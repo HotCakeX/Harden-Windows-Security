@@ -16,9 +16,11 @@
 //
 
 using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.Pages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -34,6 +36,8 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
+
+		InitializeHashItems();
 	}
 
 	private readonly InfoBarSettings MainInfoBar;
@@ -45,123 +49,171 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 
 	#region UI-Bound Properties
 
-	internal bool PickFileButtonIsEnabled
-	{
-		get; set => SP(ref field, value);
-	} = true;
+	internal bool ElementsAreEnabled { get; set => SP(ref field, value); } = true;
 
-	internal string? Sha1Page { get; set => SP(ref field, value); }
+	internal ObservableCollection<HashCardItem> HashItems { get; } = [];
 
-	internal Visibility Sha1PageProgressRingVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
-	internal string? Sha256Page { get; set => SP(ref field, value); }
-
-	internal Visibility Sha256PageProgressRingVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
-	internal string? Sha1Authenticode { get; set => SP(ref field, value); }
-
-	internal Visibility Sha1AuthenticodeProgressRingVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
-	internal string? Sha256Authenticode { get; set => SP(ref field, value); }
-
-	internal Visibility Sha256AuthenticodeProgressRingVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
-	internal string? Sha384Authenticode { get; set => SP(ref field, value); }
-
-	internal Visibility Sha384AuthenticodeProgressRingVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
-	internal string? Sha512Authenticode { get; set => SP(ref field, value); }
-
-	internal Visibility Sha512AuthenticodeProgressRingVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
-	internal string? Sha3_256Authenticode { get; set => SP(ref field, value); }
-
-	internal Visibility Sha3_256AuthenticodeProgressRingVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
-	internal string? Sha3_384Authenticode { get; set => SP(ref field, value); }
-
-	internal Visibility Sha3_384AuthenticodeProgressRingVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
-	internal string? Sha3_512Authenticode { get; set => SP(ref field, value); }
-
-	internal Visibility Sha3_512AuthenticodeProgressRingVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
-	internal string? SHA3384FlatHash { get; set => SP(ref field, value); }
-
-	internal Visibility SHA3384FlatHashProgressRingVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
-	internal string? SHA3512FlatHash { get; set => SP(ref field, value); }
-
-	internal Visibility SHA3512FlatHashProgressRingVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
+	internal HashCardItem? SelectedHashItem { get; set => SP(ref field, value); }
 
 	#endregion
 
 	private string? selectedFile;
 
+	private void InitializeHashItems()
+	{
+		HashItems.Add(new HashCardItem
+		{
+			DisplayName = "SHA1-160-Page",
+			AlgorithmName = "SHA1",
+			HashTypeName = " 160-Page",
+			HashType = "Header Page",
+			HashKey = "Sha1Page",
+			KeySize = "160",
+			HashValue = string.Empty,
+			ProgressRingVisibility = Visibility.Collapsed
+		});
+		HashItems.Add(new HashCardItem
+		{
+			DisplayName = "SHA2-256-Page",
+			AlgorithmName = "SHA2",
+			HashTypeName = " 256-Page",
+			HashType = "Header Page",
+			HashKey = "Sha256Page",
+			KeySize = "256",
+			HashValue = string.Empty,
+			ProgressRingVisibility = Visibility.Collapsed
+		});
+		HashItems.Add(new HashCardItem
+		{
+			DisplayName = "SHA1-160-Authenticode",
+			AlgorithmName = "SHA1",
+			HashTypeName = " 160-Authenticode",
+			HashType = "Authenticode",
+			HashKey = "Sha1Authenticode",
+			KeySize = "160",
+			HashValue = string.Empty,
+			ProgressRingVisibility = Visibility.Collapsed
+		});
+		HashItems.Add(new HashCardItem
+		{
+			DisplayName = "SHA2-256-Authenticode",
+			AlgorithmName = "SHA2",
+			HashTypeName = " 256-Authenticode",
+			HashType = "Authenticode",
+			HashKey = "Sha256Authenticode",
+			KeySize = "256",
+			HashValue = string.Empty,
+			ProgressRingVisibility = Visibility.Collapsed
+		});
+		HashItems.Add(new HashCardItem
+		{
+			DisplayName = "SHA2-384-Authenticode",
+			AlgorithmName = "SHA2",
+			HashTypeName = " 384-Authenticode",
+			HashType = "Authenticode",
+			HashKey = "Sha384Authenticode",
+			KeySize = "384",
+			HashValue = string.Empty,
+			ProgressRingVisibility = Visibility.Collapsed
+		});
+		HashItems.Add(new HashCardItem
+		{
+			DisplayName = "SHA2-512-Authenticode",
+			AlgorithmName = "SHA2",
+			HashTypeName = " 512-Authenticode",
+			HashType = "Authenticode",
+			HashKey = "Sha512Authenticode",
+			KeySize = "512",
+			HashValue = string.Empty,
+			ProgressRingVisibility = Visibility.Collapsed
+		});
+		HashItems.Add(new HashCardItem
+		{
+			DisplayName = "SHA3-256-Authenticode",
+			AlgorithmName = "SHA3",
+			HashTypeName = " 256-Authenticode",
+			HashType = "Authenticode",
+			HashKey = "Sha3_256Authenticode",
+			KeySize = "256",
+			HashValue = string.Empty,
+			ProgressRingVisibility = Visibility.Collapsed
+		});
+		HashItems.Add(new HashCardItem
+		{
+			DisplayName = "SHA3-384-Authenticode",
+			AlgorithmName = "SHA3",
+			HashTypeName = " 384-Authenticode",
+			HashType = "Authenticode",
+			HashKey = "Sha3_384Authenticode",
+			KeySize = "384",
+			HashValue = string.Empty,
+			ProgressRingVisibility = Visibility.Collapsed
+		});
+		HashItems.Add(new HashCardItem
+		{
+			DisplayName = "SHA3-512-Authenticode",
+			AlgorithmName = "SHA3",
+			HashTypeName = " 512-Authenticode",
+			HashType = "Authenticode",
+			HashKey = "Sha3_512Authenticode",
+			KeySize = "512",
+			HashValue = string.Empty,
+			ProgressRingVisibility = Visibility.Collapsed
+		});
+		HashItems.Add(new HashCardItem
+		{
+			DisplayName = "SHA3-384-Flat",
+			AlgorithmName = "SHA3",
+			HashTypeName = " 384-Flat",
+			HashType = "Flat",
+			HashKey = "SHA3384FlatHash",
+			KeySize = "384",
+			HashValue = string.Empty,
+			ProgressRingVisibility = Visibility.Collapsed
+		});
+		HashItems.Add(new HashCardItem
+		{
+			DisplayName = "SHA3-512-Flat",
+			AlgorithmName = "SHA3",
+			HashTypeName = " 512-Flat",
+			HashType = "Flat",
+			HashKey = "SHA3512FlatHash",
+			KeySize = "512",
+			HashValue = string.Empty,
+			ProgressRingVisibility = Visibility.Collapsed
+		});
+	}
+
 	private async Task Calculate()
 	{
 		try
 		{
-			PickFileButtonIsEnabled = false;
+			ElementsAreEnabled = false;
 
 			if (string.IsNullOrWhiteSpace(selectedFile))
 			{
 				return;
 			}
 
-			ClearTextBoxes();
-
+			ClearHashValues();
 			ManageProgressRingVisibility(Visibility.Visible);
 
 			CodeIntegrityHashesV2 hashes = await Task.Run(() => CiFileHash.GetCiFileHashesV2(selectedFile));
 
-			// Display the hashes in the UI
-			Sha1Page = hashes.SHA1Page;
-			Sha256Page = hashes.SHA256Page;
-			Sha1Authenticode = hashes.SHa1Authenticode;
-			Sha256Authenticode = hashes.SHA256Authenticode;
-			Sha384Authenticode = hashes.SHA384Authenticode;
-			Sha512Authenticode = hashes.SHA512Authenticode;
-			Sha3_256Authenticode = hashes.SHA3_256Authenticode;
-			Sha3_384Authenticode = hashes.SHA3_384Authenticode;
-			Sha3_512Authenticode = hashes.SHA3_512Authenticode;
-			SHA3384FlatHash = hashes.SHA3_384_Flat;
-			SHA3512FlatHash = hashes.SHA3_512_Flat;
+			HashItems[0].HashValue = hashes.SHA1Page ?? string.Empty;
+			HashItems[1].HashValue = hashes.SHA256Page ?? string.Empty;
+			HashItems[2].HashValue = hashes.SHa1Authenticode ?? string.Empty;
+			HashItems[3].HashValue = hashes.SHA256Authenticode ?? string.Empty;
+			HashItems[4].HashValue = hashes.SHA384Authenticode ?? string.Empty;
+			HashItems[5].HashValue = hashes.SHA512Authenticode ?? string.Empty;
+			HashItems[6].HashValue = hashes.SHA3_256Authenticode ?? string.Empty;
+			HashItems[7].HashValue = hashes.SHA3_384Authenticode ?? string.Empty;
+			HashItems[8].HashValue = hashes.SHA3_512Authenticode ?? string.Empty;
+			HashItems[9].HashValue = hashes.SHA3_384_Flat ?? string.Empty;
+			HashItems[10].HashValue = hashes.SHA3_512_Flat ?? string.Empty;
 
-			await PublishUserActivityAsync(LaunchProtocolActions.FileHashes,
+			await PublishUserActivityAsync(
+				LaunchProtocolActions.FileHashes,
 				selectedFile,
 				GlobalVars.Rizz.GetString("UserActivityNameForFileHashes"));
 		}
@@ -172,7 +224,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 		finally
 		{
 			ManageProgressRingVisibility(Visibility.Collapsed);
-			PickFileButtonIsEnabled = true;
+			ElementsAreEnabled = true;
 		}
 	}
 
@@ -181,9 +233,15 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	/// </summary>
 	internal async void PickFile_Click()
 	{
-		selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
-
-		await Calculate();
+		try
+		{
+			selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+			await Calculate();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
 	}
 
 	/// <summary>
@@ -191,13 +249,10 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	/// </summary>
 	internal void Clear_Click()
 	{
-		ClearTextBoxes();
-
-		// Ensure all progress rings are hidden
+		ClearHashValues();
 		ManageProgressRingVisibility(Visibility.Collapsed);
-
-		// Clear the selected file
 		selectedFile = null;
+		SelectedHashItem = null;
 	}
 
 	/// <summary>
@@ -209,11 +264,8 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	{
 		try
 		{
-			// Navigate to the Get CI Hashes page
-			App._nav.Navigate(typeof(Pages.GetCIHashes), null);
-
+			App._nav.Navigate(typeof(GetCIHashes), null);
 			selectedFile = filePath;
-
 			await Calculate();
 		}
 		catch (Exception ex)
@@ -223,35 +275,31 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Clear all hash text boxes
+	/// Clear all hash values
 	/// </summary>
-	private void ClearTextBoxes()
+	private void ClearHashValues()
 	{
-		Sha1Page = null;
-		Sha256Page = null;
-		Sha1Authenticode = null;
-		Sha256Authenticode = null;
-		Sha384Authenticode = null;
-		Sha512Authenticode = null;
-		Sha3_256Authenticode = null;
-		Sha3_384Authenticode = null;
-		Sha3_512Authenticode = null;
-		SHA3384FlatHash = null;
-		SHA3512FlatHash = null;
+		foreach (HashCardItem item in HashItems)
+		{
+			item.HashValue = string.Empty;
+		}
 	}
 
 	private void ManageProgressRingVisibility(Visibility visibility)
 	{
-		Sha1PageProgressRingVisibility = visibility;
-		Sha256PageProgressRingVisibility = visibility;
-		Sha1AuthenticodeProgressRingVisibility = visibility;
-		Sha256AuthenticodeProgressRingVisibility = visibility;
-		Sha384AuthenticodeProgressRingVisibility = visibility;
-		Sha512AuthenticodeProgressRingVisibility = visibility;
-		Sha3_256AuthenticodeProgressRingVisibility = visibility;
-		Sha3_384AuthenticodeProgressRingVisibility = visibility;
-		Sha3_512AuthenticodeProgressRingVisibility = visibility;
-		SHA3384FlatHashProgressRingVisibility = visibility;
-		SHA3512FlatHashProgressRingVisibility = visibility;
+		foreach (HashCardItem item in HashItems)
+		{
+			item.ProgressRingVisibility = visibility;
+		}
+	}
+
+	internal void CopyButton_Click()
+	{
+		if (SelectedHashItem != null && !string.IsNullOrEmpty(SelectedHashItem.HashValue))
+		{
+			ClipboardManagement.CopyText(SelectedHashItem.HashValue);
+
+			MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("HashCopiedToClipboard"));
+		}
 	}
 }

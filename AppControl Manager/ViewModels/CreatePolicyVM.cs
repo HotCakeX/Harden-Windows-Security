@@ -663,7 +663,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal bool StrictKernelModesCreateAndDeploy { get; set => SP(ref field, value); }
 
-	internal bool StrictKernelModesAudit { get; set => SP(ref field, value); }
+	internal bool StrictKernelModesAudit { get; set => SP(ref field, value); } = true;
 	internal bool StrictKernelModeNoFlightRoots { get; set => SP(ref field, value); }
 
 	internal bool StrictKernelModesSettingsInfoBarIsOpen { get; set => SP(ref field, value); }

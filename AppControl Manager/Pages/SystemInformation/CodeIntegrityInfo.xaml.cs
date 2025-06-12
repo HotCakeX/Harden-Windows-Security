@@ -27,8 +27,8 @@ namespace AppControlManager.Pages;
 internal sealed partial class CodeIntegrityInfo : Page
 {
 
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
-	private ViewModels.CodeIntegrityInfoVM ViewModel { get; } = ViewModelProvider.CodeIntegrityInfoVM;
+	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
+	private ViewModels.CodeIntegrityInfoVM ViewModel { get; } = ViewModels.ViewModelProvider.CodeIntegrityInfoVM;
 
 	/// <summary>
 	/// Initializes a new instance of the CodeIntegrityInfo class.

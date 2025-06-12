@@ -704,12 +704,12 @@
                                 <Button Click="{x:Bind ViewModel.StrictKernelModeScanButton_Click}"
                                         IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
                                         HorizontalAlignment="Center"
-                                        Content="Scan for All Kernel-mode Logs" />
+                                        x:Uid="ScanForAllKernelModeLogs" />
 
                                 <Button Click="{x:Bind ViewModel.StrictKernelModeScanSinceLastRebootButton_Click}"
                                         IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
                                         HorizontalAlignment="Center"
-                                        Content="Scan for Kernel-mode Logs Since Last Reboot" />
+                                        x:Uid="ScanForKernelModeLogsSinceReboot" />
 
                             </controls:WrapPanel>
 

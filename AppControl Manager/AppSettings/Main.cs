@@ -32,7 +32,29 @@ namespace AppControlManager.AppSettings;
 /// </summary>
 internal sealed partial class Main : ViewModelBase
 {
-	private readonly Lock _syncRoot = new();
+	// Individual locks for each property
+	private readonly Lock _soundSettingLock = new();
+	private readonly Lock _navViewBackgroundLock = new();
+	private readonly Lock _navViewPaneDisplayModeLock = new();
+	private readonly Lock _appThemeLock = new();
+	private readonly Lock _backDropBackgroundLock = new();
+	private readonly Lock _iconsStyleLock = new();
+	private readonly Lock _mainWindowWidthLock = new();
+	private readonly Lock _mainWindowHeightLock = new();
+	private readonly Lock _mainWindowIsMaximizedLock = new();
+	private readonly Lock _listViewsVerticalCenteringLock = new();
+	private readonly Lock _cacheSecurityCatalogsScanResultsLock = new();
+	private readonly Lock _promptForElevationOnStartupLock = new();
+	private readonly Lock _automaticAssignmentSidebarLock = new();
+	private readonly Lock _autoCheckForUpdateAtStartupLock = new();
+	private readonly Lock _applicationGlobalLanguageLock = new();
+	private readonly Lock _applicationGlobalFlowDirectionLock = new();
+	private readonly Lock _fileActivatedLaunchArgLock = new();
+	private readonly Lock _ciPolicySchemaPathLock = new();
+	private readonly Lock _launchActivationFilePathLock = new();
+	private readonly Lock _launchActivationActionLock = new();
+	private readonly Lock _screenShieldLock = new();
+	private readonly Lock _publishUserActivityInTheOSLock = new();
 
 	private readonly ApplicationDataContainer _localSettings;
 
@@ -104,14 +126,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_soundSettingLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_soundSettingLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -132,14 +154,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_navViewBackgroundLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_navViewBackgroundLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -159,14 +181,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_navViewPaneDisplayModeLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_navViewPaneDisplayModeLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -183,14 +205,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_appThemeLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_appThemeLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -207,14 +229,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_backDropBackgroundLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_backDropBackgroundLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -231,14 +253,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_iconsStyleLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_iconsStyleLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -255,14 +277,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_mainWindowWidthLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_mainWindowWidthLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -270,7 +292,7 @@ internal sealed partial class Main : ViewModelBase
 				}
 			}
 		}
-	} = 100; // Setting it to this value initially so that it will be determined naturally in MainWindow class
+	} = 700;
 
 	/// <summary>
 	/// Height of the main window
@@ -279,14 +301,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_mainWindowHeightLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_mainWindowHeightLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -294,7 +316,7 @@ internal sealed partial class Main : ViewModelBase
 				}
 			}
 		}
-	} = 100; // Setting it to this value initially so that it will be determined naturally in MainWindow class
+	} = 700;
 
 	/// <summary>
 	/// Whether the main window is maximized prior to closing the app.
@@ -303,14 +325,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_mainWindowIsMaximizedLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_mainWindowIsMaximizedLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -327,14 +349,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_listViewsVerticalCenteringLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_listViewsVerticalCenteringLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -351,14 +373,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_cacheSecurityCatalogsScanResultsLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_cacheSecurityCatalogsScanResultsLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -375,14 +397,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_promptForElevationOnStartupLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_promptForElevationOnStartupLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -399,14 +421,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_automaticAssignmentSidebarLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_automaticAssignmentSidebarLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -423,14 +445,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_autoCheckForUpdateAtStartupLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_autoCheckForUpdateAtStartupLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -447,14 +469,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_applicationGlobalLanguageLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_applicationGlobalLanguageLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -471,14 +493,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_applicationGlobalFlowDirectionLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_applicationGlobalFlowDirectionLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -496,14 +518,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_fileActivatedLaunchArgLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_fileActivatedLaunchArgLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -521,14 +543,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_ciPolicySchemaPathLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_ciPolicySchemaPathLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -545,14 +567,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_launchActivationFilePathLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_launchActivationFilePathLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -569,14 +591,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_launchActivationActionLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_launchActivationActionLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -594,14 +616,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_screenShieldLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_screenShieldLock)
 			{
 				if (SP(ref field, value))
 				{
@@ -620,14 +642,14 @@ internal sealed partial class Main : ViewModelBase
 	{
 		get
 		{
-			lock (_syncRoot)
+			lock (_publishUserActivityInTheOSLock)
 			{
 				return field;
 			}
 		}
 		set
 		{
-			lock (_syncRoot)
+			lock (_publishUserActivityInTheOSLock)
 			{
 				if (SP(ref field, value))
 				{

@@ -5338,4 +5338,142 @@
 <data name="NotIncludedText" xml:space="preserve">
   <value>ഉൾപ്പെടുത്തിയില്ല</value>
 </data>
+<data name="UserActivityNameForFileHashes" xml:space="preserve">
+  <value>വിപുലമായ ഫയൽ ഹാഷുകൾ കണക്കാക്കുന്നു</value>
+</data>
+<data name="UserActivityNameForFileSignature" xml:space="preserve">
+  <value>ഫയൽ സർട്ടിഫിക്കറ്റുകൾ കാണുന്നു</value>
+</data>
+<data name="UserActivityNameForPolicyEditor" xml:space="preserve">
+  <value>പോളിസി എഡിറ്ററിൽ ആപ്പ് കൺട്രോൾ പോളിസി തുറക്കുന്നു</value>
+</data>
+ <data name="PublishUserActivityInTheOSSettingsCard.Description" xml:space="preserve">
+    <value>ആപ്പ്കൺട്രോൾ മാനേജറിൽ നിങ്ങൾ നടത്തുന്ന വിവിധ പ്രവർത്തനങ്ങൾ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ പ്രസിദ്ധീകരിക്കുക, അവ Microsoft Recall-ൽ പ്രത്യക്ഷപ്പെടാനും നിങ്ങൾക്ക് ലഭ്യമാകാനും അനുവദിക്കുന്നതിലൂടെ നിങ്ങളുടെ പ്രവർത്തനങ്ങൾ വീണ്ടും ട്രാക്ക് ചെയ്യാൻ കഴിയും.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.Header" xml:space="preserve">
+    <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ പ്രവർത്തനം പ്രസിദ്ധീകരിക്കുക</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ്കൺട്രോൾ മാനേജറിൽ നിങ്ങൾ നടത്തുന്ന വിവിധ പ്രവർത്തനങ്ങൾ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ പ്രസിദ്ധീകരിക്കുക, അവ Microsoft Recall-ൽ പ്രത്യക്ഷപ്പെടാനും നിങ്ങൾക്ക് ലഭ്യമാകാനും അനുവദിക്കുന്നതിലൂടെ നിങ്ങളുടെ പ്രവർത്തനങ്ങൾ വീണ്ടും ട്രാക്ക് ചെയ്യാൻ കഴിയും.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ്കൺട്രോൾ മാനേജറിൽ നിങ്ങൾ നടത്തുന്ന വിവിധ പ്രവർത്തനങ്ങൾ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ പ്രസിദ്ധീകരിക്കുക, അവ Microsoft Recall-ൽ പ്രത്യക്ഷപ്പെടാനും നിങ്ങൾക്ക് ലഭ്യമാകാനും അനുവദിക്കുന്നതിലൂടെ നിങ്ങളുടെ പ്രവർത്തനങ്ങൾ വീണ്ടും ട്രാക്ക് ചെയ്യാൻ കഴിയും.</value>
+  </data>
+  <data name="OperationCancelledByUser" xml:space="preserve">
+    <value>പ്രവർത്തനം റദ്ദാക്കപ്പെട്ടു.</value>
+  </data>
+    <data name="Cancelling" xml:space="preserve">
+    <value>റദ്ദാക്കുന്നു...</value>
+  </data>
+  <data name="DonationHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ പിന്തുണ ഈ പ്രോജക്റ്റ് സൃഷ്ടിക്കുന്നതും പരിപാലിക്കുന്നതും തുടരാൻ എന്നെ സഹായിക്കുന്നു.</value>
+  </data>
+  <data name="DonationHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങളുടെ പിന്തുണ ഈ പ്രോജക്റ്റ് സൃഷ്ടിക്കുന്നതും പരിപാലിക്കുന്നതും തുടരാൻ എന്നെ സഹായിക്കുന്നു.</value>
+  </data>
+    <data name="DonationHyperLinkButton.Content" xml:space="preserve">
+    <value>സംഭാവന നൽകുക</value>
+  </data>
+    <data name="CopyToClipboard.Content" xml:space="preserve">
+    <value>ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തുക</value>
+  </data>
+  <data name="CopyToClipboard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തുക</value>
+  </data>
+  <data name="CopyToClipboard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തുക</value>
+  </data>
+    <data name="HashCopiedToClipboard" xml:space="preserve">
+    <value>ഹാഷ് മൂല്യം ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തി!</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.Content" xml:space="preserve">
+    <value>എല്ലാ കേർണൽ-മോഡ് ലോഗുകൾക്കായി സ്കാൻ ചെയ്യുക</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ നിലവിൽ ലഭ്യമായ എല്ലാ കേർണൽ-മോഡ് ലോഗുകൾക്കായി സ്കാൻ ചെയ്യുക.</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ നിലവിൽ ലഭ്യമായ എല്ലാ കേർണൽ-മോഡ് ലോഗുകൾക്കായി സ്കാൻ ചെയ്യുക.</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.Content" xml:space="preserve">
+    <value>അവസാന റീബൂട്ട് മുതൽ കേർണൽ-മോഡ് ലോഗുകൾക്കായി സ്കാൻ ചെയ്യുക</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റം അവസാനമായി റീബൂട്ട് ചെയ്തത് മുതലുള്ള കേർണൽ-മോഡ് ലോഗുകൾക്കായി സ്കാൻ ചെയ്യുക.</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റം അവസാനമായി റീബൂട്ട് ചെയ്തത് മുതലുള്ള കേർണൽ-മോഡ് ലോഗുകൾക്കായി സ്കാൻ ചെയ്യുക.</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OnContent" xml:space="preserve">
+    <value>ടെക്സ്റ്റ് സെലക്ഷൻ പ്രവർത്തനക്ഷമമാണ്</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OffContent" xml:space="preserve">
+    <value>ടെക്സ്റ്റ് സെലക്ഷൻ നിർജ്ജീവമാണ്</value>
+  </data>
+    <data name="TextSelectionStateToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലിസ്റ്റ് വ്യൂ വരികളിലെ ടെക്സ്റ്റുകൾ തിരഞ്ഞെടുക്കാനുള്ള കഴിവ് പ്രവർത്തനക്ഷമമാക്കുകയോ നിർജ്ജീവമാക്കുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലിസ്റ്റ് വ്യൂ വരികളിലെ ടെക്സ്റ്റുകൾ തിരഞ്ഞെടുക്കാനുള്ള കഴിവ് പ്രവർത്തനക്ഷമമാക്കുകയോ നിർജ്ജീവമാക്കുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="PolicyEditorClearAllData.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസിയിൽ നിന്ന് ഉപയോക്തൃ ഇന്റർഫേസിൽ ലോഡ് ചെയ്ത എല്ലാ ഡാറ്റയും മായ്ക്കുന്നു.</value>
+  </data>
+  <data name="PolicyEditorClearAllData.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസിയിൽ നിന്ന് ഉപയോക്തൃ ഇന്റർഫേസിൽ ലോഡ് ചെയ്ത എല്ലാ ഡാറ്റയും മായ്ക്കുന്നു.</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡാറ്റയിൽ വരുത്തിയ മാറ്റങ്ങൾ പോളിസി XML ഫയലിലേക്ക് തിരികെ സേവ് ചെയ്യുക.</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡാറ്റയിൽ വരുത്തിയ മാറ്റങ്ങൾ പോളിസി XML ഫയലിലേക്ക് തിരികെ സേവ് ചെയ്യുക.</value>
+  </data>
+  <data name="BeginSimulationTextBlock.Text" xml:space="preserve">
+    <value>സിമുലേഷൻ ആരംഭിക്കുക</value>
+  </data>
+  <data name="BeginSimulation.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത കോൺഫിഗറേഷനുകൾ ഉപയോഗിച്ച് സിമുലേഷൻ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="BeginSimulation.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത കോൺഫിഗറേഷനുകൾ ഉപയോഗിച്ച് സിമുലേഷൻ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="RetrieveOnlinePoliciesTextBlock.Text" xml:space="preserve">
+    <value>ഓൺലൈൻ പോളിസികൾ വീണ്ടെടുക്കുക</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.Header" xml:space="preserve">
+    <value>സൈൻ മാത്രം - വിന്യാസമില്ല</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.Description" xml:space="preserve">
+    <value>ഉപയോക്തൃ കോൺഫിഗ് ഡയറക്ടറിയിൽ സൈൻ ചെയ്ത CIP ഫയലുകൾ മാത്രം സൃഷ്ടിക്കുന്നു, അവ വിന്യസിക്കാതെ. നിങ്ങൾ അവ മറ്റൊരു സിസ്റ്റത്തിൽ വിന്യസിക്കാൻ ആഗ്രഹിക്കുന്നുവെങ്കിൽ ഇത് ടോഗിൾ ചെയ്യുക.</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഉപയോക്തൃ കോൺഫിഗ് ഡയറക്ടറിയിൽ സൈൻ ചെയ്ത CIP ഫയലുകൾ മാത്രം സൃഷ്ടിക്കുന്നു, അവ വിന്യസിക്കാതെ. നിങ്ങൾ അവ മറ്റൊരു സിസ്റ്റത്തിൽ വിന്യസിക്കാൻ ആഗ്രഹിക്കുന്നുവെങ്കിൽ ഇത് ടോഗിൾ ചെയ്യുക.</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഉപയോക്തൃ കോൺഫിഗ് ഡയറക്ടറിയിൽ സൈൻ ചെയ്ത CIP ഫയലുകൾ മാത്രം സൃഷ്ടിക്കുന്നു, അവ വിന്യസിക്കാതെ. നിങ്ങൾ അവ മറ്റൊരു സിസ്റ്റത്തിൽ വിന്യസിക്കാൻ ആഗ്രഹിക്കുന്നുവെങ്കിൽ ഇത് ടോഗിൾ ചെയ്യുക.</value>
+  </data>
+  <data name="ViewSelectedCIPFilesTextBlock.Text" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത CIP ഫയലുകൾ കാണുക.</value>
+  </data>
+  <data name="ConvertTextBlock.Text" xml:space="preserve">
+    <value>പരിവർത്തനം ചെയ്യുക</value>
+  </data>
+  <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത XML ഫയലുകൾ കാണുക.</value>
+  </data>
+  <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <value>നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <value>സജീവമായി സജ്ജീകരിക്കുക</value>
+  </data>
+  <data name="SignInTextBlock.Text" xml:space="preserve">
+    <value>സൈൻ ഇൻ ചെയ്യുക</value>
+  </data>
+  <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
+    <value>സജീവമായി സജ്ജീകരിക്കുക</value>
+  </data>
+  <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
+    <value>നിലവിൽ ഉപയോഗത്തിലുള്ള അക്കൗണ്ടിന്റെ വിശദാംശങ്ങൾ</value>
+  </data>
 </root>

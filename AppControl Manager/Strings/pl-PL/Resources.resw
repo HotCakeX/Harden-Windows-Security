@@ -5338,4 +5338,142 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
 <data name="NotIncludedText" xml:space="preserve">
   <value>nieuwzględnione</value>
 </data>
+<data name="UserActivityNameForFileHashes" xml:space="preserve">
+  <value>Obliczanie Zaawansowanych Skrótów Plików</value>
+</data>
+<data name="UserActivityNameForFileSignature" xml:space="preserve">
+  <value>Przeglądanie Certyfikatów Plików</value>
+</data>
+<data name="UserActivityNameForPolicyEditor" xml:space="preserve">
+  <value>Otwieranie Zasad Kontroli Aplikacji w Edytorze Zasad</value>
+</data>
+ <data name="PublishUserActivityInTheOSSettingsCard.Description" xml:space="preserve">
+    <value>Publikuj różne aktywności wykonywane w Menedżerze Kontroli Aplikacji do systemu operacyjnego, umożliwiając im pojawienie się i dostępność w Microsoft Recall, abyś mógł śledzić swoje działania.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.Header" xml:space="preserve">
+    <value>Publikuj Aktywność w Systemie Operacyjnym</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Publikuj różne aktywności wykonywane w Menedżerze Kontroli Aplikacji do systemu operacyjnego, umożliwiając im pojawienie się i dostępność w Microsoft Recall, abyś mógł śledzić swoje działania.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Publikuj różne aktywności wykonywane w Menedżerze Kontroli Aplikacji do systemu operacyjnego, umożliwiając im pojawienie się i dostępność w Microsoft Recall, abyś mógł śledzić swoje działania.</value>
+  </data>
+  <data name="OperationCancelledByUser" xml:space="preserve">
+    <value>Operacja została anulowana.</value>
+  </data>
+    <data name="Cancelling" xml:space="preserve">
+    <value>Anulowanie...</value>
+  </data>
+  <data name="DonationHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Twoje wsparcie pomaga mi kontynuować tworzenie i utrzymywanie tego projektu.</value>
+  </data>
+  <data name="DonationHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Twoje wsparcie pomaga mi kontynuować tworzenie i utrzymywanie tego projektu.</value>
+  </data>
+    <data name="DonationHyperLinkButton.Content" xml:space="preserve">
+    <value>Wpłać Darowiznę</value>
+  </data>
+    <data name="CopyToClipboard.Content" xml:space="preserve">
+    <value>Kopiuj do Schowka</value>
+  </data>
+  <data name="CopyToClipboard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopiuj do Schowka</value>
+  </data>
+  <data name="CopyToClipboard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kopiuj do Schowka</value>
+  </data>
+    <data name="HashCopiedToClipboard" xml:space="preserve">
+    <value>Wartość skrótu skopiowana do schowka!</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.Content" xml:space="preserve">
+    <value>Skanuj Wszystkie Dzienniki Trybu Jądra</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Skanuj wszystkie dzienniki trybu jądra dostępne obecnie w systemie.</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Skanuj wszystkie dzienniki trybu jądra dostępne obecnie w systemie.</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.Content" xml:space="preserve">
+    <value>Skanuj Dzienniki Trybu Jądra od Ostatniego Restartu</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Skanuj dzienniki trybu jądra od momentu ostatniego restartu systemu.</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Skanuj dzienniki trybu jądra od momentu ostatniego restartu systemu.</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OnContent" xml:space="preserve">
+    <value>Zaznaczanie Tekstu jest Włączone</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OffContent" xml:space="preserve">
+    <value>Zaznaczanie Tekstu jest Wyłączone</value>
+  </data>
+    <data name="TextSelectionStateToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Włącz lub wyłącz możliwość zaznaczania tekstów w wierszach Widoku Listy.</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Włącz lub wyłącz możliwość zaznaczania tekstów w wierszach Widoku Listy.</value>
+  </data>
+  <data name="PolicyEditorClearAllData.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Czyści wszystkie dane załadowane w interfejsie użytkownika z wybranej zasady.</value>
+  </data>
+  <data name="PolicyEditorClearAllData.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Czyści wszystkie dane załadowane w interfejsie użytkownika z wybranej zasady.</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zapisz zmiany wprowadzone w danych z powrotem do pliku XML zasady.</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zapisz zmiany wprowadzone w danych z powrotem do pliku XML zasady.</value>
+  </data>
+  <data name="BeginSimulationTextBlock.Text" xml:space="preserve">
+    <value>Rozpocznij Symulację</value>
+  </data>
+  <data name="BeginSimulation.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rozpocznij symulację używając wybranych konfiguracji.</value>
+  </data>
+  <data name="BeginSimulation.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rozpocznij symulację używając wybranych konfiguracji.</value>
+  </data>
+  <data name="RetrieveOnlinePoliciesTextBlock.Text" xml:space="preserve">
+    <value>Pobierz Zasady Online</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.Header" xml:space="preserve">
+    <value>Tylko Podpisywanie - Bez Wdrażania</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.Description" xml:space="preserve">
+    <value>Tworzy tylko podpisane pliki CIP w katalogu konfiguracji użytkownika bez ich wdrażania. Przełącz to, jeśli chcesz wdrożyć je w innym systemie.</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tworzy tylko podpisane pliki CIP w katalogu konfiguracji użytkownika bez ich wdrażania. Przełącz to, jeśli chcesz wdrożyć je w innym systemie.</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Tworzy tylko podpisane pliki CIP w katalogu konfiguracji użytkownika bez ich wdrażania. Przełącz to, jeśli chcesz wdrożyć je w innym systemie.</value>
+  </data>
+  <data name="ViewSelectedCIPFilesTextBlock.Text" xml:space="preserve">
+    <value>Zobacz wybrane pliki CIP.</value>
+  </data>
+  <data name="ConvertTextBlock.Text" xml:space="preserve">
+    <value>Konwertuj</value>
+  </data>
+  <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
+    <value>Zobacz wybrane pliki XML.</value>
+  </data>
+  <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <value>Ustaw jako Aktywne</value>
+  </data>
+  <data name="SignInTextBlock.Text" xml:space="preserve">
+    <value>Zaloguj się</value>
+  </data>
+  <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
+    <value>Ustaw jako Aktywne</value>
+  </data>
+  <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
+    <value>Szczegóły konta aktualnie używanego</value>
+  </data>
 </root>

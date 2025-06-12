@@ -5338,4 +5338,142 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 <data name="NotIncludedText" xml:space="preserve">
   <value>शामिल नहीं</value>
 </data>
+<data name="UserActivityNameForFileHashes" xml:space="preserve">
+  <value>उन्नत फ़ाइल हैश की गणना</value>
+</data>
+<data name="UserActivityNameForFileSignature" xml:space="preserve">
+  <value>फ़ाइल प्रमाणपत्र देखना</value>
+</data>
+<data name="UserActivityNameForPolicyEditor" xml:space="preserve">
+  <value>नीति संपादक में ऐप नियंत्रण नीति खोलना</value>
+</data>
+ <data name="PublishUserActivityInTheOSSettingsCard.Description" xml:space="preserve">
+    <value>ऐपकंट्रोल मैनेजर में आपके द्वारा की जाने वाली विभिन्न गतिविधियों को ऑपरेटिंग सिस्टम में प्रकाशित करें, जिससे वे Microsoft Recall में दिखाई दें और आपके लिए उपलब्ध हों ताकि आप अपनी कार्रवाइयों को फिर से ट्रैक कर सकें।</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.Header" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम में गतिविधि प्रकाशित करें</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐपकंट्रोल मैनेजर में आपके द्वारा की जाने वाली विभिन्न गतिविधियों को ऑपरेटिंग सिस्टम में प्रकाशित करें, जिससे वे Microsoft Recall में दिखाई दें और आपके लिए उपलब्ध हों ताकि आप अपनी कार्रवाइयों को फिर से ट्रैक कर सकें।</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐपकंट्रोल मैनेजर में आपके द्वारा की जाने वाली विभिन्न गतिविधियों को ऑपरेटिंग सिस्टम में प्रकाशित करें, जिससे वे Microsoft Recall में दिखाई दें और आपके लिए उपलब्ध हों ताकि आप अपनी कार्रवाइयों को फिर से ट्रैक कर सकें।</value>
+  </data>
+  <data name="OperationCancelledByUser" xml:space="preserve">
+    <value>ऑपरेशन रद्द कर दिया गया।</value>
+  </data>
+    <data name="Cancelling" xml:space="preserve">
+    <value>रद्द कर रहे हैं...</value>
+  </data>
+  <data name="DonationHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आपका समर्थन मुझे इस प्रोजेक्ट को बनाना और बनाए रखना जारी रखने में मदद करता है।</value>
+  </data>
+  <data name="DonationHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>आपका समर्थन मुझे इस प्रोजेक्ट को बनाना और बनाए रखना जारी रखने में मदद करता है।</value>
+  </data>
+    <data name="DonationHyperLinkButton.Content" xml:space="preserve">
+    <value>दान करें</value>
+  </data>
+    <data name="CopyToClipboard.Content" xml:space="preserve">
+    <value>क्लिपबोर्ड में कॉपी करें</value>
+  </data>
+  <data name="CopyToClipboard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>क्लिपबोर्ड में कॉपी करें</value>
+  </data>
+  <data name="CopyToClipboard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>क्लिपबोर्ड में कॉपी करें</value>
+  </data>
+    <data name="HashCopiedToClipboard" xml:space="preserve">
+    <value>हैश वैल्यू क्लिपबोर्ड में कॉपी हो गया!</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.Content" xml:space="preserve">
+    <value>सभी कर्नेल-मोड लॉग स्कैन करें</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम पर वर्तमान में उपलब्ध सभी कर्नेल-मोड लॉग स्कैन करें।</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम पर वर्तमान में उपलब्ध सभी कर्नेल-मोड लॉग स्कैन करें।</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.Content" xml:space="preserve">
+    <value>अंतिम रीबूट के बाद से कर्नेल-मोड लॉग स्कैन करें</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम के अंतिम रीबूट के बाद से कर्नेल-मोड लॉग स्कैन करें।</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम के अंतिम रीबूट के बाद से कर्नेल-मोड लॉग स्कैन करें।</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OnContent" xml:space="preserve">
+    <value>टेक्स्ट चयन सक्षम है</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OffContent" xml:space="preserve">
+    <value>टेक्स्ट चयन अक्षम है</value>
+  </data>
+    <data name="TextSelectionStateToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सूची दृश्य पंक्तियों में टेक्स्ट चुनने की क्षमता को सक्षम या अक्षम करें।</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सूची दृश्य पंक्तियों में टेक्स्ट चुनने की क्षमता को सक्षम या अक्षम करें।</value>
+  </data>
+  <data name="PolicyEditorClearAllData.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित नीति से उपयोगकर्ता इंटरफ़ेस पर लोड किए गए सभी डेटा को साफ़ करता है।</value>
+  </data>
+  <data name="PolicyEditorClearAllData.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित नीति से उपयोगकर्ता इंटरफ़ेस पर लोड किए गए सभी डेटा को साफ़ करता है।</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डेटा में किए गए परिवर्तनों को नीति XML फ़ाइल में वापस सेव करें।</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डेटा में किए गए परिवर्तनों को नीति XML फ़ाइल में वापस सेव करें।</value>
+  </data>
+  <data name="BeginSimulationTextBlock.Text" xml:space="preserve">
+    <value>सिमुलेशन शुरू करें</value>
+  </data>
+  <data name="BeginSimulation.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित कॉन्फ़िगरेशन का उपयोग करके सिमुलेशन शुरू करें।</value>
+  </data>
+  <data name="BeginSimulation.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित कॉन्फ़िगरेशन का उपयोग करके सिमुलेशन शुरू करें।</value>
+  </data>
+  <data name="RetrieveOnlinePoliciesTextBlock.Text" xml:space="preserve">
+    <value>ऑनलाइन नीतियां प्राप्त करें</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.Header" xml:space="preserve">
+    <value>केवल हस्ताक्षर - कोई तैनाती नहीं</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.Description" xml:space="preserve">
+    <value>केवल उपयोगकर्ता कॉन्फ़िग डायरेक्टरी में हस्ताक्षरित CIP फ़ाइलें बनाता है और उन्हें तैनात नहीं करता। यदि आप उन्हें किसी अन्य सिस्टम पर तैनात करना चाहते हैं तो इसे टॉगल करें।</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>केवल उपयोगकर्ता कॉन्फ़िग डायरेक्टरी में हस्ताक्षरित CIP फ़ाइलें बनाता है और उन्हें तैनात नहीं करता। यदि आप उन्हें किसी अन्य सिस्टम पर तैनात करना चाहते हैं तो इसे टॉगल करें।</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>केवल उपयोगकर्ता कॉन्फ़िग डायरेक्टरी में हस्ताक्षरित CIP फ़ाइलें बनाता है और उन्हें तैनात नहीं करता। यदि आप उन्हें किसी अन्य सिस्टम पर तैनात करना चाहते हैं तो इसे टॉगल करें।</value>
+  </data>
+  <data name="ViewSelectedCIPFilesTextBlock.Text" xml:space="preserve">
+    <value>आपके द्वारा चयनित CIP फ़ाइलें देखें।</value>
+  </data>
+  <data name="ConvertTextBlock.Text" xml:space="preserve">
+    <value>कन्वर्ट करें</value>
+  </data>
+  <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
+    <value>आपके द्वारा चयनित XML फ़ाइलें देखें।</value>
+  </data>
+  <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <value>हटाएं</value>
+  </data>
+  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <value>सक्रिय के रूप में सेट करें</value>
+  </data>
+  <data name="SignInTextBlock.Text" xml:space="preserve">
+    <value>साइन इन करें</value>
+  </data>
+  <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
+    <value>सक्रिय के रूप में सेट करें</value>
+  </data>
+  <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
+    <value>वर्तमान में उपयोग में आने वाले खाते का विवरण</value>
+  </data>
 </root>

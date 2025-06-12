@@ -11,247 +11,311 @@
     FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
-    <ScrollViewer>
+    <Grid>
+        <ScrollViewer>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+                <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
+                    <TextBlock x:Uid="GetCIHashesPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
+                    <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Code-Integrity-Hashes" />
+                </controls:WrapPanel>
 
-            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
+                <customUI:InfoBarV2 Grid.Row="1"
+                    Margin="15"
+                    IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                    Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                    Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                    IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
 
-                <TextBlock x:Uid="GetCIHashesPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
+                <Grid Grid.Row="2" Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Code-Integrity-Hashes" />
+                    <!-- Button container for browse and clear buttons -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Margin="0,0,0,20">
+                        <Button Click="{x:Bind ViewModel.PickFile_Click}"
+                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                            x:Uid="FileBrowseButton"
+                            Style="{StaticResource AccentButtonStyle}"/>
+                        <Button Click="{x:Bind ViewModel.Clear_Click}"
+                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                x:Uid="ClearButton"/>
+                    </StackPanel>
 
-            </controls:WrapPanel>
+                    <!-- Hash Cards GridView -->
+                    <GridView x:Name="hashGridView" 
+                             Grid.Row="1"
+                             ItemsSource="{x:Bind ViewModel.HashItems, Mode=OneWay}"
+                             IsItemClickEnabled="True" 
+                             ItemClick="HashGrid_ItemClick"
+                             HorizontalAlignment="Center"
+                             SelectionMode="None"
+                             Padding="20">
+                        <GridView.ItemContainerStyle>
+                            <Style BasedOn="{StaticResource GridViewItemRevealStyle}" TargetType="GridViewItem">
+                                <Style.Setters>
+                                    <Setter Property="Margin" Value="20" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="CornerRadius" Value="8"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="GridViewItem">
+                                                <ListViewItemPresenter 
+                                                    ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                    SelectionCheckMarkVisualEnabled="{ThemeResource GridViewItemSelectionCheckMarkVisualEnabled}"
+                                                    CheckBrush="{ThemeResource GridViewItemCheckBrush}"
+                                                    CheckBoxBrush="{ThemeResource GridViewItemCheckBoxBrush}"
+                                                    DragBackground="{ThemeResource GridViewItemDragBackground}"
+                                                    DragForeground="{ThemeResource GridViewItemDragForeground}"
+                                                    FocusBorderBrush="{ThemeResource GridViewItemFocusBorderBrush}"
+                                                    FocusSecondaryBorderBrush="{ThemeResource GridViewItemFocusSecondaryBorderBrush}"
+                                                    PlaceholderBackground="{ThemeResource GridViewItemPlaceholderBackground}"
+                                                    PointerOverBackground="Transparent"
+                                                    PointerOverForeground="{ThemeResource GridViewItemForegroundPointerOver}"
+                                                    SelectedBackground="Transparent"
+                                                    SelectedForeground="{ThemeResource GridViewItemForegroundSelected}"
+                                                    SelectedPointerOverBackground="Transparent"
+                                                    PressedBackground="Transparent"
+                                                    SelectedPressedBackground="Transparent"
+                                                    DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                                                    DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                                                    ReorderHintOffset="{ThemeResource GridViewItemReorderHintThemeOffset}"
+                                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                    ContentMargin="{TemplateBinding Padding}"
+                                                    CheckMode="{ThemeResource GridViewItemCheckMode}"
+                                                    RevealBackground="Transparent"
+                                                    RevealBorderThickness="0"
+                                                    RevealBorderBrush="Transparent"
+                                                    CornerRadius="{TemplateBinding CornerRadius}"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style.Setters>
+                            </Style>
+                        </GridView.ItemContainerStyle>
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:DataType="local:HashCardItem">
+                                <Grid x:Name="connectedElement" 
+                                      Height="200" 
+                                      Width="200" 
+                                      Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                      BorderThickness="1"
+                                      CornerRadius="8">
+                                    <Grid.BorderBrush>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#4568DC" Offset="0.0"/>
+                                            <GradientStop Color="#B06AB3" Offset="1.0"/>
+                                        </LinearGradientBrush>
+                                    </Grid.BorderBrush>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
 
-            <customUI:InfoBarV2 Grid.Row="1"
-                Margin="15"
-                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
+                                    <!-- Header -->
+                                    <Grid Grid.Row="0" 
+                                          Height="60"
+                                          CornerRadius="8,8,0,0">
+                                        <Grid.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#4568DC" Offset="0.0"/>
+                                                <GradientStop Color="#B06AB3" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Grid.Background>
+                                        <TextBlock HorizontalAlignment="Center" 
+                                                   VerticalAlignment="Center" 
+                                                   Style="{ThemeResource SubtitleTextBlockStyle}"
+                                                   Foreground="White"                                                  
+                                                   TextWrapping="Wrap"
+                                                   TextAlignment="Center">
+                                            <Run Text="{x:Bind AlgorithmName}" Foreground="HotPink"/>
+                                            <Run Text="{x:Bind HashTypeName}"/>
+                                        </TextBlock>
+                                    </Grid>
 
-            <controls:WrapPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="15" Margin="15,0,15,0" Grid.Row="2">
+                                    <!-- Content -->
+                                    <Grid Grid.Row="1" Padding="12">
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{x:Bind HashValue, Mode=OneWay}" 
+                                                       Style="{ThemeResource CaptionTextBlockStyle}"
+                                                       TextWrapping="Wrap"
+                                                       TextAlignment="Center"
+                                                       MaxLines="3"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       Opacity="0.8"/>
+                                        </StackPanel>
+                                    </Grid>
 
-                <!-- Button container for browse and clear buttons -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
-                    <!-- Button to trigger file picker -->
-                    <Button Click="{x:Bind ViewModel.PickFile_Click}"
-                        IsEnabled="{x:Bind ViewModel.PickFileButtonIsEnabled, Mode=OneWay}"
-                        x:Uid="FileBrowseButton"
-                        Style="{StaticResource AccentButtonStyle}"/>
-
-                    <!-- Clear button -->
-                    <Button Click="{x:Bind ViewModel.Clear_Click}"
-                        Content="Clear"/>
-                </StackPanel>
-
-                <!-- Grid for SHA1 Page -->
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <!-- Takes all available space -->
-                        <ColumnDefinition Width="Auto"/>
-                        <!-- Takes space for ProgressRing -->
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Text="{x:Bind ViewModel.Sha1Page, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
-                        <TextBox.Header>
-                            <TextBlock>
-                                <Run Text="SHA1" FontWeight="Bold" Foreground="HotPink"/>
-                                <Run Text="160-Page"/>
-                            </TextBlock>
-                        </TextBox.Header>
-                    </TextBox>
-                    <ProgressRing Visibility="{x:Bind ViewModel.Sha1PageProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
+                                    <!-- Progress Ring -->
+                                    <Grid Grid.RowSpan="3" 
+                                          Visibility="{x:Bind ProgressRingVisibility, Mode=OneWay}"
+                                          Background="#99000000">
+                                        <ProgressRing IsActive="True"
+                                                      Width="40" 
+                                                      Height="40"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
                 </Grid>
+            </Grid>
+        </ScrollViewer>
 
-                <!-- Grid for SHA256 Page -->
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+        <!-- Modal Overlay -->
+        <Grid x:Name="SmokeGrid" 
+              HorizontalAlignment="Stretch" 
+              VerticalAlignment="Stretch" 
+              Visibility="Collapsed"
+              Canvas.ZIndex="100"
+              Tapped="SmokeGrid_Tapped">
+            <Grid.Background>
+                <SolidColorBrush Color="{ThemeResource SystemChromeAltHighColor}" Opacity="0.9" />
+            </Grid.Background>
 
-                    <TextBox Text="{x:Bind ViewModel.Sha256Page, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
-                        <TextBox.Header>
-                            <TextBlock>
-                                <Run Text="SHA2" FontWeight="Bold" Foreground="HotPink"/>
-                                <Run Text="256-Page"/>
-                            </TextBlock>
-                        </TextBox.Header>
-                    </TextBox>
-                    <ProgressRing Visibility="{x:Bind ViewModel.Sha256PageProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
+            <!-- Wrap entire modal in a ScrollViewer to include header in scrolling -->
+            <ScrollViewer x:Name="destinationElement" 
+                          HorizontalAlignment="Center" 
+                          VerticalAlignment="Center" 
+                          MaxHeight="400"
+                          Width="Auto"
+                          Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+                          BorderThickness="1"
+                          CornerRadius="12"
+                          Tapped="DestinationElement_Tapped">
+                <ScrollViewer.BorderBrush>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#4568DC" Offset="0.0"/>
+                        <GradientStop Color="#B06AB3" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </ScrollViewer.BorderBrush>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Modal Header -->
+                    <Grid Grid.Row="0" 
+                          HorizontalAlignment="Stretch" 
+                          VerticalAlignment="Stretch"                      
+                          Height="80"
+                          MinWidth="300"
+                          CornerRadius="12,12,0,0">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#4568DC" Offset="0.0"/>
+                                <GradientStop Color="#B06AB3" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="modalHeaderText"
+                                   Style="{ThemeResource TitleTextBlockStyle}"                               
+                                   Margin="20"                               
+                                   HorizontalAlignment="Left"
+                                   TextWrapping="Wrap"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   Foreground="White"
+                                   FontWeight="SemiBold">
+                            <Run Text="{x:Bind ViewModel.SelectedHashItem.AlgorithmName, Mode=OneWay}"
+                                 FontWeight="Bold" Foreground="HotPink"/>
+                            <Run Text="{x:Bind ViewModel.SelectedHashItem.HashTypeName, Mode=OneWay}"/>
+                        </TextBlock>
+                        <Button Click="BackButton_Click" 
+                                HorizontalAlignment="Right" 
+                                VerticalAlignment="Center"                             
+                                Margin="10"
+                                Grid.Column="1"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                ToolTipService.ToolTip="Close" 
+                                AutomationProperties.Name="Close">
+                            <SymbolIcon Symbol="Clear" Foreground="White" />
+                        </Button>
+                    </Grid>
+
+                    <!-- Info Section -->
+                    <Grid Grid.Row="1" Padding="20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- Key Size -->
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Key Size:" 
+                                       Style="{ThemeResource BaseTextBlockStyle}" 
+                                       FontWeight="SemiBold" 
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.KeySize, Mode=OneWay}" 
+                                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        <!-- Algorithm Name -->
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Algorithm:" 
+                                       Style="{ThemeResource BaseTextBlockStyle}" 
+                                       FontWeight="SemiBold" 
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.AlgorithmName, Mode=OneWay}" 
+                                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        <!-- Hash Type -->
+                        <StackPanel Grid.Column="2" Spacing="4">
+                            <TextBlock Text="Hash Type:" 
+                                       Style="{ThemeResource BaseTextBlockStyle}" 
+                                       FontWeight="SemiBold" 
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.HashType, Mode=OneWay}" 
+                                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Modal Content -->
+                    <StackPanel Grid.Row="2"
+                                Padding="20"
+                                VerticalAlignment="Center"
+                                Spacing="15">
+                        <TextBlock Text="Hash Value:" 
+                                   Style="{ThemeResource BaseTextBlockStyle}" 
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center"/>
+                        <TextBox Text="{x:Bind ViewModel.SelectedHashItem.HashValue, Mode=OneWay}"
+                                 IsReadOnly="True"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 Width="220"
+                                 MinWidth="220"                                 
+                                 HorizontalAlignment="Center"/>
+                        <Button x:Uid="CopyToClipboard"
+                                Click="{x:Bind ViewModel.CopyButton_Click}"
+                                HorizontalAlignment="Center"
+                                Style="{StaticResource AccentButtonStyle}"/>
+                    </StackPanel>
                 </Grid>
-
-                <!-- Grid for SHA1 Authenticode -->
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Text="{x:Bind ViewModel.Sha1Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
-                        <TextBox.Header>
-                            <TextBlock>
-                                <Run Text="SHA1" FontWeight="Bold" Foreground="HotPink"/>
-                                <Run Text="160-Authenticode"/>
-                            </TextBlock>
-                        </TextBox.Header>
-                    </TextBox>
-                    <ProgressRing Visibility="{x:Bind ViewModel.Sha1AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
-                </Grid>
-
-                <!-- Grid for SHA256 Authenticode -->
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Text="{x:Bind ViewModel.Sha256Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
-                        <TextBox.Header>
-                            <TextBlock>
-                                <Run Text="SHA2" FontWeight="Bold" Foreground="HotPink"/>
-                                <Run Text="256-Authenticode"/>
-                            </TextBlock>
-                        </TextBox.Header>
-                    </TextBox>
-                    <ProgressRing Visibility="{x:Bind ViewModel.Sha256AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
-                </Grid>
-
-                <!-- Grid for SHA384 Authenticode -->
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Text="{x:Bind ViewModel.Sha384Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
-                        <TextBox.Header>
-                            <TextBlock>
-                                <Run Text="SHA2" FontWeight="Bold" Foreground="HotPink"/>
-                                <Run Text="384-Authenticode"/>
-                            </TextBlock>
-                        </TextBox.Header>
-                    </TextBox>
-                    <ProgressRing Visibility="{x:Bind ViewModel.Sha384AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
-                </Grid>
-
-                <!-- Grid for SHA512 Authenticode -->
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Text="{x:Bind ViewModel.Sha512Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
-                        <TextBox.Header>
-                            <TextBlock>
-                                <Run Text="SHA2" FontWeight="Bold" Foreground="HotPink"/>
-                                <Run Text="512-Authenticode"/>
-                            </TextBlock>
-                        </TextBox.Header>
-                    </TextBox>
-                    <ProgressRing Visibility="{x:Bind ViewModel.Sha512AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
-                </Grid>
-
-                <!-- Grid for SHA3-256 Authenticode -->
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Text="{x:Bind ViewModel.Sha3_256Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
-                        <TextBox.Header>
-                            <TextBlock>
-                                <Run Text="SHA3" FontWeight="Bold" Foreground="HotPink"/>
-                                <Run Text="256-Authenticode"/>
-                            </TextBlock>
-                        </TextBox.Header>
-                    </TextBox>
-                    <ProgressRing Visibility="{x:Bind ViewModel.Sha3_256AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
-                </Grid>
-
-                <!-- Grid for SHA3-384 Authenticode -->
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Text="{x:Bind ViewModel.Sha3_384Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
-                        <TextBox.Header>
-                            <TextBlock>
-                                <Run Text="SHA3" FontWeight="Bold" Foreground="HotPink"/>
-                                <Run Text="384-Authenticode"/>
-                            </TextBlock>
-                        </TextBox.Header>
-                    </TextBox>
-                    <ProgressRing Visibility="{x:Bind ViewModel.Sha3_384AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
-                </Grid>
-
-                <!-- Grid for SHA3-512 Authenticode -->
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Text="{x:Bind ViewModel.Sha3_512Authenticode, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
-                        <TextBox.Header>
-                            <TextBlock>
-                                <Run Text="SHA3" FontWeight="Bold" Foreground="HotPink"/>
-                                <Run Text="512-Authenticode"/>
-                            </TextBlock>
-                        </TextBox.Header>
-                    </TextBox>
-                    <ProgressRing Visibility="{x:Bind ViewModel.Sha3_512AuthenticodeProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
-                </Grid>
-
-                <!-- Grid for SHA3 384 Flat -->
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Text="{x:Bind ViewModel.SHA3384FlatHash, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
-                        <TextBox.Header>
-                            <TextBlock>
-                                <Run Text="SHA3" FontWeight="Bold" Foreground="HotPink"/>
-                                <Run Text="384-Flat"/>
-                            </TextBlock>
-                        </TextBox.Header>
-                    </TextBox>
-                    <ProgressRing Visibility="{x:Bind ViewModel.SHA3384FlatHashProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
-                </Grid>
-
-                <!-- Grid for SHA3 512 Flat -->
-                <Grid HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Text="{x:Bind ViewModel.SHA3512FlatHash, Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch" MinWidth="300" Margin="0,0,12,0">
-                        <TextBox.Header>
-                            <TextBlock>
-                                <Run Text="SHA3" FontWeight="Bold" Foreground="HotPink"/>
-                                <Run Text="512-Flat"/>
-                            </TextBlock>
-                        </TextBox.Header>
-                    </TextBox>
-                    <ProgressRing Visibility="{x:Bind ViewModel.SHA3512FlatHashProgressRingVisibility, Mode=OneWay}" Grid.Column="1" Margin="0,27,0,0"/>
-                </Grid>
-
-            </controls:WrapPanel>
-
+            </ScrollViewer>
         </Grid>
-    </ScrollViewer>
+    </Grid>
 </Page>

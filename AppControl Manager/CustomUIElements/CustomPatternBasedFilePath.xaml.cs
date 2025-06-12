@@ -27,7 +27,7 @@ namespace AppControlManager.CustomUIElements;
 internal sealed partial class CustomPatternBasedFilePath : ContentDialog
 {
 
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
 
 	internal static readonly ObservableCollection<FilePathPatternExample> FilePathPatternExamplesCollection = [];
 

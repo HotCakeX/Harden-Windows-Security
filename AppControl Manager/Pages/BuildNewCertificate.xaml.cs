@@ -26,8 +26,8 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class BuildNewCertificate : Page
 {
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
-	private ViewModels.BuildNewCertificateVM ViewModel { get; } = ViewModelProvider.BuildNewCertificateVM;
+	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
+	private ViewModels.BuildNewCertificateVM ViewModel { get; } = ViewModels.ViewModelProvider.BuildNewCertificateVM;
 
 	internal BuildNewCertificate()
 	{

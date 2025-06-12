@@ -5338,4 +5338,142 @@
 <data name="NotIncludedText" xml:space="preserve">
   <value>عدم تضمينها</value>
 </data>
+<data name="UserActivityNameForFileHashes" xml:space="preserve">
+  <value>حساب قيم التجزئة المتقدمة للملفات</value>
+</data>
+<data name="UserActivityNameForFileSignature" xml:space="preserve">
+  <value>عرض شهادات الملفات</value>
+</data>
+<data name="UserActivityNameForPolicyEditor" xml:space="preserve">
+  <value>فتح سياسة التحكم في التطبيقات في محرر السياسات</value>
+</data>
+ <data name="PublishUserActivityInTheOSSettingsCard.Description" xml:space="preserve">
+    <value>نشر الأنشطة المختلفة التي تقوم بها في مدير التحكم في التطبيقات إلى نظام التشغيل، مما يسمح لها بالظهور وأن تكون متاحة لك في Microsoft Recall حتى تتمكن من تتبع أعمالك.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.Header" xml:space="preserve">
+    <value>نشر النشاط في نظام التشغيل</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نشر الأنشطة المختلفة التي تقوم بها في مدير التحكم في التطبيقات إلى نظام التشغيل، مما يسمح لها بالظهور وأن تكون متاحة لك في Microsoft Recall حتى تتمكن من تتبع أعمالك.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نشر الأنشطة المختلفة التي تقوم بها في مدير التحكم في التطبيقات إلى نظام التشغيل، مما يسمح لها بالظهور وأن تكون متاحة لك في Microsoft Recall حتى تتمكن من تتبع أعمالك.</value>
+  </data>
+  <data name="OperationCancelledByUser" xml:space="preserve">
+    <value>تم إلغاء العملية.</value>
+  </data>
+    <data name="Cancelling" xml:space="preserve">
+    <value>جارٍ الإلغاء...</value>
+  </data>
+  <data name="DonationHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>دعمك يساعدني على الاستمرار في إنشاء وصيانة هذا المشروع.</value>
+  </data>
+  <data name="DonationHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>دعمك يساعدني على الاستمرار في إنشاء وصيانة هذا المشروع.</value>
+  </data>
+    <data name="DonationHyperLinkButton.Content" xml:space="preserve">
+    <value>تبرع</value>
+  </data>
+    <data name="CopyToClipboard.Content" xml:space="preserve">
+    <value>نسخ إلى الحافظة</value>
+  </data>
+  <data name="CopyToClipboard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نسخ إلى الحافظة</value>
+  </data>
+  <data name="CopyToClipboard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نسخ إلى الحافظة</value>
+  </data>
+    <data name="HashCopiedToClipboard" xml:space="preserve">
+    <value>تم نسخ قيمة التجزئة إلى الحافظة!</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.Content" xml:space="preserve">
+    <value>فحص جميع سجلات وضع النواة</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فحص جميع سجلات وضع النواة المتاحة حالياً على النظام.</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فحص جميع سجلات وضع النواة المتاحة حالياً على النظام.</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.Content" xml:space="preserve">
+    <value>فحص سجلات وضع النواة منذ آخر إعادة تشغيل</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فحص سجلات وضع النواة منذ آخر إعادة تشغيل للنظام.</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فحص سجلات وضع النواة منذ آخر إعادة تشغيل للنظام.</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OnContent" xml:space="preserve">
+    <value>تحديد النص مُفعل</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OffContent" xml:space="preserve">
+    <value>تحديد النص مُعطل</value>
+  </data>
+    <data name="TextSelectionStateToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تفعيل أو تعطيل القدرة على تحديد النصوص في صفوف عرض القائمة.</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تفعيل أو تعطيل القدرة على تحديد النصوص في صفوف عرض القائمة.</value>
+  </data>
+  <data name="PolicyEditorClearAllData.ToolTipService.ToolTip" xml:space="preserve">
+    <value>مسح جميع البيانات المحملة في واجهة المستخدم من السياسة المحددة.</value>
+  </data>
+  <data name="PolicyEditorClearAllData.AutomationProperties.HelpText" xml:space="preserve">
+    <value>مسح جميع البيانات المحملة في واجهة المستخدم من السياسة المحددة.</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حفظ التغييرات التي تم إجراؤها على البيانات مرة أخرى إلى ملف XML الخاص بالسياسة.</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حفظ التغييرات التي تم إجراؤها على البيانات مرة أخرى إلى ملف XML الخاص بالسياسة.</value>
+  </data>
+  <data name="BeginSimulationTextBlock.Text" xml:space="preserve">
+    <value>بدء المحاكاة</value>
+  </data>
+  <data name="BeginSimulation.ToolTipService.ToolTip" xml:space="preserve">
+    <value>بدء المحاكاة باستخدام التكوينات المحددة.</value>
+  </data>
+  <data name="BeginSimulation.AutomationProperties.HelpText" xml:space="preserve">
+    <value>بدء المحاكاة باستخدام التكوينات المحددة.</value>
+  </data>
+  <data name="RetrieveOnlinePoliciesTextBlock.Text" xml:space="preserve">
+    <value>استرداد السياسات المتصلة</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.Header" xml:space="preserve">
+    <value>التوقيع فقط - بدون نشر</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.Description" xml:space="preserve">
+    <value>ينشئ ملفات CIP موقعة فقط في دليل تكوين المستخدم دون نشرها. فعل هذا إذا كنت تريد نشرها على نظام آخر.</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ينشئ ملفات CIP موقعة فقط في دليل تكوين المستخدم دون نشرها. فعل هذا إذا كنت تريد نشرها على نظام آخر.</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ينشئ ملفات CIP موقعة فقط في دليل تكوين المستخدم دون نشرها. فعل هذا إذا كنت تريد نشرها على نظام آخر.</value>
+  </data>
+  <data name="ViewSelectedCIPFilesTextBlock.Text" xml:space="preserve">
+    <value>عرض ملفات CIP التي حددتها.</value>
+  </data>
+  <data name="ConvertTextBlock.Text" xml:space="preserve">
+    <value>تحويل</value>
+  </data>
+  <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
+    <value>عرض ملفات XML التي حددتها.</value>
+  </data>
+  <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <value>إزالة</value>
+  </data>
+  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <value>تعيين كنشط</value>
+  </data>
+  <data name="SignInTextBlock.Text" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+  <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
+    <value>تعيين كنشط</value>
+  </data>
+  <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
+    <value>تفاصيل الحساب المستخدم حالياً</value>
+  </data>
 </root>

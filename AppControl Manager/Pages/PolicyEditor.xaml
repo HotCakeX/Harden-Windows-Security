@@ -37,11 +37,12 @@
         </controls:WrapPanel>
 
         <customUI:InfoBarV2 Grid.Row="1"
-          Title="{x:Bind ViewModel.MainInfoBarTitle, Mode=OneWay}"
-          IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-          Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-          Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-          IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+                            Title="{x:Bind ViewModel.MainInfoBarTitle, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
+                            />
 
         <Border
             Grid.Row="2"
@@ -51,8 +52,11 @@
 
                 <ProgressRing IsIndeterminate="True" Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}" />
 
-                <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" Click="{x:Bind ViewModel.BrowseForPolicyButton_Click}"
-                    VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="Browse for an App Control XML policy file">
+                <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                   Click="{x:Bind ViewModel.BrowseForPolicyButton_Click}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   ToolTipService.ToolTip="Browse for an App Control XML policy file">
 
                     <customUI:ButtonV2.Flyout>
                         <Flyout>
@@ -102,8 +106,11 @@
                     </Button.Content>
                 </Button>
 
-                <Button VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" HorizontalAlignment="Center"
-                        ToolTipService.ToolTip="Save the changes made to the List Views back to the policy XML file" Click="{x:Bind ViewModel.SaveChanges}">
+                <Button VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                        HorizontalAlignment="Center"
+                        x:Uid="PolicyEditorSaveTheChanges"
+                        Click="{x:Bind ViewModel.SaveChanges}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
@@ -117,18 +124,23 @@
                 </Button>
 
                 <TextBox HorizontalAlignment="Center" VerticalAlignment="Center"
-                         IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}"
-                         Text="{x:Bind ViewModel.SearchTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Search the data...  " />
+                         IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                         TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}"
+                         Text="{x:Bind ViewModel.SearchTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         x:Uid="SearchBoxTextBox" />
 
                 <ToggleSwitch HorizontalAlignment="Center"
                               VerticalAlignment="Center"
                               Toggled="{x:Bind ViewModel.ChangeTextSelectionsState}"
-                              OnContent="Text Selection is Enabled" OffContent="Text Selection is Disabled"
-                              ToolTipService.ToolTip="Enable or Disable the ability to be able to select texts in the List View rows" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"/>
+                              x:Uid="TextSelectionStateToggleSwitch"
+                              IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"/>
 
 
-                <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center"
-                       ToolTipService.ToolTip="Clears all of the data loaded on the UI from the selected policy" Click="{x:Bind ViewModel.ClearData}">
+                <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        x:Uid="PolicyEditorClearAllData"
+                        Click="{x:Bind ViewModel.ClearData}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">

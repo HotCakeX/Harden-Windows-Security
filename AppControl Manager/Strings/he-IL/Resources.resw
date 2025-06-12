@@ -5339,4 +5339,142 @@
 <data name="NotIncludedText" xml:space="preserve">
   <value>לא נכללו</value>
 </data>
+<data name="UserActivityNameForFileHashes" xml:space="preserve">
+  <value>חישוב גיבובי קבצים מתקדמים</value>
+</data>
+<data name="UserActivityNameForFileSignature" xml:space="preserve">
+  <value>צפייה באישורי קבצים</value>
+</data>
+<data name="UserActivityNameForPolicyEditor" xml:space="preserve">
+  <value>פתיחת מדיניות בקרת יישומים בעורך המדיניות</value>
+</data>
+ <data name="PublishUserActivityInTheOSSettingsCard.Description" xml:space="preserve">
+    <value>פרסם פעילויות שונות שאתה מבצע במנהל בקרת היישומים למערכת ההפעלה, מה שמאפשר להן להופיע ולהיות זמינות עבורך ב-Microsoft Recall כדי שתוכל לעקוב אחר הפעולות שלך.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.Header" xml:space="preserve">
+    <value>פרסם פעילות במערכת ההפעלה</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פרסם פעילויות שונות שאתה מבצע במנהל בקרת היישומים למערכת ההפעלה, מה שמאפשר להן להופיע ולהיות זמינות עבורך ב-Microsoft Recall כדי שתוכל לעקוב אחר הפעולות שלך.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פרסם פעילויות שונות שאתה מבצע במנהל בקרת היישומים למערכת ההפעלה, מה שמאפשר להן להופיע ולהיות זמינות עבורך ב-Microsoft Recall כדי שתוכל לעקוב אחר הפעולות שלך.</value>
+  </data>
+  <data name="OperationCancelledByUser" xml:space="preserve">
+    <value>הפעולה בוטלה.</value>
+  </data>
+    <data name="Cancelling" xml:space="preserve">
+    <value>מבטל...</value>
+  </data>
+  <data name="DonationHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התמיכה שלך עוזרת לי להמשיך ליצור ולתחזק פרויקט זה.</value>
+  </data>
+  <data name="DonationHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התמיכה שלך עוזרת לי להמשיך ליצור ולתחזק פרויקט זה.</value>
+  </data>
+    <data name="DonationHyperLinkButton.Content" xml:space="preserve">
+    <value>תרום</value>
+  </data>
+    <data name="CopyToClipboard.Content" xml:space="preserve">
+    <value>העתק ללוח הגזירים</value>
+  </data>
+  <data name="CopyToClipboard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק ללוח הגזירים</value>
+  </data>
+  <data name="CopyToClipboard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>העתק ללוח הגזירים</value>
+  </data>
+  <data name="HashCopiedToClipboard" xml:space="preserve">
+    <value>ערך הגיבוב הועתק ללוח הגזירים!</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.Content" xml:space="preserve">
+    <value>סרוק עבור כל יומני מצב ליבה</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סרוק עבור כל יומני מצב ליבה הזמינים כרגע במערכת.</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סרוק עבור כל יומני מצב ליבה הזמינים כרגע במערכת.</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.Content" xml:space="preserve">
+    <value>סרוק עבור יומני מצב ליבה מאז האתחול האחרון</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סרוק עבור יומני מצב ליבה מאז שהמערכת הופעלה מחדש לאחרונה.</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סרוק עבור יומני מצב ליבה מאז שהמערכת הופעלה מחדש לאחרונה.</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OnContent" xml:space="preserve">
+    <value>בחירת טקסט מופעלת</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OffContent" xml:space="preserve">
+    <value>בחירת טקסט מבוטלת</value>
+  </data>
+    <data name="TextSelectionStateToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעל או בטל את היכולת לבחור טקסטים בשורות תצוגת הרשימה.</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפעל או בטל את היכולת לבחור טקסטים בשורות תצוגת הרשימה.</value>
+  </data>
+  <data name="PolicyEditorClearAllData.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מנקה את כל הנתונים הטעונים בממשק המשתמש מהמדיניות הנבחרת.</value>
+  </data>
+  <data name="PolicyEditorClearAllData.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מנקה את כל הנתונים הטעונים בממשק המשתמש מהמדיניות הנבחרת.</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שמור את השינויים שנעשו בנתונים חזרה לקובץ XML של המדיניות.</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שמור את השינויים שנעשו בנתונים חזרה לקובץ XML של המדיניות.</value>
+  </data>
+  <data name="BeginSimulationTextBlock.Text" xml:space="preserve">
+    <value>התחל סימולציה</value>
+  </data>
+  <data name="BeginSimulation.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל את הסימולציה באמצעות התצורות הנבחרות.</value>
+  </data>
+  <data name="BeginSimulation.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל את הסימולציה באמצעות התצורות הנבחרות.</value>
+  </data>
+  <data name="RetrieveOnlinePoliciesTextBlock.Text" xml:space="preserve">
+    <value>אחזר מדיניות מקוונת</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.Header" xml:space="preserve">
+    <value>חתימה בלבד - ללא פריסה</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.Description" xml:space="preserve">
+    <value>יוצר רק קובצי CIP חתומים בספריית תצורת המשתמש מבלי לפרוס אותם. הפעל זאת אם אתה רוצה לפרוס אותם במערכת אחרת.</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>יוצר רק קובצי CIP חתומים בספריית תצורת המשתמש מבלי לפרוס אותם. הפעל זאת אם אתה רוצה לפרוס אותם במערכת אחרת.</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>יוצר רק קובצי CIP חתומים בספריית תצורת המשתמש מבלי לפרוס אותם. הפעל זאת אם אתה רוצה לפרוס אותם במערכת אחרת.</value>
+  </data>
+  <data name="ViewSelectedCIPFilesTextBlock.Text" xml:space="preserve">
+    <value>הצג את קובצי ה-CIP שבחרת.</value>
+  </data>
+  <data name="ConvertTextBlock.Text" xml:space="preserve">
+    <value>המר</value>
+  </data>
+  <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
+    <value>הצג את קובצי ה-XML שבחרת.</value>
+  </data>
+  <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <value>הסר</value>
+  </data>
+  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <value>הגדר כפעיל</value>
+  </data>
+  <data name="SignInTextBlock.Text" xml:space="preserve">
+    <value>התחבר</value>
+  </data>
+  <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
+    <value>הגדר כפעיל</value>
+  </data>
+  <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
+    <value>פרטי החשבון שנמצא כרגע בשימוש</value>
+  </data>
 </root>

@@ -16,107 +16,106 @@
 //
 
 using System;
-using System.Threading;
 using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Windows.Storage;
+using System.Threading;
 
-namespace AppControlManager;
+namespace AppControlManager.ViewModels;
 
 /// <summary>
-/// Provides thread-safe lazy initialization for all view models in the application.
+/// Provides lazy initialization for all view models in the application.
 /// This class serves as a centralized provider for view models using the Lazy<T> pattern.
 /// </summary>
 internal static class ViewModelProvider
 {
 	// Core dependencies \\
 	private static readonly Lazy<AppSettings.Main> _appSettings = new(() =>
-		new AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.ExecutionAndPublication);
+		new AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.PublicationOnly);
 
 	private static readonly Lazy<EventLogUtility> _eventLogUtility = new(() =>
-		new EventLogUtility(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new EventLogUtility(), LazyThreadSafetyMode.PublicationOnly);
 
 	// View Models \\
 	private static readonly Lazy<SidebarVM> _sidebarVM = new(() =>
-		new SidebarVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new SidebarVM(), false);
 
 	private static readonly Lazy<ViewCurrentPoliciesVM> _viewCurrentPoliciesVM = new(() =>
-		new ViewCurrentPoliciesVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new ViewCurrentPoliciesVM(), false);
 
 	private static readonly Lazy<SettingsVM> _settingsVM = new(() =>
-		new SettingsVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new SettingsVM(), false);
 
 	private static readonly Lazy<MergePoliciesVM> _mergePoliciesVM = new(() =>
-		new MergePoliciesVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new MergePoliciesVM(), false);
 
 	private static readonly Lazy<ConfigurePolicyRuleOptionsVM> _configurePolicyRuleOptionsVM = new(() =>
-		new ConfigurePolicyRuleOptionsVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new ConfigurePolicyRuleOptionsVM(), false);
 
 	private static readonly Lazy<CreateDenyPolicyVM> _createDenyPolicyVM = new(() =>
-		new CreateDenyPolicyVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new CreateDenyPolicyVM(), false);
 
 	private static readonly Lazy<CreateSupplementalPolicyVM> _createSupplementalPolicyVM = new(() =>
-		new CreateSupplementalPolicyVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new CreateSupplementalPolicyVM(), false);
 
 	private static readonly Lazy<EventLogsPolicyCreationVM> _eventLogsPolicyCreationVM = new(() =>
-		new EventLogsPolicyCreationVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new EventLogsPolicyCreationVM(), false);
 
 	private static readonly Lazy<SimulationVM> _simulationVM = new(() =>
-		new SimulationVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new SimulationVM(), false);
 
 	private static readonly Lazy<MDEAHPolicyCreationVM> _mdeahPolicyCreationVM = new(() =>
-		new MDEAHPolicyCreationVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new MDEAHPolicyCreationVM(), false);
 
 	private static readonly Lazy<ViewFileCertificatesVM> _viewFileCertificatesVM = new(() =>
-		new ViewFileCertificatesVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new ViewFileCertificatesVM(), false);
 
 	private static readonly Lazy<CreatePolicyVM> _createPolicyVM = new(() =>
-		new CreatePolicyVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new CreatePolicyVM(), false);
 
 	private static readonly Lazy<DeploymentVM> _deploymentVM = new(() =>
-		new DeploymentVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new DeploymentVM(), false);
 
 	private static readonly Lazy<UpdateVM> _updateVM = new(() =>
-		new UpdateVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new UpdateVM(), false);
 
 	private static readonly Lazy<ValidatePolicyVM> _validatePolicyVM = new(() =>
-		new ValidatePolicyVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new ValidatePolicyVM(), false);
 
 	private static readonly Lazy<CodeIntegrityInfoVM> _codeIntegrityInfoVM = new(() =>
-		new CodeIntegrityInfoVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new CodeIntegrityInfoVM(), false);
 
 	private static readonly Lazy<GetCIHashesVM> _getCIHashesVM = new(() =>
-		new GetCIHashesVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new GetCIHashesVM(), false);
 
 	private static readonly Lazy<ViewModelForMSGraph> _viewModelForMSGraph = new(() =>
-		new ViewModelForMSGraph(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new ViewModelForMSGraph(), false);
 
 	private static readonly Lazy<BuildNewCertificateVM> _buildNewCertificateVM = new(() =>
-		new BuildNewCertificateVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new BuildNewCertificateVM(), false);
 
 	private static readonly Lazy<GetSecurePolicySettingsVM> _getSecurePolicySettingsVM = new(() =>
-		new GetSecurePolicySettingsVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new GetSecurePolicySettingsVM(), false);
 
 	private static readonly Lazy<LogsVM> _logsVM = new(() =>
-		new LogsVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new LogsVM(), false);
 
 	// View Models with Dependencies \\
 	private static readonly Lazy<PolicyEditorVM> _policyEditorVM = new(() =>
-		new PolicyEditorVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new PolicyEditorVM(), false);
 
 	private static readonly Lazy<AllowNewAppsVM> _allowNewAppsVM = new(() =>
-		new AllowNewAppsVM(EventLogUtility, PolicyEditorVM), LazyThreadSafetyMode.ExecutionAndPublication);
+		new AllowNewAppsVM(EventLogUtility, PolicyEditorVM), false);
 
 	private static readonly Lazy<MainWindowVM> _mainWindowVM = new(() =>
-		new MainWindowVM(), LazyThreadSafetyMode.ExecutionAndPublication);
+		new MainWindowVM(), false);
 
 	private static readonly Lazy<NavigationService> _navigationService = new(() =>
-		new NavigationService(MainWindowVM, SidebarVM), LazyThreadSafetyMode.ExecutionAndPublication);
+		new NavigationService(MainWindowVM, SidebarVM), false);
 
 	private static readonly Lazy<ViewOnlinePoliciesVM> _viewOnlinePoliciesVM = new(() =>
-		new ViewOnlinePoliciesVM(ViewModelForMSGraph), LazyThreadSafetyMode.ExecutionAndPublication);
+		new ViewOnlinePoliciesVM(ViewModelForMSGraph), false);
 
 	// Internal Properties - Core Dependencies \\
 	internal static AppSettings.Main AppSettings => _appSettings.Value;

@@ -31,7 +31,7 @@ namespace AppControlManager.Pages;
 internal sealed partial class MicrosoftDocumentation : Page
 {
 
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
 
 	/// <summary>
 	/// Initializes the MicrosoftDocumentation component, sets the background color of WebView2 to transparent, and handles

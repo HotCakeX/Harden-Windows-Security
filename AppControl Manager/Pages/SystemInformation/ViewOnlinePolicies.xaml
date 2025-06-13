@@ -97,15 +97,15 @@
                             </Flyout.FlyoutPresenterStyle>
 
                             <StackPanel Width="500"
-                                VerticalAlignment="Top"
-                                Orientation="Vertical"
-                                Spacing="8">
+                                        VerticalAlignment="Top"
+                                        Orientation="Vertical"
+                                        Spacing="8">
 
                                 <controls:Segmented x:Name="segmentedControl"
-                                        HorizontalAlignment="Stretch"
-                                        SelectedIndex="0">
+                                                    HorizontalAlignment="Stretch"
+                                                    SelectedIndex="0">
                                     <controls:SegmentedItem Content="Active Account"
-                                        Tag="Active">
+                                                            Tag="Active">
                                         <controls:SegmentedItem.Icon>
                                             <IconSourceElement>
                                                 <BitmapIconSource UriSource="/Assets/External/Bottle.png" ShowAsMonochrome="False" />
@@ -115,7 +115,7 @@
                                     </controls:SegmentedItem>
 
                                     <controls:SegmentedItem Content="Sign In"
-                                    Tag="Authentication" >
+                                                            Tag="Authentication" >
                                         <controls:SegmentedItem.Icon>
                                             <IconSourceElement>
                                                 <BitmapIconSource UriSource="/Assets/External/Authentication.png" ShowAsMonochrome="False" />
@@ -142,7 +142,9 @@
 
                                             <controls:WrapPanel Orientation="Vertical" VerticalSpacing="5" HorizontalAlignment="Center" HorizontalSpacing="10">
 
-                                                <TextBlock Text="Details of the account that's currently in use" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                                                <TextBlock x:Uid="CurrentlyInUseAccountDetailsTextBlock"
+                                                           Margin="0,0,0,5"
+                                                           HorizontalAlignment="Center"/>
 
                                                 <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountUsername" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountUsername, Mode=OneWay}" HorizontalAlignment="Center" Width="470"/>
                                                 <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountTenantID" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountTenantID, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
@@ -163,7 +165,8 @@
                                             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
 
                                                 <Button IsEnabled="{x:Bind ViewModel.AuthCompanionCLS.SignInButtonState, Mode=OneWay}"
-                                                        x:Uid="SignInButton" Click="{x:Bind ViewModel.AuthCompanionCLS.SignIn}">
+                                                        x:Uid="SignInButton"
+                                                        Click="{x:Bind ViewModel.AuthCompanionCLS.SignIn}">
                                                     <Button.Content>
                                                         <StackPanel Orientation="Horizontal">
                                                             <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
@@ -171,13 +174,15 @@
                                                                     <animatedvisuals:SignIn/>
                                                                 </AnimatedIcon.Source>
                                                             </AnimatedIcon>
-                                                            <TextBlock Text="Sign In" Margin="5,0,0,0" />
+                                                            <TextBlock x:Uid="SignInTextBlock"
+                                                                       Margin="5,0,0,0" />
                                                         </StackPanel>
                                                     </Button.Content>
                                                 </Button>
 
                                                 <Button IsEnabled="{x:Bind ViewModel.AuthCompanionCLS.SignOutButtonState, Mode=OneWay}"
-                                                        x:Uid="CancelSigningInButton" Click="{x:Bind ViewModel.AuthCompanionCLS.MSGraphCancelSignInButton_Click}">
+                                                        x:Uid="CancelSigningInButton"
+                                                        Click="{x:Bind ViewModel.AuthCompanionCLS.MSGraphCancelSignInButton_Click}">
                                                     <Button.Content>
                                                         <StackPanel Orientation="Horizontal">
                                                             <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
@@ -185,7 +190,8 @@
                                                                     <animatedvisuals:Cancel/>
                                                                 </AnimatedIcon.Source>
                                                             </AnimatedIcon>
-                                                            <TextBlock Text="Cancel Signing In" Margin="5,0,0,0" />
+                                                            <TextBlock x:Uid="CancelSigningInTextBlock"
+                                                                       Margin="5,0,0,0" />
                                                         </StackPanel>
                                                     </Button.Content>
                                                 </Button>
@@ -202,8 +208,8 @@
                                                 <ComboBox.HeaderTemplate>
                                                     <DataTemplate>
                                                         <TextBlock Text="{Binding}"
-                                                            HorizontalAlignment="Center"
-                                                            TextAlignment="Center" />
+                                                                   HorizontalAlignment="Center"
+                                                                   TextAlignment="Center" />
                                                     </DataTemplate>
                                                 </ComboBox.HeaderTemplate>
                                             </ComboBox>
@@ -243,7 +249,7 @@
                                                                     <animatedvisuals:Logout/>
                                                                 </AnimatedIcon.Source>
                                                             </AnimatedIcon>
-                                                            <TextBlock Text="Remove" Margin="5,0,0,0" />
+                                                            <TextBlock x:Uid="RemoveTextBlock" Margin="5,0,0,0" />
                                                         </StackPanel>
                                                     </Button.Content>
                                                 </Button>
@@ -257,7 +263,7 @@
                                                                     <animatedvisuals:Select/>
                                                                 </AnimatedIcon.Source>
                                                             </AnimatedIcon>
-                                                            <TextBlock Text="Set as Active" Margin="5,0,0,0" />
+                                                            <TextBlock x:Uid="SetAsActiveTextBlock" Margin="5,0,0,0" />
                                                         </StackPanel>
                                                     </Button.Content>
                                                 </Button>
@@ -344,8 +350,11 @@
                     </Button.Flyout>
                 </Button>
 
-                <Button HorizontalAlignment="Center" IsEnabled="{x:Bind ViewModel.RetrievePoliciesButtonState, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.GetOnlinePolicies}" VerticalAlignment="Center" x:Uid="RetrieveOnlinePoliciesButton">
+                <Button HorizontalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.RetrievePoliciesButtonState, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.GetOnlinePolicies}"
+                        VerticalAlignment="Center"
+                        x:Uid="RetrieveOnlinePoliciesButton">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
@@ -353,7 +362,7 @@
                                     <animatedvisuals:Refresh/>
                                 </AnimatedIcon.Source>
                             </AnimatedIcon>
-                            <TextBlock Text="Retrieve Online Policies" Margin="5,0,0,0" />
+                            <TextBlock x:Uid="RetrieveOnlinePoliciesTextBlock" Margin="5,0,0,0" />
                         </StackPanel>
                     </Button.Content>
                 </Button>

@@ -17,7 +17,20 @@
 
 namespace AppControlManager.Others;
 
-internal readonly struct CodeIntegrityHashes(string? sha1Page, string? sha256Page, string? sha1Authenticode, string? sha256Authenticode)
+/// <summary>
+/// Gets the Code Integrity hashes of a file.
+/// Used primarily by the internal methods.
+/// Use CodeIntegrityHashesV2 for more hash algorithms.
+/// </summary>
+/// <param name="sha1Page"></param>
+/// <param name="sha256Page"></param>
+/// <param name="sha1Authenticode"></param>
+/// <param name="sha256Authenticode"></param>
+internal sealed class CodeIntegrityHashes(
+	string? sha1Page,
+	string? sha256Page,
+	string? sha1Authenticode,
+	string? sha256Authenticode)
 {
 	internal string? SHA1Page => sha1Page;
 	internal string? SHA256Page => sha256Page;

@@ -5338,7 +5338,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 <data name="NotIncludedText" xml:space="preserve">
   <value>not included</value>
 </data>
-<!--new-->
 <data name="UserActivityNameForFileHashes" xml:space="preserve">
   <value>Calculating Advanced File Hashes</value>
 </data>
@@ -5374,5 +5373,107 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
     <data name="DonationHyperLinkButton.Content" xml:space="preserve">
     <value>Donate</value>
+  </data>
+    <data name="CopyToClipboard.Content" xml:space="preserve">
+    <value>Copy To Clipboard</value>
+  </data>
+  <data name="CopyToClipboard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copy To Clipboard</value>
+  </data>
+  <data name="CopyToClipboard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copy To Clipboard</value>
+  </data>
+    <data name="HashCopiedToClipboard" xml:space="preserve">
+    <value>Hash value copied to clipboard!</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.Content" xml:space="preserve">
+    <value>Scan for All Kernel-mode Logs</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Scan for All Kernel-mode Logs that are currently available on the system.</value>
+  </data>
+  <data name="ScanForAllKernelModeLogs.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Scan for All Kernel-mode Logs that are currently available on the system.</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.Content" xml:space="preserve">
+    <value>Scan for Kernel-mode Logs Since Last Reboot</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Scan for Kernel-mode Logs Since the system was last reboot.</value>
+  </data>
+  <data name="ScanForKernelModeLogsSinceReboot.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Scan for Kernel-mode Logs Since the system was last reboot.</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OnContent" xml:space="preserve">
+    <value>Text Selection is Enabled</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.OffContent" xml:space="preserve">
+    <value>Text Selection is Disabled</value>
+  </data>
+    <data name="TextSelectionStateToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enable or Disable the ability to be able to select texts in the List View rows.</value>
+  </data>
+  <data name="TextSelectionStateToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enable or Disable the ability to be able to select texts in the List View rows.</value>
+  </data>
+  <data name="PolicyEditorClearAllData.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Clears all of the data loaded on the user interface from the selected policy.</value>
+  </data>
+  <data name="PolicyEditorClearAllData.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Clears all of the data loaded on the user interface from the selected policy.</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Save the changes made to the data back to the policy XML file.</value>
+  </data>
+  <data name="PolicyEditorSaveTheChanges.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Save the changes made to the data back to the policy XML file.</value>
+  </data>
+  <data name="BeginSimulationTextBlock.Text" xml:space="preserve">
+    <value>Begin Simulation</value>
+  </data>
+  <data name="BeginSimulation.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Start the Simulation using the selected configurations.</value>
+  </data>
+  <data name="BeginSimulation.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Start the Simulation using the selected configurations.</value>
+  </data>
+  <data name="RetrieveOnlinePoliciesTextBlock.Text" xml:space="preserve">
+    <value>Retrieve Online Policies</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.Header" xml:space="preserve">
+    <value>Sign Only - No Deployment</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.Description" xml:space="preserve">
+    <value>Only creates signed CIP file(s) in the user config directory without deploying them. Toggle this if you want to deploy them on another system.</value>
+  </data>
+    <data name="SignOnlyNoDeploySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Only creates signed CIP file(s) in the user config directory without deploying them. Toggle this if you want to deploy them on another system.</value>
+  </data>
+  <data name="SignOnlyNoDeploySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Only creates signed CIP file(s) in the user config directory without deploying them. Toggle this if you want to deploy them on another system.</value>
+  </data>
+  <data name="ViewSelectedCIPFilesTextBlock.Text" xml:space="preserve">
+    <value>View the CIP files you selected.</value>
+  </data>
+  <data name="ConvertTextBlock.Text" xml:space="preserve">
+    <value>Convert</value>
+  </data>
+  <data name="ViewSelectedXMLFilesTextBlock.Text" xml:space="preserve">
+    <value>View the XML files you selected.</value>
+  </data>
+  <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <value>Set as Active</value>
+  </data>
+  <data name="SignInTextBlock.Text" xml:space="preserve">
+    <value>Sign In</value>
+  </data>
+  <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
+    <value>Set as Active</value>
+  </data>
+  <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
+    <value>Details of the account that's currently in use</value>
   </data>
 </root>

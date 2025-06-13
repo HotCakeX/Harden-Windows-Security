@@ -43,15 +43,20 @@
             Margin="0,10,0,10"
             Style="{StaticResource GridCardStyle}" Padding="8">
 
-            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+            <controls:WrapPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                HorizontalSpacing="10"
+                                VerticalSpacing="10">
+
                 <!-- Begin Simulation Button -->
-                <Button ToolTipService.ToolTip="Start the Simulation using the selected configurations"
+                <Button x:Uid="BeginSimulation"
                         Style="{StaticResource AccentButtonStyle}"
                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                         Click="{x:Bind ViewModel.BeginSimulationButton_Click}">
                     <StackPanel Orientation="Horizontal">
                         <SymbolIcon Symbol="Play" />
-                        <TextBlock Text="Begin Simulation" Margin="5,0,0,0"/>
+                        <TextBlock x:Uid="BeginSimulationTextBlock" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Button>
 

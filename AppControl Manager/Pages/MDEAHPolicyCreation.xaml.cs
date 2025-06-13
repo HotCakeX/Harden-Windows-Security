@@ -21,7 +21,6 @@ using AppControlManager.Others;
 using Microsoft.UI.Xaml.Controls;
 using AppControlManager.IntelGathering;
 using AppControlManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -46,8 +45,8 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 
-	private MDEAHPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MDEAHPolicyCreationVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private MDEAHPolicyCreationVM ViewModel { get; } = ViewModelProvider.MDEAHPolicyCreationVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal MDEAHPolicyCreation()
 	{

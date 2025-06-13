@@ -18,7 +18,6 @@
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -32,9 +31,9 @@ namespace AppControlManager.Pages;
 internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager
 {
 
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-	private DeploymentVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<DeploymentVM>();
-	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private DeploymentVM ViewModel { get; } = ViewModelProvider.DeploymentVM;
+	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
 
 	internal DeploymentPage()
 	{

@@ -25,7 +25,6 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.WindowComponents;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.Globalization;
 
@@ -34,7 +33,7 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class SettingsVM : ViewModelBase
 {
 
-	private NavigationService nav { get; } = App.AppHost.Services.GetRequiredService<NavigationService>();
+	private NavigationService nav { get; } = ViewModelProvider.NavigationService;
 
 	internal SettingsVM()
 	{
@@ -71,7 +70,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
-	private MainWindowVM ViewModelMainWindow { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
+	private MainWindowVM ViewModelMainWindow { get; } = ViewModelProvider.MainWindowVM;
 
 	internal bool IsElevated => App.IsElevated;
 

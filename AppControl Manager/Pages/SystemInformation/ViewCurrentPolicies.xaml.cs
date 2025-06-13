@@ -17,7 +17,6 @@
 
 using AppControlManager.CustomUIElements;
 using AppControlManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Navigation;
@@ -31,8 +30,8 @@ namespace AppControlManager.Pages;
 internal sealed partial class ViewCurrentPolicies : Page
 {
 
-	private ViewCurrentPoliciesVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewCurrentPoliciesVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private ViewCurrentPoliciesVM ViewModel { get; } = ViewModelProvider.ViewCurrentPoliciesVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal ViewCurrentPolicies()
 	{

@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -28,8 +27,8 @@ namespace AppControlManager.Pages;
 internal sealed partial class CodeIntegrityInfo : Page
 {
 
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-	private ViewModels.CodeIntegrityInfoVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<ViewModels.CodeIntegrityInfoVM>();
+	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
+	private ViewModels.CodeIntegrityInfoVM ViewModel { get; } = ViewModels.ViewModelProvider.CodeIntegrityInfoVM;
 
 	/// <summary>
 	/// Initializes a new instance of the CodeIntegrityInfo class.

@@ -101,7 +101,9 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// Publishes or updates user activity for the current page.
 	/// https://learn.microsoft.com/windows/ai/recall/recall-relaunch
 	/// </summary>
-	/// <param name="pageType">The type of the page being navigated to</param>
+	/// <param name="action">The type of action being performed</param>
+	/// <param name="filePath">The file path associated with the activity</param>
+	/// <param name="displayText">The display text for the activity</param>
 	internal async Task PublishUserActivityAsync(LaunchProtocolActions action, string filePath, string displayText)
 	{
 		// Only publish if allowed
@@ -110,32 +112,47 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 		try
 		{
-			await Dispatcher.EnqueueAsync(async () =>
+			await Dispatcher.EnqueueAsync(() =>
 			{
-
-				// Dispose of any previous session (which automatically logs the end of the interaction with that content)
 				_previousSession?.Dispose();
-
-				string activityId = $"AppControlManager-{action}";
-
-				// Create a new user activity that represents the current page
-				UserActivity activity = await UserActivityChannel.GetDefault().GetOrCreateUserActivityAsync(activityId);
-
-				// Populate the required properties
-				activity.VisualElements.DisplayText = displayText;
-				activity.ActivationUri = new Uri($"appcontrol-manager:--action={action}--file={filePath}");
-
-				// Save the activity
-				await activity.SaveAsync();
-
-				// Start a new session tracking the engagement with this new activity
-				_previousSession = activity.CreateSession();
-
 			});
+
+			// Create the activity
+			string activityId = $"AppControlManager-{action}";
+			UserActivity activity = await UserActivityChannel.GetDefault().GetOrCreateUserActivityAsync(activityId);
+
+			// Set properties
+			activity.VisualElements.DisplayText = displayText;
+			activity.ActivationUri = new Uri($"appcontrol-manager:--action={action}--file={filePath}");
+
+			// Save the activity
+			await activity.SaveAsync();
+
+			TaskCompletionSource<UserActivitySession> tcs = new();
+
+			bool enqueued = Dispatcher.TryEnqueue(() =>
+			{
+				try
+				{
+					UserActivitySession session = activity.CreateSession();
+					tcs.SetResult(session);
+				}
+				catch (Exception ex)
+				{
+					tcs.SetException(ex);
+				}
+			});
+
+			if (!enqueued)
+			{
+				throw new InvalidOperationException("Failed to enqueue CreateSession operation on UI thread");
+			}
+
+			// Wait for the UI thread operation to complete and store the result
+			_previousSession = await tcs.Task;
 		}
 		catch (Exception ex)
 		{
-			// Log the exception but don't let it break navigation
 			Logger.Write($"Failed to publish user activity: {ex.Message}");
 		}
 	}

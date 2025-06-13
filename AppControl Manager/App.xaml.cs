@@ -22,14 +22,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.Taskbar;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using CommunityToolkit.WinUI;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.ApplicationModel.WindowsAppRuntime;
@@ -77,7 +74,7 @@ public partial class App : Application
 	/// <summary>
 	/// The application settings for AppControl Manager
 	/// </summary>
-	internal static AppSettings.Main Settings { get; private set; } = null!;
+	internal static AppSettings.Main Settings => ViewModelProvider.AppSettings;
 
 	// Semaphore to ensure only one error dialog is shown at a time
 	// Exceptions will stack up and wait in line to be shown to the user
@@ -117,16 +114,10 @@ public partial class App : Application
 	// to this variable before using ShowAsync() method to display it.
 	internal static ContentDialog? CurrentlyOpenContentDialog;
 
-	/// <summary>
-	/// Provides a static host for the dependency injection container used throughout the application. It configures and
-	/// registers various view models as singletons.
-	/// </summary>
-	internal static IHost AppHost { get; private set; } = null!;
+	internal static NavigationService _nav => ViewModelProvider.NavigationService;
 
-	internal static NavigationService _nav { get; private set; } = null!;
-
-	private static MainWindowVM ViewModelForMainWindow { get; set; } = null!;
-	private static PolicyEditorVM PolicyEditorViewModel { get; set; } = null!;
+	private static MainWindowVM ViewModelForMainWindow => ViewModelProvider.MainWindowVM;
+	private static PolicyEditorVM PolicyEditorViewModel => ViewModelProvider.PolicyEditorVM;
 
 	/// <summary>
 	/// Initializes the singleton application object. This is the first line of authored code
@@ -134,58 +125,7 @@ public partial class App : Application
 	/// </summary>
 	internal App()
 	{
-		// Retrieve the app settings early on to check for elevation at startup and to pass it to DI container for the constructor of the Main app settings class
-		ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
-
 		this.InitializeComponent();
-
-		HostApplicationBuilderSettings builderSettings = new()
-		{
-			DisableDefaults = true
-		};
-
-		// https://learn.microsoft.com/dotnet/api/microsoft.extensions.hosting.host.createemptyapplicationbuilder
-		HostApplicationBuilder builder = Host.CreateEmptyApplicationBuilder(builderSettings);
-
-		// https://learn.microsoft.com/dotnet/api/microsoft.extensions.hosting.hostapplicationbuilder.services
-		IServiceCollection services = builder.Services;
-
-		// https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection
-
-		// If a type has a constructor it must either be public so DI can automatically resolve its parameters,
-		// or it can be internal but the value must be supplied to it via lambda factory method.
-		_ = services.AddSingleton(sp => new AppSettings.Main(_localSettings));
-		_ = services.AddSingleton<SidebarVM>();
-		_ = services.AddSingleton(sp => new ViewCurrentPoliciesVM());
-		_ = services.AddSingleton(sp => new SettingsVM());
-		_ = services.AddSingleton(sp => new MergePoliciesVM());
-		_ = services.AddSingleton(sp => new ConfigurePolicyRuleOptionsVM());
-		_ = services.AddSingleton<AllowNewAppsVM>(sp => new(sp.GetRequiredService<EventLogUtility>(), sp.GetRequiredService<PolicyEditorVM>()));
-		_ = services.AddSingleton(sp => new CreateDenyPolicyVM());
-		_ = services.AddSingleton(sp => new CreateSupplementalPolicyVM());
-		_ = services.AddSingleton(sp => new EventLogsPolicyCreationVM());
-		_ = services.AddSingleton(sp => new SimulationVM());
-		_ = services.AddSingleton(sp => new MDEAHPolicyCreationVM());
-		_ = services.AddSingleton(sp => new ViewFileCertificatesVM());
-		_ = services.AddSingleton(sp => new MainWindowVM());
-		_ = services.AddSingleton(sp => new CreatePolicyVM());
-		_ = services.AddSingleton(sp => new DeploymentVM());
-		_ = services.AddSingleton(sp => new UpdateVM());
-		_ = services.AddSingleton(sp => new ValidatePolicyVM());
-		_ = services.AddSingleton(sp => new CodeIntegrityInfoVM());
-		_ = services.AddSingleton(sp => new GetCIHashesVM());
-		_ = services.AddSingleton(sp => new EventLogUtility());
-		_ = services.AddSingleton<NavigationService>(sp => new(sp.GetRequiredService<MainWindowVM>(), sp.GetRequiredService<SidebarVM>()));
-		_ = services.AddSingleton<ViewModelForMSGraph>();
-		_ = services.AddSingleton<ViewOnlinePoliciesVM>(sp => new(sp.GetRequiredService<ViewModelForMSGraph>()));
-		_ = services.AddSingleton(sp => new PolicyEditorVM());
-		_ = services.AddSingleton(sp => new BuildNewCertificateVM());
-		_ = services.AddSingleton(sp => new GetSecurePolicySettingsVM());
-		_ = services.AddSingleton(sp => new LogsVM());
-
-		AppHost = builder.Build();
-
-		Settings = AppHost.Services.GetRequiredService<AppSettings.Main>();
 
 		// Set the language of the application to the user's preferred language
 		ApplicationLanguages.PrimaryLanguageOverride = Settings.ApplicationGlobalLanguage;
@@ -481,10 +421,6 @@ public partial class App : Application
 		m_window = new MainWindow();
 		m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
 		m_window.Activate();
-		_nav = AppHost.Services.GetRequiredService<NavigationService>(); // Retrieve the navigation instance
-
-		ViewModelForMainWindow = AppHost.Services.GetRequiredService<MainWindowVM>();
-		PolicyEditorViewModel = AppHost.Services.GetRequiredService<PolicyEditorVM>();
 
 		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
 		Badge.ClearBadge();
@@ -535,7 +471,7 @@ public partial class App : Application
 							}
 						case ViewModelBase.LaunchProtocolActions.FileSignature:
 							{
-								ViewFileCertificatesVM vm = AppHost.Services.GetRequiredService<ViewFileCertificatesVM>();
+								ViewFileCertificatesVM vm = ViewModelProvider.ViewFileCertificatesVM;
 
 								ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
 								.First(item => string.Equals(item.Tag.ToString(), "ViewFileCertificates", StringComparison.OrdinalIgnoreCase));
@@ -545,7 +481,7 @@ public partial class App : Application
 							}
 						case ViewModelBase.LaunchProtocolActions.FileHashes:
 							{
-								GetCIHashesVM vm = AppHost.Services.GetRequiredService<GetCIHashesVM>();
+								GetCIHashesVM vm = ViewModelProvider.GetCIHashesVM;
 
 								ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
 								.First(item => string.Equals(item.Tag.ToString(), "GetCodeIntegrityHashes", StringComparison.OrdinalIgnoreCase));

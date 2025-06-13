@@ -26,7 +26,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Client;
 using Microsoft.Identity.Client.Broker;
 
@@ -35,7 +34,7 @@ namespace AppControlManager.MicrosoftGraph;
 internal static class Main
 {
 
-	private static ViewModelForMSGraph ViewModelMSGraph { get; } = AppControlManager.App.AppHost.Services.GetRequiredService<ViewModelForMSGraph>();
+	private static ViewModelForMSGraph ViewModelMSGraph { get; } = ViewModels.ViewModelProvider.ViewModelForMSGraph;
 
 	/// <summary>
 	/// For Microsoft Graph Command Line Tools

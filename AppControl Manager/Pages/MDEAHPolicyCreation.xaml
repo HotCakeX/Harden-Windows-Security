@@ -244,7 +244,9 @@
 
                                             <controls:WrapPanel Orientation="Vertical" VerticalSpacing="5" HorizontalSpacing="10" HorizontalAlignment="Center">
 
-                                                <TextBlock Text="Details of the account that's currently in use" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                                                <TextBlock x:Uid="CurrentlyInUseAccountDetailsTextBlock"
+                                                           Margin="0,0,0,5"
+                                                           HorizontalAlignment="Center"/>
 
                                                 <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountUsername" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountUsername, Mode=OneWay}" HorizontalAlignment="Center" Width="470"/>
                                                 <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountTenantID" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountTenantID, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
@@ -273,7 +275,8 @@
                                                                     <animatedvisuals:SignIn/>
                                                                 </AnimatedIcon.Source>
                                                             </AnimatedIcon>
-                                                            <TextBlock Text="Sign In" Margin="5,0,0,0" />
+                                                            <TextBlock x:Uid="SignInTextBlock"
+                                                                       Margin="5,0,0,0" />
                                                         </StackPanel>
                                                     </Button.Content>
                                                 </Button>
@@ -287,7 +290,8 @@
                                                                     <animatedvisuals:Cancel/>
                                                                 </AnimatedIcon.Source>
                                                             </AnimatedIcon>
-                                                            <TextBlock Text="Cancel Signing In" Margin="5,0,0,0" />
+                                                            <TextBlock x:Uid="CancelSigningInTextBlock"
+                                                                       Margin="5,0,0,0" />
                                                         </StackPanel>
                                                     </Button.Content>
                                                 </Button>
@@ -348,7 +352,7 @@
                                                                     <animatedvisuals:Logout/>
                                                                 </AnimatedIcon.Source>
                                                             </AnimatedIcon>
-                                                            <TextBlock Text="Remove" Margin="5,0,0,0" />
+                                                            <TextBlock x:Uid="RemoveTextBlock" Margin="5,0,0,0" />
                                                         </StackPanel>
                                                     </Button.Content>
                                                 </Button>
@@ -362,7 +366,7 @@
                                                                     <animatedvisuals:Select/>
                                                                 </AnimatedIcon.Source>
                                                             </AnimatedIcon>
-                                                            <TextBlock Text="Set as Active" Margin="5,0,0,0" />
+                                                            <TextBlock x:Uid="SetAsActiveTextBlock" Margin="5,0,0,0" />
                                                         </StackPanel>
                                                     </Button.Content>
                                                 </Button>

@@ -17,7 +17,6 @@
 
 using System;
 using AppControlManager.Others;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -31,7 +30,7 @@ namespace AppControlManager.Pages;
 internal sealed partial class GitHubDocumentation : Page
 {
 
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
 
 	/// <summary>
 	/// Initializes the GitHubDocumentation component, sets the background color of the WebView2, and manages navigation

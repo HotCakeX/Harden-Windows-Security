@@ -28,7 +28,6 @@ using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using AppControlManager.XMLOps;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -37,8 +36,8 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 {
 
-	private PolicyEditorVM PolicyEditorViewModel { get; } = App.AppHost.Services.GetRequiredService<PolicyEditorVM>();
-	internal ViewModelForMSGraph ViewModelMSGraph { get; } = App.AppHost.Services.GetRequiredService<ViewModelForMSGraph>();
+	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
+	internal ViewModelForMSGraph ViewModelMSGraph { get; } = ViewModelProvider.ViewModelForMSGraph;
 
 	internal MDEAHPolicyCreationVM()
 	{

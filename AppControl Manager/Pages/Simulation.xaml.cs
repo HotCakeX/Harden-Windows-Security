@@ -16,7 +16,6 @@
 //
 
 using AppControlManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
@@ -30,8 +29,8 @@ namespace AppControlManager.Pages;
 internal sealed partial class Simulation : Page
 {
 
-	private SimulationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<SimulationVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private SimulationVM ViewModel { get; } = ViewModelProvider.SimulationVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal Simulation()
 	{

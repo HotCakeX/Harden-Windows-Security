@@ -18,7 +18,6 @@
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -32,9 +31,9 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsManager
 {
-	private CreateSupplementalPolicyVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<CreateSupplementalPolicyVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
+	private CreateSupplementalPolicyVM ViewModel { get; } = ViewModelProvider.CreateSupplementalPolicyVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
 
 	// [DynamicDependency(DynamicallyAccessedMemberTypes.PublicEvents, typeof(Border))]
 	internal CreateSupplementalPolicy()

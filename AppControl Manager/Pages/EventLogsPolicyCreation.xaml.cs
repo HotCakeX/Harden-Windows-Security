@@ -19,7 +19,6 @@ using System;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -33,8 +32,8 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class EventLogsPolicyCreation : Page
 {
-	private EventLogsPolicyCreationVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<EventLogsPolicyCreationVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
+	private EventLogsPolicyCreationVM ViewModel { get; } = ViewModelProvider.EventLogsPolicyCreationVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal EventLogsPolicyCreation()
 	{

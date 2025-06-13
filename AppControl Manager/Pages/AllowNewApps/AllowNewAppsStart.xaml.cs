@@ -19,7 +19,6 @@ using System;
 using AppControlManager.IntelGathering;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -33,9 +32,9 @@ namespace AppControlManager.Pages;
 internal sealed partial class AllowNewAppsStart : Page, IAnimatedIconsManager
 {
 
-	private AllowNewAppsVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<AllowNewAppsVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-	private SidebarVM sideBarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
+	private AllowNewAppsVM ViewModel { get; } = ViewModelProvider.AllowNewAppsVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
 
 	internal AllowNewAppsStart()
 	{

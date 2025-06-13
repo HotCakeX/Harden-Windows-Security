@@ -23,7 +23,6 @@ using AppControlManager.AppSettings;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
@@ -46,9 +45,9 @@ internal sealed partial class MainWindow : Window
 {
 
 #pragma warning disable CA1822
-	private MainWindowVM ViewModel { get; } = App.AppHost.Services.GetRequiredService<MainWindowVM>();
-	private AppSettings.Main AppSettings { get; } = App.AppHost.Services.GetRequiredService<AppSettings.Main>();
-	private SidebarVM sidebarVM { get; } = App.AppHost.Services.GetRequiredService<SidebarVM>();
+	private MainWindowVM ViewModel { get; } = ViewModelProvider.MainWindowVM;
+	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private SidebarVM sidebarVM { get; } = ViewModelProvider.SidebarVM;
 #pragma warning restore CA1822
 
 	private readonly AppWindow m_AppWindow;
@@ -78,7 +77,7 @@ internal sealed partial class MainWindow : Window
 		this.InitializeComponent();
 
 		// Grab the singleton navigation-service and give it the Frame
-		nav = App.AppHost.Services.GetRequiredService<NavigationService>();
+		nav = ViewModelProvider.NavigationService;
 		nav.Initialize(this.ContentFrame, this.MainNavigation);
 
 		RootGridPub = RootGrid;
@@ -401,32 +400,38 @@ internal sealed partial class MainWindow : Window
 	/// </summary>
 	private void RestoreWindowSize()
 	{
+		// Using .As<>() instead of direct cast because in NAOT mode direct cast would throw error for invalid cast operation. This is a bug in CsWinRT
+		OverlappedPresenter presenter = m_AppWindow.Presenter.As<OverlappedPresenter>();
 
-		// If the window was last maximized then restore it to maximized
-		if (App.Settings.MainWindowIsMaximized)
+		try
 		{
-
-			Logger.Write(GlobalVars.Rizz.GetString("WindowMaximizedMsg"));
-
-			// Using .As<>() instead of direct cast because in NAOT mode direct cast would throw error for invalid cast operation. This is a bug in CsWinRT
-			OverlappedPresenter presenter = m_AppWindow.Presenter.As<OverlappedPresenter>();
-
-			// Set the presenter to maximized
-			presenter.Maximize();
-		}
-
-		// Else set its size to its previous size before closing
-		else
-		{
-			// If the previous window size was smaller than 200 pixels width/height then do not use it, let it use the natural window size
-			if (App.Settings.MainWindowWidth > 200 && App.Settings.MainWindowHeight > 200)
+			// If the window was last maximized then restore it to maximized
+			if (App.Settings.MainWindowIsMaximized)
 			{
+				Logger.Write(GlobalVars.Rizz.GetString("WindowMaximizedMsg"));
 
+				// Set the presenter to maximized
+				presenter.Maximize();
+
+				return;
+			}
+
+			// If the previous window size was bigger than 700 pixels width/height use it.
+			// Otherwise let the OS decide.
+			if (App.Settings.MainWindowWidth > 700 && App.Settings.MainWindowHeight > 700)
+			{
 				Logger.Write(string.Format(GlobalVars.Rizz.GetString("SettingWindowSizeMessage"), App.Settings.MainWindowHeight, App.Settings.MainWindowWidth));
 
 				// Apply to the current AppWindow
 				m_AppWindow?.Resize(new SizeInt32(App.Settings.MainWindowWidth, App.Settings.MainWindowHeight));
 			}
+		}
+		finally
+		{
+			presenter.PreferredMinimumWidth = 700;
+			presenter.PreferredMinimumHeight = 700;
+
+			AppWindow.SetPresenter(presenter);
 		}
 	}
 

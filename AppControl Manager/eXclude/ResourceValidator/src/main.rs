@@ -816,6 +816,14 @@ fn validate_xuid_usage(
         ],
     );
     allowed.insert(
+        "AnimatedCancellableButton",
+        vec![
+            "AutomationProperties.HelpText",
+            "ToolTipService.ToolTip",
+            "Content",
+        ],
+    );
+    allowed.insert(
         "ToggleButton",
         vec![
             "AutomationProperties.HelpText",

@@ -74,6 +74,21 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	internal readonly ObservableCollection<PolicyEditor.SignatureBasedRulesForListView> SignatureRulesCollection = [];
 	internal readonly List<PolicyEditor.SignatureBasedRulesForListView> SignatureRulesCollectionList = [];
 
+	/// <summary>
+	/// To store Policy Settings, bound to the UI List View.
+	/// </summary>
+	internal readonly ObservableCollection<PolicyEditor.PolicySettings> PolicySettingsCollection = [];
+
+	internal Visibility PolicySettingsEmptyStateVisibility =>
+		PolicySettingsCollection.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+	internal PolicyEditor.PolicySettings? PolicySettingsSelectedItem { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// array for type mapping - index corresponds to the Type property value and should match the GetValueType method in the PolicySettingsManager method.
+	/// </summary>
+	internal readonly string[] TypeOptions = ["Binary", "Boolean", "DWord", "String"];
+
 	// Don't need getters/setters via OnPropertyChanged for the collections above since it is an observable collection and we don't replace it completely
 	// We just use the .Add(), .Remove() etc. methods
 
@@ -116,7 +131,27 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			() => MainInfoBarTitle, value => MainInfoBarTitle = value);
+
+
+		PolicySettingsCollection.CollectionChanged += (s, e) =>
+		{
+			OnPropertyChanged(nameof(PolicySettingsEmptyStateVisibility));
+		};
+
+		// Initialize preset policy settings
+		PresetPolicySettings = [
+			new(
+			parentViewModel: this,
+			provider: "AllHostIds",
+			key: "AllKeys",
+			value: true,
+			valueStr: "true",
+			valueName: "EnterpriseDefinedClsId",
+			type: 1 // Boolean
+		)
+		];
 	}
+
 
 	private readonly InfoBarSettings MainInfoBar;
 
@@ -241,15 +276,15 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 
 	private static string GetHVCIOptionKey(uint value) =>
-	value switch
-	{
-		2 => "Enabled - Strict",
-		1 => "Enabled",
-		4 => "Debug Mode",
-		8 => "Disable is Allowed",
-		0 => "None",
-		_ => throw new ArgumentException($"Invalid HVCI option value: {value}", nameof(value))
-	};
+		value switch
+		{
+			2 => "Enabled - Strict",
+			1 => "Enabled",
+			4 => "Debug Mode",
+			8 => "Disable is Allowed",
+			0 => "None",
+			_ => throw new ArgumentException($"Invalid HVCI option value: {value}", nameof(value))
+		};
 
 
 	// All of these must be nullified/emptied during policy load
@@ -425,6 +460,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				FileRulesCollectionList.Clear();
 				SignatureRulesCollection.Clear();
 				SignatureRulesCollectionList.Clear();
+				PolicySettingsCollection.Clear();
 			});
 
 			// Collections to deserialize the policy object into
@@ -458,52 +494,20 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					PolicyObj = Management.Initialize(SelectedPolicyFile, null);
 				}
 
-				#region Extract policy details
+				#region Extract policy details				
 
-				foreach (Setting item in PolicyObj.Settings)
-				{
-					if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
-					{
-						if (item.Value.Item is not null)
-							_ = Dispatcher.TryEnqueue(() =>
-							{
-								PolicyNameTextBox = (string)item.Value.Item;
-							});
-
-						break;
-					}
-				}
-
+				string? policyName = PolicySettingsManager.GetPolicyName(PolicyObj, null);
+				string? policyIDInfo = PolicySettingsManager.GetPolicyIDInfo(PolicyObj, null);
 
 				_ = Dispatcher.TryEnqueue(() =>
 				{
+					PolicyNameTextBox = policyName ?? string.Empty;
 					PolicyIDTextBox = PolicyObj.PolicyID;
 					PolicyBaseIDTextBox = PolicyObj.BasePolicyID;
 					PolicyVersionTextBox = PolicyObj.VersionEx;
 					PolicyTypeComboBox = PolicyObj.PolicyType;
+					PolicyInfoIDTextBox = policyIDInfo;
 				});
-
-
-				foreach (Setting item in PolicyObj.Settings)
-				{
-					if (string.Equals(item.ValueName, "Id", StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
-					{
-
-						if (item.Value.Item is not null)
-
-							_ = Dispatcher.TryEnqueue(() =>
-							{
-								PolicyInfoIDTextBox = (string)item.Value.Item;
-							});
-
-						break;
-					}
-				}
-
 
 				if (PolicyObj.HvciOptionsSpecified)
 				{
@@ -808,6 +812,13 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					// Calculate the column widths for Signature Based rules after processing them
 					CalculateSignatureBasedListViewColumnWidths();
 				}
+
+
+				if (PolicyObj is not null)
+					foreach (PolicyEditor.PolicySettings item in PolicySettingsManager.GetPolicySettings(PolicyObj, this))
+					{
+						PolicySettingsCollection.Add(item);
+					}
 
 			});
 
@@ -1308,42 +1319,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				#region Policy details
 
-				bool nameSettingFound = false;
-
-				// Set the policy name
-				foreach (Setting item in PolicyObj.Settings)
-				{
-					if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
-					{
-						item.Value.Item = PolicyNameTextBox;
-
-						nameSettingFound = true;
-
-						break;
-					}
-				}
-
-				// If the Setting node with ValueName="Name" does not exist, create it
-				if (!nameSettingFound)
-				{
-					Setting newNameSetting = new()
-					{
-						Provider = "PolicyInfo",
-						Key = "Information",
-						ValueName = "Name",
-						Value = new SettingValueType()
-						{
-							Item = PolicyNameTextBox
-						}
-					};
-
-					List<Setting> settings = [.. PolicyObj.Settings];
-					settings.Add(newNameSetting);
-					PolicyObj.Settings = [.. settings];
-				}
-
+				PolicySettingsManager.SetPolicyName(PolicyObj, PolicyNameTextBox);
 
 				// Validate User Inputs
 
@@ -1387,43 +1363,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				if (PolicyTypeComboBox is not null)
 					PolicyObj.PolicyType = (PolicyType)PolicyTypeComboBox;
 
-
-				bool policyInfoIDSettingFound = false;
-
-				// Set the PolicyInfoID if the setting for it exist
-				foreach (Setting item in PolicyObj.Settings)
-				{
-					if (string.Equals(item.ValueName, "Id", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
-					{
-						item.Value.Item = PolicyInfoIDTextBox;
-
-						policyInfoIDSettingFound = true;
-
-						break;
-					}
-				}
-
-				// If the setting for PolicyInfoID does not exist, create it
-
-				if (!policyInfoIDSettingFound)
-				{
-					Setting newPolicyInfoIDSetting = new()
-					{
-						Provider = "PolicyInfo",
-						Key = "Information",
-						ValueName = "Id",
-						Value = new SettingValueType()
-						{
-							Item = PolicyInfoIDTextBox
-						}
-					};
-					List<Setting> settings = [.. PolicyObj.Settings];
-					settings.Add(newPolicyInfoIDSetting);
-					PolicyObj.Settings = [.. settings];
-				}
-
+				PolicySettingsManager.SetPolicyIDInfo(PolicyObj, PolicyInfoIDTextBox);
 
 				// If the user selected an HVCI option, set it in the policy
 				if (!string.IsNullOrEmpty(HVCIOptionComboBox))
@@ -1474,11 +1414,14 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				   supplementalPolicySignersCol,
 				   updatePolicySignersCol,
 				   kernelModeFileRulesRefs,
-				   userModeFileRulesRefs);
+				   userModeFileRulesRefs,
+				   PolicySettingsManager.ConvertPolicyEditorSettingToSiPolicySetting(PolicySettingsCollection)
+				   );
 
 
 				await Dispatcher.EnqueueAsync(async () =>
 				{
+					MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("PolicyEditorSuccessfulSaveMessage"));
 
 					if (fileType == 0)
 					{
@@ -1538,6 +1481,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		FileRulesCollectionList.Clear();
 		SignatureRulesCollection.Clear();
 		SignatureRulesCollectionList.Clear();
+		PolicySettingsCollection.Clear();
 
 		ekusToUse = [];
 		PolicyObj = null;
@@ -1607,16 +1551,16 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			{
 				// Perform a case-insensitive search in all relevant fields
 				filteredResults = [.. FileRulesCollectionList.Where(p =>
-			(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FileDescription?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FileName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.FilePath?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.InternalName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.PackageFamilyName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.ProductName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.Hash?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-			)];
+				(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.FileDescription?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.FileName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.FilePath?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.InternalName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.PackageFamilyName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.ProductName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.Hash?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+				)];
 			});
 
 			FileRulesCollection.Clear();
@@ -1641,14 +1585,14 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			{
 				// Perform a case-insensitive search in all relevant fields
 				filteredResults2 = [.. SignatureRulesCollectionList.Where(p =>
-			(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertIssuer?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertificateEKU?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertOemID?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertPublisher?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.CertRoot?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-			(p.Name?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-			)];
+				(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.CertIssuer?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.CertificateEKU?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.CertOemID?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.CertPublisher?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.CertRoot?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+				(p.Name?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+				)];
 			});
 
 			SignatureRulesCollection.Clear();
@@ -1733,6 +1677,83 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		foreach (PolicyEditor.SignatureBasedRulesForListView item in itemsToDelete)
 		{
 			RemoveSignatureRuleFromCollection(item);
+		}
+	}
+
+	/// <summary>
+	/// Clears all of the Policy Settings in the collection.
+	/// </summary>
+	internal void ClearAllPolicySettings() => PolicySettingsCollection.Clear();
+
+	/// <summary>
+	/// Removes the selected Policy Setting item from the collection.
+	/// </summary>
+	internal void RemoveSelectedPolicySetting()
+	{
+		if (PolicySettingsSelectedItem is null)
+			return;
+
+		PolicySettingsCollection.Remove(PolicySettingsSelectedItem);
+	}
+
+	/// <summary>
+	/// Adds a new empty policy setting to the collection.
+	/// </summary>
+	internal void AddNewPolicySetting()
+	{
+		PolicyEditor.PolicySettings newSetting = new(
+			provider: string.Empty,
+			key: string.Empty,
+			value: string.Empty,
+			valueName: string.Empty,
+			valueStr: string.Empty,
+			type: 0,
+			parentViewModel: this
+		);
+
+		PolicySettingsCollection.Add(newSetting);
+	}
+
+	/// <summary>
+	/// Collection of preset policy settings that users can choose from
+	/// </summary>
+	internal List<PolicyEditor.PolicySettings> PresetPolicySettings { get; private set; }
+
+	/// <summary>
+	/// Adds the selected preset policy setting to the collection
+	/// </summary>
+	internal void AddPresetPolicySetting()
+	{
+		if (SelectedPresetPolicySetting is null) return;
+
+		// Create a copy of the setting so that their properties won't be tied to each other
+		PolicyEditor.PolicySettings newSetting = new(
+			parentViewModel: this,
+			provider: SelectedPresetPolicySetting.Provider,
+			key: SelectedPresetPolicySetting.Key,
+			value: SelectedPresetPolicySetting.Value,
+			valueStr: SelectedPresetPolicySetting.ValueStr,
+			valueName: SelectedPresetPolicySetting.ValueName,
+			type: SelectedPresetPolicySetting.Type
+		);
+
+		PolicySettingsCollection.Add(newSetting);
+	}
+
+	/// <summary>
+	/// Visibility property for the preset setting add button
+	/// </summary>
+	internal Visibility PresetAddButtonVisibility { get; set => SP(ref field, value); }
+
+	internal PolicyEditor.PolicySettings? SelectedPresetPolicySetting
+	{
+		get => field;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				PresetAddButtonVisibility = field is null ? Visibility.Collapsed : Visibility.Visible;
+			}
 		}
 	}
 

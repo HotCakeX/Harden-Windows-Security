@@ -16,7 +16,9 @@
 //
 
 using AppControlManager.ViewModels;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -34,5 +36,15 @@ internal sealed partial class CreateDenyPolicy : Page
 		this.InitializeComponent();
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		this.DataContext = ViewModel;
+	}
+
+	// Since using behaviors in XAML is not Native AOT compatible, we use event handlers.
+	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
+	{
+		await ShadowEnterAnimation.StartAsync((UIElement)sender);
+	}
+	private async void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
+	{
+		await ShadowExitAnimation.StartAsync((UIElement)sender);
 	}
 }

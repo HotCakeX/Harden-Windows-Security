@@ -26,6 +26,7 @@ using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
+using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -389,16 +390,7 @@ internal sealed partial class DeploymentVM : ViewModelBase
 				{
 					SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFile, null);
 
-					// Finding the policy name in the settings
-					Setting? nameSetting = policyObj.Settings.FirstOrDefault(x =>
-						string.Equals(x.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(x.Key, "Information", StringComparison.OrdinalIgnoreCase) &&
-						string.Equals(x.ValueName, "Name", StringComparison.OrdinalIgnoreCase));
-
-					if (nameSetting is not null)
-					{
-						policyName = nameSetting.Value.Item.ToString();
-					}
+					policyName = PolicySettingsManager.GetPolicyName(policyObj, null);
 
 					// Construct an instance of the class in order to serialize it into JSON string for upload to Intune
 					CiPolicyInfo policy = new(

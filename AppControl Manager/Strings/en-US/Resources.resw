@@ -5476,4 +5476,8 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Details of the account that's currently in use</value>
   </data>
+  <!--New-->
+  <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
+    <value>Successfully saved the changes to the policy file.</value>
+  </data>
 </root>

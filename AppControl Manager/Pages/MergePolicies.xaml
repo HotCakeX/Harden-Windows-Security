@@ -65,7 +65,7 @@
                                 Margin="0,0,15,0"
                                 Click="{x:Bind ViewModel.MergeButton_Click}" />
 
-                        <ToggleButton IsEnabled="{x:Bind ViewModel.ShouldDeployToggleState, Mode=OneTime}" IsChecked="{x:Bind ViewModel.ShouldDeploy, Mode=TwoWay}" x:Uid="DeployAfterMergeButton" Margin="0,0,15,0" />
+                        <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}" IsChecked="{x:Bind ViewModel.ShouldDeploy, Mode=TwoWay}" x:Uid="DeployAfterMergeButton" Margin="0,0,15,0" />
 
                         <ProgressRing IsIndeterminate="True" Visibility="{x:Bind ViewModel.MergeProgressRingVisibility, Mode=OneWay}" />
 

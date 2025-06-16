@@ -40,15 +40,11 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 	private readonly InfoBarSettings MainInfoBar;
 
-	internal bool IsElevated => App.IsElevated;
-
 	#region UI-Bound Properties
 
 	internal readonly UniqueStringObservableCollection OtherPolicies = [];
 
 	internal bool ShouldDeploy { get; set => SP(ref field, value); }
-
-	internal bool ShouldDeployToggleState = App.IsElevated;
 
 	internal string? MainPolicy { get; set => SP(ref field, value); }
 

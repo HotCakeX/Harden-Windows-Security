@@ -41,6 +41,16 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	protected readonly DispatcherQueue Dispatcher = DispatcherQueue.GetForCurrentThread();
 
 	/// <summary>
+	/// An instance property so pages can bind to.
+	/// </summary>
+	internal bool IsElevated => App.IsElevated;
+
+	/// <summary>
+	/// Same as IsElevated but in reverse.
+	/// </summary>
+	internal bool IsNotElevated => !App.IsElevated;
+
+	/// <summary>
 	/// Sets the field to <paramref name="newValue"/> if it differs from its current contents,
 	/// raises PropertyChanged, and returns true if a change occurred.
 	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI,

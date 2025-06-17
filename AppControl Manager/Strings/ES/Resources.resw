@@ -5608,15 +5608,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Buscar carpetas de sus aplicaciones nuevas o existentes que están instaladas y están siendo bloqueadas</value>
   </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.Content" xml:space="preserve">
-    <value>Buscar carpetas</value>
-  </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Buscar carpetas de sus aplicaciones nuevas o existentes que están instaladas y están siendo bloqueadas</value>
-  </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Buscar carpetas de sus aplicaciones nuevas o existentes que están instaladas y están siendo bloqueadas</value>
-  </data>
   <data name="SupplementalPolicyNameAllowNewAppsTextBox.Header" xml:space="preserve">
     <value>Nombre de Política Complementaria</value>
   </data>

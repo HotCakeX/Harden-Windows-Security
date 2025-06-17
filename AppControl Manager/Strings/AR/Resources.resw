@@ -5608,15 +5608,6 @@
   <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>استعراض مجلدات التطبيقات الجديدة أو الموجودة المثبتة والمحظورة</value>
   </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.Content" xml:space="preserve">
-    <value>استعراض المجلدات</value>
-  </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>استعراض مجلدات التطبيقات الجديدة أو الموجودة المثبتة والمحظورة</value>
-  </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>استعراض مجلدات التطبيقات الجديدة أو الموجودة المثبتة والمحظورة</value>
-  </data>
   <data name="SupplementalPolicyNameAllowNewAppsTextBox.Header" xml:space="preserve">
     <value>اسم السياسة التكميلية</value>
   </data>

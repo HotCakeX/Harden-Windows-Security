@@ -849,6 +849,12 @@ fn validate_xuid_usage(
         ],
     );
     allowed.insert(
+        "SegmentedItem",
+        vec![
+            "Content"
+        ],
+    );
+    allowed.insert(
         "MenuFlyoutSubItem",
         vec![
             "AutomationProperties.HelpText",

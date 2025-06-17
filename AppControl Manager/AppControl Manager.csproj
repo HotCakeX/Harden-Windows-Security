@@ -26,10 +26,9 @@
     <!-- Defined by CsWinRT https://github.com/microsoft/CsWinRT
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
 
-        The reason Windows.SDK.NET.Ref is released in batches of 3: https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
-        is that they have different targets. Lowest one is .NET 6, middle one is .NET 8 without UWP XAML and highest one is .NET 8 with UWP XAML.
+       https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
     -->
-    <WindowsSdkPackageVersion>10.0.26100.56</WindowsSdkPackageVersion>
+    <WindowsSdkPackageVersion>10.0.26100.68-preview</WindowsSdkPackageVersion>
 
     <!--
     By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file

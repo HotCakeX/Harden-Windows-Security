@@ -5608,15 +5608,6 @@
   <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ഇൻസ്റ്റാൾ ചെയ്തതും ബ്ലോക്ക് ചെയ്യപ്പെടുന്നതുമായ നിങ്ങളുടെ പുതിയ അല്ലെങ്കിൽ നിലവിലുള്ള ആപ്പുകളുടെ ഫോൾഡറുകൾക്കായി ബ്രൗസ് ചെയ്യുക</value>
   </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.Content" xml:space="preserve">
-    <value>ഫോൾഡറുകൾക്കായി ബ്രൗസ് ചെയ്യുക</value>
-  </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഇൻസ്റ്റാൾ ചെയ്തതും ബ്ലോക്ക് ചെയ്യപ്പെടുന്നതുമായ നിങ്ങളുടെ പുതിയ അല്ലെങ്കിൽ നിലവിലുള്ള ആപ്പുകളുടെ ഫോൾഡറുകൾക്കായി ബ്രൗസ് ചെയ്യുക</value>
-  </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഇൻസ്റ്റാൾ ചെയ്തതും ബ്ലോക്ക് ചെയ്യപ്പെടുന്നതുമായ നിങ്ങളുടെ പുതിയ അല്ലെങ്കിൽ നിലവിലുള്ള ആപ്പുകളുടെ ഫോൾഡറുകൾക്കായി ബ്രൗസ് ചെയ്യുക</value>
-  </data>
   <data name="SupplementalPolicyNameAllowNewAppsTextBox.Header" xml:space="preserve">
     <value>അനുബന്ധ നയത്തിന്റെ പേര്</value>
   </data>

@@ -5608,15 +5608,6 @@
   <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αναζήτηση φακέλων των νέων ή υπαρχόντων εφαρμογών σας που είναι εγκατεστημένες και μπλοκάρονται</value>
   </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.Content" xml:space="preserve">
-    <value>Αναζήτηση φακέλων</value>
-  </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Αναζήτηση φακέλων των νέων ή υπαρχόντων εφαρμογών σας που είναι εγκατεστημένες και μπλοκάρονται</value>
-  </data>
-  <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Αναζήτηση φακέλων των νέων ή υπαρχόντων εφαρμογών σας που είναι εγκατεστημένες και μπλοκάρονται</value>
-  </data>
   <data name="SupplementalPolicyNameAllowNewAppsTextBox.Header" xml:space="preserve">
     <value>Όνομα Συμπληρωματικής Πολιτικής</value>
   </data>

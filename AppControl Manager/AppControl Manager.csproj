@@ -26,10 +26,9 @@
     <!-- Defined by CsWinRT https://github.com/microsoft/CsWinRT
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
 
-        The reason Windows.SDK.NET.Ref is released in batches of 3: https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
-        is that they have different targets. Lowest one is .NET 6, middle one is .NET 8 without UWP XAML and highest one is .NET 8 with UWP XAML.
+       https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
     -->
-    <WindowsSdkPackageVersion>10.0.26100.56</WindowsSdkPackageVersion>
+    <WindowsSdkPackageVersion>10.0.26100.68-preview</WindowsSdkPackageVersion>
 
     <!--
     By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -77,7 +76,7 @@
     <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
     <ErrorReport>send</ErrorReport>
-    <FileVersion>2.0.29.0</FileVersion>
+    <FileVersion>2.0.30.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -293,7 +292,7 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
     <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.5.25277.114" />
     <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.5.25277.114" />
-    <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.0" />
+    <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.1" />
 
   </ItemGroup>
 

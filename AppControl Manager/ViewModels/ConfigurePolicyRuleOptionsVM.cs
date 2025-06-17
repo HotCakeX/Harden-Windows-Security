@@ -50,8 +50,6 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 	internal Visibility BrowseForXMLPolicyButtonLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal bool IsElevated => App.IsElevated;
-
 	internal bool SettingsExpanderIsExpanded { get; set => SP(ref field, value); }
 
 	internal bool ElementsAreEnabled { get; set => SP(ref field, value); } = true;

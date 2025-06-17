@@ -22,7 +22,7 @@ namespace AppControlManager.AppSettings;
 // Custom EventArgs class for navigation background changes
 internal sealed class NavigationBackgroundChangedEventArgs(bool isBackgroundOn) : EventArgs
 {
-	internal bool IsBackgroundOn { get; } = isBackgroundOn;
+	internal bool IsBackgroundOn => isBackgroundOn;
 }
 
 internal static class NavigationBackgroundManager

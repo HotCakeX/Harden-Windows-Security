@@ -132,7 +132,8 @@ internal static class Merger
 		   supplementalPolicySignersCol,
 		   updatePolicySignersCol,
 		   kernelModeFileRulesRefs,
-		   userModeFileRulesRefs);
+		   userModeFileRulesRefs,
+		   mainXML.Settings); // Pass the main policy's Settings for the merge unless there is a need to merge the Settings during a merge operation.
 	}
 
 
@@ -348,7 +349,8 @@ internal static class Merger
 		IEnumerable<SupplementalPolicySigner> supplementalPolicySignersCol,
 		IEnumerable<UpdatePolicySigner> updatePolicySignersCol,
 		IEnumerable<FileRuleRef> kernelModeFileRulesRefs,
-		IEnumerable<FileRuleRef> userModeFileRulesRefs
+		IEnumerable<FileRuleRef> userModeFileRulesRefs,
+		IEnumerable<Setting> policySettings
 		)
 	{
 
@@ -470,7 +472,7 @@ internal static class Merger
 			CiSigners = [.. ciSigners], // Aggregated data
 			HvciOptions = mainXML.HvciOptions, // Main policy takes priority
 			HvciOptionsSpecified = mainXML.HvciOptionsSpecified, // Main policy takes priority
-			Settings = mainXML.Settings, // Main policy takes priority
+			Settings = [.. policySettings], // Depends
 			Macros = mainXML.Macros, // Main policy takes priority
 			SupplementalPolicySigners = [.. supplementalPolicySignersCol], // Aggregated data
 			AppSettings = mainXML.AppSettings, // Main policy takes priority

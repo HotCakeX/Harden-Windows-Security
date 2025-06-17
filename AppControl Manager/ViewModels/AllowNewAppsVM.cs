@@ -1574,8 +1574,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// Clears the text box and the list of selected directories when the button is clicked.
 	/// </summary>
-	internal void ClearSelectedDirectoriesButton_Click()
-	{
-		selectedDirectoriesToScan.Clear();
-	}
+	internal void ClearSelectedDirectoriesButton_Click() => selectedDirectoriesToScan.Clear();
+
 }

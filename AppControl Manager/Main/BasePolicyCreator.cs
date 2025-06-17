@@ -387,17 +387,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(SiPolicyPath, null);
 
 		// Set the policy name
-		foreach (SiPolicy.Setting item in policyObj.Settings)
-		{
-			if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase) &&
-			string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-			string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
-			{
-				item.Value.Item = name;
-
-				break;
-			}
-		}
+		PolicySettingsManager.SetPolicyName(policyObj, name);
 
 		string policyVersion = policyObj.VersionEx;
 

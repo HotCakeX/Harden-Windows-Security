@@ -5476,4 +5476,157 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Detalles de la cuenta que está actualmente en uso</value>
   </data>
+  <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
+    <value>Los cambios se guardaron exitosamente en el archivo de política.</value>
+  </data>
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+    <value>Soporte - Hacer Preguntas</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <value>Buscar entre las aplicaciones</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Buscar entre las aplicaciones instaladas en el sistema.</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Buscar entre las aplicaciones instaladas en el sistema.</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Nombre de Política de Denegación</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ingrese un nombre para la política de denegación que se creará.</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ingrese un nombre para la política de denegación que se creará.</value>
+  </data>
+  <data name="CustomPolicySettingsTabViewItem.Header" xml:space="preserve">
+    <value>Configuraciones de Política Personalizada</value>
+  </data>
+  <data name="CustomPolicySettingsTitleTextBlock.Text" xml:space="preserve">
+    <value>Configure y administre configuraciones de política personalizadas y use plantillas para agregar políticas predefinidas.</value>
+  </data>
+  <data name="CustomPolicySettingsPresets.PlaceholderText" xml:space="preserve">
+    <value>Seleccione una plantilla de configuración</value>
+  </data>
+  <data name="AddSettingTextBlock.Text" xml:space="preserve">
+    <value>Agregar Configuración</value>
+  </data>
+  <data name="DeletedSelectedSettingTextBlock.Text" xml:space="preserve">
+    <value>Eliminar Seleccionado</value>
+  </data>
+  <data name="ClearAllPolicySettingsTextBlock.Text" xml:space="preserve">
+    <value>Limpiar Todo</value>
+  </data>
+  <data name="AddButton.Content" xml:space="preserve">
+    <value>Agregar</value>
+  </data>
+  <data name="NoPolicySettingsTextBlock.Text" xml:space="preserve">
+    <value>Sin Configuraciones de Política</value>
+  </data>
+  <data name="NoPolicySettingsLoadedTextBlock.Text" xml:space="preserve">
+    <value>No se han cargado o creado configuraciones de política personalizadas aún.</value>
+  </data>
+  <data name="EnterValueTextBox.PlaceholderText" xml:space="preserve">
+    <value>Ingrese valor</value>
+  </data>
+  <data name="ValueNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Nombre del valor</value>
+  </data>
+  <data name="KeyIdentifierTextBox.PlaceholderText" xml:space="preserve">
+    <value>Identificador de Clave</value>
+  </data>
+  <data name="ProviderNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Nombre del proveedor</value>
+  </data>
+  <data name="ClearAllPolicySettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Limpiar todas las configuraciones de política</value>
+  </data>
+  <data name="ClearAllPolicySettingsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Limpiar todas las configuraciones de política</value>
+  </data>
+  <data name="DeletedSelectedSettingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eliminar configuración de política seleccionada</value>
+  </data>
+  <data name="DeletedSelectedSettingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eliminar configuración de política seleccionada</value>
+  </data>
+  <data name="AddSettingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Agregar una nueva configuración de política en blanco</value>
+  </data>
+  <data name="AddSettingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Agregar una nueva configuración de política en blanco</value>
+  </data>
+  <data name="DeployTextBlock.Text" xml:space="preserve">
+    <value>Implementar</value>
+  </data>
+  <data name="SignInSegmentedItem.Content" xml:space="preserve">
+    <value>Iniciar Sesión</value>
+  </data>
+  <data name="SignedInAccountsSegmentedItem.Content" xml:space="preserve">
+    <value>Cuentas Conectadas</value>
+  </data>
+  <data name="ActiveAccountSegmentedItem.Content" xml:space="preserve">
+    <value>Cuenta Activa</value>
+  </data>
+  <data name="FilterTextBlock.Text" xml:space="preserve">
+    <value>Filtrar</value>
+  </data>
+  <data name="BrowseForMDELogsTextBlock.Text" xml:space="preserve">
+    <value>Buscar registros de Búsqueda Avanzada MDE</value>
+  </data>
+  <data name="BrowseForMDELogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Buscar registros de Búsqueda Avanzada MDE</value>
+  </data>
+  <data name="BrowseForMDELogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Buscar registros de Búsqueda Avanzada MDE</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.Content" xml:space="preserve">
+    <value>Ir al paso 2</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Comenzar implementación de la política seleccionada en modo de auditoría e ir al paso 2</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Comenzar implementación de la política seleccionada en modo de auditoría e ir al paso 2</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.Content" xml:space="preserve">
+    <value>Ir al paso 3</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Comenzar escaneo de los registros de eventos y los directorios seleccionados (si los hay) e ir al paso 3</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Comenzar escaneo de los registros de eventos y los directorios seleccionados (si los hay) e ir al paso 3</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.Content" xml:space="preserve">
+    <value>Buscar carpetas</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Buscar carpetas de sus aplicaciones nuevas o existentes que están instaladas y están siendo bloqueadas</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Buscar carpetas de sus aplicaciones nuevas o existentes que están instaladas y están siendo bloqueadas</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.Header" xml:space="preserve">
+    <value>Nombre de Política Complementaria</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.PlaceholderText" xml:space="preserve">
+    <value>Ingrese un nombre para la Política Complementaria</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ingrese un nombre para la política complementaria que se creará.</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ingrese un nombre para la política complementaria que se creará.</value>
+  </data>
+  <data name="Step1TextBlock.Text" xml:space="preserve">
+    <value>Paso 1</value>
+  </data>
+    <data name="Step2TextBlock.Text" xml:space="preserve">
+    <value>Paso 2</value>
+  </data>
+    <data name="Step3TextBlock.Text" xml:space="preserve">
+    <value>Paso 3</value>
+  </data>
 </root>

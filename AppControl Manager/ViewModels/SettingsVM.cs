@@ -72,8 +72,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	private MainWindowVM ViewModelMainWindow { get; } = ViewModelProvider.MainWindowVM;
 
-	internal bool IsElevated => App.IsElevated;
-
 	/// <summary>
 	/// Opens a file picker for Code Integrity Schema path.
 	/// </summary>

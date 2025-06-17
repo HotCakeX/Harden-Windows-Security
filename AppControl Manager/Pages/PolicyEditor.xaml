@@ -157,8 +157,9 @@
         </Border>
 
         <TabView VerticalAlignment="Stretch"
-         IsAddTabButtonVisible="False" Grid.Row="3" TabWidthMode="SizeToContent"
-         CanReorderTabs="False">
+                 IsAddTabButtonVisible="False"
+                 Grid.Row="3" TabWidthMode="SizeToContent"
+                 CanReorderTabs="{x:Bind ViewModel.IsNotElevated}">
             <!--
             <TabView.Resources>
                 <SolidColorBrush x:Key="TabViewBackground" Color="{ThemeResource SystemAccentColorLight2}"/>
@@ -236,11 +237,13 @@
                             <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                         </win:Grid.ChildrenTransitions>
 
-                        <customUI:ListViewV2
-                        RegistryKey="PolicyEditor_FileBasedRules"
-                        IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                        SelectionMode="Extended"
-                        ItemsSource="{x:Bind ViewModel.FileRulesCollection, Mode=OneWay}">
+                        <customUI:ListViewV2 RegistryKey="PolicyEditor_FileBasedRules"
+                                             AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+                                             CanDragItems="{x:Bind ViewModel.IsNotElevated}"
+                                             CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
+                                             IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                             SelectionMode="Extended"
+                                             ItemsSource="{x:Bind ViewModel.FileRulesCollection, Mode=OneWay}">
 
                             <customUI:ListViewV2.Header>
 
@@ -358,11 +361,13 @@
                             <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                         </win:Grid.ChildrenTransitions>
 
-                        <customUI:ListViewV2
-                        RegistryKey="PolicyEditor_SignatureBasedRules"
-                        SelectionMode="Extended"
-                        IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                        ItemsSource="{x:Bind ViewModel.SignatureRulesCollection, Mode=OneWay}">
+                        <customUI:ListViewV2 RegistryKey="PolicyEditor_SignatureBasedRules"
+                                             SelectionMode="Extended"
+                                             AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+                                             CanDragItems="{x:Bind ViewModel.IsNotElevated}"
+                                             CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
+                                             IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                             ItemsSource="{x:Bind ViewModel.SignatureRulesCollection, Mode=OneWay}">
 
                             <customUI:ListViewV2.Header>
 
@@ -547,17 +552,392 @@
             </TabViewItem>
 
 
-            <TabViewItem Header="Custom Policy Settings (Coming Soon)" IsClosable="False" Visibility="Visible" IsEnabled="False" MinWidth="260">
+            <TabViewItem x:Uid="CustomPolicySettingsTabViewItem"
+                         IsClosable="False"
+                         Visibility="Visible"
+                         IsEnabled="True"
+                         MinWidth="260">
                 <TabViewItem.IconSource>
                     <BitmapIconSource UriSource="/Assets/External/setting.png" ShowAsMonochrome="False" />
                 </TabViewItem.IconSource>
                 <TabViewItem.Content>
-                    <StackPanel Padding="12">
-                        <TextBlock Text="Custom Policy Settings (Coming Soon)" Style="{ThemeResource TitleTextBlockStyle}"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Header section with action buttons -->
+                        <Border Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="12" Margin="12,12,12,6">
+
+                            <controls:WrapPanel Orientation="Horizontal"                                                   
+                                                    HorizontalSpacing="8"
+                                                    VerticalSpacing="8"
+                                                    VerticalAlignment="Center">
+
+                                <TextBlock x:Uid="CustomPolicySettingsTitleTextBlock"
+                                           VerticalAlignment="Center"
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                                <Button x:Uid="AddButton"
+                                        Style="{ThemeResource AccentButtonStyle}"
+                                        Click="{x:Bind ViewModel.AddPresetPolicySetting}"
+                                        FontSize="12"
+                                        Padding="8,4"
+                                        MinWidth="0"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right"
+                                        Visibility="{x:Bind ViewModel.PresetAddButtonVisibility, Mode=OneWay}"/>
+
+                                <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                          ItemsSource="{x:Bind ViewModel.PresetPolicySettings}"
+                                          SelectedItem="{x:Bind ViewModel.SelectedPresetPolicySetting, Mode=TwoWay}"
+                                          VerticalAlignment="Center"
+                                          x:Uid="CustomPolicySettingsPresets"
+                                          MinWidth="200">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="PolicyEditor:PolicySettings">
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{x:Bind ValueName}" 
+                                                           FontWeight="SemiBold"
+                                                           FontSize="14" />
+                                                <TextBlock Text="{x:Bind Provider}" 
+                                                           FontSize="12"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                                <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.AddNewPolicySetting}"
+                                        VerticalAlignment="Center"
+                                        x:Uid="AddSettingButton">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE710;" FontSize="16" />
+                                        <TextBlock x:Uid="AddSettingTextBlock" />
+                                    </StackPanel>
+                                </Button>
+
+                                <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.RemoveSelectedPolicySetting}"
+                                        VerticalAlignment="Center"
+                                        x:Uid="DeletedSelectedSettingButton">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE74D;" FontSize="16" Foreground="Red" />
+                                        <TextBlock x:Uid="DeletedSelectedSettingTextBlock" />
+                                    </StackPanel>
+                                </Button>
+
+                                <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                        VerticalAlignment="Center"
+                                        Click="{x:Bind ViewModel.ClearAllPolicySettings}"
+                                        x:Uid="ClearAllPolicySettingsButton">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE738;" FontSize="16" />
+                                        <TextBlock x:Uid="ClearAllPolicySettingsTextBlock" />
+                                    </StackPanel>
+                                </Button>
+                            </controls:WrapPanel>
+
+
+                        </Border>
+
+                        <!-- Main content area -->
+                        <Grid Grid.Row="1" Margin="12,6,12,12">
+
+                            <!-- ListView for policy settings -->
+                            <ListView IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"                                                 
+                                      SelectionMode="Single"
+                                      SelectedItem="{x:Bind ViewModel.PolicySettingsSelectedItem, Mode=TwoWay}"
+                                      Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                      CornerRadius="8"
+                                      BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                      BorderThickness="1"
+                                      Padding="0"
+                                      AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+                                      CanDragItems="{x:Bind ViewModel.IsNotElevated}"
+                                      CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
+                                      ItemsSource="{x:Bind ViewModel.PolicySettingsCollection}"
+                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                      ScrollViewer.ZoomMode="Disabled"
+                                      ScrollViewer.HorizontalScrollMode="Auto">
+
+                                <ListView.Header>
+                                    <Border Background="{ThemeResource LayerOnMicaBaseAltFillColorDefault}" 
+                                            CornerRadius="8,8,0,0" 
+                                            Padding="18"
+                                            MinWidth="1050">
+                                        <interactivity:Interaction.Behaviors>
+                                            <customUI:StickyHeaderBehaviorV2/>
+                                        </interactivity:Interaction.Behaviors>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="200" />
+                                                <ColumnDefinition Width="250" />
+                                                <ColumnDefinition Width="180" />
+                                                <ColumnDefinition Width="200" />
+                                                <ColumnDefinition Width="120" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0" 
+                                                       Text="Provider" 
+                                                       FontWeight="SemiBold"                                                        
+                                                       VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="1" 
+                                                       Text="Key" 
+                                                       FontWeight="SemiBold"                                                        
+                                                       VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="2" 
+                                                       Text="Value Name" 
+                                                       FontWeight="SemiBold"                                                        
+                                                       VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="3" 
+                                                       Text="Value" 
+                                                       FontWeight="SemiBold"                                                        
+                                                       VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="4" 
+                                                       Text="Type" 
+                                                       FontWeight="SemiBold"                                                        
+                                                       VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                </ListView.Header>
+
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="PolicyEditor:PolicySettings">
+                                        <Border Background="Transparent" 
+                                                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" 
+                                                BorderThickness="0,0,0,1" 
+                                                Padding="16,12"
+                                                MinWidth="1050">
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="250" />
+                                                    <ColumnDefinition Width="180" />
+                                                    <ColumnDefinition Width="200" />
+                                                    <ColumnDefinition Width="120" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Provider TextBox -->
+                                                <TextBox Grid.Column="0" 
+                                                         Text="{x:Bind Provider, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         BorderThickness="1"
+                                                         Margin="0,0,8,0"
+                                                         VerticalAlignment="Center"
+                                                         x:Uid="ProviderNameTextBox" />
+
+                                                <!-- Key TextBox -->
+                                                <TextBox Grid.Column="1" 
+                                                         Text="{x:Bind Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         BorderThickness="1"
+                                                         Margin="0,0,8,0"
+                                                         VerticalAlignment="Center"
+                                                         x:Uid="KeyIdentifierTextBox" />
+
+                                                <!-- Value Name TextBox -->
+                                                <TextBox Grid.Column="2" 
+                                                         Text="{x:Bind ValueName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         BorderThickness="1"
+                                                         Margin="0,0,8,0"
+                                                         VerticalAlignment="Center"
+                                                         x:Uid="ValueNameTextBox" />
+
+                                                <!-- Value TextBox -->
+                                                <TextBox Grid.Column="3" 
+                                                         Text="{x:Bind ValueStr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         BorderThickness="1"
+                                                         Margin="0,0,8,0"
+                                                         VerticalAlignment="Center"
+                                                         TextWrapping="Wrap"
+                                                         x:Uid="EnterValueTextBox" />
+
+                                                <!-- Value Type ComboBox -->
+                                                <ComboBox Grid.Column="4" 
+                                                          SelectedIndex="{x:Bind Type, Mode=TwoWay}"
+                                                          ItemsSource="{x:Bind ParentViewModel.TypeOptions}"
+                                                          Margin="0,0,8,0"
+                                                          VerticalAlignment="Center"
+                                                          HorizontalAlignment="Stretch" />
+
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                        <Setter Property="Padding" Value="0" />
+                                        <Setter Property="Margin" Value="0" />
+                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListViewItem">
+                                                    <Grid x:Name="LayoutRoot" 
+                                                          Background="{TemplateBinding Background}" 
+                                                          BorderBrush="{TemplateBinding BorderBrush}" 
+                                                          BorderThickness="{TemplateBinding BorderThickness}">
+
+                                                        <VisualStateManager.VisualStateGroups>
+                                                            <VisualStateGroup x:Name="CommonStates">
+                                                                <!-- Normal state -->
+                                                                <VisualState x:Name="Normal">
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetName="AnimatedBorder"
+                                                                                         Storyboard.TargetProperty="Opacity"
+                                                                                         To="0"
+                                                                                         Duration="0:0:0.3"/>
+                                                                    </Storyboard>
+                                                                </VisualState>
+
+                                                                <!-- Hover state -->
+                                                                <VisualState x:Name="PointerOver">
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetName="AnimatedBorder"
+                                                                                         Storyboard.TargetProperty="Opacity"
+                                                                                         To="1"
+                                                                                         Duration="0:0:0.2"/>
+                                                                    </Storyboard>
+                                                                </VisualState>
+
+                                                                <!-- Pressed state -->
+                                                                <VisualState x:Name="Pressed">
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetName="AnimatedBorder"
+                                                                                         Storyboard.TargetProperty="Opacity"
+                                                                                         To="1"
+                                                                                         Duration="0:0:0.1"/>
+                                                                    </Storyboard>
+                                                                </VisualState>
+
+                                                                <!-- Selected state -->
+                                                                <VisualState x:Name="Selected">
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetName="AnimatedBorder"
+                                                                                         Storyboard.TargetProperty="Opacity"
+                                                                                         To="1"
+                                                                                         Duration="0:0:0.2"/>
+                                                                    </Storyboard>
+                                                                </VisualState>
+
+                                                                <!-- PointerOverSelected state -->
+                                                                <VisualState x:Name="PointerOverSelected">
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetName="AnimatedBorder"
+                                                                                         Storyboard.TargetProperty="Opacity"
+                                                                                         To="1"
+                                                                                         Duration="0:0:0.1"/>
+                                                                    </Storyboard>
+                                                                </VisualState>
+                                                            </VisualStateGroup>
+                                                        </VisualStateManager.VisualStateGroups>
+
+                                                        <!-- Animated Border with gradient setup -->
+                                                        <Border x:Name="AnimatedBorder"
+                                                                BorderThickness="1"
+                                                                CornerRadius="4"
+                                                                Opacity="0"
+                                                                Margin="1">
+                                                            <Border.BorderBrush>
+                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                    <GradientStop Color="Transparent" Offset="0" x:Name="GradientStop1"/>
+                                                                    <GradientStop Color="DeepPink" Offset="0.25"/>
+                                                                    <GradientStop Color="MediumOrchid" Offset="0.5"/>
+                                                                    <GradientStop Color="DodgerBlue" Offset="0.75"/>
+                                                                    <GradientStop Color="Transparent" Offset="1" x:Name="GradientStop2"/>
+                                                                </LinearGradientBrush>
+                                                            </Border.BorderBrush>
+                                                        </Border>
+
+                                                        <ContentPresenter x:Name="ContentPresenter" 
+                                                                          Content="{TemplateBinding Content}" 
+                                                                          ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                                                          Margin="{TemplateBinding Padding}" 
+                                                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+
+                            </ListView>
+
+                            <!-- Empty state overlay - positioned to respect the ListView header bounds -->
+                            <Grid Visibility="{x:Bind ViewModel.PolicySettingsEmptyStateVisibility, Mode=OneWay}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <!-- Header spacer - matches ListView header height -->
+                                <Border Grid.Row="0"
+                                        Background="Transparent"
+                                        Padding="18"
+                                        MinWidth="1050">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="200" />
+                                            <ColumnDefinition Width="250" />
+                                            <ColumnDefinition Width="180" />
+                                            <ColumnDefinition Width="200" />
+                                            <ColumnDefinition Width="120" />
+                                        </Grid.ColumnDefinitions>
+                                        <!-- Invisible content to match header height -->
+                                        <TextBlock Grid.Column="0" 
+                                                   Text="Provider" 
+                                                   FontWeight="SemiBold"                                                        
+                                                   VerticalAlignment="Center"
+                                                   Opacity="0" />
+                                    </Grid>
+                                </Border>
+
+                                <!-- Empty state content area -->
+                                <Grid Grid.Row="1"
+                                      Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                      CornerRadius="0,0,8,8"
+                                      BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                      BorderThickness="1,0,1,1">
+
+                                    <StackPanel HorizontalAlignment="Center" 
+                                                VerticalAlignment="Center" 
+                                                Spacing="16"
+                                                Padding="40">
+
+                                        <FontIcon Glyph="&#xE713;" 
+                                                  FontSize="48" 
+                                                  Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                                        <TextBlock x:Uid="NoPolicySettingsTextBlock"
+                                                   Style="{ThemeResource SubtitleTextBlockStyle}"
+                                                   HorizontalAlignment="Center"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                                        <TextBlock x:Uid="NoPolicySettingsLoadedTextBlock"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   MaxWidth="300"
+                                                   Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+
+                        </Grid>
+
+                    </Grid>
                 </TabViewItem.Content>
             </TabViewItem>
-
         </TabView>
 
     </Grid>

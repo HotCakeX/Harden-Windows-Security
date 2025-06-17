@@ -5476,4 +5476,157 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>वर्तमान में उपयोग में आने वाले खाते का विवरण</value>
   </data>
+  <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
+    <value>नीति फ़ाइल में परिवर्तन सफलतापूर्वक सहेजे गए।</value>
+  </data>
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+    <value>सहायता - प्रश्न पूछें</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <value>एप्लिकेशन में खोजें</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम पर स्थापित एप्लिकेशन में खोजें।</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम पर स्थापित एप्लिकेशन में खोजें।</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>अस्वीकृति नीति का नाम</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>जो अस्वीकृति नीति बनाई जाएगी उसके लिए एक नाम दर्ज करें।</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>जो अस्वीकृति नीति बनाई जाएगी उसके लिए एक नाम दर्ज करें।</value>
+  </data>
+  <data name="CustomPolicySettingsTabViewItem.Header" xml:space="preserve">
+    <value>कस्टम नीति सेटिंग्स</value>
+  </data>
+  <data name="CustomPolicySettingsTitleTextBlock.Text" xml:space="preserve">
+    <value>कस्टम नीति सेटिंग्स को कॉन्फ़िगर और प्रबंधित करें तथा पूर्वनिर्धारित नीतियों को जोड़ने के लिए प्रीसेट का उपयोग करें।</value>
+  </data>
+  <data name="CustomPolicySettingsPresets.PlaceholderText" xml:space="preserve">
+    <value>एक सेटिंग प्रीसेट चुनें</value>
+  </data>
+  <data name="AddSettingTextBlock.Text" xml:space="preserve">
+    <value>सेटिंग जोड़ें</value>
+  </data>
+  <data name="DeletedSelectedSettingTextBlock.Text" xml:space="preserve">
+    <value>चयनित को हटाएं</value>
+  </data>
+  <data name="ClearAllPolicySettingsTextBlock.Text" xml:space="preserve">
+    <value>सब साफ़ करें</value>
+  </data>
+  <data name="AddButton.Content" xml:space="preserve">
+    <value>जोड़ें</value>
+  </data>
+  <data name="NoPolicySettingsTextBlock.Text" xml:space="preserve">
+    <value>कोई नीति सेटिंग्स नहीं</value>
+  </data>
+  <data name="NoPolicySettingsLoadedTextBlock.Text" xml:space="preserve">
+    <value>अभी तक कोई कस्टम नीति सेटिंग्स लोड या बनाई नहीं गई हैं।</value>
+  </data>
+  <data name="EnterValueTextBox.PlaceholderText" xml:space="preserve">
+    <value>मान दर्ज करें</value>
+  </data>
+  <data name="ValueNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>मान का नाम</value>
+  </data>
+  <data name="KeyIdentifierTextBox.PlaceholderText" xml:space="preserve">
+    <value>कुंजी पहचानकर्ता</value>
+  </data>
+  <data name="ProviderNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>प्रदाता का नाम</value>
+  </data>
+  <data name="ClearAllPolicySettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी नीति सेटिंग्स साफ़ करें</value>
+  </data>
+  <data name="ClearAllPolicySettingsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी नीति सेटिंग्स साफ़ करें</value>
+  </data>
+  <data name="DeletedSelectedSettingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित नीति सेटिंग हटाएं</value>
+  </data>
+  <data name="DeletedSelectedSettingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित नीति सेटिंग हटाएं</value>
+  </data>
+  <data name="AddSettingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक नई खाली नीति सेटिंग जोड़ें</value>
+  </data>
+  <data name="AddSettingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक नई खाली नीति सेटिंग जोड़ें</value>
+  </data>
+  <data name="DeployTextBlock.Text" xml:space="preserve">
+    <value>तैनात करें</value>
+  </data>
+  <data name="SignInSegmentedItem.Content" xml:space="preserve">
+    <value>साइन इन करें</value>
+  </data>
+  <data name="SignedInAccountsSegmentedItem.Content" xml:space="preserve">
+    <value>साइन इन खाते</value>
+  </data>
+  <data name="ActiveAccountSegmentedItem.Content" xml:space="preserve">
+    <value>सक्रिय खाता</value>
+  </data>
+  <data name="FilterTextBlock.Text" xml:space="preserve">
+    <value>फ़िल्टर</value>
+  </data>
+  <data name="BrowseForMDELogsTextBlock.Text" xml:space="preserve">
+    <value>MDE उन्नत शिकार लॉग्स ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseForMDELogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>MDE उन्नत शिकार लॉग्स ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseForMDELogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>MDE उन्नत शिकार लॉग्स ब्राउज़ करें</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.Content" xml:space="preserve">
+    <value>चरण 2 पर जाएं</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऑडिट मोड में चयनित नीति की तैनाती शुरू करें और चरण 2 पर जाएं</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऑडिट मोड में चयनित नीति की तैनाती शुरू करें और चरण 2 पर जाएं</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.Content" xml:space="preserve">
+    <value>चरण 3 पर जाएं</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>इवेंट लॉग्स और चयनित निर्देशिकाओं (यदि कोई हो) की स्कैनिंग शुरू करें और चरण 3 पर जाएं</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>इवेंट लॉग्स और चयनित निर्देशिकाओं (यदि कोई हो) की स्कैनिंग शुरू करें और चरण 3 पर जाएं</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.Content" xml:space="preserve">
+    <value>फ़ोल्डर ब्राउज़ करें</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आपके नए या मौजूदा एप्लिकेशन के फ़ोल्डर ब्राउज़ करें जो स्थापित हैं और ब्लॉक हो रहे हैं</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>आपके नए या मौजूदा एप्लिकेशन के फ़ोल्डर ब्राउज़ करें जो स्थापित हैं और ब्लॉक हो रहे हैं</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.Header" xml:space="preserve">
+    <value>पूरक नीति का नाम</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.PlaceholderText" xml:space="preserve">
+    <value>पूरक नीति के लिए एक नाम दर्ज करें</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>जो पूरक नीति बनाई जाएगी उसके लिए एक नाम दर्ज करें।</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>जो पूरक नीति बनाई जाएगी उसके लिए एक नाम दर्ज करें।</value>
+  </data>
+  <data name="Step1TextBlock.Text" xml:space="preserve">
+    <value>चरण 1</value>
+  </data>
+    <data name="Step2TextBlock.Text" xml:space="preserve">
+    <value>चरण 2</value>
+  </data>
+    <data name="Step3TextBlock.Text" xml:space="preserve">
+    <value>चरण 3</value>
+  </data>
 </root>

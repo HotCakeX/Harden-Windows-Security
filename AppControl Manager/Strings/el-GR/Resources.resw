@@ -5476,4 +5476,157 @@
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>Λεπτομέρειες του λογαριασμού που χρησιμοποιείται επί του παρόντος</value>
   </data>
+  <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
+    <value>Οι αλλαγές αποθηκεύτηκαν επιτυχώς στο αρχείο πολιτικής.</value>
+  </data>
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+    <value>Υποστήριξη - Κάντε Ερωτήσεις</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <value>Αναζήτηση μεταξύ εφαρμογών</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση μεταξύ των εφαρμογών που είναι εγκατεστημένες στο σύστημα.</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση μεταξύ των εφαρμογών που είναι εγκατεστημένες στο σύστημα.</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Όνομα Πολιτικής Άρνησης</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εισάγετε ένα όνομα για την πολιτική άρνησης που θα δημιουργηθεί.</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εισάγετε ένα όνομα για την πολιτική άρνησης που θα δημιουργηθεί.</value>
+  </data>
+  <data name="CustomPolicySettingsTabViewItem.Header" xml:space="preserve">
+    <value>Προσαρμοσμένες Ρυθμίσεις Πολιτικής</value>
+  </data>
+  <data name="CustomPolicySettingsTitleTextBlock.Text" xml:space="preserve">
+    <value>Διαμορφώστε και διαχειριστείτε προσαρμοσμένες ρυθμίσεις πολιτικής και χρησιμοποιήστε προεπιλογές για να προσθέσετε προκαθορισμένες πολιτικές.</value>
+  </data>
+  <data name="CustomPolicySettingsPresets.PlaceholderText" xml:space="preserve">
+    <value>Επιλέξτε μια προεπιλογή ρυθμίσεων</value>
+  </data>
+  <data name="AddSettingTextBlock.Text" xml:space="preserve">
+    <value>Προσθήκη Ρύθμισης</value>
+  </data>
+  <data name="DeletedSelectedSettingTextBlock.Text" xml:space="preserve">
+    <value>Διαγραφή Επιλεγμένου</value>
+  </data>
+  <data name="ClearAllPolicySettingsTextBlock.Text" xml:space="preserve">
+    <value>Εκκαθάριση Όλων</value>
+  </data>
+  <data name="AddButton.Content" xml:space="preserve">
+    <value>Προσθήκη</value>
+  </data>
+  <data name="NoPolicySettingsTextBlock.Text" xml:space="preserve">
+    <value>Καμία Ρύθμιση Πολιτικής</value>
+  </data>
+  <data name="NoPolicySettingsLoadedTextBlock.Text" xml:space="preserve">
+    <value>Δεν έχουν φορτωθεί ή δημιουργηθεί προσαρμοσμένες ρυθμίσεις πολιτικής ακόμη.</value>
+  </data>
+  <data name="EnterValueTextBox.PlaceholderText" xml:space="preserve">
+    <value>Εισάγετε τιμή</value>
+  </data>
+  <data name="ValueNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Όνομα τιμής</value>
+  </data>
+  <data name="KeyIdentifierTextBox.PlaceholderText" xml:space="preserve">
+    <value>Αναγνωριστικό Κλειδιού</value>
+  </data>
+  <data name="ProviderNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Όνομα παρόχου</value>
+  </data>
+  <data name="ClearAllPolicySettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εκκαθάριση όλων των ρυθμίσεων πολιτικής</value>
+  </data>
+  <data name="ClearAllPolicySettingsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εκκαθάριση όλων των ρυθμίσεων πολιτικής</value>
+  </data>
+  <data name="DeletedSelectedSettingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγραφή επιλεγμένης ρύθμισης πολιτικής</value>
+  </data>
+  <data name="DeletedSelectedSettingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγραφή επιλεγμένης ρύθμισης πολιτικής</value>
+  </data>
+  <data name="AddSettingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη νέας κενής ρύθμισης πολιτικής</value>
+  </data>
+  <data name="AddSettingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη νέας κενής ρύθμισης πολιτικής</value>
+  </data>
+  <data name="DeployTextBlock.Text" xml:space="preserve">
+    <value>Ανάπτυξη</value>
+  </data>
+  <data name="SignInSegmentedItem.Content" xml:space="preserve">
+    <value>Σύνδεση</value>
+  </data>
+  <data name="SignedInAccountsSegmentedItem.Content" xml:space="preserve">
+    <value>Συνδεδεμένοι Λογαριασμοί</value>
+  </data>
+  <data name="ActiveAccountSegmentedItem.Content" xml:space="preserve">
+    <value>Ενεργός Λογαριασμός</value>
+  </data>
+  <data name="FilterTextBlock.Text" xml:space="preserve">
+    <value>Φίλτρο</value>
+  </data>
+  <data name="BrowseForMDELogsTextBlock.Text" xml:space="preserve">
+    <value>Αναζήτηση αρχείων καταγραφής προηγμένου κυνηγιού MDE</value>
+  </data>
+  <data name="BrowseForMDELogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση αρχείων καταγραφής προηγμένου κυνηγιού MDE</value>
+  </data>
+  <data name="BrowseForMDELogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση αρχείων καταγραφής προηγμένου κυνηγιού MDE</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.Content" xml:space="preserve">
+    <value>Πηγαίνετε στο βήμα 2</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Έναρξη ανάπτυξης της επιλεγμένης πολιτικής σε λειτουργία ελέγχου και μετάβαση στο βήμα 2</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Έναρξη ανάπτυξης της επιλεγμένης πολιτικής σε λειτουργία ελέγχου και μετάβαση στο βήμα 2</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.Content" xml:space="preserve">
+    <value>Πηγαίνετε στο βήμα 3</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Έναρξη σάρωσης των αρχείων καταγραφής συμβάντων και των επιλεγμένων καταλόγων (εάν υπάρχουν) και μετάβαση στο βήμα 3</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Έναρξη σάρωσης των αρχείων καταγραφής συμβάντων και των επιλεγμένων καταλόγων (εάν υπάρχουν) και μετάβαση στο βήμα 3</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.Content" xml:space="preserve">
+    <value>Αναζήτηση φακέλων</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση φακέλων των νέων ή υπαρχόντων εφαρμογών σας που είναι εγκατεστημένες και μπλοκάρονται</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση φακέλων των νέων ή υπαρχόντων εφαρμογών σας που είναι εγκατεστημένες και μπλοκάρονται</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.Header" xml:space="preserve">
+    <value>Όνομα Συμπληρωματικής Πολιτικής</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.PlaceholderText" xml:space="preserve">
+    <value>Εισάγετε όνομα για τη συμπληρωματική πολιτική</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εισάγετε ένα όνομα για τη συμπληρωματική πολιτική που θα δημιουργηθεί.</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εισάγετε ένα όνομα για τη συμπληρωματική πολιτική που θα δημιουργηθεί.</value>
+  </data>
+  <data name="Step1TextBlock.Text" xml:space="preserve">
+    <value>Βήμα 1</value>
+  </data>
+    <data name="Step2TextBlock.Text" xml:space="preserve">
+    <value>Βήμα 2</value>
+  </data>
+    <data name="Step3TextBlock.Text" xml:space="preserve">
+    <value>Βήμα 3</value>
+  </data>
 </root>

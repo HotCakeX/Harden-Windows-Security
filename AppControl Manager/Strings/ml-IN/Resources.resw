@@ -5476,4 +5476,157 @@
   <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
     <value>നിലവിൽ ഉപയോഗത്തിലുള്ള അക്കൗണ്ടിന്റെ വിശദാംശങ്ങൾ</value>
   </data>
+  <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
+    <value>നയ ഫയലിലേക്കുള്ള മാറ്റങ്ങൾ വിജയകരമായി സേവ് ചെയ്തു.</value>
+  </data>
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+    <value>സപ്പോർട്ട് - ചോദ്യങ്ങൾ ചോദിക്കുക</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <value>ആപ്പുകളിൽ തിരയുക</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പുകളിൽ തിരയുക.</value>
+  </data>
+  <data name="AppsSearchBoxTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പുകളിൽ തിരയുക.</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>നിരസിക്കൽ നയത്തിന്റെ പേര്</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സൃഷ്ടിക്കപ്പെടുന്ന നിരസിക്കൽ നയത്തിന് ഒരു പേര് നൽകുക.</value>
+  </data>
+  <data name="DenyPolicyNameTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സൃഷ്ടിക്കപ്പെടുന്ന നിരസിക്കൽ നയത്തിന് ഒരു പേര് നൽകുക.</value>
+  </data>
+  <data name="CustomPolicySettingsTabViewItem.Header" xml:space="preserve">
+    <value>കസ്റ്റം നയ ക്രമീകരണങ്ങൾ</value>
+  </data>
+  <data name="CustomPolicySettingsTitleTextBlock.Text" xml:space="preserve">
+    <value>കസ്റ്റം നയ ക്രമീകരണങ്ങൾ കോൺഫിഗർ ചെയ്യുകയും പരിപാലിക്കുകയും പൂർവ്വനിർവ്വചിത നയങ്ങൾ ചേർക്കാൻ പ്രീസെറ്റുകൾ ഉപയോഗിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="CustomPolicySettingsPresets.PlaceholderText" xml:space="preserve">
+    <value>ഒരു ക്രമീകരണ പ്രീസെറ്റ് തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="AddSettingTextBlock.Text" xml:space="preserve">
+    <value>ക്രമീകരണം ചേർക്കുക</value>
+  </data>
+  <data name="DeletedSelectedSettingTextBlock.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തത് ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="ClearAllPolicySettingsTextBlock.Text" xml:space="preserve">
+    <value>എല്ലാം മായ്ക്കുക</value>
+  </data>
+  <data name="AddButton.Content" xml:space="preserve">
+    <value>ചേർക്കുക</value>
+  </data>
+  <data name="NoPolicySettingsTextBlock.Text" xml:space="preserve">
+    <value>നയ ക്രമീകരണങ്ങൾ ഇല്ല</value>
+  </data>
+  <data name="NoPolicySettingsLoadedTextBlock.Text" xml:space="preserve">
+    <value>ഇതുവരെ കസ്റ്റം നയ ക്രമീകരണങ്ങൾ ലോഡ് ചെയ്യപ്പെടുകയോ സൃഷ്ടിക്കപ്പെടുകയോ ചെയ്തിട്ടില്ല.</value>
+  </data>
+  <data name="EnterValueTextBox.PlaceholderText" xml:space="preserve">
+    <value>മൂല്യം നൽകുക</value>
+  </data>
+  <data name="ValueNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>മൂല്യത്തിന്റെ പേര്</value>
+  </data>
+  <data name="KeyIdentifierTextBox.PlaceholderText" xml:space="preserve">
+    <value>കീ ഐഡന്റിഫയർ</value>
+  </data>
+  <data name="ProviderNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>പ്രൊവൈഡറിന്റെ പേര്</value>
+  </data>
+  <data name="ClearAllPolicySettingsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ നയ ക്രമീകരണങ്ങളും മായ്ക്കുക</value>
+  </data>
+  <data name="ClearAllPolicySettingsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ നയ ക്രമീകരണങ്ങളും മായ്ക്കുക</value>
+  </data>
+  <data name="DeletedSelectedSettingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത നയ ക്രമീകരണം ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="DeletedSelectedSettingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത നയ ക്രമീകരണം ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="AddSettingButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പുതിയ ശൂന്യമായ നയ ക്രമീകരണം ചേർക്കുക</value>
+  </data>
+  <data name="AddSettingButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പുതിയ ശൂന്യമായ നയ ക്രമീകരണം ചേർക്കുക</value>
+  </data>
+  <data name="DeployTextBlock.Text" xml:space="preserve">
+    <value>വിന്യസിക്കുക</value>
+  </data>
+  <data name="SignInSegmentedItem.Content" xml:space="preserve">
+    <value>സൈൻ ഇൻ ചെയ്യുക</value>
+  </data>
+  <data name="SignedInAccountsSegmentedItem.Content" xml:space="preserve">
+    <value>സൈൻ ഇൻ ചെയ്ത അക്കൗണ്ടുകൾ</value>
+  </data>
+  <data name="ActiveAccountSegmentedItem.Content" xml:space="preserve">
+    <value>സജീവ അക്കൗണ്ട്</value>
+  </data>
+  <data name="FilterTextBlock.Text" xml:space="preserve">
+    <value>ഫിൽട്ടർ</value>
+  </data>
+  <data name="BrowseForMDELogsTextBlock.Text" xml:space="preserve">
+    <value>MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ലോഗുകൾക്കായി ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="BrowseForMDELogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ലോഗുകൾക്കായി ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="BrowseForMDELogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ലോഗുകൾക്കായി ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.Content" xml:space="preserve">
+    <value>ഘട്ടം 2-ലേക്ക് പോകുക</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഓഡിറ്റ് മോഡിൽ തിരഞ്ഞെടുത്ത നയത്തിന്റെ വിന്യാസം ആരംഭിക്കുകയും ഘട്ടം 2-ലേക്ക് പോകുകയും ചെയ്യുക</value>
+  </data>
+  <data name="GoToStep2AllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഓഡിറ്റ് മോഡിൽ തിരഞ്ഞെടുത്ത നയത്തിന്റെ വിന്യാസം ആരംഭിക്കുകയും ഘട്ടം 2-ലേക്ക് പോകുകയും ചെയ്യുക</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.Content" xml:space="preserve">
+    <value>ഘട്ടം 3-ലേക്ക് പോകുക</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇവന്റ് ലോഗുകളുടെയും തിരഞ്ഞെടുത്ത ഡയറക്ടറികളുടെയും (എന്തെങ്കിലും ഉണ്ടെങ്കിൽ) സ്കാനിംഗ് ആരംഭിക്കുകയും ഘട്ടം 3-ലേക്ക് പോകുകയും ചെയ്യുക</value>
+  </data>
+  <data name="GoToStep3AllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇവന്റ് ലോഗുകളുടെയും തിരഞ്ഞെടുത്ത ഡയറക്ടറികളുടെയും (എന്തെങ്കിലും ഉണ്ടെങ്കിൽ) സ്കാനിംഗ് ആരംഭിക്കുകയും ഘട്ടം 3-ലേക്ക് പോകുകയും ചെയ്യുക</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.Content" xml:space="preserve">
+    <value>ഫോൾഡറുകൾക്കായി ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്തതും ബ്ലോക്ക് ചെയ്യപ്പെടുന്നതുമായ നിങ്ങളുടെ പുതിയ അല്ലെങ്കിൽ നിലവിലുള്ള ആപ്പുകളുടെ ഫോൾഡറുകൾക്കായി ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="BrowseForFoldersAllowNewAppsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്തതും ബ്ലോക്ക് ചെയ്യപ്പെടുന്നതുമായ നിങ്ങളുടെ പുതിയ അല്ലെങ്കിൽ നിലവിലുള്ള ആപ്പുകളുടെ ഫോൾഡറുകൾക്കായി ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.Header" xml:space="preserve">
+    <value>അനുബന്ധ നയത്തിന്റെ പേര്</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.PlaceholderText" xml:space="preserve">
+    <value>അനുബന്ധ നയത്തിന് ഒരു പേര് നൽകുക</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സൃഷ്ടിക്കപ്പെടുന്ന അനുബന്ധ നയത്തിന് ഒരു പേര് നൽകുക.</value>
+  </data>
+  <data name="SupplementalPolicyNameAllowNewAppsTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സൃഷ്ടിക്കപ്പെടുന്ന അനുബന്ധ നയത്തിന് ഒരു പേര് നൽകുക.</value>
+  </data>
+  <data name="Step1TextBlock.Text" xml:space="preserve">
+    <value>ഘട്ടം 1</value>
+  </data>
+    <data name="Step2TextBlock.Text" xml:space="preserve">
+    <value>ഘട്ടം 2</value>
+  </data>
+    <data name="Step3TextBlock.Text" xml:space="preserve">
+    <value>ഘട്ടം 3</value>
+  </data>
 </root>

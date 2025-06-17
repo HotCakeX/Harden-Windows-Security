@@ -182,7 +182,7 @@
 
                                 <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click}" />
 
-                                <TextBlock Text="View the Code Integrity EVTX files you selected." TextWrapping="WrapWholeWords" />
+                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
                                 <TextBox Text="{x:Bind ViewModel.CodeIntegrityEVTX, Mode=OneWay}"
                                          TextWrapping="Wrap"
@@ -205,7 +205,7 @@
 
                                 <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectedAppLockerEVTXFilesFlyout_Clear_Click}" />
 
-                                <TextBlock Text="View the AppLocker EVTX files you selected." TextWrapping="WrapWholeWords" />
+                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
                                 <TextBox Text="{x:Bind ViewModel.AppLockerEVTX, Mode=OneWay}"
                                          TextWrapping="Wrap"
@@ -270,7 +270,7 @@
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center" />
 
-                <Button Content="Policy Name" IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
+                <Button x:Uid="PolicyNameColumnHeaderBtn" IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
                     <Button.Flyout>
                         <Flyout>
                             <Flyout.FlyoutPresenterStyle>

@@ -104,7 +104,7 @@
                                 <controls:Segmented x:Name="segmentedControl"
                                                     HorizontalAlignment="Stretch"
                                                     SelectedIndex="0">
-                                    <controls:SegmentedItem Content="Active Account"
+                                    <controls:SegmentedItem x:Uid="ActiveAccountSegmentedItem"
                                                             Tag="Active">
                                         <controls:SegmentedItem.Icon>
                                             <IconSourceElement>
@@ -114,7 +114,7 @@
 
                                     </controls:SegmentedItem>
 
-                                    <controls:SegmentedItem Content="Sign In"
+                                    <controls:SegmentedItem x:Uid="SignInSegmentedItem"
                                                             Tag="Authentication" >
                                         <controls:SegmentedItem.Icon>
                                             <IconSourceElement>
@@ -123,8 +123,8 @@
                                         </controls:SegmentedItem.Icon>
                                     </controls:SegmentedItem>
 
-                                    <controls:SegmentedItem Content="Signed In Accounts"
-                                    Tag="SignedIn">
+                                    <controls:SegmentedItem x:Uid="SignedInAccountsSegmentedItem"
+                                                            Tag="SignedIn">
                                         <controls:SegmentedItem.Icon>
                                             <IconSourceElement>
                                                 <BitmapIconSource UriSource="/Assets/External/Vault.png" ShowAsMonochrome="False" />
@@ -236,8 +236,13 @@
 
 
                                         <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                            Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="5" Padding="3">
+                                                    animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                                    Style="{StaticResource PanelStyle}"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Orientation="Vertical"
+                                                    Spacing="5"
+                                                    Padding="3">
 
                                             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Top">
 

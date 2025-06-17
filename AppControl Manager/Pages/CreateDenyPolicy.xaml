@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:others="using:AppControlManager.Others"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -18,6 +19,7 @@
 
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -79,8 +81,91 @@
 
             </controls:WrapPanel>
 
+            <Border x:Name="AnimatedBorder"
+                    Grid.Row="1"
+                    ui:Effects.Shadow="{StaticResource BorderShadow}"
+                    BorderThickness="0"
+                    Margin="15,0,15,0"
+                    PointerEntered="{x:Bind OnBorderPointerEntered}"
+                    PointerExited="{x:Bind OnBorderPointerExited}">
+
+                <ani:Explicit.Animations>
+                    <ani:AnimationSet x:Name="ShadowEnterAnimation">
+                        <ani:BlurRadiusDropShadowAnimation To="20"/>
+                    </ani:AnimationSet>
+
+                    <ani:AnimationSet x:Name="ShadowExitAnimation">
+                        <ani:BlurRadiusDropShadowAnimation To="10"/>
+                    </ani:AnimationSet>
+                </ani:Explicit.Animations>
+
+                <Border Height="60"
+                        Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
+                        BorderThickness="0"
+                        CornerRadius="18">
+
+                    <Grid Margin="10,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="230" Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="1"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center">
+
+                            <TextBlock x:Uid="Mode" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" />
+
+                            <ComboBox SelectedIndex="{x:Bind ViewModel.OperationModeComboBoxSelectedIndex, Mode=TwoWay}"
+                                      x:Uid="PolicyCreationOperationModeComboBox">
+                                <ComboBoxItem x:Uid="CreateNewPolicyComboBoxItem"/>
+                                <ComboBoxItem x:Uid="AddToExistingPolicyComboBoxItem"/>
+                            </ComboBox>
+
+                        </StackPanel>
+
+                        <Border Grid.Column="1" Grid.ColumnSpan="1" Background="Transparent" BorderThickness="0" CornerRadius="18">
+
+                            <controls:WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15">
+
+                                <customUI:ButtonV2 x:Uid="SelectPolicyFileToAddRulesToButton"
+                                                   Margin="15,0,0,0"
+                                                   Click="{x:Bind ViewModel.PolicyFileToMergeWithButton_Click}"
+                                                   IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
+
+                                    <customUI:ButtonV2.Flyout>
+                                        <Flyout>
+
+                                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearPolicyFileToMergeWith}" />
+
+                                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                                <TextBox Text="{x:Bind ViewModel.PolicyFileToMergeWith, Mode=OneWay}"
+                                                         TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                         MinWidth="400" IsReadOnly="True" />
+
+                                            </controls:WrapPanel>
+
+                                        </Flyout>
+                                    </customUI:ButtonV2.Flyout>
+
+                                </customUI:ButtonV2>
+
+                            </controls:WrapPanel>
+
+                        </Border>
+
+                    </Grid>
+                </Border>
+
+            </Border>
+
             <StackPanel HorizontalAlignment="Stretch"
-                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1" Margin="0,40,0,0">
+                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
@@ -194,9 +279,13 @@
 
                         </customUI:SettingsCardV3>
 
-                        <controls:SettingsCard x:Uid="DenyPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                        <controls:SettingsCard x:Uid="DenyPolicyNameSettingsCard"
+                                               IsClickEnabled="False"
+                                               Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                               IsActionIconVisible="False">
                             <TextBox Text="{x:Bind ViewModel.filesAndFoldersDenyPolicyName, Mode=TwoWay}"
-                                     PlaceholderText="Deny Policy Name"
+                                     x:Uid="DenyPolicyNameTextBox"
+                                     Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"/>
                         </controls:SettingsCard>
 
@@ -219,8 +308,7 @@
                             <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
 
                                 <ProgressRing IsIndeterminate="False"
-                                              Value="{x:Bind ViewModel.FilesAndFoldersProgressRingValue, Mode=OneWay}"
-                                              ToolTipService.ToolTip="The Deny policy creation progress" />
+                                              Value="{x:Bind ViewModel.FilesAndFoldersProgressRingValue, Mode=OneWay}" />
 
                                 <!-- Scalability Button with RadialGauge Flyout -->
                                 <Button Content="{x:Bind ViewModel.FilesAndFoldersScalabilityButtonContent, Mode=OneWay}"
@@ -320,11 +408,13 @@
                     <controls:SettingsExpander.Items>
 
                         <controls:SettingsCard x:Uid="DenyPolicyNameSettingsCard"
+                                               Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                IsClickEnabled="False"
                                                IsActionIconVisible="False">
                             <TextBox IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
                                      Text="{x:Bind ViewModel.PFNBasedDenyPolicyName, Mode=TwoWay}"
-                                     PlaceholderText="Deny Policy Name"/>
+                                     Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                     x:Uid="DenyPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Uid="PackageFamilyNamesSelectionSettingsCard"
@@ -340,7 +430,7 @@
                                                     HorizontalSpacing="10">
 
                                     <TextBox Text="{x:Bind ViewModel.PFNBasedSearchKeywordForAppsList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                             PlaceholderText="Search among the apps"/>
+                                             x:Uid="AppsSearchBoxTextBox"/>
 
                                     <TextBlock x:Uid="SelectedAppsTextBlock"
                                                Text="{x:Bind ViewModel.PFNBasedSelectedItemsCount, Mode=OneWay}"
@@ -459,10 +549,14 @@
 
                     <controls:SettingsExpander.Items>
 
-                        <controls:SettingsCard x:Uid="DenyPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
+                        <controls:SettingsCard x:Uid="DenyPolicyNameSettingsCard"
+                                               IsClickEnabled="False"
+                                               Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                               IsActionIconVisible="False">
                             <TextBox IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
                                      Text="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedDenyPolicyName, Mode=TwoWay}"
-                                     PlaceholderText="Choose a Deny policy name"/>
+                                     Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                     x:Uid="DenyPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Uid="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">

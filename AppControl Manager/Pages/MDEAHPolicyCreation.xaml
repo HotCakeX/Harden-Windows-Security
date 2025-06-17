@@ -94,13 +94,13 @@
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEE6F;" />
-                            <TextBlock Text="Scan Logs" Margin="5,0,0,0" />
+                            <TextBlock x:Uid="ScanLogsTextBlock" Margin="5,0,0,0" />
 
                         </StackPanel>
                     </Button.Content>
                 </Button>
 
-                <customUI:ButtonV2 ToolTipService.ToolTip="Browse for Advanced Hunting Logs"
+                <customUI:ButtonV2 x:Uid="BrowseForMDELogsButton"
                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                    Click="{x:Bind ViewModel.BrowseForLogs_Click}">
 
@@ -111,11 +111,11 @@
 
                                 <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.BrowseForLogs_Flyout_Clear_Click}" />
 
-                                <TextBlock Text="View the log files you selected." TextWrapping="WrapWholeWords" />
+                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
                                 <TextBox Text="{x:Bind ViewModel.MDEAdvancedHuntingLogs, Mode=OneWay}"
-                                    TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                    MinWidth="400" IsReadOnly="True" />
+                                         TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                         MinWidth="400" IsReadOnly="True" />
 
                             </controls:WrapPanel>
 
@@ -125,7 +125,7 @@
                     <customUI:ButtonV2.Content>
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xEC50;" />
-                            <TextBlock Text="Browse for MDE Advanced Hunting logs" Margin="5,0,0,0" />
+                            <TextBlock x:Uid="BrowseForMDELogsTextBlock" Margin="5,0,0,0" />
                         </StackPanel>
                     </customUI:ButtonV2.Content>
                 </customUI:ButtonV2>
@@ -206,7 +206,7 @@
                                 <controls:Segmented x:Name="segmentedControl1"
                                                     SelectedIndex="0"
                                                     HorizontalAlignment="Stretch">
-                                    <controls:SegmentedItem Content="Active Account"
+                                    <controls:SegmentedItem x:Uid="ActiveAccountSegmentedItem"
                                                             Tag="Active">
                                         <controls:SegmentedItem.Icon>
                                             <IconSourceElement>
@@ -216,8 +216,8 @@
 
                                     </controls:SegmentedItem>
 
-                                    <controls:SegmentedItem Content="Sign In"
-                                            Tag="Authentication" >
+                                    <controls:SegmentedItem x:Uid="SignInSegmentedItem"
+                                                            Tag="Authentication" >
                                         <controls:SegmentedItem.Icon>
                                             <IconSourceElement>
                                                 <BitmapIconSource UriSource="/Assets/External/Authentication.png" ShowAsMonochrome="False" />
@@ -225,8 +225,8 @@
                                         </controls:SegmentedItem.Icon>
                                     </controls:SegmentedItem>
 
-                                    <controls:SegmentedItem Content="Signed In Accounts"
-                                            Tag="SignedIn">
+                                    <controls:SegmentedItem x:Uid="SignedInAccountsSegmentedItem"
+                                                            Tag="SignedIn">
                                         <controls:SegmentedItem.Icon>
                                             <IconSourceElement>
                                                 <BitmapIconSource UriSource="/Assets/External/Vault.png" ShowAsMonochrome="False" />
@@ -692,7 +692,7 @@
                     </DropDownButton.Flyout>
                 </DropDownButton>
 
-                <Button Content="Policy Name"
+                <Button x:Uid="PolicyNameColumnHeaderBtn"
                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
                     <Button.Flyout>
                         <Flyout>

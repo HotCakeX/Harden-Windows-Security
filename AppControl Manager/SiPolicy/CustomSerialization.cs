@@ -361,7 +361,7 @@ internal static class CustomSerialization
 				}
 				else if (setting.Value.Item is bool boolVal)
 				{
-					// Somehow the CIP conversion cmdlet doesn't like "True" but "true" is ok
+					// Must be lowercase for CIP conversion to succeed, "True" is not ok but "true" is ok.
 					if (!AppendTextElement(xmlDoc, valueElement, "Boolean", boolVal.ToString().ToLowerInvariant()))
 					{
 						continue;

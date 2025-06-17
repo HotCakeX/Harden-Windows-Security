@@ -16,7 +16,6 @@
 //
 
 using System;
-using System.Collections.Generic;
 using AppControlManager.Others;
 
 namespace AppControlManager.XMLOps;
@@ -56,42 +55,7 @@ internal static class SetCiPolicyInfo
 
 		#region PolicyName Processing
 
-		if (!string.IsNullOrEmpty(policyName))
-		{
-
-			bool nameSettingFound = false;
-
-			foreach (SiPolicy.Setting item in policyObj.Settings)
-			{
-				if (string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
-				{
-					item.Value.Item = policyName;
-
-					nameSettingFound = true;
-				}
-			}
-
-			// If the Setting node with ValueName="Name" does not exist, create it
-			if (!nameSettingFound)
-			{
-				SiPolicy.Setting newNameSetting = new()
-				{
-					Provider = "PolicyInfo",
-					Key = "Information",
-					ValueName = "Name",
-					Value = new SiPolicy.SettingValueType()
-					{
-						Item = policyName
-					}
-				};
-
-				List<SiPolicy.Setting> settings = [.. policyObj.Settings];
-				settings.Add(newNameSetting);
-				policyObj.Settings = [.. settings];
-			}
-		}
+		PolicySettingsManager.SetPolicyName(policyObj, policyName);
 
 		#endregion
 

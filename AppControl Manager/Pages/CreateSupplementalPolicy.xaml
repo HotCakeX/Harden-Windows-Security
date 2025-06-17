@@ -130,7 +130,10 @@
                     </ani:AnimationSet>
                 </ani:Explicit.Animations>
 
-                <Border Height="60" Background="{StaticResource SmokeFillColorDefaultBrush}" BorderThickness="0" CornerRadius="18">
+                <Border Height="60"
+                        Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
+                        BorderThickness="0"
+                        CornerRadius="18">
 
                     <Grid Margin="10,0,0,0">
                         <Grid.ColumnDefinitions>
@@ -138,7 +141,11 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="1" Margin="0,0,10,0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="1"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center">
 
                             <TextBlock x:Uid="Mode" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" />
 
@@ -898,7 +905,8 @@
 
                                 <controls:WrapPanel VerticalAlignment="Center" Orientation="Vertical" Margin="0,0,15,0" VerticalSpacing="15" HorizontalSpacing="10">
 
-                                    <TextBox Text="{x:Bind ViewModel.PFNBasedSearchKeywordForAppsList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Search among the apps"/>
+                                    <TextBox Text="{x:Bind ViewModel.PFNBasedSearchKeywordForAppsList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             x:Uid="AppsSearchBoxTextBox"/>
 
                                     <TextBlock x:Uid="SelectedAppsTextBlock" Text="{x:Bind ViewModel.PFNBasedSelectedItemsCount, Mode=OneWay}" HorizontalAlignment="Center"/>
                                     <Button x:Uid="RefreshButton" HorizontalAlignment="Center" Click="{x:Bind ViewModel.PFNRefreshAppsListButton_Click}" />

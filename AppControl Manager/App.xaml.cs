@@ -64,6 +64,11 @@ public partial class App : Application
 	internal static readonly string AUMID = AppInfo.Current.AppUserModelId;
 
 	/// <summary>
+	/// To determine whether the app has Administrator privileges
+	/// </summary>
+	internal static readonly bool IsElevated = Environment.IsPrivilegedProcess;
+
+	/// <summary>
 	/// Detects the source of the application.
 	/// GitHub => 0
 	/// Microsoft Store => 1
@@ -97,11 +102,6 @@ public partial class App : Application
 
 	private static Mutex? _mutex;
 	private const string MutexName = "AppControlManagerRunning";
-
-	/// <summary>
-	/// To determine whether the app has Administrator privileges
-	/// </summary>
-	internal static readonly bool IsElevated = Environment.IsPrivilegedProcess;
 
 	/// <summary>
 	/// The directory where the logs will be stored

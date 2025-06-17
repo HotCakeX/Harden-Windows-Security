@@ -1138,25 +1138,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 					// Instantiate the supplemental policy
 					SiPolicy.SiPolicy supplementalPolicyObj = Management.Initialize(GlobalVars.ISGOnlySupplementalPolicyPath, null);
 
-					// If policy name was provided by user
-					if (!string.IsNullOrWhiteSpace(ISGBasedSupplementalPolicyName))
-					{
-						// Finding the policy name in the settings
-						List<Setting> nameSettings = [.. supplementalPolicyObj.Settings.Where(x =>
-							string.Equals(x.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-							string.Equals(x.Key, "Information", StringComparison.OrdinalIgnoreCase) &&
-							string.Equals(x.ValueName, "Name", StringComparison.OrdinalIgnoreCase))];
-
-						SettingValueType settingVal = new()
-						{
-							Item = ISGBasedSupplementalPolicyName
-						};
-
-						foreach (Setting setting in nameSettings)
-						{
-							setting.Value = settingVal;
-						}
-					}
+					PolicySettingsManager.SetPolicyName(supplementalPolicyObj, ISGBasedSupplementalPolicyName);
 
 					// Replace the BasePolicyID in the Supplemental policy
 					supplementalPolicyObj.BasePolicyID = basePolicyObj.BasePolicyID;

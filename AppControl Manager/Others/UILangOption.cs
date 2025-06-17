@@ -24,6 +24,6 @@ namespace AppControlManager.Others;
 /// <param name="image"></param>
 internal sealed class LanguageOption(string name, string image)
 {
-	internal string Name { get; } = name;
-	internal string Image { get; } = image;
+	internal string Name => name;
+	internal string Image => image;
 }

@@ -552,7 +552,11 @@
             </TabViewItem>
 
 
-            <TabViewItem Header="Custom Policy Settings" IsClosable="False" Visibility="Visible" IsEnabled="True" MinWidth="260">
+            <TabViewItem x:Uid="CustomPolicySettingsTabViewItem"
+                         IsClosable="False"
+                         Visibility="Visible"
+                         IsEnabled="True"
+                         MinWidth="260">
                 <TabViewItem.IconSource>
                     <BitmapIconSource UriSource="/Assets/External/setting.png" ShowAsMonochrome="False" />
                 </TabViewItem.IconSource>
@@ -571,70 +575,68 @@
                                                     VerticalSpacing="8"
                                                     VerticalAlignment="Center">
 
-                                <TextBlock Text="Configure and manage custom policy settings and use presets to add predefined policies."
+                                <TextBlock x:Uid="CustomPolicySettingsTitleTextBlock"
                                            VerticalAlignment="Center"
                                            Style="{ThemeResource CaptionTextBlockStyle}"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
-                                <Button Content="Add"
-                                            Style="{ThemeResource AccentButtonStyle}"
-                                            Click="{x:Bind ViewModel.AddPresetPolicySetting}"
-                                            FontSize="12"
-                                            Padding="8,4"
-                                            MinWidth="0"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Right"
-                                            Visibility="{x:Bind ViewModel.PresetAddButtonVisibility, Mode=OneWay}">
-                                </Button>
+                                <Button x:Uid="AddButton"
+                                        Style="{ThemeResource AccentButtonStyle}"
+                                        Click="{x:Bind ViewModel.AddPresetPolicySetting}"
+                                        FontSize="12"
+                                        Padding="8,4"
+                                        MinWidth="0"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right"
+                                        Visibility="{x:Bind ViewModel.PresetAddButtonVisibility, Mode=OneWay}"/>
 
                                 <ComboBox IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                              ItemsSource="{x:Bind ViewModel.PresetPolicySettings}"
-                                              SelectedItem="{x:Bind ViewModel.SelectedPresetPolicySetting, Mode=TwoWay}"
-                                              VerticalAlignment="Center"
-                                              PlaceholderText="Select preset setting"
-                                              MinWidth="200"
-                                              x:Name="PresetComboBox">
+                                          ItemsSource="{x:Bind ViewModel.PresetPolicySettings}"
+                                          SelectedItem="{x:Bind ViewModel.SelectedPresetPolicySetting, Mode=TwoWay}"
+                                          VerticalAlignment="Center"
+                                          x:Uid="CustomPolicySettingsPresets"
+                                          MinWidth="200">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate x:DataType="PolicyEditor:PolicySettings">
                                             <StackPanel VerticalAlignment="Center">
                                                 <TextBlock Text="{x:Bind ValueName}" 
-                                                               FontWeight="SemiBold"
-                                                               FontSize="14" />
+                                                           FontWeight="SemiBold"
+                                                           FontSize="14" />
                                                 <TextBlock Text="{x:Bind Provider}" 
-                                                                FontSize="12"
-                                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                           FontSize="12"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
 
                                 <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                            Click="{x:Bind ViewModel.AddNewPolicySetting}"
-                                            VerticalAlignment="Center"
-                                            ToolTipService.ToolTip="Add a new policy setting">
+                                        Click="{x:Bind ViewModel.AddNewPolicySetting}"
+                                        VerticalAlignment="Center"
+                                        x:Uid="AddSettingButton">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <FontIcon Glyph="&#xE710;" FontSize="16" />
-                                        <TextBlock Text="Add Setting" />
+                                        <TextBlock x:Uid="AddSettingTextBlock" />
                                     </StackPanel>
                                 </Button>
 
                                 <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                            Click="{x:Bind ViewModel.RemoveSelectedPolicySetting}"
-                                            VerticalAlignment="Center"
-                                            ToolTipService.ToolTip="Delete selected policy settings">
+                                        Click="{x:Bind ViewModel.RemoveSelectedPolicySetting}"
+                                        VerticalAlignment="Center"
+                                        x:Uid="DeletedSelectedSettingButton">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <FontIcon Glyph="&#xE74D;" FontSize="16" Foreground="Red" />
-                                        <TextBlock Text="Delete Selected" />
+                                        <TextBlock x:Uid="DeletedSelectedSettingTextBlock" />
                                     </StackPanel>
                                 </Button>
 
                                 <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                            VerticalAlignment="Center"
-                                            Click="{x:Bind ViewModel.ClearAllPolicySettings}"
-                                            ToolTipService.ToolTip="Clear all policy settings">
+                                        VerticalAlignment="Center"
+                                        Click="{x:Bind ViewModel.ClearAllPolicySettings}"
+                                        x:Uid="ClearAllPolicySettingsButton">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <FontIcon Glyph="&#xE738;" FontSize="16" />
-                                        <TextBlock Text="Clear All" />
+                                        <TextBlock x:Uid="ClearAllPolicySettingsTextBlock" />
                                     </StackPanel>
                                 </Button>
                             </controls:WrapPanel>
@@ -727,7 +729,7 @@
                                                          BorderThickness="1"
                                                          Margin="0,0,8,0"
                                                          VerticalAlignment="Center"
-                                                         PlaceholderText="Provider name" />
+                                                         x:Uid="ProviderNameTextBox" />
 
                                                 <!-- Key TextBox -->
                                                 <TextBox Grid.Column="1" 
@@ -735,7 +737,7 @@
                                                          BorderThickness="1"
                                                          Margin="0,0,8,0"
                                                          VerticalAlignment="Center"
-                                                         PlaceholderText="Key identifier" />
+                                                         x:Uid="KeyIdentifierTextBox" />
 
                                                 <!-- Value Name TextBox -->
                                                 <TextBox Grid.Column="2" 
@@ -743,7 +745,7 @@
                                                          BorderThickness="1"
                                                          Margin="0,0,8,0"
                                                          VerticalAlignment="Center"
-                                                         PlaceholderText="Value name" />
+                                                         x:Uid="ValueNameTextBox" />
 
                                                 <!-- Value TextBox -->
                                                 <TextBox Grid.Column="3" 
@@ -752,7 +754,7 @@
                                                          Margin="0,0,8,0"
                                                          VerticalAlignment="Center"
                                                          TextWrapping="Wrap"
-                                                         PlaceholderText="Enter value" />
+                                                         x:Uid="EnterValueTextBox" />
 
                                                 <!-- Value Type ComboBox -->
                                                 <ComboBox Grid.Column="4" 
@@ -879,7 +881,7 @@
                                 <!-- Header spacer - matches ListView header height -->
                                 <Border Grid.Row="0"
                                         Background="Transparent"
-                                        Padding="16,12"
+                                        Padding="18"
                                         MinWidth="1050">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -914,12 +916,12 @@
                                                   FontSize="48" 
                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
-                                        <TextBlock Text="No Policy Settings" 
+                                        <TextBlock x:Uid="NoPolicySettingsTextBlock"
                                                    Style="{ThemeResource SubtitleTextBlockStyle}"
                                                    HorizontalAlignment="Center"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
-                                        <TextBlock Text="No custom policy settings have been loaded or created yet." 
+                                        <TextBlock x:Uid="NoPolicySettingsLoadedTextBlock"
                                                    Style="{ThemeResource CaptionTextBlockStyle}"
                                                    HorizontalAlignment="Center"
                                                    TextAlignment="Center"

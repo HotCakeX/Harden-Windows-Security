@@ -137,8 +137,8 @@
                                             <controls:Segmented x:Name="segmentedControl"
                                                     HorizontalAlignment="Stretch"
                                                     SelectedIndex="0">
-                                                <controls:SegmentedItem Content="Active Account"
-                                                        Tag="Active">
+                                                <controls:SegmentedItem x:Uid="ActiveAccountSegmentedItem"
+                                                                        Tag="Active">
                                                     <controls:SegmentedItem.Icon>
                                                         <IconSourceElement>
                                                             <BitmapIconSource UriSource="/Assets/External/Bottle.png" ShowAsMonochrome="False" />
@@ -147,8 +147,8 @@
 
                                                 </controls:SegmentedItem>
 
-                                                <controls:SegmentedItem Content="Sign In"
-                                                         Tag="Authentication" >
+                                                <controls:SegmentedItem x:Uid="SignInSegmentedItem"
+                                                                        Tag="Authentication" >
                                                     <controls:SegmentedItem.Icon>
                                                         <IconSourceElement>
                                                             <BitmapIconSource UriSource="/Assets/External/Authentication.png" ShowAsMonochrome="False" />
@@ -156,8 +156,8 @@
                                                     </controls:SegmentedItem.Icon>
                                                 </controls:SegmentedItem>
 
-                                                <controls:SegmentedItem Content="Signed In Accounts"
-                                                        Tag="SignedIn">
+                                                <controls:SegmentedItem x:Uid="SignedInAccountsSegmentedItem"
+                                                                        Tag="SignedIn">
                                                     <controls:SegmentedItem.Icon>
                                                         <IconSourceElement>
                                                             <BitmapIconSource UriSource="/Assets/External/Vault.png" ShowAsMonochrome="False" />
@@ -479,7 +479,7 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Center">
                                         <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
-                                        <TextBlock Text="Deploy"/>
+                                        <TextBlock x:Uid="DeployTextBlock"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Button.Content>
@@ -616,7 +616,7 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Center">
                                         <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
-                                        <TextBlock Text="Deploy"/>
+                                        <TextBlock x:Uid="DeployTextBlock"/>
                                     </StackPanel>
 
                                 </StackPanel>

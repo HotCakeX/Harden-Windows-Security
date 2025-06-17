@@ -905,7 +905,8 @@
 
                                 <controls:WrapPanel VerticalAlignment="Center" Orientation="Vertical" Margin="0,0,15,0" VerticalSpacing="15" HorizontalSpacing="10">
 
-                                    <TextBox Text="{x:Bind ViewModel.PFNBasedSearchKeywordForAppsList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Search among the apps"/>
+                                    <TextBox Text="{x:Bind ViewModel.PFNBasedSearchKeywordForAppsList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             x:Uid="AppsSearchBoxTextBox"/>
 
                                     <TextBlock x:Uid="SelectedAppsTextBlock" Text="{x:Bind ViewModel.PFNBasedSelectedItemsCount, Mode=OneWay}" HorizontalAlignment="Center"/>
                                     <Button x:Uid="RefreshButton" HorizontalAlignment="Center" Click="{x:Bind ViewModel.PFNRefreshAppsListButton_Click}" />

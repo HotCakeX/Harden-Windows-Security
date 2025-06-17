@@ -297,6 +297,8 @@ internal sealed partial class MainWindow : Window
 			Microsoft.UI.Xaml.Automation.AutomationProperties.SetHelpText(OpenConfigDirectoryButton, GlobalVars.Rizz.GetString("OpenConfigDirectoryButton/AutomationProperties/HelpText"));
 			Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(OpenConfigDirectoryButton, GlobalVars.Rizz.GetString("OpenConfigDirectoryButton/ToolTipService/ToolTip"));
 
+			SidebarHelpHyperlinkTextBlock.Text = GlobalVars.Rizz.GetString("SidebarHelpHyperlinkTextBlock/Text");
+
 			Logger.Write("MainWindow localized text refreshed successfully");
 		}
 		catch (Exception ex)

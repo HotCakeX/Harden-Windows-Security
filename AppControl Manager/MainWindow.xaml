@@ -329,22 +329,60 @@
                                 </Border>
 
                                 <controls:SettingsCard HorizontalContentAlignment="Center"
-                                    x:Name="SidebarAutomaticAssignmentSettingsCard" x:Uid="SidebarAutomaticAssignmentSettingsCard" Click="{x:Bind ViewModel.AutomaticAssignmentSidebarSettingsCard_Click}"
-                                    HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}" IsClickEnabled="True" IsActionIconVisible="False">
+                                                       x:Name="SidebarAutomaticAssignmentSettingsCard"
+                                                       x:Uid="SidebarAutomaticAssignmentSettingsCard"
+                                                       Click="{x:Bind ViewModel.AutomaticAssignmentSidebarSettingsCard_Click}"
+                                                       HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}"
+                                                       IsClickEnabled="True"
+                                                       IsActionIconVisible="False">
+
                                     <ToggleSwitch Toggled="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitch_Toggled}"
                                                   x:Uid="ToggleSwitchGeneral"
                                                   IsOn="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitchToggledState, Mode=TwoWay}"/>
                                 </controls:SettingsCard>
 
-                                <HyperlinkButton x:Name="SidebarGuideHyperlinkButton" x:Uid="SidebarGuideHyperlinkButton" HorizontalAlignment="Center" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar" />
+                                <HyperlinkButton x:Name="SidebarGuideHyperlinkButton"
+                                                 x:Uid="SidebarGuideHyperlinkButton"
+                                                 HorizontalAlignment="Center"
+                                                 NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar"
+                                                 Padding="12,8"
+                                                 CornerRadius="6"
+                                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                 BorderThickness="1"/>
 
-                                <Button HorizontalAlignment="Center" x:Name="OpenConfigDirectoryButton" x:Uid="OpenConfigDirectoryButton"
-                                        IsEnabled="{x:Bind ViewModel.OpenConfigDirectoryButtonState, Mode=OneWay}" Click="{x:Bind ViewModel.OpenConfigDirectoryButton_Click}">
+                                <HyperlinkButton x:Name="SidebarHelpHyperlinkButton"
+                                                 HorizontalAlignment="Center"
+                                                 NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/discussions"
+                                                 Padding="12,8"
+                                                 CornerRadius="6"
+                                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                 BorderThickness="1">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE9CE;"
+                                                  Foreground="Gold"
+                                                  FontSize="16"/>
+                                        <TextBlock x:Uid="SidebarHelpHyperlinkTextBlock"
+                                                   x:Name="SidebarHelpHyperlinkTextBlock"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                </HyperlinkButton>
+
+                                <Button HorizontalAlignment="Center"
+                                        x:Name="OpenConfigDirectoryButton"
+                                        x:Uid="OpenConfigDirectoryButton"
+                                        IsEnabled="{x:Bind ViewModel.OpenConfigDirectoryButtonState, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.OpenConfigDirectoryButton_Click}">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal">
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalAlignment="Center">
                                                 <FontIcon Glyph="&#xE8A7;" Margin="0,0,8,0" />
-                                                <TextBlock x:Name="OpenConfigDirectoryButtonText" x:Uid="OpenConfigDirectoryButtonText"/>
+                                                <TextBlock x:Name="OpenConfigDirectoryButtonText"
+                                                           x:Uid="OpenConfigDirectoryButtonText"/>
                                             </StackPanel>
                                         </StackPanel>
                                     </Button.Content>
@@ -375,7 +413,9 @@
 
                         <BreadcrumbBar.ItemTemplate>
                             <DataTemplate x:DataType="WindowComponents:Crumb">
-                                <TextBlock Text="{x:Bind Label}" TextWrapping="Wrap" Style="{StaticResource TitleTextBlockStyle}" />
+                                <TextBlock Text="{x:Bind Label}"
+                                           TextWrapping="Wrap"
+                                           Style="{StaticResource TitleTextBlockStyle}" />
                             </DataTemplate>
                         </BreadcrumbBar.ItemTemplate>
 

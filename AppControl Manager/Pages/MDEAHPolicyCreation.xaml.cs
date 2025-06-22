@@ -46,13 +46,12 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 	}
 
 	private MDEAHPolicyCreationVM ViewModel { get; } = ViewModelProvider.MDEAHPolicyCreationVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal MDEAHPolicyCreation()
 	{
 		this.InitializeComponent();
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = this;
+		this.DataContext = ViewModel;
 
 		// Perform initial selected item assignment for the SelectorBar
 		InitSelectorBar();

@@ -30,7 +30,6 @@ internal sealed partial class Simulation : Page
 {
 
 	private SimulationVM ViewModel { get; } = ViewModelProvider.SimulationVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal Simulation()
 	{

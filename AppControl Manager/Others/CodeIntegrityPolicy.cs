@@ -33,6 +33,7 @@ internal sealed class CodeIntegrityPolicy
 	internal XmlNode FileRulesNode { get; }
 	internal XmlNode SignersNode { get; }
 	internal XmlNode CiSignersNode { get; }
+	internal XmlNode EKUsNode { get; }
 
 	internal XmlNode UMCI_SigningScenarioNode { get; }
 	internal XmlNode KMCI_SigningScenarioNode { get; }
@@ -69,6 +70,11 @@ internal sealed class CodeIntegrityPolicy
 		SignersNode = SiPolicyNode.SelectSingleNode("ns:Signers", NamespaceManager)
 			?? throw new InvalidOperationException(
 				GlobalVars.Rizz.GetString("SignersNodeNotFoundMessage"));
+
+		// Find the EKUs Node
+		EKUsNode = SiPolicyNode.SelectSingleNode("ns:EKUs", NamespaceManager)
+			?? throw new InvalidOperationException(
+				GlobalVars.Rizz.GetString("EKUsNodeNotFoundMessage"));
 
 		// Find or ensure SigningScenario Node for User Mode
 		UMCI_SigningScenarioNode = EnsureUMCISigningScenario();

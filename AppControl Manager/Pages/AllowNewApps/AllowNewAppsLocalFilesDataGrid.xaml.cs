@@ -33,7 +33,6 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 {
 
 	private AllowNewAppsVM ViewModel { get; } = ViewModelProvider.AllowNewAppsVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal AllowNewAppsLocalFilesDataGrid()
 	{

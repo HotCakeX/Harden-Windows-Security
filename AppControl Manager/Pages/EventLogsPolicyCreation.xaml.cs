@@ -33,7 +33,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class EventLogsPolicyCreation : Page
 {
 	private EventLogsPolicyCreationVM ViewModel { get; } = ViewModelProvider.EventLogsPolicyCreationVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal EventLogsPolicyCreation()
 	{

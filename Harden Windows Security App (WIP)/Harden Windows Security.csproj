@@ -2,22 +2,19 @@
 
   <!-- https://github.com/microsoft/CsWinRT/blob/master/nuget/Microsoft.Windows.CsWinRT.targets -->
 
+  <!-- Global -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.22621.0</TargetPlatformMinVersion>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/standard/frameworks#support-older-os-versions -->
+    <!-- https://learn.microsoft.com/dotnet/standard/frameworks#support-older-os-versions -->
     <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/fundamentals/apicompat/package-validation/overview -->
-    <EnablePackageValidation>true</EnablePackageValidation>
-    <EnableStrictModeForCompatibleFrameworksInPackage>true</EnableStrictModeForCompatibleFrameworksInPackage>
-    <EnableStrictModeForCompatibleTfms>true</EnableStrictModeForCompatibleTfms>
-
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#invariantglobalization -->
+    <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#invariantglobalization -->
     <InvariantGlobalization>true</InvariantGlobalization>
-    
+
+    <RootNamespace>HardenWindowsSecurity</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;arm64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
@@ -26,16 +23,12 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
-    <SatelliteResourceLanguages>en-US,he-IL</SatelliteResourceLanguages>
-
     <!-- Defined by CsWinRT https://github.com/microsoft/CsWinRT
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
 
-        The reason Windows.SDK.NET.Ref is released in batches of 3: https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
-        is that they have different targets. Lowest one is .NET 6, middle one is .NET 8 without UWP XAML and highest one is .NET 8 with UWP XAML.
+       https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
     -->
-    <WindowsSdkPackageVersion>10.0.26100.56</WindowsSdkPackageVersion>
+    <WindowsSdkPackageVersion>10.0.26100.68-preview</WindowsSdkPackageVersion>
 
     <!--
     By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -43,7 +36,7 @@
 
     Without this, we'd have to download the latest SDK and install it manually on the user's system, which will add the relevant packages
     and satisfy the requirements of the MSIX instlaler.
-    https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/downloads
+    https://learn.microsoft.com/windows/apps/windows-app-sdk/downloads
     -->
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
@@ -53,69 +46,98 @@
     <PublishReadyToRun>false</PublishReadyToRun>
 
     <ImplicitUsings>disable</ImplicitUsings>
-
-    <Description>Harden Windows Security Application</Description>
-    <RootNamespace>HardenWindowsSecurity</RootNamespace>
-
-
+    <Description>Harden Windows Security</Description>
     <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>
-    <PackageTags>Windows, Security</PackageTags>
+    <PackageTags>Harden Windows Security, Harden, Windows, Firewall, Security, BitLocker</PackageTags>
     <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#rollforward -->
+    <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#rollforward -->
     <RollForward>LatestMajor</RollForward>
 
     <!-- Automatically created for packing -->
-    <!-- https://learn.microsoft.com/en-us/windows/msix/app-installer/create-appinstallerfile-vs -->
+    <!-- https://learn.microsoft.com/windows/msix/app-installer/create-appinstallerfile-vs -->
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
     <!-- This specifies what hashing algorithm must be used for the certificate that will sign the MSIX package -->
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <!-- <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm> -->
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
 
-
+    <!-- Defining custom directory in the root directory to be created if it doesn't exist. MSIX package after packing will be stored there -->
+    <!-- Defining it in each publish profile -->
+    <!-- <AppxPackageDir>MSIXOutputX64\</AppxPackageDir> -->
 
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AssemblyName>HardenWindowsSecurity</AssemblyName>
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/optimizing -->
-    <PublishAot>True</PublishAot>
-    <OptimizationPreference>Speed</OptimizationPreference>
+    <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
+
     <ErrorReport>send</ErrorReport>
     <FileVersion>1.0.0.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+    <StartupObject>HardenWindowsSecurity.Program</StartupObject>
+    <LangVersion>preview</LangVersion>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/unsafe-code -->
+    <!-- https://learn.microsoft.com/dotnet/csharp/language-reference/unsafe-code -->
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/security#control-flow-guard -->
-    <ControlFlowGuard>Guard</ControlFlowGuard>
-
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/security#control-flow-enforcement-technology-shadow-stack-net-9 -->
-    <CetCompat>true</CetCompat>
 
     <Version>$(FileVersion)</Version>
     <Copyright>© 2024-Present</Copyright>
-
-
-
     <Title>Harden Windows Security</Title>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-    <NuGetAuditMode>all</NuGetAuditMode>
-    <RepositoryType>GitHub</RepositoryType>
+
+    <IlcMaxVectorTBitWidth>512</IlcMaxVectorTBitWidth>
+
+    <!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/workstation-server-gc -->
+    <!-- https://learn.microsoft.com/dotnet/standard/garbage-collection/background-gc -->
+    <!-- https://learn.microsoft.com/dotnet/core/runtime-config/garbage-collector -->
+
+    <!--
+      <ServerGarbageCollection>true</ServerGarbageCollection>
+      <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+    -->
+
+    <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
+    <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
+
+    <!-- https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/issues/5226 -->
+    <NoWarn>IL3000</NoWarn>
+
+  </PropertyGroup>
+
+
+  <!-- Only for Debug -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+
+    <EnableXAMLDiagnostics>true</EnableXAMLDiagnostics>
+
+    <NuGetAudit>false</NuGetAudit>
+
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+  </PropertyGroup>
+
+
+  <!-- Only for Release -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+
+    <NuGetAudit>true</NuGetAudit>
+
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
+    <SatelliteResourceLanguages>en-US,he-IL</SatelliteResourceLanguages>
+
+    <RepositoryType>GitHub</RepositoryType>
 
     <!-- There should be absolutely no trim warnings before this can be enabled
     Otherwise there is no guarantee that the app will work as expected at all times -->
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trimming-options -->
+    <!-- https://learn.microsoft.com/dotnet/core/deploying/trimming/trimming-options -->
     <PublishTrimmed>True</PublishTrimmed>
     <TrimMode>full</TrimMode>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
@@ -135,107 +157,140 @@
     <!-- Disabled by default in the default ILC.exe config -->
     <EventSourceSupport>false</EventSourceSupport>
 
+    <!--
+        Will cause the "Fold identical method bodies" feature to be implicitly enabled which can also be enabled by supplying "- -methodbodyfolding" to the ILC.exe .
+        It also won't use "System.Private.StackTraceMetadata" during static code gen; supplying "- -methodbodyfolding" to the ILC.exe would not have this effect.
+        Compared to that parameter, this option reduces package size even more but removes stack trace info.
 
+        If we use "- -methodbodyfolding" parameter of the ILC.exe only, the stack traces will sometimes be nonsensical,
+        because they will have methods we're not calling (they got folded with something we're actually calling)
+
+        This is the only suported way to enable folding. Disabling stack traces means I don't care about stack, feel free to fold method bodies.
+     -->
     <StackTraceSupport>true</StackTraceSupport>
 
+    <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/security#control-flow-guard -->
+    <ControlFlowGuard>Guard</ControlFlowGuard>
 
-    <IlcMaxVectorTBitWidth>512</IlcMaxVectorTBitWidth>
+    <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/security#control-flow-enforcement-technology-shadow-stack-net-9 -->
+    <CetCompat>true</CetCompat>
 
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+    <PublishAot>True</PublishAot>
+    <OptimizationPreference>Speed</OptimizationPreference>
 
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <!-- https://learn.microsoft.com/dotnet/fundamentals/apicompat/package-validation/overview -->
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <EnableStrictModeForCompatibleFrameworksInPackage>true</EnableStrictModeForCompatibleFrameworksInPackage>
+    <EnableStrictModeForCompatibleTfms>true</EnableStrictModeForCompatibleTfms>
 
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 
-    <DocumentationFile>HardenWindowsSecurity.xml</DocumentationFile>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
+
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+
+    <DocumentationFile>HardenWindowsSecurityAPIDocumentation.xml</DocumentationFile>
 
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
 
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#analysismodecategory -->
+    <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#analysismodecategory -->
     <AnalysisModeDocumentation>All</AnalysisModeDocumentation>
     <AnalysisModeGlobalization>All</AnalysisModeGlobalization>
     <AnalysisModePerformance>All</AnalysisModePerformance>
     <AnalysisModeInteroperability>All</AnalysisModeInteroperability>
 
-
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
-    <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration-generator -->
+    <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
 
   </PropertyGroup>
 
+  <!--
+  The default parameters passed to the ILC.exe during compilation
+  https://github.com/dotnet/runtime/blob/main/src/coreclr/nativeaot/BuildIntegration/Microsoft.NETCore.Native.targets
 
 
+  We can pass the parameters displayed by the - -help switch of the ilc.exe using the syntax below
+  "C:\Users\HotCakeX\.nuget\packages\runtime.win-x64.microsoft.dotnet.ilcompiler\9.0.2\tools\ilc.exe"
 
+
+  We can see what parameters were used by the NAOT code generator, ILC, by inspecting the response file located at:
+  "Harden-Windows-Security\AppControl Manager\obj\x64\Release\net9.0-windows10.0.26100.0\win-x64\native\AppControlManager.ilc.rsp"
+
+  -->
+  <ItemGroup>
+    <!-- The logs generated by the following parameters will be included in the binlog file specified by the -bl:X64MSBuildLog.binlog parameter on the CLI -->
+    <IlcArg Include="--debug" />
+    <IlcArg Include="--verbose" />
+
+    <!--  <IlcArg Include="- -methodbodyfolding" /> -->
+  </ItemGroup>
+
+
+  <!--
+  Not needed for now
+
+  <ItemGroup>
+    <TrimmerRootDescriptor Include="MyRoots.xml" />
+  </ItemGroup>
+  -->
+
+  <!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    package has not yet been restored. -->
+  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <ProjectCapability Include="Msix" />
+  </ItemGroup>
+
+  <!-- Nuget packages
+  All transitive/nested packages under the main packages are added as well
+  so they can be updated separately and receive bug/security vulnerability fixes faster
+  https://devblogs.microsoft.com/nuget/introducing-transitive-dependencies-in-visual-studio/
+  -->
   <ItemGroup>
 
     <!-- Main Packages - Without these packages, there will be compilaton errors related to missing types -->
-    <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.1.240821" />
-    <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250129-preview2" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
+    <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250610-build.2151" />
+    <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.2.250604" />
+    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250402" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.70.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.72.1" />
+    <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.72.1" />
     <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.183">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.3" />
-    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.3" />
-    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250129-preview2" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0-preview.5.25277.114" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0-preview.5.25277.114" />
+    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
 
     <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
-    <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250129-preview2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250129-preview2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
+    <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.7.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
+    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.12.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3296.44" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
     <PackageReference Include="Microsoft.Windows.SDK.Win32Docs" Version="0.1.42-alpha" />
     <PackageReference Include="Microsoft.Windows.SDK.Win32Metadata" Version="63.0.31-preview" />
     <PackageReference Include="Microsoft.Windows.WDK.Win32Metadata" Version="0.13.25-experimental" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
-    <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="9.0.3" />
-    <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="9.0.3" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.3" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.1" />
+    <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.5.25277.114" />
+    <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.5.25277.114" />
+    <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.1" />
 
-  </ItemGroup>
-
-
-
-
-
-
-
-
-  <ItemGroup>
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Manifest Include="$(ApplicationManifest)" />
-  </ItemGroup>
-
-  <!--
-    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
-    Tools extension to be activated for this project even if the Windows App SDK Nuget
-    package has not yet been restored.
-  -->
-  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-    <ProjectCapability Include="Msix" />
   </ItemGroup>
 
   <!--
@@ -247,11 +302,8 @@
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
 
-  <!-- Publish Properties -->
-  <PropertyGroup>
-    <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
-    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
-    <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
-    <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
-  </PropertyGroup>
+  <ItemGroup>
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+ 
 </Project>

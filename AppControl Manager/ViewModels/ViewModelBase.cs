@@ -16,7 +16,6 @@
 //
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -39,6 +38,11 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	// Expose the dispatcher queue so that derived classes can marshal
 	// calls to the UI thread when needed.
 	protected readonly DispatcherQueue Dispatcher = DispatcherQueue.GetForCurrentThread();
+
+	/// <summary>
+	/// An instance property reference to the App settings that pages can x:Bind to.
+	/// </summary>
+	internal AppSettings.Main AppSettings => ViewModelProvider.AppSettings;
 
 	/// <summary>
 	/// An instance property so pages can bind to.
@@ -78,29 +82,23 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 
-	// Dictionaries used for quick conversion and parsing of ScanLevels.
-	internal static readonly FrozenDictionary<string, ScanLevels> StringToScanLevel = new Dictionary<string, ScanLevels>
-	{
-		{ "File Publisher", ScanLevels.FilePublisher },
-		{ "Publisher", ScanLevels.Publisher },
-		{ "Hash", ScanLevels.Hash },
-		{ "File Path", ScanLevels.FilePath },
-		{ "WildCard Folder Path", ScanLevels.WildCardFolderPath },
-		{ "PFN", ScanLevels.PFN },
-		{ "Custom File Rule Pattern", ScanLevels.CustomFileRulePattern }
-	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
+	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSource =
+	[
+		new ScanLevelsComboBoxType("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5),
+		new ScanLevelsComboBoxType("File Publisher", ScanLevels.FilePublisher, 4),
+		new ScanLevelsComboBoxType("Publisher", ScanLevels.Publisher, 3),
+		new ScanLevelsComboBoxType("Hash", ScanLevels.Hash, 5),
+		new ScanLevelsComboBoxType("File Path", ScanLevels.FilePath, 2),
+		new ScanLevelsComboBoxType("Wildcard Folder Path", ScanLevels.WildCardFolderPath, 1)
+	];
 
-
-	internal static readonly FrozenDictionary<ScanLevels, string> ScanLevelToString = new Dictionary<ScanLevels, string>
-	{
-		{ ScanLevels.FilePublisher, "File Publisher" },
-		{ ScanLevels.Publisher, "Publisher" },
-		{ ScanLevels.Hash, "Hash" },
-		{ ScanLevels.FilePath, "File Path" },
-		{ ScanLevels.WildCardFolderPath, "WildCard Folder Path" },
-		{ ScanLevels.PFN, "PFN" },
-		{ ScanLevels.CustomFileRulePattern, "Custom File Rule Pattern" }
-	}.ToFrozenDictionary();
+	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSourceForLogs =
+	[
+		new ScanLevelsComboBoxType("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5),
+		new ScanLevelsComboBoxType("File Publisher", ScanLevels.FilePublisher, 4),
+		new ScanLevelsComboBoxType("Publisher", ScanLevels.Publisher, 3),
+		new ScanLevelsComboBoxType("Hash", ScanLevels.Hash, 5)
+	];
 
 	/// <summary>
 	/// User Activity tracking field

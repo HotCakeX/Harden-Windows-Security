@@ -47,7 +47,6 @@ internal sealed partial class HashCardItem : ViewModelBase
 /// </summary>
 internal sealed partial class GetCIHashes : Page
 {
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 	private GetCIHashesVM ViewModel { get; } = ViewModelProvider.GetCIHashesVM;
 
 	/// <summary>

@@ -96,7 +96,12 @@ internal sealed partial class Main : ViewModelBase
 	/// Helper method to immediately persist the new value to local storage.
 	/// TODO: Add logic for Enums that will be added in the future.
 	/// </summary>
-	private void SaveValue(string key, object value) => _localSettings.Values[key] = value;
+	private void SaveValue(string key, object value)
+	{
+		// Use the lock when setting values to the Settings Container
+		lock (SettingsLock)
+			_localSettings.Values[key] = value;
+	}
 
 	/// <summary>
 	/// Whether the app emits sounds during navigation or not
@@ -106,16 +111,13 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(SoundSetting), field);
+				SaveValue(nameof(SoundSetting), field);
 
-					// Set the sound settings
-					ElementSoundPlayer.State = field ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
-					ElementSoundPlayer.SpatialAudioMode = field ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
-				}
+				// Set the sound settings
+				ElementSoundPlayer.State = field ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
+				ElementSoundPlayer.SpatialAudioMode = field ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
 			}
 		}
 	}
@@ -128,15 +130,12 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(NavViewBackground), field);
+				SaveValue(nameof(NavViewBackground), field);
 
-					// Notify NavigationBackgroundManager
-					NavigationBackgroundManager.OnNavigationBackgroundChanged(field);
-				}
+				// Notify NavigationBackgroundManager
+				NavigationBackgroundManager.OnNavigationBackgroundChanged(field);
 			}
 		}
 	}
@@ -149,12 +148,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(NavViewPaneDisplayMode), field);
-				}
+				SaveValue(nameof(NavViewPaneDisplayMode), field);
 			}
 		}
 	} = "Left";
@@ -167,12 +163,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(AppTheme), field);
-				}
+				SaveValue(nameof(AppTheme), field);
 			}
 		}
 	} = "Use System Setting";
@@ -185,12 +178,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(BackDropBackground), field);
-				}
+				SaveValue(nameof(BackDropBackground), field);
 			}
 		}
 	} = "MicaAlt";
@@ -203,12 +193,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(IconsStyle), field);
-				}
+				SaveValue(nameof(IconsStyle), field);
 			}
 		}
 	} = "Monochromatic";
@@ -221,12 +208,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(MainWindowWidth), field);
-				}
+				SaveValue(nameof(MainWindowWidth), field);
 			}
 		}
 	} = 700;
@@ -239,12 +223,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(MainWindowHeight), field);
-				}
+				SaveValue(nameof(MainWindowHeight), field);
 			}
 		}
 	} = 700;
@@ -257,12 +238,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(MainWindowIsMaximized), field);
-				}
+				SaveValue(nameof(MainWindowIsMaximized), field);
 			}
 		}
 	}
@@ -275,12 +253,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(ListViewsVerticalCentering), field);
-				}
+				SaveValue(nameof(ListViewsVerticalCentering), field);
 			}
 		}
 	}
@@ -293,12 +268,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(CacheSecurityCatalogsScanResults), field);
-				}
+				SaveValue(nameof(CacheSecurityCatalogsScanResults), field);
 			}
 		}
 	} = true;
@@ -311,12 +283,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(PromptForElevationOnStartup), field);
-				}
+				SaveValue(nameof(PromptForElevationOnStartup), field);
 			}
 		}
 	}
@@ -329,12 +298,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(AutomaticAssignmentSidebar), field);
-				}
+				SaveValue(nameof(AutomaticAssignmentSidebar), field);
 			}
 		}
 	} = true;
@@ -347,12 +313,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(AutoCheckForUpdateAtStartup), field);
-				}
+				SaveValue(nameof(AutoCheckForUpdateAtStartup), field);
 			}
 		}
 	} = true;
@@ -365,12 +328,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(ApplicationGlobalLanguage), field);
-				}
+				SaveValue(nameof(ApplicationGlobalLanguage), field);
 			}
 		}
 	} = "en-US";
@@ -383,12 +343,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(ApplicationGlobalFlowDirection), field);
-				}
+				SaveValue(nameof(ApplicationGlobalFlowDirection), field);
 			}
 		}
 	} = "LeftToRight";
@@ -402,12 +359,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(FileActivatedLaunchArg), field);
-				}
+				SaveValue(nameof(FileActivatedLaunchArg), field);
 			}
 		}
 	} = string.Empty;
@@ -421,12 +375,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(CiPolicySchemaPath), field);
-				}
+				SaveValue(nameof(CiPolicySchemaPath), field);
 			}
 		}
 	} = string.Empty;
@@ -439,12 +390,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(LaunchActivationFilePath), field);
-				}
+				SaveValue(nameof(LaunchActivationFilePath), field);
 			}
 		}
 	} = string.Empty;
@@ -457,12 +405,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(LaunchActivationAction), field);
-				}
+				SaveValue(nameof(LaunchActivationAction), field);
 			}
 		}
 	} = string.Empty;
@@ -476,14 +421,11 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					WindowDisplayAffinity.SetWindowDisplayAffinity(GlobalVars.hWnd, field ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
+				WindowDisplayAffinity.SetWindowDisplayAffinity(GlobalVars.hWnd, field ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
 
-					SaveValue(nameof(ScreenShield), field);
-				}
+				SaveValue(nameof(ScreenShield), field);
 			}
 		}
 	}
@@ -496,12 +438,9 @@ internal sealed partial class Main : ViewModelBase
 		get;
 		set
 		{
-			lock (SettingsLock)
+			if (SP(ref field, value))
 			{
-				if (SP(ref field, value))
-				{
-					SaveValue(nameof(PublishUserActivityInTheOS), field);
-				}
+				SaveValue(nameof(PublishUserActivityInTheOS), field);
 			}
 		}
 	} = true;

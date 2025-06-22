@@ -104,7 +104,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	internal Visibility ISGBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility StrictKernelModeBasePolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility PFNBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
+	internal Visibility CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	#region Files and Folders scan
 
@@ -244,11 +244,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// </summary>
 	internal bool FilesAndFoldersDeployButton { get; set => SP(ref field, value); }
 
-	/// <summary>
-	/// Whether the selected level is Wildcard file paths.
-	/// </summary>
-	private bool UsingWildCardFilePathRules { get; set => SP(ref field, value); }
-
 	internal Visibility FilesAndFoldersBrowseForFilesSettingsCardVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
 	internal bool FilesAndFoldersInfoBarIsOpen { get; set => SP(ref field, value); }
@@ -259,22 +254,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 	private readonly InfoBarSettings FilesAndFoldersInfoBar;
 
-	// The default selected scan level
-	internal ScanLevels filesAndFoldersScanLevel = ScanLevels.FilePublisher;
-	internal string FilesAndFoldersScanLevelComboBoxSelectedItem
+	internal ScanLevelsComboBoxType FilesAndFoldersScanLevelComboBoxSelectedItem
 	{
 		get; set
 		{
 			if (SP(ref field, value))
 			{
-				filesAndFoldersScanLevel = StringToScanLevel[field];
-
 				// For Wildcard file path rules, only folder paths should be used
-				UsingWildCardFilePathRules = filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath;
-				FilesAndFoldersBrowseForFilesSettingsCardVisibility = filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
+				FilesAndFoldersBrowseForFilesSettingsCardVisibility = field.Level is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
-	} = ScanLevelToString[ScanLevels.FilePublisher];
+	} = new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5);
 
 	internal double FilesAndFoldersScalabilityRadialGaugeValue
 	{
@@ -357,9 +347,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// </summary>
 	internal void FilesAndFoldersBrowseForFilesButton_Click()
 	{
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
-		if (selectedFiles is { Count: > 0 })
+		if (selectedFiles.Count > 0)
 		{
 			foreach (string file in selectedFiles)
 			{
@@ -373,9 +363,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// </summary>
 	internal void FilesAndFoldersBrowseForFoldersButton_Click()
 	{
-		List<string>? selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+		List<string> selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedDirectories is { Count: > 0 })
+		if (selectedDirectories.Count > 0)
 		{
 			foreach (string dir in selectedDirectories)
 			{
@@ -487,7 +477,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				IEnumerable<FileIdentity> LocalFilesResults = [];
 
 				// Do the following steps only if Wildcard paths aren't going to be used because then only the selected folder paths are needed
-				if (!UsingWildCardFilePathRules)
+				if (FilesAndFoldersScanLevelComboBoxSelectedItem.Level is not ScanLevels.WildCardFolderPath)
 				{
 
 					// Collect all of the AppControl compatible files from user selected directories and files
@@ -558,7 +548,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: filesAndFoldersScanLevel, folderPaths: filesAndFoldersFolderPaths.UniqueItems);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: FilesAndFoldersScanLevelComboBoxSelectedItem.Level, folderPaths: filesAndFoldersFolderPaths.UniqueItems);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -587,11 +577,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					// Configure policy rule options
-					if (filesAndFoldersScanLevel is ScanLevels.FilePath || filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
+					if (FilesAndFoldersScanLevelComboBoxSelectedItem.Level is ScanLevels.FilePath || FilesAndFoldersScanLevelComboBoxSelectedItem.Level is ScanLevels.WildCardFolderPath)
 					{
 						Logger.Write(string.Format(
 							GlobalVars.Rizz.GetString("SelectedScanLevelMessage"),
-							filesAndFoldersScanLevel
+							FilesAndFoldersScanLevelComboBoxSelectedItem.FriendlyName
 						));
 
 						CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
@@ -827,9 +817,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 	internal void CertificatesBrowseForCertsButton_Click()
 	{
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.CertificatePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.CertificatePickerFilter);
 
-		if (selectedFiles is { Count: > 0 })
+		if (selectedFiles.Count > 0)
 		{
 			foreach (string file in selectedFiles)
 			{

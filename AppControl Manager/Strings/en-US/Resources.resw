@@ -5629,4 +5629,34 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>Step 3</value>
   </data>
+  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Using WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash levels.</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} WHQLFilePublisher Rules.</value>
+  </data>
+  <data name="BuildSignerProcessingWHQLFilePublisherMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Processing WHQLFilePublisher data.</value>
+  </data>
+  <data name="WHQLFilePublisherSignersToAddMessage" xml:space="preserve">
+    <value>There are {0} WHQL File Publisher Signers to be added to the XML file</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+    <value>no WHQLFilePublisher signers detected to create allow rules for.</value>
+  </data>
+    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
+    <value>EKUs node not found</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <value>no WHQLFilePublisher signers detected to create deny rules for.</value>
+  </data>
+  <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
+    <value>WHQL File Publisher Rule Type</value>
+  </data>
+  <data name="AllowNewApps_SidebarButtonContent" xml:space="preserve">
+    <value>Allow New Apps Base Policy</value>
+  </data>
+  <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
+    <value>Custom Pattern Supplemental Policy</value>
+  </data>
 </root>

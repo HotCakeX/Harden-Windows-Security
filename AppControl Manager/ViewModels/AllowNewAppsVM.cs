@@ -135,11 +135,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	internal bool SupplementalPolicyNameTextBoxIsEnabled { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
-	/// The user selected scan level
-	/// </summary>
-	internal ScanLevels scanLevel = ScanLevels.FilePublisher;
-
-	/// <summary>
 	/// Only the logs generated after this time will be shown
 	/// It will be set when user moves from Step1 to Step2
 	/// </summary>
@@ -760,7 +755,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. fileIdentities.FileIdentitiesInternal], level: scanLevel);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. fileIdentities.FileIdentitiesInternal], level: ScanLevelComboBoxSelectedItem.Level, folderPaths: selectedDirectoriesToScan);
 
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, Authorization.Allow);
@@ -873,9 +868,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// </summary>
 	internal void BrowseForFoldersButton_Click()
 	{
-		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+		List<string> selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedFolders is { Count: > 0 })
+		if (selectedFolders.Count > 0)
 		{
 			// Add each folder to the HashSet of the selected directories
 			foreach (string folder in selectedFolders)
@@ -1091,7 +1086,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	// A Progress<double> so Report() callbacks run on the UI thread
 	internal IProgress<double> Step2ProgressRingProgress;
 
-	internal int ScanLevelComboBoxSelectedIndex { get; set => SP(ref field, value); }
+	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5);
 
 
 	/// <summary>
@@ -1393,6 +1388,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 							CalculateColumnWidthLocalFiles();
 						});
+
 					}
 				}
 			});
@@ -1531,7 +1527,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			// Reset the UI inputs back to their default states
 			DeployPolicy = true;
-			ScanLevelComboBoxSelectedIndex = 0;
 
 			// Run the main reset tasks on a different thread
 			await Task.Run(() =>

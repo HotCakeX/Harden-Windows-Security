@@ -9,7 +9,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    xmlns:intelgathering="using:AppControlManager.IntelGathering"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <ScrollView>
@@ -237,17 +238,21 @@
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.DeployPolicy, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.DeployPolicyState, Mode=OneWay}" x:Uid="DeployAfterCreationButton" />
 
-                        <ComboBox
-                            IsEnabled="{x:Bind ViewModel.ScanLevelComboBoxIsEnabled, Mode=OneWay}"
-                            SelectedIndex="{x:Bind ViewModel.ScanLevelComboBoxSelectedIndex, Mode=TwoWay}"
-                            SelectionChanged="ScanLevelComboBox_SelectionChanged"
-                            x:Name="ScanLevelComboBox"
-                            x:Uid="ScanLevelComboBox"
-                            Header="Scan level"
-                            Margin="0,0,0,27">
-                            <x:String>FilePublisher</x:String>
-                            <x:String>Publisher</x:String>
-                            <x:String>Hash</x:String>
+                        <ComboBox IsEnabled="{x:Bind ViewModel.ScanLevelComboBoxIsEnabled, Mode=OneWay}"
+                                  SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
+                                  ItemsSource="{x:Bind ViewModel.ScanLevelsSource}"
+                                  SelectedIndex="0"                                  
+                                  x:Uid="ScanLevelComboBox"
+                                  Header="Scan level"
+                                  Margin="0,0,0,27">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                        <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
                         </ComboBox>
 
                         <Button

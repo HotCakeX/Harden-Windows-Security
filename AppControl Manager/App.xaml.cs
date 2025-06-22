@@ -116,7 +116,6 @@ public partial class App : Application
 
 	internal static NavigationService _nav => ViewModelProvider.NavigationService;
 
-	private static MainWindowVM ViewModelForMainWindow => ViewModelProvider.MainWindowVM;
 	private static PolicyEditorVM PolicyEditorViewModel => ViewModelProvider.PolicyEditorVM;
 
 	/// <summary>
@@ -400,7 +399,7 @@ public partial class App : Application
 			}
 			*/
 
-			if (ReLaunch.Action())
+			if (Relaunch.Action())
 			{
 				// Exit the process
 				Environment.Exit(0);
@@ -419,6 +418,11 @@ public partial class App : Application
 		}
 
 		m_window = new MainWindow();
+
+		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase) ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
+
+		NavigationService.RestoreWindowSize(m_window.AppWindow); // Restore window size on startup		
+		_nav.mainWindowVM.OnIconsStylesChanged(Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
 		m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
 		m_window.Activate();
 
@@ -430,10 +434,6 @@ public partial class App : Application
 		if (!string.IsNullOrWhiteSpace(Settings.FileActivatedLaunchArg))
 		{
 			Logger.Write(string.Format(GlobalVars.Rizz.GetString("FileActivationLaunchMessage"), Settings.FileActivatedLaunchArg));
-
-			// Set the "Policy Editor" item as selected in the NavigationView
-			ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
-				.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
 
 			try
 			{
@@ -463,9 +463,6 @@ public partial class App : Application
 					{
 						case ViewModelBase.LaunchProtocolActions.PolicyEditor:
 							{
-								ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
-								.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
-
 								await PolicyEditorViewModel.OpenInPolicyEditor(Settings.LaunchActivationFilePath);
 								break;
 							}
@@ -473,18 +470,12 @@ public partial class App : Application
 							{
 								ViewFileCertificatesVM vm = ViewModelProvider.ViewFileCertificatesVM;
 
-								ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
-								.First(item => string.Equals(item.Tag.ToString(), "ViewFileCertificates", StringComparison.OrdinalIgnoreCase));
-
 								await vm.OpenInViewFileCertificatesVM(Settings.LaunchActivationFilePath);
 								break;
 							}
 						case ViewModelBase.LaunchProtocolActions.FileHashes:
 							{
 								GetCIHashesVM vm = ViewModelProvider.GetCIHashesVM;
-
-								ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
-								.First(item => string.Equals(item.Tag.ToString(), "GetCodeIntegrityHashes", StringComparison.OrdinalIgnoreCase));
 
 								await vm.OpenInGetCIHashes(Settings.LaunchActivationFilePath);
 								break;
@@ -533,23 +524,8 @@ public partial class App : Application
 	/// </summary>
 	private static void InitialNav()
 	{
-		if (IsElevated)
-		{
-			// Navigate to the CreatePolicy page when the window is loaded
-			_nav.Navigate(typeof(Pages.CreatePolicy));
-
-			// Set the "Create Policy" item as selected in the NavigationView
-			ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
-				.First(item => string.Equals(item.Tag.ToString(), "CreatePolicy", StringComparison.OrdinalIgnoreCase));
-		}
-		else
-		{
-			_nav.Navigate(typeof(Pages.PolicyEditor));
-
-			// Set the "Policy Editor" item as selected in the NavigationView
-			ViewModelForMainWindow.NavViewSelectedItem = ViewModelForMainWindow.allNavigationItems
-				.First(item => string.Equals(item.Tag.ToString(), "PolicyEditor", StringComparison.OrdinalIgnoreCase));
-		}
+		// Navigate to the CreatePolicy page when the window is loaded and is Admin, else Policy Editor
+		_nav.Navigate(IsElevated ? typeof(Pages.CreatePolicy) : typeof(Pages.PolicyEditor));
 	}
 
 	/// <summary>

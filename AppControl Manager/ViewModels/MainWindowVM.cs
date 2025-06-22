@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using AnimatedVisuals;
 using AppControlManager.Others;
 using AppControlManager.WindowComponents;
@@ -27,6 +28,8 @@ using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Windows.Foundation;
+using Windows.Graphics;
 
 namespace AppControlManager.ViewModels;
 
@@ -979,4 +982,87 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		// Save the selected option (using the enum's name)
 		App.Settings.BackDropBackground = selection.ToString();
 	}
+
+	/// <summary>
+	/// Event handler for when the main app window's size changes
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)
+	{
+		double mainWindowWidth = args.Size.Width; // Width of the main window
+
+		// Hide TitleColumn if width is less than 200, Restore the TitleColumn if width is 200 or more
+		TitleColumnWidth = mainWindowWidth < 750 ? new GridLength(0) : GridLength.Auto;
+	}
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/winmsg/extended-window-styles
+	/// </summary>
+	private const int WS_EX_LAYOUTRTL = 0x00400000;
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowlonga
+	/// </summary>
+	private const int GWL_EXSTYLE = -20;
+
+	/// <summary>
+	/// Sets the flow direction of the Main Window's title bar and Close/Minimize/Maximize buttons.
+	/// </summary>
+	/// <param name="flowD">The Flow Direction to set.</param>
+	internal static void SetCaptionButtonsFlowDirection(FlowDirection flowD)
+	{
+		IntPtr exStyle = NativeMethods.GetWindowLongPtr(GlobalVars.hWnd, GWL_EXSTYLE);
+
+		if (flowD is FlowDirection.LeftToRight)
+		{
+			exStyle &= ~WS_EX_LAYOUTRTL;
+		}
+		else
+		{
+			exStyle |= WS_EX_LAYOUTRTL;
+		}
+
+		NativeMethods.SetWindowLongPtr(GlobalVars.hWnd, GWL_EXSTYLE, exStyle);
+	}
+
+	/// <summary>
+	/// Checks if the window has RTL layout applied
+	/// </summary>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static bool IsWindowRTL()
+	{
+		IntPtr exStyle = NativeMethods.GetWindowLongPtr(GlobalVars.hWnd, GWL_EXSTYLE);
+		return (exStyle.ToInt32() & WS_EX_LAYOUTRTL) != 0;
+	}
+
+	/// <summary>
+	/// Transforms a UIElement’s RenderSize to a pixel-based RectInt32.
+	/// </summary>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static RectInt32 CalculatePixelRect(UIElement element, double scale)
+	{
+		GeneralTransform t = element.TransformToVisual(null);
+
+		// Could cast to FrameworkElement and use ActualHeight and ActualWidth instead.
+		Rect bounds = t.TransformBounds(new Rect(0, 0, element.RenderSize.Width, element.RenderSize.Height));
+
+		return new RectInt32(
+			_X: (int)Math.Round(bounds.X * scale),
+			_Y: (int)Math.Round(bounds.Y * scale),
+			_Width: (int)Math.Round(bounds.Width * scale),
+			_Height: (int)Math.Round(bounds.Height * scale)
+		);
+	}
+
+	/// <summary>
+	/// Mirror a pixel-space rect horizontally around the given total width.
+	/// </summary>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static RectInt32 FlipHorizontally(RectInt32 rect, double totalWidthPx)
+	{
+		rect.X = (int)Math.Round(totalWidthPx - (rect.X + rect.Width));
+		return rect;
+	}
+
 }

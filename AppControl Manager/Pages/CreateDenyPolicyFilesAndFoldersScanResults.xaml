@@ -11,7 +11,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors">
 
     <Grid>
@@ -63,10 +63,10 @@
                 </DropDownButton>
 
                 <TextBox x:Uid="TotalLogsTextBlock"
-                Text="{x:Bind ViewModel.TotalCountOfTheFilesTextBox, Mode=OneWay}"
-                IsReadOnly="True"
-                VerticalAlignment="Center"
-                VerticalContentAlignment="Center"/>
+                         Text="{x:Bind ViewModel.TotalCountOfTheFilesTextBox, Mode=OneWay}"
+                         IsReadOnly="True"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Center"/>
 
                 <TextBox Width="300"
                          x:Uid="SearchBoxTextBox"
@@ -78,10 +78,10 @@
         </Border>
 
         <customUI:ListViewV2 x:Name="FileIdentitiesListView"
-            RegistryKey="DenyPolicy_FilesAndFolders_ScanResults"
-            Grid.Row="2"
-            SelectionMode="Extended"
-            ItemsSource="{x:Bind ViewModel.FilesAndFoldersScanResults, Mode=OneWay}">
+                             RegistryKey="DenyPolicy_FilesAndFolders_ScanResults"
+                             Grid.Row="2"
+                             SelectionMode="Extended"
+                             ItemsSource="{x:Bind ViewModel.FilesAndFoldersScanResults, Mode=OneWay}">
 
             <customUI:ListViewV2.Header>
 

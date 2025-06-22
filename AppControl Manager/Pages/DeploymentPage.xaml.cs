@@ -30,8 +30,6 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager
 {
-
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 	private DeploymentVM ViewModel { get; } = ViewModelProvider.DeploymentVM;
 	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
 
@@ -51,9 +49,8 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager
 		ViewModel.SignedXMLFilesLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-			(param => LightUp1(), GlobalVars.Rizz.GetString("DeployUnsignedPolicy")),
-			(param => LightUp2(), GlobalVars.Rizz.GetString("DeploySignedPolicy")),
-			null, null, null);
+			actionPack1: (param => LightUp1(), GlobalVars.Rizz.GetString("DeployUnsignedPolicy")),
+			actionPack2: (param => LightUp2(), GlobalVars.Rizz.GetString("DeploySignedPolicy")));
 	}
 
 	/// <summary>

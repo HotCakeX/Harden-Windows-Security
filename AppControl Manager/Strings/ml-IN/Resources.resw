@@ -5629,4 +5629,34 @@
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>ഘട്ടം 3</value>
   </data>
+  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash ലെവലുകൾ ഉപയോഗിക്കുന്നു।</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} WHQLFilePublisher നിയമങ്ങൾ।</value>
+  </data>
+  <data name="BuildSignerProcessingWHQLFilePublisherMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: WHQLFilePublisher ഡാറ്റ പ്രോസസ്സിംഗ്।</value>
+  </data>
+  <data name="WHQLFilePublisherSignersToAddMessage" xml:space="preserve">
+    <value>XML ഫയലിൽ ചേർക്കേണ്ട {0} WHQL File Publisher ഒപ്പിടുന്നവർ ഉണ്ട്</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+    <value>അനുമതി നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി WHQLFilePublisher ഒപ്പിടുന്നവരെ കണ്ടെത്തിയില്ല।</value>
+  </data>
+    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
+    <value>EKUs നോഡ് കണ്ടെത്തിയില്ല</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <value>നിഷേധ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി WHQLFilePublisher ഒപ്പിടുന്നവരെ കണ്ടെത്തിയില്ല।</value>
+  </data>
+  <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
+    <value>WHQL File Publisher നിയമ തരം</value>
+  </data>
+  <data name="AllowNewApps_SidebarButtonContent" xml:space="preserve">
+    <value>പുതിയ ആപ്പുകൾക്ക് അനുമതി നൽകുന്ന അടിസ്ഥാന നയം</value>
+  </data>
+  <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
+    <value>ഇഷ്ടാനുസൃത പാറ്റേൺ അടിസ്ഥാനമാക്കിയുള്ള സപ്ലിമെന്റൽ നയം</value>
+  </data>
 </root>

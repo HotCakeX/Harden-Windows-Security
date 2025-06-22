@@ -17,14 +17,29 @@
 
 namespace AppControlManager.IntelGathering;
 
-// The levels used by the BuildSignerAndHashObjects method
+/// <summary>
+/// The levels based on which the files are scanned by the app. They have fallback orders.
+/// </summary>
 internal enum ScanLevels
 {
-	FilePublisher = 0,
-	Publisher = 1,
-	Hash = 2,
-	FilePath = 3,
-	WildCardFolderPath = 4,
-	PFN = 5,
-	CustomFileRulePattern = 6
+	WHQLFilePublisher, // WHQLFilePublisher => FilePublisher => Publisher => Hash
+	FilePublisher, // FilePublisher => Publisher => Hash
+	Publisher, // Publisher => Hash
+	Hash,
+	FilePath,
+	WildCardFolderPath, // Only for folders
+	PFN,
+	CustomFileRulePattern
+}
+
+/// <summary>
+/// Bound to the ComboBox ItemsSource.
+/// </summary>
+/// <param name="friendlyName"></param>
+/// <param name="level"></param>
+internal sealed class ScanLevelsComboBoxType(string friendlyName, ScanLevels level, int rating)
+{
+	internal string FriendlyName = friendlyName;
+	internal ScanLevels Level = level;
+	internal int Rating = rating;
 }

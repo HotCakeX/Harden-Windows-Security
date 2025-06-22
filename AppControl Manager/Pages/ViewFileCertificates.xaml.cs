@@ -30,7 +30,6 @@ internal sealed partial class ViewFileCertificates : Page
 {
 
 	private ViewFileCertificatesVM ViewModel { get; } = ViewModelProvider.ViewFileCertificatesVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal ViewFileCertificates()
 	{

@@ -25,6 +25,8 @@ using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.WindowComponents;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.Globalization;
 
@@ -33,7 +35,7 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class SettingsVM : ViewModelBase
 {
 
-	private NavigationService nav { get; } = ViewModelProvider.NavigationService;
+	private NavigationService Nav { get; } = ViewModelProvider.NavigationService;
 
 	internal SettingsVM()
 	{
@@ -157,7 +159,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				}
 
 				// Refresh this page.
-				nav.RefreshSettingsPage();
+				Nav.RefreshSettingsPage();
 			}
 		}
 	} = SupportedLanguages.TryGetValue(App.Settings.ApplicationGlobalLanguage, out int x) ? x : 0;
@@ -256,6 +258,22 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 		// Expand the settings expander to make the configurations visible
 		MainUserConfigurationsSettingsExpanderIsExpanded = true;
+	}
+
+	/// <summary>
+	/// Executed when flow direction toggle is changed.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void FlowDirectionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+	{
+		MainWindowVM.SetCaptionButtonsFlowDirection(((ToggleSwitch)sender).IsOn ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
+
+		// Needs to run via Dispatcher, otherwise the 1st double-click on the UI elements register as pass-through, meaning they will resize the window as if we clicked on an empty area on the TitleBar.
+		Dispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () =>
+		{
+			MainWindow.MainWindowInstance?.SetRegionsForCustomTitleBar();
+		});
 	}
 
 	#region Signed Policy Path

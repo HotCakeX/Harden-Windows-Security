@@ -5629,4 +5629,34 @@
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>الخطوة 3</value>
   </data>
+  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: استخدام مستويات WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash.</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} قواعد WHQLFilePublisher.</value>
+  </data>
+  <data name="BuildSignerProcessingWHQLFilePublisherMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: معالجة بيانات WHQLFilePublisher.</value>
+  </data>
+  <data name="WHQLFilePublisherSignersToAddMessage" xml:space="preserve">
+    <value>يوجد {0} موقعين WHQL File Publisher ليتم إضافتهم إلى ملف XML</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+    <value>لم يتم اكتشاف موقعين WHQLFilePublisher لإنشاء قواعد السماح لهم.</value>
+  </data>
+    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
+    <value>عقدة EKUs غير موجودة</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <value>لم يتم اكتشاف موقعين WHQLFilePublisher لإنشاء قواعد المنع لهم.</value>
+  </data>
+  <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
+    <value>نوع قاعدة WHQL File Publisher</value>
+  </data>
+  <data name="AllowNewApps_SidebarButtonContent" xml:space="preserve">
+    <value>سياسة أساسية للسماح بالتطبيقات الجديدة</value>
+  </data>
+  <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
+    <value>سياسة مكملة مبنية على نمط مخصص</value>
+  </data>
 </root>

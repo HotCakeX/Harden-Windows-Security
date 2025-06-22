@@ -680,9 +680,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// </summary>
 	internal void SelectFilesButton_Click()
 	{
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
-		if (selectedFiles is { Count: > 0 })
+		if (selectedFiles.Count > 0)
 		{
 			foreach (string item in selectedFiles)
 			{
@@ -696,9 +696,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// </summary>
 	internal void SelectFoldersButton_Click()
 	{
-		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+		List<string> selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedFolders is { Count: > 0 })
+		if (selectedFolders.Count > 0)
 		{
 			foreach (string folder in selectedFolders)
 			{
@@ -712,9 +712,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// </summary>
 	internal void CatRootPathsButton_Click()
 	{
-		List<string>? selectedCatRoots = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+		List<string> selectedCatRoots = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedCatRoots is { Count: > 0 })
+		if (selectedCatRoots.Count > 0)
 		{
 			CatRootPaths = selectedCatRoots;
 		}

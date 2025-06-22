@@ -11,11 +11,12 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     mc:Ignorable="d"
+    SizeChanged="{x:Bind ViewModel.MainWindow_SizeChanged}"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     SystemBackdrop="{x:Bind ViewModel.SystemBackDropStyle, Mode=OneWay}"
     Title="AppControl Manager">
 
-    <Grid x:Name="RootGrid">
+    <Grid x:Name="RootGrid" FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
         <Grid.RowDefinitions>
             <!-- Titlebar Row -->
@@ -74,7 +75,11 @@
 
         <!-- Titlebar -->
         <!-- https://learn.microsoft.com/windows/apps/develop/title-bar#full-customization-example -->
-        <Grid x:Name="AppTitleBar" Loaded="{x:Bind SetRegionsForCustomTitleBar}" SizeChanged="{x:Bind SetRegionsForCustomTitleBar}" Height="48" Grid.Row="0">
+        <Grid x:Name="AppTitleBar"
+              Loaded="{x:Bind SetRegionsForCustomTitleBar}"
+              SizeChanged="{x:Bind SetRegionsForCustomTitleBar}"
+              Height="48"
+              Grid.Row="0">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
@@ -90,10 +95,19 @@
             </Grid.ColumnDefinitions>
 
             <!-- Back button style, mimics the same NavigationView back button's style. If the style isn't set here, we can use the built-in animated icon for the back button -->
-            <Button x:Name="BackButtonTitleBar" Style="{StaticResource NavigationBackButtonNormalStyle}" Grid.Column="1" Click="{x:Bind BackButtonTitleBar_Click}" />
+            <Button x:Name="BackButtonTitleBar"
+                    Style="{StaticResource NavigationBackButtonNormalStyle}"
+                    Grid.Column="1"
+                    Click="{x:Bind Nav.BackButtonTitleBar_Click}" />
 
             <!-- Menu button style, mimics the same NavigationView menu (hamburger) button's style. If the style isn't set here, we can use the built-in animated icon for the menu (hamburger) button -->
-            <Button VerticalAlignment="Center" VerticalContentAlignment="Center" x:Name="HamburgerMenuButton" Grid.Column="2" Style="{StaticResource PaneToggleButtonStyle}" Margin="10,0,0,0" Click="{x:Bind ViewModel.HamburgerMenuButton_Click}" />
+            <Button VerticalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    x:Name="HamburgerMenuButton"
+                    Grid.Column="2"
+                    Style="{StaticResource PaneToggleButtonStyle}"
+                    Margin="10,0,0,0"
+                    Click="{x:Bind ViewModel.HamburgerMenuButton_Click}" />
 
             <!-- App icon -->
             <Image x:Name="TitleBarIcon" Source="ms-appx:///Assets/StoreLogo.png" Grid.Column="3"
@@ -111,13 +125,19 @@
                             Grid.Column="6"
                             QueryIcon="Find"
                             VerticalAlignment="Center"
-                            MaxWidth="600" TextChanged="SearchBox_TextChanged"
-                            SuggestionChosen="SearchBox_SuggestionChosen"
+                            MaxWidth="600"
+                            TextChanged="{x:Bind Nav.SearchBox_TextChanged}"
+                            SuggestionChosen="{x:Bind Nav.SearchBox_SuggestionChosen}"
                             x:Uid="MainSearchAutoSuggestBox" Margin="0"/>
 
             <!-- Sidebar access point -->
-            <Button x:Name="SidebarButton" Click="{x:Bind ViewModel.SidebarButton_Click}" Grid.Column="8"
-                    Height="32" Margin="5,0,30,0" Background="Transparent" BorderThickness="0">
+            <Button x:Name="SidebarButton"
+                    Click="{x:Bind ViewModel.SidebarButton_Click}"
+                    Grid.Column="8"
+                    Height="32"
+                    Margin="5,0,30,0"
+                    Background="Transparent"
+                    BorderThickness="0">
 
                 <Button.Content>
                     <controls:WrapPanel Orientation="Horizontal">
@@ -137,18 +157,18 @@
 
         <!-- Doc: https://learn.microsoft.com/windows/apps/design/controls/navigationview -->
         <NavigationView x:Name="MainNavigation"
-                    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-                    IsTabStop="True"
-                    IsPaneOpen="{x:Bind ViewModel.MainNavigationIsPaneOpen, Mode=TwoWay}"
-                    ItemInvoked="MainNavigation_ItemInvoked"
-                    IsBackButtonVisible="Collapsed"
-                    IsBackEnabled="False"
-                    AlwaysShowHeader="False"
-                    Grid.Row="1"
-                    Margin="{x:Bind ViewModel.NavViewMargin, Mode=OneWay}"
-                    SelectedItem="{x:Bind ViewModel.NavViewSelectedItem, Mode=TwoWay}"
-                    IsTitleBarAutoPaddingEnabled="False"
-                    IsPaneToggleButtonVisible="False">
+                        FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+                        IsTabStop="True"
+                        IsPaneOpen="{x:Bind ViewModel.MainNavigationIsPaneOpen, Mode=TwoWay}"
+                        ItemInvoked="{x:Bind Nav.MainNavigation_ItemInvoked}"
+                        IsBackButtonVisible="Collapsed"
+                        IsBackEnabled="False"
+                        AlwaysShowHeader="False"
+                        Grid.Row="1"
+                        Margin="{x:Bind ViewModel.NavViewMargin, Mode=OneWay}"
+                        SelectedItem="{x:Bind ViewModel.NavViewSelectedItem, Mode=TwoWay}"
+                        IsTitleBarAutoPaddingEnabled="False"
+                        IsPaneToggleButtonVisible="False">
 
             <!--
              Being controlled from MainWindow.xaml.cs
@@ -274,7 +294,7 @@
                                                  x:Name="SidebarPolicyPathPlaceHolder" x:Uid="SidebarPolicyPathPlaceHolder" TextWrapping="Wrap"
                                                  Width="150" />
 
-                                        <Button x:Name="SidebarBrowseButton" x:Uid="SidebarBrowseButton" HorizontalAlignment="Center" Click="{x:Bind nav.SidebarBasePolicyBrowseButton_Click}" Style="{ThemeResource AccentButtonStyle}">
+                                        <Button x:Name="SidebarBrowseButton" x:Uid="SidebarBrowseButton" HorizontalAlignment="Center" Click="{x:Bind Nav.SidebarBasePolicyBrowseButton_Click}" Style="{ThemeResource AccentButtonStyle}">
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -285,7 +305,7 @@
                                             </Button.Content>
                                         </Button>
 
-                                        <Button x:Name="SidebarClearButton" x:Uid="SidebarClearButton" HorizontalAlignment="Center" Click="{x:Bind nav.SidebarBasePolicyClearButton_Click}" Style="{ThemeResource AccentButtonStyle}">
+                                        <Button x:Name="SidebarClearButton" x:Uid="SidebarClearButton" HorizontalAlignment="Center" Click="{x:Bind Nav.SidebarBasePolicyClearButton_Click}" Style="{ThemeResource AccentButtonStyle}">
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -319,6 +339,7 @@
                                                         <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect3Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect3Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect3Command, Mode=OneWay}" />
                                                         <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect4Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect4Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect4Command, Mode=OneWay}" />
                                                         <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect5Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect5Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect5Command, Mode=OneWay}" />
+                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect6Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect6Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect6Command, Mode=OneWay}" />
                                                     </StackPanel>
                                                 </Flyout>
                                             </Button.Flyout>
@@ -338,6 +359,7 @@
 
                                     <ToggleSwitch Toggled="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitch_Toggled}"
                                                   x:Uid="ToggleSwitchGeneral"
+                                                  x:Name="AutomaticAssignmentSidebarToggleSwitch"
                                                   IsOn="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitchToggledState, Mode=TwoWay}"/>
                                 </controls:SettingsCard>
 
@@ -405,11 +427,11 @@
 
                     <!-- BreadCrumBar that that also acts as a sticky header -->
                     <BreadcrumbBar VerticalAlignment="Top"
-                        Grid.Row="0"
-                        Padding="10"
-                        Margin="20,10,0,10"
-                        ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
-                        ItemClicked="BreadcrumbBar_ItemClicked">
+                                   Grid.Row="0"
+                                   Padding="10"
+                                   Margin="20,10,0,10"
+                                   ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
+                                   ItemClicked="{x:Bind Nav.BreadcrumbBar_ItemClicked}">
 
                         <BreadcrumbBar.ItemTemplate>
                             <DataTemplate x:DataType="WindowComponents:Crumb">
@@ -422,11 +444,12 @@
                     </BreadcrumbBar>
 
                     <!--  Note the use of a TwoWay binding here, this is required for this control to work.  -->
-                    <controls:PropertySizer HorizontalAlignment="Left" Grid.Row="1"
-                        Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
-                        Maximum="640"
-                        Minimum="60"
-                        Visibility="{x:Bind MainNavigation.IsPaneOpen, Mode=OneWay}" />
+                    <controls:PropertySizer HorizontalAlignment="Left"
+                                            Grid.Row="1"
+                                            Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
+                                            Maximum="640"
+                                            Minimum="60"
+                                            Visibility="{x:Bind MainNavigation.IsPaneOpen, Mode=OneWay}" />
 
                     <!-- Global margin settings for every page's content -->
                     <Frame x:Name="ContentFrame" Margin="15,15,15,10" Grid.Row="1" />

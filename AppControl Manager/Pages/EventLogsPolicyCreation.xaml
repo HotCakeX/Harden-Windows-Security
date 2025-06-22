@@ -13,7 +13,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <!--
@@ -298,11 +298,18 @@
                 <ComboBox x:Uid="ScanLevelComboBox"
                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                           SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
-                          PlaceholderText="Scan level" >
-                    <x:String>File Publisher</x:String>
-                    <x:String>Publisher</x:String>
-                    <x:String>Hash</x:String>
+                          SelectedIndex="0"
+                          ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
+
 
                 <ToggleButton IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"
                               IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"

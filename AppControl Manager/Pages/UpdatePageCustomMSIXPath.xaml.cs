@@ -26,13 +26,12 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class UpdatePageCustomMSIXPath : Page
 {
-	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
 	private ViewModels.UpdateVM ViewModel { get; } = ViewModels.ViewModelProvider.UpdateVM;
 
 	internal UpdatePageCustomMSIXPath()
 	{
 		this.InitializeComponent();
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = this;
+		this.DataContext = ViewModel;
 	}
 }

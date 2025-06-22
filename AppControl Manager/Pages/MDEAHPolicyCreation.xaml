@@ -16,7 +16,7 @@
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:MSGraph="using:AppControlManager.MicrosoftGraph"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
 
@@ -713,11 +713,18 @@
                     </Button.Flyout>
                 </Button>
 
-                <ComboBox SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"                         
+                <ComboBox SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
+                          SelectedIndex="0"
+                          ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}"
                           x:Uid="ScanLevelComboBox">
-                    <x:String>File Publisher</x:String>
-                    <x:String>Publisher</x:String>
-                    <x:String>Hash</x:String>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
 
                 <ToggleButton IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"
@@ -728,10 +735,10 @@
         </Border>
 
         <customUI:ListViewV2 x:Name="FileIdentitiesListView"
-             RegistryKey="MDE_AdvancedHunting"
-             ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}"
-             Grid.Row="4"
-             SelectionMode="Extended">
+                             RegistryKey="MDE_AdvancedHunting"
+                             ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}"
+                             Grid.Row="4"
+                             SelectionMode="Extended">
 
             <customUI:ListViewV2.Header>
 

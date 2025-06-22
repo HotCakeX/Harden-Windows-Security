@@ -27,7 +27,6 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class Logs : Page
 {
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 	private LogsVM ViewModel { get; } = ViewModelProvider.LogsVM;
 
 	internal Logs()

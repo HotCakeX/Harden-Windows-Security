@@ -113,18 +113,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal string SelectedBarItemText { get; set; } = "Local";
 
-	// The default selected scan level
-	internal ScanLevels ScanLevel = ScanLevels.FilePublisher;
-	internal string ScanLevelComboBoxSelectedItem
-	{
-		get; set
-		{
-			if (SP(ref field, value))
-			{
-				ScanLevel = StringToScanLevel[field];
-			}
-		}
-	} = ScanLevelToString[ScanLevels.FilePublisher];
+	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5);
 
 	/// <summary>
 	/// Bound to the Date Picker on the UI.
@@ -691,7 +680,7 @@ DeviceEvents
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: SelectedLogs, level: ScanLevel);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: SelectedLogs, level: ScanLevelComboBoxSelectedItem.Level);
 
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);

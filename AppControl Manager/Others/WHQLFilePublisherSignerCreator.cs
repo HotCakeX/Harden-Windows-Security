@@ -1,0 +1,49 @@
+// MIT License
+//
+// Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+//
+
+using System;
+using System.Collections.Generic;
+
+namespace AppControlManager.Others;
+
+internal sealed class WHQLFilePublisherSignerCreator(
+	List<CertificateDetailsCreator> certificateDetails,
+	Version? fileVersion,
+	string? fileDescription,
+	string? internalName,
+	string? originalFileName,
+	string? packageFamilyName,
+	string? productName,
+	string? fileName,
+	string? authenticodeSHA256,
+	string? authenticodeSHA1,
+	int siSigningScenario,
+	string opus)
+{
+	internal List<CertificateDetailsCreator> CertificateDetails { get; } = certificateDetails;
+	internal Version? FileVersion { get; } = fileVersion;
+	internal string? FileDescription { get; } = fileDescription;
+	internal string? InternalName { get; } = internalName;
+	internal string? OriginalFileName { get; } = originalFileName;
+	internal string? PackageFamilyName { get; } = packageFamilyName;
+	internal string? ProductName { get; } = productName;
+	internal string? FileName { get; } = fileName;
+	internal string? AuthenticodeSHA256 { get; } = authenticodeSHA256;
+	internal string? AuthenticodeSHA1 { get; } = authenticodeSHA1;
+	internal int SiSigningScenario { get; } = siSigningScenario;
+	internal string Opus { get; } = opus;
+}

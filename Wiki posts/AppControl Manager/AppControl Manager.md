@@ -530,6 +530,17 @@ function Build_ACM {
 
     Set-Location -Path $Current_Location
 
+    
+    Set-Location -Path '.\eXclude\Rust Interop Library'
+
+    cargo clean
+
+    cargo build_x64
+
+    cargo build_arm64
+
+    Set-Location -Path $Current_Location
+
     #endregion
 
     # Adjust the Digest Algorithm based on the package source
@@ -562,6 +573,8 @@ function Build_ACM {
 
     Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\x86_64-pc-windows-msvc\release\DeviceGuardWMIRetriever-X64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
 
+    Copy-Item -Path '.\eXclude\Rust Interop Library\rust_interop-X64.dll' -Destination '.\RustInterop\RustInterop.dll' -Force
+
     # Generate for X64 architecture
     dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=x64
 
@@ -575,6 +588,8 @@ function Build_ACM {
     Copy-Item -Path '.\eXclude\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination '.\CppInterop\ManageDefender.exe' -Force
 
     Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
+
+    Copy-Item -Path '.\eXclude\Rust Interop Library\rust_interop-ARM64.dll' -Destination '.\RustInterop\RustInterop.dll' -Force
 
     # Generate for ARM64 architecture
     dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=ARM64

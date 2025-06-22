@@ -18,7 +18,6 @@
 using System;
 using AppControlManager.Others;
 using Microsoft.UI;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -31,7 +30,7 @@ namespace AppControlManager.Pages;
 internal sealed partial class MicrosoftDocumentation : Page
 {
 
-	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
+	private AppSettings.Main AppSettings => ViewModels.ViewModelProvider.AppSettings;
 
 	/// <summary>
 	/// Initializes the MicrosoftDocumentation component, sets the background color of WebView2 to transparent, and handles
@@ -51,7 +50,7 @@ internal sealed partial class MicrosoftDocumentation : Page
 	}
 
 	// Event handler for Back button
-	private void BackButton_Click(object sender, RoutedEventArgs e)
+	private void BackButton_Click()
 	{
 		if (MicrosoftDocumentationWebView2.CanGoBack)
 		{
@@ -60,7 +59,7 @@ internal sealed partial class MicrosoftDocumentation : Page
 	}
 
 	// Event handler for Forward button
-	private void ForwardButton_Click(object sender, RoutedEventArgs e)
+	private void ForwardButton_Click()
 	{
 		if (MicrosoftDocumentationWebView2.CanGoForward)
 		{
@@ -69,13 +68,13 @@ internal sealed partial class MicrosoftDocumentation : Page
 	}
 
 	// Event handler for Reload button
-	private void ReloadButton_Click(object sender, RoutedEventArgs e)
+	private void ReloadButton_Click()
 	{
 		MicrosoftDocumentationWebView2.Reload();
 	}
 
 	// Event handler for Home button
-	private void HomeButton_Click(object sender, RoutedEventArgs e)
+	private void HomeButton_Click()
 	{
 		MicrosoftDocumentationWebView2.Source = new Uri("https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/appcontrol");
 	}

@@ -25,7 +25,6 @@ internal sealed partial class Settings : Page
 {
 
 	private SettingsVM ViewModel { get; } = ViewModelProvider.SettingsVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 	private MainWindowVM ViewModelMainWindow { get; } = ViewModelProvider.MainWindowVM;
 
 	internal Settings()

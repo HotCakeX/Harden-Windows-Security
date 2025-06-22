@@ -5629,4 +5629,34 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>चरण 3</value>
   </data>
+  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash स्तरों का उपयोग।</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} WHQLFilePublisher नियम।</value>
+  </data>
+  <data name="BuildSignerProcessingWHQLFilePublisherMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: WHQLFilePublisher डेटा प्रसंस्करण।</value>
+  </data>
+  <data name="WHQLFilePublisherSignersToAddMessage" xml:space="preserve">
+    <value>XML फ़ाइल में जोड़े जाने वाले {0} WHQL File Publisher हस्ताक्षरकर्ता हैं</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+    <value>अनुमति नियम बनाने के लिए कोई WHQLFilePublisher हस्ताक्षरकर्ता नहीं मिले।</value>
+  </data>
+    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
+    <value>EKUs नोड नहीं मिला</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <value>अस्वीकार नियम बनाने के लिए कोई WHQLFilePublisher हस्ताक्षरकर्ता नहीं मिले।</value>
+  </data>
+  <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
+    <value>WHQL File Publisher नियम प्रकार</value>
+  </data>
+  <data name="AllowNewApps_SidebarButtonContent" xml:space="preserve">
+    <value>नए ऐप्स को अनुमति देने की आधार नीति</value>
+  </data>
+  <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
+    <value>कस्टम पैटर्न आधारित पूरक नीति</value>
+  </data>
 </root>

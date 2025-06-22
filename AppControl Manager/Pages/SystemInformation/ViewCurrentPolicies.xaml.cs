@@ -31,7 +31,6 @@ internal sealed partial class ViewCurrentPolicies : Page
 {
 
 	private ViewCurrentPoliciesVM ViewModel { get; } = ViewModelProvider.ViewCurrentPoliciesVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal ViewCurrentPolicies()
 	{

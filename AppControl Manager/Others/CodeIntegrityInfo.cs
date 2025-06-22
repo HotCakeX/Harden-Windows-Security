@@ -22,17 +22,16 @@ using System.Runtime.InteropServices;
 
 namespace AppControlManager.Others;
 
-
 internal sealed class CodeIntegrityOption(string name, string description)
 {
-	internal string Name { get; } = name;
-	internal string Description { get; } = description;
+	internal string Name => name;
+	internal string Description => description;
 }
 
 internal sealed class SystemCodeIntegrityInfo(uint codeIntegrityOptions, List<CodeIntegrityOption> codeIntegrityDetails)
 {
-	internal uint CodeIntegrityOptions { get; } = codeIntegrityOptions;
-	internal List<CodeIntegrityOption> CodeIntegrityDetails { get; } = codeIntegrityDetails;
+	internal uint CodeIntegrityOptions => codeIntegrityOptions;
+	internal List<CodeIntegrityOption> CodeIntegrityDetails => codeIntegrityDetails;
 }
 
 internal static partial class DetailsRetrieval

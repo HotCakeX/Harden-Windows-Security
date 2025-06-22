@@ -32,7 +32,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsManager
 {
 	private ConfigurePolicyRuleOptionsVM ViewModel { get; } = ViewModelProvider.ConfigurePolicyRuleOptionsVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
 
 	internal ConfigurePolicyRuleOptions()
@@ -50,8 +49,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-		(param => LightUp1(), GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptions_ButtonContent")),
-		null, null, null, null);
+			actionPack1: (param => LightUp1(), GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptions_ButtonContent")));
 	}
 
 	/// <summary>

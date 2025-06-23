@@ -32,6 +32,7 @@ using AppControlManager.SimulationMethods;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
@@ -175,7 +176,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 		List<FileCertificateInfoCol> results = [];
 
-		results = [.. FilteredCertificates.Where(cert =>
+		results = FilteredCertificates.Where(cert =>
 					(cert.SubjectCN is not null && cert.SubjectCN.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
 					(cert.IssuerCN is not null && cert.IssuerCN.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
 					(cert.TBSHash is not null && cert.TBSHash.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
@@ -187,7 +188,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 					(cert.HashingAlgorithm is not null && cert.HashingAlgorithm.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
 					(cert.SerialNumber is not null && cert.SerialNumber.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
 					(cert.Thumbprint is not null && cert.Thumbprint.Contains(query, StringComparison.OrdinalIgnoreCase))
-				)];
+				).ToList();
 
 		FileCertificates.Clear();
 
@@ -847,5 +848,16 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		{
 			MainInfoBar.WriteError(ex);
 		}
+	}
+
+	/// <summary>
+	/// CTRL + C shortcuts event handler
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		ListViewFlyoutMenuCopy_Click();
+		args.Handled = true;
 	}
 }

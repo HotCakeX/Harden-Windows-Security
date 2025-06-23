@@ -29,6 +29,7 @@ using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
@@ -234,7 +235,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 		}
 
 		// Perform a case-insensitive search in all relevant fields
-		List<SimulationOutput> filteredResults = [.. AllSimulationOutputs.Where(output =>
+		List<SimulationOutput> filteredResults = AllSimulationOutputs.Where(output =>
 			(output.Path is not null && output.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.Source is not null && output.Source.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.MatchCriteria is not null && output.MatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
@@ -242,7 +243,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 			(output.CertSubjectCN is not null && output.CertSubjectCN.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.SignerName is not null && output.SignerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-		)];
+		).ToList();
 
 		SimulationOutputs.Clear();
 
@@ -747,4 +748,14 @@ internal sealed partial class SimulationVM : ViewModelBase
 		FolderPaths.Clear();
 	}
 
+	/// <summary>
+	/// CTRL + C shortcuts event handler
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		ListViewFlyoutMenuCopy_Click();
+		args.Handled = true;
+	}
 }

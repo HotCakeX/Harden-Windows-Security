@@ -17,7 +17,6 @@
 
 using System;
 using AppControlManager.Others;
-using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -33,17 +32,11 @@ internal sealed partial class MicrosoftDocumentation : Page
 	private AppSettings.Main AppSettings => ViewModels.ViewModelProvider.AppSettings;
 
 	/// <summary>
-	/// Initializes the MicrosoftDocumentation component, sets the background color of WebView2 to transparent, and handles
-	/// navigation events.
+	/// Initializes the MicrosoftDocumentation component and handles navigation events.
 	/// </summary>
 	internal MicrosoftDocumentation()
 	{
 		this.InitializeComponent();
-		// Set background color of WebView2 while content is loading
-		MicrosoftDocumentationWebView2.DefaultBackgroundColor = Colors.Transparent;
-
-		// Handle navigation events to manage button state
-		MicrosoftDocumentationWebView2.NavigationCompleted += WebView2_NavigationCompleted;
 
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;

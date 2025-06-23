@@ -57,7 +57,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 
 	#endregion
 
-	private string? selectedFile;
+	internal string? selectedFile { get; set => SP(ref field, value); }
 
 	private void InitializeHashItems()
 	{
@@ -301,5 +301,10 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 
 			MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("HashCopiedToClipboard"));
 		}
+	}
+
+	internal void ClearSelectedFilePath()
+	{
+		selectedFile = null;
 	}
 }

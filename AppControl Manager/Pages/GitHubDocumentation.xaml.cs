@@ -17,7 +17,6 @@
 
 using System;
 using AppControlManager.Others;
-using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -39,12 +38,6 @@ internal sealed partial class GitHubDocumentation : Page
 	internal GitHubDocumentation()
 	{
 		this.InitializeComponent();
-
-		// Background color of the WebView2 while content is loading
-		GitHubDocumentationWebView2.DefaultBackgroundColor = Colors.Transparent;
-
-		// Handle navigation events to manage button state
-		GitHubDocumentationWebView2.NavigationCompleted += WebView2_NavigationCompleted;
 
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;

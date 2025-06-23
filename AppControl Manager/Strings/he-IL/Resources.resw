@@ -1823,15 +1823,6 @@
   <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>אם זה מופעל, מנהל AppControl יבקש הרשאות מנהל בעת ההפעלה.</value>
   </data>
-  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
-    <value>פתח בעורך המדיניות</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פתח את המדיניות בעורך המדיניות שם תוכל לראות סקירה מפורטת של המדיניות ולהתאים אותה עוד יותר בתוך האפליקציה הזו.</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פתח את המדיניות בעורך המדיניות שם תוכל לראות סקירה מפורטת של המדיניות ולהתאים אותה עוד יותר בתוך האפליקציה הזו.</value>
-  </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.Content" xml:space="preserve">
     <value>השתמש רק בפריטים שנבחרו</value>
   </data>

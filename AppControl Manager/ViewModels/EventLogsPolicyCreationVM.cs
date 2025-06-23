@@ -27,6 +27,7 @@ using AppControlManager.Others;
 using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
@@ -77,7 +78,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("TotalLogsTextBlock/PlaceholderText");
 
-	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5);
+	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = DefaultScanLevel;
 
 	/// <summary>
 	/// Bound to the Date Picker on the UI.
@@ -383,10 +384,9 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the supplemental policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor() => await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(finalSupplementalPolicyPath);
 
 	/// <summary>
 	/// Event handler for the select Code Integrity EVTX file path button
@@ -781,4 +781,32 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		}
 	}
 
+	/// <summary>
+	/// CTRL + C shortcuts event handler
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		ListViewFlyoutMenuCopy_Click();
+		args.Handled = true;
+	}
+
+	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is Button button && button.Tag is string key)
+		{
+			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			{
+				ListViewHelper.SortColumn(
+					mapping.Getter,
+					SearchBoxText,
+					AllFileIdentities,
+					FileIdentities,
+					SortState,
+					key,
+					regKey: ListViewHelper.ListViewsRegistry.Event_Logs);
+			}
+		}
+	}
 }

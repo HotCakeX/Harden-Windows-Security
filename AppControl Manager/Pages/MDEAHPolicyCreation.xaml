@@ -43,9 +43,25 @@
                  Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                  IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
             <customUI:InfoBarV2.ActionButton>
-                <Button x:Uid="OpenInPolicyEditorButton"
-                        Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.OpenInPolicyEditor}" />
+                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                    Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}">
+                    <DropDownButton.Content>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                        </StackPanel>
+                    </DropDownButton.Content>
+                    <DropDownButton.Flyout>
+                        <MenuFlyout Placement="Bottom">
+                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                            Icon="Edit"
+                                            Click="{x:Bind ViewModel.OpenInPolicyEditor}"/>
+                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                            Icon="OpenWith"
+                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_Internal}"/>
+                        </MenuFlyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
             </customUI:InfoBarV2.ActionButton>
         </customUI:InfoBarV2>
 
@@ -57,9 +73,9 @@
             <SelectorBar x:Name="MenuSelectorBar"                        
                          HorizontalAlignment="Left"
                          VerticalAlignment="Center">
-                <SelectorBarItem x:Name="SelectorBarItemMain" Text="Local"/>
-                <SelectorBarItem x:Name="SelectorBarItemCloud" Text="Cloud"/>
-                <SelectorBarItem x:Name="SelectorBarItemCreate" Text="Create"/>
+                <SelectorBarItem Tag="Local" x:Uid="LocalTextBlock"/>
+                <SelectorBarItem Tag="Cloud" x:Uid="CloudTextBlock"/>
+                <SelectorBarItem Tag="Create" x:Uid="CreateTextBlock"/>
             </SelectorBar>
 
             <TextBox x:Uid="TotalLogsTextBlock"
@@ -80,7 +96,7 @@
 
         </controls:WrapPanel>
 
-        <Border Grid.Row="3" Visibility="{x:Bind IsLocalSelected, Mode=OneWay}"
+        <Border Grid.Row="3" Visibility="{x:Bind ViewModel.IsLocalSelected, Mode=OneWay}"
             Margin="0,10,0,10"
             Style="{StaticResource GridCardStyle}" Padding="8">
 
@@ -135,7 +151,7 @@
         </Border>
 
 
-        <Border Grid.Row="3" Visibility="{x:Bind IsCloudSelected, Mode=OneWay}"
+        <Border Grid.Row="3" Visibility="{x:Bind ViewModel.IsCloudSelected, Mode=OneWay}"
               Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
@@ -535,8 +551,8 @@
         </Border>
 
 
-        <Border Grid.Row="3" Visibility="{x:Bind IsCreateSelected, Mode=OneWay}"
-            Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
+        <Border Grid.Row="3" Visibility="{x:Bind ViewModel.IsCreateSelected, Mode=OneWay}"
+                Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -767,24 +783,24 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth17, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth18, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <Button x:Uid="FileNameColumnHeaderBtn" Tag="FileName" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="TimeCreatedColumnHeaderBtn" Tag="TimeCreated" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="SignatureStatusColumnHeaderBtn" Tag="SignatureStatus" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="ActionColumnHeaderBtn" Tag="Action" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="OriginalFileNameColumnHeaderBtn" Tag="OriginalFileName" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="InternalNameColumnHeaderBtn" Tag="InternalName" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="FileDescriptionColumnHeaderBtn" Tag="FileDescription" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="FileVersionColumnHeaderBtn" Tag="FileVersion" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="SHA256HashColumnHeaderBtn" Tag="SHA256Hash" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="SHA1HashColumnHeaderBtn" Tag="SHA1Hash" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="SHA256FlatHashColumnHeaderBtn" Tag="SHA256FlatHash" Grid.Column="10" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="SHA1FlatHashColumnHeaderBtn" Tag="SHA1FlatHash" Grid.Column="11" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="SigningScenarioColumnHeaderBtn" Tag="SISigningScenario" Grid.Column="12" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="FilePathColumnHeaderBtn" Tag="FilePath" Grid.Column="13" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="ComputerNameColumnHeaderBtn" Tag="ComputerName" Grid.Column="14" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="PolicyGUIDColumnHeaderBtn" Tag="PolicyGUID" Grid.Column="15" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="PolicyNameColumnHeaderBtn" Tag="PolicyName" Grid.Column="16" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
-                        <Button x:Uid="FilePublishersColumnHeaderBtn" Tag="FilePublishersToDisplay" Grid.Column="17" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
+                        <Button x:Uid="FileNameColumnHeaderBtn" Tag="FileName" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="TimeCreatedColumnHeaderBtn" Tag="TimeCreated" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SignatureStatusColumnHeaderBtn" Tag="SignatureStatus" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="ActionColumnHeaderBtn" Tag="Action" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="OriginalFileNameColumnHeaderBtn" Tag="OriginalFileName" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="InternalNameColumnHeaderBtn" Tag="InternalName" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="FileDescriptionColumnHeaderBtn" Tag="FileDescription" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="FileVersionColumnHeaderBtn" Tag="FileVersion" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SHA256HashColumnHeaderBtn" Tag="SHA256Hash" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SHA1HashColumnHeaderBtn" Tag="SHA1Hash" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SHA256FlatHashColumnHeaderBtn" Tag="SHA256FlatHash" Grid.Column="10" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SHA1FlatHashColumnHeaderBtn" Tag="SHA1FlatHash" Grid.Column="11" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SigningScenarioColumnHeaderBtn" Tag="SISigningScenario" Grid.Column="12" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="FilePathColumnHeaderBtn" Tag="FilePath" Grid.Column="13" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="ComputerNameColumnHeaderBtn" Tag="ComputerName" Grid.Column="14" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="PolicyGUIDColumnHeaderBtn" Tag="PolicyGUID" Grid.Column="15" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="PolicyNameColumnHeaderBtn" Tag="PolicyName" Grid.Column="16" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="FilePublishersColumnHeaderBtn" Tag="FilePublishersToDisplay" Grid.Column="17" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>
@@ -805,7 +821,7 @@
 
                                 <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ListViewFlyoutMenuCopy_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModelMDEAHPolicyCreationVM.CtrlC_Invoked}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />

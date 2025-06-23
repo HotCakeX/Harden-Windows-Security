@@ -16,6 +16,7 @@
 //
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Xml;
 using AppControlManager.Others;
@@ -24,10 +25,16 @@ namespace AppControlManager.XMLOps;
 
 internal static class NewWHQLFilePublisherLevelRules
 {
-	/// <summary>
-	/// Microsoft Windows Third Party Component CA 2012
-	/// </summary>
-	private const string WHQLTBSHash = "CEC1AFD0E310C55C1DCC601AB8E172917706AA32FB5EAF826813547FDF02DD46";
+
+	private static readonly FrozenSet<string> WHQLTBSHashes = new string[]
+	{
+		// Microsoft Windows Third Party Component CA 2012
+		"CEC1AFD0E310C55C1DCC601AB8E172917706AA32FB5EAF826813547FDF02DD46",
+
+		// Microsoft Windows Third Party Component CA 2014
+		"D8BE9E4D9074088EF818BC6F6FB64955E90378B2754155126FEEBBBD969CF0AE"
+
+	}.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 
 	private const string EKUID = "ID_EKU_E_MSFTWHQL";
 	private const string EKUValue = "010A2B0601040182370A0305";
@@ -106,8 +113,8 @@ internal static class NewWHQLFilePublisherLevelRules
 
 			foreach (CertificateDetailsCreator signerData in whqlFilePublisherData.CertificateDetails)
 			{
-				// Only keeping certificates with the WHQL TBS Hash, it's Intermediate
-				if (!string.Equals(signerData.IntermediateCertTBS, WHQLTBSHash, StringComparison.OrdinalIgnoreCase)) continue;
+				// Only keeping certificates with WHQL TBS Hash, it's Intermediate.
+				if (!WHQLTBSHashes.Contains(signerData.IntermediateCertTBS)) continue;
 
 				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 
@@ -267,8 +274,8 @@ internal static class NewWHQLFilePublisherLevelRules
 
 			foreach (CertificateDetailsCreator signerData in whqlFilePublisherData.CertificateDetails)
 			{
-				// Only keeping certificates with the WHQL TBS Hash, it's Intermediate
-				if (!string.Equals(signerData.IntermediateCertTBS, WHQLTBSHash, StringComparison.OrdinalIgnoreCase)) continue;
+				// Only keeping certificates with WHQL TBS Hash, it's Intermediate.
+				if (!WHQLTBSHashes.Contains(signerData.IntermediateCertTBS)) continue;
 
 				string guid2 = Guid.CreateVersion7().ToString("N").ToUpperInvariant();
 

@@ -57,9 +57,6 @@ internal sealed partial class GetCIHashes : Page
 		this.InitializeComponent();
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		this.DataContext = ViewModel;
-
-		// Subscribe to GridView events for card animations
-		hashGridView.ContainerContentChanging += HashGridView_ContainerContentChanging;
 	}
 
 	private void HashGridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)

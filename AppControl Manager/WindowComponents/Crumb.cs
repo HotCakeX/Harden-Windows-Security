@@ -27,7 +27,7 @@ namespace AppControlManager.WindowComponents;
 /// <param name="page"></param>
 internal readonly struct Crumb(string label, Type page)
 {
-	internal string Label { get; } = label;
-	internal Type Page { get; } = page;
+	internal string Label => label;
+	internal Type Page => page;
 	public override string ToString() => Label;
 }

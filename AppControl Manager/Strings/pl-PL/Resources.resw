@@ -1823,15 +1823,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Jeśli ta opcja jest włączona, Menedżer AppControl wyświetli monit o podniesienie uprawnień w celu uruchomienia z uprawnieniami administratora podczas uruchamiania.</value>
   </data>
-  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
-    <value>Otwórz w edytorze zasad</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Otwórz zasady w Edytorze zasad, gdzie możesz zobaczyć szczegółowy przegląd zasad i mieć możliwość dalszego dostosowania ich bezpośrednio w tej aplikacji.</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Otwórz zasady w Edytorze zasad, gdzie możesz zobaczyć szczegółowy przegląd zasad i mieć możliwość dalszego dostosowania ich bezpośrednio w tej aplikacji.</value>
-  </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.Content" xml:space="preserve">
     <value>Użyj tylko wybranych elementów</value>
   </data>

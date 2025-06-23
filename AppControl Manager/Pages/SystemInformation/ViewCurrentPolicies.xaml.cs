@@ -15,10 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.CustomUIElements;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -29,7 +27,6 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class ViewCurrentPolicies : Page
 {
-
 	private ViewCurrentPoliciesVM ViewModel { get; } = ViewModelProvider.ViewCurrentPoliciesVM;
 
 	internal ViewCurrentPolicies()
@@ -38,22 +35,4 @@ internal sealed partial class ViewCurrentPolicies : Page
 		DataContext = ViewModel; // Set the DataContext for x:Bind references in the header in XAML
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
-
-#pragma warning disable CA1822
-
-	/// <summary>
-	/// Event handler to prevent the MenuFlyout to automatically close immediately after selecting a checkbox or any button in it
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private void MenuFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
-	{
-		if (sender is MenuFlyoutV2 { IsPointerOver: true })
-		{
-			args.Cancel = true;
-		}
-	}
-
-#pragma warning restore CA1822
-
 }

@@ -31,6 +31,7 @@ using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
@@ -264,7 +265,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				FilesAndFoldersBrowseForFilesSettingsCardVisibility = field.Level is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
-	} = new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5);
+	} = DefaultScanLevel;
 
 	internal double FilesAndFoldersScalabilityRadialGaugeValue
 	{
@@ -407,10 +408,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for files and folders using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_FilesAndFolders()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_FilesAndFoldersSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_FilesAndFolders() => await PolicyEditorViewModel.OpenInPolicyEditor(_FilesAndFoldersSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FilesAndFoldersSupplementalPolicyPath);
 
 	/// <summary>
 	/// Main button's event handler for files and folder Supplemental policy creation
@@ -736,6 +736,13 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		UpdateTotalFilesFilesAndFolders();
 	}
 
+	internal void _OpenInFileExplorerFilesAndFolders() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.SupplementalPolicy_FilesAndFolders_ScanResults);
+	internal void _OpenInFileExplorerShortCutFilesAndFolders(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		_OpenInFileExplorerFilesAndFolders();
+		args.Handled = true;
+	}
+
 	#endregion
 
 	#region Certificates scan
@@ -1023,10 +1030,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for Certificates using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_Certificates()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_CertificatesSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_Certificates() => await PolicyEditorViewModel.OpenInPolicyEditor(_CertificatesSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_Certificates() => await OpenInDefaultFileHandler(_CertificatesSupplementalPolicyPath);
 
 	#endregion
 
@@ -1213,10 +1219,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for ISG using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_ISG()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_ISGSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_ISG() => await PolicyEditorViewModel.OpenInPolicyEditor(_ISGSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_ISG() => await OpenInDefaultFileHandler(_ISGSupplementalPolicyPath);
 
 	#endregion
 
@@ -1554,7 +1559,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. StrictKernelModeScanResults], level: ScanLevels.FilePublisher);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. StrictKernelModeScanResults], level: ScanLevels.WHQLFilePublisher);
 
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
@@ -1742,10 +1747,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for StrictKernelMode using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_StrictKernelMode()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_StrictKernelModeSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_StrictKernelMode() => await PolicyEditorViewModel.OpenInPolicyEditor(_StrictKernelModeSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_StrictKernelMode() => await OpenInDefaultFileHandler(_StrictKernelModeSupplementalPolicyPath);
 
 	/// <summary>
 	/// Updates the total logs count displayed on the UI
@@ -1856,6 +1860,13 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 
 		UpdateTotalFilesStrictKernelMode();
+	}
+
+	internal void _OpenInFileExplorerStrictKernelMode() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults);
+	internal void _OpenInFileExplorerShortCutStrictKernelMode(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		_OpenInFileExplorerStrictKernelMode();
+		args.Handled = true;
 	}
 
 	#endregion
@@ -2249,10 +2260,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for PFN using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_PFN()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_PFNSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_PFN() => await PolicyEditorViewModel.OpenInPolicyEditor(_PFNSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_PFNSupplementalPolicyPath);
 
 	#endregion
 
@@ -2501,10 +2511,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for CustomPatternBasedFileRule using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_CustomPatternBasedFileRuleSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await PolicyEditorViewModel.OpenInPolicyEditor(_CustomPatternBasedFileRuleSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await OpenInDefaultFileHandler(_CustomPatternBasedFileRuleSupplementalPolicyPath);
 
 	#endregion
 

@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -40,24 +41,57 @@
 
                     <!-- Button container for browse and clear buttons -->
                     <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Margin="0,0,0,20">
-                        <Button Click="{x:Bind ViewModel.PickFile_Click}"
-                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                            x:Uid="FileBrowseButton"
-                            Style="{StaticResource AccentButtonStyle}"/>
+
+                        <customUI:ButtonV2 Click="{x:Bind ViewModel.PickFile_Click}"
+                                           IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                           x:Uid="FileBrowseButton"
+                                           Style="{StaticResource AccentButtonStyle}">
+
+                            <customUI:ButtonV2.Flyout>
+                                <Flyout>
+
+                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedFilePath}" />
+
+                                        <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+
+                                        <TextBox Text="{x:Bind ViewModel.selectedFile, Mode=OneWay}"
+                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                 MinWidth="400" IsReadOnly="True" />
+
+                                    </controls:WrapPanel>
+
+                                </Flyout>
+                            </customUI:ButtonV2.Flyout>
+
+                        </customUI:ButtonV2>
+
                         <Button Click="{x:Bind ViewModel.Clear_Click}"
-                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                x:Uid="ClearButton"/>
+                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                        <AnimatedIcon.Source>
+                                            <animatedvisuals:TrashCan/>
+                                        </AnimatedIcon.Source>
+                                    </AnimatedIcon>
+                                    <TextBlock x:Uid="ClearTheData" Margin="5,0,0,0" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
                     </StackPanel>
 
                     <!-- Hash Cards GridView -->
                     <GridView x:Name="hashGridView" 
-                             Grid.Row="1"
-                             ItemsSource="{x:Bind ViewModel.HashItems, Mode=OneWay}"
-                             IsItemClickEnabled="True" 
-                             ItemClick="HashGrid_ItemClick"
-                             HorizontalAlignment="Center"
-                             SelectionMode="None"
-                             Padding="20">
+                              Grid.Row="1"
+                              ItemsSource="{x:Bind ViewModel.HashItems, Mode=OneWay}"
+                              IsItemClickEnabled="True" 
+                              ItemClick="{x:Bind HashGrid_ItemClick}"
+                              HorizontalAlignment="Center"
+                              SelectionMode="None"
+                              ContainerContentChanging="{x:Bind HashGridView_ContainerContentChanging}"
+                              Padding="20">
                         <GridView.ItemContainerStyle>
                             <Style BasedOn="{StaticResource GridViewItemRevealStyle}" TargetType="GridViewItem">
                                 <Style.Setters>
@@ -182,7 +216,7 @@
               VerticalAlignment="Stretch" 
               Visibility="Collapsed"
               Canvas.ZIndex="100"
-              Tapped="SmokeGrid_Tapped">
+              Tapped="{x:Bind SmokeGrid_Tapped}">
             <Grid.Background>
                 <SolidColorBrush Color="{ThemeResource SystemChromeAltHighColor}" Opacity="0.9" />
             </Grid.Background>
@@ -196,7 +230,7 @@
                           Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
                           BorderThickness="1"
                           CornerRadius="12"
-                          Tapped="DestinationElement_Tapped">
+                          Tapped="{x:Bind DestinationElement_Tapped}">
                 <ScrollViewer.BorderBrush>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                         <GradientStop Color="#4568DC" Offset="0.0"/>
@@ -241,7 +275,7 @@
                                  FontWeight="Bold" Foreground="HotPink"/>
                             <Run Text="{x:Bind ViewModel.SelectedHashItem.HashTypeName, Mode=OneWay}"/>
                         </TextBlock>
-                        <Button Click="BackButton_Click" 
+                        <Button Click="{x:Bind BackButton_Click}" 
                                 HorizontalAlignment="Right" 
                                 VerticalAlignment="Center"                             
                                 Margin="10"

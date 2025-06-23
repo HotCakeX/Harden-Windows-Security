@@ -1823,15 +1823,6 @@
   <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>ഇത് പ്രവർത്തനക്ഷമമാക്കിയിട്ടുണ്ടെങ്കിൽ, സ്റ്റാർട്ടപ്പിൽ അഡ്മിനിസ്ട്രേറ്റർ പ്രത്യേകാനുമതികളോടെ പ്രവർത്തിക്കാൻ ആപ്പ്കൺട്രോൾ മാനേജർ എലിവേഷനായി ആവശ്യപ്പെടും.</value>
   </data>
-  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
-    <value>നയ എഡിറ്ററിൽ തുറക്കുക</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>നയ എഡിറ്ററിൽ നയം തുറക്കുക, അവിടെ നിങ്ങൾക്ക് നയത്തിന്റെ വിശദമായ അവലോകനം കാണാനും ഈ ആപ്പിനുള്ളിൽ തന്നെ അത് കൂടുതൽ ഇഷ്ടാനുസൃതമാക്കാനുള്ള ഓപ്ഷനും ലഭിക്കും.</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>നയ എഡിറ്ററിൽ നയം തുറക്കുക, അവിടെ നിങ്ങൾക്ക് നയത്തിന്റെ വിശദമായ അവലോകനം കാണാനും ഈ ആപ്പിനുള്ളിൽ തന്നെ അത് കൂടുതൽ ഇഷ്ടാനുസൃതമാക്കാനുള്ള ഓപ്ഷനും ലഭിക്കും.</value>
-  </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.Content" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾ മാത്രം ഉപയോഗിക്കുക</value>
   </data>

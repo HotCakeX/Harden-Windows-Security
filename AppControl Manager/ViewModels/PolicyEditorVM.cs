@@ -1563,7 +1563,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			await Task.Run(() =>
 			{
 				// Perform a case-insensitive search in all relevant fields
-				filteredResults = [.. FileRulesCollectionList.Where(p =>
+				filteredResults = FileRulesCollectionList.Where(p =>
 				(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.FileDescription?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
@@ -1573,7 +1573,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				(p.PackageFamilyName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.ProductName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.Hash?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-				)];
+				).ToList();
 			});
 
 			FileRulesCollection.Clear();

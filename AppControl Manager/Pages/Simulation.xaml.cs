@@ -17,7 +17,6 @@
 
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -28,7 +27,6 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class Simulation : Page
 {
-
 	private SimulationVM ViewModel { get; } = ViewModelProvider.SimulationVM;
 
 	internal Simulation()
@@ -36,16 +34,5 @@ internal sealed partial class Simulation : Page
 		this.InitializeComponent();
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		this.DataContext = ViewModel;
-	}
-
-	/// <summary>
-	/// CTRL + C shortcuts event handler
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-	{
-		ViewModel.ListViewFlyoutMenuCopy_Click();
-		args.Handled = true;
 	}
 }

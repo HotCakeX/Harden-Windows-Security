@@ -15,7 +15,7 @@
                  PaneDisplayMode="Top"
                  IsTabStop="True"
                  Grid.Row="1"
-                 SelectionChanged="NavigationView_SelectionChanged"
+                 SelectionChanged="{x:Bind NavigationView_SelectionChanged}"
                  IsSettingsVisible="False"
                  IsBackButtonVisible="Collapsed">
 

@@ -30,6 +30,7 @@ using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
@@ -131,7 +132,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				FilesAndFoldersBrowseForFilesSettingsCardVisibility = field.Level is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
-	} = new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5);
+	} = DefaultScanLevel;
 
 	internal double FilesAndFoldersScalabilityRadialGaugeValue
 	{
@@ -550,17 +551,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for files and folders using a specified Deny policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_FilesAndFolders()
-	{
-		try
-		{
-			await PolicyEditorViewModel.OpenInPolicyEditor(_FilesAndFoldersDenyPolicyPath);
-		}
-		catch (Exception ex)
-		{
-			FilesAndFoldersInfoBar.WriteError(ex);
-		}
-	}
+	internal async void OpenInPolicyEditor_FilesAndFolders() => await PolicyEditorViewModel.OpenInPolicyEditor(_FilesAndFoldersDenyPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FilesAndFoldersDenyPolicyPath);
 
 	/// <summary>
 	/// De-selects all of the displayed rows on the ListView
@@ -990,17 +983,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for PFN using a specified Deny policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_PFN()
-	{
-		try
-		{
-			await PolicyEditorViewModel.OpenInPolicyEditor(_PFNDenyPolicyPath);
-		}
-		catch (Exception ex)
-		{
-			PFNInfoBar.WriteError(ex);
-		}
-	}
+	internal async void OpenInPolicyEditor_PFN() => await PolicyEditorViewModel.OpenInPolicyEditor(_PFNDenyPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_PFNDenyPolicyPath);
 
 	#endregion
 
@@ -1224,17 +1209,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for CustomPatternBasedFileRule using a specified Deny policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule()
-	{
-		try
-		{
-			await PolicyEditorViewModel.OpenInPolicyEditor(_CustomPatternBasedFileRuleDenyPolicyPath);
-		}
-		catch (Exception ex)
-		{
-			CustomFilePathRulesInfoBar.WriteError(ex);
-		}
-	}
+	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await PolicyEditorViewModel.OpenInPolicyEditor(_CustomPatternBasedFileRuleDenyPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await OpenInDefaultFileHandler(_CustomPatternBasedFileRuleDenyPolicyPath);
 
 	#endregion
 
@@ -1299,4 +1276,11 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	}
 
 	#endregion
+
+	internal void _OpenInFileExplorer() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults);
+	internal void _OpenInFileExplorerShortCut(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		_OpenInFileExplorer();
+		args.Handled = true;
+	}
 }

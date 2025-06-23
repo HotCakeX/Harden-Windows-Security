@@ -16,13 +16,11 @@
 //
 
 using System;
-using System.ComponentModel;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml.Controls;
 using AppControlManager.IntelGathering;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -32,18 +30,8 @@ namespace AppControlManager.Pages;
 /// MDEAHPolicyCreation is a page for managing MDE Advanced Hunting policies, including scanning logs, filtering data,
 /// and creating policies.
 /// </summary>
-internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
+internal sealed partial class MDEAHPolicyCreation : Page
 {
-
-	/// <summary>
-	/// An event that is triggered when a property value changes, allowing subscribers to be notified of updates.
-	/// </summary>
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	private void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
 
 	private MDEAHPolicyCreationVM ViewModel { get; } = ViewModelProvider.MDEAHPolicyCreationVM;
 
@@ -57,29 +45,17 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 		InitSelectorBar();
 
 		// Setting it in XAML would fire it unnecessarily initially
-		MenuSelectorBar.SelectionChanged += MenuSelectorBar_SelectionChanged;
+		MenuSelectorBar.SelectionChanged += ViewModel.MenuSelectorBar_SelectionChanged;
 	}
 
-	#region For the toolbar menu's Selector Bar
-
-	internal bool IsLocalSelected => string.Equals(ViewModel.SelectedBarItemText, SelectorBarItemMain.Text, StringComparison.OrdinalIgnoreCase);
-	internal bool IsCloudSelected => string.Equals(ViewModel.SelectedBarItemText, SelectorBarItemCloud.Text, StringComparison.OrdinalIgnoreCase);
-	internal bool IsCreateSelected => string.Equals(ViewModel.SelectedBarItemText, SelectorBarItemCreate.Text, StringComparison.OrdinalIgnoreCase);
+	#region For the toolbar menu's Selector Bar - The rest in the ViewModel class.
 
 	private void InitSelectorBar()
 	{
 		foreach (SelectorBarItem item in MenuSelectorBar.Items)
 		{
-			item.IsSelected = item.Text.Equals(ViewModel.SelectedBarItemText, StringComparison.OrdinalIgnoreCase);
+			item.IsSelected = ((string)item.Tag).Equals(ViewModel.SelectedBarItemTag, StringComparison.OrdinalIgnoreCase);
 		}
-	}
-
-	private void MenuSelectorBar_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
-	{
-		ViewModel.SelectedBarItemText = sender.SelectedItem.Text;
-		OnPropertyChanged(nameof(IsLocalSelected));
-		OnPropertyChanged(nameof(IsCloudSelected));
-		OnPropertyChanged(nameof(IsCreateSelected));
 	}
 
 	#endregion
@@ -96,24 +72,6 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 		{
 			// Use the mapping's Getter, converting the result to a string.
 			ListViewHelper.CopyToClipboard(item => mapping.Getter(item)?.ToString(), FileIdentitiesListView);
-		}
-	}
-
-	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (sender is Button button && button.Tag is string key)
-		{
-			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					mapping.Getter,
-					ViewModel.SearchBoxText,
-					ViewModel.AllFileIdentities,
-					ViewModel.FileIdentities,
-					ViewModel.SortState,
-					key,
-					regKey: ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting);
-			}
 		}
 	}
 
@@ -175,17 +133,6 @@ internal sealed partial class MDEAHPolicyCreation : Page, INotifyPropertyChanged
 			// Start the storyboard.
 			sb.Begin();
 		}
-	}
-
-	/// <summary>
-	/// CTRL + C shortcuts event handler
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-	{
-		ViewModel.ListViewFlyoutMenuCopy_Click();
-		args.Handled = true;
 	}
 }
 

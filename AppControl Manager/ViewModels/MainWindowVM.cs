@@ -153,13 +153,13 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		breadCrumbMappingsV2[typeof(Pages.UpdatePage)] = new PageTitleMap
 		{
-			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), "Custom MSIXBundle Path"],
+			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), GlobalVars.Rizz.GetString("UpdatePageCustomMSIXPath")],
 			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		};
 
 		breadCrumbMappingsV2[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap
 		{
-			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), "Custom MSIXBundle Path"],
+			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), GlobalVars.Rizz.GetString("UpdatePageCustomMSIXPath")],
 			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		};
 
@@ -256,7 +256,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Dictionary of all the main pages in the app, used for the main navigation.
 	/// Keys are the Navigation Item tags (non-localized) and values are the page types.
-	/// Sub-pages should only be added if they don't rely on/access the the instance of any page that might not be initialized.
 	/// </summary>
 	internal readonly Dictionary<string, Type> NavigationPageToItemContentMap = new()
 	{
@@ -286,8 +285,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 
 	/// <summary>
-	/// Dictionary of all the main pages in the app, used for the search bar.
-	/// Keys are page contents which are localized and values are page types.
+	/// Dictionary of all the pages in the app, used for the search bar.
+	/// Keys are page header contents which are localized and values are page types.
 	/// </summary>
 	internal readonly Dictionary<string, Type> NavigationPageToItemContentMapForSearch = [];
 
@@ -296,6 +295,16 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch.Clear();
 
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content")] = typeof(Pages.CreatePolicy);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content")] = typeof(Pages.CreateSupplementalPolicy);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ScanResults")] = typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ScanResults")] = typeof(Pages.StrictKernelPolicyScanResults);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content")] = typeof(Pages.CreateDenyPolicy);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ScanResults")] = typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content")] = typeof(Pages.BuildNewCertificate);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content")] = typeof(Pages.ViewFileCertificates);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content")] = typeof(Pages.EventLogsPolicyCreation);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content")] = typeof(Pages.MDEAHPolicyCreation);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content")] = typeof(Pages.AllowNewApps);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/Content")] = typeof(Pages.GetCIHashes);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("GitHubDocsNavItem/Content")] = typeof(Pages.GitHubDocumentation);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("MSFTDocsNavItem/Content")] = typeof(Pages.MicrosoftDocumentation);
@@ -306,17 +315,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("LogsNavItem/Content")] = typeof(Pages.Logs);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("SimulationNavItem/Content")] = typeof(Pages.Simulation);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("DeploymentNavItem/Content")] = typeof(Pages.DeploymentPage);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content")] = typeof(Pages.EventLogsPolicyCreation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content")] = typeof(Pages.MDEAHPolicyCreation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content")] = typeof(Pages.AllowNewApps);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content")] = typeof(Pages.BuildNewCertificate);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content")] = typeof(Pages.CreateSupplementalPolicy);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content")] = typeof(Pages.MergePolicies);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content")] = typeof(Pages.CreateDenyPolicy);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content")] = typeof(Pages.ValidatePolicy);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content")] = typeof(Pages.ViewFileCertificates);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content")] = typeof(Pages.PolicyEditor);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("UpdatePageCustomMSIXPath")] = typeof(Pages.UpdatePageCustomMSIXPath);
 	}
 
 	/// <summary>

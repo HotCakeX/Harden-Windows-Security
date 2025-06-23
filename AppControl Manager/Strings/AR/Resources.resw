@@ -1823,15 +1823,6 @@
   <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>إذا تم تمكين هذا، سيطلب مدير AppControl رفع الامتيازات للتشغيل بامتيازات المسؤول عند بدء التشغيل.</value>
   </data>
-  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
-    <value>فتح في محرر النهج</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>افتح النهج في محرر النهج حيث يمكنك رؤية نظرة عامة مفصلة على النهج ولديك خيار تخصيصه بشكل أكبر داخل هذا التطبيق مباشرةً.</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>افتح النهج في محرر النهج حيث يمكنك رؤية نظرة عامة مفصلة على النهج ولديك خيار تخصيصه بشكل أكبر داخل هذا التطبيق مباشرةً.</value>
-  </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.Content" xml:space="preserve">
     <value>استخدام العناصر المحددة فقط</value>
   </data>

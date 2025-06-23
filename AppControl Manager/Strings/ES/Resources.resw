@@ -1823,15 +1823,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Si está habilitado, AppControl Manager solicitará elevación para ejecutarse con privilegios de Administrador al iniciar.</value>
   </data>
-  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
-    <value>Abrir en el Editor de Directivas</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Abra la directiva en el Editor de Directivas donde puede ver una descripción detallada de la directiva y tener la opción de personalizarla aún más dentro de esta aplicación.</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Abra la directiva en el Editor de Directivas donde puede ver una descripción detallada de la directiva y tener la opción de personalizarla aún más dentro de esta aplicación.</value>
-  </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.Content" xml:space="preserve">
     <value>Usar Solo Elementos Seleccionados</value>
   </data>

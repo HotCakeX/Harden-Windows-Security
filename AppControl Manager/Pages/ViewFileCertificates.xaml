@@ -124,7 +124,7 @@
 
                                 <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModel.ListViewFlyoutMenuCopy_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModel.CtrlC_Invoked}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />

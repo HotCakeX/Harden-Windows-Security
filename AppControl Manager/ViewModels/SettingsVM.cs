@@ -272,7 +272,11 @@ internal sealed partial class SettingsVM : ViewModelBase
 		// Needs to run via Dispatcher, otherwise the 1st double-click on the UI elements register as pass-through, meaning they will resize the window as if we clicked on an empty area on the TitleBar.
 		Dispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () =>
 		{
-			MainWindow.MainWindowInstance?.SetRegionsForCustomTitleBar();
+			// Get reference to the MainWindow and refresh the localized content
+			if (App.MainWindow is MainWindow mainWindow)
+			{
+				mainWindow.SetRegionsForCustomTitleBar();
+			}
 		});
 	}
 

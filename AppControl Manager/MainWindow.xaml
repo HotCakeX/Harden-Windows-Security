@@ -79,6 +79,8 @@
               Loaded="{x:Bind SetRegionsForCustomTitleBar}"
               SizeChanged="{x:Bind SetRegionsForCustomTitleBar}"
               Height="48"
+              AutomationProperties.LandmarkType="Custom"
+              AutomationProperties.LocalizedLandmarkType="Title Bar"
               Grid.Row="0">
 
             <Grid.ColumnDefinitions>
@@ -126,6 +128,7 @@
                             QueryIcon="Find"
                             VerticalAlignment="Center"
                             MaxWidth="600"
+                            AutomationProperties.LandmarkType="Search"
                             TextChanged="{x:Bind Nav.SearchBox_TextChanged}"
                             SuggestionChosen="{x:Bind Nav.SearchBox_SuggestionChosen}"
                             x:Uid="MainSearchAutoSuggestBox" Margin="0"/>
@@ -164,6 +167,7 @@
                         IsBackButtonVisible="Collapsed"
                         IsBackEnabled="False"
                         AlwaysShowHeader="False"
+                        AutomationProperties.LandmarkType="Navigation"
                         Grid.Row="1"
                         Margin="{x:Bind ViewModel.NavViewMargin, Mode=OneWay}"
                         SelectedItem="{x:Bind ViewModel.NavViewSelectedItem, Mode=TwoWay}"
@@ -259,8 +263,13 @@
 
             <!-- Split view to create the sidebar -->
             <SplitView PaneBackground="Transparent"
-                 IsPaneOpen="{x:Bind ViewModel.SidebarPaneIsOpen, Mode=TwoWay}" OpenPaneLength="256"
-                 CompactPaneLength="48" DisplayMode="Inline" PanePlacement="Right">
+                       IsPaneOpen="{x:Bind ViewModel.SidebarPaneIsOpen, Mode=TwoWay}"
+                       OpenPaneLength="256"
+                       CompactPaneLength="48"
+                       DisplayMode="Inline"
+                       PanePlacement="Right"
+                       AutomationProperties.LandmarkType="Custom"
+                       AutomationProperties.LocalizedLandmarkType="Sidebar">
 
                 <SplitView.Pane>
                     <Border BorderThickness="1"
@@ -429,6 +438,8 @@
                     <BreadcrumbBar VerticalAlignment="Top"
                                    Grid.Row="0"
                                    Padding="10"
+                                   AutomationProperties.LandmarkType="Custom"
+                                   AutomationProperties.LocalizedLandmarkType="Bread Crumb Bar Navigation and Page Title"
                                    Margin="20,10,0,10"
                                    ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
                                    ItemClicked="{x:Bind Nav.BreadcrumbBar_ItemClicked}">
@@ -452,7 +463,10 @@
                                             Visibility="{x:Bind MainNavigation.IsPaneOpen, Mode=OneWay}" />
 
                     <!-- Global margin settings for every page's content -->
-                    <Frame x:Name="ContentFrame" Margin="15,15,15,10" Grid.Row="1" />
+                    <Frame x:Name="ContentFrame"
+                           Margin="15,15,15,10"
+                           Grid.Row="1"
+                           AutomationProperties.LandmarkType="Main" />
 
                 </Grid>
             </SplitView>

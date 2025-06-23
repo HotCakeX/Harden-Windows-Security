@@ -55,6 +55,8 @@
         <!-- WebView2 Control -->
         <WebView2 Grid.Row="1"
                   x:Name="MicrosoftDocumentationWebView2"
+                  NavigationCompleted="{x:Bind WebView2_NavigationCompleted}"
+                  DefaultBackgroundColor="Transparent"
                   Source="https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/appcontrol"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"

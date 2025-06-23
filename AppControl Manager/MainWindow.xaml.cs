@@ -50,8 +50,6 @@ internal sealed partial class MainWindow : Window
 
 	private NavigationService Nav => ViewModelProvider.NavigationService;
 
-	internal static MainWindow? MainWindowInstance { get; private set; }
-
 	/// <summary>
 	/// Initializes the main window, sets up event handlers, and configures UI elements like the title bar and navigation
 	/// items.
@@ -61,8 +59,6 @@ internal sealed partial class MainWindow : Window
 		this.InitializeComponent();
 
 		Nav.Initialize(this.ContentFrame, this.MainNavigation);
-
-		MainWindowInstance = this;
 
 		RootGridPub = RootGrid;
 

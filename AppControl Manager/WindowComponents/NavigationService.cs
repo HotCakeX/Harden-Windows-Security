@@ -350,10 +350,15 @@ internal sealed class NavigationService
 	/// </summary>
 	internal void RefreshSettingsPage()
 	{
-		_ = _frame?.Navigate(typeof(Pages.Settings));
+		if (_frame is null) return;
 
-		// Clear navigation history because it will have the same Settings page assigned to it due to in-place refresh.
-		_frame?.BackStack.Clear();
+		_ = _frame.Navigate(typeof(Pages.Settings));
+
+		// Remove the last navigation history because it will be the same Settings page due to in-place refresh.
+		_frame.BackStack.RemoveAt(_frame.BackStack.Count - 1);
+
+		// Update the Crumb Bar header title of the page with new localized texts.
+		SetCrumbBar(typeof(Pages.Settings));
 	}
 
 

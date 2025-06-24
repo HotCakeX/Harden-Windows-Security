@@ -27,7 +27,7 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class SystemInformation : Page
 {
-	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
+	private AppSettings.Main AppSettings => App.Settings;
 
 	internal SystemInformation()
 	{

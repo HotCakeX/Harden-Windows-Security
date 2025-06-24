@@ -10,7 +10,7 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <ScrollViewer>
@@ -51,7 +51,31 @@
                              IsClosable="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarIsClosable, Mode=OneWay}"
                              Severity="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.AllowMicrosoftInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_AllowMicrosoft}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.AllowMicrosoftInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_AllowMicrosoft}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_AllowMicrosoft}"/>
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_AllowMicrosoft}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xEEA3;" />
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -133,7 +157,31 @@
                              IsClosable="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarIsClosable, Mode=OneWay}"
                              Severity="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.DefaultWindowsInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_DefaultWindows}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.DefaultWindowsInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_DefaultWindows}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_DefaultWindows}"/>
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_DefaultWindows}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xEEA3;" />
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -210,7 +258,31 @@
                              IsClosable="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarIsClosable, Mode=OneWay}"
                              Severity="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.SignedAndReputableInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_SignedAndReputable}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.SignedAndReputableInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_SignedAndReputable}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_SignedAndReputable}"/>
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_SignedAndReputable}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xEEA3;" />
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -287,7 +359,31 @@
                             IsClosable="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarIsClosable, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.RecommendedDriverBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_RecommendedDriverBlockRules}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.RecommendedDriverBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_RecommendedDriverBlockRules}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RecommendedDriverBlockRules}"/>
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RecommendedDriverBlockRules}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xEEA3;" />
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -338,7 +434,31 @@
                                 IsClosable="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarIsClosable, Mode=OneWay}"
                                 Severity="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.RecommendedUserModeBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_RecommendedUserModeBlockRules}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.RecommendedUserModeBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_RecommendedUserModeBlockRules}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RecommendedUserModeBlockRules}"/>
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RecommendedUserModeBlockRules}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xEEA3;" />
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -375,7 +495,31 @@
                         IsClosable="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarIsClosable, Mode=OneWay}"
                         Severity="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_StrictKernelModePolicy}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_StrictKernelModePolicy}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_StrictKernelModePolicy}"/>
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_StrictKernelModePolicy}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xEEA3;" />
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -424,9 +568,31 @@
                                  IsClosable="{x:Bind ViewModel.RMMBlockingSettingsInfoBarIsClosable, Mode=OneWay}"
                                  Severity="{x:Bind ViewModel.RMMBlockingSettingsInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton"
-                                             Visibility="{x:Bind ViewModel.RMMBlockingInfoBarActionButtonVisibility, Mode=OneWay}"
-                                             Click="{x:Bind ViewModel.OpenInPolicyEditor_RMMBlockingPolicy}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.RMMBlockingInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_RMMBlockingPolicy}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RMMBlockingPolicy}"/>
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RMMBlockingPolicy}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xEEA3;" />
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>

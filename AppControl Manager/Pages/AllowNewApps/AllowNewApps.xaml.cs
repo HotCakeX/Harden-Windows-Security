@@ -17,6 +17,7 @@
 
 using System;
 using System.Linq;
+using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
@@ -32,7 +33,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager
 {
 	private AllowNewAppsVM ViewModel { get; } = ViewModelProvider.AllowNewAppsVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
 	private NavigationService nav { get; } = ViewModelProvider.NavigationService;
 
@@ -80,8 +80,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager
 		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-		(param => ViewModel.LightUp1(), "Allow New Apps Base Policy"),
-		null, null, null, null);
+			actionPack1: (param => ViewModel.LightUp1(), GlobalVars.Rizz.GetString("AllowNewApps_SidebarButtonContent")));
 	}
 
 	#endregion

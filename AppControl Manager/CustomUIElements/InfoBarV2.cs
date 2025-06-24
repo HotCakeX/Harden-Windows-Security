@@ -33,7 +33,7 @@ namespace AppControlManager.CustomUIElements;
 /// This control extends the standard WinUI3 InfoBar to provide smooth animated transitions
 /// when opening and closing, including proper handling of close button clicks.
 /// </summary>
-public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
+internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 {
 	// Animation storyboards - these handle the actual animation sequences
 	private Storyboard? _showStoryboard;
@@ -89,7 +89,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	private readonly System.Collections.Generic.List<Action> _pendingDispatcherOperations = [];
 
 	// Animation type enumeration defining all supported animation styles
-	public enum InfoBarAnimationType
+	internal enum InfoBarAnimationType
 	{
 		Slide,
 		Scale,
@@ -101,7 +101,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		FadeAndScale
 	}
 
-	public InfoBarV2()
+	internal InfoBarV2()
 	{
 		// Wire up all necessary event handlers
 		this.Loaded += InfoBarV2_Loaded;
@@ -156,7 +156,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	// We can override these defaults in XAML.
 
 	// Default: FadeAndScale animation type
-	public static readonly DependencyProperty AnimationTypeProperty =
+	internal static readonly DependencyProperty AnimationTypeProperty =
 		DependencyProperty.Register(
 			nameof(AnimationType),
 			typeof(InfoBarAnimationType),
@@ -164,7 +164,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(InfoBarAnimationType.FadeAndScale, OnAnimationTypeChanged)); // DEFAULT: FadeAndScale
 
 	// Default: 300ms animation duration
-	public static readonly DependencyProperty AnimationDurationProperty =
+	internal static readonly DependencyProperty AnimationDurationProperty =
 		DependencyProperty.Register(
 			nameof(AnimationDuration),
 			typeof(TimeSpan),
@@ -172,7 +172,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.FromMilliseconds(300), OnAnimationDurationChanged)); // DEFAULT: 300ms
 
 	// Default: True - easing enabled
-	public static readonly DependencyProperty UseEasingProperty =
+	internal static readonly DependencyProperty UseEasingProperty =
 		DependencyProperty.Register(
 			nameof(UseEasing),
 			typeof(bool),
@@ -180,7 +180,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(true, OnUseEasingChanged)); // DEFAULT: True
 
 	// Default: CubicEase with EaseOut mode
-	public static readonly DependencyProperty EasingFunctionProperty =
+	internal static readonly DependencyProperty EasingFunctionProperty =
 		DependencyProperty.Register(
 			nameof(EasingFunction),
 			typeof(EasingFunctionBase),
@@ -188,7 +188,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(new CubicEase { EasingMode = EasingMode.EaseOut }, OnEasingFunctionChanged)); // DEFAULT: CubicEase EaseOut
 
 	// Default: 100.0 pixel slide distance
-	public static readonly DependencyProperty SlideDistanceProperty =
+	internal static readonly DependencyProperty SlideDistanceProperty =
 		DependencyProperty.Register(
 			nameof(SlideDistance),
 			typeof(double),
@@ -196,7 +196,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(100.0, OnSlideDistanceChanged)); // DEFAULT: 100.0
 
 	// Default: 0.85 scale from value
-	public static readonly DependencyProperty ScaleFromProperty =
+	internal static readonly DependencyProperty ScaleFromProperty =
 		DependencyProperty.Register(
 			nameof(ScaleFrom),
 			typeof(double),
@@ -204,7 +204,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(0.85, OnScaleFromChanged)); // DEFAULT: 0.85
 
 	// Default: 1.0 scale to value (normal size)
-	public static readonly DependencyProperty ScaleToProperty =
+	internal static readonly DependencyProperty ScaleToProperty =
 		DependencyProperty.Register(
 			nameof(ScaleTo),
 			typeof(double),
@@ -212,7 +212,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(1.0, OnScaleToChanged)); // DEFAULT: 1.0
 
 	// Default: True - animations enabled
-	public static readonly DependencyProperty EnableAnimationProperty =
+	internal static readonly DependencyProperty EnableAnimationProperty =
 		DependencyProperty.Register(
 			nameof(EnableAnimation),
 			typeof(bool),
@@ -220,7 +220,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(true, OnEnableAnimationChanged)); // DEFAULT: True
 
 	// Default: Zero delay before animation starts
-	public static readonly DependencyProperty AnimationDelayProperty =
+	internal static readonly DependencyProperty AnimationDelayProperty =
 		DependencyProperty.Register(
 			nameof(AnimationDelay),
 			typeof(TimeSpan),
@@ -228,7 +228,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.Zero, OnAnimationDelayChanged)); // DEFAULT: 0ms
 
 	// Default: 250ms fade in duration (0.25 seconds)
-	public static readonly DependencyProperty FadeInDurationProperty =
+	internal static readonly DependencyProperty FadeInDurationProperty =
 		DependencyProperty.Register(
 			nameof(FadeInDuration),
 			typeof(TimeSpan),
@@ -236,7 +236,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.FromMilliseconds(250), OnFadeInDurationChanged)); // DEFAULT: 250ms (0.25s)
 
 	// Default: 400ms fade out duration (0.4 seconds)
-	public static readonly DependencyProperty FadeOutDurationProperty =
+	internal static readonly DependencyProperty FadeOutDurationProperty =
 		DependencyProperty.Register(
 			nameof(FadeOutDuration),
 			typeof(TimeSpan),
@@ -244,7 +244,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.FromMilliseconds(400), OnFadeOutDurationChanged)); // DEFAULT: 400ms (0.4s)
 
 	// Default: 300ms scale in duration (0.3 seconds)
-	public static readonly DependencyProperty ScaleInDurationProperty =
+	internal static readonly DependencyProperty ScaleInDurationProperty =
 		DependencyProperty.Register(
 			nameof(ScaleInDuration),
 			typeof(TimeSpan),
@@ -252,7 +252,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.FromMilliseconds(300), OnScaleInDurationChanged)); // DEFAULT: 300ms (0.3s)
 
 	// Default: 450ms scale out duration (0.45 seconds)
-	public static readonly DependencyProperty ScaleOutDurationProperty =
+	internal static readonly DependencyProperty ScaleOutDurationProperty =
 		DependencyProperty.Register(
 			nameof(ScaleOutDuration),
 			typeof(TimeSpan),
@@ -260,7 +260,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(TimeSpan.FromMilliseconds(450), OnScaleOutDurationChanged)); // DEFAULT: 450ms (0.45s)
 
 	// Default: True - intercept close button clicks for animation
-	public static readonly DependencyProperty InterceptCloseButtonProperty =
+	internal static readonly DependencyProperty InterceptCloseButtonProperty =
 		DependencyProperty.Register(
 			nameof(InterceptCloseButton),
 			typeof(bool),
@@ -268,7 +268,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			new PropertyMetadata(true)); // DEFAULT: True
 
 	// Default: True - force close animation even for programmatic closes
-	public static readonly DependencyProperty ForceCloseAnimationProperty =
+	internal static readonly DependencyProperty ForceCloseAnimationProperty =
 		DependencyProperty.Register(
 			nameof(ForceCloseAnimation),
 			typeof(bool),
@@ -279,91 +279,91 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 	#region Properties
 
-	public InfoBarAnimationType AnimationType
+	internal InfoBarAnimationType AnimationType
 	{
 		get => (InfoBarAnimationType)GetValue(AnimationTypeProperty);
 		set => SetValue(AnimationTypeProperty, value);
 	}
 
-	public TimeSpan AnimationDuration
+	internal TimeSpan AnimationDuration
 	{
 		get => (TimeSpan)GetValue(AnimationDurationProperty);
 		set => SetValue(AnimationDurationProperty, value);
 	}
 
-	public bool UseEasing
+	internal bool UseEasing
 	{
 		get => (bool)GetValue(UseEasingProperty);
 		set => SetValue(UseEasingProperty, value);
 	}
 
-	public EasingFunctionBase EasingFunction
+	internal EasingFunctionBase EasingFunction
 	{
 		get => (EasingFunctionBase)GetValue(EasingFunctionProperty);
 		set => SetValue(EasingFunctionProperty, value);
 	}
 
-	public double SlideDistance
+	internal double SlideDistance
 	{
 		get => (double)GetValue(SlideDistanceProperty);
 		set => SetValue(SlideDistanceProperty, value);
 	}
 
-	public double ScaleFrom
+	internal double ScaleFrom
 	{
 		get => (double)GetValue(ScaleFromProperty);
 		set => SetValue(ScaleFromProperty, value);
 	}
 
-	public double ScaleTo
+	internal double ScaleTo
 	{
 		get => (double)GetValue(ScaleToProperty);
 		set => SetValue(ScaleToProperty, value);
 	}
 
-	public bool EnableAnimation
+	internal bool EnableAnimation
 	{
 		get => (bool)GetValue(EnableAnimationProperty);
 		set => SetValue(EnableAnimationProperty, value);
 	}
 
-	public TimeSpan AnimationDelay
+	internal TimeSpan AnimationDelay
 	{
 		get => (TimeSpan)GetValue(AnimationDelayProperty);
 		set => SetValue(AnimationDelayProperty, value);
 	}
 
-	public TimeSpan FadeInDuration
+	internal TimeSpan FadeInDuration
 	{
 		get => (TimeSpan)GetValue(FadeInDurationProperty);
 		set => SetValue(FadeInDurationProperty, value);
 	}
 
-	public TimeSpan FadeOutDuration
+	internal TimeSpan FadeOutDuration
 	{
 		get => (TimeSpan)GetValue(FadeOutDurationProperty);
 		set => SetValue(FadeOutDurationProperty, value);
 	}
 
-	public TimeSpan ScaleInDuration
+	internal TimeSpan ScaleInDuration
 	{
 		get => (TimeSpan)GetValue(ScaleInDurationProperty);
 		set => SetValue(ScaleInDurationProperty, value);
 	}
 
-	public TimeSpan ScaleOutDuration
+	internal TimeSpan ScaleOutDuration
 	{
 		get => (TimeSpan)GetValue(ScaleOutDurationProperty);
 		set => SetValue(ScaleOutDurationProperty, value);
 	}
 
-	public bool InterceptCloseButton
+	internal bool InterceptCloseButton
 	{
 		get => (bool)GetValue(InterceptCloseButtonProperty);
 		set => SetValue(InterceptCloseButtonProperty, value);
 	}
 
-	public bool ForceCloseAnimation
+	internal bool ForceCloseAnimation
 	{
 		get => (bool)GetValue(ForceCloseAnimationProperty);
 		set => SetValue(ForceCloseAnimationProperty, value);
@@ -373,7 +373,7 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	/// Indicates whether an animation is currently running.
 	/// This property notifies observers and triggers the IsAnimatingChanged event.
 	/// </summary>
-	public bool IsAnimating
+	internal bool IsAnimating
 	{
 		get => _isAnimating;
 		private set
@@ -391,9 +391,9 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 	#region Events
 
-	public event TypedEventHandler<InfoBarV2, bool>? IsAnimatingChanged;
-	public event TypedEventHandler<InfoBarV2, InfoBarV2AnimationEventArgs>? AnimationStarting;
-	public event TypedEventHandler<InfoBarV2, InfoBarV2AnimationEventArgs>? AnimationCompleted;
+	internal event TypedEventHandler<InfoBarV2, bool>? IsAnimatingChanged;
+	internal event TypedEventHandler<InfoBarV2, InfoBarV2AnimationEventArgs>? AnimationStarting;
+	internal event TypedEventHandler<InfoBarV2, InfoBarV2AnimationEventArgs>? AnimationCompleted;
 
 	#endregion
 
@@ -914,12 +914,10 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		_shouldCancelCurrentAnimation = false;
 
 		// Create event args for animation events
-		InfoBarV2AnimationEventArgs eventArgs = new()
-		{
-			AnimationType = this.AnimationType,
-			IsOpening = shouldOpen,
-			Duration = this.AnimationDuration
-		};
+		InfoBarV2AnimationEventArgs eventArgs = new(
+			animationType: this.AnimationType,
+			isOpening: shouldOpen,
+			duration: this.AnimationDuration);
 
 		// Notify observers that animation is starting (with null check for safety)
 		try
@@ -1662,12 +1660,10 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Create event args and notify observers
-		InfoBarV2AnimationEventArgs eventArgs = new()
-		{
-			AnimationType = this.AnimationType,
-			IsOpening = true,
-			Duration = this.AnimationDuration
-		};
+		InfoBarV2AnimationEventArgs eventArgs = new(
+			animationType: this.AnimationType,
+			isOpening: true,
+			duration: this.AnimationDuration);
 
 		// Safely invoke event with null check
 		try
@@ -1720,12 +1716,10 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Create event args and notify observers
-		InfoBarV2AnimationEventArgs eventArgs = new()
-		{
-			AnimationType = this.AnimationType,
-			IsOpening = false,
-			Duration = this.AnimationDuration
-		};
+		InfoBarV2AnimationEventArgs eventArgs = new(
+			animationType: this.AnimationType,
+			isOpening: false,
+			duration: this.AnimationDuration);
 
 		// Safely invoke event with null check
 		try
@@ -1832,98 +1826,6 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 	#endregion
 
-	#region Public Methods
-
-	/// <summary>
-	/// Force the InfoBar to show immediately without animation.
-	/// Useful for scenarios where immediate display is required.
-	/// </summary>
-	public void ForceShow()
-	{
-		StopAllAnimations();
-		this.Visibility = Visibility.Visible;
-		this.Opacity = 1;
-		ResetTransforms();
-		_isInternalIsOpenChange = true;
-		this.IsOpen = true;
-		_isInternalIsOpenChange = false;
-		_lastKnownIsOpenState = true;
-		_isClosingViaButton = false;
-		ResetAllAnimationState();
-	}
-
-	/// <summary>
-	/// Force the InfoBar to hide immediately without animation.
-	/// Useful for scenarios where immediate hiding is required.
-	/// </summary>
-	public void ForceHide()
-	{
-		StopAllAnimations();
-		this.Visibility = Visibility.Collapsed;
-		this.Opacity = 0;
-		ResetTransforms();
-		_suppressCloseAnimation = true;
-		_isInternalIsOpenChange = true;
-		this.IsOpen = false;
-		_isInternalIsOpenChange = false;
-		_lastKnownIsOpenState = false;
-		_isClosingViaButton = false;
-		ResetAllAnimationState();
-	}
-
-	/// <summary>
-	/// Set animation type without recreating animations.
-	/// Used for performance when multiple properties are being set.
-	/// </summary>
-	public void SetAnimationTypeWithoutRecreate(InfoBarAnimationType animationType)
-	{
-		SetValue(AnimationTypeProperty, animationType);
-	}
-
-	/// <summary>
-	/// Manually refresh animations.
-	/// Useful when animation properties have been changed and need to be applied.
-	/// </summary>
-	public void RefreshAnimations()
-	{
-		RecreateAnimations();
-	}
-
-	/// <summary>
-	/// Close the InfoBar with animation.
-	/// Programmatic way to trigger animated close.
-	/// </summary>
-	public void CloseWithAnimation()
-	{
-		if (this.IsOpen && EnableAnimation)
-		{
-			_isClosingViaButton = false;  // This is a programmatic close
-			AnimateInfoBarState(false);
-		}
-		else
-		{
-			ForceHide();
-		}
-	}
-
-	/// <summary>
-	/// Show the InfoBar with animation.
-	/// Programmatic way to trigger animated show.
-	/// </summary>
-	public void ShowInfoBarWithAnimation()
-	{
-		if (!this.IsOpen && EnableAnimation)
-		{
-			AnimateInfoBarState(true);
-		}
-		else
-		{
-			ForceShow();
-		}
-	}
-
-	#endregion
-
 	#region INotifyPropertyChanged Implementation
 
 	public event PropertyChangedEventHandler? PropertyChanged;
@@ -1942,11 +1844,14 @@ public sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 /// Event arguments for InfoBarV2 animation events.
 /// Provides information about the animation that started or completed.
 /// </summary>
-public sealed class InfoBarV2AnimationEventArgs
+internal sealed class InfoBarV2AnimationEventArgs(
+	InfoBarV2.InfoBarAnimationType animationType,
+	bool isOpening,
+	TimeSpan duration)
 {
-	public InfoBarV2.InfoBarAnimationType AnimationType { get; set; }
-	public bool IsOpening { get; set; }
-	public TimeSpan Duration { get; set; }
+	internal InfoBarV2.InfoBarAnimationType AnimationType => animationType;
+	internal bool IsOpening => isOpening;
+	internal TimeSpan Duration => duration;
 }
 
 #endregion

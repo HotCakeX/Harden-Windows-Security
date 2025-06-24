@@ -31,6 +31,7 @@ using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
@@ -104,7 +105,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	internal Visibility ISGBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility StrictKernelModeBasePolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 	internal Visibility PFNBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
+	internal Visibility CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	#region Files and Folders scan
 
@@ -244,11 +245,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// </summary>
 	internal bool FilesAndFoldersDeployButton { get; set => SP(ref field, value); }
 
-	/// <summary>
-	/// Whether the selected level is Wildcard file paths.
-	/// </summary>
-	private bool UsingWildCardFilePathRules { get; set => SP(ref field, value); }
-
 	internal Visibility FilesAndFoldersBrowseForFilesSettingsCardVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
 	internal bool FilesAndFoldersInfoBarIsOpen { get; set => SP(ref field, value); }
@@ -259,22 +255,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 	private readonly InfoBarSettings FilesAndFoldersInfoBar;
 
-	// The default selected scan level
-	internal ScanLevels filesAndFoldersScanLevel = ScanLevels.FilePublisher;
-	internal string FilesAndFoldersScanLevelComboBoxSelectedItem
+	internal ScanLevelsComboBoxType FilesAndFoldersScanLevelComboBoxSelectedItem
 	{
 		get; set
 		{
 			if (SP(ref field, value))
 			{
-				filesAndFoldersScanLevel = StringToScanLevel[field];
-
 				// For Wildcard file path rules, only folder paths should be used
-				UsingWildCardFilePathRules = filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath;
-				FilesAndFoldersBrowseForFilesSettingsCardVisibility = filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
+				FilesAndFoldersBrowseForFilesSettingsCardVisibility = field.Level is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
-	} = ScanLevelToString[ScanLevels.FilePublisher];
+	} = DefaultScanLevel;
 
 	internal double FilesAndFoldersScalabilityRadialGaugeValue
 	{
@@ -357,9 +348,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// </summary>
 	internal void FilesAndFoldersBrowseForFilesButton_Click()
 	{
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
-		if (selectedFiles is { Count: > 0 })
+		if (selectedFiles.Count > 0)
 		{
 			foreach (string file in selectedFiles)
 			{
@@ -373,9 +364,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// </summary>
 	internal void FilesAndFoldersBrowseForFoldersButton_Click()
 	{
-		List<string>? selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+		List<string> selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedDirectories is { Count: > 0 })
+		if (selectedDirectories.Count > 0)
 		{
 			foreach (string dir in selectedDirectories)
 			{
@@ -417,10 +408,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for files and folders using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_FilesAndFolders()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_FilesAndFoldersSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_FilesAndFolders() => await PolicyEditorViewModel.OpenInPolicyEditor(_FilesAndFoldersSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FilesAndFoldersSupplementalPolicyPath);
 
 	/// <summary>
 	/// Main button's event handler for files and folder Supplemental policy creation
@@ -487,7 +477,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				IEnumerable<FileIdentity> LocalFilesResults = [];
 
 				// Do the following steps only if Wildcard paths aren't going to be used because then only the selected folder paths are needed
-				if (!UsingWildCardFilePathRules)
+				if (FilesAndFoldersScanLevelComboBoxSelectedItem.Level is not ScanLevels.WildCardFolderPath)
 				{
 
 					// Collect all of the AppControl compatible files from user selected directories and files
@@ -558,7 +548,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: filesAndFoldersScanLevel, folderPaths: filesAndFoldersFolderPaths.UniqueItems);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: FilesAndFoldersScanLevelComboBoxSelectedItem.Level, folderPaths: filesAndFoldersFolderPaths.UniqueItems);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -587,11 +577,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					// Configure policy rule options
-					if (filesAndFoldersScanLevel is ScanLevels.FilePath || filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath)
+					if (FilesAndFoldersScanLevelComboBoxSelectedItem.Level is ScanLevels.FilePath || FilesAndFoldersScanLevelComboBoxSelectedItem.Level is ScanLevels.WildCardFolderPath)
 					{
 						Logger.Write(string.Format(
 							GlobalVars.Rizz.GetString("SelectedScanLevelMessage"),
-							filesAndFoldersScanLevel
+							FilesAndFoldersScanLevelComboBoxSelectedItem.FriendlyName
 						));
 
 						CiRuleOptions.Set(filePath: EmptyPolicyPath, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
@@ -746,6 +736,13 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		UpdateTotalFilesFilesAndFolders();
 	}
 
+	internal void _OpenInFileExplorerFilesAndFolders() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.SupplementalPolicy_FilesAndFolders_ScanResults);
+	internal void _OpenInFileExplorerShortCutFilesAndFolders(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		_OpenInFileExplorerFilesAndFolders();
+		args.Handled = true;
+	}
+
 	#endregion
 
 	#region Certificates scan
@@ -827,9 +824,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 	internal void CertificatesBrowseForCertsButton_Click()
 	{
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.CertificatePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.CertificatePickerFilter);
 
-		if (selectedFiles is { Count: > 0 })
+		if (selectedFiles.Count > 0)
 		{
 			foreach (string file in selectedFiles)
 			{
@@ -1033,10 +1030,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for Certificates using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_Certificates()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_CertificatesSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_Certificates() => await PolicyEditorViewModel.OpenInPolicyEditor(_CertificatesSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_Certificates() => await OpenInDefaultFileHandler(_CertificatesSupplementalPolicyPath);
 
 	#endregion
 
@@ -1223,10 +1219,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for ISG using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_ISG()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_ISGSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_ISG() => await PolicyEditorViewModel.OpenInPolicyEditor(_ISGSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_ISG() => await OpenInDefaultFileHandler(_ISGSupplementalPolicyPath);
 
 	#endregion
 
@@ -1564,7 +1559,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. StrictKernelModeScanResults], level: ScanLevels.FilePublisher);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. StrictKernelModeScanResults], level: ScanLevels.WHQLFilePublisher);
 
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, SiPolicyIntel.Authorization.Allow);
@@ -1752,10 +1747,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for StrictKernelMode using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_StrictKernelMode()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_StrictKernelModeSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_StrictKernelMode() => await PolicyEditorViewModel.OpenInPolicyEditor(_StrictKernelModeSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_StrictKernelMode() => await OpenInDefaultFileHandler(_StrictKernelModeSupplementalPolicyPath);
 
 	/// <summary>
 	/// Updates the total logs count displayed on the UI
@@ -1866,6 +1860,13 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 
 		UpdateTotalFilesStrictKernelMode();
+	}
+
+	internal void _OpenInFileExplorerStrictKernelMode() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults);
+	internal void _OpenInFileExplorerShortCutStrictKernelMode(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		_OpenInFileExplorerStrictKernelMode();
+		args.Handled = true;
 	}
 
 	#endregion
@@ -2259,10 +2260,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for PFN using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_PFN()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_PFNSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_PFN() => await PolicyEditorViewModel.OpenInPolicyEditor(_PFNSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_PFNSupplementalPolicyPath);
 
 	#endregion
 
@@ -2511,10 +2511,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for CustomPatternBasedFileRule using a specified supplemental policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(_CustomPatternBasedFileRuleSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await PolicyEditorViewModel.OpenInPolicyEditor(_CustomPatternBasedFileRuleSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await OpenInDefaultFileHandler(_CustomPatternBasedFileRuleSupplementalPolicyPath);
 
 	#endregion
 

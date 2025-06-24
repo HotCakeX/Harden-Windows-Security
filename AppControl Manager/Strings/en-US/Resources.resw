@@ -1823,15 +1823,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>If this is enabled, AppControl Manager will prompt for elevation to run with Administrator privileges on startup.</value>
   </data>
-  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
-    <value>Open In The Policy Editor</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Open the policy in the Policy Editor where you can see detailed overview of the policy and have the option to customize it further right inside of this app.</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Open the policy in the Policy Editor where you can see detailed overview of the policy and have the option to customize it further right inside of this app.</value>
-  </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.Content" xml:space="preserve">
     <value>Only Use Selected Items</value>
   </data>
@@ -5628,5 +5619,93 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>Step 3</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Using WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash levels.</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} WHQLFilePublisher Rules.</value>
+  </data>
+  <data name="BuildSignerProcessingWHQLFilePublisherMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Processing WHQLFilePublisher data.</value>
+  </data>
+  <data name="WHQLFilePublisherSignersToAddMessage" xml:space="preserve">
+    <value>There are {0} WHQL File Publisher Signers to be added to the XML file</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+    <value>no WHQLFilePublisher signers detected to create allow rules for.</value>
+  </data>
+    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
+    <value>EKUs node not found</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <value>no WHQLFilePublisher signers detected to create deny rules for.</value>
+  </data>
+  <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
+    <value>WHQL File Publisher Rule Type</value>
+  </data>
+  <data name="AllowNewApps_SidebarButtonContent" xml:space="preserve">
+    <value>Allow New Apps Base Policy</value>
+  </data>
+  <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
+    <value>Custom Pattern Supplemental Policy</value>
+  </data>
+  <!--New-->
+  <data name="CloudTextBlock.Text" xml:space="preserve">
+    <value>Cloud</value>
+  </data>
+  <data name="LocalTextBlock.Text" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="CreateTextBlock.Text" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>Custom MSIXBundle Path</value>
+  </data>
+  <data name="OpenInFileExplorer.Text" xml:space="preserve">
+    <value>Open In File Explorer</value>
+  </data>
+  <data name="OpenInFileExplorer.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the folder where the file is located in the File Explorer.</value>
+  </data>
+  <data name="OpenInFileExplorer.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the folder where the file is located in the File Explorer.</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Open In The Policy Editor</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the policy in the Policy Editor where you can see detailed overview of the policy and have the option to customize it further right inside of this app.</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the policy in the Policy Editor where you can see detailed overview of the policy and have the option to customize it further right inside of this app.</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Open The File</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the file that was created using the default file handler configured in the operation system.</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the file that was created using the default file handler configured in the operation system.</value>
+  </data>
+  <data name="AdditionalActionsTextBlock.Text" xml:space="preserve">
+    <value>Additional Actions</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the policy in the Policy Editor or choose another action from the list.</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the policy in the Policy Editor or choose another action from the list.</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Configure Rule Options</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the policy in another page to configure its rule options further.</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the policy in another page to configure its rule options further.</value>
   </data>
 </root>

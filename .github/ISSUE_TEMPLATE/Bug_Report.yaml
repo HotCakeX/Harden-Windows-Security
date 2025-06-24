@@ -1,7 +1,7 @@
 name: Bug Report 🐛
 description: File a bug report
 # title: "[Bug]: "
-labels: ["Needs Triage"]
+labels: ["Needs Triage 🤔"]
 assignees:
   - HotCakeX
 body:

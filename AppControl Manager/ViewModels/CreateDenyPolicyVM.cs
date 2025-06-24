@@ -30,6 +30,7 @@ using AppControlManager.XMLOps;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
@@ -121,24 +122,17 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 	internal bool filesAndFoldersDeployButton { get; set => SP(ref field, value); }
 
-	private bool UsingWildCardFilePathRules { get; set; }
-
-	// The default selected scan level
-	internal ScanLevels filesAndFoldersScanLevel = ScanLevels.FilePublisher;
-	internal string FilesAndFoldersScanLevelComboBoxSelectedItem
+	internal ScanLevelsComboBoxType FilesAndFoldersScanLevelComboBoxSelectedItem
 	{
 		get; set
 		{
 			if (SP(ref field, value))
 			{
-				filesAndFoldersScanLevel = StringToScanLevel[field];
-
 				// For Wildcard file path rules, only folder paths should be used
-				UsingWildCardFilePathRules = filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath;
-				FilesAndFoldersBrowseForFilesSettingsCardVisibility = filesAndFoldersScanLevel is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
+				FilesAndFoldersBrowseForFilesSettingsCardVisibility = field.Level is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
-	} = ScanLevelToString[ScanLevels.FilePublisher];
+	} = DefaultScanLevel;
 
 	internal double FilesAndFoldersScalabilityRadialGaugeValue
 	{
@@ -340,7 +334,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Do the following steps only if Wildcard paths aren't going to be used because then only the selected folder paths are needed
-				if (!UsingWildCardFilePathRules)
+				if (FilesAndFoldersScanLevelComboBoxSelectedItem.Level is not ScanLevels.WildCardFolderPath)
 				{
 					// Collect all of the AppControl compatible files from user selected directories and files
 					(IEnumerable<string>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(filesAndFoldersFolderPaths,
@@ -407,7 +401,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: filesAndFoldersScanLevel, folderPaths: filesAndFoldersFolderPaths);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: FilesAndFoldersScanLevelComboBoxSelectedItem.Level, folderPaths: filesAndFoldersFolderPaths);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -507,9 +501,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// </summary>
 	internal void FilesAndFoldersBrowseForFilesButton_Click()
 	{
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
-		if (selectedFiles is { Count: > 0 })
+		if (selectedFiles.Count > 0)
 		{
 			foreach (string file in selectedFiles)
 			{
@@ -523,9 +517,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// </summary>
 	internal void FilesAndFoldersBrowseForFoldersButton_Click()
 	{
-		List<string>? selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+		List<string> selectedDirectories = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedDirectories is { Count: > 0 })
+		if (selectedDirectories.Count > 0)
 		{
 			foreach (string dir in selectedDirectories)
 			{
@@ -557,17 +551,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for files and folders using a specified Deny policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_FilesAndFolders()
-	{
-		try
-		{
-			await PolicyEditorViewModel.OpenInPolicyEditor(_FilesAndFoldersDenyPolicyPath);
-		}
-		catch (Exception ex)
-		{
-			FilesAndFoldersInfoBar.WriteError(ex);
-		}
-	}
+	internal async void OpenInPolicyEditor_FilesAndFolders() => await PolicyEditorViewModel.OpenInPolicyEditor(_FilesAndFoldersDenyPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FilesAndFoldersDenyPolicyPath);
 
 	/// <summary>
 	/// De-selects all of the displayed rows on the ListView
@@ -997,17 +983,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for PFN using a specified Deny policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_PFN()
-	{
-		try
-		{
-			await PolicyEditorViewModel.OpenInPolicyEditor(_PFNDenyPolicyPath);
-		}
-		catch (Exception ex)
-		{
-			PFNInfoBar.WriteError(ex);
-		}
-	}
+	internal async void OpenInPolicyEditor_PFN() => await PolicyEditorViewModel.OpenInPolicyEditor(_PFNDenyPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_PFNDenyPolicyPath);
 
 	#endregion
 
@@ -1231,17 +1209,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// <summary>
 	/// Opens a policy editor for CustomPatternBasedFileRule using a specified Deny policy path.
 	/// </summary>
-	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule()
-	{
-		try
-		{
-			await PolicyEditorViewModel.OpenInPolicyEditor(_CustomPatternBasedFileRuleDenyPolicyPath);
-		}
-		catch (Exception ex)
-		{
-			CustomFilePathRulesInfoBar.WriteError(ex);
-		}
-	}
+	internal async void OpenInPolicyEditor_CustomPatternBasedFileRule() => await PolicyEditorViewModel.OpenInPolicyEditor(_CustomPatternBasedFileRuleDenyPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_CustomPatternBasedFileRule() => await OpenInDefaultFileHandler(_CustomPatternBasedFileRuleDenyPolicyPath);
 
 	#endregion
 
@@ -1306,4 +1276,11 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	}
 
 	#endregion
+
+	internal void _OpenInFileExplorer() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults);
+	internal void _OpenInFileExplorerShortCut(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		_OpenInFileExplorer();
+		args.Handled = true;
+	}
 }

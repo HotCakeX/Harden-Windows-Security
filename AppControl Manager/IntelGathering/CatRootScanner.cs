@@ -55,10 +55,7 @@ internal static class CatRootScanner
 
 		if (paths is { Count: > 0 })
 		{
-			foreach (string item in paths)
-			{
-				DirectoriesToScan.Add(item);
-			}
+			DirectoriesToScan.AddRange(paths);
 		}
 		else
 		{
@@ -74,7 +71,7 @@ internal static class CatRootScanner
 			detectedCatFiles.Item2));
 
 		// Make sure the degree of parallelism is always at least 4
-		ParallelOptions options = new() { MaxDegreeOfParallelism = scalability is > 4 ? scalability : 4 };
+		ParallelOptions options = new() { MaxDegreeOfParallelism = scalability is > 4 ? scalability : Environment.ProcessorCount };
 
 		_ = Parallel.ForEach(detectedCatFiles.Item1, options, file =>
 		{

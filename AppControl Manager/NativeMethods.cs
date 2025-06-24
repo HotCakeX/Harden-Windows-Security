@@ -22,7 +22,7 @@ using Microsoft.Win32.SafeHandles;
 
 namespace AppControlManager;
 
-internal static partial class NativeMethods
+internal unsafe static partial class NativeMethods
 {
 
 	// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecontextw
@@ -665,5 +665,14 @@ internal static partial class NativeMethods
 	[LibraryImport("bcrypt.dll", EntryPoint = "BCryptDestroyHash", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int BCryptDestroyHash(IntPtr hHash);
+
+
+	[LibraryImport("user32.dll", EntryPoint = "SetWindowLongPtrW")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, nint newProc);
+
+	[LibraryImport("user32.dll", EntryPoint = "GetWindowLongPtrW")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
 
 }

@@ -42,6 +42,7 @@ internal static class Master
 
 		if (authorization is SiPolicyIntel.Authorization.Allow)
 		{
+			NewWHQLFilePublisherLevelRules.CreateAllow(xmlFilePath, incomingData.WHQLFilePublisherSigners);
 			NewFilePublisherLevelRules.CreateAllow(xmlFilePath, incomingData.FilePublisherSigners);
 			NewPublisherLevelRules.CreateAllow(xmlFilePath, incomingData.PublisherSigners);
 			NewHashLevelRules.CreateAllow(xmlFilePath, incomingData.CompleteHashes);
@@ -52,6 +53,7 @@ internal static class Master
 		}
 		else
 		{
+			NewWHQLFilePublisherLevelRules.CreateDeny(xmlFilePath, incomingData.WHQLFilePublisherSigners);
 			NewFilePublisherLevelRules.CreateDeny(xmlFilePath, incomingData.FilePublisherSigners);
 			NewPublisherLevelRules.CreateDeny(xmlFilePath, incomingData.PublisherSigners);
 			NewHashLevelRules.CreateDeny(xmlFilePath, incomingData.CompleteHashes);

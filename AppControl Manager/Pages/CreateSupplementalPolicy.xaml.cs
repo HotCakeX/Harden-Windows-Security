@@ -31,7 +31,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsManager
 {
 	private CreateSupplementalPolicyVM ViewModel { get; } = ViewModelProvider.CreateSupplementalPolicyVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
 
 	internal CreateSupplementalPolicy()
@@ -51,13 +50,15 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		ViewModel.ISGBasePolicyPathLightAnimatedIconVisibility = visibility;
 		ViewModel.StrictKernelModeBasePolicyLightAnimatedIconVisibility = visibility;
 		ViewModel.PFNBasePolicyPathLightAnimatedIconVisibility = visibility;
+		ViewModel.CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-			(param => LightUp1(), GlobalVars.Rizz.GetString("FilesAndFoldersSupplementalPolicyLabel")),
-			(param => LightUp2(), GlobalVars.Rizz.GetString("CertificatesSupplementalPolicyLabel")),
-			(param => LightUp3(), GlobalVars.Rizz.GetString("ISGSupplementalPolicyLabel")),
-			(param => LightUp4(), GlobalVars.Rizz.GetString("StrictKernelModeSupplementalPolicyLabel")),
-			(param => LightUp5(), GlobalVars.Rizz.GetString("PFNSupplementalPolicyLabel"))
+			actionPack1: (param => LightUp1(), GlobalVars.Rizz.GetString("FilesAndFoldersSupplementalPolicyLabel")),
+			actionPack2: (param => LightUp2(), GlobalVars.Rizz.GetString("CertificatesSupplementalPolicyLabel")),
+			actionPack3: (param => LightUp3(), GlobalVars.Rizz.GetString("ISGSupplementalPolicyLabel")),
+			actionPack4: (param => LightUp4(), GlobalVars.Rizz.GetString("StrictKernelModeSupplementalPolicyLabel")),
+			actionPack5: (param => LightUp5(), GlobalVars.Rizz.GetString("PFNSupplementalPolicyLabel")),
+			actionPack6: (param => LightUp6(), GlobalVars.Rizz.GetString("CustomPatternBasedSupplementalPolicyLabel"))
 		);
 	}
 
@@ -105,6 +106,14 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 			PFNBrowseForBasePolicyButton_FlyOut.ShowAt(PFNBrowseForBasePolicyButton);
 		}
 		ViewModel.PFNBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
+	}
+	private void LightUp6()
+	{
+		if (CustomPatternBasedFileRuleBrowseForBasePolicyButton.XamlRoot is not null)
+		{
+			CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut.ShowAt(CustomPatternBasedFileRuleBrowseForBasePolicyButton);
+		}
+		ViewModel.CustomPatternBasedFileRuleBasedBasePolicyPath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 	}
 
 	#endregion

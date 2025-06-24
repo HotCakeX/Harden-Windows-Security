@@ -17,7 +17,7 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <Grid>
@@ -308,14 +308,14 @@
 
 
                                             <ListView HorizontalAlignment="Center"
-                                                Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsListViewVisibility, Mode=OneWay}"
-                                                x:Name="AuthenticatedAccountsListView"
-                                                BorderThickness="0"
-                                                CornerRadius="5"
-                                                ItemsSource="{x:Bind ViewModelMSGraph.AuthenticatedAccounts, Mode=OneWay}"
-                                                SelectedItem="{x:Bind ViewModel.AuthCompanionCLS.ListViewSelectedAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                Height="300"
-                                                SelectionMode="Single">
+                                                      Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsListViewVisibility, Mode=OneWay}"
+                                                      x:Name="AuthenticatedAccountsListView"
+                                                      BorderThickness="0"
+                                                      CornerRadius="5"
+                                                      ItemsSource="{x:Bind ViewModel._ViewModelMSGraph.AuthenticatedAccounts, Mode=OneWay}"
+                                                      SelectedItem="{x:Bind ViewModel.AuthCompanionCLS.ListViewSelectedAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                      Height="300"
+                                                      SelectionMode="Single">
                                                 <ListView.ItemTemplate>
                                                     <DataTemplate x:DataType="MSGraph:AuthenticatedAccounts">
                                                         <Grid Padding="2,10,2,10">

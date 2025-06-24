@@ -18,8 +18,8 @@
 
         <!-- Navigation Bar -->
         <controls:WrapPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="5" VerticalSpacing="5" VerticalAlignment="Top" Margin="0,0,0,10">
-            <!-- Back Button with Icon - Set initially to falce until it makes sense to be enabled -->
-            <Button Click="BackButton_Click" IsEnabled="False" x:Name="BackButton">
+            <!-- Back Button with Icon - Set initially to disabled until it makes sense to be enabled -->
+            <Button Click="{x:Bind BackButton_Click}" IsEnabled="False" x:Name="BackButton">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Back"/>
                     <TextBlock x:Uid="WebViewBackButton" Margin="5,0,0,0"/>
@@ -27,7 +27,7 @@
             </Button>
 
             <!-- Forward Button with Icon - Set initially to falce until it makes sense to be enabled -->
-            <Button Click="ForwardButton_Click" IsEnabled="False" x:Name="ForwardButton">
+            <Button Click="{x:Bind ForwardButton_Click}" IsEnabled="False" x:Name="ForwardButton">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Forward"/>
                     <TextBlock x:Uid="WebViewForwardButton" Margin="5,0,0,0"/>
@@ -35,7 +35,7 @@
             </Button>
 
             <!-- Reload Button with Icon -->
-            <Button Click="ReloadButton_Click">
+            <Button Click="{x:Bind ReloadButton_Click}">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Refresh"/>
                     <TextBlock x:Uid="WebViewReloadButton" Margin="5,0,0,0"/>
@@ -43,7 +43,7 @@
             </Button>
 
             <!-- Home Button with Icon -->
-            <Button Click="HomeButton_Click">
+            <Button Click="{x:Bind HomeButton_Click}">
                 <StackPanel Orientation="Horizontal">
                     <!-- Using FontIcon to show a "Home" symbol from Segoe MDL2 Assets -->
                     <FontIcon Glyph="" FontFamily="Segoe MDL2 Assets"/>
@@ -53,13 +53,14 @@
         </controls:WrapPanel>
 
         <!-- WebView2 Control -->
-        <WebView2
-            Grid.Row="1"
-            x:Name="MicrosoftDocumentationWebView2"
-            Source="https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/appcontrol"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            MinHeight="200"
-            MinWidth="200" />
+        <WebView2 Grid.Row="1"
+                  x:Name="MicrosoftDocumentationWebView2"
+                  NavigationCompleted="{x:Bind WebView2_NavigationCompleted}"
+                  DefaultBackgroundColor="Transparent"
+                  Source="https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/appcontrol"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  MinHeight="500"
+                  MinWidth="500" />
     </Grid>
 </Page>

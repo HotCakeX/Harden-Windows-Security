@@ -1823,15 +1823,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Si está habilitado, AppControl Manager solicitará elevación para ejecutarse con privilegios de Administrador al iniciar.</value>
   </data>
-  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
-    <value>Abrir en el Editor de Directivas</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Abra la directiva en el Editor de Directivas donde puede ver una descripción detallada de la directiva y tener la opción de personalizarla aún más dentro de esta aplicación.</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Abra la directiva en el Editor de Directivas donde puede ver una descripción detallada de la directiva y tener la opción de personalizarla aún más dentro de esta aplicación.</value>
-  </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.Content" xml:space="preserve">
     <value>Usar Solo Elementos Seleccionados</value>
   </data>
@@ -5628,5 +5619,35 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>Paso 3</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Usando niveles WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash.</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} reglas WHQLFilePublisher.</value>
+  </data>
+  <data name="BuildSignerProcessingWHQLFilePublisherMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Procesando datos WHQLFilePublisher.</value>
+  </data>
+  <data name="WHQLFilePublisherSignersToAddMessage" xml:space="preserve">
+    <value>Hay {0} firmantes WHQL File Publisher que se agregarán al archivo XML</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+    <value>no se detectaron firmantes WHQLFilePublisher para crear reglas de autorización.</value>
+  </data>
+    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
+    <value>Nodo EKUs no encontrado</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <value>no se detectaron firmantes WHQLFilePublisher para crear reglas de denegación.</value>
+  </data>
+  <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
+    <value>Tipo de Regla WHQL File Publisher</value>
+  </data>
+  <data name="AllowNewApps_SidebarButtonContent" xml:space="preserve">
+    <value>Política Base para Permitir Nuevas Aplicaciones</value>
+  </data>
+  <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
+    <value>Política Suplementaria Basada en Patrón Personalizado</value>
   </data>
 </root>

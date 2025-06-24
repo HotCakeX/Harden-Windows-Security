@@ -29,6 +29,7 @@ using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
@@ -234,7 +235,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 		}
 
 		// Perform a case-insensitive search in all relevant fields
-		List<SimulationOutput> filteredResults = [.. AllSimulationOutputs.Where(output =>
+		List<SimulationOutput> filteredResults = AllSimulationOutputs.Where(output =>
 			(output.Path is not null && output.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.Source is not null && output.Source.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.MatchCriteria is not null && output.MatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
@@ -242,7 +243,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 			(output.CertSubjectCN is not null && output.CertSubjectCN.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.SignerName is not null && output.SignerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-		)];
+		).ToList();
 
 		SimulationOutputs.Clear();
 
@@ -680,9 +681,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// </summary>
 	internal void SelectFilesButton_Click()
 	{
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
-		if (selectedFiles is { Count: > 0 })
+		if (selectedFiles.Count > 0)
 		{
 			foreach (string item in selectedFiles)
 			{
@@ -696,9 +697,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// </summary>
 	internal void SelectFoldersButton_Click()
 	{
-		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+		List<string> selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedFolders is { Count: > 0 })
+		if (selectedFolders.Count > 0)
 		{
 			foreach (string folder in selectedFolders)
 			{
@@ -712,9 +713,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// </summary>
 	internal void CatRootPathsButton_Click()
 	{
-		List<string>? selectedCatRoots = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+		List<string> selectedCatRoots = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedCatRoots is { Count: > 0 })
+		if (selectedCatRoots.Count > 0)
 		{
 			CatRootPaths = selectedCatRoots;
 		}
@@ -747,4 +748,14 @@ internal sealed partial class SimulationVM : ViewModelBase
 		FolderPaths.Clear();
 	}
 
+	/// <summary>
+	/// CTRL + C shortcuts event handler
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		ListViewFlyoutMenuCopy_Click();
+		args.Handled = true;
+	}
 }

@@ -34,7 +34,6 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 {
 
 	private CreateDenyPolicyVM ViewModel { get; } = ViewModelProvider.CreateDenyPolicyVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal CreateDenyPolicyFilesAndFoldersScanResults()
 	{

@@ -1823,15 +1823,6 @@
   <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Εάν αυτό είναι ενεργοποιημένο, ο AppControl Manager θα ζητήσει ανύψωση για να εκτελεστεί με δικαιώματα Διαχειριστή κατά την εκκίνηση.</value>
   </data>
-  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
-    <value>Άνοιγμα Στον Επεξεργαστή Πολιτικής</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ανοίξτε την πολιτική στον Επεξεργαστή Πολιτικής όπου μπορείτε να δείτε λεπτομερή επισκόπηση της πολιτικής και να έχετε την επιλογή να την προσαρμόσετε περαιτέρω απευθείας μέσα σε αυτήν την εφαρμογή.</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ανοίξτε την πολιτική στον Επεξεργαστή Πολιτικής όπου μπορείτε να δείτε λεπτομερή επισκόπηση της πολιτικής και να έχετε την επιλογή να την προσαρμόσετε περαιτέρω απευθείας μέσα σε αυτήν την εφαρμογή.</value>
-  </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.Content" xml:space="preserve">
     <value>Χρήση Μόνο Επιλεγμένων Στοιχείων</value>
   </data>
@@ -5628,5 +5619,35 @@
   </data>
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>Βήμα 3</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Χρήση επιπέδων WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash.</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} κανόνες WHQLFilePublisher.</value>
+  </data>
+  <data name="BuildSignerProcessingWHQLFilePublisherMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: Επεξεργασία δεδομένων WHQLFilePublisher.</value>
+  </data>
+  <data name="WHQLFilePublisherSignersToAddMessage" xml:space="preserve">
+    <value>Υπάρχουν {0} υπογραφείς WHQL File Publisher που θα προστεθούν στο αρχείο XML</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+    <value>δεν εντοπίστηκαν υπογραφείς WHQLFilePublisher για τη δημιουργία κανόνων έγκρισης.</value>
+  </data>
+    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
+    <value>Ο κόμβος EKUs δεν βρέθηκε</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <value>δεν εντοπίστηκαν υπογραφείς WHQLFilePublisher για τη δημιουργία κανόνων άρνησης.</value>
+  </data>
+  <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
+    <value>Τύπος Κανόνα WHQL File Publisher</value>
+  </data>
+  <data name="AllowNewApps_SidebarButtonContent" xml:space="preserve">
+    <value>Βασική Πολιτική Έγκρισης Νέων Εφαρμογών</value>
+  </data>
+  <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
+    <value>Συμπληρωματική Πολιτική Βασισμένη σε Προσαρμοσμένο Μοτίβο</value>
   </data>
 </root>

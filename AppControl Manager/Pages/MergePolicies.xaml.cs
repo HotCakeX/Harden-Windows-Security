@@ -28,7 +28,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class MergePolicies : Page
 {
 	private MergePoliciesVM ViewModel { get; } = ViewModelProvider.MergePoliciesVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	/// <summary>
 	/// Initializes a new instance of the MergePolicies class. Sets up the navigation cache mode and binds the data context

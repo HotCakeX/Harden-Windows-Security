@@ -29,7 +29,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class CreateDenyPolicy : Page
 {
 	private CreateDenyPolicyVM ViewModel { get; } = ViewModelProvider.CreateDenyPolicyVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal CreateDenyPolicy()
 	{

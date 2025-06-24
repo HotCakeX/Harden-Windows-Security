@@ -26,7 +26,7 @@ namespace AppControlManager.Others;
 /// An ObservableCollection of strings that only allows unique items (case-insensitive, ordinal comparison).
 /// Duplicate strings will be ignored when added or set.
 /// </summary>
-public sealed partial class UniqueStringObservableCollection : ObservableCollection<string>
+internal sealed partial class UniqueStringObservableCollection : ObservableCollection<string>
 {
 	private readonly HashSet<string> _hashSet;
 
@@ -34,7 +34,7 @@ public sealed partial class UniqueStringObservableCollection : ObservableCollect
 	/// Initializes a new instance of the <see cref="UniqueStringObservableCollection"/> class.
 	/// Uses StringComparer.OrdinalIgnoreCase for uniqueness.
 	/// </summary>
-	public UniqueStringObservableCollection()
+	internal UniqueStringObservableCollection()
 	{
 		_hashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 	}
@@ -44,7 +44,7 @@ public sealed partial class UniqueStringObservableCollection : ObservableCollect
 	/// Only unique items (case-insensitive) will be retained.
 	/// </summary>
 	/// <param name="collection">The collection whose elements are copied to the new list.</param>
-	public UniqueStringObservableCollection(IEnumerable<string> collection)
+	internal UniqueStringObservableCollection(IEnumerable<string> collection)
 		: base(collection.Distinct(StringComparer.OrdinalIgnoreCase))
 	{
 		_hashSet = new HashSet<string>(this, StringComparer.OrdinalIgnoreCase);
@@ -53,7 +53,7 @@ public sealed partial class UniqueStringObservableCollection : ObservableCollect
 	/// <summary>
 	/// A read-only view of the internal set of unique items.
 	/// </summary>
-	public IReadOnlyCollection<string> UniqueItems => _hashSet;
+	internal IReadOnlyCollection<string> UniqueItems => _hashSet;
 
 	/// <summary>
 	/// Inserts an item into the collection at the specified index if it's not already present (case-insensitive).

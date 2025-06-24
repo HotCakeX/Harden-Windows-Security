@@ -33,7 +33,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class StrictKernelPolicyScanResults : Page
 {
 	private CreateSupplementalPolicyVM ViewModel { get; } = ViewModelProvider.CreateSupplementalPolicyVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal StrictKernelPolicyScanResults()
 	{

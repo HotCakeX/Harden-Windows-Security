@@ -25,13 +25,11 @@ internal sealed partial class ViewOnlinePolicies : Page
 {
 
 	private ViewOnlinePoliciesVM ViewModel { get; } = ViewModelProvider.ViewOnlinePoliciesVM;
-	private MicrosoftGraph.ViewModelForMSGraph ViewModelMSGraph { get; } = ViewModelProvider.ViewModelForMSGraph;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal ViewOnlinePolicies()
 	{
 		this.InitializeComponent();
-		this.DataContext = this;
+		this.DataContext = ViewModel;
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 }

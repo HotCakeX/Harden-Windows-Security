@@ -29,6 +29,7 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 
@@ -1036,6 +1037,19 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		if (propertyValue is not null)
 		{
 			ClipboardManagement.CopyText(propertyValue);
+		}
+	}
+
+	/// <summary>
+	/// Event handler to prevent the MenuFlyout to automatically close immediately after selecting a checkbox or any button in it
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void MenuFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
+	{
+		if (sender is MenuFlyoutV2 { IsPointerOver: true })
+		{
+			args.Cancel = true;
 		}
 	}
 

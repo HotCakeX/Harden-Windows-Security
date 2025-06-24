@@ -11,7 +11,7 @@
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <ScrollViewer>
@@ -129,7 +129,7 @@
                     <controls:SettingsExpander.Items>
 
                         <customUI:SettingsCardV2 x:Uid="DarkerBackGroundSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}">
-                            <ToggleSwitch IsOn="{x:Bind AppSettings.NavViewBackground, Mode=TwoWay}"
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.NavViewBackground, Mode=TwoWay}"
                                           x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
 
@@ -171,30 +171,30 @@
                 <controls:SettingsExpander IsExpanded="True" x:Uid="BehaviorSettingSettingsExpander" HeaderIcon="{ui:FontIcon Glyph=&#xE9E9;}">
                     <controls:SettingsExpander.Items>
                         <customUI:SettingsCardV2 x:Uid="ListViewsCenterVerticallyUponSelectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE8E3;}">
-                            <ToggleSwitch IsOn="{x:Bind AppSettings.ListViewsVerticalCentering, Mode=TwoWay}"
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.ListViewsVerticalCentering, Mode=TwoWay}"
                                           x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="CacheSecurityCatalogsScanResultsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE96A;}">
-                            <ToggleSwitch IsOn="{x:Bind AppSettings.CacheSecurityCatalogsScanResults, Mode=TwoWay}"
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.CacheSecurityCatalogsScanResults, Mode=TwoWay}"
                                           x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="PromptForElevationSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE7EF;}">
-                            <ToggleSwitch IsOn="{x:Bind AppSettings.PromptForElevationOnStartup, Mode=TwoWay}"
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.PromptForElevationOnStartup, Mode=TwoWay}"
                                           x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="ScreenShieldSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEE3F;}">
-                            <ToggleSwitch IsOn="{x:Bind AppSettings.ScreenShield, Mode=TwoWay}"
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.ScreenShield, Mode=TwoWay}"
                                           x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="PublishUserActivityInTheOSSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC5B;}">
-                            <ToggleSwitch IsOn="{x:Bind AppSettings.PublishUserActivityInTheOS, Mode=TwoWay}"
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.PublishUserActivityInTheOS, Mode=TwoWay}"
                                           x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="BrowseForCISchemaSettingsCard">
                             <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10">
 
-                                <TextBox IsReadOnly="True" Text="{x:Bind AppSettings.CiPolicySchemaPath, Mode=OneWay}" x:Uid="CustomCISchemaPathTextBox"/>
+                                <TextBox IsReadOnly="True" Text="{x:Bind ViewModel.AppSettings.CiPolicySchemaPath, Mode=OneWay}" x:Uid="CustomCISchemaPathTextBox"/>
 
                                 <Button Click="{x:Bind ViewModel.BrowseForCISchemaPath}" x:Uid="BrowseForCISchemaButton" />
 
@@ -230,6 +230,7 @@
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="UIFlowDirectionSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE9AB;}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.UIFlowDirectionToggleSwitch, Mode=TwoWay}"
+                                          Toggled="{x:Bind ViewModel.FlowDirectionToggleSwitch_Toggled}"
                                           x:Uid="UIFlowDirectionToggleSwitch" />
                         </customUI:SettingsCardV2>
                     </controls:SettingsExpander.Items>
@@ -238,7 +239,7 @@
                 <!-- Sound section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Sound" />
                 <customUI:SettingsCardV2 x:Uid="AppSoundSettingSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}">
-                    <ToggleSwitch IsOn="{x:Bind AppSettings.SoundSetting, Mode=TwoWay}"
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.SoundSetting, Mode=TwoWay}"
                                   x:Uid="ToggleSwitchGeneral"/>
                 </customUI:SettingsCardV2>
 

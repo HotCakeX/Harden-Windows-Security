@@ -30,23 +30,11 @@ internal sealed partial class ViewFileCertificates : Page
 {
 
 	private ViewFileCertificatesVM ViewModel { get; } = ViewModelProvider.ViewFileCertificatesVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal ViewFileCertificates()
 	{
 		this.InitializeComponent();
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
 		this.DataContext = ViewModel;
-	}
-
-	/// <summary>
-	/// CTRL + C shortcuts event handler
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-	{
-		ViewModel.ListViewFlyoutMenuCopy_Click();
-		args.Handled = true;
 	}
 }

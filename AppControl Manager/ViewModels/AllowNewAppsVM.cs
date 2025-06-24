@@ -34,6 +34,7 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 
 namespace AppControlManager.ViewModels;
@@ -133,11 +134,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// Gets or sets a value indicating whether the supplemental policy name text box is enabled.
 	/// </summary>
 	internal bool SupplementalPolicyNameTextBoxIsEnabled { get; set => SP(ref field, value); } = true;
-
-	/// <summary>
-	/// The user selected scan level
-	/// </summary>
-	internal ScanLevels scanLevel = ScanLevels.FilePublisher;
 
 	/// <summary>
 	/// Only the logs generated after this time will be shown
@@ -354,15 +350,20 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 	#region Steps management
 
-	internal void DisableStep1()
+	internal void DisableStep1(bool ResetInfoBar = true)
 	{
 		BrowseForXMLPolicyButtonIsEnabled = false;
 		GoToStep2ButtonIsEnabled = false;
 		SupplementalPolicyNameTextBoxIsEnabled = false;
 		Step1GridOpacity = 0.5;
 		Step1Border_ResetStyles();
-		Step1InfoBar_IsOpen = false;
-		Step1InfoBar_Message = null;
+
+		if (ResetInfoBar)
+		{
+			Step1InfoBar_IsOpen = false;
+			Step1InfoBar_Message = null;
+		}
+
 		LogSizeNumberBoxIsEnabled = false;
 	}
 
@@ -687,10 +688,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// Event handler to open the supplemental policy in the Policy Editor
 	/// </summary>
-	internal async void OpenInPolicyEditor()
-	{
-		await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
-	}
+	internal async void OpenInPolicyEditor() => await PolicyEditorViewModel.OpenInPolicyEditor(finalSupplementalPolicyPath);
+
+	internal async void OpenInDefaultFileHandler_Internal() => await OpenInDefaultFileHandler(finalSupplementalPolicyPath);
 
 	/// <summary>
 	/// Event handler for the clear button in the base policy path selection button
@@ -760,7 +760,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. fileIdentities.FileIdentitiesInternal], level: scanLevel);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. fileIdentities.FileIdentitiesInternal], level: ScanLevelComboBoxSelectedItem.Level, folderPaths: selectedDirectoriesToScan);
 
 				// Insert the data into the empty policy file
 				Master.Initiate(DataPackage, EmptyPolicyPath, Authorization.Allow);
@@ -873,9 +873,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// </summary>
 	internal void BrowseForFoldersButton_Click()
 	{
-		List<string>? selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+		List<string> selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedFolders is { Count: > 0 })
+		if (selectedFolders.Count > 0)
 		{
 			// Add each folder to the HashSet of the selected directories
 			foreach (string folder in selectedFolders)
@@ -1091,7 +1091,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	// A Progress<double> so Report() callbacks run on the UI thread
 	internal IProgress<double> Step2ProgressRingProgress;
 
-	internal int ScanLevelComboBoxSelectedIndex { get; set => SP(ref field, value); }
+	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = DefaultScanLevel;
 
 
 	/// <summary>
@@ -1393,6 +1393,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 							CalculateColumnWidthLocalFiles();
 						});
+
 					}
 				}
 			});
@@ -1485,7 +1486,8 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			ResetProgressRingIsActive = true;
 
 			// Disable all steps
-			DisableStep1();
+			// Since there is opening/closing animations, we can't quickly set its IsOpen property to false and true
+			DisableStep1(false);
 			DisableStep2();
 			DisableStep3();
 
@@ -1531,7 +1533,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			// Reset the UI inputs back to their default states
 			DeployPolicy = true;
-			ScanLevelComboBoxSelectedIndex = 0;
 
 			// Run the main reset tasks on a different thread
 			await Task.Run(() =>
@@ -1576,4 +1577,78 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// </summary>
 	internal void ClearSelectedDirectoriesButton_Click() => selectedDirectoriesToScan.Clear();
 
+
+	/// <summary>
+	/// CTRL + C shortcuts event handler
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void CtrlC_Invoked_EventLogs(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		ListViewFlyoutMenuCopy_Click_EventLogs();
+		args.Handled = true;
+	}
+
+	/// <summary>
+	/// CTRL + C shortcuts event handler
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void CtrlC_Invoked_LocalFiles(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		ListViewFlyoutMenuCopy_Click_LocalFiles();
+		args.Handled = true;
+	}
+
+	internal void HeaderColumnSortingButton_Click_LocalFiles(object sender, RoutedEventArgs e)
+	{
+		if (sender is Button button && button.Tag is string key)
+		{
+			// Look up the mapping in the reusable property mappings dictionary.
+			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			{
+				ListViewHelper.SortColumn(
+					mapping.Getter,
+					LocalFilesAllFileIdentitiesSearchText,
+					LocalFilesAllFileIdentities,
+					LocalFilesFileIdentities,
+					SortStateLocalFiles,
+					key,
+					regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults);
+			}
+		}
+	}
+
+	internal void HeaderColumnSortingButton_Click_EventLogs(object sender, RoutedEventArgs e)
+	{
+		if (sender is Button button && button.Tag is string key)
+		{
+			// Look up the mapping using the key.
+			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			{
+				ListViewHelper.SortColumn(mapping.Getter,
+										  EventLogsAllFileIdentitiesSearchText,
+										  EventLogsAllFileIdentities,
+										  EventLogsFileIdentities,
+										  SortStateEventLogs,
+										  key,
+										  regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults);
+			}
+		}
+	}
+
+
+	internal void _OpenInFileExplorer_LocalFiles() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults);
+	internal void _OpenInFileExplorerShortCut_LocalFiles(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		_OpenInFileExplorer_LocalFiles();
+		args.Handled = true;
+	}
+
+	internal void _OpenInFileExplorer_EventLogs() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults);
+	internal void _OpenInFileExplorerShortCut_EventLogs(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		_OpenInFileExplorer_EventLogs();
+		args.Handled = true;
+	}
 }

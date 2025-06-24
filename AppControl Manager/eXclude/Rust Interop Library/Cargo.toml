@@ -1,0 +1,30 @@
+[package]
+name = "rust_interop"
+version = "1.0.0"
+edition = "2024"
+authors = ["Violet Hansen"]
+license = "MIT"
+homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
+repository = "https://github.com/HotCakeX/Harden-Windows-Security"
+publish = false
+rust-version = "1.87" # Enforces minimum required installed Rust version
+
+[lib]
+name = "rust_interop"
+crate-type = ["cdylib"]
+
+[profile.release]
+codegen-units = 1
+opt-level = "s"
+split-debuginfo = "packed"
+strip = "symbols"
+lto = "fat"
+incremental = true
+
+[dependencies]
+windows = { version = "0.61", features = [
+    "Win32_Foundation",
+    "Win32_System_Com",
+    "Win32_UI_Shell",
+    "Win32_UI_Shell_Common"
+] }

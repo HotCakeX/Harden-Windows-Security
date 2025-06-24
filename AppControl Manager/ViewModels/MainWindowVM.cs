@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using AnimatedVisuals;
 using AppControlManager.Others;
 using AppControlManager.WindowComponents;
@@ -27,6 +28,8 @@ using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Windows.Foundation;
+using Windows.Graphics;
 
 namespace AppControlManager.ViewModels;
 
@@ -150,13 +153,13 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		breadCrumbMappingsV2[typeof(Pages.UpdatePage)] = new PageTitleMap
 		{
-			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), "Custom MSIXBundle Path"],
+			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), GlobalVars.Rizz.GetString("UpdatePageCustomMSIXPath")],
 			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		};
 
 		breadCrumbMappingsV2[typeof(Pages.UpdatePageCustomMSIXPath)] = new PageTitleMap
 		{
-			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), "Custom MSIXBundle Path"],
+			Titles = [GlobalVars.Rizz.GetString("UpdateNavItem/Content"), GlobalVars.Rizz.GetString("UpdatePageCustomMSIXPath")],
 			Pages = [typeof(Pages.UpdatePage), typeof(Pages.UpdatePageCustomMSIXPath)]
 		};
 
@@ -253,7 +256,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Dictionary of all the main pages in the app, used for the main navigation.
 	/// Keys are the Navigation Item tags (non-localized) and values are the page types.
-	/// Sub-pages should only be added if they don't rely on/access the the instance of any page that might not be initialized.
 	/// </summary>
 	internal readonly Dictionary<string, Type> NavigationPageToItemContentMap = new()
 	{
@@ -283,8 +285,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 
 	/// <summary>
-	/// Dictionary of all the main pages in the app, used for the search bar.
-	/// Keys are page contents which are localized and values are page types.
+	/// Dictionary of all the pages in the app, used for the search bar.
+	/// Keys are page header contents which are localized and values are page types.
 	/// </summary>
 	internal readonly Dictionary<string, Type> NavigationPageToItemContentMapForSearch = [];
 
@@ -293,6 +295,16 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch.Clear();
 
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content")] = typeof(Pages.CreatePolicy);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content")] = typeof(Pages.CreateSupplementalPolicy);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ScanResults")] = typeof(Pages.CreateSupplementalPolicyFilesAndFoldersScanResults);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ScanResults")] = typeof(Pages.StrictKernelPolicyScanResults);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content")] = typeof(Pages.CreateDenyPolicy);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ScanResults")] = typeof(Pages.CreateDenyPolicyFilesAndFoldersScanResults);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content")] = typeof(Pages.BuildNewCertificate);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content")] = typeof(Pages.ViewFileCertificates);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content")] = typeof(Pages.EventLogsPolicyCreation);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content")] = typeof(Pages.MDEAHPolicyCreation);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content")] = typeof(Pages.AllowNewApps);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/Content")] = typeof(Pages.GetCIHashes);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("GitHubDocsNavItem/Content")] = typeof(Pages.GitHubDocumentation);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("MSFTDocsNavItem/Content")] = typeof(Pages.MicrosoftDocumentation);
@@ -303,17 +315,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("LogsNavItem/Content")] = typeof(Pages.Logs);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("SimulationNavItem/Content")] = typeof(Pages.Simulation);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("DeploymentNavItem/Content")] = typeof(Pages.DeploymentPage);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content")] = typeof(Pages.EventLogsPolicyCreation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content")] = typeof(Pages.MDEAHPolicyCreation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content")] = typeof(Pages.AllowNewApps);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content")] = typeof(Pages.BuildNewCertificate);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content")] = typeof(Pages.CreateSupplementalPolicy);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content")] = typeof(Pages.MergePolicies);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content")] = typeof(Pages.CreateDenyPolicy);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content")] = typeof(Pages.ValidatePolicy);
-		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content")] = typeof(Pages.ViewFileCertificates);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content")] = typeof(Pages.PolicyEditor);
 		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
+		NavigationPageToItemContentMapForSearch[GlobalVars.Rizz.GetString("UpdatePageCustomMSIXPath")] = typeof(Pages.UpdatePageCustomMSIXPath);
 	}
 
 	/// <summary>
@@ -847,7 +853,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 					GetSecurePolicySettingsIcon = new FontIcon
 					{
-						Glyph = "\uEEA3",
+						Glyph = "\uF404",
 						Foreground = accentBrush
 					};
 
@@ -936,7 +942,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					CreatePolicyFromEventLogsIcon = new FontIcon { Glyph = "\uEA18" };
 					CreatePolicyFromMDEAHIcon = new FontIcon { Glyph = "\uEB44" };
 					GetCodeIntegrityHashesIcon = new FontIcon { Glyph = "\uE950" };
-					GetSecurePolicySettingsIcon = new FontIcon { Glyph = "\uEEA3" };
+					GetSecurePolicySettingsIcon = new FontIcon { Glyph = "\uF404" };
 					LogsIcon = new FontIcon { Glyph = "\uF5A0" };
 					GitHubDocsIcon = new FontIcon { Glyph = "\uE8A5" };
 					MSFTDocsIcon = new FontIcon { Glyph = "\uE8A5" };
@@ -979,4 +985,87 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		// Save the selected option (using the enum's name)
 		App.Settings.BackDropBackground = selection.ToString();
 	}
+
+	/// <summary>
+	/// Event handler for when the main app window's size changes
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)
+	{
+		double mainWindowWidth = args.Size.Width; // Width of the main window
+
+		// Hide TitleColumn if width is less than 200, Restore the TitleColumn if width is 200 or more
+		TitleColumnWidth = mainWindowWidth < 750 ? new GridLength(0) : GridLength.Auto;
+	}
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/winmsg/extended-window-styles
+	/// </summary>
+	private const int WS_EX_LAYOUTRTL = 0x00400000;
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowlonga
+	/// </summary>
+	private const int GWL_EXSTYLE = -20;
+
+	/// <summary>
+	/// Sets the flow direction of the Main Window's title bar and Close/Minimize/Maximize buttons.
+	/// </summary>
+	/// <param name="flowD">The Flow Direction to set.</param>
+	internal static void SetCaptionButtonsFlowDirection(FlowDirection flowD)
+	{
+		IntPtr exStyle = NativeMethods.GetWindowLongPtr(GlobalVars.hWnd, GWL_EXSTYLE);
+
+		if (flowD is FlowDirection.LeftToRight)
+		{
+			exStyle &= ~WS_EX_LAYOUTRTL;
+		}
+		else
+		{
+			exStyle |= WS_EX_LAYOUTRTL;
+		}
+
+		NativeMethods.SetWindowLongPtr(GlobalVars.hWnd, GWL_EXSTYLE, exStyle);
+	}
+
+	/// <summary>
+	/// Checks if the window has RTL layout applied
+	/// </summary>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static bool IsWindowRTL()
+	{
+		IntPtr exStyle = NativeMethods.GetWindowLongPtr(GlobalVars.hWnd, GWL_EXSTYLE);
+		return (exStyle.ToInt32() & WS_EX_LAYOUTRTL) != 0;
+	}
+
+	/// <summary>
+	/// Transforms a UIElement’s RenderSize to a pixel-based RectInt32.
+	/// </summary>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static RectInt32 CalculatePixelRect(UIElement element, double scale)
+	{
+		GeneralTransform t = element.TransformToVisual(null);
+
+		// Could cast to FrameworkElement and use ActualHeight and ActualWidth instead.
+		Rect bounds = t.TransformBounds(new Rect(0, 0, element.RenderSize.Width, element.RenderSize.Height));
+
+		return new RectInt32(
+			_X: (int)Math.Round(bounds.X * scale),
+			_Y: (int)Math.Round(bounds.Y * scale),
+			_Width: (int)Math.Round(bounds.Width * scale),
+			_Height: (int)Math.Round(bounds.Height * scale)
+		);
+	}
+
+	/// <summary>
+	/// Mirror a pixel-space rect horizontally around the given total width.
+	/// </summary>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static RectInt32 FlipHorizontally(RectInt32 rect, double totalWidthPx)
+	{
+		rect.X = (int)Math.Round(totalWidthPx - (rect.X + rect.Width));
+		return rect;
+	}
+
 }

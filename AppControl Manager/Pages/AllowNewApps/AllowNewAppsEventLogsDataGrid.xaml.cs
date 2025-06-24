@@ -21,7 +21,6 @@ using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
@@ -34,7 +33,6 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 {
 
 	private AllowNewAppsVM ViewModel { get; } = ViewModelProvider.AllowNewAppsVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal AllowNewAppsEventLogsDataGrid()
 	{
@@ -56,34 +54,5 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 			// Use the mapping's Getter, converting the result to a string.
 			ListViewHelper.CopyToClipboard(item => mapping.Getter(item)?.ToString(), FileIdentitiesListView);
 		}
-	}
-
-	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (sender is Button button && button.Tag is string key)
-		{
-			// Look up the mapping using the key.
-			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(mapping.Getter,
-										  ViewModel.EventLogsAllFileIdentitiesSearchText,
-										  ViewModel.EventLogsAllFileIdentities,
-										  ViewModel.EventLogsFileIdentities,
-										  ViewModel.SortStateEventLogs,
-										  key,
-										  regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults);
-			}
-		}
-	}
-
-	/// <summary>
-	/// CTRL + C shortcuts event handler
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-	{
-		ViewModel.ListViewFlyoutMenuCopy_Click_EventLogs();
-		args.Handled = true;
-	}
+	}	
 }

@@ -17,8 +17,6 @@
 
 using System;
 using AppControlManager.Others;
-using Microsoft.UI;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
@@ -31,27 +29,21 @@ namespace AppControlManager.Pages;
 internal sealed partial class MicrosoftDocumentation : Page
 {
 
-	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
+	private AppSettings.Main AppSettings => App.Settings;
 
 	/// <summary>
-	/// Initializes the MicrosoftDocumentation component, sets the background color of WebView2 to transparent, and handles
-	/// navigation events.
+	/// Initializes the MicrosoftDocumentation component and handles navigation events.
 	/// </summary>
 	internal MicrosoftDocumentation()
 	{
 		this.InitializeComponent();
-		// Set background color of WebView2 while content is loading
-		MicrosoftDocumentationWebView2.DefaultBackgroundColor = Colors.Transparent;
-
-		// Handle navigation events to manage button state
-		MicrosoftDocumentationWebView2.NavigationCompleted += WebView2_NavigationCompleted;
 
 		// Make sure navigating to/from this page maintains its state
 		this.NavigationCacheMode = NavigationCacheMode.Enabled;
 	}
 
 	// Event handler for Back button
-	private void BackButton_Click(object sender, RoutedEventArgs e)
+	private void BackButton_Click()
 	{
 		if (MicrosoftDocumentationWebView2.CanGoBack)
 		{
@@ -60,7 +52,7 @@ internal sealed partial class MicrosoftDocumentation : Page
 	}
 
 	// Event handler for Forward button
-	private void ForwardButton_Click(object sender, RoutedEventArgs e)
+	private void ForwardButton_Click()
 	{
 		if (MicrosoftDocumentationWebView2.CanGoForward)
 		{
@@ -69,13 +61,13 @@ internal sealed partial class MicrosoftDocumentation : Page
 	}
 
 	// Event handler for Reload button
-	private void ReloadButton_Click(object sender, RoutedEventArgs e)
+	private void ReloadButton_Click()
 	{
 		MicrosoftDocumentationWebView2.Reload();
 	}
 
 	// Event handler for Home button
-	private void HomeButton_Click(object sender, RoutedEventArgs e)
+	private void HomeButton_Click()
 	{
 		MicrosoftDocumentationWebView2.Source = new Uri("https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/appcontrol");
 	}

@@ -140,9 +140,9 @@ internal sealed partial class DeploymentVM : ViewModelBase
 	/// </summary>
 	internal void BrowseForXMLPolicyFilesButton_Click()
 	{
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
-		if (selectedFiles is { Count: > 0 })
+		if (selectedFiles.Count > 0)
 		{
 			foreach (string file in selectedFiles)
 			{
@@ -158,9 +158,9 @@ internal sealed partial class DeploymentVM : ViewModelBase
 	{
 		const string filter = "CIP file|*.cip";
 
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(filter);
 
-		if (selectedFiles is { Count: > 0 })
+		if (selectedFiles.Count > 0)
 		{
 			foreach (string file in selectedFiles)
 			{
@@ -199,9 +199,9 @@ internal sealed partial class DeploymentVM : ViewModelBase
 	internal void BrowseForSignedXMLPolicyFilesButton_Click()
 	{
 
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
-		if (selectedFiles is { Count: > 0 })
+		if (selectedFiles.Count > 0)
 		{
 			foreach (string file in selectedFiles)
 			{
@@ -215,9 +215,9 @@ internal sealed partial class DeploymentVM : ViewModelBase
 	/// </summary>
 	internal void BrowseForXMLPolicesButton_Click()
 	{
-		List<string>? selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
+		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.XMLFilePickerFilter);
 
-		if (selectedFiles is { Count: > 0 })
+		if (selectedFiles.Count > 0)
 		{
 			foreach (string file in selectedFiles)
 			{

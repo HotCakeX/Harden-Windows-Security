@@ -28,7 +28,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class CreatePolicy : Page
 {
 	private CreatePolicyVM ViewModel { get; } = ViewModelProvider.CreatePolicyVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal CreatePolicy()
 	{

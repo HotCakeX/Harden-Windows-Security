@@ -8,6 +8,7 @@
     xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
@@ -15,7 +16,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <ScrollView>
@@ -219,7 +220,25 @@
                             IsClosable="{x:Bind ViewModel.FilesAndFoldersInfoBarIsClosable, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.FilesAndFoldersInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.FilesAndFoldersInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_FilesAndFolders}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.FilesAndFoldersInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_FilesAndFolders}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_FilesAndFolders}"/>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -369,12 +388,17 @@
                         <customUI:SettingsCardV2 x:Uid="SelectScanLevelSettingsCard">
 
                             <ComboBox IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
-                                      SelectedItem="{x:Bind ViewModel.FilesAndFoldersScanLevelComboBoxSelectedItem, Mode=TwoWay}">
-                                <x:String>File Publisher</x:String>
-                                <x:String>Publisher</x:String>
-                                <x:String>Hash</x:String>
-                                <x:String>File Path</x:String>
-                                <x:String>WildCard Folder Path</x:String>
+                                      SelectedItem="{x:Bind ViewModel.FilesAndFoldersScanLevelComboBoxSelectedItem, Mode=TwoWay}"
+                                      SelectedIndex="0"
+                                      ItemsSource="{x:Bind ViewModel.ScanLevelsSource}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                            <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
                             </ComboBox>
 
                         </customUI:SettingsCardV2>
@@ -446,7 +470,25 @@
                             IsClosable="{x:Bind ViewModel.CertificatesBasedInfoBarIsClosable, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.CertificatesBasedInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.CertificatesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_Certificates}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.CertificatesInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_Certificates}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_Certificates}"/>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -568,7 +610,25 @@
                             IsClosable="{x:Bind ViewModel.ISGInfoBarIsClosable, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.ISGInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.ISGInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_ISG}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.ISGInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_ISG}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_ISG}"/>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -664,7 +724,25 @@
                             IsClosable="{x:Bind ViewModel.StrictKernelModeInfoBarIsClosable, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.StrictKernelModeInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_StrictKernelMode}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_StrictKernelMode}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_StrictKernelMode}"/>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -806,7 +884,25 @@
                             IsClosable="{x:Bind ViewModel.PFNInfoBarIsClosable, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.PFNInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.PFNInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_PFN}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.PFNInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_PFN}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_PFN}"/>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -977,7 +1073,25 @@
                             IsClosable="{x:Bind ViewModel.CustomFilePathRulesInfoBarIsClosable, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.CustomFilePathRulesInfoBarSeverity, Mode=OneWay}">
                             <customUI:InfoBarV2.ActionButton>
-                                <Button x:Uid="OpenInPolicyEditorButton" Visibility="{x:Bind ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility, Mode=OneWay}" Click="{x:Bind ViewModel.OpenInPolicyEditor_CustomPatternBasedFileRule}" />
+                                <DropDownButton x:Uid="AdditionalActionsDropDownButton"
+                                                Visibility="{x:Bind ViewModel.CustomFilePathRulesInfoBarActionButtonVisibility, Mode=OneWay}">
+                                    <DropDownButton.Content>
+                                        <StackPanel Orientation="Horizontal" Spacing="5">
+                                            <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
+                                            <TextBlock x:Uid="AdditionalActionsTextBlock" />
+                                        </StackPanel>
+                                    </DropDownButton.Content>
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                                            Icon="Edit"
+                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_CustomPatternBasedFileRule}"/>
+                                            <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
+                                                            Icon="OpenWith"
+                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_CustomPatternBasedFileRule}"/>
+                                        </MenuFlyout>
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
                             </customUI:InfoBarV2.ActionButton>
                         </customUI:InfoBarV2>
                     </controls:SettingsExpander.ItemsHeader>
@@ -1049,15 +1163,12 @@
                                 <Button.Content>
                                     <controls:WrapPanel Orientation="Horizontal">
 
-                                        <!--
-
-                                        <AnimatedIcon x:Name="CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIcon" Height="20" Margin="0,0,5,0" Width="20">
+                                        <AnimatedIcon Visibility="{x:Bind ViewModel.CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIconVisibility, Mode=OneWay}"
+                                                      Height="20" Margin="0,0,5,0" Width="20">
                                             <AnimatedIcon.Source>
                                                 <animatedvisuals:Light/>
                                             </AnimatedIcon.Source>
                                         </AnimatedIcon>
-
-                                        -->
 
                                         <TextBlock x:Uid="BrowseTextBlock" />
 

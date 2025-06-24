@@ -11,7 +11,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors">
 
     <Grid>
@@ -137,6 +137,15 @@
                     <Grid Background="Transparent">
                         <Grid.ContextFlyout>
                             <MenuFlyout>
+
+                                <MenuFlyoutItem x:Uid="OpenInFileExplorer" Click="{x:Bind ParentViewModelCreateSupplementalPolicyVM._OpenInFileExplorerStrictKernelMode}">
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Key="O" Modifiers="Control" Invoked="{x:Bind ParentViewModelCreateSupplementalPolicyVM._OpenInFileExplorerShortCutStrictKernelMode}"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xEC50;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
                                 <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind ParentViewModelCreateSupplementalPolicyVM.StrictKernel_ListViewFlyoutMenuDelete_Click}">
                                     <MenuFlyoutItem.Icon>

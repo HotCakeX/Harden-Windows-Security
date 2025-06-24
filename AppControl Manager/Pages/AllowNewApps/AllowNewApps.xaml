@@ -6,7 +6,7 @@
     xmlns:local="using:AppControlManager.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <Grid>
@@ -15,7 +15,7 @@
                  PaneDisplayMode="Top"
                  IsTabStop="True"
                  Grid.Row="1"
-                 SelectionChanged="NavigationView_SelectionChanged"
+                 SelectionChanged="{x:Bind NavigationView_SelectionChanged}"
                  IsSettingsVisible="False"
                  IsBackButtonVisible="Collapsed">
 

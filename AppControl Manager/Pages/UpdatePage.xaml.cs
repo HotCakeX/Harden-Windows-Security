@@ -26,13 +26,12 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class UpdatePage : Page
 {
-	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
 	private ViewModels.UpdateVM ViewModel { get; } = ViewModels.ViewModelProvider.UpdateVM;
 
 	internal UpdatePage()
 	{
 		this.InitializeComponent();
 		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = this;
+		this.DataContext = ViewModel;
 	}
 }

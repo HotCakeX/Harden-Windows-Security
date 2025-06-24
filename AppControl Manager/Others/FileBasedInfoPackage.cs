@@ -22,18 +22,21 @@ namespace AppControlManager.Others;
 /// <summary>
 /// Used by the BuildSignerAndHashObjects method to store and return the output
 /// </summary>
+/// <param name="whqlFilepublishersigners">Data to create WHQLFilePublisher level rules for.</param>
 /// <param name="filepublishersigners">Data to create FilePublisher level rules for.</param>
 /// <param name="publishersigners">Data to create Publisher level rules for.</param>
 /// <param name="completehashes">Data to create Hash rules for.</param>
 /// <param name="filePaths">Data to create File path rules for.</param>
 /// <param name="pfnRules">Data to create PFN (Package Family Name) rules for.</param>
 internal sealed class FileBasedInfoPackage(
+	List<WHQLFilePublisherSignerCreator> whqlFilepublishersigners,
 	List<FilePublisherSignerCreator> filepublishersigners,
 	List<PublisherSignerCreator> publishersigners,
 	List<HashCreator> completehashes,
 	List<FilePathCreator> filePaths,
 	List<PFNRuleCreator> pfnRules)
 {
+	internal List<WHQLFilePublisherSignerCreator> WHQLFilePublisherSigners { get; } = whqlFilepublishersigners;
 	internal List<FilePublisherSignerCreator> FilePublisherSigners { get; } = filepublishersigners;
 	internal List<PublisherSignerCreator> PublisherSigners { get; } = publishersigners;
 	internal List<HashCreator> CompleteHashes { get; } = completehashes;

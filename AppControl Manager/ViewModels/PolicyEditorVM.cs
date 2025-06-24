@@ -815,7 +815,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 
 				if (PolicyObj is not null)
-					foreach (PolicyEditor.PolicySettings item in PolicySettingsManager.GetPolicySettings(PolicyObj, this))
+					foreach (PolicyEditor.PolicySettings item in PolicySettingsManager.GetPolicySettings(PolicyObj.Settings, this))
 					{
 						PolicySettingsCollection.Add(item);
 					}
@@ -1319,8 +1319,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				#region Policy details
 
-				PolicySettingsManager.SetPolicyName(PolicyObj, PolicyNameTextBox);
-
 				// Validate User Inputs
 
 				(bool, string) policyIDCheckResult = SetCiPolicyInfo.ValidatePolicyID(PolicyIDTextBox);
@@ -1363,8 +1361,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				if (PolicyTypeComboBox is not null)
 					PolicyObj.PolicyType = (PolicyType)PolicyTypeComboBox;
 
-				PolicySettingsManager.SetPolicyIDInfo(PolicyObj, PolicyInfoIDTextBox);
-
 				// If the user selected an HVCI option, set it in the policy
 				if (!string.IsNullOrEmpty(HVCIOptionComboBox))
 				{
@@ -1399,6 +1395,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					fileToSaveTheChangesTo = SelectedPolicyFile;
 				}
 
+
+				// Anything that has to do with Settings must be applied by this method because it always overwrites any other changes as it writes the final settings block to the policy.
+				Setting[] _policySettings = PolicySettingsManager.ConvertPolicyEditorSettingToSiPolicySetting(PolicySettingsCollection, PolicyNameTextBox, PolicyInfoIDTextBox);
+
 				// Generate the policy
 				Merger.PolicyGenerator(
 				   fileToSaveTheChangesTo, // The user selected XML file path
@@ -1415,12 +1415,25 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				   updatePolicySignersCol,
 				   kernelModeFileRulesRefs,
 				   userModeFileRulesRefs,
-				   PolicySettingsManager.ConvertPolicyEditorSettingToSiPolicySetting(PolicySettingsCollection)
+				   _policySettings
 				   );
 
 
 				await Dispatcher.EnqueueAsync(async () =>
 				{
+
+					// Update the Policy Settings again to reflect the newest changes when something is removed from their UI-bound collection.
+					if (PolicyObj is not null)
+					{
+						PolicySettingsCollection.Clear();
+
+						foreach (PolicyEditor.PolicySettings item in PolicySettingsManager.GetPolicySettings(_policySettings, this))
+						{
+							PolicySettingsCollection.Add(item);
+						}
+					}
+
+
 					MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("PolicyEditorSuccessfulSaveMessage"));
 
 					if (fileType == 0)
@@ -1550,7 +1563,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			await Task.Run(() =>
 			{
 				// Perform a case-insensitive search in all relevant fields
-				filteredResults = [.. FileRulesCollectionList.Where(p =>
+				filteredResults = FileRulesCollectionList.Where(p =>
 				(p.Id?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.FileDescription?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
@@ -1560,7 +1573,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				(p.PackageFamilyName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.ProductName?.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.Hash?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
-				)];
+				).ToList();
 			});
 
 			FileRulesCollection.Clear();

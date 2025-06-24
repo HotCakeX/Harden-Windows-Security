@@ -91,29 +91,29 @@ internal sealed partial class AnimatedCancellableButton : Button
 		Color.FromArgb(255, 221, 160, 221)  // Light Purple
 	];
 
-	public new event RoutedEventHandler? Click;
+	internal new event RoutedEventHandler? Click;
 
-	public static readonly DependencyProperty CancelMethodProperty =
+	internal static readonly DependencyProperty CancelMethodProperty =
 		DependencyProperty.Register(
 			nameof(CancelMethod),
 			typeof(Func<Task>),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(null));
 
-	public Func<Task>? CancelMethod
+	internal Func<Task>? CancelMethod
 	{
 		get => (Func<Task>?)GetValue(CancelMethodProperty);
 		set => SetValue(CancelMethodProperty, value);
 	}
 
-	public static readonly DependencyProperty ExternalOperationInProgressProperty =
+	internal static readonly DependencyProperty ExternalOperationInProgressProperty =
 		DependencyProperty.Register(
 			nameof(ExternalOperationInProgress),
 			typeof(bool),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(false, OnExternalOperationInProgressChanged));
 
-	public bool ExternalOperationInProgress
+	internal bool ExternalOperationInProgress
 	{
 		get => (bool)GetValue(ExternalOperationInProgressProperty);
 		set => SetValue(ExternalOperationInProgressProperty, value);
@@ -135,14 +135,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalIsCancelStateProperty =
+	internal static readonly DependencyProperty ExternalIsCancelStateProperty =
 		DependencyProperty.Register(
 			nameof(ExternalIsCancelState),
 			typeof(bool),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(false, OnExternalIsCancelStateChanged));
 
-	public bool ExternalIsCancelState
+	internal bool ExternalIsCancelState
 	{
 		get => (bool)GetValue(ExternalIsCancelStateProperty);
 		set => SetValue(ExternalIsCancelStateProperty, value);
@@ -156,14 +156,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalIsCancellingStateProperty =
+	internal static readonly DependencyProperty ExternalIsCancellingStateProperty =
 		DependencyProperty.Register(
 			nameof(ExternalIsCancellingState),
 			typeof(bool),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(false, OnExternalIsCancellingStateChanged));
 
-	public bool ExternalIsCancellingState
+	internal bool ExternalIsCancellingState
 	{
 		get => (bool)GetValue(ExternalIsCancellingStateProperty);
 		set => SetValue(ExternalIsCancellingStateProperty, value);
@@ -177,14 +177,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalIsAnimatingProperty =
+	internal static readonly DependencyProperty ExternalIsAnimatingProperty =
 		DependencyProperty.Register(
 			nameof(ExternalIsAnimating),
 			typeof(bool),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(false, OnExternalIsAnimatingChanged));
 
-	public bool ExternalIsAnimating
+	internal bool ExternalIsAnimating
 	{
 		get => (bool)GetValue(ExternalIsAnimatingProperty);
 		set => SetValue(ExternalIsAnimatingProperty, value);
@@ -198,14 +198,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalButtonContentProperty =
+	internal static readonly DependencyProperty ExternalButtonContentProperty =
 		DependencyProperty.Register(
 			nameof(ExternalButtonContent),
 			typeof(string),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(string.Empty, OnExternalButtonContentChanged));
 
-	public string ExternalButtonContent
+	internal string ExternalButtonContent
 	{
 		get => (string)GetValue(ExternalButtonContentProperty);
 		set => SetValue(ExternalButtonContentProperty, value);
@@ -224,14 +224,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalOriginalTextProperty =
+	internal static readonly DependencyProperty ExternalOriginalTextProperty =
 		DependencyProperty.Register(
 			nameof(ExternalOriginalText),
 			typeof(string),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(string.Empty, OnExternalOriginalTextChanged));
 
-	public string ExternalOriginalText
+	internal string ExternalOriginalText
 	{
 		get => (string)GetValue(ExternalOriginalTextProperty);
 		set => SetValue(ExternalOriginalTextProperty, value);
@@ -245,14 +245,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalInternalIsCancelStateProperty =
+	internal static readonly DependencyProperty ExternalInternalIsCancelStateProperty =
 		DependencyProperty.Register(
 			nameof(ExternalInternalIsCancelState),
 			typeof(bool),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(false, OnExternalInternalIsCancelStateChanged));
 
-	public bool ExternalInternalIsCancelState
+	internal bool ExternalInternalIsCancelState
 	{
 		get => (bool)GetValue(ExternalInternalIsCancelStateProperty);
 		set => SetValue(ExternalInternalIsCancelStateProperty, value);
@@ -266,14 +266,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalInternalIsCancellingStateProperty =
+	internal static readonly DependencyProperty ExternalInternalIsCancellingStateProperty =
 		DependencyProperty.Register(
 			nameof(ExternalInternalIsCancellingState),
 			typeof(bool),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(false, OnExternalInternalIsCancellingStateChanged));
 
-	public bool ExternalInternalIsCancellingState
+	internal bool ExternalInternalIsCancellingState
 	{
 		get => (bool)GetValue(ExternalInternalIsCancellingStateProperty);
 		set => SetValue(ExternalInternalIsCancellingStateProperty, value);
@@ -287,14 +287,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalInternalIsAnimatingProperty =
+	internal static readonly DependencyProperty ExternalInternalIsAnimatingProperty =
 		DependencyProperty.Register(
 			nameof(ExternalInternalIsAnimating),
 			typeof(bool),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(false, OnExternalInternalIsAnimatingChanged));
 
-	public bool ExternalInternalIsAnimating
+	internal bool ExternalInternalIsAnimating
 	{
 		get => (bool)GetValue(ExternalInternalIsAnimatingProperty);
 		set => SetValue(ExternalInternalIsAnimatingProperty, value);
@@ -308,14 +308,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalInternalIsOperationInProgressProperty =
+	internal static readonly DependencyProperty ExternalInternalIsOperationInProgressProperty =
 		DependencyProperty.Register(
 			nameof(ExternalInternalIsOperationInProgress),
 			typeof(bool),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(false, OnExternalInternalIsOperationInProgressChanged));
 
-	public bool ExternalInternalIsOperationInProgress
+	internal bool ExternalInternalIsOperationInProgress
 	{
 		get => (bool)GetValue(ExternalInternalIsOperationInProgressProperty);
 		set => SetValue(ExternalInternalIsOperationInProgressProperty, value);
@@ -329,14 +329,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalInternalSuppressExternalClickProperty =
+	internal static readonly DependencyProperty ExternalInternalSuppressExternalClickProperty =
 		DependencyProperty.Register(
 			nameof(ExternalInternalSuppressExternalClick),
 			typeof(bool),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(false, OnExternalInternalSuppressExternalClickChanged));
 
-	public bool ExternalInternalSuppressExternalClick
+	internal bool ExternalInternalSuppressExternalClick
 	{
 		get => (bool)GetValue(ExternalInternalSuppressExternalClickProperty);
 		set => SetValue(ExternalInternalSuppressExternalClickProperty, value);
@@ -350,14 +350,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalShadowAnimationRunningProperty =
+	internal static readonly DependencyProperty ExternalShadowAnimationRunningProperty =
 		DependencyProperty.Register(
 			nameof(ExternalShadowAnimationRunning),
 			typeof(bool),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(false, OnExternalShadowAnimationRunningChanged));
 
-	public bool ExternalShadowAnimationRunning
+	internal bool ExternalShadowAnimationRunning
 	{
 		get => (bool)GetValue(ExternalShadowAnimationRunningProperty);
 		set => SetValue(ExternalShadowAnimationRunningProperty, value);
@@ -383,14 +383,14 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public static readonly DependencyProperty ExternalOperationStartedProperty =
+	internal static readonly DependencyProperty ExternalOperationStartedProperty =
 		DependencyProperty.Register(
 			nameof(ExternalOperationStarted),
 			typeof(bool),
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(false, OnExternalOperationStartedChanged));
 
-	public bool ExternalOperationStarted
+	internal bool ExternalOperationStarted
 	{
 		get => (bool)GetValue(ExternalOperationStartedProperty);
 		set => SetValue(ExternalOperationStartedProperty, value);
@@ -872,7 +872,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public AnimatedCancellableButton()
+	internal AnimatedCancellableButton()
 	{
 		this.DefaultStyleKey = typeof(Button);
 		base.Click += AnimatedCancellableButton_BaseClick;
@@ -1018,24 +1018,6 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public void NotifyOperationCompleted()
-	{
-		if (_isDisposed || _isDisposing) return;
-
-		lock (_stateLock)
-		{
-			if (_isDisposed || _isDisposing) return;
-
-			if (ExternalInternalIsCancellingState && !ExternalInternalIsAnimating)
-			{
-				StopShadowAnimation();
-				AnimateToState(false, false);
-				_operationStarted = false;
-				ExternalOperationStarted = false;
-			}
-		}
-	}
-
 	private void AnimateToState(bool toCancelState, bool toCancellingState)
 	{
 		if (_isDisposed || _isDisposing) return;
@@ -1124,27 +1106,23 @@ internal sealed partial class AnimatedCancellableButton : Button
 		{ }
 	}
 
-	public bool IsCancelState => !_isDisposed && !_isDisposing && ExternalInternalIsCancelState;
+	internal bool IsCancelState => !_isDisposed && !_isDisposing && ExternalInternalIsCancelState;
 
-	public bool IsCancellingState => !_isDisposed && !_isDisposing && ExternalInternalIsCancellingState;
+	internal bool IsCancellingState => !_isDisposed && !_isDisposing && ExternalInternalIsCancellingState;
 
-	public bool IsOperationInProgress => !_isDisposed && !_isDisposing && ExternalInternalIsOperationInProgress;
+	internal bool IsOperationInProgress => !_isDisposed && !_isDisposing && ExternalInternalIsOperationInProgress;
 
-	public bool IsSuppressingExternalClick => !_isDisposed && !_isDisposing && ExternalInternalSuppressExternalClick;
+	internal bool IsSuppressingExternalClick => !_isDisposed && !_isDisposing && ExternalInternalSuppressExternalClick;
 
-	public bool IsShadowAnimationRunning => !_isDisposed && !_isDisposing && _isShadowAnimationRunning;
+	internal bool IsShadowAnimationRunning => !_isDisposed && !_isDisposing && _isShadowAnimationRunning;
 
-	public int CurrentShadowColorIndex => _isDisposed || _isDisposing ? 0 : _currentColorIndex;
+	internal int CurrentShadowColorIndex => _isDisposed || _isDisposing ? 0 : _currentColorIndex;
 
-	public Color CurrentShadowColor => GetCurrentShadowColor();
+	internal bool IsInColorTransition => !_isDisposed && !_isDisposing && _inColorTransition;
 
-	public bool IsInColorTransition => !_isDisposed && !_isDisposing && _inColorTransition;
+	internal double ColorTransitionProgress => (_isDisposed || _isDisposing || !_inColorTransition) ? 0.0 : (double)_colorTransitionCounter / COLOR_TRANSITION_DURATION;
 
-	public double ColorTransitionProgress => (_isDisposed || _isDisposing || !_inColorTransition) ? 0.0 : (double)_colorTransitionCounter / COLOR_TRANSITION_DURATION;
-
-	public static double ShadowOpacity => SHADOW_OPACITY;
-
-	public double AnimationDurationMilliseconds
+	internal double AnimationDurationMilliseconds
 	{
 		get => _isDisposed || _isDisposing ? 150.0 : _fadeOutAnimation.Duration.TimeSpan.TotalMilliseconds;
 		set
@@ -1157,7 +1135,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 	}
 
-	public double ShadowAnimationDurationMilliseconds
+	internal double ShadowAnimationDurationMilliseconds
 	{
 		get => _isDisposed || _isDisposing ? 50.0 : _shadowTimer?.Interval.TotalMilliseconds ?? 50.0;
 		set
@@ -1168,16 +1146,6 @@ internal sealed partial class AnimatedCancellableButton : Button
 			}
 		}
 	}
-
-	public static double ShadowMinBlurRadius => MIN_BLUR_RADIUS;
-
-	public static double ShadowMaxBlurRadius => MAX_BLUR_RADIUS;
-
-	public static int ColorTransitionDuration => COLOR_TRANSITION_DURATION;
-
-	public static int ColorHoldDuration => COLOR_HOLD_DURATION;
-
-	public static Color[] ShadowColors => [.. _shadowColors];
 
 	protected override void OnApplyTemplate()
 	{

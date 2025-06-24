@@ -27,7 +27,6 @@ namespace AppControlManager.Pages;
 internal sealed partial class ValidatePolicy : Page
 {
 
-	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
 	private ViewModels.ValidatePolicyVM ViewModel { get; } = ViewModels.ViewModelProvider.ValidatePolicyVM;
 
 	internal ValidatePolicy()

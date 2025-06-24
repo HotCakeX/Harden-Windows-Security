@@ -184,12 +184,26 @@ internal static class PolicySettingsManager
 	/// <param name="PolicyObj"></param>
 	/// <param name="VMRef"></param>
 	/// <returns></returns>
-	internal static List<AppControlManager.PolicyEditor.PolicySettings> GetPolicySettings(SiPolicy.SiPolicy PolicyObj, ViewModels.PolicyEditorVM VMRef)
+	internal static List<AppControlManager.PolicyEditor.PolicySettings> GetPolicySettings(Setting[] policySettings, ViewModels.PolicyEditorVM VMRef)
 	{
 		List<AppControlManager.PolicyEditor.PolicySettings> output = [];
 
-		foreach (Setting item in PolicyObj.Settings)
+		foreach (Setting item in policySettings)
 		{
+
+			// To prevent Policy Name and Policy Info ID to be displayed in Policy Editor's Custom Settings section
+			// Because they have to be modified via the Policy Details Tab only.
+			if (string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
+				string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
+			{
+				if (string.Equals(item.ValueName, "Id", StringComparison.OrdinalIgnoreCase) ||
+					string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase))
+				{
+					continue;
+				}
+			}
+
+
 			try
 			{
 				output.Add(new AppControlManager.PolicyEditor.PolicySettings(
@@ -255,13 +269,27 @@ internal static class PolicySettingsManager
 	/// </summary>
 	/// <param name="Objects"></param>
 	/// <returns></returns>
-	internal static Setting[] ConvertPolicyEditorSettingToSiPolicySetting(IEnumerable<AppControlManager.PolicyEditor.PolicySettings> Objects)
+	internal static Setting[] ConvertPolicyEditorSettingToSiPolicySetting(
+		IEnumerable<AppControlManager.PolicyEditor.PolicySettings> Objects,
+		string policyName,
+		string? policyInfo)
 	{
 		List<Setting> output = [];
 		HashSet<string> seenKeys = [];
 
 		foreach (AppControlManager.PolicyEditor.PolicySettings item in Objects)
 		{
+			// To prevent duplicate Name and PolicyIDInfo Setting elements in the policy.
+			if (string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
+				string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
+			{
+				if (string.Equals(item.ValueName, "Id", StringComparison.OrdinalIgnoreCase) ||
+					string.Equals(item.ValueName, "Name", StringComparison.OrdinalIgnoreCase))
+				{
+					continue;
+				}
+			}
+
 			// Create the actual SettingValueType to get the real value for comparison
 			SettingValueType settingValue = SetValueType(item.Type, item.ValueStr);
 
@@ -279,6 +307,41 @@ internal static class PolicySettingsManager
 				});
 			}
 		}
+
+
+		#region Always add these to the Settings list, used by the Policy Editor VM
+
+		Setting newNameSetting = new()
+		{
+			Provider = "PolicyInfo",
+			Key = "Information",
+			ValueName = "Name",
+			Value = new SettingValueType()
+			{
+				Item = policyName
+			}
+		};
+
+		output.Add(newNameSetting);
+
+		if (policyInfo is not null)
+		{
+			Setting newPolicyInfoIDSetting = new()
+			{
+				Provider = "PolicyInfo",
+				Key = "Information",
+				ValueName = "Id",
+				Value = new SettingValueType()
+				{
+					Item = policyInfo
+				}
+			};
+
+			output.Add(newPolicyInfoIDSetting);
+		}
+
+		#endregion
+
 
 		return output.ToArray();
 	}

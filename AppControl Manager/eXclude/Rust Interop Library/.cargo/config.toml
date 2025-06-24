@@ -1,0 +1,31 @@
+# rustup target list - Lists all of the available supported targets
+
+# https://doc.rust-lang.org/cargo/reference/profiles.html
+# https://crates.io/crates/windows
+# https://learn.microsoft.com/he-il/windows/dev-environment/rust/setup
+# https://learn.microsoft.com/he-il/windows/dev-environment/rust/rust-for-windows
+# https://github.com/rust-lang/rustup
+# https://doc.rust-lang.org/cargo/reference/manifest.html
+# https://doc.rust-lang.org/rustc/codegen-options/index.html#target-cpu
+# https://doc.rust-lang.org/reference/linkage.html#static-and-dynamic-c-runtimes
+
+[build]
+target-dir = "target"
+
+# For Windows MSVC builds to statically link the CRT so it will be self-contained.
+[target.x86_64-pc-windows-msvc]
+rustflags = [
+  "-C", "target-cpu=x86-64-v2",
+  "-C", "target-feature=+crt-static",
+  "-C", "link-arg=/OUT:rust_interop-X64.dll"
+]
+
+[target.aarch64-pc-windows-msvc]
+rustflags = [
+  "-C", "target-feature=+crt-static",
+  "-C", "link-arg=/OUT:rust_interop-ARM64.dll"
+]
+
+[alias]
+build_x64 = "build --target x86_64-pc-windows-msvc --verbose --release"
+build_arm64 = "build --target aarch64-pc-windows-msvc --verbose --release"

@@ -16,12 +16,16 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Windows.Graphics;
+using WinRT;
 
 #pragma warning disable CA1812
 
@@ -29,8 +33,9 @@ namespace AppControlManager.WindowComponents;
 
 internal sealed class NavigationService
 {
-	private readonly MainWindowVM mainWindowVM;
+	internal readonly MainWindowVM mainWindowVM;
 	private readonly SidebarVM sidebarVM;
+	private bool NavItemsHaveBeenCollected;
 
 	internal NavigationService(MainWindowVM _MainWindowVM, SidebarVM _SidebarVM)
 	{
@@ -48,6 +53,12 @@ internal sealed class NavigationService
 	{
 		_frame = frame;
 		MainNavigation = mainNavigation;
+
+		if (!NavItemsHaveBeenCollected)
+		{
+			CollectNavigationItems();
+			NavItemsHaveBeenCollected = true;
+		}
 	}
 
 	/// <summary>
@@ -224,7 +235,7 @@ internal sealed class NavigationService
 
 					*/
 
-					if (ReLaunch.Action())
+					if (Relaunch.Action())
 					{
 						Application.Current.Exit();
 					}
@@ -259,13 +270,20 @@ internal sealed class NavigationService
 		// For page Interface and light augmentation
 		AffectPagesAnimatedIconsVisibilities(_frame);
 
-		// Get the item from BreadCrumb dictionary that belongs to the next page we navigated to
-		_ = mainWindowVM.breadCrumbMappingsV2.TryGetValue(nextNavPageType, out PageTitleMap? info);
+		SetCrumbBar(nextNavPageType);
+	}
 
-		if (info is not null)
+	/// <summary>
+	/// Updates the BreadCrumbBar in response to a page navigation in the app.
+	/// </summary>
+	/// <param name="currentPageType"></param>
+	internal void SetCrumbBar(Type currentPageType)
+	{
+		// Get the item from BreadCrumb dictionary that belongs to the next page we navigated to
+		if (mainWindowVM.breadCrumbMappingsV2.TryGetValue(currentPageType, out PageTitleMap? info))
 		{
 			// Get the index location of the page we navigated to in the list of pages
-			int currentPageLocation = info.Pages.IndexOf(nextNavPageType);
+			int currentPageLocation = info.Pages.IndexOf(currentPageType);
 
 			// Clear the breadcrumb bar's collection
 			mainWindowVM.Breadcrumbs.Clear();
@@ -279,11 +297,12 @@ internal sealed class NavigationService
 				mainWindowVM.Breadcrumbs.Add(new Crumb(info.Titles[i], info.Pages[i]));
 			}
 
-			// Since settings page doesn't have content the way we define them in XAML, adding an explicit check for it here
-			if (Equals(nextNavPageType, typeof(Pages.Settings)))
+			// Since settings page doesn't have content when it is in Top mode (it only has Tag property)
+			// And also content for the auto-created Settings page varies based on localization, adding an explicit check for it here
+			if (Equals(currentPageType, typeof(Pages.Settings)))
 			{
 				// Set the selected item in the MainNavigation to the Settings page
-				mainWindowVM.NavViewSelectedItem = MainNavigation.SettingsItem;
+				mainWindowVM.NavViewSelectedItem = MainNavigation?.SettingsItem;
 			}
 			else
 			{
@@ -331,9 +350,184 @@ internal sealed class NavigationService
 	/// </summary>
 	internal void RefreshSettingsPage()
 	{
-		_ = _frame?.Navigate(typeof(Pages.Settings));
+		if (_frame is null) return;
 
-		// Clear navigation history because it will have the same Settings page assigned to it due to in-place refresh.
-		_frame?.BackStack.Clear();
+		_ = _frame.Navigate(typeof(Pages.Settings));
+
+		// Remove the last navigation history because it will be the same Settings page due to in-place refresh.
+		_frame.BackStack.RemoveAt(_frame.BackStack.Count - 1);
+
+		// Update the Crumb Bar header title of the page with new localized texts.
+		SetCrumbBar(typeof(Pages.Settings));
+	}
+
+
+	/// <summary>
+	/// Main navigation event of the Nav View
+	/// ItemInvoked event is much better than SelectionChanged because it allows click/tap on the same selected menu on main navigation
+	/// which is necessary if the same main page is selected but user has navigated to inner pages and then wants to go back by selecting the already selected main navigation item again.
+	/// The duplicate-loading logic is implemented manually in code behind.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void MainNavigation_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs? args)
+	{
+		// If any other page was invoked
+		if (args?.InvokedItemContainer is not null)
+		{
+			// The "Content" property of the Settings page is null when NavigationView is in "Top" mode since it has no label/content on the UI
+			// That is why we use the "IsSettingsInvoked" property to check for the Settings page click/tap.
+			// Settings' content is also auto translated on different system localizations so this is also useful for those situations.
+			// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.navigationviewiteminvokedeventargs.issettingsinvoked
+			if (args.IsSettingsInvoked)
+			{
+				Navigate(typeof(Pages.Settings), null);
+			}
+			else
+			{
+				Navigate(null, args?.InvokedItemContainer.Tag.ToString());
+			}
+		}
+	}
+
+	/// <summary>
+	/// Event handler for when the back button is pressed
+	/// </summary>
+	internal void BackButtonTitleBar_Click()
+	{
+		if (_frame is null) return;
+
+		if (_frame.CanGoBack)
+		{
+
+			// Don't go back if the nav pane is overlayed.
+			/*
+                if (MainNavigation.IsPaneOpen &&
+                    (MainNavigation.DisplayMode == NavigationViewDisplayMode.Compact ||
+                     MainNavigation.DisplayMode == NavigationViewDisplayMode.Minimal))
+                */
+
+			// Play sound for back navigation
+			ElementSoundPlayer.Play(ElementSoundKind.GoBack);
+
+			// Go back to the previous page
+			_frame.GoBack(new DrillInNavigationTransitionInfo());
+
+			// Get the current page after navigating back
+			Type currentPage = _frame.CurrentSourcePageType;
+
+			// For page Interface and light augmentation
+			AffectPagesAnimatedIconsVisibilities(_frame);
+
+			SetCrumbBar(currentPage);
+		}
+	}
+
+	/// <summary>
+	/// Event handler for the AutoSuggestBox text change event
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+	{
+		if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+		{
+			// Get the text user entered in the search box
+			string query = sender.Text.Trim();
+
+			// Filter menu items based on the search query
+			List<string> suggestions = new(mainWindowVM.NavigationPageToItemContentMapForSearch.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase)));
+
+			// Set the filtered items as suggestions in the AutoSuggestBox
+			sender.ItemsSource = suggestions;
+		}
+	}
+
+	/// <summary>
+	/// Event handler for when a suggestion is chosen in the AutoSuggestBox
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void SearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+	{
+		// Get the selected item's name and find the corresponding NavigationViewItem
+		string? chosenItemName = args.SelectedItem?.ToString();
+
+		if (chosenItemName is not null && mainWindowVM.NavigationPageToItemContentMapForSearch.TryGetValue(chosenItemName, out Type? selectedItem))
+		{
+			Navigate(selectedItem, null);
+		}
+	}
+
+	/// <summary>
+	/// Event handler to run at Window launch to restore its size to the one before closing
+	/// </summary>
+	internal static void RestoreWindowSize(AppWindow m_AppWindow)
+	{
+		// Using .As<>() instead of direct cast because in NAOT mode direct cast would throw error for invalid cast operation. This is a bug in CsWinRT
+		OverlappedPresenter presenter = m_AppWindow.Presenter.As<OverlappedPresenter>();
+
+		try
+		{
+			// If the window was last maximized then restore it to maximized
+			if (App.Settings.MainWindowIsMaximized)
+			{
+				Logger.Write(GlobalVars.Rizz.GetString("WindowMaximizedMsg"));
+
+				// Set the presenter to maximized
+				presenter.Maximize();
+
+				return;
+			}
+
+			// If the previous window size was bigger than 700 pixels width/height use it.
+			// Otherwise let the OS decide.
+			if (App.Settings.MainWindowWidth > 700 && App.Settings.MainWindowHeight > 700)
+			{
+				Logger.Write(string.Format(GlobalVars.Rizz.GetString("SettingWindowSizeMessage"), App.Settings.MainWindowHeight, App.Settings.MainWindowWidth));
+
+				// Apply to the current AppWindow
+				m_AppWindow.Resize(new SizeInt32(App.Settings.MainWindowWidth, App.Settings.MainWindowHeight));
+			}
+		}
+		finally
+		{
+			presenter.PreferredMinimumWidth = 700;
+			presenter.PreferredMinimumHeight = 700;
+
+			m_AppWindow.SetPresenter(presenter);
+		}
+	}
+
+	/// <summary>
+	/// Get all NavigationViewItem items in the MainNavigation, that includes MenuItems + any nested MenuItems + FooterMenuItems.
+	/// Only needs to run once.
+	/// </summary>
+	internal void CollectNavigationItems()
+	{
+		if (MainNavigation is null) return;
+
+		mainWindowVM.allNavigationItems =
+		[                 .. MainNavigation.MenuItems
+							 .OfType<NavigationViewItem>()
+							 .SelectMany(GetAllChildren)
+,
+			 .. MainNavigation.FooterMenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren),
+			];
+
+		static IEnumerable<NavigationViewItem> GetAllChildren(NavigationViewItem parent) =>
+			new[] { parent }.Concat(parent.MenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren));
+	}
+
+	/// <summary>
+	/// Event handler for the BreadCrumbBar's ItemClicked event
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void BreadcrumbBar_ItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
+	{
+		Crumb crumb = (Crumb)args.Item;
+
+		Navigate(crumb.Page, null);
 	}
 }

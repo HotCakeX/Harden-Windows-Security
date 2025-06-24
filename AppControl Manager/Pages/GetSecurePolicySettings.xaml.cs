@@ -23,7 +23,6 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class GetSecurePolicySettings : Page
 {
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 	private GetSecurePolicySettingsVM ViewModel { get; } = ViewModelProvider.GetSecurePolicySettingsVM;
 
 	internal GetSecurePolicySettings()

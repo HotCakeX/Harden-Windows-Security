@@ -28,7 +28,6 @@ internal sealed partial class PolicyEditor : Page
 {
 
 	private PolicyEditorVM ViewModel { get; } = ViewModelProvider.PolicyEditorVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal static Flyout? _DiamondButtonFlyout { get; private set; }
 	internal static Button? _DiamondButton { get; private set; }

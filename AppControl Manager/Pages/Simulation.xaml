@@ -13,7 +13,7 @@
     xmlns:others="using:AppControlManager.Others"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     mc:Ignorable="d">
 
     <Grid TabFocusNavigation="Cycle">
@@ -311,7 +311,7 @@
 
                                 <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModelSimulationVM.ListViewFlyoutMenuCopy_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="CtrlC_Invoked"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModelSimulationVM.CtrlC_Invoked}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />

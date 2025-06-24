@@ -16,16 +16,18 @@
 //
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
-using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.UserActivities;
+using Windows.System;
 
 namespace AppControlManager.ViewModels;
 
@@ -38,7 +40,12 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 	// Expose the dispatcher queue so that derived classes can marshal
 	// calls to the UI thread when needed.
-	protected readonly DispatcherQueue Dispatcher = DispatcherQueue.GetForCurrentThread();
+	protected readonly Microsoft.UI.Dispatching.DispatcherQueue Dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+
+	/// <summary>
+	/// An instance property reference to the App settings that pages can x:Bind to.
+	/// </summary>
+	internal AppSettings.Main AppSettings => App.Settings;
 
 	/// <summary>
 	/// An instance property so pages can bind to.
@@ -78,29 +85,28 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 
-	// Dictionaries used for quick conversion and parsing of ScanLevels.
-	internal static readonly FrozenDictionary<string, ScanLevels> StringToScanLevel = new Dictionary<string, ScanLevels>
-	{
-		{ "File Publisher", ScanLevels.FilePublisher },
-		{ "Publisher", ScanLevels.Publisher },
-		{ "Hash", ScanLevels.Hash },
-		{ "File Path", ScanLevels.FilePath },
-		{ "WildCard Folder Path", ScanLevels.WildCardFolderPath },
-		{ "PFN", ScanLevels.PFN },
-		{ "Custom File Rule Pattern", ScanLevels.CustomFileRulePattern }
-	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
+	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSource =
+	[
+		new ScanLevelsComboBoxType("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5),
+		new ScanLevelsComboBoxType("File Publisher", ScanLevels.FilePublisher, 4),
+		new ScanLevelsComboBoxType("Publisher", ScanLevels.Publisher, 3),
+		new ScanLevelsComboBoxType("Hash", ScanLevels.Hash, 5),
+		new ScanLevelsComboBoxType("File Path", ScanLevels.FilePath, 2),
+		new ScanLevelsComboBoxType("Wildcard Folder Path", ScanLevels.WildCardFolderPath, 1)
+	];
 
+	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSourceForLogs =
+	[
+		new ScanLevelsComboBoxType("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5),
+		new ScanLevelsComboBoxType("File Publisher", ScanLevels.FilePublisher, 4),
+		new ScanLevelsComboBoxType("Publisher", ScanLevels.Publisher, 3),
+		new ScanLevelsComboBoxType("Hash", ScanLevels.Hash, 5)
+	];
 
-	internal static readonly FrozenDictionary<ScanLevels, string> ScanLevelToString = new Dictionary<ScanLevels, string>
-	{
-		{ ScanLevels.FilePublisher, "File Publisher" },
-		{ ScanLevels.Publisher, "Publisher" },
-		{ ScanLevels.Hash, "Hash" },
-		{ ScanLevels.FilePath, "File Path" },
-		{ ScanLevels.WildCardFolderPath, "WildCard Folder Path" },
-		{ ScanLevels.PFN, "PFN" },
-		{ ScanLevels.CustomFileRulePattern, "Custom File Rule Pattern" }
-	}.ToFrozenDictionary();
+	/// <summary>
+	/// The default scan level used by the ItemsSources of ComboBoxes.
+	/// </summary>
+	internal static readonly ScanLevelsComboBoxType DefaultScanLevel = new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5);
 
 	/// <summary>
 	/// User Activity tracking field
@@ -235,6 +241,74 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 			errorsOccurred = true;
 
 			infoBarSettings.WriteError(exception, errorMessage);
+		}
+	}
+
+	/// <summary>
+	/// Opens the directory where a file is located in File Explorer.
+	/// </summary>
+	/// <param name="ListViewKey"></param>
+	internal static void OpenInFileExplorer(ListViewHelper.ListViewsRegistry ListViewKey)
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewKey);
+		if (lv is null) return;
+
+		string? fileToOpen = null;
+
+		FileIdentity? attempt1 = lv.SelectedItem as FileIdentity;
+
+		if (attempt1 is not null)
+		{
+			fileToOpen = attempt1.FilePath;
+		}
+		else
+		{
+			IList<object> attempt2 = lv.SelectedItems;
+
+			if (attempt2.Count > 0)
+			{
+				FileIdentity? attempt3 = attempt2[0] as FileIdentity;
+
+				if (attempt3 is not null)
+				{
+					fileToOpen = attempt3.FilePath;
+				}
+			}
+		}
+
+		if (fileToOpen is not null)
+		{
+			string? Dir = Path.GetDirectoryName(fileToOpen);
+
+			if (Dir is not null)
+			{
+				ProcessStartInfo processInfo = new()
+				{
+					FileName = "explorer.exe",
+					Arguments = Dir,
+					Verb = "runas",
+					UseShellExecute = true
+				};
+
+				_ = Process.Start(processInfo);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Opens a file in the default file handler in the OS.
+	/// </summary>
+	/// <param name="filePath"></param>
+	internal static async Task OpenInDefaultFileHandler(string? filePath)
+	{
+		try
+		{
+			if (filePath is not null)
+				await Launcher.LaunchUriAsync(new Uri(filePath));
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 	}
 }

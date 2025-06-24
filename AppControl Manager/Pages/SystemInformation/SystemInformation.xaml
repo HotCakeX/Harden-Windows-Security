@@ -26,10 +26,11 @@
 
         </controls:WrapPanel>
 
-        <NavigationView Grid.Row="1" x:Name="SystemInformationNavigation"
+        <NavigationView Grid.Row="1"
+                        x:Name="SystemInformationNavigation"
                         PaneDisplayMode="Top"
                         IsTabStop="True"
-                        SelectionChanged="NavigationView_SelectionChanged"
+                        SelectionChanged="{x:Bind NavigationView_SelectionChanged}"
                         IsSettingsVisible="False"
                         IsBackButtonVisible="Collapsed">
 

@@ -38,7 +38,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 	/// <summary>
 	/// To store the view model of the MS Graph that is retrieved from the constructor
 	/// </summary>
-	private readonly ViewModelForMSGraph _ViewModelMSGraph;
+	internal readonly ViewModelForMSGraph _ViewModelMSGraph;
 
 	internal readonly AuthenticationCompanion AuthCompanionCLS;
 

@@ -18,7 +18,8 @@
     BorderThickness="1"
     CornerRadius="8"
     Style="{ThemeResource DefaultContentDialogStyle}"
-    BorderBrush="{ThemeResource AccentFillColorDefaultBrush}">
+    BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ContentDialog.Resources>
         <!-- https://github.com/microsoft/microsoft-ui-xaml/issues/424 -->

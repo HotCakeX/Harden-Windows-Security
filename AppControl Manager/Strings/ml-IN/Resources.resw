@@ -1823,15 +1823,6 @@
   <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>ഇത് പ്രവർത്തനക്ഷമമാക്കിയിട്ടുണ്ടെങ്കിൽ, സ്റ്റാർട്ടപ്പിൽ അഡ്മിനിസ്ട്രേറ്റർ പ്രത്യേകാനുമതികളോടെ പ്രവർത്തിക്കാൻ ആപ്പ്കൺട്രോൾ മാനേജർ എലിവേഷനായി ആവശ്യപ്പെടും.</value>
   </data>
-  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
-    <value>നയ എഡിറ്ററിൽ തുറക്കുക</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>നയ എഡിറ്ററിൽ നയം തുറക്കുക, അവിടെ നിങ്ങൾക്ക് നയത്തിന്റെ വിശദമായ അവലോകനം കാണാനും ഈ ആപ്പിനുള്ളിൽ തന്നെ അത് കൂടുതൽ ഇഷ്ടാനുസൃതമാക്കാനുള്ള ഓപ്ഷനും ലഭിക്കും.</value>
-  </data>
-  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>നയ എഡിറ്ററിൽ നയം തുറക്കുക, അവിടെ നിങ്ങൾക്ക് നയത്തിന്റെ വിശദമായ അവലോകനം കാണാനും ഈ ആപ്പിനുള്ളിൽ തന്നെ അത് കൂടുതൽ ഇഷ്ടാനുസൃതമാക്കാനുള്ള ഓപ്ഷനും ലഭിക്കും.</value>
-  </data>
   <data name="OnlyIncludeSelectedItemsToggleButton.Content" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾ മാത്രം ഉപയോഗിക്കുക</value>
   </data>
@@ -5628,5 +5619,35 @@
   </data>
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>ഘട്ടം 3</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash ലെവലുകൾ ഉപയോഗിക്കുന്നു।</value>
+  </data>
+  <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: {0} WHQLFilePublisher നിയമങ്ങൾ।</value>
+  </data>
+  <data name="BuildSignerProcessingWHQLFilePublisherMessage" xml:space="preserve">
+    <value>BuildSignerAndHashObjects: WHQLFilePublisher ഡാറ്റ പ്രോസസ്സിംഗ്।</value>
+  </data>
+  <data name="WHQLFilePublisherSignersToAddMessage" xml:space="preserve">
+    <value>XML ഫയലിൽ ചേർക്കേണ്ട {0} WHQL File Publisher ഒപ്പിടുന്നവർ ഉണ്ട്</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedAllowMessage" xml:space="preserve">
+    <value>അനുമതി നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി WHQLFilePublisher ഒപ്പിടുന്നവരെ കണ്ടെത്തിയില്ല।</value>
+  </data>
+    <data name="EKUsNodeNotFoundMessage" xml:space="preserve">
+    <value>EKUs നോഡ് കണ്ടെത്തിയില്ല</value>
+  </data>
+  <data name="NoWHQLFilePublisherSignersDetectedDenyMessage" xml:space="preserve">
+    <value>നിഷേധ നിയമങ്ങൾ സൃഷ്ടിക്കുന്നതിനായി WHQLFilePublisher ഒപ്പിടുന്നവരെ കണ്ടെത്തിയില്ല।</value>
+  </data>
+  <data name="WHQLFilePublisherRuleTypeFriendlyName" xml:space="preserve">
+    <value>WHQL File Publisher നിയമ തരം</value>
+  </data>
+  <data name="AllowNewApps_SidebarButtonContent" xml:space="preserve">
+    <value>പുതിയ ആപ്പുകൾക്ക് അനുമതി നൽകുന്ന അടിസ്ഥാന നയം</value>
+  </data>
+  <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
+    <value>ഇഷ്ടാനുസൃത പാറ്റേൺ അടിസ്ഥാനമാക്കിയുള്ള സപ്ലിമെന്റൽ നയം</value>
   </data>
 </root>

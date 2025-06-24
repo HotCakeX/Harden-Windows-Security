@@ -34,7 +34,6 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 {
 
 	private CreateSupplementalPolicyVM ViewModel { get; } = ViewModelProvider.CreateSupplementalPolicyVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
 
 	internal CreateSupplementalPolicyFilesAndFoldersScanResults()
 	{

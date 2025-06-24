@@ -34,7 +34,7 @@ namespace AppControlManager.CustomUIElements;
 internal sealed partial class SigningDetailsDialog : ContentDialogV2
 {
 
-	private AppSettings.Main AppSettings { get; } = ViewModels.ViewModelProvider.AppSettings;
+	private AppSettings.Main AppSettings => App.Settings;
 
 	// Properties to access the input value
 	internal string? CertificatePath { get; private set; }

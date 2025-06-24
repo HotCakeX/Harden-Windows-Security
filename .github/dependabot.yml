@@ -16,7 +16,7 @@ updates:
       interval: "weekly"
       day: "tuesday"
     labels:
-      - ".NET SDK"
+      - "Dependabot"
   - package-ecosystem: "nuget"
     directories:
       - "/AppControl Manager/"
@@ -27,14 +27,14 @@ updates:
       time: "07:30"
       timezone: "Israel"
     labels:
-      - "Nuget Dependencies"
+      - "Dependabot"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       # Check for updates to GitHub Actions every week: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
       interval: "daily"
     labels:
-      - "github_actions"
+      - "Dependabot"
   - package-ecosystem: "cargo"
     directories:
       - "/AppControl Manager/eXclude/ResourceValidator/"

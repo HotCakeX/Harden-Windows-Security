@@ -29,7 +29,7 @@ namespace AppControlManager.Pages;
 internal sealed partial class MicrosoftDocumentation : Page
 {
 
-	private AppSettings.Main AppSettings => ViewModels.ViewModelProvider.AppSettings;
+	private AppSettings.Main AppSettings => App.Settings;
 
 	/// <summary>
 	/// Initializes the MicrosoftDocumentation component and handles navigation events.

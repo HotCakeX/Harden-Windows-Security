@@ -26,8 +26,7 @@ namespace AppControlManager.CustomUIElements;
 // https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.contentdialog
 internal sealed partial class CustomPatternBasedFilePath : ContentDialog
 {
-
-	private AppSettings.Main AppSettings => ViewModels.ViewModelProvider.AppSettings;
+	private AppSettings.Main AppSettings => App.Settings;
 
 	internal static readonly ObservableCollection<FilePathPatternExample> FilePathPatternExamplesCollection = [];
 

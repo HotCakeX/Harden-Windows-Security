@@ -45,7 +45,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// <summary>
 	/// An instance property reference to the App settings that pages can x:Bind to.
 	/// </summary>
-	internal AppSettings.Main AppSettings => ViewModelProvider.AppSettings;
+	internal AppSettings.Main AppSettings => App.Settings;
 
 	/// <summary>
 	/// An instance property so pages can bind to.

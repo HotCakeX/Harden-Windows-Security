@@ -5699,4 +5699,13 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="AdditionalActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Open the policy in the Policy Editor or choose another action from the list.</value>
   </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Configure Rule Options</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the policy in another page to configure its rule options further.</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the policy in another page to configure its rule options further.</value>
+  </data>
 </root>

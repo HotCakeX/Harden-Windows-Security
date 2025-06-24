@@ -77,7 +77,8 @@ public partial class App : Application
 	internal static readonly int PackageSource = string.Equals(PFN, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ? 0 : (string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) ? 1 : 2);
 
 	/// <summary>
-	/// The application settings for AppControl Manager
+	/// The application settings for AppControl Manager. Retrieved early in a Non-ThreadSafe manner.
+	/// Any references (instance or static) throughout the app to App settings use this property.
 	/// </summary>
 	internal static AppSettings.Main Settings => ViewModelProvider.AppSettings;
 

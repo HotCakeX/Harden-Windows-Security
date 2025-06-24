@@ -31,8 +31,12 @@ namespace AppControlManager.ViewModels;
 internal static class ViewModelProvider
 {
 	// Core dependencies \\
+
+	/// <summary>
+	/// Initialized early during App startup by a single thread, doesn't need thread safety.
+	/// </summary>
 	private static readonly Lazy<AppSettings.Main> _appSettings = new(() =>
-		new AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.PublicationOnly);
+		new AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.None);
 
 	private static readonly Lazy<EventLogUtility> _eventLogUtility = new(() =>
 		new EventLogUtility(), LazyThreadSafetyMode.PublicationOnly);

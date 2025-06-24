@@ -104,11 +104,8 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 			{
 				SelectedFilePath = selectedFile;
 
-				// Expand the settings expander when user selects a policy
-				SettingsExpanderIsExpanded = true;
-
 				// Load the policy options from the XML and update the UI
-				await LoadPolicyOptionsFromXML(selectedFile);
+				await LoadPolicyOptionsFromXML();
 			}
 		}
 		catch (Exception ex)
@@ -120,8 +117,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// <summary>
 	/// When the XML policy file is selected by the user, get its rule options and check/uncheck the check boxes in the UI accordingly
 	/// </summary>
-	/// <param name="filePath"></param>
-	internal async Task LoadPolicyOptionsFromXML(string? filePath)
+	internal async Task LoadPolicyOptionsFromXML()
 	{
 		try
 		{
@@ -129,7 +125,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-				policyObj = Management.Initialize(filePath, null);
+				policyObj = Management.Initialize(SelectedFilePath, null);
 			});
 
 			// All the Policy OptionTypes in the selected XML file
@@ -159,6 +155,9 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 			EnabledDeveloperModeDynamicCodeTrustCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Developer Mode Dynamic Code Trust"));
 			EnabledSecureSettingPolicyCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Secure Setting Policy"));
 			EnabledConditionalWindowsLockdownPolicyCheckBox = policyRules.Contains(CustomDeserialization.ConvertStringToOptionType("Enabled:Conditional Windows Lockdown Policy"));
+
+			// Expand the settings expander to display the settings.
+			SettingsExpanderIsExpanded = true;
 		}
 		catch (Exception ex)
 		{
@@ -255,7 +254,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 			});
 
 			// Refresh the UI check boxes
-			await LoadPolicyOptionsFromXML(SelectedFilePath);
+			await LoadPolicyOptionsFromXML();
 		}
 		catch (Exception ex)
 		{
@@ -287,7 +286,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 			if (SelectedFilePath is not null)
 			{
-				await LoadPolicyOptionsFromXML(SelectedFilePath);
+				await LoadPolicyOptionsFromXML();
 			}
 			else
 			{
@@ -421,4 +420,31 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 		{ "Enabled:Secure Setting Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledSecureSettingPolicy") },
 		{ "Enabled:Conditional Windows Lockdown Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledConditionalWindowsLockdownPolicy") }
 	};
+
+
+	/// <summary>
+	/// Used by any code from the app to use the functionalities in this VM.
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <returns></returns>
+	internal async Task OpenInConfigurePolicyRuleOptions(string? filePath)
+	{
+		try
+		{
+			if (filePath is null) return;
+
+			// Navigate to the Configure Policy Rule Options page
+			App._nav.Navigate(typeof(Pages.ConfigurePolicyRuleOptions), null);
+
+			// Assign the policy file path to the local variable
+			SelectedFilePath = filePath;
+
+			// Load the policy options from the XML and update the UI
+			await LoadPolicyOptionsFromXML();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
 }

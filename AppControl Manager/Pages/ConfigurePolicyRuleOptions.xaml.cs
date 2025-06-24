@@ -62,10 +62,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 			PickPolicyFileButton_FlyOut.ShowAt(PickPolicyFileButton);
 			ViewModel.SelectedFilePath = MainWindowVM.SidebarBasePolicyPathTextBoxTextStatic;
 
-			await ViewModel.LoadPolicyOptionsFromXML(ViewModel.SelectedFilePath);
-
-			// Expand the settings expander when user selects a policy
-			ViewModel.SettingsExpanderIsExpanded = true;
+			await ViewModel.LoadPolicyOptionsFromXML();
 		}
 		catch (Exception ex)
 		{

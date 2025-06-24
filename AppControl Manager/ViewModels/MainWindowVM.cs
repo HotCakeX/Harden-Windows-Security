@@ -853,7 +853,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 					GetSecurePolicySettingsIcon = new FontIcon
 					{
-						Glyph = "\uEEA3",
+						Glyph = "\uF404",
 						Foreground = accentBrush
 					};
 
@@ -942,7 +942,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					CreatePolicyFromEventLogsIcon = new FontIcon { Glyph = "\uEA18" };
 					CreatePolicyFromMDEAHIcon = new FontIcon { Glyph = "\uEB44" };
 					GetCodeIntegrityHashesIcon = new FontIcon { Glyph = "\uE950" };
-					GetSecurePolicySettingsIcon = new FontIcon { Glyph = "\uEEA3" };
+					GetSecurePolicySettingsIcon = new FontIcon { Glyph = "\uF404" };
 					LogsIcon = new FontIcon { Glyph = "\uF5A0" };
 					GitHubDocsIcon = new FontIcon { Glyph = "\uE8A5" };
 					MSFTDocsIcon = new FontIcon { Glyph = "\uE8A5" };

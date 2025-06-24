@@ -42,7 +42,7 @@ internal sealed partial class MainWindow : Window
 
 #pragma warning disable CA1822
 	private MainWindowVM ViewModel { get; } = ViewModelProvider.MainWindowVM;
-	private AppSettings.Main AppSettings { get; } = ViewModelProvider.AppSettings;
+	private AppSettings.Main AppSettings { get; } = App.Settings;
 	private SidebarVM sidebarVM { get; } = ViewModelProvider.SidebarVM;
 #pragma warning restore CA1822
 

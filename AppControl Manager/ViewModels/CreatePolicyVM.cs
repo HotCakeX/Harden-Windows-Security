@@ -81,6 +81,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	}
 
 	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
+	private ConfigurePolicyRuleOptionsVM ConfigurePolicyRuleOptionsViewModel { get; } = ViewModelProvider.ConfigurePolicyRuleOptionsVM;
 	internal EventLogUtility EventLogsUtil { get; } = ViewModelProvider.EventLogUtility;
 
 	#region Allow Microsoft
@@ -200,6 +201,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal async void OpenInPolicyEditor_AllowMicrosoft() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathAllowMicrosoft);
 
 	internal async void OpenInDefaultFileHandler_AllowMicrosoft() => await OpenInDefaultFileHandler(_policyPathAllowMicrosoft);
+
+	internal async void OpenInConfigurePolicyRuleOptions_AllowMicrosoft() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathAllowMicrosoft);
 
 	#endregion
 
@@ -321,6 +324,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal async void OpenInDefaultFileHandler_DefaultWindows() => await OpenInDefaultFileHandler(_policyPathDefaultWindows);
 
+	internal async void OpenInConfigurePolicyRuleOptions_DefaultWindows() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathDefaultWindows);
+
 	#endregion
 
 	#region Signed and Reputable
@@ -437,6 +442,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal async void OpenInPolicyEditor_SignedAndReputable() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathSignedAndReputable);
 
 	internal async void OpenInDefaultFileHandler_SignedAndReputable() => await OpenInDefaultFileHandler(_policyPathSignedAndReputable);
+
+	internal async void OpenInConfigurePolicyRuleOptions_SignedAndReputable() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathSignedAndReputable);
 
 	#endregion
 
@@ -570,6 +577,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal async void OpenInDefaultFileHandler_RecommendedDriverBlockRules() => await OpenInDefaultFileHandler(_policyPathMSFTRecommendedDriverBlockRules);
 
+	internal async void OpenInConfigurePolicyRuleOptions_RecommendedDriverBlockRules() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathMSFTRecommendedDriverBlockRules);
+
 	#endregion
 
 	#region Microsoft Recommended Block Rule
@@ -646,6 +655,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal async void OpenInDefaultFileHandler_RecommendedUserModeBlockRules() => await OpenInDefaultFileHandler(_policyPathRecommendedUserModeBlockRules);
 
+	internal async void OpenInConfigurePolicyRuleOptions_RecommendedUserModeBlockRules() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathRecommendedUserModeBlockRules);
+
 	#endregion
 
 	#region Strict Kernel Mode
@@ -720,6 +731,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal async void OpenInDefaultFileHandler_StrictKernelModePolicy() => await OpenInDefaultFileHandler(_policyPathStrictKernelMode);
 
+	internal async void OpenInConfigurePolicyRuleOptions_StrictKernelModePolicy() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathStrictKernelMode);
+
 	#endregion
 
 	#region RMM Blocking
@@ -792,6 +805,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal async void OpenInPolicyEditor_RMMBlockingPolicy() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathRMMBlocking);
 
 	internal async void OpenInDefaultFileHandler_RMMBlockingPolicy() => await OpenInDefaultFileHandler(_policyPathRMMBlocking);
+
+	internal async void OpenInConfigurePolicyRuleOptions_RMMBlockingPolicy() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathRMMBlocking);
 
 	#endregion
 

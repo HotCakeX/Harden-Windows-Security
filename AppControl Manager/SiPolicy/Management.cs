@@ -43,7 +43,7 @@ internal static class Management
 	{
 		if (!string.IsNullOrEmpty(xmlFilePath) && !CiPolicyTest.TestCiPolicy(xmlFilePath))
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("XmlFileNotCompliantWithSchema"), xmlFilePath));
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("XmlFileNotCompliantWithSchema"), xmlFilePath));
 		}
 
 		/*

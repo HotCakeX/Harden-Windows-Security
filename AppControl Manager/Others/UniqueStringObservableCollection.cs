@@ -76,7 +76,7 @@ internal sealed partial class UniqueStringObservableCollection : ObservableColle
 	{
 		string removed = this[index];
 		base.RemoveItem(index);
-		_hashSet.Remove(removed);
+		_ = _hashSet.Remove(removed);
 	}
 
 	/// <summary>
@@ -94,8 +94,8 @@ internal sealed partial class UniqueStringObservableCollection : ObservableColle
 		}
 
 		base.SetItem(index, item);
-		_hashSet.Remove(old);
-		_hashSet.Add(item);
+		_ = _hashSet.Remove(old);
+		_ = _hashSet.Add(item);
 	}
 
 	/// <summary>

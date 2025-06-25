@@ -48,7 +48,7 @@ internal static class CiToolHelper
 			if (!ulong.TryParse(number, out ulong num))
 			{
 				throw new FormatException(
-					GlobalVars.Rizz.GetString("InputStringNotValidUInt64Message"));
+					GlobalVars.GetStr("InputStringNotValidUInt64Message"));
 			}
 
 			// Split the 64-bit integer into four 16-bit segments for the version parts
@@ -66,7 +66,7 @@ internal static class CiToolHelper
 		catch (Exception ex)
 		{
 			// Handle errors by printing an error message and returning a default version of 0.0.0.0
-			Logger.Write(GlobalVars.Rizz.GetString("ErrorConvertingNumberToVersionMessage"));
+			Logger.Write(GlobalVars.GetStr("ErrorConvertingNumberToVersionMessage"));
 			Logger.Write(ErrorWriter.FormatException(ex));
 
 			return new Version(0, 0, 0, 0);
@@ -102,7 +102,7 @@ internal static class CiToolHelper
 
 		// Start the process and capture the output
 		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
-			GlobalVars.Rizz.GetString("GetPoliciesCiToolExeErrorMessage"));
+			GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -113,7 +113,7 @@ internal static class CiToolHelper
 		if (process.ExitCode != 0)
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("CommandExecutionFailedMessage"),
+				GlobalVars.GetStr("CommandExecutionFailedMessage"),
 				process.ExitCode));
 		}
 
@@ -173,7 +173,7 @@ internal static class CiToolHelper
 		if (string.IsNullOrWhiteSpace(policyId))
 		{
 			throw new ArgumentException(
-				GlobalVars.Rizz.GetString("PolicyIdCannotBeNullOrEmptyMessage"),
+				GlobalVars.GetStr("PolicyIdCannotBeNullOrEmptyMessage"),
 				nameof(policyId)
 			);
 		}
@@ -198,7 +198,7 @@ internal static class CiToolHelper
 
 		// Start the process and capture the output
 		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
-			GlobalVars.Rizz.GetString("GetPoliciesCiToolExeErrorMessage"));
+			GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -210,7 +210,7 @@ internal static class CiToolHelper
 		{
 			throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.Rizz.GetString("CommandExecutionFailedWithOutputMessage"),
+					GlobalVars.GetStr("CommandExecutionFailedWithOutputMessage"),
 					process.ExitCode,
 					jsonOutput
 				)
@@ -255,7 +255,7 @@ internal static class CiToolHelper
 
 			// Start the process and capture the output
 			using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
-				GlobalVars.Rizz.GetString("GetPoliciesCiToolExeErrorMessage"));
+				GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 			// Read all output as a string
 			string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -267,7 +267,7 @@ internal static class CiToolHelper
 			{
 				throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.Rizz.GetString("CommandExecutionFailedWithOutputMessage"),
+					GlobalVars.GetStr("CommandExecutionFailedWithOutputMessage"),
 					process.ExitCode,
 					jsonOutput
 					)
@@ -289,7 +289,7 @@ internal static class CiToolHelper
 		if (string.IsNullOrWhiteSpace(CipPath))
 		{
 			throw new ArgumentException(
-				GlobalVars.Rizz.GetString("CipPathCannotBeNullOrEmptyMessage"),
+				GlobalVars.GetStr("CipPathCannotBeNullOrEmptyMessage"),
 				nameof(CipPath));
 		}
 
@@ -297,7 +297,7 @@ internal static class CiToolHelper
 		{
 			throw new FileNotFoundException(
 				string.Format(
-					GlobalVars.Rizz.GetString("CipFileNotFoundMessage"),
+					GlobalVars.GetStr("CipFileNotFoundMessage"),
 					CipPath),
 				CipPath);
 		}
@@ -309,7 +309,7 @@ internal static class CiToolHelper
 
 		Logger.Write(
 			string.Format(
-				GlobalVars.Rizz.GetString("DeployingCipFileMessage"),
+				GlobalVars.GetStr("DeployingCipFileMessage"),
 				CipPath));
 
 		// Set up the process start info to run CiTool.exe with necessary arguments
@@ -324,7 +324,7 @@ internal static class CiToolHelper
 
 		// Start the process and capture the output
 		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
-			GlobalVars.Rizz.GetString("GetPoliciesCiToolExeErrorMessage"));
+			GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -336,7 +336,7 @@ internal static class CiToolHelper
 		{
 			throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.Rizz.GetString("CommandExecutionFailedWithOutputMessage"),
+					GlobalVars.GetStr("CommandExecutionFailedWithOutputMessage"),
 					process.ExitCode,
 					jsonOutput
 					)
@@ -366,7 +366,7 @@ internal static class CiToolHelper
 
 		// Start the process and capture the output
 		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
-			GlobalVars.Rizz.GetString("GetPoliciesCiToolExeErrorMessage"));
+			GlobalVars.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
 		string jsonOutput = process.StandardOutput.ReadToEnd();
@@ -378,7 +378,7 @@ internal static class CiToolHelper
 		{
 			throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.Rizz.GetString("CommandExecutionFailedWithOutputMessage"),
+					GlobalVars.GetStr("CommandExecutionFailedWithOutputMessage"),
 					process.ExitCode,
 					jsonOutput
 					)

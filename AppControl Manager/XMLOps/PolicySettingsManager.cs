@@ -227,10 +227,10 @@ internal static class PolicySettingsManager
 	{
 		return type?.Item switch
 		{
-			byte[] _ => 0, // (Binary)
-			bool _ => 1, // (Boolean)
-			uint _ => 2, // (DWord)
-			string _ => 3, // (String)
+			byte[] => 0, // (Binary)
+			bool => 1, // (Boolean)
+			uint => 2, // (DWord)
+			string => 3, // (String)
 			_ => -1
 		};
 	}

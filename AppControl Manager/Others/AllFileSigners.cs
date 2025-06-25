@@ -27,6 +27,6 @@ namespace AppControlManager.Others;
 /// <param name="certificateChain"></param>
 internal sealed class AllFileSigners(SignedCms signerCertificate, X509Chain certificateChain)
 {
-	internal SignedCms Signer { get; } = signerCertificate;
-	internal X509Chain Chain { get; } = certificateChain;
+	internal SignedCms Signer => signerCertificate;
+	internal X509Chain Chain => certificateChain;
 }

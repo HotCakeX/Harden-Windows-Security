@@ -522,7 +522,15 @@ function Build_ACM {
 
     Set-Location -Path '.\eXclude\Rust WMI Interop\Device Guard\Program'
 
+    if (Test-Path -PathType Leaf -LiteralPath 'Cargo.lock'){
+        Remove-Item -Force -LiteralPath 'Cargo.lock'
+    }
+
     cargo clean
+
+    cargo update --verbose
+
+    cargo tree
 
     cargo build_x64
 
@@ -533,7 +541,15 @@ function Build_ACM {
     
     Set-Location -Path '.\eXclude\Rust Interop Library'
 
+    if (Test-Path -PathType Leaf -LiteralPath 'Cargo.lock'){
+        Remove-Item -Force -LiteralPath 'Cargo.lock'
+    }
+
     cargo clean
+
+    cargo update --verbose
+
+    cargo tree
 
     cargo build_x64
 

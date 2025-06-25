@@ -46,7 +46,7 @@ internal static class Main
 			"1.2.840.10045.4.3.3" => "2.16.840.1.101.3.4.2.2", // SHA-2 384
 			"1.2.840.10045.4.3.4" => "2.16.840.1.101.3.4.2.3", // SHA-2 512
 
-			_ => throw new NotSupportedException(string.Format(GlobalVars.Rizz.GetString("UnsupportedCertificateSignatureAlgorithmForHashOID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName)),
+			_ => throw new NotSupportedException(string.Format(GlobalVars.GetStr("UnsupportedCertificateSignatureAlgorithmForHashOID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName)),
 		};
 	}
 
@@ -77,7 +77,7 @@ internal static class Main
 			// ecdsa-with-SHA512
 			"1.2.840.10045.4.3.4" => Structure.CALG_SHA_512,
 
-			_ => throw new NotSupportedException(string.Format(GlobalVars.Rizz.GetString("UnsupportedCertificateSignatureAlgorithmForALGID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName)),
+			_ => throw new NotSupportedException(string.Format(GlobalVars.GetStr("UnsupportedCertificateSignatureAlgorithmForALGID"), signatureAlgorithmOid, certificate.SignatureAlgorithm.FriendlyName)),
 		};
 	}
 
@@ -103,7 +103,7 @@ internal static class Main
 		ArgumentNullException.ThrowIfNull(signingCertificate);
 
 		if (!signingCertificate.HasPrivateKey)
-			throw new ArgumentException(GlobalVars.Rizz.GetString("CertificateMustHavePrivateKey"), nameof(signingCertificate));
+			throw new ArgumentException(GlobalVars.GetStr("CertificateMustHavePrivateKey"), nameof(signingCertificate));
 
 		// Read the file content to be signed
 		byte[] fileContent = File.ReadAllBytes(filePath);
@@ -139,7 +139,7 @@ internal static class Main
 		File.Delete(filePath);
 		File.WriteAllBytes(filePath, signedBytes);
 
-		Logger.Write(string.Format(GlobalVars.Rizz.GetString("PKCS7SignatureWritten"), filePath));
+		Logger.Write(string.Format(GlobalVars.GetStr("PKCS7SignatureWritten"), filePath));
 	}
 
 	/// <summary>
@@ -163,7 +163,7 @@ internal static class Main
 		ArgumentNullException.ThrowIfNull(signingCertificate);
 
 		if (!signingCertificate.HasPrivateKey)
-			throw new ArgumentException(GlobalVars.Rizz.GetString("CertificateMustHavePrivateKey"), nameof(signingCertificate));
+			throw new ArgumentException(GlobalVars.GetStr("CertificateMustHavePrivateKey"), nameof(signingCertificate));
 
 		IntPtr pSignerFileInfo = IntPtr.Zero;
 		IntPtr pSignerSubjectInfo = IntPtr.Zero;
@@ -266,13 +266,13 @@ internal static class Main
 
 			if (hr != Structure.S_OK) // S_OK is 0
 			{
-				string errorMessage = string.Format(GlobalVars.Rizz.GetString("SignerSignEx3Failed"), hr);
+				string errorMessage = string.Format(GlobalVars.GetStr("SignerSignEx3Failed"), hr);
 				if (hr == Structure.ERROR_BAD_FORMAT_HRESULT)
-					errorMessage += GlobalVars.Rizz.GetString("ErrorBadFormat");
+					errorMessage += GlobalVars.GetStr("ErrorBadFormat");
 				else if (hr == Structure.ERROR_FILE_NOT_FOUND_HRESULT)
-					errorMessage += GlobalVars.Rizz.GetString("ErrorFileNotFound");
+					errorMessage += GlobalVars.GetStr("ErrorFileNotFound");
 				else if (hr == Structure.E_INVALIDARG_HRESULT)
-					errorMessage += GlobalVars.Rizz.GetString("ErrorInvalidArg");
+					errorMessage += GlobalVars.GetStr("ErrorInvalidArg");
 				throw new Win32Exception(hr, errorMessage);
 			}
 
@@ -283,7 +283,7 @@ internal static class Main
 		finally
 		{
 			if (pActualSignerContext != IntPtr.Zero)
-				NativeMethods.SignerFreeSignerContext(pActualSignerContext);
+				_ = NativeMethods.SignerFreeSignerContext(pActualSignerContext);
 			if (ppSignerContext != IntPtr.Zero) Marshal.FreeHGlobal(ppSignerContext); // Free the memory allocated for the pointer itself
 
 			// Cleanup for Authenticode common structures
@@ -315,7 +315,7 @@ internal static class Main
 		ArgumentNullException.ThrowIfNull(signingCertificate);
 
 		if (!signingCertificate.HasPrivateKey)
-			throw new ArgumentException(GlobalVars.Rizz.GetString("CertificateMustHavePrivateKey"), nameof(signingCertificate));
+			throw new ArgumentException(GlobalVars.GetStr("CertificateMustHavePrivateKey"), nameof(signingCertificate));
 
 		IntPtr pSignerFileInfo = IntPtr.Zero;
 		IntPtr pSignerSubjectInfo = IntPtr.Zero;
@@ -436,13 +436,13 @@ internal static class Main
 
 			if (hr != Structure.S_OK)
 			{
-				string errorMessage = string.Format(GlobalVars.Rizz.GetString("SignerSignEx3Failed"), hr);
+				string errorMessage = string.Format(GlobalVars.GetStr("SignerSignEx3Failed"), hr);
 				if (hr == Structure.ERROR_BAD_FORMAT_HRESULT)
-					errorMessage += GlobalVars.Rizz.GetString("ErrorBadFormat");
+					errorMessage += GlobalVars.GetStr("ErrorBadFormat");
 				else if (hr == Structure.ERROR_FILE_NOT_FOUND_HRESULT)
-					errorMessage += GlobalVars.Rizz.GetString("ErrorFileNotFound");
+					errorMessage += GlobalVars.GetStr("ErrorFileNotFound");
 				else if (hr == Structure.E_INVALIDARG_HRESULT)
-					errorMessage += GlobalVars.Rizz.GetString("ErrorInvalidArg");
+					errorMessage += GlobalVars.GetStr("ErrorInvalidArg");
 				throw new Win32Exception(hr, errorMessage);
 			}
 
@@ -470,7 +470,7 @@ internal static class Main
 		finally
 		{
 			if (pActualSignerContext != IntPtr.Zero)
-				NativeMethods.SignerFreeSignerContext(pActualSignerContext);
+				_ = NativeMethods.SignerFreeSignerContext(pActualSignerContext);
 			if (ppSignerContext != IntPtr.Zero) Marshal.FreeHGlobal(ppSignerContext);
 
 			if (pAppxSipClientData != IntPtr.Zero) Marshal.FreeHGlobal(pAppxSipClientData);
@@ -505,7 +505,7 @@ internal static class Main
 		}
 		catch (Win32Exception w32Ex)
 		{
-			Logger.Write(string.Format(GlobalVars.Rizz.GetString("Win32ErrorSigningFile"), w32Ex.NativeErrorCode, w32Ex.NativeErrorCode, w32Ex.Message));
+			Logger.Write(string.Format(GlobalVars.GetStr("Win32ErrorSigningFile"), w32Ex.NativeErrorCode, w32Ex.NativeErrorCode, w32Ex.Message));
 
 			throw;
 		}
@@ -528,7 +528,7 @@ internal static class Main
 		}
 		catch (Win32Exception w32Ex)
 		{
-			Logger.Write(string.Format(GlobalVars.Rizz.GetString("Win32ErrorSigningFile"), w32Ex.NativeErrorCode, w32Ex.NativeErrorCode, w32Ex.Message));
+			Logger.Write(string.Format(GlobalVars.GetStr("Win32ErrorSigningFile"), w32Ex.NativeErrorCode, w32Ex.NativeErrorCode, w32Ex.Message));
 
 			throw;
 		}
@@ -552,7 +552,7 @@ internal static class Main
 		}
 		catch (Win32Exception w32Ex)
 		{
-			Logger.Write(string.Format(GlobalVars.Rizz.GetString("Win32ErrorSigningFile"), w32Ex.NativeErrorCode, w32Ex.NativeErrorCode, w32Ex.Message));
+			Logger.Write(string.Format(GlobalVars.GetStr("Win32ErrorSigningFile"), w32Ex.NativeErrorCode, w32Ex.NativeErrorCode, w32Ex.Message));
 
 			throw;
 		}

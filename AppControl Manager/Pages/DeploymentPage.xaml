@@ -469,7 +469,7 @@
 
                         </customUI:ButtonV2>
 
-                        <Button HorizontalAlignment="Center"                                
+                        <Button HorizontalAlignment="Center"
                                 HorizontalContentAlignment="Center"
                                 IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                 Click="{x:Bind ViewModel.DeployUnsignedXMLButton_Click}">
@@ -605,7 +605,7 @@
 
                         </customUI:ButtonV2>
 
-                        <Button HorizontalAlignment="Center"                                
+                        <Button HorizontalAlignment="Center"
                                 IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                 HorizontalContentAlignment="Center"
                                 Click="{x:Bind ViewModel.DeployCIPButton_Click}">
@@ -661,7 +661,7 @@
 
                         </customUI:ButtonV2>
 
-                        <Button HorizontalAlignment="Center"                                
+                        <Button HorizontalAlignment="Center"
                                 IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                 HorizontalContentAlignment="Center"
                                 Click="{x:Bind ViewModel.ConvertXMLToCIPButton_Click}">

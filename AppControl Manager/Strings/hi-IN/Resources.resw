@@ -994,9 +994,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="NoMSIXBundlePath" xml:space="preserve">
     <value>कोई MSIXBundle पथ चयनित नहीं था</value>
   </data>
-  <data name="DetectingSignTool" xml:space="preserve">
-    <value>Microsoft सर्वरों से SignTool.exe का पता/डाउनलोड किया जा रहा है</value>
-  </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>सभी डाउनलोड पूर्ण, नया AppControl Manager संस्करण स्थापित किया जा रहा है</value>
   </data>
@@ -1084,32 +1081,11 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="CIPDeploymentSuccess" xml:space="preserve">
     <value>सभी चयनित CIP फाइलें सफलतापूर्वक तैनात की गईं</value>
   </data>
-  <data name="SigningIntoIntune" xml:space="preserve">
-    <value>Intune में साइन इन किया जा रहा है</value>
-  </data>
-  <data name="IntuneSignInSuccess" xml:space="preserve">
-    <value>Intune में सफलतापूर्वक साइन इन हुआ</value>
-  </data>
   <data name="CloudDeploymentActive" xml:space="preserve">
     <value>क्लाउड तैनाती वर्तमान में सक्रिय है</value>
   </data>
-  <data name="IntuneSignInCancelled" xml:space="preserve">
-    <value>उपयोगकर्ता द्वारा Intune में साइन इन रद्द किया गया</value>
-  </data>
-  <data name="IntuneSignInError" xml:space="preserve">
-    <value>Intune में साइन इन करते समय एक त्रुटि हुई: </value>
-  </data>
-  <data name="SigningOutOfIntune" xml:space="preserve">
-    <value>Intune से साइन आउट किया जा रहा है</value>
-  </data>
-  <data name="IntuneSignOutSuccess" xml:space="preserve">
-    <value>Intune से सफलतापूर्वक साइन आउट हुआ</value>
-  </data>
   <data name="LocalDeploymentActive" xml:space="preserve">
     <value>लोकल तैनाती वर्तमान में सक्रिय है</value>
-  </data>
-  <data name="IntuneSignOutError" xml:space="preserve">
-    <value>Intune से साइन आउट करते समय एक त्रुटि हुई: </value>
   </data>
   <data name="ProcessingTitle" xml:space="preserve">
     <value>संसाधित किया जा रहा है</value>
@@ -1179,9 +1155,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="CreatingPFNBasedDenyPolicy" xml:space="preserve">
     <value>Package Family Names के आधार पर निषेध नीति बनाई जा रही है</value>
-  </data>
-  <data name="SelectedApps" xml:space="preserve">
-    <value>चयनित ऐप्स: </value>
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>निषेध नीति सफलतापूर्वक बनाई गई</value>
@@ -1339,12 +1312,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>रद्द करें</value>
-  </data>
-  <data name="LastUpdatedLabel" xml:space="preserve">
-    <value>अंतिम अद्यतन: </value>
-  </data>
-  <data name="DriverBlockListError" xml:space="preserve">
-    <value>ड्राइवर ब्लॉक सूची जानकारी प्राप्त करने में त्रुटि हुई।</value>
   </data>
   <data name="ConfiguringAutoUpdate" xml:space="preserve">
     <value>स्वचालित अपडेट के लिए अनुसूचित कार्य कॉन्फ़िगर किया जा रहा है</value>
@@ -2165,16 +2132,16 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>UI तत्वों के लिए राइट-टू-लेफ्ट और लेफ्ट-टू-राइट फ्लो दिशाओं के बीच स्विच करें।</value>
   </data>
-  <data name="AppElevationNotice.Main" xml:space="preserve">
+  <data name="AppElevationNoticeMain" xml:space="preserve">
     <value>कृपया इस पृष्ठ तक पहुँचने के लिए AppControl Manager को प्रशासक के रूप में लॉन्च करें</value>
   </data>
-  <data name="AppElevationNotice.Title" xml:space="preserve">
+  <data name="AppElevationNoticeTitle" xml:space="preserve">
     <value>प्रशासक विशेषाधिकार आवश्यक</value>
   </data>
-  <data name="AppElevationNotice.ExtraPrompt" xml:space="preserve">
+  <data name="AppElevationNoticeExtraPrompt" xml:space="preserve">
     <value>हमेशा ऐप शुरू होने पर एलिवेशन के लिए संकेत करें</value>
   </data>
-  <data name="AppElevationNotice.Relaunch" xml:space="preserve">
+  <data name="AppElevationNoticeRelaunch" xml:space="preserve">
     <value>एडमिन के रूप में पुनः लॉन्च करें</value>
   </data>
   <data name="WindowMaximizedMsg" xml:space="preserve">
@@ -2474,15 +2441,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>प्रमाणपत्र विवरण डेटा में खोजें</value>
   </data>
-  <data name="SortingDirectionToggleButton.Text" xml:space="preserve">
-    <value>अवरोही क्रम</value>
-  </data>
-  <data name="SortingDirectionToggleButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>चेक होने पर अवरोही क्रम में सॉर्ट होगा, अचेक होने पर आरोही क्रम में।</value>
-  </data>
-  <data name="SortingDirectionToggleButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>चेक होने पर अवरोही क्रम में सॉर्ट होगा, अचेक होने पर आरोही क्रम में।</value>
-  </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
     <value>अपने डिवाइस पर AppControl Manager MSIXBundle फ़ाइल पाथ के लिए ब्राउज़ करें और फिर इसे इंस्टॉल करने के लिए अपडेट पेज पर वापस जाएँ।</value>
   </data>
@@ -2662,9 +2620,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>AppControl Manager के लुक और विजुअल इफेक्ट बदलने के लिए विभिन्न विकल्पों का उपयोग करें</value>
-  </data>
-  <data name="LanguageSectionSettingsExpanderInfoBar.Message" xml:space="preserve">
-    <value>भाषा परिवर्तनों को पूर्ण रूप से लागू करने के लिए कृपया ऐप पुनः लॉन्च करें।</value>
   </data>
   <data name="LanguageTextBlock.Text" xml:space="preserve">
     <value>भाषा</value>
@@ -4216,9 +4171,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>कमान्ड '{0} {1}' exit कोड {2} के साथ विफल हुआ। त्रुटि: {3}</value>
   </data>
-  <data name="CoCreateInstanceFailedHResultMessage" xml:space="preserve">
-    <value>CoCreateInstance HRESULT: 0x{0:X} के साथ विफल हुआ</value>
-  </data>
   <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
     <value>उच्चरण अनुरोध उपयोगकर्ता द्वारा रद्द किया गया।</value>
   </data>
@@ -5649,5 +5601,104 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
     <value>कस्टम पैटर्न आधारित पूरक नीति</value>
+  </data>
+  <data name="CloudTextBlock.Text" xml:space="preserve">
+    <value>क्लाउड</value>
+  </data>
+  <data name="LocalTextBlock.Text" xml:space="preserve">
+    <value>स्थानीय</value>
+  </data>
+  <data name="CreateTextBlock.Text" xml:space="preserve">
+    <value>बनाएं</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>कस्टम MSIXBundle पथ</value>
+  </data>
+  <data name="OpenInFileExplorer.Text" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर में खोलें</value>
+  </data>
+  <data name="OpenInFileExplorer.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर में उस फ़ोल्डर को खोलें जहाँ फ़ाइल स्थित है।</value>
+  </data>
+  <data name="OpenInFileExplorer.AutomationProperties.HelpText" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर में उस फ़ोल्डर को खोलें जहाँ फ़ाइल स्थित है।</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.Text" xml:space="preserve">
+    <value>नीति संपादक में खोलें</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>नीति संपादक में नीति खोलें जहाँ आप नीति का विस्तृत अवलोकन देख सकते हैं और इस एप्लिकेशन के भीतर ही इसे और भी अधिक अनुकूलित करने का विकल्प रख सकते हैं।</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>नीति संपादक में नीति खोलें जहाँ आप नीति का विस्तृत अवलोकन देख सकते हैं और इस एप्लिकेशन के भीतर ही इसे और भी अधिक अनुकूलित करने का विकल्प रख सकते हैं।</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.Text" xml:space="preserve">
+    <value>फ़ाइल खोलें</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम में कॉन्फ़िगर किए गए डिफ़ॉल्ट फ़ाइल हैंडलर का उपयोग करके बनाई गई फ़ाइल को खोलें।</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम में कॉन्फ़िगर किए गए डिफ़ॉल्ट फ़ाइल हैंडलर का उपयोग करके बनाई गई फ़ाइल को खोलें।</value>
+  </data>
+  <data name="AdditionalActionsTextBlock.Text" xml:space="preserve">
+    <value>अतिरिक्त कार्य</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>नीति संपादक में नीति खोलें या सूची से कोई अन्य कार्य चुनें।</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>नीति संपादक में नीति खोलें या सूची से कोई अन्य कार्य चुनें।</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>नियम विकल्प कॉन्फ़िगर करें</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>नीति को दूसरे पृष्ठ में खोलें ताकि इसके नियम विकल्पों को और भी अधिक कॉन्फ़िगर कर सकें।</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>नीति को दूसरे पृष्ठ में खोलें ताकि इसके नियम विकल्पों को और भी अधिक कॉन्फ़िगर कर सकें।</value>
+  </data>
+  <data name="AddToPolicySegmentedItem.Content" xml:space="preserve">
+    <value>नीति में जोड़ें</value>
+  </data>
+  <data name="BasePolicyFileSegmentedItem.Content" xml:space="preserve">
+    <value>आधार नीति फ़ाइल</value>
+  </data>
+  <data name="BasePolicyGUIDSegmentedItem.Content" xml:space="preserve">
+    <value>आधार नीति GUID</value>
+  </data>
+  <data name="AddToPolicyDescription.Text" xml:space="preserve">
+    <value>लॉग जोड़ने के लिए नीति फ़ाइल ब्राउज़ करें। नए नियम किसी भी मौजूदा नियम के साथ मिला दिए जाएंगे।</value>
+  </data>
+  <data name="BasePolicyFileDescription.Text" xml:space="preserve">
+    <value>आधार नीति फ़ाइल ब्राउज़ करें जिससे बनने वाली पूरक नीति को जोड़ा जाएगा।</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.PlaceholderText" xml:space="preserve">
+    <value>आधार नीति GUID दर्ज करें</value>
+  </data>
+    <data name="BasePolicyGUIDDescription.AutomationProperties.HelpText" xml:space="preserve">
+  <value>आधार नीति फ़ाइल का GUID दर्ज करें जिससे बनने वाली पूरक नीति को जोड़ा जाएगा।</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आधार नीति फ़ाइल का GUID दर्ज करें जिससे बनने वाली पूरक नीति को जोड़ा जाएगा।</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.PlaceholderText" xml:space="preserve">
+    <value>दिनांक के अनुसार फ़िल्टर करें</value>
+  </data>
+    <data name="FilterByDateCalendarDatePicker.AutomationProperties.HelpText" xml:space="preserve">
+  <value>केवल उन डेटा को दिखाएगा जो चयनित दिनांक के बराबर या नए हैं।</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.ToolTipService.ToolTip" xml:space="preserve">
+    <value>केवल उन डेटा को दिखाएगा जो चयनित दिनांक के बराबर या नए हैं।</value>
+  </data>
+  <data name="SubmitButton.Content" xml:space="preserve">
+    <value>सबमिट करें</value>
+  </data>
+  <data name="SubmitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सबमिट करें</value>
+  </data>
+  <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सबमिट करें</value>
   </data>
 </root>

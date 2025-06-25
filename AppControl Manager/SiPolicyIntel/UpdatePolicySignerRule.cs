@@ -20,10 +20,12 @@ using AppControlManager.SiPolicy;
 namespace AppControlManager.SiPolicyIntel;
 
 /// <summary>
-/// Represents a rule for updating a policy signer with a required signer element and an update policy signer.
+/// Represents a rule for updating a policy signer with a signer element and an update policy signer.
 /// </summary>
-internal sealed class UpdatePolicySignerRule
+internal sealed class UpdatePolicySignerRule(
+	Signer signerElement,
+	UpdatePolicySigner updatePolicySigner)
 {
-	internal required Signer SignerElement { get; set; }
-	internal required UpdatePolicySigner UpdatePolicySigner { get; set; }
+	internal Signer SignerElement => signerElement;
+	internal UpdatePolicySigner UpdatePolicySigner => updatePolicySigner;
 }

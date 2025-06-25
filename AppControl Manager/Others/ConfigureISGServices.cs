@@ -95,7 +95,7 @@ internal static class ConfigureISGServices
 	/// </summary>
 	internal static void Configure()
 	{
-		Logger.Write(GlobalVars.Rizz.GetString("ConfiguringAndStartingRequiredIsgServicesMessage"));
+		Logger.Write(GlobalVars.GetStr("ConfiguringAndStartingRequiredIsgServicesMessage"));
 
 		_ = ProcessStarter.RunCommand("appidtel.exe", "start");
 

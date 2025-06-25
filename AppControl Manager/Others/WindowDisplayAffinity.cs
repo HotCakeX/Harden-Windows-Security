@@ -36,7 +36,7 @@ internal static class WindowDisplayAffinity
 		WDA_NONE = 0x00000000,
 
 		/// <summary>
-		/// The window content is displayed only on a monitor. 
+		/// The window content is displayed only on a monitor.
 		/// Everywhere else, the window appears with no content.
 		/// </summary>
 		WDA_MONITOR = 0x00000001,

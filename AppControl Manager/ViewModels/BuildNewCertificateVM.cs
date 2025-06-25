@@ -108,7 +108,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 			{
 				if (field > 2)
 				{
-					MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("AlgoNotSupportedByCIWarning"));
+					MainInfoBar.WriteWarning(GlobalVars.GetStr("AlgoNotSupportedByCIWarning"));
 				}
 				else
 				{
@@ -127,8 +127,8 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 
 		if (string.IsNullOrEmpty(CommonName) || string.IsNullOrEmpty(Password))
 		{
-			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ProvideCNOrPassErrorMsg"),
-				GlobalVars.Rizz.GetString("ProvideCNOrPassErrorTitle"));
+			MainInfoBar.WriteWarning(GlobalVars.GetStr("ProvideCNOrPassErrorMsg"),
+				GlobalVars.GetStr("ProvideCNOrPassErrorTitle"));
 			return;
 		}
 
@@ -141,8 +141,8 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 
 			ElementsAreEnabled = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("BuildingCertificate"),
-				GlobalVars.Rizz.GetString("ProcessingTitle"));
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("BuildingCertificate"),
+				GlobalVars.GetStr("ProcessingTitle"));
 
 			await Task.Run(() =>
 			{
@@ -159,8 +159,8 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("CertificateBuildError"),
-				GlobalVars.Rizz.GetString("ErrorTitle"));
+			MainInfoBar.WriteError(ex, GlobalVars.GetStr("CertificateBuildError"),
+				GlobalVars.GetStr("ErrorTitle"));
 			ErrorsOccurred = true;
 		}
 
@@ -170,8 +170,8 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 
 			if (!ErrorsOccurred)
 			{
-				MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("CertificateBuildSuccess") + generatedCertThumbPrint + "'",
-					GlobalVars.Rizz.GetString("SuccessTitle"));
+				MainInfoBar.WriteSuccess(GlobalVars.GetStr("CertificateBuildSuccess") + generatedCertThumbPrint + "'",
+					GlobalVars.GetStr("SuccessTitle"));
 
 				CopyInfoBarToClipboardButtonVisibility = Visibility.Visible;
 			}

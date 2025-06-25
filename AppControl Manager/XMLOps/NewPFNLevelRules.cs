@@ -35,7 +35,7 @@ internal static class NewPFNLevelRules
 
 		if (PFNData.Count is 0)
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("NoPackageFamilyNamesDetectedAllowMessage"));
+			Logger.Write(GlobalVars.GetStr("NoPackageFamilyNamesDetectedAllowMessage"));
 			return;
 		}
 
@@ -53,7 +53,7 @@ internal static class NewPFNLevelRules
 
 			// Fill it with the required attributes
 			newPFNRule.SetAttribute("ID", ID);
-			newPFNRule.SetAttribute("FriendlyName", GlobalVars.Rizz.GetString("AllowingPackagedAppFriendlyName"));
+			newPFNRule.SetAttribute("FriendlyName", GlobalVars.GetStr("AllowingPackagedAppFriendlyName"));
 			newPFNRule.SetAttribute("MinimumFileVersion", PFN.MinimumFileVersion);
 			newPFNRule.SetAttribute("PackageFamilyName", PFN.PackageFamilyName);
 
@@ -81,7 +81,7 @@ internal static class NewPFNLevelRules
 
 		if (PFNData.Count is 0)
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("NoPackageFamilyNamesDetectedDenyMessage"));
+			Logger.Write(GlobalVars.GetStr("NoPackageFamilyNamesDetectedDenyMessage"));
 			return;
 		}
 
@@ -99,7 +99,7 @@ internal static class NewPFNLevelRules
 
 			// Fill it with the required attributes
 			newPFNRule.SetAttribute("ID", ID);
-			newPFNRule.SetAttribute("FriendlyName", GlobalVars.Rizz.GetString("DenyingPackagedAppFriendlyName"));
+			newPFNRule.SetAttribute("FriendlyName", GlobalVars.GetStr("DenyingPackagedAppFriendlyName"));
 			newPFNRule.SetAttribute("MinimumFileVersion", PFN.MinimumFileVersion);
 			newPFNRule.SetAttribute("PackageFamilyName", PFN.PackageFamilyName);
 

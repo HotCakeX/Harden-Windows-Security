@@ -38,13 +38,13 @@ internal sealed class AuthenticatedAccounts : Main.IRestrictedAuthenticatedAccou
 	{
 		get => _authResult;
 		set => throw new InvalidOperationException(
-			GlobalVars.Rizz.GetString("AuthResultImmutableErrorMessage"));
+			GlobalVars.GetStr("AuthResultImmutableErrorMessage"));
 	}
 	IAccount Main.IRestrictedAuthenticatedAccounts.Account
 	{
 		get => _account;
 		set => throw new InvalidOperationException(
-			GlobalVars.Rizz.GetString("AccountImmutableErrorMessage"));
+			GlobalVars.GetStr("AccountImmutableErrorMessage"));
 	}
 
 	internal AuthenticatedAccounts(string accountIdentifier, string userName, string tenantID, string permissions, AuthenticationContext authContext, AuthenticationResult authResult, IAccount account)

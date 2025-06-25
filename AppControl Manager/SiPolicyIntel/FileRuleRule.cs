@@ -20,11 +20,15 @@ using AppControlManager.SiPolicy;
 namespace AppControlManager.SiPolicyIntel;
 
 /// <summary>
-/// For File Path rules only in the "FileRules" node
+/// For File Path rules only in the "FileRules" node.
 /// </summary>
-internal sealed class FileRuleRule
+internal sealed class FileRuleRule(
+	FileRule fileRuleElement,
+	FileRuleRef fileRuleRefElement,
+	SSType signingScenario
+	)
 {
-	internal required FileRule FileRuleElement { get; set; }
-	internal required FileRuleRef FileRuleRefElement { get; set; }
-	internal required SSType SigningScenario { get; set; }
+	internal FileRule FileRuleElement => fileRuleElement;
+	internal FileRuleRef FileRuleRefElement => fileRuleRefElement;
+	internal SSType SigningScenario => signingScenario;
 }

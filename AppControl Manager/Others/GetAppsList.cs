@@ -63,8 +63,8 @@ internal static class GetAppsList
 					// Create a new instance of the class that displays each app in the ListView
 					apps.Add(new PackagedAppView(
 						displayName: item.DisplayName,
-						version: string.Format(GlobalVars.Rizz.GetString("VersionLabelFormat"), item.Id.Version.Major, item.Id.Version.Minor, item.Id.Version.Build, item.Id.Version.Revision),
-						packageFamilyName: string.Format(GlobalVars.Rizz.GetString("PFNLabelFormat"), item.Id.FamilyName),
+						version: string.Format(GlobalVars.GetStr("VersionLabelFormat"), item.Id.Version.Major, item.Id.Version.Minor, item.Id.Version.Build, item.Id.Version.Revision),
+						packageFamilyName: string.Format(GlobalVars.GetStr("PFNLabelFormat"), item.Id.FamilyName),
 						logo: logoStr,
 						packageFamilyNameActual: item.Id.FamilyName
 						));
@@ -72,18 +72,18 @@ internal static class GetAppsList
 				catch (System.Runtime.InteropServices.COMException)
 				{ /*
 				     Do nothing.
-				     It's thrown here: string? logoStr = item.Logo?.ToString();				                                                       
+				     It's thrown here: string? logoStr = item.Logo?.ToString();
 				  */
 				}
 				catch (Exception ex)
 				{
 					try
 					{
-						Logger.Write(string.Format(GlobalVars.Rizz.GetString("AppDetailsErrorMessageWithName"), item.Id.FamilyName));
+						Logger.Write(string.Format(GlobalVars.GetStr("AppDetailsErrorMessageWithName"), item.Id.FamilyName));
 					}
 					catch
 					{
-						Logger.Write(GlobalVars.Rizz.GetString("AppDetailsErrorMessageGeneric"));
+						Logger.Write(GlobalVars.GetStr("AppDetailsErrorMessageGeneric"));
 					}
 					Logger.Write(ErrorWriter.FormatException(ex));
 				}

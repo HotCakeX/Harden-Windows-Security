@@ -22,7 +22,7 @@ lto = "fat"
 incremental = true
 
 [dependencies]
-windows = { version = "0.61", features = [
+windows = { version = "*", features = [
     "Win32_Foundation",
     "Win32_System_Com",
     "Win32_UI_Shell",

@@ -53,7 +53,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			() => FilesAndFoldersInfoBarIsClosable, value => FilesAndFoldersInfoBarIsClosable = value,
 			() => FilesAndFoldersInfoBarTitle, value => FilesAndFoldersInfoBarTitle = value);
 
-		FilesAndFoldersCancellableButton = new(GlobalVars.Rizz.GetString("CreateSupplementalPolicyButton/Content"));
+		FilesAndFoldersCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
 
 		// InfoBar manager for the CertificatesBased section
 		CertificatesBasedInfoBar = new InfoBarSettings(
@@ -87,7 +87,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			() => PFNInfoBarIsClosable, value => PFNInfoBarIsClosable = value,
 			() => PFNInfoBarTitle, value => PFNInfoBarTitle = value);
 
-		PFNBasedCancellableButton = new(GlobalVars.Rizz.GetString("CreateSupplementalPolicyButton/Content"));
+		PFNBasedCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
 
 		// InfoBar manager for the CustomFilePathRules section
 		CustomFilePathRulesInfoBar = new InfoBarSettings(
@@ -97,7 +97,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			() => CustomFilePathRulesInfoBarIsClosable, value => CustomFilePathRulesInfoBarIsClosable = value,
 			() => CustomFilePathRulesInfoBarTitle, value => CustomFilePathRulesInfoBarTitle = value);
 
-		PatternBasedFileRuleCancellableButton = new(GlobalVars.Rizz.GetString("CreateSupplementalPolicyButton/Content"));
+		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
 	}
 
 	internal Visibility FilesAndFoldersBasePolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
@@ -160,24 +160,24 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	{
 
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileNameHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SignatureStatusHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("OriginalFileNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
-		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA1PageHashHeader/Text"));
-		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA256PageHashHeader/Text"));
-		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("HasWHQLSignerHeader/Text"));
-		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
-		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsECCSignedHeader/Text"));
-		double maxWidth18 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileNameHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignatureStatusHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("OriginalFileNameHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("InternalNameHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileDescriptionHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("ProductNameHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileVersionHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("PackageFamilyNameHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256HashHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1HashHeader/Text"));
+		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.GetStr("SigningScenarioHeader/Text"));
+		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePathHeader/Text"));
+		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1PageHashHeader/Text"));
+		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256PageHashHeader/Text"));
+		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.GetStr("HasWHQLSignerHeader/Text"));
+		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePublishersHeader/Text"));
+		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsECCSignedHeader/Text"));
+		double maxWidth18 = ListViewHelper.MeasureText(GlobalVars.GetStr("OpusDataHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (FileIdentity item in FilesAndFoldersScanResults)
@@ -273,7 +273,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				FilesAndFoldersScalabilityButtonContent = GlobalVars.Rizz.GetString("Scalability") + field;
+				FilesAndFoldersScalabilityButtonContent = GlobalVars.GetStr("Scalability") + field;
 			}
 		}
 	} = 2;
@@ -281,7 +281,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// The content of the button that has the RadialGauge inside it.
 	/// </summary>
-	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("Scalability") + "2";
+	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("Scalability") + "2";
 
 	/// <summary>
 	/// Used to store the scan results and as the source for the results ListViews
@@ -310,7 +310,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	internal string TotalCountOfTheFilesTextBox
 	{
 		get; set => SP(ref field, value);
-	} = GlobalVars.Rizz.GetString("TotalFiles") + ": 0";
+	} = GlobalVars.GetStr("TotalFiles") + ": 0";
 
 	/// <summary>
 	/// Button to clear the list of selected file paths
@@ -335,11 +335,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesTextBox = GlobalVars.Rizz.GetString("TotalFiles") + ": 0";
+			TotalCountOfTheFilesTextBox = GlobalVars.GetStr("TotalFiles") + ": 0";
 		}
 		else
 		{
-			TotalCountOfTheFilesTextBox = GlobalVars.Rizz.GetString("TotalFiles") + ": " + FilesAndFoldersScanResults.Count;
+			TotalCountOfTheFilesTextBox = GlobalVars.GetStr("TotalFiles") + ": " + FilesAndFoldersScanResults.Count;
 		}
 	}
 
@@ -428,7 +428,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 		if (filesAndFoldersFilePaths.Count is 0 && filesAndFoldersFolderPaths.Count is 0)
 		{
-			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoFilesOrFoldersSelected"), GlobalVars.Rizz.GetString("SelectFilesOrFoldersTitle"));
+			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("NoFilesOrFoldersSelected"), GlobalVars.GetStr("SelectFilesOrFoldersTitle"));
 			return;
 		}
 
@@ -437,20 +437,20 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle"), GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle"));
+				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"), GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (FilesAndFoldersBasePolicyPath is null)
 		{
-			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectBasePolicySubtitle"), GlobalVars.Rizz.GetString("SelectBasePolicyTitle"));
+			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"), GlobalVars.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
 		// Only check for policy name if user hasn't provided a policy to add the rules to
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(FilesAndFoldersSupplementalPolicyName))
 		{
-			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle"), GlobalVars.Rizz.GetString("ChoosePolicyNameTitle"));
+			FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"), GlobalVars.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -465,7 +465,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			FilesAndFoldersElementsAreEnabled = false;
 
 			FilesAndFoldersInfoBar.WriteInfo(string.Format(
-				GlobalVars.Rizz.GetString("FindingAllAppControlFilesMessage"),
+				GlobalVars.GetStr("FindingAllAppControlFilesMessage"),
 				filesAndFoldersFilePaths.Count,
 				filesAndFoldersFolderPaths.Count
 			));
@@ -489,8 +489,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 						_ = Dispatcher.TryEnqueue(() =>
 						{
 							FilesAndFoldersInfoBar.WriteInfo(
-								GlobalVars.Rizz.GetString("NoCompatibleFilesDetectedSubtitle"),
-								GlobalVars.Rizz.GetString("NoCompatibleFilesTitle"));
+								GlobalVars.GetStr("NoCompatibleFilesDetectedSubtitle"),
+								GlobalVars.GetStr("NoCompatibleFilesTitle"));
 							errorsOccurred = true;
 						});
 
@@ -502,7 +502,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 					_ = Dispatcher.TryEnqueue(() =>
 					{
 						FilesAndFoldersInfoBar.WriteInfo(string.Format(
-						GlobalVars.Rizz.GetString("ScanningTotalAppControlFilesMessage"),
+						GlobalVars.GetStr("ScanningTotalAppControlFilesMessage"),
 						DetectedFilesInSelectedDirectories.Item2));
 					});
 
@@ -535,7 +535,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						FilesAndFoldersInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanCompletedCreatingSupplementalPolicyMessage"));
+						FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("ScanCompletedCreatingSupplementalPolicyMessage"));
 					});
 
 				}
@@ -580,7 +580,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 					if (FilesAndFoldersScanLevelComboBoxSelectedItem.Level is ScanLevels.FilePath || FilesAndFoldersScanLevelComboBoxSelectedItem.Level is ScanLevels.WildCardFolderPath)
 					{
 						Logger.Write(string.Format(
-							GlobalVars.Rizz.GetString("SelectedScanLevelMessage"),
+							GlobalVars.GetStr("SelectedScanLevelMessage"),
 							FilesAndFoldersScanLevelComboBoxSelectedItem.FriendlyName
 						));
 
@@ -620,7 +620,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						FilesAndFoldersInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingThePolicy"));
+						FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 					});
 
 					CiToolHelper.UpdatePolicy(CIPPath);
@@ -636,18 +636,18 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			HandleExceptions(ex, ref errorsOccurred, ref FilesAndFoldersCancellableButton.wasCancelled, FilesAndFoldersInfoBar, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref FilesAndFoldersCancellableButton.wasCancelled, FilesAndFoldersInfoBar, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
 			if (FilesAndFoldersCancellableButton.wasCancelled)
 			{
-				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OperationCancelledByUser"));
+				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
 				FilesAndFoldersInfoBar.WriteSuccess(string.Format(
-					GlobalVars.Rizz.GetString("SuccessfullyCreatedSupplementalPolicyMessage"),
+					GlobalVars.GetStr("SuccessfullyCreatedSupplementalPolicyMessage"),
 					FilesAndFoldersSupplementalPolicyName
 				));
 				FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Visible;
@@ -859,8 +859,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 		if (CertificatesBasedCertFilePaths.Count is 0)
 		{
-			CertificatesBasedInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectCertificatesSubtitle"),
-				GlobalVars.Rizz.GetString("SelectCertificatesTitle"));
+			CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("SelectCertificatesSubtitle"),
+				GlobalVars.GetStr("SelectCertificatesTitle"));
 			return;
 		}
 
@@ -869,23 +869,23 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				CertificatesBasedInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle"),
-				GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle"));
+				CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"),
+				GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (CertificatesBasedBasePolicyPath is null)
 		{
-			CertificatesBasedInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectBasePolicySubtitle"),
-				GlobalVars.Rizz.GetString("SelectBasePolicyTitle"));
+			CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
+				GlobalVars.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
 		// Only check for policy name if user hasn't provided a policy to add the rules to
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(CertificatesBasedSupplementalPolicyName))
 		{
-			CertificatesBasedInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle"),
-				GlobalVars.Rizz.GetString("ChoosePolicyNameTitle"));
+			CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"),
+				GlobalVars.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -896,7 +896,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			CertificatesBasedElementsAreEnabled = false;
 
 			CertificatesBasedInfoBar.WriteInfo(string.Format(
-				GlobalVars.Rizz.GetString("CreatingCertificatesPolicyMessage"),
+				GlobalVars.GetStr("CreatingCertificatesPolicyMessage"),
 				CertificatesBasedCertFilePaths.Count
 			));
 
@@ -931,7 +931,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						CertificatesBasedInfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoCertificateDetailsFoundCreatingPolicy"));
+						CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("NoCertificateDetailsFoundCreatingPolicy"));
 					});
 
 					errorsOccurred = true;
@@ -983,7 +983,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						CertificatesBasedInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingThePolicy"));
+						CertificatesBasedInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 					});
 
 					CiToolHelper.UpdatePolicy(CIPPath);
@@ -998,7 +998,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			CertificatesBasedInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
+			CertificatesBasedInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
 			errorsOccurred = true;
 		}
 		finally
@@ -1006,7 +1006,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			if (!errorsOccurred)
 			{
 				CertificatesBasedInfoBar.WriteSuccess(string.Format(
-					GlobalVars.Rizz.GetString("SuccessfullyCreatedCertificatePolicyMessage"),
+					GlobalVars.GetStr("SuccessfullyCreatedCertificatePolicyMessage"),
 					CertificatesBasedSupplementalPolicyName
 				));
 
@@ -1092,15 +1092,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				ISGInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle"),
-					GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle"));
+				ISGInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"),
+					GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (ISGBasedBasePolicyPath is null)
 		{
-			ISGInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectBasePolicySubtitle"),
-				GlobalVars.Rizz.GetString("SelectBasePolicyTitle"));
+			ISGInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
+				GlobalVars.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
@@ -1110,7 +1110,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		{
 			ISGElementsAreEnabled = false;
 
-			ISGInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingISGBasedSupplementalPolicyMessage"));
+			ISGInfoBar.WriteInfo(GlobalVars.GetStr("CreatingISGBasedSupplementalPolicyMessage"));
 
 			await Task.Run(() =>
 			{
@@ -1161,7 +1161,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						ISGInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingThePolicy"));
+						ISGInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 					});
 
 					// Prepare the ISG services
@@ -1182,14 +1182,14 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			ISGInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
+			ISGInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
 			errorsOccurred = true;
 		}
 		finally
 		{
 			if (!errorsOccurred)
 			{
-				ISGInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCreatedISGBasedSupplementalPolicyMessage"));
+				ISGInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedISGBasedSupplementalPolicyMessage"));
 
 				ISGInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -1268,24 +1268,24 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	{
 
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileNameHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SignatureStatusHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("OriginalFileNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
-		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA1PageHashHeader/Text"));
-		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA256PageHashHeader/Text"));
-		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("HasWHQLSignerHeader/Text"));
-		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
-		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsECCSignedHeader/Text"));
-		double maxWidth18 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("OpusDataHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileNameHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignatureStatusHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("OriginalFileNameHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("InternalNameHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileDescriptionHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("ProductNameHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileVersionHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("PackageFamilyNameHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256HashHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1HashHeader/Text"));
+		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.GetStr("SigningScenarioHeader/Text"));
+		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePathHeader/Text"));
+		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1PageHashHeader/Text"));
+		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256PageHashHeader/Text"));
+		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.GetStr("HasWHQLSignerHeader/Text"));
+		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePublishersHeader/Text"));
+		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsECCSignedHeader/Text"));
+		double maxWidth18 = ListViewHelper.MeasureText(GlobalVars.GetStr("OpusDataHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (FileIdentity item in StrictKernelModeScanResults)
@@ -1341,7 +1341,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 	internal Visibility StrictKernelModeInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal string TotalCountOfTheFilesStrictKernelModeTextBox { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("TotalFiles") + ": 0";
+	internal string TotalCountOfTheFilesStrictKernelModeTextBox { get; set => SP(ref field, value); } = GlobalVars.GetStr("TotalFiles") + ": 0";
 
 	internal bool StrictKernelModeInfoBarIsOpen { get; set => SP(ref field, value); }
 	internal bool StrictKernelModeInfoBarIsClosable { get; set => SP(ref field, value); }
@@ -1421,7 +1421,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			StrictKernelModeElementsAreEnabled = false;
 
 			StrictKernelModeInfoBarIsClosable = false;
-			StrictKernelModeInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanningSystemForEvents"));
+			StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("ScanningSystemForEvents"));
 			StrictKernelModeSettingsExpanderIsExpanded = true;
 
 			// Clear variables responsible for the ListView
@@ -1452,12 +1452,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			// If any logs were generated since audit mode policy was deployed
 			if (Output.Count is 0)
 			{
-				StrictKernelModeInfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoLogsGeneratedDuringAuditPhase"));
+				StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("NoLogsGeneratedDuringAuditPhase"));
 				ErrorsOccurred = true;
 				return;
 			}
 
-			StrictKernelModeInfoBar.WriteInfo(string.Format(GlobalVars.Rizz.GetString("GeneratedLogsDuringAuditPhase"), Output.Count));
+			StrictKernelModeInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("GeneratedLogsDuringAuditPhase"), Output.Count));
 
 			// Add the event logs to the List
 			StrictKernelModeScanResultsList.AddRange(Output);
@@ -1477,7 +1477,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
-			StrictKernelModeInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredWhileScanningSystem"));
+			StrictKernelModeInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorOccurredWhileScanningSystem"));
 		}
 		finally
 		{
@@ -1485,7 +1485,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 			if (!ErrorsOccurred)
 			{
-				StrictKernelModeInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyScannedSystemForEvents"));
+				StrictKernelModeInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyScannedSystemForEvents"));
 			}
 
 			StrictKernelModeInfoBarIsClosable = true;
@@ -1504,16 +1504,16 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 		if (StrictKernelModeScanResults.Count is 0)
 		{
-			StrictKernelModeInfoBar.WriteWarning(GlobalVars.Rizz.GetString("StrictKernelModeTeachingTipSubtitleNoItems"),
-				GlobalVars.Rizz.GetString("StrictKernelModeTeachingTipTitle"));
+			StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("StrictKernelModeTeachingTipSubtitleNoItems"),
+				GlobalVars.GetStr("StrictKernelModeTeachingTipTitle"));
 			return;
 		}
 
 		// Only check for policy name if user hasn't provided a policy to add the rules to
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(StrictKernelModePolicyName))
 		{
-			StrictKernelModeInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle"),
-				GlobalVars.Rizz.GetString("ChoosePolicyNameTitle"));
+			StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"),
+				GlobalVars.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -1522,15 +1522,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				StrictKernelModeInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle"),
-					GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle"));
+				StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"),
+					GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (string.IsNullOrWhiteSpace(StrictKernelModeBasePolicyPath))
 		{
-			StrictKernelModeInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectBasePolicySubtitle"),
-				GlobalVars.Rizz.GetString("SelectBasePolicyTitle"));
+			StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
+				GlobalVars.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
@@ -1545,7 +1545,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			StrictKernelModeInfoBarIsClosable = false;
 
 			StrictKernelModeInfoBar.WriteInfo(string.Format(
-				GlobalVars.Rizz.GetString("CreatingStrictKernelModePolicyMessage"),
+				GlobalVars.GetStr("CreatingStrictKernelModePolicyMessage"),
 				StrictKernelModeScanResults.Count
 			));
 
@@ -1605,7 +1605,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						StrictKernelModeInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingThePolicy"));
+						StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 					});
 
 					CiToolHelper.UpdatePolicy(CIPPath);
@@ -1622,14 +1622,14 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
-			StrictKernelModeInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
+			StrictKernelModeInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
 			if (!ErrorsOccurred)
 			{
 				StrictKernelModeInfoBarActionButtonVisibility = Visibility.Visible;
-				StrictKernelModeInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCreatedStrictKernelModePolicyMessage"));
+				StrictKernelModeInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedStrictKernelModePolicyMessage"));
 			}
 
 			StrictKernelModeElementsAreEnabled = true;
@@ -1653,7 +1653,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 			StrictKernelModeInfoBarIsClosable = false;
 
-			StrictKernelModeInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanningSystemForDrivers"));
+			StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("ScanningSystemForDrivers"));
 
 			StrictKernelModeSettingsExpanderIsExpanded = true;
 
@@ -1689,12 +1689,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 			if (kernelModeDriversList.Count is 0)
 			{
-				StrictKernelModeInfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoKernelModeDriversDetected"));
+				StrictKernelModeInfoBar.WriteWarning(GlobalVars.GetStr("NoKernelModeDriversDetected"));
 				ErrorsOccurred = true;
 				return;
 			}
 
-			StrictKernelModeInfoBar.WriteInfo(string.Format(GlobalVars.Rizz.GetString("ScanningKernelModeFilesCount"), kernelModeDriversList.Count));
+			StrictKernelModeInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("ScanningKernelModeFilesCount"), kernelModeDriversList.Count));
 
 			IEnumerable<FileIdentity> LocalFilesResults = [];
 
@@ -1729,13 +1729,13 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		catch (Exception ex)
 		{
 			ErrorsOccurred = true;
-			StrictKernelModeInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorOccurredScanningDrivers"));
+			StrictKernelModeInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorOccurredScanningDrivers"));
 		}
 		finally
 		{
 			if (!ErrorsOccurred)
 			{
-				StrictKernelModeInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyScannedSystemForDrivers"));
+				StrictKernelModeInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyScannedSystemForDrivers"));
 			}
 
 			StrictKernelModeElementsAreEnabled = true;
@@ -1758,11 +1758,11 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesStrictKernelModeTextBox = GlobalVars.Rizz.GetString("TotalFiles") + ": 0";
+			TotalCountOfTheFilesStrictKernelModeTextBox = GlobalVars.GetStr("TotalFiles") + ": 0";
 		}
 		else
 		{
-			TotalCountOfTheFilesStrictKernelModeTextBox = GlobalVars.Rizz.GetString("TotalFiles") + ": " + StrictKernelModeScanResults.Count;
+			TotalCountOfTheFilesStrictKernelModeTextBox = GlobalVars.GetStr("TotalFiles") + ": " + StrictKernelModeScanResults.Count;
 		}
 	}
 
@@ -2010,7 +2010,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		if (lv is null) return;
 
 		int selectedCount = lv.SelectedItems.Count;
-		PFNBasedSelectedItemsCount = string.Format(GlobalVars.Rizz.GetString("SelectedAppsCount"), selectedCount);
+		PFNBasedSelectedItemsCount = string.Format(GlobalVars.GetStr("SelectedAppsCount"), selectedCount);
 
 		PFNBasedAppsListItemsSourceSelectedItems = new(lv.SelectedItems);
 	}
@@ -2025,7 +2025,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	private void PFNAppFilteringTextBox_TextChanged()
 	{
 		// Store the original collection if it hasn't been saved yet
-		_originalContacts ??= (ObservableCollection<GroupInfoListForPackagedAppView>)PFNBasedAppsListItemsSource;
+		_originalContacts ??= PFNBasedAppsListItemsSource;
 
 		if (string.IsNullOrWhiteSpace(PFNBasedSearchKeywordForAppsList))
 		{
@@ -2095,16 +2095,16 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 		if (PFNBasedAppsListItemsSourceSelectedItems.Count is 0)
 		{
-			PFNInfoBar.WriteWarning(GlobalVars.Rizz.GetString("PFNBasedSupplementalPolicySubtitle"),
-				GlobalVars.Rizz.GetString("PFNBasedSupplementalPolicyTitle"));
+			PFNInfoBar.WriteWarning(GlobalVars.GetStr("PFNBasedSupplementalPolicySubtitle"),
+				GlobalVars.GetStr("PFNBasedSupplementalPolicyTitle"));
 			return;
 		}
 
 		// Only check for policy name if user hasn't provided a policy to add the rules to
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(PFNBasedSupplementalPolicyName))
 		{
-			PFNInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle"),
-				GlobalVars.Rizz.GetString("ChoosePolicyNameTitle"));
+			PFNInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"),
+				GlobalVars.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -2113,15 +2113,15 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				PFNInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle"),
-					GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle"));
+				PFNInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"),
+					GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (string.IsNullOrWhiteSpace(PFNBasePolicyPath))
 		{
-			PFNInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectBasePolicySubtitle"),
-				GlobalVars.Rizz.GetString("SelectBasePolicyTitle"));
+			PFNInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
+				GlobalVars.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
@@ -2138,7 +2138,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 			PFNInfoBarIsClosable = false;
 
-			PFNInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingPFNSupplementalPolicyMessage"));
+			PFNInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPFNSupplementalPolicyMessage"));
 
 			PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -2217,7 +2217,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						PFNInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingThePolicy"));
+						PFNInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 					});
 
 					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
@@ -2234,17 +2234,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			HandleExceptions(ex, ref errorsOccurred, ref PFNBasedCancellableButton.wasCancelled, PFNInfoBar, GlobalVars.Rizz.GetString("ErrorOccurredScanningDrivers"));
+			HandleExceptions(ex, ref errorsOccurred, ref PFNBasedCancellableButton.wasCancelled, PFNInfoBar, GlobalVars.GetStr("ErrorOccurredScanningDrivers"));
 		}
 		finally
 		{
 			if (PFNBasedCancellableButton.wasCancelled)
 			{
-				PFNInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OperationCancelledByUser"));
+				PFNInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
-				PFNInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCreatedPFNSupplementalPolicyMessage"));
+				PFNInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedPFNSupplementalPolicyMessage"));
 
 				PFNInfoBarActionButtonVisibility = Visibility.Visible;
 			}
@@ -2349,30 +2349,30 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToSubtitle"),
-					GlobalVars.Rizz.GetString("SelectPolicyToAddRulesToTitle"));
+				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"),
+					GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
 		else if (CustomPatternBasedFileRuleBasedBasePolicyPath is null)
 		{
-			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectBasePolicySubtitle"),
-				GlobalVars.Rizz.GetString("SelectBasePolicyTitle"));
+			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("SelectBasePolicySubtitle"),
+				GlobalVars.GetStr("SelectBasePolicyTitle"));
 			return;
 		}
 
 		if (string.IsNullOrWhiteSpace(SupplementalPolicyCustomPatternBasedCustomPatternTextBox))
 		{
-			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.Rizz.GetString("EnterCustomPatternSubtitle"),
-				GlobalVars.Rizz.GetString("EnterCustomPatternTitle"));
+			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("EnterCustomPatternSubtitle"),
+				GlobalVars.GetStr("EnterCustomPatternTitle"));
 			return;
 		}
 
 		// Only check for policy name if user hasn't provided a policy to add the rules to
 		if (OperationModeComboBoxSelectedIndex is 0 && string.IsNullOrWhiteSpace(CustomPatternBasedFileRuleBasedSupplementalPolicyName))
 		{
-			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ChoosePolicyNameSubtitle"),
-				GlobalVars.Rizz.GetString("ChoosePolicyNameTitle"));
+			CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("ChoosePolicyNameSubtitle"),
+				GlobalVars.GetStr("ChoosePolicyNameTitle"));
 			return;
 		}
 
@@ -2387,7 +2387,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		{
 			CustomFilePathRulesElementsAreEnabled = false;
 
-			CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CreatingPatternBasedFileRuleMessage"));
+			CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPatternBasedFileRuleMessage"));
 
 			CustomFilePathRulesInfoBarIsClosable = false;
 
@@ -2455,7 +2455,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DeployingThePolicy"));
+						CustomFilePathRulesInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 					});
 
 					CiToolHelper.UpdatePolicy(CIPPath);
@@ -2471,17 +2471,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			HandleExceptions(ex, ref errorsOccurred, ref PatternBasedFileRuleCancellableButton.wasCancelled, CustomFilePathRulesInfoBar, GlobalVars.Rizz.GetString("ErrorOccurredCreatingPolicy"));
+			HandleExceptions(ex, ref errorsOccurred, ref PatternBasedFileRuleCancellableButton.wasCancelled, CustomFilePathRulesInfoBar, GlobalVars.GetStr("ErrorOccurredCreatingPolicy"));
 		}
 		finally
 		{
 			if (PatternBasedFileRuleCancellableButton.wasCancelled)
 			{
-				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OperationCancelledByUser"));
+				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
-				CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCreatedPatternBasedFileRuleMessage"));
+				CustomFilePathRulesInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCreatedPatternBasedFileRuleMessage"));
 
 				CustomFilePathRulesInfoBarActionButtonVisibility = Visibility.Visible;
 			}

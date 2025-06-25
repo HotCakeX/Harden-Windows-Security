@@ -89,7 +89,7 @@ internal static class FileAttribDeDuplication
 		{
 			if (!signerDictionary.TryAdd(signer.ID, signer))
 			{
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("DuplicateSignerIdMessage"), signer.ID));
+				Logger.Write(string.Format(GlobalVars.GetStr("DuplicateSignerIdMessage"), signer.ID));
 			}
 		}
 

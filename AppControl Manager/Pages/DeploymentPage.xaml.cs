@@ -49,8 +49,8 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager
 		ViewModel.SignedXMLFilesLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-			actionPack1: (param => LightUp1(), GlobalVars.Rizz.GetString("DeployUnsignedPolicy")),
-			actionPack2: (param => LightUp2(), GlobalVars.Rizz.GetString("DeploySignedPolicy")));
+			actionPack1: (param => LightUp1(), GlobalVars.GetStr("DeployUnsignedPolicy")),
+			actionPack2: (param => LightUp2(), GlobalVars.GetStr("DeploySignedPolicy")));
 	}
 
 	/// <summary>

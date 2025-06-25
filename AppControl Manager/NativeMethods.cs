@@ -597,6 +597,7 @@ internal unsafe static partial class NativeMethods
 	/// <param name="dwAffinity"></param>
 	/// <returns></returns>
 	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
 
@@ -606,6 +607,7 @@ internal unsafe static partial class NativeMethods
 	/// </summary>
 	/// <returns></returns>
 	[LibraryImport("kernel32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint GetLastError();
 
 

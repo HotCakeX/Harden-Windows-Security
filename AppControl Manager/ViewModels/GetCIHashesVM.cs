@@ -215,7 +215,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 			await PublishUserActivityAsync(
 				LaunchProtocolActions.FileHashes,
 				selectedFile,
-				GlobalVars.Rizz.GetString("UserActivityNameForFileHashes"));
+				GlobalVars.GetStr("UserActivityNameForFileHashes"));
 		}
 		catch (Exception ex)
 		{
@@ -299,7 +299,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 		{
 			ClipboardManagement.CopyText(SelectedHashItem.HashValue);
 
-			MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("HashCopiedToClipboard"));
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("HashCopiedToClipboard"));
 		}
 	}
 

@@ -53,7 +53,7 @@ internal static class CertCNFetcher
 					if (!output.Add(cn))
 					{
 						Logger.Write(string.Format(
-							GlobalVars.Rizz.GetString("DuplicateCertCommonNameWarning"),
+							GlobalVars.GetStr("DuplicateCertCommonNameWarning"),
 							cn));
 
 						_ = output.Remove(cn);

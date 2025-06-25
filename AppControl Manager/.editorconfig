@@ -8,6 +8,9 @@ end_of_line = crlf
 
 # https://learn.microsoft.com/visualstudio/ide/reference/add-file-header
 file_header_template = MIT License\r\n\r\nCopyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the "Software"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nSee here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE\r\n
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+tab_width = 4
+indent_size = 4
 
 # Applies to C# files only
 [*.cs]
@@ -68,10 +71,6 @@ dotnet_diagnostic.CA1200.severity = error
 
 # CA1812: Avoid uninstantiated internal classes
 dotnet_diagnostic.CA1812.severity = error
-
-# View Models are instantiated by the Dependency Injection container
-[ViewModels/*.cs]
-dotnet_diagnostic.CA1812.severity = none
 
 # CA1825: Avoid zero-length array allocations
 dotnet_diagnostic.CA1825.severity = error
@@ -155,14 +154,6 @@ dotnet_diagnostic.CA2000.severity = error
 dotnet_diagnostic.CA1830.severity = error
 
 # CA1822: Mark members as static
-dotnet_diagnostic.CA1822.severity = error
-
-# View Models should not have static members
-[ViewModels/*.cs]
-dotnet_diagnostic.CA1822.severity = none
-
-# Pages have properties referencing View Models which get this false positive warning too.
-[Pages/*.cs]
 dotnet_diagnostic.CA1822.severity = none
 
 # CA1050: Declare types in namespaces
@@ -248,7 +239,7 @@ dotnet_diagnostic.CA1846.severity = error
 dotnet_diagnostic.CA1862.severity = error
 
 # CA1863: Use 'CompositeFormat'
-dotnet_diagnostic.CA1863.severity = error
+dotnet_diagnostic.CA1863.severity = none
 
 # CA1838: Avoid 'StringBuilder' parameters for P/Invokes
 dotnet_diagnostic.CA1838.severity = error
@@ -1151,3 +1142,147 @@ dotnet_diagnostic.CA1515.severity = error
 
 # CA1060: Move pinvokes to native methods class
 dotnet_diagnostic.CA1060.severity = error
+
+# CA1874: Use 'Regex.IsMatch'
+dotnet_diagnostic.CA1874.severity = error
+
+# CA1875: Use 'Regex.Count'
+dotnet_diagnostic.CA1875.severity = error
+
+# CA2023: Invalid braces in message template
+dotnet_diagnostic.CA2023.severity = error
+
+# CA2025: Do not pass 'IDisposable' instances into unawaited tasks
+dotnet_diagnostic.CA2025.severity = error
+
+# CA2024: Do not use 'StreamReader.EndOfStream' in async methods
+dotnet_diagnostic.CA2024.severity = error
+
+# IL4001: Invalid FeatureGuardAttribute.
+dotnet_diagnostic.IL4001.severity = error
+
+# IL2032: The value passed as the assembly name or type name to the CreateInstance method can't be statically analyzed.
+dotnet_diagnostic.IL2032.severity = error
+
+# IL2041: The 'DynamicallyAccessedMembersAttribute' is not allowed on methods. It is allowed on method return value or method parameters.
+dotnet_diagnostic.IL2041.severity = error
+
+# IL2043: 'DynamicallyAccessedMembersAttribute' on property conflicts with the same attribute on its accessor.
+dotnet_diagnostic.IL2043.severity = error
+
+# IL2046: 'RequiresUnreferencedCodeAttribute' annotations must match across all interface implementations or overrides.
+dotnet_diagnostic.IL2046.severity = error
+
+# IL2050: Correctness of COM interop cannot be guaranteed after trimming. Interfaces and interface members might be removed.
+dotnet_diagnostic.IL2050.severity = error
+
+# IL2057: Unrecognized value passed to the parameter of method. It's not possible to guarantee the availability of the target type.
+dotnet_diagnostic.IL2057.severity = error
+
+# IL2058: Parameters passed to method cannot be analyzed. Consider using methods 'System.Type.GetType' and `System.Activator.CreateInstance` instead.
+dotnet_diagnostic.IL2058.severity = error
+
+# IL2060: Call to 'System.Reflection.MethodInfo.MakeGenericMethod' can not be statically analyzed. It's not possible to guarantee the availability of requirements of the generic method.
+dotnet_diagnostic.IL2060.severity = error
+
+# IL2062: The parameter of method has a DynamicallyAccessedMembersAttribute, but the value passed to it can not be statically analyzed.
+dotnet_diagnostic.IL2062.severity = error
+
+# IL2064: The field has a DynamicallyAccessedMembersAttribute, but the value assigned to it can not be statically analyzed.
+dotnet_diagnostic.IL2064.severity = error
+
+# IL2066: The generic parameter of type or method has a DynamicallyAccessedMembersAttribute, but the value used for it can not be statically analyzed.
+dotnet_diagnostic.IL2066.severity = error
+
+# IL2067: Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The parameter of method does not have matching annotations.
+dotnet_diagnostic.IL2067.severity = error
+
+# IL2070: 'this' argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The parameter of method does not have matching annotations.
+dotnet_diagnostic.IL2070.severity = error
+
+# IL2071: Generic argument does not satisfy 'DynamicallyAccessedMembersAttribute' in target method or type. The parameter of method does not have matching annotations.
+dotnet_diagnostic.IL2071.severity = error
+
+# IL2073: Target method return value does not satisfy 'DynamicallyAccessedMembersAttribute' requirements. The return value of the source method does not have matching annotations.
+dotnet_diagnostic.IL2073.severity = error
+
+# IL2075: 'this' argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The return value of the source method does not have matching annotations.
+dotnet_diagnostic.IL2075.severity = error
+
+# IL2077: Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method. The source field does not have matching annotations.
+dotnet_diagnostic.IL2077.severity = error
+
+# IL2078: Target method return value does not satisfy 'DynamicallyAccessedMembersAttribute' requirements. The source field does not have matching annotations.
+dotnet_diagnostic.IL2078.severity = error
+
+# IL2079: Value stored in target field does not satisfy 'DynamicallyAccessedMembersAttribute' requirements. The source field does not have matching annotations.
+dotnet_diagnostic.IL2079.severity = error
+
+# IL2081: Target generic argument does not satisfy 'DynamicallyAccessedMembersAttribute' in target method or type. The source field does not have matching annotations.
+dotnet_diagnostic.IL2081.severity = error
+
+# IL2083: Target method return value does not satisfy 'DynamicallyAccessedMembersAttribute' requirements. The implicit 'this' argument of source method does not have matching annotations.
+dotnet_diagnostic.IL2083.severity = error
+
+# IL2086: Target generic argument does not satisfy 'DynamicallyAccessedMembersAttribute' in target method or type. The implicit 'this' argument of source method does not have matching annotations.
+dotnet_diagnostic.IL2086.severity = error
+
+# IL2088: Target method return value does not satisfy 'DynamicallyAccessedMembersAttribute' requirements. The generic parameter of the source method or type does not have matching annotations.
+dotnet_diagnostic.IL2088.severity = error
+
+# IL2089: Value stored in target field does not satisfy 'DynamicallyAccessedMembersAttribute' requirements. The generic parameter of the source method or type does not have matching annotations.
+dotnet_diagnostic.IL2089.severity = error
+
+# IL2091: Target generic argument does not satisfy 'DynamicallyAccessedMembersAttribute' in target method or type. The generic parameter of the source method or type does not have matching annotations.
+dotnet_diagnostic.IL2091.severity = error
+
+# IL2093: 'DynamicallyAccessedMemberTypes' on the return value of method don't match overridden return value of method. All overridden members must have the same 'DynamicallyAccessedMembersAttribute' usage.
+dotnet_diagnostic.IL2093.severity = error
+
+# IL2095: 'DynamicallyAccessedMemberTypes' on the generic parameter of method or type don't match overridden generic parameter method or type. All overridden members must have the same 'DynamicallyAccessedMembersAttribute' usage.
+dotnet_diagnostic.IL2095.severity = error
+
+# IL2097: Field has 'DynamicallyAccessedMembersAttribute', but that attribute can only be applied to fields of type 'System.Type' or 'System.String'.
+dotnet_diagnostic.IL2097.severity = error
+
+# IL2098: Parameter of method has 'DynamicallyAccessedMembersAttribute', but that attribute can only be applied to parameters of type 'System.Type' or 'System.String'.
+dotnet_diagnostic.IL2098.severity = error
+
+# IL2103: Value passed to the parameter of method cannot be statically determined as a property accessor.
+dotnet_diagnostic.IL2103.severity = error
+
+# IL2109: Types that derive from a base class with 'RequiresUnreferencedCodeAttribute' need to explicitly use the 'RequiresUnreferencedCodeAttribute' or suppress this warning
+dotnet_diagnostic.IL2109.severity = error
+
+# IL2110: Field with 'DynamicallyAccessedMembersAttribute' is accessed via reflection. Trimmer can't guarantee availability of the requirements of the field.
+dotnet_diagnostic.IL2110.severity = error
+
+# IL2113: 'DynamicallyAccessedMembersAttribute' on a type or one of its base types references a member which requires unreferenced code.
+dotnet_diagnostic.IL2113.severity = error
+
+# IL2114: 'DynamicallyAccessedMembersAttribute' on a type or one of its base types references a member which has 'DynamicallyAccessedMembersAttribute' requirements.
+dotnet_diagnostic.IL2114.severity = error
+
+# IL2116: The use of 'RequiresUnreferencedCodeAttribute' on static constructors is disallowed since is a method not callable by the user, is only called by the runtime. Placing the attribute directly on the static constructor will have no effect, instead use 'RequiresUnreferencedCodeAttribute' on the type which will handle warning and silencing from the static constructor.
+dotnet_diagnostic.IL2116.severity = error
+
+# IL2123: The use of 'RequiresUnreferencedCodeAttribute' on entry points is disallowed since the method will be called from outside the visible app.
+dotnet_diagnostic.IL2123.severity = error
+
+# IL3001: Avoid accessing Assembly file path when publishing as a single file
+dotnet_diagnostic.IL3001.severity = error
+
+# IL3002: Avoid calling members marked with 'RequiresAssemblyFilesAttribute' when publishing as a single-file
+dotnet_diagnostic.IL3002.severity = error
+
+# IL3004: The use of 'RequiresAssemblyFilesAttribute' on static constructors is disallowed since is a method not callable by the user, is only called by the runtime. Placing the attribute directly on the static constructor will have no effect, instead use 'RequiresUnreferencedCodeAttribute' on the type which will handle warning and silencing from the static constructor.
+dotnet_diagnostic.IL3004.severity = error
+
+# IL3005: The use of 'RequiresAssemblyFilesAttribute' on entry points is disallowed since the method will be called from outside the visible app.
+dotnet_diagnostic.IL3005.severity = error
+
+# IL3056: The use of 'RequiresDynamicCodeAttribute' on static constructors is disallowed since is a method not callable by the user, is only called by the runtime. Placing the attribute directly on the static constructor will have no effect, instead use 'RequiresUnreferencedCodeAttribute' on the type which will handle warning and silencing from the static constructor.
+dotnet_diagnostic.IL3056.severity = error
+
+# IL4000: Return value does not match FeatureGuard annotations of the property. The check should return false whenever any of the features referenced in the FeatureGuard annotations is disabled.
+dotnet_diagnostic.IL4000.severity = error

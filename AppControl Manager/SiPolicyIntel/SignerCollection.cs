@@ -22,12 +22,19 @@ namespace AppControlManager.SiPolicyIntel;
 /// <summary>
 /// This is the output of the method that collects all types of signers from SiPolicies
 /// </summary>
-internal sealed class SignerCollection
+internal sealed class SignerCollection(
+	HashSet<FilePublisherSignerRule> filePublisherSigners,
+	HashSet<SignerRule> signerRules,
+	HashSet<WHQLPublisher> wHQLPublishers,
+	HashSet<WHQLFilePublisher> wHQLFilePublishers,
+	HashSet<UpdatePolicySignerRule> updatePolicySigners,
+	HashSet<SupplementalPolicySignerRule> supplementalPolicySigners
+	)
 {
-	internal required HashSet<FilePublisherSignerRule> FilePublisherSigners { get; set; }
-	internal required HashSet<SignerRule> SignerRules { get; set; }
-	internal required HashSet<WHQLPublisher> WHQLPublishers { get; set; }
-	internal required HashSet<WHQLFilePublisher> WHQLFilePublishers { get; set; }
-	internal required HashSet<UpdatePolicySignerRule> UpdatePolicySigners { get; set; }
-	internal required HashSet<SupplementalPolicySignerRule> SupplementalPolicySigners { get; set; }
+	internal HashSet<FilePublisherSignerRule> FilePublisherSigners => filePublisherSigners;
+	internal HashSet<SignerRule> SignerRules => signerRules;
+	internal HashSet<WHQLPublisher> WHQLPublishers => wHQLPublishers;
+	internal HashSet<WHQLFilePublisher> WHQLFilePublishers => wHQLFilePublishers;
+	internal HashSet<UpdatePolicySignerRule> UpdatePolicySigners => updatePolicySigners;
+	internal HashSet<SupplementalPolicySignerRule> SupplementalPolicySigners => supplementalPolicySigners;
 }

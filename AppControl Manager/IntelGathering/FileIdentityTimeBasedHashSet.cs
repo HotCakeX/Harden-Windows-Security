@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using AppControlManager.Others;
 
 namespace AppControlManager.IntelGathering;
 
@@ -66,10 +65,14 @@ internal sealed class FileIdentityTimeBasedHashSet
 			if (existingItem.TimeCreated.HasValue && item.TimeCreated.HasValue &&
 				existingItem.TimeCreated < item.TimeCreated)
 			{
+
+				// Excessive logging
+				/*
 				Logger.Write(string.Format(
-					GlobalVars.Rizz.GetString("ReplacingOlderFileIdentityItemMessage"),
+					GlobalVars.GetStr("ReplacingOlderFileIdentityItemMessage"),
 					existingItem.FileName,
 					existingItem.SHA256Hash));
+				*/
 
 				// Remove the existing older item and add the newer one
 				_ = _set.Remove(existingItem);

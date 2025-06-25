@@ -42,33 +42,33 @@ internal static class CustomAppManifestLogics
 		{
 			XmlDocument xmlDoc = new();
 			xmlDoc.Load(filePath);
-			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("InvalidXmlMissingRootElementValidationError"));
+			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException(GlobalVars.GetStr("InvalidXmlMissingRootElementValidationError"));
 		}
 		else if (stream != null)
 		{
 			XmlDocument xmlDoc = new();
 			xmlDoc.Load(stream);
-			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("InvalidXmlMissingRootElementValidationError"));
+			root = xmlDoc.DocumentElement ?? throw new InvalidOperationException(GlobalVars.GetStr("InvalidXmlMissingRootElementValidationError"));
 		}
 		else
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("NoFilePathOrStreamProvidedValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("NoFilePathOrStreamProvidedValidationError"));
 		}
 
 		if (!string.Equals(root.LocalName, "AppManifest", StringComparison.OrdinalIgnoreCase) ||
 			!string.Equals(root.NamespaceURI, NamespaceUri, StringComparison.OrdinalIgnoreCase))
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("InvalidXmlRootElementNamespaceValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("InvalidXmlRootElementNamespaceValidationError"));
 		}
 
 		if (!root.HasAttribute("Id"))
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("AppManifestMissingIdAttributeValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("AppManifestMissingIdAttributeValidationError"));
 		}
 		string id = root.GetAttribute("Id");
 		if (string.IsNullOrEmpty(id))
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("AppManifestEmptyIdAttributeValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("AppManifestEmptyIdAttributeValidationError"));
 		}
 
 		List<SettingDefinition> settings = [];
@@ -90,17 +90,17 @@ internal static class CustomAppManifestLogics
 	{
 		if (!elem.HasAttribute("Name"))
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionMissingNameAttributeValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionMissingNameAttributeValidationError"));
 		}
 		string name = elem.GetAttribute("Name");
 		if (string.IsNullOrEmpty(name))
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionEmptyNameAttributeValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionEmptyNameAttributeValidationError"));
 		}
 
 		if (!elem.HasAttribute("Type"))
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionMissingTypeAttributeValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionMissingTypeAttributeValidationError"));
 		}
 		string typeStr = elem.GetAttribute("Type");
 		if (!Enum.TryParse(typeStr, out SettingType type))
@@ -110,7 +110,7 @@ internal static class CustomAppManifestLogics
 
 		if (!elem.HasAttribute("IgnoreAuditPolicies"))
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionMissingIgnoreAuditPoliciesAttributeValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionMissingIgnoreAuditPoliciesAttributeValidationError"));
 		}
 		string ignoreAuditPoliciesStr = elem.GetAttribute("IgnoreAuditPolicies");
 		if (!bool.TryParse(ignoreAuditPoliciesStr, out bool ignoreAuditPolicies))
@@ -137,12 +137,12 @@ internal static class CustomAppManifestLogics
 	{
 		if (manifest is null)
 		{
-			throw new ArgumentNullException(nameof(manifest), GlobalVars.Rizz.GetString("AppManifestObjectNullValidationError"));
+			throw new ArgumentNullException(nameof(manifest), GlobalVars.GetStr("AppManifestObjectNullValidationError"));
 		}
 
 		if (string.IsNullOrEmpty(manifest.Id))
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("AppManifestPropertyIdNullOrEmptyValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("AppManifestPropertyIdNullOrEmptyValidationError"));
 		}
 
 		XmlDocument xmlDoc = new();
@@ -160,11 +160,11 @@ internal static class CustomAppManifestLogics
 			{
 				if (setting is null)
 				{
-					throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionArrayNullElementValidationError"));
+					throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionArrayNullElementValidationError"));
 				}
 				if (string.IsNullOrEmpty(setting.Name))
 				{
-					throw new InvalidOperationException(GlobalVars.Rizz.GetString("SettingDefinitionPropertyNameNullOrEmptyValidationError"));
+					throw new InvalidOperationException(GlobalVars.GetStr("SettingDefinitionPropertyNameNullOrEmptyValidationError"));
 				}
 
 				XmlElement settingElem = xmlDoc.CreateElement("SettingDefinition", NamespaceUri);

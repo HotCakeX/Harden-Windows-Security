@@ -406,145 +406,145 @@ internal sealed partial class MainWindow : Window
 			ViewModel.RebuildNavigationPageToItemContentMapForSearch();
 			CustomUIElements.CustomPatternBasedFilePath.PopulateFilePathPatternExamplesCollection();
 
-			TitleBarSearchBox.PlaceholderText = GlobalVars.Rizz.GetString("MainSearchAutoSuggestBox/PlaceholderText");
-			AutomationProperties.SetHelpText(TitleBarSearchBox, GlobalVars.Rizz.GetString("MainSearchAutoSuggestBox/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(TitleBarSearchBox, GlobalVars.Rizz.GetString("MainSearchAutoSuggestBox/ToolTipService/ToolTip"));
+			TitleBarSearchBox.PlaceholderText = GlobalVars.GetStr("MainSearchAutoSuggestBox/PlaceholderText");
+			AutomationProperties.SetHelpText(TitleBarSearchBox, GlobalVars.GetStr("MainSearchAutoSuggestBox/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(TitleBarSearchBox, GlobalVars.GetStr("MainSearchAutoSuggestBox/ToolTipService/ToolTip"));
 
-			CreationNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("CreationNavigationViewItemHeader/Content");
+			CreationNavigationViewItemHeader.Content = GlobalVars.GetStr("CreationNavigationViewItemHeader/Content");
 
-			CreatePolicyNavItem.Content = GlobalVars.Rizz.GetString("CreatePolicyNavItem/Content");
-			AutomationProperties.SetHelpText(CreatePolicyNavItem, GlobalVars.Rizz.GetString("CreatePolicyNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CreatePolicyNavItem, GlobalVars.Rizz.GetString("CreatePolicyNavItem/ToolTipService/ToolTip"));
+			CreatePolicyNavItem.Content = GlobalVars.GetStr("CreatePolicyNavItem/Content");
+			AutomationProperties.SetHelpText(CreatePolicyNavItem, GlobalVars.GetStr("CreatePolicyNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CreatePolicyNavItem, GlobalVars.GetStr("CreatePolicyNavItem/ToolTipService/ToolTip"));
 
-			CreateSupplementalPolicyNavItem.Content = GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/Content");
-			AutomationProperties.SetHelpText(CreateSupplementalPolicyNavItem, GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CreateSupplementalPolicyNavItem, GlobalVars.Rizz.GetString("CreateSupplementalPolicyNavItem/ToolTipService/ToolTip"));
+			CreateSupplementalPolicyNavItem.Content = GlobalVars.GetStr("CreateSupplementalPolicyNavItem/Content");
+			AutomationProperties.SetHelpText(CreateSupplementalPolicyNavItem, GlobalVars.GetStr("CreateSupplementalPolicyNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CreateSupplementalPolicyNavItem, GlobalVars.GetStr("CreateSupplementalPolicyNavItem/ToolTipService/ToolTip"));
 
-			CreateDenyPolicyNavItem.Content = GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/Content");
-			AutomationProperties.SetHelpText(CreateDenyPolicyNavItem, GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CreateDenyPolicyNavItem, GlobalVars.Rizz.GetString("CreateDenyPolicyNavItem/ToolTipService/ToolTip"));
+			CreateDenyPolicyNavItem.Content = GlobalVars.GetStr("CreateDenyPolicyNavItem/Content");
+			AutomationProperties.SetHelpText(CreateDenyPolicyNavItem, GlobalVars.GetStr("CreateDenyPolicyNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CreateDenyPolicyNavItem, GlobalVars.GetStr("CreateDenyPolicyNavItem/ToolTipService/ToolTip"));
 
-			CertificatesNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("CertificatesNavigationViewItemHeader/Content");
+			CertificatesNavigationViewItemHeader.Content = GlobalVars.GetStr("CertificatesNavigationViewItemHeader/Content");
 
-			BuildNewCertificateNavItem.Content = GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/Content");
-			AutomationProperties.SetHelpText(BuildNewCertificateNavItem, GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(BuildNewCertificateNavItem, GlobalVars.Rizz.GetString("BuildNewCertificateNavItem/ToolTipService/ToolTip"));
+			BuildNewCertificateNavItem.Content = GlobalVars.GetStr("BuildNewCertificateNavItem/Content");
+			AutomationProperties.SetHelpText(BuildNewCertificateNavItem, GlobalVars.GetStr("BuildNewCertificateNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(BuildNewCertificateNavItem, GlobalVars.GetStr("BuildNewCertificateNavItem/ToolTipService/ToolTip"));
 
-			ViewFileCertificatesNavItem.Content = GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/Content");
-			AutomationProperties.SetHelpText(ViewFileCertificatesNavItem, GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(ViewFileCertificatesNavItem, GlobalVars.Rizz.GetString("ViewFileCertificatesNavItem/ToolTipService/ToolTip"));
+			ViewFileCertificatesNavItem.Content = GlobalVars.GetStr("ViewFileCertificatesNavItem/Content");
+			AutomationProperties.SetHelpText(ViewFileCertificatesNavItem, GlobalVars.GetStr("ViewFileCertificatesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ViewFileCertificatesNavItem, GlobalVars.GetStr("ViewFileCertificatesNavItem/ToolTipService/ToolTip"));
 
-			LogsProcessingNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("LogsProcessingNavigationViewItemHeader/Content");
+			LogsProcessingNavigationViewItemHeader.Content = GlobalVars.GetStr("LogsProcessingNavigationViewItemHeader/Content");
 
-			CreatePolicyFromEventLogsNavItem.Content = GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/Content");
-			AutomationProperties.SetHelpText(CreatePolicyFromEventLogsNavItem, GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CreatePolicyFromEventLogsNavItem, GlobalVars.Rizz.GetString("CreatePolicyFromEventLogsNavItem/ToolTipService/ToolTip"));
+			CreatePolicyFromEventLogsNavItem.Content = GlobalVars.GetStr("CreatePolicyFromEventLogsNavItem/Content");
+			AutomationProperties.SetHelpText(CreatePolicyFromEventLogsNavItem, GlobalVars.GetStr("CreatePolicyFromEventLogsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CreatePolicyFromEventLogsNavItem, GlobalVars.GetStr("CreatePolicyFromEventLogsNavItem/ToolTipService/ToolTip"));
 
-			CreatePolicyFromMDEAHNavItem.Content = GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/Content");
-			AutomationProperties.SetHelpText(CreatePolicyFromMDEAHNavItem, GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(CreatePolicyFromMDEAHNavItem, GlobalVars.Rizz.GetString("CreatePolicyFromMDEAHNavItem/ToolTipService/ToolTip"));
+			CreatePolicyFromMDEAHNavItem.Content = GlobalVars.GetStr("CreatePolicyFromMDEAHNavItem/Content");
+			AutomationProperties.SetHelpText(CreatePolicyFromMDEAHNavItem, GlobalVars.GetStr("CreatePolicyFromMDEAHNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CreatePolicyFromMDEAHNavItem, GlobalVars.GetStr("CreatePolicyFromMDEAHNavItem/ToolTipService/ToolTip"));
 
-			TacticalNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("TacticalNavigationViewItemHeader/Content");
+			TacticalNavigationViewItemHeader.Content = GlobalVars.GetStr("TacticalNavigationViewItemHeader/Content");
 
-			AllowNewAppsNavItem.Content = GlobalVars.Rizz.GetString("AllowNewAppsNavItem/Content");
-			AutomationProperties.SetHelpText(AllowNewAppsNavItem, GlobalVars.Rizz.GetString("AllowNewAppsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(AllowNewAppsNavItem, GlobalVars.Rizz.GetString("AllowNewAppsNavItem/ToolTipService/ToolTip"));
+			AllowNewAppsNavItem.Content = GlobalVars.GetStr("AllowNewAppsNavItem/Content");
+			AutomationProperties.SetHelpText(AllowNewAppsNavItem, GlobalVars.GetStr("AllowNewAppsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(AllowNewAppsNavItem, GlobalVars.GetStr("AllowNewAppsNavItem/ToolTipService/ToolTip"));
 
-			PolicyEditorNavItem.Content = GlobalVars.Rizz.GetString("PolicyEditorNavItem/Content");
+			PolicyEditorNavItem.Content = GlobalVars.GetStr("PolicyEditorNavItem/Content");
 
-			SimulationNavItem.Content = GlobalVars.Rizz.GetString("SimulationNavItem/Content");
-			AutomationProperties.SetHelpText(SimulationNavItem, GlobalVars.Rizz.GetString("SimulationNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SimulationNavItem, GlobalVars.Rizz.GetString("SimulationNavItem/ToolTipService/ToolTip"));
+			SimulationNavItem.Content = GlobalVars.GetStr("SimulationNavItem/Content");
+			AutomationProperties.SetHelpText(SimulationNavItem, GlobalVars.GetStr("SimulationNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(SimulationNavItem, GlobalVars.GetStr("SimulationNavItem/ToolTipService/ToolTip"));
 
-			InfoGatheringNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("InfoGatheringNavigationViewItemHeader/Content");
+			InfoGatheringNavigationViewItemHeader.Content = GlobalVars.GetStr("InfoGatheringNavigationViewItemHeader/Content");
 
-			SystemInformationNavItem.Content = GlobalVars.Rizz.GetString("SystemInformationNavItem/Content");
-			AutomationProperties.SetHelpText(SystemInformationNavItem, GlobalVars.Rizz.GetString("SystemInformationNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SystemInformationNavItem, GlobalVars.Rizz.GetString("SystemInformationNavItem/ToolTipService/ToolTip"));
+			SystemInformationNavItem.Content = GlobalVars.GetStr("SystemInformationNavItem/Content");
+			AutomationProperties.SetHelpText(SystemInformationNavItem, GlobalVars.GetStr("SystemInformationNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(SystemInformationNavItem, GlobalVars.GetStr("SystemInformationNavItem/ToolTipService/ToolTip"));
 
-			GetCodeIntegrityHashesNavItem.Content = GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/Content");
-			AutomationProperties.SetHelpText(GetCodeIntegrityHashesNavItem, GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(GetCodeIntegrityHashesNavItem, GlobalVars.Rizz.GetString("GetCodeIntegrityHashesNavItem/ToolTipService/ToolTip"));
+			GetCodeIntegrityHashesNavItem.Content = GlobalVars.GetStr("GetCodeIntegrityHashesNavItem/Content");
+			AutomationProperties.SetHelpText(GetCodeIntegrityHashesNavItem, GlobalVars.GetStr("GetCodeIntegrityHashesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(GetCodeIntegrityHashesNavItem, GlobalVars.GetStr("GetCodeIntegrityHashesNavItem/ToolTipService/ToolTip"));
 
-			GetSecurePolicySettingsNavItem.Content = GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/Content");
-			AutomationProperties.SetHelpText(GetSecurePolicySettingsNavItem, GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(GetSecurePolicySettingsNavItem, GlobalVars.Rizz.GetString("GetSecurePolicySettingsNavItem/ToolTipService/ToolTip"));
+			GetSecurePolicySettingsNavItem.Content = GlobalVars.GetStr("GetSecurePolicySettingsNavItem/Content");
+			AutomationProperties.SetHelpText(GetSecurePolicySettingsNavItem, GlobalVars.GetStr("GetSecurePolicySettingsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(GetSecurePolicySettingsNavItem, GlobalVars.GetStr("GetSecurePolicySettingsNavItem/ToolTipService/ToolTip"));
 
-			PolicyManagementNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("PolicyManagementNavigationViewItemHeader/Content");
+			PolicyManagementNavigationViewItemHeader.Content = GlobalVars.GetStr("PolicyManagementNavigationViewItemHeader/Content");
 
-			ConfigurePolicyRuleOptionsNavItem.Content = GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/Content");
-			AutomationProperties.SetHelpText(ConfigurePolicyRuleOptionsNavItem, GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(ConfigurePolicyRuleOptionsNavItem, GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptionsNavItem/ToolTipService/ToolTip"));
+			ConfigurePolicyRuleOptionsNavItem.Content = GlobalVars.GetStr("ConfigurePolicyRuleOptionsNavItem/Content");
+			AutomationProperties.SetHelpText(ConfigurePolicyRuleOptionsNavItem, GlobalVars.GetStr("ConfigurePolicyRuleOptionsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ConfigurePolicyRuleOptionsNavItem, GlobalVars.GetStr("ConfigurePolicyRuleOptionsNavItem/ToolTipService/ToolTip"));
 
-			MergePoliciesNavItem.Content = GlobalVars.Rizz.GetString("MergePoliciesNavItem/Content");
-			AutomationProperties.SetHelpText(MergePoliciesNavItem, GlobalVars.Rizz.GetString("MergePoliciesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(MergePoliciesNavItem, GlobalVars.Rizz.GetString("MergePoliciesNavItem/ToolTipService/ToolTip"));
+			MergePoliciesNavItem.Content = GlobalVars.GetStr("MergePoliciesNavItem/Content");
+			AutomationProperties.SetHelpText(MergePoliciesNavItem, GlobalVars.GetStr("MergePoliciesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(MergePoliciesNavItem, GlobalVars.GetStr("MergePoliciesNavItem/ToolTipService/ToolTip"));
 
-			DeploymentNavItem.Content = GlobalVars.Rizz.GetString("DeploymentNavItem/Content");
-			AutomationProperties.SetHelpText(DeploymentNavItem, GlobalVars.Rizz.GetString("DeploymentNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(DeploymentNavItem, GlobalVars.Rizz.GetString("DeploymentNavItem/ToolTipService/ToolTip"));
+			DeploymentNavItem.Content = GlobalVars.GetStr("DeploymentNavItem/Content");
+			AutomationProperties.SetHelpText(DeploymentNavItem, GlobalVars.GetStr("DeploymentNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(DeploymentNavItem, GlobalVars.GetStr("DeploymentNavItem/ToolTipService/ToolTip"));
 
-			ValidatePoliciesNavItem.Content = GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/Content");
-			AutomationProperties.SetHelpText(ValidatePoliciesNavItem, GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(ValidatePoliciesNavItem, GlobalVars.Rizz.GetString("ValidatePoliciesNavItem/ToolTipService/ToolTip"));
+			ValidatePoliciesNavItem.Content = GlobalVars.GetStr("ValidatePoliciesNavItem/Content");
+			AutomationProperties.SetHelpText(ValidatePoliciesNavItem, GlobalVars.GetStr("ValidatePoliciesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ValidatePoliciesNavItem, GlobalVars.GetStr("ValidatePoliciesNavItem/ToolTipService/ToolTip"));
 
-			DocumentationNavigationViewItemHeader.Content = GlobalVars.Rizz.GetString("DocumentationNavigationViewItemHeader/Content");
+			DocumentationNavigationViewItemHeader.Content = GlobalVars.GetStr("DocumentationNavigationViewItemHeader/Content");
 
-			GitHubDocsNavItem.Content = GlobalVars.Rizz.GetString("GitHubDocsNavItem/Content");
-			AutomationProperties.SetHelpText(GitHubDocsNavItem, GlobalVars.Rizz.GetString("GitHubDocsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(GitHubDocsNavItem, GlobalVars.Rizz.GetString("GitHubDocsNavItem/ToolTipService/ToolTip"));
+			GitHubDocsNavItem.Content = GlobalVars.GetStr("GitHubDocsNavItem/Content");
+			AutomationProperties.SetHelpText(GitHubDocsNavItem, GlobalVars.GetStr("GitHubDocsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(GitHubDocsNavItem, GlobalVars.GetStr("GitHubDocsNavItem/ToolTipService/ToolTip"));
 
-			MSFTDocsNavItem.Content = GlobalVars.Rizz.GetString("MSFTDocsNavItem/Content");
-			AutomationProperties.SetHelpText(MSFTDocsNavItem, GlobalVars.Rizz.GetString("MSFTDocsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(MSFTDocsNavItem, GlobalVars.Rizz.GetString("MSFTDocsNavItem/ToolTipService/ToolTip"));
+			MSFTDocsNavItem.Content = GlobalVars.GetStr("MSFTDocsNavItem/Content");
+			AutomationProperties.SetHelpText(MSFTDocsNavItem, GlobalVars.GetStr("MSFTDocsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(MSFTDocsNavItem, GlobalVars.GetStr("MSFTDocsNavItem/ToolTipService/ToolTip"));
 
-			LogsNavItem.Content = GlobalVars.Rizz.GetString("LogsNavItem/Content");
-			AutomationProperties.SetHelpText(LogsNavItem, GlobalVars.Rizz.GetString("LogsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(LogsNavItem, GlobalVars.Rizz.GetString("LogsNavItem/ToolTipService/ToolTip"));
+			LogsNavItem.Content = GlobalVars.GetStr("LogsNavItem/Content");
+			AutomationProperties.SetHelpText(LogsNavItem, GlobalVars.GetStr("LogsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(LogsNavItem, GlobalVars.GetStr("LogsNavItem/ToolTipService/ToolTip"));
 
-			UpdateNavItem.Content = GlobalVars.Rizz.GetString("UpdateNavItem/Content");
-			AutomationProperties.SetHelpText(UpdateNavItem, GlobalVars.Rizz.GetString("UpdateNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(UpdateNavItem, GlobalVars.Rizz.GetString("UpdateNavItem/ToolTipService/ToolTip"));
+			UpdateNavItem.Content = GlobalVars.GetStr("UpdateNavItem/Content");
+			AutomationProperties.SetHelpText(UpdateNavItem, GlobalVars.GetStr("UpdateNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(UpdateNavItem, GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip"));
 
-			SidebarTextBlock.Text = GlobalVars.Rizz.GetString("SidebarTextBlock/Text");
+			SidebarTextBlock.Text = GlobalVars.GetStr("SidebarTextBlock/Text");
 
-			SidebarMainCaptionTextBlock.Text = GlobalVars.Rizz.GetString("SidebarMainCaptionTextBlock/Text");
+			SidebarMainCaptionTextBlock.Text = GlobalVars.GetStr("SidebarMainCaptionTextBlock/Text");
 
-			SidebarPinnedPolicyPathTextBlock.Text = GlobalVars.Rizz.GetString("SidebarPinnedPolicyPathTextBlock/Text");
+			SidebarPinnedPolicyPathTextBlock.Text = GlobalVars.GetStr("SidebarPinnedPolicyPathTextBlock/Text");
 
-			SidebarPolicyPathPlaceHolder.PlaceholderText = GlobalVars.Rizz.GetString("SidebarPolicyPathPlaceHolder/PlaceholderText");
+			SidebarPolicyPathPlaceHolder.PlaceholderText = GlobalVars.GetStr("SidebarPolicyPathPlaceHolder/PlaceholderText");
 
-			AutomationProperties.SetHelpText(SidebarBrowseButton, GlobalVars.Rizz.GetString("SidebarBrowseButton/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SidebarBrowseButton, GlobalVars.Rizz.GetString("SidebarBrowseButton/ToolTipService/ToolTip"));
+			AutomationProperties.SetHelpText(SidebarBrowseButton, GlobalVars.GetStr("SidebarBrowseButton/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(SidebarBrowseButton, GlobalVars.GetStr("SidebarBrowseButton/ToolTipService/ToolTip"));
 
-			BrowseTextBlock.Text = GlobalVars.Rizz.GetString("BrowseTextBlock/Text");
+			BrowseTextBlock.Text = GlobalVars.GetStr("BrowseTextBlock/Text");
 
-			AutomationProperties.SetHelpText(SidebarClearButton, GlobalVars.Rizz.GetString("SidebarClearButton/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SidebarClearButton, GlobalVars.Rizz.GetString("SidebarClearButton/ToolTipService/ToolTip"));
+			AutomationProperties.SetHelpText(SidebarClearButton, GlobalVars.GetStr("SidebarClearButton/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(SidebarClearButton, GlobalVars.GetStr("SidebarClearButton/ToolTipService/ToolTip"));
 
-			ClearTextBlock.Text = GlobalVars.Rizz.GetString("ClearTextBlock/Text");
+			ClearTextBlock.Text = GlobalVars.GetStr("ClearTextBlock/Text");
 
-			AutomationProperties.SetHelpText(SidebarPolicySelectAssignmentButton, GlobalVars.Rizz.GetString("SidebarPolicySelectAssignmentButton/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SidebarPolicySelectAssignmentButton, GlobalVars.Rizz.GetString("SidebarPolicySelectAssignmentButton/ToolTipService/ToolTip"));
+			AutomationProperties.SetHelpText(SidebarPolicySelectAssignmentButton, GlobalVars.GetStr("SidebarPolicySelectAssignmentButton/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(SidebarPolicySelectAssignmentButton, GlobalVars.GetStr("SidebarPolicySelectAssignmentButton/ToolTipService/ToolTip"));
 
-			SelectTextBlock.Text = GlobalVars.Rizz.GetString("SelectTextBlock/Text");
+			SelectTextBlock.Text = GlobalVars.GetStr("SelectTextBlock/Text");
 
-			SidebarAutomaticAssignmentSettingsCard.Header = GlobalVars.Rizz.GetString("SidebarAutomaticAssignmentSettingsCard/Header");
-			SidebarAutomaticAssignmentSettingsCard.Description = GlobalVars.Rizz.GetString("SidebarAutomaticAssignmentSettingsCard/Description");
-			AutomationProperties.SetHelpText(SidebarAutomaticAssignmentSettingsCard, GlobalVars.Rizz.GetString("SidebarAutomaticAssignmentSettingsCard/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(SidebarAutomaticAssignmentSettingsCard, GlobalVars.Rizz.GetString("SidebarAutomaticAssignmentSettingsCard/ToolTipService/ToolTip"));
+			SidebarAutomaticAssignmentSettingsCard.Header = GlobalVars.GetStr("SidebarAutomaticAssignmentSettingsCard/Header");
+			SidebarAutomaticAssignmentSettingsCard.Description = GlobalVars.GetStr("SidebarAutomaticAssignmentSettingsCard/Description");
+			AutomationProperties.SetHelpText(SidebarAutomaticAssignmentSettingsCard, GlobalVars.GetStr("SidebarAutomaticAssignmentSettingsCard/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(SidebarAutomaticAssignmentSettingsCard, GlobalVars.GetStr("SidebarAutomaticAssignmentSettingsCard/ToolTipService/ToolTip"));
 
-			SidebarGuideHyperlinkButton.Content = GlobalVars.Rizz.GetString("SidebarGuideHyperlinkButton/Content");
+			SidebarGuideHyperlinkButton.Content = GlobalVars.GetStr("SidebarGuideHyperlinkButton/Content");
 
-			OpenConfigDirectoryButtonText.Text = GlobalVars.Rizz.GetString("OpenConfigDirectoryButtonText/Text");
+			OpenConfigDirectoryButtonText.Text = GlobalVars.GetStr("OpenConfigDirectoryButtonText/Text");
 
-			AutomationProperties.SetHelpText(OpenConfigDirectoryButton, GlobalVars.Rizz.GetString("OpenConfigDirectoryButton/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(OpenConfigDirectoryButton, GlobalVars.Rizz.GetString("OpenConfigDirectoryButton/ToolTipService/ToolTip"));
+			AutomationProperties.SetHelpText(OpenConfigDirectoryButton, GlobalVars.GetStr("OpenConfigDirectoryButton/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(OpenConfigDirectoryButton, GlobalVars.GetStr("OpenConfigDirectoryButton/ToolTipService/ToolTip"));
 
-			SidebarHelpHyperlinkTextBlock.Text = GlobalVars.Rizz.GetString("SidebarHelpHyperlinkTextBlock/Text");
+			SidebarHelpHyperlinkTextBlock.Text = GlobalVars.GetStr("SidebarHelpHyperlinkTextBlock/Text");
 
-			AutomaticAssignmentSidebarToggleSwitch.OnContent = GlobalVars.Rizz.GetString("ToggleSwitchGeneral/OnContent");
-			AutomaticAssignmentSidebarToggleSwitch.OffContent = GlobalVars.Rizz.GetString("ToggleSwitchGeneral/OffContent");
+			AutomaticAssignmentSidebarToggleSwitch.OnContent = GlobalVars.GetStr("ToggleSwitchGeneral/OnContent");
+			AutomaticAssignmentSidebarToggleSwitch.OffContent = GlobalVars.GetStr("ToggleSwitchGeneral/OffContent");
 
 			Logger.Write("MainWindow localized text refreshed successfully");
 		}

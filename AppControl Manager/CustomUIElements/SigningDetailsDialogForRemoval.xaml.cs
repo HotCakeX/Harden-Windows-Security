@@ -95,7 +95,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			if (this.DispatcherQueue is not null)
 			{
 				// Use DispatcherQueue to ensure we're on the UI thread
-				this.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+				_ = this.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
 				{
 					try
 					{
@@ -287,7 +287,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			// Disable UI elements during verification
 			DisableUIElements();
 
-			VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("VerifyButtonText");
+			VerifyButtonContentTextBlock.Text = GlobalVars.GetStr("VerifyButtonText");
 
 			VerifyButtonProgressRing.Visibility = Visibility.Visible;
 
@@ -300,19 +300,19 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 			if (string.IsNullOrWhiteSpace(CertFilePathTextBox.Text))
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("PleaseSelectCertificateFileMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("PleaseSelectCertificateFileMessage"));
 				return;
 			}
 
 			if (!File.Exists(CertFilePathTextBox.Text))
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateFilePathNotExistMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("CertificateFilePathNotExistMessage"));
 				return;
 			}
 
 			if (!string.Equals(Path.GetExtension(CertFilePathTextBox.Text), ".cer", StringComparison.OrdinalIgnoreCase))
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateExtensionInvalidMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("CertificateExtensionInvalidMessage"));
 				return;
 			}
 
@@ -322,13 +322,13 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 			if (string.IsNullOrWhiteSpace(CertificateCommonNameAutoSuggestBox.Text))
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("PleaseSelectCertificateCommonNameMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("PleaseSelectCertificateCommonNameMessage"));
 				return;
 			}
 
 			if (!CertCommonNames.Contains(CertificateCommonNameAutoSuggestBox.Text))
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateCommonNameNotFoundMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("CertificateCommonNameNotFoundMessage"));
 				return;
 			}
 
@@ -338,19 +338,19 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 			if (string.IsNullOrWhiteSpace(XMLPolicyFileTextBox.Text))
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("PleaseSelectXmlPolicyFileMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("PleaseSelectXmlPolicyFileMessage"));
 				return;
 			}
 
 			if (!File.Exists(XMLPolicyFileTextBox.Text))
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("XmlPolicyFilePathNotExistMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("XmlPolicyFilePathNotExistMessage"));
 				return;
 			}
 
 			if (!string.Equals(Path.GetExtension(XMLPolicyFileTextBox.Text), ".xml", StringComparison.OrdinalIgnoreCase))
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("XmlPolicyExtensionInvalidMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("XmlPolicyExtensionInvalidMessage"));
 				return;
 			}
 
@@ -371,19 +371,19 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 			if (possibleDeployedPolicy is null)
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("XmlPolicyNotDeployedMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("XmlPolicyNotDeployedMessage"));
 				return;
 			}
 
 			if (!string.Equals(policyObject!.PolicyID, $"{{{policyIDBeingRemoved}}}", StringComparison.OrdinalIgnoreCase))
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("XmlPolicyNotBeingRemovedMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("XmlPolicyNotBeingRemovedMessage"));
 				return;
 			}
 
 			if (policyObject.PolicyType is SiPolicy.PolicyType.SupplementalPolicy)
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("SupplementalPoliciesRemovalMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("SupplementalPoliciesRemovalMessage"));
 				return;
 			}
 
@@ -403,7 +403,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 			if (!certIsUpdatePolicySigner)
 			{
-				ShowTeachingTip(GlobalVars.Rizz.GetString("CertificateNotInPolicyRemovalMessage"));
+				ShowTeachingTip(GlobalVars.GetStr("CertificateNotInPolicyRemovalMessage"));
 				return;
 			}
 
@@ -415,19 +415,19 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			{
 				if (string.IsNullOrWhiteSpace(SignToolPathTextBox.Text))
 				{
-					ShowTeachingTip(GlobalVars.Rizz.GetString("PleaseSelectSignToolPathOrEnableAutoAcquireMessage"));
+					ShowTeachingTip(GlobalVars.GetStr("PleaseSelectSignToolPathOrEnableAutoAcquireMessage"));
 					return;
 				}
 
 				if (!File.Exists(SignToolPathTextBox.Text))
 				{
-					ShowTeachingTip(GlobalVars.Rizz.GetString("SignToolNotExistMessage"));
+					ShowTeachingTip(GlobalVars.GetStr("SignToolNotExistMessage"));
 					return;
 				}
 
 				if (!string.Equals(Path.GetExtension(SignToolPathTextBox.Text), ".exe", StringComparison.OrdinalIgnoreCase))
 				{
-					ShowTeachingTip(GlobalVars.Rizz.GetString("SignToolExtensionInvalidMessage"));
+					ShowTeachingTip(GlobalVars.GetStr("SignToolExtensionInvalidMessage"));
 					return;
 				}
 			}
@@ -435,7 +435,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			{
 				try
 				{
-					VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("DownloadingSignToolButtonText");
+					VerifyButtonContentTextBlock.Text = GlobalVars.GetStr("DownloadingSignToolButtonText");
 
 					string newSignToolPath;
 
@@ -450,7 +450,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 				}
 				finally
 				{
-					VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("VerifyButtonText");
+					VerifyButtonContentTextBlock.Text = GlobalVars.GetStr("VerifyButtonText");
 				}
 			}
 
@@ -477,7 +477,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 					if (this.DispatcherQueue is not null)
 					{
 						// Use DispatcherQueue to ensure we're on the UI thread
-						this.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+						_ = this.DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
 						{
 							try
 							{
@@ -535,7 +535,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 			}
 			else
 			{
-				VerifyButtonContentTextBlock.Text = GlobalVars.Rizz.GetString("VerificationSuccessfulText");
+				VerifyButtonContentTextBlock.Text = GlobalVars.GetStr("VerificationSuccessfulText");
 			}
 
 			VerificationRunning = false;

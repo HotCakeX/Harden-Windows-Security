@@ -42,7 +42,7 @@ internal static partial class BasePolicyCreator
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void SetAutoUpdateDriverBlockRules()
 	{
-		Logger.Write(GlobalVars.Rizz.GetString("CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage"));
+		Logger.Write(GlobalVars.GetStr("CreatingScheduledTaskForFastWeeklyDriverBlockListUpdateMessage"));
 
 		/*
 
@@ -250,7 +250,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 				lastUpdated = DateTime.Parse(dateString, CultureInfo.InvariantCulture);
 
 				Logger.Write(string.Format(
-					GlobalVars.Rizz.GetString("DriversBlockListLastUpdatedMessage"),
+					GlobalVars.GetStr("DriversBlockListLastUpdatedMessage"),
 					lastUpdated));
 			}
 
@@ -258,7 +258,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("ErrorRetrievingAdditionalDriverBlockRulesInfoMessage"));
+			Logger.Write(GlobalVars.GetStr("ErrorRetrievingAdditionalDriverBlockRulesInfoMessage"));
 
 			Logger.Write(ErrorWriter.FormatException(ex));
 
@@ -294,7 +294,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		else
 		{
 			throw new InvalidOperationException(
-				GlobalVars.Rizz.GetString("DeployDriversBlockRulesSystemDriveNullMessage"));
+				GlobalVars.GetStr("DeployDriversBlockRulesSystemDriveNullMessage"));
 		}
 
 		// Download the zip file
@@ -341,10 +341,10 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		// Move the SiPolicy file to the final destination, renaming it in the process
 		File.Move(SiPolicyPath, SiPolicyFinalDestination);
 
-		Logger.Write(GlobalVars.Rizz.GetString("DeployDriversBlockRulesRefreshPoliciesMessage"));
+		Logger.Write(GlobalVars.GetStr("DeployDriversBlockRulesRefreshPoliciesMessage"));
 		CiToolHelper.RefreshPolicy();
 
-		Logger.Write(GlobalVars.Rizz.GetString("DeployDriversBlockRulesDeployedMessage"));
+		Logger.Write(GlobalVars.GetStr("DeployDriversBlockRulesDeployedMessage"));
 
 		return (null, policyVersion);
 	}
@@ -406,7 +406,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		File.Copy(xmlPath, savePathLocation, true);
 
 		Logger.Write(string.Format(
-			  GlobalVars.Rizz.GetString("PolicyFileCreatedSavedMessage"),
+			  GlobalVars.GetStr("PolicyFileCreatedSavedMessage"),
 			  savePathLocation));
 
 		return (savePathLocation, policyVersion);
@@ -456,7 +456,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 
 		File.Copy(GlobalVars.AllowMicrosoftTemplatePolicyPath, tempPolicyPath, true);
 
-		Logger.Write(GlobalVars.Rizz.GetString("ResettingPolicyIdAndAssigningPolicyNameMessage"));
+		Logger.Write(GlobalVars.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
 
 		// Get the policy ID of the policy being created
 		string policyID = SetCiPolicyInfo.Set(
@@ -494,7 +494,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 
 		if (deploy)
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("ConvertingPolicyFileToCipBinaryMessage"));
+			Logger.Write(GlobalVars.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
 
 			SiPolicy.Management.ConvertXMLToBinary(
 				tempPolicyPath,
@@ -556,7 +556,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 
 		File.Copy(GlobalVars.DefaultWindowsTemplatePolicyPath, tempPolicyPath, true);
 
-		Logger.Write(GlobalVars.Rizz.GetString("ResettingPolicyIdAndAssigningPolicyNameMessage"));
+		Logger.Write(GlobalVars.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
 
 		// Get the policy ID of the policy being created
 		string policyID = SetCiPolicyInfo.Set(
@@ -594,7 +594,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 
 		if (deploy)
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("ConvertingPolicyFileToCipBinaryMessage"));
+			Logger.Write(GlobalVars.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
 
 			SiPolicy.Management.ConvertXMLToBinary(
 				tempPolicyPath,
@@ -627,7 +627,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		const string policyName = "Microsoft Windows Recommended User Mode BlockList";
 
 		Logger.Write(string.Format(
-			GlobalVars.Rizz.GetString("GettingLatestPolicyFromOfficialRepoMessage"),
+			GlobalVars.GetStr("GettingLatestPolicyFromOfficialRepoMessage"),
 			policyName));
 
 		// Download the markdown page from GitHub containing the latest Microsoft recommended block rules (User Mode)
@@ -654,7 +654,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		else
 		{
 			throw new InvalidOperationException(
-				GlobalVars.Rizz.GetString("NoXmlContentFoundForUserModeBlockRulesErrorMessage"));
+				GlobalVars.GetStr("NoXmlContentFoundForUserModeBlockRulesErrorMessage"));
 		}
 
 		// Load the XML content into an XmlDocument
@@ -678,7 +678,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 			rulesToAdd: [SiPolicy.OptionType.EnabledUpdatePolicyNoReboot, SiPolicy.OptionType.DisabledScriptEnforcement],
 			rulesToRemove: [SiPolicy.OptionType.EnabledAuditMode, SiPolicy.OptionType.EnabledAdvancedBootOptionsMenu]);
 
-		Logger.Write(GlobalVars.Rizz.GetString("AssigningPolicyNameAndResettingPolicyIDMessage"));
+		Logger.Write(GlobalVars.GetStr("AssigningPolicyNameAndResettingPolicyIDMessage"));
 
 		// Get the policyID of the policy being created
 		_ = SetCiPolicyInfo.Set(tempPolicyPath, true, policyName, null, null);
@@ -688,7 +688,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		if (deploy)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("CheckingIfPolicyIsAlreadyDeployedMessage"),
+				GlobalVars.GetStr("CheckingIfPolicyIsAlreadyDeployedMessage"),
 				policyName));
 
 			// Getting the list of the deployed base policies whose names match the policyName
@@ -707,7 +707,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 				string CurrentlyDeployedBlockRulesGUID = CurrentlyDeployedBlockRules.First().PolicyID!;
 
 				Logger.Write(string.Format(
-					GlobalVars.Rizz.GetString("PolicyAlreadyDeployedUpdatingUsingSameGuidMessage"),
+					GlobalVars.GetStr("PolicyAlreadyDeployedUpdatingUsingSameGuidMessage"),
 					policyName,
 					CurrentlyDeployedBlockRulesGUID));
 
@@ -717,7 +717,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 			else
 			{
 				Logger.Write(string.Format(
-					GlobalVars.Rizz.GetString("PolicyNotDeployedDeployingNowMessage"),
+					GlobalVars.GetStr("PolicyNotDeployedDeployingNowMessage"),
 					policyName));
 			}
 
@@ -787,7 +787,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 			TestMode: TestMode);
 
 
-		Logger.Write(GlobalVars.Rizz.GetString("ResettingPolicyIdAndAssigningPolicyNameMessage"));
+		Logger.Write(GlobalVars.GetStr("ResettingPolicyIdAndAssigningPolicyNameMessage"));
 
 		// Get the policyID of the policy being created
 		string policyID = SetCiPolicyInfo.Set(
@@ -814,7 +814,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		{
 			ConfigureISGServices.Configure();
 
-			Logger.Write(GlobalVars.Rizz.GetString("ConvertingPolicyFileToCipBinaryMessage"));
+			Logger.Write(GlobalVars.GetStr("ConvertingPolicyFileToCipBinaryMessage"));
 
 			SiPolicy.Management.ConvertXMLToBinary(tempPolicyPath, null, tempPolicyCIPPath);
 
@@ -883,7 +883,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		if (deploy)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("DeployingStrictKernelModePolicyMessage"),
+				GlobalVars.GetStr("DeployingStrictKernelModePolicyMessage"),
 				policyID));
 
 			string cipPath = Path.Combine(StagingArea, $"{fileName}.cip");

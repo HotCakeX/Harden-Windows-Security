@@ -25,7 +25,7 @@ internal static class PrepareEmptyPolicy
 	/// <summary>
 	/// Copies the empty policy in app resources to the defined directory and returns its new path
 	/// </summary>
-	/// <param name="directory"></param>
+	/// <param name="directory">The directory where the empty policy file will be saved to.</param>
 	/// <returns></returns>
 	internal static string Prepare(string directory)
 	{

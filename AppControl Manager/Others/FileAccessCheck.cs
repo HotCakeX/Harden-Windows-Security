@@ -54,7 +54,7 @@ internal static class FileAccessCheck
 			{
 				Logger.Write(
 					string.Format(
-						GlobalVars.Rizz.GetString("FileRequiresElevatedPermissionsMessage"),
+						GlobalVars.GetStr("FileRequiresElevatedPermissionsMessage"),
 						filePath
 					)
 				);

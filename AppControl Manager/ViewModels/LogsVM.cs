@@ -27,7 +27,7 @@ using Microsoft.UI.Xaml;
 
 namespace AppControlManager.ViewModels;
 
-internal sealed partial class LogsVM : ViewModelBase
+internal sealed partial class LogsVM : ViewModelBase, IDisposable
 {
 	private const string LogFilePattern = "AppControlManager_Logs_*.txt";
 	internal static readonly char[] LineSeparators = ['\r', '\n'];
@@ -47,6 +47,11 @@ internal sealed partial class LogsVM : ViewModelBase
 	/// Atomic counter to track file display operations and prevent race conditions.
 	/// </summary>
 	private volatile int _displayOperationId;
+
+	/// <summary>
+	/// Track disposal state to prevent double disposal.
+	/// </summary>
+	private volatile bool _isDisposed;
 
 	/// <summary>
 	/// Filter predicate for log lines.
@@ -180,7 +185,7 @@ internal sealed partial class LogsVM : ViewModelBase
 	{
 		return async () =>
 		{
-			return await Task.Run(() =>
+			return await Task.Run<IFileDataProvider>(() =>
 			{
 				try
 				{
@@ -190,12 +195,12 @@ internal sealed partial class LogsVM : ViewModelBase
 					if (isActiveLogFile)
 					{
 						// Use stream-based provider for the active log file
-						return (IFileDataProvider)new StreamBasedFileDataProvider(filePath);
+						return new StreamBasedFileDataProvider(filePath);
 					}
 					else
 					{
 						// Use memory-mapped provider for inactive log files
-						return (IFileDataProvider)new MemoryMappedFileDataProvider(filePath);
+						return new MemoryMappedFileDataProvider(filePath);
 					}
 				}
 				catch (Exception ex)
@@ -212,10 +217,14 @@ internal sealed partial class LogsVM : ViewModelBase
 	/// </summary>
 	private async Task DisplayLogContentAsync(string filePath)
 	{
+		if (_isDisposed) return;
+
 		await _displaySemaphore.WaitAsync();
 
 		try
 		{
+			if (_isDisposed) return;
+
 			int currentOperationId = Interlocked.Increment(ref _displayOperationId);
 
 			IsLoading = true;
@@ -267,10 +276,15 @@ internal sealed partial class LogsVM : ViewModelBase
 	/// </summary>
 	private void OnLoadingStateChanged(object? sender, bool isLoading)
 	{
+		if (_isDisposed) return;
+
 		// Update loading state on UI thread
-		App.MainWindow?.DispatcherQueue.TryEnqueue(() =>
+		_ = App.MainWindow?.DispatcherQueue.TryEnqueue(() =>
 		{
-			IsLoading = isLoading;
+			if (!_isDisposed)
+			{
+				IsLoading = isLoading;
+			}
 		});
 	}
 
@@ -281,6 +295,8 @@ internal sealed partial class LogsVM : ViewModelBase
 	/// </summary>
 	private async Task UpdateLogDisplayAsync()
 	{
+		if (_isDisposed) return;
+
 		try
 		{
 			// Cancel previous search
@@ -318,6 +334,8 @@ internal sealed partial class LogsVM : ViewModelBase
 	/// </summary>
 	internal async Task CleanupCurrentSession()
 	{
+		if (_isDisposed) return;
+
 		// Cancel any pending search operations
 		if (_searchCancellationTokenSource is not null)
 		{
@@ -334,5 +352,48 @@ internal sealed partial class LogsVM : ViewModelBase
 
 		// Clear search text
 		SearchText = string.Empty;
+	}
+
+	/// <summary>
+	/// Disposes of resources used by the LogsVM.
+	/// </summary>
+	public void Dispose()
+	{
+		if (_isDisposed) return;
+
+		_isDisposed = true;
+
+		try
+		{
+			// Unsubscribe from events to prevent memory leaks
+			LogCollection.LoadingStateChanged -= OnLoadingStateChanged;
+		}
+		catch { }
+
+		// Cancel and dispose search cancellation token source
+		if (_searchCancellationTokenSource is not null)
+		{
+			try
+			{
+				_searchCancellationTokenSource.Cancel();
+				_searchCancellationTokenSource.Dispose();
+				_searchCancellationTokenSource = null;
+			}
+			catch { }
+		}
+
+		// Dispose the semaphore
+		try
+		{
+			_displaySemaphore?.Dispose();
+		}
+		catch { }
+
+		// Dispose the LogCollection
+		try
+		{
+			LogCollection?.Dispose();
+		}
+		catch { }
 	}
 }

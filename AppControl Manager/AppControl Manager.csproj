@@ -76,7 +76,7 @@
     <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
     <ErrorReport>send</ErrorReport>
-    <FileVersion>2.0.31.0</FileVersion>
+    <FileVersion>2.0.32.0</FileVersion>
     <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <StartupObject>AppControlManager.Program</StartupObject>
@@ -256,7 +256,7 @@
   <ItemGroup>
 
     <!-- Main Packages - Without these packages, there will be compilaton errors related to missing types -->
-    <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250618-build.2154" />
+    <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250626-build.2162" />
     <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.2.250402" />
@@ -267,8 +267,8 @@
     <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
     <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250402" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.73.0" />
-    <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.73.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.73.1" />
+    <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.73.1" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0-preview.5.25277.114" />
@@ -288,7 +288,7 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
     <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.5.25277.114" />
     <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.5.25277.114" />
-    <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.1" />
+    <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.2" />
 
   </ItemGroup>
 

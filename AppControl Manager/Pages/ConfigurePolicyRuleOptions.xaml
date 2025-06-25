@@ -107,7 +107,7 @@
                     </controls:WrapPanel>
 
                     <controls:SettingsExpander.Items>
-                        <customUI:SettingsCardV2 Header="Enabled:UMCI"                                               
+                        <customUI:SettingsCardV2 Header="Enabled:UMCI"
                                                  ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:UMCI'], Mode=OneTime}"
                                                  Description="{x:Bind ViewModel.RuleOptions['Enabled:UMCI'], Mode=OneTime}">
                             <CheckBox IsChecked="{x:Bind ViewModel.EnabledUMCICheckBox, Mode=TwoWay}"

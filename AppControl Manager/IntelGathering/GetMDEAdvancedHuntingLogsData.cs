@@ -143,23 +143,21 @@ internal static class GetMDEAdvancedHuntingLogsData
 						}
 
 						// Extract values using XPath
-						FileSignerInfo signerInfo = new()
-						{
-
-							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
-							Signature = correlatedEvent.Signature,
-							Hash = correlatedEvent.Hash,
-							SignatureType = CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							VerificationError = CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							Flags = correlatedEvent.Flags,
-							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
-							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
-							PublisherName = PublisherName,
-							IssuerName = correlatedEvent.IssuerName,
-							PublisherTBSHash = PublisherTBSHash,
-							IssuerTBSHash = correlatedEvent.IssuerTBSHash
-						};
+						FileSignerInfo signerInfo = new(
+							totalSignatureCount: correlatedEvent.TotalSignatureCount,
+							signature: correlatedEvent.Signature,
+							hash: correlatedEvent.Hash,
+							signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+							verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+							flags: correlatedEvent.Flags,
+							notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
+							notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
+							publisherName: PublisherName,
+							issuerName: correlatedEvent.IssuerName,
+							publisherTBSHash: PublisherTBSHash,
+							issuerTBSHash: correlatedEvent.IssuerTBSHash
+						);
 
 						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
 						_ = eventData.FilePublishers.Add(PublisherName);
@@ -248,23 +246,21 @@ internal static class GetMDEAdvancedHuntingLogsData
 						}
 
 						// Extract values using XPath
-						FileSignerInfo signerInfo = new()
-						{
-
-							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
-							Signature = correlatedEvent.Signature,
-							Hash = correlatedEvent.Hash,
-							SignatureType = CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							VerificationError = CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							Flags = correlatedEvent.Flags,
-							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
-							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
-							PublisherName = PublisherName,
-							IssuerName = correlatedEvent.IssuerName,
-							PublisherTBSHash = PublisherTBSHash,
-							IssuerTBSHash = correlatedEvent.IssuerTBSHash
-						};
+						FileSignerInfo signerInfo = new(
+							totalSignatureCount: correlatedEvent.TotalSignatureCount,
+							signature: correlatedEvent.Signature,
+							hash: correlatedEvent.Hash,
+							signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+							verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+							flags: correlatedEvent.Flags,
+							notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
+							notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
+							publisherName: PublisherName,
+							issuerName: correlatedEvent.IssuerName,
+							publisherTBSHash: PublisherTBSHash,
+							issuerTBSHash: correlatedEvent.IssuerTBSHash
+						);
 
 						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
 						_ = eventData.FilePublishers.Add(PublisherName);
@@ -355,23 +351,21 @@ internal static class GetMDEAdvancedHuntingLogsData
 						}
 
 						// Extract values using XPath
-						FileSignerInfo signerInfo = new()
-						{
-
-							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
-							Signature = correlatedEvent.Signature,
-							Hash = correlatedEvent.Hash,
-							SignatureType = CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							VerificationError = CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							Flags = correlatedEvent.Flags,
-							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
-							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
-							PublisherName = PublisherName,
-							IssuerName = correlatedEvent.IssuerName,
-							PublisherTBSHash = PublisherTBSHash,
-							IssuerTBSHash = correlatedEvent.IssuerTBSHash
-						};
+						FileSignerInfo signerInfo = new(
+							totalSignatureCount: correlatedEvent.TotalSignatureCount,
+							signature: correlatedEvent.Signature,
+							hash: correlatedEvent.Hash,
+							signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+							verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+							flags: correlatedEvent.Flags,
+							notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
+							notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
+							publisherName: PublisherName,
+							issuerName: correlatedEvent.IssuerName,
+							publisherTBSHash: PublisherTBSHash,
+							issuerTBSHash: correlatedEvent.IssuerTBSHash
+						);
 
 						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
 						_ = eventData.FilePublishers.Add(PublisherName);
@@ -460,23 +454,21 @@ internal static class GetMDEAdvancedHuntingLogsData
 						}
 
 						// Extract values using XPath
-						FileSignerInfo signerInfo = new()
-						{
-
-							TotalSignatureCount = correlatedEvent.TotalSignatureCount,
-							Signature = correlatedEvent.Signature,
-							Hash = correlatedEvent.Hash,
-							SignatureType = CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							VerificationError = CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							Flags = correlatedEvent.Flags,
-							NotValidBefore = GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
-							NotValidAfter = GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
-							PublisherName = PublisherName,
-							IssuerName = correlatedEvent.IssuerName,
-							PublisherTBSHash = PublisherTBSHash,
-							IssuerTBSHash = correlatedEvent.IssuerTBSHash
-						};
+						FileSignerInfo signerInfo = new(
+							totalSignatureCount: correlatedEvent.TotalSignatureCount,
+							signature: correlatedEvent.Signature,
+							hash: correlatedEvent.Hash,
+							signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+							verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+							flags: correlatedEvent.Flags,
+							notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
+							notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
+							publisherName: PublisherName,
+							issuerName: correlatedEvent.IssuerName,
+							publisherTBSHash: PublisherTBSHash,
+							issuerTBSHash: correlatedEvent.IssuerTBSHash
+						);
 
 						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
 						_ = eventData.FilePublishers.Add(PublisherName);

@@ -51,17 +51,17 @@ internal sealed class SignerX(
 	bool hasEKU
 	)
 {
-	internal string ID { get; } = id;
-	internal string Name { get; } = name;
-	internal string CertRoot { get; } = certRoot;
-	internal string? CertPublisher { get; } = certPublisher;
-	internal string? CertIssuer { get; } = certIssuer;
-	internal List<string>? CertEKU { get; } = certEKU;
-	internal string? CertOemID { get; } = certOemID;
-	internal List<string> FileAttribRef { get; } = fileAttribRef;
-	internal Dictionary<string, Dictionary<string, string>> FileAttrib { get; } = fileAttrib;
-	internal string SignerScope { get; } = signerScope;
-	internal bool IsWHQL { get; } = isWHQL;
-	internal bool IsAllowed { get; } = isAllowed;
-	internal bool HasEKU { get; } = hasEKU;
+	internal string ID => id;
+	internal string Name => name;
+	internal string CertRoot => certRoot;
+	internal string? CertPublisher => certPublisher;
+	internal string? CertIssuer => certIssuer;
+	internal List<string>? CertEKU => certEKU;
+	internal string? CertOemID => certOemID;
+	internal List<string> FileAttribRef => fileAttribRef;
+	internal Dictionary<string, Dictionary<string, string>> FileAttrib => fileAttrib;
+	internal string SignerScope => signerScope;
+	internal bool IsWHQL => isWHQL;
+	internal bool IsAllowed => isAllowed;
+	internal bool HasEKU => hasEKU;
 }

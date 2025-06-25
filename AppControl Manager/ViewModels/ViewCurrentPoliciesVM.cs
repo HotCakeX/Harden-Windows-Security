@@ -142,16 +142,16 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyIDHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("BasePolicyIDHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FriendlyNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("VersionHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsAuthorizedHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsEnforcedHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsOnDiskHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsSignedPolicyHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsSystemPolicyHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyOptionsHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyIDHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("BasePolicyIDHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("VersionHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsAuthorizedHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsEnforcedHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsOnDiskHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsSignedPolicyHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsSystemPolicyHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyOptionsHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (CiPolicyInfo item in AllPolicies)
@@ -233,7 +233,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			}
 
 			// Update the UI once the task completes
-			PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + policies.Count;
+			PoliciesCountTextBox = GlobalVars.GetStr("NumberOfPolicies") + policies.Count;
 
 			CalculateColumnWidths();
 		}
@@ -278,10 +278,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			SolidColorBrush hotPinkBrush = new(Colors.HotPink);
 
 			// Create normal text runs
-			Run normalText1 = new() { Text = GlobalVars.Rizz.GetString("SelectedPolicyName") };
-			Run normalText2 = new() { Text = GlobalVars.Rizz.GetString("AndID") };
-			Run normalText3 = new() { Text = GlobalVars.Rizz.GetString("WillBeChangedTo") };
-			Run normalText4 = new() { Text = GlobalVars.Rizz.GetString("PolicyRedeployInfo") };
+			Run normalText1 = new() { Text = GlobalVars.GetStr("SelectedPolicyName") };
+			Run normalText2 = new() { Text = GlobalVars.GetStr("AndID") };
+			Run normalText3 = new() { Text = GlobalVars.GetStr("WillBeChangedTo") };
+			Run normalText4 = new() { Text = GlobalVars.GetStr("PolicyRedeployInfo") };
 
 			// Create colored runs
 			Run accentPolicyName = new() { Text = ListViewSelectedPolicy.FriendlyName, Foreground = violetBrush };
@@ -290,7 +290,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 			// Create bold text run
 			Bold boldText = new();
-			boldText.Inlines.Add(new Run() { Text = GlobalVars.Rizz.GetString("SupplementalPolicyContinues") });
+			boldText.Inlines.Add(new Run() { Text = GlobalVars.GetStr("SupplementalPolicyContinues") });
 
 			// Add runs to the TextBlock
 			formattedTextBlock.Inlines.Add(normalText1);
@@ -309,10 +309,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			// Create and display a ContentDialog with styled TextBlock
 			using ContentDialogV2 dialog = new()
 			{
-				Title = GlobalVars.Rizz.GetString("SwappingPolicyTitle"),
+				Title = GlobalVars.GetStr("SwappingPolicyTitle"),
 				Content = formattedTextBlock,
-				PrimaryButtonText = GlobalVars.Rizz.GetString("OK"),
-				CloseButtonText = GlobalVars.Rizz.GetString("Cancel"),
+				PrimaryButtonText = GlobalVars.GetStr("OK"),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
 			};
 
 			// Show the dialog and wait for user response
@@ -482,10 +482,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 						// Create and display a ContentDialog with Yes and No options
 						using ContentDialogV2 dialog = new()
 						{
-							Title = GlobalVars.Rizz.GetString("WarningTitle"),
-							Content = GlobalVars.Rizz.GetString("ManualRemovalWarning") + GlobalVars.AppControlManagerSpecialPolicyName + "' " + GlobalVars.Rizz.GetString("ManualRemovalWarningEnd"),
-							PrimaryButtonText = GlobalVars.Rizz.GetString("Yes"),
-							CloseButtonText = GlobalVars.Rizz.GetString("No"),
+							Title = GlobalVars.GetStr("WarningTitle"),
+							Content = GlobalVars.GetStr("ManualRemovalWarning") + GlobalVars.AppControlManagerSpecialPolicyName + "' " + GlobalVars.GetStr("ManualRemovalWarningEnd"),
+							PrimaryButtonText = GlobalVars.GetStr("Yes"),
+							CloseButtonText = GlobalVars.GetStr("No"),
 						};
 
 						// Show the dialog and wait for user response
@@ -564,9 +564,9 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 									// Create and display a ContentDialog
 									using ContentDialogV2 dialog = new()
 									{
-										Title = GlobalVars.Rizz.GetString("WarningTitle"),
-										Content = GlobalVars.Rizz.GetString("RestartRequired") + policy.FriendlyName + "' " + GlobalVars.Rizz.GetString("RestartRequiredEnd") + policy.PolicyID + "' you must restart your system.",
-										PrimaryButtonText = GlobalVars.Rizz.GetString("Understand"),
+										Title = GlobalVars.GetStr("WarningTitle"),
+										Content = GlobalVars.GetStr("RestartRequired") + policy.FriendlyName + "' " + GlobalVars.GetStr("RestartRequiredEnd") + policy.PolicyID + "' you must restart your system.",
+										PrimaryButtonText = GlobalVars.GetStr("Understand"),
 									};
 
 									// Show the dialog and wait for user response
@@ -673,18 +673,18 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		// When system was last reboot
 		DateTime lastRebootTimeUtc = DateTime.UtcNow - TimeSpan.FromMilliseconds(Environment.TickCount64);
 
-		Logger.Write(GlobalVars.Rizz.GetString("LastRebootTime") + lastRebootTimeUtc + " (UTC)");
+		Logger.Write(GlobalVars.GetStr("LastRebootTime") + lastRebootTimeUtc + " (UTC)");
 
 		// When the policy's 1st stage was completed
 		DateTime? stage1RemovalTime = UserConfiguration.QuerySignedPolicyStage1RemovalTime(policyID);
 
 		if (stage1RemovalTime is not null)
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("PolicyStage1Completed") + policyID + "' " + GlobalVars.Rizz.GetString("CompletedAt") + stage1RemovalTime + " (UTC)");
+			Logger.Write(GlobalVars.GetStr("PolicyStage1Completed") + policyID + "' " + GlobalVars.GetStr("CompletedAt") + stage1RemovalTime + " (UTC)");
 
 			if (stage1RemovalTime < lastRebootTimeUtc)
 			{
-				Logger.Write(GlobalVars.Rizz.GetString("PolicySafeToRemove"));
+				Logger.Write(GlobalVars.GetStr("PolicySafeToRemove"));
 
 				return true;
 			}
@@ -921,7 +921,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			}
 
 			// Update the policies count text
-			PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
+			PoliciesCountTextBox = GlobalVars.GetStr("NumberOfPolicies") + AllPolicies.Count;
 
 			if (Sv != null && savedHorizontal.HasValue)
 			{
@@ -978,16 +978,16 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	{
 		// Use StringBuilder to format each property with its label for easy reading
 		return new StringBuilder()
-			.AppendLine(GlobalVars.Rizz.GetString("PolicyIDLabel") + row.PolicyID)
-			.AppendLine(GlobalVars.Rizz.GetString("BasePolicyIDLabel") + row.BasePolicyID)
-			.AppendLine(GlobalVars.Rizz.GetString("FriendlyNameLabel") + row.FriendlyName)
-			.AppendLine(GlobalVars.Rizz.GetString("VersionLabel/Text") + row.Version)
-			.AppendLine(GlobalVars.Rizz.GetString("IsAuthorizedLabel") + row.IsAuthorized)
-			.AppendLine(GlobalVars.Rizz.GetString("IsEnforcedLabel") + row.IsEnforced)
-			.AppendLine(GlobalVars.Rizz.GetString("IsOnDiskLabel") + row.IsOnDisk)
-			.AppendLine(GlobalVars.Rizz.GetString("IsSignedPolicyLabel") + row.IsSignedPolicy)
-			.AppendLine(GlobalVars.Rizz.GetString("IsSystemPolicyLabel") + row.IsSystemPolicy)
-			.AppendLine(GlobalVars.Rizz.GetString("PolicyOptionsLabel") + row.PolicyOptionsDisplay)
+			.AppendLine(GlobalVars.GetStr("PolicyIDLabel") + row.PolicyID)
+			.AppendLine(GlobalVars.GetStr("BasePolicyIDLabel") + row.BasePolicyID)
+			.AppendLine(GlobalVars.GetStr("FriendlyNameLabel") + row.FriendlyName)
+			.AppendLine(GlobalVars.GetStr("VersionLabel/Text") + row.Version)
+			.AppendLine(GlobalVars.GetStr("IsAuthorizedLabel") + row.IsAuthorized)
+			.AppendLine(GlobalVars.GetStr("IsEnforcedLabel") + row.IsEnforced)
+			.AppendLine(GlobalVars.GetStr("IsOnDiskLabel") + row.IsOnDisk)
+			.AppendLine(GlobalVars.GetStr("IsSignedPolicyLabel") + row.IsSignedPolicy)
+			.AppendLine(GlobalVars.GetStr("IsSystemPolicyLabel") + row.IsSystemPolicy)
+			.AppendLine(GlobalVars.GetStr("PolicyOptionsLabel") + row.PolicyOptionsDisplay)
 			.ToString();
 	}
 

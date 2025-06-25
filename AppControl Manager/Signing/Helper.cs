@@ -33,14 +33,17 @@ internal static class Helper
 	{
 		if (string.IsNullOrWhiteSpace(subjectNameFragment))
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("SubjectNameFragmentEmpty"));
+			Logger.Write(GlobalVars.GetStr("SubjectNameFragmentEmpty"));
 			return null;
 		}
 
+		using X509Store currentUserStore = new(StoreName.My, StoreLocation.CurrentUser);
+		using X509Store localMachineStore = new(StoreName.My, StoreLocation.LocalMachine);
+
 		// Search in the personal stores of current user and local machine
 		X509Store[] storesToSearch = [
-			new(StoreName.My, StoreLocation.CurrentUser),
-			new(StoreName.My, StoreLocation.LocalMachine)
+			currentUserStore,
+			localMachineStore
 		];
 
 		// Normalize the input CN
@@ -65,11 +68,11 @@ internal static class Helper
 				X509Certificate2Collection certificates = store.Certificates;
 				if (certificates.Count == 0)
 				{
-					Logger.Write(string.Format(GlobalVars.Rizz.GetString("NoCertificatesFoundInStore"), store.Location, store.Name));
+					Logger.Write(string.Format(GlobalVars.GetStr("NoCertificatesFoundInStore"), store.Location, store.Name));
 					continue;
 				}
 
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("SearchingCertificatesInStore"), certificates.Count, store.Location, store.Name, subjectNameFragment, targetCN));
+				Logger.Write(string.Format(GlobalVars.GetStr("SearchingCertificatesInStore"), certificates.Count, store.Location, store.Name, subjectNameFragment, targetCN));
 
 				foreach (X509Certificate2 cert in certificates)
 				{
@@ -91,8 +94,8 @@ internal static class Helper
 
 					if (!subjectMatch) continue;
 
-					Logger.Write(string.Format(GlobalVars.Rizz.GetString("FoundCertificateWithMatchingSubject"), cert.Subject, cert.Thumbprint));
-					Logger.Write(string.Format(GlobalVars.Rizz.GetString("SignatureAlgorithmInfo"), cert.SignatureAlgorithm.FriendlyName, cert.SignatureAlgorithm.Value));
+					Logger.Write(string.Format(GlobalVars.GetStr("FoundCertificateWithMatchingSubject"), cert.Subject, cert.Thumbprint));
+					Logger.Write(string.Format(GlobalVars.GetStr("SignatureAlgorithmInfo"), cert.SignatureAlgorithm.FriendlyName, cert.SignatureAlgorithm.Value));
 
 					bool isCodeSigning = false;
 					foreach (X509Extension extension in cert.Extensions)
@@ -105,7 +108,7 @@ internal static class Helper
 								if (oid.Value == Structure.CodeSigningOID)
 								{
 									isCodeSigning = true;
-									Logger.Write(GlobalVars.Rizz.GetString("CertificateHasCodeSigningEKU"));
+									Logger.Write(GlobalVars.GetStr("CertificateHasCodeSigningEKU"));
 									break;
 								}
 							}
@@ -113,22 +116,22 @@ internal static class Helper
 						if (isCodeSigning) break;
 					}
 
-					if (!isCodeSigning) Logger.Write(GlobalVars.Rizz.GetString("CertificateDoesNotHaveCodeSigningEKU"));
+					if (!isCodeSigning) Logger.Write(GlobalVars.GetStr("CertificateDoesNotHaveCodeSigningEKU"));
 
 					if (cert.HasPrivateKey && isCodeSigning)
 					{
-						Logger.Write(string.Format(GlobalVars.Rizz.GetString("SuitableCodeSigningCertificateFound"), cert.Subject, store.Location, store.Name, cert.Thumbprint));
+						Logger.Write(string.Format(GlobalVars.GetStr("SuitableCodeSigningCertificateFound"), cert.Subject, store.Location, store.Name, cert.Thumbprint));
 						return cert;
 					}
 				}
 			}
 			catch (CryptographicException ex)
 			{
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("CryptographicErrorAccessingStore"), store?.Name, store?.Location, ex.Message));
+				Logger.Write(string.Format(GlobalVars.GetStr("CryptographicErrorAccessingStore"), store?.Name, store?.Location, ex.Message));
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("GeneralErrorAccessingStore"), store?.Name, store?.Location, ex.Message));
+				Logger.Write(string.Format(GlobalVars.GetStr("GeneralErrorAccessingStore"), store?.Name, store?.Location, ex.Message));
 			}
 			finally
 			{
@@ -136,7 +139,7 @@ internal static class Helper
 			}
 		}
 
-		Logger.Write(string.Format(GlobalVars.Rizz.GetString("NoSuitableCodeSigningCertificateFound"), subjectNameFragment));
+		Logger.Write(string.Format(GlobalVars.GetStr("NoSuitableCodeSigningCertificateFound"), subjectNameFragment));
 		return null;
 	}
 }

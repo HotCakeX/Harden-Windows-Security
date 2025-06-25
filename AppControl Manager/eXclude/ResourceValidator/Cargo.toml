@@ -20,9 +20,9 @@ lto = "fat"
 incremental = true
 
 [dependencies]
-regex = "1.11"
-quick-xml = "0.37"
-anyhow = "1.0"
+regex = "*"
+quick-xml = "*"
+anyhow = "*"
 
 [[bin]]
 # Binary for X64 target.

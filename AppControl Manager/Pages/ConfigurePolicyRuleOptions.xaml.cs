@@ -49,7 +49,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-			actionPack1: (param => LightUp1(), GlobalVars.Rizz.GetString("ConfigurePolicyRuleOptions_ButtonContent")));
+			actionPack1: (param => LightUp1(), GlobalVars.GetStr("ConfigurePolicyRuleOptions_ButtonContent")));
 	}
 
 	/// <summary>

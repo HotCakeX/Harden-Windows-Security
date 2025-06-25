@@ -29,7 +29,6 @@ namespace AppControlManager.Others;
 /// Monitors the max-size of a Windows Event Log channel via registry notifications
 /// and exposes it as a bindable property.
 /// </summary>
-#pragma warning disable CA1812
 internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 {
 	internal EventLogUtility()
@@ -197,7 +196,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 	/// <param name="logSize">Size of the Code Integrity Operational Event Log (in MB)</param>
 	internal static void SetLogSize(double logSize = 0)
 	{
-		Logger.Write(GlobalVars.Rizz.GetString("SettingCodeIntegrityLogSizeMessageOnly"));
+		Logger.Write(GlobalVars.GetStr("SettingCodeIntegrityLogSizeMessageOnly"));
 
 		try
 		{
@@ -214,7 +213,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 				// Only increase by 1MB if there's less than 1MB free and under 10MB max
 				if ((currentLogMaxSize - currentLogFileSize) < (1L * 1024 * 1024) && currentLogMaxSize <= (10L * 1024 * 1024))
 				{
-					Logger.Write(GlobalVars.Rizz.GetString("IncreasingCodeIntegrityLogSizeMessage"));
+					Logger.Write(GlobalVars.GetStr("IncreasingCodeIntegrityLogSizeMessage"));
 					logConfig.MaximumSizeInBytes = SafeAdd(currentLogMaxSize, 1L * 1024 * 1024);
 					logConfig.IsEnabled = true;
 					logConfig.SaveChanges();
@@ -235,7 +234,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 				{
 					Logger.Write(
 						string.Format(
-							GlobalVars.Rizz.GetString("SettingCodeIntegrityLogSizeMessage"),
+							GlobalVars.GetStr("SettingCodeIntegrityLogSizeMessage"),
 							bytesToSet / (1024d * 1024d)
 						)
 					);
@@ -247,7 +246,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 				else
 				{
 					Logger.Write(
-						GlobalVars.Rizz.GetString("ProvidedLogSizeLessThanOrEqualOneMbNoChangesMadeMessage")
+						GlobalVars.GetStr("ProvidedLogSizeLessThanOrEqualOneMbNoChangesMadeMessage")
 					);
 				}
 			}

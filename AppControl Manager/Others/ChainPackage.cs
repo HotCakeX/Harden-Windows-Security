@@ -36,10 +36,10 @@ internal sealed class ChainPackage(
 	List<ChainElement>? intermediatecertificates,
 	ChainElement? leafcertificate)
 {
-	internal X509Chain CertificateChain { get; } = certificatechain;
-	internal SignedCms SignedCms { get; } = signedcms;
-	internal ChainElement RootCertificate { get; } = rootcertificate;
-	internal List<ChainElement>? IntermediateCertificates { get; } = intermediatecertificates;
-	internal ChainElement? LeafCertificate { get; } = leafcertificate;
+	internal X509Chain CertificateChain => certificatechain;
+	internal SignedCms SignedCms => signedcms;
+	internal ChainElement RootCertificate => rootcertificate;
+	internal List<ChainElement>? IntermediateCertificates => intermediatecertificates;
+	internal ChainElement? LeafCertificate => leafcertificate;
 }
 

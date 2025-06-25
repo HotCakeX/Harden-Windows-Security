@@ -93,12 +93,11 @@ internal static class Factory
 								RuleID = rand
 							};
 
-							AllowRule allowRule = new()
-							{
-								AllowElement = allowElementCopy,
-								FileRuleRefElement = fileRuleRefCopy,
-								SigningScenario = signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode
-							};
+							AllowRule allowRule = new(
+								allowElement: allowElementCopy,
+								fileRuleRefElement: fileRuleRefCopy,
+								signingScenario: signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode);
+
 							_ = allowRules.Add(allowRule);
 
 						}
@@ -175,12 +174,11 @@ internal static class Factory
 								RuleID = rand
 							};
 
-							DenyRule allowRule = new()
-							{
-								DenyElement = denyElementCopy,
-								FileRuleRefElement = fileRuleRefCopy,
-								SigningScenario = signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode
-							};
+							DenyRule allowRule = new(
+								denyElement: denyElementCopy,
+								fileRuleRefElement: fileRuleRefCopy,
+								signingScenario: signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode);
+
 							_ = denyRules.Add(allowRule);
 						}
 					}
@@ -258,12 +256,11 @@ internal static class Factory
 								RuleID = rand
 							};
 
-							FileRuleRule fileRuleNew = new()
-							{
-								FileRuleElement = fileRuleElementCopy,
-								FileRuleRefElement = fileRuleRefCopy,
-								SigningScenario = signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode
-							};
+							FileRuleRule fileRuleNew = new(
+								fileRuleElement: fileRuleElementCopy,
+								fileRuleRefElement: fileRuleRefCopy,
+								signingScenario: signingScenario.Value == 12 ? SSType.UserMode : SSType.KernelMode
+							);
 							_ = fileRuleRules.Add(fileRuleNew);
 
 						}
@@ -308,7 +305,7 @@ internal static class Factory
 			{
 				if (!signerDictionary.TryAdd(signer.ID, signer))
 				{
-					Logger.Write(string.Format(GlobalVars.Rizz.GetString("DuplicateSignerIdMessage"), signer.ID));
+					Logger.Write(string.Format(GlobalVars.GetStr("DuplicateSignerIdMessage"), signer.ID));
 				}
 			}
 
@@ -398,14 +395,14 @@ internal static class Factory
 		}
 
 		return new SignerCollection
-		{
-			FilePublisherSigners = filePublisherSigners,
-			SignerRules = signerRules,
-			WHQLPublishers = wHQLPublishers,
-			WHQLFilePublishers = whqlFilePublishers,
-			UpdatePolicySigners = updatePolicySignerRules,
-			SupplementalPolicySigners = supplementalPolicySignerRules
-		};
+		(
+			filePublisherSigners: filePublisherSigners,
+			signerRules: signerRules,
+			wHQLPublishers: wHQLPublishers,
+			wHQLFilePublishers: whqlFilePublishers,
+			updatePolicySigners: updatePolicySignerRules,
+			supplementalPolicySigners: supplementalPolicySignerRules
+		);
 	}
 
 
@@ -578,17 +575,15 @@ internal static class Factory
 
 
 				// WHQLFilePublisher
-				_ = WHQLFilePublishers.Add(new WHQLFilePublisher
-				{
-					FileAttribElements = newFileAttribs,
-					AllowedSignerElement = newAllowedSigner,
-					DeniedSignerElement = newDeniedSigner,
-					CiSignerElement = isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
-					SignerElement = newSigner,
-					Ekus = newEKUs,
-					SigningScenario = scenarioType,
-					Auth = auth
-				});
+				_ = WHQLFilePublishers.Add(new WHQLFilePublisher(
+					fileAttribElements: newFileAttribs,
+					allowedSignerElement: newAllowedSigner,
+					deniedSignerElement: newDeniedSigner,
+					ciSignerElement: isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
+					signerElement: newSigner,
+					ekus: newEKUs,
+					signingScenario: scenarioType,
+					auth: auth));
 			}
 			else
 			{
@@ -674,15 +669,15 @@ internal static class Factory
 
 				// FilePublisherSignerRule
 				_ = filePublisherSigners.Add(new FilePublisherSignerRule
-				{
-					FileAttribElements = newFileAttribs,
-					AllowedSignerElement = newAllowedSigner,
-					DeniedSignerElement = newDeniedSigner,
-					CiSignerElement = isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
-					SignerElement = newSigner,
-					SigningScenario = scenarioType,
-					Auth = auth
-				});
+				(
+					fileAttribElements: newFileAttribs,
+					allowedSignerElement: newAllowedSigner,
+					deniedSignerElement: newDeniedSigner,
+					ciSignerElement: isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
+					signerElement: newSigner,
+					signingScenario: scenarioType,
+					auth: auth
+				));
 			}
 		}
 		else if (associatedEKUs.Count is not 0)
@@ -753,16 +748,14 @@ internal static class Factory
 
 
 			// WHQLPublisher
-			_ = WHQLPublishers.Add(new WHQLPublisher
-			{
-				AllowedSignerElement = newAllowedSigner,
-				DeniedSignerElement = newDeniedSigner,
-				CiSignerElement = isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
-				SignerElement = newSigner,
-				Ekus = newEKUs,
-				SigningScenario = scenarioType,
-				Auth = auth
-			});
+			_ = WHQLPublishers.Add(new WHQLPublisher(
+				allowedSignerElement: newAllowedSigner,
+				deniedSignerElement: newDeniedSigner,
+				ciSignerElement: isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
+				signerElement: newSigner,
+				ekus: newEKUs,
+				signingScenario: scenarioType,
+				auth: auth));
 		}
 		else
 		{
@@ -805,14 +798,14 @@ internal static class Factory
 
 			// Generic SignerRule
 			_ = signerRules.Add(new SignerRule
-			{
-				SignerElement = newSigner,
-				AllowedSignerElement = newAllowedSigner,
-				DeniedSignerElement = newDeniedSigner,
-				CiSignerElement = isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
-				SigningScenario = scenarioType,
-				Auth = auth
-			});
+			(
+				signerElement: newSigner,
+				allowedSignerElement: newAllowedSigner,
+				deniedSignerElement: newDeniedSigner,
+				ciSignerElement: isCiSigner ? new CiSigner { SignerId = newSignerID } : null,
+				signingScenario: scenarioType,
+				auth: auth
+			));
 		}
 	}
 
@@ -858,11 +851,9 @@ internal static class Factory
 					SignerId = newSignerID
 				};
 
-				_ = supplementalPolicySignersSet.Add(new SupplementalPolicySignerRule
-				{
-					SignerElement = newSigner,
-					SupplementalPolicySigner = suppRule
-				});
+				_ = supplementalPolicySignersSet.Add(new SupplementalPolicySignerRule(
+					signerElement: newSigner,
+					supplementalPolicySigner: suppRule));
 			}
 		}
 	}
@@ -909,11 +900,9 @@ internal static class Factory
 					SignerId = newSignerID
 				};
 
-				_ = updatePolicySignersSet.Add(new UpdatePolicySignerRule
-				{
-					SignerElement = newSigner,
-					UpdatePolicySigner = uppRule
-				});
+				_ = updatePolicySignersSet.Add(new UpdatePolicySignerRule(
+					signerElement: newSigner,
+					updatePolicySigner: uppRule));
 			}
 		}
 	}

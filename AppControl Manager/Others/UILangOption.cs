@@ -20,8 +20,8 @@ namespace AppControlManager.Others;
 /// <summary>
 /// Used by the ComboBox Items in the Settings page to display the language options.
 /// </summary>
-/// <param name="name"></param>
-/// <param name="image"></param>
+/// <param name="name">Name of the language.</param>
+/// <param name="image">Path to the picture file of the country flag.</param>
 internal sealed class LanguageOption(string name, string image)
 {
 	internal string Name => name;

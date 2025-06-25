@@ -60,7 +60,7 @@ internal static class ProcessStarter
 		{
 			throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.Rizz.GetString("CommandFailedWithExitCodeErrorMessage"),
+					GlobalVars.GetStr("CommandFailedWithExitCodeErrorMessage"),
 					command,
 					arguments,
 					process.ExitCode,

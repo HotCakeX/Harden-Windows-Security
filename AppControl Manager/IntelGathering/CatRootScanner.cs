@@ -43,7 +43,7 @@ internal static class CatRootScanner
 			// Check if the cached result is still valid (within 5 minutes) and return it if so
 			if ((DateTime.Now - _lastScanTime) < TimeSpan.FromMinutes(5))
 			{
-				Logger.Write(GlobalVars.Rizz.GetString("ReturningCachedSecurityCatalogScanResult"));
+				Logger.Write(GlobalVars.GetStr("ReturningCachedSecurityCatalogScanResult"));
 				return _cachedResult;
 			}
 		}
@@ -67,7 +67,7 @@ internal static class CatRootScanner
 		(IEnumerable<string>, int) detectedCatFiles = FileUtility.GetFilesFast([.. DirectoriesToScan], null, [".cat"]);
 
 		Logger.Write(string.Format(
-			GlobalVars.Rizz.GetString("IncludingSecurityCatalogsScanCountMessage"),
+			GlobalVars.GetStr("IncludingSecurityCatalogsScanCountMessage"),
 			detectedCatFiles.Item2));
 
 		// Make sure the degree of parallelism is always at least 4

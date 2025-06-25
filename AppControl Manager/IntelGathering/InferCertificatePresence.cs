@@ -52,7 +52,7 @@ internal static class CertificatePresence
 		if (!string.Equals(certCN, CertCommonName, StringComparison.OrdinalIgnoreCase))
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("SelectedCertCommonNameMismatchMessage"),
+				GlobalVars.GetStr("SelectedCertCommonNameMismatchMessage"),
 				certCN,
 				CertCommonName));
 			return false;
@@ -91,7 +91,7 @@ internal static class CertificatePresence
 			}
 		}
 
-		Logger.Write(GlobalVars.Rizz.GetString("NoMatchingUpdatePolicySignerMessage"));
+		Logger.Write(GlobalVars.GetStr("NoMatchingUpdatePolicySignerMessage"));
 		return false;
 	}
 
@@ -119,7 +119,7 @@ internal static class CertificatePresence
 		if (!string.Equals(certCN, CertCommonName, StringComparison.OrdinalIgnoreCase))
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("SelectedCertCommonNameMismatchMessage"),
+				GlobalVars.GetStr("SelectedCertCommonNameMismatchMessage"),
 				certCN,
 				CertCommonName));
 			return false;

@@ -44,7 +44,7 @@ internal static class SignToolHelper
 
 		Logger.Write(
 			string.Format(
-				GlobalVars.Rizz.GetString("SigningCodeIntegrityPolicyFileMessage"),
+				GlobalVars.GetStr("SigningCodeIntegrityPolicyFileMessage"),
 				ciPath.FullName
 			)
 		);
@@ -80,7 +80,7 @@ internal static class SignToolHelper
 		{
 			throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.Rizz.GetString("SignToolFailedWithExitCodeErrorMessage"),
+					GlobalVars.GetStr("SignToolFailedWithExitCodeErrorMessage"),
 					process.ExitCode,
 					error
 				)
@@ -92,7 +92,7 @@ internal static class SignToolHelper
 		{
 			throw new InvalidOperationException(
 				string.Format(
-					GlobalVars.Rizz.GetString("SignToolFailedWithExitCodeErrorMessage"),
+					GlobalVars.GetStr("SignToolFailedWithExitCodeErrorMessage"),
 					process.ExitCode,
 					error
 				)
@@ -115,7 +115,7 @@ internal static class SignToolHelper
 		const string packageName = "microsoft.windows.sdk.buildtools"; // Important that this stays all lower case
 
 		Logger.Write(
-			GlobalVars.Rizz.GetString("FindingLatestVersionOfBuildToolsPackageMessage")
+			GlobalVars.GetStr("FindingLatestVersionOfBuildToolsPackageMessage")
 		);
 
 		// Get the list of versions
@@ -132,7 +132,7 @@ internal static class SignToolHelper
 
 		Logger.Write(
 			string.Format(
-				GlobalVars.Rizz.GetString("DownloadingLatestNuPkgVersionMessage"),
+				GlobalVars.GetStr("DownloadingLatestNuPkgVersionMessage"),
 				latestVersion,
 				downloadUrl
 			)
@@ -148,7 +148,7 @@ internal static class SignToolHelper
 
 		Logger.Write(
 			string.Format(
-				GlobalVars.Rizz.GetString("DownloadedNuPkgToMessage"),
+				GlobalVars.GetStr("DownloadedNuPkgToMessage"),
 				filePath
 			)
 		);
@@ -159,7 +159,7 @@ internal static class SignToolHelper
 
 		Logger.Write(
 			string.Format(
-				GlobalVars.Rizz.GetString("ExtractedPackageToMessage"),
+				GlobalVars.GetStr("ExtractedPackageToMessage"),
 				extractPath
 			)
 		);
@@ -192,7 +192,7 @@ internal static class SignToolHelper
 
 		Logger.Write(
 			string.Format(
-				GlobalVars.Rizz.GetString("PathToSignToolMessage"),
+				GlobalVars.GetStr("PathToSignToolMessage"),
 				finalSignToolPath
 			)
 		);
@@ -260,7 +260,7 @@ internal static class SignToolHelper
 			try
 			{
 				Logger.Write(
-					GlobalVars.Rizz.GetString("SignToolPathNotProvidedByParameterMessage")
+					GlobalVars.GetStr("SignToolPathNotProvidedByParameterMessage")
 				);
 
 				string baseDir = @"C:\Program Files (x86)\Windows Kits\10\bin";
@@ -284,7 +284,7 @@ internal static class SignToolHelper
 						signToolPath = constructedFinalPath;
 						Logger.Write(
 							string.Format(
-								GlobalVars.Rizz.GetString("SuccessfullyDetectedSignToolOnSystemMessage"),
+								GlobalVars.GetStr("SuccessfullyDetectedSignToolOnSystemMessage"),
 								constructedFinalPath
 							)
 						);
@@ -295,7 +295,7 @@ internal static class SignToolHelper
 			{
 				Logger.Write(
 					string.Format(
-						GlobalVars.Rizz.GetString("FailedToDetectSignToolPathAutomaticallyMessage"),
+						GlobalVars.GetStr("FailedToDetectSignToolPathAutomaticallyMessage"),
 						ex.Message
 					)
 				);
@@ -305,20 +305,20 @@ internal static class SignToolHelper
 		else
 		{
 			Logger.Write(
-				GlobalVars.Rizz.GetString("SignToolPathProvidedByParameterMessage")
+				GlobalVars.GetStr("SignToolPathProvidedByParameterMessage")
 			);
 
 			if (Verify(filePath))
 			{
 				Logger.Write(
-					GlobalVars.Rizz.GetString("ProvidedSignToolIsValidMessage")
+					GlobalVars.GetStr("ProvidedSignToolIsValidMessage")
 				);
 				signToolPath = filePath;
 			}
 			else
 			{
 				Logger.Write(
-					GlobalVars.Rizz.GetString("ProvidedSignToolIsNotValidMessage")
+					GlobalVars.GetStr("ProvidedSignToolIsNotValidMessage")
 				);
 			}
 		}
@@ -328,7 +328,7 @@ internal static class SignToolHelper
 
 		Logger.Write(
 			string.Format(
-				GlobalVars.Rizz.GetString("SettingSignToolPathInUserConfigMessage"),
+				GlobalVars.GetStr("SettingSignToolPathInUserConfigMessage"),
 				signToolPath
 			)
 		);

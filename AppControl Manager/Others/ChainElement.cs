@@ -33,12 +33,12 @@ internal enum CertificateType
 
 internal sealed class ChainElement(string subjectCN, string issuerCN, DateTime notAfter, DateTime notBefore, string tbsValue, X509Certificate2 certificate, CertificateType type, X509Certificate2 issuer)
 {
-	internal string SubjectCN { get; } = subjectCN;
-	internal string IssuerCN { get; } = issuerCN;
-	internal DateTime NotAfter { get; } = notAfter;
-	internal DateTime NotBefore { get; } = notBefore;
-	internal string TBSValue { get; } = tbsValue;
-	internal X509Certificate2 Certificate { get; } = certificate;
-	internal CertificateType Type { get; } = type;
-	internal X509Certificate2 Issuer { get; } = issuer;
+	internal string SubjectCN => subjectCN;
+	internal string IssuerCN => issuerCN;
+	internal DateTime NotAfter => notAfter;
+	internal DateTime NotBefore => notBefore;
+	internal string TBSValue => tbsValue;
+	internal X509Certificate2 Certificate => certificate;
+	internal CertificateType Type => type;
+	internal X509Certificate2 Issuer => issuer;
 }

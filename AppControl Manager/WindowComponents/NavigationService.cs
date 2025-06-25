@@ -27,8 +27,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Graphics;
 using WinRT;
 
-#pragma warning disable CA1812
-
 namespace AppControlManager.WindowComponents;
 
 internal sealed class NavigationService
@@ -168,7 +166,7 @@ internal sealed class NavigationService
 				// a TextBlock for the informational text.
 				TextBlock infoText = new()
 				{
-					Text = GlobalVars.Rizz.GetString("AppElevationNotice/Main"),
+					Text = GlobalVars.GetStr("AppElevationNoticeMain"),
 					TextWrapping = TextWrapping.Wrap
 				};
 				panel.Children.Add(infoText);
@@ -176,7 +174,7 @@ internal sealed class NavigationService
 				// a CheckBox for the extra input.
 				CheckBox extraInfoCheckBox = new()
 				{
-					Content = GlobalVars.Rizz.GetString("AppElevationNotice/ExtraPrompt"),
+					Content = GlobalVars.GetStr("AppElevationNoticeExtraPrompt"),
 					Margin = new Thickness(0, 12, 0, 0)
 				};
 				panel.Children.Add(extraInfoCheckBox);
@@ -184,10 +182,10 @@ internal sealed class NavigationService
 				// Create and configure the ContentDialog.
 				using CustomUIElements.ContentDialogV2 dialog = new()
 				{
-					Title = GlobalVars.Rizz.GetString("AppElevationNotice/Title"),
+					Title = GlobalVars.GetStr("AppElevationNoticeTitle"),
 					Content = panel,
-					CloseButtonText = GlobalVars.Rizz.GetString("Cancel"),
-					SecondaryButtonText = GlobalVars.Rizz.GetString("AppElevationNotice/Relaunch")
+					CloseButtonText = GlobalVars.GetStr("Cancel"),
+					SecondaryButtonText = GlobalVars.GetStr("AppElevationNoticeRelaunch")
 				};
 
 				// Show the dialog and wait for user response
@@ -222,7 +220,7 @@ internal sealed class NavigationService
 					catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
 					{
 						// Do nothing if the user cancels the UAC prompt.
-						Logger.Write("User canceled the UAC prompt.");
+						Logger.Write(GlobalVars.GetStr("UserCanceledUACMessage"));
 					}
 
 					// Explicitly exit the current instance only after launching the elevated instance
@@ -472,7 +470,7 @@ internal sealed class NavigationService
 			// If the window was last maximized then restore it to maximized
 			if (App.Settings.MainWindowIsMaximized)
 			{
-				Logger.Write(GlobalVars.Rizz.GetString("WindowMaximizedMsg"));
+				Logger.Write(GlobalVars.GetStr("WindowMaximizedMsg"));
 
 				// Set the presenter to maximized
 				presenter.Maximize();
@@ -484,7 +482,7 @@ internal sealed class NavigationService
 			// Otherwise let the OS decide.
 			if (App.Settings.MainWindowWidth > 700 && App.Settings.MainWindowHeight > 700)
 			{
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("SettingWindowSizeMessage"), App.Settings.MainWindowHeight, App.Settings.MainWindowWidth));
+				Logger.Write(string.Format(GlobalVars.GetStr("SettingWindowSizeMessage"), App.Settings.MainWindowHeight, App.Settings.MainWindowWidth));
 
 				// Apply to the current AppWindow
 				m_AppWindow.Resize(new SizeInt32(App.Settings.MainWindowWidth, App.Settings.MainWindowHeight));

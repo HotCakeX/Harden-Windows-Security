@@ -32,9 +32,9 @@ internal static partial class DriveLetterMapper
 	/// <param name="devicePath">Property to store device path</param>
 	internal sealed class DriveMapping(string? driveLetter, string? volumeName, string? devicePath)
 	{
-		internal string? DriveLetter { get; } = driveLetter;
-		internal string? DevicePath { get; } = devicePath;
-		internal string? VolumeName { get; } = volumeName;
+		internal string? DriveLetter => driveLetter;
+		internal string? DevicePath => devicePath;
+		internal string? VolumeName => volumeName;
 	}
 
 	/// <summary>
@@ -114,7 +114,7 @@ internal static partial class DriveLetterMapper
 					volumeName: volume,
 
 					// Use resource for the "No mountpoint found" message
-					devicePath: GlobalVars.Rizz.GetString("NoMountpointFoundMessage")
+					devicePath: GlobalVars.GetStr("NoMountpointFoundMessage")
 				));
 			}
 

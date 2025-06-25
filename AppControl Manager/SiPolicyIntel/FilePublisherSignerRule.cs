@@ -21,13 +21,21 @@ using AppControlManager.SiPolicy;
 namespace AppControlManager.SiPolicyIntel;
 
 // For Levels: FilePublisher, SignedVersion
-internal sealed class FilePublisherSignerRule
+internal sealed class FilePublisherSignerRule(
+	List<FileAttrib> fileAttribElements,
+	AllowedSigner? allowedSignerElement,
+	DeniedSigner? deniedSignerElement,
+	CiSigner? ciSignerElement,
+	Signer signerElement,
+	SSType signingScenario,
+	Authorization auth
+	)
 {
-	internal required List<FileAttrib> FileAttribElements { get; set; }
-	internal AllowedSigner? AllowedSignerElement { get; set; }
-	internal DeniedSigner? DeniedSignerElement { get; set; }
-	internal CiSigner? CiSignerElement { get; set; }
-	internal required Signer SignerElement { get; set; }
-	internal required SSType SigningScenario { get; set; }
-	internal required Authorization Auth { get; set; }
+	internal List<FileAttrib> FileAttribElements => fileAttribElements;
+	internal AllowedSigner? AllowedSignerElement => allowedSignerElement;
+	internal DeniedSigner? DeniedSignerElement => deniedSignerElement;
+	internal CiSigner? CiSignerElement => ciSignerElement;
+	internal Signer SignerElement => signerElement;
+	internal SSType SigningScenario => signingScenario;
+	internal Authorization Auth => auth;
 }

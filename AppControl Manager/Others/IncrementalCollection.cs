@@ -236,7 +236,7 @@ internal sealed partial class IncrementalCollection<T>(
 		}
 		else
 		{
-			App.MainWindow?.DispatcherQueue.TryEnqueue(Clear);
+			_ = (App.MainWindow?.DispatcherQueue.TryEnqueue(Clear));
 		}
 
 		// Clear all internal data structures with aggressive memory management
@@ -759,7 +759,7 @@ internal sealed partial class MemoryMappedFileDataProvider : IFileDataProvider
 			return string.Empty;
 
 		byte[] lineBytes = new byte[length];
-		_accessor.ReadArray(startOffset, lineBytes, 0, (int)length);
+		_ = _accessor.ReadArray(startOffset, lineBytes, 0, (int)length);
 
 		return Encoding.UTF8.GetString(lineBytes);
 	}

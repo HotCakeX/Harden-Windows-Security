@@ -29,6 +29,24 @@ internal static class GlobalVars
 	// Instantiate the ResourceLoader object to access the strings in the Resource.resw file
 	internal static ResourceLoader Rizz = new();
 
+	/// <summary>
+	/// This method is responsible for retrieving localized strings from the resource files based on a key.
+	/// </summary>
+	/// <param name="key"></param>
+	/// <returns></returns>
+	internal static string GetStr(string key)
+	{
+		try
+		{
+			return Rizz.GetString(key);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"Error retrieving localized string for key: {key}: {ex.Message}");
+			return key;
+		}
+	}
+
 	// User Mode block rules
 	internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");
 

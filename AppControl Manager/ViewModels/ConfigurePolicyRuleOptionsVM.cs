@@ -177,7 +177,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 			if (string.IsNullOrWhiteSpace(SelectedFilePath))
 			{
-				MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectPolicyFileBeforeAddingOptions"));
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyFileBeforeAddingOptions"));
 				return;
 			}
 
@@ -203,7 +203,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 					{
 						_ = Dispatcher.TryEnqueue(() =>
 						{
-							MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("TeachingTipSubtitlePolicyRequiresSigning"));
+							MainInfoBar.WriteWarning(GlobalVars.GetStr("TeachingTipSubtitlePolicyRequiresSigning"));
 						});
 
 						return;
@@ -240,7 +240,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 			if (string.IsNullOrWhiteSpace(SelectedFilePath))
 			{
-				MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectPolicyFileBeforeSettingTemplate"));
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyFileBeforeSettingTemplate"));
 				return;
 			}
 
@@ -290,7 +290,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 			}
 			else
 			{
-				MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectPolicyFileBeforeRetrievingOptions"));
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyFileBeforeRetrievingOptions"));
 				return;
 			}
 		}
@@ -396,29 +396,29 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 	internal readonly Dictionary<string, string> RuleOptions = new()
 	{
-		{ "Enabled:UMCI", GlobalVars.Rizz.GetString("RuleOption_EnabledUMCI") },
-		{ "Enabled:Boot Menu Protection", GlobalVars.Rizz.GetString("RuleOption_EnabledBootMenuProtection") },
-		{ "Required:WHQL", GlobalVars.Rizz.GetString("RuleOption_RequiredWHQL") },
-		{ "Enabled:Audit Mode", GlobalVars.Rizz.GetString("RuleOption_EnabledAuditMode") },
-		{ "Disabled:Flight Signing", GlobalVars.Rizz.GetString("RuleOption_DisabledFlightSigning") },
-		{ "Enabled:Inherit Default Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledInheritDefaultPolicy") },
-		{ "Enabled:Unsigned System Integrity Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledUnsignedSystemIntegrityPolicy") },
-		{ "Required:EV Signers", GlobalVars.Rizz.GetString("RuleOption_EnabledBootMenuProtection") },
-		{ "Enabled:Advanced Boot Options Menu", GlobalVars.Rizz.GetString("RuleOption_EnabledAdvancedBootOptionsMenu") },
-		{ "Enabled:Boot Audit On Failure", GlobalVars.Rizz.GetString("RuleOption_EnabledBootAuditOnFailure") },
-		{ "Disabled:Script Enforcement", GlobalVars.Rizz.GetString("RuleOption_DisabledScriptEnforcement") },
-		{ "Required:Enforce Store Applications", GlobalVars.Rizz.GetString("RuleOption_RequiredEnforceStoreApplications") },
-		{ "Enabled:Managed Installer", GlobalVars.Rizz.GetString("RuleOption_EnabledManagedInstaller") },
-		{ "Enabled:Intelligent Security Graph Authorization", GlobalVars.Rizz.GetString("RuleOption_EnabledIntelligentSecurityGraphAuthorization") },
-		{ "Enabled:Invalidate EAs on Reboot", GlobalVars.Rizz.GetString("RuleOption_EnabledInvalidateEAsOnReboot") },
-		{ "Enabled:Update Policy No Reboot", GlobalVars.Rizz.GetString("RuleOption_EnabledUpdatePolicyNoReboot") },
-		{ "Enabled:Allow Supplemental Policies", GlobalVars.Rizz.GetString("RuleOption_EnabledAllowSupplementalPolicies") },
-		{ "Disabled:Runtime FilePath Rule Protection", GlobalVars.Rizz.GetString("RuleOption_DisabledRuntimeFilePathRuleProtection") },
-		{ "Enabled:Dynamic Code Security",GlobalVars.Rizz.GetString("RuleOption_EnabledDynamicCodeSecurity") },
-		{ "Enabled:Revoked Expired As Unsigned", GlobalVars.Rizz.GetString("RuleOption_EnabledRevokedExpiredAsUnsigned") },
-		{ "Enabled:Developer Mode Dynamic Code Trust", GlobalVars.Rizz.GetString("RuleOption_EnabledDeveloperModeDynamicCodeTrust") },
-		{ "Enabled:Secure Setting Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledSecureSettingPolicy") },
-		{ "Enabled:Conditional Windows Lockdown Policy", GlobalVars.Rizz.GetString("RuleOption_EnabledConditionalWindowsLockdownPolicy") }
+		{ "Enabled:UMCI", GlobalVars.GetStr("RuleOption_EnabledUMCI") },
+		{ "Enabled:Boot Menu Protection", GlobalVars.GetStr("RuleOption_EnabledBootMenuProtection") },
+		{ "Required:WHQL", GlobalVars.GetStr("RuleOption_RequiredWHQL") },
+		{ "Enabled:Audit Mode", GlobalVars.GetStr("RuleOption_EnabledAuditMode") },
+		{ "Disabled:Flight Signing", GlobalVars.GetStr("RuleOption_DisabledFlightSigning") },
+		{ "Enabled:Inherit Default Policy", GlobalVars.GetStr("RuleOption_EnabledInheritDefaultPolicy") },
+		{ "Enabled:Unsigned System Integrity Policy", GlobalVars.GetStr("RuleOption_EnabledUnsignedSystemIntegrityPolicy") },
+		{ "Required:EV Signers", GlobalVars.GetStr("RuleOption_EnabledBootMenuProtection") },
+		{ "Enabled:Advanced Boot Options Menu", GlobalVars.GetStr("RuleOption_EnabledAdvancedBootOptionsMenu") },
+		{ "Enabled:Boot Audit On Failure", GlobalVars.GetStr("RuleOption_EnabledBootAuditOnFailure") },
+		{ "Disabled:Script Enforcement", GlobalVars.GetStr("RuleOption_DisabledScriptEnforcement") },
+		{ "Required:Enforce Store Applications", GlobalVars.GetStr("RuleOption_RequiredEnforceStoreApplications") },
+		{ "Enabled:Managed Installer", GlobalVars.GetStr("RuleOption_EnabledManagedInstaller") },
+		{ "Enabled:Intelligent Security Graph Authorization", GlobalVars.GetStr("RuleOption_EnabledIntelligentSecurityGraphAuthorization") },
+		{ "Enabled:Invalidate EAs on Reboot", GlobalVars.GetStr("RuleOption_EnabledInvalidateEAsOnReboot") },
+		{ "Enabled:Update Policy No Reboot", GlobalVars.GetStr("RuleOption_EnabledUpdatePolicyNoReboot") },
+		{ "Enabled:Allow Supplemental Policies", GlobalVars.GetStr("RuleOption_EnabledAllowSupplementalPolicies") },
+		{ "Disabled:Runtime FilePath Rule Protection", GlobalVars.GetStr("RuleOption_DisabledRuntimeFilePathRuleProtection") },
+		{ "Enabled:Dynamic Code Security",GlobalVars.GetStr("RuleOption_EnabledDynamicCodeSecurity") },
+		{ "Enabled:Revoked Expired As Unsigned", GlobalVars.GetStr("RuleOption_EnabledRevokedExpiredAsUnsigned") },
+		{ "Enabled:Developer Mode Dynamic Code Trust", GlobalVars.GetStr("RuleOption_EnabledDeveloperModeDynamicCodeTrust") },
+		{ "Enabled:Secure Setting Policy", GlobalVars.GetStr("RuleOption_EnabledSecureSettingPolicy") },
+		{ "Enabled:Conditional Windows Lockdown Policy", GlobalVars.GetStr("RuleOption_EnabledConditionalWindowsLockdownPolicy") }
 	};
 
 

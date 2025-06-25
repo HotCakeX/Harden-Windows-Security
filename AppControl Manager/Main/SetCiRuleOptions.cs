@@ -136,7 +136,7 @@ internal static class CiRuleOptions
 	{
 
 		Logger.Write(string.Format(
-			GlobalVars.Rizz.GetString("ConfiguringPolicyRuleOptionsForMessage"),
+			GlobalVars.GetStr("ConfiguringPolicyRuleOptionsForMessage"),
 			filePath));
 
 		// Instantiate the policy or use the supplied SiPolicy object
@@ -294,13 +294,13 @@ internal static class CiRuleOptions
 		foreach (OptionType option in toAdd)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("AddingRuleOptionMessage"),
+				GlobalVars.GetStr("AddingRuleOptionMessage"),
 				option));
 		}
 		foreach (OptionType option in toRemove)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("RemovingRuleOptionMessage"),
+				GlobalVars.GetStr("RemovingRuleOptionMessage"),
 				option));
 		}
 		#endregion

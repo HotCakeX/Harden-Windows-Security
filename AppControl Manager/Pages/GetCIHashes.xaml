@@ -83,10 +83,10 @@
                     </StackPanel>
 
                     <!-- Hash Cards GridView -->
-                    <GridView x:Name="hashGridView" 
+                    <GridView x:Name="hashGridView"
                               Grid.Row="1"
                               ItemsSource="{x:Bind ViewModel.HashItems, Mode=OneWay}"
-                              IsItemClickEnabled="True" 
+                              IsItemClickEnabled="True"
                               ItemClick="{x:Bind HashGrid_ItemClick}"
                               HorizontalAlignment="Center"
                               SelectionMode="None"
@@ -104,7 +104,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="GridViewItem">
-                                                <ListViewItemPresenter 
+                                                <ListViewItemPresenter
                                                     ContentTransitions="{TemplateBinding ContentTransitions}"
                                                     SelectionCheckMarkVisualEnabled="{ThemeResource GridViewItemSelectionCheckMarkVisualEnabled}"
                                                     CheckBrush="{ThemeResource GridViewItemCheckBrush}"
@@ -140,9 +140,9 @@
                         </GridView.ItemContainerStyle>
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="local:HashCardItem">
-                                <Grid x:Name="connectedElement" 
-                                      Height="200" 
-                                      Width="200" 
+                                <Grid x:Name="connectedElement"
+                                      Height="200"
+                                      Width="200"
                                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                       BorderThickness="1"
                                       CornerRadius="8">
@@ -159,7 +159,7 @@
                                     </Grid.RowDefinitions>
 
                                     <!-- Header -->
-                                    <Grid Grid.Row="0" 
+                                    <Grid Grid.Row="0"
                                           Height="60"
                                           CornerRadius="8,8,0,0">
                                         <Grid.Background>
@@ -168,10 +168,10 @@
                                                 <GradientStop Color="#B06AB3" Offset="1.0"/>
                                             </LinearGradientBrush>
                                         </Grid.Background>
-                                        <TextBlock HorizontalAlignment="Center" 
-                                                   VerticalAlignment="Center" 
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
                                                    Style="{ThemeResource SubtitleTextBlockStyle}"
-                                                   Foreground="White"                                                  
+                                                   Foreground="White"
                                                    TextWrapping="Wrap"
                                                    TextAlignment="Center">
                                             <Run Text="{x:Bind AlgorithmName}" Foreground="HotPink"/>
@@ -182,7 +182,7 @@
                                     <!-- Content -->
                                     <Grid Grid.Row="1" Padding="12">
                                         <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="{x:Bind HashValue, Mode=OneWay}" 
+                                            <TextBlock Text="{x:Bind HashValue, Mode=OneWay}"
                                                        Style="{ThemeResource CaptionTextBlockStyle}"
                                                        TextWrapping="Wrap"
                                                        TextAlignment="Center"
@@ -193,11 +193,11 @@
                                     </Grid>
 
                                     <!-- Progress Ring -->
-                                    <Grid Grid.RowSpan="3" 
+                                    <Grid Grid.RowSpan="3"
                                           Visibility="{x:Bind ProgressRingVisibility, Mode=OneWay}"
                                           Background="#99000000">
                                         <ProgressRing IsActive="True"
-                                                      Width="40" 
+                                                      Width="40"
                                                       Height="40"
                                                       HorizontalAlignment="Center"
                                                       VerticalAlignment="Center"/>
@@ -211,9 +211,9 @@
         </ScrollViewer>
 
         <!-- Modal Overlay -->
-        <Grid x:Name="SmokeGrid" 
-              HorizontalAlignment="Stretch" 
-              VerticalAlignment="Stretch" 
+        <Grid x:Name="SmokeGrid"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
               Visibility="Collapsed"
               Canvas.ZIndex="100"
               Tapped="{x:Bind SmokeGrid_Tapped}">
@@ -222,9 +222,9 @@
             </Grid.Background>
 
             <!-- Wrap entire modal in a ScrollViewer to include header in scrolling -->
-            <ScrollViewer x:Name="destinationElement" 
-                          HorizontalAlignment="Center" 
-                          VerticalAlignment="Center" 
+            <ScrollViewer x:Name="destinationElement"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
                           MaxHeight="400"
                           Width="Auto"
                           Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
@@ -246,9 +246,9 @@
                     </Grid.RowDefinitions>
 
                     <!-- Modal Header -->
-                    <Grid Grid.Row="0" 
-                          HorizontalAlignment="Stretch" 
-                          VerticalAlignment="Stretch"                      
+                    <Grid Grid.Row="0"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
                           Height="80"
                           MinWidth="300"
                           CornerRadius="12,12,0,0">
@@ -263,8 +263,8 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Name="modalHeaderText"
-                                   Style="{ThemeResource TitleTextBlockStyle}"                               
-                                   Margin="20"                               
+                                   Style="{ThemeResource TitleTextBlockStyle}"
+                                   Margin="20"
                                    HorizontalAlignment="Left"
                                    TextWrapping="Wrap"
                                    Grid.Column="0"
@@ -275,14 +275,14 @@
                                  FontWeight="Bold" Foreground="HotPink"/>
                             <Run Text="{x:Bind ViewModel.SelectedHashItem.HashTypeName, Mode=OneWay}"/>
                         </TextBlock>
-                        <Button Click="{x:Bind BackButton_Click}" 
-                                HorizontalAlignment="Right" 
-                                VerticalAlignment="Center"                             
+                        <Button Click="{x:Bind BackButton_Click}"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
                                 Margin="10"
                                 Grid.Column="1"
                                 Background="Transparent"
                                 BorderThickness="0"
-                                ToolTipService.ToolTip="Close" 
+                                ToolTipService.ToolTip="Close"
                                 AutomationProperties.Name="Close">
                             <SymbolIcon Symbol="Clear" Foreground="White" />
                         </Button>
@@ -297,32 +297,32 @@
                         </Grid.ColumnDefinitions>
                         <!-- Key Size -->
                         <StackPanel Grid.Column="0" Spacing="4">
-                            <TextBlock Text="Key Size:" 
-                                       Style="{ThemeResource BaseTextBlockStyle}" 
-                                       FontWeight="SemiBold" 
+                            <TextBlock Text="Key Size:"
+                                       Style="{ThemeResource BaseTextBlockStyle}"
+                                       FontWeight="SemiBold"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.KeySize, Mode=OneWay}" 
-                                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.KeySize, Mode=OneWay}"
+                                       Style="{ThemeResource CaptionTextBlockStyle}"
                                        HorizontalAlignment="Center"/>
                         </StackPanel>
                         <!-- Algorithm Name -->
                         <StackPanel Grid.Column="1" Spacing="4">
-                            <TextBlock Text="Algorithm:" 
-                                       Style="{ThemeResource BaseTextBlockStyle}" 
-                                       FontWeight="SemiBold" 
+                            <TextBlock Text="Algorithm:"
+                                       Style="{ThemeResource BaseTextBlockStyle}"
+                                       FontWeight="SemiBold"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.AlgorithmName, Mode=OneWay}" 
-                                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.AlgorithmName, Mode=OneWay}"
+                                       Style="{ThemeResource CaptionTextBlockStyle}"
                                        HorizontalAlignment="Center"/>
                         </StackPanel>
                         <!-- Hash Type -->
                         <StackPanel Grid.Column="2" Spacing="4">
-                            <TextBlock Text="Hash Type:" 
-                                       Style="{ThemeResource BaseTextBlockStyle}" 
-                                       FontWeight="SemiBold" 
+                            <TextBlock Text="Hash Type:"
+                                       Style="{ThemeResource BaseTextBlockStyle}"
+                                       FontWeight="SemiBold"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.HashType, Mode=OneWay}" 
-                                       Style="{ThemeResource CaptionTextBlockStyle}" 
+                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.HashType, Mode=OneWay}"
+                                       Style="{ThemeResource CaptionTextBlockStyle}"
                                        HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Grid>
@@ -332,8 +332,8 @@
                                 Padding="20"
                                 VerticalAlignment="Center"
                                 Spacing="15">
-                        <TextBlock Text="Hash Value:" 
-                                   Style="{ThemeResource BaseTextBlockStyle}" 
+                        <TextBlock Text="Hash Value:"
+                                   Style="{ThemeResource BaseTextBlockStyle}"
                                    FontWeight="SemiBold"
                                    HorizontalAlignment="Center"/>
                         <TextBox Text="{x:Bind ViewModel.SelectedHashItem.HashValue, Mode=OneWay}"
@@ -341,7 +341,7 @@
                                  TextWrapping="Wrap"
                                  AcceptsReturn="True"
                                  Width="220"
-                                 MinWidth="220"                                 
+                                 MinWidth="220"
                                  HorizontalAlignment="Center"/>
                         <Button x:Uid="CopyToClipboard"
                                 Click="{x:Bind ViewModel.CopyButton_Click}"

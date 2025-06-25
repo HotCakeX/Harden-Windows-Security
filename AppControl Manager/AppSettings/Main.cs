@@ -24,8 +24,6 @@ using Windows.Storage;
 
 namespace AppControlManager.AppSettings;
 
-#pragma warning disable CA1812
-
 /// <summary>
 /// A thread-safe, unified settings manager for the application.
 /// Properties are strongly typed and any change is immediately persisted to local storage.

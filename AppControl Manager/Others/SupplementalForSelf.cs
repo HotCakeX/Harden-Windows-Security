@@ -60,7 +60,7 @@ internal static class SupplementalForSelf
 		// Save the XML to the path as XML file
 		Management.SavePolicyToFile(policyObj, savePath);
 
-		Logger.Write(string.Format(GlobalVars.Rizz.GetString("LogCheckingDeploymentStatusSupplemental"), GlobalVars.AppControlManagerSpecialPolicyName));
+		Logger.Write(string.Format(GlobalVars.GetStr("LogCheckingDeploymentStatusSupplemental"), GlobalVars.AppControlManagerSpecialPolicyName));
 
 		// Get all the deployed supplemental policies to see if our policy is among them
 
@@ -75,11 +75,11 @@ internal static class SupplementalForSelf
 
 		if (CurrentlyDeployedSupplementalPolicy.Count > 0)
 		{
-			Logger.Write(string.Format(GlobalVars.Rizz.GetString("LogSupplementalPolicyAlreadyDeployed"), GlobalVars.AppControlManagerSpecialPolicyName, basePolicyID));
+			Logger.Write(string.Format(GlobalVars.GetStr("LogSupplementalPolicyAlreadyDeployed"), GlobalVars.AppControlManagerSpecialPolicyName, basePolicyID));
 		}
 		else
 		{
-			Logger.Write(string.Format(GlobalVars.Rizz.GetString("LogSupplementalPolicyNotDeployedDeploying"), GlobalVars.AppControlManagerSpecialPolicyName, basePolicyID));
+			Logger.Write(string.Format(GlobalVars.GetStr("LogSupplementalPolicyNotDeployedDeploying"), GlobalVars.AppControlManagerSpecialPolicyName, basePolicyID));
 
 			SiPolicy.Management.ConvertXMLToBinary(savePath, null, cipPath);
 
@@ -124,7 +124,7 @@ internal static class SupplementalForSelf
 		// Save the XML to the path as XML file
 		Management.SavePolicyToFile(policyObj, savePath);
 
-		Logger.Write(string.Format(GlobalVars.Rizz.GetString("LogCheckingDeploymentStatusSupplemental"), GlobalVars.AppControlManagerSpecialPolicyName));
+		Logger.Write(string.Format(GlobalVars.GetStr("LogCheckingDeploymentStatusSupplemental"), GlobalVars.AppControlManagerSpecialPolicyName));
 
 		// Get all the deployed supplemental policies to see if our policy is among them
 
@@ -143,7 +143,7 @@ internal static class SupplementalForSelf
 		{
 			foreach (CiPolicyInfo item in CurrentlyDeployedSupplementalPolicy)
 			{
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("LogRemovingUnsignedSupplementalForSigned"), item.PolicyID!, item.FriendlyName));
+				Logger.Write(string.Format(GlobalVars.GetStr("LogRemovingUnsignedSupplementalForSigned"), item.PolicyID!, item.FriendlyName));
 				CiToolHelper.RemovePolicy(item.PolicyID!);
 			}
 		}

@@ -53,12 +53,12 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 		ViewModel.CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-			actionPack1: (param => LightUp1(), GlobalVars.Rizz.GetString("FilesAndFoldersSupplementalPolicyLabel")),
-			actionPack2: (param => LightUp2(), GlobalVars.Rizz.GetString("CertificatesSupplementalPolicyLabel")),
-			actionPack3: (param => LightUp3(), GlobalVars.Rizz.GetString("ISGSupplementalPolicyLabel")),
-			actionPack4: (param => LightUp4(), GlobalVars.Rizz.GetString("StrictKernelModeSupplementalPolicyLabel")),
-			actionPack5: (param => LightUp5(), GlobalVars.Rizz.GetString("PFNSupplementalPolicyLabel")),
-			actionPack6: (param => LightUp6(), GlobalVars.Rizz.GetString("CustomPatternBasedSupplementalPolicyLabel"))
+			actionPack1: (param => LightUp1(), GlobalVars.GetStr("FilesAndFoldersSupplementalPolicyLabel")),
+			actionPack2: (param => LightUp2(), GlobalVars.GetStr("CertificatesSupplementalPolicyLabel")),
+			actionPack3: (param => LightUp3(), GlobalVars.GetStr("ISGSupplementalPolicyLabel")),
+			actionPack4: (param => LightUp4(), GlobalVars.GetStr("StrictKernelModeSupplementalPolicyLabel")),
+			actionPack5: (param => LightUp5(), GlobalVars.GetStr("PFNSupplementalPolicyLabel")),
+			actionPack6: (param => LightUp6(), GlobalVars.GetStr("CustomPatternBasedSupplementalPolicyLabel"))
 		);
 	}
 

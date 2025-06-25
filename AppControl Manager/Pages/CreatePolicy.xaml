@@ -67,7 +67,7 @@
                                             <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
                                                             Icon="OpenWith"
                                                             Click="{x:Bind ViewModel.OpenInDefaultFileHandler_AllowMicrosoft}"/>
-                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
                                                             Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_AllowMicrosoft}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xEEA3;" />
@@ -173,7 +173,7 @@
                                             <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
                                                             Icon="OpenWith"
                                                             Click="{x:Bind ViewModel.OpenInDefaultFileHandler_DefaultWindows}"/>
-                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
                                                             Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_DefaultWindows}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xEEA3;" />
@@ -274,7 +274,7 @@
                                             <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
                                                             Icon="OpenWith"
                                                             Click="{x:Bind ViewModel.OpenInDefaultFileHandler_SignedAndReputable}"/>
-                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
                                                             Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_SignedAndReputable}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xEEA3;" />
@@ -375,7 +375,7 @@
                                             <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
                                                             Icon="OpenWith"
                                                             Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RecommendedDriverBlockRules}"/>
-                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
                                                             Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RecommendedDriverBlockRules}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xEEA3;" />
@@ -450,7 +450,7 @@
                                             <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
                                                             Icon="OpenWith"
                                                             Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RecommendedUserModeBlockRules}"/>
-                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
                                                             Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RecommendedUserModeBlockRules}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xEEA3;" />
@@ -511,7 +511,7 @@
                                             <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
                                                             Icon="OpenWith"
                                                             Click="{x:Bind ViewModel.OpenInDefaultFileHandler_StrictKernelModePolicy}"/>
-                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
                                                             Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_StrictKernelModePolicy}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xEEA3;" />
@@ -584,7 +584,7 @@
                                             <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
                                                             Icon="OpenWith"
                                                             Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RMMBlockingPolicy}"/>
-                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"                                                            
+                                            <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
                                                             Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RMMBlockingPolicy}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xEEA3;" />

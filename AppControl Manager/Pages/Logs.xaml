@@ -35,7 +35,7 @@
 
             <!-- Search TextBox -->
             <TextBox PlaceholderText="Search in the logs..."
-                     MinWidth="300" 
+                     MinWidth="300"
                      Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <!-- Progress Ring for loading indication -->
@@ -59,8 +59,8 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local:LogLine">
                     <TextBlock Text="{x:Bind Text}"
-                              TextWrapping="Wrap" 
-                              IsTextSelectionEnabled="True" 
+                              TextWrapping="Wrap"
+                              IsTextSelectionEnabled="True"
                               FontSize="18"
                               Margin="5"/>
                 </DataTemplate>

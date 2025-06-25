@@ -47,7 +47,7 @@ internal static class CustomDeserialization
 			xmlDoc.Load(filePath);
 			root = xmlDoc.DocumentElement
 				   ?? throw new InvalidOperationException(
-					   GlobalVars.Rizz.GetString("InvalidXmlMissingRootElementValidationError"));
+					   GlobalVars.GetStr("InvalidXmlMissingRootElementValidationError"));
 
 			// Make sure the policy file is valid
 			_ = CiPolicyTest.TestCiPolicy(filePath);
@@ -56,12 +56,12 @@ internal static class CustomDeserialization
 		{
 			root = Xml.DocumentElement
 				   ?? throw new InvalidOperationException(
-					   GlobalVars.Rizz.GetString("InvalidXmlMissingRootElementValidationError"));
+					   GlobalVars.GetStr("InvalidXmlMissingRootElementValidationError"));
 		}
 		else
 		{
 			throw new InvalidOperationException(
-				GlobalVars.Rizz.GetString("FilePathOrXmlRequiredMessage"));
+				GlobalVars.GetStr("FilePathOrXmlRequiredMessage"));
 		}
 
 		SiPolicy policy = new();
@@ -94,7 +94,7 @@ internal static class CustomDeserialization
 
 		if (string.IsNullOrEmpty(policy.PolicyID) || string.IsNullOrEmpty(policy.BasePolicyID))
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("NeedBothIDsValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("NeedBothIDsValidationError"));
 		}
 
 		if (
@@ -102,7 +102,7 @@ internal static class CustomDeserialization
 			(policy.PolicyType is not PolicyType.BasePolicy && string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase))
 			)
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("IDsMismatchValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("IDsMismatchValidationError"));
 		}
 
 		// PolicyTypeID used to be for old version of WDAC policies that didn't have support for Supplemental policies.
@@ -125,7 +125,7 @@ internal static class CustomDeserialization
 
 				if (!policyRules.Add(opt))
 				{
-					throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("DuplicateRuleOptionValidationError")}: {opt}");
+					throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateRuleOptionValidationError")}: {opt}");
 				}
 
 				RuleType rule = new() { Item = opt };
@@ -136,7 +136,7 @@ internal static class CustomDeserialization
 
 		if (policy.PolicyType is PolicyType.SupplementalPolicy && policyRules.Contains(OptionType.EnabledAllowSupplementalPolicies))
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("SupplementalPolicyWithInvalidRuleOption"), PolicyType.SupplementalPolicy, OptionType.EnabledAllowSupplementalPolicies, PolicyType.BasePolicy));
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SupplementalPolicyWithInvalidRuleOption"), PolicyType.SupplementalPolicy, OptionType.EnabledAllowSupplementalPolicies, PolicyType.BasePolicy));
 		}
 
 		// Deserialize EKUs
@@ -162,7 +162,7 @@ internal static class CustomDeserialization
 
 				if (!EKUIDsCol.Add(eku.ID))
 				{
-					throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("DuplicateEKUIDsValidationError")}: {eku.ID}");
+					throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateEKUIDsValidationError")}: {eku.ID}");
 				}
 			}
 			policy.EKUs = [.. ekus];
@@ -240,12 +240,12 @@ internal static class CustomDeserialization
 				{
 					if (signingScenario.Value != 12)
 					{
-						throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("AppIDTaggingPolicyInvalidSigningScenarioID"), PolicyType.AppIDTaggingPolicy, signingScenario.Value));
+						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AppIDTaggingPolicyInvalidSigningScenarioID"), PolicyType.AppIDTaggingPolicy, signingScenario.Value));
 					}
 
 					if (signingScenario.AppIDTags is null || signingScenario.AppIDTags.AppIDTag is null || signingScenario.AppIDTags.AppIDTag.Length == 0)
 					{
-						throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("AppIDTaggingPolicyMissingAppIDTags"), PolicyType.AppIDTaggingPolicy));
+						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AppIDTaggingPolicyMissingAppIDTags"), PolicyType.AppIDTaggingPolicy));
 					}
 				}
 
@@ -274,7 +274,7 @@ internal static class CustomDeserialization
 		// If policy requires to be Signed
 		if (!policyRules.Contains(OptionType.EnabledUnsignedSystemIntegrityPolicy) && policy.UpdatePolicySigners.Length == 0)
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("PolicyNeedsSigningButNoUpdateSigner"), OptionType.EnabledUnsignedSystemIntegrityPolicy));
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("PolicyNeedsSigningButNoUpdateSigner"), OptionType.EnabledUnsignedSystemIntegrityPolicy));
 		}
 
 		// Deserialize CiSigners
@@ -318,7 +318,7 @@ internal static class CustomDeserialization
 
 		if (policy.Settings.Length > ushort.MaxValue)
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("SettingsAndAppIDTagsCountExceeded"), ushort.MaxValue));
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SettingsAndAppIDTagsCountExceeded"), ushort.MaxValue));
 		}
 
 		// Deserialize Macros
@@ -342,7 +342,7 @@ internal static class CustomDeserialization
 
 				if (!MacrosIDsCol.Add(macro.Id))
 				{
-					throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("DuplicateMacroIDsValidationError")}: {macro.Id}");
+					throw new InvalidOperationException($"{GlobalVars.GetStr("DuplicateMacroIDsValidationError")}: {macro.Id}");
 				}
 			}
 			policy.Macros = [.. macros];
@@ -367,7 +367,7 @@ internal static class CustomDeserialization
 
 		if (policy.PolicyType is PolicyType.SupplementalPolicy && policy.SupplementalPolicySigners.Length != 0)
 		{
-			throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("SupplementalPolicyWithSupplementalSigners"), PolicyType.SupplementalPolicy));
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SupplementalPolicyWithSupplementalSigners"), PolicyType.SupplementalPolicy));
 		}
 
 		// If it's supposed to be a Signed Base policy
@@ -380,7 +380,7 @@ internal static class CustomDeserialization
 				// https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/operations/inbox-appcontrol-policies
 				if (!string.Equals(policy.PolicyID, "{5951A96A-E0B5-4D3D-8FB8-3E5B61030784}", StringComparison.OrdinalIgnoreCase))
 				{
-					throw new InvalidOperationException(GlobalVars.Rizz.GetString("MissingSupPolSignersValidationError"));
+					throw new InvalidOperationException(GlobalVars.GetStr("MissingSupPolSignersValidationError"));
 				}
 			}
 		}
@@ -521,12 +521,12 @@ internal static class CustomDeserialization
 
 		if (allow.ID is null)
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("AllowRuleNoIDValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("AllowRuleNoIDValidationError"));
 		}
 
 		if (!IDsCollection.Add(allow.ID))
 		{
-			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("AllowRuleDupIDValidationError")}: {allow.ID}");
+			throw new InvalidOperationException($"{GlobalVars.GetStr("AllowRuleDupIDValidationError")}: {allow.ID}");
 		}
 
 		bool HashExists = allow.Hash is not null;
@@ -598,13 +598,13 @@ internal static class CustomDeserialization
 		if (deny.ID is null)
 		{
 			throw new InvalidOperationException(
-				GlobalVars.Rizz.GetString("DenyRuleNoIDValidationError"));
+				GlobalVars.GetStr("DenyRuleNoIDValidationError"));
 		}
 
 		if (!IDsCollection.Add(deny.ID))
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("DenyRuleDupIDValidationError"),
+				GlobalVars.GetStr("DenyRuleDupIDValidationError"),
 				deny.ID));
 		}
 
@@ -632,14 +632,14 @@ internal static class CustomDeserialization
 			if (APropertyExists)
 			{
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.Rizz.GetString("DenyRuleHashWithOtherPropsError"),
+					GlobalVars.GetStr("DenyRuleHashWithOtherPropsError"),
 					deny.ID));
 			}
 		}
 		else if (NoPropertyExists)
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("DenyRuleNoPropsError"),
+				GlobalVars.GetStr("DenyRuleNoPropsError"),
 				deny.ID));
 		}
 
@@ -681,13 +681,13 @@ internal static class CustomDeserialization
 		if (fa.ID is null)
 		{
 			throw new InvalidOperationException(
-				GlobalVars.Rizz.GetString("FileAttribNoIDValidationError"));
+				GlobalVars.GetStr("FileAttribNoIDValidationError"));
 		}
 
 		if (!IDsCollection.Add(fa.ID))
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("FileAttribDupIDValidationError"),
+				GlobalVars.GetStr("FileAttribDupIDValidationError"),
 				fa.ID));
 		}
 
@@ -715,14 +715,14 @@ internal static class CustomDeserialization
 			if (APropertyExists)
 			{
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.Rizz.GetString("FileAttribHashWithOtherPropsError"),
+					GlobalVars.GetStr("FileAttribHashWithOtherPropsError"),
 					fa.ID));
 			}
 		}
 		else if (NoPropertyExists)
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("FileAttribNoPropsError"),
+				GlobalVars.GetStr("FileAttribNoPropsError"),
 				fa.ID));
 		}
 
@@ -765,12 +765,12 @@ internal static class CustomDeserialization
 
 		if (fr.ID is null)
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("FileRuleNoIDValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("FileRuleNoIDValidationError"));
 		}
 
 		if (!(IDsCollection.Add(fr.ID)))
 		{
-			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("FileRuleDupIDValidationError")}: {fr.ID}");
+			throw new InvalidOperationException($"{GlobalVars.GetStr("FileRuleDupIDValidationError")}: {fr.ID}");
 		}
 
 		return fr;
@@ -784,12 +784,12 @@ internal static class CustomDeserialization
 
 		if (signer.ID is null)
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SignerNoIDValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("SignerNoIDValidationError"));
 		}
 
 		if (!IDsCollection.Add(signer.ID))
 		{
-			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("SignerDupIDValidationError")}: {signer.ID}");
+			throw new InvalidOperationException($"{GlobalVars.GetStr("SignerDupIDValidationError")}: {signer.ID}");
 		}
 
 		if (elem.HasAttribute("Name"))
@@ -813,7 +813,7 @@ internal static class CustomDeserialization
 			if (cr.Type is not CertEnumType.TBS and not CertEnumType.Wellknown)
 			{
 				throw new InvalidOperationException(
-					GlobalVars.Rizz.GetString("InvalidCertRootTypeError"));
+					GlobalVars.GetStr("InvalidCertRootTypeError"));
 			}
 
 			signer.CertRoot = cr;
@@ -821,7 +821,7 @@ internal static class CustomDeserialization
 		else
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("SignerNoCertRootError"),
+				GlobalVars.GetStr("SignerNoCertRootError"),
 				signer.ID));
 		}
 
@@ -891,12 +891,12 @@ internal static class CustomDeserialization
 
 		if (scenario.ID is null)
 		{
-			throw new InvalidOperationException(GlobalVars.Rizz.GetString("SigningScenarioNoIDValidationError"));
+			throw new InvalidOperationException(GlobalVars.GetStr("SigningScenarioNoIDValidationError"));
 		}
 
 		if (!IDsCollection.Add(scenario.ID))
 		{
-			throw new InvalidOperationException($"{GlobalVars.Rizz.GetString("SigningScenarioDupIDValidationError")}: {scenario.ID}");
+			throw new InvalidOperationException($"{GlobalVars.GetStr("SigningScenarioDupIDValidationError")}: {scenario.ID}");
 		}
 
 		if (elem.HasAttribute("FriendlyName"))
@@ -1272,14 +1272,14 @@ internal static class CustomDeserialization
 			else
 			{
 				throw new InvalidOperationException(
-					GlobalVars.Rizz.GetString("PolicySettingInvalidValueElementMessage"));
+					GlobalVars.GetStr("PolicySettingInvalidValueElementMessage"));
 			}
 		}
 
 		if (string.IsNullOrEmpty(setting.Key) || string.IsNullOrEmpty(setting.Provider) || string.IsNullOrEmpty(setting.ValueName))
 		{
 			throw new InvalidOperationException(
-				GlobalVars.Rizz.GetString("PolicySettingMissingProviderKeyValueNameMessage"));
+				GlobalVars.GetStr("PolicySettingMissingProviderKeyValueNameMessage"));
 		}
 
 		return setting;
@@ -1341,7 +1341,7 @@ internal static class CustomDeserialization
 		if (!Version.TryParse(minimumVersion, out var minVer))
 			throw new ArgumentException(
 				string.Format(
-					GlobalVars.Rizz.GetString("ValidateVersionRangeInvalidMinVersionMessage"),
+					GlobalVars.GetStr("ValidateVersionRangeInvalidMinVersionMessage"),
 					id,
 					minimumVersion),
 				nameof(minimumVersion));
@@ -1349,7 +1349,7 @@ internal static class CustomDeserialization
 		if (!Version.TryParse(maximumVersion, out var maxVer))
 			throw new ArgumentException(
 				string.Format(
-					GlobalVars.Rizz.GetString("ValidateVersionRangeInvalidMaxVersionMessage"),
+					GlobalVars.GetStr("ValidateVersionRangeInvalidMaxVersionMessage"),
 					id,
 					maximumVersion),
 				nameof(maximumVersion));
@@ -1360,7 +1360,7 @@ internal static class CustomDeserialization
 				nameof(minimumVersion),
 				minVer,
 				string.Format(
-					GlobalVars.Rizz.GetString("ValidateVersionRangeMinGreaterThanMaxMessage"),
+					GlobalVars.GetStr("ValidateVersionRangeMinGreaterThanMaxMessage"),
 					id,
 					minVer,
 					maxVer));

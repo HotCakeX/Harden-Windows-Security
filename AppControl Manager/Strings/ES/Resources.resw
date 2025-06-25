@@ -994,9 +994,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="NoMSIXBundlePath" xml:space="preserve">
     <value>No se seleccionó ninguna ruta de MSIXBundle</value>
   </data>
-  <data name="DetectingSignTool" xml:space="preserve">
-    <value>Detectando/Descargando SignTool.exe desde los servidores de Microsoft</value>
-  </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>Todas las descargas finalizaron, instalando la nueva versión de AppControl Manager</value>
   </data>
@@ -1084,32 +1081,11 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CIPDeploymentSuccess" xml:space="preserve">
     <value>Todos los archivos CIP seleccionados se implementaron correctamente</value>
   </data>
-  <data name="SigningIntoIntune" xml:space="preserve">
-    <value>Iniciando sesión en Intune</value>
-  </data>
-  <data name="IntuneSignInSuccess" xml:space="preserve">
-    <value>Se inició sesión correctamente en Intune</value>
-  </data>
   <data name="CloudDeploymentActive" xml:space="preserve">
     <value>La Implementación en la Nube está Actualmente Activa</value>
   </data>
-  <data name="IntuneSignInCancelled" xml:space="preserve">
-    <value>El usuario canceló el inicio de sesión en Intune</value>
-  </data>
-  <data name="IntuneSignInError" xml:space="preserve">
-    <value>Hubo un error al iniciar sesión en Intune: </value>
-  </data>
-  <data name="SigningOutOfIntune" xml:space="preserve">
-    <value>Cerrando sesión en Intune</value>
-  </data>
-  <data name="IntuneSignOutSuccess" xml:space="preserve">
-    <value>Se cerró sesión correctamente en Intune</value>
-  </data>
   <data name="LocalDeploymentActive" xml:space="preserve">
     <value>La Implementación Local está Actualmente Activa</value>
-  </data>
-  <data name="IntuneSignOutError" xml:space="preserve">
-    <value>Hubo un error al cerrar sesión en Intune: </value>
   </data>
   <data name="ProcessingTitle" xml:space="preserve">
     <value>Procesando</value>
@@ -1179,9 +1155,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="CreatingPFNBasedDenyPolicy" xml:space="preserve">
     <value>Creando la directiva de denegación basada en Nombres de Familia de Paquetes</value>
-  </data>
-  <data name="SelectedApps" xml:space="preserve">
-    <value>Aplicaciones Seleccionadas: </value>
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Se creó correctamente la directiva de Denegación</value>
@@ -1339,12 +1312,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
-  </data>
-  <data name="LastUpdatedLabel" xml:space="preserve">
-    <value>Última Actualización: </value>
-  </data>
-  <data name="DriverBlockListError" xml:space="preserve">
-    <value>Error al recuperar la información de la lista de bloqueo de controladores.</value>
   </data>
   <data name="ConfiguringAutoUpdate" xml:space="preserve">
     <value>Configurando tarea programada para actualización automática</value>
@@ -2165,16 +2132,16 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Cambiar entre las direcciones de flujo de Derecha a Izquierda e Izquierda a Derecha para los elementos de la interfaz de usuario.</value>
   </data>
-  <data name="AppElevationNotice.Main" xml:space="preserve">
+  <data name="AppElevationNoticeMain" xml:space="preserve">
     <value>Inicie AppControl Manager como Administrador para acceder a esta página</value>
   </data>
-  <data name="AppElevationNotice.Title" xml:space="preserve">
+  <data name="AppElevationNoticeTitle" xml:space="preserve">
     <value>Se requieren privilegios de administrador</value>
   </data>
-  <data name="AppElevationNotice.ExtraPrompt" xml:space="preserve">
+  <data name="AppElevationNoticeExtraPrompt" xml:space="preserve">
     <value>Solicitar siempre elevación al iniciar la aplicación</value>
   </data>
-  <data name="AppElevationNotice.Relaunch" xml:space="preserve">
+  <data name="AppElevationNoticeRelaunch" xml:space="preserve">
     <value>Reiniciar como Administrador</value>
   </data>
   <data name="WindowMaximizedMsg" xml:space="preserve">
@@ -2474,15 +2441,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Buscar entre los datos de detalles del certificado</value>
   </data>
-  <data name="SortingDirectionToggleButton.Text" xml:space="preserve">
-    <value>Ordenación Descendente</value>
-  </data>
-  <data name="SortingDirectionToggleButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Cuando está marcado, la ordenación se realizará en orden descendente, si no está marcado, la ordenación se realizará en orden ascendente.</value>
-  </data>
-  <data name="SortingDirectionToggleButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Cuando está marcado, la ordenación se realizará en orden descendente, si no está marcado, la ordenación se realizará en orden ascendente.</value>
-  </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
     <value>Busque la ruta del archivo MSIXBundle de AppControl Manager en su dispositivo y luego regrese a la página de actualización para instalarlo.</value>
   </data>
@@ -2662,9 +2620,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Utilice varias opciones disponibles para cambiar la apariencia y los efectos visuales de AppControl Manager</value>
-  </data>
-  <data name="LanguageSectionSettingsExpanderInfoBar.Message" xml:space="preserve">
-    <value>Reinicie la aplicación para que los cambios de idioma se apliquen completamente a la interfaz de usuario.</value>
   </data>
   <data name="LanguageTextBlock.Text" xml:space="preserve">
     <value>Idioma</value>
@@ -4216,10 +4171,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>El comando '{0} {1}' falló con el código de salida {2}. Error: {3}</value>
   </data>
-    <data name="CoCreateInstanceFailedHResultMessage" xml:space="preserve">
-    <value>CoCreateInstance falló con HRESULT: 0x{0:X}</value>
-  </data>
-  <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
+    <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
     <value>El usuario canceló la solicitud de elevación.</value>
   </data>
   <data name="ActivationManagerFailedWithHRESULTMessage" xml:space="preserve">
@@ -5649,5 +5601,104 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
     <value>Política Suplementaria Basada en Patrón Personalizado</value>
+  </data>
+  <data name="CloudTextBlock.Text" xml:space="preserve">
+    <value>Nube</value>
+  </data>
+  <data name="LocalTextBlock.Text" xml:space="preserve">
+    <value>Local</value>
+  </data>
+  <data name="CreateTextBlock.Text" xml:space="preserve">
+    <value>Crear</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>Ruta Personalizada de MSIXBundle</value>
+  </data>
+  <data name="OpenInFileExplorer.Text" xml:space="preserve">
+    <value>Abrir en el Explorador de Archivos</value>
+  </data>
+  <data name="OpenInFileExplorer.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abrir la carpeta donde se encuentra el archivo en el Explorador de Archivos.</value>
+  </data>
+  <data name="OpenInFileExplorer.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abrir la carpeta donde se encuentra el archivo en el Explorador de Archivos.</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Abrir en el Editor de Políticas</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abrir la política en el Editor de Políticas donde puede ver una descripción detallada de la política y tiene la opción de personalizarla aún más directamente dentro de esta aplicación.</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abrir la política en el Editor de Políticas donde puede ver una descripción detallada de la política y tiene la opción de personalizarla aún más directamente dentro de esta aplicación.</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Abrir el Archivo</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abrir el archivo que se creó utilizando el controlador de archivos predeterminado configurado en el sistema operativo.</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abrir el archivo que se creó utilizando el controlador de archivos predeterminado configurado en el sistema operativo.</value>
+  </data>
+  <data name="AdditionalActionsTextBlock.Text" xml:space="preserve">
+    <value>Acciones Adicionales</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abrir la política en el Editor de Políticas o elegir otra acción de la lista.</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abrir la política en el Editor de Políticas o elegir otra acción de la lista.</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Configurar Opciones de Regla</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abrir la política en otra página para configurar aún más sus opciones de regla.</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abrir la política en otra página para configurar aún más sus opciones de regla.</value>
+  </data>
+  <data name="AddToPolicySegmentedItem.Content" xml:space="preserve">
+    <value>Agregar a la Política</value>
+  </data>
+  <data name="BasePolicyFileSegmentedItem.Content" xml:space="preserve">
+    <value>Archivo de Política Base</value>
+  </data>
+  <data name="BasePolicyGUIDSegmentedItem.Content" xml:space="preserve">
+    <value>GUID de Política Base</value>
+  </data>
+  <data name="AddToPolicyDescription.Text" xml:space="preserve">
+    <value>Buscar un archivo de política para agregar los registros. Las nuevas reglas se combinarán con cualquier regla existente.</value>
+  </data>
+  <data name="BasePolicyFileDescription.Text" xml:space="preserve">
+    <value>Buscar un archivo de política base con el que se asociará la política Suplementaria que se va a crear.</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.PlaceholderText" xml:space="preserve">
+    <value>Ingresar un GUID de política base</value>
+  </data>
+    <data name="BasePolicyGUIDDescription.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Ingresar el GUID de un archivo de política base con el que se asociará la política Suplementaria que se va a crear.</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ingresar el GUID de un archivo de política base con el que se asociará la política Suplementaria que se va a crear.</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.PlaceholderText" xml:space="preserve">
+    <value>Filtrar por Fecha</value>
+  </data>
+    <data name="FilterByDateCalendarDatePicker.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Solo mostrará los datos que sean iguales o más recientes que la fecha seleccionada.</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Solo mostrará los datos que sean iguales o más recientes que la fecha seleccionada.</value>
+  </data>
+  <data name="SubmitButton.Content" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="SubmitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enviar</value>
   </data>
 </root>

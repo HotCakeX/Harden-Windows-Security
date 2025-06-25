@@ -22,12 +22,18 @@ namespace AppControlManager.SiPolicyIntel;
 /// <summary>
 /// For Levels: Publisher, LeafCertificate, PcaCertificate, RootCertificate,
 /// </summary>
-internal sealed class SignerRule
+internal sealed class SignerRule(
+	Signer signerElement,
+	AllowedSigner? allowedSignerElement,
+	DeniedSigner? deniedSignerElement,
+	CiSigner? ciSignerElement,
+	SSType signingScenario,
+	Authorization auth)
 {
-	internal required Signer SignerElement { get; set; }
-	internal AllowedSigner? AllowedSignerElement { get; set; }
-	internal DeniedSigner? DeniedSignerElement { get; set; }
-	internal CiSigner? CiSignerElement { get; set; }
-	internal required SSType SigningScenario { get; set; }
-	internal required Authorization Auth { get; set; }
+	internal Signer SignerElement => signerElement;
+	internal AllowedSigner? AllowedSignerElement => allowedSignerElement;
+	internal DeniedSigner? DeniedSignerElement => deniedSignerElement;
+	internal CiSigner? CiSignerElement => ciSignerElement;
+	internal SSType SigningScenario => signingScenario;
+	internal Authorization Auth => auth;
 }

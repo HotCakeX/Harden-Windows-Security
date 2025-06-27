@@ -10,7 +10,7 @@ license = "MIT"
 keywords = ["WMI", "Windows", "Security"]
 categories = ["API bindings", "Security"]
 publish = false
-rust-version = "1.87" # Enforces minimum required installed Rust version
+rust-version = "1.88" # Enforces minimum required installed Rust version
 
 [profile.release]
 codegen-units = 1
@@ -22,7 +22,7 @@ lto = "fat"
 incremental = true
 
 [dependencies.windows]
-version = "0.61.*"
+version = "*"
 features = [
     "Win32_Security",
     "Win32_System_Com_StructuredStorage",

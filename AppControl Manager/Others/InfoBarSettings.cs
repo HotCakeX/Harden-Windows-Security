@@ -76,7 +76,7 @@ internal sealed class InfoBarSettings(
 	{
 		IsOpen = true;
 		Message = Msg;
-		Title = title ?? GlobalVars.Rizz.GetString("Status");
+		Title = title ?? GlobalVars.GetStr("Status");
 		Logger.Write(title is not null ? title + ": " + Msg : Msg);
 		Severity = InfoBarSeverity.Informational;
 		IsClosable = false;
@@ -86,7 +86,7 @@ internal sealed class InfoBarSettings(
 	{
 		IsOpen = true;
 		Message = Msg;
-		Title = title ?? GlobalVars.Rizz.GetString("WarningTitle");
+		Title = title ?? GlobalVars.GetStr("WarningTitle");
 		Logger.Write(title is not null ? title + ": " + Msg : Msg);
 		Severity = InfoBarSeverity.Warning;
 		IsClosable = true;
@@ -96,7 +96,7 @@ internal sealed class InfoBarSettings(
 	{
 		IsOpen = true;
 		Message = Msg is not null ? Msg + ex.Message : ex.Message;
-		Title = title ?? GlobalVars.Rizz.GetString("ErrorTitle");
+		Title = title ?? GlobalVars.GetStr("ErrorTitle");
 		Logger.Write(ErrorWriter.FormatException(ex));
 		Severity = InfoBarSeverity.Error;
 		IsClosable = true;
@@ -106,7 +106,7 @@ internal sealed class InfoBarSettings(
 	{
 		IsOpen = true;
 		Message = Msg;
-		Title = title ?? GlobalVars.Rizz.GetString("SuccessTitle");
+		Title = title ?? GlobalVars.GetStr("SuccessTitle");
 		Logger.Write(title is not null ? title + ": " + Msg : Msg);
 		Severity = InfoBarSeverity.Success;
 		IsClosable = true;

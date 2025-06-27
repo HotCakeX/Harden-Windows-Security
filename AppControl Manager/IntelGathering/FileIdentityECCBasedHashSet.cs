@@ -58,7 +58,7 @@ internal sealed class FileIdentityECCBasedHashSet
 			{
 				// Replace the existing item with the new ECC-signed item
 				Logger.Write(string.Format(
-					GlobalVars.Rizz.GetString("ReplacingECCSignedItemMessage"),
+					GlobalVars.GetStr("ReplacingECCSignedItemMessage"),
 					existingItem.FileName,
 					existingItem.SHA256Hash));
 

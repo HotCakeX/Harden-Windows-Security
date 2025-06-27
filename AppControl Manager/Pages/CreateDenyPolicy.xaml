@@ -85,6 +85,7 @@
             <Border x:Name="AnimatedBorder"
                     Grid.Row="1"
                     ui:Effects.Shadow="{StaticResource BorderShadow}"
+                    Background="Transparent"
                     BorderThickness="0"
                     Margin="15,0,15,0"
                     PointerEntered="{x:Bind OnBorderPointerEntered}"
@@ -100,8 +101,7 @@
                     </ani:AnimationSet>
                 </ani:Explicit.Animations>
 
-                <Border Height="60"
-                        Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
+                <Border Height="60"                        
                         BorderThickness="0"
                         CornerRadius="18">
 
@@ -127,7 +127,7 @@
 
                         </StackPanel>
 
-                        <Border Grid.Column="1" Grid.ColumnSpan="1" Background="Transparent" BorderThickness="0" CornerRadius="18">
+                        <Border Grid.Column="1" Grid.ColumnSpan="1" BorderThickness="0" CornerRadius="18">
 
                             <controls:WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15">
 

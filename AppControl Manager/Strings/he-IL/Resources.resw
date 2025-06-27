@@ -994,9 +994,6 @@
   <data name="NoMSIXBundlePath" xml:space="preserve">
     <value>לא נבחר נתיב MSIXBundle</value>
   </data>
-  <data name="DetectingSignTool" xml:space="preserve">
-    <value>מזהה/מוריד את SignTool.exe משרתי מיקרוסופט</value>
-  </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>כל ההורדות הסתיימו, מתקין את הגרסה החדשה של מנהל AppControl</value>
   </data>
@@ -1084,32 +1081,11 @@
   <data name="CIPDeploymentSuccess" xml:space="preserve">
     <value>הפעלתי בהצלחה את כל קבצי ה-CIP שנבחרו</value>
   </data>
-  <data name="SigningIntoIntune" xml:space="preserve">
-    <value>מתחבר ל-Intune</value>
-  </data>
-  <data name="IntuneSignInSuccess" xml:space="preserve">
-    <value>התחברתי בהצלחה ל-Intune</value>
-  </data>
   <data name="CloudDeploymentActive" xml:space="preserve">
     <value>הפעלה בענן פעילה כעת</value>
   </data>
-  <data name="IntuneSignInCancelled" xml:space="preserve">
-    <value>ההתחברות ל-Intune בוטלה על ידי המשתמש</value>
-  </data>
-  <data name="IntuneSignInError" xml:space="preserve">
-    <value>הייתה שגיאה בהתחברות ל-Intune: </value>
-  </data>
-  <data name="SigningOutOfIntune" xml:space="preserve">
-    <value>מתנתק מ-Intune</value>
-  </data>
-  <data name="IntuneSignOutSuccess" xml:space="preserve">
-    <value>התנתקתי בהצלחה מ-Intune</value>
-  </data>
   <data name="LocalDeploymentActive" xml:space="preserve">
     <value>הפעלה מקומית פעילה כעת</value>
-  </data>
-  <data name="IntuneSignOutError" xml:space="preserve">
-    <value>הייתה שגיאה בהתנתקות מ-Intune: </value>
   </data>
   <data name="ProcessingTitle" xml:space="preserve">
     <value>מעבד</value>
@@ -1179,9 +1155,6 @@
   </data>
   <data name="CreatingPFNBasedDenyPolicy" xml:space="preserve">
     <value>יוצר את מדיניות הדחייה בהתבסס על שמות משפחת חבילה</value>
-  </data>
-  <data name="SelectedApps" xml:space="preserve">
-    <value>אפליקציות שנבחרו: </value>
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>יצרתי בהצלחה את מדיניות הדחייה</value>
@@ -1339,12 +1312,6 @@
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>ביטול</value>
-  </data>
-  <data name="LastUpdatedLabel" xml:space="preserve">
-    <value>עודכן לאחרונה: </value>
-  </data>
-  <data name="DriverBlockListError" xml:space="preserve">
-    <value>שגיאה באחזור מידע על רשימת חסימת מנהלי התקנים.</value>
   </data>
   <data name="ConfiguringAutoUpdate" xml:space="preserve">
     <value>מגדיר משימה מתוזמנת לעדכון אוטומטי</value>
@@ -2165,16 +2132,16 @@
   <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>עבור בין כיווני זרימה מימין לשמאל ומשמאל לימין לאלמנטים של ממשק המשתמש.</value>
   </data>
-  <data name="AppElevationNotice.Main" xml:space="preserve">
+  <data name="AppElevationNoticeMain" xml:space="preserve">
     <value>אנא הפעל את מנהל AppControl כמנהל כדי לגשת לדף זה</value>
   </data>
-  <data name="AppElevationNotice.Title" xml:space="preserve">
+  <data name="AppElevationNoticeTitle" xml:space="preserve">
     <value>נדרשות הרשאות מנהל</value>
   </data>
-  <data name="AppElevationNotice.ExtraPrompt" xml:space="preserve">
+  <data name="AppElevationNoticeExtraPrompt" xml:space="preserve">
     <value>תמיד בקש הרשאות מוגברות בעת הפעלת האפליקציה</value>
   </data>
-  <data name="AppElevationNotice.Relaunch" xml:space="preserve">
+  <data name="AppElevationNoticeRelaunch" xml:space="preserve">
     <value>הפעל מחדש כמנהל</value>
   </data>
   <data name="WindowMaximizedMsg" xml:space="preserve">
@@ -2474,15 +2441,6 @@
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>חפש בין פרטי התעודה</value>
   </data>
-  <data name="SortingDirectionToggleButton.Text" xml:space="preserve">
-    <value>מיון בסדר יורד</value>
-  </data>
-  <data name="SortingDirectionToggleButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>כאשר מסומן, המיון יתבצע בסדר יורד; כאשר לא מסומן, המיון יתבצע בסדר עולה.</value>
-  </data>
-  <data name="SortingDirectionToggleButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>כאשר מסומן, המיון יתבצע בסדר יורד; כאשר לא מסומן, המיון יתבצע בסדר עולה.</value>
-  </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
     <value>עיין ובחר את הנתיב לקובץ MSIXBundle של AppControl Manager במכשיר שלך, ולאחר מכן חזור לדף העדכונים כדי להתקין אותו.</value>
   </data>
@@ -2662,9 +2620,6 @@
   </data>
   <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>השתמש באפשרויות השונות הזמינות לשינוי המראה והאפקטים הוויזואליים של AppControl Manager.</value>
-  </data>
-  <data name="LanguageSectionSettingsExpanderInfoBar.Message" xml:space="preserve">
-    <value>אנא הפעל מחדש את האפליקציה כדי שהשינויים בשפה יתממשו במלואם בממשק המשתמש.</value>
   </data>
   <data name="LanguageTextBlock.Text" xml:space="preserve">
     <value>שפה</value>
@@ -4217,9 +4172,6 @@
 <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>הפקודה '{0} {1}' נכשלה עם קוד יציאה {2}. שגיאה: {3}</value>
 </data>
-<data name="CoCreateInstanceFailedHResultMessage" xml:space="preserve">
-    <value>CoCreateInstance נכשל עם HRESULT: 0x{0:X}</value>
-</data>
 <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
     <value>בקשת העלאה בוטלה על-ידי המשתמש.</value>
 </data>
@@ -5650,5 +5602,104 @@
   </data>
   <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
     <value>מדיניות משלימה מבוססת תבנית מותאמת</value>
+  </data>
+  <data name="CloudTextBlock.Text" xml:space="preserve">
+    <value>ענן</value>
+  </data>
+  <data name="LocalTextBlock.Text" xml:space="preserve">
+    <value>מקומי</value>
+  </data>
+  <data name="CreateTextBlock.Text" xml:space="preserve">
+    <value>צור</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>נתיב MSIXBundle מותאם אישית</value>
+  </data>
+  <data name="OpenInFileExplorer.Text" xml:space="preserve">
+    <value>פתח בסייר הקבצים</value>
+  </data>
+  <data name="OpenInFileExplorer.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את התיקייה שבה נמצא הקובץ בסייר הקבצים.</value>
+  </data>
+  <data name="OpenInFileExplorer.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח את התיקייה שבה נמצא הקובץ בסייר הקבצים.</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.Text" xml:space="preserve">
+    <value>פתח בעורך המדיניות</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את המדיניות בעורך המדיניות שבו תוכל לראות סקירה מפורטת של המדיניות ולהתאים אותה נוסף ישירות בתוך האפליקציה הזו.</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח את המדיניות בעורך המדיניות שבו תוכל לראות סקירה מפורטת של המדיניות ולהתאים אותה נוסף ישירות בתוך האפליקציה הזו.</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.Text" xml:space="preserve">
+    <value>פתח את הקובץ</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את הקובץ שנוצר באמצעות מטפל הקבצים המוגדר כברירת מחדל במערכת ההפעלה.</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח את הקובץ שנוצר באמצעות מטפל הקבצים המוגדר כברירת מחדל במערכת ההפעלה.</value>
+  </data>
+  <data name="AdditionalActionsTextBlock.Text" xml:space="preserve">
+    <value>פעולות נוספות</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את המדיניות בעורך המדיניות או בחר פעולה אחרת מהרשימה.</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח את המדיניות בעורך המדיניות או בחר פעולה אחרת מהרשימה.</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הגדר אפשרויות כלל</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את המדיניות בעמוד אחר כדי להגדיר את אפשרויות הכלל שלה נוסף.</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח את המדיניות בעמוד אחר כדי להגדיר את אפשרויות הכלל שלה נוסף.</value>
+  </data>
+  <data name="AddToPolicySegmentedItem.Content" xml:space="preserve">
+    <value>הוסף למדיניות</value>
+  </data>
+  <data name="BasePolicyFileSegmentedItem.Content" xml:space="preserve">
+    <value>קובץ מדיניות בסיס</value>
+  </data>
+  <data name="BasePolicyGUIDSegmentedItem.Content" xml:space="preserve">
+    <value>GUID מדיניות בסיס</value>
+  </data>
+  <data name="AddToPolicyDescription.Text" xml:space="preserve">
+    <value>חפש קובץ מדיניות להוספת הלוגים אליו. הכללים החדשים ימוזגו עם כל הכללים הקיימים.</value>
+  </data>
+  <data name="BasePolicyFileDescription.Text" xml:space="preserve">
+    <value>חפש קובץ מדיניות בסיס שהמדיניות המשלימה שעתידה להיווצר תשויך אליו.</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.PlaceholderText" xml:space="preserve">
+    <value>הזן GUID מדיניות בסיס</value>
+  </data>
+    <data name="BasePolicyGUIDDescription.AutomationProperties.HelpText" xml:space="preserve">
+  <value>הזן את ה-GUID של קובץ מדיניות בסיס שהמדיניות המשלימה שעתידה להיווצר תשויך אליו.</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הזן את ה-GUID של קובץ מדיניות בסיס שהמדיניות המשלימה שעתידה להיווצר תשויך אליו.</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.PlaceholderText" xml:space="preserve">
+    <value>סנן לפי תאריך</value>
+  </data>
+    <data name="FilterByDateCalendarDatePicker.AutomationProperties.HelpText" xml:space="preserve">
+  <value>יציג רק את הנתונים השווים או החדשים מהתאריך שנבחר.</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.ToolTipService.ToolTip" xml:space="preserve">
+    <value>יציג רק את הנתונים השווים או החדשים מהתאריך שנבחר.</value>
+  </data>
+  <data name="SubmitButton.Content" xml:space="preserve">
+    <value>שלח</value>
+  </data>
+  <data name="SubmitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שלח</value>
+  </data>
+  <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שלח</value>
   </data>
 </root>

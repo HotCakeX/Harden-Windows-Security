@@ -146,7 +146,7 @@ internal static class LocalFilesScan
 							catch (HashMismatchInCertificateException)
 							{
 								Logger.Write(string.Format(
-									GlobalVars.Rizz.GetString("FileHashMismatchRuleCreationMessage"),
+									GlobalVars.GetStr("FileHashMismatchRuleCreationMessage"),
 									file));
 							}
 
@@ -167,7 +167,7 @@ internal static class LocalFilesScan
 								catch (HashMismatchInCertificateException)
 								{
 									Logger.Write(string.Format(
-										GlobalVars.Rizz.GetString("FileHashMismatchRuleCreationMessage"),
+										GlobalVars.GetStr("FileHashMismatchRuleCreationMessage"),
 										file));
 								}
 							}
@@ -180,7 +180,7 @@ internal static class LocalFilesScan
 								catch (HashMismatchInCertificateException)
 								{
 									Logger.Write(string.Format(
-										GlobalVars.Rizz.GetString("FileHashMismatchRuleCreationMessage"),
+										GlobalVars.GetStr("FileHashMismatchRuleCreationMessage"),
 										file));
 								}
 							}
@@ -245,7 +245,7 @@ internal static class LocalFilesScan
 									}
 									catch
 									{
-										Logger.Write(GlobalVars.Rizz.GetString("FailedToGetOpusDataMessage"));
+										Logger.Write(GlobalVars.GetStr("FailedToGetOpusDataMessage"));
 									}
 
 									// If the Leaf Certificate exists in the current package
@@ -259,19 +259,18 @@ internal static class LocalFilesScan
 										// Get the TBSHash of the Issuer certificate of the Leaf Certificate of the current file's signer
 										string IssuerTBSHash = CertificateHelper.GetTBSCertificate(package.LeafCertificate.Issuer);
 
-										FileSignerInfo signerInfo = new()
-										{
-											TotalSignatureCount = FileSignerInfo.Count,
-											NotValidAfter = package.LeafCertificate?.NotAfter,
-											NotValidBefore = package.LeafCertificate?.NotBefore,
-											PublisherName = package.LeafCertificate?.SubjectCN,
-											IssuerName = package.LeafCertificate?.IssuerCN,
-											PublisherTBSHash = package.LeafCertificate?.TBSValue,
-											IssuerTBSHash = IssuerTBSHash,
-											OPUSInfo = CurrentOpusData,
-											IsWHQL = WHQLConfirmed,
-											EKUs = WHQLConfirmed ? WHQLOid : ekuOIDs.FirstOrDefault() // If the Leaf certificate has WHQL EKU then assign that EKU's OID here, otherwise assign the first OID of the leaf certificate of the file.
-										};
+										FileSignerInfo signerInfo = new(
+											totalSignatureCount: FileSignerInfo.Count,
+											notValidAfter: package.LeafCertificate?.NotAfter,
+											notValidBefore: package.LeafCertificate?.NotBefore,
+											publisherName: package.LeafCertificate?.SubjectCN,
+											issuerName: package.LeafCertificate?.IssuerCN,
+											publisherTBSHash: package.LeafCertificate?.TBSValue,
+											issuerTBSHash: IssuerTBSHash,
+											oPUSInfo: CurrentOpusData,
+											isWHQL: WHQLConfirmed,
+											eKUs: WHQLConfirmed ? WHQLOid : ekuOIDs.FirstOrDefault() // If the Leaf certificate has WHQL EKU then assign that EKU's OID here, otherwise assign the first OID of the leaf certificate of the file.
+										);
 
 										// Add the CN of the file's leaf certificate to the FilePublishers HashSet of the current FileIdentity
 										if (package.LeafCertificate?.SubjectCN is not null)
@@ -291,7 +290,7 @@ internal static class LocalFilesScan
 													IsECCSigned = true;
 
 													Logger.Write(string.Format(
-														GlobalVars.Rizz.GetString("EccSignedFileDetectedMessage"),
+														GlobalVars.GetStr("EccSignedFileDetectedMessage"),
 														currentFileIdentity.FilePath));
 												}
 											}
@@ -306,19 +305,18 @@ internal static class LocalFilesScan
 										// See if the root certificate in the current signer has WHQL OID for its EKU
 										bool WHQLConfirmed = DetermineWHQL(package.RootCertificate.Certificate!.Extensions);
 
-										FileSignerInfo signerInfo = new()
-										{
-											TotalSignatureCount = FileSignerInfo.Count,
-											NotValidAfter = package.RootCertificate.NotAfter,
-											NotValidBefore = package.RootCertificate.NotBefore,
-											PublisherName = package.RootCertificate.SubjectCN,
-											IssuerName = package.RootCertificate.IssuerCN,
-											PublisherTBSHash = package.RootCertificate.TBSValue,
-											IssuerTBSHash = package.RootCertificate.TBSValue,
-											OPUSInfo = CurrentOpusData,
-											IsWHQL = WHQLConfirmed,
-											EKUs = WHQLConfirmed ? WHQLOid : ekuOIDs.FirstOrDefault() // If the root certificate has WHQL EKU then assign that EKU's OID here, otherwise assign the first OID of the root certificate of the file.
-										};
+										FileSignerInfo signerInfo = new(
+											totalSignatureCount: FileSignerInfo.Count,
+											notValidAfter: package.RootCertificate.NotAfter,
+											notValidBefore: package.RootCertificate.NotBefore,
+											publisherName: package.RootCertificate.SubjectCN,
+											issuerName: package.RootCertificate.IssuerCN,
+											publisherTBSHash: package.RootCertificate.TBSValue,
+											issuerTBSHash: package.RootCertificate.TBSValue,
+											oPUSInfo: CurrentOpusData,
+											isWHQL: WHQLConfirmed,
+											eKUs: WHQLConfirmed ? WHQLOid : ekuOIDs.FirstOrDefault() // If the root certificate has WHQL EKU then assign that EKU's OID here, otherwise assign the first OID of the root certificate of the file.
+										);
 
 										// Add the CN of the file's root certificate to the FilePublishers HashSet of the current FileIdentity
 										if (package.RootCertificate.SubjectCN is not null)
@@ -338,7 +336,7 @@ internal static class LocalFilesScan
 													IsECCSigned = true;
 
 													Logger.Write(string.Format(
-														GlobalVars.Rizz.GetString("EccSignedFileDetectedMessage"),
+														GlobalVars.GetStr("EccSignedFileDetectedMessage"),
 														currentFileIdentity.FilePath));
 												}
 											}
@@ -358,13 +356,13 @@ internal static class LocalFilesScan
 						catch (IOException ex) when (ex.HResult == unchecked((int)0x80070020)) // File in use by another process
 						{
 							Logger.Write(string.Format(
-								GlobalVars.Rizz.GetString("SkippingFileInUseMessage"),
+								GlobalVars.GetStr("SkippingFileInUseMessage"),
 								file));
 						}
 						catch (IOException ex) when (ex.HResult == unchecked((int)0x80070780)) // File cannot be accessed by the system
 						{
 							Logger.Write(string.Format(
-								GlobalVars.Rizz.GetString("SkippingFileCannotBeAccessedMessage"),
+								GlobalVars.GetStr("SkippingFileCannotBeAccessedMessage"),
 								file));
 						}
 						// Custom "Could not hash file via SHA1" error
@@ -372,20 +370,20 @@ internal static class LocalFilesScan
 						catch (Exception ex) when (ex.HResult == -2146233079)
 						{
 							Logger.Write(string.Format(
-								GlobalVars.Rizz.GetString("SkippingFileHashingFailedMessage"),
+								GlobalVars.GetStr("SkippingFileHashingFailedMessage"),
 								file));
 						}
 						catch (IOException ex) when (ex.HResult == -2147024894) // FileNotFoundException (0x80070002)
 						{
 							Logger.Write(string.Format(
-								GlobalVars.Rizz.GetString("SkippingFileNotFoundMessage"),
+								GlobalVars.GetStr("SkippingFileNotFoundMessage"),
 								file));
 						}
 						// Defender files in Program Data directory can throw this
 						catch (UnauthorizedAccessException)
 						{
 							Logger.Write(string.Format(
-								GlobalVars.Rizz.GetString("SkippingFileAccessDeniedMessage"),
+								GlobalVars.GetStr("SkippingFileAccessDeniedMessage"),
 								file));
 						}
 

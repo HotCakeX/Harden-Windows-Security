@@ -114,12 +114,13 @@
 
             -->
             <Border x:Name="AnimatedBorder"
-                Grid.Row="1"
-                ui:Effects.Shadow="{StaticResource BorderShadow}"
-                BorderThickness="0"
-                Margin="15,0,15,0"
-                PointerEntered="{x:Bind OnBorderPointerEntered}"
-                PointerExited="{x:Bind OnBorderPointerExited}">
+                    Grid.Row="1"
+                    ui:Effects.Shadow="{StaticResource BorderShadow}"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Margin="15,0,15,0"
+                    PointerEntered="{x:Bind OnBorderPointerEntered}"
+                    PointerExited="{x:Bind OnBorderPointerExited}">
 
                 <ani:Explicit.Animations>
                     <ani:AnimationSet x:Name="ShadowEnterAnimation">
@@ -131,8 +132,7 @@
                     </ani:AnimationSet>
                 </ani:Explicit.Animations>
 
-                <Border Height="60"
-                        Background="{StaticResource CardBackgroundFillColorDefaultBrush}"
+                <Border Height="60"                        
                         BorderThickness="0"
                         CornerRadius="18">
 
@@ -151,21 +151,26 @@
                             <TextBlock x:Uid="Mode" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold" />
 
                             <ComboBox SelectedIndex="{x:Bind ViewModel.OperationModeComboBoxSelectedIndex, Mode=TwoWay}"
-                          x:Uid="PolicyCreationOperationModeComboBox">
+                                      x:Uid="PolicyCreationOperationModeComboBox">
                                 <ComboBoxItem x:Uid="CreateNewPolicyComboBoxItem"/>
                                 <ComboBoxItem x:Uid="AddToExistingPolicyComboBoxItem"/>
                             </ComboBox>
 
                         </StackPanel>
 
-                        <Border Grid.Column="1" Grid.ColumnSpan="1" Background="Transparent" BorderThickness="0" CornerRadius="18">
+                        <Border Grid.Column="1"
+                                Grid.ColumnSpan="1"
+                                BorderThickness="0"
+                                CornerRadius="18">
 
-                            <controls:WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15">
+                            <controls:WrapPanel HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                HorizontalSpacing="15">
 
                                 <customUI:ButtonV2 x:Uid="SelectPolicyFileToAddRulesToButton"
-                                       Margin="15,0,0,0"
-                                       Click="{x:Bind ViewModel.PolicyFileToMergeWithButton_Click}"
-                                       IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
+                                                   Margin="15,0,0,0"
+                                                   Click="{x:Bind ViewModel.PolicyFileToMergeWithButton_Click}"
+                                                   IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
 
                                     <customUI:ButtonV2.Flyout>
                                         <Flyout>

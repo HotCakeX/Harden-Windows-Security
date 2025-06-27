@@ -19,8 +19,10 @@ using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
 
-internal sealed class SupplementalPolicySignerRule
+internal sealed class SupplementalPolicySignerRule(
+	Signer signerElement,
+	SupplementalPolicySigner supplementalPolicySigner)
 {
-	internal required Signer SignerElement { get; set; }
-	internal required SupplementalPolicySigner SupplementalPolicySigner { get; set; }
+	internal Signer SignerElement => signerElement;
+	internal SupplementalPolicySigner SupplementalPolicySigner => supplementalPolicySigner;
 }

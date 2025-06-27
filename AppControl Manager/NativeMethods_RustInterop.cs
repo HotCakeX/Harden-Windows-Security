@@ -21,51 +21,53 @@ using AppControlManager.Others;
 
 namespace AppControlManager;
 
+#pragma warning disable CA5393
+
 internal unsafe static partial class NativeMethods
 {
 	[LibraryImport("RustInterop/RustInterop.dll", StringMarshalling = StringMarshalling.Utf8)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 	internal static partial IntPtr show_file_picker(
 		[MarshalAs(UnmanagedType.LPUTF8Str)] string filter,
 		[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
 		out int lastError);
 
 	[LibraryImport("RustInterop/RustInterop.dll", StringMarshalling = StringMarshalling.Utf8)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 	internal static partial FileDialogHelper.StringArray show_files_picker(
 		[MarshalAs(UnmanagedType.LPUTF8Str)] string filter,
 		[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
 		out int lastError);
 
 	[LibraryImport("RustInterop/RustInterop.dll", StringMarshalling = StringMarshalling.Utf8)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 	internal static partial IntPtr show_folder_picker(
 		[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
 		out int lastError);
 
 	[LibraryImport("RustInterop/RustInterop.dll", StringMarshalling = StringMarshalling.Utf8)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 	internal static partial FileDialogHelper.StringArray show_folders_picker(
 		[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
 		out int lastError);
 
 	[LibraryImport("RustInterop/RustInterop.dll")]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 	internal static partial void free_string(IntPtr s);
 
 	[LibraryImport("RustInterop/RustInterop.dll")]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 	internal static partial void free_string_array(FileDialogHelper.StringArray arr);
 
 	[LibraryImport("RustInterop/RustInterop.dll", StringMarshalling = StringMarshalling.Utf16)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 	internal static partial int relaunch_app_elevated(
 		[MarshalAs(UnmanagedType.LPWStr)] string aumid,
 		[MarshalAs(UnmanagedType.LPWStr)] string? arguments,
 		uint* processId);
 
 	[LibraryImport("RustInterop/RustInterop.dll")]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.ApplicationDirectory)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 	internal static partial int update_taskbar_progress(
 		IntPtr hwnd,
 		ulong completed,

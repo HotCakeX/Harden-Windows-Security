@@ -127,7 +127,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 		// Register for IsOpen property changes - this is how to detect when ViewModel changes the property
 		// This callback is essential for responding to two-way binding changes from the ViewModel
-		this.RegisterPropertyChangedCallback(InfoBar.IsOpenProperty, OnIsOpenPropertyChanged);
+		_ = this.RegisterPropertyChangedCallback(IsOpenProperty, OnIsOpenPropertyChanged);
 	}
 
 	/// <summary>
@@ -686,7 +686,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Update state tracking if InfoBar was closed without my custom animation
-		if (!_isClosingViaButton && EnableAnimation && this.IsOpen == false && _lastKnownIsOpenState == true)
+		if (!_isClosingViaButton && EnableAnimation && !this.IsOpen && _lastKnownIsOpenState)
 		{
 			_lastKnownIsOpenState = false;
 		}
@@ -742,7 +742,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Queue the operation with safety checks
-		this.DispatcherQueue.TryEnqueue(() =>
+		_ = this.DispatcherQueue.TryEnqueue(() =>
 		{
 			// Check if we're still valid before executing
 			bool shouldExecute = false;
@@ -750,7 +750,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			{
 				if (_pendingDispatcherOperations.Contains(operation) && !_isDisposed && !_isUnloading)
 				{
-					_pendingDispatcherOperations.Remove(operation);
+					_ = _pendingDispatcherOperations.Remove(operation);
 					shouldExecute = true;
 				}
 			}
@@ -834,7 +834,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		// Handle programmatic close (when ViewModel sets IsOpen=false) with forced animation
-		if (oldState == true && newIsOpenValue == false && !_isClosingViaButton && ForceCloseAnimation)
+		if (oldState && !newIsOpenValue && !_isClosingViaButton && ForceCloseAnimation)
 		{
 			AnimateInfoBarState(false);
 			return;
@@ -1117,6 +1117,8 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 				_scaleTransform.ScaleX = ScaleFrom;      // Start scaled down
 				_scaleTransform.ScaleY = ScaleFrom;
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -1240,6 +1242,8 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 			case InfoBarAnimationType.Fade:
 				// Only opacity animation, no transform animations needed
+				break;
+			default:
 				break;
 		}
 	}
@@ -1384,6 +1388,8 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			case InfoBarAnimationType.Fade:
 				// Only opacity animation, no transform animations needed
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -1461,7 +1467,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		EasingFunctionBase? easing = CloneEasingFunction(EasingFunction);
-		easing?.EasingMode = EasingMode.EaseOut;
+		_ = (easing?.EasingMode = EasingMode.EaseOut);
 		return easing;
 	}
 
@@ -1477,7 +1483,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		}
 
 		EasingFunctionBase? easing = CloneEasingFunction(EasingFunction);
-		easing?.EasingMode = EasingMode.EaseIn;
+		_ = (easing?.EasingMode = EasingMode.EaseIn);
 		return easing;
 	}
 
@@ -1500,6 +1506,12 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 				// For 'All' animation type, use the longer of fade or scale duration
 				double maxDuration = Math.Max(FadeInDuration.TotalMilliseconds, ScaleInDuration.TotalMilliseconds);
 				return TimeSpan.FromMilliseconds(maxDuration);
+			case InfoBarAnimationType.Slide:
+				return baseDuration;
+			case InfoBarAnimationType.Scale:
+				return baseDuration;
+			case InfoBarAnimationType.SlideAndScale:
+				return baseDuration;
 			default:
 				return baseDuration;
 		}
@@ -1523,6 +1535,12 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			case InfoBarAnimationType.All:
 				double maxDuration = Math.Max(FadeOutDuration.TotalMilliseconds, ScaleOutDuration.TotalMilliseconds);
 				return TimeSpan.FromMilliseconds(maxDuration);
+			case InfoBarAnimationType.Slide:
+				return baseDuration;
+			case InfoBarAnimationType.Scale:
+				return baseDuration;
+			case InfoBarAnimationType.SlideAndScale:
+				return baseDuration;
 			default:
 				return baseDuration;
 		}

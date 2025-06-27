@@ -43,7 +43,7 @@ internal static class CertificateGenerator
 		string pfxFilePath = Path.Combine(GlobalVars.UserConfigDir, $"{CommonName}.pfx");
 
 		Logger.Write(string.Format(
-			GlobalVars.Rizz.GetString("AppControlCertCheckExistingMessage"),
+			GlobalVars.GetStr("AppControlCertCheckExistingMessage"),
 			CommonName));
 
 		// Check see if there are any certificates in the personal store of User certificates with the selected Common Name
@@ -52,7 +52,7 @@ internal static class CertificateGenerator
 		if (possibleExistingCerts.Count > 0)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("AppControlCertExistingCountRemovingMessage"),
+				GlobalVars.GetStr("AppControlCertExistingCountRemovingMessage"),
 				possibleExistingCerts.Count,
 				CommonName));
 
@@ -290,7 +290,7 @@ internal static class CertificateGenerator
 					// Certificate found with the matching CN, so delete it
 					store.Remove(cert);
 					Logger.Write(string.Format(
-						GlobalVars.Rizz.GetString("DeletedCertificateFromStoreMessage"),
+						GlobalVars.GetStr("DeletedCertificateFromStoreMessage"),
 						subjectName,
 						storeName));
 				}

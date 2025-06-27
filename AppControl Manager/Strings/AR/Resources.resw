@@ -994,9 +994,6 @@
   <data name="NoMSIXBundlePath" xml:space="preserve">
     <value>لم يتم اختيار أي مسار MSIXBundle</value>
   </data>
-  <data name="DetectingSignTool" xml:space="preserve">
-    <value>جارٍ اكتشاف/تنزيل SignTool.exe من خوادم Microsoft</value>
-  </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>اكتملت جميع التنزيلات، جارٍ تثبيت الإصدار الجديد من AppControl Manager</value>
   </data>
@@ -1084,32 +1081,11 @@
   <data name="CIPDeploymentSuccess" xml:space="preserve">
     <value>تم نشر جميع ملفات CIP المحددة بنجاح</value>
   </data>
-  <data name="SigningIntoIntune" xml:space="preserve">
-    <value>جارٍ تسجيل الدخول إلى Intune</value>
-  </data>
-  <data name="IntuneSignInSuccess" xml:space="preserve">
-    <value>تم تسجيل الدخول إلى Intune بنجاح</value>
-  </data>
   <data name="CloudDeploymentActive" xml:space="preserve">
     <value>النشر السحابي نشط حاليًا</value>
   </data>
-  <data name="IntuneSignInCancelled" xml:space="preserve">
-    <value>تم إلغاء تسجيل الدخول إلى Intune بواسطة المستخدم</value>
-  </data>
-  <data name="IntuneSignInError" xml:space="preserve">
-    <value>حدث خطأ أثناء تسجيل الدخول إلى Intune: </value>
-  </data>
-  <data name="SigningOutOfIntune" xml:space="preserve">
-    <value>جارٍ تسجيل الخروج من Intune</value>
-  </data>
-  <data name="IntuneSignOutSuccess" xml:space="preserve">
-    <value>تم تسجيل الخروج من Intune بنجاح</value>
-  </data>
   <data name="LocalDeploymentActive" xml:space="preserve">
     <value>النشر المحلي نشط حاليًا</value>
-  </data>
-  <data name="IntuneSignOutError" xml:space="preserve">
-    <value>حدث خطأ أثناء تسجيل الخروج من Intune: </value>
   </data>
   <data name="ProcessingTitle" xml:space="preserve">
     <value>جارٍ المعالجة</value>
@@ -1179,9 +1155,6 @@
   </data>
   <data name="CreatingPFNBasedDenyPolicy" xml:space="preserve">
     <value>جارٍ إنشاء سياسة Deny بناءً على أسماء عائلات الحزم</value>
-  </data>
-  <data name="SelectedApps" xml:space="preserve">
-    <value>التطبيقات المحددة: </value>
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>تم إنشاء سياسة Deny بنجاح</value>
@@ -1339,12 +1312,6 @@
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>إلغاء</value>
-  </data>
-  <data name="LastUpdatedLabel" xml:space="preserve">
-    <value>آخر تحديث: </value>
-  </data>
-  <data name="DriverBlockListError" xml:space="preserve">
-    <value>خطأ في استرداد معلومات قائمة حظر برامج التشغيل.</value>
   </data>
   <data name="ConfiguringAutoUpdate" xml:space="preserve">
     <value>تكوين المهمة المجدولة للتحديث التلقائي</value>
@@ -2165,16 +2132,16 @@
   <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>التبديل بين اتجاهات التدفق من اليمين إلى اليسار ومن اليسار إلى اليمين لعناصر واجهة المستخدم.</value>
   </data>
-  <data name="AppElevationNotice.Main" xml:space="preserve">
+  <data name="AppElevationNoticeMain" xml:space="preserve">
     <value>يرجى تشغيل مدير AppControl كمسؤول للوصول إلى هذه الصفحة</value>
   </data>
-  <data name="AppElevationNotice.Title" xml:space="preserve">
+  <data name="AppElevationNoticeTitle" xml:space="preserve">
     <value>امتيازات المسؤول مطلوبة</value>
   </data>
-  <data name="AppElevationNotice.ExtraPrompt" xml:space="preserve">
+  <data name="AppElevationNoticeExtraPrompt" xml:space="preserve">
     <value>اطلب دائمًا رفع الامتيازات عند بدء تشغيل التطبيق</value>
   </data>
-  <data name="AppElevationNotice.Relaunch" xml:space="preserve">
+  <data name="AppElevationNoticeRelaunch" xml:space="preserve">
     <value>إعادة التشغيل كمسؤول</value>
   </data>
   <data name="WindowMaximizedMsg" xml:space="preserve">
@@ -2474,15 +2441,6 @@
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>ابحث بين بيانات تفاصيل الشهادة</value>
   </data>
-  <data name="SortingDirectionToggleButton.Text" xml:space="preserve">
-    <value>فرز تنازلي</value>
-  </data>
-  <data name="SortingDirectionToggleButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>عند تحديده، سيتم الفرز بترتيب تنازلي، وإذا لم يتم تحديده، سيتم الفرز بترتيب تصاعدي.</value>
-  </data>
-  <data name="SortingDirectionToggleButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>عند تحديده، سيتم الفرز بترتيب تنازلي، وإذا لم يتم تحديده، سيتم الفرز بترتيب تصاعدي.</value>
-  </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
     <value>تصفح مسار ملف AppControl Manager MSIXBundle على جهازك ثم عد إلى صفحة التحديث لتثبيته.</value>
   </data>
@@ -2662,9 +2620,6 @@
   </data>
   <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>استخدم الخيارات المختلفة المتاحة لتغيير مظهر وتأثيرات مدير AppControl المرئية</value>
-  </data>
-  <data name="LanguageSectionSettingsExpanderInfoBar.Message" xml:space="preserve">
-    <value>يرجى إعادة تشغيل التطبيق لتطبيق تغييرات اللغة بالكامل على واجهة المستخدم.</value>
   </data>
   <data name="LanguageTextBlock.Text" xml:space="preserve">
     <value>اللغة</value>
@@ -4216,10 +4171,7 @@
   <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>فشل الأمر "{0} {1}" برمز الخروج {2}. الخطأ: {3}</value>
   </data>
-    <data name="CoCreateInstanceFailedHResultMessage" xml:space="preserve">
-    <value>فشل CoCreateInstance مع HRESULT: 0x{0:X}</value>
-  </data>
-  <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
+    <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
     <value>تم إلغاء طلب الرفع بواسطة المستخدم.</value>
   </data>
   <data name="ActivationManagerFailedWithHRESULTMessage" xml:space="preserve">
@@ -5649,5 +5601,104 @@
   </data>
   <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
     <value>سياسة مكملة مبنية على نمط مخصص</value>
+  </data>
+  <data name="CloudTextBlock.Text" xml:space="preserve">
+    <value>السحابة</value>
+  </data>
+  <data name="LocalTextBlock.Text" xml:space="preserve">
+    <value>محلي</value>
+  </data>
+  <data name="CreateTextBlock.Text" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>مسار MSIXBundle مخصص</value>
+  </data>
+  <data name="OpenInFileExplorer.Text" xml:space="preserve">
+    <value>فتح في مستكشف الملفات</value>
+  </data>
+  <data name="OpenInFileExplorer.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فتح المجلد الذي يحتوي على الملف في مستكشف الملفات.</value>
+  </data>
+  <data name="OpenInFileExplorer.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فتح المجلد الذي يحتوي على الملف في مستكشف الملفات.</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.Text" xml:space="preserve">
+    <value>فتح في محرر السياسات</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فتح السياسة في محرر السياسات حيث يمكنك رؤية نظرة عامة مفصلة للسياسة ولديك خيار تخصيصها أكثر مباشرة داخل هذا التطبيق.</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فتح السياسة في محرر السياسات حيث يمكنك رؤية نظرة عامة مفصلة للسياسة ولديك خيار تخصيصها أكثر مباشرة داخل هذا التطبيق.</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.Text" xml:space="preserve">
+    <value>فتح الملف</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فتح الملف الذي تم إنشاؤه باستخدام معالج الملفات الافتراضي المكون في نظام التشغيل.</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فتح الملف الذي تم إنشاؤه باستخدام معالج الملفات الافتراضي المكون في نظام التشغيل.</value>
+  </data>
+  <data name="AdditionalActionsTextBlock.Text" xml:space="preserve">
+    <value>إجراءات إضافية</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فتح السياسة في محرر السياسات أو اختيار إجراء آخر من القائمة.</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فتح السياسة في محرر السياسات أو اختيار إجراء آخر من القائمة.</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تكوين خيارات القاعدة</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فتح السياسة في صفحة أخرى لتكوين خيارات قاعدتها أكثر.</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فتح السياسة في صفحة أخرى لتكوين خيارات قاعدتها أكثر.</value>
+  </data>
+  <data name="AddToPolicySegmentedItem.Content" xml:space="preserve">
+    <value>إضافة إلى السياسة</value>
+  </data>
+  <data name="BasePolicyFileSegmentedItem.Content" xml:space="preserve">
+    <value>ملف السياسة الأساسية</value>
+  </data>
+  <data name="BasePolicyGUIDSegmentedItem.Content" xml:space="preserve">
+    <value>معرف السياسة الأساسية</value>
+  </data>
+  <data name="AddToPolicyDescription.Text" xml:space="preserve">
+    <value>تصفح ملف سياسة لإضافة السجلات إليه. سيتم دمج القواعد الجديدة مع أي قواعد موجودة.</value>
+  </data>
+  <data name="BasePolicyFileDescription.Text" xml:space="preserve">
+    <value>تصفح ملف سياسة أساسية ليتم ربط السياسة التكميلية المراد إنشاؤها به.</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.PlaceholderText" xml:space="preserve">
+    <value>أدخل معرف السياسة الأساسية</value>
+  </data>
+    <data name="BasePolicyGUIDDescription.AutomationProperties.HelpText" xml:space="preserve">
+  <value>أدخل معرف ملف السياسة الأساسية الذي ستربط به السياسة التكميلية المراد إنشاؤها.</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أدخل معرف ملف السياسة الأساسية الذي ستربط به السياسة التكميلية المراد إنشاؤها.</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.PlaceholderText" xml:space="preserve">
+    <value>تصفية حسب التاريخ</value>
+  </data>
+    <data name="FilterByDateCalendarDatePicker.AutomationProperties.HelpText" xml:space="preserve">
+  <value>سيعرض فقط البيانات المساوية أو الأحدث من التاريخ المحدد.</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.ToolTipService.ToolTip" xml:space="preserve">
+    <value>سيعرض فقط البيانات المساوية أو الأحدث من التاريخ المحدد.</value>
+  </data>
+  <data name="SubmitButton.Content" xml:space="preserve">
+    <value>إرسال</value>
+  </data>
+  <data name="SubmitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إرسال</value>
+  </data>
+  <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إرسال</value>
   </data>
 </root>

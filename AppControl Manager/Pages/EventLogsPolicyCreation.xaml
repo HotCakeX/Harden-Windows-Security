@@ -42,10 +42,10 @@
         </controls:WrapPanel>
 
         <customUI:InfoBarV2 Grid.Row="1"
-                   IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                   Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                   Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                   IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
+                            IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                            Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                            IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
             <customUI:InfoBarV2.ActionButton>
                 <DropDownButton x:Uid="AdditionalActionsDropDownButton"
                                 Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}">
@@ -121,14 +121,20 @@
 
                             <StackPanel VerticalAlignment="Top" Orientation="Vertical" Spacing="8">
                                 <controls:Segmented x:Name="segmentedControl"
-                                    HorizontalAlignment="Stretch"
-                                    SelectedIndex="{x:Bind ViewModel.SelectedCreationMethod, Mode=TwoWay}">
-                                    <controls:SegmentedItem Content="Add To Policy"
-                                        Tag="AddToPolicy" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}" />
-                                    <controls:SegmentedItem Content="Base Policy File"
-                                        Tag="BasePolicyFile" Width="160" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
-                                    <controls:SegmentedItem Content="Base GUID"
-                                        Tag="BaseGUID" Width="130" Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
+                                                    HorizontalAlignment="Stretch"
+                                                    SelectedIndex="{x:Bind ViewModel.SelectedCreationMethod, Mode=TwoWay}">
+                                    <controls:SegmentedItem x:Uid="AddToPolicySegmentedItem"
+                                                            Tag="AddToPolicy"
+                                                            Width="160"
+                                                            Icon="{ui:FontIcon Glyph=&#xEB49;}" />
+                                    <controls:SegmentedItem x:Uid="BasePolicyFileSegmentedItem"
+                                                            Tag="BasePolicyFile"
+                                                            Width="160"
+                                                            Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
+                                    <controls:SegmentedItem x:Uid="BasePolicyGUIDSegmentedItem"
+                                                            Tag="BaseGUID"
+                                                            Width="160"
+                                                            Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
                                 </controls:Segmented>
                                 <controls:SwitchPresenter Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center">
 
@@ -137,12 +143,14 @@
                                             animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
                                             Style="{StaticResource PanelStyle}">
 
-                                            <TextBlock Margin="5" VerticalAlignment="Center" TextWrapping="WrapWholeWords">
-                                                <Span>Browse for a XML policy file to add <Bold>the logs</Bold> to </Span>
-                                            </TextBlock>
+                                            <TextBlock Margin="5"
+                                                       VerticalAlignment="Center"
+                                                       x:Uid="AddToPolicyDescription"
+                                                       Width="310"
+                                                       TextWrapping="WrapWholeWords"/>
 
-                                            <Button Margin="5" Content="Browse"
-                                                    ToolTipService.ToolTip="Select a XML file to add the scanned logs to"
+                                            <Button Margin="5"
+                                                    x:Uid="FileBrowseButton"
                                                     Style="{StaticResource AccentButtonStyle}"
                                                     Click="{x:Bind ViewModel.AddToPolicyButton_Click}" />
 
@@ -153,14 +161,14 @@
                                                     animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
                                                     Style="{StaticResource PanelStyle}">
 
-                                            <TextBlock Margin="5" VerticalAlignment="Center" TextWrapping="WrapWholeWords" Width="290" >
+                                            <TextBlock Margin="5"
+                                                       VerticalAlignment="Center"
+                                                       x:Uid="BasePolicyFileDescription"
+                                                       TextWrapping="WrapWholeWords"
+                                                       Width="310" />
 
-                                                 <Span>Browse for a <Bold>base</Bold>
-                                                    policy XML file that this <Underline>Supplemental</Underline> policy will belong to </Span>
-                                            </TextBlock>
-
-                                            <Button Margin="5" Content="Browse"
-                                                    ToolTipService.ToolTip="Select a base policy that this supplemental policy will belong to."
+                                            <Button Margin="5"
+                                                    x:Uid="FileBrowseButton"
                                                     Style="{StaticResource AccentButtonStyle}"
                                                     Click="{x:Bind ViewModel.BasePolicyFileButton_Click}" />
                                         </StackPanel>
@@ -171,14 +179,14 @@
                                              animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
                                              Style="{StaticResource PanelStyle}">
 
-                                            <TextBox PlaceholderText="Enter a Base policy GUID"
+                                            <TextBox x:Uid="BasePolicyGUIDDescription"
                                                      Width="300" Margin="10"
                                                      Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay}"
                                                      VerticalAlignment="Center"
-                                                     VerticalContentAlignment="Center" ToolTipService.ToolTip="Enter the Base GUID" />
+                                                     VerticalContentAlignment="Center" />
 
-                                            <Button Margin="5" Content="Submit"
-                                                    ToolTipService.ToolTip="Submit the GUID"
+                                            <Button Margin="5"
+                                                    x:Uid="SubmitButton"
                                                     Style="{StaticResource AccentButtonStyle}"
                                                     Click="{x:Bind ViewModel.BaseGUIDSubmitButton_Click}" />
                                         </StackPanel>
@@ -306,10 +314,9 @@
                     </Button.Flyout>
                 </Button>
 
-                <CalendarDatePicker PlaceholderText="Filter logs by date"
+                <CalendarDatePicker x:Uid="FilterByDateCalendarDatePicker"
                                     Date="{x:Bind ViewModel.DatePickerDate, Mode=TwoWay}"
-                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                    ToolTipService.ToolTip="Will only show logs that are newer than the selected date" />
+                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
 
                 <ComboBox x:Uid="ScanLevelComboBox"
                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
@@ -335,10 +342,10 @@
         </Border>
 
         <customUI:ListViewV2 x:Name="FileIdentitiesListView"
-            RegistryKey="Event_Logs"
-            Grid.Row="3"
-            SelectionMode="Extended"
-            ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}">
+                             RegistryKey="Event_Logs"
+                             Grid.Row="3"
+                             SelectionMode="Extended"
+                             ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}">
 
             <customUI:ListViewV2.Header>
 

@@ -237,8 +237,8 @@ internal static class AllCertificatesGrabber
 				{
 					// Throw a custom exception
 					throw new HashMismatchInCertificateException(
-						string.Format(GlobalVars.Rizz.GetString("WinTrustReturnCodeMessage"), verifyTrustResult),
-						string.Format(GlobalVars.Rizz.GetString("FileTamperedHashMismatchMessage"), FilePath)
+						string.Format(GlobalVars.GetStr("WinTrustReturnCodeMessage"), verifyTrustResult),
+						string.Format(GlobalVars.GetStr("FileTamperedHashMismatchMessage"), FilePath)
 					);
 				}
 

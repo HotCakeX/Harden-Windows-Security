@@ -20,10 +20,15 @@ using AppControlManager.SiPolicyIntel;
 
 namespace AppControlManager.IntelGathering;
 
-internal sealed class KernelUserVerdict
+internal sealed class KernelUserVerdict(
+	SSType verdict,
+	bool isPE,
+	bool hasSIP,
+	List<string> imports
+	)
 {
-	internal required SSType Verdict { get; set; }
-	internal required bool IsPE { get; set; }
-	internal required bool HasSIP { get; set; }
-	internal required List<string> Imports { get; set; }
+	internal SSType Verdict => verdict;
+	internal bool IsPE => isPE;
+	internal bool HasSIP => hasSIP;
+	internal List<string> Imports => imports;
 }

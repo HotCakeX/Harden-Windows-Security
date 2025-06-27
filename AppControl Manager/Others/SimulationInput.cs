@@ -29,8 +29,8 @@ namespace AppControlManager.Others;
 /// <param name="ekuOids">Lists the Extended Key Usage Object Identifiers relevant to the simulation.</param>
 internal sealed class SimulationInput(FileInfo filePath, List<ChainPackage> allFileSigners, List<SignerX> signerInfo, List<string> ekuOids)
 {
-	internal FileInfo FilePath { get; } = filePath;
-	internal List<ChainPackage> AllFileSigners { get; } = allFileSigners;
-	internal List<SignerX> SignerInfo { get; } = signerInfo;
-	internal List<string> EKUOIDs { get; } = ekuOids;
+	internal FileInfo FilePath => filePath;
+	internal List<ChainPackage> AllFileSigners => allFileSigners;
+	internal List<SignerX> SignerInfo => signerInfo;
+	internal List<string> EKUOIDs => ekuOids;
 }

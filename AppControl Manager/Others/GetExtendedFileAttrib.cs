@@ -100,7 +100,7 @@ internal static partial class GetExtendedFileAttrib
 		{
 			Logger.Write(
 				string.Format(
-					GlobalVars.Rizz.GetString("CouldNotGetExFileInfoErrorMessage"),
+					GlobalVars.GetStr("CouldNotGetExFileInfoErrorMessage"),
 					filePath,
 					ex.Message
 				)

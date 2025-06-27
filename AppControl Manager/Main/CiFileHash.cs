@@ -110,7 +110,7 @@ internal static class CiFileHash
 		finally
 		{
 			// Remove the file's hash ranges from cache
-			HashRangesCache.TryRemove(filePath, out _);
+			_ = HashRangesCache.TryRemove(filePath, out _);
 		}
 	}
 
@@ -123,10 +123,10 @@ internal static class CiFileHash
 		results[0] = GetAuthenticodeHashLegacy(filePath, "SHA1");
 		results[1] = GetAuthenticodeHashLegacy(filePath, "SHA256");
 
-		// Handle all other algorithms using manual calculation with single file read		
+		// Handle all other algorithms using manual calculation with single file read
 		string?[] manualResults = GetAllAuthenticodeHashesManual(filePath);
 
-		// Copy manual results to the main results array		
+		// Copy manual results to the main results array
 		// results indices: 2=SHA384, 3=SHA512, 4=SHA3-256, 5=SHA3-384, 6=SHA3-512
 		results[2] = manualResults[0]; // SHA384
 		results[3] = manualResults[1]; // SHA512
@@ -224,7 +224,7 @@ internal static class CiFileHash
 					try
 					{
 						// Read chunk from memory-mapped file
-						accessor.ReadArray(currentOffset, chunkData, 0, currentChunkSize);
+						_ = accessor.ReadArray(currentOffset, chunkData, 0, currentChunkSize);
 
 						// Hash this chunk for all algorithms
 						for (int i = 0; i < HashAlgorithmsManual.Length; i++)
@@ -323,7 +323,7 @@ internal static class CiFileHash
 			{
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.Rizz.GetString("GetAuthenticodeHashAcquireContextError"),
+						GlobalVars.GetStr("GetAuthenticodeHashAcquireContextError"),
 						hashAlgorithm));
 			}
 
@@ -339,7 +339,7 @@ internal static class CiFileHash
 			{
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.Rizz.GetString("GetAuthenticodeHashCalcFileHashError"),
+						GlobalVars.GetStr("GetAuthenticodeHashCalcFileHashError"),
 						filePath,
 						hashAlgorithm));
 			}
@@ -357,7 +357,7 @@ internal static class CiFileHash
 			{
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.Rizz.GetString("GetAuthenticodeHashCalcFileHashError"),
+						GlobalVars.GetStr("GetAuthenticodeHashCalcFileHashError"),
 						filePath,
 						hashAlgorithm));
 			}
@@ -393,7 +393,7 @@ internal static class CiFileHash
 			else
 			{
 				// Remove stale cache entry
-				HashRangesCache.TryRemove(filePath, out _);
+				_ = HashRangesCache.TryRemove(filePath, out _);
 			}
 		}
 
@@ -401,7 +401,7 @@ internal static class CiFileHash
 		var ranges = GetAuthenticodeHashRangesFromMemoryMapped(accessor, fileLength);
 
 		// Cache the result
-		HashRangesCache.TryAdd(filePath, (ranges, fileLength, lastWriteTime));
+		_ = HashRangesCache.TryAdd(filePath, (ranges, fileLength, lastWriteTime));
 
 		return ranges;
 	}

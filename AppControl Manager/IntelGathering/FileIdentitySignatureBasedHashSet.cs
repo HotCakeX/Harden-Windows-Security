@@ -63,7 +63,7 @@ internal sealed class FileIdentitySignatureBasedHashSet
 			if (existingItem.SignatureStatus == SignatureStatus.IsUnsigned && item.SignatureStatus == SignatureStatus.IsSigned)
 			{
 				Logger.Write(string.Format(
-					GlobalVars.Rizz.GetString("ReplacingUnsignedItemMessage"),
+					GlobalVars.GetStr("ReplacingUnsignedItemMessage"),
 					existingItem.FileName,
 					existingItem.SHA256Hash));
 

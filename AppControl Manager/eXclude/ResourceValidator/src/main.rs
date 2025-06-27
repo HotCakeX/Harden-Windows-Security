@@ -96,7 +96,7 @@ fn main() -> Result<()> {
         .collect(); // Collect into a HashSet for efficient lookup
 
     // Step 3: Scan C# files for resource key usage
-    // Look for `GlobalVars.Rizz.GetString("KEY")` calls in all .cs files to see which keys are used
+    // Look for `GlobalVars.GetStr("KEY")` calls in all .cs files to see which keys are used
     let used_keys: HashSet<String> = scan_cs_for_getstring(&cs_dir)
         .with_context(|| format!("Failed to scan C# files in {:?}", cs_dir))?;
 
@@ -117,14 +117,37 @@ fn main() -> Result<()> {
 
     // If any keys are missing, report them and exit with an error code
     if !missing.is_empty() {
-        eprintln!("Error: Found GlobalVars.Rizz.GetString keys not in resx:");
+        eprintln!("Error: Found GlobalVars.GetStr keys not in resx:");
         for key in missing {
             eprintln!("  - {}", key); // List each missing key
         }
         exit(1);
     }
 
-    println!("All GlobalVars.Rizz.GetString keys are valid.");
+    println!("All GlobalVars.GetStr keys are valid.");
+
+    // Step 4.5: Detect unused keys in English resource file
+    // Find keys that are neither used by GlobalVars.GetStr nor referenced by x:Uid in XAML
+    let xaml_used_keys: HashSet<String> = scan_xaml_for_xuid_keys(&cs_dir)
+        .with_context(|| format!("Failed to scan XAML files for x:Uid keys in {:?}", cs_dir))?;
+
+    // Combine all used keys from C# and XAML
+    let mut all_used_keys: HashSet<String> = HashSet::new();
+    all_used_keys.extend(used_keys.clone());
+    all_used_keys.extend(xaml_used_keys.clone());
+
+    // Find unused keys by comparing resource keys with used keys (case-insensitive)
+    let unused_keys: Vec<String> = detect_unused_keys(&resx_info.key_values, &all_used_keys);
+
+    if unused_keys.is_empty() {
+        println!("No unused keys found in English resource file.");
+    } else {
+        println!("Unused keys found in English resource file:");
+        for key in &unused_keys {
+            println!("  - {}", key);
+        }
+        println!("Total unused keys: {}", unused_keys.len());
+    }
 
     // Prepare English key set for non-English validation
     // Create a set of exact English keys (case-sensitive) to compare against non-English resource files
@@ -364,7 +387,7 @@ fn process_value_duplicates(
     Ok(())
 }
 
-/// Updates all .cs files under a directory by replacing GetString calls for old keys with a new key
+/// Updates all .cs files under a directory by replacing GetStr calls for old keys with a new key
 fn update_cs_references(
     dir: &PathBuf,       // Directory to search for .cs files
     new_key: &str,       // The key to use in replacements
@@ -388,16 +411,16 @@ fn update_cs_references(
                 .with_context(|| format!("Failed to read file {:?}", path))?;
             let original: String = content.clone(); // Keep original for comparison
 
-            // Replace each old key's GetString call with the new key
+            // Replace each old key's GetStr call with the new key
             for old in old_keys {
-                // Match `GlobalVars.Rizz.GetString("old_key")` with optional whitespace
+                // Match `GlobalVars.GetStr("old_key")` with optional whitespace
                 let call_pattern: String = format!(
-                    r#"GlobalVars\.Rizz\.GetString\s*\(\s*"{}"\s*\)"#,
+                    r#"GlobalVars\.GetStr\s*\(\s*"{}"\s*\)"#,
                     regex::escape(old)
                 );
                 let call_re: Regex = Regex::new(&call_pattern)
                     .with_context(|| format!("Invalid regex for updating key `{}`", old))?;
-                let replacement: String = format!(r#"GlobalVars.Rizz.GetString("{}")"#, new_key);
+                let replacement: String = format!(r#"GlobalVars.GetStr("{}")"#, new_key);
                 content = call_re
                     .replace_all(&content, replacement.as_str())
                     .to_string();
@@ -538,10 +561,10 @@ fn parse_resx_data(path: &PathBuf) -> Result<ResxInfo> {
     })
 }
 
-/// Scans all .cs files under a directory for `GlobalVars.Rizz.GetString("KEY")` calls
+/// Scans all .cs files under a directory for `GlobalVars.GetStr("KEY")` calls
 fn scan_cs_for_getstring(root: &PathBuf) -> Result<HashSet<String>> {
-    // Regex to match GetString calls and capture the key
-    let pattern = Regex::new(r#"GlobalVars\.Rizz\.GetString\s*\(\s*"(?P<key>[^"]+)"\s*\)"#)
+    // Regex to match GetStr calls and capture the key
+    let pattern = Regex::new(r#"GlobalVars\.GetStr\s*\(\s*"(?P<key>[^"]+)"\s*\)"#)
         .expect("Failed to compile regex"); // Panic if regex is invalid (shouldn't happen)
 
     let mut keys = HashSet::new(); // Collect unique keys
@@ -551,7 +574,7 @@ fn scan_cs_for_getstring(root: &PathBuf) -> Result<HashSet<String>> {
     Ok(keys)
 }
 
-/// Helper function to recursively visit directories and scan .cs files for GetString keys
+/// Helper function to recursively visit directories and scan .cs files for GetStr keys
 fn visit_dir(dir: &Path, pattern: &Regex, keys: &mut HashSet<String>) -> Result<()> {
     for entry in fs::read_dir(dir).with_context(|| format!("Cannot read directory {:?}", dir))? {
         let entry: fs::DirEntry =
@@ -577,6 +600,103 @@ fn visit_dir(dir: &Path, pattern: &Regex, keys: &mut HashSet<String>) -> Result<
         }
     }
     Ok(())
+}
+
+/// Scans all XAML files under a directory for x:Uid usage and extracts referenced resource keys
+fn scan_xaml_for_xuid_keys(root: &PathBuf) -> Result<HashSet<String>> {
+    // Regex to find elements with an x:Uid attribute
+    let xuid_pattern = Regex::new(r#"<[A-Za-z0-9_:]+\b[^>]*\bx:Uid\s*=\s*"([^"]+)""#)
+        .expect("Failed to compile x:Uid regex");
+
+    let mut keys = HashSet::new(); // Collect unique resource keys
+
+    visit_xaml_dir(root, &xuid_pattern, &mut keys)?; // Recursively scan XAML files
+
+    Ok(keys)
+}
+
+/// Helper function to recursively visit directories and scan XAML files for x:Uid references
+fn visit_xaml_dir(dir: &Path, pattern: &Regex, keys: &mut HashSet<String>) -> Result<()> {
+    for entry in fs::read_dir(dir).with_context(|| format!("Cannot read directory {:?}", dir))? {
+        let entry: fs::DirEntry =
+            entry.with_context(|| format!("Failed to read entry in {:?}", dir))?;
+        let path: PathBuf = entry.path();
+        if path.is_dir() {
+            visit_xaml_dir(&path, pattern, keys)?; // Recurse into subdirectories
+        } else if path.is_file() && path.extension().map_or(false, |e| e.eq_ignore_ascii_case("xaml")) {
+            // Read the XAML file
+            let mut content: String = String::new();
+
+            File::open(&path)
+                .with_context(|| format!("Failed to open {:?}", path))?
+                .read_to_string(&mut content)
+                .with_context(|| format!("Failed to read {:?}", path))?;
+
+            // Find all x:Uid matches and generate potential resource keys
+            for cap in pattern.captures_iter(&content) {
+                if let Some(uid_match) = cap.get(1) {
+                    let uid = uid_match.as_str();
+
+                    // Generate potential resource keys for this x:Uid
+                    // x:Uid="MyButton" can reference keys like "MyButton.Content", "MyButton.ToolTip", etc.
+                    let potential_properties = vec![
+                        "AutomationProperties.HelpText",
+                        "ToolTipService.ToolTip",
+                        "Content",
+                        "Description",
+                        "Header",
+                        "PlaceholderText",
+                        "Text",
+                        "OffContent",
+                        "OnContent",
+                        "Title",
+                        "Message",
+                        "Label",
+                        "CloseButtonText",
+                        "PrimaryButtonText",
+                    ];
+
+                    for property in potential_properties {
+                        let resource_key = format!("{}.{}", uid, property);
+                        keys.insert(resource_key);
+                    }
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Detects unused resource keys by comparing available keys with used keys
+fn detect_unused_keys(
+    key_values: &HashMap<String, Vec<String>>, // All available resource keys
+    used_keys: &HashSet<String>,              // Keys that are actually used
+) -> Vec<String> {
+    let mut unused = Vec::new();
+
+    // Create a set of used keys in lowercase for case-insensitive comparison
+    let used_keys_lower: HashSet<String> = used_keys
+        .iter()
+        .map(|k| k.to_lowercase())
+        .collect();
+
+    // Check each resource key to see if it's used
+    for resource_key in key_values.keys() {
+        let resource_key_lower = resource_key.to_lowercase();
+
+        // Check if this key is used directly
+        if !used_keys_lower.contains(&resource_key_lower) {
+            // Also check with '/' replaced by '.' for normalization
+            let normalized_lower = resource_key.replace('/', ".").to_lowercase();
+            if !used_keys_lower.contains(&normalized_lower) {
+                unused.push(resource_key.clone());
+            }
+        }
+    }
+
+    // Sort for consistent output
+    unused.sort();
+    unused
 }
 
 /// Detects keys in non-English resource files that don't exist in the English resource file
@@ -1013,6 +1133,20 @@ fn validate_xuid_usage(
         "TabViewItem",
         vec![
             "Header"
+        ],
+    );
+    allowed.insert(
+        "SelectorBarItem",
+        vec![
+            "Text"
+        ],
+    );
+    allowed.insert(
+        "CalendarDatePicker",
+        vec![
+            "PlaceholderText",
+            "AutomationProperties.HelpText",
+            "ToolTipService.ToolTip",
         ],
     );
 

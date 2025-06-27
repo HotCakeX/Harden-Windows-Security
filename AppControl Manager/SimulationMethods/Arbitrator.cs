@@ -69,7 +69,7 @@ internal static class Arbitrator
 			// If the signer has any EKUs, try to match it with the file's EKU OIDs
 			if (signer.HasEKU)
 			{
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("CurrentFileHasNEKUs"), simulationInput.FilePath.FullName, simulationInput.EKUOIDs?.Count));
+				Logger.Write(string.Format(GlobalVars.GetStr("CurrentFileHasNEKUs"), simulationInput.FilePath.FullName, simulationInput.EKUOIDs?.Count));
 
 				// Check if any of the Signer's OIDs match any of the file's certificates' OIDs (which are basically Leaf certificates' EKU OIDs)
 				// This is used for all levels, not just WHQL levels
@@ -88,13 +88,13 @@ internal static class Arbitrator
 				if (EKUsMatch)
 				{
 
-					Logger.Write(string.Format(GlobalVars.Rizz.GetString("SignerEKUsMatchedFileEKUs"), signer.Name));
+					Logger.Write(string.Format(GlobalVars.GetStr("SignerEKUsMatchedFileEKUs"), signer.Name));
 
 					// If the signer and file have matching EKUs and the signer is WHQL then start checking for OemID
 					if (signer.IsWHQL)
 					{
 
-						Logger.Write(string.Format(GlobalVars.Rizz.GetString("SignerIsWHQL"), signer.Name));
+						Logger.Write(string.Format(GlobalVars.GetStr("SignerIsWHQL"), signer.Name));
 
 						// At this point the file is definitely WHQL-Signed
 
@@ -125,7 +125,7 @@ internal static class Arbitrator
 							}
 							catch
 							{
-								Logger.Write(GlobalVars.Rizz.GetString("FailedToGetOpusDataCurrentChain"));
+								Logger.Write(GlobalVars.GetStr("FailedToGetOpusDataCurrentChain"));
 							}
 
 							// If there was Opus data
@@ -184,7 +184,7 @@ internal static class Arbitrator
 
 										if (!Attrib.Value.TryGetValue("MinimumFileVersion", out string? MinimumFileVersion))
 										{
-											Logger.Write(GlobalVars.Rizz.GetString("MinimumFileVersionNullSkipping"));
+											Logger.Write(GlobalVars.GetStr("MinimumFileVersionNullSkipping"));
 											continue;
 										}
 
@@ -208,7 +208,8 @@ internal static class Arbitrator
 												 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
 												 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
 												{
-													Logger.Write(string.Format(GlobalVars.Rizz.GetString("SpecificFileNameLevelIs"), keyItem));
+													// Excessive logging
+													// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
 
 													/*
 														If there was a match then assign the keyItem, which is the name of the SpecificFileNameLevel option, to the SpecificFileNameLevelMatchCriteria of the SimulationOutput
@@ -336,7 +337,7 @@ internal static class Arbitrator
 				}
 				else
 				{
-					Logger.Write(GlobalVars.Rizz.GetString("SignerHadEKUsButNoMatch"));
+					Logger.Write(GlobalVars.GetStr("SignerHadEKUsButNoMatch"));
 					// If the signer has EKU but it didn't match with the file's EKU then skip the current signer
 					// as it shouldn't be used for any other levels
 					continue;
@@ -386,7 +387,7 @@ internal static class Arbitrator
 
 									if (MinimumFileVersion is null)
 									{
-										Logger.Write(GlobalVars.Rizz.GetString("MinimumFileVersionNullSkipping"));
+										Logger.Write(GlobalVars.GetStr("MinimumFileVersionNullSkipping"));
 										continue;
 									}
 
@@ -444,7 +445,8 @@ internal static class Arbitrator
 											 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
 											 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
 											{
-												Logger.Write(string.Format(GlobalVars.Rizz.GetString("SpecificFileNameLevelIs"), keyItem));
+												// Excessive logging
+												// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
 
 
 												// If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
@@ -616,7 +618,7 @@ internal static class Arbitrator
 
 							if (MinimumFileVersion is null)
 							{
-								Logger.Write(GlobalVars.Rizz.GetString("MinimumFileVersionNullSkipping"));
+								Logger.Write(GlobalVars.GetStr("MinimumFileVersionNullSkipping"));
 								continue;
 							}
 
@@ -675,7 +677,8 @@ internal static class Arbitrator
 									 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
 									 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
 									{
-										Logger.Write(string.Format(GlobalVars.Rizz.GetString("SpecificFileNameLevelIs"), keyItem));
+										// Excessive logging
+										// Logger.Write(string.Format(GlobalVars.GetStr("SpecificFileNameLevelIs"), keyItem));
 
 										// If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
 										// And break out of the loop by validating the signer as suitable for FilePublisher level

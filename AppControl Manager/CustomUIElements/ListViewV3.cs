@@ -109,14 +109,14 @@ internal sealed partial class ListViewV3 : ListView
 			}
 
 			// Disable vertical scrolling for the outer ScrollView only for mouse input
-			_parentScrollView?.VerticalScrollMode = ScrollingScrollMode.Disabled;
+			_ = (_parentScrollView?.VerticalScrollMode = ScrollingScrollMode.Disabled);
 		}
 	}
 
 	private void OnPointerExited(object sender, PointerRoutedEventArgs e)
 	{
 		// Re-enable vertical scrolling for the outer ScrollView
-		_parentScrollView?.VerticalScrollMode = ScrollingScrollMode.Enabled;
+		_ = (_parentScrollView?.VerticalScrollMode = ScrollingScrollMode.Enabled);
 	}
 
 	private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
@@ -134,7 +134,7 @@ internal sealed partial class ListViewV3 : ListView
 	private ScrollView? FindParentScrollView()
 	{
 		// Start from the inner ScrollViewer if we have it, otherwise from 'this'
-		DependencyObject? parent = (_innerScrollViewer as DependencyObject) ?? this as DependencyObject;
+		DependencyObject? parent = (_innerScrollViewer as DependencyObject) ?? this;
 
 		// Move up until we find a ScrollView that's *not* the inner one
 		while (parent != null)

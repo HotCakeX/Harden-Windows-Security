@@ -570,7 +570,7 @@
                         <!-- Header section with action buttons -->
                         <Border Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="12" Margin="12,12,12,6">
 
-                            <controls:WrapPanel Orientation="Horizontal"                                                   
+                            <controls:WrapPanel Orientation="Horizontal"
                                                     HorizontalSpacing="8"
                                                     VerticalSpacing="8"
                                                     VerticalAlignment="Center">
@@ -599,10 +599,10 @@
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate x:DataType="PolicyEditor:PolicySettings">
                                             <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Text="{x:Bind ValueName}" 
+                                                <TextBlock Text="{x:Bind ValueName}"
                                                            FontWeight="SemiBold"
                                                            FontSize="14" />
-                                                <TextBlock Text="{x:Bind Provider}" 
+                                                <TextBlock Text="{x:Bind Provider}"
                                                            FontSize="12"
                                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                             </StackPanel>
@@ -648,7 +648,7 @@
                         <Grid Grid.Row="1" Margin="12,6,12,12">
 
                             <!-- ListView for policy settings -->
-                            <ListView IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"                                                 
+                            <ListView IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                       SelectionMode="Single"
                                       SelectedItem="{x:Bind ViewModel.PolicySettingsSelectedItem, Mode=TwoWay}"
                                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -666,8 +666,8 @@
                                       ScrollViewer.HorizontalScrollMode="Auto">
 
                                 <ListView.Header>
-                                    <Border Background="{ThemeResource LayerOnMicaBaseAltFillColorDefault}" 
-                                            CornerRadius="8,8,0,0" 
+                                    <Border Background="{ThemeResource LayerOnMicaBaseAltFillColorDefault}"
+                                            CornerRadius="8,8,0,0"
                                             Padding="18"
                                             MinWidth="1050">
                                         <interactivity:Interaction.Behaviors>
@@ -682,25 +682,25 @@
                                                 <ColumnDefinition Width="120" />
                                             </Grid.ColumnDefinitions>
 
-                                            <TextBlock Grid.Column="0" 
-                                                       Text="Provider" 
-                                                       FontWeight="SemiBold"                                                        
+                                            <TextBlock Grid.Column="0"
+                                                       Text="Provider"
+                                                       FontWeight="SemiBold"
                                                        VerticalAlignment="Center" />
-                                            <TextBlock Grid.Column="1" 
-                                                       Text="Key" 
-                                                       FontWeight="SemiBold"                                                        
+                                            <TextBlock Grid.Column="1"
+                                                       Text="Key"
+                                                       FontWeight="SemiBold"
                                                        VerticalAlignment="Center" />
-                                            <TextBlock Grid.Column="2" 
-                                                       Text="Value Name" 
-                                                       FontWeight="SemiBold"                                                        
+                                            <TextBlock Grid.Column="2"
+                                                       Text="Value Name"
+                                                       FontWeight="SemiBold"
                                                        VerticalAlignment="Center" />
-                                            <TextBlock Grid.Column="3" 
-                                                       Text="Value" 
-                                                       FontWeight="SemiBold"                                                        
+                                            <TextBlock Grid.Column="3"
+                                                       Text="Value"
+                                                       FontWeight="SemiBold"
                                                        VerticalAlignment="Center" />
-                                            <TextBlock Grid.Column="4" 
-                                                       Text="Type" 
-                                                       FontWeight="SemiBold"                                                        
+                                            <TextBlock Grid.Column="4"
+                                                       Text="Type"
+                                                       FontWeight="SemiBold"
                                                        VerticalAlignment="Center" />
                                         </Grid>
                                     </Border>
@@ -708,9 +708,9 @@
 
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="PolicyEditor:PolicySettings">
-                                        <Border Background="Transparent" 
-                                                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" 
-                                                BorderThickness="0,0,0,1" 
+                                        <Border Background="Transparent"
+                                                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                                BorderThickness="0,0,0,1"
                                                 Padding="16,12"
                                                 MinWidth="1050">
 
@@ -724,7 +724,7 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <!-- Provider TextBox -->
-                                                <TextBox Grid.Column="0" 
+                                                <TextBox Grid.Column="0"
                                                          Text="{x:Bind Provider, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                          BorderThickness="1"
                                                          Margin="0,0,8,0"
@@ -732,7 +732,7 @@
                                                          x:Uid="ProviderNameTextBox" />
 
                                                 <!-- Key TextBox -->
-                                                <TextBox Grid.Column="1" 
+                                                <TextBox Grid.Column="1"
                                                          Text="{x:Bind Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                          BorderThickness="1"
                                                          Margin="0,0,8,0"
@@ -740,7 +740,7 @@
                                                          x:Uid="KeyIdentifierTextBox" />
 
                                                 <!-- Value Name TextBox -->
-                                                <TextBox Grid.Column="2" 
+                                                <TextBox Grid.Column="2"
                                                          Text="{x:Bind ValueName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                          BorderThickness="1"
                                                          Margin="0,0,8,0"
@@ -748,7 +748,7 @@
                                                          x:Uid="ValueNameTextBox" />
 
                                                 <!-- Value TextBox -->
-                                                <TextBox Grid.Column="3" 
+                                                <TextBox Grid.Column="3"
                                                          Text="{x:Bind ValueStr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                          BorderThickness="1"
                                                          Margin="0,0,8,0"
@@ -757,7 +757,7 @@
                                                          x:Uid="EnterValueTextBox" />
 
                                                 <!-- Value Type ComboBox -->
-                                                <ComboBox Grid.Column="4" 
+                                                <ComboBox Grid.Column="4"
                                                           SelectedIndex="{x:Bind Type, Mode=TwoWay}"
                                                           ItemsSource="{x:Bind ParentViewModel.TypeOptions}"
                                                           Margin="0,0,8,0"
@@ -780,9 +780,9 @@
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="ListViewItem">
-                                                    <Grid x:Name="LayoutRoot" 
-                                                          Background="{TemplateBinding Background}" 
-                                                          BorderBrush="{TemplateBinding BorderBrush}" 
+                                                    <Grid x:Name="LayoutRoot"
+                                                          Background="{TemplateBinding Background}"
+                                                          BorderBrush="{TemplateBinding BorderBrush}"
                                                           BorderThickness="{TemplateBinding BorderThickness}">
 
                                                         <VisualStateManager.VisualStateGroups>
@@ -856,11 +856,11 @@
                                                             </Border.BorderBrush>
                                                         </Border>
 
-                                                        <ContentPresenter x:Name="ContentPresenter" 
-                                                                          Content="{TemplateBinding Content}" 
-                                                                          ContentTemplate="{TemplateBinding ContentTemplate}" 
-                                                                          Margin="{TemplateBinding Padding}" 
-                                                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                        <ContentPresenter x:Name="ContentPresenter"
+                                                                          Content="{TemplateBinding Content}"
+                                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                          Margin="{TemplateBinding Padding}"
+                                                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                                     </Grid>
                                                 </ControlTemplate>
@@ -892,9 +892,9 @@
                                             <ColumnDefinition Width="120" />
                                         </Grid.ColumnDefinitions>
                                         <!-- Invisible content to match header height -->
-                                        <TextBlock Grid.Column="0" 
-                                                   Text="Provider" 
-                                                   FontWeight="SemiBold"                                                        
+                                        <TextBlock Grid.Column="0"
+                                                   Text="Provider"
+                                                   FontWeight="SemiBold"
                                                    VerticalAlignment="Center"
                                                    Opacity="0" />
                                     </Grid>
@@ -907,13 +907,13 @@
                                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                       BorderThickness="1,0,1,1">
 
-                                    <StackPanel HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center" 
+                                    <StackPanel HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
                                                 Spacing="16"
                                                 Padding="40">
 
-                                        <FontIcon Glyph="&#xE713;" 
-                                                  FontSize="48" 
+                                        <FontIcon Glyph="&#xE713;"
+                                                  FontSize="48"
                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
                                         <TextBlock x:Uid="NoPolicySettingsTextBlock"

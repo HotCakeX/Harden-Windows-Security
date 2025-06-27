@@ -7,7 +7,7 @@ license = "MIT"
 homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
 repository = "https://github.com/HotCakeX/Harden-Windows-Security"
 publish = false
-rust-version = "1.87" # Enforces minimum required installed Rust version
+rust-version = "1.88" # Enforces minimum required installed Rust version
 
 [lib]
 name = "rust_interop"
@@ -22,7 +22,7 @@ lto = "fat"
 incremental = true
 
 [dependencies]
-windows = { version = "0.61", features = [
+windows = { version = "*", features = [
     "Win32_Foundation",
     "Win32_System_Com",
     "Win32_UI_Shell",

@@ -34,9 +34,9 @@ internal sealed class PublisherSignerCreator(
 	string? authenticodeSHA1,
 	int siSigningScenario)
 {
-	internal List<CertificateDetailsCreator> CertificateDetails { get; } = certificateDetails;
-	internal string? FileName { get; } = fileName;
-	internal string? AuthenticodeSHA256 { get; } = authenticodeSHA256;
-	internal string? AuthenticodeSHA1 { get; } = authenticodeSHA1;
-	internal int SiSigningScenario { get; } = siSigningScenario;
+	internal List<CertificateDetailsCreator> CertificateDetails => certificateDetails;
+	internal string? FileName => fileName;
+	internal string? AuthenticodeSHA256 => authenticodeSHA256;
+	internal string? AuthenticodeSHA1 => authenticodeSHA1;
+	internal int SiSigningScenario => siSigningScenario;
 }

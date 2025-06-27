@@ -60,9 +60,9 @@ internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 	/// <returns></returns>
 	private static string? GetPolicyStatus(int? status) => status switch
 	{
-		0 => GlobalVars.Rizz.GetString("NotRunningOrDisabled"),
-		1 => GlobalVars.Rizz.GetString("AuditMode"),
-		2 => GlobalVars.Rizz.GetString("EnforcedMode"),
+		0 => GlobalVars.GetStr("NotRunningOrDisabled"),
+		1 => GlobalVars.GetStr("AuditMode"),
+		2 => GlobalVars.GetStr("EnforcedMode"),
 		_ => null
 	};
 

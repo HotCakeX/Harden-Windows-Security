@@ -20,15 +20,33 @@ using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SiPolicyIntel;
 
-// For Levels: WHQLFilePublisher
-internal sealed class WHQLFilePublisher
+/// <summary>
+/// For Levels: WHQLFilePublisher
+/// </summary>
+/// <param name="fileAttribElements"></param>
+/// <param name="allowedSignerElement"></param>
+/// <param name="deniedSignerElement"></param>
+/// <param name="ciSignerElement"></param>
+/// <param name="signerElement"></param>
+/// <param name="ekus"></param>
+/// <param name="signingScenario"></param>
+/// <param name="auth"></param>
+internal sealed class WHQLFilePublisher(
+	List<FileAttrib> fileAttribElements,
+	AllowedSigner? allowedSignerElement,
+	DeniedSigner? deniedSignerElement,
+	CiSigner? ciSignerElement,
+	Signer signerElement,
+	List<EKU> ekus,
+	SSType signingScenario,
+	Authorization auth)
 {
-	internal required List<FileAttrib> FileAttribElements { get; set; }
-	internal AllowedSigner? AllowedSignerElement { get; set; }
-	internal DeniedSigner? DeniedSignerElement { get; set; }
-	internal CiSigner? CiSignerElement { get; set; }
-	internal required Signer SignerElement { get; set; }
-	internal required List<EKU> Ekus { get; set; }
-	internal required SSType SigningScenario { get; set; }
-	internal required Authorization Auth { get; set; }
+	internal List<FileAttrib> FileAttribElements => fileAttribElements;
+	internal AllowedSigner? AllowedSignerElement => allowedSignerElement;
+	internal DeniedSigner? DeniedSignerElement => deniedSignerElement;
+	internal CiSigner? CiSignerElement => ciSignerElement;
+	internal Signer SignerElement => signerElement;
+	internal List<EKU> Ekus => ekus;
+	internal SSType SigningScenario => signingScenario;
+	internal Authorization Auth => auth;
 }

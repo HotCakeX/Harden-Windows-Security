@@ -36,10 +36,10 @@ internal sealed class FileBasedInfoPackage(
 	List<FilePathCreator> filePaths,
 	List<PFNRuleCreator> pfnRules)
 {
-	internal List<WHQLFilePublisherSignerCreator> WHQLFilePublisherSigners { get; } = whqlFilepublishersigners;
-	internal List<FilePublisherSignerCreator> FilePublisherSigners { get; } = filepublishersigners;
-	internal List<PublisherSignerCreator> PublisherSigners { get; } = publishersigners;
-	internal List<HashCreator> CompleteHashes { get; } = completehashes;
-	internal List<FilePathCreator> FilePaths { get; } = filePaths;
-	internal List<PFNRuleCreator> PFNRules { get; } = pfnRules;
+	internal List<WHQLFilePublisherSignerCreator> WHQLFilePublisherSigners => whqlFilepublishersigners;
+	internal List<FilePublisherSignerCreator> FilePublisherSigners => filepublishersigners;
+	internal List<PublisherSignerCreator> PublisherSigners => publishersigners;
+	internal List<HashCreator> CompleteHashes => completehashes;
+	internal List<FilePathCreator> FilePaths => filePaths;
+	internal List<PFNRuleCreator> PFNRules => pfnRules;
 }

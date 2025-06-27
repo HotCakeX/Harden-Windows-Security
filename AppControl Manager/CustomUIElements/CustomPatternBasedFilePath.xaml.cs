@@ -37,31 +37,31 @@ internal sealed partial class CustomPatternBasedFilePath : ContentDialog
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "C:\\Windows\\*",
-			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription1")
+			Description = GlobalVars.GetStr("CustomPatternBasedFilePathExampleDescription1")
 		});
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "D:\\EnterpriseApps\\MyApp\\*",
-			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription2")
+			Description = GlobalVars.GetStr("CustomPatternBasedFilePathExampleDescription2")
 		});
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "*\\Bing.exe",
-			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription3")
+			Description = GlobalVars.GetStr("CustomPatternBasedFilePathExampleDescription3")
 		});
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "C:\\*\\CCMCACHE\\*\\7z????-x64.exe",
-			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription4")
+			Description = GlobalVars.GetStr("CustomPatternBasedFilePathExampleDescription4")
 		});
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
 		{
 			Example = "C:\\Users\\UserName\\AppData\\Local\\Temp\\????????-????-????-????-????????????.tmp.node",
-			Description = GlobalVars.Rizz.GetString("CustomPatternBasedFilePathExampleDescription5")
+			Description = GlobalVars.GetStr("CustomPatternBasedFilePathExampleDescription5")
 		});
 	}
 

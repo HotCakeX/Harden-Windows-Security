@@ -89,12 +89,12 @@ internal sealed partial class UpdateVM : ViewModelBase
 		get; set
 		{
 			// This is changed by other non-UI threads.
-			Dispatcher.TryEnqueue(() =>
+			_ = Dispatcher.TryEnqueue(() =>
 			{
 				_ = SP(ref field, value);
 			});
 		}
-	} = GlobalVars.Rizz.GetString("UpdateNavItem/ToolTipService/ToolTip");
+	} = GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip");
 
 	/// <summary>
 	/// To determine whether to use the user-supplied package or continue with downloading the package from GitHub.
@@ -107,7 +107,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 			if (SP(ref field, value))
 			{
 				// Change the update button's text based on the file path
-				UpdateButtonContent = field ? $"Install {Path.GetFileName(LocalPackageFilePath)}" : GlobalVars.Rizz.GetString("UpdateNavItem/ToolTipService/ToolTip");
+				UpdateButtonContent = field ? $"Install {Path.GetFileName(LocalPackageFilePath)}" : GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip");
 			}
 		}
 	}
@@ -186,13 +186,13 @@ internal sealed partial class UpdateVM : ViewModelBase
 				CheckForUpdateButtonIsEnabled = false;
 				MainInfoBarIsClosable = false;
 
-				MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CheckingForUpdateStore"));
+				MainInfoBar.WriteInfo(GlobalVars.GetStr("CheckingForUpdateStore"));
 
 				UpdateCheckResponse UpCheckResult = await AppUpdate.CheckStore();
 
 				if (UpCheckResult.IsNewVersionAvailable)
 				{
-					MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("NewUpdateIsAvailableStore"));
+					MainInfoBar.WriteInfo(GlobalVars.GetStr("NewUpdateIsAvailableStore"));
 
 					// https://learn.microsoft.com/windows/apps/develop/launch/launch-store-app#opening-to-a-specific-product
 					Uri uri = new($"ms-windows-store://pdp/?ProductId={GlobalVars.StoreProductID}&mode=mini");
@@ -201,17 +201,17 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 					if (!launched)
 					{
-						MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ProblemOpeningMSStore"));
+						MainInfoBar.WriteWarning(GlobalVars.GetStr("ProblemOpeningMSStore"));
 					}
 				}
 				else
 				{
-					MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("TheAppIsUpToDate"));
+					MainInfoBar.WriteSuccess(GlobalVars.GetStr("TheAppIsUpToDate"));
 				}
 			}
 			catch (Exception ex)
 			{
-				MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("UpdateCheckError"));
+				MainInfoBar.WriteError(ex, GlobalVars.GetStr("UpdateCheckError"));
 			}
 			finally
 			{
@@ -233,7 +233,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 				// If user did not provide custom MSIXBundle path, start checking for update
 				if (!InstallLocalPackageConfirmation)
 				{
-					MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("CheckingForUpdate"));
+					MainInfoBar.WriteInfo(GlobalVars.GetStr("CheckingForUpdate"));
 
 					// Check for update asynchronously
 					updateCheckResult = await Task.Run(AppUpdate.CheckGitHub);
@@ -244,11 +244,11 @@ internal sealed partial class UpdateVM : ViewModelBase
 				{
 					if (InstallLocalPackageConfirmation)
 					{
-						MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("InstallingCustomPath") + LocalPackageFilePath);
+						MainInfoBar.WriteInfo(GlobalVars.GetStr("InstallingCustomPath") + LocalPackageFilePath);
 					}
 					else
 					{
-						MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("VersionComparison") + App.currentAppVersion + GlobalVars.Rizz.GetString("WhileOnlineVersion") + updateCheckResult?.OnlineVersion + GlobalVars.Rizz.GetString("UpdatingApplication"));
+						MainInfoBar.WriteInfo(GlobalVars.GetStr("VersionComparison") + App.currentAppVersion + GlobalVars.GetStr("WhileOnlineVersion") + updateCheckResult?.OnlineVersion + GlobalVars.GetStr("UpdatingApplication"));
 					}
 
 					WhatsNewInfoBarIsOpen = true;
@@ -276,7 +276,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 						AppControlManagerSavePath = Path.Combine(stagingArea, "AppControlManager.msixbundle");
 
-						MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DownloadingPackage"));
+						MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadingPackage"));
 
 						using (HttpClient client = new SecHttpClient())
 						{
@@ -339,18 +339,18 @@ internal sealed partial class UpdateVM : ViewModelBase
 							}
 						}
 
-						Logger.Write(GlobalVars.Rizz.GetString("DownloadSuccess") + AppControlManagerSavePath);
+						Logger.Write(GlobalVars.GetStr("DownloadSuccess") + AppControlManagerSavePath);
 					}
 
 					else
 					{
 						// Use the user-supplied MSIXBundle file path for installation source
-						AppControlManagerSavePath = LocalPackageFilePath ?? throw new InvalidOperationException(GlobalVars.Rizz.GetString("NoMSIXBundlePath"));
+						AppControlManagerSavePath = LocalPackageFilePath ?? throw new InvalidOperationException(GlobalVars.GetStr("NoMSIXBundlePath"));
 					}
 
 					ProgressBarIsIndeterminate = true;
 
-					MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("DownloadsFinished"));
+					MainInfoBar.WriteInfo(GlobalVars.GetStr("DownloadsFinished"));
 
 					await Task.Run(() =>
 					{
@@ -421,7 +421,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 									// Find all the rules that belong to the AppControl Manager
 									foreach (string item in ASROutputArrayCleaned)
 									{
-										if (AppPFNRegex().Match(item).Success)
+										if (AppPFNRegex().IsMatch(item))
 										{
 											asrRulesToRemove.Add(item);
 										}
@@ -450,17 +450,17 @@ internal sealed partial class UpdateVM : ViewModelBase
 						}
 						catch (JsonException Jex)
 						{
-							Logger.Write(string.Format(GlobalVars.Rizz.GetString("ASRRulesDeserializationFailedMessage"), ASROutput, Jex.Message));
+							Logger.Write(string.Format(GlobalVars.GetStr("ASRRulesDeserializationFailedMessage"), ASROutput, Jex.Message));
 						}
 						catch (Exception ex)
 						{
-							Logger.Write(GlobalVars.Rizz.GetString("ASRError") + ex.Message);
+							Logger.Write(GlobalVars.GetStr("ASRError") + ex.Message);
 						}
 
 
 						PackageManager packageManager = new();
 
-						Logger.Write(GlobalVars.Rizz.GetString("InstallingPackage"));
+						Logger.Write(GlobalVars.GetStr("InstallingPackage"));
 
 						// https://learn.microsoft.com/uwp/api/windows.management.deployment.addpackageoptions
 						AddPackageOptions options = new()
@@ -484,19 +484,19 @@ internal sealed partial class UpdateVM : ViewModelBase
 						if (deploymentOperation.Status == AsyncStatus.Error)
 						{
 							DeploymentResult deploymentResult = deploymentOperation.GetResults();
-							throw new InvalidOperationException(GlobalVars.Rizz.GetString("InstallationError") + deploymentOperation.ErrorCode + GlobalVars.Rizz.GetString("InstallationErrorText") + deploymentResult.ErrorText);
+							throw new InvalidOperationException(GlobalVars.GetStr("InstallationError") + deploymentOperation.ErrorCode + GlobalVars.GetStr("InstallationErrorText") + deploymentResult.ErrorText);
 						}
 						else if (deploymentOperation.Status == AsyncStatus.Canceled)
 						{
-							Logger.Write(GlobalVars.Rizz.GetString("InstallationCanceled"));
+							Logger.Write(GlobalVars.GetStr("InstallationCanceled"));
 						}
 						else if (deploymentOperation.Status == AsyncStatus.Completed)
 						{
-							Logger.Write(GlobalVars.Rizz.GetString("InstallationSucceeded"));
+							Logger.Write(GlobalVars.GetStr("InstallationSucceeded"));
 						}
 						else
 						{
-							throw new InvalidOperationException(GlobalVars.Rizz.GetString("UnknownInstallationIssue"));
+							throw new InvalidOperationException(GlobalVars.GetStr("UnknownInstallationIssue"));
 						}
 
 						try
@@ -536,13 +536,13 @@ internal sealed partial class UpdateVM : ViewModelBase
 						}
 						catch (Exception ex)
 						{
-							Logger.Write(GlobalVars.Rizz.GetString("ASRAddError") + ex.Message);
+							Logger.Write(GlobalVars.GetStr("ASRAddError") + ex.Message);
 						}
 					});
 
-					MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("UpdateSuccess"));
+					MainInfoBar.WriteSuccess(GlobalVars.GetStr("UpdateSuccess"));
 
-					UpdateButtonContent = GlobalVars.Rizz.GetString("UpdatesInstalled");
+					UpdateButtonContent = GlobalVars.GetStr("UpdatesInstalled");
 
 					// Keep the CheckForUpdate button disabled since the update has been installed at this point
 					// And all that's required is for the app to be restarted by the user
@@ -550,7 +550,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 				else
 				{
-					MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("AlreadyUpdated"));
+					MainInfoBar.WriteSuccess(GlobalVars.GetStr("AlreadyUpdated"));
 
 					CheckForUpdateButtonIsEnabled = true;
 				}
@@ -563,7 +563,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 				WhatsNewInfoBarIsOpen = false;
 
-				MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("UpdateCheckError"));
+				MainInfoBar.WriteError(ex, GlobalVars.GetStr("UpdateCheckError"));
 			}
 			finally
 			{
@@ -599,7 +599,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 			if (!launched)
 			{
-				Logger.Write(GlobalVars.Rizz.GetString("FailedToOpenRating"));
+				Logger.Write(GlobalVars.GetStr("FailedToOpenRating"));
 			}
 		}
 		catch (Exception ex)

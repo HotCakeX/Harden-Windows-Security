@@ -19,8 +19,6 @@ using AppControlManager.ViewModels;
 
 namespace AppControlManager.PolicyEditor;
 
-#pragma warning disable CA1812
-
 internal sealed partial class PolicySettings(
 	PolicyEditorVM parentViewModel,
 	string provider,

@@ -30,10 +30,10 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
-internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
+internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 {
 
-	#region ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
+	#region MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
 	/// <summary>
 	/// To store the view model of the MS Graph that is retrieved from the constructor
@@ -72,7 +72,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 			null, null);
 	}
 
-	#endregion ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
+	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
 	internal readonly InfoBarSettings MainInfoBar;
 
@@ -138,12 +138,12 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 	private void CalculateColumnWidths()
 	{
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyIDHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("BasePolicyIDHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FriendlyNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("VersionHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IsSignedPolicyHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyOptionsHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyIDHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("BasePolicyIDHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("VersionHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsSignedPolicyHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyOptionsHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (CiPolicyInfo item in AllPolicies)
@@ -204,7 +204,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 						if (policyResult.Item2 is null)
 						{
 							throw new InvalidOperationException(
-								GlobalVars.Rizz.GetString("IntunePolicyDeserializedButEmptyMessage"));
+								GlobalVars.GetStr("IntunePolicyDeserializedButEmptyMessage"));
 						}
 
 						if (policyResult.Item2.PolicyOptions is not null)
@@ -229,7 +229,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 								catch (Exception ex)
 								{
 									Logger.Write(string.Format(
-										GlobalVars.Rizz.GetString("ErrorParsingRuleOptionMessage"),
+										GlobalVars.GetStr("ErrorParsingRuleOptionMessage"),
 										item2,
 										ex.Message));
 
@@ -286,7 +286,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 		{
 			// Update the policies count text
 			PoliciesCountTextBox = string.Format(
-				GlobalVars.Rizz.GetString("NumberOfPoliciesMessage"),
+				GlobalVars.GetStr("NumberOfPoliciesMessage"),
 				AllPolicies.Count);
 
 			ManageButtonsStates(true);
@@ -494,7 +494,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 			}
 
 			// Update the policies count text
-			PoliciesCountTextBox = GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
+			PoliciesCountTextBox = GlobalVars.GetStr("NumberOfPolicies") + AllPolicies.Count;
 
 			if (Sv != null && savedHorizontal.HasValue)
 			{
@@ -525,7 +525,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 			if (ListViewSelectedPolicy.IntunePolicyObjectID is null)
 			{
 				throw new InvalidOperationException(
-					GlobalVars.Rizz.GetString("IntunePolicyObjectIdNullMessage"));
+					GlobalVars.GetStr("IntunePolicyObjectIdNullMessage"));
 			}
 
 			ManageButtonsStates(false);
@@ -542,7 +542,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 
 			// Update the policies count text
 			PoliciesCountTextBox =
-				GlobalVars.Rizz.GetString("NumberOfPolicies") + AllPolicies.Count;
+				GlobalVars.GetStr("NumberOfPolicies") + AllPolicies.Count;
 		}
 		catch (Exception ex)
 		{
@@ -565,12 +565,12 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 	{
 		// Use StringBuilder to format each property with its label for easy reading
 		return new StringBuilder()
-			.AppendLine(GlobalVars.Rizz.GetString("PolicyIDLabel") + row.PolicyID)
-			.AppendLine(GlobalVars.Rizz.GetString("BasePolicyIDLabel") + row.BasePolicyID)
-			.AppendLine(GlobalVars.Rizz.GetString("FriendlyNameLabel") + row.FriendlyName)
-			.AppendLine(GlobalVars.Rizz.GetString("VersionLabel/Text") + row.VersionString)
-			.AppendLine(GlobalVars.Rizz.GetString("IsSignedPolicyLabel") + row.IsSignedPolicy)
-			.AppendLine(GlobalVars.Rizz.GetString("PolicyOptionsLabel") + row.PolicyOptionsDisplay)
+			.AppendLine(GlobalVars.GetStr("PolicyIDLabel") + row.PolicyID)
+			.AppendLine(GlobalVars.GetStr("BasePolicyIDLabel") + row.BasePolicyID)
+			.AppendLine(GlobalVars.GetStr("FriendlyNameLabel") + row.FriendlyName)
+			.AppendLine(GlobalVars.GetStr("VersionLabel/Text") + row.VersionString)
+			.AppendLine(GlobalVars.GetStr("IsSignedPolicyLabel") + row.IsSignedPolicy)
+			.AppendLine(GlobalVars.GetStr("PolicyOptionsLabel") + row.PolicyOptionsDisplay)
 			.ToString();
 	}
 
@@ -617,5 +617,18 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase
 		{
 			ClipboardManagement.CopyText(propertyValue);
 		}
+	}
+
+	public void Dispose()
+	{
+		try
+		{
+			// Unsubscribe from the collection changed event to prevent memory leaks
+			_ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged -= AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
+		}
+		catch { }
+
+		// Dispose the AuthenticationCompanion which implements IDisposable
+		AuthCompanionCLS?.Dispose();
 	}
 }

@@ -34,16 +34,16 @@ internal sealed class WHQLFilePublisherSignerCreator(
 	int siSigningScenario,
 	string opus)
 {
-	internal List<CertificateDetailsCreator> CertificateDetails { get; } = certificateDetails;
-	internal Version? FileVersion { get; } = fileVersion;
-	internal string? FileDescription { get; } = fileDescription;
-	internal string? InternalName { get; } = internalName;
-	internal string? OriginalFileName { get; } = originalFileName;
-	internal string? PackageFamilyName { get; } = packageFamilyName;
-	internal string? ProductName { get; } = productName;
-	internal string? FileName { get; } = fileName;
-	internal string? AuthenticodeSHA256 { get; } = authenticodeSHA256;
-	internal string? AuthenticodeSHA1 { get; } = authenticodeSHA1;
-	internal int SiSigningScenario { get; } = siSigningScenario;
-	internal string Opus { get; } = opus;
+	internal List<CertificateDetailsCreator> CertificateDetails => certificateDetails;
+	internal Version? FileVersion => fileVersion;
+	internal string? FileDescription => fileDescription;
+	internal string? InternalName => internalName;
+	internal string? OriginalFileName => originalFileName;
+	internal string? PackageFamilyName => packageFamilyName;
+	internal string? ProductName => productName;
+	internal string? FileName => fileName;
+	internal string? AuthenticodeSHA256 => authenticodeSHA256;
+	internal string? AuthenticodeSHA1 => authenticodeSHA1;
+	internal int SiSigningScenario => siSigningScenario;
+	internal string Opus => opus;
 }

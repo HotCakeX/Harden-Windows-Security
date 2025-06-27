@@ -994,9 +994,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="NoMSIXBundlePath" xml:space="preserve">
     <value>No MSIXBundle path was selected</value>
   </data>
-  <data name="DetectingSignTool" xml:space="preserve">
-    <value>Detecting/Downloading the SignTool.exe from the Microsoft servers</value>
-  </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>All Downloads finished, installing the new AppControl Manager version</value>
   </data>
@@ -1084,32 +1081,11 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CIPDeploymentSuccess" xml:space="preserve">
     <value>Successfully deployed all of the selected CIP files</value>
   </data>
-  <data name="SigningIntoIntune" xml:space="preserve">
-    <value>Signing into Intune</value>
-  </data>
-  <data name="IntuneSignInSuccess" xml:space="preserve">
-    <value>Successfully signed into Intune</value>
-  </data>
   <data name="CloudDeploymentActive" xml:space="preserve">
     <value>Cloud Deployment is Currently Active</value>
   </data>
-  <data name="IntuneSignInCancelled" xml:space="preserve">
-    <value>Sign in to Intune was cancelled by the user</value>
-  </data>
-  <data name="IntuneSignInError" xml:space="preserve">
-    <value>There was an error signing into Intune: </value>
-  </data>
-  <data name="SigningOutOfIntune" xml:space="preserve">
-    <value>Signing out of Intune</value>
-  </data>
-  <data name="IntuneSignOutSuccess" xml:space="preserve">
-    <value>Successfully signed out of Intune</value>
-  </data>
   <data name="LocalDeploymentActive" xml:space="preserve">
     <value>Local Deployment is Currently Active</value>
-  </data>
-  <data name="IntuneSignOutError" xml:space="preserve">
-    <value>There was an error signing out of Intune: </value>
   </data>
   <data name="ProcessingTitle" xml:space="preserve">
     <value>Processing</value>
@@ -1179,9 +1155,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="CreatingPFNBasedDenyPolicy" xml:space="preserve">
     <value>Creating the deny policy based on Package Family Names</value>
-  </data>
-  <data name="SelectedApps" xml:space="preserve">
-    <value>Selected Apps: </value>
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Successfully created the Deny policy</value>
@@ -1339,12 +1312,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
-  </data>
-  <data name="LastUpdatedLabel" xml:space="preserve">
-    <value>Last Updated: </value>
-  </data>
-  <data name="DriverBlockListError" xml:space="preserve">
-    <value>Error retrieving driver block list information.</value>
   </data>
   <data name="ConfiguringAutoUpdate" xml:space="preserve">
     <value>Configuring Scheduled task for auto update</value>
@@ -2165,16 +2132,16 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Switch between Right-to-Left and Left-to-Right flow directions for the user interface elements.</value>
   </data>
-  <data name="AppElevationNotice.Main" xml:space="preserve">
+  <data name="AppElevationNoticeMain" xml:space="preserve">
     <value>Please launch AppControl Manager as Administrator to access this page</value>
   </data>
-  <data name="AppElevationNotice.Title" xml:space="preserve">
+  <data name="AppElevationNoticeTitle" xml:space="preserve">
     <value>Administrator privileges required</value>
   </data>
-  <data name="AppElevationNotice.ExtraPrompt" xml:space="preserve">
+  <data name="AppElevationNoticeExtraPrompt" xml:space="preserve">
     <value>Always prompt for elevation on app startup</value>
   </data>
-  <data name="AppElevationNotice.Relaunch" xml:space="preserve">
+  <data name="AppElevationNoticeRelaunch" xml:space="preserve">
     <value>Relaunch as Admin</value>
   </data>
   <data name="WindowMaximizedMsg" xml:space="preserve">
@@ -2474,15 +2441,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Search among the certificate details data</value>
   </data>
-  <data name="SortingDirectionToggleButton.Text" xml:space="preserve">
-    <value>Descending Sorting</value>
-  </data>
-  <data name="SortingDirectionToggleButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>When checked, the sort will be performed in descending order, if unchecked the sort will be performed in ascending order.</value>
-  </data>
-  <data name="SortingDirectionToggleButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>When checked, the sort will be performed in descending order, if unchecked the sort will be performed in ascending order.</value>
-  </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
     <value>Browse for the AppControl Manager MSIXBundle file path on your device and then go back to the update page to install it.</value>
   </data>
@@ -2662,9 +2620,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Use various available options to change the appearance and visual effects of the AppControl Manager</value>
-  </data>
-  <data name="LanguageSectionSettingsExpanderInfoBar.Message" xml:space="preserve">
-    <value>Please restart the app for language changes to be fully applied to the user interface.</value>
   </data>
   <data name="LanguageTextBlock.Text" xml:space="preserve">
     <value>Language</value>
@@ -4216,9 +4171,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>The command '{0} {1}' failed with exit code {2}. Error: {3}</value>
   </data>
-    <data name="CoCreateInstanceFailedHResultMessage" xml:space="preserve">
-    <value>CoCreateInstance failed with HRESULT: 0x{0:X}</value>
-  </data>
   <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
     <value>Elevation request cancelled by the user.</value>
   </data>
@@ -5650,7 +5602,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
     <value>Custom Pattern Supplemental Policy</value>
   </data>
-  <!--New-->
   <data name="CloudTextBlock.Text" xml:space="preserve">
     <value>Cloud</value>
   </data>
@@ -5707,5 +5658,47 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Open the policy in another page to configure its rule options further.</value>
+  </data>
+  <data name="AddToPolicySegmentedItem.Content" xml:space="preserve">
+    <value>Add To Policy</value>
+  </data>
+  <data name="BasePolicyFileSegmentedItem.Content" xml:space="preserve">
+    <value>Base Policy File</value>
+  </data>
+  <data name="BasePolicyGUIDSegmentedItem.Content" xml:space="preserve">
+    <value>Base Policy GUID</value>
+  </data>
+  <data name="AddToPolicyDescription.Text" xml:space="preserve">
+    <value>Browse for a policy file to add the logs to. The new rules will be merged with any existing rules.</value>
+  </data>
+  <data name="BasePolicyFileDescription.Text" xml:space="preserve">
+    <value>Browse for a base policy file that the Supplemental policy that is going to be created will be associated with.</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.PlaceholderText" xml:space="preserve">
+    <value>Enter a Base policy GUID</value>
+  </data>
+    <data name="BasePolicyGUIDDescription.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Enter the GUID of a Base policy file that the Supplemental policy that is going to be created will be associated with.</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enter the GUID of a Base policy file that the Supplemental policy that is going to be created will be associated with.</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.PlaceholderText" xml:space="preserve">
+    <value>Filter By Date</value>
+  </data>
+    <data name="FilterByDateCalendarDatePicker.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Will only show the data that are equal or newer than the selected date.</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Will only show the data that are equal or newer than the selected date.</value>
+  </data>
+  <data name="SubmitButton.Content" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="SubmitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Submit</value>
   </data>
 </root>

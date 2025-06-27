@@ -310,18 +310,18 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IDHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FriendlyNameHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("IDHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
 		double maxWidth3 = ListViewHelper.MeasureText("Hash");
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileNameHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("ProductNameHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("MinimumFileVersionHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("MaximumFileVersionHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PackageFamilyNameHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PackageVersionHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileNameHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("InternalNameHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileDescriptionHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("ProductNameHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePathHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("MinimumFileVersionHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("MaximumFileVersionHeader/Text"));
+		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.GetStr("PackageFamilyNameHeader/Text"));
+		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.GetStr("PackageVersionHeader/Text"));
 		double maxWidth13 = ListViewHelper.MeasureText("App IDs");
 		double maxWidth14 = ListViewHelper.MeasureText("Type");
 
@@ -373,7 +373,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("IDHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("IDHeader/Text"));
 		double maxWidth2 = ListViewHelper.MeasureText("Name");
 		double maxWidth3 = ListViewHelper.MeasureText("Cert Root");
 		double maxWidth4 = ListViewHelper.MeasureText("Cert Publisher");
@@ -417,7 +417,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	{
 		if (SelectedPolicyFile is null)
 		{
-			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectAppControlPolicyFirstMessage"));
+			MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectAppControlPolicyFirstMessage"));
 			return;
 		}
 
@@ -433,7 +433,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		}
 		else
 		{
-			MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("OnlyXmlCipSupportedMessage"));
+			MainInfoBar.WriteWarning(GlobalVars.GetStr("OnlyXmlCipSupportedMessage"));
 			return;
 		}
 
@@ -448,7 +448,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				ProgressBarVisibility = Visibility.Visible;
 				UIElementsEnabledState = false;
 
-				MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("LoadingPolicyMessage"));
+				MainInfoBar.WriteInfo(GlobalVars.GetStr("LoadingPolicyMessage"));
 
 				// Clear the class variables
 				PolicyObj = null;
@@ -494,7 +494,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					PolicyObj = Management.Initialize(SelectedPolicyFile, null);
 				}
 
-				#region Extract policy details				
+				#region Extract policy details
 
 				string? policyName = PolicySettingsManager.GetPolicyName(PolicyObj, null);
 				string? policyIDInfo = PolicySettingsManager.GetPolicyIDInfo(PolicyObj, null);
@@ -834,14 +834,14 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			await PublishUserActivityAsync(LaunchProtocolActions.PolicyEditor,
 				SelectedPolicyFile,
-				GlobalVars.Rizz.GetString("UserActivityNameForPolicyEditor"));
+				GlobalVars.GetStr("UserActivityNameForPolicyEditor"));
 		}
 		catch (Exception ex)
 		{
 			error = true;
 			await Dispatcher.EnqueueAsync(() =>
 			{
-				MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorLoadingPolicyFileMessage"));
+				MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorLoadingPolicyFileMessage"));
 			});
 		}
 		finally
@@ -855,7 +855,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				if (!error)
 				{
-					MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessLoadedPolicyMessage"));
+					MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessLoadedPolicyMessage"));
 				}
 
 				MainInfoBarIsClosable = true;
@@ -873,7 +873,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		if (!FileRulesCollection.Remove(item))
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("CouldNotRemoveFileRuleMessage"),
+				GlobalVars.GetStr("CouldNotRemoveFileRuleMessage"),
 				item.Id));
 		}
 
@@ -891,7 +891,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		if (!SignatureRulesCollection.Remove(item))
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("CouldNotRemoveSignatureRuleMessage"),
+				GlobalVars.GetStr("CouldNotRemoveSignatureRuleMessage"),
 				item.Id));
 		}
 
@@ -1034,7 +1034,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 			if (SelectedPolicyFile is null || PolicyObj is null)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("SelectPolicyBeforeLoad"));
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyBeforeLoad"));
 				return;
 			}
 
@@ -1348,7 +1348,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				{
 					_ = Dispatcher.TryEnqueue(() =>
 					{
-						MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("EnterPolicyVersion"));
+						MainInfoBar.WriteWarning(GlobalVars.GetStr("EnterPolicyVersion"));
 					});
 					return;
 				}
@@ -1434,13 +1434,13 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					}
 
 
-					MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("PolicyEditorSuccessfulSaveMessage"));
+					MainInfoBar.WriteSuccess(GlobalVars.GetStr("PolicyEditorSuccessfulSaveMessage"));
 
 					if (fileType == 0)
 					{
 						using ContentDialogV2 dialog = new()
 						{
-							Title = GlobalVars.Rizz.GetString("DialogTitleSuccess"),
+							Title = GlobalVars.GetStr("DialogTitleSuccess"),
 							Content = new WrapPanel
 							{
 								Orientation = Orientation.Vertical,
@@ -1451,7 +1451,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 								{
 									new TextBlock
 									{
-										Text = GlobalVars.Rizz.GetString("DialogContentCIPConvertedToXML"),
+										Text = GlobalVars.GetStr("DialogContentCIPConvertedToXML"),
 										HorizontalAlignment = HorizontalAlignment.Center,
 										TextWrapping = TextWrapping.WrapWholeWords
 									},
@@ -1464,7 +1464,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 									}
 								}
 							},
-							CloseButtonText = GlobalVars.Rizz.GetString("Ok"),
+							CloseButtonText = GlobalVars.GetStr("Ok"),
 						};
 
 						_ = await dialog.ShowAsync();
@@ -1524,7 +1524,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		UpdatePolicySignersCount = "• Update Policy Signer Rules count: 0";
 		SupplementalPolicySignersCount = "• Supplemental Policy Signer Rules count: 0";
 
-		MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("AllDataClearedMsg"));
+		MainInfoBar.WriteInfo(GlobalVars.GetStr("AllDataClearedMsg"));
 		MainInfoBarIsClosable = true;
 	}
 
@@ -1706,7 +1706,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		if (PolicySettingsSelectedItem is null)
 			return;
 
-		PolicySettingsCollection.Remove(PolicySettingsSelectedItem);
+		_ = PolicySettingsCollection.Remove(PolicySettingsSelectedItem);
 	}
 
 	/// <summary>

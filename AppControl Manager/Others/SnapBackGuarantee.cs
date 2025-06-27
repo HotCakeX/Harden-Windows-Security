@@ -39,7 +39,7 @@ internal static class SnapBackGuarantee
 		}
 
 		Logger.Write(
-			   GlobalVars.Rizz.GetString("CreatingScheduledTaskForSnapBackGuaranteeMessage")
+			   GlobalVars.GetStr("CreatingScheduledTaskForSnapBackGuaranteeMessage")
 		   );
 
 		/*

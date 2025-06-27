@@ -304,7 +304,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		try
 		{
 			if (filePath is not null)
-				await Launcher.LaunchUriAsync(new Uri(filePath));
+				_ = await Launcher.LaunchUriAsync(new Uri(filePath));
 		}
 		catch (Exception ex)
 		{

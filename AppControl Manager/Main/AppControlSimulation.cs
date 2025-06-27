@@ -89,7 +89,7 @@ internal static class AppControlSimulation
 		threadsCount = Math.Max((ushort)1, threadsCount);
 
 		Logger.Write(string.Format(
-			GlobalVars.Rizz.GetString("RunningAppControlSimulationMessage"),
+			GlobalVars.GetStr("RunningAppControlSimulationMessage"),
 			threadsCount));
 
 		// Read the content of the XML file into a string
@@ -104,7 +104,7 @@ internal static class AppControlSimulation
 		List<SignerX> SignerInfo = GetSignerInfo.Get(XMLData);
 
 		#region Region FilePath Rule Checking
-		Logger.Write(GlobalVars.Rizz.GetString("CheckingFilePathRulesMessage"));
+		Logger.Write(GlobalVars.GetStr("CheckingFilePathRulesMessage"));
 
 		HashSet<string> FilePathRules = XmlFilePathExtractor.GetFilePaths(xmlFilePath);
 
@@ -121,15 +121,15 @@ internal static class AppControlSimulation
 		}
 		else
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("SkippingSecurityCatalogsMessage"));
+			Logger.Write(GlobalVars.GetStr("SkippingSecurityCatalogsMessage"));
 		}
 
-		Logger.Write(GlobalVars.Rizz.GetString("GettingHashValuesOfFileRulesMessage"));
+		Logger.Write(GlobalVars.GetStr("GettingHashValuesOfFileRulesMessage"));
 
 		// All Hash values of all the file rules based on hash in the supplied xml policy file
 		HashSet<string> AllHashTypesFromXML = GetFileHashes.Get(XMLData);
 
-		Logger.Write(GlobalVars.Rizz.GetString("GettingSupportedFilePathsMessage"));
+		Logger.Write(GlobalVars.GetStr("GettingSupportedFilePathsMessage"));
 
 		(IEnumerable<string>, int) CollectedFiles = FileUtility.GetFilesFast(
 			folderPaths,
@@ -140,10 +140,10 @@ internal static class AppControlSimulation
 		if (CollectedFiles.Item2 == 0)
 		{
 			throw new NoValidFilesSelectedException(
-				GlobalVars.Rizz.GetString("NoValidFilesSelectedMessage"));
+				GlobalVars.GetStr("NoValidFilesSelectedMessage"));
 		}
 
-		Logger.Write(GlobalVars.Rizz.GetString("LoopingThroughSupportedFilesMessage"));
+		Logger.Write(GlobalVars.GetStr("LoopingThroughSupportedFilesMessage"));
 
 		// The counter variable to track processed files
 		int processedFilesCount = 0;
@@ -161,7 +161,7 @@ internal static class AppControlSimulation
 		if (CheckForAllowAll.Check(xmlFilePath))
 		{
 			Logger.Write(string.Format(
-			  GlobalVars.Rizz.GetString("XmlFileAllowsAllFilesMessage"),
+			  GlobalVars.GetStr("XmlFileAllowsAllFilesMessage"),
 			  xmlFilePath));
 
 			_ = FinalSimulationResults.TryAdd(xmlFilePath, new SimulationOutput(

@@ -994,9 +994,6 @@
   <data name="NoMSIXBundlePath" xml:space="preserve">
     <value>Δεν επιλέχθηκε διαδρομή MSIXBundle</value>
   </data>
-  <data name="DetectingSignTool" xml:space="preserve">
-    <value>Ανίχνευση/Λήψη του SignTool.exe από τους διακομιστές της Microsoft</value>
-  </data>
   <data name="DownloadsFinished" xml:space="preserve">
     <value>Όλες οι λήψεις ολοκληρώθηκαν, εγκατάσταση της νέας έκδοσης του AppControl Manager</value>
   </data>
@@ -1084,32 +1081,11 @@
   <data name="CIPDeploymentSuccess" xml:space="preserve">
     <value>Επιτυχής ανάπτυξη όλων των επιλεγμένων αρχείων CIP</value>
   </data>
-  <data name="SigningIntoIntune" xml:space="preserve">
-    <value>Είσοδος στο Intune</value>
-  </data>
-  <data name="IntuneSignInSuccess" xml:space="preserve">
-    <value>Επιτυχής είσοδος στο Intune</value>
-  </data>
   <data name="CloudDeploymentActive" xml:space="preserve">
     <value>Η Ανάπτυξη στο Cloud είναι Προς το Παρών Ενεργή</value>
   </data>
-  <data name="IntuneSignInCancelled" xml:space="preserve">
-    <value>Η είσοδος στο Intune ακυρώθηκε από τον χρήστη</value>
-  </data>
-  <data name="IntuneSignInError" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά την είσοδο στο Intune: </value>
-  </data>
-  <data name="SigningOutOfIntune" xml:space="preserve">
-    <value>Έξοδος από το Intune</value>
-  </data>
-  <data name="IntuneSignOutSuccess" xml:space="preserve">
-    <value>Επιτυχής έξοδος από το Intune</value>
-  </data>
   <data name="LocalDeploymentActive" xml:space="preserve">
     <value>Η Τοπική Ανάπτυξη είναι Προς το Παρών Ενεργή</value>
-  </data>
-  <data name="IntuneSignOutError" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά την έξοδο από το Intune: </value>
   </data>
   <data name="ProcessingTitle" xml:space="preserve">
     <value>Επεξεργασία</value>
@@ -1179,9 +1155,6 @@
   </data>
   <data name="CreatingPFNBasedDenyPolicy" xml:space="preserve">
     <value>Δημιουργία της πολιτικής απαγόρευσης με βάση τα Ονόματα Οικογένειας Πακέτου</value>
-  </data>
-  <data name="SelectedApps" xml:space="preserve">
-    <value>Επιλεγμένες Εφαρμογές: </value>
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Επιτυχής δημιουργία της πολιτικής Απαγόρευσης</value>
@@ -1339,12 +1312,6 @@
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Ακύρωση</value>
-  </data>
-  <data name="LastUpdatedLabel" xml:space="preserve">
-    <value>Τελευταία Ενημέρωση: </value>
-  </data>
-  <data name="DriverBlockListError" xml:space="preserve">
-    <value>Σφάλμα κατά την ανάκτηση πληροφοριών λίστας αποκλεισμού οδηγών.</value>
   </data>
   <data name="ConfiguringAutoUpdate" xml:space="preserve">
     <value>Διαμόρφωση Προγραμματισμένης εργασίας για αυτόματη ενημέρωση</value>
@@ -2165,16 +2132,16 @@
   <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Εναλλαγή μεταξύ των κατευθύνσεων ροής από Δεξιά προς Αριστερά και από Αριστερά προς Δεξιά για τα στοιχεία της διεπαφής χρήστη.</value>
   </data>
-  <data name="AppElevationNotice.Main" xml:space="preserve">
+  <data name="AppElevationNoticeMain" xml:space="preserve">
     <value>Παρακαλώ εκκινήστε τον AppControl Manager ως Διαχειριστής για να αποκτήσετε πρόσβαση σε αυτήν τη σελίδα</value>
   </data>
-  <data name="AppElevationNotice.Title" xml:space="preserve">
+  <data name="AppElevationNoticeTitle" xml:space="preserve">
     <value>Απαιτούνται δικαιώματα Διαχειριστή</value>
   </data>
-  <data name="AppElevationNotice.ExtraPrompt" xml:space="preserve">
+  <data name="AppElevationNoticeExtraPrompt" xml:space="preserve">
     <value>Πάντα να ζητάται ανύψωση κατά την εκκίνηση της εφαρμογής</value>
   </data>
-  <data name="AppElevationNotice.Relaunch" xml:space="preserve">
+  <data name="AppElevationNoticeRelaunch" xml:space="preserve">
     <value>Επανεκκίνηση ως Διαχειριστής</value>
   </data>
   <data name="WindowMaximizedMsg" xml:space="preserve">
@@ -2474,15 +2441,6 @@
   <data name="CertificatesSearchBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αναζήτηση μεταξύ των δεδομένων λεπτομερειών πιστοποιητικού</value>
   </data>
-  <data name="SortingDirectionToggleButton.Text" xml:space="preserve">
-    <value>Φθίνουσα Ταξινόμηση</value>
-  </data>
-  <data name="SortingDirectionToggleButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Όταν είναι επιλεγμένο, η ταξινόμηση θα γίνεται σε φθίνουσα σειρά, εάν δεν είναι επιλεγμένο, η ταξινόμηση θα γίνεται σε αύξουσα σειρά.</value>
-  </data>
-  <data name="SortingDirectionToggleButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Όταν είναι επιλεγμένο, η ταξινόμηση θα γίνεται σε φθίνουσα σειρά, εάν δεν είναι επιλεγμένο, η ταξινόμηση θα γίνεται σε αύξουσα σειρά.</value>
-  </data>
   <data name="BrowseForCustomMSIXPathSettingsCard.Description" xml:space="preserve">
     <value>Αναζήτηση για τη διαδρομή του αρχείου MSIXBundle του AppControl Manager στη συσκευή σας και στη συνέχεια επιστρέψτε στη σελίδα ενημέρωσης για να το εγκαταστήσετε.</value>
   </data>
@@ -2662,9 +2620,6 @@
   </data>
   <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Χρησιμοποιήστε διάφορες διαθέσιμες επιλογές για να αλλάξετε την εμφάνιση και τα οπτικά εφέ του AppControl Manager</value>
-  </data>
-  <data name="LanguageSectionSettingsExpanderInfoBar.Message" xml:space="preserve">
-    <value>Παρακαλώ επανεκκινήστε την εφαρμογή για να εφαρμοστούν πλήρως οι αλλαγές γλώσσας στη διεπαφή χρήστη.</value>
   </data>
   <data name="LanguageTextBlock.Text" xml:space="preserve">
     <value>Γλώσσα</value>
@@ -4216,9 +4171,6 @@
   <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>Η εντολή '{0} {1}' απέτυχε με κωδικό εξόδου {2}. Σφάλμα: {3}</value>
   </data>
-  <data name="CoCreateInstanceFailedHResultMessage" xml:space="preserve">
-    <value>CoCreateInstance απέτυχε με HRESULT: 0x{0:X}</value>
-  </data>
   <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
     <value>Το αίτημα ανύψωσης ακυρώθηκε από τον χρήστη.</value>
   </data>
@@ -5649,5 +5601,104 @@
   </data>
   <data name="CustomPatternBasedSupplementalPolicyLabel" xml:space="preserve">
     <value>Συμπληρωματική Πολιτική Βασισμένη σε Προσαρμοσμένο Μοτίβο</value>
+  </data>
+  <data name="CloudTextBlock.Text" xml:space="preserve">
+    <value>Σύννεφο</value>
+  </data>
+  <data name="LocalTextBlock.Text" xml:space="preserve">
+    <value>Τοπικό</value>
+  </data>
+  <data name="CreateTextBlock.Text" xml:space="preserve">
+    <value>Δημιουργία</value>
+  </data>
+  <data name="UpdatePageCustomMSIXPath" xml:space="preserve">
+    <value>Προσαρμοσμένη Διαδρομή MSIXBundle</value>
+  </data>
+  <data name="OpenInFileExplorer.Text" xml:space="preserve">
+    <value>Άνοιγμα στην Εξερεύνηση Αρχείων</value>
+  </data>
+  <data name="OpenInFileExplorer.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίξτε τον φάκελο όπου βρίσκεται το αρχείο στην Εξερεύνηση Αρχείων.</value>
+  </data>
+  <data name="OpenInFileExplorer.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίξτε τον φάκελο όπου βρίσκεται το αρχείο στην Εξερεύνηση Αρχείων.</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Άνοιγμα στον Επεξεργαστή Πολιτικών</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίξτε την πολιτική στον Επεξεργαστή Πολιτικών όπου μπορείτε να δείτε λεπτομερή επισκόπηση της πολιτικής και να έχετε την επιλογή να την προσαρμόσετε περαιτέρω απευθείας μέσα σε αυτήν την εφαρμογή.</value>
+  </data>
+  <data name="OpenInPolicyEditorMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίξτε την πολιτική στον Επεξεργαστή Πολιτικών όπου μπορείτε να δείτε λεπτομερή επισκόπηση της πολιτικής και να έχετε την επιλογή να την προσαρμόσετε περαιτέρω απευθείας μέσα σε αυτήν την εφαρμογή.</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Άνοιγμα του Αρχείου</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίξτε το αρχείο που δημιουργήθηκε χρησιμοποιώντας τον προεπιλεγμένο χειριστή αρχείων που έχει διαμορφωθεί στο λειτουργικό σύστημα.</value>
+  </data>
+  <data name="OpenTheFileMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίξτε το αρχείο που δημιουργήθηκε χρησιμοποιώντας τον προεπιλεγμένο χειριστή αρχείων που έχει διαμορφωθεί στο λειτουργικό σύστημα.</value>
+  </data>
+  <data name="AdditionalActionsTextBlock.Text" xml:space="preserve">
+    <value>Πρόσθετες Ενέργειες</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίξτε την πολιτική στον Επεξεργαστή Πολιτικών ή επιλέξτε άλλη ενέργεια από τη λίστα.</value>
+  </data>
+  <data name="AdditionalActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίξτε την πολιτική στον Επεξεργαστή Πολιτικών ή επιλέξτε άλλη ενέργεια από τη λίστα.</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Διαμόρφωση Επιλογών Κανόνα</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίξτε την πολιτική σε άλλη σελίδα για να διαμορφώσετε περαιτέρω τις επιλογές του κανόνα της.</value>
+  </data>
+  <data name="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίξτε την πολιτική σε άλλη σελίδα για να διαμορφώσετε περαιτέρω τις επιλογές του κανόνα της.</value>
+  </data>
+  <data name="AddToPolicySegmentedItem.Content" xml:space="preserve">
+    <value>Προσθήκη στην Πολιτική</value>
+  </data>
+  <data name="BasePolicyFileSegmentedItem.Content" xml:space="preserve">
+    <value>Αρχείο Βασικής Πολιτικής</value>
+  </data>
+  <data name="BasePolicyGUIDSegmentedItem.Content" xml:space="preserve">
+    <value>GUID Βασικής Πολιτικής</value>
+  </data>
+  <data name="AddToPolicyDescription.Text" xml:space="preserve">
+    <value>Αναζητήστε ένα αρχείο πολιτικής για να προσθέσετε τα αρχεία καταγραφής σε αυτό. Οι νέοι κανόνες θα συγχωνευθούν με τυχόν υπάρχοντες κανόνες.</value>
+  </data>
+  <data name="BasePolicyFileDescription.Text" xml:space="preserve">
+    <value>Αναζητήστε ένα αρχείο βασικής πολιτικής με το οποίο θα συσχετιστεί η Συμπληρωματική πολιτική που πρόκειται να δημιουργηθεί.</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.PlaceholderText" xml:space="preserve">
+    <value>Εισάγετε ένα GUID Βασικής πολιτικής</value>
+  </data>
+    <data name="BasePolicyGUIDDescription.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Εισάγετε το GUID ενός αρχείου Βασικής πολιτικής με το οποίο θα συσχετιστεί η Συμπληρωματική πολιτική που πρόκειται να δημιουργηθεί.</value>
+  </data>
+  <data name="BasePolicyGUIDDescription.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εισάγετε το GUID ενός αρχείου Βασικής πολιτικής με το οποίο θα συσχετιστεί η Συμπληρωματική πολιτική που πρόκειται να δημιουργηθεί.</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.PlaceholderText" xml:space="preserve">
+    <value>Φιλτράρισμα κατά Ημερομηνία</value>
+  </data>
+    <data name="FilterByDateCalendarDatePicker.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Θα εμφανίσει μόνο τα δεδομένα που είναι ίσα ή νεότερα από την επιλεγμένη ημερομηνία.</value>
+  </data>
+  <data name="FilterByDateCalendarDatePicker.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Θα εμφανίσει μόνο τα δεδομένα που είναι ίσα ή νεότερα από την επιλεγμένη ημερομηνία.</value>
+  </data>
+  <data name="SubmitButton.Content" xml:space="preserve">
+    <value>Υποβολή</value>
+  </data>
+  <data name="SubmitButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Υποβολή</value>
+  </data>
+  <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Υποβολή</value>
   </data>
 </root>

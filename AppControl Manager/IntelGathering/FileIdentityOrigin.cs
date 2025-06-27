@@ -17,6 +17,9 @@
 
 namespace AppControlManager.IntelGathering;
 
+/// <summary>
+/// Defines the origin of a FileIdentity.
+/// </summary>
 internal enum FileIdentityOrigin
 {
 	EventLog,

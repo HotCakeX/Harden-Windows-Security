@@ -38,6 +38,6 @@ internal static class UpdateHvciOptions
 		// Save the modified XML document
 		SiPolicy.Management.SavePolicyToFile(policyObj, filePath);
 
-		Logger.Write(string.Format(GlobalVars.Rizz.GetString("HVCISetToStrictSuccessMessage"), filePath));
+		Logger.Write(string.Format(GlobalVars.GetStr("HVCISetToStrictSuccessMessage"), filePath));
 	}
 }

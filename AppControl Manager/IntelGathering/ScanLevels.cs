@@ -35,11 +35,12 @@ internal enum ScanLevels
 /// <summary>
 /// Bound to the ComboBox ItemsSource.
 /// </summary>
-/// <param name="friendlyName"></param>
-/// <param name="level"></param>
+/// <param name="friendlyName">The display name of the level for UI.</param>
+/// <param name="level">The actual Enum value used in code.</param>
+/// <param name="rating">The rating displayed on the UI.</param>
 internal sealed class ScanLevelsComboBoxType(string friendlyName, ScanLevels level, int rating)
 {
-	internal string FriendlyName = friendlyName;
-	internal ScanLevels Level = level;
-	internal int Rating = rating;
+	internal string FriendlyName => friendlyName;
+	internal ScanLevels Level => level;
+	internal int Rating => rating;
 }

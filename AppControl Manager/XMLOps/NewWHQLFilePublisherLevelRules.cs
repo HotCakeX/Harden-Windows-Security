@@ -31,6 +31,9 @@ internal static class NewWHQLFilePublisherLevelRules
 		// Microsoft Windows Third Party Component CA 2012
 		"CEC1AFD0E310C55C1DCC601AB8E172917706AA32FB5EAF826813547FDF02DD46",
 
+		// Microsoft Windows Third Party Component CA 2013 - Less common
+		"C55EE44C6DE86FA9AC3FC90F84EF0D4A6CAD5AAC6A112047C88B997E7547AED1",
+
 		// Microsoft Windows Third Party Component CA 2014
 		"D8BE9E4D9074088EF818BC6F6FB64955E90378B2754155126FEEBBBD969CF0AE"
 
@@ -52,14 +55,14 @@ internal static class NewWHQLFilePublisherLevelRules
 
 		if (whqlFilePublisherSigners.Count is 0)
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("NoWHQLFilePublisherSignersDetectedAllowMessage"));
+			Logger.Write(GlobalVars.GetStr("NoWHQLFilePublisherSignersDetectedAllowMessage"));
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
-		Logger.Write(string.Format(GlobalVars.Rizz.GetString("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
+		Logger.Write(string.Format(GlobalVars.GetStr("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
 
 		foreach (WHQLFilePublisherSignerCreator whqlFilePublisherData in whqlFilePublisherSigners)
 		{
@@ -72,7 +75,7 @@ internal static class NewWHQLFilePublisherLevelRules
 
 			XmlElement newFileAttribNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileAttrib", GlobalVars.SiPolicyNamespace);
 			newFileAttribNode.SetAttribute("ID", FileAttribID);
-			newFileAttribNode.SetAttribute("FriendlyName", GlobalVars.Rizz.GetString("WHQLFilePublisherRuleTypeFriendlyName"));
+			newFileAttribNode.SetAttribute("FriendlyName", GlobalVars.GetStr("WHQLFilePublisherRuleTypeFriendlyName"));
 
 			#region Creating File Attributes with automatic fallback
 
@@ -213,14 +216,14 @@ internal static class NewWHQLFilePublisherLevelRules
 
 		if (whqlFilePublisherSigners.Count is 0)
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("NoWHQLFilePublisherSignersDetectedDenyMessage"));
+			Logger.Write(GlobalVars.GetStr("NoWHQLFilePublisherSignersDetectedDenyMessage"));
 			return;
 		}
 
 		// Instantiate the policy
 		CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath);
 
-		Logger.Write(string.Format(GlobalVars.Rizz.GetString("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
+		Logger.Write(string.Format(GlobalVars.GetStr("WHQLFilePublisherSignersToAddMessage"), whqlFilePublisherSigners.Count));
 
 		foreach (WHQLFilePublisherSignerCreator whqlFilePublisherData in whqlFilePublisherSigners)
 		{
@@ -233,7 +236,7 @@ internal static class NewWHQLFilePublisherLevelRules
 
 			XmlElement newFileAttribNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileAttrib", GlobalVars.SiPolicyNamespace);
 			newFileAttribNode.SetAttribute("ID", FileAttribID);
-			newFileAttribNode.SetAttribute("FriendlyName", GlobalVars.Rizz.GetString("WHQLFilePublisherRuleTypeFriendlyName"));
+			newFileAttribNode.SetAttribute("FriendlyName", GlobalVars.GetStr("WHQLFilePublisherRuleTypeFriendlyName"));
 
 			#region Creating File Attributes with automatic fallback
 

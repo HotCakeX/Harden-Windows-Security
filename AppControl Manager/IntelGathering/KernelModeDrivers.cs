@@ -96,12 +96,12 @@ internal static class KernelModeDrivers
 		if (string.Equals(Path.GetExtension(filePath), KernelModeFileExtension, StringComparison.OrdinalIgnoreCase))
 		{
 			return new KernelUserVerdict
-			{
-				Verdict = SSType.KernelMode,
-				IsPE = true,
-				HasSIP = false,
-				Imports = importNames
-			};
+			(
+				verdict: SSType.KernelMode,
+				isPE: true,
+				hasSIP: false,
+				imports: importNames
+			);
 		}
 
 
@@ -111,15 +111,15 @@ internal static class KernelModeDrivers
 
 			if (fileHandle == INVALID_HANDLE_VALUE)
 			{
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("CouldNotOpenFileMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("CouldNotOpenFileMessage"), filePath, error));
 
 				return new KernelUserVerdict
-				{
-					Verdict = Verdict,
-					IsPE = isPE,
-					HasSIP = hasSIP,
-					Imports = importNames
-				};
+				(
+					verdict: Verdict,
+					isPE: isPE,
+					hasSIP: hasSIP,
+					imports: importNames
+				);
 			}
 
 			hasSIP = NativeMethods.CryptSIPRetrieveSubjectGuid(filePath, fileHandle, out Guid pgActionID);
@@ -127,12 +127,12 @@ internal static class KernelModeDrivers
 			if (!hasSIP)
 			{
 				return new KernelUserVerdict
-				{
-					Verdict = Verdict,
-					IsPE = isPE,
-					HasSIP = hasSIP,
-					Imports = importNames
-				};
+				(
+					verdict: Verdict,
+					isPE: isPE,
+					hasSIP: hasSIP,
+					imports: importNames
+				);
 			}
 
 			if (pgActionID.Equals(CRYPT_SUBJTYPE_CATALOG_IMAGE))
@@ -140,12 +140,12 @@ internal static class KernelModeDrivers
 				hasSIP = false;
 
 				return new KernelUserVerdict
-				{
-					Verdict = Verdict,
-					IsPE = isPE,
-					HasSIP = hasSIP,
-					Imports = importNames
-				};
+				(
+					verdict: Verdict,
+					isPE: isPE,
+					hasSIP: hasSIP,
+					imports: importNames
+				);
 			}
 
 			if (pgActionID.Equals(CRYPT_SUBJTYPE_CTL_IMAGE) || pgActionID.Equals(CRYPT_SUBJTYPE_CABINET_IMAGE))
@@ -153,12 +153,12 @@ internal static class KernelModeDrivers
 				hasSIP = false;
 
 				return new KernelUserVerdict
-				{
-					Verdict = Verdict,
-					IsPE = isPE,
-					HasSIP = hasSIP,
-					Imports = importNames
-				};
+				(
+					verdict: Verdict,
+					isPE: isPE,
+					hasSIP: hasSIP,
+					imports: importNames
+				);
 			}
 
 			uint fileSize = NativeMethods.GetFileSize(fileHandle, ref localPointerFileSizeHigh);
@@ -167,26 +167,26 @@ internal static class KernelModeDrivers
 			{
 				error = Marshal.GetLastWin32Error();
 
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("GetFileSizeFailedMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("GetFileSizeFailedMessage"), filePath, error));
 
 				return new KernelUserVerdict
-				{
-					Verdict = Verdict,
-					IsPE = isPE,
-					HasSIP = hasSIP,
-					Imports = importNames
-				};
+				(
+					verdict: Verdict,
+					isPE: isPE,
+					hasSIP: hasSIP,
+					imports: importNames
+				);
 			}
 
 			if (fileSize == 0U)
 			{
 				return new KernelUserVerdict
-				{
-					Verdict = Verdict,
-					IsPE = isPE,
-					HasSIP = hasSIP,
-					Imports = importNames
-				};
+				(
+					verdict: Verdict,
+					isPE: isPE,
+					hasSIP: hasSIP,
+					imports: importNames
+				);
 			}
 
 			// Generate a new GUID and convert it to a string to ensure a unique name for the file mapping
@@ -210,29 +210,29 @@ internal static class KernelModeDrivers
 
 			if (fileMappingHandle == IntPtr.Zero)
 			{
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("CreateFileMappingFailedMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("CreateFileMappingFailedMessage"), filePath, error));
 
 				return new KernelUserVerdict
-				{
-					Verdict = Verdict,
-					IsPE = isPE,
-					HasSIP = hasSIP,
-					Imports = importNames
-				};
+				(
+					verdict: Verdict,
+					isPE: isPE,
+					hasSIP: hasSIP,
+					imports: importNames
+				);
 
 			}
 
 			if (error == 183)
 			{
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("CreateFileMappingAlreadyExistsMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("CreateFileMappingAlreadyExistsMessage"), filePath, error));
 
 				return new KernelUserVerdict
-				{
-					Verdict = Verdict,
-					IsPE = isPE,
-					HasSIP = hasSIP,
-					Imports = importNames
-				};
+				(
+					verdict: Verdict,
+					isPE: isPE,
+					hasSIP: hasSIP,
+					imports: importNames
+				);
 			}
 
 			// Map a view of the file into the process's address space using the file mapping handle.
@@ -252,15 +252,15 @@ internal static class KernelModeDrivers
 			{
 				error = Marshal.GetLastWin32Error();
 
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("MapViewOfFileFailedMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("MapViewOfFileFailedMessage"), filePath, error));
 
 				return new KernelUserVerdict
-				{
-					Verdict = Verdict,
-					IsPE = isPE,
-					HasSIP = hasSIP,
-					Imports = importNames
-				};
+				(
+					verdict: Verdict,
+					isPE: isPE,
+					hasSIP: hasSIP,
+					imports: importNames
+				);
 			}
 
 			IntPtr ntHeaders = NativeMethods.ImageNtHeader(fileMappingView);
@@ -272,24 +272,24 @@ internal static class KernelModeDrivers
 				if (error == 193)
 				{
 					return new KernelUserVerdict
-					{
-						Verdict = Verdict,
-						IsPE = isPE,
-						HasSIP = hasSIP,
-						Imports = importNames
-					};
+					(
+						verdict: Verdict,
+						isPE: isPE,
+						hasSIP: hasSIP,
+						imports: importNames
+					);
 				}
 
 
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("ImageNtHeaderFailedMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("ImageNtHeaderFailedMessage"), filePath, error));
 
 				return new KernelUserVerdict
-				{
-					Verdict = Verdict,
-					IsPE = isPE,
-					HasSIP = hasSIP,
-					Imports = importNames
-				};
+				(
+					verdict: Verdict,
+					isPE: isPE,
+					hasSIP: hasSIP,
+					imports: importNames
+				);
 			}
 
 			isPE = true;
@@ -309,24 +309,24 @@ internal static class KernelModeDrivers
 				if (error == 0)
 				{
 					return new KernelUserVerdict
-					{
-						Verdict = Verdict,
-						IsPE = isPE,
-						HasSIP = hasSIP,
-						Imports = importNames
-					};
+					(
+						verdict: Verdict,
+						isPE: isPE,
+						hasSIP: hasSIP,
+						imports: importNames
+					);
 				}
 
 
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("ImageDirectoryEntryToDataExFailedMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("ImageDirectoryEntryToDataExFailedMessage"), filePath, error));
 
 				return new KernelUserVerdict
-				{
-					Verdict = Verdict,
-					IsPE = isPE,
-					HasSIP = hasSIP,
-					Imports = importNames
-				};
+				(
+					verdict: Verdict,
+					isPE: isPE,
+					hasSIP: hasSIP,
+					imports: importNames
+				);
 			}
 
 			// Collect all of the file's imports - using cached ImportDescriptorSize for performance
@@ -371,23 +371,23 @@ internal static class KernelModeDrivers
 
 			// Return the actual output which happens when no errors occurred before
 			return new KernelUserVerdict
-			{
-				Verdict = Verdict,
-				IsPE = isPE,
-				HasSIP = hasSIP,
-				Imports = importNames
-			};
+			(
+				verdict: Verdict,
+				isPE: isPE,
+				hasSIP: hasSIP,
+				imports: importNames
+			);
 		}
 
 		catch (AccessViolationException)
 		{
 			return new KernelUserVerdict
-			{
-				Verdict = Verdict,
-				IsPE = isPE,
-				HasSIP = hasSIP,
-				Imports = importNames
-			};
+			(
+				verdict: Verdict,
+				isPE: isPE,
+				hasSIP: hasSIP,
+				imports: importNames
+			);
 		}
 
 		finally
@@ -398,7 +398,7 @@ internal static class KernelModeDrivers
 				{
 					int lastWin32Error = Marshal.GetLastWin32Error();
 
-					Logger.Write(string.Format(GlobalVars.Rizz.GetString("UnmapViewOfFileFailedMessage"), filePath, lastWin32Error));
+					Logger.Write(string.Format(GlobalVars.GetStr("UnmapViewOfFileFailedMessage"), filePath, lastWin32Error));
 				}
 			}
 			if (fileMappingHandle != IntPtr.Zero && fileMappingHandle != INVALID_HANDLE_VALUE)
@@ -407,7 +407,7 @@ internal static class KernelModeDrivers
 				{
 					int lastWin32Error = Marshal.GetLastWin32Error();
 
-					Logger.Write(string.Format(GlobalVars.Rizz.GetString("CouldNotCloseMapHandleMessage"), filePath, lastWin32Error));
+					Logger.Write(string.Format(GlobalVars.GetStr("CouldNotCloseMapHandleMessage"), filePath, lastWin32Error));
 
 				}
 			}
@@ -417,7 +417,7 @@ internal static class KernelModeDrivers
 				{
 					int lastWin32Error = Marshal.GetLastWin32Error();
 
-					Logger.Write(string.Format(GlobalVars.Rizz.GetString("CouldNotCloseFileHandleMessage"), filePath, lastWin32Error));
+					Logger.Write(string.Format(GlobalVars.GetStr("CouldNotCloseFileHandleMessage"), filePath, lastWin32Error));
 				}
 			}
 		}

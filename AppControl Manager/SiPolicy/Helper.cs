@@ -138,7 +138,7 @@ internal static class Helper
 					Deny d => (0, d.FileName, d.InternalName, d.FileDescription, d.ProductName, d.PackageFamilyName, d.FilePath, d.Hash),
 					Allow a => (1, a.FileName, a.InternalName, a.FileDescription, a.ProductName, a.PackageFamilyName, a.FilePath, a.Hash),
 					FileAttrib f => (2, f.FileName, f.InternalName, f.FileDescription, f.ProductName, f.PackageFamilyName, f.FilePath, f.Hash),
-					_ => throw new InvalidOperationException(GlobalVars.Rizz.GetString("EncounteredInvalidFileRule"))
+					_ => throw new InvalidOperationException(GlobalVars.GetStr("EncounteredInvalidFileRule"))
 				};
 
 		var r1 = DeconstructRule(x);
@@ -227,7 +227,7 @@ internal static class Helper
 				AppIDs = rule.AppIDs,
 				FilePath = rule.FilePath
 			},
-			_ => throw new InvalidOperationException(GlobalVars.Rizz.GetString("EncounteredInvalidFileRule"))
+			_ => throw new InvalidOperationException(GlobalVars.GetStr("EncounteredInvalidFileRule"))
 		};
 	}
 
@@ -336,7 +336,7 @@ internal static class Helper
 
 			// Too many segments → malformed version
 			if (segmentCount > MaxSegments)
-				throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("MalformedVersionDetected"), version));
+				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("MalformedVersionDetected"), version));
 
 			//
 			// Second pass: extract, parse, and pack each segment into 'result'
@@ -354,7 +354,7 @@ internal static class Helper
 
 				// If we already parsed MaxSegments, any extra data is an error
 				if (segmentsParsed >= MaxSegments)
-					throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("MalformedVersionDetected"), version));
+					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("MalformedVersionDetected"), version));
 
 				// Mark the beginning of this segment
 				char* partStart = ptr;
@@ -366,13 +366,13 @@ internal static class Helper
 
 				// Calculate segment length and allocate a temporary string for parsing
 				int len = (int)(partEnd - partStart);
-				string part = new string(partStart, 0, len);
+				string part = new(partStart, 0, len);
 
 				// Parse as unsigned 16‐bit integer using invariant culture (no signs, no hex)
 				if (!ushort.TryParse(part, NumberStyles.None, CultureInfo.InvariantCulture, out ushort segment))
 				{
 					// Parsing failed (non‐numeric / overflow) → invalid format
-					throw new InvalidOperationException(string.Format(GlobalVars.Rizz.GetString("StringFormatIncorrect"), part));
+					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("StringFormatIncorrect"), part));
 				}
 
 				// Determine how many bits this segment occupies in the 64-bit result:
@@ -463,7 +463,7 @@ internal static class Helper
 		}
 		else
 		{
-			throw new InvalidOperationException($"Invalid URL detected for the App Manifest: {Manifest.Scheme}");
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("InvalidUrlDetectedForAppManifest"), Manifest.Scheme));
 		}
 
 		using MemoryStream xmlStream = new(Encoding.UTF8.GetBytes(content));

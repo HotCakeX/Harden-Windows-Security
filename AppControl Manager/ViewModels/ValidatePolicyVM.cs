@@ -132,8 +132,8 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 
 		try
 		{
-			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("BrowseForAppControlPolicy"),
-				GlobalVars.Rizz.GetString("CurrentStatusInfoBar/Title"));
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("BrowseForAppControlPolicy"),
+				GlobalVars.GetStr("CurrentStatusInfoBar/Title"));
 
 			ElementsAreEnabled = false;
 
@@ -143,7 +143,7 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 
 			bool IsValid = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("Validating"));
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("Validating"));
 
 			if (!string.IsNullOrEmpty(selectedFile))
 			{
@@ -197,32 +197,32 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 
 			if (IsValid)
 			{
-				string msg = GlobalVars.Rizz.GetString("IsValid") + selectedFile;
+				string msg = GlobalVars.GetStr("IsValid") + selectedFile;
 
 				if (Level4Test)
 				{
-					msg += $"\n{GlobalVars.Rizz.GetString("CIPFileSize")}: {CIPSize} KB";
+					msg += $"\n{GlobalVars.GetStr("CIPFileSize")}: {CIPSize} KB";
 
 					if (CIPSize < 350)
 					{
-						msg += $"\n{GlobalVars.Rizz.GetString("SuitableForIntuneDeployment")}";
+						msg += $"\n{GlobalVars.GetStr("SuitableForIntuneDeployment")}";
 					}
 					else
 					{
-						msg += $"\n{GlobalVars.Rizz.GetString("ReduceSizeForIntuneDeployment")}";
+						msg += $"\n{GlobalVars.GetStr("ReduceSizeForIntuneDeployment")}";
 					}
 				}
 
-				MainInfoBar.WriteSuccess(msg, GlobalVars.Rizz.GetString("Valid"));
+				MainInfoBar.WriteSuccess(msg, GlobalVars.GetStr("Valid"));
 			}
 			else
 			{
-				MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("IsNotValid") + selectedFile, GlobalVars.Rizz.GetString("Invalid"));
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("IsNotValid") + selectedFile, GlobalVars.GetStr("Invalid"));
 			}
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, null, GlobalVars.Rizz.GetString("Invalid"));
+			MainInfoBar.WriteError(ex, null, GlobalVars.GetStr("Invalid"));
 		}
 		finally
 		{

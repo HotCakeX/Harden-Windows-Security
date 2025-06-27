@@ -19,24 +19,43 @@ using System;
 
 namespace AppControlManager.IntelGathering;
 
-internal sealed class FileSignerInfo
+internal sealed class FileSignerInfo(
+	int? totalSignatureCount,
+	int? signature = null,
+	string? hash = null,
+	bool? pageHash = null,
+	string? signatureType = null,
+	string? validatedSigningLevel = null,
+	string? verificationError = null,
+	int? flags = null,
+	DateTime? notValidBefore = null,
+	DateTime? notValidAfter = null,
+	string? publisherName = null,
+	string? issuerName = null,
+	string? publisherTBSHash = null,
+	string? issuerTBSHash = null,
+	string? oPUSInfo = null,
+	string? eKUs = null,
+	int? knownRoot = null,
+	bool? isWHQL = null
+	)
 {
-	internal int? TotalSignatureCount { get; set; }
-	internal int? Signature { get; set; }
-	internal string? Hash { get; set; }
-	internal bool? PageHash { get; set; }
-	internal string? SignatureType { get; set; }
-	internal string? ValidatedSigningLevel { get; set; }
-	internal string? VerificationError { get; set; }
-	internal int? Flags { get; set; }
-	internal DateTime? NotValidBefore { get; set; }
-	internal DateTime? NotValidAfter { get; set; }
-	internal string? PublisherName { get; set; }
-	internal string? IssuerName { get; set; }
-	internal string? PublisherTBSHash { get; set; }
-	internal string? IssuerTBSHash { get; set; }
-	internal string? OPUSInfo { get; set; }
-	internal string? EKUs { get; set; }
-	internal int? KnownRoot { get; set; }
-	internal bool? IsWHQL { get; set; }
+	internal int? TotalSignatureCount => totalSignatureCount;
+	internal int? Signature => signature;
+	internal string? Hash => hash;
+	internal bool? PageHash => pageHash;
+	internal string? SignatureType => signatureType;
+	internal string? ValidatedSigningLevel => validatedSigningLevel;
+	internal string? VerificationError => verificationError;
+	internal int? Flags => flags;
+	internal DateTime? NotValidBefore => notValidBefore;
+	internal DateTime? NotValidAfter => notValidAfter;
+	internal string? PublisherName => publisherName;
+	internal string? IssuerName => issuerName;
+	internal string? PublisherTBSHash => publisherTBSHash;
+	internal string? IssuerTBSHash => issuerTBSHash;
+	internal string? OPUSInfo => oPUSInfo;
+	internal string? EKUs => eKUs;
+	internal int? KnownRoot => knownRoot;
+	internal bool? IsWHQL => isWHQL;
 }

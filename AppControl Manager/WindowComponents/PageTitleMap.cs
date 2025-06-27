@@ -23,8 +23,8 @@ namespace AppControlManager.WindowComponents;
 /// <summary>
 /// Used for the BreadCrumBar's data to define valid navigational paths in the app
 /// </summary>
-internal sealed class PageTitleMap
+internal sealed class PageTitleMap(List<string> titles, List<Type> pages)
 {
-	internal required List<string> Titles { get; set; }
-	internal required List<Type> Pages { get; set; }
+	internal List<string> Titles => titles;
+	internal List<Type> Pages => pages;
 }

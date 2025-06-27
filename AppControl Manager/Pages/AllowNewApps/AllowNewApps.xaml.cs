@@ -80,7 +80,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager
 		ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility = visibility;
 
 		sideBarVM.AssignActionPacks(
-			actionPack1: (param => ViewModel.LightUp1(), GlobalVars.Rizz.GetString("AllowNewApps_SidebarButtonContent")));
+			actionPack1: (param => ViewModel.LightUp1(), GlobalVars.GetStr("AllowNewApps_SidebarButtonContent")));
 	}
 
 	#endregion

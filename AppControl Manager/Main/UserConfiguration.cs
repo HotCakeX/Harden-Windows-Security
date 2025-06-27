@@ -125,7 +125,7 @@ internal sealed partial class UserConfiguration(
 			{
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.Rizz.GetString("CertificateCommonNameInvalidErrorMessage"),
+						GlobalVars.GetStr("CertificateCommonNameInvalidErrorMessage"),
 						CertificateCommonName));
 			}
 		}
@@ -137,7 +137,7 @@ internal sealed partial class UserConfiguration(
 			{
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.Rizz.GetString("PolicyFileNotSignedErrorMessage"),
+						GlobalVars.GetStr("PolicyFileNotSignedErrorMessage"),
 						SignedPolicyPath));
 			}
 		}
@@ -149,12 +149,12 @@ internal sealed partial class UserConfiguration(
 			{
 				throw new InvalidOperationException(
 					string.Format(
-						GlobalVars.Rizz.GetString("PolicyFileSignedErrorMessage"),
+						GlobalVars.GetStr("PolicyFileSignedErrorMessage"),
 						UnsignedPolicyPath));
 			}
 		}
 
-		Logger.Write(GlobalVars.Rizz.GetString("ReadingUserConfigurationsFileMessage"));
+		Logger.Write(GlobalVars.GetStr("ReadingUserConfigurationsFileMessage"));
 		UserConfiguration UserConfiguration = ReadUserConfiguration();
 
 		// Modify the properties based on the input
@@ -232,7 +232,7 @@ internal sealed partial class UserConfiguration(
 		// Write the updated configuration back to the JSON file
 		WriteUserConfiguration(currentConfig);
 
-		Logger.Write(GlobalVars.Rizz.GetString("SpecifiedPropertiesRemovedAndSetToNullMessage"));
+		Logger.Write(GlobalVars.GetStr("SpecifiedPropertiesRemovedAndSetToNullMessage"));
 	}
 
 
@@ -244,7 +244,7 @@ internal sealed partial class UserConfiguration(
 			if (!Directory.Exists(GlobalVars.UserConfigDir))
 			{
 				_ = Directory.CreateDirectory(GlobalVars.UserConfigDir);
-				Logger.Write(GlobalVars.Rizz.GetString("AppControlManagerFolderCreatedMessage"));
+				Logger.Write(GlobalVars.GetStr("AppControlManagerFolderCreatedMessage"));
 			}
 
 			// Create User configuration folder in the AppControl Manager folder if it doesn't already exist
@@ -252,7 +252,7 @@ internal sealed partial class UserConfiguration(
 			if (!Directory.Exists(UserConfigDir))
 			{
 				_ = Directory.CreateDirectory(UserConfigDir);
-				Logger.Write(GlobalVars.Rizz.GetString("AppControlManagerFolderCreatedMessage"));
+				Logger.Write(GlobalVars.GetStr("AppControlManagerFolderCreatedMessage"));
 			}
 
 			// Read the JSON file
@@ -263,7 +263,7 @@ internal sealed partial class UserConfiguration(
 		{
 			// Log the error if JSON is corrupted or any other error occurs
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("ErrorReadingUserConfigMessage"),
+				GlobalVars.GetStr("ErrorReadingUserConfigMessage"),
 				ex.Message));
 
 			// Create a new configuration with default values and write it to the file
@@ -371,7 +371,7 @@ internal sealed partial class UserConfiguration(
 
 		// Write the JSON string to the file
 		File.WriteAllText(GlobalVars.UserConfigJson, jsonString);
-		Logger.Write(GlobalVars.Rizz.GetString("UserConfigurationsFileUpdatedSuccessfullyMessage"));
+		Logger.Write(GlobalVars.GetStr("UserConfigurationsFileUpdatedSuccessfullyMessage"));
 	}
 
 
@@ -395,7 +395,7 @@ internal sealed partial class UserConfiguration(
 		WriteUserConfiguration(currentConfig);
 
 		Logger.Write(string.Format(
-			GlobalVars.Rizz.GetString("KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage"),
+			GlobalVars.GetStr("KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage"),
 			key,
 			value));
 	}
@@ -442,13 +442,13 @@ internal sealed partial class UserConfiguration(
 			WriteUserConfiguration(currentConfig);
 
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("KeyRemovedFromSignedPolicyStage1RemovalTimesMessage"),
+				GlobalVars.GetStr("KeyRemovedFromSignedPolicyStage1RemovalTimesMessage"),
 				key));
 		}
 		else
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("KeyNotFoundInSignedPolicyStage1RemovalTimesMessage"),
+				GlobalVars.GetStr("KeyNotFoundInSignedPolicyStage1RemovalTimesMessage"),
 				key));
 		}
 	}

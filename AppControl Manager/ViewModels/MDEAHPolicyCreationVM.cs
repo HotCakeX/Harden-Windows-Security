@@ -34,7 +34,7 @@ using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
-internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
+internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 {
 
 	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
@@ -59,7 +59,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 	}
 
 
-	#region ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
+	#region MICROSOFT GRAPH IMPLEMENTATION DETAILS 
 
 	private void UpdateButtonsStates(bool on)
 	{
@@ -69,7 +69,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 
 	internal readonly AuthenticationCompanion AuthCompanionCLS;
 
-	#endregion ✡️✡️✡️✡️✡️✡️✡️ MICROSOFT GRAPH IMPLEMENTATION DETAILS ✡️✡️✡️✡️✡️✡️✡️
+	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS 
 
 	internal readonly InfoBarSettings MainInfoBar;
 
@@ -94,7 +94,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 	internal string? PolicyToAddLogsTo { get; set => SP(ref field, value); }
 	internal string? BasePolicyXMLFile { get; set => SP(ref field, value); }
 
-	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("TotalLogsTextBlock/PlaceholderText");
+	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = GlobalVars.GetStr("TotalLogsTextBlock/PlaceholderText");
 
 
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
@@ -159,7 +159,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 
 	internal bool OnlyIncludeSelectedItemsToggleButton { get; set => SP(ref field, value); }
 
-	internal string CreatePolicyButtonContent { get; set => SP(ref field, value); } = GlobalVars.Rizz.GetString("CreatePolicyForSelectedBase");
+	internal string CreatePolicyButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("CreatePolicyForSelectedBase");
 
 	internal int SelectedCreationMethod
 	{
@@ -169,10 +169,10 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 			{
 				CreatePolicyButtonContent = field switch
 				{
-					0 => GlobalVars.Rizz.GetString("AddLogsToSelectedPolicyMessage"),
-					1 => GlobalVars.Rizz.GetString("CreatePolicyForSelectedBase"),
-					2 => GlobalVars.Rizz.GetString("CreatePolicyForBaseGUIDMessage"),
-					_ => GlobalVars.Rizz.GetString("DefaultCreatePolicy")
+					0 => GlobalVars.GetStr("AddLogsToSelectedPolicyMessage"),
+					1 => GlobalVars.GetStr("CreatePolicyForSelectedBase"),
+					2 => GlobalVars.GetStr("CreatePolicyForBaseGUIDMessage"),
+					_ => GlobalVars.GetStr("DefaultCreatePolicy")
 				};
 			}
 		}
@@ -213,24 +213,24 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase
 	{
 
 		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileNameHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("TimeCreatedHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SignatureStatusHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("ActionHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("OriginalFileNameHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("InternalNameHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileDescriptionHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FileVersionHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA256HashHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA1HashHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA256FlatHashHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SHA1FlatHashHeader/Text"));
-		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("SigningScenarioHeader/Text"));
-		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FilePathHeader/Text"));
-		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("ComputerNameHeader/Text"));
-		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyGUIDHeader/Text"));
-		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("PolicyNameHeader/Text"));
-		double maxWidth18 = ListViewHelper.MeasureText(GlobalVars.Rizz.GetString("FilePublishersHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileNameHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("TimeCreatedHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignatureStatusHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("ActionHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("OriginalFileNameHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("InternalNameHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileDescriptionHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileVersionHeader/Text"));
+		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256HashHeader/Text"));
+		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1HashHeader/Text"));
+		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256FlatHashHeader/Text"));
+		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1FlatHashHeader/Text"));
+		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.GetStr("SigningScenarioHeader/Text"));
+		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePathHeader/Text"));
+		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.GetStr("ComputerNameHeader/Text"));
+		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyGUIDHeader/Text"));
+		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.GetStr("PolicyNameHeader/Text"));
+		double maxWidth18 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePublishersHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (FileIdentity item in FileIdentities)
@@ -421,11 +421,11 @@ DeviceEvents
 	{
 		if (Zero == true)
 		{
-			TotalCountOfTheFilesTextBox = GlobalVars.Rizz.GetString("TotalLogsTextBlock/PlaceholderText");
+			TotalCountOfTheFilesTextBox = GlobalVars.GetStr("TotalLogsTextBlock/PlaceholderText");
 		}
 		else
 		{
-			TotalCountOfTheFilesTextBox = string.Format(GlobalVars.Rizz.GetString("TotalLogsCountMessage"), FileIdentities.Count);
+			TotalCountOfTheFilesTextBox = string.Format(GlobalVars.GetStr("TotalLogsCountMessage"), FileIdentities.Count);
 		}
 	}
 
@@ -516,7 +516,7 @@ DeviceEvents
 
 			MainInfoBarIsClosable = false;
 
-			MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("ScanningMDEAdvancedHuntingCsvLogs"));
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("ScanningMDEAdvancedHuntingCsvLogs"));
 
 			// Clear the FileIdentities before getting and showing the new ones
 			FileIdentities.Clear();
@@ -533,7 +533,7 @@ DeviceEvents
 				if (MDEAdvancedHuntingLogs is null)
 				{
 					throw new InvalidOperationException(
-						GlobalVars.Rizz.GetString("NoMDEAdvancedHuntingLogProvided")
+						GlobalVars.GetStr("NoMDEAdvancedHuntingLogProvided")
 					);
 				}
 
@@ -546,7 +546,7 @@ DeviceEvents
 				else
 				{
 					throw new InvalidOperationException(
-						GlobalVars.Rizz.GetString("NoResultsInMDEAdvancedHuntingCsvLogs")
+						GlobalVars.GetStr("NoResultsInMDEAdvancedHuntingCsvLogs")
 					);
 				}
 			});
@@ -570,7 +570,7 @@ DeviceEvents
 		catch (Exception ex)
 		{
 			error = true;
-			MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorScanningMDEAdvancedHuntingCsvLogs"));
+			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorScanningMDEAdvancedHuntingCsvLogs"));
 		}
 		finally
 		{
@@ -582,7 +582,7 @@ DeviceEvents
 
 			if (!error)
 			{
-				MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs"));
+				MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs"));
 			}
 
 			MainInfoBarIsClosable = true;
@@ -613,14 +613,14 @@ DeviceEvents
 			if (FileIdentities.Count is 0)
 			{
 				throw new InvalidOperationException(
-					GlobalVars.Rizz.GetString("NoLogsErrorMessage")
+					GlobalVars.GetStr("NoLogsErrorMessage")
 				);
 			}
 
 			if (PolicyToAddLogsTo is null && BasePolicyXMLFile is null && BasePolicyGUID is null)
 			{
 				throw new InvalidOperationException(
-					GlobalVars.Rizz.GetString("NoPolicyCreationOptionSelectedErrorMessage")
+					GlobalVars.GetStr("NoPolicyCreationOptionSelectedErrorMessage")
 				);
 			}
 
@@ -634,7 +634,7 @@ DeviceEvents
 			if (string.IsNullOrWhiteSpace(PolicyNameTextBox))
 			{
 				PolicyNameTextBox = string.Format(
-					GlobalVars.Rizz.GetString("DefaultSupplementalPolicyNameFormat"),
+					GlobalVars.GetStr("DefaultSupplementalPolicyNameFormat"),
 					formattedDate
 				);
 			}
@@ -648,7 +648,7 @@ DeviceEvents
 			if (OnlyIncludeSelectedItemsToggleButton && lv?.SelectedItems.Count > 0)
 			{
 				MainInfoBar.WriteInfo(string.Format(
-					GlobalVars.Rizz.GetString("CreatingSupplementalPolicyForFilesMessage"),
+					GlobalVars.GetStr("CreatingSupplementalPolicyForFilesMessage"),
 					lv.SelectedItems.Count
 				));
 
@@ -667,7 +667,7 @@ DeviceEvents
 				SelectedLogs = AllFileIdentities;
 
 				MainInfoBar.WriteInfo(string.Format(
-					GlobalVars.Rizz.GetString("CreatingSupplementalPolicyForFilesMessage"),
+					GlobalVars.GetStr("CreatingSupplementalPolicyForFilesMessage"),
 					AllFileIdentities.Count
 				));
 			}
@@ -716,7 +716,7 @@ DeviceEvents
 							else
 							{
 								throw new InvalidOperationException(
-									GlobalVars.Rizz.GetString("NoPolicySelectedToAddLogsMessage")
+									GlobalVars.GetStr("NoPolicySelectedToAddLogsMessage")
 								);
 							}
 
@@ -760,7 +760,7 @@ DeviceEvents
 							else
 							{
 								throw new InvalidOperationException(
-									GlobalVars.Rizz.GetString("NoPolicyFileSelectedToAssociateErrorMessage")
+									GlobalVars.GetStr("NoPolicyFileSelectedToAssociateErrorMessage")
 								);
 							}
 
@@ -804,7 +804,7 @@ DeviceEvents
 							else
 							{
 								throw new InvalidOperationException(
-									GlobalVars.Rizz.GetString("NoBasePolicyGuidProvidedMessage")
+									GlobalVars.GetStr("NoBasePolicyGuidProvidedMessage")
 								);
 							}
 
@@ -821,7 +821,7 @@ DeviceEvents
 		catch (Exception ex)
 		{
 			Error = true;
-			MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorCreatingSupplementalPolicyMessage"));
+			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorCreatingSupplementalPolicyMessage"));
 		}
 		finally
 		{
@@ -836,7 +836,7 @@ DeviceEvents
 			if (!Error)
 			{
 				MainInfoBar.WriteSuccess(string.Format(
-					GlobalVars.Rizz.GetString("SuccessfullyCreatedSupplementalPolicyMessage"),
+					GlobalVars.GetStr("SuccessfullyCreatedSupplementalPolicyMessage"),
 					PolicyNameTextBox
 				));
 
@@ -864,7 +864,7 @@ DeviceEvents
 
 		MainInfoBarIsClosable = false;
 
-		MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("RetrievingMDEAdvancedHuntingDataMessage"));
+		MainInfoBar.WriteInfo(GlobalVars.GetStr("RetrievingMDEAdvancedHuntingDataMessage"));
 
 		MDEAdvancedHuntingDataRootObject? root = null;
 
@@ -883,24 +883,24 @@ DeviceEvents
 
 				if (root is null)
 				{
-					MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoLogsRetrievedMessage"));
+					MainInfoBar.WriteWarning(GlobalVars.GetStr("NoLogsRetrievedMessage"));
 					return;
 				}
 
 				if (root.Results.Count is 0)
 				{
-					MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("ZeroLogsRetrievedMessage"));
+					MainInfoBar.WriteWarning(GlobalVars.GetStr("ZeroLogsRetrievedMessage"));
 					return;
 				}
 
 				MainInfoBar.WriteSuccess(string.Format(
-					GlobalVars.Rizz.GetString("SuccessfullyRetrievedLogsFromCloudMessage"),
+					GlobalVars.GetStr("SuccessfullyRetrievedLogsFromCloudMessage"),
 					root.Results.Count
 				));
 
 				Logger.Write(
 					string.Format(
-						GlobalVars.Rizz.GetString("DeserializationCompleteNumberOfRecordsMessage"),
+						GlobalVars.GetStr("DeserializationCompleteNumberOfRecordsMessage"),
 						root.Results.Count
 					)
 				);
@@ -910,7 +910,7 @@ DeviceEvents
 
 				if (Output.Count is 0)
 				{
-					MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("NoActionableLogsFoundMessage"));
+					MainInfoBar.WriteWarning(GlobalVars.GetStr("NoActionableLogsFoundMessage"));
 				}
 
 				AllFileIdentities.Clear();
@@ -933,7 +933,7 @@ DeviceEvents
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorRetrievingMDEAdvancedHuntingLogsMessage"));
+			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorRetrievingMDEAdvancedHuntingLogsMessage"));
 		}
 		finally
 		{
@@ -989,5 +989,19 @@ DeviceEvents
 	}
 
 	#endregion
+
+
+	public void Dispose()
+	{
+		try
+		{
+			// Unsubscribe from the collection changed event to prevent memory leaks
+			ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged -= AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
+		}
+		catch { }
+
+		// Dispose the AuthenticationCompanion which implements IDisposable
+		AuthCompanionCLS?.Dispose();
+	}
 
 }

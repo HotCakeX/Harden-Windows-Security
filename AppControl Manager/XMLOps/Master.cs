@@ -38,7 +38,7 @@ internal static class Master
 		string? stagingArea = null,
 		bool noAllowAllWildCards = false)
 	{
-		Logger.Write(GlobalVars.Rizz.GetString("MergingRulesMessage"));
+		Logger.Write(GlobalVars.GetStr("MergingRulesMessage"));
 
 		if (authorization is SiPolicyIntel.Authorization.Allow)
 		{

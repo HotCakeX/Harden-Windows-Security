@@ -22,9 +22,12 @@ namespace AppControlManager.SiPolicyIntel;
 /// <summary>
 /// For levels: Hash, FileName, FilePath, PFN
 /// </summary>
-internal sealed class AllowRule
+internal sealed class AllowRule(
+	Allow allowElement,
+	FileRuleRef fileRuleRefElement,
+	SSType signingScenario)
 {
-	internal required Allow AllowElement { get; set; }
-	internal required FileRuleRef FileRuleRefElement { get; set; }
-	internal required SSType SigningScenario { get; set; }
+	internal Allow AllowElement => allowElement;
+	internal FileRuleRef FileRuleRefElement => fileRuleRefElement;
+	internal SSType SigningScenario => signingScenario;
 }

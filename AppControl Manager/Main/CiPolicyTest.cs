@@ -43,7 +43,7 @@ internal static class CiPolicyTest
 		{
 			if (string.IsNullOrEmpty(App.Settings.CiPolicySchemaPath) || !File.Exists(App.Settings.CiPolicySchemaPath))
 			{
-				throw new FileNotFoundException(GlobalVars.Rizz.GetString("CISchemaNotFound"), schemaPath);
+				throw new FileNotFoundException(GlobalVars.GetStr("CISchemaNotFound"), schemaPath);
 			}
 			else
 			{
@@ -54,7 +54,7 @@ internal static class CiPolicyTest
 		// Make sure the input XML file exists
 		if (!File.Exists(xmlFilePath))
 		{
-			throw new FileNotFoundException(GlobalVars.Rizz.GetString("FileNotExists"), xmlFilePath);
+			throw new FileNotFoundException(GlobalVars.GetStr("FileNotExists"), xmlFilePath);
 		}
 
 		// Validate XML file against schema
@@ -76,7 +76,7 @@ internal static class CiPolicyTest
 		{
 			throw new XmlSchemaValidationException(
 				string.Format(
-					GlobalVars.Rizz.GetString("XmlValidationErrorMessage"),
+					GlobalVars.GetStr("XmlValidationErrorMessage"),
 					xmlFilePath,
 					args.Message));
 		};

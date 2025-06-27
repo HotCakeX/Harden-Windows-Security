@@ -144,7 +144,7 @@ public partial class App : Application
 		// Subscribe to UnobservedTaskException events
 		TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
-		Logger.Write(string.Format(GlobalVars.Rizz.GetString("AppStartupMessage"), Environment.Version));
+		Logger.Write(string.Format(GlobalVars.GetStr("AppStartupMessage"), Environment.Version));
 
 		// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/VersionInfo/VersionInfo.md
 		Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
@@ -224,7 +224,7 @@ public partial class App : Application
 
 		if (!IsUniqueAppInstance)
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("AnotherInstanceRunningMessage"));
+			Logger.Write(GlobalVars.GetStr("AnotherInstanceRunningMessage"));
 		}
 
 		// Determines whether the session must prompt for UAC to elevate or not
@@ -238,7 +238,7 @@ public partial class App : Application
 
 			if (activatedEventArgs.Kind is ExtendedActivationKind.File)
 			{
-				Logger.Write(GlobalVars.Rizz.GetString("FileActivationDetectedMessage"));
+				Logger.Write(GlobalVars.GetStr("FileActivationDetectedMessage"));
 
 				IFileActivatedEventArgs? fileActivatedArgs = activatedEventArgs.Data as IFileActivatedEventArgs;
 
@@ -264,12 +264,12 @@ public partial class App : Application
 					}
 					else
 					{
-						Logger.Write(GlobalVars.Rizz.GetString("FileActivationNoObjectsMessage"));
+						Logger.Write(GlobalVars.GetStr("FileActivationNoObjectsMessage"));
 					}
 				}
 				else
 				{
-					Logger.Write(GlobalVars.Rizz.GetString("FileActivationNoArgumentsMessage"));
+					Logger.Write(GlobalVars.GetStr("FileActivationNoArgumentsMessage"));
 				}
 			}
 			else if (activatedEventArgs.Kind is ExtendedActivationKind.Protocol)
@@ -374,7 +374,7 @@ public partial class App : Application
 			catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
 			{
 				// Do nothing if the user cancels the UAC prompt.
-				Logger.Write("User canceled the UAC prompt.");
+				Logger.Write(GlobalVars.GetStr("UserCanceledUACMessage"));
 			}
 			catch (System.ComponentModel.Win32Exception ex)
 			{
@@ -407,14 +407,14 @@ public partial class App : Application
 			}
 			else if (requireAdminPrivilege)
 			{
-				Logger.Write(GlobalVars.Rizz.GetString("ElevationRequiredButDeniedMessage"));
+				Logger.Write(GlobalVars.GetStr("ElevationRequiredButDeniedMessage"));
 
 				// Exit the process anyway since admin privileges were required but user didn't successfully elevate
 				Environment.Exit(0);
 			}
 			else
 			{
-				Logger.Write(GlobalVars.Rizz.GetString("ElevationDeniedMessage"));
+				Logger.Write(GlobalVars.GetStr("ElevationDeniedMessage"));
 			}
 		}
 
@@ -434,7 +434,7 @@ public partial class App : Application
 
 		if (!string.IsNullOrWhiteSpace(Settings.FileActivatedLaunchArg))
 		{
-			Logger.Write(string.Format(GlobalVars.Rizz.GetString("FileActivationLaunchMessage"), Settings.FileActivatedLaunchArg));
+			Logger.Write(string.Format(GlobalVars.GetStr("FileActivationLaunchMessage"), Settings.FileActivatedLaunchArg));
 
 			try
 			{
@@ -442,7 +442,7 @@ public partial class App : Application
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("PolicyEditorLaunchErrorMessage"), ex.Message));
+				Logger.Write(string.Format(GlobalVars.GetStr("PolicyEditorLaunchErrorMessage"), ex.Message));
 
 				// Continue doing the normal navigation if there was a problem
 				InitialNav();
@@ -592,7 +592,7 @@ public partial class App : Application
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(string.Format(GlobalVars.Rizz.GetString("WindowSizeSaveErrorMessage"), ex.Message));
+				Logger.Write(string.Format(GlobalVars.GetStr("WindowSizeSaveErrorMessage"), ex.Message));
 			}
 		}
 
@@ -627,9 +627,9 @@ public partial class App : Application
 
 					using CustomUIElements.ContentDialogV2 errorDialog = new()
 					{
-						Title = GlobalVars.Rizz.GetString("ErrorDialogTitle"),
-						Content = string.Format(GlobalVars.Rizz.GetString("ErrorDialogContent"), ex.Message),
-						CloseButtonText = GlobalVars.Rizz.GetString("OK"),
+						Title = GlobalVars.GetStr("ErrorDialogTitle"),
+						Content = string.Format(GlobalVars.GetStr("ErrorDialogContent"), ex.Message),
+						CloseButtonText = GlobalVars.GetStr("OK"),
 					};
 
 					// Show the dialog

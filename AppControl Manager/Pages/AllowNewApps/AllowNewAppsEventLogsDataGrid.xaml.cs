@@ -54,5 +54,5 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 			// Use the mapping's Getter, converting the result to a string.
 			ListViewHelper.CopyToClipboard(item => mapping.Getter(item)?.ToString(), FileIdentitiesListView);
 		}
-	}	
+	}
 }

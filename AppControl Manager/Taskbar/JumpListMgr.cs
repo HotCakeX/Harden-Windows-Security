@@ -31,7 +31,7 @@ internal static class JumpListMgr
 	{
 		if (!JumpList.IsSupported())
 		{
-			Logger.Write(GlobalVars.Rizz.GetString("JumpListNotSupportedMessage"));
+			Logger.Write(GlobalVars.GetStr("JumpListNotSupportedMessage"));
 			return;
 		}
 

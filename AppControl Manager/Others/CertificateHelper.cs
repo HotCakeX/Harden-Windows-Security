@@ -50,7 +50,7 @@ internal static class CertificateHelper
 				if (!NativeMethods.CryptAcquireContext(out hProv, null, "Microsoft Base Cryptographic Provider v1.0", PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
 				{
 					throw new InvalidOperationException(string.Format(
-						GlobalVars.Rizz.GetString("CryptAcquireContextFailedMessage"),
+						GlobalVars.GetStr("CryptAcquireContextFailedMessage"),
 						Marshal.GetLastWin32Error()));
 				}
 			}
@@ -59,7 +59,7 @@ internal static class CertificateHelper
 			if (!NativeMethods.CryptCreateHash(hProv, CALG_MD2, IntPtr.Zero, 0, out hHash))
 			{
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.Rizz.GetString("CryptCreateHashFailedMessage"),
+					GlobalVars.GetStr("CryptCreateHashFailedMessage"),
 					Marshal.GetLastWin32Error()));
 			}
 
@@ -68,7 +68,7 @@ internal static class CertificateHelper
 			if (!NativeMethods.CryptHashData(hHash, dataArray, (uint)dataArray.Length, 0))
 			{
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.Rizz.GetString("CryptHashDataFailedMessage"),
+					GlobalVars.GetStr("CryptHashDataFailedMessage"),
 					Marshal.GetLastWin32Error()));
 			}
 
@@ -77,7 +77,7 @@ internal static class CertificateHelper
 			if (!NativeMethods.CryptGetHashParam(hHash, HP_HASHVAL, null, ref hashSize, 0))
 			{
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.Rizz.GetString("CryptGetHashParamSizeFailedMessage"),
+					GlobalVars.GetStr("CryptGetHashParamSizeFailedMessage"),
 					Marshal.GetLastWin32Error()));
 			}
 
@@ -86,7 +86,7 @@ internal static class CertificateHelper
 			if (!NativeMethods.CryptGetHashParam(hHash, HP_HASHVAL, hashValue, ref hashSize, 0))
 			{
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.Rizz.GetString("CryptGetHashParamValueFailedMessage"),
+					GlobalVars.GetStr("CryptGetHashParamValueFailedMessage"),
 					Marshal.GetLastWin32Error()));
 			}
 
@@ -154,7 +154,7 @@ internal static class CertificateHelper
 			"2.16.840.1.101.3.4.3.15" => SHA3_384.HashData(tbsCertificate.Span),
 			"2.16.840.1.101.3.4.3.16" => SHA3_512.HashData(tbsCertificate.Span),
 			_ => throw new InvalidOperationException(string.Format(
-					GlobalVars.Rizz.GetString("NoHandlerForAlgorithmMessage"),
+					GlobalVars.GetStr("NoHandlerForAlgorithmMessage"),
 					algorithmOid)),
 		};
 
@@ -175,7 +175,7 @@ internal static class CertificateHelper
 		if (string.IsNullOrEmpty(hex))
 		{
 			throw new ArgumentException(
-				GlobalVars.Rizz.GetString("HexStringCannotBeNullOrEmptyMessage"),
+				GlobalVars.GetStr("HexStringCannotBeNullOrEmptyMessage"),
 				nameof(hex));
 		}
 

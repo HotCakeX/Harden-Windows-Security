@@ -38,7 +38,7 @@ internal static class CiPolicyHandler
 		if (policyObj.SupplementalPolicySigners.Length > 0)
 		{
 			Logger.Write(
-				GlobalVars.Rizz.GetString("RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage")
+				GlobalVars.GetStr("RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage")
 			);
 
 			// Store SignerIds to remove

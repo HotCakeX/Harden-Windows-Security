@@ -8,7 +8,7 @@ license = "MIT"
 homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
 repository = "https://github.com/HotCakeX/Harden-Windows-Security"
 publish = false
-rust-version = "1.87" # Enforces minimum required installed Rust version
+rust-version = "1.88" # Enforces minimum required installed Rust version
 
 [profile.release]
 codegen-units = 1
@@ -20,9 +20,9 @@ lto = "fat"
 incremental = true
 
 [dependencies]
-regex = "1.11"
-quick-xml = "0.37"
-anyhow = "1.0"
+regex = "*"
+quick-xml = "*"
+anyhow = "*"
 
 [[bin]]
 # Binary for X64 target.

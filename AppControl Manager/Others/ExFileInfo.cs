@@ -29,27 +29,27 @@ internal sealed class ExFileInfo(
 	/// <summary>
 	/// Holds the original name of the file. It can be null if no name is provided.
 	/// </summary>
-	internal string? OriginalFileName { get; } = originalFileName;
+	internal string? OriginalFileName => originalFileName;
 
 	/// <summary>
 	/// Represents the internal name of an entity, which can be null. It is a string property that can be accessed and
 	/// modified.
 	/// </summary>
-	internal string? InternalName { get; } = internalName;
+	internal string? InternalName => internalName;
 
 	/// <summary>
 	/// Represents the name of a product. It can be null, indicating that the product name is not specified.
 	/// </summary>
-	internal string? ProductName { get; } = productName;
+	internal string? ProductName => productName;
 
 	/// <summary>
 	/// Represents the version of an object, allowing for nullable values. It can be used to track or specify the
 	/// versioning of data.
 	/// </summary>
-	internal Version? Version { get; } = version;
+	internal Version? Version => version;
 
 	/// <summary>
 	/// Represents an optional description of a file. It can hold a string value or be null.
 	/// </summary>
-	internal string? FileDescription { get; } = fileDescription;
+	internal string? FileDescription => fileDescription;
 }

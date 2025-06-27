@@ -173,20 +173,20 @@ DeviceEvents
 		if (response.IsSuccessStatusCode)
 		{
 			output = await response.Content.ReadAsStringAsync();
-			Logger.Write(GlobalVars.Rizz.GetString("MDEAdvancedHuntingQuerySuccessfulMessage"));
+			Logger.Write(GlobalVars.GetStr("MDEAdvancedHuntingQuerySuccessfulMessage"));
 
 			return output;
 		}
 		else
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("FailedToRunMDEAdvancedHuntingQueryMessage"),
+				GlobalVars.GetStr("FailedToRunMDEAdvancedHuntingQueryMessage"),
 				response.StatusCode));
 
 			string errorContent = await response.Content.ReadAsStringAsync();
 
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("ErrorDetailsMessage"),
+				GlobalVars.GetStr("ErrorDetailsMessage"),
 				errorContent));
 		}
 	}
@@ -233,25 +233,25 @@ DeviceEvents
 				}
 
 				Logger.Write(string.Format(
-					GlobalVars.Rizz.GetString("SuccessfullyFetchedGroupsMessage"),
+					GlobalVars.GetStr("SuccessfullyFetchedGroupsMessage"),
 					output.Count));
 			}
 			else
 			{
 				Logger.Write(
-					GlobalVars.Rizz.GetString("NoGroupsFoundInResponseMessage"));
+					GlobalVars.GetStr("NoGroupsFoundInResponseMessage"));
 			}
 		}
 		else
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("FailedToFetchGroupsMessage"),
+				GlobalVars.GetStr("FailedToFetchGroupsMessage"),
 				response.StatusCode));
 
 			string errorContent = await response.Content.ReadAsStringAsync();
 
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("ErrorDetailsMessage"),
+				GlobalVars.GetStr("ErrorDetailsMessage"),
 				errorContent));
 		}
 
@@ -296,14 +296,14 @@ DeviceEvents
 					}
 				default:
 					throw new InvalidOperationException(
-						GlobalVars.Rizz.GetString("InvalidSignInMethodUsedMessage"));
+						GlobalVars.GetStr("InvalidSignInMethodUsedMessage"));
 			}
 		}
 		catch (OperationCanceledException)
 		{
 			error = true;
 			throw new OperationCanceledException(
-				GlobalVars.Rizz.GetString("SignInOperationCanceledByCallerMessage"));
+				GlobalVars.GetStr("SignInOperationCanceledByCallerMessage"));
 		}
 		finally
 		{
@@ -334,7 +334,7 @@ DeviceEvents
 				if (possibleDuplicate is not null)
 				{
 					Logger.Write(string.Format(
-						GlobalVars.Rizz.GetString("DuplicateAccountReplacedMessage"),
+						GlobalVars.GetStr("DuplicateAccountReplacedMessage"),
 						authResult.Account.Username));
 
 					_ = ViewModelMSGraph.AuthenticatedAccounts.Remove(possibleDuplicate);
@@ -360,7 +360,7 @@ DeviceEvents
 		await App.RemoveAsync(((IRestrictedAuthenticatedAccounts)account).Account);
 		_ = ViewModelMSGraph.AuthenticatedAccounts.Remove(account);
 		Logger.Write(string.Format(
-			GlobalVars.Rizz.GetString("SignedOutAccountMessage"),
+			GlobalVars.GetStr("SignedOutAccountMessage"),
 			account.Username));
 	}
 
@@ -395,7 +395,7 @@ DeviceEvents
 		string? policyId = await CreateCustomIntunePolicy(((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken, base64String, policyName, policyID, descriptionText);
 
 		Logger.Write(string.Format(
-			GlobalVars.Rizz.GetString("PolicyCreatedMessage"),
+			GlobalVars.GetStr("PolicyCreatedMessage"),
 			policyId));
 
 		if (groupIds.Count > 0 && policyId is not null)
@@ -450,7 +450,7 @@ DeviceEvents
 			{
 				string responseContent = await response.Content.ReadAsStringAsync();
 				Logger.Write(string.Format(
-					GlobalVars.Rizz.GetString("PolicyAssignedSuccessfullyToGroupMessage"),
+					GlobalVars.GetStr("PolicyAssignedSuccessfullyToGroupMessage"),
 					groupId));
 				Logger.Write(responseContent);
 			}
@@ -459,12 +459,12 @@ DeviceEvents
 				string errorContent = await response.Content.ReadAsStringAsync();
 
 				Logger.Write(string.Format(
-					GlobalVars.Rizz.GetString("FailedToAssignPolicyToGroupMessage"),
+					GlobalVars.GetStr("FailedToAssignPolicyToGroupMessage"),
 					groupId,
 					response.StatusCode));
 
 				throw new InvalidOperationException(string.Format(
-					GlobalVars.Rizz.GetString("ErrorDetailsForGroupMessage"),
+					GlobalVars.GetStr("ErrorDetailsForGroupMessage"),
 					groupId,
 					errorContent));
 			}
@@ -532,7 +532,7 @@ DeviceEvents
 		if (response.IsSuccessStatusCode)
 		{
 			string responseContent = await response.Content.ReadAsStringAsync();
-			Logger.Write(GlobalVars.Rizz.GetString("CustomPolicyCreatedSuccessMessage"));
+			Logger.Write(GlobalVars.GetStr("CustomPolicyCreatedSuccessMessage"));
 			Logger.Write(responseContent);
 
 			// Extract the policy ID from the response
@@ -543,13 +543,13 @@ DeviceEvents
 		else
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("FailedToCreateCustomPolicyMessage"),
+				GlobalVars.GetStr("FailedToCreateCustomPolicyMessage"),
 				response.StatusCode));
 
 			string errorContent = await response.Content.ReadAsStringAsync();
 
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("ErrorDetailsMessage"),
+				GlobalVars.GetStr("ErrorDetailsMessage"),
 				errorContent));
 		}
 	}
@@ -644,7 +644,7 @@ DeviceEvents
 		if (fileInfo.Length > maxSizeInBytes)
 		{
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("CipPolicyFileSizeExceedsLimitMessage"),
+				GlobalVars.GetStr("CipPolicyFileSizeExceedsLimitMessage"),
 				maxSizeInBytes));
 		}
 
@@ -681,7 +681,7 @@ DeviceEvents
 		if (response.IsSuccessStatusCode)
 		{
 			string jsonResponse = await response.Content.ReadAsStringAsync();
-			Logger.Write(GlobalVars.Rizz.GetString("DeviceConfigurationsRetrievedSuccessfullyMessage"));
+			Logger.Write(GlobalVars.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
 
 			// Deserialize the JSON response using the source-generated context.
 			DeviceConfigurationPoliciesResponse? policies = JsonSerializer.Deserialize(
@@ -693,13 +693,13 @@ DeviceEvents
 		else
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("FailedToRetrieveDeviceConfigurationsMessage"),
+				GlobalVars.GetStr("FailedToRetrieveDeviceConfigurationsMessage"),
 				response.StatusCode));
 
 			string errorContent = await response.Content.ReadAsStringAsync();
 
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("ErrorDetailsMessage"),
+				GlobalVars.GetStr("ErrorDetailsMessage"),
 				errorContent));
 		}
 	}
@@ -734,14 +734,14 @@ DeviceEvents
 		if (response.IsSuccessStatusCode)
 		{
 			Logger.Write(string.Format(
-				GlobalVars.Rizz.GetString("PolicyDeletedSuccessfullyMessage"),
+				GlobalVars.GetStr("PolicyDeletedSuccessfullyMessage"),
 				policyId));
 		}
 		else
 		{
 			string errorContent = await response.Content.ReadAsStringAsync();
 			throw new InvalidOperationException(string.Format(
-				GlobalVars.Rizz.GetString("FailedToDeletePolicyExceptionMessage"),
+				GlobalVars.GetStr("FailedToDeletePolicyExceptionMessage"),
 				policyId,
 				response.StatusCode,
 				errorContent));

@@ -29,7 +29,7 @@ using Windows.UI;
 
 namespace AppControlManager.CustomUIElements;
 
-internal sealed partial class AnimatedCancellableButton : Button
+internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 {
 	private const string ZeroOffsetString = "0";
 	private const string ButtonDefaultText = "Button";
@@ -713,12 +713,12 @@ internal sealed partial class AnimatedCancellableButton : Button
 		{
 			if (ExternalInternalIsCancellingState)
 			{
-				this.Content = GlobalVars.Rizz.GetString("Cancelling");
+				this.Content = GlobalVars.GetStr("Cancelling");
 				UpdateButtonStyle(true);
 			}
 			else if (ExternalInternalIsCancelState)
 			{
-				this.Content = GlobalVars.Rizz.GetString("Cancel");
+				this.Content = GlobalVars.GetStr("Cancel");
 				UpdateButtonStyle(true);
 			}
 			else
@@ -953,7 +953,7 @@ internal sealed partial class AnimatedCancellableButton : Button
 					{
 						Click?.Invoke(this, e);
 
-						DispatcherQueue.TryEnqueue(DispatcherQueuePriority.High, () =>
+						_ = DispatcherQueue.TryEnqueue(DispatcherQueuePriority.High, () =>
 						{
 							if (!ExternalInternalIsOperationInProgress &&
 								!ExternalInternalIsCancelState &&
@@ -1067,12 +1067,12 @@ internal sealed partial class AnimatedCancellableButton : Button
 		{
 			if (_targetCancellingStateAfterFadeOut)
 			{
-				this.Content = GlobalVars.Rizz.GetString("Cancelling");
+				this.Content = GlobalVars.GetStr("Cancelling");
 				UpdateButtonStyle(true);
 			}
 			else if (_targetStateAfterFadeOut)
 			{
-				this.Content = GlobalVars.Rizz.GetString("Cancel");
+				this.Content = GlobalVars.GetStr("Cancel");
 				UpdateButtonStyle(true);
 			}
 			else
@@ -1168,6 +1168,12 @@ internal sealed partial class AnimatedCancellableButton : Button
 
 	private void AnimatedCancellableButton_Unloaded(object? sender, RoutedEventArgs e)
 	{
+		if (_isDisposed) return;
+		PerformCleanup();
+	}
+
+	private void PerformCleanup()
+	{
 		_isLoaded = false;
 
 		lock (_stateLock)
@@ -1244,5 +1250,11 @@ internal sealed partial class AnimatedCancellableButton : Button
 		}
 		catch (Exception)
 		{ }
+	}
+
+	public void Dispose()
+	{
+		if (_isDisposed) return;
+		PerformCleanup();
 	}
 }

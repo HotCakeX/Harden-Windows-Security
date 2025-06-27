@@ -19,7 +19,7 @@ namespace AppControlManager.Others;
 
 internal sealed class CertificateSignerCreator(string tbs, string signerName, int siSigningScenario)
 {
-	internal string TBS { get; } = tbs;
-	internal string SignerName { get; } = signerName;
-	internal int SiSigningScenario { get; } = siSigningScenario;
+	internal string TBS => tbs;
+	internal string SignerName => signerName;
+	internal int SiSigningScenario => siSigningScenario;
 }

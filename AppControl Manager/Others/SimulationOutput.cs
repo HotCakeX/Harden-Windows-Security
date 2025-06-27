@@ -46,82 +46,82 @@ internal sealed class SimulationOutput(
 	/// <summary>
 	/// The name of the file, which is a truncated version of its path
 	/// </summary>
-	internal string? Path { get; } = path;
+	internal string? Path => path;
 
 	/// <summary>
 	/// Source from the Comparer function is always 'Signer'
 	/// </summary>
-	internal string Source { get; } = source;
+	internal string Source => source;
 
 	/// <summary>
 	/// Whether the file is authorized or not
 	/// </summary>
-	internal bool IsAuthorized { get; } = isAuthorized;
+	internal bool IsAuthorized => isAuthorized;
 
 	/// <summary>
 	/// Gathered from the GetSignerInfo method
 	/// </summary>
-	internal string? SignerID { get; } = signerID;
+	internal string? SignerID => signerID;
 
 	/// <summary>
 	/// Gathered from the GetSignerInfo method
 	/// </summary>
-	internal string? SignerName { get; } = signerName;
+	internal string? SignerName => signerName;
 
 	/// <summary>
 	/// Gathered from the GetSignerInfo method
 	/// </summary>
-	internal string? SignerCertRoot { get; } = signerCertRoot;
+	internal string? SignerCertRoot => signerCertRoot;
 
 	/// <summary>
 	/// Gathered from the GetSignerInfo method
 	/// </summary>
-	internal string? SignerCertPublisher { get; } = signerCertPublisher;
+	internal string? SignerCertPublisher => signerCertPublisher;
 
 	/// <summary>
 	/// Gathered from the GetSignerInfo method
 	/// </summary>
-	internal string? SignerScope { get; } = signerScope;
+	internal string? SignerScope => signerScope;
 
 	/// <summary>
 	/// Gathered from the GetSignerInfo method
 	/// </summary>
-	internal List<string>? SignerFileAttributeIDs { get; } = signerFileAttributeIDs;
+	internal List<string>? SignerFileAttributeIDs => signerFileAttributeIDs;
 
 	/// <summary>
 	/// The main level based on which the file is authorized
 	/// </summary>
-	internal string? MatchCriteria { get; } = matchCriteria;
+	internal string? MatchCriteria => matchCriteria;
 
 	/// <summary>
 	/// Only those eligible for FilePublisher, WHQLFilePublisher, or SignedVersion levels assign this value, otherwise it stays null
 	/// </summary>
-	internal string? SpecificFileNameLevelMatchCriteria { get; } = specificFileNameLevelMatchCriteria;
+	internal string? SpecificFileNameLevelMatchCriteria => specificFileNameLevelMatchCriteria;
 
 	/// <summary>
 	/// Subject CN of the signer that allows the file
 	/// </summary>
-	internal string? CertSubjectCN { get; } = certSubjectCN;
+	internal string? CertSubjectCN => certSubjectCN;
 
 	/// <summary>
 	/// Issuer CN of the signer that allows the file
 	/// </summary>
-	internal string? CertIssuerCN { get; } = certIssuerCN;
+	internal string? CertIssuerCN => certIssuerCN;
 
 	/// <summary>
 	/// NotAfter date of the signer that allows the file
 	/// </summary>
-	internal string? CertNotAfter { get; } = certNotAfter;
+	internal string? CertNotAfter => certNotAfter;
 
 	/// <summary>
 	/// TBS value of the signer that allows the file
 	/// </summary>
-	internal string? CertTBSValue { get; } = certTBSValue;
+	internal string? CertTBSValue => certTBSValue;
 
 	/// <summary>
 	/// Full path of the file
 	/// </summary>
-	internal string? FilePath { get; } = filePath;
+	internal string? FilePath => filePath;
 
 	/// <summary>
 	/// Reference for the ViewModel's class

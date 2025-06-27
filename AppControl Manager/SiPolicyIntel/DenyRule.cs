@@ -20,9 +20,12 @@ using AppControlManager.SiPolicy;
 namespace AppControlManager.SiPolicyIntel;
 
 // For levels: Hash, FileName, FilePath, PFN
-internal sealed class DenyRule
+internal sealed class DenyRule(
+	Deny denyElement,
+	FileRuleRef fileRuleRefElement,
+	SSType signingScenario)
 {
-	internal required Deny DenyElement { get; set; }
-	internal required FileRuleRef FileRuleRefElement { get; set; }
-	internal required SSType SigningScenario { get; set; }
+	internal Deny DenyElement => denyElement;
+	internal FileRuleRef FileRuleRefElement => fileRuleRefElement;
+	internal SSType SigningScenario => signingScenario;
 }

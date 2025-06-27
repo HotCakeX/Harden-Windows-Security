@@ -53,7 +53,7 @@ internal static class FileUtility
 								 .TrimEnd(Path.DirectorySeparatorChar)
 								 + Path.DirectorySeparatorChar;
 
-			normalizedDirs.Add(fullDir);
+			_ = normalizedDirs.Add(fullDir);
 		}
 
 		// Walk through each file. Normalize its full path, then climb its parent chain.
@@ -100,7 +100,7 @@ internal static class FileUtility
 			if (!residesUnderExcluded)
 			{
 				// Use the original file‐string (not the full‐path) in the output set
-				output.Add(file);
+				_ = output.Add(file);
 			}
 		}
 
@@ -350,7 +350,7 @@ internal static class FileUtility
 
 		Logger.Write(
 			string.Format(
-				GlobalVars.Rizz.GetString("FileEnumerationDurationMessage"),
+				GlobalVars.GetStr("FileEnumerationDurationMessage"),
 				elapsedTime.Hours,
 				elapsedTime.Minutes,
 				elapsedTime.Seconds

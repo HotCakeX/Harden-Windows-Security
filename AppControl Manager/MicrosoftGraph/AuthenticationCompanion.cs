@@ -28,7 +28,7 @@ namespace AppControlManager.MicrosoftGraph;
 /// <summary>
 /// Encapsulates the logic shared among the pages and ViewModels that implement Microsoft Graph functionality
 /// </summary>
-internal sealed partial class AuthenticationCompanion : ViewModelBase
+internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposable
 {
 	private readonly Action<bool> _UpdateButtons;
 	private readonly InfoBarSettings _InfoBar;
@@ -200,14 +200,9 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 		{
 			ManageButtonsStates(false);
 
-			if (cancellationTokenSource is not null)
-			{
-				cancellationTokenSource.Cancel();
-				cancellationTokenSource.Dispose();
-				cancellationTokenSource = null;
+			CancelAndDisposeCts();
 
-				_InfoBar.WriteInfo(GlobalVars.Rizz.GetString("SignInProcessCancelledMessage"));
-			}
+			_InfoBar.WriteInfo(GlobalVars.GetStr("SignInProcessCancelledMessage"));
 		}
 		finally
 		{
@@ -229,7 +224,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 			{
 				await Main.SignOut(ListViewSelectedAccount);
 
-				_InfoBar.WriteInfo(GlobalVars.Rizz.GetString("SuccessfullyLoggedOutSelectedAccountMessage"));
+				_InfoBar.WriteInfo(GlobalVars.GetStr("SuccessfullyLoggedOutSelectedAccountMessage"));
 			}
 		}
 		finally
@@ -250,7 +245,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 		if (CurrentActiveAccount is not null)
 		{
 			_InfoBar.WriteSuccess(string.Format(
-				GlobalVars.Rizz.GetString("SuccessfullySetActiveAccountMessage"),
+				GlobalVars.GetStr("SuccessfullySetActiveAccountMessage"),
 				CurrentActiveAccount.Username));
 		}
 	}
@@ -263,6 +258,19 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 	{
 		SignInButtonState = on;
 		SignOutButtonState = on;
+	}
+
+	/// <summary>
+	/// Helper method to cancel and dispose the cancellation token source
+	/// </summary>
+	private void CancelAndDisposeCts()
+	{
+		if (cancellationTokenSource is not null)
+		{
+			cancellationTokenSource.Cancel();
+			cancellationTokenSource.Dispose();
+			cancellationTokenSource = null;
+		}
 	}
 
 	/// <summary>
@@ -298,7 +306,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 		{
 			SignInButtonState = false;
 
-			_InfoBar.WriteInfo(GlobalVars.Rizz.GetString("SigningIntoMSGraphMessage"));
+			_InfoBar.WriteInfo(GlobalVars.GetStr("SigningIntoMSGraphMessage"));
 
 			(bool, AuthenticatedAccounts?) signInResult = await Main.SignIn(
 				AuthenticationContextComboBoxSelectedItem,
@@ -309,29 +317,33 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase
 			{
 				CurrentActiveAccount = signInResult.Item2;
 
-				_InfoBar.WriteSuccess(GlobalVars.Rizz.GetString("SuccessfullySignedIntoMSGraphMessage"));
+				_InfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullySignedIntoMSGraphMessage"));
 			}
 		}
 		catch (OperationCanceledException)
 		{
-			_InfoBar.WriteWarning(GlobalVars.Rizz.GetString("SignInProcessCancelledByUserMessage"));
+			_InfoBar.WriteWarning(GlobalVars.GetStr("SignInProcessCancelledByUserMessage"));
 		}
 		// Specifically for WAM
 		catch (MsalClientException ex) when (ex.ErrorCode == "authentication_canceled")
 		{
-			_InfoBar.WriteWarning(GlobalVars.Rizz.GetString("SignInProcessCancelledByUserMessage"));
+			_InfoBar.WriteWarning(GlobalVars.GetStr("SignInProcessCancelledByUserMessage"));
 		}
 		catch (Exception ex)
 		{
-			_InfoBar.WriteError(ex, GlobalVars.Rizz.GetString("ErrorSigningIntoMSGraphMessage"));
+			_InfoBar.WriteError(ex, GlobalVars.GetStr("ErrorSigningIntoMSGraphMessage"));
 		}
 		finally
 		{
-			cancellationTokenSource?.Dispose();
-			cancellationTokenSource = null;
+			CancelAndDisposeCts();
 
 			_InfoBar.IsClosable = true;
 			SignInButtonState = true;
 		}
+	}
+
+	public void Dispose()
+	{
+		CancelAndDisposeCts();
 	}
 }

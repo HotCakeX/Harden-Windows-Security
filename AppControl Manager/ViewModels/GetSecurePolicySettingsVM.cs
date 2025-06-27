@@ -63,8 +63,8 @@ internal sealed partial class GetSecurePolicySettingsVM : ViewModelBase
 			// Check if all fields are filled
 			if (string.IsNullOrWhiteSpace(Provider) || string.IsNullOrWhiteSpace(Key) || string.IsNullOrWhiteSpace(ValueName))
 			{
-				MainInfoBar.WriteWarning(GlobalVars.Rizz.GetString("GetSecurePolicySettings_FillAllFields"),
-					GlobalVars.Rizz.GetString("GetSecurePolicySettings_InputRequired"));
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("GetSecurePolicySettings_FillAllFields"),
+					GlobalVars.GetStr("GetSecurePolicySettings_InputRequired"));
 				return;
 			}
 
@@ -73,13 +73,13 @@ internal sealed partial class GetSecurePolicySettingsVM : ViewModelBase
 
 			if (result.StatusCode is not 0)
 			{
-				MainInfoBar.WriteInfo(GlobalVars.Rizz.GetString("GetSecurePolicySettings_NoPolicyMessage"),
-					GlobalVars.Rizz.GetString("GetSecurePolicySettings_PolicyNotFound"));
+				MainInfoBar.WriteInfo(GlobalVars.GetStr("GetSecurePolicySettings_NoPolicyMessage"),
+					GlobalVars.GetStr("GetSecurePolicySettings_PolicyNotFound"));
 			}
 			else
 			{
-				MainInfoBar.WriteSuccess(GlobalVars.Rizz.GetString("GetSecurePolicySettings_PolicyFoundMessage"),
-					GlobalVars.Rizz.GetString("GetSecurePolicySettings_PolicyFound"));
+				MainInfoBar.WriteSuccess(GlobalVars.GetStr("GetSecurePolicySettings_PolicyFoundMessage"),
+					GlobalVars.GetStr("GetSecurePolicySettings_PolicyFound"));
 			}
 
 			// Populate result fields

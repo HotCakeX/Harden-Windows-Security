@@ -122,8 +122,11 @@
                     because the binding now updates as soon as the text changes rather than waiting for the control to lose focus.
                 -->
 
-                <TextBox Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Uid="SearchPoliciesTextBox" IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                         TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}" VerticalAlignment="Center" />
+                <TextBox Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         x:Uid="SearchPoliciesTextBox"
+                         IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                         TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}"
+                         VerticalAlignment="Center" />
 
             </controls:WrapPanel>
 

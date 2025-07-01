@@ -99,7 +99,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		get;
 		set
 		{
-			if (SP(ref field, value))
+			if (SPT(ref field, value))
 			{
 				_ = UpdateLogDisplayAsync();
 			}

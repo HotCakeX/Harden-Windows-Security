@@ -387,8 +387,11 @@
                     </Button.Content>
                 </Button>
 
-                <TextBox Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Uid="SearchPoliciesTextBox" IsEnabled="{x:Bind ViewModel.SearchTextBoxState, Mode=OneWay}"
-                         TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}" VerticalAlignment="Center" />
+                <TextBox Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         x:Uid="SearchPoliciesTextBox"
+                         IsEnabled="{x:Bind ViewModel.SearchTextBoxState, Mode=OneWay}"
+                         TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}"
+                         VerticalAlignment="Center" />
 
             </controls:WrapPanel>
 

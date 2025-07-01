@@ -348,7 +348,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal readonly ObservableCollection<string> CertCommonNames = [];
 	internal readonly List<string> CertCommonNamesList = [];
 
-	internal string? CertCNsAutoSuggestBoxText { get; set => SP(ref field, value); }
+	internal string? CertCNsAutoSuggestBoxText { get; set => SPT(ref field, value); }
 
 	internal bool CertCNAutoSuggestBoxIsSuggestionListOpen { get; set => SP(ref field, value); }
 

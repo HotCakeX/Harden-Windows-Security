@@ -1,0 +1,17 @@
+[package]
+name = "dism_capabilities"
+version = "0.1.0"
+edition = "2024"
+authors = ["Violet Hansen"]
+license = "MIT"
+homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
+repository = "https://github.com/HotCakeX/Harden-Windows-Security"
+publish = false
+rust-version = "1.88"
+
+[dependencies]
+windows = { version = "*", features = [
+    "Win32_Foundation",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Memory",
+] }

@@ -430,6 +430,8 @@ internal sealed class NavigationService
 	{
 		if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
 		{
+			ViewModelBase.EmitTypingSound();
+
 			// Get the text user entered in the search box
 			string query = sender.Text.Trim();
 

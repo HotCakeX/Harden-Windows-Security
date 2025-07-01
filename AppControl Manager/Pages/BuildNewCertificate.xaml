@@ -140,7 +140,7 @@
                                  PasswordChar="#"
                                  IsEnabled="{x:Bind ViewModel.ElementsAreEnabled,Mode=OneWay}"
                                  PasswordRevealMode="Peek"
-                                 Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
+                                 Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  x:Uid="PFXEncryptionPasswordBox" />
 
                 </controls:SettingsCard>

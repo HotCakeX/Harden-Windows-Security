@@ -85,7 +85,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// <summary>
 	/// The text entered in the Text box for search.
 	/// </summary>
-	internal string? SearchBoxTextBox { get; set => SP(ref field, value); }
+	internal string? SearchBoxTextBox { get; set => SPT(ref field, value); }
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }

@@ -8,7 +8,7 @@ license = "MIT"
 homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
 repository = "https://github.com/HotCakeX/Harden-Windows-Security"
 publish = false
-rust-version = "1.88" # Enforces minimum required installed Rust version
+rust-version = "1.88"
 
 [profile.release]
 codegen-units = 1

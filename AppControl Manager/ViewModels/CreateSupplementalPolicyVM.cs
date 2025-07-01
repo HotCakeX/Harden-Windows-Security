@@ -233,7 +233,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Selected Supplemental policy name
 	/// </summary>
-	internal string? FilesAndFoldersSupplementalPolicyName { get; set => SP(ref field, value); }
+	internal string? FilesAndFoldersSupplementalPolicyName { get; set => SPT(ref field, value); }
 
 	/// <summary>
 	/// Whether the UI elements for Files and Folders section are enabled or disabled.
@@ -714,7 +714,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	{
 		get; set
 		{
-			if (SP(ref field, value))
+			if (SPT(ref field, value))
 			{
 				ApplyFilters();
 			}
@@ -783,7 +783,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Selected Supplemental policy name,
 	/// </summary>
-	internal string? CertificatesBasedSupplementalPolicyName { get; set => SP(ref field, value); }
+	internal string? CertificatesBasedSupplementalPolicyName { get; set => SPT(ref field, value); }
 
 	/// <summary>
 	/// Whether the policy should be deployed or not.
@@ -1068,7 +1068,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Selected Supplemental policy name
 	/// </summary>
-	internal string? ISGBasedSupplementalPolicyName { get; set => SP(ref field, value); }
+	internal string? ISGBasedSupplementalPolicyName { get; set => SPT(ref field, value); }
 
 	/// <summary>
 	/// Path to the ISG Supplemental policy XML file
@@ -1364,7 +1364,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// The name of the supplemental policy for Strict Kernel Mode.
 	/// </summary>
-	internal string? StrictKernelModePolicyName { get; set => SP(ref field, value); }
+	internal string? StrictKernelModePolicyName { get; set => SPT(ref field, value); }
 
 	internal bool StrictKernelModeSettingsExpanderIsExpanded { get; set => SP(ref field, value); }
 
@@ -1818,7 +1818,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	{
 		get; set
 		{
-			if (SP(ref field, value))
+			if (SPT(ref field, value))
 			{
 				StrictKernel_ApplyFilters();
 			}
@@ -1901,7 +1901,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// The name of the supplemental policy that will be created.
 	/// </summary>
-	internal string? PFNBasedSupplementalPolicyName { get; set => SP(ref field, value); }
+	internal string? PFNBasedSupplementalPolicyName { get; set => SPT(ref field, value); }
 
 	/// <summary>
 	/// Whether the Supplemental policy should be deployed at the end.
@@ -1932,7 +1932,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	{
 		get; set
 		{
-			if (SP(ref field, value))
+			if (SPT(ref field, value))
 			{
 				PFNAppFilteringTextBox_TextChanged();
 			}
@@ -2306,7 +2306,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// The custom pattern used for file rule.
 	/// </summary>
-	internal string? SupplementalPolicyCustomPatternBasedCustomPatternTextBox { get; set => SP(ref field, value); }
+	internal string? SupplementalPolicyCustomPatternBasedCustomPatternTextBox { get; set => SPT(ref field, value); }
 
 	/// <summary>
 	/// Initialization details for the main Create button for the Pattern Based FileRule section
@@ -2316,7 +2316,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Selected Supplemental policy name
 	/// </summary>
-	internal string? CustomPatternBasedFileRuleBasedSupplementalPolicyName { get; set => SP(ref field, value); }
+	internal string? CustomPatternBasedFileRuleBasedSupplementalPolicyName { get; set => SPT(ref field, value); }
 
 	internal void CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click()
 	{

@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
@@ -27,6 +26,8 @@ using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.UserActivities;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 using Windows.System;
 
 namespace AppControlManager.ViewModels;
@@ -73,6 +74,30 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 		field = newValue;
 		OnPropertyChanged(propertyName);
+		return true;
+	}
+
+	/// <summary>
+	/// Only for properties that are nullable texts.
+	/// This plays type writing audio if Sound is enabled in the app settings.
+	/// </summary>
+	/// <param name="field"></param>
+	/// <param name="newValue"></param>
+	/// <param name="propertyName"></param>
+	/// <returns></returns>
+	protected bool SPT(ref string? field, string? newValue, [CallerMemberName] string? propertyName = null)
+	{
+		if (string.Equals(field, newValue, StringComparison.Ordinal))
+			return false;
+
+		field = newValue;
+		OnPropertyChanged(propertyName);
+
+		if (App.Settings.SoundSetting)
+		{
+			TypeWriterMediaPlayer.Position = TypeWriterAudioStartTime;
+			TypeWriterMediaPlayer.Play();
+		}
 		return true;
 	}
 
@@ -278,20 +303,15 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 		if (fileToOpen is not null)
 		{
-			string? Dir = Path.GetDirectoryName(fileToOpen);
-
-			if (Dir is not null)
+			ProcessStartInfo processInfo = new()
 			{
-				ProcessStartInfo processInfo = new()
-				{
-					FileName = "explorer.exe",
-					Arguments = Dir,
-					Verb = "runas",
-					UseShellExecute = true
-				};
+				FileName = "explorer.exe",
+				Arguments = $"/select,\"{fileToOpen}\"", // Scroll to the file in File Explorer and highlight it.
+				Verb = "runas",
+				UseShellExecute = true
+			};
 
-				_ = Process.Start(processInfo);
-			}
+			_ = Process.Start(processInfo);
 		}
 	}
 
@@ -310,5 +330,21 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		{
 			Logger.Write(ErrorWriter.FormatException(ex));
 		}
+	}
+
+	private static readonly MediaPlayer TypeWriterMediaPlayer = new()
+	{
+		Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/Audio/TypeWriter.wav"))
+	};
+
+	private static readonly TimeSpan TypeWriterAudioStartTime = TimeSpan.FromMilliseconds(167);
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+	internal static void EmitTypingSound()
+	{
+		if (!App.Settings.SoundSetting) return;
+
+		TypeWriterMediaPlayer.Position = TypeWriterAudioStartTime;
+		TypeWriterMediaPlayer.Play();
 	}
 }

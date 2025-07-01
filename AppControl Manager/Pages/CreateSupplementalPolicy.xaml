@@ -338,7 +338,7 @@
                                                IsActionIconVisible="False">
                             <TextBox IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
                                      Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
-                                     Text="{x:Bind ViewModel.FilesAndFoldersSupplementalPolicyName, Mode=TwoWay}"
+                                     Text="{x:Bind ViewModel.FilesAndFoldersSupplementalPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
@@ -527,7 +527,7 @@
 
                         <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
                             <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
-                                     Text="{x:Bind ViewModel.CertificatesBasedSupplementalPolicyName, Mode=TwoWay}"
+                                     Text="{x:Bind ViewModel.CertificatesBasedSupplementalPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
@@ -658,7 +658,7 @@
                         <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
                             <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
-                                     Text="{x:Bind ViewModel.ISGBasedSupplementalPolicyName, Mode=TwoWay}"
+                                     Text="{x:Bind ViewModel.ISGBasedSupplementalPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
@@ -856,7 +856,7 @@
                                                IsActionIconVisible="False">
                             <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
-                                     Text="{x:Bind ViewModel.StrictKernelModePolicyName, Mode=TwoWay}"
+                                     Text="{x:Bind ViewModel.StrictKernelModePolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
@@ -948,7 +948,7 @@
                                                IsActionIconVisible="False">
                             <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
-                                     Text="{x:Bind ViewModel.PFNBasedSupplementalPolicyName, Mode=TwoWay}"
+                                     Text="{x:Bind ViewModel.PFNBasedSupplementalPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
@@ -1134,7 +1134,7 @@
                         <controls:SettingsCard Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}" x:Uid="SupplementalPolicyNameSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
                             <TextBox Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
-                                     Text="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedSupplementalPolicyName, Mode=TwoWay}"
+                                     Text="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedSupplementalPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      x:Uid="SupplementalPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
@@ -1185,7 +1185,7 @@
                         </customUI:SettingsCardV3>
 
                         <controls:SettingsCard x:Uid="SupplementalPolicyCustomPatternBasedFileRuleActualPatternSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
-                            <TextBox Text="{x:Bind ViewModel.SupplementalPolicyCustomPatternBasedCustomPatternTextBox, Mode=TwoWay}"
+                            <TextBox Text="{x:Bind ViewModel.SupplementalPolicyCustomPatternBasedCustomPatternTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
                                      x:Uid="SupplementalPolicyCustomPatternBasedCustomPatternTextBox"
                                      TextWrapping="Wrap"

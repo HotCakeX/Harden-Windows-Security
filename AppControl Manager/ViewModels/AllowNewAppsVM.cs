@@ -111,7 +111,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// The user selected Supplemental policy name.
 	/// </summary>
-	internal string? selectedSupplementalPolicyName { get; set => SP(ref field, value); }
+	internal string? selectedSupplementalPolicyName { get; set => SPT(ref field, value); }
 
 	/// <summary>
 	/// The user selected directories to scan

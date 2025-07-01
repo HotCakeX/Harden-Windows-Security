@@ -96,8 +96,8 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 		{ HashAlgorithm.SHA3_512, HashAlgorithmName.SHA3_512 }
 	};
 
-	internal string? CommonName { get; set => SP(ref field, value); }
-	internal string? Password { get; set => SP(ref field, value); }
+	internal string? CommonName { get; set => SPT(ref field, value); }
+	internal string? Password { get; set => SPT(ref field, value); }
 	internal string KeySizeComboBoxSelectedItem { get; set => SP(ref field, value); } = "4096";
 	internal double Validity { get; set => SP(ref field, value); } = 100;
 	internal int SelectedHashAlgorithm

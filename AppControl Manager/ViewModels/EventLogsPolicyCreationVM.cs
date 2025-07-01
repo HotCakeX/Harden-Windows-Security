@@ -67,7 +67,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	// Variables to hold the data supplied by the UI elements
-	internal string? BasePolicyGUID { get; set => SP(ref field, value); }
+	internal string? BasePolicyGUID { get; set => SPT(ref field, value); }
 	internal string? PolicyToAddLogsTo { get; set => SP(ref field, value); }
 	internal string? BasePolicyXMLFile { get; set => SP(ref field, value); }
 
@@ -101,7 +101,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		get; set
 		{
-			if (SP(ref field, value))
+			if (SPT(ref field, value))
 			{
 				ApplyFilters();
 			}
@@ -257,7 +257,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	internal Visibility ScanLogsProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 
-	internal string? PolicyNameTextBox { get; set => SP(ref field, value); }
+	internal string? PolicyNameTextBox { get; set => SPT(ref field, value); }
 
 	internal bool DeployPolicyToggle { get; set => SP(ref field, value); }
 

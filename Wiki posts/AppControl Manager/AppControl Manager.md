@@ -301,7 +301,8 @@ function Build_ACM {
         [bool]$DownloadRepo,
         [bool]$InstallDeps,
         [bool]$Workflow,
-        [bool]$UpdateWorkLoads
+        [bool]$UpdateWorkLoads,
+        [bool]$Install
     )
 
     $ErrorActionPreference = 'Stop'
@@ -517,17 +518,21 @@ function Build_ACM {
 
     #region --- RUST projects ---
 
+    rustup default stable
+
     rustup target add aarch64-pc-windows-msvc
 
     rustup target add x86_64-pc-windows-msvc
 
     rustup update
 
+    cargo version
+
     [string]$Current_Location = (Get-Location).Path
 
     Set-Location -Path '.\eXclude\Rust WMI Interop\Device Guard\Program'
 
-    if (Test-Path -PathType Leaf -LiteralPath 'Cargo.lock'){
+    if (Test-Path -PathType Leaf -LiteralPath 'Cargo.lock') {
         Remove-Item -Force -LiteralPath 'Cargo.lock'
     }
 
@@ -536,6 +541,8 @@ function Build_ACM {
     cargo update --verbose
 
     cargo tree
+
+    rustup show active-toolchain
 
     cargo build_x64
 
@@ -546,15 +553,29 @@ function Build_ACM {
 
     Set-Location -Path '.\eXclude\Rust Interop Library'
 
-    if (Test-Path -PathType Leaf -LiteralPath 'Cargo.lock'){
+    if (Test-Path -PathType Leaf -LiteralPath 'Cargo.lock') {
         Remove-Item -Force -LiteralPath 'Cargo.lock'
     }
+
+    rustup toolchain install nightly
+
+    rustup default nightly
+
+    rustup target add aarch64-pc-windows-msvc
+
+    rustup target add x86_64-pc-windows-msvc
+
+    rustup update
+
+    cargo version
 
     cargo clean
 
     cargo update --verbose
 
     cargo tree
+
+    rustup show active-toolchain
 
     cargo build_x64
 
@@ -594,7 +615,7 @@ function Build_ACM {
 
     Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\x86_64-pc-windows-msvc\release\DeviceGuardWMIRetriever-X64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
 
-    Copy-Item -Path '.\eXclude\Rust Interop Library\rust_interop-X64.dll' -Destination '.\RustInterop\RustInterop.dll' -Force
+    Copy-Item -Path '.\eXclude\Rust Interop Library\target\x86_64-pc-windows-msvc\release\rust_interop.lib' -Destination '.\RustInterop\rust_interop.lib' -Force
 
     # Generate for X64 architecture
     dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=x64
@@ -610,7 +631,7 @@ function Build_ACM {
 
     Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
 
-    Copy-Item -Path '.\eXclude\Rust Interop Library\rust_interop-ARM64.dll' -Destination '.\RustInterop\RustInterop.dll' -Force
+    Copy-Item -Path '.\eXclude\Rust Interop Library\target\aarch64-pc-windows-msvc\release\rust_interop.lib' -Destination '.\RustInterop\rust_interop.lib' -Force
 
     # Generate for ARM64 architecture
     dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=ARM64
@@ -805,6 +826,10 @@ function Build_ACM {
         Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value 'SBOM_NAME=manifest.spdx.json'
     }
 
+    if ($Install -and $PackageFamilyName -eq 'AppControlManager_sadt7br7jpt02') {
+        (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1') + "AppControl -Verbose -MSIXBundlePath '$MSIXBundle'" | Invoke-Expression
+    }
+
     if ($null -ne $Stopwatch) {
 
         $Stopwatch.Stop()
@@ -825,7 +850,8 @@ Milliseconds : $($Elapsed.Milliseconds)
     }
 }
 
-Build_ACM -PackageFamilyName 'VioletHansen.AppControlManager_ea7andspwdn10' -DownloadRepo $false -InstallDeps $false -Workflow $false -UpdateWorkLoads $false
+Build_ACM -PackageFamilyName 'VioletHansen.AppControlManager_ea7andspwdn10' -DownloadRepo $false -InstallDeps $false -Workflow $false -UpdateWorkLoads $false -Install $false
+
 
 ```
 

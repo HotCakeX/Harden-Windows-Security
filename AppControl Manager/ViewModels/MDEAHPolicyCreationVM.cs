@@ -90,7 +90,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 	internal ListViewHelper.SortState SortState { get; set; } = new();
 
 	// Variables to hold the data supplied by the UI elements
-	internal string? BasePolicyGUID { get; set => SP(ref field, value); }
+	internal string? BasePolicyGUID { get; set => SPT(ref field, value); }
 	internal string? PolicyToAddLogsTo { get; set => SP(ref field, value); }
 	internal string? BasePolicyXMLFile { get; set => SP(ref field, value); }
 
@@ -137,7 +137,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 	{
 		get; set
 		{
-			if (SP(ref field, value))
+			if (SPT(ref field, value))
 			{
 				ApplyFilters();
 			}
@@ -153,7 +153,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 	/// </summary>
 	private string? finalSupplementalPolicyPath;
 
-	internal string? PolicyNameTextBox { get; set => SP(ref field, value); }
+	internal string? PolicyNameTextBox { get; set => SPT(ref field, value); }
 
 	internal bool DeployPolicyToggle { get; set => SP(ref field, value); }
 
@@ -179,7 +179,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 	} = 1;
 
 
-	internal string? DeviceNameTextBox { get; set => SP(ref field, value); }
+	internal string? DeviceNameTextBox { get; set => SPT(ref field, value); }
 
 	#region LISTVIEW IMPLEMENTATIONS
 

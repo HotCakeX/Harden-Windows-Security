@@ -189,13 +189,13 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		get; set => SP(ref field, value);
 	} = string.Empty;
 
-	internal string? PolicyIDTextBox { get; set => SP(ref field, value); }
+	internal string? PolicyIDTextBox { get; set => SPT(ref field, value); }
 
-	internal string? PolicyBaseIDTextBox { get; set => SP(ref field, value); }
+	internal string? PolicyBaseIDTextBox { get; set => SPT(ref field, value); }
 
-	internal string? PolicyVersionTextBox { get; set => SP(ref field, value); }
+	internal string? PolicyVersionTextBox { get; set => SPT(ref field, value); }
 
-	internal string? PolicyInfoIDTextBox { get; set => SP(ref field, value); }
+	internal string? PolicyInfoIDTextBox { get; set => SPT(ref field, value); }
 
 	internal PolicyType? PolicyTypeComboBox { get; set => SP(ref field, value); }
 
@@ -204,7 +204,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	internal string? HVCIOptionComboBox { get; set => SP(ref field, value); }
 
-	internal string? SearchTextBox { get; set => SP(ref field, value); }
+	internal string? SearchTextBox { get; set => SPT(ref field, value); }
 
 	#region Counting properties
 

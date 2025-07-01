@@ -181,7 +181,7 @@
 
                                             <TextBox x:Uid="BasePolicyGUIDDescription"
                                                      Width="300" Margin="10"
-                                                     Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay}"
+                                                     Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      VerticalAlignment="Center"
                                                      VerticalContentAlignment="Center" />
 
@@ -307,7 +307,7 @@
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="3" VerticalSpacing="8">
                                 <TextBox Width="300"
                                          Header="Optional: Choose a policy name"
-                                         Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay}"
+                                         Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          PlaceholderText="Policy Name..."/>
                             </controls:WrapPanel>
                         </Flyout>

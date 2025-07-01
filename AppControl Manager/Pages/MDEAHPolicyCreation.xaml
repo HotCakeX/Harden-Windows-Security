@@ -489,7 +489,7 @@
                                 <TextBox Width="300"
                                          Header="Optional: Choose a device name to filter the logs before retrieval"
                                          PlaceholderText="Device Name..."
-                                         Text="{x:Bind ViewModel.DeviceNameTextBox, Mode=TwoWay}"/>
+                                         Text="{x:Bind ViewModel.DeviceNameTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </controls:WrapPanel>
                         </Flyout>
                     </Button.Flyout>
@@ -660,7 +660,7 @@
                                                      Margin="10"
                                                      VerticalAlignment="Center"
                                                      VerticalContentAlignment="Center"
-                                                     Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay}" />
+                                                     Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                                             <Button Margin="5"
                                                     x:Uid="SubmitButton"
@@ -729,7 +729,7 @@
                             <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="3" VerticalSpacing="8">
                                 <TextBox Width="300"
                                          Header="Optional: Choose a policy name"
-                                         Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay}"
+                                         Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          PlaceholderText="Policy Name..."/>
                             </controls:WrapPanel>
                         </Flyout>

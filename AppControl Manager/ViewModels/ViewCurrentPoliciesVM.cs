@@ -87,7 +87,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		get; set => SP(ref field, value);
 	} = "Number of Policies: 0";
 
-	internal string? SearchBoxTextBox { get; set => SP(ref field, value); }
+	internal string? SearchBoxTextBox { get; set => SPT(ref field, value); }
 
 	internal bool RemovePolicyButtonState { get; set => SP(ref field, value); }
 

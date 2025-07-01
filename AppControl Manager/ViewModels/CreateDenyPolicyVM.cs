@@ -118,7 +118,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// <summary>
 	/// Selected Deny policy name
 	/// </summary>
-	internal string? filesAndFoldersDenyPolicyName { get; set => SP(ref field, value); }
+	internal string? filesAndFoldersDenyPolicyName { get; set => SPT(ref field, value); }
 
 	internal bool filesAndFoldersDeployButton { get; set => SP(ref field, value); }
 
@@ -593,7 +593,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	{
 		get; set
 		{
-			if (SP(ref field, value))
+			if (SPT(ref field, value))
 			{
 				ApplyFilters();
 			}
@@ -673,7 +673,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	{
 		get; set
 		{
-			if (SP(ref field, value))
+			if (SPT(ref field, value))
 			{
 				PFNAppFilteringTextBox_TextChanged();
 			}
@@ -683,7 +683,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// <summary>
 	/// The name of the Deny policy that will be created.
 	/// </summary>
-	internal string? PFNBasedDenyPolicyName { get; set => SP(ref field, value); }
+	internal string? PFNBasedDenyPolicyName { get; set => SPT(ref field, value); }
 
 	/// <summary>
 	/// Event handler for the Refresh button to get the apps list
@@ -1016,12 +1016,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// <summary>
 	/// The custom pattern used for file rule.
 	/// </summary>
-	internal string? DenyPolicyCustomPatternBasedCustomPatternTextBox { get; set => SP(ref field, value); }
+	internal string? DenyPolicyCustomPatternBasedCustomPatternTextBox { get; set => SPT(ref field, value); }
 
 	/// <summary>
 	/// Selected Deny policy name
 	/// </summary>
-	internal string? CustomPatternBasedFileRuleBasedDenyPolicyName { get; set => SP(ref field, value); }
+	internal string? CustomPatternBasedFileRuleBasedDenyPolicyName { get; set => SPT(ref field, value); }
 
 	/// <summary>
 	/// Initialization details for the main Create button for the Pattern Based FileRule section

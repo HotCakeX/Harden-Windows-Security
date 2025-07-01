@@ -300,7 +300,7 @@
                                                IsClickEnabled="False"
                                                Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                IsActionIconVisible="False">
-                            <TextBox Text="{x:Bind ViewModel.filesAndFoldersDenyPolicyName, Mode=TwoWay}"
+                            <TextBox Text="{x:Bind ViewModel.filesAndFoldersDenyPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      x:Uid="DenyPolicyNameTextBox"
                                      Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"/>
@@ -450,7 +450,7 @@
                                                IsClickEnabled="False"
                                                IsActionIconVisible="False">
                             <TextBox IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
-                                     Text="{x:Bind ViewModel.PFNBasedDenyPolicyName, Mode=TwoWay}"
+                                     Text="{x:Bind ViewModel.PFNBasedDenyPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      x:Uid="DenyPolicyNameTextBox"/>
                         </controls:SettingsCard>
@@ -608,14 +608,14 @@
                                                Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                IsActionIconVisible="False">
                             <TextBox IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
-                                     Text="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedDenyPolicyName, Mode=TwoWay}"
+                                     Text="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedDenyPolicyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                      x:Uid="DenyPolicyNameTextBox"/>
                         </controls:SettingsCard>
 
                         <controls:SettingsCard x:Uid="DenyPolicyCustomPatternBasedFileRuleActualPatternSettingsCard" IsClickEnabled="False" IsActionIconVisible="False">
                             <TextBox x:Uid="DenyPolicyCustomPatternBasedCustomPatternTextBox"
-                                     Text="{x:Bind ViewModel.DenyPolicyCustomPatternBasedCustomPatternTextBox, Mode=TwoWay}"
+                                     Text="{x:Bind ViewModel.DenyPolicyCustomPatternBasedCustomPatternTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
                                      TextWrapping="Wrap"
                                      MaxWidth="400"/>

@@ -84,7 +84,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	{
 		get; set
 		{
-			if (SP(ref field, value))
+			if (SPT(ref field, value))
 			{
 				SearchBox_TextChanged();
 			}

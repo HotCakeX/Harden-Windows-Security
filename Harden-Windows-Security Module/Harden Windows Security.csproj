@@ -10,6 +10,10 @@
     <!-- Reference to the manifest file -->
     <ApplicationManifest>app.manifest</ApplicationManifest>
 
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/tools/sdk-errors/netsdk1100 -->
+    <!-- To satisfy the Dependency Graph action on GitHub -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+
     <!-- This would activate all analyzers -->
     <!-- <AnalysisMode>All</AnalysisMode>  -->
 

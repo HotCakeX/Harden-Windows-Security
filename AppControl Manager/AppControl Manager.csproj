@@ -14,6 +14,10 @@
         <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#invariantglobalization -->
         <InvariantGlobalization>true</InvariantGlobalization>
 
+        <!-- https://learn.microsoft.com/en-us/dotnet/core/tools/sdk-errors/netsdk1100 -->
+        <!-- To satisfy the Dependency Graph action on GitHub -->
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+
         <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
 
         <RootNamespace>AppControlManager</RootNamespace>

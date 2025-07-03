@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="arm64" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="PartnerCenter.csproj" />
+</Solution>
+

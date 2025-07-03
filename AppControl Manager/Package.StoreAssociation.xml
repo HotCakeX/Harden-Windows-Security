@@ -364,6 +364,13 @@
     <MainPackageIdentityName>VioletHansen.AppControlManager</MainPackageIdentityName>
     <ReservedNames>
       <ReservedName>AppControl Manager</ReservedName>
+      <ReservedName>AppControl Manager – חסימה ואישור יישומים וקבצים</ReservedName>
+      <ReservedName>AppControl Manager – حظر والسماح بالتطبيقات والملفات</ReservedName>
+      <ReservedName>AppControl Manager – Αποκλεισμός και Έγκριση Εφαρμογών και Αρχείων</ReservedName>
+      <ReservedName>AppControl Manager – Blokowanie i zezwalanie na aplikacje i pliki</ReservedName>
+      <ReservedName>AppControl Manager – Bloqueo y permiso de aplicaciones y archivos</ReservedName>
+      <ReservedName>AppControl Manager – एप्लिकेशन और फ़ाइलों का निषेध एवं स्वीकृति</ReservedName>
+      <ReservedName>AppControl Manager – ആപ്ലിക്കേഷനുകളും ഫയലുകളും നിരോധനവും അനുമതിയും</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>

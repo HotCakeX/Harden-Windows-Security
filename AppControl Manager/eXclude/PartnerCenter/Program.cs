@@ -154,6 +154,8 @@ internal static class Helpers
 	private const int ExtendedTimeoutSeconds = 300;
 	private const int PackageUploadTimeoutSeconds = 1800; // 30 minutes
 	private const int DeleteDelayMinutes = 3;
+	private const int CommitStatusTimeoutMinutes = 30; // timeout for commit status checking
+	private const int CommitStatusCheckIntervalSeconds = 10; // Check every 10 seconds
 
 	// Set to false when in production
 	private const bool WriteSensitiveLogsEnabled = false;
@@ -427,7 +429,7 @@ internal static class Helpers
 		}
 
 		// Create new draft submission (only if we deleted the existing one or there was none)
-		if (deleteExistingDraft || existingSubmissionId == null)
+		if (deleteExistingDraft || existingSubmissionId is null)
 		{
 			Console.WriteLine("Creating new draft submission...");
 			string newSubmissionId = await CreateDraftSubmissionAsync(accessToken, applicationId);
@@ -473,6 +475,173 @@ internal static class Helpers
 				throw new HttpRequestException($"Get submission config request failed with status {response.StatusCode}.");
 			}
 		}, "get submission config");
+	}
+
+	/// <summary>
+	/// Waits for submission commit processing to complete by checking the submission status periodically.
+	/// Follows the Microsoft sample pattern of waiting for commit status changes.
+	/// </summary>
+	internal static async Task WaitForCommitProcessingAsync(
+		string accessToken,
+		string applicationId,
+		string submissionId)
+	{
+		Console.WriteLine("Waiting for submission commit processing to complete...");
+
+		DateTime startTime = DateTime.UtcNow;
+		DateTime timeoutTime = startTime.AddMinutes(CommitStatusTimeoutMinutes);
+
+		string? submissionStatus = null;
+
+		do
+		{
+			if (DateTime.UtcNow >= timeoutTime)
+			{
+				TimeSpan totalElapsed = DateTime.UtcNow - startTime;
+				throw new TimeoutException($"Commit processing timeout after {totalElapsed.TotalMinutes:F1} minutes. Status was: {submissionStatus}");
+			}
+
+			await Task.Delay(TimeSpan.FromSeconds(CommitStatusCheckIntervalSeconds));
+
+			try
+			{
+				string submissionJson = await GetSubmissionConfigAsync(accessToken, applicationId, submissionId);
+				using JsonDocument doc = JsonDocument.Parse(submissionJson);
+				JsonElement root = doc.RootElement;
+
+				if (root.TryGetProperty("status", out JsonElement statusElement))
+				{
+					submissionStatus = statusElement.GetString();
+					Console.WriteLine($"Current status: {submissionStatus}");
+				}
+				else
+				{
+					Console.WriteLine("No status found in submission response");
+					submissionStatus = "Unknown";
+				}
+			}
+			catch (Exception ex)
+			{
+				WriteSensitiveLogs($"Error during commit status check: {ex.Message}");
+				Console.WriteLine($"Retrying in {CommitStatusCheckIntervalSeconds} seconds...");
+			}
+		}
+		while (string.Equals(submissionStatus, "CommitStarted", StringComparison.OrdinalIgnoreCase));
+
+		if (string.Equals(submissionStatus, "CommitFailed", StringComparison.OrdinalIgnoreCase))
+		{
+			Console.WriteLine("Submission has failed. Please check the submission details for errors.");
+
+			// Get detailed error information
+			try
+			{
+				await CheckSubmissionStatusAsync(accessToken, applicationId, submissionId);
+			}
+			catch (Exception ex)
+			{
+				WriteSensitiveLogs($"Failed to get detailed error information: {ex.Message}");
+			}
+
+			throw new InvalidOperationException("Submission commit failed");
+		}
+		else
+		{
+			Console.WriteLine($"Submission commit completed successfully! Final status: {submissionStatus}");
+		}
+	}
+
+	/// <summary>
+	/// Checks the status of a submission and displays detailed information.
+	/// </summary>
+	internal static async Task CheckSubmissionStatusAsync(
+		string accessToken,
+		string applicationId,
+		string submissionId)
+	{
+		WriteSensitiveLogs($"Checking status for submission ID: {submissionId}");
+
+		string submissionJson = await GetSubmissionConfigAsync(accessToken, applicationId, submissionId);
+
+		using JsonDocument doc = JsonDocument.Parse(submissionJson);
+		JsonElement root = doc.RootElement;
+
+		if (root.TryGetProperty("status", out JsonElement statusElement))
+		{
+			string? status = statusElement.GetString();
+			Console.WriteLine($"Submission Status: {status}");
+		}
+		else
+		{
+			Console.WriteLine("No status information found in submission.");
+		}
+
+		if (root.TryGetProperty("statusDetails", out JsonElement statusDetailsElement))
+		{
+			Console.WriteLine("\nStatus Details:");
+
+			if (statusDetailsElement.TryGetProperty("errors", out JsonElement errorsElement) && errorsElement.GetArrayLength() > 0)
+			{
+				Console.WriteLine("Errors:");
+				foreach (JsonElement error in errorsElement.EnumerateArray())
+				{
+					if (error.TryGetProperty("code", out JsonElement codeElement) &&
+						error.TryGetProperty("details", out JsonElement detailsElement))
+					{
+						WriteSensitiveLogs($"  • {codeElement.GetString()}: {detailsElement.GetString()}");
+					}
+				}
+			}
+
+			if (statusDetailsElement.TryGetProperty("warnings", out JsonElement warningsElement) && warningsElement.GetArrayLength() > 0)
+			{
+				Console.WriteLine("Warnings:");
+				foreach (JsonElement warning in warningsElement.EnumerateArray())
+				{
+					if (warning.TryGetProperty("code", out JsonElement codeElement) &&
+						warning.TryGetProperty("details", out JsonElement detailsElement))
+					{
+						WriteSensitiveLogs($"  • {codeElement.GetString()}: {detailsElement.GetString()}");
+					}
+				}
+			}
+
+			if (statusDetailsElement.TryGetProperty("certificationNotes", out JsonElement certNotesElement))
+			{
+				string? certNotes = certNotesElement.GetString();
+				if (!string.IsNullOrEmpty(certNotes))
+				{
+					WriteSensitiveLogs($"Certification Notes: {certNotes}");
+				}
+			}
+		}
+
+		// Display submission dates if available
+		if (root.TryGetProperty("targetPublishDate", out JsonElement targetPublishDateElement))
+		{
+			string? targetPublishDate = targetPublishDateElement.GetString();
+			if (!string.IsNullOrEmpty(targetPublishDate))
+			{
+				WriteSensitiveLogs($"Target Publish Date: {targetPublishDate}");
+			}
+		}
+
+		// Display package information
+		if (root.TryGetProperty("applicationPackages", out JsonElement packagesElement) && packagesElement.GetArrayLength() > 0)
+		{
+			Console.WriteLine("\nApplication Packages:");
+			foreach (JsonElement package in packagesElement.EnumerateArray())
+			{
+				if (package.TryGetProperty("fileName", out JsonElement fileNameElement) &&
+					package.TryGetProperty("fileStatus", out JsonElement fileStatusElement))
+				{
+					string? fileName = fileNameElement.GetString();
+					string? fileStatus = fileStatusElement.GetString();
+					WriteSensitiveLogs($"  • {fileName} - Status: {fileStatus}");
+				}
+			}
+		}
+
+		Console.WriteLine("\nStatus check completed.");
 	}
 
 	/// <summary>
@@ -645,9 +814,7 @@ internal static class Helpers
 			Uri requestUrl = new($"https://manage.devcenter.microsoft.com/v1.0/my/applications/{applicationId}/submissions/{submissionId}");
 
 			using StringContent content = new(updatedJson, Encoding.UTF8, "application/json");
-			if (content.Headers is not null)
-				if (content.Headers.ContentType is not null)
-					content.Headers.ContentType.CharSet = "UTF-8";
+			_ = (content.Headers?.ContentType?.CharSet = "UTF-8");
 
 			using HttpResponseMessage response = await client.PutAsync(requestUrl, content);
 
@@ -714,10 +881,7 @@ internal static class Helpers
 			if (enUsNode != null)
 			{
 				JsonNode? baseListingNode = enUsNode["baseListing"];
-				if (baseListingNode != null)
-				{
-					baseListingNode["releaseNotes"] = releaseNotes;
-				}
+				_ = (baseListingNode?["releaseNotes"] = releaseNotes);
 			}
 		}
 
@@ -740,9 +904,7 @@ internal static class Helpers
 			Uri requestUrl = new($"https://manage.devcenter.microsoft.com/v1.0/my/applications/{applicationId}/submissions/{submissionId}");
 
 			using StringContent content = new(updatedJson, Encoding.UTF8, "application/json");
-			if (content.Headers is not null)
-				if (content.Headers.ContentType is not null)
-					content.Headers.ContentType.CharSet = "UTF-8";
+			_ = (content.Headers?.ContentType?.CharSet = "UTF-8");
 
 			using HttpResponseMessage response = await client.PutAsync(requestUrl, content);
 
@@ -855,9 +1017,20 @@ internal sealed class Program
 {
 	public static async Task Main(string[] args)
 	{
+		// Check if first argument is the status command
+		if (args.Length > 0 && args[0].Equals("status", StringComparison.OrdinalIgnoreCase))
+		{
+			await HandleStatusCommandAsync(args);
+			return;
+		}
+
 		if (args.Length != 6)
 		{
-			Console.WriteLine("Usage: <tokenEndpoint> <clientId> <clientSecret> <applicationId> <packageFilePath> <releaseNotesFilePath>");
+			Console.WriteLine("Usage for submission:");
+			Console.WriteLine("  <tokenEndpoint> <clientId> <clientSecret> <applicationId> <packageFilePath> <releaseNotesFilePath>");
+			Console.WriteLine();
+			Console.WriteLine("Usage for status check:");
+			Console.WriteLine("  status <tokenEndpoint> <clientId> <clientSecret> <applicationId>");
 			return;
 		}
 
@@ -917,6 +1090,56 @@ internal sealed class Program
 			applicationId,
 			submissionId);
 
+		Console.WriteLine("Waiting for commit processing to complete...");
+		await Helpers.WaitForCommitProcessingAsync(
+			accessToken,
+			applicationId,
+			submissionId);
+
 		Console.WriteLine("Submission process completed successfully.");
+	}
+
+	private static async Task HandleStatusCommandAsync(string[] args)
+	{
+		if (args.Length != 5)
+		{
+			Console.WriteLine("Usage for status check:");
+			Console.WriteLine("  status <tokenEndpoint> <clientId> <clientSecret> <applicationId>");
+			return;
+		}
+
+		string tokenEndpoint = args[1];
+		string clientId = args[2];
+		string clientSecret = args[3];
+		string applicationId = args[4];
+
+		const string scope = "https://manage.devcenter.microsoft.com";
+
+		try
+		{
+			Console.WriteLine("Getting authorization token...");
+			string accessToken = await Helpers.GetClientCredentialAccessToken(
+				tokenEndpoint,
+				clientId,
+				clientSecret,
+				scope);
+
+			Console.WriteLine("Authorization token received.");
+			Console.WriteLine("Getting pending submission ID...");
+			string? submissionId = await Helpers.GetPendingSubmissionIdAsync(accessToken, applicationId);
+
+			if (submissionId is null)
+			{
+				Console.WriteLine("No pending submission found for this application.");
+				return;
+			}
+
+			Console.WriteLine("Checking submission status...");
+			await Helpers.CheckSubmissionStatusAsync(accessToken, applicationId, submissionId);
+		}
+		catch (Exception ex)
+		{
+			Helpers.WriteSensitiveLogs($"Error checking submission status: {ex.Message}");
+		}
 	}
 }

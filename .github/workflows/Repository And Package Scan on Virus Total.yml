@@ -1,4 +1,9 @@
 name: Repository And Package Scan on Virus Total
+
+permissions:
+  contents: read
+  pull-requests: read
+  
 on:
   workflow_dispatch:
   release:  # to trigger on releases

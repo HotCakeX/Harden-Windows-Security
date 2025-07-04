@@ -29,15 +29,15 @@
   IgnorableNamespaces="mp uap uap2 uap3 uap4 uap5 uap6 uap7 uap8 uap10 uap11 uap12 uap16 uap17 uap18 desktop desktop4 desktop5 desktop10 com virtualization rescap">
 
   <Identity
-    Name="AppControlManager"
-    Publisher="CN=SelfSignedCertForAppControlManager"
+    Name="VioletHansen.AppControlManager"
+    Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189"
     Version="2.0.33.0" />
 
-  <mp:PhoneIdentity PhoneProductId="199a23ec-7cb6-4ab5-ab50-8baca348bc79" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="4157a676-f4c2-4a8c-a511-b7fb2255c6f5" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 
   <Properties>
     <DisplayName>AppControl Manager</DisplayName>
-    <PublisherDisplayName>SelfSignedCertForAppControlManager</PublisherDisplayName>
+    <PublisherDisplayName>Violet Hansen</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
     <uap10:PackageIntegrity>
       <uap10:Content Enforcement="on" />

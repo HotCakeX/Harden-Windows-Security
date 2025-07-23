@@ -74,6 +74,9 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			() => Step3InfoBar_Severity, value => Step3InfoBar_Severity = value,
 			() => Step3InfoBar_IsClosable, value => Step3InfoBar_IsClosable = value,
 			() => Step3InfoBar_Title, value => Step3InfoBar_Title = value);
+
+		CalculateColumnWidthLocalFiles();
+		CalculateColumnWidthEventLogs();
 	}
 
 	#region
@@ -86,7 +89,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
 	internal readonly List<FileIdentity> LocalFilesAllFileIdentities = [];
 
-	internal ListViewHelper.SortState SortStateLocalFiles { get; set; } = new();
+	private ListViewHelper.SortState SortStateLocalFiles { get; set; } = new();
 
 	// To store the FileIdentities displayed on the Event Logs ListView
 	internal readonly ObservableCollection<FileIdentity> EventLogsFileIdentities = [];
@@ -96,7 +99,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
 	internal readonly List<FileIdentity> EventLogsAllFileIdentities = [];
 
-	internal ListViewHelper.SortState SortStateEventLogs { get; set; } = new();
+	private ListViewHelper.SortState SortStateEventLogs { get; set; } = new();
 
 	#endregion
 
@@ -634,6 +637,8 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		LocalFilesAllFileIdentities.Clear();
 
 		UpdateTotalFiles(true);
+
+		CalculateColumnWidthLocalFiles();
 	}
 
 	/// <summary>
@@ -664,6 +669,8 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		EventLogsAllFileIdentities.Clear();
 
 		UpdateTotalLogs(true);
+
+		CalculateColumnWidthEventLogs();
 	}
 
 	/// <summary>
@@ -909,7 +916,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(lv.SelectedItems);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
 		}
 	}
 
@@ -1020,7 +1027,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(lv.SelectedItems);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
 		}
 	}
 
@@ -1605,7 +1612,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		if (sender is Button button && button.Tag is string key)
 		{
 			// Look up the mapping in the reusable property mappings dictionary.
-			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,
@@ -1624,7 +1631,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		if (sender is Button button && button.Tag is string key)
 		{
 			// Look up the mapping using the key.
-			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(mapping.Getter,
 										  EventLogsAllFileIdentitiesSearchText,

@@ -71,6 +71,9 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			() => CustomFilePathRulesInfoBarTitle, value => CustomFilePathRulesInfoBarTitle = value);
 
 		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));
+
+		// To adjust the initial width of the columns, giving them nice paddings.
+		CalculateColumnWidths();
 	}
 
 	#region Files and Folders scan
@@ -584,6 +587,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		FilesAndFoldersScanResults.Clear();
 		filesAndFoldersScanResultsList.Clear();
 		UpdateTotalFiles(true);
+		CalculateColumnWidths();
 	}
 
 	/// <summary>
@@ -774,13 +778,10 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		}
 
 		// Filter the original collection
-		List<GroupInfoListForPackagedAppView> filtered = [.. _originalContacts
-			.Select(group => new GroupInfoListForPackagedAppView(group.Where(app =>
-				app.DisplayName.Contains(PFNBasedSearchKeywordForAppsList, StringComparison.OrdinalIgnoreCase)))
-			{
-				Key = group.Key // Preserve the group key
-			})
-			.Where(group => group.Any())];
+		List<GroupInfoListForPackagedAppView> filtered = _originalContacts
+			.Select(group => new GroupInfoListForPackagedAppView(
+				items: group.Where(app => app.DisplayName.Contains(PFNBasedSearchKeywordForAppsList, StringComparison.OrdinalIgnoreCase)),
+				key: group.Key)).Where(group => group.Any()).ToList();
 
 		// Update the ListView source with the filtered data
 		PFNBasedAppsListItemsSource = new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
@@ -851,7 +852,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 		try
 		{
-
 			PFNElementsAreEnabled = false;
 
 			PFNInfoBar.IsClosable = false;

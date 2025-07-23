@@ -20,12 +20,29 @@ using System.IO;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
+#if HARDEN_WINDOWS_SECURITY
+using HardenWindowsSecurity;
+#endif
+
 namespace AppControlManager.Others;
+
+/// <summary>
+/// Determines the type of log that was received and if it needs additional actions taken.
+/// </summary>
+internal enum LogTypeIntel
+{
+	Information,
+	Error,
+	Warning,
+	InformationInteractionRequired, // Same as "Information" but also displays DialogBox to the user
+	WarningInteractionRequired, // Same as "Warning" but also displays DialogBox to the user
+	ErrorInteractionRequired, // Same as "Error" but also displays DialogBox to the user
+}
 
 internal static class Logger
 {
 	// The Logs file path
-	internal static readonly string LogFileName = Path.Combine(App.LogsDirectory, $"AppControlManager_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
+	internal static readonly string LogFileName = Path.Combine(App.LogsDirectory, $"{App.AppName}_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
 
 	// The log channel for high-performance asynchronous logging
 	private static readonly Channel<string> _logChannel = Channel.CreateUnbounded<string>(new UnboundedChannelOptions
@@ -75,7 +92,7 @@ internal static class Logger
 	/// Write the log to the file
 	/// </summary>
 	/// <param name="message"></param>
-	internal static void Write(string message)
+	internal static void Write(string message, LogTypeIntel logType = LogTypeIntel.Information)
 	{
 		string logEntry = $"{DateTime.Now}: {message}";
 

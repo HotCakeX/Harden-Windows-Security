@@ -19,10 +19,19 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AppControlManager.ViewModels;
 using Windows.Services.Store;
 
+#if HARDEN_WINDOWS_SECURITY
+using AppControlManager.Others;
+using HardenWindowsSecurity.ViewModels;
+using UpdateVM = HardenWindowsSecurity.ViewModels.UpdateVM;
+namespace HardenWindowsSecurity.Others;
+#endif
+
+#if APP_CONTROL_MANAGER
+using AppControlManager.ViewModels;
 namespace AppControlManager.Others;
+#endif
 
 /// <summary>
 /// AppUpdate class is responsible for checking for application updates.

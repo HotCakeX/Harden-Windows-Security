@@ -15,11 +15,17 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
+#if APP_CONTROL_MANAGER
+using AppControlManager.ViewModels;
 namespace AppControlManager.Pages;
+#endif
+#if HARDEN_WINDOWS_SECURITY
+using HardenWindowsSecurity.ViewModels;
+namespace HardenWindowsSecurity.Pages;
+#endif
 
 internal sealed partial class Settings : Page
 {

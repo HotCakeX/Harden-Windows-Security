@@ -114,7 +114,7 @@ internal static class GetAppsList
 															 // GroupInfoListForPackagedAppView is a simple custom class that has an IEnumerable type attribute, and
 															 // a key attribute. The IGrouping-typed variable g now holds the App objects,
 															 // and these objects will be used to create a new GroupInfoListForPackagedAppView object.
-															 select new GroupInfoListForPackagedAppView(g) { Key = g.Key };
+															 select new GroupInfoListForPackagedAppView(items: g, key: g.Key);
 
 		return new(query);
 	}

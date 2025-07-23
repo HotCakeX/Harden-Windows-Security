@@ -18,6 +18,10 @@
 using System;
 using System.Runtime.InteropServices;
 
+#if HARDEN_WINDOWS_SECURITY
+using HardenWindowsSecurity;
+#endif
+
 namespace AppControlManager.Others;
 
 internal unsafe static class Relaunch

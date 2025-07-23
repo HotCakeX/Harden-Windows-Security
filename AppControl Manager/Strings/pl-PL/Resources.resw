@@ -2073,7 +2073,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Wyświetl wykryte pliki trybu jądra, które zostaną użyte do utworzenia zasad trybu wymuszonego. Usuń z listy elementy, których nie chcesz uwzględniać w ostatecznych zasadach trybu ścisłego jądra.</value>
   </data>
   <data name="UpdatePageTitle.Text" xml:space="preserve">
-    <value>Sprawdź aktualizacje na tej stronie. Możesz również włączyć automatyczne sprawdzanie aktualizacji, które będzie miało miejsce raz podczas uruchamiania, a zostaniesz powiadomiony, gdy dostępna będzie nowa wersja. Ta strona jest dostępna tylko wtedy, gdy Menedżer AppControl jest zainstalowany ze źródła GitHub.</value>
+    <value>Sprawdź aktualizacje na tej stronie. Możesz również włączyć automatyczne sprawdzanie aktualizacji, które będzie miało miejsce raz podczas uruchamiania, a zostaniesz powiadomiony, gdy dostępna będzie nowa wersja.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
     <value>Sprawdź poprawność zasad kontroli aplikacji, aby upewnić się, że są zgodne z oficjalnym schematem. Jeśli ręcznie zmodyfikowałeś pliki zasad XML i chcesz upewnić się, że Twoje modyfikacje są poprawne, użyj tej funkcji, aby je zweryfikować.</value>

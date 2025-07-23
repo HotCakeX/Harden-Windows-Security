@@ -27,19 +27,36 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Graphics;
 using WinRT;
 
+#if APP_CONTROL_MANAGER
 namespace AppControlManager.WindowComponents;
+#endif
+#if HARDEN_WINDOWS_SECURITY
+using AppControlManager.WindowComponents;
+using HardenWindowsSecurity.ViewModels;
+namespace HardenWindowsSecurity.WindowComponents;
+#endif
 
 internal sealed class NavigationService
 {
 	internal readonly MainWindowVM mainWindowVM;
-	private readonly SidebarVM sidebarVM;
 	private bool NavItemsHaveBeenCollected;
+
+#if APP_CONTROL_MANAGER
+private readonly SidebarVM sidebarVM;
 
 	internal NavigationService(MainWindowVM _MainWindowVM, SidebarVM _SidebarVM)
 	{
 		mainWindowVM = _MainWindowVM;
 		sidebarVM = _SidebarVM;
 	}
+#endif
+
+#if HARDEN_WINDOWS_SECURITY
+	internal NavigationService(MainWindowVM _MainWindowVM)
+	{
+		mainWindowVM = _MainWindowVM;
+	}
+#endif
 
 	private Frame? _frame;
 	private NavigationView? MainNavigation;
@@ -59,6 +76,7 @@ internal sealed class NavigationService
 		}
 	}
 
+#if APP_CONTROL_MANAGER
 	/// <summary>
 	/// Event handler to change visibility of the AnimatedIcons on the currently visible page in the frame
 	/// It is called by the Sidebar's Browse/Clear buttons' event handlers
@@ -113,6 +131,7 @@ internal sealed class NavigationService
 			sidebarVM.SidebarBasePolicySelectButtonLightAnimatedIconVisibility = Visibility.Collapsed;
 		}
 	}
+#endif
 
 	/// <summary>
 	/// Main navigation method that is used by the search bar, direct clicks on the main navigation items
@@ -180,7 +199,7 @@ internal sealed class NavigationService
 				panel.Children.Add(extraInfoCheckBox);
 
 				// Create and configure the ContentDialog.
-				using CustomUIElements.ContentDialogV2 dialog = new()
+				using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
 				{
 					Title = GlobalVars.GetStr("AppElevationNoticeTitle"),
 					Content = panel,
@@ -265,8 +284,10 @@ internal sealed class NavigationService
 		// Navigate to the new page
 		_ = _frame.Navigate(nextNavPageType, null, new DrillInNavigationTransitionInfo());
 
+#if APP_CONTROL_MANAGER
 		// For page Interface and light augmentation
 		AffectPagesAnimatedIconsVisibilities(_frame);
+#endif
 
 		SetCrumbBar(nextNavPageType);
 	}
@@ -311,6 +332,7 @@ internal sealed class NavigationService
 		}
 	}
 
+#if APP_CONTROL_MANAGER
 	/// <summary>
 	/// Event handler for the sidebar base policy browse button
 	/// </summary>
@@ -341,6 +363,7 @@ internal sealed class NavigationService
 
 		sidebarVM.Nullify();
 	}
+#endif
 
 	/// <summary>
 	/// Used to refresh the Settings page but re-navigating to it so we can display the new language after user changes app language.
@@ -414,9 +437,10 @@ internal sealed class NavigationService
 			// Get the current page after navigating back
 			Type currentPage = _frame.CurrentSourcePageType;
 
+#if APP_CONTROL_MANAGER
 			// For page Interface and light augmentation
 			AffectPagesAnimatedIconsVisibilities(_frame);
-
+#endif
 			SetCrumbBar(currentPage);
 		}
 	}

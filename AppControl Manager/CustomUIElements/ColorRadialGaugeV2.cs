@@ -26,6 +26,11 @@ using Windows.Foundation;
 using Windows.UI;
 using Microsoft.UI;
 
+#if HARDEN_WINDOWS_SECURITY
+using HardenWindowsSecurity;
+#pragma warning disable CA1812
+#endif
+
 namespace AppControlManager.CustomUIElements;
 
 /// <summary>

@@ -20,7 +20,12 @@ using AppControlManager.Others;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
+#if APP_CONTROL_MANAGER
 namespace AppControlManager.Pages;
+#endif
+#if HARDEN_WINDOWS_SECURITY
+namespace HardenWindowsSecurity.Pages;
+#endif
 
 /// <summary>
 /// Initializes the GitHubDocumentation component, sets the WebView2 background color, and manages navigation events.
@@ -78,7 +83,12 @@ internal sealed partial class GitHubDocumentation : Page
 	/// </summary>
 	private void HomeButton_Click()
 	{
+#if APP_CONTROL_MANAGER
 		GitHubDocumentationWebView2.Source = new Uri("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction");
+#endif
+#if HARDEN_WINDOWS_SECURITY
+		GitHubDocumentationWebView2.Source = new Uri("https://github.com/HotCakeX/Harden-Windows-Security");
+#endif
 	}
 
 	// Update the state of navigation buttons when navigation is completed so that the Back/Forward buttons will be enabled only when they can be used

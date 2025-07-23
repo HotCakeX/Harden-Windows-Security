@@ -1,7 +1,3 @@
-* The Rust interop code is no longer in a separate dll but rather absorbed into the main executable of the AppControl Manager, improving security and performance.
-
-* When you right-click or hold + tap on an entry in a List View and select to open it in file explorer, the file will be scrolled to if it's down in the list and it will be highlighted, allowing you to quickly locate it.
+* Improved various aspects of ListViews in the app. Their column widths have more paddings to look better when the list is empty. Also some ListViews wouldn't maintain horizontal scroll position when you performed search and column sorting. This has been fixed.
 
 * Updated NuGet dependencies.
-
-* When you enable Sound in the app settings (it is off by default), there will be sound effects for typing in the text fields in the app.

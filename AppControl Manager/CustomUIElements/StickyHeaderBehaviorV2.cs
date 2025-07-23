@@ -39,6 +39,10 @@ THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED
 
  */
 
+#if HARDEN_WINDOWS_SECURITY
+#pragma warning disable CA1812
+#endif
+
 using System.Numerics;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations.Expressions;

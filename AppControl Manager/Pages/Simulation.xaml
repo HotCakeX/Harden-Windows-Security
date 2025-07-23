@@ -282,21 +282,22 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth14, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth15, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <Button x:Uid="PathColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByPath, Mode=OneWay}"/>
-                        <Button x:Uid="SourceColumnHeaderBtn" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySource, Mode=OneWay}"/>
-                        <Button x:Uid="IsAuthorizedColumnHeaderBtn" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByIsAuthorized, Mode=OneWay}"/>
-                        <Button x:Uid="MatchCriteriaColumnHeaderBtn" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByMatchCriteria, Mode=OneWay}"/>
-                        <Button x:Uid="SpecificFileNameLevelMatchCriteriaColumnHeaderBtn" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySpecificFileNameLevelMatchCriteria, Mode=OneWay}"/>
-                        <Button x:Uid="SignerIDColumnHeaderBtn" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySignerID, Mode=OneWay}"/>
-                        <Button x:Uid="SignerNameColumnHeaderBtn" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySignerName, Mode=OneWay}"/>
-                        <Button x:Uid="SignerCertRootColumnHeaderBtn" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySignerCertRoot, Mode=OneWay}"/>
-                        <Button x:Uid="SignerCertPublisherColumnHeaderBtn" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySignerCertPublisher, Mode=OneWay}"/>
-                        <Button x:Uid="SignerScopeColumnHeaderBtn" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySignerScope, Mode=OneWay}"/>
-                        <Button x:Uid="CertSubjectCNColumnHeaderBtn" Grid.Column="10" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByCertSubjectCN, Mode=OneWay}"/>
-                        <Button x:Uid="CertIssuerCNColumnHeaderBtn" Grid.Column="11" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByCertIssuerCN, Mode=OneWay}"/>
-                        <Button x:Uid="CertNotAfterColumnHeaderBtn" Grid.Column="12" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByCertNotAfter, Mode=OneWay}"/>
-                        <Button x:Uid="CertTBSValueColumnHeaderBtn" Grid.Column="13" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByCertTBSValue, Mode=OneWay}"/>
-                        <Button x:Uid="FilePathColumnHeaderBtn" Grid.Column="14" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByFilePath, Mode=OneWay}"/>
+                        <Button x:Uid="PathColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Tag="Path" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SourceColumnHeaderBtn" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="Source" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="IsAuthorizedColumnHeaderBtn" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsAuthorized" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="MatchCriteriaColumnHeaderBtn" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="MatchCriteria" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SpecificFileNameLevelMatchCriteriaColumnHeaderBtn" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="SpecificFileNameLevelMatchCriteria" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SignerIDColumnHeaderBtn" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="SignerID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SignerNameColumnHeaderBtn" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="SignerName" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SignerCertRootColumnHeaderBtn" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="SignerCertRoot" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SignerCertPublisherColumnHeaderBtn" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="SignerCertPublisher" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SignerScopeColumnHeaderBtn" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="SignerScope" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="CertSubjectCNColumnHeaderBtn" Grid.Column="10" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="CertSubjectCN" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="CertIssuerCNColumnHeaderBtn" Grid.Column="11" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="CertIssuerCN" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="CertNotAfterColumnHeaderBtn" Grid.Column="12" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="CertNotAfter" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="CertTBSValueColumnHeaderBtn" Grid.Column="13" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="CertTBSValue" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="FilePathColumnHeaderBtn" Grid.Column="14" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="FilePath" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>
@@ -309,9 +310,9 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModelSimulationVM.ListViewFlyoutMenuCopy_Click}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModelSimulationVM.CopySelectedPolicies_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModelSimulationVM.CtrlC_Invoked}"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModelSimulationVM.CopySelectedPolicies_Click}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
@@ -325,91 +326,91 @@
 
                                     <MenuFlyoutSubItem.Items>
 
-                                        <MenuFlyoutItem x:Uid="PathHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyPath_Click}">
+                                        <MenuFlyoutItem x:Uid="PathHeader" Tag="Path" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SourceHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySource_Click}">
+                                        <MenuFlyoutItem x:Uid="SourceHeader" Tag="Source" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsAuthorizedHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyIsAuthorized_Click}">
+                                        <MenuFlyoutItem x:Uid="IsAuthorizedHeader" Tag="IsAuthorized" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="MatchCriteriaHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyMatchCriteria_Click}">
+                                        <MenuFlyoutItem x:Uid="MatchCriteriaHeader" Tag="MatchCriteria" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SpecificFileNameLevelMatchCriteriaHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySpecificFileNameLevelMatch_Click}">
+                                        <MenuFlyoutItem x:Uid="SpecificFileNameLevelMatchCriteriaHeader" Tag="SpecificFileNameLevelMatchCriteria" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignerIDHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySignerID_Click}">
+                                        <MenuFlyoutItem x:Uid="SignerIDHeader" Tag="SignerID" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignerNameHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySignerName_Click}">
+                                        <MenuFlyoutItem x:Uid="SignerNameHeader" Tag="SignerName" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignerCertRootHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySignerCertRoot_Click}">
+                                        <MenuFlyoutItem x:Uid="SignerCertRootHeader" Tag="SignerCertRoot" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignerCertPublisherHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySignerCertPublisher_Click}">
+                                        <MenuFlyoutItem x:Uid="SignerCertPublisherHeader" Tag="SignerCertPublisher" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SignerScopeHeader" Click="{x:Bind ParentViewModelSimulationVM.CopySignerScope_Click}">
+                                        <MenuFlyoutItem x:Uid="SignerScopeHeader" Tag="SignerScope" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="CertSubjectCNHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyCertSubjectCN_Click}">
+                                        <MenuFlyoutItem x:Uid="CertSubjectCNHeader" Tag="CertSubjectCN" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="CertIssuerCNHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyCertIssuerCN_Click}">
+                                        <MenuFlyoutItem x:Uid="CertIssuerCNHeader" Tag="CertIssuerCN" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="CertNotAfterHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyCertNotAfter_Click}">
+                                        <MenuFlyoutItem x:Uid="CertNotAfterHeader" Tag="CertNotAfter" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="CertTBSValueHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyCertTBSValue_Click}">
+                                        <MenuFlyoutItem x:Uid="CertTBSValueHeader" Tag="CertTBSValue" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FilePathHeader" Click="{x:Bind ParentViewModelSimulationVM.CopyFilePath_Click}">
+                                        <MenuFlyoutItem x:Uid="FilePathHeader" Tag="FilePath" Click="{x:Bind ParentViewModelSimulationVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>

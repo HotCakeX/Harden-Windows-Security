@@ -17,22 +17,20 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
@@ -46,6 +44,8 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
+
+		CalculateColumnWidths();
 	}
 
 	internal readonly InfoBarSettings MainInfoBar;
@@ -166,7 +166,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			return;
 
 		// Get the ListView ScrollViewer info
-		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
+		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.View_File_Certificates);
 
 		double? savedHorizontal = null;
 		if (Sv != null)
@@ -207,203 +207,43 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 	#region Sort
 
-	/// <summary>
-	/// Enum representing the sort columns for certificate items.
-	/// </summary>
-	private enum CertificateSortColumn
-	{
-		SignerNumber,
-		Type,
-		SubjectCommonName,
-		IssuerCommonName,
-		NotBefore,
-		NotAfter,
-		HashingAlgorithm,
-		SerialNumber,
-		Thumbprint,
-		TBSHash,
-		ExtensionOIDs
-	}
+	private ListViewHelper.SortState SortState { get; set; } = new();
 
-	// Sorting state: current column and sort direction.
-	private CertificateSortColumn? _currentSortColumn;
-	private bool _isDescending = true; // column defaults to descending.
-
-	/// <summary>
-	/// Common sort method that determines sort column and toggles direction.
-	/// </summary>
-	/// <param name="newSortColumn">The column to sort by.</param>
-	private async void Sort(CertificateSortColumn newSortColumn)
-	{
-		try
+	// Pre‑computed property getters for high performance.
+	// Used for column sorting and column copying (single cell and entire row), for all ListViews that display FileCertificateInfoCol data type
+	private static readonly FrozenDictionary<string, (string Label, Func<FileCertificateInfoCol, object?> Getter)> FileCertificateInfoColPropertyMappings
+		= new Dictionary<string, (string Label, Func<FileCertificateInfoCol, object?> Getter)>
 		{
+			{ "SignerNumber",      (GlobalVars.GetStr("SignerNumberHeader/Text") + ": ",      fc => fc.SignerNumber) },
+			{ "Type",              (GlobalVars.GetStr("TypeHeader/Text") + ": ",              fc => fc.Type) },
+			{ "SubjectCN",         (GlobalVars.GetStr("SubjectCommonNameHeader/Text") + ": ", fc => fc.SubjectCN) },
+			{ "IssuerCN",          (GlobalVars.GetStr("IssuerCommonNameHeader/Text") + ": ",  fc => fc.IssuerCN) },
+			{ "NotBefore",         (GlobalVars.GetStr("NotBeforeHeader/Text") + ": ",         fc => fc.NotBefore) },
+			{ "NotAfter",          (GlobalVars.GetStr("NotAfterHeader/Text") + ": ",          fc => fc.NotAfter) },
+			{ "HashingAlgorithm",  (GlobalVars.GetStr("HashingAlgorithmHeader/Text") + ": ",  fc => fc.HashingAlgorithm) },
+			{ "SerialNumber",      (GlobalVars.GetStr("SerialNumberHeader/Text") + ": ",      fc => fc.SerialNumber) },
+			{ "Thumbprint",        (GlobalVars.GetStr("ThumbprintHeader/Text") + ": ",        fc => fc.Thumbprint) },
+			{ "TBSHash",           (GlobalVars.GetStr("TBSHashHeader/Text") + ": ",           fc => fc.TBSHash) },
+			{ "OIDs",              (GlobalVars.GetStr("ExtensionOIDsHeader/Text") + ": ",     fc => fc.OIDs) }
+		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
-			// Get the ListView ScrollViewer info
-			ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
-
-			double? savedHorizontal = null;
-			if (Sv != null)
-			{
-				savedHorizontal = Sv.HorizontalOffset;
-			}
-
-
-			// Toggle sort order if the same column is clicked.
-			if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
-			{
-				_isDescending = !_isDescending;
-			}
-			else
-			{
-				_currentSortColumn = newSortColumn;
-				_isDescending = true;
-			}
-
-			// Determine if there is active search text.
-			bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBoxTextBox);
-			List<FileCertificateInfoCol> sourceData = isSearchEmpty
-				? FilteredCertificates
-				: FileCertificates.ToList();
-
-			List<FileCertificateInfoCol> sortedData = [];
-
-			switch (newSortColumn)
-			{
-				case CertificateSortColumn.SignerNumber:
-					sortedData = _isDescending
-						? sourceData.OrderByDescending(c => c.SignerNumber).ToList()
-						: sourceData.OrderBy(c => c.SignerNumber).ToList();
-					break;
-				case CertificateSortColumn.Type:
-					sortedData = _isDescending
-						? sourceData.OrderByDescending(c => c.Type).ToList()
-						: sourceData.OrderBy(c => c.Type).ToList();
-					break;
-				case CertificateSortColumn.SubjectCommonName:
-					sortedData = _isDescending
-						? sourceData.OrderByDescending(c => c.SubjectCN).ToList()
-						: sourceData.OrderBy(c => c.SubjectCN).ToList();
-					break;
-				case CertificateSortColumn.IssuerCommonName:
-					sortedData = _isDescending
-						? sourceData.OrderByDescending(c => c.IssuerCN).ToList()
-						: sourceData.OrderBy(c => c.IssuerCN).ToList();
-					break;
-				case CertificateSortColumn.NotBefore:
-					sortedData = _isDescending
-						? sourceData.OrderByDescending(c => c.NotBefore).ToList()
-						: sourceData.OrderBy(c => c.NotBefore).ToList();
-					break;
-				case CertificateSortColumn.NotAfter:
-					sortedData = _isDescending
-						? sourceData.OrderByDescending(c => c.NotAfter).ToList()
-						: sourceData.OrderBy(c => c.NotAfter).ToList();
-					break;
-				case CertificateSortColumn.HashingAlgorithm:
-					sortedData = _isDescending
-						? sourceData.OrderByDescending(c => c.HashingAlgorithm).ToList()
-						: sourceData.OrderBy(c => c.HashingAlgorithm).ToList();
-					break;
-				case CertificateSortColumn.SerialNumber:
-					sortedData = _isDescending
-						? sourceData.OrderByDescending(c => c.SerialNumber).ToList()
-						: sourceData.OrderBy(c => c.SerialNumber).ToList();
-					break;
-				case CertificateSortColumn.Thumbprint:
-					sortedData = _isDescending
-						? sourceData.OrderByDescending(c => c.Thumbprint).ToList()
-						: sourceData.OrderBy(c => c.Thumbprint).ToList();
-					break;
-				case CertificateSortColumn.TBSHash:
-					sortedData = _isDescending
-						? sourceData.OrderByDescending(c => c.TBSHash).ToList()
-						: sourceData.OrderBy(c => c.TBSHash).ToList();
-					break;
-				case CertificateSortColumn.ExtensionOIDs:
-					sortedData = _isDescending
-						? sourceData.OrderByDescending(c => c.OIDs).ToList()
-						: sourceData.OrderBy(c => c.OIDs).ToList();
-					break;
-				default:
-					break;
-			}
-
-			// Update the observable collection on the UI thread.
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				FileCertificates.Clear();
-				foreach (var item in sortedData)
-				{
-					FileCertificates.Add(item);
-				}
-
-				if (Sv != null && savedHorizontal.HasValue)
-				{
-					// restore horizontal scroll position
-					_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-				}
-			});
-		}
-		catch (Exception ex)
+	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is Button button && button.Tag is string key)
 		{
-			MainInfoBar.WriteError(ex);
+			// Look up the mapping in the reusable property mappings dictionary.
+			if (FileCertificateInfoColPropertyMappings.TryGetValue(key, out (string Label, Func<FileCertificateInfoCol, object?> Getter) mapping))
+			{
+				ListViewHelper.SortColumn(
+					mapping.Getter,
+					SearchBoxTextBox,
+					FilteredCertificates,
+					FileCertificates,
+					SortState,
+					key,
+					regKey: ListViewHelper.ListViewsRegistry.View_File_Certificates);
+			}
 		}
-	}
-
-	// Methods bound to each header button's Click events.
-	internal void SortBySignerNumber()
-	{
-		Sort(CertificateSortColumn.SignerNumber);
-	}
-
-	internal void SortByType()
-	{
-		Sort(CertificateSortColumn.Type);
-	}
-
-	internal void SortBySubjectCommonName()
-	{
-		Sort(CertificateSortColumn.SubjectCommonName);
-	}
-
-	internal void SortByIssuerCommonName()
-	{
-		Sort(CertificateSortColumn.IssuerCommonName);
-	}
-
-	internal void SortByNotBefore()
-	{
-		Sort(CertificateSortColumn.NotBefore);
-	}
-
-	internal void SortByNotAfter()
-	{
-		Sort(CertificateSortColumn.NotAfter);
-	}
-
-	internal void SortByHashingAlgorithm()
-	{
-		Sort(CertificateSortColumn.HashingAlgorithm);
-	}
-
-	internal void SortBySerialNumber()
-	{
-		Sort(CertificateSortColumn.SerialNumber);
-	}
-
-	internal void SortByThumbprint()
-	{
-		Sort(CertificateSortColumn.Thumbprint);
-	}
-
-	internal void SortByTBSHash()
-	{
-		Sort(CertificateSortColumn.TBSHash);
-	}
-
-	internal void SortByExtensionOIDs()
-	{
-		Sort(CertificateSortColumn.ExtensionOIDs);
 	}
 
 	#endregion
@@ -414,94 +254,41 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// Converts the properties of a FileCertificateInfoCol row into a labeled, formatted string for copying to clipboard.
 	/// </summary>
-	/// <param name="row">The selected FileCertificateInfoCol row from the ListView.</param>
-	/// <returns>A formatted string of the row's properties with labels.</returns>
-	private string ConvertRowToText(FileCertificateInfoCol row)
+	internal void CopySelectedPolicies_Click()
 	{
-		// Use StringBuilder to format each property with its label for easy reading
-		return new StringBuilder()
-			.AppendLine(GlobalVars.GetStr("SignerNumberHeader/Text") + ": " + row.SignerNumber)
-			.AppendLine(GlobalVars.GetStr("TypeHeader/Text") + ": " + row.Type)
-			.AppendLine(GlobalVars.GetStr("SubjectCommonNameHeader/Text") + ": " + row.SubjectCN)
-			.AppendLine(GlobalVars.GetStr("IssuerCommonNameHeader/Text") + ": " + row.IssuerCN)
-			.AppendLine(GlobalVars.GetStr("NotBeforeHeader/Text") + ": " + row.NotBefore)
-			.AppendLine(GlobalVars.GetStr("NotAfterHeader/Text") + ": " + row.NotAfter)
-			.AppendLine(GlobalVars.GetStr("HashingAlgorithmHeader/Text") + ": " + row.HashingAlgorithm)
-			.AppendLine(GlobalVars.GetStr("SerialNumberHeader/Text") + ": " + row.SerialNumber)
-			.AppendLine(GlobalVars.GetStr("ThumbprintHeader/Text") + ": " + row.Thumbprint)
-			.AppendLine(GlobalVars.GetStr("TBSHashHeader/Text") + ": " + row.TBSHash)
-			.AppendLine(GlobalVars.GetStr("ExtensionOIDsHeader/Text") + ": " + row.OIDs)
-			.ToString();
-	}
-
-	/// <summary>
-	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-	/// </summary>
-	internal void ListViewFlyoutMenuCopy_Click()
-	{
-		// Get the ListView ScrollViewer info
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.View_File_Certificates);
 
 		if (lv is null) return;
 
-		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			// Initialize StringBuilder to store all selected rows' data with labels
-			StringBuilder dataBuilder = new();
-
-			// Loop through each selected item in the ListView
-			foreach (var selectedItem in lv.SelectedItems)
-			{
-				if (selectedItem is FileCertificateInfoCol obj)
-
-					// Append each row's formatted data to the StringBuilder
-					_ = dataBuilder.AppendLine(ConvertRowToText(obj));
-
-				// Add a separator between rows for readability in multi-row copies
-				_ = dataBuilder.AppendLine(ListViewHelper.DefaultDelimiter);
-			}
-
-			ClipboardManagement.CopyText(dataBuilder.ToString());
+			// SelectedItems is an IList, and contains FileCertificateInfoCol
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, FileCertificateInfoColPropertyMappings);
 		}
 	}
 
 	/// <summary>
-	/// Helper method to copy a specified property to clipboard without reflection
+	/// Copy a single property of the current selection
 	/// </summary>
-	/// <param name="getProperty">Function that retrieves the desired property value as a string</param>
-	private void CopyToClipboard(Func<FileCertificateInfoCol, string?> getProperty)
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
-		// Get the ListView ScrollViewer info
+		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
+		string key = (string)menuItem.Tag;
+
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.View_File_Certificates);
 
 		if (lv is null) return;
 
-		if (lv.SelectedItem is FileCertificateInfoCol selectedItem)
+		if (FileCertificateInfoColPropertyMappings.TryGetValue(key, out var map))
 		{
-			string? propertyValue = getProperty(selectedItem);
-			if (propertyValue is not null)
-			{
-				ClipboardManagement.CopyText(propertyValue);
-			}
+			// TElement = FileCertificateInfoCol, copy just that one property
+			ListViewHelper.CopyToClipboard<FileCertificateInfoCol>(ci => map.Getter(ci)?.ToString(), lv);
 		}
 	}
 
-	// Click event handlers for each property
-	internal void CopySignerNumber_Click() => CopyToClipboard((item) => item.SignerNumber.ToString());
-	internal void CopyType_Click() => CopyToClipboard((item) => item.Type.ToString());
-	internal void CopySubjectCommonName_Click() => CopyToClipboard((item) => item.SubjectCN);
-	internal void CopyIssuerCommonName_Click() => CopyToClipboard((item) => item.IssuerCN);
-	internal void CopyNotBefore_Click() => CopyToClipboard((item) => item.NotBefore.ToString());
-	internal void CopyNotAfter_Click() => CopyToClipboard((item) => item.NotAfter.ToString());
-	internal void CopyHashingAlgorithm_Click() => CopyToClipboard((item) => item.HashingAlgorithm);
-	internal void CopySerialNumber_Click() => CopyToClipboard((item) => item.SerialNumber);
-	internal void CopyThumbprint_Click() => CopyToClipboard((item) => item.Thumbprint);
-	internal void CopyTBSHash_Click() => CopyToClipboard((item) => item.TBSHash);
-	internal void CopyExtensionOIDs_Click() => CopyToClipboard((item) => item.OIDs);
-
 	#endregion
-
 
 	/// <summary>
 	/// Get the certificates of the .CIP files
@@ -848,16 +635,5 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		{
 			MainInfoBar.WriteError(ex);
 		}
-	}
-
-	/// <summary>
-	/// CTRL + C shortcuts event handler
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	internal void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-	{
-		ListViewFlyoutMenuCopy_Click();
-		args.Handled = true;
 	}
 }

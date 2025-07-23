@@ -281,21 +281,8 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		// The location where the zip file will be extracted
 		string ZipExtractionDir = Path.Combine(StagingArea, "VulnerableDriverBlockList");
 
-		// Get the system drive
-		string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
-
 		// Initialize the final destination of the SiPolicy file
-		string SiPolicyFinalDestination;
-		if (systemDrive is not null)
-		{
-			// Construct the final destination of the SiPolicy file
-			SiPolicyFinalDestination = Path.Combine(systemDrive, "Windows", "System32", "CodeIntegrity", "SiPolicy.p7b");
-		}
-		else
-		{
-			throw new InvalidOperationException(
-				GlobalVars.GetStr("DeployDriversBlockRulesSystemDriveNullMessage"));
-		}
+		string SiPolicyFinalDestination = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "CodeIntegrity", "SiPolicy.p7b");
 
 		// Download the zip file
 		using (HttpClient client = new())

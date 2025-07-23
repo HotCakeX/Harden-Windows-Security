@@ -19,11 +19,15 @@ using System.Collections.Generic;
 
 namespace AppControlManager.Others;
 
-// GroupInfoListForPackagedAppView class definition
-internal sealed partial class GroupInfoListForPackagedAppView(IEnumerable<PackagedAppView> items) : List<PackagedAppView>(items)
+/// <summary>
+/// GroupInfoListForPackagedAppView class definition
+/// </summary>
+/// <param name="items">All of the <see cref="PackagedAppView"/> items in this group.</param>
+/// <param name="key">The key for this group, which is based on the first character of the DisplayName of the <see cref="PackagedAppView"/> items.</param>
+internal sealed partial class GroupInfoListForPackagedAppView(IEnumerable<PackagedAppView> items, string key) : List<PackagedAppView>(items)
 {
 	// string is the type for Key since it's based on DisplayName[..1] and will always be a string
-	internal required string Key { get; set; }
+	internal string Key => key;
 
 	public override string ToString()
 	{

@@ -170,16 +170,11 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	/// <summary>
 	/// Clears the text box for the main selected policy
 	/// </summary>
-	internal void MainPolicy_Flyout_ClearButton()
-	{
-		MainPolicy = null;
-	}
+	internal void MainPolicy_Flyout_ClearButton() => MainPolicy = null;
 
 	/// <summary>
 	/// Clears the textbox for other selected policies
 	/// </summary>
-	internal void OtherPolicies_Flyout_ClearButton()
-	{
-		OtherPolicies.Clear();
-	}
+	internal void OtherPolicies_Flyout_ClearButton() => OtherPolicies.Clear();
+
 }

@@ -22,14 +22,20 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using AppControlManager.Pages;
+using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 
+#if HARDEN_WINDOWS_SECURITY
+namespace HardenWindowsSecurity.ViewModels;
+#endif
+
+#if APP_CONTROL_MANAGER
 namespace AppControlManager.ViewModels;
+#endif
 
 internal sealed partial class LogsVM : ViewModelBase, IDisposable
 {
-	private const string LogFilePattern = "AppControlManager_Logs_*.txt";
+	private const string LogFilePattern = $"{App.AppName}_Logs_*.txt";
 	internal static readonly char[] LineSeparators = ['\r', '\n'];
 	private const int PageSize = 50;
 

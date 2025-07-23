@@ -20,6 +20,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.ViewModels;
 
+#pragma warning disable CA1812
+
 namespace AppControlManager.Others;
 
 /// <summary>

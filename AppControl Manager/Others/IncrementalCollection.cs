@@ -29,12 +29,16 @@ using System.ComponentModel;
 using System.Threading;
 using System.Runtime;
 
+#if HARDEN_WINDOWS_SECURITY
+using HardenWindowsSecurity;
+#endif
+
 namespace AppControlManager.Others;
 
 /// <summary>
 /// Generic incremental collection for loading items in pages with filtering support.
 /// Uses memory-mapped files for efficient large file handling.
-/// https://learn.microsoft.com/en-us/windows/uwp/debug-test-perf/listview-and-gridview-data-optimization#incremental-data-virtualization
+/// https://learn.microsoft.com/windows/uwp/debug-test-perf/listview-and-gridview-data-optimization#incremental-data-virtualization
 /// </summary>
 /// <typeparam name="T">The type of items in the collection.</typeparam>
 internal sealed partial class IncrementalCollection<T>(

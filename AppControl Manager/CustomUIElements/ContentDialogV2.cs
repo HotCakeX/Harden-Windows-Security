@@ -27,6 +27,11 @@ using System.Threading.Tasks;
 using Windows.UI;
 using AppControlManager.Others;
 
+#if HARDEN_WINDOWS_SECURITY
+#pragma warning disable CA1852
+using HardenWindowsSecurity;
+#endif
+
 namespace AppControlManager.CustomUIElements;
 
 /// <summary>
@@ -184,7 +189,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 
 			// Look for ThemeShadow or DropShadow elements
-			if (FindChildOfType<Microsoft.UI.Xaml.Controls.Border>(this) is { Shadow: not null } themeShadowElement)
+			if (FindChildOfType<Border>(this) is { Shadow: not null } themeShadowElement)
 			{
 				themeShadowElement.Shadow = null;
 			}
@@ -1718,7 +1723,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				// Try alternative approach for creating async result
 				try
 				{
-					var taskCompletionSource = new TaskCompletionSource<ContentDialogResult>();
+					TaskCompletionSource<ContentDialogResult> taskCompletionSource = new();
 					taskCompletionSource.SetResult(ContentDialogResult.None);
 					return taskCompletionSource.Task.AsAsyncOperation();
 				}

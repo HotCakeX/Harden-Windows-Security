@@ -150,6 +150,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			type: 1 // Boolean
 		)
 		];
+
+		// To adjust the initial width of the columns, giving them nice paddings.
+		CalculateSignatureBasedListViewColumnWidths();
+		CalculateFileBasedListViewColumnWidths();
 	}
 
 
@@ -1526,6 +1530,9 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 		MainInfoBar.WriteInfo(GlobalVars.GetStr("AllDataClearedMsg"));
 		MainInfoBarIsClosable = true;
+
+		CalculateSignatureBasedListViewColumnWidths();
+		CalculateFileBasedListViewColumnWidths();
 	}
 
 

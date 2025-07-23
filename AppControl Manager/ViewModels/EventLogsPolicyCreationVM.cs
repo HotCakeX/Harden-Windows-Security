@@ -44,6 +44,9 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
+
+		// To adjust the initial width of the columns, giving them nice paddings.
+		CalculateColumnWidths();
 	}
 
 	internal readonly InfoBarSettings MainInfoBar;
@@ -62,7 +65,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	// from the collection, making it difficult to reset or apply different filters without re-fetching data.
 	internal readonly List<FileIdentity> AllFileIdentities = [];
 
-	internal ListViewHelper.SortState SortState { get; set; } = new();
+	private ListViewHelper.SortState SortState { get; set; } = new();
 
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -314,6 +317,8 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		AllFileIdentities.Clear();
 
 		UpdateTotalLogs(true);
+
+		CalculateColumnWidths();
 	}
 
 	/// <summary>
@@ -371,7 +376,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(lv.SelectedItems);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
 		}
 	}
 
@@ -796,7 +801,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		if (sender is Button button && button.Tag is string key)
 		{
-			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,

@@ -1,6 +1,15 @@
-/// [string]$Root = ".\AppControl Manager"
-/// [string]$ExePath = "$Root\eXclude\ResourceValidator\target\x86_64-pc-windows-msvc\release\ResourceValidator-X64.exe"
-/// . $ExePath $Root "$Root\Strings\en-US\Resources.resw" "$Root\Strings"
+// [string]$ExePath = 'AppControl Manager\eXclude\ResourceValidator\target\x86_64-pc-windows-msvc\release\ResourceValidator-X64.exe'
+// [string]$Root = '.\AppControl Manager'
+// [string]$CsprojPath = '.\AppControl Manager\AppControl Manager.csproj'
+// . $ExePath $Root $CsprojPath
+
+// [string]$ExePath = 'AppControl Manager\eXclude\ResourceValidator\target\x86_64-pc-windows-msvc\release\ResourceValidator-X64.exe'
+// [string]$Root = '.\Harden Windows Security App'
+// [string]$CsprojPath = '.\Harden Windows Security App\Harden Windows Security.csproj'
+// . $ExePath $Root $CsprojPath
+
+// There is currently an edge case where a key is defined in a resource file via "." indicating it belongs to a XAML x:UID, but then it's used via GetStr method in C# code.
+// Another edge case: the code doesn't consider GetStr methods inside of conditional compilation blocks marked with !Debug or !Debug in C# codes.
 use std::{
     collections::{HashMap, HashSet},
     fs::{self, File},
@@ -10,35 +19,59 @@ use std::{
 };
 
 use anyhow::{Context, Result, anyhow};
-use quick_xml::Reader;
-use quick_xml::events::Event;
+use quick_xml::{Reader, events::Event};
 use regex::Regex;
 
 // Main function that orchestrates the entire process, returning a Result to handle errors
 fn main() -> Result<()> {
     // Parse command-line arguments
     let args: Vec<String> = std::env::args().collect();
-    if args.len() != 4 {
-        eprintln!("Usage: {} <cs_dir> <resx_file> <resources_root>", args[0]);
+    if args.len() != 3 {
+        eprintln!("Usage: {} <root_dir> <csproj_file>", args[0]);
+        eprintln!("  root_dir: Root directory containing local files and resources");
+        eprintln!("  csproj_file: Path to .csproj file for finding linked files");
         exit(1);
     }
 
-    let cs_dir: PathBuf = PathBuf::from(&args[1]);
-    let resx_file: PathBuf = PathBuf::from(&args[2]);
-    let resources_root: PathBuf = PathBuf::from(&args[3]);
+    let root_dir: PathBuf = PathBuf::from(&args[1]);
+    let csproj_file: PathBuf = PathBuf::from(&args[2]);
+
+    // Derive other paths from root_dir
+    let cs_dir: PathBuf = root_dir.clone();
+    let resx_file: PathBuf = root_dir.join("Strings").join("en-US").join("Resources.resw");
+    let resources_root: PathBuf = root_dir.join("Strings");
 
     // === CONFIGURATION ===
     // These paths define where the code looks for C# files, the English resource file, and all resource files
-    // cs_dir is the folder containing the .cs files.
-    // resx_file is the main English .resx or .resw file.
-    // resources_root is the root folder containing all resource-language folders (e.g., en-US, hebrew, etc.)
+    // root_dir is the main project directory
+    // cs_dir is the folder containing the .cs files (same as root_dir)
+    // resx_file is the main English .resx or .resw file (derived from root_dir)
+    // resources_root is the root folder containing all resource-language folders (derived from root_dir)
+    // csproj_file is the path to .csproj file for finding linked C# files
     // =====================
 
+    if !resx_file.exists() {
+        eprintln!("Error: Main English resource file not found at {:?}", resx_file);
+        exit(1);
+    }
+
+    if !csproj_file.exists() {
+        eprintln!("Error: Csproj file not found at {:?}", csproj_file);
+        exit(1);
+    }
+
+    // Parse DefineConstants from csproj file
+    let define_constants: HashSet<String> = parse_define_constants(&csproj_file)
+        .with_context(|| "Failed to parse DefineConstants from csproj")?;
+
+    if !define_constants.is_empty() {
+        println!("Found DefineConstants: {:?}", define_constants);
+    }
+
     // Step 1: Parse the English resource file
-    // Parse the main English .resx or .resw file to extract keys, values, and detect duplicates
-    // `parse_resx_data` returns a ResxInfo struct with all necessary data
-    let resx_info = parse_resx_data(&resx_file)
-        .with_context(|| format!("Failed to parse resx file {:?}", resx_file))?; // Add context for error reporting
+    // Parse the main English .resw file to extract keys, values, and detect duplicates
+    let resx_info: ResxInfo = parse_resx_data(&resx_file)
+        .with_context(|| format!("Failed to parse resx file {:?}", resx_file))?;
 
     // Reporting basic statistics
     // Print the total number of <data> entries found in the resource file (including duplicates)
@@ -82,7 +115,7 @@ fn main() -> Result<()> {
 
         // Step 2: Clean up duplicate values
         // Remove extra <data> entries from the English resource file and update C# code to use a single key
-        process_value_duplicates(&resx_file, &resx_info.duplicate_values, &cs_dir)
+        process_value_duplicates(&resx_file, &resx_info.duplicate_values, &cs_dir, &csproj_file, &define_constants)
             .with_context(|| "Failed to process and clean up duplicate values")?;
         println!("Duplicate-value cleanup complete.");
     }
@@ -92,22 +125,22 @@ fn main() -> Result<()> {
     let resx_keys_lower: HashSet<String> = resx_info
         .key_values
         .keys()
-        .map(|k: &String| k.to_lowercase()) // Convert each key to lowercase
-        .collect(); // Collect into a HashSet for efficient lookup
+        .map(|k: &String| k.to_lowercase())
+        .collect();
 
     // Step 3: Scan C# files for resource key usage
     // Look for `GlobalVars.GetStr("KEY")` calls in all .cs files to see which keys are used
-    let used_keys: HashSet<String> = scan_cs_for_getstring(&cs_dir)
+    let used_keys: HashSet<String> = scan_cs_for_getstring(&cs_dir, &csproj_file, &define_constants)
         .with_context(|| format!("Failed to scan C# files in {:?}", cs_dir))?;
 
     // Step 4: Validate used keys against the resource file
     // Check if all keys used in C# code exist in the resource file, accounting for '/' vs '.' and case
     let mut missing: Vec<String> = Vec::new(); // Collect keys that don't exist in the resource file
     for key in &used_keys {
-        let key_lower: String = key.to_lowercase(); // Convert the used key to lowercase
+        let key_lower: String = key.to_lowercase();
 
         if !resx_keys_lower.contains(&key_lower) {
-            // If not found, try normalizing by replacing '/' with '.' (common in resource naming)
+            // If not found, try normalizing by replacing '/' with '.'
             let normalized_lower: String = key.replace('/', ".").to_lowercase();
             if !resx_keys_lower.contains(&normalized_lower) {
                 missing.push(key.clone()); // If still not found, it's missing
@@ -172,7 +205,7 @@ fn main() -> Result<()> {
         }
     }
 
-    // Step 5.5: Detect duplicate keys in non-English resource files ===
+    // Step 5.5: Detect duplicate keys in non-English resource files
     let non_english_duplicate_report = detect_duplicate_keys_non_english(&resources_root)
         .with_context(|| "Failed to detect duplicate keys in non-English resource files")?;
 
@@ -187,7 +220,6 @@ fn main() -> Result<()> {
             }
         }
     }
-    // ====================================================================
 
     // Step 6: Prune non-English resource files
     // Remove <data> entries from non-English files if their keys aren't in the English file
@@ -240,6 +272,15 @@ fn main() -> Result<()> {
             println!("  - {}", elem); // List unknown elements
         }
     }
+    if !xuid_report.invalid_uids.is_empty() {
+        println!("Invalid x:Uid values detected (not found in resource file):");
+        for (file, element, uid) in &xuid_report.invalid_uids {
+            println!(
+                "  File: {:?}, Element: {}, x:Uid=\"{}\"",
+                file, element, uid
+            );
+        }
+    }
     if !xuid_report.mismatches.is_empty() {
         println!("Invalid x:Uid property usages detected:");
         for (file, element, uid, invalid_props) in &xuid_report.mismatches {
@@ -254,7 +295,101 @@ fn main() -> Result<()> {
         }
     }
 
-    Ok(()) // Return Ok if everything succeeds
+    Ok(())
+}
+
+/// Parses DefineConstants from a .csproj file
+fn parse_define_constants(csproj_path: &PathBuf) -> Result<HashSet<String>> {
+    let mut constants = HashSet::new();
+
+    let content: String = fs::read_to_string(csproj_path)
+        .with_context(|| format!("Failed to read csproj file {:?}", csproj_path))?;
+
+    // Regex to match <DefineConstants>...</DefineConstants> entries
+    let define_re = Regex::new(r#"<DefineConstants[^>]*>([^<]+)</DefineConstants>"#)
+        .expect("Failed to compile DefineConstants regex");
+
+    for cap in define_re.captures_iter(&content) {
+        if let Some(constants_match) = cap.get(1) {
+            let constants_text = constants_match.as_str();
+
+            // Split by semicolon and process each constant
+            for constant in constants_text.split(';') {
+                let trimmed: &str = constant.trim();
+
+                // Skip common patterns like $(DefineConstants) and empty strings
+                if !trimmed.is_empty() && !trimmed.starts_with("$(") {
+                    constants.insert(trimmed.to_string());
+                }
+            }
+        }
+    }
+
+    Ok(constants)
+}
+
+/// Parses a .csproj file to extract linked C# file paths
+fn parse_csproj_linked_files(csproj_path: &PathBuf) -> Result<Vec<PathBuf>> {
+    let mut linked_files = Vec::new();
+
+    let content = fs::read_to_string(csproj_path)
+        .with_context(|| format!("Failed to read csproj file {:?}", csproj_path))?;
+
+    // Regex to match <Compile Include="path" Link="..." /> entries
+    let compile_re = Regex::new(r#"<Compile\s+Include\s*=\s*"([^"]+)"\s+Link\s*=\s*"[^"]+"\s*/>"#)
+        .expect("Failed to compile csproj regex");
+
+    // Get the directory containing the csproj file
+    let csproj_dir = csproj_path.parent().unwrap_or(Path::new("."));
+
+    for cap in compile_re.captures_iter(&content) {
+        if let Some(include_match) = cap.get(1) {
+            let include_path = include_match.as_str();
+
+            // Only process .cs files
+            if include_path.ends_with(".cs") {
+                // Resolve the path relative to the csproj file's directory
+                let full_path = csproj_dir.join(include_path);
+
+                // Normalize the path
+                if let Ok(canonical) = full_path.canonicalize() {
+                    linked_files.push(canonical);
+                } else {
+                    // If canonicalize fails, try to clean up the path manually
+                    let cleaned = clean_path(&full_path);
+                    if cleaned.exists() {
+                        linked_files.push(cleaned);
+                    } else {
+                        eprintln!("Warning: Linked file not found: {:?}", full_path);
+                    }
+                }
+            }
+        }
+    }
+
+    println!("Found {} linked C# files in csproj", linked_files.len());
+    Ok(linked_files)
+}
+
+/// Manually clean up a path by resolving .. and . components
+fn clean_path(path: &Path) -> PathBuf {
+    let mut components = Vec::new();
+
+    for component in path.components() {
+        match component {
+            std::path::Component::ParentDir => {
+                components.pop();
+            }
+            std::path::Component::CurDir => {
+                // Skip current directory components
+            }
+            _ => {
+                components.push(component);
+            }
+        }
+    }
+
+    components.into_iter().collect()
 }
 
 /// Detect duplicate keys in non-English resource files
@@ -324,6 +459,8 @@ fn process_value_duplicates(
     resx_file: &PathBuf, // Path to the English resource file
     duplicate_values: &Vec<(String, Vec<String>)>, // Groups of (value, [keys]) with duplicates
     cs_dir: &PathBuf,    // Directory containing C# files
+    csproj_file: &PathBuf, // Path to .csproj file
+    define_constants: &HashSet<String>, // DefineConstants from csproj
 ) -> Result<()> {
     let resx_text: String = fs::read_to_string(resx_file)
         .with_context(|| format!("Cannot read resx file {:?}", resx_file))?;
@@ -339,7 +476,7 @@ fn process_value_duplicates(
         if keys.len() < 2 {
             continue;
         }
-        let keep_key = keys[0].clone(); // Keep the first key as requested
+        let keep_key = keys[0].clone(); // Keep the first key
         keep_keys.insert(keep_key.clone());
         for remove_key in &keys[1..] {
             remove_keys.insert(remove_key.clone(), keep_key.clone());
@@ -380,7 +517,7 @@ fn process_value_duplicates(
         }
         let keep_key = &keys[0]; // First key is kept
         let remove_keys = &keys[1..]; // Rest are removed
-        update_cs_references(cs_dir, keep_key, remove_keys)
+        update_cs_references(cs_dir, keep_key, remove_keys, csproj_file, define_constants)
             .with_context(|| format!("Failed to update C# references for key `{}`", keep_key))?;
     }
 
@@ -392,6 +529,31 @@ fn update_cs_references(
     dir: &PathBuf,       // Directory to search for .cs files
     new_key: &str,       // The key to use in replacements
     old_keys: &[String], // List of keys to replace
+    csproj_file: &PathBuf, // Path to .csproj file
+    define_constants: &HashSet<String>, // DefineConstants from csproj
+) -> Result<()> {
+    // Update local .cs files
+    update_cs_files_in_dir(dir, new_key, old_keys, define_constants)?;
+
+    // Update linked .cs files
+    let linked_files = parse_csproj_linked_files(csproj_file)
+        .with_context(|| "Failed to parse linked files from csproj")?;
+
+    for file_path in linked_files {
+        if file_path.extension().map_or(false, |e| e == "cs") {
+            update_single_cs_file(&file_path, new_key, old_keys, define_constants)?;
+        }
+    }
+
+    Ok(())
+}
+
+/// Updates .cs files in a directory recursively
+fn update_cs_files_in_dir(
+    dir: &PathBuf,       // Directory to search for .cs files
+    new_key: &str,       // The key to use in replacements
+    old_keys: &[String], // List of keys to replace
+    define_constants: &HashSet<String>, // DefineConstants from csproj
 ) -> Result<()> {
     // Recursively iterate over all entries in the directory
     for entry in fs::read_dir(dir).with_context(|| format!("Cannot read directory {:?}", dir))? {
@@ -400,51 +562,125 @@ fn update_cs_references(
         let path: PathBuf = entry.path();
         if path.is_dir() {
             // If it's a directory, recurse into it
-            update_cs_references(&path, new_key, old_keys)?;
+            update_cs_files_in_dir(&path, new_key, old_keys, define_constants)?;
         } else if path.is_file()
             && path
                 .extension()
                 .map_or(false, |e: &std::ffi::OsStr| e == "cs")
         {
             // Process only .cs files
-            let mut content: String = fs::read_to_string(&path)
-                .with_context(|| format!("Failed to read file {:?}", path))?;
-            let original: String = content.clone(); // Keep original for comparison
-
-            // Replace each old key's GetStr call with the new key
-            for old in old_keys {
-                // Match `GlobalVars.GetStr("old_key")` with optional whitespace
-                let call_pattern: String = format!(
-                    r#"GlobalVars\.GetStr\s*\(\s*"{}"\s*\)"#,
-                    regex::escape(old)
-                );
-                let call_re: Regex = Regex::new(&call_pattern)
-                    .with_context(|| format!("Invalid regex for updating key `{}`", old))?;
-                let replacement: String = format!(r#"GlobalVars.GetStr("{}")"#, new_key);
-                content = call_re
-                    .replace_all(&content, replacement.as_str())
-                    .to_string();
-            }
-
-            // If the content changed, write it back
-            if content != original {
-                fs::write(&path, content)
-                    .with_context(|| format!("Failed to write updated file {:?}", path))?;
-            }
+            update_single_cs_file(&path, new_key, old_keys, define_constants)?;
         }
     }
     Ok(())
 }
 
+/// Updates a single .cs file by replacing GetStr calls for old keys with a new key
+fn update_single_cs_file(
+    path: &PathBuf,
+    new_key: &str,
+    old_keys: &[String],
+    define_constants: &HashSet<String>,
+) -> Result<()> {
+    let content: String = fs::read_to_string(path)
+        .with_context(|| format!("Failed to read file {:?}", path))?;
+    let original: String = content.clone(); // Keep original for comparison
+
+    // Process conditional compilation and extract valid GetStr calls
+    let processed_content = process_conditional_compilation(&content, define_constants);
+
+    // Replace each old key's GetStr call with the new key in the processed content
+    let mut modified_content = content.clone();
+    for old in old_keys {
+        // Match `GlobalVars.GetStr("old_key")` with optional whitespace
+        let call_pattern: String = format!(
+            r#"GlobalVars\.GetStr\s*\(\s*"{}"\s*\)"#,
+            regex::escape(old)
+        );
+        let call_re: Regex = Regex::new(&call_pattern)
+            .with_context(|| format!("Invalid regex for updating key `{}`", old))?;
+        let replacement: String = format!(r#"GlobalVars.GetStr("{}")"#, new_key);
+
+        // Only replace if the old key would be considered valid in the processed content
+        if processed_content.contains(&format!(r#"GlobalVars.GetStr("{}""#, old)) {
+            modified_content = call_re
+                .replace_all(&modified_content, replacement.as_str())
+                .to_string();
+        }
+    }
+
+    // If the content changed, write it back
+    if modified_content != original {
+        fs::write(path, modified_content)
+            .with_context(|| format!("Failed to write updated file {:?}", path))?;
+    }
+
+    Ok(())
+}
+
+/// Processes conditional compilation directives and returns content with only valid sections
+fn process_conditional_compilation(content: &str, define_constants: &HashSet<String>) -> String {
+    let mut result = String::new();
+    let lines: Vec<&str> = content.lines().collect();
+    let mut i = 0;
+
+    while i < lines.len() {
+        let line = lines[i].trim();
+
+        if line.starts_with("#if ") {
+            // Extract the condition after #if
+            let condition = line[4..].trim();
+
+            // Check if this condition is defined in our constants
+            let is_defined = define_constants.contains(condition);
+
+            // Find the matching #endif
+            let mut if_depth = 1;
+            let mut j = i + 1;
+            let mut section_content = String::new();
+
+            while j < lines.len() && if_depth > 0 {
+                let current_line = lines[j].trim();
+
+                if current_line.starts_with("#if ") {
+                    if_depth += 1;
+                } else if current_line == "#endif" {
+                    if_depth -= 1;
+                }
+
+                if if_depth > 0 {
+                    section_content.push_str(lines[j]);
+                    section_content.push('\n');
+                }
+
+                j += 1;
+            }
+
+            // If the condition is defined, include the content
+            if is_defined {
+                result.push_str(&section_content);
+            }
+
+            // Move past the #endif
+            i = j;
+        } else {
+            // Regular line, include it
+            result.push_str(lines[i]);
+            result.push('\n');
+            i += 1;
+        }
+    }
+
+    result
+}
+
 /// Parses a .resx or .resw file to extract keys and values, and detect duplicates
 fn parse_resx_data(path: &PathBuf) -> Result<ResxInfo> {
-    // Open the file and set up an XML reader with buffering for efficiency
-    let file: File =
-        File::open(path).with_context(|| format!("Cannot open resx file {:?}", path))?;
+    let file: File = File::open(path).with_context(|| format!("Cannot open resx file {:?}", path))?;
 
     let mut reader: Reader<BufReader<File>> = Reader::from_reader(BufReader::new(file));
 
-    reader.config_mut().trim_text(true); // Trim whitespace in text nodes
+    reader.config_mut().trim_text(true);
 
     let mut buf: Vec<u8> = Vec::new(); // Buffer for XML events
     let mut key_values: HashMap<String, Vec<String>> = HashMap::new(); // Stores key-value pairs
@@ -562,41 +798,70 @@ fn parse_resx_data(path: &PathBuf) -> Result<ResxInfo> {
 }
 
 /// Scans all .cs files under a directory for `GlobalVars.GetStr("KEY")` calls
-fn scan_cs_for_getstring(root: &PathBuf) -> Result<HashSet<String>> {
+fn scan_cs_for_getstring(
+    root: &PathBuf,
+    csproj_file: &PathBuf,
+    define_constants: &HashSet<String>,
+) -> Result<HashSet<String>> {
     // Regex to match GetStr calls and capture the key
     let pattern = Regex::new(r#"GlobalVars\.GetStr\s*\(\s*"(?P<key>[^"]+)"\s*\)"#)
-        .expect("Failed to compile regex"); // Panic if regex is invalid (shouldn't happen)
+        .expect("Failed to compile regex");
 
     let mut keys = HashSet::new(); // Collect unique keys
 
-    visit_dir(root, &pattern, &mut keys)?; // Recursively scan files
+    // Scan local .cs files
+    visit_dir(root, &pattern, &mut keys, define_constants)?; // Recursively scan files
+
+    // Scan linked .cs files
+    let linked_files = parse_csproj_linked_files(csproj_file)
+        .with_context(|| "Failed to parse linked files from csproj")?;
+
+    for file_path in linked_files {
+        if file_path.extension().map_or(false, |e| e == "cs") {
+            scan_single_cs_file(&file_path, &pattern, &mut keys, define_constants)?;
+        }
+    }
 
     Ok(keys)
 }
 
+/// Scans a single .cs file for GetStr calls
+fn scan_single_cs_file(
+    path: &PathBuf,
+    pattern: &Regex,
+    keys: &mut HashSet<String>,
+    define_constants: &HashSet<String>,
+) -> Result<()> {
+    let mut content: String = String::new();
+
+    File::open(path)
+        .with_context(|| format!("Failed to open {:?}", path))?
+        .read_to_string(&mut content)
+        .with_context(|| format!("Failed to read {:?}", path))?;
+
+    // Process conditional compilation
+    let processed_content = process_conditional_compilation(&content, define_constants);
+
+    // Find all matches and add keys to the set
+    for cap in pattern.captures_iter(&processed_content) {
+        if let Some(m) = cap.name("key") {
+            keys.insert(m.as_str().to_string());
+        }
+    }
+
+    Ok(())
+}
+
 /// Helper function to recursively visit directories and scan .cs files for GetStr keys
-fn visit_dir(dir: &Path, pattern: &Regex, keys: &mut HashSet<String>) -> Result<()> {
+fn visit_dir(dir: &Path, pattern: &Regex, keys: &mut HashSet<String>, define_constants: &HashSet<String>) -> Result<()> {
     for entry in fs::read_dir(dir).with_context(|| format!("Cannot read directory {:?}", dir))? {
         let entry: fs::DirEntry =
             entry.with_context(|| format!("Failed to read entry in {:?}", dir))?;
         let path: PathBuf = entry.path();
         if path.is_dir() {
-            visit_dir(&path, pattern, keys)?; // Recurse into subdirectories
+            visit_dir(&path, pattern, keys, define_constants)?; // Recurse into subdirectories
         } else if path.is_file() && path.extension().map_or(false, |e| e == "cs") {
-            // Read the .cs file
-            let mut content: String = String::new();
-
-            File::open(&path)
-                .with_context(|| format!("Failed to open {:?}", path))?
-                .read_to_string(&mut content)
-                .with_context(|| format!("Failed to read {:?}", path))?;
-
-            // Find all matches and add keys to the set
-            for cap in pattern.captures_iter(&content) {
-                if let Some(m) = cap.name("key") {
-                    keys.insert(m.as_str().to_string());
-                }
-            }
+            scan_single_cs_file(&path, pattern, keys, define_constants)?;
         }
     }
     Ok(())
@@ -902,17 +1167,21 @@ struct XuidValidateReport {
 
     /// List of (file, element, uid, [invalid properties]) for mismatches
     mismatches: Vec<(PathBuf, String, String, Vec<String>)>,
+
+    /// List of (file, element, uid) for x:Uid values that don't exist in resource file
+    invalid_uids: Vec<(PathBuf, String, String)>,
 }
 
 /// Validates that x:Uid usage in XAML files uses allowed properties for each element type
 fn validate_xuid_usage(
     key_values: &HashMap<String, Vec<String>>, // English resource keys and values
-    root: &PathBuf,                       // Directory containing XAML files
+    root: &PathBuf,                            // Directory containing XAML files
 ) -> Result<XuidValidateReport> {
     let mut report: XuidValidateReport = XuidValidateReport {
         element_types: HashSet::new(),
         unknown_elements: HashSet::new(),
         mismatches: Vec::new(),
+        invalid_uids: Vec::new(),
     };
 
     // Defining allowed properties for each element type that can use x:Uid
@@ -1219,6 +1488,16 @@ fn visit_xaml(
                     if key.starts_with(&prefix) {
                         actual_suffixes.push(key[prefix.len()..].to_string()); // Extract property suffix
                     }
+                }
+
+                // Check if the x:Uid exists in the resource file (has at least one key with this prefix)
+                if actual_suffixes.is_empty() {
+                    report.invalid_uids.push((
+                        path.clone(),
+                        base_elem.clone(),
+                        uid.to_string(),
+                    ));
+                    continue; // Skip property validation if the UID doesn't exist
                 }
 
                 // Check for invalid properties

@@ -18,19 +18,27 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 using AppControlManager.AppSettings;
-using AppControlManager.IntelGathering;
-using AppControlManager.Main;
 using AppControlManager.Others;
-using AppControlManager.WindowComponents;
-using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.Globalization;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Dispatching;
 
+#if HARDEN_WINDOWS_SECURITY
+using AppControlManager.ViewModels;
+using HardenWindowsSecurity.WindowComponents;
+namespace HardenWindowsSecurity.ViewModels;
+#endif
+
+#if APP_CONTROL_MANAGER
+using AppControlManager.IntelGathering;
+using AppControlManager.Main;
+using AppControlManager.WindowComponents;
+using System.Threading.Tasks;
+using System.Linq;
 namespace AppControlManager.ViewModels;
+#endif
 
 internal sealed partial class SettingsVM : ViewModelBase
 {
@@ -73,17 +81,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	private MainWindowVM ViewModelMainWindow { get; } = ViewModelProvider.MainWindowVM;
-
-	/// <summary>
-	/// Opens a file picker for Code Integrity Schema path.
-	/// </summary>
-	internal void BrowseForCISchemaPath()
-	{
-		string? path = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XSDFilePickerFilter);
-
-		if (path is not null)
-			App.Settings.CiPolicySchemaPath = path;
-	}
 
 	internal bool UIFlowDirectionToggleSwitch
 	{
@@ -238,6 +235,39 @@ internal sealed partial class SettingsVM : ViewModelBase
 	/// </summary>
 	internal readonly string CopyRightSettingsExpanderDescription = $"© {DateTime.Now.Year}. All rights reserved.";
 
+	/// <summary>
+	/// Executed when flow direction toggle is changed.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void FlowDirectionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+	{
+		MainWindowVM.SetCaptionButtonsFlowDirection(((ToggleSwitch)sender).IsOn ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
+
+		// Needs to run via Dispatcher, otherwise the 1st double-click on the UI elements register as pass-through, meaning they will resize the window as if we clicked on an empty area on the TitleBar.
+		_ = Dispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () =>
+		{
+			// Get reference to the MainWindow and refresh the localized content
+			if (App.MainWindow is MainWindow mainWindow)
+			{
+				mainWindow.SetRegionsForCustomTitleBar();
+			}
+		});
+	}
+
+#if APP_CONTROL_MANAGER
+
+	/// <summary>
+	/// Opens a file picker for Code Integrity Schema path.
+	/// </summary>
+	internal void BrowseForCISchemaPath()
+	{
+		string? path = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XSDFilePickerFilter);
+
+		if (path is not null)
+			App.Settings.CiPolicySchemaPath = path;
+	}
+
 	internal string? SignedPolicyPathTextBox { get; set => SP(ref field, value); }
 	internal string? UnsignedPolicyPathTextBox { get; set => SP(ref field, value); }
 	internal string? SignToolCustomPathTextBox { get; set => SP(ref field, value); }
@@ -258,26 +288,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 		// Expand the settings expander to make the configurations visible
 		MainUserConfigurationsSettingsExpanderIsExpanded = true;
-	}
-
-	/// <summary>
-	/// Executed when flow direction toggle is changed.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	internal void FlowDirectionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-	{
-		MainWindowVM.SetCaptionButtonsFlowDirection(((ToggleSwitch)sender).IsOn ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
-
-		// Needs to run via Dispatcher, otherwise the 1st double-click on the UI elements register as pass-through, meaning they will resize the window as if we clicked on an empty area on the TitleBar.
-		_ = Dispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () =>
-		{
-			// Get reference to the MainWindow and refresh the localized content
-			if (App.MainWindow is MainWindow mainWindow)
-			{
-				mainWindow.SetRegionsForCustomTitleBar();
-			}
-		});
 	}
 
 	#region Signed Policy Path
@@ -474,5 +484,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	}
 
 	#endregion
+
+#endif
 
 }

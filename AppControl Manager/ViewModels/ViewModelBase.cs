@@ -18,17 +18,26 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using AppControlManager.IntelGathering;
 using AppControlManager.Others;
-using CommunityToolkit.WinUI;
-using Microsoft.UI.Xaml.Controls;
-using Windows.ApplicationModel.UserActivities;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using System.Threading.Tasks;
 using Windows.System;
+using Windows.ApplicationModel.UserActivities;
+using CommunityToolkit.WinUI;
+
+
+#if HARDEN_WINDOWS_SECURITY
+using HardenWindowsSecurity.AppSettings;
+using HardenWindowsSecurity;
+#endif
+
+#if APP_CONTROL_MANAGER
+using Microsoft.UI.Xaml.Controls;
+using System.Diagnostics;
+using AppControlManager.IntelGathering;
+#endif
 
 namespace AppControlManager.ViewModels;
 
@@ -41,12 +50,26 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 	// Expose the dispatcher queue so that derived classes can marshal
 	// calls to the UI thread when needed.
-	protected readonly Microsoft.UI.Dispatching.DispatcherQueue Dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
 
+	// This won't always be available, especially when a type inheriting from this is being instantiated before the app is fully initialized,
+	//protected readonly Microsoft.UI.Dispatching.DispatcherQueue Dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+
+	// Get it from the App class.
+	protected Microsoft.UI.Dispatching.DispatcherQueue Dispatcher => App.AppDispatcher;
+
+#if APP_CONTROL_MANAGER
 	/// <summary>
 	/// An instance property reference to the App settings that pages can x:Bind to.
 	/// </summary>
 	internal AppSettings.Main AppSettings => App.Settings;
+#endif
+
+#if HARDEN_WINDOWS_SECURITY
+	/// <summary>
+	/// An instance property reference to the App settings that pages can x:Bind to.
+	/// </summary>
+	internal Main AppSettings => App.Settings;
+#endif
 
 	/// <summary>
 	/// An instance property so pages can bind to.
@@ -93,11 +116,12 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		field = newValue;
 		OnPropertyChanged(propertyName);
 
-		if (App.Settings.SoundSetting)
+		if (App.Settings.SoundSetting && !string.IsNullOrEmpty(field))
 		{
 			TypeWriterMediaPlayer.Position = TypeWriterAudioStartTime;
 			TypeWriterMediaPlayer.Play();
 		}
+
 		return true;
 	}
 
@@ -110,6 +134,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 
+#if APP_CONTROL_MANAGER
 	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSource =
 	[
 		new ScanLevelsComboBoxType("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5),
@@ -132,6 +157,8 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// The default scan level used by the ItemsSources of ComboBoxes.
 	/// </summary>
 	internal static readonly ScanLevelsComboBoxType DefaultScanLevel = new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5);
+
+#endif
 
 	/// <summary>
 	/// User Activity tracking field
@@ -208,7 +235,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		FileHashes
 	}
 
-
 	/// <summary>
 	/// Handles different types of exceptions, used mainly by methods that deal with cancellable workflows.
 	/// </summary>
@@ -269,6 +295,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		}
 	}
 
+#if APP_CONTROL_MANAGER
 	/// <summary>
 	/// Opens the directory where a file is located in File Explorer.
 	/// </summary>
@@ -314,6 +341,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 			_ = Process.Start(processInfo);
 		}
 	}
+#endif
 
 	/// <summary>
 	/// Opens a file in the default file handler in the OS.
@@ -347,4 +375,10 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		TypeWriterMediaPlayer.Position = TypeWriterAudioStartTime;
 		TypeWriterMediaPlayer.Play();
 	}
+
+	/// <summary>
+	/// The current user's profile directory path.
+	/// </summary>
+	internal static readonly string UserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
 }

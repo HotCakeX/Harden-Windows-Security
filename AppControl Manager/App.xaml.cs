@@ -24,8 +24,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.Taskbar;
-using AppControlManager.ViewModels;
-using AppControlManager.WindowComponents;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -36,11 +34,23 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Graphics;
 using Windows.Storage;
+using Microsoft.UI.Dispatching;
 
 // To learn more about WinUI abd the WinUI project structure see: http://aka.ms/winui-project-info
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/windows/apps/windows-app-sdk/applifecycle/applifecycle
 
+#if HARDEN_WINDOWS_SECURITY
+using HardenWindowsSecurity.Others;
+using HardenWindowsSecurity.ViewModels;
+using HardenWindowsSecurity.WindowComponents;
+using AppControlManager;
+namespace HardenWindowsSecurity;
+#endif
+#if APP_CONTROL_MANAGER
+using AppControlManager.WindowComponents;
+using AppControlManager.ViewModels;
 namespace AppControlManager;
+#endif
 
 #pragma warning disable CA1515 // App class cannot be set to internal
 
@@ -49,8 +59,14 @@ namespace AppControlManager;
 /// </summary>
 public partial class App : Application
 {
-
 #pragma warning restore CA1515
+
+#if HARDEN_WINDOWS_SECURITY
+	internal const string AppName = "HardenWindowsSecurity";
+#endif
+#if APP_CONTROL_MANAGER
+	internal const string AppName = "AppControlManager";
+#endif
 
 	/// <summary>
 	/// Package Family Name of the application
@@ -74,13 +90,21 @@ public partial class App : Application
 	/// Microsoft Store => 1
 	/// Unknown => 2
 	/// </summary>
-	internal static readonly int PackageSource = string.Equals(PFN, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ? 0 : (string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) ? 1 : 2);
+	internal static readonly int PackageSource = string.Equals(PFN, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ?
+		0 :
+		(string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) || string.Equals(PFN, "a0eb8225-9ca1-460b-aa8a-2425139fd329_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase)
+		? 1 : 2);
 
 	/// <summary>
 	/// The application settings for AppControl Manager. Retrieved early in a Non-ThreadSafe manner.
 	/// Any references (instance or static) throughout the app to App settings use this property.
 	/// </summary>
 	internal static AppSettings.Main Settings => ViewModelProvider.AppSettings;
+
+	/// <summary>
+	/// Global dispatcher queue for the application that can be accessed from anywhere.
+	/// </summary>
+	internal static DispatcherQueue AppDispatcher { get; private set; } = null!;
 
 	// Semaphore to ensure only one error dialog is shown at a time
 	// Exceptions will stack up and wait in line to be shown to the user
@@ -102,14 +126,14 @@ public partial class App : Application
 	private static bool IsUniqueAppInstance;
 
 	private static Mutex? _mutex;
-	private const string MutexName = "AppControlManagerRunning";
+	private const string MutexName = $"{AppName}Running";
 
 	/// <summary>
 	/// The directory where the logs will be stored
 	/// </summary>
 	internal static readonly string LogsDirectory = IsElevated ?
 		Path.Combine(GlobalVars.UserConfigDir, "Logs") :
-		Path.Combine(Path.GetTempPath(), "AppControlManagerLogs");
+		Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
 
 	// To track the currently open Content Dialog across the app. Every piece of code that tries to display a content dialog, whether custom or generic, must assign it first
 	// to this variable before using ShowAsync() method to display it.
@@ -117,7 +141,9 @@ public partial class App : Application
 
 	internal static NavigationService _nav => ViewModelProvider.NavigationService;
 
+#if APP_CONTROL_MANAGER
 	private static PolicyEditorVM PolicyEditorViewModel => ViewModelProvider.PolicyEditorVM;
+#endif
 
 	/// <summary>
 	/// Initializes the singleton application object. This is the first line of authored code
@@ -126,6 +152,9 @@ public partial class App : Application
 	internal App()
 	{
 		this.InitializeComponent();
+
+		// Capture the dispatcher queue as early as possible.
+		AppDispatcher = DispatcherQueue.GetForCurrentThread();
 
 		// Set the language of the application to the user's preferred language
 		ApplicationLanguages.PrimaryLanguageOverride = Settings.ApplicationGlobalLanguage;
@@ -197,7 +226,13 @@ public partial class App : Application
 	/// Invoked when the application is launched.
 	/// </summary>
 	/// <param name="args">Details about the launch request and process.</param>
+#if APP_CONTROL_MANAGER
 	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+#endif
+#if HARDEN_WINDOWS_SECURITY
+	protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+#endif
+
 	{
 		// Register the Jump List tasks
 		/*
@@ -434,6 +469,7 @@ public partial class App : Application
 
 		if (!string.IsNullOrWhiteSpace(Settings.FileActivatedLaunchArg))
 		{
+#if APP_CONTROL_MANAGER
 			Logger.Write(string.Format(GlobalVars.GetStr("FileActivationLaunchMessage"), Settings.FileActivatedLaunchArg));
 
 			try
@@ -506,6 +542,7 @@ public partial class App : Application
 				Settings.LaunchActivationFilePath = string.Empty;
 				Settings.LaunchActivationAction = string.Empty;
 			}
+#endif
 		}
 		else
 		{
@@ -525,8 +562,13 @@ public partial class App : Application
 	/// </summary>
 	private static void InitialNav()
 	{
+#if APP_CONTROL_MANAGER
 		// Navigate to the CreatePolicy page when the window is loaded and is Admin, else Policy Editor
 		_nav.Navigate(IsElevated ? typeof(Pages.CreatePolicy) : typeof(Pages.PolicyEditor));
+#endif
+#if HARDEN_WINDOWS_SECURITY
+		_nav.Navigate(IsElevated ? typeof(Pages.Protect) : typeof(Pages.GitHubDocumentation));
+#endif
 	}
 
 	/// <summary>
@@ -565,6 +607,11 @@ public partial class App : Application
 	/// </summary>
 	private void Window_Closed(object sender, WindowEventArgs e)
 	{
+#if HARDEN_WINDOWS_SECURITY
+		// Terminate our DISM exe if it's still running and user closed the window.
+		DismServiceClient.TerminateActiveService();
+#endif
+
 		// Clean up the staging area
 		if (IsElevated && Directory.Exists(GlobalVars.StagingArea))
 		{
@@ -624,8 +671,9 @@ public partial class App : Application
 						// Remove it after hiding it
 						CurrentlyOpenContentDialog = null;
 					}
-
-					using CustomUIElements.ContentDialogV2 errorDialog = new()
+#pragma warning disable IDE0001
+					using AppControlManager.CustomUIElements.ContentDialogV2 errorDialog = new()
+#pragma warning restore IDE0001
 					{
 						Title = GlobalVars.GetStr("ErrorDialogTitle"),
 						Content = string.Format(GlobalVars.GetStr("ErrorDialogContent"), ex.Message),

@@ -303,8 +303,5 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 		}
 	}
 
-	internal void ClearSelectedFilePath()
-	{
-		selectedFile = null;
-	}
+	internal void ClearSelectedFilePath() => selectedFile = null;
 }

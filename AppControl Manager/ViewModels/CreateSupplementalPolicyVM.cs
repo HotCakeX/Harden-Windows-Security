@@ -98,6 +98,10 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			() => CustomFilePathRulesInfoBarTitle, value => CustomFilePathRulesInfoBarTitle = value);
 
 		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
+
+		// To adjust the initial width of the columns, giving them nice paddings.
+		CalculateColumnWidthsStrictKernelMode();
+		CalculateColumnWidths();
 	}
 
 	internal Visibility FilesAndFoldersBasePolicyLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
@@ -672,7 +676,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(lv.SelectedItems);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
 		}
 	}
 
@@ -705,6 +709,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		filesAndFoldersScanResultsList.Clear();
 
 		UpdateTotalFilesFilesAndFolders(true);
+
+		CalculateColumnWidths();
 	}
 
 	/// <summary>
@@ -1666,11 +1672,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 				// Since there can be more than one folder due to localizations such as en-US then from each of the folders, the bootres.dll.mui file is added
 
-				// Get the system drive
-				string systemDrive = Environment.GetEnvironmentVariable("SystemDrive")!;
-
 				// Define the directory path
-				string directoryPath = Path.Combine(systemDrive, "Windows", "Boot", "Resources");
+				string directoryPath = Path.Combine(GlobalVars.SystemDrive, "Windows", "Boot", "Resources");
 
 				// Iterate through each directory in the specified path
 				foreach (string directory in Directory.GetDirectories(directoryPath))
@@ -1679,7 +1682,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 					kernelModeDriversList.Add(Path.Combine(directory, "bootres.dll.mui"));
 				}
 
-				string sys32Dir = new(Path.Combine(systemDrive, "Windows", "System32"));
+				string sys32Dir = new(Path.Combine(GlobalVars.SystemDrive, "Windows", "System32"));
 
 				(IEnumerable<string>, int) filesOutput = FileUtility.GetFilesFast([sys32Dir], null, [".dll", ".sys"]);
 
@@ -1777,7 +1780,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(lv.SelectedItems);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
 		}
 	}
 
@@ -1790,6 +1793,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		StrictKernelModeScanResultsList.Clear();
 
 		UpdateTotalFilesStrictKernelMode(true);
+
+		CalculateColumnWidthsStrictKernelMode();
 	}
 
 	/// <summary>
@@ -2035,13 +2040,10 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 
 		// Filter the original collection
-		List<GroupInfoListForPackagedAppView> filtered = [.. _originalContacts
-			.Select(group => new GroupInfoListForPackagedAppView(group.Where(app =>
-				app.DisplayName.Contains(PFNBasedSearchKeywordForAppsList, StringComparison.OrdinalIgnoreCase)))
-			{
-				Key = group.Key // Preserve the group key
-			})
-			.Where(group => group.Any())];
+		List<GroupInfoListForPackagedAppView> filtered = _originalContacts
+			.Select(group => new GroupInfoListForPackagedAppView(
+				items: group.Where(app => app.DisplayName.Contains(PFNBasedSearchKeywordForAppsList, StringComparison.OrdinalIgnoreCase)),
+				key: group.Key)).Where(group => group.Any()).ToList();
 
 		// Update the ListView source with the filtered data
 		PFNBasedAppsListItemsSource = new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);

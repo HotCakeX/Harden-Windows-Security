@@ -15,11 +15,18 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
+#if APP_CONTROL_MANAGER
+using AppControlManager.ViewModels;
 namespace AppControlManager.Pages;
+#endif
+
+#if HARDEN_WINDOWS_SECURITY
+using HardenWindowsSecurity.ViewModels;
+namespace HardenWindowsSecurity.Pages;
+#endif
 
 /// <summary>
 /// The Logs class manages log files, allowing users to view and filter log content. It initializes with navigation
@@ -59,12 +66,4 @@ internal sealed partial class Logs : Page
 		// Clean up current session but keep ViewModel alive for DI container
 		await ViewModel.CleanupCurrentSession();
 	}
-}
-
-/// <summary>
-/// Represents one log line.
-/// </summary>
-internal sealed class LogLine(string text)
-{
-	internal string Text => text;
 }

@@ -17,12 +17,18 @@
 
 using System;
 using System.Threading;
+using AppControlManager.AppSettings;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 using Windows.Storage;
 
+#if HARDEN_WINDOWS_SECURITY
+namespace HardenWindowsSecurity.AppSettings;
+#endif
+#if APP_CONTROL_MANAGER
 namespace AppControlManager.AppSettings;
+#endif
 
 /// <summary>
 /// A thread-safe, unified settings manager for the application.

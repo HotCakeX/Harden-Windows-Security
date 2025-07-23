@@ -18,6 +18,10 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 
+#if HARDEN_WINDOWS_SECURITY
+#pragma warning disable CA1812
+#endif
+
 namespace AppControlManager.CustomUIElements;
 
 /// <summary>

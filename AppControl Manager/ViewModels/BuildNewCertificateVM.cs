@@ -181,8 +181,5 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 	/// <summary>
 	/// Copies the thumbprint of the generated certificate to the clipboard.
 	/// </summary>
-	internal void CopyInfoBarToClipboardButton_Click()
-	{
-		ClipboardManagement.CopyText(generatedCertThumbPrint);
-	}
+	internal void CopyInfoBarToClipboardButton_Click() => ClipboardManagement.CopyText(generatedCertThumbPrint);
 }

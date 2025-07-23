@@ -3,7 +3,8 @@ Please follow these guidelines when contributing:
 ## Repository Structure
 - `AppControl Manager/`: The main directory for the AppControl Manager application.
 - `AppControl Manager/eXclude/`: Ignore everything in this directory, they are not part of the AppControl Manager application files.
-- `Harden-Windows-Security Module/`: The main directory for the Harden Windows Security module.
+- `Harden Windows Security App/`: The main directory for the Harden Windows Security application.
+- `Harden-Windows-Security Module/`: The main directory for the Harden Windows Security PowerShell module.
 
 ## Key Guidelines
 1. Use the latest .NET and C# features when working with C# or .NET code.
@@ -13,3 +14,9 @@ Please follow these guidelines when contributing:
 5. Comment the new changes properly.
 6. Never add extra dependencies to the projects.
 7. Always make sure the code you add or modify is compatible with Native AOT compilation if you're working with C# or .NET code.
+8. Use Internal types when working with C# or .NET code.
+9. Define variable types explicitly instead of using the `var` keyword when working with C# or .NET code.
+10. Do not make unnecessary changes to the code.
+11. Do not remove any existing comments from the code unless the comments are no longer correct or valid.
+12. Define variable types explicitly after `let` keyword and variable name when working with Rust code.
+13. Do not use reflection when working with C# or .NET code.

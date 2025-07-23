@@ -19,7 +19,7 @@ opt-level = "s"
 split-debuginfo = "packed"
 strip = "symbols"
 lto = "fat"
-incremental = true
+incremental = false
 panic = "unwind"
 
 [dependencies]

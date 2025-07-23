@@ -87,7 +87,7 @@
 
                                         <TextBlock x:Uid="ViewSelectedBasePolicyTextBlock" TextWrapping="WrapWholeWords" />
 
-                                        <TextBox Text="{x:Bind ViewModel.selectedXMLFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        <TextBox Text="{x:Bind ViewModel.selectedXMLFilePath, Mode=TwoWay}"
                                             TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                             MinWidth="400" IsReadOnly="True" />
 

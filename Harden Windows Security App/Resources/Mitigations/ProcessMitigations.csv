@@ -1,0 +1,154 @@
+ProgramName,Mitigation,Action,RemovalAllowed,Comment
+msedge.exe,DisableExtensionPoints,On,True,Edge All Channels - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+msedge.exe,CFG,On,True,Edge All Channels - Enabled by default System-Wide
+msedge.exe,StrictCFG,On,True,Edge All Channels - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
+msedge.exe,MicrosoftSignedOnly,On,True,Edge All Channels - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+msedge.exe,AllowStoreSignedBinaries,On,True,Edge All Channels - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
+msedge.exe,EnforceModuleDependencySigning,On,True,Edge All Channels - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+msedge.exe,BlockRemoteImageLoads,On,True,Edge All Channels - Prevents the application from loading images from remote devices.
+msedge.exe,BlockLowLabelImageLoads,On,True,Edge All Channels - prevents the application from loading files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser.
+msedge.exe,UserShadowStack,On,True,Edge All Channels - user-mode Hardware-enforced Stack Protection is enabled for the process in compatibility mode. This means that the CPU verifies function return addresses at runtime by employing a shadow stack mechanism if supported by the hardware. In compatibility mode only shadow stack violations occurring in modules that are considered compatible with shadow stacks (CETCOMPAT) are fatal. For a module to be considered CETCOMPAT it needs to be either compiled with CETCOMPAT for binaries or marked using SetProcessDynamicEnforcedCetCompatibleRanges for dynamic code.
+msedge.exe,UserShadowStackStrictMode,On,True,Edge All Channels - All shadow stack violations are fatal - No compatibility mode - See https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-process_mitigation_user_shadow_stack_policy
+explorer.exe,StrictHandle,On,True,Explorer - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+explorer.exe,DisableExtensionPoints,On,True,Explorer - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+vmcompute.exe,CFG,On,True,part of the Hyper-V Host Compute Service - Enabled by default System-Wide
+vmcompute.exe,StrictCFG,On,True,part of the Hyper-V Host Compute Service - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
+vmwp.exe,CFG,On,True,Virtual Machine Worker Process - Enabled by default System-Wide
+vmwp.exe,StrictCFG,On,True,Virtual Machine Worker Process - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
+QuickAssist.exe,DisableExtensionPoints,On,True,Quick Assist - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+QuickAssist.exe,StrictHandle,On,True,Quick Assist - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+QuickAssist.exe,BlockDynamicCode,On,True,Quick Assist - (a.k.a Arbitrary code guard) protects an application from executing dynamically generated code (code that isn't loaded for example from the exe itself or a dll).
+QuickAssist.exe,MicrosoftSignedOnly,On,True,Quick Assist - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+QuickAssist.exe,AllowStoreSignedBinaries,On,True,Quick Assist - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
+QuickAssist.exe,EnforceModuleDependencySigning,On,True,Quick Assist - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+QuickAssist.exe,DisableNonSystemFonts,On,True,Quick Assist - Only fonts that are installed into the windows\fonts directory will be loaded for processing by GDI.
+QuickAssist.exe,BlockRemoteImageLoads,On,True,Quick Assist - Prevents the application from loading images from remote devices.
+QuickAssist.exe,BlockLowLabelImageLoads,On,True,Quick Assist - prevents the application from loading files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser.
+QuickAssist.exe,EnableExportAddressFilter,On,True,Quick Assist - mitigates the risk of malicious code looking at the export address table of all loaded modules to find modules that contain useful APIs for their attack.
+QuickAssist.exe,EnableExportAddressFilterPlus,On,True,Quick Assist - (.a.k.a) EAF+ adds protections for other commonly attacked modules by expanding the support of EAF
+QuickAssist.exe,EnableImportAddressFilter,On,True,Quick Assist - helps mitigate the risk of an adversary changing the control flow of an application by modifying the import address table (IAT) to redirect to arbitrary code of the attacker's choice when that function is called.
+QuickAssist.exe,EnableRopStackPivot,On,True,Quick Assist - helps protect against the Stack Pivot attack; a ROP attack where an attacker creates a fake stack in heap memory and then tricks the application into returning into the fake stack that controls the flow of execution.
+QuickAssist.exe,EnableRopCallerCheck,On,True,Quick Assist - a mitigation for return-oriented programming (ROP) techniques that validates that sensitive APIs were called from a valid caller.
+QuickAssist.exe,UserShadowStack,On,True,Quick Assist - user-mode Hardware-enforced Stack Protection is enabled for the process in compatibility mode. This means that the CPU verifies function return addresses at runtime by employing a shadow stack mechanism if supported by the hardware. In compatibility mode only shadow stack violations occurring in modules that are considered compatible with shadow stacks (CETCOMPAT) are fatal. For a module to be considered CETCOMPAT it needs to be either compiled with CETCOMPAT for binaries or marked using SetProcessDynamicEnforcedCetCompatibleRanges for dynamic code.
+QuickAssist.exe,UserShadowStackStrictMode,On,True,Quick Assist - All shadow stack violations are fatal - No compatibility mode - See https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-process_mitigation_user_shadow_stack_policy
+Acrobat.exe,ForceRelocateImages,On,True,Adobe Acrobat - Enabled by default system-wide
+Acrobat.exe,RequireInfo,On,True,Adobe Acrobat - This option blocks the loading of images that have had relocation information stripped. Some older applications strip out this information in production builds and therefore these binaries can't be rebased.
+Acrobat.exe,StrictHandle,On,True,Adobe Acrobat - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+Acrobat.exe,EnforceModuleDependencySigning,On,True,Adobe Acrobat - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+Acrobat.exe,DisableNonSystemFonts,On,True,Adobe Acrobat - Only fonts that are installed into the windows\fonts directory will be loaded for processing by GDI.
+Acrobat.exe,BlockRemoteImageLoads,On,True,Adobe Acrobat - Prevents the application from loading images from remote devices.
+Acrobat.exe,BlockLowLabelImageLoads,On,True,Adobe Acrobat - prevents the application from loading files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser.
+Acrobat.exe,EnableRopStackPivot,On,True,Adobe Acrobat - helps protect against the Stack Pivot attack; a ROP attack where an attacker creates a fake stack in heap memory and then tricks the application into returning into the fake stack that controls the flow of execution.
+Acrobat.exe,EnableRopCallerCheck,On,True,Adobe Acrobat - a mitigation for return-oriented programming (ROP) techniques that validates that sensitive APIs were called from a valid caller.
+Acrobat.exe,UserShadowStack,On,True,Adobe Acrobat - user-mode Hardware-enforced Stack Protection is enabled for the process in compatibility mode. This means that the CPU verifies function return addresses at runtime by employing a shadow stack mechanism if supported by the hardware. In compatibility mode only shadow stack violations occurring in modules that are considered compatible with shadow stacks (CETCOMPAT) are fatal. For a module to be considered CETCOMPAT it needs to be either compiled with CETCOMPAT for binaries or marked using SetProcessDynamicEnforcedCetCompatibleRanges for dynamic code.
+OneDrive.exe,StrictHandle,On,True,OneDrive - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+OneDrive.exe,DisableExtensionPoints,On,True,OneDrive - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+OneDrive.exe,MicrosoftSignedOnly,On,True,OneDrive - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+OneDrive.exe,AllowStoreSignedBinaries,On,True,OneDrive - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
+OneDrive.exe,EnforceModuleDependencySigning,On,True,OneDrive - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+OneDrive.exe,EnableRopStackPivot,On,True,OneDrive - helps protect against the Stack Pivot attack; a ROP attack where an attacker creates a fake stack in heap memory and then tricks the application into returning into the fake stack that controls the flow of execution.
+OneDrive.exe,EnableRopCallerCheck,On,True,OneDrive - a mitigation for return-oriented programming (ROP) techniques that validates that sensitive APIs were called from a valid caller.
+EXCEL.EXE,StrictHandle,On,True,Excel - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+EXCEL.EXE,DisableExtensionPoints,On,True,Excel - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+EXCEL.EXE,MicrosoftSignedOnly,On,True,Excel - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+EXCEL.EXE,AllowStoreSignedBinaries,On,True,Excel - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
+EXCEL.EXE,EnforceModuleDependencySigning,On,True,Excel - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+EXCEL.EXE,EnableRopStackPivot,On,True,Excel - helps protect against the Stack Pivot attack; a ROP attack where an attacker creates a fake stack in heap memory and then tricks the application into returning into the fake stack that controls the flow of execution.
+EXCEL.EXE,EnableRopCallerCheck,On,True,Excel - a mitigation for return-oriented programming (ROP) techniques that validates that sensitive APIs were called from a valid caller.
+MSACCESS.EXE,StrictHandle,On,True,Access - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+MSACCESS.EXE,DisableExtensionPoints,On,True,Access - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+MSACCESS.EXE,MicrosoftSignedOnly,On,True,Access - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+MSACCESS.EXE,AllowStoreSignedBinaries,On,True,Access - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
+MSACCESS.EXE,EnforceModuleDependencySigning,On,True,Access - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+MSACCESS.EXE,EnableRopStackPivot,On,True,Access - helps protect against the Stack Pivot attack; a ROP attack where an attacker creates a fake stack in heap memory and then tricks the application into returning into the fake stack that controls the flow of execution.
+MSACCESS.EXE,EnableRopCallerCheck,On,True,Access - a mitigation for return-oriented programming (ROP) techniques that validates that sensitive APIs were called from a valid caller.
+MSPUB.EXE,StrictHandle,On,True,Publisher - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+MSPUB.EXE,DisableExtensionPoints,On,True,Publisher - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+MSPUB.EXE,MicrosoftSignedOnly,On,True,Publisher - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+MSPUB.EXE,AllowStoreSignedBinaries,On,True,Publisher - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
+MSPUB.EXE,EnforceModuleDependencySigning,On,True,Publisher - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+MSPUB.EXE,EnableRopStackPivot,On,True,Publisher - helps protect against the Stack Pivot attack; a ROP attack where an attacker creates a fake stack in heap memory and then tricks the application into returning into the fake stack that controls the flow of execution.
+MSPUB.EXE,EnableRopCallerCheck,On,True,Publisher - a mitigation for return-oriented programming (ROP) techniques that validates that sensitive APIs were called from a valid caller.
+ONENOTE.EXE,StrictHandle,On,True,OneNote - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+ONENOTE.EXE,DisableExtensionPoints,On,True,OneNote - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+ONENOTE.EXE,MicrosoftSignedOnly,On,True,OneNote - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+ONENOTE.EXE,AllowStoreSignedBinaries,On,True,OneNote - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
+ONENOTE.EXE,EnforceModuleDependencySigning,On,True,OneNote - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+ONENOTE.EXE,EnableRopStackPivot,On,True,OneNote - helps protect against the Stack Pivot attack; a ROP attack where an attacker creates a fake stack in heap memory and then tricks the application into returning into the fake stack that controls the flow of execution.
+ONENOTE.EXE,EnableRopCallerCheck,On,True,OneNote - a mitigation for return-oriented programming (ROP) techniques that validates that sensitive APIs were called from a valid caller.
+OUTLOOK.EXE,StrictHandle,On,True,Outlook - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+OUTLOOK.EXE,DisableExtensionPoints,On,True,Outlook - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+OUTLOOK.EXE,MicrosoftSignedOnly,On,True,Outlook - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+OUTLOOK.EXE,AllowStoreSignedBinaries,On,True,Outlook - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
+OUTLOOK.EXE,EnforceModuleDependencySigning,On,True,Outlook - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+OUTLOOK.EXE,EnableRopStackPivot,On,True,Outlook - helps protect against the Stack Pivot attack; a ROP attack where an attacker creates a fake stack in heap memory and then tricks the application into returning into the fake stack that controls the flow of execution.
+OUTLOOK.EXE,EnableRopCallerCheck,On,True,Outlook - a mitigation for return-oriented programming (ROP) techniques that validates that sensitive APIs were called from a valid caller.
+POWERPNT.EXE,StrictHandle,On,True,Power Point - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+POWERPNT.EXE,DisableExtensionPoints,On,True,Power Point - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+POWERPNT.EXE,MicrosoftSignedOnly,On,True,Power Point - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+POWERPNT.EXE,AllowStoreSignedBinaries,On,True,Power Point - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
+POWERPNT.EXE,EnforceModuleDependencySigning,On,True,Power Point - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+POWERPNT.EXE,EnableRopStackPivot,On,True,Power Point - helps protect against the Stack Pivot attack; a ROP attack where an attacker creates a fake stack in heap memory and then tricks the application into returning into the fake stack that controls the flow of execution.
+POWERPNT.EXE,EnableRopCallerCheck,On,True,Power Point - a mitigation for return-oriented programming (ROP) techniques that validates that sensitive APIs were called from a valid caller.
+WINWORD.EXE,StrictHandle,On,True,Word - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+WINWORD.EXE,DisableExtensionPoints,On,True,Word - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+WINWORD.EXE,MicrosoftSignedOnly,On,True,Word - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+WINWORD.EXE,AllowStoreSignedBinaries,On,True,Word - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
+WINWORD.EXE,EnforceModuleDependencySigning,On,True,Word - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+WINWORD.EXE,EnableRopStackPivot,On,True,Word - helps protect against the Stack Pivot attack; a ROP attack where an attacker creates a fake stack in heap memory and then tricks the application into returning into the fake stack that controls the flow of execution.
+WINWORD.EXE,EnableRopCallerCheck,On,True,Word - a mitigation for return-oriented programming (ROP) techniques that validates that sensitive APIs were called from a valid caller.
+lsass.exe,DisableExtensionPoints,On,False,Local Security Authority Subsystem Service - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+lsass.exe,BlockDynamicCode,On,False,Local Security Authority Subsystem Service - (a.k.a Arbitrary code guard) protects an application from executing dynamically generated code (code that isn't loaded for example from the exe itself or a dll).
+lsass.exe,DisallowChildProcessCreation,On,False,Local Security Authority Subsystem Service
+lsass.exe,BlockRemoteImageLoads,On,False,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc.
+lsass.exe,MicrosoftSignedOnly,On,False,(a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+SmartScreen.exe,DisableExtensionPoints,On,True,Smart Screen process - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+SmartScreen.exe,CFG,On,True,Smart Screen process - Enabled by default System-Wide
+SmartScreen.exe,StrictCFG,On,True,Smart Screen process - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
+SmartScreen.exe,MicrosoftSignedOnly,On,True,Smart Screen process - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+Regsvr32.exe,BlockLowLabelImageLoads,On,True,Register Server - prevents the application from loading files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser.
+WindowsSandbox.exe,StrictHandle,On,True,Windows Sandbox process - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+WindowsSandbox.exe,DisableExtensionPoints,On,True,Windows Sandbox process - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+WindowsSandbox.exe,CFG,On,True,Windows Sandbox process - Enabled by default System-Wide
+WindowsSandbox.exe,StrictCFG,On,True,Windows Sandbox process - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
+WindowsSandbox.exe,MicrosoftSignedOnly,On,True,Windows Sandbox process - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+WindowsSandbox.exe,EnforceModuleDependencySigning,On,True,Windows Sandbox process - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+WindowsSandbox.exe,BlockRemoteImageLoads,On,True,Windows Sandbox process - Prevents the application from loading images from remote devices.
+WindowsSandbox.exe,BlockLowLabelImageLoads,On,True,Windows Sandbox process - prevents the application from loading files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser.
+WindowsSandbox.exe,EnableExportAddressFilter,On,True,Windows Sandbox process - mitigates the risk of malicious code looking at the export address table of all loaded modules to find modules that contain useful APIs for their attack.
+WindowsSandbox.exe,EnableExportAddressFilterPlus,On,True,Windows Sandbox process - (.a.k.a) EAF+ adds protections for other commonly attacked modules by expanding the support of EAF
+WindowsSandboxClient.exe,StrictHandle,On,True,Windows Sandbox process - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
+WindowsSandboxClient.exe,DisableExtensionPoints,On,True,Windows Sandbox process - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+WindowsSandboxClient.exe,CFG,On,True,Windows Sandbox process - Enabled by default System-Wide
+WindowsSandboxClient.exe,StrictCFG,On,True,Windows Sandbox process - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
+WindowsSandboxClient.exe,MicrosoftSignedOnly,On,True,Windows Sandbox process - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
+WindowsSandboxClient.exe,EnforceModuleDependencySigning,On,True,Windows Sandbox process - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+WindowsSandboxClient.exe,BlockRemoteImageLoads,On,True,Windows Sandbox process - Prevents the application from loading images from remote devices.
+WindowsSandboxClient.exe,BlockLowLabelImageLoads,On,True,Windows Sandbox process - prevents the application from loading files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser.
+WindowsSandboxClient.exe,EnableExportAddressFilter,On,True,Windows Sandbox process - mitigates the risk of malicious code looking at the export address table of all loaded modules to find modules that contain useful APIs for their attack.
+WindowsSandboxClient.exe,EnableExportAddressFilterPlus,On,True,Windows Sandbox process - (.a.k.a) EAF+ adds protections for other commonly attacked modules by expanding the support of EAF
+RuntimeBroker.exe,DisableExtensionPoints,On,False,RuntimeBroker - Related to Microsoft Store apps and their permissions - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+RuntimeBroker.exe,CFG,On,False,RuntimeBroker - Related to Microsoft Store apps and their permissions - Enabled by default System-Wide
+RuntimeBroker.exe,StrictCFG,On,False,RuntimeBroker - Related to Microsoft Store apps and their permissions - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
+RuntimeBroker.exe,EnforceModuleDependencySigning,On,False,RuntimeBroker - Related to Microsoft Store apps and their permissions - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+msedgewebview2.exe,DisableExtensionPoints,On,True,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+msedgewebview2.exe,CFG,On,True,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc - Enabled by default System-Wide
+msedgewebview2.exe,StrictCFG,On,True,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
+msedgewebview2.exe,EnforceModuleDependencySigning,On,True,Edge WebView 2 - Many components use it such as OneDrive;Quick Assist;Teams .etc - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.
+csrss.exe,BlockRemoteImageLoads,On,True,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc.
+services.exe,BlockRemoteImageLoads,On,True,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc.
+rundll32.exe,BlockRemoteImageLoads,On,True,Prevent loading of DLLs from network locations such as SMB - WebDAV - etc.
+rundll32.exe,BlockLowLabelImageLoads,On,True,Prevent loading of files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser - Some malware use rundll32.exe to load malicious file that was just downloaded from the internet
+SMSS.exe,BlockRemoteImageLoads,On,True,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc. - It's called Session Manager SubSystem
+Wininit.exe,BlockRemoteImageLoads,On,True,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc. - It stands for Windows Initialization and is a process that is responsible for starting and terminating system services and processes during startup and shutdown
+NisSrv.exe,MicrosoftSignedOnly,On,True,Protecting PPL process to prevent loading Non-Microsoft signed code into the process - This is a component of Microsoft Defender called Network Inspection Service
+AppControlManager.exe,DisableNonSystemFonts,On,True,AppControl Manager hardening
+AppControlManager.exe,BlockRemoteImageLoads,On,True,AppControl Manager hardening
+AppControlManager.exe,BlockLowLabelImageLoads,On,True,AppControl Manager hardening
+AppControlManager.exe,EnableExportAddressFilter,On,True,AppControl Manager hardening
+AppControlManager.exe,EnableExportAddressFilterPlus,On,True,AppControl Manager hardening
+AppControlManager.exe,EnableImportAddressFilter,On,True,AppControl Manager hardening
+AppControlManager.exe,EnableRopStackPivot,On,True,AppControl Manager hardening
+AppControlManager.exe,EnableRopCallerCheck,On,True,AppControl Manager hardening
+AppControlManager.exe,UserShadowStack,On,True,AppControl Manager hardening
+AppControlManager.exe,UserShadowStackStrictMode,On,True,AppControl Manager hardening

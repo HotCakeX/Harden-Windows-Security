@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -26,10 +27,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
@@ -46,6 +45,9 @@ internal sealed partial class SimulationVM : ViewModelBase
 			null, null);
 
 		ProgressRingValueProgress = new Progress<double>(p => ProgressRingValue = p);
+
+		// To adjust the initial width of the columns, giving them nice paddings.
+		CalculateColumnWidths();
 	}
 
 	internal readonly InfoBarSettings MainInfoBar;
@@ -214,7 +216,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 	#endregion
 
-
 	/// <summary>
 	/// Event handler for the SearchBox text change
 	/// </summary>
@@ -226,7 +227,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 			return;
 
 		// Get the ListView ScrollViewer info
-		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
+		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Simulation);
 
 		double? savedHorizontal = null;
 		if (Sv != null)
@@ -262,154 +263,89 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 	#region Sort
 
-	/// <summary>
-	/// Enum listing all available sort columns.
-	/// </summary>
-	private enum SimulationSortColumn
+	private ListViewHelper.SortState SortState { get; set; } = new();
+
+	// Pre‑computed property getters for high performance.
+	// Used for column sorting and column copying (single cell and entire row), for all ListViews that display SimulationOutput data type
+	private static readonly FrozenDictionary<string, (string Label, Func<SimulationOutput, object?> Getter)> SimulationOutputPropertyMappings
+		= new Dictionary<string, (string Label, Func<SimulationOutput, object?> Getter)>
+		{
+			{ "Path",                                  (GlobalVars.GetStr("PathHeader/Text") + ": ",                                so => so.Path) },
+			{ "Source",                                (GlobalVars.GetStr("SourceHeader/Text") + ": ",                              so => so.Source) },
+			{ "IsAuthorized",                          (GlobalVars.GetStr("IsAuthorizedHeader/Text") + ": ",                        so => so.IsAuthorized) },
+			{ "SignerID",                              (GlobalVars.GetStr("SignerIDHeader/Text") + ": ",                            so => so.SignerID) },
+			{ "SignerName",                            (GlobalVars.GetStr("SignerNameHeader/Text") + ": ",                          so => so.SignerName) },
+			{ "SignerCertRoot",                        (GlobalVars.GetStr("SignerCertRootHeader/Text") + ": ",                      so => so.SignerCertRoot) },
+			{ "SignerCertPublisher",                   (GlobalVars.GetStr("SignerCertPublisherHeader/Text") + ": ",                 so => so.SignerCertPublisher) },
+			{ "SignerScope",                           (GlobalVars.GetStr("SignerScopeHeader/Text") + ": ",                         so => so.SignerScope) },
+			{ "MatchCriteria",                         (GlobalVars.GetStr("MatchCriteriaHeader/Text") + ": ",                       so => so.MatchCriteria) },
+			{ "SpecificFileNameLevelMatchCriteria",    (GlobalVars.GetStr("SpecificFileNameLevelMatchCriteriaHeader/Text") + ": ",  so => so.SpecificFileNameLevelMatchCriteria) },
+			{ "CertSubjectCN",                         (GlobalVars.GetStr("CertSubjectCNHeader/Text") + ": ",                       so => so.CertSubjectCN) },
+			{ "CertIssuerCN",                          (GlobalVars.GetStr("CertIssuerCNHeader/Text") + ": ",                        so => so.CertIssuerCN) },
+			{ "CertNotAfter",                          (GlobalVars.GetStr("CertNotAfterHeader/Text") + ": ",                        so => so.CertNotAfter) },
+			{ "CertTBSValue",                          (GlobalVars.GetStr("CertTBSValueHeader/Text") + ": ",                        so => so.CertTBSValue) },
+			{ "FilePath",                              (GlobalVars.GetStr("FilePathHeader/Text") + ": ",                            so => so.FilePath) }
+		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
+
+	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		Path,
-		Source,
-		IsAuthorized,
-		MatchCriteria,
-		SpecificFileNameLevelMatchCriteria,
-		SignerID,
-		SignerName,
-		SignerCertRoot,
-		SignerCertPublisher,
-		SignerScope,
-		CertSubjectCN,
-		CertIssuerCN,
-		CertNotAfter,
-		CertTBSValue,
-		FilePath
-	}
-
-
-	// Sorting state: current sort column and sort direction.
-	private SimulationSortColumn? _currentSortColumn;
-	private bool _isDescending = true; // Defaults to descending when a new column is selected.
-
-	/// <summary>
-	/// Common sort method that toggles sort order on consecutive clicks and resets order on column change.
-	/// </summary>
-	/// <param name="newSortColumn">The column to sort by.</param>
-	private async void Sort(SimulationSortColumn newSortColumn)
-	{
-
-		// Get the ListView ScrollViewer info
-		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
-
-		double? savedHorizontal = null;
-		if (Sv != null)
+		if (sender is Button button && button.Tag is string key)
 		{
-			savedHorizontal = Sv.HorizontalOffset;
-		}
-
-		// Toggle sort order if the same column is clicked; otherwise, default to descending.
-		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
-		{
-			_isDescending = !_isDescending;
-		}
-		else
-		{
-			_currentSortColumn = newSortColumn;
-			_isDescending = true;
-		}
-
-		// Use all outputs if no search text; otherwise, sort the currently displayed collection.
-		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBoxTextBox);
-
-		List<SimulationOutput> sourceData = isSearchEmpty ? AllSimulationOutputs : SimulationOutputs.ToList();
-
-		List<SimulationOutput> sortedData = [];
-
-		switch (newSortColumn)
-		{
-			case SimulationSortColumn.Path:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.Path).ToList() : sourceData.OrderBy(s => s.Path).ToList();
-				break;
-			case SimulationSortColumn.Source:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.Source).ToList() : sourceData.OrderBy(s => s.Source).ToList();
-				break;
-			case SimulationSortColumn.IsAuthorized:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.IsAuthorized).ToList() : sourceData.OrderBy(s => s.IsAuthorized).ToList();
-				break;
-			case SimulationSortColumn.MatchCriteria:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.MatchCriteria).ToList() : sourceData.OrderBy(s => s.MatchCriteria).ToList();
-				break;
-			case SimulationSortColumn.SpecificFileNameLevelMatchCriteria:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SpecificFileNameLevelMatchCriteria).ToList() : sourceData.OrderBy(s => s.SpecificFileNameLevelMatchCriteria).ToList();
-				break;
-			case SimulationSortColumn.SignerID:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SignerID).ToList() : sourceData.OrderBy(s => s.SignerID).ToList();
-				break;
-			case SimulationSortColumn.SignerName:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SignerName).ToList() : sourceData.OrderBy(s => s.SignerName).ToList();
-				break;
-			case SimulationSortColumn.SignerCertRoot:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SignerCertRoot).ToList() : sourceData.OrderBy(s => s.SignerCertRoot).ToList();
-				break;
-			case SimulationSortColumn.SignerCertPublisher:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SignerCertPublisher).ToList() : sourceData.OrderBy(s => s.SignerCertPublisher).ToList();
-				break;
-			case SimulationSortColumn.SignerScope:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.SignerScope).ToList() : sourceData.OrderBy(s => s.SignerScope).ToList();
-				break;
-			case SimulationSortColumn.CertSubjectCN:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.CertSubjectCN).ToList() : sourceData.OrderBy(s => s.CertSubjectCN).ToList();
-				break;
-			case SimulationSortColumn.CertIssuerCN:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.CertIssuerCN).ToList() : sourceData.OrderBy(s => s.CertIssuerCN).ToList();
-				break;
-			case SimulationSortColumn.CertNotAfter:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.CertNotAfter).ToList() : sourceData.OrderBy(s => s.CertNotAfter).ToList();
-				break;
-			case SimulationSortColumn.CertTBSValue:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.CertTBSValue).ToList() : sourceData.OrderBy(s => s.CertTBSValue).ToList();
-				break;
-			case SimulationSortColumn.FilePath:
-				sortedData = _isDescending ? sourceData.OrderByDescending(s => s.FilePath).ToList() : sourceData.OrderBy(s => s.FilePath).ToList();
-				break;
-			default:
-				break;
-		}
-
-		// Update the observable collection on the UI thread.
-		await Dispatcher.EnqueueAsync(() =>
-		{
-			SimulationOutputs.Clear();
-			foreach (SimulationOutput item in sortedData)
+			// Look up the mapping in the reusable property mappings dictionary.
+			if (SimulationOutputPropertyMappings.TryGetValue(key, out (string Label, Func<SimulationOutput, object?> Getter) mapping))
 			{
-				SimulationOutputs.Add(item);
+				ListViewHelper.SortColumn(
+					mapping.Getter,
+					SearchBoxTextBox,
+					AllSimulationOutputs,
+					SimulationOutputs,
+					SortState,
+					key,
+					regKey: ListViewHelper.ListViewsRegistry.Simulation);
 			}
-
-			if (Sv != null && savedHorizontal.HasValue)
-			{
-				// restore horizontal scroll position
-				_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-			}
-		});
+		}
 	}
-
-	// Methods bound to each header button’s Click events.
-	internal void SortByPath() { Sort(SimulationSortColumn.Path); }
-	internal void SortBySource() { Sort(SimulationSortColumn.Source); }
-	internal void SortByIsAuthorized() { Sort(SimulationSortColumn.IsAuthorized); }
-	internal void SortByMatchCriteria() { Sort(SimulationSortColumn.MatchCriteria); }
-	internal void SortBySpecificFileNameLevelMatchCriteria() { Sort(SimulationSortColumn.SpecificFileNameLevelMatchCriteria); }
-	internal void SortBySignerID() { Sort(SimulationSortColumn.SignerID); }
-	internal void SortBySignerName() { Sort(SimulationSortColumn.SignerName); }
-	internal void SortBySignerCertRoot() { Sort(SimulationSortColumn.SignerCertRoot); }
-	internal void SortBySignerCertPublisher() { Sort(SimulationSortColumn.SignerCertPublisher); }
-	internal void SortBySignerScope() { Sort(SimulationSortColumn.SignerScope); }
-	internal void SortByCertSubjectCN() { Sort(SimulationSortColumn.CertSubjectCN); }
-	internal void SortByCertIssuerCN() { Sort(SimulationSortColumn.CertIssuerCN); }
-	internal void SortByCertNotAfter() { Sort(SimulationSortColumn.CertNotAfter); }
-	internal void SortByCertTBSValue() { Sort(SimulationSortColumn.CertTBSValue); }
-	internal void SortByFilePath() { Sort(SimulationSortColumn.FilePath); }
 
 	#endregion
 
+	#region Copy
+	/// <summary>
+	/// Converts the properties of a SimulationOutput row into a labeled, formatted string for copying to clipboard.
+	/// </summary>
+	internal void CopySelectedPolicies_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Simulation);
+
+		if (lv is null) return;
+
+		if (lv.SelectedItems.Count > 0)
+		{
+			// SelectedItems is an IList, and contains SimulationOutput
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, SimulationOutputPropertyMappings);
+		}
+	}
+
+	/// <summary>
+	/// Copy a single property of the current selection
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
+	{
+		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
+		string key = (string)menuItem.Tag;
+
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Simulation);
+
+		if (lv is null) return;
+
+		if (SimulationOutputPropertyMappings.TryGetValue(key, out var map))
+		{
+			// TElement = SimulationOutput, copy just that one property
+			ListViewHelper.CopyToClipboard<SimulationOutput>(ci => map.Getter(ci)?.ToString(), lv);
+		}
+	}
+	#endregion
 
 	/// <summary>
 	/// Exports the list of SimulationOutput objects to a CSV file.
@@ -488,100 +424,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 		// Wrap the value in double quotes.
 		return $"\"{safeValue}\"";
-	}
-
-	/// <summary>
-	/// Converts the properties of a SimulationOutput row into a labeled, formatted string for copying to clipboard.
-	/// </summary>
-	/// <param name="row">The selected SimulationOutput row from the ListView.</param>
-	/// <returns>A formatted string of the row's properties with labels.</returns>
-	private static string ConvertRowToText(SimulationOutput row)
-	{
-		// Use StringBuilder to format each property with its label for easy reading
-		return new StringBuilder()
-			.AppendLine($"Path: {row.Path}")
-			.AppendLine($"Source: {row.Source}")
-			.AppendLine($"Is Authorized: {row.IsAuthorized}")
-			.AppendLine($"Match Criteria: {row.MatchCriteria}")
-			.AppendLine($"Specific File Name Criteria: {row.SpecificFileNameLevelMatchCriteria}")
-			.AppendLine($"Signer ID: {row.SignerID}")
-			.AppendLine($"Signer Name: {row.SignerName}")
-			.AppendLine($"Signer Cert Root: {row.SignerCertRoot}")
-			.AppendLine($"Signer Cert Publisher: {row.SignerCertPublisher}")
-			.AppendLine($"Signer Scope: {row.SignerScope}")
-			.AppendLine($"Cert Subject CN: {row.CertSubjectCN}")
-			.AppendLine($"Cert Issuer CN: {row.CertIssuerCN}")
-			.AppendLine($"Cert Not After: {row.CertNotAfter}")
-			.AppendLine($"Cert TBS Value: {row.CertTBSValue}")
-			.AppendLine($"File Path: {row.FilePath}")
-			.ToString();
-	}
-
-	/// <summary>
-	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-	/// </summary>
-	internal void ListViewFlyoutMenuCopy_Click()
-	{
-
-		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Simulation);
-		if (lv is null) return;
-
-		// Check if there are selected items in the ListView
-		if (lv.SelectedItems.Count > 0)
-		{
-			// Initialize StringBuilder to store all selected rows' data with labels
-			StringBuilder dataBuilder = new();
-
-			// Loop through each selected item in the ListView
-			foreach (var selectedItem in lv.SelectedItems)
-			{
-				if (selectedItem is SimulationOutput obj)
-
-					// Append each row's formatted data to the StringBuilder
-					_ = dataBuilder.AppendLine(ConvertRowToText(obj));
-
-				// Add a separator between rows for readability in multi-row copies
-				_ = dataBuilder.AppendLine(ListViewHelper.DefaultDelimiter);
-			}
-
-			ClipboardManagement.CopyText(dataBuilder.ToString());
-		}
-	}
-
-	// Click event handlers for each property
-	internal void CopyPath_Click() => CopyToClipboard((item) => item.Path);
-	internal void CopySource_Click() => CopyToClipboard((item) => item.Source);
-	internal void CopyIsAuthorized_Click() => CopyToClipboard((item) => item.IsAuthorized.ToString());
-	internal void CopyMatchCriteria_Click() => CopyToClipboard((item) => item.MatchCriteria);
-	internal void CopySpecificFileNameLevelMatch_Click() => CopyToClipboard((item) => item.SpecificFileNameLevelMatchCriteria);
-	internal void CopySignerID_Click() => CopyToClipboard((item) => item.SignerID);
-	internal void CopySignerName_Click() => CopyToClipboard((item) => item.SignerName);
-	internal void CopySignerCertRoot_Click() => CopyToClipboard((item) => item.SignerCertRoot);
-	internal void CopySignerCertPublisher_Click() => CopyToClipboard((item) => item.SignerCertPublisher);
-	internal void CopySignerScope_Click() => CopyToClipboard((item) => item.SignerScope);
-	internal void CopyCertSubjectCN_Click() => CopyToClipboard((item) => item.CertSubjectCN);
-	internal void CopyCertIssuerCN_Click() => CopyToClipboard((item) => item.CertIssuerCN);
-	internal void CopyCertNotAfter_Click() => CopyToClipboard((item) => item.CertNotAfter);
-	internal void CopyCertTBSValue_Click() => CopyToClipboard((item) => item.CertTBSValue);
-	internal void CopyFilePath_Click() => CopyToClipboard((item) => item.FilePath);
-
-	/// <summary>
-	/// Helper method to copy a specified property to clipboard without reflection
-	/// </summary>
-	/// <param name="getProperty">Function that retrieves the desired property value as a string</param>
-	private static void CopyToClipboard(Func<SimulationOutput, string?> getProperty)
-	{
-		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Simulation);
-		if (lv is null) return;
-
-		if (lv.SelectedItem is SimulationOutput selectedItem)
-		{
-			string? propertyValue = getProperty(selectedItem);
-			if (propertyValue is not null)
-			{
-				ClipboardManagement.CopyText(propertyValue);
-			}
-		}
 	}
 
 	/// <summary>
@@ -731,31 +573,14 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 		// set the total count to 0 after clearing all the data
 		TotalCountOfTheFilesTextBox = "0";
+
+		CalculateColumnWidths();
 	}
 
-	internal void SelectXmlFileButton_Flyout_Clear_Click()
-	{
-		XmlFilePath = null;
-	}
+	internal void SelectXmlFileButton_Flyout_Clear_Click() => XmlFilePath = null;
 
-	internal void SelectFilesButton_Flyout_Clear_Click()
-	{
-		FilePaths.Clear();
-	}
+	internal void SelectFilesButton_Flyout_Clear_Click() => FilePaths.Clear();
 
-	internal void SelectFoldersButton_Flyout_Clear_Click()
-	{
-		FolderPaths.Clear();
-	}
+	internal void SelectFoldersButton_Flyout_Clear_Click() => FolderPaths.Clear();
 
-	/// <summary>
-	/// CTRL + C shortcuts event handler
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	internal void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-	{
-		ListViewFlyoutMenuCopy_Click();
-		args.Handled = true;
-	}
 }

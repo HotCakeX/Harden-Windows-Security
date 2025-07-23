@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Harden Windows Security (Package)": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": true,
+      "remoteDebugEnabled": false
+    },
+    "Harden Windows Security (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

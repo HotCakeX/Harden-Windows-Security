@@ -19,7 +19,7 @@ split-debuginfo = "packed"
 strip = "symbols"
 overflow-checks = true
 lto = "fat"
-incremental = true
+incremental = false
 
 [dependencies.windows]
 version = "*"

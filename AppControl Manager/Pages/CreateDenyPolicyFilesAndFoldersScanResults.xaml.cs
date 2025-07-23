@@ -52,7 +52,7 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 		// Check if there are selected items in the ListView
 		if (FileIdentitiesListView.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(FileIdentitiesListView.SelectedItems);
+			ListViewHelper.ConvertRowToText(FileIdentitiesListView.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
 		}
 	}
 
@@ -64,18 +64,18 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 	private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
 	{
 		// Attempt to retrieve the property mapping using the Tag as the key.
-		if (ListViewHelper.PropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+		if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out var mapping))
 		{
-			// Use the mapping's Getter, converting the result to a string.
-			ListViewHelper.CopyToClipboard(item => mapping.Getter(item)?.ToString(), FileIdentitiesListView);
+			ListViewHelper.CopyToClipboard<FileIdentity>(fi => mapping.Getter(fi)?.ToString(), FileIdentitiesListView);
 		}
 	}
+
 
 	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
 		{
-			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,

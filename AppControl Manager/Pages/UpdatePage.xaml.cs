@@ -18,7 +18,12 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
+#if HARDEN_WINDOWS_SECURITY
+namespace HardenWindowsSecurity.Pages;
+#endif
+#if APP_CONTROL_MANAGER
 namespace AppControlManager.Pages;
+#endif
 
 /// <summary>
 /// UpdatePage manages the update process for the AppControl Manager, including checking for updates, downloading

@@ -87,7 +87,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal string? MDEAdvancedHuntingLogs { get; set => SP(ref field, value); }
 
-	internal ListViewHelper.SortState SortState { get; set; } = new();
+	private ListViewHelper.SortState SortState { get; set; } = new();
 
 	// Variables to hold the data supplied by the UI elements
 	internal string? BasePolicyGUID { get; set => SPT(ref field, value); }
@@ -343,7 +343,7 @@ DeviceEvents
 		// Check if there are selected items in the ListView
 		if (lv.SelectedItems.Count > 0)
 		{
-			ListViewHelper.ConvertRowToText(lv.SelectedItems);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
 		}
 	}
 
@@ -959,7 +959,7 @@ DeviceEvents
 	{
 		if (sender is Button button && button.Tag is string key)
 		{
-			if (ListViewHelper.PropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
+			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
 					mapping.Getter,

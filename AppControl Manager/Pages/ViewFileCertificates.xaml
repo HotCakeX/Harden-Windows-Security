@@ -99,17 +99,17 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth10, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth11, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <Button x:Uid="SignerNumberColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySignerNumber}" />
-                        <Button x:Uid="TypeColumnHeaderBtn" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByType}" />
-                        <Button x:Uid="SubjectCommonNameColumnHeaderBtn" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySubjectCommonName}" />
-                        <Button x:Uid="IssuerCommonNameColumnHeaderBtn" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByIssuerCommonName}" />
-                        <Button x:Uid="NotBeforeColumnHeaderBtn" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByNotBefore}" />
-                        <Button x:Uid="NotAfterColumnHeaderBtn" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByNotAfter}" />
-                        <Button x:Uid="HashingAlgorithmColumnHeaderBtn" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByHashingAlgorithm}" />
-                        <Button x:Uid="SerialNumberColumnHeaderBtn" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortBySerialNumber}" />
-                        <Button x:Uid="ThumbprintColumnHeaderBtn" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByThumbprint}" />
-                        <Button x:Uid="TBSHashColumnHeaderBtn" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByTBSHash}" />
-                        <Button x:Uid="ExtensionOIDsColumnHeaderBtn" Grid.Column="10" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByExtensionOIDs}" />
+                        <Button x:Uid="SignerNumberColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Tag="SignerNumber" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="TypeColumnHeaderBtn" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="Type" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="SubjectCommonNameColumnHeaderBtn" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="SubjectCN" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IssuerCommonNameColumnHeaderBtn" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IssuerCN" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="NotBeforeColumnHeaderBtn" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="NotBefore" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="NotAfterColumnHeaderBtn" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="NotAfter" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="HashingAlgorithmColumnHeaderBtn" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="HashingAlgorithm" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="SerialNumberColumnHeaderBtn" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="SerialNumber" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="ThumbprintColumnHeaderBtn" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="Thumbprint" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="TBSHashColumnHeaderBtn" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="TBSHash" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="ExtensionOIDsColumnHeaderBtn" Grid.Column="10" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="OIDs" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>
@@ -122,9 +122,9 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModel.ListViewFlyoutMenuCopy_Click}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModel.CopySelectedPolicies_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModel.CtrlC_Invoked}"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModel.CopySelectedPolicies_Click}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
@@ -138,67 +138,67 @@
 
                                     <MenuFlyoutSubItem.Items>
 
-                                        <MenuFlyoutItem x:Uid="SignerNumberHeader" Click="{x:Bind ParentViewModel.CopySignerNumber_Click}">
+                                        <MenuFlyoutItem x:Uid="SignerNumberHeader" Tag="SignerNumber" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="TypeHeader" Click="{x:Bind ParentViewModel.CopyType_Click}">
+                                        <MenuFlyoutItem x:Uid="TypeHeader" Tag="Type" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SubjectCommonNameHeader" Click="{x:Bind ParentViewModel.CopySubjectCommonName_Click}">
+                                        <MenuFlyoutItem x:Uid="SubjectCommonNameHeader" Tag="SubjectCN" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IssuerCommonNameHeader" Click="{x:Bind ParentViewModel.CopyIssuerCommonName_Click}">
+                                        <MenuFlyoutItem x:Uid="IssuerCommonNameHeader" Tag="IssuerCN" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="NotBeforeHeader" Click="{x:Bind ParentViewModel.CopyNotBefore_Click}">
+                                        <MenuFlyoutItem x:Uid="NotBeforeHeader" Tag="NotBefore" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="NotAfterHeader" Click="{x:Bind ParentViewModel.CopyNotAfter_Click}">
+                                        <MenuFlyoutItem x:Uid="NotAfterHeader" Tag="NotAfter" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="HashingAlgorithmHeader" Click="{x:Bind ParentViewModel.CopyHashingAlgorithm_Click}">
+                                        <MenuFlyoutItem x:Uid="HashingAlgorithmHeader" Tag="HashingAlgorithm" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SerialNumberHeader" Click="{x:Bind ParentViewModel.CopySerialNumber_Click}">
+                                        <MenuFlyoutItem x:Uid="SerialNumberHeader" Tag="SerialNumber" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="ThumbprintHeader" Click="{x:Bind ParentViewModel.CopyThumbprint_Click}">
+                                        <MenuFlyoutItem x:Uid="ThumbprintHeader" Tag="Thumbprint" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="TBSHashHeader" Click="{x:Bind ParentViewModel.CopyTBSHash_Click}">
+                                        <MenuFlyoutItem x:Uid="TBSHashHeader" Tag="TBSHash" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="ExtensionOIDsHeader" Click="{x:Bind ParentViewModel.CopyExtensionOIDs_Click}">
+                                        <MenuFlyoutItem x:Uid="ExtensionOIDsHeader" Tag="OIDs" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>

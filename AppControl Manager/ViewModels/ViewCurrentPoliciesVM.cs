@@ -16,16 +16,15 @@
 //
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
-using CommunityToolkit.WinUI;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -45,6 +44,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
+
+		CalculateColumnWidths();
 	}
 
 	internal readonly InfoBarSettings MainInfoBar;
@@ -696,179 +697,44 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 	#region Sorting
 
-	/// <summary>
-	/// Defines the available columns for sorting.
-	/// </summary>
-	private enum SortColumnEnum
+	private ListViewHelper.SortState SortState { get; set; } = new();
+
+	// Pre‑computed property getters for high performance.
+	// Used for column sorting and column copying (single cell and entire row), for all ListViews that display CiPolicyInfo data type
+	internal static readonly FrozenDictionary<string, (string Label, Func<CiPolicyInfo, object?> Getter)> CiPolicyInfoPropertyMappings
+		= new Dictionary<string, (string Label, Func<CiPolicyInfo, object?> Getter)>
+		{
+			{ "PolicyID",        (GlobalVars.GetStr("PolicyIDLabel"),        ci => ci.PolicyID) },
+			{ "BasePolicyID",    (GlobalVars.GetStr("BasePolicyIDLabel"),    ci => ci.BasePolicyID) },
+			{ "FriendlyName",    (GlobalVars.GetStr("FriendlyNameLabel"),    ci => ci.FriendlyName) },
+			{ "Version",         (GlobalVars.GetStr("VersionLabel/Text"),    ci => ci.Version) },
+			{ "VersionString",   (GlobalVars.GetStr("VersionLabel/Text"),    ci => ci.VersionString) },
+			{ "IsSystemPolicy",  (GlobalVars.GetStr("IsSystemPolicyLabel"),  ci => ci.IsSystemPolicy) },
+			{ "IsSignedPolicy",  (GlobalVars.GetStr("IsSignedPolicyLabel"),  ci => ci.IsSignedPolicy) },
+			{ "IsOnDisk",        (GlobalVars.GetStr("IsOnDiskLabel"),        ci => ci.IsOnDisk) },
+			{ "IsEnforced",      (GlobalVars.GetStr("IsEnforcedLabel"),      ci => ci.IsEnforced) },
+			{ "IsAuthorized",    (GlobalVars.GetStr("IsAuthorizedLabel"),    ci => ci.IsAuthorized) },
+			{ "PolicyOptions",   (GlobalVars.GetStr("PolicyOptionsLabel"),   ci => ci.PolicyOptionsDisplay) }
+		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
+
+	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		PolicyID,
-		BasePolicyID,
-		FriendlyName,
-		Version,
-		IsAuthorized,
-		IsEnforced,
-		IsOnDisk,
-		IsSignedPolicy,
-		IsSystemPolicy,
-		PolicyOptions
-	}
-
-
-	// Sorting state – current sort column and direction
-	private SortColumnEnum? _currentSortColumn;
-	private bool _isDescending = true; // When a column is first clicked, sort descending by default.
-
-	/// <summary>
-	/// This method is invoked by each header button when clicked.
-	/// </summary>
-	/// <param name="newSortColumn">The column that needs to be sorted.</param>
-	private async void Sort(SortColumnEnum newSortColumn)
-	{
-
-		// Get the ListView ScrollViewer info
-		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
-
-		double? savedHorizontal = null;
-		if (Sv != null)
+		if (sender is Button button && button.Tag is string key)
 		{
-			savedHorizontal = Sv.HorizontalOffset;
-		}
-
-		// If the same column is clicked again, toggle the sorting direction.
-		// Otherwise, if a new column is clicked, start with descending order.
-		if (_currentSortColumn.HasValue && _currentSortColumn.Value == newSortColumn)
-		{
-			_isDescending = !_isDescending;
-		}
-		else
-		{
-			_currentSortColumn = newSortColumn;
-			_isDescending = true;
-		}
-
-		// Determine if there is an active search; if not, use the complete list.
-		bool isSearchEmpty = string.IsNullOrWhiteSpace(SearchBoxTextBox);
-
-		List<CiPolicyInfo> sourceData = isSearchEmpty ? AllPoliciesOutput : AllPolicies.ToList();
-
-		List<CiPolicyInfo> sortedData = [];
-
-		switch (newSortColumn)
-		{
-			case SortColumnEnum.PolicyID:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(p => p.PolicyID).ToList()
-					: sourceData.OrderBy(p => p.PolicyID).ToList();
-				break;
-			case SortColumnEnum.BasePolicyID:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(p => p.BasePolicyID).ToList()
-					: sourceData.OrderBy(p => p.BasePolicyID).ToList();
-				break;
-			case SortColumnEnum.FriendlyName:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(p => p.FriendlyName).ToList()
-					: sourceData.OrderBy(p => p.FriendlyName).ToList();
-				break;
-			case SortColumnEnum.Version:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(p => p.Version).ToList()
-					: sourceData.OrderBy(p => p.Version).ToList();
-				break;
-			case SortColumnEnum.IsAuthorized:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(p => p.IsAuthorized).ToList()
-					: sourceData.OrderBy(p => p.IsAuthorized).ToList();
-				break;
-			case SortColumnEnum.IsEnforced:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(p => p.IsEnforced).ToList()
-					: sourceData.OrderBy(p => p.IsEnforced).ToList();
-				break;
-			case SortColumnEnum.IsOnDisk:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(p => p.IsOnDisk).ToList()
-					: sourceData.OrderBy(p => p.IsOnDisk).ToList();
-				break;
-			case SortColumnEnum.IsSignedPolicy:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(p => p.IsSignedPolicy).ToList()
-					: sourceData.OrderBy(p => p.IsSignedPolicy).ToList();
-				break;
-			case SortColumnEnum.IsSystemPolicy:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(p => p.IsSystemPolicy).ToList()
-					: sourceData.OrderBy(p => p.IsSystemPolicy).ToList();
-				break;
-			case SortColumnEnum.PolicyOptions:
-				sortedData = _isDescending
-					? sourceData.OrderByDescending(p => p.PolicyOptionsDisplay).ToList()
-					: sourceData.OrderBy(p => p.PolicyOptionsDisplay).ToList();
-				break;
-			default:
-				break;
-		}
-
-		// Update the ObservableCollection on the UI thread.
-		await Dispatcher.EnqueueAsync(() =>
-		{
-			AllPolicies.Clear();
-			foreach (CiPolicyInfo item in sortedData)
+			// Look up the mapping in the reusable property mappings dictionary.
+			if (CiPolicyInfoPropertyMappings.TryGetValue(key, out (string Label, Func<CiPolicyInfo, object?> Getter) mapping))
 			{
-				AllPolicies.Add(item);
+				ListViewHelper.SortColumn(
+					mapping.Getter,
+					SearchBoxTextBox,
+					AllPoliciesOutput,
+					AllPolicies,
+					SortState,
+					key,
+					regKey: ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 			}
-
-			if (Sv != null && savedHorizontal.HasValue)
-			{
-				// restore horizontal scroll position
-				_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
-			}
-		});
+		}
 	}
-
-
-	// These methods are bound to each column header button's Click event.
-	internal void SortByPolicyID()
-	{
-		Sort(SortColumnEnum.PolicyID);
-	}
-	internal void SortByBasePolicyID()
-	{
-		Sort(SortColumnEnum.BasePolicyID);
-	}
-	internal void SortByFriendlyName()
-	{
-		Sort(SortColumnEnum.FriendlyName);
-	}
-	internal void SortByVersion()
-	{
-		Sort(SortColumnEnum.Version);
-	}
-	internal void SortByIsAuthorized()
-	{
-		Sort(SortColumnEnum.IsAuthorized);
-	}
-	internal void SortByIsEnforced()
-	{
-		Sort(SortColumnEnum.IsEnforced);
-	}
-	internal void SortByIsOnDisk()
-	{
-		Sort(SortColumnEnum.IsOnDisk);
-	}
-	internal void SortByIsSignedPolicy()
-	{
-		Sort(SortColumnEnum.IsSignedPolicy);
-	}
-	internal void SortByIsSystemPolicy()
-	{
-		Sort(SortColumnEnum.IsSystemPolicy);
-	}
-	internal void SortByPolicyOptions()
-	{
-		Sort(SortColumnEnum.PolicyOptions);
-	}
-
 
 	#endregion
 
@@ -968,75 +834,40 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		SwapPolicyComboBoxState = string.Equals(ListViewSelectedPolicy.BasePolicyID, ListViewSelectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase) && !ListViewSelectedPolicy.IsSignedPolicy && !ListViewSelectedPolicy.IsSystemPolicy;
 	}
 
-
 	/// <summary>
 	/// Converts the properties of a CiPolicyInfo row into a labeled, formatted string for copying to clipboard.
 	/// </summary>
-	/// <param name="row">The selected CiPolicyInfo row from the ListView.</param>
-	/// <returns>A formatted string of the row's properties with labels.</returns>
-	private static string ConvertRowToText(CiPolicyInfo row)
+	internal void CopySelectedPolicies_Click()
 	{
-		// Use StringBuilder to format each property with its label for easy reading
-		return new StringBuilder()
-			.AppendLine(GlobalVars.GetStr("PolicyIDLabel") + row.PolicyID)
-			.AppendLine(GlobalVars.GetStr("BasePolicyIDLabel") + row.BasePolicyID)
-			.AppendLine(GlobalVars.GetStr("FriendlyNameLabel") + row.FriendlyName)
-			.AppendLine(GlobalVars.GetStr("VersionLabel/Text") + row.Version)
-			.AppendLine(GlobalVars.GetStr("IsAuthorizedLabel") + row.IsAuthorized)
-			.AppendLine(GlobalVars.GetStr("IsEnforcedLabel") + row.IsEnforced)
-			.AppendLine(GlobalVars.GetStr("IsOnDiskLabel") + row.IsOnDisk)
-			.AppendLine(GlobalVars.GetStr("IsSignedPolicyLabel") + row.IsSignedPolicy)
-			.AppendLine(GlobalVars.GetStr("IsSystemPolicyLabel") + row.IsSystemPolicy)
-			.AppendLine(GlobalVars.GetStr("PolicyOptionsLabel") + row.PolicyOptionsDisplay)
-			.ToString();
-	}
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 
-	/// <summary>
-	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-	/// </summary>
-	internal void ListViewFlyoutMenuCopy_Click()
-	{
-		// Check if there are selected items in the ListView
-		if (ListViewSelectedPolicy is not null)
+		if (lv is null) return;
+
+		if (lv.SelectedItems.Count > 0)
 		{
-			// Initialize StringBuilder to store all selected rows' data with labels
-			StringBuilder dataBuilder = new();
-
-			// Append each row's formatted data to the StringBuilder
-			_ = dataBuilder.AppendLine(ConvertRowToText(ListViewSelectedPolicy));
-
-			// Add a separator between rows for readability in multi-row copies
-			_ = dataBuilder.AppendLine(ListViewHelper.DefaultDelimiter);
-
-			ClipboardManagement.CopyText(dataBuilder.ToString());
+			// SelectedItems is an IList, and contains CiPolicyInfo
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, CiPolicyInfoPropertyMappings);
 		}
 	}
 
-	// Click event handlers for each property
-	internal void CopyPolicyID_Click() => CopyToClipboard((item) => item.PolicyID?.ToString());
-	internal void CopyBasePolicyID_Click() => CopyToClipboard((item) => item.BasePolicyID?.ToString());
-	internal void CopyFriendlyName_Click() => CopyToClipboard((item) => item.FriendlyName);
-	internal void CopyVersion_Click() => CopyToClipboard((item) => item.Version?.ToString());
-	internal void CopyIsAuthorized_Click() => CopyToClipboard((item) => item.IsAuthorized.ToString());
-	internal void CopyIsEnforced_Click() => CopyToClipboard((item) => item.IsEnforced.ToString());
-	internal void CopyIsOnDisk_Click() => CopyToClipboard((item) => item.IsOnDisk.ToString());
-	internal void CopyIsSignedPolicy_Click() => CopyToClipboard((item) => item.IsSignedPolicy.ToString());
-	internal void CopyIsSystemPolicy_Click() => CopyToClipboard((item) => item.IsSystemPolicy.ToString());
-	internal void CopyPolicyOptionsDisplay_Click() => CopyToClipboard((item) => item.PolicyOptionsDisplay);
-
 	/// <summary>
-	/// Helper method to copy a specified property to clipboard.
+	/// Copy a single property of the current selection
 	/// </summary>
-	/// <param name="getProperty">Function that retrieves the desired property value as a string</param>
-	private void CopyToClipboard(Func<CiPolicyInfo, string?> getProperty)
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
-		if (ListViewSelectedPolicy is null)
-			return;
+		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
+		string key = (string)menuItem.Tag;
 
-		string? propertyValue = getProperty(ListViewSelectedPolicy);
-		if (propertyValue is not null)
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
+
+		if (lv is null) return;
+
+		if (CiPolicyInfoPropertyMappings.TryGetValue(key, out var map))
 		{
-			ClipboardManagement.CopyText(propertyValue);
+			// TElement = CiPolicyInfo, copy just that one property
+			ListViewHelper.CopyToClipboard<CiPolicyInfo>(ci => map.Getter(ci)?.ToString(), lv);
 		}
 	}
 

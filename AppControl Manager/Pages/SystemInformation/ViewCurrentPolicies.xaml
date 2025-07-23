@@ -161,16 +161,16 @@
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth9, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth10, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <Button x:Uid="PolicyIDColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByPolicyID}" />
-                        <Button x:Uid="BasePolicyIDColumnHeaderBtn" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByBasePolicyID}" />
-                        <Button x:Uid="FriendlyNameColumnHeaderBtn" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByFriendlyName}" />
-                        <Button x:Uid="VersionColumnHeaderBtn" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByVersion}" />
-                        <Button x:Uid="IsAuthorizedColumnHeaderBtn" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByIsAuthorized}" />
-                        <Button x:Uid="IsEnforcedColumnHeaderBtn" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByIsEnforced}" />
-                        <Button x:Uid="IsOnDiskColumnHeaderBtn" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByIsOnDisk}" />
-                        <Button x:Uid="IsSignedPolicyColumnHeaderBtn" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByIsSignedPolicy}" />
-                        <Button x:Uid="IsSystemPolicyColumnHeaderBtn" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByIsSystemPolicy}" />
-                        <Button x:Uid="PolicyOptionsColumnHeaderBtn" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SortByPolicyOptions}" />
+                        <Button x:Uid="PolicyIDColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="BasePolicyIDColumnHeaderBtn" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="BasePolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="FriendlyNameColumnHeaderBtn" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="FriendlyName" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="VersionColumnHeaderBtn" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="Version" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IsAuthorizedColumnHeaderBtn" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsAuthorized" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IsEnforcedColumnHeaderBtn" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsEnforced" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IsOnDiskColumnHeaderBtn" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsOnDisk" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IsSignedPolicyColumnHeaderBtn" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsSignedPolicy" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IsSystemPolicyColumnHeaderBtn" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsSystemPolicy" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="PolicyOptionsColumnHeaderBtn" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyOptions" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>
@@ -184,9 +184,9 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModel.ListViewFlyoutMenuCopy_Click}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModel.CopySelectedPolicies_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModel.ListViewFlyoutMenuCopy_Click}"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModel.CopySelectedPolicies_Click}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
@@ -200,61 +200,61 @@
 
                                     <MenuFlyoutSubItem.Items>
 
-                                        <MenuFlyoutItem x:Uid="PolicyIDHeader" Click="{x:Bind ParentViewModel.CopyPolicyID_Click}">
+                                        <MenuFlyoutItem x:Uid="PolicyIDHeader" Tag="PolicyID" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="BasePolicyIDHeader" Click="{x:Bind ParentViewModel.CopyBasePolicyID_Click}">
+                                        <MenuFlyoutItem x:Uid="BasePolicyIDHeader" Tag="BasePolicyID" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FriendlyNameHeader" Click="{x:Bind ParentViewModel.CopyFriendlyName_Click}">
+                                        <MenuFlyoutItem x:Uid="FriendlyNameHeader" Tag="FriendlyName" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="VersionHeader" Click="{x:Bind ParentViewModel.CopyVersion_Click}">
+                                        <MenuFlyoutItem x:Uid="VersionHeader" Tag="Version" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsAuthorizedHeader" Click="{x:Bind ParentViewModel.CopyIsAuthorized_Click}">
+                                        <MenuFlyoutItem x:Uid="IsAuthorizedHeader" Tag="IsAuthorized" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsEnforcedHeader" Click="{x:Bind ParentViewModel.CopyIsEnforced_Click}">
+                                        <MenuFlyoutItem x:Uid="IsEnforcedHeader" Tag="IsEnforced" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsOnDiskHeader" Click="{x:Bind ParentViewModel.CopyIsOnDisk_Click}">
+                                        <MenuFlyoutItem x:Uid="IsOnDiskHeader" Tag="IsOnDisk" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsSignedPolicyHeader" Click="{x:Bind ParentViewModel.CopyIsSignedPolicy_Click}">
+                                        <MenuFlyoutItem x:Uid="IsSignedPolicyHeader" Tag="IsSignedPolicy" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsSystemPolicyHeader" Click="{x:Bind ParentViewModel.CopyIsSystemPolicy_Click}">
+                                        <MenuFlyoutItem x:Uid="IsSystemPolicyHeader" Tag="IsSystemPolicy" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="PolicyOptionsHeader" Click="{x:Bind ParentViewModel.CopyPolicyOptionsDisplay_Click}">
+                                        <MenuFlyoutItem x:Uid="PolicyOptionsHeader" Tag="PolicyOptions" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>

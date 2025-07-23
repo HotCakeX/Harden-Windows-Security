@@ -2073,7 +2073,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Ver los archivos de modo Kernel detectados que se utilizarán para crear la directiva en modo forzado. Elimine de la lista los elementos que no desea que se incluyan en la directiva final de modo Kernel Estricto.</value>
   </data>
   <data name="UpdatePageTitle.Text" xml:space="preserve">
-    <value>Busque actualizaciones en esta página. También puede habilitar la verificación automática de actualizaciones que ocurrirá una vez al iniciar y se le notificará cada vez que haya una nueva versión disponible. Esta página solo está disponible cuando AppControl Manager se instala desde el código fuente de GitHub.</value>
+    <value>Busque actualizaciones en esta página. También puede habilitar la verificación automática de actualizaciones que ocurrirá una vez al iniciar y se le notificará cada vez que haya una nueva versión disponible.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
     <value>Valide las Directivas de App Control para asegurarse de que cumplen con el esquema oficial. Si modificó manualmente los archivos de directiva XML y desea asegurarse de que sus modificaciones son correctas, utilice esta función para validarlas.</value>

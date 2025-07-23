@@ -26,6 +26,10 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Foundation;
 
+#if HARDEN_WINDOWS_SECURITY
+#pragma warning disable CA1812
+#endif
+
 namespace AppControlManager.CustomUIElements;
 
 /// <summary>

@@ -2073,7 +2073,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>View the detected Kernel-mode files that will be used to create the enforced mode policy. Remove items you don't want to be included in the final Strict Kernel-mode policy from the list.</value>
   </data>
   <data name="UpdatePageTitle.Text" xml:space="preserve">
-    <value>Check for updates in this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available. This page is only available when the AppControl Manager is installed from the GitHub source.</value>
+    <value>Check for updates in this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
     <value>Validate App Control Policies to ensure they are compliant with the official schema. If you manually modified XML policy files and want to ensure your modifications are correct, use this feature to validate them.</value>

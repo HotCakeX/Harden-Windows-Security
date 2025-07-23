@@ -172,26 +172,17 @@ internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Clear button for the CIP files deployment button flyout
 	/// </summary>
-	internal void BrowseForCIPBinaryFilesButton_Flyout_Clear_Click()
-	{
-		CIPFiles.Clear();
-	}
+	internal void BrowseForCIPBinaryFilesButton_Flyout_Clear_Click() => CIPFiles.Clear();
 
 	/// <summary>
 	/// Clear button for the unsigned files deployment button flyout
 	/// </summary>
-	internal void BrowseForXMLPolicyFilesButton_Flyout_Clear_Click()
-	{
-		XMLFiles.Clear();
-	}
+	internal void BrowseForXMLPolicyFilesButton_Flyout_Clear_Click() => XMLFiles.Clear();
 
 	/// <summary>
 	/// Clear button for the Signed files deployment button flyout
 	/// </summary>
-	internal void BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click()
-	{
-		SignedXMLFiles.Clear();
-	}
+	internal void BrowseForSignedXMLPolicyFilesButton_Flyout_Clear_Click() => SignedXMLFiles.Clear();
 
 	/// <summary>
 	/// Event handler for browse button - Signed XML files

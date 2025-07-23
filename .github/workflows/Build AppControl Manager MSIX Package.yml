@@ -120,7 +120,8 @@ jobs:
                   [bool]$Workflow,
                   [bool]$UpdateWorkLoads,
                   [bool]$Install,
-                  [bool]$Upload
+                  [bool]$Upload,
+                  [bool]$X64ONLY
               )
 
               [string]$PackageFamilyName = ''
@@ -344,9 +345,12 @@ jobs:
 
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for X64. Exit Code: $LASTEXITCODE") }
 
-              . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+              if (!$X64ONLY) {
 
-              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for ARM64. Exit Code: $LASTEXITCODE") }
+                  . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+
+                  if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for ARM64. Exit Code: $LASTEXITCODE") }
+              }
 
               ### ScheduledTaskManager
 
@@ -354,9 +358,12 @@ jobs:
 
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ScheduledTaskManager solution for X64. Exit Code: $LASTEXITCODE") }
 
-              . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+              if (!$X64ONLY) {
 
-              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ScheduledTaskManager solution for ARM64. Exit Code: $LASTEXITCODE") }
+                  . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+
+                  if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ScheduledTaskManager solution for ARM64. Exit Code: $LASTEXITCODE") }
+              }
 
               ### Shell
 
@@ -369,9 +376,12 @@ jobs:
 
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building the Shell solution for X64. Exit Code: $LASTEXITCODE") }
 
-              . $MSBuildPath 'eXclude\Shell\Shell.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+              if (!$X64ONLY) {
 
-              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building the Shell solution for ARM64. Exit Code: $LASTEXITCODE") }
+                  . $MSBuildPath 'eXclude\Shell\Shell.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+
+                  if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building the Shell solution for ARM64. Exit Code: $LASTEXITCODE") }
+              }
 
               #endregion
 
@@ -382,9 +392,13 @@ jobs:
 
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed setting Rust toolchain to Stable. Exit Code: $LASTEXITCODE") }
 
-              rustup target add aarch64-pc-windows-msvc
+              if (!$X64ONLY) {
 
-              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed adding aarch64-pc-windows-msvc target to Rust toolchain. Exit Code: $LASTEXITCODE") }
+                  rustup target add aarch64-pc-windows-msvc
+
+                  if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed adding aarch64-pc-windows-msvc target to Rust toolchain. Exit Code: $LASTEXITCODE") }
+
+              }
 
               rustup target add x86_64-pc-windows-msvc
 
@@ -424,9 +438,13 @@ jobs:
 
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 Device Guard Rust project. Exit Code: $LASTEXITCODE") }
 
-              cargo build_arm64
+              if (!$X64ONLY) {
 
-              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building arm64 Device Guard Rust project. Exit Code: $LASTEXITCODE") }
+                  cargo build_arm64
+
+                  if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building arm64 Device Guard Rust project. Exit Code: $LASTEXITCODE") }
+
+              }
 
               Set-Location -Path $Current_Location
 
@@ -475,9 +493,13 @@ jobs:
 
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 Rust Interop project. Exit Code: $LASTEXITCODE") }
 
-              cargo build_arm64
+              if (!$X64ONLY) {
 
-              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ARM64 Rust Interop project. Exit Code: $LASTEXITCODE") }
+                  cargo build_arm64
+
+                  if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ARM64 Rust Interop project. Exit Code: $LASTEXITCODE") }
+
+              }
 
               Set-Location -Path $Current_Location
 
@@ -549,25 +571,28 @@ jobs:
 
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging x64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 
-              # Copy the ARM64 components to the directory before the build starts
-              Copy-Item -Path '.\eXclude\Shell\ARM64\Release\Shell.dll' -Destination 'Shell' -Force
+              if (!$X64ONLY) {
 
-              Copy-Item -Path '.\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
+                  # Copy the ARM64 components to the directory before the build starts
+                  Copy-Item -Path '.\eXclude\Shell\ARM64\Release\Shell.dll' -Destination 'Shell' -Force
 
-              Copy-Item -Path '.\eXclude\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination '.\CppInterop\ManageDefender.exe' -Force
+                  Copy-Item -Path '.\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
 
-              Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
+                  Copy-Item -Path '.\eXclude\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination '.\CppInterop\ManageDefender.exe' -Force
 
-              Copy-Item -Path '.\eXclude\Rust Interop Library\target\aarch64-pc-windows-msvc\release\rust_interop.lib' -Destination '.\RustInterop\rust_interop.lib' -Force
+                  Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
 
-              # Generate for ARM64 architecture
-              dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=ARM64
+                  Copy-Item -Path '.\eXclude\Rust Interop Library\target\aarch64-pc-windows-msvc\release\rust_interop.lib' -Destination '.\RustInterop\rust_interop.lib' -Force
 
-              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ARM64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
+                  # Generate for ARM64 architecture
+                  dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=ARM64
 
-              dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
+                  if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ARM64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 
-              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging ARM64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
+                  dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
+
+                  if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging ARM64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
+              }
 
               function Get-MSIXFile {
                   param(
@@ -614,33 +639,55 @@ jobs:
               [System.String]$FinalMSIXX64SymbolName = [System.IO.Path]::GetFileName($FinalMSIXX64SymbolPath)
               #endregion
 
-              #region Finding ARM64 outputs
-              [System.String]$FinalMSIXARM64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msix' -ErrorMessageFolder 'Could not find the directory for ARM64 MSIX file' -ErrorMessageFile 'Could not find the ARM64 MSIX file'
-              [System.String]$FinalMSIXARM64Name = [System.IO.Path]::GetFileName($FinalMSIXARM64Path)
-              [System.String]$FinalMSIXARM64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msixsym' -ErrorMessageFolder 'Could not find the directory for ARM64 symbol file' -ErrorMessageFile 'Could not find the ARM64 symbol file'
-              [System.String]$FinalMSIXARM64SymbolName = [System.IO.Path]::GetFileName($FinalMSIXARM64SymbolPath)
-              #endregion
+              if (!$X64ONLY) {
+
+                  #region Finding ARM64 outputs
+                  [System.String]$FinalMSIXARM64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msix' -ErrorMessageFolder 'Could not find the directory for ARM64 MSIX file' -ErrorMessageFile 'Could not find the ARM64 MSIX file'
+                  [System.String]$FinalMSIXARM64Name = [System.IO.Path]::GetFileName($FinalMSIXARM64Path)
+                  [System.String]$FinalMSIXARM64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msixsym' -ErrorMessageFolder 'Could not find the directory for ARM64 symbol file' -ErrorMessageFile 'Could not find the ARM64 symbol file'
+                  [System.String]$FinalMSIXARM64SymbolName = [System.IO.Path]::GetFileName($FinalMSIXARM64SymbolPath)
+                  #endregion
+
+              }
 
               #region Detect and Validate File Versions
               [System.Text.RegularExpressions.Regex]$versionRegexX64 = [System.Text.RegularExpressions.Regex]::New('AppControl Manager_(\d+\.\d+\.\d+\.\d+)_x64\.msix')
-              [System.Text.RegularExpressions.Regex]$versionRegexARM64 = [System.Text.RegularExpressions.Regex]::New('AppControl Manager_(\d+\.\d+\.\d+\.\d+)_arm64\.msix')
+
+              if (!$X64ONLY) {
+
+                  [System.Text.RegularExpressions.Regex]$versionRegexARM64 = [System.Text.RegularExpressions.Regex]::New('AppControl Manager_(\d+\.\d+\.\d+\.\d+)_arm64\.msix')
+              }
 
               [System.Text.RegularExpressions.Match]$MatchX64 = $versionRegexX64.Match($FinalMSIXX64Name)
-              [System.Text.RegularExpressions.Match]$MatchARM64 = $versionRegexARM64.Match($FinalMSIXARM64Name)
+
+              if (!$X64ONLY) {
+
+                  [System.Text.RegularExpressions.Match]$MatchARM64 = $versionRegexARM64.Match($FinalMSIXARM64Name)
+
+              }
 
               if (!$MatchX64.Success) {
                   throw [System.InvalidOperationException]::New('Could not detect version from X64 file name')
               }
 
-              if (!$MatchARM64.Success) {
-                  throw [System.InvalidOperationException]::New('Could not detect version from ARM64 file name')
+              if (!$X64ONLY) {
+
+                  if (!$MatchARM64.Success) {
+                      throw [System.InvalidOperationException]::New('Could not detect version from ARM64 file name')
+                  }
               }
 
               [System.String]$versionX64 = $MatchX64.Groups[1].Value
-              [System.String]$versionARM64 = $MatchARM64.Groups[1].Value
 
-              if ($versionX64 -ne $versionARM64) {
-                  throw [System.InvalidOperationException]::New('The versions in X64 and ARM64 files do not match')
+              if (!$X64ONLY) {
+
+                  [System.String]$versionARM64 = $MatchARM64.Groups[1].Value
+
+
+                  if ($versionX64 -ne $versionARM64) {
+                      throw [System.InvalidOperationException]::New('The versions in X64 and ARM64 files do not match')
+                  }
+
               }
 
               # Craft the file name for the MSIX Bundle file
@@ -651,7 +698,12 @@ jobs:
               [System.String]$MSIXBundleOutput = [System.IO.Directory]::CreateDirectory([System.IO.Path]::Combine($script:AppControlManagerDirectory, 'MSIXBundleOutput')).FullName
 
               [System.IO.File]::Copy($FinalMSIXX64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXX64Name), $true)
-              [System.IO.File]::Copy($FinalMSIXARM64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXARM64Name), $true)
+
+              if (!$X64ONLY) {
+
+                  [System.IO.File]::Copy($FinalMSIXARM64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXARM64Name), $true)
+
+              }
 
               # The path to the final MSIX Bundle file
               [System.String]$MSIXBundle = [System.IO.Path]::Combine($MSIXBundleOutput, $FinalBundleFileName)
@@ -712,9 +764,13 @@ jobs:
               Write-Host -Object "X64 MSIX File Name: $FinalMSIXX64Name" -ForegroundColor Green
               Write-Host -Object "X64 Symbols: $FinalMSIXX64SymbolPath" -ForegroundColor Green
 
-              Write-Host -Object "ARM64 MSIX File Path: $FinalMSIXARM64Path" -ForegroundColor Cyan
-              Write-Host -Object "ARM64 MSIX File Name: $FinalMSIXARM64Name" -ForegroundColor Cyan
-              Write-Host -Object "ARM64 Symbols: $FinalMSIXARM64SymbolPath" -ForegroundColor Cyan
+              if (!$X64ONLY) {
+
+                  Write-Host -Object "ARM64 MSIX File Path: $FinalMSIXARM64Path" -ForegroundColor Cyan
+                  Write-Host -Object "ARM64 MSIX File Name: $FinalMSIXARM64Name" -ForegroundColor Cyan
+                  Write-Host -Object "ARM64 Symbols: $FinalMSIXARM64SymbolPath" -ForegroundColor Cyan
+
+              }
 
               Write-Host -Object "MSIX Bundle File Path: $MSIXBundle" -ForegroundColor Yellow
               Write-Host -Object "MSIX Bundle File Name: $FinalBundleFileName" -ForegroundColor Yellow
@@ -797,13 +853,17 @@ jobs:
           }
 
           # For GitHub workflow 1
-          Build_ACM -Type Self -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $false
+          Build_ACM -Type Self -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $false -X64ONLY $false
           # For GitHub workflow 2
-          # Build_ACM -Type Store -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $true
+          # Build_ACM -Type Store -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $true -X64ONLY $false
           # Example of building the app from the source code and installing it on a clean system with self-signed certificate
-          # Build_ACM -Type Self -DownloadRepo $true -InstallDeps $true -Workflow $false -UpdateWorkLoads $false -Install $true -Upload $false
+          # Build_ACM -Type Self -DownloadRepo $true -InstallDeps $true -Workflow $false -UpdateWorkLoads $false -Install $true -Upload $false -X64ONLY $false
           # Example of building the app from the source code on a clean system and uploading it to the Partner Center
-          # Build_ACM -Type Store -DownloadRepo $true -InstallDeps $true -Workflow $false -UpdateWorkLoads $false -Install $false -Upload $true
+          # Build_ACM -Type Store -DownloadRepo $true -InstallDeps $true -Workflow $false -UpdateWorkLoads $false -Install $false -Upload $true -X64ONLY $false
+          # Local Test - X64 only
+          # Build_ACM -Type Self -DownloadRepo $false -InstallDeps $false -Workflow $false -UpdateWorkLoads $false -Install $false -Upload $false -X64ONLY $true
+          # Local Test - ARM64 + X64
+          # Build_ACM -Type Self -DownloadRepo $false -InstallDeps $false -Workflow $false -UpdateWorkLoads $false -Install $false -Upload $false -X64ONLY $false
 
       - name: Finding the Latest Draft Release
         id: find_draft_release

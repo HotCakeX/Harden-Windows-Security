@@ -3,6 +3,14 @@ images export-ignore
 *.xaml text eol=crlf
 *.ps1 text eol=crlf
 *.psm1 text eol=crlf
+*.idl text eol=crlf
+*.h text eol=crlf
+*.cpp text eol=crlf
+*.sln text eol=crlf
+*.props text eol=crlf
+*.targets text eol=crlf
+*proj text eol=crlf
+*.cmd text eol=crlf
 *.psd1 text eol=crlf
 *.txt text eol=crlf
 *.md text eol=crlf

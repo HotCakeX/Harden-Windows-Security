@@ -1,0 +1,86 @@
+<Project>
+   <!-- https://aka.ms/dotnet/msbuild/customize -->
+   <!-- https://learn.microsoft.com/visualstudio/msbuild/msbuild-reserved-and-well-known-properties -->
+
+   <!-- .NET SDK projects only -->
+   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+       <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+       <TargetPlatformMinVersion>10.0.22621.0</TargetPlatformMinVersion>
+       <!-- https://learn.microsoft.com/dotnet/standard/frameworks#support-older-os-versions -->
+       <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
+       <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#invariantglobalization -->
+       <InvariantGlobalization>true</InvariantGlobalization>
+       <!-- https://learn.microsoft.com/dotnet/core/tools/sdk-errors/netsdk1100 -->
+       <!-- To satisfy the Dependency Graph action on GitHub -->
+       <EnableWindowsTargeting>true</EnableWindowsTargeting>
+       <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+       <Platforms>x64;arm64</Platforms>
+       <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+       <PublishProfile>win-$(Platform).pubxml</PublishProfile>
+       <Nullable>enable</Nullable>
+       <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>
+       <ErrorReport>send</ErrorReport>
+       <LangVersion>preview</LangVersion>
+       <NeutralLanguage>en-US</NeutralLanguage>
+       <RepositoryType>GitHub</RepositoryType>
+       <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
+       <SatelliteResourceLanguages>en-US,he-IL</SatelliteResourceLanguages>
+       <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#rollforward -->
+       <RollForward>LatestMajor</RollForward>
+       <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
+       <!-- Can't use and don't need Ready2Run when using Native AOT -->
+       <PublishReadyToRun>false</PublishReadyToRun>
+       <ImplicitUsings>disable</ImplicitUsings>
+       <!-- https://learn.microsoft.com/dotnet/csharp/language-reference/unsafe-code -->
+       <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+       <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+       <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/security#control-flow-guard -->
+       <ControlFlowGuard>Guard</ControlFlowGuard>
+       <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/security#control-flow-enforcement-technology-shadow-stack-net-9 -->
+       <CetCompat>true</CetCompat>
+       <!--
+            Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
+            Explorer "Package and Publish" context menu entry to be enabled for this project even if
+            the Windows App SDK Nuget package has not yet been restored.
+        -->
+       <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+       <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+       <!-- WASDK isn't a .NET library so it can't use these features and cannot be affected
+            We won't get warnings for these in compile time if a code or library relies on them.
+            We can get NotSupportedException exception during runtime instead.
+        -->
+       <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
+       <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+       <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+       <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
+       <DebuggerSupport>false</DebuggerSupport>
+       <!-- Disabled by default in the default ILC.exe config -->
+       <EventSourceSupport>false</EventSourceSupport>
+       <GenerateDocumentationFile>false</GenerateDocumentationFile>
+       <!-- https://learn.microsoft.com/dotnet/core/extensions/configuration-generator -->
+       <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+   </PropertyGroup>
+
+   <!-- C++ projects only - Global Project Settings -->
+   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.vcxproj'">
+       <VCProjectVersion>17.0</VCProjectVersion>
+       <Keyword>Win32Proj</Keyword>
+       <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+       <PlatformToolset>v143</PlatformToolset>
+       <CharacterSet>Unicode</CharacterSet>
+       <SpectreMitigation>false</SpectreMitigation>
+       <RunCodeAnalysis>true</RunCodeAnalysis>
+   </PropertyGroup>
+   <!-- C++ projects only - Shared compiler & linker defaults -->
+   <ItemDefinitionGroup Condition="'$(MSBuildProjectExtension)' == '.vcxproj'">
+       <ClCompile>
+           <ConformanceMode>true</ConformanceMode>
+           <LanguageStandard>stdcpp23</LanguageStandard>
+           <LanguageStandard_C>stdc17</LanguageStandard_C>
+           <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+           <SDLCheck>true</SDLCheck>
+           <WarningLevel>Level4</WarningLevel>
+           <ControlFlowGuard>Guard</ControlFlowGuard>
+       </ClCompile>
+   </ItemDefinitionGroup>
+</Project>

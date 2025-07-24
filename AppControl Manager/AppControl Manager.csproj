@@ -5,29 +5,12 @@
     <!-- Global -->
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
-        <TargetPlatformMinVersion>10.0.22621.0</TargetPlatformMinVersion>
-
-        <!-- https://learn.microsoft.com/dotnet/standard/frameworks#support-older-os-versions -->
-        <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
-
-        <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#invariantglobalization -->
-        <InvariantGlobalization>true</InvariantGlobalization>
-
-        <!-- https://learn.microsoft.com/en-us/dotnet/core/tools/sdk-errors/netsdk1100 -->
-        <!-- To satisfy the Dependency Graph action on GitHub -->
-        <EnableWindowsTargeting>true</EnableWindowsTargeting>
-
-        <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
 
         <RootNamespace>AppControlManager</RootNamespace>
         <ApplicationManifest>app.manifest</ApplicationManifest>
-        <Platforms>x64;arm64</Platforms>
-        <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
-        <PublishProfile>win-$(Platform).pubxml</PublishProfile>
+
         <UseWinUI>true</UseWinUI>
         <EnableMsixTooling>true</EnableMsixTooling>
-        <Nullable>enable</Nullable>
 
         <!-- Defined by CsWinRT https://github.com/microsoft/CsWinRT
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
@@ -46,20 +29,10 @@
         -->
         <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
-        <!-- Publish Properties -->
-        <!-- Can't use and don't need Ready2Run when using Native AOT -->
-        <!-- <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">true</PublishReadyToRun> -->
-        <PublishReadyToRun>false</PublishReadyToRun>
-
-        <ImplicitUsings>disable</ImplicitUsings>
         <Description>A modern secure application that simplifies management of Application Control in Windows.</Description>
-        <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>
+
         <PackageTags>App Control,WDAC,AppControl For Business, AppControl Manager</PackageTags>
         <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
-
-        <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#rollforward -->
-        <RollForward>LatestMajor</RollForward>
 
         <!-- Automatically created for packing -->
         <!-- https://learn.microsoft.com/windows/msix/app-installer/create-appinstallerfile-vs -->
@@ -81,21 +54,16 @@
         <AssemblyName>AppControlManager</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <ErrorReport>send</ErrorReport>
         <FileVersion>2.0.34.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
-        <NeutralLanguage>en-US</NeutralLanguage>
-        <StartupObject>AppControlManager.Program</StartupObject>
-        <LangVersion>preview</LangVersion>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
 
-        <!-- https://learn.microsoft.com/dotnet/csharp/language-reference/unsafe-code -->
-        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+        <StartupObject>AppControlManager.Program</StartupObject>
+
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
 
         <Version>$(FileVersion)</Version>
         <Copyright>© 2024-Present</Copyright>
         <Title>AppControl Manager</Title>
-        <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
 
         <IlcMaxVectorTBitWidth>512</IlcMaxVectorTBitWidth>
 
@@ -129,7 +97,6 @@
         <NativeLibrary Include="RustInterop/rust_interop.lib" />
     </ItemGroup>
 
-
     <!-- Only for Debug -->
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 
@@ -141,18 +108,12 @@
 
     </PropertyGroup>
 
-
     <!-- Only for Release -->
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
 
         <NuGetAudit>true</NuGetAudit>
 
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-
-        <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
-        <SatelliteResourceLanguages>en-US,he-IL</SatelliteResourceLanguages>
-
-        <RepositoryType>GitHub</RepositoryType>
 
         <!-- There should be absolutely no trim warnings before this can be enabled
         Otherwise there is no guarantee that the app will work as expected at all times -->
@@ -163,18 +124,8 @@
         <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
         <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
         <TrimmerSingleWarn>false</TrimmerSingleWarn>
-        <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
-        <!-- WASDK isn't a .NET libary so it can't use these features and cannot be affected
-        We won't get warnings for these in compile time if a code or library relies on them.
-        We can get NotSupportedException exception during runtime instead. -->
-        <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
-        <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
-        <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
-        <DebuggerSupport>false</DebuggerSupport>
-        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
 
-        <!-- Disabled by default in the default ILC.exe config -->
-        <EventSourceSupport>false</EventSourceSupport>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
 
         <!--
         Will cause the "Fold identical method bodies" feature to be implicitly enabled which can also be enabled by supplying "- -methodbodyfolding" to the ILC.exe .
@@ -188,13 +139,6 @@
         -->
         <StackTraceSupport>true</StackTraceSupport>
 
-        <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/security#control-flow-guard -->
-        <ControlFlowGuard>Guard</ControlFlowGuard>
-
-        <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/security#control-flow-enforcement-technology-shadow-stack-net-9 -->
-        <CetCompat>true</CetCompat>
-
-        <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
         <PublishAot>True</PublishAot>
         <OptimizationPreference>Speed</OptimizationPreference>
 
@@ -207,8 +151,6 @@
 
         <NuGetAuditMode>all</NuGetAuditMode>
         <NuGetAuditLevel>low</NuGetAuditLevel>
-
-        <GenerateDocumentationFile>false</GenerateDocumentationFile>
 
         <DocumentationFile>AppControlManagerAPIDocumentation.xml</DocumentationFile>
 
@@ -224,11 +166,7 @@
         <AnalysisModePerformance>All</AnalysisModePerformance>
         <AnalysisModeInteroperability>All</AnalysisModeInteroperability>
 
-        <!-- https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration-generator -->
-        <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
-
     </PropertyGroup>
-
 
     <!--
     The default parameters passed to the ILC.exe during compilation
@@ -310,14 +248,6 @@
 
     </ItemGroup>
 
-    <!--
-    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
-    Explorer "Package and Publish" context menu entry to be enabled for this project even if
-    the Windows App SDK Nuget package has not yet been restored.
-    -->
-    <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-        <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
-    </PropertyGroup>
     <PropertyGroup>
         <DefineConstants>$(DefineConstants);APP_CONTROL_MANAGER</DefineConstants>
     </PropertyGroup>

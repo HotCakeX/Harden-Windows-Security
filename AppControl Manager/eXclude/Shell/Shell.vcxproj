@@ -1,231 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|ARM64">
-      <Configuration>Debug</Configuration>
-      <Platform>ARM64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|ARM64">
-      <Configuration>Release</Configuration>
-      <Platform>ARM64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-  </ItemGroup>
-  <PropertyGroup Label="Globals">
-    <VCProjectVersion>17.0</VCProjectVersion>
-    <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{a7f42396-746a-4200-b311-46650833ed48}</ProjectGuid>
-    <RootNamespace>Shell</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp23</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
-      <ControlFlowGuard>Guard</ControlFlowGuard>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <OmitFramePointers>true</OmitFramePointers>
-      <StringPooling>true</StringPooling>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <UseProcessorExtensions>true</UseProcessorExtensions>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>MyCommands.def</ModuleDefinitionFile>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <GenerateMapFile>false</GenerateMapFile>
-      <MapExports>false</MapExports>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp23</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
-      <ControlFlowGuard>Guard</ControlFlowGuard>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <OmitFramePointers>true</OmitFramePointers>
-      <StringPooling>true</StringPooling>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableEnhancedInstructionSet>CPUExtensionRequirementsARMv81</EnableEnhancedInstructionSet>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>MyCommands.def</ModuleDefinitionFile>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <GenerateMapFile>false</GenerateMapFile>
-      <MapExports>false</MapExports>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp23</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <ControlFlowGuard>Guard</ControlFlowGuard>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <OmitFramePointers>true</OmitFramePointers>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <UseProcessorExtensions>true</UseProcessorExtensions>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <ModuleDefinitionFile>MyCommands.def</ModuleDefinitionFile>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <GenerateMapFile>false</GenerateMapFile>
-      <MapExports>false</MapExports>
-      <SetChecksum>true</SetChecksum>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp23</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <ControlFlowGuard>Guard</ControlFlowGuard>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <OmitFramePointers>true</OmitFramePointers>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
-      <EnableEnhancedInstructionSet>CPUExtensionRequirementsARMv81</EnableEnhancedInstructionSet>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
-      <ModuleDefinitionFile>MyCommands.def</ModuleDefinitionFile>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <GenerateMapFile>false</GenerateMapFile>
-      <MapExports>false</MapExports>
-      <SetChecksum>true</SetChecksum>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Shell.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="resource.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Icons\Main.ico" />
-    <Image Include="Icons\GetFileHash.ico" />
-    <Image Include="Icons\PolicyEditor.ico" />
-    <Image Include="Icons\ViewFileCert.ico" />
-  </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+   <ItemGroup Label="ProjectConfigurations">
+       <ProjectConfiguration Include="Debug|ARM64">
+           <Configuration>Debug</Configuration>
+           <Platform>ARM64</Platform>
+       </ProjectConfiguration>
+       <ProjectConfiguration Include="Release|ARM64">
+           <Configuration>Release</Configuration>
+           <Platform>ARM64</Platform>
+       </ProjectConfiguration>
+       <ProjectConfiguration Include="Debug|x64">
+           <Configuration>Debug</Configuration>
+           <Platform>x64</Platform>
+       </ProjectConfiguration>
+       <ProjectConfiguration Include="Release|x64">
+           <Configuration>Release</Configuration>
+           <Platform>x64</Platform>
+       </ProjectConfiguration>
+   </ItemGroup>
+   <PropertyGroup Label="Globals">
+       <ProjectGuid>{a7f42396-746a-4200-b311-46650833ed48}</ProjectGuid>
+       <RootNamespace>Shell</RootNamespace>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+       <ConfigurationType>DynamicLibrary</ConfigurationType>
+       <UseDebugLibraries>true</UseDebugLibraries>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+       <ConfigurationType>DynamicLibrary</ConfigurationType>
+       <UseDebugLibraries>true</UseDebugLibraries>
+       <PlatformToolset>v143</PlatformToolset>
+       <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+       <ConfigurationType>DynamicLibrary</ConfigurationType>
+       <UseDebugLibraries>false</UseDebugLibraries>
+       <PlatformToolset>v143</PlatformToolset>
+       <WholeProgramOptimization>true</WholeProgramOptimization>
+       <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+       <ConfigurationType>DynamicLibrary</ConfigurationType>
+       <UseDebugLibraries>false</UseDebugLibraries>
+       <PlatformToolset>v143</PlatformToolset>
+       <WholeProgramOptimization>true</WholeProgramOptimization>
+       <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings"></ImportGroup>
+   <ImportGroup Label="Shared"></ImportGroup>
+   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+       <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+   </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="PropertySheets">
+       <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+   </ImportGroup>
+   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+       <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+   </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="PropertySheets">
+       <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+   </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+       <ClCompile>
+           <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+           <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+           <WholeProgramOptimization>true</WholeProgramOptimization>
+           <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+           <OmitFramePointers>true</OmitFramePointers>
+           <StringPooling>true</StringPooling>
+           <BufferSecurityCheck>true</BufferSecurityCheck>
+           <FunctionLevelLinking>true</FunctionLevelLinking>
+           <IntrinsicFunctions>true</IntrinsicFunctions>
+           <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+           <FloatingPointModel>Fast</FloatingPointModel>
+           <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+           <UseProcessorExtensions>true</UseProcessorExtensions>
+       </ClCompile>
+       <Link>
+           <SubSystem>Console</SubSystem>
+           <GenerateDebugInformation>true</GenerateDebugInformation>
+           <ModuleDefinitionFile>MyCommands.def</ModuleDefinitionFile>
+           <OptimizeReferences>true</OptimizeReferences>
+           <EnableCOMDATFolding>true</EnableCOMDATFolding>
+           <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+           <GenerateMapFile>false</GenerateMapFile>
+           <MapExports>false</MapExports>
+       </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+       <ClCompile>
+           <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+           <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+           <WholeProgramOptimization>true</WholeProgramOptimization>
+           <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+           <OmitFramePointers>true</OmitFramePointers>
+           <StringPooling>true</StringPooling>
+           <BufferSecurityCheck>true</BufferSecurityCheck>
+           <FunctionLevelLinking>true</FunctionLevelLinking>
+           <IntrinsicFunctions>true</IntrinsicFunctions>
+           <FloatingPointModel>Fast</FloatingPointModel>
+           <EnableEnhancedInstructionSet>CPUExtensionRequirementsARMv81</EnableEnhancedInstructionSet>
+           <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+       </ClCompile>
+       <Link>
+           <SubSystem>Console</SubSystem>
+           <GenerateDebugInformation>true</GenerateDebugInformation>
+           <ModuleDefinitionFile>MyCommands.def</ModuleDefinitionFile>
+           <OptimizeReferences>true</OptimizeReferences>
+           <EnableCOMDATFolding>true</EnableCOMDATFolding>
+           <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+           <GenerateMapFile>false</GenerateMapFile>
+           <MapExports>false</MapExports>
+       </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+       <ClCompile>
+           <FunctionLevelLinking>true</FunctionLevelLinking>
+           <IntrinsicFunctions>true</IntrinsicFunctions>
+           <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+           <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+           <Optimization>MaxSpeed</Optimization>
+           <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+           <OmitFramePointers>true</OmitFramePointers>
+           <StringPooling>true</StringPooling>
+           <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+           <BufferSecurityCheck>false</BufferSecurityCheck>
+           <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+           <FloatingPointModel>Fast</FloatingPointModel>
+           <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+           <UseProcessorExtensions>true</UseProcessorExtensions>
+           <WholeProgramOptimization>true</WholeProgramOptimization>
+       </ClCompile>
+       <Link>
+           <SubSystem>Console</SubSystem>
+           <GenerateDebugInformation>false</GenerateDebugInformation>
+           <ModuleDefinitionFile>MyCommands.def</ModuleDefinitionFile>
+           <EnableCOMDATFolding>true</EnableCOMDATFolding>
+           <OptimizeReferences>true</OptimizeReferences>
+           <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+           <GenerateMapFile>false</GenerateMapFile>
+           <MapExports>false</MapExports>
+           <SetChecksum>true</SetChecksum>
+       </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+       <ClCompile>
+           <FunctionLevelLinking>true</FunctionLevelLinking>
+           <IntrinsicFunctions>true</IntrinsicFunctions>
+           <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+           <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+           <Optimization>MaxSpeed</Optimization>
+           <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+           <OmitFramePointers>true</OmitFramePointers>
+           <StringPooling>true</StringPooling>
+           <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+           <BufferSecurityCheck>false</BufferSecurityCheck>
+           <EnableEnhancedInstructionSet>CPUExtensionRequirementsARMv81</EnableEnhancedInstructionSet>
+           <FloatingPointModel>Fast</FloatingPointModel>
+           <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+           <WholeProgramOptimization>true</WholeProgramOptimization>
+       </ClCompile>
+       <Link>
+           <SubSystem>Console</SubSystem>
+           <GenerateDebugInformation>false</GenerateDebugInformation>
+           <ModuleDefinitionFile>MyCommands.def</ModuleDefinitionFile>
+           <EnableCOMDATFolding>true</EnableCOMDATFolding>
+           <OptimizeReferences>true</OptimizeReferences>
+           <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+           <GenerateMapFile>false</GenerateMapFile>
+           <MapExports>false</MapExports>
+           <SetChecksum>true</SetChecksum>
+       </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+       <ClCompile Include="Shell.cpp" />
+   </ItemGroup>
+   <ItemGroup>
+       <ClInclude Include="resource.h" />
+   </ItemGroup>
+   <ItemGroup>
+       <ResourceCompile Include="Resource.rc" />
+   </ItemGroup>
+   <ItemGroup>
+       <Image Include="Icons\Main.ico" />
+       <Image Include="Icons\GetFileHash.ico" />
+       <Image Include="Icons\PolicyEditor.ico" />
+       <Image Include="Icons\ViewFileCert.ico" />
+   </ItemGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets"></ImportGroup>
 </Project>

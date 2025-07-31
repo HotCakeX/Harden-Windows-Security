@@ -652,9 +652,6 @@
 <data name="DnsOverHttpsMode-Edge" xml:space="preserve">
     <value>Establecer el modo DNS sobre HTTPS para usar la configuración DoH del sistema</value>
 </data>
-<data name="AutomaticHttpsDefault-Edge" xml:space="preserve">
-    <value>Actualizar automáticamente conexiones HTTP a HTTPS</value>
-</data>
 <data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
     <value>Habilitar Cliente Hello Cifrado</value>
 </data>
@@ -780,9 +777,6 @@
 </data>
 <data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
     <value>Configura Edge para usar DNS sobre HTTPS del sistema. Esto también hace que MDAG funcione correctamente</value>
-</data>
-<data name="AutomaticHttpsDefaultEdge-Edge" xml:space="preserve">
-    <value>Actualizar automáticamente conexiones HTTP a HTTPS</value>
 </data>
 <data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
     <value>Habilitar Cliente Hello Cifrado</value>

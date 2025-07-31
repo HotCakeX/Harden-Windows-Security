@@ -652,9 +652,6 @@
 <data name="DnsOverHttpsMode-Edge" xml:space="preserve">
     <value>സിസ്റ്റത്തിന്റെ DoH ക്രമീകരണങ്ങൾ ഉപയോഗിക്കാൻ DNS over HTTPS മോഡ് സജ്ജമാക്കുക</value>
 </data>
-<data name="AutomaticHttpsDefault-Edge" xml:space="preserve">
-    <value>HTTP കണക്ഷനുകൾ സ്വയമേവ HTTPS-ലേക്ക് അപ്‌ഗ്രേഡ് ചെയ്യുക</value>
-</data>
 <data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
     <value>എൻക്രിപ്റ്റഡ് ക്ലയന്റ് ഹലോ പ്രവർത്തനക്ഷമമാക്കുക</value>
 </data>
@@ -780,9 +777,6 @@
 </data>
 <data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
     <value>സിസ്റ്റത്തിന്റെ DNS over HTTPS ഉപയോഗിക്കാൻ Edge സജ്ജമാക്കുന്നു. ഇത് MDAG ശരിയായി പ്രവർത്തിക്കാനും സഹായിക്കുന്നു</value>
-</data>
-<data name="AutomaticHttpsDefaultEdge-Edge" xml:space="preserve">
-    <value>HTTP കണക്ഷനുകൾ സ്വയമേവ HTTPS-ലേക്ക് അപ്‌ഗ്രേഡ് ചെയ്യുക</value>
 </data>
 <data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
     <value>എൻക്രിപ്റ്റഡ് ക്ലയന്റ് ഹലോ പ്രവർത്തനക്ഷമമാക്കുക</value>

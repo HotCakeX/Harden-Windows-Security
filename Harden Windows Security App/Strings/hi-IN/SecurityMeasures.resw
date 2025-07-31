@@ -652,9 +652,6 @@
 <data name="DnsOverHttpsMode-Edge" xml:space="preserve">
     <value>सिस्टम की DoH सेटिंग्स का उपयोग करने के लिए DNS ओवर HTTPS मोड सेट करें</value>
 </data>
-<data name="AutomaticHttpsDefault-Edge" xml:space="preserve">
-    <value>HTTP कनेक्शन को स्वचालित रूप से HTTPS में अपग्रेड करें</value>
-</data>
 <data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
     <value>एन्क्रिप्टेड क्लाइंट हैलो सक्षम करें</value>
 </data>
@@ -780,9 +777,6 @@
 </data>
 <data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
     <value>Edge को सिस्टम का DNS over HTTPS उपयोग करने के लिए सेट करें। यह MDAG को भी सही तरीके से काम करने देता है</value>
-</data>
-<data name="AutomaticHttpsDefaultEdge-Edge" xml:space="preserve">
-    <value>HTTP कनेक्शन को स्वचालित रूप से HTTPS में अपग्रेड करें</value>
 </data>
 <data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
     <value>एन्क्रिप्टेड क्लाइंट हैलो सक्षम करें</value>

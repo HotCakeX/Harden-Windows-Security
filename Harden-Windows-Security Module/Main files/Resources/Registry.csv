@@ -28,7 +28,6 @@ Miscellaneous,HKEY_LOCAL_MACHINE\Software\Microsoft\Cryptography\Wintrust\Config
 Miscellaneous,HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,1,String,AddOrModify,WinVerifyTrust Signature Validation
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended,BlockThirdPartyCookies,1,DWORD,AddOrModify,Recommends to block 3rd party cookies
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsMode,automatic,String,AddOrModify,Sets Edge to use system's DNS over HTTPS. This makes MDAG to work properly too
-Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,AutomaticHttpsDefault,2,DWORD,AddOrModify,Automatically upgrade HTTP connections to HTTPS
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,EncryptedClientHelloEnabled,1,DWORD,AddOrModify,Enable Encrypted Client Hello
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,BasicAuthOverHttpEnabled,0,DWORD,AddOrModify,Block Basic authentication for HTTP
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,ExperimentationAndConfigurationServiceControl,2,DWORD,AddOrModify,Allow devices using the Edge category protection to receive new features and experimentations like normal devices

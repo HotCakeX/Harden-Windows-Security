@@ -652,9 +652,6 @@
 <data name="DnsOverHttpsMode-Edge" xml:space="preserve">
     <value>تعيين وضع DNS عبر HTTPS لاستخدام إعدادات DoH للنظام</value>
 </data>
-<data name="AutomaticHttpsDefault-Edge" xml:space="preserve">
-    <value>ترقية اتصالات HTTP تلقائيًا إلى HTTPS</value>
-</data>
 <data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
     <value>تفعيل Encrypted Client Hello</value>
 </data>
@@ -780,9 +777,6 @@
 </data>
 <data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
     <value>تعيين Edge لاستخدام DNS over HTTPS الخاص بالنظام. هذا يجعل MDAG يعمل بشكل صحيح أيضًا</value>
-</data>
-<data name="AutomaticHttpsDefaultEdge-Edge" xml:space="preserve">
-    <value>ترقية اتصالات HTTP تلقائيًا إلى HTTPS</value>
 </data>
 <data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
     <value>تفعيل Encrypted Client Hello</value>

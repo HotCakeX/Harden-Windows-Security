@@ -652,9 +652,6 @@
 <data name="DnsOverHttpsMode-Edge" xml:space="preserve">
     <value>Ορισμός λειτουργίας DNS μέσω HTTPS για χρήση ρυθμίσεων DoH του συστήματος</value>
 </data>
-<data name="AutomaticHttpsDefault-Edge" xml:space="preserve">
-    <value>Αυτόματη αναβάθμιση συνδέσεων HTTP σε HTTPS</value>
-</data>
 <data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
     <value>Ενεργοποίηση Κρυπτογραφημένου Client Hello</value>
 </data>
@@ -780,9 +777,6 @@
 </data>
 <data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
     <value>Ρυθμίζει το Edge να χρησιμοποιεί DNS over HTTPS του συστήματος. Αυτό κάνει και το MDAG να λειτουργεί σωστά</value>
-</data>
-<data name="AutomaticHttpsDefaultEdge-Edge" xml:space="preserve">
-    <value>Αυτόματη αναβάθμιση συνδέσεων HTTP σε HTTPS</value>
 </data>
 <data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
     <value>Ενεργοποίηση Κρυπτογραφημένου Client Hello</value>

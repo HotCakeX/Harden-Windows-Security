@@ -652,9 +652,6 @@
 <data name="DnsOverHttpsMode-Edge" xml:space="preserve">
     <value>הגדרת מצב DNS דרך HTTPS לשימוש בהגדרות DoH של המערכת</value>
 </data>
-<data name="AutomaticHttpsDefault-Edge" xml:space="preserve">
-    <value>שדרוג אוטומטי של חיבורי HTTP ל-HTTPS</value>
-</data>
 <data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
     <value>הפעלת Encrypted Client Hello</value>
 </data>
@@ -780,9 +777,6 @@
 </data>
 <data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
     <value>הגדרת Edge להשתמש ב-DNS over HTTPS של המערכת. זה גורם גם ל-MDAG לעבוד כראוי</value>
-</data>
-<data name="AutomaticHttpsDefaultEdge-Edge" xml:space="preserve">
-    <value>שדרוג אוטומטי של חיבורי HTTP ל-HTTPS</value>
 </data>
 <data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
     <value>הפעלת Encrypted Client Hello</value>

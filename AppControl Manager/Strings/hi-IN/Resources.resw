@@ -4996,12 +4996,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 <data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
   <value>कोड इंटेग्रिटी लॉग का आकार सेट किया जा रहा है</value>
 </data>
-<data name="VersionLabelFormat" xml:space="preserve">
-  <value>संस्करण: {0}.{1}.{2}.{3}</value>
-</data>
-<data name="PFNLabelFormat" xml:space="preserve">
-  <value>PFN: {0}</value>
-</data>
 <data name="AppDetailsErrorMessageWithName" xml:space="preserve">
   <value>ऐप के लिए विवरण प्राप्त करने में एक त्रुटि हुई: {0}</value>
 </data>
@@ -5700,5 +5694,38 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>सबमिट करें</value>
+  </data>
+  <data name="PFNArchitectureLabel.Text" xml:space="preserve">
+  <value>आर्किटेक्चर</value>
+</data>
+<data name="PFNPublisherLabel.Text" xml:space="preserve">
+  <value>प्रकाशक</value>
+</data>
+<data name="PFNPublisherID.Text" xml:space="preserve">
+  <value>प्रकाशक ID</value>
+</data>
+<data name="PFNDescription.Text" xml:space="preserve">
+  <value>विवरण</value>
+</data>
+<data name="PFNInstallLocation.Text" xml:space="preserve">
+  <value>इंस्टॉल स्थान</value>
+</data>
+<data name="PFNInstalledDateLabel.Text" xml:space="preserve">
+  <value>अंतिम बार संशोधित</value>
+</data>
+<data name="PFNDisplayNameLabelText" xml:space="preserve">
+  <value>प्रदर्शन नाम</value>
+</data>
+<data name="PFNFullNameLabel.Text" xml:space="preserve">
+  <value>पूरा नाम</value>
+</data>
+<data name="PFNVersionLabel.Text" xml:space="preserve">
+  <value>संस्करण</value>
+</data>
+<data name="PFNLabel.Text" xml:space="preserve">
+  <value>पैकेज परिवार नाम</value>
+</data>
+  <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
+    <value>लॉग डायरेक्टरी खोलें</value>
   </data>
 </root>

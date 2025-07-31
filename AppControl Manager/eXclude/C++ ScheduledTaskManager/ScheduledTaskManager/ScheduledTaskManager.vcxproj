@@ -67,6 +67,7 @@
            <EnableEnhancedInstructionSet>CPUExtensionRequirementsARMv81</EnableEnhancedInstructionSet>
            <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
            <GuardSignedReturns>true</GuardSignedReturns>
+           <ControlFlowGuard>false</ControlFlowGuard>
        </ClCompile>
        <Link>
            <SubSystem>Console</SubSystem>
@@ -104,6 +105,7 @@
            <IntelJCCErratum>true</IntelJCCErratum>
            <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
            <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+           <ControlFlowGuard>false</ControlFlowGuard>
        </ClCompile>
        <Link>
            <SubSystem>Console</SubSystem>

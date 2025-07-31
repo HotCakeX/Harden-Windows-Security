@@ -103,6 +103,11 @@ internal sealed class RegistryPolicyEntry(
 	[JsonPropertyName("SubCategory")]
 	internal SubCategories? SubCategory { get; init; }
 
+	[JsonInclude]
+	[JsonPropertyOrder(13)]
+	[JsonPropertyName("DefaultRegValue")]
+	internal string? DefaultRegValue { get; set; }
+
 	/// <summary>
 	/// Calculated once, returns the parsed value based on the type and data.
 	/// </summary>

@@ -10,6 +10,8 @@ AppControl Manager/MSIXOutputARM64
 AppControl Manager/MSIXBundleOutput
 AppControl Manager/Generated Files/
 AppControl Manager/AppControl Manager.csproj.user
+AppControl Manager/Cargo.lock
+AppControl Manager/target
 Harden Windows Security App/.vs/
 Harden Windows Security App/bin/
 Harden Windows Security App/obj/
@@ -17,4 +19,4 @@ Harden Windows Security App/MSIXOutputX64
 Harden Windows Security App/MSIXOutputARM64
 Harden Windows Security App/MSIXBundleOutput
 Harden Windows Security App/Generated Files/
-Harden Windows Security App/Harden Windows Security.csproj.user
+Harden Windows Security App/Harden Windows Security App.csproj.user

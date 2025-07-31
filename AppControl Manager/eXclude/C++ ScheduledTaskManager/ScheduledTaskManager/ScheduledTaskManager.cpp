@@ -164,7 +164,7 @@ static WORD ParseDaysOfWeek(const std::wstring& days)
 	for (auto& d : daysvec)
 	{
 		std::wstring s = d;
-		for (auto& c : s) c = std::tolower(c);
+		for (auto& c : s) c = static_cast<wchar_t>(std::tolower(c));
 		if (s == L"sun") val |= TASK_SUNDAY;
 		else if (s == L"mon") val |= TASK_MONDAY;
 		else if (s == L"tue") val |= TASK_TUESDAY;
@@ -183,7 +183,7 @@ static LONG ParseMonths(const std::wstring& months)
 	for (auto& m : mvec)
 	{
 		std::wstring s = m;
-		for (auto& c : s) c = std::tolower(c);
+		for (auto& c : s) c = static_cast<wchar_t>(std::tolower(c));
 		if (s == L"jan") val |= (1 << 0);
 		else if (s == L"feb") val |= (1 << 1);
 		else if (s == L"mar") val |= (1 << 2);
@@ -228,12 +228,12 @@ static bool ParseISO8601(const std::wstring& s, SYSTEMTIME& st)
 	if (swscanf_s(s.c_str(), L"%d-%d-%dT%d:%d:%d", &y, &m, &d, &h, &mi, &sec) == 6 ||
 		swscanf_s(s.c_str(), L"%d-%d-%d %d:%d:%d", &y, &m, &d, &h, &mi, &sec) == 6)
 	{
-		st.wYear = y;
-		st.wMonth = m;
-		st.wDay = d;
-		st.wHour = h;
-		st.wMinute = mi;
-		st.wSecond = sec;
+		st.wYear = static_cast<WORD>(y);
+		st.wMonth = static_cast<WORD>(m);
+		st.wDay = static_cast<WORD>(d);
+		st.wHour = static_cast<WORD>(h);
+		st.wMinute = static_cast<WORD>(mi);
+		st.wSecond = static_cast<WORD>(sec);
 		st.wMilliseconds = 0;
 		return true;
 	}
@@ -432,7 +432,7 @@ static HRESULT AddTriggerToCollection(ITriggerCollection* pTriggers, const Trigg
 		if (SUCCEEDED(pBaseTrig->QueryInterface(IID_IDailyTrigger, (void**)&pDaily)) && pDaily)
 		{
 			if (trig.kv.count(L"interval")) {
-				hr = pDaily->put_DaysInterval(_wtoi(trig.kv.at(L"interval").c_str()));
+				hr = pDaily->put_DaysInterval(static_cast<short>(_wtoi(trig.kv.at(L"interval").c_str())));
 				if (FAILED(hr)) {
 					_com_error err(hr);
 					std::wcerr << L"[Error] put_DaysInterval failed: 0x" << std::hex << hr << L" — " << err.ErrorMessage() << std::endl;
@@ -451,7 +451,7 @@ static HRESULT AddTriggerToCollection(ITriggerCollection* pTriggers, const Trigg
 		if (SUCCEEDED(pBaseTrig->QueryInterface(IID_IWeeklyTrigger, (void**)&pWeekly)) && pWeekly)
 		{
 			if (trig.kv.count(L"interval")) {
-				hr = pWeekly->put_WeeksInterval(_wtoi(trig.kv.at(L"interval").c_str()));
+				hr = pWeekly->put_WeeksInterval(static_cast<short>(_wtoi(trig.kv.at(L"interval").c_str())));
 				if (FAILED(hr)) {
 					_com_error err(hr);
 					std::wcerr << L"[Error] put_WeeksInterval failed: 0x" << std::hex << hr << L" — " << err.ErrorMessage() << std::endl;
@@ -480,7 +480,8 @@ static HRESULT AddTriggerToCollection(ITriggerCollection* pTriggers, const Trigg
 		if (SUCCEEDED(pBaseTrig->QueryInterface(IID_IMonthlyTrigger, (void**)&pMonthly)) && pMonthly)
 		{
 			if (trig.kv.count(L"months")) {
-				hr = pMonthly->put_MonthsOfYear(static_cast<short>(ParseMonths(trig.kv.at(L"months"))));
+				LONG monthsValue = ParseMonths(trig.kv.at(L"months"));
+				hr = pMonthly->put_MonthsOfYear(static_cast<short>(monthsValue));
 				if (FAILED(hr)) {
 					_com_error err(hr);
 					std::wcerr << L"[Error] put_MonthsOfYear failed: 0x" << std::hex << hr << L" — " << err.ErrorMessage() << std::endl;
@@ -495,7 +496,7 @@ static HRESULT AddTriggerToCollection(ITriggerCollection* pTriggers, const Trigg
 				long mask = 0;
 				for (auto day : dom) {
 					if (day >= 1 && day <= 31)
-						mask |= (1 << (day - 1));
+						mask |= (1L << (day - 1));
 				}
 				hr = pMonthly->put_DaysOfMonth(mask);
 				if (FAILED(hr)) {

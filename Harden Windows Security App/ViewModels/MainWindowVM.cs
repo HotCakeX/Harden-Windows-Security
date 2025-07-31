@@ -18,13 +18,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using AnimatedVisuals;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using AnimatedVisuals;
 
 namespace HardenWindowsSecurity.ViewModels;
 
@@ -42,7 +42,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.UpdatePage),
 		typeof(Pages.GitHubDocumentation),
 		typeof(Pages.GroupPolicyEditor),
-		typeof(Pages.Protects.NonAdmin)
+		typeof(Pages.Protects.NonAdmin),
+		typeof(Pages.FileReputation)
 		];
 
 
@@ -52,7 +53,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		breadCrumbMappingsV2[typeof(Pages.Protect)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("ProtectNavigationViewItemHeader/Content")],
+			titles: [GlobalVars.GetStr("ProtectNavigationViewItem/Content")],
 			pages: [typeof(Pages.Protect)]
 		);
 
@@ -175,12 +176,24 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("NonAdminCommandsNavItem/Content")],
 			pages: [typeof(Pages.Protects.NonAdmin)]
 		);
+
+		breadCrumbMappingsV2[typeof(Pages.FileReputation)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("FileReputationNavItem/Content")],
+			pages: [typeof(Pages.FileReputation)]
+		);
+
+		breadCrumbMappingsV2[typeof(Pages.InstalledAppsManagement)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("InstalledAppsManagementNavItem/Content")],
+			pages: [typeof(Pages.InstalledAppsManagement)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
 	// initially adding the default page that loads when the app is loaded to the collection
-	internal readonly ObservableCollection<Crumb> Breadcrumbs = App.IsElevated ? [new Crumb(GlobalVars.GetStr("ProtectNavigationViewItemHeader/Content"), typeof(Pages.Protect))] :
-		[new Crumb(GlobalVars.GetStr("GitHubDocsNavItem/Content"), typeof(Pages.GitHubDocumentation))];
+	internal readonly ObservableCollection<Crumb> Breadcrumbs = App.IsElevated ? [new Crumb(GlobalVars.GetStr("ProtectNavigationViewItem/Content"), typeof(Pages.Protect))] :
+		[new Crumb(GlobalVars.GetStr("NonAdminCommandsNavItem/Content"), typeof(Pages.Protects.NonAdmin))];
 
 	/// <summary>
 	/// Dictionary of all the main pages in the app, used for the main navigation.
@@ -207,9 +220,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "Miscellaneous", typeof(Pages.Protects.MiscellaneousConfigs) },
 		{ "WinUpdate", typeof(Pages.Protects.WindowsUpdate) },
 		{ "Edge", typeof(Pages.Protects.Edge) },
-		{ "Certificates", typeof(Pages.Protects.CertificateChecking) },
-		{ "CountryIPBlocking", typeof(Pages.Protects.CountryIPBlocking) },
-		{ "NonAdmin", typeof(Pages.Protects.NonAdmin) }
+		// { "Certificates", typeof(Pages.Protects.CertificateChecking) },
+		// { "CountryIPBlocking", typeof(Pages.Protects.CountryIPBlocking) },
+		{ "NonAdmin", typeof(Pages.Protects.NonAdmin) },
+		{ "FileReputation", typeof(Pages.FileReputation) },
+		{ "InstalledAppsManagement", typeof(Pages.InstalledAppsManagement) }
 	};
 
 
@@ -223,7 +238,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	{
 		NavigationPageToItemContentMapForSearch.Clear();
 
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("ProtectNavigationViewItemHeader/Content")] = typeof(Pages.Protect);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("ProtectNavigationViewItem/Content")] = typeof(Pages.Protect);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("LogsNavItem/Content")] = typeof(Pages.Logs);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("GitHubDocsNavItem/Content")] = typeof(Pages.GitHubDocumentation);
@@ -242,9 +257,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MiscellaneousNavItem/Content")] = typeof(Pages.Protects.MiscellaneousConfigs);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("WindowsUpdateNavItem/Content")] = typeof(Pages.Protects.WindowsUpdate);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("EdgeBrowserNavItem/Content")] = typeof(Pages.Protects.Edge);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CertificatesNavItem/Content")] = typeof(Pages.Protects.CertificateChecking);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CountryIPBlockingNavItem/Content")] = typeof(Pages.Protects.CountryIPBlocking);
+		// NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CertificatesNavItem/Content")] = typeof(Pages.Protects.CertificateChecking);
+		//NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CountryIPBlockingNavItem/Content")] = typeof(Pages.Protects.CountryIPBlocking);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("NonAdminCommandsNavItem/Content")] = typeof(Pages.Protects.NonAdmin);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("FileReputationNavItem/Content")] = typeof(Pages.FileReputation);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("InstalledAppsManagementNavItem/Content")] = typeof(Pages.InstalledAppsManagement);
 	}
 
 	/// <summary>
@@ -282,6 +299,21 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the Update navigation item in the footer.
 	/// </summary>
 	internal IconElement? UpdateIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the Group Policy Editor navigation item.
+	/// </summary>
+	internal IconElement? GroupPolicyEditorIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the File Reputation navigation item.
+	/// </summary>
+	internal IconElement? FileReputationIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the File Installed Apps Management item.
+	/// </summary>
+	internal IconElement? InstalledAppsManagementIcon { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -335,6 +367,24 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						};
 					}
 
+					GroupPolicyEditorIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -35, -35, -35),
+						Source = new Star()
+					};
+
+					FileReputationIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -11, -11, -11),
+						Source = new Kawaii()
+					};
+
+					InstalledAppsManagementIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -8, -8, -8),
+						Source = new Toolbox()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -366,6 +416,24 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					GroupPolicyEditorIcon = new FontIcon
+					{
+						Glyph = "\uE70F",
+						Foreground = accentBrush
+					};
+
+					FileReputationIcon = new FontIcon
+					{
+						Glyph = "\uEA91",
+						Foreground = accentBrush
+					};
+
+					InstalledAppsManagementIcon = new FontIcon
+					{
+						Glyph = "\uE71D",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -375,6 +443,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					LogsIcon = new FontIcon { Glyph = "\uF5A0" };
 					GitHubDocsIcon = new FontIcon { Glyph = "\uE8A5" };
 					UpdateIcon = new FontIcon { Glyph = "\uEB52" };
+					GroupPolicyEditorIcon = new FontIcon { Glyph = "\uE70F" };
+					FileReputationIcon = new FontIcon { Glyph = "\uEA91" };
+					InstalledAppsManagementIcon = new FontIcon { Glyph = "\uE71D" };
 					break;
 				}
 		}

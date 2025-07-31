@@ -1,0 +1,2324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="GitHubDocsNavItem.Content" xml:space="preserve">
+    <value>Τεκμηρίωση GitHub</value>
+  </data>
+  <data name="GitHubDocsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Λήψη ηλεκτρονικής τεκμηρίωσης από το GitHub σχετικά με τη χρήση της εφαρμογής</value>
+  </data>
+  <data name="GitHubDocsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Λήψη ηλεκτρονικής τεκμηρίωσης από το GitHub σχετικά με τη χρήση της εφαρμογής</value>
+  </data>
+  <data name="LogsNavItem.Content" xml:space="preserve">
+    <value>Αρχεία καταγραφής</value>
+  </data>
+  <data name="SettingsNavItem.Content" xml:space="preserve">
+    <value>Ρυθμίσεις</value>
+  </data>
+  <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβολή των αρχείων καταγραφής της εφαρμογής σε πραγματικό χρόνο</value>
+  </data>
+  <data name="LogsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προβολή των αρχείων καταγραφής της εφαρμογής σε πραγματικό χρόνο</value>
+  </data>
+    <data name="UpdateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Έλεγχος για ενημερώσεις</value>
+  </data>
+  <data name="UpdateNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Έλεγχος για ενημερώσεις</value>
+  </data>
+  <data name="UpdateNavItem.Content" xml:space="preserve">
+    <value>Ενημέρωση</value>
+  </data>
+    <data name="MainSearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
+    <value>Αναζήτηση στοιχείων μενού...</value>
+  </data>
+  <data name="MainSearchAutoSuggestBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εισάγετε ονόματα στοιχείων μενού για να τα βρείτε γρήγορα</value>
+  </data>
+  <data name="MainSearchAutoSuggestBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εισάγετε ονόματα στοιχείων μενού για να τα βρείτε γρήγορα</value>
+  </data>
+  <data name="RefreshLogFilesButton.Content" xml:space="preserve">
+    <value>Ανανέωση Αρχείων Καταγραφής</value>
+  </data>
+  <data name="RefreshLogFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση των πιο πρόσφατων αρχείων καταγραφής για την τρέχουσα συνεδρία διαβάζοντάς τα από το αρχείο καταγραφής στο φάκελο διαμορφώσεων χρήστη</value>
+  </data>
+  <data name="RefreshLogFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση των πιο πρόσφατων αρχείων καταγραφής για την τρέχουσα συνεδρία διαβάζοντάς τα από το αρχείο καταγραφής στο φάκελο διαμορφώσεων χρήστη</value>
+  </data>
+  <data name="AppStartupMessage" xml:space="preserve">
+    <value>Εκκίνηση εφαρμογής, έκδοση περιβάλλοντος εκτέλεσης .NET: {0}</value>
+  </data>
+  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
+    <value>Υπάρχει άλλη παρουσία του Harden Windows Security που εκτελείται. Αυτό είναι απλώς ένα πληροφοριακό αρχείο καταγραφής.</value>
+</data>
+<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <value>Ανιχνεύθηκε ενεργοποίηση αρχείου</value>
+</data>
+<data name="FileActivationNoObjectsMessage" xml:space="preserve">
+  <value>Η εφαρμογή εκκινήθηκε μέσω ενεργοποίησης αρχείου αλλά τα ορίσματα δεν περιείχαν αντικείμενα αρχείων</value>
+</data>
+<data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+  <value>Η εφαρμογή εκκινήθηκε μέσω ενεργοποίησης αρχείου αλλά χωρίς ορίσματα ενεργοποίησης αρχείου</value>
+</data>
+<data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+  <value>Απαιτήθηκε αίτημα αυξημένων δικαιωμάτων για την επεξεργασία του επιλεγμένου αρχείου αλλά απορρίφθηκε από τον χρήστη. Έξοδος από την εφαρμογή.</value>
+</data>
+<data name="ElevationDeniedMessage" xml:space="preserve">
+  <value>Το αίτημα αυξημένων δικαιωμάτων απορρίφθηκε από τον χρήστη</value>
+</data>
+<data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+  <value>Υπήρξε πρόβλημα στην αποθήκευση του μεγέθους παραθύρου κατά το κλείσιμο της εφαρμογής: {0}</value>
+</data>
+<data name="ErrorDialogTitle" xml:space="preserve">
+  <value>Παρουσιάστηκε σφάλμα</value>
+</data>
+<data name="ErrorDialogContent" xml:space="preserve">
+  <value>Παρουσιάστηκε απροσδόκητο σφάλμα: {0}</value>
+</data>
+  <data name="OK" xml:space="preserve">
+    <value>ΟΚ</value>
+  </data>
+      <data name="Cancelling" xml:space="preserve">
+    <value>Ακύρωση...</value>
+  </data>
+    <data name="Cancel" xml:space="preserve">
+    <value>Ακύρωση</value>
+  </data>
+  <data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+  <value>Ρύθμιση μεγέθους αρχείου καταγραφής ακεραιότητας κώδικα</value>
+</data>
+  <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
+    <value>Αύξηση του μεγέθους αρχείου καταγραφής ακεραιότητας κώδικα κατά 1MB επειδή ο τρέχων ελεύθερος χώρος του είναι λιγότερο από 1MB.</value>
+  </data>
+    <data name="SettingCodeIntegrityLogSizeMessage" xml:space="preserve">
+    <value>Ρύθμιση μεγέθους αρχείου καταγραφής ακεραιότητας κώδικα σε {0:N2} MB.</value>
+  </data>
+    <data name="ProvidedLogSizeLessThanOrEqualOneMbNoChangesMadeMessage" xml:space="preserve">
+    <value>Το παρεχόμενο μέγεθος αρχείου καταγραφής είναι μικρότερο ή ίσο με 1 MB. Δεν έγιναν αλλαγές.</value>
+  </data>
+    <data name="FileRequiresElevatedPermissionsMessage" xml:space="preserve">
+    <value>Το αρχείο "{0}" απαιτεί αυξημένα δικαιώματα.</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+  <value>Κατάσταση</value>
+</data>
+  <data name="WarningTitle" xml:space="preserve">
+    <value>ΠΡΟΕΙΔΟΠΟΙΗΣΗ</value>
+  </data>
+    <data name="ErrorTitle" xml:space="preserve">
+    <value>Σφάλμα</value>
+  </data>
+    <data name="SuccessTitle" xml:space="preserve">
+    <value>Επιτυχία</value>
+  </data>
+    <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
+    <value>Η εντολή '{0} {1}' απέτυχε με κωδικό εξόδου {2}. Σφάλμα: {3}</value>
+  </data>
+  <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
+    <value>Το αίτημα αυξημένων δικαιωμάτων ακυρώθηκε από τον χρήστη.</value>
+  </data>
+    <data name="ActivationManagerFailedWithHRESULTMessage" xml:space="preserve">
+    <value>Το ActivationManager απέτυχε με HRESULT: 0x{0:X}</value>
+  </data>
+  <data name="JumpListNotSupportedMessage" xml:space="preserve">
+  <value>Το JumpList δεν υποστηρίζεται.</value>
+</data>
+  <data name="AppElevationNoticeMain" xml:space="preserve">
+    <value>Παρακαλώ εκκινήστε το Harden Windows Security ως Διαχειριστής για πρόσβαση σε αυτή τη σελίδα</value>
+  </data>
+    <data name="AppElevationNoticeExtraPrompt" xml:space="preserve">
+    <value>Πάντα να ζητείται αύξηση δικαιωμάτων κατά την εκκίνηση της εφαρμογής</value>
+  </data>
+    <data name="AppElevationNoticeTitle" xml:space="preserve">
+    <value>Απαιτούνται δικαιώματα διαχειριστή</value>
+  </data>
+    <data name="AppElevationNoticeRelaunch" xml:space="preserve">
+    <value>Επανεκκίνηση ως Διαχειριστής</value>
+  </data>
+    <data name="WindowMaximizedMsg" xml:space="preserve">
+    <value>Το παράθυρο ήταν μεγιστοποιημένο όταν η εφαρμογή έκλεισε την τελευταία φορά, ρύθμιση του σε μεγιστοποιημένο τώρα</value>
+  </data>
+  <data name="SettingWindowSizeMessage" xml:space="preserve">
+  <value>Ρύθμιση του μεγέθους παραθύρου πίσω σε αυτό που ήταν όταν η εφαρμογή έκλεισε. Ύψος: {0} - Πλάτος: {1}</value>
+</data>
+  <data name="SidebarTextBlock.Text" xml:space="preserve">
+    <value>Πλευρική μπάρα</value>
+  </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>Χρησιμοποιήστε την πλευρική μπάρα για επιπλέον λειτουργίες.</value>
+  </data>
+    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
+    <value>Οδηγός πλευρικής μπάρας</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Για οδηγό χρήσης της πλευρικής μπάρας παρακαλώ επισκεφθείτε τη σελίδα wiki του GitHub κάνοντας κλικ/πατώντας εδώ.</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Για οδηγό χρήσης της πλευρικής μπάρας παρακαλώ επισκεφθείτε τη σελίδα wiki του GitHub κάνοντας κλικ/πατώντας εδώ.</value>
+  </data>
+    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+    <value>Υποστήριξη - Κάντε ερωτήσεις</value>
+  </data>
+  <data name="SettingsPageTitle.Text" xml:space="preserve">
+    <value>Προσαρμόστε τις ρυθμίσεις της εφαρμογής σας εδώ. Οι προτιμήσεις σας θα αποθηκευτούν ώστε να είναι έτοιμες για εσάς κάθε φορά που εκκινείτε το Harden Windows Security.</value>
+  </data>
+  <data name="Appearance.Text" xml:space="preserve">
+    <value>Εμφάνιση</value>
+  </data>
+  <data name="About.Text" xml:space="preserve">
+    <value>Σχετικά</value>
+  </data>
+    <data name="AppearanceSectionSettingsExpander.Header" xml:space="preserve">
+    <value>Κάντε το Harden Windows Security να φαίνεται όπως θέλετε</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Χρησιμοποιήστε τις διάφορες διαθέσιμες επιλογές για να αλλάξετε την εμφάνιση και τα οπτικά εφέ του Harden Windows Security</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Χρησιμοποιήστε τις διάφορες διαθέσιμες επιλογές για να αλλάξετε την εμφάνιση και τα οπτικά εφέ του Harden Windows Security</value>
+  </data>
+    <data name="DarkerBackGroundSettingsCard.Description" xml:space="preserve">
+    <value>Κυρίως κατάλληλο όταν χρησιμοποιείτε MicaAlt ως φόντο.</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.Header" xml:space="preserve">
+    <value>Σκοτεινότερο φόντο</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Θα αφαιρέσει την επιπλέον ανοιχτή σκιά από το φόντο, δίνοντας μια συνολικά σκοτεινότερη εμφάνιση στο Harden Windows Security.</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Θα αφαιρέσει την επιπλέον ανοιχτή σκιά από το φόντο, δίνοντας μια συνολικά σκοτεινότερη εμφάνιση στο Harden Windows Security.</value>
+  </data>
+    <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>Ενεργό</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>Ανενεργό</value>
+  </data>
+    <data name="BackgroundStyleSettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε το στυλ φόντου της εφαρμογής</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.Header" xml:space="preserve">
+    <value>Στυλ φόντου</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αυτό είναι το φόντο του Harden Windows Security. Οι αλλαγές θα είναι ορατές στο φόντο.</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αυτό είναι το φόντο του Harden Windows Security. Οι αλλαγές θα είναι ορατές στο φόντο.</value>
+  </data>
+    <data name="AppThemeSettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε το θέμα</value>
+  </data>
+  <data name="AppThemeSettingsCard.Header" xml:space="preserve">
+    <value>Θέμα</value>
+  </data>
+  <data name="AppThemeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε ένα θέμα για το Harden Windows Security</value>
+  </data>
+  <data name="AppThemeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε ένα θέμα για το Harden Windows Security</value>
+  </data>
+    <data name="MainNavigationIconsSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε ένα στυλ για τα εικονίδια της κύριας πλοήγησης</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.Header" xml:space="preserve">
+    <value>Στυλ εικονιδίων</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε ένα στυλ για τα εικονίδια της κύριας πλοήγησης.</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε ένα στυλ για τα εικονίδια της κύριας πλοήγησης.</value>
+  </data>
+    <data name="MainNavigationLocationSettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε τη θέση του μενού πλοήγησης</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.Header" xml:space="preserve">
+    <value>Μενού πλοήγησης</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε μια θέση για το μενού πλοήγησης</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε μια θέση για το μενού πλοήγησης</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.Header" xml:space="preserve">
+    <value>Αλλάξτε τη συμπεριφορά του Harden Windows Security και διάφορων στοιχείων μέσα σε αυτό</value>
+  </data>
+  <data name="Behavior.Text" xml:space="preserve">
+    <value>Συμπεριφορά</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αλλάξτε τη συμπεριφορά του Harden Windows Security και διάφορων στοιχείων μέσα σε αυτό</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αλλάξτε τη συμπεριφορά του Harden Windows Security και διάφορων στοιχείων μέσα σε αυτό</value>
+  </data>
+    <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Όποτε επιλέγετε ένα στοιχείο σε μια προβολή λίστας, κεντράρετε αυτό το στοιχείο κάθετα στην οθόνη.</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Κάθετο κεντράρισμα προβολών λίστας κατά την επιλογή</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Όποτε επιλέγετε ένα στοιχείο σε μια προβολή λίστας, κεντράρετε αυτό το στοιχείο κάθετα στην οθόνη.</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Όποτε επιλέγετε ένα στοιχείο σε μια προβολή λίστας, κεντράρετε αυτό το στοιχείο κάθετα στην οθόνη.</value>
+  </data>
+    <data name="PromptForElevationSettingsCard.Description" xml:space="preserve">
+    <value>Εάν αυτό είναι ενεργοποιημένο, το Harden Windows Security θα ζητάει αύξηση δικαιωμάτων για να εκτελεστεί με δικαιώματα διαχειριστή κατά την εκκίνηση.</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.Header" xml:space="preserve">
+    <value>Αίτημα αύξησης δικαιωμάτων κατά την εκκίνηση</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εάν αυτό είναι ενεργοποιημένο, το Harden Windows Security θα ζητάει αύξηση δικαιωμάτων για να εκτελεστεί με δικαιώματα διαχειριστή κατά την εκκίνηση.</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εάν αυτό είναι ενεργοποιημένο, το Harden Windows Security θα ζητάει αύξηση δικαιωμάτων για να εκτελεστεί με δικαιώματα διαχειριστή κατά την εκκίνηση.</value>
+  </data>
+    <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>Αποτρέψτε άλλες εφαρμογές όπως εγγραφείς οθόνης (συμπεριλαμβανομένου του Recall) από το να εγγράφουν ή να λαμβάνουν στιγμιότυπα οθόνης του παραθύρου Harden Windows Security.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>Προστασία οθόνης</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποτρέψτε άλλες εφαρμογές όπως εγγραφείς οθόνης (συμπεριλαμβανομένου του Recall) από το να εγγράφουν ή να λαμβάνουν στιγμιότυπα οθόνης του παραθύρου Harden Windows Security.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποτρέψτε άλλες εφαρμογές όπως εγγραφείς οθόνης (συμπεριλαμβανομένου του Recall) από το να εγγράφουν ή να λαμβάνουν στιγμιότυπα οθόνης του παραθύρου Harden Windows Security.</value>
+  </data>
+   <data name="PublishUserActivityInTheOSSettingsCard.Description" xml:space="preserve">
+    <value>Δημοσιεύστε διάφορες δραστηριότητες που εκτελείτε στο Harden Windows Security στο λειτουργικό σύστημα, επιτρέποντάς τους να εμφανίζονται και να είναι διαθέσιμες σε εσάς στο Microsoft Recall ώστε να μπορείτε να ανακαλέσετε τις ενέργειές σας.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.Header" xml:space="preserve">
+    <value>Δημοσίευση δραστηριότητας στο λειτουργικό σύστημα</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημοσιεύστε διάφορες δραστηριότητες που εκτελείτε στο Harden Windows Security στο λειτουργικό σύστημα, επιτρέποντάς τους να εμφανίζονται και να είναι διαθέσιμες σε εσάς στο Microsoft Recall ώστε να μπορείτε να ανακαλέσετε τις ενέργειές σας.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημοσιεύστε διάφορες δραστηριότητες που εκτελείτε στο Harden Windows Security στο λειτουργικό σύστημα, επιτρέποντάς τους να εμφανίζονται και να είναι διαθέσιμες σε εσάς στο Microsoft Recall ώστε να μπορείτε να ανακαλέσετε τις ενέργειές σας.</value>
+  </data>
+    <data name="LanguageTextBlock.Text" xml:space="preserve">
+    <value>Γλώσσα</value>
+  </data>
+    <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
+    <value>Εναλλαγή μεταξύ διαφορετικών υποστηριζόμενων γλωσσών και διατάξεων διεπαφής χρήστη.</value>
+  </data>
+  <data name="LanguageSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εναλλαγή μεταξύ διαφορετικών υποστηριζόμενων γλωσσών και διατάξεων διεπαφής χρήστη.</value>
+  </data>
+  <data name="LanguageSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εναλλαγή μεταξύ διαφορετικών υποστηριζόμενων γλωσσών και διατάξεων διεπαφής χρήστη.</value>
+  </data>
+    <data name="LanguageSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε διαφορετική γλώσσα από τη λίστα</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Επιλογή γλώσσας</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε διαφορετική γλώσσα από τη λίστα</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε διαφορετική γλώσσα από τη λίστα</value>
+  </data>
+    <data name="UIFlowDirectionSettingsCard.Description" xml:space="preserve">
+    <value>Εναλλαγή μεταξύ κατευθύνσεων ροής από δεξιά προς αριστερά και από αριστερά προς δεξιά για τα στοιχεία διεπαφής χρήστη.</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.Header" xml:space="preserve">
+    <value>Κατεύθυνση ροής</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εναλλαγή μεταξύ κατευθύνσεων ροής από δεξιά προς αριστερά και από αριστερά προς δεξιά για τα στοιχεία διεπαφής χρήστη.</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εναλλαγή μεταξύ κατευθύνσεων ροής από δεξιά προς αριστερά και από αριστερά προς δεξιά για τα στοιχεία διεπαφής χρήστη.</value>
+  </data>
+    <data name="UIFlowDirectionToggleSwitch.OnContent" xml:space="preserve">
+    <value>Αριστερά προς δεξιά</value>
+  </data>
+  <data name="UIFlowDirectionToggleSwitch.OffContent" xml:space="preserve">
+    <value>Δεξιά προς αριστερά</value>
+  </data>
+    <data name="Sound.Text" xml:space="preserve">
+    <value>Ήχος</value>
+  </data>
+    <data name="AppSoundSettingSettingsCard.Description" xml:space="preserve">
+    <value>Ακούστε ηχητικά σχόλια κατά τη χρήση διαφορετικών στοιχείων του Harden Windows Security</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.Header" xml:space="preserve">
+    <value>Ήχος</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ακούστε ηχητικά σχόλια κατά τη χρήση διαφορετικών στοιχείων του Harden Windows Security</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ακούστε ηχητικά σχόλια κατά τη χρήση διαφορετικών στοιχείων του Harden Windows Security</value>
+  </data>
+    <data name="GitHubRepoHyperLinkButton.Content" xml:space="preserve">
+    <value>Αποθετήριο GitHub</value>
+  </data>
+    <data name="SpyNetGirlWebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>Ιστότοπος SpyNetGirl</value>
+  </data>
+    <data name="MicrosoftStorePageHyperLinkButton.Content" xml:space="preserve">
+    <value>Σελίδα Microsoft Store</value>
+  </data>
+    <data name="YouTubeChannelHyperLinkButton.Content" xml:space="preserve">
+    <value>Κανάλι YouTube</value>
+  </data>
+    <data name="DonationHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Η υποστήριξή σας με βοηθάει να συνεχίσω να δημιουργώ και να διατηρώ αυτό το έργο.</value>
+  </data>
+  <data name="DonationHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Η υποστήριξή σας με βοηθάει να συνεχίσω να δημιουργώ και να διατηρώ αυτό το έργο.</value>
+  </data>
+    <data name="DonationHyperLinkButton.Content" xml:space="preserve">
+    <value>Δωρεά</value>
+  </data>
+    <data name="PrivacyPolicyHyperLinkButton.Content" xml:space="preserve">
+    <value>Πολιτική απορρήτου</value>
+  </data>
+    <data name="SendFeedbackHyperLinkButton.Content" xml:space="preserve">
+    <value>Αποστολή σχολίων</value>
+  </data>
+    <data name="Icons8WebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>Ιστότοπος Icons8 για όλα τα εικονίδια που χρησιμοποιούνται σε αυτή την εφαρμογή</value>
+  </data>
+    <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
+    <value>Πηγαίος κώδικας</value>
+  </data>
+    <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <value>Ελέγξτε για ενημερώσεις σε αυτή τη σελίδα. Μπορείτε επίσης να ενεργοποιήσετε τον αυτόματο έλεγχο ενημερώσεων που θα συμβεί μία φορά κατά την εκκίνηση και θα ειδοποιηθείτε όποτε είναι διαθέσιμη νέα έκδοση.</value>
+  </data>
+    <data name="GuideButtonAtTop.Content" xml:space="preserve">
+    <value>Οδηγός</value>
+  </data>
+  <data name="GuideButtonAtTop.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κάντε κλικ/πατήστε για να επισκεφθείτε τον πλήρη οδηγό για αυτή τη σελίδα στο GitHub</value>
+  </data>
+  <data name="GuideButtonAtTop.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κάντε κλικ/πατήστε για να επισκεφθείτε τον πλήρη οδηγό για αυτή τη σελίδα στο GitHub</value>
+  </data>
+    <data name="UpdatePageUpdateStatusInfoBar.Title" xml:space="preserve">
+    <value>Κατάσταση ενημέρωσης</value>
+  </data>
+  <data name="UpdatePageUpdateStatusInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κατάσταση ενημέρωσης</value>
+  </data>
+    <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
+    <value>Περισσότερες πληροφορίες</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίγει την κύρια σελίδα wiki του GitHub για το Harden Windows Security</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίγει την κύρια σελίδα wiki του GitHub για το Harden Windows Security</value>
+  </data>
+    <data name="UpdatePageWhatsNewInfoBar.Title" xml:space="preserve">
+    <value>Σημειώσεις έκδοσης</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.Message" xml:space="preserve">
+    <value>Ελέγξτε τις εκδόσεις GitHub για πλήρεις σημειώσεις έκδοσης</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ελέγξτε τις εκδόσεις GitHub για πλήρεις σημειώσεις έκδοσης</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ελέγξτε τις εκδόσεις GitHub για πλήρεις σημειώσεις έκδοσης</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.Content" xml:space="preserve">
+    <value>Δείτε τι νέο υπάρχει</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίγει τη σελίδα εκδόσεων του GitHub όπου μπορείτε να βρείτε τις πλήρεις σημειώσεις έκδοσης για τη διαθέσιμη ενημέρωση.</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίγει τη σελίδα εκδόσεων του GitHub όπου μπορείτε να βρείτε τις πλήρεις σημειώσεις έκδοσης για τη διαθέσιμη ενημέρωση.</value>
+  </data>
+    <data name="CheckForUpdateSettingsCard.Description" xml:space="preserve">
+    <value>Μόλις ληφθούν και εγκατασταθούν οι ενημερώσεις, την επόμενη φορά που θα ανοίξετε το Harden Windows Security θα χρησιμοποιήσετε τη νέα έκδοση.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.Header" xml:space="preserve">
+    <value>Έλεγχος για ενημέρωση Harden Windows Security</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μόλις ληφθούν και εγκατασταθούν οι ενημερώσεις, την επόμενη φορά που θα ανοίξετε το Harden Windows Security θα χρησιμοποιήσετε τη νέα έκδοση.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μόλις ληφθούν και εγκατασταθούν οι ενημερώσεις, την επόμενη φορά που θα ανοίξετε το Harden Windows Security θα χρησιμοποιήσετε τη νέα έκδοση.</value>
+  </data>
+    <data name="UpdatePageCheckForUpdateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Θα κατεβάσει και θα εγκαταστήσει την πιο πρόσφατη έκδοση από το αποθετήριο GitHub. Ο χρόνος που χρειάζεται εξαρτάται από τη σύνδεση δικτύου σας. Το κατά προσέγγιση μέγεθος λήψης είναι 65 MB.</value>
+  </data>
+  <data name="UpdatePageCheckForUpdateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Θα κατεβάσει και θα εγκαταστήσει την πιο πρόσφατη έκδοση από το αποθετήριο GitHub. Ο χρόνος που χρειάζεται εξαρτάται από τη σύνδεση δικτύου σας. Το κατά προσέγγιση μέγεθος λήψης είναι 65 MB.</value>
+  </data>
+    <data name="AutoUpdateCheckSettingsCard.Description" xml:space="preserve">
+    <value>Ελέγχει αυτόματα για ενημέρωση όταν εκκινείται η εφαρμογή και σας ειδοποιεί εάν είναι διαθέσιμη νέα έκδοση ώστε να μπορείτε να χρησιμοποιήσετε αυτή τη σελίδα για να την εγκαταστήσετε.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.Header" xml:space="preserve">
+    <value>Αυτόματος έλεγχος ενημερώσεων</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ελέγχει αυτόματα για ενημέρωση όταν εκκινείται η εφαρμογή και σας ειδοποιεί εάν είναι διαθέσιμη νέα έκδοση ώστε να μπορείτε να χρησιμοποιήσετε αυτή τη σελίδα για να την εγκαταστήσετε.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ελέγχει αυτόματα για ενημέρωση όταν εκκινείται η εφαρμογή και σας ειδοποιεί εάν είναι διαθέσιμη νέα έκδοση ώστε να μπορείτε να χρησιμοποιήσετε αυτή τη σελίδα για να την εγκαταστήσετε.</value>
+  </data>
+    <data name="HardenedUpdateProcedureSettingsCard.Description" xml:space="preserve">
+    <value>Όταν αυτή η επιλογή είναι ενεργοποιημένη, το προσωρινό ιδιωτικό κλειδί του πιστοποιητικού που δημιουργήθηκε στη συσκευή θα συνδεθεί με τον λογαριασμό του χρήστη, απαιτώντας επιβεβαίωση των προτροπών πριν μπορέσει να χρησιμοποιηθεί για υπογραφή.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.Header" xml:space="preserve">
+    <value>Ενισχυμένη διαδικασία ενημέρωσης</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Όταν αυτή η επιλογή είναι ενεργοποιημένη, το προσωρινό ιδιωτικό κλειδί του πιστοποιητικού που δημιουργήθηκε στη συσκευή θα συνδεθεί με τον λογαριασμό του χρήστη, απαιτώντας επιβεβαίωση των προτροπών πριν μπορέσει να χρησιμοποιηθεί για υπογραφή.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Όταν αυτή η επιλογή είναι ενεργοποιημένη, το προσωρινό ιδιωτικό κλειδί του πιστοποιητικού που δημιουργήθηκε στη συσκευή θα συνδεθεί με τον λογαριασμό του χρήστη, απαιτώντας επιβεβαίωση των προτροπών πριν μπορέσει να χρησιμοποιηθεί για υπογραφή.</value>
+  </data>
+    <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίγει τη μίνι σελίδα Microsoft Store όπου μπορείτε να βαθμολογήσετε και προαιρετικά να γράψετε μια κριτική για το Harden Windows Security.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.Header" xml:space="preserve">
+    <value>Βαθμολογία και κριτική</value>
+  </data>
+    <data name="RateAndReviewSettingsCard.Description" xml:space="preserve">
+    <value>Ανοίγει τη μίνι σελίδα Microsoft Store όπου μπορείτε να βαθμολογήσετε και προαιρετικά να γράψετε μια κριτική για το Harden Windows Security.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίγει τη μίνι σελίδα Microsoft Store όπου μπορείτε να βαθμολογήσετε και προαιρετικά να γράψετε μια κριτική για το Harden Windows Security.</value>
+  </data>
+    <data name="CheckingForUpdateStore" xml:space="preserve">
+    <value>Έλεγχος για ενημέρωση στο Microsoft Store...</value>
+  </data>
+    <data name="NewUpdateIsAvailableStore" xml:space="preserve">
+    <value>Μια νέα ενημέρωση είναι διαθέσιμη. Άνοιγμα του Microsoft Store ώστε να μπορέσετε να συνεχίσετε με την ενημέρωση της εφαρμογής εκεί.</value>
+  </data>
+    <data name="ProblemOpeningMSStore" xml:space="preserve">
+    <value>Υπήρξε πρόβλημα στο άνοιγμα της σελίδας Microsoft Store του Harden Windows Security.</value>
+  </data>
+    <data name="TheAppIsUpToDate" xml:space="preserve">
+    <value>Η εφαρμογή Harden Windows Security είναι ενημερωμένη.</value>
+  </data>
+   <data name="UpdateCheckError" xml:space="preserve">
+    <value>Παρουσιάστηκε σφάλμα κατά τον έλεγχο ενημέρωσης.</value>
+  </data>
+  <data name="FailedToOpenRating" xml:space="preserve">
+    <value>Αποτυχία ανοίγματος σελίδας βαθμολογίας στο Microsoft Store.</value>
+  </data>
+  <data name="InstallVersionMessage" xml:space="preserve">
+    <value>Εγκατάσταση έκδοσης {0}</value>
+  </data>
+    <data name="InstallLatestVer" xml:space="preserve">
+    <value>Εγκατάσταση της πιο πρόσφατης έκδοσης</value>
+  </data>
+    <data name="WebViewBackButton.Text" xml:space="preserve">
+    <value>Πίσω</value>
+  </data>
+  <data name="WebViewForwardButton.Text" xml:space="preserve">
+    <value>Μπροστά</value>
+  </data>
+  <data name="WebViewReloadButton.Text" xml:space="preserve">
+    <value>Επαναφόρτωση</value>
+  </data>
+  <data name="WebViewHomeButton.Text" xml:space="preserve">
+    <value>Αρχική</value>
+  </data>
+  <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Τεκμηρίωση</value>
+  </data>
+  <data name="UserCanceledUACMessage" xml:space="preserve">
+  <value>Ο χρήστης ακύρωσε την προτροπή UAC.</value>
+  </data>
+  <data name="ProtectionPresets.Text" xml:space="preserve">
+    <value>Προκαθορισμένες ρυθμίσεις προστασίας</value>
+  </data>
+    <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε μία από τις προκαθορισμένες ρυθμίσεις προστασίας για εφαρμογή, είναι προκαθορισμένα σύνολα διαμορφώσεων που έχουν γίνει για διαφορετικά επίπεδα ασφάλειας.</value>
+  </data>
+  <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε μία από τις προκαθορισμένες ρυθμίσεις προστασίας για εφαρμογή, είναι προκαθορισμένα σύνολα διαμορφώσεων που σχεδιάστηκαν για διαφορετικά επίπεδα ασφάλειας.</value>
+  </data>
+    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>Βασικό</value>
+  </data>
+    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>Συνιστώμενο</value>
+  </data>
+    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>Πλήρες</value>
+  </data>
+  <data name="ProtectPageTitle.Text" xml:space="preserve">
+    <value>Διαχειριστείτε τις διαμορφώσεις ασφάλειας και επιλέξτε πώς να ασφαλίσετε τη συσκευή σας.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaseline" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Βασική γραμμή ασφάλειας Microsoft</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaseline" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Εφαρμογή των συστάσεων διαμόρφωσης ασφάλειας της Microsoft. Συνιστάται ιδιαίτερα.</value>
+  </data>
+  <data name="ProtectCategory_MSFT365AppsSecBaseline" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Βασική γραμμή ασφάλειας εφαρμογών Microsoft 365</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFT365AppsSecBaseline" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Ενίσχυση των εφαρμογών Microsoft 365 ενάντια σε πολλαπλά διανύσματα επίθεσης εφαρμόζοντας συστάσεις ασφάλειας από τη Microsoft.</value>
+  </data>
+  <data name="ProtectCategory_MSFTDefender" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Microsoft Defender</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTDefender" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Ενεργοποίηση πολλών χαρακτηριστικών ασφάλειας που είναι απενεργοποιημένα από προεπιλογή στο Microsoft Defender και ενίσχυση της ασφάλειας των υπαρχόντων χαρακτηριστικών για παροχή εξαιρετικού επιπέδου προστασίας κατά των κακόβουλων προγραμμάτων.</value>
+  </data>
+  <data name="ProtectCategory_ASRRules" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Μείωση επιφάνειας επίθεσης</value>
+  </data>
+  <data name="ProtectCategory_Description_ASRRules" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Χρήση κανόνων μείωσης επιφάνειας επίθεσης για προσθήκη πιο προηγμένων και εξειδικευμένων αμυντικών επιπέδων στο σύνολο ασφάλειάς σας.</value>
+  </data>
+  <data name="ProtectCategory_BitLocker" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Ρυθμίσεις BitLocker</value>
+  </data>
+  <data name="ProtectCategory_Description_BitLocker" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Διαμόρφωση του BitLocker για παροχή της υψηλότερης δυνατής ασφάλειας και κρυπτογράφησης για τα δεδομένα σας εν κατάστασι ηρεμίας και διασφάλιση ότι τα δεδομένα σας παραμένουν απρόσιτα σε περίπτωση κλοπής της συσκευής.</value>
+  </data>
+  <data name="ProtectCategory_DeviceGuard" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Device Guard</value>
+  </data>
+  <data name="ProtectCategory_Description_DeviceGuard" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Αξιοποίηση και ενεργοποίηση διαφόρων χαρακτηριστικών ασφάλειας υλικού που βοηθούν τον πυρήνα του λειτουργικού συστήματος να προστατεύσει τον εαυτό του και τη συσκευή από προηγμένο κακόβουλο λογισμικό.</value>
+  </data>
+  <data name="ProtectCategory_TLS" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Ασφάλεια TLS</value>
+  </data>
+  <data name="ProtectCategory_Description_TLS" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Διασφαλίζει ότι τα δεδομένα σας παραμένουν πιο ασφαλή κατά τη μεταφορά και ότι οι συνδέσεις σας θα χρησιμοποιούν μόνο ασφαλείς αλγορίθμους.</value>
+  </data>
+  <data name="ProtectCategory_LockScreen" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Οθόνη κλειδώματος</value>
+  </data>
+  <data name="ProtectCategory_Description_LockScreen" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Βελτίωση της ασφάλειας της οθόνης κλειδώματος κατά διαφορετικών απειλών και μείωση της ποσότητας πληροφοριών που είναι προσβάσιμες στην οθόνη κλειδώματος για μη εξουσιοδοτημένους χρήστες.</value>
+  </data>
+  <data name="ProtectCategory_UAC" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Έλεγχος λογαριασμού χρήστη</value>
+  </data>
+  <data name="ProtectCategory_Description_UAC" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Βελτίωση της ασφάλειας του ελέγχου λογαριασμού χρήστη έτσι ώστε οποιαδήποτε διαχειριστική εργασία να απαιτεί την ρητή άδειά σας για να πραγματοποιηθεί.</value>
+  </data>
+  <data name="ProtectCategory_WindowsFirewall" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Τείχος προστασίας Windows</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsFirewall" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Ενίσχυση του τείχους προστασίας Windows κατά απειλών δικτύου και ενεργοποίηση λεπτομερούς καταγραφής για σενάρια αντίδρασης σε περιστατικά.</value>
+  </data>
+  <data name="ProtectCategory_OptionalWinFeatures" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Προαιρετικά χαρακτηριστικά Windows</value>
+  </data>
+  <data name="ProtectCategory_Description_OptionalWinFeatures" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Αφαίρεση παλαιών και εγκαταλελειμμένων χαρακτηριστικών και δυνατοτήτων από το λειτουργικό σύστημα, μειώνοντας την επιφάνεια επίθεσης και τη χρήση δίσκου και βελτιώνοντας τη συνολική ασφάλεια.</value>
+  </data>
+  <data name="ProtectCategory_WindowsNetworking" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Δικτύωση Windows</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsNetworking" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Βελτίωση της ασφάλειας της στοίβας δικτύου στα Windows, διασφάλιση ασφαλών επικοινωνιών και πρόληψη της χρήσης παλαιών, μη ασφαλών πρωτοκόλλων.</value>
+  </data>
+  <data name="ProtectCategory_MiscellaneousConfig" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Διάφορες διαμορφώσεις</value>
+  </data>
+  <data name="ProtectCategory_Description_MiscellaneousConfig" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Εφαρμογή διάφορων σημαντικών χαρακτηριστικών ασφάλειας που δεν ταιριάζουν σε άλλες πιο εξειδικευμένες κατηγορίες. Μπορείτε να τα διαμορφώσετε περαιτέρω χρησιμοποιώντας τη σελίδα διαφόρων διαμορφώσεων.</value>
+  </data>
+  <data name="ProtectCategory_WindowsUpdate" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Windows Update</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsUpdate" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Διασφάλιση ότι οι ενημερώσεις Windows εγκαθίστανται με ασφαλή και έγκαιρο τρόπο για πρόληψη εκμετάλλευσης διορθωμένων τρωτοτήτων.</value>
+  </data>
+  <data name="ProtectCategory_Edge" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Πρόγραμμα περιήγησης Edge</value>
+  </data>
+  <data name="ProtectCategory_Description_Edge" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Διαμόρφωση του προγράμματος περιήγησης Edge να είναι πιο ασφαλές και να μοιράζεται λιγότερα δεδομένα με τους ιστότοπους που επισκέπτεστε.</value>
+  </data>
+  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Έλεγχος πιστοποιητικών</value>
+  </data>
+  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Έλεγχος των εγκατεστημένων πιστοποιητικών και εντοπισμός όσων δεν ανήκουν στο ίδιο το λειτουργικό σύστημα.</value>
+  </data>
+  <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Αποκλεισμός IP ανά χώρα</value>
+  </data>
+  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Αποκλεισμός περιοχών διευθύνσεων IP συγκεκριμένων χωρών στη λίστα κυρώσεων των ΗΠΑ για υποστήριξη τρομοκρατίας.</value>
+  </data>
+  <data name="ProtectCategory_NonAdmin" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Ρυθμίσεις μη διαχειριστή</value>
+  </data>
+  <data name="ProtectCategory_Description_NonAdmin" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Εφαρμογή ρυθμίσεων ασφάλειας που δεν απαιτούν δικαιώματα διαχειριστή και εφαρμόζονται σε όλους τους κανονικούς χρήστες και διαχειριστές.</value>
+  </data>
+  <data name="ProtectSubCategory_SmartAppControl" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Έξυπνος έλεγχος εφαρμογών</value>
+  </data>
+  <data name="ProtectSubCategory_BetaUpdateChannels" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Ενεργοποίηση δοκιμαστικών καναλιών ενημέρωσης για το Microsoft Defender</value>
+  </data>
+  <data name="ProtectSubCategory_NoLastSignedIn" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Να μην εμφανίζονται πληροφορίες τελευταίας σύνδεσης στην οθόνη κλειδώματος</value>
+  </data>
+  <data name="ProtectSubCategory_RequireCTRLAltDel" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Απαίτηση πατήματος των πλήκτρων CTRL + Alt + Del στην οθόνη κλειδώματος πριν από την εισαγωγή διαπιστευτηρίων.</value>
+  </data>
+  <data name="ProtectSubCategory_NoFastUserSwitching" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Απενεργοποίηση του χαρακτηριστικού γρήγορης εναλλαγής χρήστη.</value>
+  </data>
+  <data name="ProtectSubCategory_OnlyElevateSigned" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Να επιτρέπεται μόνο σε υπογεγραμμένα και επαληθευμένα προγράμματα να εκτελούνται με αυξημένα δικαιώματα.</value>
+  </data>
+  <data name="ProtectSubCategory_MandatoryModeForVBS" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Ενεργοποίηση υποχρεωτικής λειτουργίας για VBS (Ασφάλεια βασισμένη σε εικονικοποίηση)</value>
+  </data>
+  <data name="ProtectSubCategory_BlockNTLM" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Πλήρης αποκλεισμός του πρωτοκόλλου NTLM.</value>
+  </data>
+  <data name="ProtectSubCategory_ForceStrongKeyProtection" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Απαίτηση ισχυρής προστασίας για ιδιωτικά κλειδιά πιστοποιητικών που αποθηκεύονται στη συσκευή.</value>
+  </data>
+  <data name="ProtectSubCategory_EnableWindowsProtectedPrint" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Ενεργοποίηση προστατευμένης εκτύπωσης Windows.</value>
+  </data>
+  <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Ενεργοποίηση υποστήριξης μακρών διαδρομών αρχείων.</value>
+  </data>
+  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Αποκλεισμός περιοχών IP χωρών στη λίστα κυρώσεων OFAC.</value>
+  </data>
+  <data name="ASRNavItem.Content" xml:space="preserve">
+    <value>Μείωση επιφάνειας επίθεσης</value>
+  </data>
+  <data name="BitLockerNavItem.Content" xml:space="preserve">
+    <value>BitLocker</value>
+  </data>
+  <data name="DeviceGuardNavItem.Content" xml:space="preserve">
+    <value>Device Guard</value>
+  </data>
+  <data name="TLSSecurityNavItem.Content" xml:space="preserve">
+    <value>Ασφάλεια TLS</value>
+  </data>
+    <data name="LockScreenNavItem.Content" xml:space="preserve">
+    <value>Οθόνη κλειδώματος</value>
+  </data>
+  <data name="UACNavItem.Content" xml:space="preserve">
+    <value>Έλεγχος λογαριασμού χρήστη</value>
+  </data>
+  <data name="WindowsFirewallNavItem.Content" xml:space="preserve">
+    <value>Τείχος προστασίας Windows</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.Content" xml:space="preserve">
+    <value>Προαιρετικά χαρακτηριστικά Windows</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.Content" xml:space="preserve">
+    <value>Δικτύωση Windows</value>
+  </data>
+  <data name="MiscellaneousNavItem.Content" xml:space="preserve">
+    <value>Διάφορα</value>
+  </data>
+  <data name="WindowsUpdateNavItem.Content" xml:space="preserve">
+    <value>Windows Update</value>
+  </data>
+  <data name="EdgeBrowserNavItem.Content" xml:space="preserve">
+    <value>Πρόγραμμα περιήγησης Edge</value>
+  </data>
+  <data name="CertificatesNavItem.Content" xml:space="preserve">
+    <value>Πιστοποιητικά</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.Content" xml:space="preserve">
+    <value>Αποκλεισμός IP ανά χώρα</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.Content" xml:space="preserve">
+    <value>Εντολές μη διαχειριστή</value>
+  </data>
+  <!--Group Policy Editor ListView Headers Start-->
+  <data name="KeynameHeader.Text" xml:space="preserve">
+    <value>Όνομα κλειδιού</value>
+  </data>
+  <data name="ValueNameHeader.Text" xml:space="preserve">
+    <value>Όνομα τιμής</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>Τιμή</value>
+  </data>
+  <data name="CategoryHeader.Text" xml:space="preserve">
+    <value>Κατηγορία</value>
+  </data>
+  <data name="SubCategoryHeader.Text" xml:space="preserve">
+    <value>Υποκατηγορία</value>
+  </data>
+  <data name="PolicyActionHeader.Text" xml:space="preserve">
+    <value>Ενέργεια πολιτικής</value>
+  </data>
+  <data name="FriendlyNameHeader.Text" xml:space="preserve">
+    <value>Φιλικό όνομα</value>
+  </data>
+  <data name="SizeHeader.Text" xml:space="preserve">
+    <value>Μέγεθος</value>
+  </data>
+  <!--Group Policy Editor ListView Headers End-->
+  <!--Group Policy Editor ListView Headers Buttons Start-->
+  <data name="KeynameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Όνομα κλειδιού</value>
+  </data>
+  <data name="ValueNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Όνομα τιμής</value>
+  </data>
+  <data name="ValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Τιμή</value>
+  </data>
+  <data name="CategoryColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Κατηγορία</value>
+  </data>
+  <data name="SubCategoryColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Υποκατηγορία</value>
+  </data>
+  <data name="PolicyActionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Ενέργεια πολιτικής</value>
+  </data>
+  <data name="FriendlyNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Φιλικό όνομα</value>
+  </data>
+  <data name="SizeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Μέγεθος</value>
+  </data>
+  <!--Group Policy Editor ListView Headers Buttons End-->
+  <data name="GroupPolicyEditorNavItem.Content" xml:space="preserve">
+    <value>Επεξεργαστής πολιτικής ομάδας</value>
+  </data>
+    <data name="ClearButton.Content" xml:space="preserve">
+    <value>Εκκαθάριση</value>
+  </data>
+  <data name="ClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εκκαθάριση</value>
+  </data>
+  <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εκκαθάριση</value>
+  </data>
+  <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
+    <value>Ανοίξτε και διαβάστε αρχεία πολιτικής ομάδας σε αυτή τη σελίδα. Μπορείτε να αναζητήσετε στα δεδομένα και να αφαιρέσετε μεμονωμένες πολιτικές από το αρχείο. Μπορείτε επίσης να προβάλετε τις ισχύουσες πολιτικές στο σύστημα.</value>
+  </data>
+  <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
+    <value>Προβολή της διαδρομής/διαδρομών του αρχείου πολιτικής που επιλέξατε.</value>
+  </data>
+    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Συνολικές πολιτικές: 0</value>
+  </data>
+  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ο συνολικός αριθμός πολιτικών</value>
+  </data>
+  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ο συνολικός αριθμός πολιτικών</value>
+  </data>
+  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <value>Αναζήτηση στα δεδομένα...</value>
+  </data>
+  <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναζήτηση μέσα στα εμφανιζόμενα δεδομένα</value>
+  </data>
+  <data name="SearchBoxTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναζήτηση μέσα στα εμφανιζόμενα δεδομένα</value>
+  </data>
+    <data name="CopyRow.Text" xml:space="preserve">
+    <value>Αντιγραφή γραμμής</value>
+  </data>
+  <data name="CopyRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγραφή της/των επιλεγμένης/ων γραμμής/γραμμών στο πρόχειρο ως κείμενα ώστε να μπορείτε να τα επικολλήσετε σε οποιοδήποτε επεξεργαστή κειμένου.</value>
+  </data>
+  <data name="CopyRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αντιγραφή της/των επιλεγμένης/ων γραμμής/γραμμών στο πρόχειρο ως κείμενα ώστε να μπορείτε να τα επικολλήσετε σε οποιοδήποτε επεξεργαστή κειμένου.</value>
+  </data>
+  <data name="GenericBrowseButton.Content" xml:space="preserve">
+    <value>Περιήγηση</value>
+  </data>
+  <data name="GenericBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Περιήγηση</value>
+  </data>
+  <data name="GenericBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Περιήγηση</value>
+  </data>
+    <data name="GetEffectivePoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Λήψη ισχυουσών πολιτικών</value>
+  </data>
+  <data name="GetEffectivePoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Παραθέτει τις ισχύουσες πολιτικές ομάδας που εφαρμόζονται στο τρέχον σύστημα.</value>
+  </data>
+  <data name="GetEffectivePoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Παραθέτει τις ισχύουσες πολιτικές ομάδας που εφαρμόζονται στο τρέχον σύστημα.</value>
+  </data>
+  <data name="MoreActionsMenuBar.Title" xml:space="preserve">
+    <value>Περισσότερες ενέργειες</value>
+  </data>
+  <data name="MoreActionsMenuBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εκτέλεση περισσότερων ενεργειών χρησιμοποιώντας εξειδικευμένα χαρακτηριστικά.</value>
+  </data>
+  <data name="MoreActionsMenuBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εκτέλεση περισσότερων ενεργειών χρησιμοποιώντας εξειδικευμένα χαρακτηριστικά.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.Header" xml:space="preserve">
+    <value>Επιλογή άλλων αρχείων POL για συγχώνευση</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.Description" xml:space="preserve">
+    <value>Περιηγηθείτε για άλλα αρχεία POL που θα συγχωνευτούν με το κύριο αρχείο POL. Εάν υπάρχει καταχώρηση με το ίδιο KeyName και ValueName τόσο στο κύριο αρχείο όσο και σε οποιοδήποτε άλλο αρχείο POL, η καταχώρηση από το άλλο αρχείο θα έχει προτεραιότητα και θα αντικαταστήσει την καταχώρηση του κύριου αρχείου POL.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Περιηγηθείτε για άλλα αρχεία POL που θα συγχωνευτούν με το κύριο αρχείο POL. Εάν υπάρχει καταχώρηση με το ίδιο KeyName και ValueName τόσο στο κύριο αρχείο όσο και σε οποιοδήποτε άλλο αρχείο POL, η καταχώρηση από το άλλο αρχείο θα έχει προτεραιότητα και θα αντικαταστήσει την καταχώρηση του κύριου αρχείου POL.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Περιηγηθείτε για άλλα αρχεία POL που θα συγχωνευτούν με το κύριο αρχείο POL. Εάν υπάρχει καταχώρηση με το ίδιο KeyName και ValueName τόσο στο κύριο αρχείο όσο και σε οποιοδήποτε άλλο αρχείο POL, η καταχώρηση από το άλλο αρχείο θα έχει προτεραιότητα και θα αντικαταστήσει την καταχώρηση του κύριου αρχείου POL.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.Header" xml:space="preserve">
+    <value>Επιλογή κύριου αρχείου POL για συγχώνευση</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.Description" xml:space="preserve">
+    <value>Περιηγηθείτε για το κύριο αρχείο POL. Όλα τα άλλα αρχεία POL θα προσθέσουν το περιεχόμενό τους σε αυτό το αρχείο και θα αντικαταστήσουν οποιοδήποτε υπάρχον περιεχόμενο.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Περιηγηθείτε για το κύριο αρχείο POL. Όλα τα άλλα αρχεία POL θα προσθέσουν το περιεχόμενό τους σε αυτό το αρχείο και θα αντικαταστήσουν οποιοδήποτε υπάρχον περιεχόμενο.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Περιηγηθείτε για το κύριο αρχείο POL. Όλα τα άλλα αρχεία POL θα προσθέσουν το περιεχόμενό τους σε αυτό το αρχείο και θα αντικαταστήσουν οποιοδήποτε υπάρχον περιεχόμενο.</value>
+  </data>
+    <data name="POLFilesMergeTitleTextBlock.Text" xml:space="preserve">
+    <value>Συγχώνευση πολλαπλών αρχείων πολιτικής ομάδας POL σε ένα</value>
+  </data>
+  <data name="StartPOLFileMergeButton.Content" xml:space="preserve">
+    <value>Έναρξη συγχώνευσης</value>
+  </data>
+  <data name="StartPOLFileMergeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Έναρξη συγχώνευσης των επιλεγμένων αρχείων πολιτικής ομάδας POL.</value>
+  </data>
+  <data name="StartPOLFileMergeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Έναρξη συγχώνευσης των επιλεγμένων αρχείων πολιτικής ομάδας POL.</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Άνοιγμα πλευρικής μπάρας</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίγει την πλευρική μπάρα ώστε να μπορείτε να αποκτήσετε πρόσβαση σε πρόσθετα χαρακτηριστικά.</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίγει την πλευρική μπάρα ώστε να μπορείτε να αποκτήσετε πρόσβαση σε πρόσθετα χαρακτηριστικά.</value>
+  </data>
+  <data name="ClearDataButton.Content" xml:space="preserve">
+    <value>Εκκαθάριση δεδομένων</value>
+  </data>
+  <data name="ClearDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εκκαθάριση όλων των δεδομένων από την προβολή λίστας</value>
+  </data>
+  <data name="ClearDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εκκαθάριση όλων των δεδομένων από την προβολή λίστας</value>
+  </data>
+  <data name="LoadButton.Content" xml:space="preserve">
+    <value>Φόρτωση</value>
+  </data>
+  <data name="LoadButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Φόρτωση των δεδομένων της επιλεγμένης πολιτικής.</value>
+  </data>
+  <data name="LoadButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Φόρτωση των δεδομένων της επιλεγμένης πολιτικής.</value>
+  </data>
+  <data name="ConvertPOLToJSONTitleTextBlock.Text" xml:space="preserve">
+    <value>Μετατροπή αρχείων πολιτικής ομάδας POL σε JSON</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.Content" xml:space="preserve">
+    <value>Μετατροπή</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Έναρξη μετατροπής των επιλεγμένων αρχείων πολιτικής ομάδας POL σε αρχεία JSON με τα ίδια ονόματα.</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Έναρξη μετατροπής των επιλεγμένων αρχείων πολιτικής ομάδας POL σε αρχεία JSON με τα ίδια ονόματα.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.Header" xml:space="preserve">
+    <value>Επιλογή αρχείων POL για μετατροπή σε JSON</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.Description" xml:space="preserve">
+    <value>Περιηγηθείτε για αρχεία POL που θα μετατραπούν σε αρχεία JSON.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Περιηγηθείτε για αρχεία POL που θα μετατραπούν σε αρχεία JSON.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Περιηγηθείτε για αρχεία POL που θα μετατραπούν σε αρχεία JSON.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.Header" xml:space="preserve">
+    <value>Επιλογή φακέλου εξόδου (προαιρετικό)</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.Description" xml:space="preserve">
+    <value>Προαιρετική περιήγηση για φάκελο όπου όλα τα αρχεία JSON θα αποθηκευτούν. Εάν δεν επιλεχθεί, κάθε αρχείο JSON θα αποθηκευτεί στον ίδιο φάκελο με το επιλεγμένο αρχείο POL με το ίδιο όνομα.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προαιρετική περιήγηση για φάκελο όπου όλα τα αρχεία JSON θα αποθηκευτούν. Εάν δεν επιλεχθεί, κάθε αρχείο JSON θα αποθηκευτεί στον ίδιο φάκελο με το επιλεγμένο αρχείο POL με το ίδιο όνομα.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προαιρετική περιήγηση για φάκελο όπου όλα τα αρχεία JSON θα αποθηκευτούν. Εάν δεν επιλεχθεί, κάθε αρχείο JSON θα αποθηκευτεί στον ίδιο φάκελο με το επιλεγμένο αρχείο POL με το ίδιο όνομα.</value>
+  </data>
+  <data name="SelectedDirectory.Text" xml:space="preserve">
+    <value>Προβολή του φακέλου που επιλέξατε</value>
+  </data>
+  <data name="ConvertJSONToPolTitleTextBlock.Text" xml:space="preserve">
+    <value>Μετατροπή αρχείων JSON σε αρχεία πολιτικής ομάδας POL</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.Header" xml:space="preserve">
+    <value>Επιλογή αρχείων JSON για μετατροπή σε POL</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.Description" xml:space="preserve">
+    <value>Περιηγηθείτε για αρχεία JSON που θα μετατραπούν σε αρχεία πολιτικής ομάδας POL.</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Περιηγηθείτε για αρχεία JSON που θα μετατραπούν σε αρχεία πολιτικής ομάδας POL.</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Περιηγηθείτε για αρχεία JSON που θα μετατραπούν σε αρχεία πολιτικής ομάδας POL.</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.Content" xml:space="preserve">
+    <value>Μετατροπή</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Έναρξη μετατροπής των επιλεγμένων αρχείων JSON σε αρχεία πολιτικής ομάδας POL με τα ίδια ονόματα.</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Έναρξη μετατροπής των επιλεγμένων αρχείων JSON σε αρχεία πολιτικής ομάδας POL με τα ίδια ονόματα.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.Header" xml:space="preserve">
+    <value>Επιλογή φακέλου εξόδου (προαιρετικό)</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.Description" xml:space="preserve">
+    <value>Προαιρετική περιήγηση για φάκελο όπου όλα τα αρχεία POL θα αποθηκευτούν. Εάν δεν επιλεχθεί, κάθε αρχείο POL θα αποθηκευτεί στον ίδιο φάκελο με το επιλεγμένο αρχείο JSON με το ίδιο όνομα.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προαιρετική περιήγηση για φάκελο όπου όλα τα αρχεία POL θα αποθηκευτούν. Εάν δεν επιλεχθεί, κάθε αρχείο POL θα αποθηκευτεί στον ίδιο φάκελο με το επιλεγμένο αρχείο JSON με το ίδιο όνομα.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προαιρετική περιήγηση για φάκελο όπου όλα τα αρχεία POL θα αποθηκευτούν. Εάν δεν επιλεχθεί, κάθε αρχείο POL θα αποθηκευτεί στον ίδιο φάκελο με το επιλεγμένο αρχείο JSON με το ίδιο όνομα.</value>
+  </data>
+  <data name="CopyIndividualItems.Text" xml:space="preserve">
+    <value>Αντιγραφή μεμονωμένων στοιχείων</value>
+  </data>
+  <data name="CopyIndividualItems.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επεκτείνει ένα υπομενού σε hover ή touch ώστε να έχετε την επιλογή αντιγραφής μεμονωμένων στοιχείων σε κάθε γραμμή.</value>
+  </data>
+  <data name="CopyIndividualItems.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επεκτείνει ένα υπομενού σε hover ή touch ώστε να έχετε την επιλογή αντιγραφής μεμονωμένων στοιχείων σε κάθε γραμμή.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.Content" xml:space="preserve">
+    <value>Microsoft Defender</value>
+  </data>
+  <data name="EnablingRestorePointScan-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση σάρωσης σημείου επαναφοράς</value>
+  </data>
+  <data name="AllowSwitchToAsyncInspection-MSDefender" xml:space="preserve">
+    <value>Βελτιστοποίηση της απόδοσης της προστασίας δικτύου του Microsoft Defender κάνοντάς την ασύγχρονη.</value>
+  </data>
+  <data name="EnableConvertWarnToBlock-MSDefender" xml:space="preserve">
+    <value>Ρύθμιση της προστασίας δικτύου να αποκλείει την κίνηση δικτύου αντί να εμφανίζει προειδοποίηση</value>
+  </data>
+  <data name="BruteForceProtectionLocalNetworkBlocking-MSDefender" xml:space="preserve">
+    <value>Επέκταση της κάλυψης προστασίας κατά επιθέσεων brute force για αποκλεισμό διευθύνσεων τοπικού δικτύου.</value>
+  </data>
+    <data name="AddOneDriveDirsToCFA-MSDefender" xml:space="preserve">
+    <value>Προσθήκη φακέλων OneDrive όλων των λογαριασμών χρηστών (προσωπικοί και επαγγελματικοί λογαριασμοί) στον έλεγχο πρόσβασης φακέλων για προστασία από ransomware</value>
+  </data>
+      <data name="EnableMandatoryASLR-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση υποχρεωτικής προστασίας ASLR σε επίπεδο συστήματος</value>
+  </data>
+  <data name="ApplyProcessMitigations-MSDefender" xml:space="preserve">
+    <value>Εφαρμογή μετριασμών διεργασίας για: {0}</value>
+  </data>
+  <data name="ARM64NoticeForProcessMitigations" xml:space="preserve">
+    <value>Ανιχνεύθηκε υλικό ARM64, παράκαμψη μετριασμών διεργασίας λόγω πιθανών ασυμβατοτήτων.</value>
+  </data>
+  <data name="SetNXBit-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση της πρόληψης εκτέλεσης δεδομένων (DEP) για όλες τις εφαρμογές, συμπεριλαμβανομένων των προγραμμάτων 32-bit.</value>
+  </data>
+    <data name="SetNXBitError-MSDefender" xml:space="preserve">
+    <value>Αποτυχία ρύθμισης της τιμής Boot Configuration Data (BCD) No-eXecute (NX).</value>
+  </data>
+  <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
+    <value>Εξαίρεση των μη συμβατών εκτελέσιμων αρχείων GitHub Desktop και Git από το υποχρεωτικό ASLR σε επίπεδο συστήματος.</value>
+  </data>
+  <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
+    <value>Διαμόρφωση των καναλιών ενημέρωσης μηχανής και πλατφόρμας του Microsoft Defender σε beta.</value>
+  </data>
+  <data name="ApplyAllButtonText.Text" xml:space="preserve">
+    <value>Εφαρμογή όλων</value>
+  </data>
+  <data name="ApplyAllButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμογή όλων των μέτρων ασφάλειας στη σελίδα.</value>
+  </data>
+  <data name="ApplyAllButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εφαρμογή όλων των μέτρων ασφάλειας στη σελίδα.</value>
+  </data>
+  <data name="VerifyAllButtonText" xml:space="preserve">
+    <value>Επαλήθευση όλων</value>
+  </data>
+  <data name="VerifyAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαλήθευση όλων των μέτρων ασφάλειας στη σελίδα.</value>
+  </data>
+  <data name="VerifyAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επαλήθευση όλων των μέτρων ασφάλειας στη σελίδα.</value>
+  </data>
+  <data name="RemoveAllButtonText.Text" xml:space="preserve">
+    <value>Αφαίρεση όλων</value>
+  </data>
+  <data name="RemoveAllButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αφαίρεση όλων των μέτρων ασφάλειας στη σελίδα.</value>
+  </data>
+  <data name="RemoveAllButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αφαίρεση όλων των μέτρων ασφάλειας στη σελίδα.</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Επιλογή όλων</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλογή όλων των στοιχείων στη σελίδα.</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Επιλογή όλων των στοιχείων στη σελίδα.</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αφαίρεση επιλογών</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αφαίρεση όλων των επιλογών αποεπιλέγοντάς τες.</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Αφαίρεση όλων των επιλογών αποεπιλέγοντάς τες.</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Εφαρμογή επιλεγμένων</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμογή μόνο των μέτρων ασφάλειας που επιλέξατε.</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Εφαρμογή μόνο των μέτρων ασφάλειας που επιλέξατε.</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Επαλήθευση επιλεγμένων</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαλήθευση μόνο των μέτρων ασφάλειας που επιλέξατε.</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Επαλήθευση μόνο των μέτρων ασφάλειας που επιλέξατε.</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αφαίρεση επιλεγμένων</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αφαίρεση μόνο των μέτρων ασφάλειας που επιλέξατε.</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Αφαίρεση μόνο των μέτρων ασφάλειας που επιλέξατε.</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.Content" xml:space="preserve">
+    <value>Διαχείριση επιλογών</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχειριστείτε τα επιλεγμένα στοιχεία και εφαρμόστε, αφαιρέστε ή επαληθεύστε τα.</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Διαχειριστείτε τα επιλεγμένα στοιχεία και εφαρμόστε, αφαιρέστε ή επαληθεύστε τα.</value>
+  </data>
+  <data name="FileReputationNavItem.Content" xml:space="preserve">
+    <value>Φήμη αρχείων</value>
+  </data>
+  <data name="FileReputationNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβολή και έλεγχος της φήμης ενός αρχείου σύμφωνα με την κρυφή πληροφόρηση της Microsoft για Defender ή Smart Screen.</value>
+  </data>
+  <data name="FileReputationNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προβολή και έλεγχος της φήμης ενός αρχείου σύμφωνα με την κρυφή πληροφόρηση της Microsoft για Defender ή Smart Screen.</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.Text" xml:space="preserve">
+    <value>Εφαρμογή συνιστώμενων</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμογή όλων των συνιστώμενων μέτρων ασφάλειας στη σελίδα.</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εφαρμογή όλων των συνιστώμενων μέτρων ασφάλειας στη σελίδα.</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.Text" xml:space="preserve">
+    <value>Ανάκτηση τελευταίων καταστάσεων</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση των τελευταίων καταστάσεων των μέτρων ασφάλειας στη σελίδα.</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση των τελευταίων καταστάσεων των μέτρων ασφάλειας στη σελίδα.</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.Text" xml:space="preserve">
+    <value>Ανάκτηση όλων</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση όλων των προαιρετικών χαρακτηριστικών και δυνατοτήτων στο τρέχον λειτουργικό σύστημα.</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση όλων των προαιρετικών χαρακτηριστικών και δυνατοτήτων στο τρέχον λειτουργικό σύστημα.</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ενεργοποίηση επιλεγμένων στοιχείων</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποίηση/εγκατάσταση των στοιχείων που επιλέξατε.</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Ενεργοποίηση/εγκατάσταση των στοιχείων που επιλέξατε.</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Απενεργοποίηση επιλεγμένων στοιχείων</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Απενεργοποίηση/απεγκατάσταση των στοιχείων που επιλέξατε.</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Απενεργοποίηση/απεγκατάσταση των στοιχείων που επιλέξατε.</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.Content" xml:space="preserve">
+    <value>Διαχείριση εγκατεστημένων εφαρμογών</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβολή και απεγκατάσταση εγκατεστημένων εφαρμογών.</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προβολή και απεγκατάσταση εγκατεστημένων εφαρμογών.</value>
+  </data>
+  <data name="MicrosoftDefenderPageTitle.Text" xml:space="preserve">
+    <value>Διαμόρφωση όλων των πτυχών του Microsoft Defender και ενεργοποίηση πολλών από τα χαρακτηριστικά του που είναι απενεργοποιημένα από προεπιλογή.</value>
+  </data>
+  <data name="ASRRulesPageTitle.Text" xml:space="preserve">
+    <value>Διαμόρφωση κάθε κανόνα μείωσης επιφάνειας επίθεσης σε αυτή τη σελίδα. Μπορούν να αποτρέψουν μόλυνση από κακόβουλο λογισμικό και εκμετάλλευση τρωτοτήτων.</value>
+  </data>
+  <data name="BitLockerPageTitle.Text" xml:space="preserve">
+    <value>Σε αυτή τη σελίδα μπορείτε να εφαρμόσετε πολιτικές που θα κάνουν το BitLocker πιο ισχυρό από το προεπιλεγμένο και να προστατεύσετε τα δεδομένα σας εν κατάστασι ηρεμίας.</value>
+  </data>
+  <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
+    <value>Εύρεση όλων των πιστοποιητικών στο σύστημά σας που δεν έχουν ρίζα σε οποιοδήποτε πιστοποιητικό στη λίστα εμπιστευμένων ριζικών πιστοποιητικών της Microsoft.</value>
+  </data>
+  <data name="CountryIPBlockingPageTitle.Text" xml:space="preserve">
+    <value>Αποκλεισμός περιοχών διευθύνσεων IP χωρών στις ακόλουθες λίστες: Κρατικοί χορηγοί τρομοκρατίας - Γραφείο ελέγχου ξένων περιουσιακών στοιχείων (OFAC)</value>
+  </data>
+  <data name="DeviceGuardPageTitle.Text" xml:space="preserve">
+    <value>Αξιοποίηση των χαρακτηριστικών ασφάλειας που παρέχει το υλικό για ενίσχυση του λειτουργικού συστήματος σε διαφορετικά πολλαπλά επίπεδα εκτέλεσης.</value>
+  </data>
+  <data name="EdgePageTitle.Text" xml:space="preserve">
+    <value>Εφαρμογή πολιτικών σχετικών με την ασφάλεια και το απόρρητο στο Microsoft Edge για να το κάνετε πιο ασφαλές και ιδιωτικό κατά την περιήγηση στον ιστό.</value>
+  </data>
+  <data name="LockScreenPageTitle.Text" xml:space="preserve">
+    <value>Ενίσχυση της οθόνης κλειδώματος του λειτουργικού συστήματος κατά πιθανών εκμεταλλεύσεων και μείωση της ποσότητας πληροφοριών που εκτίθενται σε μη εξουσιοδοτημένα άτομα όταν η συσκευή είναι κλειδωμένη.</value>
+  </data>
+  <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
+    <value>Αυτή η σελίδα περιέχει σημαντικά μέτρα ασφάλειας που δεν εμπίπτουν σε πιο εξειδικευμένες κατηγορίες. Η εφαρμογή τους μπορεί να ενισχύσει και να ενδυναμώσει την ασφάλεια του συστήματός και της συσκευής σας.</value>
+  </data>
+  <data name="NonAdminPageTitle.Text" xml:space="preserve">
+    <value>Οι πολιτικές σε αυτή τη σελίδα εφαρμόζονται μόνο στον τρέχοντα χρήστη και δεν εφαρμόζονται σε επίπεδο συστήματος για όλους τους χρήστες. Για αυτό τον λόγο, δεν χρειάζεστε δικαιώματα διαχειριστή για να τις εφαρμόσετε.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
+    <value>Ανάκτηση, προβολή, ενεργοποίηση και απενεργοποίηση όλων των προαιρετικών χαρακτηριστικών και δυνατοτήτων που παρέχει το λειτουργικό σύστημα με ενοποιημένο τρόπο.</value>
+  </data>
+  <data name="TLSPageTitle.Text" xml:space="preserve">
+    <value>Ενίσχυση του SChannel (Secure Channel) στο λειτουργικό σύστημα. Είναι ο πάροχος υποστήριξης ασφάλειας (SSP) που αναπτύχθηκε από τη Microsoft που υλοποιεί πρωτόκολλα ασφάλειας όπως το Transport Layer Security (TLS).</value>
+  </data>
+  <data name="UACPageTitle.Text" xml:space="preserve">
+    <value>Το UAC βοηθάει στην πρόληψη μη εξουσιοδοτημένων αλλαγών στο λειτουργικό σύστημα ζητώντας άδεια ή διαπιστευτήρια διαχειριστή. Αυτή η σελίδα προσφέρει πολιτικές που θα ενισχύσουν αυτή τη ροή εργασίας.</value>
+  </data>
+  <data name="WindowsFirewallPageTitle.Text" xml:space="preserve">
+    <value>Το τείχος προστασίας των Windows βοηθάει στην προστασία του υπολογιστή σας φιλτράροντας την εισερχόμενη και εξερχόμενη κίνηση. Εδώ μπορείτε να εφαρμόσετε διάφορους κανόνες και διαμορφώσεις για να ενισχύσετε την ασφάλειά του.</value>
+  </data>
+  <data name="WindowsNetworkingPageTitle.Text" xml:space="preserve">
+    <value>Οι ρυθμίσεις δικτύωσης των Windows σας επιτρέπουν να διαμορφώσετε διάφορες πτυχές της συνδεσιμότητας δικτύου και της ασφάλειας όπως το πώς η συσκευή σας επικοινωνεί με άλλες συσκευές στο δίκτυο.</value>
+  </data>
+  <data name="WindowsUpdatePageTitle.Text" xml:space="preserve">
+    <value>Η εγκατάσταση ενημερώσεων Windows το συντομότερο δυνατό μετά την κυκλοφορία τους είναι ζωτικής σημασίας για τη διατήρηση της ασφάλειας και σταθερότητας του συστήματός σας, ειδικά κατά νέων εκμεταλλεύσεων και zero-day. Αυτή η σελίδα σας βοηθάει να επιβάλετε πολιτικές που θα διασφαλίσουν ότι οι ενημερώσεις εγκαθίστανται έγκαιρα.</value>
+  </data>
+  <data name="FileReputationPageTitle.Text" xml:space="preserve">
+    <value>Επαλήθευση της φήμης εκτελέσιμων αρχείων και άλλων αρχείων χρησιμοποιώντας το Microsoft Defender Smart Screen ή το γράφημα ασφαλείας της Microsoft.</value>
+  </data>
+  <data name="InstalledAppsManagementPageTitle.Text" xml:space="preserve">
+    <value>Προβολή λίστας όλων των εφαρμογών που είναι εγκατεστημένες στο σύστημα και απεγκατάσταση των ανεπιθύμητων.</value>
+  </data>
+  <data name="PFNVersionLabel.Text" xml:space="preserve">
+  <value>Έκδοση</value>
+</data>
+<data name="PFNLabel.Text" xml:space="preserve">
+  <value>Όνομα οικογένειας πακέτου</value>
+</data>
+<data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+  <value>Υπήρξε σφάλμα στη λήψη των λεπτομερειών της εφαρμογής: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+  <value>Υπήρξε σφάλμα στη λήψη λεπτομερειών εφαρμογής</value>
+</data>
+<data name="PFNArchitectureLabel.Text" xml:space="preserve">
+  <value>Αρχιτεκτονική</value>
+</data>
+<data name="PFNPublisherLabel.Text" xml:space="preserve">
+  <value>Εκδότης</value>
+</data>
+<data name="PFNPublisherID.Text" xml:space="preserve">
+  <value>Αναγνωριστικό εκδότη</value>
+</data>
+<data name="PFNDescription.Text" xml:space="preserve">
+  <value>Περιγραφή</value>
+</data>
+<data name="PFNInstallLocation.Text" xml:space="preserve">
+  <value>Τοποθεσία εγκατάστασης</value>
+</data>
+<data name="PFNInstalledDateLabel.Text" xml:space="preserve">
+  <value>Τελευταία τροποποίηση στις</value>
+</data>
+<data name="PFNDisplayNameLabelText" xml:space="preserve">
+  <value>Όνομα εμφάνισης</value>
+</data>
+<data name="PFNFullNameLabel.Text" xml:space="preserve">
+  <value>Πλήρες όνομα</value>
+</data>
+  <data name="ProtectPageVerifySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαλήθευση μόνο των κατηγοριών και υποκατηγοριών που επιλέξατε.</value>
+  </data>
+    <data name="ProtectPageVerifySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επαλήθευση μόνο των κατηγοριών και υποκατηγοριών που επιλέξατε.</value>
+  </data>
+    <data name="ProtectPageApplySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμογή μόνο των κατηγοριών και υποκατηγοριών που επιλέξατε.</value>
+  </data>
+    <data name="ProtectPageApplySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εφαρμογή μόνο των κατηγοριών και υποκατηγοριών που επιλέξατε.</value>
+  </data>
+  <data name="ProtectPageRemoveSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αφαίρεση μόνο των κατηγοριών και υποκατηγοριών που επιλέξατε.</value>
+  </data>
+    <data name="ProtectPageRemoveSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αφαίρεση μόνο των κατηγοριών και υποκατηγοριών που επιλέξατε.</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ανάκτηση πολιτικής ασφάλειας συστήματος</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση όλων των πολιτικών ασφάλειας συστήματος που είναι επί του παρόντος ρυθμισμένες.</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση όλων των πολιτικών ασφάλειας συστήματος που είναι επί του παρόντος ρυθμισμένες.</value>
+  </data>
+  <data name="UnsupportedFileTypeError" xml:space="preserve">
+  <value>Μη υποστηριζόμενος τύπος αρχείου: {0}</value>
+</data>
+<data name="GroupPolicyDataLoadedSuccess" xml:space="preserve">
+  <value>Τα δεδομένα πολιτικής ομάδας φορτώθηκαν επιτυχώς</value>
+</data>
+<data name="SelectMainAndOtherPOLFilesWarning" xml:space="preserve">
+  <value>Παρακαλώ επιλέξτε ένα κύριο αρχείο POL και τουλάχιστον ένα άλλο αρχείο POL για συγχώνευση.</value>
+</data>
+<data name="MergeSummaryHeader" xml:space="preserve">
+  <value>=== Περίληψη συγχώνευσης ===</value>
+</data>
+<data name="TotalOperationsLog" xml:space="preserve">
+  <value>Συνολικές λειτουργίες: {0}</value>
+</data>
+<data name="AddedEntriesLog" xml:space="preserve">
+  <value>Προστεθείσες καταχωρήσεις: {0}</value>
+</data>
+<data name="TotalEntriesInMergedFileLog" xml:space="preserve">
+  <value>Συνολικές καταχωρήσεις στο συγχωνευμένο αρχείο: {0}</value>
+</data>
+<data name="POLFilesMergedSuccess" xml:space="preserve">
+  <value>Τα αρχεία POL συγχωνεύθηκαν επιτυχώς. Ελέγξτε τα αρχεία καταγραφής για λεπτομέρειες.</value>
+</data>
+<data name="SelectAtLeastOnePOLFileWarning" xml:space="preserve">
+  <value>Παρακαλώ επιλέξτε τουλάχιστον ένα αρχείο POL για μετατροπή.</value>
+</data>
+<data name="POLFilesConvertedToJSONSuccess" xml:space="preserve">
+  <value>Τα αρχεία POL μετατράπηκαν σε JSON επιτυχώς. Το αρχείο εξόδου είναι: {0}</value>
+</data>
+<data name="SelectAtLeastOneJSONFileWarning" xml:space="preserve">
+  <value>Παρακαλώ επιλέξτε τουλάχιστον ένα αρχείο JSON για μετατροπή.</value>
+</data>
+<data name="JSONFileConvertedToPOLSuccess" xml:space="preserve">
+  <value>Το αρχείο JSON μετατράπηκε σε POL επιτυχώς. Το αρχείο εξόδου αποθηκεύθηκε στο: {0}</value>
+</data>
+<data name="SelectAtLeastOneSecurityINFFileWarning" xml:space="preserve">
+  <value>Παρακαλώ επιλέξτε τουλάχιστον ένα αρχείο Security INF για μετατροπή.</value>
+</data>
+<data name="SecurityINFFileConvertedToJSONSuccess" xml:space="preserve">
+  <value>Το αρχείο Security INF μετατράπηκε σε JSON επιτυχώς. Το αρχείο εξόδου είναι: {0}</value>
+</data>
+<data name="SecurityPolicyReportSavedSuccess" xml:space="preserve">
+  <value>Η αναφορά πολιτικής ασφάλειας αποθηκεύθηκε επιτυχώς στην ακόλουθη τοποθεσία: {0}</value>
+</data>
+<data name="FoundExistingDISMServiceProcess" xml:space="preserve">
+  <value>Βρέθηκε υπάρχουσα διεργασία DISMService (PID: {0}), τερματισμός...</value>
+</data>
+<data name="SuccessfullyTerminatedDISMServiceProcess" xml:space="preserve">
+  <value>Η διεργασία DISMService τερματίστηκε επιτυχώς (PID: {0})</value>
+</data>
+<data name="FailedToTerminateDISMServiceProcess" xml:space="preserve">
+  <value>Αποτυχία τερματισμού διεργασίας DISMService (PID: {0}): {1}</value>
+</data>
+<data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
+  <value>Σφάλμα κατά τον έλεγχο υπαρχουσών διεργασιών DISMService: {0}</value>
+</data>
+<data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
+  <value>Ο έλεγχος ακεραιότητας αρχείου υπηρεσίας DISM απέτυχε</value>
+</data>
+<data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
+  <value>Αποτυχία επαλήθευσης ακεραιότητας υπηρεσίας DISM: {0}</value>
+</data>
+<data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
+  <value>Η επαλήθευση ακεραιότητας αρχείου υπηρεσίας DISM απέτυχε. Δεν είναι δυνατή η εκκίνηση της υπηρεσίας.</value>
+</data>
+<data name="FailedToCreateProcessWin32Error" xml:space="preserve">
+  <value>Αποτυχία δημιουργίας διεργασίας. Σφάλμα Win32: {0}</value>
+</data>
+<data name="FailedToStartService" xml:space="preserve">
+  <value>Αποτυχία εκκίνησης υπηρεσίας: {0}</value>
+</data>
+<data name="ServiceError" xml:space="preserve">
+  <value>Σφάλμα υπηρεσίας: {0}</value>
+</data>
+<data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
+  <value>Αποτυχία εκκίνησης υπηρεσίας DISM. Βεβαιωθείτε ότι το DismService.exe βρίσκεται στο φάκελο της εφαρμογής και ότι εκτελείστε ως διαχειριστής.</value>
+</data>
+<data name="FailedToInitializeDISMService" xml:space="preserve">
+  <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM: {0}</value>
+</data>
+<data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
+  <value>Φορτώθηκαν επιτυχώς {0} χαρακτηριστικά και δυνατότητες Windows.</value>
+</data>
+<data name="ProgressInfo" xml:space="preserve">
+  <value>Πρόοδος: {0}/{1} ({2}%)</value>
+</data>
+<data name="ProgressUnknownInfo" xml:space="preserve">
+  <value>Πρόοδος: {0}/άγνωστο</value>
+</data>
+<data name="SuccessfullyEnabledItem" xml:space="preserve">
+  <value>Ενεργοποιήθηκε επιτυχώς {0}: {1}</value>
+</data>
+<data name="CouldNotVerifyStateAfterEnabling" xml:space="preserve">
+  <value>Δεν ήταν δυνατή η επαλήθευση κατάστασης μετά την ενεργοποίηση {0}: {1}</value>
+</data>
+<data name="FailedToEnableItem" xml:space="preserve">
+  <value>Αποτυχία ενεργοποίησης {0}: {1}</value>
+</data>
+<data name="ErrorEnablingItem" xml:space="preserve">
+  <value>Σφάλμα ενεργοποίησης {0}: {1}</value>
+</data>
+<data name="SuccessfullyDisabledItem" xml:space="preserve">
+  <value>Απενεργοποιήθηκε επιτυχώς {0}: {1}</value>
+</data>
+<data name="CouldNotVerifyStateAfterDisabling" xml:space="preserve">
+  <value>Δεν ήταν δυνατή η επαλήθευση κατάστασης μετά την απενεργοποίηση {0}: {1}</value>
+</data>
+<data name="FailedToDisableItem" xml:space="preserve">
+  <value>Αποτυχία απενεργοποίησης {0}: {1}</value>
+</data>
+<data name="ErrorDisablingItem" xml:space="preserve">
+  <value>Σφάλμα απενεργοποίησης {0}: {1}</value>
+</data>
+<data name="NoItemsSelectedForEnable" xml:space="preserve">
+  <value>Δεν επιλέχθηκαν στοιχεία. Παρακαλώ επιλέξτε ένα ή περισσότερα χαρακτηριστικά ή δυνατότητες για ενεργοποίηση.</value>
+</data>
+<data name="StartingBulkEnableOperation" xml:space="preserve">
+  <value>Έναρξη λειτουργίας μαζικής ενεργοποίησης για {0} επιλεγμένα στοιχεία...</value>
+</data>
+<data name="SuccessfullyEnabledAllSelectedItems" xml:space="preserve">
+  <value>Ενεργοποιήθηκαν επιτυχώς όλα τα {0} επιλεγμένα στοιχεία.</value>
+</data>
+<data name="FailedToEnableAllSelectedItems" xml:space="preserve">
+  <value>Αποτυχία ενεργοποίησης όλων των {0} επιλεγμένων στοιχείων.</value>
+</data>
+<data name="BulkEnableCompleted" xml:space="preserve">
+  <value>Η μαζική ενεργοποίηση ολοκληρώθηκε: {0} επέτυχαν, {1} απέτυχαν.</value>
+</data>
+<data name="FailedItems" xml:space="preserve">
+  <value>Στοιχεία που απέτυχαν: {0}</value>
+</data>
+<data name="ErrorDuringBulkEnableOperation" xml:space="preserve">
+  <value>Σφάλμα κατά τη λειτουργία μαζικής ενεργοποίησης</value>
+</data>
+<data name="NoItemsSelectedForDisable" xml:space="preserve">
+  <value>Δεν επιλέχθηκαν στοιχεία. Παρακαλώ επιλέξτε ένα ή περισσότερα χαρακτηριστικά ή δυνατότητες για απενεργοποίηση.</value>
+</data>
+<data name="StartingBulkDisableOperation" xml:space="preserve">
+  <value>Έναρξη λειτουργίας μαζικής απενεργοποίησης για {0} επιλεγμένα στοιχεία...</value>
+</data>
+<data name="SuccessfullyDisabledAllSelectedItems" xml:space="preserve">
+  <value>Απενεργοποιήθηκαν επιτυχώς όλα τα {0} επιλεγμένα στοιχεία.</value>
+</data>
+<data name="FailedToDisableAllSelectedItems" xml:space="preserve">
+  <value>Αποτυχία απενεργοποίησης όλων των {0} επιλεγμένων στοιχείων.</value>
+</data>
+<data name="BulkDisableCompleted" xml:space="preserve">
+  <value>Η μαζική απενεργοποίηση ολοκληρώθηκε: {0} επέτυχαν, {1} απέτυχαν.</value>
+</data>
+<data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
+  <value>Σφάλμα κατά τη λειτουργία μαζικής απενεργοποίησης</value>
+</data>
+<data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
+  <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM για ενίσχυση ασφάλειας.</value>
+</data>
+<data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
+  <value>Έναρξη με {0} προαιρετικά χαρακτηριστικά και δυνατότητες Windows...</value>
+</data>
+<data name="SuccessfullyAppliedSecurityHardening" xml:space="preserve">
+  <value>Εφαρμόστηκε επιτυχώς η ενίσχυση ασφάλειας σε όλα τα {0} προαιρετικά χαρακτηριστικά και δυνατότητες Windows.</value>
+</data>
+<data name="FailedToApplySecurityHardening" xml:space="preserve">
+  <value>Αποτυχία εφαρμογής ενίσχυσης ασφάλειας σε όλα τα {0} στοιχεία.</value>
+</data>
+<data name="SecurityHardeningCompleted" xml:space="preserve">
+  <value>Η ενίσχυση ασφάλειας ολοκληρώθηκε: {0} επέτυχαν, {1} απέτυχαν.</value>
+</data>
+<data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
+  <value>Σφάλμα κατά τη λειτουργία ενίσχυσης ασφάλειας</value>
+</data>
+<data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
+  <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM για επαλήθευση.</value>
+</data>
+<data name="VerifyingSecurityHardeningState" xml:space="preserve">
+  <value>Επαλήθευση κατάστασης ενίσχυσης ασφάλειας για {0} προαιρετικά χαρακτηριστικά και δυνατότητες Windows...</value>
+</data>
+<data name="SecurityHardeningVerificationPassed" xml:space="preserve">
+  <value>Η επαλήθευση ενίσχυσης ασφάλειας πέρασε: όλα τα {0} στοιχεία είναι στις σωστές καταστάσεις τους.</value>
+</data>
+<data name="SecurityHardeningVerificationCompleted" xml:space="preserve">
+  <value>Η επαλήθευση ενίσχυσης ασφάλειας ολοκληρώθηκε: {0} σωστά, {1} εσφαλμένα.</value>
+</data>
+<data name="IncorrectItems" xml:space="preserve">
+  <value>Εσφαλμένα στοιχεία: {0}</value>
+</data>
+<data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
+  <value>Σφάλμα κατά την επαλήθευση ενίσχυσης ασφάλειας</value>
+</data>
+<data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
+  <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM για αφαίρεση ενίσχυσης ασφάλειας.</value>
+</data>
+<data name="RemovingSecurityHardening" xml:space="preserve">
+  <value>Αφαίρεση ενίσχυσης ασφάλειας για {0} προαιρετικά χαρακτηριστικά και δυνατότητες Windows...</value>
+</data>
+<data name="SuccessfullyRemovedSecurityHardening" xml:space="preserve">
+  <value>Αφαιρέθηκε επιτυχώς η ενίσχυση ασφάλειας από όλα τα {0} προαιρετικά χαρακτηριστικά και δυνατότητες Windows.</value>
+</data>
+<data name="FailedToRemoveSecurityHardening" xml:space="preserve">
+  <value>Αποτυχία αφαίρεσης ενίσχυσης ασφάλειας από όλα τα {0} στοιχεία.</value>
+</data>
+<data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
+  <value>Η αφαίρεση ενίσχυσης ασφάλειας ολοκληρώθηκε: {0} επέτυχαν, {1} απέτυχαν.</value>
+</data>
+<data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
+  <value>Σφάλμα κατά τη λειτουργία αφαίρεσης ενίσχυσης ασφάλειας</value>
+</data>
+<data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
+  <value>Σφάλμα απόρριψης πελάτη υπηρεσίας DISM: {0}</value>
+</data>
+<data name="NotPresentState" xml:space="preserve">
+  <value>Μη παρόν</value>
+</data>
+<data name="UninstallPendingState" xml:space="preserve">
+  <value>Απεγκατάσταση σε εκκρεμότητα</value>
+</data>
+<data name="StagedState" xml:space="preserve">
+  <value>Σταδιακό</value>
+</data>
+<data name="RemovedState" xml:space="preserve">
+  <value>Αφαιρεμένο</value>
+</data>
+<data name="InstalledState" xml:space="preserve">
+  <value>Εγκατεστημένο</value>
+</data>
+<data name="InstallPendingState" xml:space="preserve">
+  <value>Εγκατάσταση σε εκκρεμότητα</value>
+</data>
+<data name="SupersededState" xml:space="preserve">
+  <value>Αντικατεστημένο</value>
+</data>
+<data name="PartiallyInstalledState" xml:space="preserve">
+  <value>Μερικώς εγκατεστημένο</value>
+</data>
+<data name="UnknownState" xml:space="preserve">
+  <value>Άγνωστο</value>
+</data>
+<data name="FeatureType" xml:space="preserve">
+  <value>Χαρακτηριστικό</value>
+</data>
+<data name="CapabilityType" xml:space="preserve">
+  <value>Δυνατότητα</value>
+</data>
+<data name="FailedToRetrieveASRRuleIDs" xml:space="preserve">
+  <value>Αποτυχία ανάκτησης αναγνωριστικών κανόνων ASR από το σύστημα</value>
+</data>
+<data name="FailedToRetrieveASRRuleActions" xml:space="preserve">
+  <value>Αποτυχία ανάκτησης ενεργειών κανόνων ASR από το σύστημα</value>
+</data>
+<data name="FailedToParseASRRulesData" xml:space="preserve">
+  <value>Αποτυχία ανάλυσης δεδομένων κανόνων ASR από το σύστημα</value>
+</data>
+<data name="MismatchBetweenIDsAndActionsCount" xml:space="preserve">
+  <value>Αναντιστοιχία μεταξύ αριθμού αναγνωριστικών ({0}) και αριθμού ενεργειών ({1})</value>
+</data>
+<data name="SuccessfullyRetrievedASRRuleStates" xml:space="preserve">
+  <value>Ανακτήθηκαν επιτυχώς {0} καταστάσεις κανόνων ASR από το σύστημα</value>
+</data>
+<data name="AppliedASRRuleWithState" xml:space="preserve">
+  <value>Εφαρμόστηκε κανόνας ASR {0} με κατάσταση {1}</value>
+</data>
+<data name="AppliedASRRulesSuccessfully" xml:space="preserve">
+  <value>Οι κανόνες ASR εφαρμόστηκαν επιτυχώς</value>
+</data>
+<data name="RemovedASRRulesSuccessfully" xml:space="preserve">
+  <value>Οι κανόνες ASR αφαιρέθηκαν επιτυχώς</value>
+</data>
+<data name="RetrievedSystemStatesAndUpdatedASRRules" xml:space="preserve">
+  <value>Ανακτήθηκαν καταστάσεις συστήματος και ενημερώθηκαν {0} κανόνες ASR. Η διεπαφή χρήστη ενημερώθηκε για να αντικατοπτρίζει την τρέχουσα κατάσταση συστήματος.</value>
+</data>
+<data name="FailedToVerifyASRRules" xml:space="preserve">
+  <value>Αποτυχία επαλήθευσης κανόνων ASR</value>
+</data>
+<data name="SuccessfullyAppliedRecommendedValuesASRRules" xml:space="preserve">
+  <value>Εφαρμόστηκαν επιτυχώς όλες οι συνιστώμενες τιμές για τους κανόνες ASR.</value>
+</data>
+<data name="CouldNotDetermineWhichAppToUninstall" xml:space="preserve">
+  <value>Δεν ήταν δυνατός ο προσδιορισμός της εφαρμογής προς απεγκατάσταση.</value>
+</data>
+<data name="StartingUninstallationOfApp" xml:space="preserve">
+  <value>Έναρξη απεγκατάστασης εφαρμογής: {0}...</value>
+</data>
+<data name="SuccessfullyUninstalledApp" xml:space="preserve">
+  <value>Η εφαρμογή απεγκαταστάθηκε επιτυχώς: {0}</value>
+</data>
+<data name="NoAppsSelectedForUninstallation" xml:space="preserve">
+  <value>Δεν επιλέχθηκαν εφαρμογές για απεγκατάσταση.</value>
+</data>
+<data name="StartingUninstallationOfMultipleApps" xml:space="preserve">
+  <value>Έναρξη απεγκατάστασης {0} εφαρμογή/εφαρμογών...</value>
+</data>
+<data name="AllAppsSuccessfullyUninstalled" xml:space="preserve">
+  <value>Όλες οι εφαρμογές απεγκαταστάθηκαν επιτυχώς.</value>
+</data>
+<data name="ErrorCodeAndText" xml:space="preserve">
+  <value>Κωδικός σφάλματος: {0} - Κείμενο σφάλματος: {1}</value>
+</data>
+<data name="RemovalCanceled" xml:space="preserve">
+  <value>Η αφαίρεση ακυρώθηκε</value>
+</data>
+<data name="AppSuccessfullyRemoved" xml:space="preserve">
+  <value>Η εφαρμογή με πλήρες όνομα '{0}' αφαιρέθηκε επιτυχώς.</value>
+</data>
+<data name="RemovalStatusUnknown" xml:space="preserve">
+  <value>Άγνωστη κατάσταση αφαίρεσης</value>
+</data>
+<data name="TryingToRemoveAppForCurrentUserOnly" xml:space="preserve">
+  <value>Προσπάθεια αφαίρεσης εφαρμογής με πλήρες όνομα '{0}' ξανά αλλά μόνο για τον τρέχοντα χρήστη.</value>
+</data>
+<data name="CouldNotDetermineWhichAppLocationToOpen" xml:space="preserve">
+  <value>Δεν ήταν δυνατός ο προσδιορισμός της τοποθεσίας εφαρμογής προς άνοιγμα.</value>
+</data>
+<data name="NoInstallationLocationAvailable" xml:space="preserve">
+  <value>Δεν υπάρχει διαθέσιμη τοποθεσία εγκατάστασης για {0}.</value>
+</data>
+<data name="InstallationLocationDoesNotExist" xml:space="preserve">
+  <value>Η τοποθεσία εγκατάστασης δεν υπάρχει: {0}</value>
+</data>
+<data name="OpenedInstallationLocation" xml:space="preserve">
+  <value>Ανοίχθηκε η τοποθεσία εγκατάστασης για {0}</value>
+</data>
+<data name="CouldNotDetermineWhichAppDetailsToCopy" xml:space="preserve">
+  <value>Δεν ήταν δυνατός ο προσδιορισμός των λεπτομερειών εφαρμογής προς αντιγραφή.</value>
+</data>
+<data name="JSONDependencyRegistered" xml:space="preserve">
+  <value>Εξάρτηση JSON καταχωρήθηκε: {0} - {1} ({2}, {3})</value>
+</data>
+<data name="DependencyCycleDetected" xml:space="preserve">
+  <value>Ανιχνεύθηκε κύκλος εξάρτησης: παράκαμψη {0} για αποφυγή άπειρου βρόχου</value>
+</data>
+<data name="DependencySkip" xml:space="preserve">
+  <value>Παράκαμψη εξάρτησης: {0} υπάρχει ήδη στο batch επεξεργασίας</value>
+</data>
+<data name="DependencyResolved" xml:space="preserve">
+  <value>Εξάρτηση επιλύθηκε: {0} - {1} ({2}, {3})</value>
+</data>
+<data name="DependencyNotFound" xml:space="preserve">
+  <value>Εξάρτηση δεν βρέθηκε: {0} αναφέρεται από {1}</value>
+</data>
+<data name="SecurityPolicyRegistryApplyBulkInvokeError" xml:space="preserve">
+  <value>Το SecurityPolicyRegistryApply πρέπει να κληθεί μαζικά μέσω SecurityPolicyManager</value>
+</data>
+<data name="GroupPolicyApplyBulkInvokeError" xml:space="preserve">
+  <value>Το GroupPolicyApply πρέπει να κληθεί μαζικά μέσω ApplyPolicies</value>
+</data>
+<data name="RegistryApplyBulkInvokeError" xml:space="preserve">
+  <value>Το RegistryApply πρέπει να κληθεί μαζικά μέσω RegistryManager.AddPoliciesToSystem</value>
+</data>
+<data name="SecurityPolicyRegistryVerifyBulkInvokeError" xml:space="preserve">
+  <value>Πρέπει να κληθεί μαζικά.</value>
+</data>
+<data name="SpecializedApplySuccess" xml:space="preserve">
+  <value>Εξειδικευμένη εφαρμογή ({0}): {1}\{2} - επιτυχία</value>
+</data>
+<data name="SpecializedRemoveSuccess" xml:space="preserve">
+  <value>Εξειδικευμένη αφαίρεση ({0}): {1}\{2} - επιτυχία</value>
+</data>
+<data name="ErrorInSpecializedStrategy" xml:space="preserve">
+  <value>Σφάλμα στην εξειδικευμένη στρατηγική {0} ({1}) για {2}\{3}.</value>
+</data>
+<data name="ProcessingBeforeDependencies" xml:space="preserve">
+  <value>Επεξεργασία {0} εξαρτήσεων-πριν για λειτουργία {1}</value>
+</data>
+<data name="ProcessingAfterDependencies" xml:space="preserve">
+  <value>Επεξεργασία {0} εξαρτήσεων-μετά για λειτουργία {1}</value>
+</data>
+<data name="ErrorProcessingGroupPolicyMUnits" xml:space="preserve">
+  <value>Σφάλμα επεξεργασίας μονάδων M πολιτικής ομάδας μαζικά.</value>
+</data>
+<data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
+  <value>Σφάλμα επεξεργασίας μονάδων M μητρώου μαζικά.</value>
+</data>
+<data name="ErrorProcessingSecurityPolicyRegistryMUnits" xml:space="preserve">
+  <value>Σφάλμα επεξεργασίας μονάδων M μητρώου πολιτικής ασφάλειας μαζικά.</value>
+</data>
+<data name="FallbackVerifyResult" xml:space="preserve">
+  <value>Εφεδρική επαλήθευση: {0}\{1} = {2}</value>
+</data>
+<data name="ErrorInFallbackVerification" xml:space="preserve">
+  <value>Σφάλμα στην εφεδρική επαλήθευση για {0}\{1}: {2}</value>
+</data>
+<data name="ErrorProcessingRegularMUnit" xml:space="preserve">
+  <value>Σφάλμα επεξεργασίας κανονικής μονάδας M {0}</value>
+</data>
+<data name="ApplyingSecurityMeasures" xml:space="preserve">
+  <value>Εφαρμογή {0} μέτρων ασφάλειας...</value>
+</data>
+<data name="RemovingSecurityMeasures" xml:space="preserve">
+  <value>Αφαίρεση {0} μέτρων ασφάλειας...</value>
+</data>
+<data name="VerifyingSecurityMeasures" xml:space="preserve">
+  <value>Επαλήθευση {0} μέτρων ασφάλειας...</value>
+</data>
+<data name="ProcessingSecurityMeasures" xml:space="preserve">
+  <value>Επεξεργασία {0} μέτρων ασφάλειας...</value>
+</data>
+<data name="SuccessfullyAppliedSecurityMeasures" xml:space="preserve">
+  <value>Εφαρμόστηκαν επιτυχώς {0} μέτρα ασφάλειας</value>
+</data>
+<data name="SuccessfullyRemovedSecurityMeasures" xml:space="preserve">
+  <value>Αφαιρέθηκαν επιτυχώς {0} μέτρα ασφάλειας</value>
+</data>
+<data name="SuccessfullyVerifiedSecurityMeasures" xml:space="preserve">
+  <value>Επαληθεύτηκαν επιτυχώς {0} μέτρα ασφάλειας</value>
+</data>
+<data name="SuccessfullyProcessedSecurityMeasures" xml:space="preserve">
+  <value>Επεξεργάστηκαν επιτυχώς {0} μέτρα ασφάλειας</value>
+</data>
+<data name="CouldNotLoadPoliciesFromPath" xml:space="preserve">
+  <value>Δεν ήταν δυνατή η φόρτωση πολιτικών από: {0}</value>
+</data>
+<data name="InvalidSource" xml:space="preserve">
+  <value>Μη έγκυρη πηγή: {0}</value>
+</data>
+<data name="SecurityPolicyRegistryEntryMustHaveDefaultRegValue" xml:space="preserve">
+  <value>Η καταχώρηση SecurityPolicyRegistry {0}\{1} πρέπει να έχει μη κενό DefaultRegValue</value>
+</data>
+<data name="ErrorCreatingMUnitsForCategory" xml:space="preserve">
+  <value>Σφάλμα δημιουργίας μονάδων M για κατηγορία {0}: {1}</value>
+</data>
+<data name="SUCCESS" xml:space="preserve">
+  <value>ΕΠΙΤΥΧΙΑ</value>
+</data>
+<data name="FAILED" xml:space="preserve">
+  <value>ΑΠΟΤΥΧΙΑ</value>
+</data>
+<data name="FailedToOpenBCDSystemStore" xml:space="preserve">
+  <value>Αποτυχία ανοίγματος καταστήματος συστήματος BCD</value>
+</data>
+<data name="FailedToParseCurrent EntryGUID" xml:space="preserve">
+  <value>Αποτυχία ανάλυσης τρέχοντος GUID καταχώρησης</value>
+</data>
+<data name="CurrentBootEntryNotFoundAdministrator" xml:space="preserve">
+  <value>Η τρέχουσα καταχώρηση εκκίνησης δεν βρέθηκε. Δοκιμάστε να εκτελέσετε ως διαχειριστής.</value>
+</data>
+<data name="FailedToOpenBCDObject" xml:space="preserve">
+  <value>Αποτυχία ανοίγματος αντικειμένου BCD</value>
+</data>
+<data name="FailedToSetBCDElement" xml:space="preserve">
+  <value>Αποτυχία ρύθμισης στοιχείου BCD</value>
+</data>
+<data name="MpClientDllNotFound" xml:space="preserve">
+  <value>Το MpClient.dll δεν βρέθηκε</value>
+</data>
+<data name="MpQueryFileTrustByHandle2NotFound" xml:space="preserve">
+  <value>Το MpQueryFileTrustByHandle2 δεν βρέθηκε</value>
+</data>
+<data name="ErrorOpeningHandleToFile" xml:space="preserve">
+  <value>Σφάλμα ανοίγματος χειριστηρίου σε αρχείο '{0}': {1}</value>
+</data>
+<data name="ExtraInfoFileReputationCheck" xml:space="preserve">
+  <value>Υπήρχαν επιπλέον πληροφορίες σχετικά με τον έλεγχο φήμης αρχείου: {0}, {1}, {2}, {3}</value>
+</data>
+<data name="FailedToQueryReputation" xml:space="preserve">
+  <value>Αποτυχία ερωτήματος φήμης: {0}</value>
+</data>
+<data name="HighTrust" xml:space="preserve">
+  <value>Υψηλή εμπιστοσύνη</value>
+</data>
+<data name="GoodTrust" xml:space="preserve">
+  <value>Καλή εμπιστοσύνη</value>
+</data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>Μη διαθέσιμο ή άγνωστο</value>
+</data>
+<data name="PotentiallyUnwantedApplication" xml:space="preserve">
+  <value>Πιθανώς ανεπιθύμητη εφαρμογή (PUA)</value>
+</data>
+<data name="Malicious" xml:space="preserve">
+  <value>Κακόβουλο</value>
+</data>
+<data name="UnrecognizedScore" xml:space="preserve">
+  <value>Μη αναγνωρισμένη βαθμολογία: ({0})</value>
+</data>
+<data name="InvalidRegistryBaseKey" xml:space="preserve">
+  <value>Μη έγκυρο βασικό κλειδί μητρώου: {0}</value>
+</data>
+<data name="RegistryKeyDidNotHaveRegValue" xml:space="preserve">
+  <value>Το κλειδί μητρώου δεν είχε κάποιο RegValue</value>
+</data>
+<data name="InvalidRegistryValueType" xml:space="preserve">
+  <value>Μη έγκυρος τύπος τιμής μητρώου</value>
+</data>
+<data name="InvalidActionSpecified" xml:space="preserve">
+  <value>Καθορίστηκε μη έγκυρη ενέργεια: {0}</value>
+</data>
+<data name="AppliedRegistryEntry" xml:space="preserve">
+  <value>Εφαρμόστηκε: {0}\{1}\{2}</value>
+</data>
+<data name="ErrorApplyingRegistryPolicy" xml:space="preserve">
+  <value>Σφάλμα εφαρμογής πολιτικής μητρώου {0}\{1}\{2}: {3}</value>
+</data>
+<data name="RegistryApplicationComplete" xml:space="preserve">
+  <value>Η εφαρμογή μητρώου ολοκληρώθηκε: {0} από {1} πολιτικές εφαρμόστηκαν επιτυχώς</value>
+</data>
+<data name="RemovedRegistryEntry" xml:space="preserve">
+  <value>Αφαιρέθηκε</value>
+</data>
+<data name="ResetToDefaultRegistryEntry" xml:space="preserve">
+  <value>Επαναφορά σε προεπιλογή</value>
+</data>
+<data name="RemovedRegistryEntryFormat" xml:space="preserve">
+  <value>{0}: {1}\{2}\{3}</value>
+</data>
+<data name="ErrorRemovingRegistryPolicy" xml:space="preserve">
+  <value>Σφάλμα αφαίρεσης πολιτικής μητρώου {0}\{1}\{2}: {3}</value>
+</data>
+<data name="RegistryRemovalComplete" xml:space="preserve">
+  <value>Η αφαίρεση μητρώου ολοκληρώθηκε: {0} από {1} πολιτικές αφαιρέθηκαν επιτυχώς</value>
+</data>
+<data name="VerifyRegistryMatch" xml:space="preserve">
+  <value>Επαλήθευση: {0}\{1}\{2} = ταίριασμα</value>
+</data>
+<data name="VerifyRegistryMismatch" xml:space="preserve">
+  <value>Επαλήθευση: {0}\{1}\{2} = αναντιστοιχία</value>
+</data>
+<data name="ErrorVerifyingRegistryPolicy" xml:space="preserve">
+  <value>Σφάλμα επαλήθευσης πολιτικής μητρώου {0}\{1}\{2}: {3}</value>
+</data>
+<data name="RegistryVerificationComplete" xml:space="preserve">
+  <value>Η επαλήθευση μητρώου ολοκληρώθηκε: {0} από {1} πολιτικές ταιριάζουν</value>
+</data>
+<data name="NoSettingsProvided" xml:space="preserve">
+  <value>Δεν παρασχέθηκαν ρυθμίσεις</value>
+</data>
+<data name="SettingSystemAccessPolicyViaSecedit" xml:space="preserve">
+  <value>Ρύθμιση πολιτικής πρόσβασης συστήματος μέσω secedit...</value>
+</data>
+<data name="CreatedSecurityTemplate" xml:space="preserve">
+  <value>Δημιουργήθηκε πρότυπο ασφάλειας: {0}</value>
+</data>
+<data name="TemplateContent" xml:space="preserve">
+  <value>Περιεχόμενο προτύπου: {0}</value>
+</data>
+<data name="FailedToStartSeceditProcess" xml:space="preserve">
+  <value>Αποτυχία εκκίνησης διεργασίας secedit</value>
+</data>
+<data name="SeceditExitCode" xml:space="preserve">
+  <value>Κωδικός εξόδου Secedit: {0}</value>
+</data>
+<data name="SeceditOutput" xml:space="preserve">
+  <value>Έξοδος Secedit: {0}</value>
+</data>
+<data name="SeceditError" xml:space="preserve">
+  <value>Σφάλμα Secedit: {0}</value>
+</data>
+<data name="SeceditCompletedSuccessfully" xml:space="preserve">
+  <value>Το Secedit ολοκληρώθηκε επιτυχώς</value>
+</data>
+<data name="SeceditFailedWithExitCode" xml:space="preserve">
+  <value>Το Secedit απέτυχε με κωδικό εξόδου: {0}</value>
+</data>
+<data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
+  <value>Προειδοποίηση: Δεν ήταν δυνατή η διαγραφή προσωρινών αρχείων.</value>
+</data>
+<data name="SeceditMethodFailed" xml:space="preserve">
+  <value>Η μέθοδος Secedit απέτυχε.</value>
+</data>
+<data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
+  <value>Δεν βρέθηκαν ρυθμίσεις [System Access] στο καθορισμένο αρχείο</value>
+</data>
+<data name="ExtractedSystemAccessSettingsFromFile" xml:space="preserve">
+  <value>Εξήχθησαν {0} ρυθμίσεις System Access από αρχείο: {1}</value>
+</data>
+<data name="FileNotFoundPath" xml:space="preserve">
+  <value>Το αρχείο δεν βρέθηκε: {0}</value>
+</data>
+<data name="CreatedPolicyDirectory" xml:space="preserve">
+  <value>Δημιουργήθηκε φάκελος πολιτικής: {0}</value>
+</data>
+<data name="FileTooSmallForValidHeader" xml:space="preserve">
+  <value>Το αρχείο είναι πολύ μικρό για να περιέχει έγκυρη κεφαλίδα</value>
+</data>
+<data name="InvalidSignatureExpected" xml:space="preserve">
+  <value>Μη έγκυρη υπογραφή: 0x{0:X8}. Αναμενόμενη: 0x{1:X8}</value>
+</data>
+<data name="ErrorReadingEntryAtPosition" xml:space="preserve">
+  <value>Σφάλμα ανάγνωσης καταχώρησης στη θέση {0}: {1}</value>
+</data>
+<data name="ExpectedOpeningBracketAtStartOfEntry" xml:space="preserve">
+  <value>Αναμενόταν άνοιγμα αγκύλης στην αρχή της καταχώρησης, λήφθηκε: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterKeyName" xml:space="preserve">
+  <value>Αναμενόταν διαχωριστικό ερωτηματικό μετά το όνομα κλειδιού, λήφθηκε: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterValueName" xml:space="preserve">
+  <value>Αναμενόταν διαχωριστικό ερωτηματικό μετά το όνομα τιμής, λήφθηκε: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterType" xml:space="preserve">
+  <value>Αναμενόταν διαχωριστικό ερωτηματικό μετά τον τύπο, λήφθηκε: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterSize" xml:space="preserve">
+  <value>Αναμενόταν διαχωριστικό ερωτηματικό μετά το μέγεθος, λήφθηκε: 0x{0:X4}</value>
+</data>
+<data name="CouldNotReadBytesOfData" xml:space="preserve">
+  <value>Δεν ήταν δυνατή η ανάγνωση {0} bytes δεδομένων, λήφθηκαν μόνο {1} bytes</value>
+</data>
+<data name="ExpectedClosingBracketAfterData" xml:space="preserve">
+  <value>Αναμενόταν κλείσιμο αγκύλης μετά τα δεδομένα, λήφθηκε: 0x{0:X4}</value>
+</data>
+<data name="UnexpectedEndOfStreamReadingUnicodeString" xml:space="preserve">
+  <value>Απροσδόκητο τέλος ροής κατά την ανάγνωση συμβολοσειράς Unicode</value>
+</data>
+<data name="AtLeastOneOtherPolicyFileMustBeProvided" xml:space="preserve">
+  <value>Πρέπει να παρασχεθεί τουλάχιστον ένα άλλο αρχείο πολιτικής</value>
+</data>
+<data name="MainPolicyFilePathCannotBeNullOrEmpty" xml:space="preserve">
+  <value>Η διαδρομή κύριου αρχείου πολιτικής δεν μπορεί να είναι null ή κενή</value>
+</data>
+<data name="AtLeastOneOtherPolicyFilePathMustBeProvided" xml:space="preserve">
+  <value>Πρέπει να παρασχεθεί τουλάχιστον μια διαδρομή άλλου αρχείου πολιτικής</value>
+</data>
+<data name="PolicyFilePathAtIndexCannotBeNullOrEmpty" xml:space="preserve">
+  <value>Η διαδρομή αρχείου πολιτικής στο ευρετήριο {0} δεν μπορεί να είναι null ή κενή</value>
+</data>
+<data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
+  <value>Φορτώθηκε υπάρχον αρχείο πολιτικής με {0} καταχωρήσεις</value>
+</data>
+<data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
+  <value>Το αρχείο πολιτικής δεν υπάρχει, δημιουργία νέου κενού αρχείου πολιτικής</value>
+</data>
+<data name="ReplacedEntries" xml:space="preserve">
+  <value>Αντικατεστημένες καταχωρήσεις: {0}</value>
+</data>
+<data name="PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified" xml:space="preserve">
+  <value>Το αρχείο πολιτικής δεν υπάρχει, σήμανση όλων των πολιτικών ως μη επαληθευμένων</value>
+</data>
+<data name="VerificationCompletePolicyFileDoesNotExist" xml:space="preserve">
+  <value>Η επαλήθευση ολοκληρώθηκε: 0 από {0} πολιτικές ταιριάζουν (το αρχείο πολιτικής δεν υπάρχει)</value>
+</data>
+<data name="VerifyPolicyMatch" xml:space="preserve">
+  <value>Επαλήθευση: {0}\{1} = ταίριασμα</value>
+</data>
+<data name="VerifyPolicyMismatch" xml:space="preserve">
+  <value>Επαλήθευση: {0}\{1} = αναντιστοιχία</value>
+</data>
+<data name="VerifyPolicyNotFound" xml:space="preserve">
+  <value>Επαλήθευση: {0}\{1} = δεν βρέθηκε</value>
+</data>
+<data name="VerificationCompletePoliciesMatch" xml:space="preserve">
+  <value>Η επαλήθευση ολοκληρώθηκε: {0} από {1} πολιτικές ταιριάζουν</value>
+</data>
+<data name="PolicyFileDoesNotExistNothingToRemove" xml:space="preserve">
+  <value>Το αρχείο πολιτικής δεν υπάρχει, τίποτα για αφαίρεση</value>
+</data>
+<data name="RemovedPolicyEntry" xml:space="preserve">
+  <value>Αφαιρέθηκε: {0}</value>
+</data>
+<data name="PolicyRemovalComplete" xml:space="preserve">
+  <value>Η αφαίρεση πολιτικής ολοκληρώθηκε: {0} πολιτικές αφαιρέθηκαν</value>
+</data>
+ <data name="ProtectNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Κύριο</value>
+  </data>
+  <data name="ProtectNavigationViewItem.Content" xml:space="preserve">
+    <value>Προστασία</value>
+  </data>
+  <data name="ProtectNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Χρησιμοποιήστε αυτό το τμήμα για την αυτοματοποίηση εφαρμογής, επαλήθευσης ή αφαίρεσης μέτρων ασφαλείας σε μεγάλες ποσότητες. Διατίθενται προκαθορισμένες ρυθμίσεις ασφαλείας για να διευκολύνουν τη λήψη αποφάσεων.</value>
+  </data>
+  <data name="ProtectNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Χρησιμοποιήστε αυτό το τμήμα για την αυτοματοποίηση εφαρμογής, επαλήθευσης ή αφαίρεσης μέτρων ασφαλείας σε μεγάλες ποσότητες. Διατίθενται προκαθορισμένες ρυθμίσεις ασφαλείας για να διευκολύνουν τη λήψη αποφάσεων.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμόστε, επαληθεύστε ή αφαιρέστε μέτρα ασφαλείας που σχετίζονται με το Microsoft Defender.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Εφαρμόστε, επαληθεύστε ή αφαιρέστε μέτρα ασφαλείας που σχετίζονται με το Microsoft Defender.</value>
+  </data>
+  <data name="ASRNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμόστε, επαληθεύστε ή αφαιρέστε κανόνες μείωσης επιφάνειας επίθεσης.</value>
+  </data>
+  <data name="ASRNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εφαρμόστε, επαληθεύστε ή αφαιρέστε κανόνες μείωσης επιφάνειας επίθεσης.</value>
+  </data>
+  <data name="BitLockerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχειριστείτε τις ρυθμίσεις ασφαλείας BitLocker που χρησιμοποιούνται για να καθορίσουν πώς να ασφαλίσετε τη συσκευή και τα δεδομένα σας σε κατάσταση αδράνειας.</value>
+  </data>
+  <data name="BitLockerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαχειριστείτε τις ρυθμίσεις ασφαλείας BitLocker που χρησιμοποιούνται για να καθορίσουν πώς να ασφαλίσετε τη συσκευή και τα δεδομένα σας σε κατάσταση αδράνειας.</value>
+  </data>
+  <data name="TLSSecurityNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχειριστείτε TLS και σουίτες κρυπτογράφησης για την προστασία των δεδομένων σας κατά τη μεταφορά.</value>
+  </data>
+  <data name="TLSSecurityNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαχειριστείτε TLS και σουίτες κρυπτογράφησης για την προστασία των δεδομένων σας κατά τη μεταφορά.</value>
+  </data>
+  <data name="LockScreenNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενισχύστε την οθόνη κλειδώματος και μειώστε την ποσότητα πληροφοριών που είναι διαθέσιμες σε μη επαληθευμένους χρήστες.</value>
+  </data>
+  <data name="LockScreenNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενισχύστε την οθόνη κλειδώματος και μειώστε την ποσότητα πληροφοριών που είναι διαθέσιμες σε μη επαληθευμένους χρήστες.</value>
+  </data>
+  <data name="UACNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ασφαλίστε τα όρια μεταξύ εργασιών χωρίς αυξημένα δικαιώματα και εργασιών με αυξημένα δικαιώματα.</value>
+  </data>
+  <data name="UACNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ασφαλίστε τα όρια μεταξύ εργασιών χωρίς αυξημένα δικαιώματα και εργασιών με αυξημένα δικαιώματα.</value>
+  </data>
+  <data name="DeviceGuardNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αξιοποιήστε τα χαρακτηριστικά ασφαλείας υλικού για την ενίσχυση του λειτουργικού συστήματος και του λογισμικού.</value>
+  </data>
+  <data name="DeviceGuardNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Αξιοποιήστε τα χαρακτηριστικά ασφαλείας υλικού για την ενίσχυση του λειτουργικού συστήματος και του λογισμικού.</value>
+  </data>
+  <data name="WindowsFirewallNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαμορφώστε και επαληθεύστε τις ρυθμίσεις του τείχους προστασίας των Windows.</value>
+  </data>
+  <data name="WindowsFirewallNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαμορφώστε και επαληθεύστε τις ρυθμίσεις του τείχους προστασίας των Windows.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθέστε, αφαιρέστε και δείτε τις καταστάσεις όλων των προαιρετικών χαρακτηριστικών και δυνατοτήτων των Windows.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθέστε, αφαιρέστε και δείτε τις καταστάσεις όλων των προαιρετικών χαρακτηριστικών και δυνατοτήτων των Windows.</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ασφαλίστε το λειτουργικό σας σύστημα στο δίκτυο στο οποίο είναι συνδεδεμένο.</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ασφαλίστε το λειτουργικό σας σύστημα στο δίκτυο στο οποίο είναι συνδεδεμένο.</value>
+  </data>
+  <data name="MiscellaneousNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δείτε, εφαρμόστε ή αφαιρέστε μέτρα ασφαλείας που δεν εμπίπτουν σε πιο συγκεκριμένες κατηγορίες.</value>
+  </data>
+  <data name="MiscellaneousNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δείτε, εφαρμόστε ή αφαιρέστε μέτρα ασφαλείας που δεν εμπίπτουν σε πιο συγκεκριμένες κατηγορίες.</value>
+  </data>
+  <data name="WindowsUpdateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαμορφώστε τις ρυθμίσεις Windows Update για να εξασφαλίσετε ότι λαμβάνετε τις πιο πρόσφατες ενημερώσεις ασφαλείας το συντομότερο δυνατό.</value>
+  </data>
+  <data name="WindowsUpdateNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαμορφώστε τις ρυθμίσεις Windows Update για να εξασφαλίσετε ότι λαμβάνετε τις πιο πρόσφατες ενημερώσεις ασφαλείας το συντομότερο δυνατό.</value>
+  </data>
+  <data name="EdgeBrowserNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενισχύστε τον περιηγητή Edge για ασφαλέστερη και πιο ιδιωτική εμπειρία περιήγησης.</value>
+  </data>
+  <data name="EdgeBrowserNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενισχύστε τον περιηγητή Edge για ασφαλέστερη και πιο ιδιωτική εμπειρία περιήγησης.</value>
+  </data>
+  <data name="CertificatesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Βρείτε όλα τα πιστοποιητικά στο σύστημά σας που δεν έχουν ρίζα σε κανένα πιστοποιητικό στη λίστα αξιόπιστων πιστοποιητικών ρίζας της Microsoft.</value>
+  </data>
+  <data name="CertificatesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Βρείτε όλα τα πιστοποιητικά στο σύστημά σας που δεν έχουν ρίζα σε κανένα πιστοποιητικό στη λίστα αξιόπιστων πιστοποιητικών ρίζας της Microsoft.</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποκλείστε εύρη διευθύνσεων IP χωρών σε διάφορες επίσημες λίστες κυρώσεων των Ηνωμένων Πολιτειών.</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποκλείστε εύρη διευθύνσεων IP χωρών σε διάφορες επίσημες λίστες κυρώσεων των Ηνωμένων Πολιτειών.</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαληθεύστε, αφαιρέστε και εφαρμόστε μέτρα ασφαλείας που ισχύουν μόνο για τον τρέχοντα χρήστη.</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Επαληθεύστε, αφαιρέστε και εφαρμόστε μέτρα ασφαλείας που ισχύουν μόνο για τον τρέχοντα χρήστη.</value>
+  </data>
+  <data name="GroupPolicyEditorNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαβάστε αρχεία Group Policy, εξάγετέ τα σε JSON, συγχωνεύστε τα και ανακτήστε τις πλήρεις λεπτομέρειες πολιτικής ασφαλείας του συστήματος.</value>
+  </data>
+  <data name="GroupPolicyEditorNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαβάστε αρχεία Group Policy, εξάγετέ τα σε JSON, συγχωνεύστε τα και ανακτήστε τις πλήρεις λεπτομέρειες πολιτικής ασφαλείας του συστήματος.</value>
+  </data>
+    <data name="ApplyText.Text" xml:space="preserve">
+    <value>Εφαρμογή</value>
+  </data>
+      <data name="VerifyText.Text" xml:space="preserve">
+    <value>Επαλήθευση</value>
+  </data>
+      <data name="RemoveText.Text" xml:space="preserve">
+    <value>Αφαίρεση</value>
+  </data>
+  <data name="OpenTheFollowingLinkInBrowser" xml:space="preserve">
+    <value>Ανοίξτε τον ακόλουθο σύνδεσμο στον περιηγητή: {0}</value>
+  </data>
+  <data name="StatusOverviewText.Text" xml:space="preserve">
+    <value>Επισκόπηση κατάστασης</value>
+  </data>
+  <data name="SearchSecurityMeasuresPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Αναζήτηση μέτρων ασφαλείας...</value>
+  </data>
+  <data name="SearchFeatureCapabilityPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Αναζήτηση ανάμεσα στα χαρακτηριστικά και τις δυνατότητες...</value>
+  </data>
+  <data name="ReputationText.Text" xml:space="preserve">
+    <value>Φήμη</value>
+  </data>
+  <data name="SourceText.Text" xml:space="preserve">
+    <value>Πηγή</value>
+  </data>
+  <data name="DurationText.Text" xml:space="preserve">
+    <value>Διάρκεια</value>
+  </data>
+  <data name="CopyToClipBoard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγραφή στο πρόχειρο</value>
+  </data>
+  <data name="CopyToClipBoard.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Αντιγραφή στο πρόχειρο</value>
+  </data>
+  <data name="GetAppsListText.Text" xml:space="preserve">
+    <value>Λήψη λίστας εφαρμογών</value>
+  </data>
+  <data name="UninstallSelectedAppsText.Text" xml:space="preserve">
+    <value>Απεγκατάσταση επιλεγμένων εφαρμογών</value>
+  </data>
+  <data name="SearchForAppsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Αναζήτηση εφαρμογών...</value>
+  </data>
+  <data name="UninstallText.Text" xml:space="preserve">
+    <value>Απεγκατάσταση</value>
+  </data>
+    <data name="OpenLocationText.Text" xml:space="preserve">
+    <value>Άνοιγμα τοποθεσίας</value>
+  </data>
+  <data name="CopyAppDetailsText.Text" xml:space="preserve">
+    <value>Αντιγραφή στοιχείων εφαρμογής</value>
+  </data>
+  <data name="DetailsText.Text" xml:space="preserve">
+    <value>Στοιχεία</value>
+  </data>
+  <data name="ConvertINFToJSONText.Text" xml:space="preserve">
+    <value>Μετατροπή INF ασφαλείας σε JSON</value>
+  </data>
+    <data name="ConvertINFToJSONButton.Content" xml:space="preserve">
+    <value>Μετατροπή</value>
+  </data>
+  <data name="ConvertINFToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Έναρξη μετατροπής του επιλεγμένου αρχείου INF πολιτικής ασφαλείας σε JSON.</value>
+  </data>
+  <data name="ConvertINFToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Έναρξη μετατροπής του επιλεγμένου αρχείου INF πολιτικής ασφαλείας σε JSON.</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.Header" xml:space="preserve">
+    <value>Κατάλογος εξόδου για αρχεία JSON</value>
+  </data>
+    <data name="OutputDirForJSONSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε πού να αποθηκευτούν τα μετατραπέντα αρχεία JSON</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε πού να αποθηκευτούν τα μετατραπέντα αρχεία JSON</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε πού να αποθηκευτούν τα μετατραπέντα αρχεία JSON</value>
+  </data>
+    <data name="SelectedINFFilesText.Text" xml:space="preserve">
+    <value>Επιλεγμένα αρχεία INF ασφαλείας</value>
+  </data>
+  <data name="SelectedDirectoryText.Text" xml:space="preserve">
+    <value>Επιλεγμένος κατάλογος</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.Header" xml:space="preserve">
+    <value>Επιλογή αρχείων INF ασφαλείας για μετατροπή JSON</value>
+  </data>
+    <data name="INFToJSONConversionSectionSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε ένα ή περισσότερα αρχεία INF ασφαλείας για μετατροπή σε μορφή JSON</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε ένα ή περισσότερα αρχεία INF ασφαλείας για μετατροπή σε μορφή JSON</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε ένα ή περισσότερα αρχεία INF ασφαλείας για μετατροπή σε μορφή JSON</value>
+  </data>
+    <data name="SelectedText.Text" xml:space="preserve">
+    <value>Επιλεγμένα: </value>
+  </data>
+  <data name="StatusAppliedText" xml:space="preserve">
+    <value>Κατάσταση: Εφαρμόστηκε</value>
+  </data>
+    <data name="StatusNotAppliedText" xml:space="preserve">
+    <value>Κατάσταση: Δεν εφαρμόστηκε</value>
+  </data>
+    <data name="StatusUndeterminedText" xml:space="preserve">
+    <value>Κατάσταση: Αδιευκρίνιστη</value>
+  </data>
+  <data name="AppliedText" xml:space="preserve">
+    <value>Εφαρμόστηκε</value>
+  </data>
+    <data name="NotAppliedText" xml:space="preserve">
+    <value>Δεν εφαρμόστηκε</value>
+  </data>
+    <data name="NAText" xml:space="preserve">
+    <value>Μη διαθέσιμο</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+  <value>Το Harden Windows Security είναι μια εφαρμογή που σας βοηθά να διαμορφώσετε το σύστημά σας ώστε να είναι ασφαλές έναντι πολλών προηγμένων απειλών, χρησιμοποιώντας μόνο εργαλεία και χαρακτηριστικά που είναι διαθέσιμα στο λειτουργικό σύστημα και προσφέρονται από τη Microsoft χωρίς τη χρήση τρίτων εργαλείων ή προγραμμάτων.</value>
+</data>
+  <data name="LogsPageTitle.Text" xml:space="preserve">
+    <value>Τα παρακάτω είναι τα αρχεία καταγραφής που το Harden Windows Security δημιουργεί αυτόματα και αποθηκεύει στον καθορισμένο φάκελο. Το συνολικό μέγεθος του φακέλου αρχείων καταγραφής δεν θα υπερβεί ποτέ το 1GB.</value>
+  </data>
+    <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
+    <value>Άνοιγμα Καταλόγου Αρχείων Καταγραφής</value>
+  </data>
+</root>

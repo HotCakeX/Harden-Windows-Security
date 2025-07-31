@@ -12,7 +12,8 @@
     "FriendlyName": "Digits-LockScreen",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexitydigits",
     "Category": 6,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -27,7 +28,8 @@
     "FriendlyName": "LowercaseLetters-LockScreen",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexitylowercaseletters",
     "Category": 6,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -42,7 +44,8 @@
     "FriendlyName": "Expiration-LockScreen",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexityexpiration",
     "Category": 6,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -57,7 +60,8 @@
     "FriendlyName": "History-LockScreen",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexityhistory",
     "Category": 6,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -72,6 +76,103 @@
     "FriendlyName": "DontDisplayNetworkSelectionUI-LockScreen",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-windowslogon#dontdisplaynetworkselectionui",
     "Category": 6,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
+  },
+  {
+    "Source": 2,
+    "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+    "ValueName": "InactivityTimeoutSecs",
+    "Type": 4,
+    "Size": 4,
+    "Data": "eAAAAA==",
+    "RegValue": "120",
+    "Hive": 0,
+    "PolicyAction": 0,
+    "FriendlyName": "InactivityTimeoutSecs-LockScreen",
+    "URL": "",
+    "Category": 6,
+    "SubCategory": null,
+    "DefaultRegValue": "0"
+  },
+  {
+    "Source": 2,
+    "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+    "ValueName": "DisableCAD",
+    "Type": 4,
+    "Size": 4,
+    "Data": "AAAAAA==",
+    "RegValue": "0",
+    "Hive": 0,
+    "PolicyAction": 0,
+    "FriendlyName": "DisableCAD-LockScreen",
+    "URL": "",
+    "Category": 6,
+    "SubCategory": 5,
+    "DefaultRegValue": "1"
+  },
+  {
+    "Source": 2,
+    "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+    "ValueName": "MaxDevicePasswordFailedAttempts",
+    "Type": 4,
+    "Size": 4,
+    "Data": "BQAAAA==",
+    "RegValue": "5",
+    "Hive": 0,
+    "PolicyAction": 0,
+    "FriendlyName": "MaxDevicePasswordFailedAttempts-LockScreen",
+    "URL": "",
+    "Category": 6,
+    "SubCategory": null,
+    "DefaultRegValue": "0"
+  },
+  {
+    "Source": 2,
+    "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+    "ValueName": "DontDisplayLockedUserId",
+    "Type": 4,
+    "Size": 4,
+    "Data": "BAAAAA==",
+    "RegValue": "4",
+    "Hive": 0,
+    "PolicyAction": 0,
+    "FriendlyName": "DontDisplayLockedUserId-LockScreen",
+    "URL": "",
+    "Category": 6,
+    "SubCategory": null,
+    "DefaultRegValue": "0"
+  },
+  {
+    "Source": 2,
+    "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+    "ValueName": "DontDisplayUserName",
+    "Type": 4,
+    "Size": 4,
+    "Data": "AQAAAA==",
+    "RegValue": "1",
+    "Hive": 0,
+    "PolicyAction": 0,
+    "FriendlyName": "DontDisplayUserName-LockScreen",
+    "URL": "",
+    "Category": 6,
+    "SubCategory": null,
+    "DefaultRegValue": "0"
+  },
+  {
+    "Source": 2,
+    "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+    "ValueName": "DontDisplayLastUserName",
+    "Type": 4,
+    "Size": 4,
+    "Data": "AQAAAA==",
+    "RegValue": "1",
+    "Hive": 0,
+    "PolicyAction": 0,
+    "FriendlyName": "DontDisplayLastUserName-LockScreen",
+    "URL": "",
+    "Category": 6,
+    "SubCategory": 6,
+    "DefaultRegValue": "0"
   }
 ]

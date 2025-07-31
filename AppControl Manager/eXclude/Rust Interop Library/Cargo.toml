@@ -1,26 +1,18 @@
 [package]
 name = "rust_interop"
 version = "1.0.0"
-edition = "2024"
-authors = ["Violet Hansen"]
-license = "MIT"
-homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
-repository = "https://github.com/HotCakeX/Harden-Windows-Security"
-publish = false
-rust-version = "1.90"
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+publish.workspace = true
+rust-version.workspace = true
+documentation.workspace = true
 
 [lib]
 name = "rust_interop"
-crate-type = ["staticlib"]
-
-[profile.release]
-codegen-units = 1
-opt-level = "s"
-split-debuginfo = "packed"
-strip = "symbols"
-lto = "fat"
-incremental = false
-panic = "unwind"
+crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
 windows = { version = "*", features = [

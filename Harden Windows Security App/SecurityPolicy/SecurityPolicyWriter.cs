@@ -377,13 +377,13 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="lockoutBadCount"></param>
 	/// <returns></returns>
-	internal static bool SetLockoutBadCount(int lockoutBadCount)
+	internal static void SetLockoutBadCount(int lockoutBadCount)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 3, out nint buffer);
 		if (result != SecurityPolicyReader.NERR_Success || buffer == IntPtr.Zero)
 		{
-			return false;
+			throw new InvalidOperationException("Failed to retrieve current user modals information.");
 		}
 
 		try
@@ -394,7 +394,7 @@ internal static class SecurityPolicyWriter
 			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)Marshal.SizeOf<USER_MODALS_INFO_3>(), out nint newBuffer);
 			if (allocResult != SecurityPolicyReader.NERR_Success)
 			{
-				return false;
+				throw new InvalidOperationException("Failed to allocate memory for new user modals information.");
 			}
 
 			try
@@ -409,7 +409,10 @@ internal static class SecurityPolicyWriter
 				Marshal.StructureToPtr(newInfo, newBuffer, false);
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out uint parmErr);
-				return setResult == SecurityPolicyReader.NERR_Success;
+				if (setResult != SecurityPolicyReader.NERR_Success)
+				{
+					throw new InvalidOperationException("Failed to set user modals information. Error code: " + setResult);
+				}
 			}
 			finally
 			{
@@ -427,13 +430,13 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="resetLockoutCount"></param>
 	/// <returns></returns>
-	internal static bool SetResetLockoutCount(int resetLockoutCount)
+	internal static void SetResetLockoutCount(int resetLockoutCount)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 3, out nint buffer);
 		if (result != SecurityPolicyReader.NERR_Success || buffer == IntPtr.Zero)
 		{
-			return false;
+			throw new InvalidOperationException("Failed to retrieve current user modals information.");
 		}
 
 		try
@@ -444,7 +447,7 @@ internal static class SecurityPolicyWriter
 			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)Marshal.SizeOf<USER_MODALS_INFO_3>(), out nint newBuffer);
 			if (allocResult != SecurityPolicyReader.NERR_Success)
 			{
-				return false;
+				throw new InvalidOperationException("Failed to allocate memory for new user modals information.");
 			}
 
 			try
@@ -462,7 +465,10 @@ internal static class SecurityPolicyWriter
 				Marshal.StructureToPtr(newInfo, newBuffer, false);
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out uint parmErr);
-				return setResult == SecurityPolicyReader.NERR_Success;
+				if (setResult != SecurityPolicyReader.NERR_Success)
+				{
+					throw new InvalidOperationException("Failed to set user modals information. Error code: " + setResult);
+				}
 			}
 			finally
 			{
@@ -480,13 +486,13 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="lockoutDuration"></param>
 	/// <returns></returns>
-	internal static bool SetLockoutDuration(int lockoutDuration)
+	internal static void SetLockoutDuration(int lockoutDuration)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 3, out nint buffer);
 		if (result != SecurityPolicyReader.NERR_Success || buffer == IntPtr.Zero)
 		{
-			return false;
+			throw new InvalidOperationException("Failed to retrieve current user modals information.");
 		}
 
 		try
@@ -497,7 +503,7 @@ internal static class SecurityPolicyWriter
 			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)Marshal.SizeOf<USER_MODALS_INFO_3>(), out nint newBuffer);
 			if (allocResult != SecurityPolicyReader.NERR_Success)
 			{
-				return false;
+				throw new InvalidOperationException("Failed to allocate memory for new user modals information.");
 			}
 
 			try
@@ -514,7 +520,10 @@ internal static class SecurityPolicyWriter
 				Marshal.StructureToPtr(newInfo, newBuffer, false);
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out uint parmErr);
-				return setResult == SecurityPolicyReader.NERR_Success;
+				if (setResult != SecurityPolicyReader.NERR_Success)
+				{
+					throw new InvalidOperationException("Failed to set user modals information. Error code: " + setResult);
+				}
 			}
 			finally
 			{

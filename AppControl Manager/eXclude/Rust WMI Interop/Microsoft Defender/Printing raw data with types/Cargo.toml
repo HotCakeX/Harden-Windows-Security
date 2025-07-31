@@ -1,25 +1,17 @@
 [package]
-name = "WMI"
+name = "WMI_Types"
 version = "1.0.0"
-edition = "2024"
 description = "This cargo package retrieves the Microsoft Defender configurations via WMI and displays their names and types on the console."
-documentation = "https://github.com/HotCakeX/Harden-Windows-Security"
-homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
-repository = "https://github.com/HotCakeX/Harden-Windows-Security"
-license = "MIT"
 keywords = ["WMI", "Windows", "Security"]
 categories = ["API bindings", "Security"]
-publish = false
-rust-version = "1.88"
-
-[profile.release]
-codegen-units = 1
-opt-level = "s"
-split-debuginfo = "packed"
-strip = "symbols"
-overflow-checks = true
-lto = "fat"
-incremental = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+publish.workspace = true
+rust-version.workspace = true
+documentation.workspace = true
 
 [dependencies.windows]
 version = "*"

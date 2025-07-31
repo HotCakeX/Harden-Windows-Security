@@ -1,27 +1,15 @@
-// Include the standard I/O stream library for input/output functionality.
 #include <iostream>
-// Include the standard string library to work with std::string and std::wstring.
 #include <string>
-// Include the string stream library for string-based stream operations.
 #include <sstream>
-// Include the vector container from the STL for dynamic arrays.
 #include <vector>
-// Include the format header to perform modern string formatting (C++20).
 #include <format>
-// Include COM definitions and helper functions for error handling.
 #include <comdef.h>
-// Include WMI (Windows Management Instrumentation) interfaces.
 #include <Wbemidl.h>
-// Include Windows-specific header for WinAPI definitions.
 #include <windows.h>
-// Include wide-char (wchar_t) functions and macros.
 #include <cwchar>
-// Include standard C time library.
 #include <ctime>
-// Include mutex for thread-safe error logging.
 #include <mutex>
 
-// Link against wbemuuid.lib for WMI functionality.
 #pragma comment(lib, "wbemuuid.lib")
 
 // Bring the std namespace into scope to avoid prefixing with std::.
@@ -767,10 +755,14 @@ bool ManageMpPreference(const wchar_t* customMethodName, const wchar_t* preferen
 	return true;
 }
 
-// Function for getting MSFT_MpPreference results based on a property name.
-// This function queries WMI for MSFT_MpPreference and outputs the specified property value in valid JSON format.
-static bool GetMpPreferenceValue(const wchar_t* preferenceName)
+// Function for getting WMI results based on a property name and source.
+// sourceId: 0 = MSFT_MpPreference, 1 = MSFT_MpComputerStatus
+// This function queries WMI for the specified class and outputs the specified property value in valid JSON format.
+static bool GetWmiValue(int sourceId, const wchar_t* preferenceName)
 {
+	// Clear the global error message at the beginning.
+	ClearLastErrorMsg();
+
 	// Variable to store the result of COM function calls.
 	HRESULT hres = S_OK;
 
@@ -789,6 +781,7 @@ static bool GetMpPreferenceValue(const wchar_t* preferenceName)
 		}
 		if (FAILED(hres))
 		{
+			SetLastErrorMsg(std::wstring(L"Failed to initialize COM library. Error code = 0x") + std::to_wstring(hres));
 			CoUninitialize();
 			return false;
 		}
@@ -807,6 +800,7 @@ static bool GetMpPreferenceValue(const wchar_t* preferenceName)
 		);
 		if (FAILED(hres))
 		{
+			SetLastErrorMsg(std::wstring(L"Failed to initialize security. Error code = 0x") + std::to_wstring(hres));
 			if (!g_skipCOMInit && didInitCOM)
 				CoUninitialize();
 			return false;
@@ -825,6 +819,7 @@ static bool GetMpPreferenceValue(const wchar_t* preferenceName)
 	);
 	if (FAILED(hres))
 	{
+		SetLastErrorMsg(std::wstring(L"Failed to create IWbemLocator object. Error code = 0x") + std::to_wstring(hres));
 		if (!g_skipCOMInit && didInitCOM)
 			CoUninitialize();
 		return false;
@@ -845,6 +840,7 @@ static bool GetMpPreferenceValue(const wchar_t* preferenceName)
 	);
 	if (FAILED(hres))
 	{
+		SetLastErrorMsg(std::wstring(L"Could not connect to ROOT\\Microsoft\\Windows\\Defender namespace. Error code = 0x") + std::to_wstring(hres));
 		pLoc->Release();
 		if (!g_skipCOMInit && didInitCOM)
 			CoUninitialize();
@@ -864,6 +860,7 @@ static bool GetMpPreferenceValue(const wchar_t* preferenceName)
 	);
 	if (FAILED(hres))
 	{
+		SetLastErrorMsg(std::wstring(L"Could not set proxy blanket for Defender. Error code = 0x") + std::to_wstring(hres));
 		pSvc->Release();
 		pLoc->Release();
 		if (!g_skipCOMInit && didInitCOM)
@@ -871,18 +868,41 @@ static bool GetMpPreferenceValue(const wchar_t* preferenceName)
 		return false;
 	}
 
+	// Determine the WMI class name based on sourceId
+	std::wstring wmiClassName;
+	switch (sourceId)
+	{
+	case 0:
+		wmiClassName = L"MSFT_MpPreference";
+		break;
+	case 1:
+		wmiClassName = L"MSFT_MpComputerStatus";
+		break;
+	default:
+		SetLastErrorMsg(L"Invalid source ID. Supported values: 0 (MSFT_MpPreference), 1 (MSFT_MpComputerStatus)");
+		pSvc->Release();
+		pLoc->Release();
+		if (!g_skipCOMInit && didInitCOM)
+			CoUninitialize();
+		return false;
+	}
+
+	// Construct the WQL query
+	std::wstring wqlQuery = L"SELECT * FROM " + wmiClassName;
+
 	// Declare an enumerator pointer to iterate WMI objects.
 	IEnumWbemClassObject* pEnumerator = nullptr;
-	// Execute a WQL query to retrieve all instances of MSFT_MpPreference.
+	// Execute the WQL query to retrieve all instances of the specified class.
 	hres = pSvc->ExecQuery(
 		bstr_t(L"WQL"),
-		bstr_t(L"SELECT * FROM MSFT_MpPreference"),
+		bstr_t(wqlQuery.c_str()),
 		WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
 		nullptr,
 		&pEnumerator
 	);
 	if (FAILED(hres))
 	{
+		SetLastErrorMsg(std::wstring(L"ExecQuery failed for ") + wmiClassName + L". Error code = 0x" + std::to_wstring(hres));
 		pSvc->Release();
 		pLoc->Release();
 		if (!g_skipCOMInit && didInitCOM)
@@ -936,6 +956,20 @@ static bool GetMpPreferenceValue(const wchar_t* preferenceName)
 	return success;
 }
 
+// Function for getting MSFT_MpPreference results based on a property name.
+// This function queries WMI for MSFT_MpPreference and outputs the specified property value in valid JSON format.
+static bool GetMpPreferenceValue(const wchar_t* preferenceName)
+{
+	return GetWmiValue(0, preferenceName);
+}
+
+// Function for getting MSFT_MpComputerStatus results based on a property name.
+// This function queries WMI for MSFT_MpComputerStatus and outputs the specified property value in valid JSON format.
+static bool GetMpComputerStatusValue(const wchar_t* preferenceName)
+{
+	return GetWmiValue(1, preferenceName);
+}
+
 // --- DLL Exported Functions for C# via DllImport/LibraryImport ---
 // These exported wrapper functions allow C# code to call the functionality directly.
 
@@ -974,7 +1008,7 @@ extern "C" __declspec(dllexport) bool __stdcall ManageMpPreferenceStringArray(co
 	return ManageMpPreference(customMethodName, preferenceName, vec);
 }
 
-// Exported function for int array preference.
+// Exported function for int array preference.s
 extern "C" __declspec(dllexport) bool __stdcall ManageMpPreferenceIntArray(const wchar_t* customMethodName, const wchar_t* preferenceName, const int* preferenceArray, int arraySize)
 {
 	// Create a vector to hold the integer array.
@@ -995,6 +1029,20 @@ extern "C" __declspec(dllexport) bool __stdcall GetMpPreference(const wchar_t* p
 	return GetMpPreferenceValue(preferenceName);
 }
 
+// Exported function for getting MSFT_MpComputerStatus results.
+// This function wraps the GetMpComputerStatusValue function, allowing external callers (e.g. from C#) to retrieve the computer status value.
+extern "C" __declspec(dllexport) bool __stdcall GetMpComputerStatus(const wchar_t* preferenceName)
+{
+	return GetMpComputerStatusValue(preferenceName);
+}
+
+// Exported function for getting WMI results from any supported source.
+// sourceId: 0 = MSFT_MpPreference, 1 = MSFT_MpComputerStatus
+extern "C" __declspec(dllexport) bool __stdcall GetWmiData(int sourceId, const wchar_t* preferenceName)
+{
+	return GetWmiValue(sourceId, preferenceName);
+}
+
 // --- End of DLL Exported Functions ---
 
 
@@ -1005,23 +1053,34 @@ extern "C" __declspec(dllexport) bool __stdcall GetMpPreference(const wchar_t* p
 // Comments below explain expected command line usage.
 int wmain(int argc, wchar_t* argv[])
 {
-	// command line option added for getting MSFT_MpPreference results.
-	// Usage: program.exe get <preferenceName>
+	// command line option added for getting WMI results.
+	// Usage: program.exe get <sourceId> <preferenceName>
+	// sourceId: 0 = MSFT_MpPreference, 1 = MSFT_MpComputerStatus
 	if (argc >= 2 && std::wstring(argv[1]) == L"get")
 	{
-		if (argc != 3)
+		if (argc != 4)
 		{
 			// Print proper usage if incorrect arguments are provided.
-			std::wcerr << L"Usage: program.exe get <preferenceName>" << std::endl;
+			std::wcerr << L"Usage: program.exe get <sourceId> <preferenceName>" << std::endl;
+			std::wcerr << L"  sourceId: 0 = MSFT_MpPreference, 1 = MSFT_MpComputerStatus" << std::endl;
 			return 1;
 		}
-		// Call function to retrieve the preference value by name.
-		bool isSuccessful = GetMpPreferenceValue(argv[2]);
+
+		// Parse the source ID
+		int sourceId = _wtoi(argv[2]);
+		if (sourceId < 0 || sourceId > 1)
+		{
+			std::wcerr << L"Error: Invalid sourceId. Supported values: 0 (MSFT_MpPreference), 1 (MSFT_MpComputerStatus)" << std::endl;
+			return 1;
+		}
+
+		// Retrieve the value by source and name.
+		bool isSuccessful = GetWmiValue(sourceId, argv[3]);
 		// Return 0 on success, or 1 on failure.
 		return isSuccessful ? 0 : 1;
 	}
 
-	// Command line usage for setting preferences:
+	// Command line usage for setting preferences (only works with MSFT_MpPreference cuz MSFT_MpComputerStatus doesn't have a Set method.):
 	// For bool, int, and string, there must be exactly 5 arguments.
 	// For stringarray and intarray, there must be at least 5 arguments.
 	// argv[1]: Function type ("bool", "int", "string", "stringarray", or "intarray")
@@ -1032,9 +1091,11 @@ int wmain(int argc, wchar_t* argv[])
 	{
 		// Print usage instructions if not enough arguments are provided.
 		std::wcerr << L"Usage:" << std::endl;
-		std::wcerr << L"  For bool, int, and string types:" << std::endl;
+		std::wcerr << L"  For getting data:" << std::endl;
+		std::wcerr << L"    program.exe get <sourceId> <preferenceName>" << std::endl;
+		std::wcerr << L"    sourceId: 0 = MSFT_MpPreference, 1 = MSFT_MpComputerStatus" << std::endl;
+		std::wcerr << L"  For setting preferences (MSFT_MpPreference only):" << std::endl;
 		std::wcerr << L"    program.exe <bool|int|string> <customMethodName> <preferenceName> <value>" << std::endl;
-		std::wcerr << L"  For stringarray and intarray types:" << std::endl;
 		std::wcerr << L"    program.exe <stringarray|intarray> <customMethodName> <preferenceName> <value1> [value2] ..." << std::endl;
 		return 1;
 	}
@@ -1048,9 +1109,11 @@ int wmain(int argc, wchar_t* argv[])
 			std::wcerr << L"Error: Command line argument " << i
 				<< L" is empty or whitespace." << std::endl;
 			std::wcerr << L"Usage:" << std::endl;
-			std::wcerr << L"  For bool, int, and string types:" << std::endl;
+			std::wcerr << L"  For getting data:" << std::endl;
+			std::wcerr << L"    program.exe get <sourceId> <preferenceName>" << std::endl;
+			std::wcerr << L"    sourceId: 0 = MSFT_MpPreference, 1 = MSFT_MpComputerStatus" << std::endl;
+			std::wcerr << L"  For setting preferences (MSFT_MpPreference only):" << std::endl;
 			std::wcerr << L"    program.exe <bool|int|string> <customMethodName> <preferenceName> <value>" << std::endl;
-			std::wcerr << L"  For stringarray and intarray types:" << std::endl;
 			std::wcerr << L"    program.exe <stringarray|intarray> <customMethodName> <preferenceName> <value1> [value2] ..." << std::endl;
 			return 1;
 		}
@@ -1212,10 +1275,9 @@ int wmain(int argc, wchar_t* argv[])
 	*/
 }
 
-
 /*
 
-Example of how to use it as a Library in C# WinUI3 Packaged App
+To use it as a Library in C# WinUI3 Packaged App
 
 
 // Import the function to set DLL mode. When set to true,
@@ -1248,9 +1310,22 @@ static extern bool ManageMpPreferenceIntArray(string customMethodName, string pr
 [DllImport("DefenderPrefDLL.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
 static extern IntPtr GetLastErrorMessage();
 
+// Importing the exported function for getting MSFT_MpPreference results
+[DllImport("DefenderPrefDLL.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
+static extern bool GetMpPreference(string preferenceName);
+
+// Importing the exported function for getting MSFT_MpComputerStatus results
+[DllImport("DefenderPrefDLL.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
+static extern bool GetMpComputerStatus(string preferenceName);
+
+// Importing the exported function for getting WMI results from any supported source
+[DllImport("DefenderPrefDLL.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
+static extern bool GetWmiData(int sourceId, string preferenceName);
+
 // Tell the DLL to skip COM initialization.
 SetDllMode(true);
 
+// Example: Setting a boolean preference using MSFT_MpPreference
 bool boolResult = ManageMpPreferenceBool("Set", "BruteForceProtectionLocalNetworkBlocking", true);
 
 if (!boolResult)
@@ -1262,5 +1337,28 @@ else
 {
 	Console.WriteLine("Boolean preference set successfully.");
 }
+
+// Example: Getting data from MSFT_MpPreference (sourceId = 0)
+bool mpPrefResult = GetWmiData(0, "AntivirusEnabled");
+if (!mpPrefResult)
+{
+	string? error = Marshal.PtrToStringUni(GetLastErrorMessage());
+	Console.WriteLine("Error getting MSFT_MpPreference data: " + error);
+}
+
+// Example: Getting data from MSFT_MpComputerStatus (sourceId = 1)
+bool mpStatusResult = GetWmiData(1, "AMServiceEnabled");
+if (!mpStatusResult)
+{
+	string? error = Marshal.PtrToStringUni(GetLastErrorMessage());
+	Console.WriteLine("Error getting MSFT_MpComputerStatus data: " + error);
+}
+
+// Alternative methods for getting specific data sources:
+// For MSFT_MpPreference only
+bool prefResult = GetMpPreference("AntivirusEnabled");
+
+// For MSFT_MpComputerStatus only
+bool statusResult = GetMpComputerStatus("AMServiceEnabled");
 
 */

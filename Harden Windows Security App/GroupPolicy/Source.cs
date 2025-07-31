@@ -20,5 +20,6 @@ namespace HardenWindowsSecurity.GroupPolicy;
 internal enum Source : uint
 {
 	GroupPolicy = 0,
-	Registry = 1
+	Registry = 1,
+	SecurityPolicyRegistry = 2
 }

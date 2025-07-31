@@ -1,0 +1,934 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+<data name="PhishingProtectServiceEnabled-MSDefender" xml:space="preserve">
+    <value>Ενεργοποιημένη Υπηρεσία Ενισχυμένης Προστασίας από Phishing.</value>
+</data>
+<data name="NotifyUnsafeApp-MSDefender" xml:space="preserve">
+    <value>Ενισχυμένη Προστασία από Phishing: Ειδοποίηση Μη Ασφαλούς Εφαρμογής</value>
+</data>
+<data name="NotifyPasswordReuse-MSDefender" xml:space="preserve">
+    <value>Ενισχυμένη Προστασία από Phishing: Ειδοποίηση Επαναχρησιμοποίησης Κωδικού</value>
+</data>
+<data name="NotifyMalicious-MSDefender" xml:space="preserve">
+    <value>Ενισχυμένη Προστασία από Phishing: Ειδοποίηση Κακόβουλου Περιεχομένου</value>
+</data>
+<data name="CaptureThreatWindow-MSDefender" xml:space="preserve">
+    <value>Ενισχυμένη Προστασία από Phishing: Καταγραφή Παραθύρου Απειλής</value>
+</data>
+<data name="PurgeItemsAfterDelay-MSDefender" xml:space="preserve">
+    <value>Εκκαθάριση Στοιχείων Μετά από Καθυστέρηση</value>
+</data>
+<data name="IOAVMaxSize-MSDefender" xml:space="preserve">
+    <value>Μέγιστο μέγεθος ληφθέντων αρχείων και συνημμένων για σάρωση</value>
+</data>
+<data name="DisableScanningMappedNetworkDrivesForFullScan-MSDefender" xml:space="preserve">
+    <value>Σάρωση Αντιστοιχισμένων Δίσκων Δικτύου για Πλήρη Σάρωση</value>
+</data>
+<data name="DisableScanningNetworkFiles-MSDefender" xml:space="preserve">
+    <value>Σάρωση Αρχείων Δικτύου</value>
+</data>
+<data name="DisableRemovableDriveScanning-MSDefender" xml:space="preserve">
+    <value>Σάρωση Αφαιρούμενων Μονάδων</value>
+</data>
+<data name="DisableReparsePointScanning-MSDefender" xml:space="preserve">
+    <value>Σάρωση Σημείων Επανασυντακτικής Ανάλυσης</value>
+</data>
+<data name="ArchiveMaxDepth-MSDefender" xml:space="preserve">
+    <value>Μέγιστο βάθος σάρωσης αρχείων συμπίεσης</value>
+</data>
+<data name="UpdateOnStartUp-MSDefender" xml:space="preserve">
+    <value>Έλεγχος για τις πιο πρόσφατες πληροφορίες ασφάλειας ιών και spyware κατά την εκκίνηση</value>
+</data>
+<data name="AVSignatureDue-MSDefender" xml:space="preserve">
+    <value>Καθορισμός αριθμού ημερών πριν θεωρηθούν παρωχημένες οι πληροφορίες ασφάλειας ιών</value>
+</data>
+<data name="ASSignatureDue-MSDefender" xml:space="preserve">
+    <value>Καθορισμός αριθμού ημερών πριν θεωρηθούν παρωχημένες οι πληροφορίες ασφάλειας spyware</value>
+</data>
+<data name="DisableBlockAtFirstSeen-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση της λειτουργίας Αποκλεισμού στην Πρώτη Θέαση.</value>
+</data>
+<data name="AllowTelemetry-MSDefender" xml:space="preserve">
+    <value>Απαιτούνται Προαιρετικά Διαγνωστικά Δεδομένα για το Smart App Control κ.λπ.</value>
+</data>
+<data name="DisableTelemetryOptInSettingsUx-MSDefender" xml:space="preserve">
+    <value>Διαμόρφωση διεπαφής χρήστη ρυθμίσεων συμμετοχής διαγνωστικών δεδομένων</value>
+</data>
+<data name="5-MSDefender" xml:space="preserve">
+    <value>Προεπιλεγμένη ενέργεια επιπέδου Σοβαρής Απειλής = Αφαίρεση</value>
+</data>
+<data name="4-MSDefender" xml:space="preserve">
+    <value>Προεπιλεγμένη ενέργεια επιπέδου Υψηλής Απειλής = Αφαίρεση</value>
+</data>
+<data name="2-MSDefender" xml:space="preserve">
+    <value>Προεπιλεγμένη ενέργεια επιπέδου Μέτριας Απειλής = Καραντίνα</value>
+</data>
+<data name="1-MSDefender" xml:space="preserve">
+    <value>Προεπιλεγμένη ενέργεια επιπέδου Χαμηλής Απειλής = Καραντίνα</value>
+</data>
+<data name="MeteredConnectionUpdates-MSDefender" xml:space="preserve">
+    <value>Επιτρέπει στο Microsoft Defender Antivirus να ενημερώνεται μέσω σύνδεσης με χρέωση</value>
+</data>
+<data name="SubmitSamplesConsent-MSDefender" xml:space="preserve">
+    <value>Αποστολή δειγμάτων αρχείων όταν απαιτείται περαιτέρω ανάλυση</value>
+</data>
+<data name="Threats_ThreatSeverityDefaultAction-MSDefender" xml:space="preserve">
+    <value>Διαμόρφωση προεπιλεγμένων ενεργειών για σοβαρότητες απειλών</value>
+</data>
+<data name="EnableControlledFolderAccess-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση Ελεγχόμενης Πρόσβασης Φακέλων</value>
+</data>
+<data name="EnableNetworkProtection-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση Προστασίας Δικτύου</value>
+</data>
+<data name="AllowNetworkProtectionOnWinServer-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση Προστασίας Δικτύου στον Windows Server</value>
+</data>
+<data name="TDTFeatureEnabled-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση Intel TDT: Τεχνολογία Ανίχνευσης Απειλών.</value>
+</data>
+<data name="MpCloudBlockLevel-MSDefender" xml:space="preserve">
+    <value>Ορισμός του Επιπέδου Αποκλεισμού Cloud στη μέγιστη τιμή: Μηδενική Ανοχή.</value>
+</data>
+<data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
+    <value>Εκτεταμένο χρονικό όριο ελέγχου cloud ορισμένο στη μέγιστη τιμή."</value>
+</data>
+<data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση υπολογισμού κατακερματισμών αρχείων.</value>
+</data>
+<data name="DisableAsyncScanOnOpen-MSDefender" xml:space="preserve">
+    <value>Απενεργοποίηση της χαλαρής ασφάλειας του Dev Drive γύρω από τη σάρωση αρχείων.</value>
+</data>
+<data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση ενημερώσεων Rtp και Υπογραφής κατά τη λειτουργία OOBE.</value>
+</data>
+<data name="BruteForceProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση λειτουργίας Προστασίας από Επιθέσεις Brute Force.</value>
+</data>
+<data name="BruteForceProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>Διαμόρφωση του επιπέδου επιθετικότητας της Προστασίας από Brute Force σε υψηλό.</value>
+</data>
+<data name="RemoteEncryptionProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση λειτουργίας Προστασίας από Απομακρυσμένη Κρυπτογράφηση.</value>
+</data>
+<data name="RemoteEncryptionProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>Διαμόρφωση του επιπέδου επιθετικότητας της Προστασίας από Απομακρυσμένη Κρυπτογράφηση σε υψηλό.</value>
+</data>
+<data name="DisableEmailScanning-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση Σάρωσης Email.</value>
+</data>
+<data name="DisableCatchupQuickScan-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση Γρήγορων Σαρώσεων Αναπλήρωσης.</value>
+</data>
+<data name="CheckForSignaturesBeforeRunningScan-MSDefender" xml:space="preserve">
+    <value>Έλεγχος για Υπογραφές Πριν την Εκτέλεση Σάρωσης.</value>
+</data>
+<data name="SignatureUpdateInterval-MSDefender" xml:space="preserve">
+    <value>Αύξηση του διαστήματος ελέγχου για ενημερώσεις πληροφοριών ασφάλειας.</value>
+</data>
+<data name="SpynetReporting-MSDefender" xml:space="preserve">
+    <value>Συμμετοχή στο δίκτυο Microsoft MAPS (γνωστό και ως SpyNet) για ενημέρωση με τις πιο πρόσφατες πληροφορίες ασφάλειας.</value>
+</data>
+<data name="ExploitGuard_ASR_Rules-ASR" xml:space="preserve">
+    <value>Διαμόρφωση Κανόνων ASR</value>
+</data>
+  <data name="56a863a9-875e-4185-98a7-b882c64b5ce5-ASR" xml:space="preserve">
+    <value>Αποκλεισμός κατάχρησης εκμεταλλευμένων ευάλωτων υπογεγραμμένων οδηγών</value>
+  </data>
+  <data name="7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c-ASR" xml:space="preserve">
+    <value>Αποκλεισμός του Adobe Reader από τη δημιουργία θυγατρικών διεργασιών</value>
+  </data>
+  <data name="d4f940ab-401b-4efc-aadc-ad5f3c50688a-ASR" xml:space="preserve">
+    <value>Αποκλεισμός όλων των εφαρμογών Office από τη δημιουργία θυγατρικών διεργασιών</value>
+  </data>
+  <data name="9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2-ASR" xml:space="preserve">
+    <value>Αποκλεισμός κλοπής διαπιστευτηρίων από το υποσύστημα τοπικής αρχής ασφάλειας των Windows (lsass.exe)</value>
+  </data>
+  <data name="be9ba2d9-53ea-4cdc-84e5-9b1eeee46550-ASR" xml:space="preserve">
+    <value>Αποκλεισμός εκτελέσιμου περιεχομένου από πελάτη email και webmail</value>
+  </data>
+  <data name="01443614-cd74-433a-b99e-2ecdc07bfc25-ASR" xml:space="preserve">
+    <value>Αποκλεισμός εκτέλεσης εκτελέσιμων αρχείων εκτός αν πληρούν κριτήριο επικράτησης, ηλικίας ή αξιόπιστης λίστας</value>
+  </data>
+  <data name="5beb7efe-fd9a-4556-801d-275e5ffc04cc-ASR" xml:space="preserve">
+    <value>Αποκλεισμός εκτέλεσης δυνητικά συγκαλυμμένων σεναρίων</value>
+  </data>
+  <data name="d3e037e1-3eb8-44c8-a917-57927947596d-ASR" xml:space="preserve">
+    <value>Αποκλεισμός JavaScript ή VBScript από την εκκίνηση ληφθέντος εκτελέσιμου περιεχομένου</value>
+  </data>
+  <data name="3b576869-a4ec-4529-8536-b80a7769e899-ASR" xml:space="preserve">
+    <value>Αποκλεισμός εφαρμογών Office από τη δημιουργία εκτελέσιμου περιεχομένου</value>
+  </data>
+  <data name="75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84-ASR" xml:space="preserve">
+    <value>Αποκλεισμός εφαρμογών Office από την έγχυση κώδικα σε άλλες διεργασίες</value>
+  </data>
+  <data name="26190899-1602-49e8-8b27-eb1d0a1ce869-ASR" xml:space="preserve">
+    <value>Αποκλεισμός εφαρμογής επικοινωνίας Office από τη δημιουργία θυγατρικών διεργασιών</value>
+  </data>
+  <data name="e6db77e5-3df2-4cf1-b95a-636979351e5b-ASR" xml:space="preserve">
+    <value>Αποκλεισμός εμμονής μέσω συνδρομής συμβάντων WMI
+* Εξαιρέσεις αρχείων και φακέλων δεν υποστηρίζονται.</value>
+  </data>
+  <data name="d1e49aac-8f56-4280-b9ba-993a6d77406c-ASR" xml:space="preserve">
+    <value>Αποκλεισμός δημιουργίας διεργασιών που προέρχονται από εντολές PSExec και WMI</value>
+  </data>
+  <data name="33ddedf1-c6e0-47cb-833e-de6133960387-ASR" xml:space="preserve">
+    <value>Αποκλεισμός επανεκκίνησης μηχανήματος σε Ασφαλή Λειτουργία</value>
+  </data>
+  <data name="b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4-ASR" xml:space="preserve">
+    <value>Αποκλεισμός μη αξιόπιστων και μη υπογεγραμμένων διεργασιών που εκτελούνται από USB</value>
+  </data>
+  <data name="c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb-ASR" xml:space="preserve">
+    <value>Αποκλεισμός χρήσης αντιγραμμένων ή μιμημένων εργαλείων συστήματος</value>
+  </data>
+  <data name="a8f5898e-1dc8-49a9-9878-85004b8a61e6-ASR" xml:space="preserve">
+    <value>Αποκλεισμός δημιουργίας Webshell για Διακομιστές</value>
+  </data>
+  <data name="92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b-ASR" xml:space="preserve">
+    <value>Αποκλεισμός κλήσεων Win32 API από μακροεντολές Office</value>
+  </data>
+  <data name="c1db55ab-c21a-4637-bb3f-a12568109d35-ASR" xml:space="preserve">
+    <value>Χρήση προηγμένης προστασίας κατά του ransomware</value>
+  </data>
+<data name="DisallowStandardUserPINReset-BitLocker" xml:space="preserve">
+    <value>Απαγόρευση Επαναφοράς PIN Τυπικού Χρήστη</value>
+</data>
+<data name="UseAdvancedStartup-BitLocker" xml:space="preserve">
+    <value>Επιτρέπει στο λειτουργικό σύστημα να απαιτεί πρόσθετη επαλήθευση κατά την εκκίνηση</value>
+</data>
+<data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
+    <value>Μη επιτρεπτή η χρήση Bitlocker χωρίς TPM</value>
+</data>
+<data name="UseTPM-BitLocker" xml:space="preserve">
+    <value>Μη επιτρεπτή η χρήση μόνο TPM</value>
+</data>
+<data name="UseTPMPIN-BitLocker" xml:space="preserve">
+    <value>Επιτρέπεται η χρήση TPM + PIN κατά την Εκκίνηση.</value>
+</data>
+<data name="UseTPMKey-BitLocker" xml:space="preserve">
+    <value>Επιτρέπεται η χρήση TPM + κλειδί κατά την Εκκίνηση.</value>
+</data>
+<data name="UseTPMKeyPIN-BitLocker" xml:space="preserve">
+    <value>Επιτρέπεται η χρήση TPM + Κλειδί Εκκίνησης + PIN κατά την Εκκίνηση.</value>
+</data>
+<data name="EncryptionMethodWithXtsOs-BitLocker" xml:space="preserve">
+    <value>Διαμόρφωση της σωστής μεθόδου κρυπτογράφησης για τη μονάδα λειτουργικού συστήματος: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsFdv-BitLocker" xml:space="preserve">
+    <value>Διαμόρφωση της σωστής μεθόδου κρυπτογράφησης για σταθερές μονάδες δεδομένων: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsRdv-BitLocker" xml:space="preserve">
+    <value>Διαμόρφωση της σωστής μεθόδου κρυπτογράφησης για αφαιρούμενες μονάδες: XTS-AES-256</value>
+</data>
+<data name="UseEnhancedPin-BitLocker" xml:space="preserve">
+    <value>Χρήση Ενισχυμένου PIN επιτρέποντας τη χρήση συμβόλων και άλλων χαρακτήρων στο PIN.</value>
+</data>
+<data name="OSEncryptionType-BitLocker" xml:space="preserve">
+    <value>Διαμόρφωση ασφαλούς τύπου πλήρους κρυπτογράφησης δίσκου για τη μονάδα λειτουργικού συστήματος</value>
+</data>
+<data name="RDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>Διαμόρφωση ασφαλούς τύπου πλήρους κρυπτογράφησης δίσκου για αφαιρούμενες μονάδες</value>
+</data>
+<data name="RDVDiscoveryVolumeType-BitLocker" xml:space="preserve">
+    <value>Αποτροπή πρόσβασης σε αφαιρούμενες μονάδες δεδομένων προστατευμένες με BitLocker από προηγούμενες εκδόσεις των Windows</value>
+</data>
+<data name="RDVNoBitLockerToGoReader-BitLocker" xml:space="preserve">
+    <value>Μη εγκατάσταση του "BitLocker To Go" Reader σε αφαιρούμενες μονάδες με μορφοποίηση FAT επειδή είναι μη ασφαλείς.</value>
+</data>
+<data name="MinimumPIN-BitLocker" xml:space="preserve">
+    <value>Διαμόρφωση ελάχιστου μήκους PIN για εκκίνηση.</value>
+</data>
+<data name="ACSettingIndex-BitLocker" xml:space="preserve">
+    <value>Απαγόρευση καταστάσεων αναμονής (S1-S3) κατά την αδράνεια (συνδεδεμένο στο ρεύμα)</value>
+</data>
+<data name="DCSettingIndex-BitLocker" xml:space="preserve">
+    <value>Απαγόρευση καταστάσεων αναμονής (S1-S3) κατά την αδράνεια (με μπαταρία)</value>
+</data>
+<data name="ShowHibernateOption-BitLocker" xml:space="preserve">
+    <value>Εμφάνιση επιλογής Αδρανοποίησης στις επιλογές ενέργειας στο λειτουργικό σύστημα ώστε να μπορείτε να θέσετε τη συσκευή σας σε αδρανοποίηση αν θέλετε.</value>
+</data>
+<data name="FDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>Διαμόρφωση ασφαλούς τύπου κρυπτογράφησης για Σταθερές Μονάδες Δεδομένων</value>
+</data>
+<data name="Functions-TLS" xml:space="preserve">
+    <value>Διαμόρφωση των σωστών Σουιτών Κρυπτογράφησης TLS</value>
+</data>
+<data name="EccCurves-TLS" xml:space="preserve">
+    <value>Διαμόρφωση καμπυλών ECC υπηρεσίας και των θέσεών τους.</value>
+</data>
+<data name="DisabledByDefault1-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση πελάτη TLS 1.0 - Απενεργοποιημένο από Προεπιλογή</value>
+</data>
+<data name="Enabled1-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση πελάτη TLS 1.0 - Ενεργοποιημένο</value>
+</data>
+<data name="DisabledByDefault2-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση διακομιστή TLS 1.0 - Απενεργοποιημένο από Προεπιλογή</value>
+</data>
+<data name="Enabled2-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση διακομιστή TLS 1.0 - Ενεργοποιημένο</value>
+</data>
+<data name="DisabledByDefault3-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση πελάτη TLS 1.1 - Απενεργοποιημένο από Προεπιλογή</value>
+</data>
+<data name="Enabled3-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση πελάτη TLS 1.1 - Ενεργοποιημένο</value>
+</data>
+<data name="DisabledByDefault4-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση διακομιστή TLS 1.1 - Απενεργοποιημένο από Προεπιλογή</value>
+</data>
+<data name="Enabled4-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση διακομιστή TLS 1.1 - Ενεργοποιημένο</value>
+</data>
+<data name="Enabled5-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Σουίτας Κρυπτογράφησης NULL</value>
+</data>
+<data name="Enabled6-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Σουίτας Κρυπτογράφησης 56/56</value>
+</data>
+<data name="Enabled7-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Σουίτας Κρυπτογράφησης 40/128</value>
+</data>
+<data name="Enabled8-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Σουίτας Κρυπτογράφησης RC2 56/128</value>
+</data>
+<data name="Enabled9-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Σουίτας Κρυπτογράφησης RC2 128/128</value>
+</data>
+<data name="Enabled10-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Σουίτας Κρυπτογράφησης RC4 40/128</value>
+</data>
+<data name="Enabled11-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Σουίτας Κρυπτογράφησης RC4 56/128</value>
+</data>
+<data name="Enabled12-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Σουίτας Κρυπτογράφησης RC4 64/128</value>
+</data>
+<data name="Enabled13-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Σουίτας Κρυπτογράφησης RC4 128/128</value>
+</data>
+<data name="Enabled14-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Σουίτας Κρυπτογράφησης Triple DES 168</value>
+</data>
+<data name="Enabled15-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Αλγορίθμου Κατακερματισμού MD5</value>
+</data>
+<data name="Digits-LockScreen" xml:space="preserve">
+    <value>Απαίτηση ψηφίων στο PIN του Windows Hello</value>
+</data>
+<data name="LowercaseLetters-LockScreen" xml:space="preserve">
+    <value>Απαίτηση πεζών γραμμάτων στο PIN του Windows Hello</value>
+</data>
+<data name="Expiration-LockScreen" xml:space="preserve">
+    <value>Ορισμός Λήξης για το PIN του Windows Hello</value>
+</data>
+<data name="History-LockScreen" xml:space="preserve">
+    <value>Αποθήκευση ιστορικού του PIN του Windows Hello</value>
+</data>
+<data name="DontDisplayNetworkSelectionUI-LockScreen" xml:space="preserve">
+    <value>Μη Εμφάνιση UI Επιλογής Δικτύου στην οθόνη κλειδώματος</value>
+</data>
+<data name="HideFastUserSwitching-UAC" xml:space="preserve">
+    <value>Απόκρυψη σημείων εισόδου Γρήγορης Εναλλαγής Χρήστη</value>
+</data>
+<data name="EnableVirtualizationBasedSecurity-DeviceGuard" xml:space="preserve">
+    <value>Ενεργοποίηση Ασφάλειας Βασισμένης σε Εικονικοποίηση</value>
+</data>
+<data name="RequirePlatformSecurityFeatures-DeviceGuard" xml:space="preserve">
+    <value>Απαίτηση Χαρακτηριστικών Ασφάλειας Πλατφόρμας</value>
+</data>
+<data name="HypervisorEnforcedCodeIntegrity-DeviceGuard" xml:space="preserve">
+    <value>Ακεραιότητα Κώδικα Επιβαλλόμενη από Hypervisor - Κλείδωμα UEFI</value>
+</data>
+<data name="HVCIMATRequired-DeviceGuard" xml:space="preserve">
+    <value>Απαίτηση HVCI MAT (Πίνακας Χαρακτηριστικών Μνήμης)</value>
+</data>
+<data name="LsaCfgFlags-DeviceGuard" xml:space="preserve">
+    <value>Διαμόρφωση Credential Guard - Κλείδωμα UEFI</value>
+</data>
+<data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
+    <value>Ενεργοποίηση System Guard Secure Launch αν υπάρχει υποστήριξη υλικού</value>
+</data>
+<data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
+    <value>Διαμόρφωση Εκκίνησης Kernel Shadow Stacks</value>
+</data>
+<data name="RunAsPPL-DeviceGuard" xml:space="preserve">
+    <value>Ενεργοποίηση Προστασίας διεργασίας Τοπικής Αρχής Ασφάλειας (LSA) με Κλείδωμα UEFI</value>
+</data>
+<data name="MachineIdentityIsolation-DeviceGuard" xml:space="preserve">
+    <value>Διαμόρφωση Ρύθμισης Απομόνωσης Ταυτότητας Μηχανήματος</value>
+</data>
+<data name="Mandatory-DeviceGuard" xml:space="preserve">
+    <value>Ενεργοποίηση VBS και Ακεραιότητας Μνήμης σε Υποχρεωτική Λειτουργία</value>
+</data>
+<data name="EnableFirewallDomain-WindowsFirewall" xml:space="preserve">
+    <value>Ενεργοποίηση Τείχους Προστασίας των Windows για προφίλ Τομέα</value>
+</data>
+<data name="DefaultOutboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>Ορισμός Προεπιλεγμένης Εξερχόμενης Ενέργειας για προφίλ Τομέα</value>
+</data>
+<data name="DefaultInboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>Ορισμός Προεπιλεγμένης Εισερχόμενης Ενέργειας για προφίλ Τομέα</value>
+</data>
+<data name="DisableNotificationsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Εμφάνιση ειδοποιήσεων για προφίλ Τομέα</value>
+</data>
+<data name="LogFilePathDomain-WindowsFirewall" xml:space="preserve">
+    <value>Διαμόρφωση διαδρομής αρχείου καταγραφής για προφίλ τομέα</value>
+</data>
+<data name="LogFileSizeDomain-WindowsFirewall" xml:space="preserve">
+    <value>Διαμόρφωση μεγέθους αρχείου καταγραφής για προφίλ τομέα</value>
+</data>
+<data name="LogDroppedPacketsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Καταγραφή αποκλεισμένων συνδέσεων για προφίλ τομέα</value>
+</data>
+<data name="LogSuccessfulConnectionsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Καταγραφή επιτυχημένων συνδέσεων για προφίλ τομέα</value>
+</data>
+<data name="EnableFirewallPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Ενεργοποίηση Τείχους Προστασίας των Windows για Ιδιωτικό προφίλ</value>
+</data>
+<data name="DisableNotificationsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Εμφάνιση ειδοποιήσεων για Ιδιωτικό προφίλ</value>
+</data>
+<data name="LogFileSizePrivate-WindowsFirewall" xml:space="preserve">
+    <value>Διαμόρφωση μεγέθους αρχείου καταγραφής για Ιδιωτικό προφίλ</value>
+</data>
+<data name="LogDroppedPacketsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Καταγραφή αποκλεισμένων συνδέσεων για Ιδιωτικό προφίλ</value>
+</data>
+<data name="LogFilePathPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Διαμόρφωση διαδρομής αρχείου καταγραφής για Ιδιωτικό προφίλ</value>
+</data>
+<data name="EnableFirewallPublic-WindowsFirewall" xml:space="preserve">
+    <value>Ενεργοποίηση Τείχους Προστασίας των Windows για Δημόσιο προφίλ</value>
+</data>
+<data name="DisableNotificationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Εμφάνιση ειδοποιήσεων για Δημόσιο προφίλ</value>
+</data>
+<data name="LogFileSizePublic-WindowsFirewall" xml:space="preserve">
+    <value>Διαμόρφωση μεγέθους αρχείου καταγραφής για Δημόσιο προφίλ</value>
+</data>
+<data name="LogDroppedPacketsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Καταγραφή αποκλεισμένων συνδέσεων για Δημόσιο προφίλ</value>
+</data>
+<data name="LogFilePathPublic-WindowsFirewall" xml:space="preserve">
+    <value>Διαμόρφωση διαδρομής αρχείου καταγραφής για Δημόσιο προφίλ</value>
+</data>
+<data name="PolicyVersion-WindowsFirewall" xml:space="preserve">
+    <value>Διαμόρφωση της Έκδοσης Πολιτικής Τείχους Προστασίας των Windows</value>
+</data>
+<data name="EnableNetbios-WindowsNetworking" xml:space="preserve">
+    <value>Απενεργοποίηση Netbios</value>
+</data>
+<data name="DisableSmartNameResolution-WindowsNetworking" xml:space="preserve">
+    <value>Απενεργοποίηση Έξυπνης Επίλυσης Ονομάτων</value>
+</data>
+<data name="EnableMulticast-WindowsNetworking" xml:space="preserve">
+    <value>Απενεργοποίηση Multicast</value>
+</data>
+<data name="DisableHTTPPrinting-WindowsNetworking" xml:space="preserve">
+    <value>Απενεργοποίηση Εκτύπωσης HTTP</value>
+</data>
+<data name="DisableWebPnPDownload-WindowsNetworking" xml:space="preserve">
+    <value>Απενεργοποίηση Λήψης Web PnP</value>
+</data>
+<data name="EnableLMHOSTS-WindowsNetworking" xml:space="preserve">
+    <value>Απενεργοποίηση πρωτοκόλλου αναζήτησης LMHOSTS σε όλους τους προσαρμογείς δικτύου</value>
+</data>
+<data name="EnableSMBQUICServer-WindowsNetworking" xml:space="preserve">
+    <value>Ενεργοποίηση Διακομιστή SMB μέσω QUIC</value>
+</data>
+<data name="EnableSMBQUICClient-WindowsNetworking" xml:space="preserve">
+    <value>Ενεργοποίηση Πελάτη SMB μέσω QUIC</value>
+</data>
+<data name="CipherSuiteOrderServer-WindowsNetworking" xml:space="preserve">
+    <value>Διαμόρφωση ασφαλούς Σειράς Σουιτών Κρυπτογράφησης Διακομιστή SMB</value>
+</data>
+<data name="CipherSuiteOrderClient-WindowsNetworking" xml:space="preserve">
+    <value>Διαμόρφωση ασφαλούς Σειράς Σουιτών Κρυπτογράφησης Πελάτη SMB</value>
+</data>
+<data name="MinSmb2DialectServer-WindowsNetworking" xml:space="preserve">
+    <value>Ορισμός της ελάχιστης έκδοσης διακομιστή SMB</value>
+</data>
+<data name="MinSmb2DialectClient-WindowsNetworking" xml:space="preserve">
+    <value>Ορισμός της ελάχιστης έκδοσης πελάτη SMB</value>
+</data>
+<data name="BlockNTLM-WindowsNetworking" xml:space="preserve">
+    <value>Αποκλεισμός NTLM για SMB</value>
+</data>
+<data name="RequireEncryption-WindowsNetworking" xml:space="preserve">
+    <value>Απαίτηση κρυπτογράφησης για πελάτη SMB</value>
+</data>
+<data name="EnableAuthEpResolution-WindowsNetworking" xml:space="preserve">
+    <value>Απενεργοποίηση Επαλήθευσης Πελάτη Χαρτογράφησης Τελικού Σημείου RPC</value>
+</data>
+<data name="EncryptData-WindowsNetworking" xml:space="preserve">
+    <value>Ενεργοποίηση Κρυπτογράφησης Διακομιστή SMB</value>
+</data>
+<data name="ProcessCreationIncludeCmdLine_Enabled-Miscellaneous" xml:space="preserve">
+    <value>Συμπερίληψη γραμμής εντολών σε συμβάντα δημιουργίας διεργασίας</value>
+</data>
+<data name="DisableLocation-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση Τοποθεσίας</value>
+</data>
+<data name="DisableLocationScripting-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση Σεναρίων Τοποθεσίας</value>
+</data>
+<data name="DisableWindowsLocationProvider-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση Παρόχου Τοποθεσίας Windows</value>
+</data>
+<data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
+    <value>Ενεργοποίηση Μετριασμού Svchost</value>
+</data>
+<data name="DriverLoadPolicy-Miscellaneous" xml:space="preserve">
+    <value>Πολιτική Αρχικοποίησης Οδηγού Εκκίνησης ορισμένη μόνο σε Καλούς</value>
+</data>
+<data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
+    <value>Ενεργοποίηση βελτιωμένης αναζήτησης στα Windows</value>
+</data>
+<data name="allowautoupdatesmeteredStable-Miscellaneous" xml:space="preserve">
+    <value>Ρύθμιση του Microsoft Edge (Σταθερό) για ενημέρωση μέσω συνδέσεων με χρέωση</value>
+</data>
+<data name="allowautoupdatesmeteredBeta-Miscellaneous" xml:space="preserve">
+    <value>Ρύθμιση του Microsoft Edge (Beta) για ενημέρωση μέσω συνδέσεων με χρέωση</value>
+</data>
+<data name="allowautoupdatesmeteredDev-Miscellaneous" xml:space="preserve">
+    <value>Ρύθμιση του Microsoft Edge (Dev) για ενημέρωση μέσω συνδέσεων με χρέωση</value>
+</data>
+<data name="EnableCertPaddingCheck-Miscellaneous" xml:space="preserve">
+    <value>Υλοποίηση Επικύρωσης Υπογραφής WinVerifyTrust μέρος 1</value>
+</data>
+<data name="EnableCertPaddingCheck2-Miscellaneous" xml:space="preserve">
+    <value>Υλοποίηση Επικύρωσης Υπογραφής WinVerifyTrust μέρος 2</value>
+</data>
+<data name="EnableCbacAndArmor-Miscellaneous" xml:space="preserve">
+    <value>Αίτημα αξιώσεων και σύνθετης επαλήθευσης για DAC και θωράκιση Kerberos</value>
+</data>
+<data name="WindowsProtectedPrintGroupPolicyState-Miscellaneous" xml:space="preserve">
+    <value>Ενεργοποίηση Προστατευμένης Εκτύπωσης Windows</value>
+</data>
+<data name="LongPathsEnabled-Miscellaneous" xml:space="preserve">
+    <value>Ενεργοποίηση υποστήριξης για μεγάλες διαδρομές</value>
+</data>
+<data name="AllowOnlineTips-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση Διαδικτυακών Συμβουλών.</value>
+</data>
+<data name="AllowFindMyDevice-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση λειτουργίας Εύρεσης της Συσκευής μου.</value>
+</data>
+<data name="AllowSpeechModelUpdate-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση Αυτόματης Ενημέρωσης Δεδομένων Ομιλίας.</value>
+</data>
+<data name="DisabledByGroupPolicy-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση του αναγνωριστικού διαφήμισης, εμποδίζοντας τις εφαρμογές να χρησιμοποιούν το αναγνωριστικό για εμπειρίες μεταξύ εφαρμογών.</value>
+</data>
+<data name="DisableSoftLanding-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση λήψης συμβουλών και προτάσεων κατά τη χρήση των Windows.</value>
+</data>
+<data name="DisableCloudOptimizedContent-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση περιεχομένου βελτιστοποιημένου για cloud σε όλες τις εμπειρίες των Windows.</value>
+</data>
+<data name="DoNotShowFeedbackNotifications-Miscellaneous" xml:space="preserve">
+    <value>Να μην εμφανίζονται ειδοποιήσεις σχολίων.</value>
+</data>
+<data name="AutoDownloadAndUpdateMapData-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση Αυτόματης Λήψης και Ενημέρωσης Δεδομένων Χάρτη.</value>
+</data>
+<data name="AllowMessageSync-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση Συγχρονισμού Cloud Υπηρεσίας Μηνυμάτων για μηνύματα κειμένου κινητής τηλεφωνίας.</value>
+</data>
+<data name="EnableFontProviders-Miscellaneous" xml:space="preserve">
+    <value>Αποκλεισμός των Windows από τη λήψη Καταλόγου Γραμματοσειρών.</value>
+</data>
+<data name="EnableCdp-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση λειτουργίας "Συνέχιση εμπειριών σε αυτή τη συσκευή".</value>
+</data>
+<data name="EnableAppUriHandlers-Miscellaneous" xml:space="preserve">
+    <value>Απενεργοποίηση υποστήριξης για σύνδεση από τον ιστό σε εφαρμογή με χειριστές URI εφαρμογών.</value>
+</data>
+<data name="DisableWebSearch-Miscellaneous" xml:space="preserve">
+    <value>Να μην γίνεται αναζήτηση στον ιστό ή εμφάνιση αποτελεσμάτων ιστού στην Αναζήτηση.</value>
+</data>
+<data name="ConnectedSearchUseWeb-Miscellaneous" xml:space="preserve">
+    <value>Να μην επιτρέπεται η αναζήτηση στον ιστό.</value>
+</data>
+<data name="AllowAutoWindowsUpdateDownloadOverMeteredNetwork-WindowsUpdate" xml:space="preserve">
+    <value>Επιτρέπεται η αυτόματη λήψη ενημερώσεων μέσω συνδέσεων με χρέωση</value>
+</data>
+<data name="AllowTemporaryEnterpriseFeatureControl-WindowsUpdate" xml:space="preserve">
+    <value>Ενεργοποίηση χαρακτηριστικών που εισάγονται μέσω εξυπηρέτησης και είναι απενεργοποιημένα από προεπιλογή</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Καθορισμός του αριθμού ημερών πριν εγκατασταθούν αυτόματα οι ενημερώσεις δυνατοτήτων στις συσκευές</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Καθορισμός του αριθμού ημερών πριν εγκατασταθούν αυτόματα οι ενημερώσεις ποιότητας στις συσκευές</value>
+</data>
+<data name="ConfigureDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Αριθμός ημερών πριν εγκατασταθούν αυτόματα οι ενημερώσεις ποιότητας στις συσκευές</value>
+</data>
+<data name="ConfigureDeadlineGracePeriod-WindowsUpdate" xml:space="preserve">
+    <value>Αριθμός ημερών περιόδου χάριτος πριν εγκατασταθούν αυτόματα οι ενημερώσεις ποιότητας στις συσκευές</value>
+</data>
+<data name="ConfigureDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Αριθμός ημερών πριν εγκατασταθούν αυτόματα οι ενημερώσεις δυνατοτήτων στις συσκευές</value>
+</data>
+<data name="ConfigureDeadlineGracePeriodForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Αριθμός ημερών περιόδου χάριτος πριν εγκατασταθούν αυτόματα οι ενημερώσεις δυνατοτήτων στις συσκευές</value>
+</data>
+<data name="NoAutoUpdate-WindowsUpdate" xml:space="preserve">
+    <value>Ρύθμιση του υπολογιστή για λήψη ενημερώσεων ασφαλείας και άλλων σημαντικών λήψεων μέσω του Windows Update</value>
+</data>
+<data name="AUOptions-WindowsUpdate" xml:space="preserve">
+    <value>Αυτόματη λήψη ενημερώσεων και εγκατάστασή τους την ημέρα συντήρησης</value>
+</data>
+<data name="AutomaticMaintenanceEnabled-WindowsUpdate" xml:space="preserve">
+    <value>Εγκατάσταση ενημερώσεων κατά την αυτόματη συντήρηση</value>
+</data>
+<data name="ScheduledInstallDay-WindowsUpdate" xml:space="preserve">
+    <value>Ορισμός προγραμματισμένης ημέρας εγκατάστασης σε κάθε ημέρα</value>
+</data>
+<data name="ScheduledInstallTime-WindowsUpdate" xml:space="preserve">
+    <value>Ορισμός προγραμματισμένης ώρας εγκατάστασης σε οποιαδήποτε ώρα</value>
+</data>
+<data name="AllowMUUpdateService-WindowsUpdate" xml:space="preserve">
+    <value>Εγκατάσταση ενημερώσεων για άλλα προϊόντα Microsoft</value>
+</data>
+<data name="RestartNotificationsAllowed2-WindowsUpdate" xml:space="preserve">
+    <value>Ενεργοποίηση ειδοποίησης επανεκκίνησης για το Windows Update</value>
+</data>
+<data name="RemoveScheduleForWeek-WindowsUpdate" xml:space="preserve">
+    <value>Αφαίρεση προγραμματισμού για εγκατάσταση ενημερώσεων μόνο σε συγκεκριμένες εβδομάδες.</value>
+</data>
+<data name="SetComplianceDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Ορισμός προθεσμίας συμμόρφωσης για ενημερώσεις δυνατοτήτων.</value>
+</data>
+<data name="SetComplianceDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Ορισμός προθεσμίας συμμόρφωσης για ενημερώσεις ποιότητας.</value>
+</data>
+<data name="BlockThirdPartyCookies-Edge" xml:space="preserve">
+    <value>Αποκλεισμός cookies τρίτων</value>
+</data>
+<data name="DnsOverHttpsMode-Edge" xml:space="preserve">
+    <value>Ορισμός λειτουργίας DNS μέσω HTTPS για χρήση ρυθμίσεων DoH του συστήματος</value>
+</data>
+<data name="AutomaticHttpsDefault-Edge" xml:space="preserve">
+    <value>Αυτόματη αναβάθμιση συνδέσεων HTTP σε HTTPS</value>
+</data>
+<data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
+    <value>Ενεργοποίηση Κρυπτογραφημένου Client Hello</value>
+</data>
+<data name="BasicAuthOverHttpEnabled-Edge" xml:space="preserve">
+    <value>Αποκλεισμός Βασικής επαλήθευσης για HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControl-Edge" xml:space="preserve">
+    <value>Να επιτρέπεται στο Edge να λαμβάνει νέες δυνατότητες ακόμη και μετά τη χρήση πολιτικών</value>
+</data>
+<data name="AudioSandboxEnabled-Edge" xml:space="preserve">
+    <value>Επιβολή εκτέλεσης της διεργασίας ήχου σε sandbox</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSetting-Edge" xml:space="preserve">
+    <value>Συνιστάται η ρύθμιση κοινής χρήσης πρόσθετης περιοχής λειτουργικού συστήματος να οριστεί σε ποτέ</value>
+</data>
+<data name="1-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="2-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="3-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_RSA_WITH_AES_256_CBC_SHA - (ΧΩΡΙΣ PFS - CBC - SHA1)</value>
+</data>
+<data name="4-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_RSA_WITH_AES_128_CBC_SHA - (ΧΩΡΙΣ PFS - CBC - SHA1)</value>
+</data>
+<data name="5-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_RSA_WITH_AES_128_GCM_SHA256 - (ΧΩΡΙΣ PFS)</value>
+</data>
+<data name="6-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_RSA_WITH_AES_256_GCM_SHA384 - (ΧΩΡΙΣ PFS)</value>
+</data>
+<data name="ExtensionManifestV2Availability-Edge" xml:space="preserve">
+    <value>Να μην απενεργοποιηθεί ποτέ η υποστήριξη επεκτάσεων Manifest V2</value>
+</data>
+<data name="DefaultWebUsbGuardSetting-Edge" xml:space="preserve">
+    <value>Να μην επιτρέπεται ποτέ στους ιστότοπους να ζητούν πρόσβαση σε τοπικές συνδεδεμένες συσκευές USB</value>
+</data>
+<data name="DefaultWindowManagementSetting-Edge" xml:space="preserve">
+    <value>Άρνηση της άδειας Διαχείρισης Παραθύρων σε όλους τους ιστότοπους από προεπιλογή</value>
+</data>
+<data name="DynamicCodeSettings-Edge" xml:space="preserve">
+    <value>Αποτροπή της διεργασίας του προγράμματος περιήγησης από τη δημιουργία δυναμικού κώδικα</value>
+</data>
+<data name="HideFileExt-NonAdmin" xml:space="preserve">
+    <value>Ενεργοποίηση εμφάνισης επεκτάσεων αρχείων στην Εξερεύνηση Αρχείων</value>
+</data>
+<data name="Hidden-NonAdmin" xml:space="preserve">
+    <value>Ενεργοποίηση εμφάνισης κρυφών αρχείων στην Εξερεύνηση Αρχείων</value>
+</data>
+<data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
+    <value>Απενεργοποίηση πρόσβασης ιστότοπων στη λίστα τοπικών γλωσσών</value>
+</data>
+<data name="SafeSearchMode-NonAdmin" xml:space="preserve">
+    <value>Απενεργοποίηση ασφαλούς αναζήτησης στην αναζήτηση των Windows</value>
+</data>
+<data name="EnableClipboardHistory-NonAdmin" xml:space="preserve">
+    <value>Ενεργοποίηση Ιστορικού Προχείρου</value>
+</data>
+<data name="EnableHwkbTextPrediction-NonAdmin" xml:space="preserve">
+    <value>Ενεργοποίηση εμφάνισης προτάσεων κειμένου κατά την πληκτρολόγηση στο φυσικό πληκτρολόγιο</value>
+</data>
+<data name="MultilingualEnabled-NonAdmin" xml:space="preserve">
+    <value>Ενεργοποίηση πολύγλωσσων προτάσεων κειμένου</value>
+</data>
+<data name="Flags-NonAdmin" xml:space="preserve">
+    <value>Απενεργοποίηση συντόμευσης κολλώδους πλήκτρου πατώντας το πλήκτρο shift 5 φορές γρήγορα</value>
+</data>
+<data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
+    <value>Απενεργοποίηση εμφάνισης υπενθυμίσεων και εισερχόμενων κλήσεων VoIP στην οθόνη κλειδώματος</value>
+</data>
+<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
+    <value>Απενεργοποίηση δημιουργίας αντιγράφων ασφαλείας κωδικού πρόσβασης τοπικού λογαριασμού διαχειριστή στο Active Directory.</value>
+</data>
+<data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
+    <value>Εφαρμογή περιορισμών UAC σε τοπικούς λογαριασμούς κατά τις συνδέσεις δικτύου</value>
+</data>
+<data name="RDVDenyCrossOrg-OptionalOverrides" xml:space="preserve">
+    <value>Να επιτρέπεται στο λειτουργικό σύστημα να χρησιμοποιεί μονάδες κρυπτογραφημένες με BitLocker που δημιουργήθηκαν σε άλλους οργανισμούς.</value>
+</data>
+<data name="DisableWindowsConsumerFeatures-OptionalOverrides" xml:space="preserve">
+    <value>Να μην απενεργοποιούνται εμπειρίες που βοηθούν τους καταναλωτές να αξιοποιήσουν στο έπακρο τις συσκευές τους και τον λογαριασμό Microsoft.</value>
+</data>
+<data name="AllowGameDVR-OptionalOverrides" xml:space="preserve">
+    <value>Να επιτρέπεται η χρήση της λειτουργίας Game DVR.</value>
+</data>
+<data name="NC_ShowSharedAccessUI-OptionalOverrides" xml:space="preserve">
+    <value>Ενεργοποίηση διεπαφής χρήστη Κοινής Χρήσης Σύνδεσης Διαδικτύου (ICS) για τον τοπικό Διαχειριστή.</value>
+</data>
+<data name="Enabled-OptionalOverrides" xml:space="preserve">
+    <value>Να επιτρέπεται στους χρήστες να χρησιμοποιούν τη λειτουργία Sudo.</value>
+</data>
+<data name="HideExclusionsFromLocalAdmins-OptionalOverrides" xml:space="preserve">
+    <value>Να μην αποκρύπτονται οι εξαιρέσεις στο Microsoft Defender από τους τοπικούς Διαχειριστές.</value>
+</data>
+<data name="fDisableCdm-OptionalOverrides" xml:space="preserve">
+    <value>Να επιτρέπεται η αντιστοίχιση μονάδων σε Συνεδρίες Απομακρυσμένης Επιφάνειας Εργασίας και Hyper-V</value>
+</data>
+<data name="fDisableClip-OptionalOverrides" xml:space="preserve">
+    <value>Να επιτρέπεται η κοινή χρήση Προχείρου σε Συνεδρίες Απομακρυσμένης Επιφάνειας Εργασίας και Hyper-V</value>
+</data>
+<data name="PolicyVersionOverride-OptionalOverrides" xml:space="preserve">
+    <value>Διαμόρφωση έκδοσης πολιτικής Τείχους Προστασίας των Windows</value>
+</data>
+<data name="DisableNotificationsPrivateOverride-OptionalOverrides" xml:space="preserve">
+    <value>Να μην απενεργοποιούνται οι ειδοποιήσεις στο Τείχος Προστασίας των Windows για το Ιδιωτικό Προφίλ</value>
+</data>
+<data name="AllowLocalPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Να επιτρέπεται η χρήση πολιτικών Τείχους Προστασίας των Windows που ορίζονται στην ενότητα προηγμένων ρυθμίσεων Τείχους Προστασίας των Windows αντί της επιβολής μόνο αυτών που ορίζονται στην Πολιτική Ομάδας.</value>
+</data>
+<data name="AllowLocalIPsecPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Να επιτρέπεται η χρήση πολιτικών IPSec Τείχους Προστασίας των Windows που ορίζονται στην ενότητα προηγμένων ρυθμίσεων Τείχους Προστασίας των Windows αντί της επιβολής μόνο αυτών που ορίζονται στην Πολιτική Ομάδας.</value>
+</data>
+<data name="DisableNotificationsPublicOverride-OptionalOverrides" xml:space="preserve">
+    <value>Να μην απενεργοποιούνται οι ειδοποιήσεις στο Τείχος Προστασίας των Windows για το Δημόσιο Προφίλ</value>
+</data>
+<data name="RDVDenyWriteAccess-OptionalOverrides" xml:space="preserve">
+    <value>Να επιτρέπεται στο λειτουργικό σύστημα να γράφει σε αφαιρούμενες μονάδες που δεν είναι κρυπτογραφημένες με BitLocker</value>
+</data>
+<data name="BlockThirdPartyCookiesRecommended-Edge" xml:space="preserve">
+    <value>Σύσταση αποκλεισμού cookies τρίτων</value>
+</data>
+<data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
+    <value>Ρυθμίζει το Edge να χρησιμοποιεί DNS over HTTPS του συστήματος. Αυτό κάνει και το MDAG να λειτουργεί σωστά</value>
+</data>
+<data name="AutomaticHttpsDefaultEdge-Edge" xml:space="preserve">
+    <value>Αυτόματη αναβάθμιση συνδέσεων HTTP σε HTTPS</value>
+</data>
+<data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
+    <value>Ενεργοποίηση Κρυπτογραφημένου Client Hello</value>
+</data>
+<data name="BasicAuthOverHttpEnabledEdge-Edge" xml:space="preserve">
+    <value>Αποκλεισμός Βασικής επαλήθευσης για HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControlEdge-Edge" xml:space="preserve">
+    <value>Να επιτρέπεται σε συσκευές που χρησιμοποιούν την προστασία κατηγορίας Edge να λαμβάνουν νέες δυνατότητες και πειραματισμούς όπως οι κανονικές συσκευές</value>
+</data>
+<data name="AudioSandboxEnabledEdge-Edge" xml:space="preserve">
+    <value>Επιβολή εκτέλεσης της διεργασίας ήχου σε sandbox</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSettingEdge-Edge" xml:space="preserve">
+    <value>Συνιστάται η ρύθμιση κοινής χρήσης πρόσθετης περιοχής λειτουργικού συστήματος να οριστεί σε ποτέ.</value>
+</data>
+<data name="TLSCipherSuiteDenyList1-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList2-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList3-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_RSA_WITH_AES_256_CBC_SHA - (ΧΩΡΙΣ PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList4-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_RSA_WITH_AES_128_CBC_SHA - (ΧΩΡΙΣ PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList5-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_RSA_WITH_AES_128_GCM_SHA256 - (ΧΩΡΙΣ PFS)</value>
+</data>
+<data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
+    <value>Απενεργοποίηση TLS_RSA_WITH_AES_256_GCM_SHA384 - (ΧΩΡΙΣ PFS)</value>
+</data>
+<data name="ExtensionManifestV2AvailabilityEdge-Edge" xml:space="preserve">
+    <value>Να μην απενεργοποιηθεί ποτέ η υποστήριξη επεκτάσεων Manifest V2</value>
+</data>
+<data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
+    <value>Να μην επιτρέπεται ποτέ στους ιστότοπους να ζητούν πρόσβαση σε τοπικές συνδεδεμένες συσκευές USB</value>
+</data>
+<data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
+    <value>Άρνηση της άδειας Διαχείρισης Παραθύρων σε όλους τους ιστότοπους από προεπιλογή</value>
+</data>
+<data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
+    <value>Αποτροπή της διεργασίας του προγράμματος περιήγησης από τη δημιουργία δυναμικού κώδικα</value>
+</data>
+<data name="DisableTLS10-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση TLS v1</value>
+</data>
+<data name="DisableTLS11-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση TLS v1.1</value>
+</data>
+<data name="DisableNULL-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση της αδύναμης Κρυπτογράφησης για Schannel: NULL</value>
+</data>
+<data name="DisableDES56-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση της αδύναμης Κρυπτογράφησης για Schannel: DES 56-bit</value>
+</data>
+<data name="DisableRC240-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση της αδύναμης Κρυπτογράφησης για Schannel: RC2 40-bit</value>
+</data>
+<data name="DisableRC256-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση της αδύναμης Κρυπτογράφησης για Schannel: RC2 56-bit</value>
+</data>
+<data name="DisableRC2128-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση της αδύναμης Κρυπτογράφησης για Schannel: RC2 128-bit</value>
+</data>
+<data name="DisableRC440-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση της αδύναμης Κρυπτογράφησης για Schannel: RC4 40-bit</value>
+</data>
+<data name="DisableRC456-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση της αδύναμης Κρυπτογράφησης για Schannel: RC4 56-bit</value>
+</data>
+<data name="DisableRC464-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση της αδύναμης Κρυπτογράφησης για Schannel: RC4 64-bit</value>
+</data>
+<data name="DisableRC4128-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση της αδύναμης Κρυπτογράφησης για Schannel: RC4 128-bit</value>
+</data>
+<data name="DisableTripleDES-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση της αδύναμης Κρυπτογράφησης για Schannel: 3DES 168-bit (Triple DES 168)</value>
+</data>
+<data name="DisableMD5-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση Αλγορίθμου Κατακερματισμού MD5 για SChannel.</value>
+</data>
+<data name="BattleNetCipher-TLS" xml:space="preserve">
+    <value>Να επιτρέπεται η λιγότερο ασφαλής κρυπτογράφηση "TLS_RSA_WITH_AES_256_CBC_SHA" για παροχή συμβατότητας με τον πελάτη παιχνιδιού Battle Net.</value>
+</data>
+  <data name="SAC-MSDefender" xml:space="preserve">
+    <value>Ενεργοποίηση Smart App Control. Παρακαλώ ενεργοποιήστε επίσης τα προαιρετικά διαγνωστικά δεδομένα που απαιτούνται για τη σωστή λειτουργία του Smart App Control.</value>
+  </data>
+    <data name="InactivityTimeoutSecs-LockScreen" xml:space="preserve">
+    <value>Ορισμός της πολιτικής ορίου αδράνειας μηχανήματος ώστε η συσκευή να κλειδώνει αυτόματα μετά από 120 δευτερόλεπτα αδράνειας.</value>
+  </data>
+      <data name="DisableCAD-LockScreen" xml:space="preserve">
+    <value>Ορισμός πολιτικής διαδραστικής σύνδεσης για απαίτηση συνδυασμού πλήκτρων CTRL+ALT+DEL στην Οθόνη Κλειδώματος πριν μπορέσετε να εισαγάγετε τα διαπιστευτήριά σας. Αυτό μπορεί να μετριάσει ορισμένες επιθέσεις που χρησιμοποιούν ψεύτικες οθόνες κλειδώματος για να καταγράψουν τα διαπιστευτήρια χρήστη σε απλό κείμενο όπως κωδικούς πρόσβασης.</value>
+  </data>
+      <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
+    <value>Ορισμός πολιτικής διαδραστικής σύνδεσης για όριο κλειδώματος λογαριασμού μηχανήματος ώστε η συσκευή κρυπτογραφημένη με BitLocker να κλειδώνει μετά από 5 αποτυχημένες προσπάθειες σύνδεσης. Θα απαιτηθεί εισαγωγή κλειδιού ανάκτησης BitLocker για τη μονάδα λειτουργικού συστήματος για να συνδεθείτε ξανά.</value>
+  </data>
+      <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
+    <value>Ορισμός πολιτικής διαδραστικής σύνδεσης για διακοπή εμφάνισης πληροφοριών χρήστη όταν η συνεδρία είναι κλειδωμένη.</value>
+  </data>
+      <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
+    <value>Ορισμός πολιτικής διαδραστικής σύνδεσης για διακοπή εμφάνισης ονόματος χρήστη στην Οθόνη Κλειδώματος.</value>
+  </data>
+      <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
+    <value>Ορισμός πολιτικής διαδραστικής σύνδεσης για διακοπή εμφάνισης στοιχείων τελευταίας σύνδεσης στην Οθόνη Κλειδώματος.</value>
+  </data>
+  <data name="ConsentPromptBehaviorAdmin-UAC" xml:space="preserve">
+    <value>Ορισμός της συμπεριφοράς της προτροπής ανύψωσης για διαχειριστές σε Λειτουργία Έγκρισης Διαχειριστή: Προτροπή για Συγκατάθεση στην Ασφαλή Επιφάνεια Εργασίας</value>
+  </data>
+    <data name="ConsentPromptBehaviorUser-UAC" xml:space="preserve">
+    <value>Ορισμός της συμπεριφοράς της προτροπής ανύψωσης για τυπικούς χρήστες: Προτροπή για Διαπιστευτήρια στην Ασφαλή Επιφάνεια Εργασίας</value>
+  </data>
+    <data name="ValidateAdminCodeSignatures-UAC" xml:space="preserve">
+    <value>Διαμόρφωση του συστήματος για ανύψωση μόνο εκτελέσιμων που είναι υπογεγραμμένα και Επικυρωμένα. Οποιοδήποτε πρόγραμμα που είναι μη υπογεγραμμένο ή υπογεγραμμένο με αυτο-υπογεγραμμένα πιστοποιητικά δεν θα μπορεί να εκτελεστεί ως διαχειριστής.</value>
+  </data>
+    <data name="ConsentPromptBehaviorEnhancedAdmin-UAC" xml:space="preserve">
+    <value>Ορισμός της συμπεριφοράς της προτροπής ανύψωσης για διαχειριστές σε Ενισχυμένη Λειτουργία Προστασίας Προνομίων: Προτροπή για Διαπιστευτήρια στην Ασφαλή Επιφάνεια Εργασίας</value>
+  </data>
+    <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
+    <value>Ορισμός του τύπου Λειτουργίας Έγκρισης Διαχειριστή να είναι Λειτουργία Έγκρισης Διαχειριστή με ενισχυμένη προστασία προνομίων</value>
+  </data>
+  <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Αφαίρεση διαδρομών μητρώου προσβάσιμων εξ αποστάσεως.</value>
+</data>
+  <data name="AllowedPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Αφαίρεση διαδρομών μητρώου και υποδιαδρομών προσβάσιμων εξ αποστάσεως.</value>
+</data>
+  <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Άρνηση εισερχόμενης σύνδεσης NTLM για όλους τους λογαριασμούς.</value>
+</data>
+  <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Άρνηση εξερχόμενων συνδέσεων NTLM.</value>
+</data>
+<data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
+    <value>Επιβολή ισχυρής προστασίας κλειδιών για τα κλειδιά χρήστη που αποθηκεύονται στον υπολογιστή. Θα μπορείτε να αποθηκεύετε με ασφάλεια τα ιδιωτικά κλειδιά των πιστοποιητικών που εγκαθιστάτε στον υπολογιστή και επίσης τα ίδια διαπιστευτήρια θα απαιτούνται κατά την πρόσβαση στο ιδιωτικό κλειδί όπως για λειτουργίες υπογραφής.</value>
+</data>
+<data name="LockoutBadCount-LockScreen" xml:space="preserve">
+    <value>Ορισμός του αριθμού επιτρεπόμενων αποτυχημένων προσπαθειών σύνδεσης σε 5. Σε συνδυασμό με άλλες πολιτικές σε αυτή την κατηγορία, αυτό σημαίνει ότι κάθε 5 αποτυχημένες προσπάθειες σύνδεσης θα χρειάζονται μια πλήρη ημέρα να περάσει πριν επιτραπούν 5 περισσότερες προσπάθειες, διαφορετικά το Bitlocker θα ενεργοποιηθεί, το σύστημα θα επανεκκινήσει και θα ζητηθεί ο 48-ψήφιος κωδικός Bitlocker. Αυτή η πολιτική αποτρέπει σε μεγάλο βαθμό τις προσπάθειες brute force.</value>
+</data>
+<data name="ResetLockoutCount-LockScreen" xml:space="preserve">
+    <value>Ορισμός της διάρκειας κλειδώματος λογαριασμού σε 1440 λεπτά ή 1 ημέρα. Σε συνδυασμό με άλλες πολιτικές σε αυτή την κατηγορία, αυτό σημαίνει ότι κάθε 5 αποτυχημένες προσπάθειες σύνδεσης θα χρειάζονται μια πλήρη ημέρα να περάσει πριν επιτραπούν 5 περισσότερες προσπάθειες, διαφορετικά το Bitlocker θα ενεργοποιηθεί, το σύστημα θα επανεκκινήσει και θα ζητηθεί ο 48-ψήφιος κωδικός Bitlocker.</value>
+</data>
+<data name="LockoutDuration-LockScreen" xml:space="preserve">
+    <value>Ορισμός επαναφοράς μετρητή κλειδώματος λογαριασμού σε 1440 λεπτά ή 1 ημέρα.</value>
+</data>
+</root>

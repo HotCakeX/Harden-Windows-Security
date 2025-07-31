@@ -12,7 +12,8 @@
     "FriendlyName": "MinSmb2DialectServer-WindowsNetworking",
     "URL": "",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -27,7 +28,8 @@
     "FriendlyName": "EnableSMBQUICServer-WindowsNetworking",
     "URL": "",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -42,7 +44,8 @@
     "FriendlyName": "CipherSuiteOrderServer-WindowsNetworking",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-lanmanserver#pol_ciphersuiteorder",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -57,7 +60,8 @@
     "FriendlyName": "RequireEncryption-WindowsNetworking",
     "URL": "",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -72,7 +76,8 @@
     "FriendlyName": "MinSmb2DialectClient-WindowsNetworking",
     "URL": "",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -87,7 +92,8 @@
     "FriendlyName": "CipherSuiteOrderClient-WindowsNetworking",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-lanmanworkstation#pol_ciphersuiteorder",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -102,7 +108,8 @@
     "FriendlyName": "EnableSMBQUICClient-WindowsNetworking",
     "URL": "",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -117,7 +124,8 @@
     "FriendlyName": "EnableNetbios-WindowsNetworking",
     "URL": "",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -132,7 +140,8 @@
     "FriendlyName": "DisableSmartNameResolution-WindowsNetworking",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-dnsclient#dns_smartmultihomednameresolution",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -147,7 +156,8 @@
     "FriendlyName": "EnableMulticast-WindowsNetworking",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-dnsclient#turn_off_multicast",
     "Category": null,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -162,7 +172,8 @@
     "FriendlyName": "DisableHTTPPrinting-WindowsNetworking",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-connectivity?WT.mc_id=Portal-fx#diableprintingoverhttp",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -177,7 +188,8 @@
     "FriendlyName": "DisableWebPnPDownload-WindowsNetworking",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-icm#disablewebpnpdownload_1",
     "Category": null,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -192,7 +204,8 @@
     "FriendlyName": "BlockNTLM-WindowsNetworking",
     "URL": "",
     "Category": 11,
-    "SubCategory": 9
+    "SubCategory": 9,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -207,7 +220,8 @@
     "FriendlyName": "EnableAuthEpResolution-WindowsNetworking",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-remoteprocedurecall#rpcendpointmapperclientauthentication",
     "Category": 11,
-    "SubCategory": 9
+    "SubCategory": 9,
+    "DefaultRegValue": null
   },
   {
     "Source": 1,
@@ -219,10 +233,11 @@
     "RegValue": "1",
     "Hive": 0,
     "PolicyAction": 0,
-    "FriendlyName": "Enable SMB Server Encryption",
+    "FriendlyName": "EncryptData-WindowsNetworking",
     "URL": "",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 1,
@@ -234,9 +249,74 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 0,
-    "FriendlyName": "Disable LMHOSTS lookup protocol on all network adapters",
+    "FriendlyName": "EnableLMHOSTS-WindowsNetworking",
     "URL": "",
     "Category": 11,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
+  },
+  {
+    "Source": 2,
+    "KeyName": "System\\CurrentControlSet\\Control\\SecurePipeServers\\Winreg\\AllowedExactPaths",
+    "ValueName": "Machine",
+    "Type": 7,
+    "Size": 4,
+    "Data": "AAAAAA==",
+    "RegValue": "",
+    "Hive": 0,
+    "PolicyAction": 0,
+    "FriendlyName": "AllowedExactPathsMachine-WindowsNetworking",
+    "URL": "",
+    "Category": 11,
+    "SubCategory": null,
+    "DefaultRegValue": "System\\CurrentControlSet\\Control\\ProductOptions,System\\CurrentControlSet\\Control\\Server Applications,Software\\Microsoft\\Windows NT\\CurrentVersion"
+  },
+  {
+    "Source": 2,
+    "KeyName": "System\\CurrentControlSet\\Control\\SecurePipeServers\\Winreg\\AllowedPaths",
+    "ValueName": "Machine",
+    "Type": 7,
+    "Size": 4,
+    "Data": "AAAAAA==",
+    "RegValue": "",
+    "Hive": 0,
+    "PolicyAction": 0,
+    "FriendlyName": "AllowedPathsMachine-WindowsNetworking",
+    "URL": "",
+    "Category": 11,
+    "SubCategory": null,
+    "DefaultRegValue": "System\\CurrentControlSet\\Control\\Print\\Printers,System\\CurrentControlSet\\Services\\Eventlog,Software\\Microsoft\\OLAP Server,Software\\Microsoft\\Windows NT\\CurrentVersion\\Print,Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows,System\\CurrentControlSet\\Control\\ContentIndex,System\\CurrentControlSet\\Control\\Terminal Server,System\\CurrentControlSet\\Control\\Terminal Server\\UserConfig,System\\CurrentControlSet\\Control\\Terminal Server\\DefaultUserConfiguration,Software\\Microsoft\\Windows NT\\CurrentVersion\\Perflib,System\\CurrentControlSet\\Services\\SysmonLog"
+  },
+  {
+    "Source": 2,
+    "KeyName": "System\\CurrentControlSet\\Control\\Lsa\\MSV1_0",
+    "ValueName": "RestrictReceivingNTLMTraffic",
+    "Type": 4,
+    "Size": 4,
+    "Data": "AgAAAA==",
+    "RegValue": "2",
+    "Hive": 0,
+    "PolicyAction": 0,
+    "FriendlyName": "RestrictReceivingNTLMTraffic-WindowsNetworking",
+    "URL": "",
+    "Category": 11,
+    "SubCategory": 9,
+    "DefaultRegValue": "0"
+  },
+  {
+    "Source": 2,
+    "KeyName": "System\\CurrentControlSet\\Control\\Lsa\\MSV1_0",
+    "ValueName": "RestrictSendingNTLMTraffic",
+    "Type": 4,
+    "Size": 4,
+    "Data": "AgAAAA==",
+    "RegValue": "2",
+    "Hive": 0,
+    "PolicyAction": 0,
+    "FriendlyName": "RestrictSendingNTLMTraffic-WindowsNetworking",
+    "URL": "",
+    "Category": 11,
+    "SubCategory": 9,
+    "DefaultRegValue": "0"
   }
 ]

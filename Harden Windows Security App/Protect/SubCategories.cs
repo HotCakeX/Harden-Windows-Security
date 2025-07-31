@@ -19,7 +19,6 @@ namespace HardenWindowsSecurity.Protect;
 
 internal enum SubCategories : uint
 {
-	MicrosoftSecurityBaseline_OptionalOverrides = 99,
 	MSDefender_SmartAppControl = 0,
 	MSDefender_BetaUpdateChannelsForDefender = 1,
 	MSDefender_OptionalDiagnosticData = 2,

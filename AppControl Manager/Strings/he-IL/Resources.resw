@@ -4997,12 +4997,6 @@
 <data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
   <value>מגדיר את גודל יומן תקינות הקוד</value>
 </data>
-<data name="VersionLabelFormat" xml:space="preserve">
-  <value>גרסה: {0}.{1}.{2}.{3}</value>
-</data>
-<data name="PFNLabelFormat" xml:space="preserve">
-  <value>PFN: {0}</value>
-</data>
 <data name="AppDetailsErrorMessageWithName" xml:space="preserve">
   <value>אירעה שגיאה בקבלת הפרטים עבור היישום: {0}</value>
 </data>
@@ -5701,5 +5695,38 @@
   </data>
   <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>שלח</value>
+  </data>
+  <data name="PFNArchitectureLabel.Text" xml:space="preserve">
+  <value>ארכיטקטורה</value>
+</data>
+<data name="PFNPublisherLabel.Text" xml:space="preserve">
+  <value>מפרסם</value>
+</data>
+<data name="PFNPublisherID.Text" xml:space="preserve">
+  <value>מזהה מפרסם</value>
+</data>
+<data name="PFNDescription.Text" xml:space="preserve">
+  <value>תיאור</value>
+</data>
+<data name="PFNInstallLocation.Text" xml:space="preserve">
+  <value>מיקום התקנה</value>
+</data>
+<data name="PFNInstalledDateLabel.Text" xml:space="preserve">
+  <value>שונה לאחרונה ב</value>
+</data>
+<data name="PFNDisplayNameLabelText" xml:space="preserve">
+  <value>שם תצוגה</value>
+</data>
+<data name="PFNFullNameLabel.Text" xml:space="preserve">
+  <value>שם מלא</value>
+</data>
+<data name="PFNVersionLabel.Text" xml:space="preserve">
+  <value>גרסה</value>
+</data>
+<data name="PFNLabel.Text" xml:space="preserve">
+  <value>שם משפחת חבילה</value>
+</data>
+  <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
+    <value>פתח תיקיית לוגים</value>
   </data>
 </root>

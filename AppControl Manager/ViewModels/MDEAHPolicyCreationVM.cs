@@ -59,7 +59,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 	}
 
 
-	#region MICROSOFT GRAPH IMPLEMENTATION DETAILS 
+	#region MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
 	private void UpdateButtonsStates(bool on)
 	{
@@ -69,7 +69,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 
 	internal readonly AuthenticationCompanion AuthCompanionCLS;
 
-	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS 
+	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
 	internal readonly InfoBarSettings MainInfoBar;
 

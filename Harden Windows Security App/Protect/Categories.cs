@@ -18,7 +18,7 @@
 namespace HardenWindowsSecurity.Protect;
 
 /// <summary>
-/// The main categories for protection.
+/// The main categories for protection. The JSON files for each category must match this enum member names.
 /// </summary>
 internal enum Categories : uint
 {

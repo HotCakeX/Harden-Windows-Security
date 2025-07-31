@@ -119,7 +119,7 @@ internal sealed partial class ASRVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// The main InfoBar for the Settings VM.
+	/// The main InfoBar for this VM.
 	/// </summary>
 	internal readonly InfoBarSettings MainInfoBar;
 
@@ -145,7 +145,7 @@ internal sealed partial class ASRVM : ViewModelBase
 		}
 	} = true;
 
-	internal static readonly string JSONConfigPath = Path.Combine(AppContext.BaseDirectory, "Resources", "ASR.json");
+	internal static readonly string JSONConfigPath = Path.Combine(AppContext.BaseDirectory, "Resources", "AttackSurfaceReductionRules.json");
 
 	/// <summary>
 	/// The parent policy that must be always applied when any rule or all rules are being applied and must be removed if all rules are going to be removed and set to NotConfigured.
@@ -198,20 +198,20 @@ internal sealed partial class ASRVM : ViewModelBase
 		Dictionary<string, ASRRuleState> output = [];
 
 		// Get ASR rule IDs from the system
-		string? idsJson = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get AttackSurfaceReductionRules_Ids");
+		string? idsJson = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 AttackSurfaceReductionRules_Ids");
 
 		if (string.IsNullOrEmpty(idsJson))
 		{
-			Logger.Write("Failed to retrieve ASR rule IDs from system");
+			Logger.Write(GlobalVars.GetStr("FailedToRetrieveASRRuleIDs"));
 			return output;
 		}
 
 		// Get ASR rule actions from the system
-		string? actionsJson = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get AttackSurfaceReductionRules_Actions");
+		string? actionsJson = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 AttackSurfaceReductionRules_Actions");
 
 		if (string.IsNullOrEmpty(actionsJson))
 		{
-			Logger.Write("Failed to retrieve ASR rule actions from system");
+			Logger.Write(GlobalVars.GetStr("FailedToRetrieveASRRuleActions"));
 			return output;
 		}
 
@@ -221,13 +221,13 @@ internal sealed partial class ASRVM : ViewModelBase
 
 		if (ids == null || actions == null)
 		{
-			Logger.Write("Failed to parse ASR rules data from system");
+			Logger.Write(GlobalVars.GetStr("FailedToParseASRRulesData"));
 			return output;
 		}
 
 		if (ids.Length != actions.Length)
 		{
-			Logger.Write($"Mismatch between IDs count ({ids.Length}) and actions count ({actions.Length})");
+			Logger.Write(string.Format(GlobalVars.GetStr("MismatchBetweenIDsAndActionsCount"), ids.Length, actions.Length));
 			return output;
 		}
 
@@ -248,7 +248,7 @@ internal sealed partial class ASRVM : ViewModelBase
 			output[id] = state;
 		}
 
-		Logger.Write($"Successfully retrieved {output.Count} ASR rule states from system");
+		Logger.Write(string.Format(GlobalVars.GetStr("SuccessfullyRetrievedASRRuleStates"), output.Count));
 
 		return output;
 	}
@@ -257,47 +257,58 @@ internal sealed partial class ASRVM : ViewModelBase
 	/// Apply a single ASR rule, event handler for individual Apply buttons.
 	/// </summary>
 	/// <param name="entry">The ASR rule entry to apply</param>
-	internal void ApplyRule(ASRRuleEntry entry)
+	internal async void ApplyRule(ASRRuleEntry entry)
 	{
 		try
 		{
-			// Convert the state value to appropriate byte array based on registry type
-			byte[] stateBytes = entry.PolicyEntry.Type switch
+			ElementsAreEnabled = false;
+
+			await Task.Run(() =>
 			{
-				RegistryValueType.REG_DWORD => BitConverter.GetBytes((uint)entry.State),
-				RegistryValueType.REG_SZ => System.Text.Encoding.Unicode.GetBytes(((uint)entry.State).ToString() + "\0"),
-				_ => BitConverter.GetBytes((uint)entry.State)
-			};
 
-			// Copy of the policy entry with updated data
-			RegistryPolicyEntry updatedEntry = new(
-				source: entry.PolicyEntry.Source,
-				keyName: entry.PolicyEntry.KeyName,
-				valueName: entry.PolicyEntry.ValueName,
-				type: entry.PolicyEntry.Type,
-				size: (uint)stateBytes.Length,
-				data: stateBytes)
-			{
-				RegValue = ((uint)entry.State).ToString(),
-				hive = entry.PolicyEntry.hive,
-				policyAction = entry.PolicyEntry.policyAction,
-				FriendlyName = entry.PolicyEntry.FriendlyName,
-				URL = entry.PolicyEntry.URL,
-				Category = entry.PolicyEntry.Category,
-				SubCategory = entry.PolicyEntry.SubCategory
-			};
+				// Convert the state value to appropriate byte array based on registry type
+				byte[] stateBytes = entry.PolicyEntry.Type switch
+				{
+					RegistryValueType.REG_DWORD => BitConverter.GetBytes((uint)entry.State),
+					RegistryValueType.REG_SZ => System.Text.Encoding.Unicode.GetBytes(((uint)entry.State).ToString() + "\0"),
+					_ => BitConverter.GetBytes((uint)entry.State)
+				};
 
-			// Also need to ensure the main ASR policy is enabled
-			List<RegistryPolicyEntry> policiesToApply = [updatedEntry, ParentPolicy!];
+				// Copy of the policy entry with updated data
+				RegistryPolicyEntry updatedEntry = new(
+					source: entry.PolicyEntry.Source,
+					keyName: entry.PolicyEntry.KeyName,
+					valueName: entry.PolicyEntry.ValueName,
+					type: entry.PolicyEntry.Type,
+					size: (uint)stateBytes.Length,
+					data: stateBytes)
+				{
+					RegValue = ((uint)entry.State).ToString(),
+					hive = entry.PolicyEntry.hive,
+					policyAction = entry.PolicyEntry.policyAction,
+					FriendlyName = entry.PolicyEntry.FriendlyName,
+					URL = entry.PolicyEntry.URL,
+					Category = entry.PolicyEntry.Category,
+					SubCategory = entry.PolicyEntry.SubCategory
+				};
 
-			// Apply the policies to the system
-			RegistryPolicyParser.AddPoliciesToSystem(policiesToApply);
+				// Also need to ensure the main ASR policy is enabled
+				List<RegistryPolicyEntry> policiesToApply = [updatedEntry, ParentPolicy!];
 
-			MainInfoBar.WriteSuccess($"Applied ASR rule {entry.PolicyEntry.FriendlyName} with state {entry.State}");
+				// Apply the policies to the system
+				RegistryPolicyParser.AddPoliciesToSystem(policiesToApply);
+
+			});
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("AppliedASRRuleWithState"), entry.PolicyEntry.FriendlyName, entry.State));
 		}
 		catch (Exception ex)
 		{
 			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
 		}
 	}
 
@@ -350,7 +361,7 @@ internal sealed partial class ASRVM : ViewModelBase
 
 			});
 
-			MainInfoBar.WriteSuccess("Applied ASR rules successfully");
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("AppliedASRRulesSuccessfully"));
 		}
 		catch (Exception ex)
 		{
@@ -379,7 +390,7 @@ internal sealed partial class ASRVM : ViewModelBase
 				entry.State = ASRRuleState.NotConfigured;
 			}
 
-			MainInfoBar.WriteSuccess("Removed ASR rules successfully");
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("RemovedASRRulesSuccessfully"));
 		}
 		catch (Exception ex)
 		{
@@ -422,12 +433,11 @@ internal sealed partial class ASRVM : ViewModelBase
 				}
 			}
 
-			MainInfoBar.WriteSuccess($"Retrieved system states and updated {updatedRules} ASR rules. UI updated to reflect current system state.");
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("RetrievedSystemStatesAndUpdatedASRRules"), updatedRules));
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex, "Failed to verify ASR rules");
-			Logger.Write($"Failed to verify ASR rules: {ex.Message}");
+			MainInfoBar.WriteError(ex, GlobalVars.GetStr("FailedToVerifyASRRules"));
 		}
 		finally
 		{
@@ -452,9 +462,16 @@ internal sealed partial class ASRVM : ViewModelBase
 			// Update UI to reflect the recommended states
 			foreach (ASRRuleEntry entry in ASRItemsLVBound)
 			{
-				if (entry.PolicyEntry.Data is not null && entry.PolicyEntry.Data.Length >= 4)
+				if (entry.PolicyEntry.ParsedValue is not null)
 				{
-					uint recommendedValue = BitConverter.ToUInt32(entry.PolicyEntry.Data, 0);
+					uint recommendedValue = entry.PolicyEntry.ParsedValue switch
+					{
+						// ASR values are stored as strings in JSON and have Type 1 so they are not int by default. This is how Group policy and system stores their information.
+						string strValue when uint.TryParse(strValue, out uint parsedUint) => parsedUint,
+						uint uintValue => uintValue,
+						_ => 0
+					};
+
 					entry.State = recommendedValue switch
 					{
 						0 => ASRRuleState.NotConfigured,
@@ -466,7 +483,7 @@ internal sealed partial class ASRVM : ViewModelBase
 				}
 			}
 
-			MainInfoBar.WriteSuccess("Successfully applied all of the recommended values to the ASR rules.");
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyAppliedRecommendedValuesASRRules"));
 		}
 		catch (Exception ex)
 		{

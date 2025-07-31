@@ -177,146 +177,145 @@
 
             <NavigationView.MenuItems>
                 <!-- Protect Group -->
-                <NavigationViewItemHeader x:Name="ProtectNavigationViewItemHeader" Content="Main" />
+                <NavigationViewItemHeader x:Name="ProtectNavigationViewItemHeader" x:Uid="ProtectNavigationViewItemHeader" />
 
-                <NavigationViewItem x:Name="ProtectNavItem" x:Uid="ProtectNavigationViewItemHeader" Icon="{x:Bind ViewModel.ProtectIcon, Mode=OneWay}" Tag="Protect" IsExpanded="True">
+                <NavigationViewItem x:Name="ProtectNavItem" x:Uid="ProtectNavigationViewItem" Icon="{x:Bind ViewModel.ProtectIcon, Mode=OneWay}" Tag="Protect" IsExpanded="True">
 
                     <NavigationViewItem.MenuItems>
-                        <NavigationViewItem x:Uid="MicrosoftDefenderNavItem" Tag="MicrosoftDefender">
+                        <NavigationViewItem x:Name="MicrosoftDefenderNavItem" x:Uid="MicrosoftDefenderNavItem" Tag="MicrosoftDefender">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/WindowsDefender.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="ASRNavItem" Tag="ASR">
+                        <NavigationViewItem x:Name="ASRNavItem" x:Uid="ASRNavItem" Tag="ASR">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/ASRrules.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="BitLockerNavItem" Tag="BitLocker">
+                        <NavigationViewItem x:Name="BitLockerNavItem" x:Uid="BitLockerNavItem" Tag="BitLocker">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/Bitlocker.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="TLSSecurityNavItem" Tag="TLS">
+                        <NavigationViewItem x:Name="TLSSecurityNavItem" x:Uid="TLSSecurityNavItem" Tag="TLS">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/TLS.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="LockScreenNavItem" Tag="LockScreen">
+                        <NavigationViewItem x:Name="LockScreenNavItem" x:Uid="LockScreenNavItem" Tag="LockScreen">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/LockScreen.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="UACNavItem" Tag="UAC">
+                        <NavigationViewItem x:Name="UACNavItem" x:Uid="UACNavItem" Tag="UAC">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/UAC.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="DeviceGuardNavItem" Tag="DeviceGuard">
+                        <NavigationViewItem x:Name="DeviceGuardNavItem" x:Uid="DeviceGuardNavItem" Tag="DeviceGuard">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/DeviceGuard.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="WindowsFirewallNavItem" Tag="Firewall">
+                        <NavigationViewItem x:Name="WindowsFirewallNavItem" x:Uid="WindowsFirewallNavItem" Tag="Firewall">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/Firewall.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="OptionalWindowsFeaturesNavItem" Tag="OptionalWindowsFeatures">
+                        <NavigationViewItem x:Name="OptionalWindowsFeaturesNavItem" x:Uid="OptionalWindowsFeaturesNavItem" Tag="OptionalWindowsFeatures">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/OptionalFeatures.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="WindowsNetworkingNavItem" Tag="WinNetworking">
+                        <NavigationViewItem x:Name="WindowsNetworkingNavItem" x:Uid="WindowsNetworkingNavItem" Tag="WinNetworking">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/Networking.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="MiscellaneousNavItem" Tag="Miscellaneous">
+                        <NavigationViewItem x:Name="MiscellaneousNavItem" x:Uid="MiscellaneousNavItem" Tag="Miscellaneous">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/MiscellaneousCommands.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="WindowsUpdateNavItem" Tag="WinUpdate">
+                        <NavigationViewItem x:Name="WindowsUpdateNavItem" x:Uid="WindowsUpdateNavItem" Tag="WinUpdate">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/WindowsUpdate.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="EdgeBrowserNavItem" Tag="Edge">
+                        <NavigationViewItem x:Name="EdgeBrowserNavItem" x:Uid="EdgeBrowserNavItem" Tag="Edge">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/EdgeBrowser.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="CertificatesNavItem" Tag="Certificates">
+                        <NavigationViewItem x:Name="CertificatesNavItem" Visibility="Collapsed" x:Uid="CertificatesNavItem" Tag="Certificates">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/Certificate.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="CountryIPBlockingNavItem" Tag="CountryIPBlocking">
+                        <NavigationViewItem x:Name="CountryIPBlockingNavItem" Visibility="Collapsed" x:Uid="CountryIPBlockingNavItem" Tag="CountryIPBlocking">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/CountryIPBlocking.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Uid="NonAdminCommandsNavItem" Tag="NonAdmin">
+                        <NavigationViewItem x:Name="NonAdminCommandsNavItem" x:Uid="NonAdminCommandsNavItem" Tag="NonAdmin">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/NonAdmin.png"
-                                            ShowAsMonochrome="False"
-                                            Margin="-5" />
+                                ShowAsMonochrome="False"
+                                Margin="-5" />
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
                     </NavigationViewItem.MenuItems>
 
-
                 </NavigationViewItem>
 
-                <NavigationViewItem Content="Installed Apps and Drivers" Icon="Mail" Tag="AppsAndDrivers"/>
-                <NavigationViewItem Content="File Reputation" Icon="Mail" Tag="FileReputation"/>
-                <NavigationViewItem x:Uid="GroupPolicyEditorNavItem" Icon="Mail" Tag="GroupPolicyEditor"/>
+                <NavigationViewItem x:Name="InstalledAppsManagementNavItem" x:Uid="InstalledAppsManagementNavItem" Icon="{x:Bind ViewModel.InstalledAppsManagementIcon, Mode=OneWay}" Tag="InstalledAppsManagement"/>
+                <NavigationViewItem x:Name="FileReputationNavItem" x:Uid="FileReputationNavItem" Icon="{x:Bind ViewModel.FileReputationIcon, Mode=OneWay}" Tag="FileReputation"/>
+                <NavigationViewItem x:Name="GroupPolicyEditorNavItem" x:Uid="GroupPolicyEditorNavItem" Icon="{x:Bind ViewModel.GroupPolicyEditorIcon, Mode=OneWay}" Tag="GroupPolicyEditor"/>
 
                 <!-- Documentation Group -->
                 <NavigationViewItemHeader x:Name="DocumentationNavigationViewItemHeader" x:Uid="DocumentationNavigationViewItemHeader"/>

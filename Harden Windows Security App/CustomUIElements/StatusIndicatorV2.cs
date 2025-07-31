@@ -200,9 +200,9 @@ internal sealed partial class StatusIndicatorV2 : UserControl, IDisposable
 
 			string statusText = Status switch
 			{
-				StatusState.Applied => "Applied",
-				StatusState.NotApplied => "Not Applied",
-				_ => "N/A"
+				StatusState.Applied => GlobalVars.GetStr("AppliedText"),
+				StatusState.NotApplied => GlobalVars.GetStr("NotAppliedText"),
+				_ => GlobalVars.GetStr("NAText")
 			};
 
 			_currentBrush = new SolidColorBrush(statusColor);
@@ -224,9 +224,9 @@ internal sealed partial class StatusIndicatorV2 : UserControl, IDisposable
 	{
 		string tooltipText = Status switch
 		{
-			StatusState.Applied => "Status: Applied",
-			StatusState.NotApplied => "Status: Not Applied",
-			_ => "Status: Undetermined"
+			StatusState.Applied => GlobalVars.GetStr("StatusAppliedText"),
+			StatusState.NotApplied => GlobalVars.GetStr("StatusNotAppliedText"),
+			_ => GlobalVars.GetStr("StatusUndeterminedText")
 		};
 
 		ToolTipService.SetToolTip(this, tooltipText);

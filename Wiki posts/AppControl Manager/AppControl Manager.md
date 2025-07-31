@@ -524,26 +524,26 @@ function Build_ACM {
 
     ### ManageDefender
 
-    . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
+    . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for X64. Exit Code: $LASTEXITCODE") }
 
     if (!$X64ONLY) {
 
-        . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+        . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
 
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for ARM64. Exit Code: $LASTEXITCODE") }
     }
 
     ### ScheduledTaskManager
 
-    . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
+    . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ScheduledTaskManager solution for X64. Exit Code: $LASTEXITCODE") }
 
     if (!$X64ONLY) {
 
-        . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+        . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
 
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ScheduledTaskManager solution for ARM64. Exit Code: $LASTEXITCODE") }
     }
@@ -555,13 +555,13 @@ function Build_ACM {
     [string]$content = $content -replace 'static constexpr LPCWSTR APP_CONTROL_MANAGER_PFN = L"[^"]*";', "static constexpr LPCWSTR APP_CONTROL_MANAGER_PFN = L`"$newPFN`";"
     $content | Set-Content 'eXclude\Shell\Shell.cpp' -NoNewline -Force
 
-    . $MSBuildPath 'eXclude\Shell\Shell.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Build"
+    . $MSBuildPath 'eXclude\Shell\Shell.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building the Shell solution for X64. Exit Code: $LASTEXITCODE") }
 
     if (!$X64ONLY) {
 
-        . $MSBuildPath 'eXclude\Shell\Shell.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Build"
+        . $MSBuildPath 'eXclude\Shell\Shell.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
 
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building the Shell solution for ARM64. Exit Code: $LASTEXITCODE") }
     }
@@ -571,7 +571,9 @@ function Build_ACM {
 
     #region --- RUST projects ---
 
-    rustup default stable
+    # Uncomment this once stable toolchain supports ehcont security feature, till then we use nightly only
+    # rustup default stable
+    rustup default nightly
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed setting Rust toolchain to Stable. Exit Code: $LASTEXITCODE") }
 
@@ -743,9 +745,8 @@ function Build_ACM {
 
     Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\x86_64-pc-windows-msvc\release\DeviceGuardWMIRetriever-X64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
 
-    Copy-Item -Path '.\eXclude\Rust Interop Library\target\x86_64-pc-windows-msvc\release\rust_interop.lib' -Destination '.\RustInterop\rust_interop.lib' -Force
-
     # Generate for X64 architecture
+    dotnet clean 'AppControl Manager.slnx' --configuration Release
     dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=x64
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
@@ -765,9 +766,8 @@ function Build_ACM {
 
         Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
 
-        Copy-Item -Path '.\eXclude\Rust Interop Library\target\aarch64-pc-windows-msvc\release\rust_interop.lib' -Destination '.\RustInterop\rust_interop.lib' -Force
-
         # Generate for ARM64 architecture
+        dotnet clean 'AppControl Manager.slnx' --configuration Release
         dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=ARM64
 
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ARM64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
@@ -1001,6 +1001,7 @@ function Build_ACM {
     }
 
     if ($Upload) {
+        dotnet clean '.\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release
         dotnet build '.\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release --verbosity minimal
         dotnet msbuild '.\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
 

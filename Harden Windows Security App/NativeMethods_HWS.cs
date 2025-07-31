@@ -19,15 +19,12 @@ using System;
 using System.Runtime.InteropServices;
 using HardenWindowsSecurity.SecurityPolicy;
 using static HardenWindowsSecurity.ExploitMitigation.Main;
+using static HardenWindowsSecurity.Helpers.FileTrustChecker;
 
 namespace AppControlManager;
 
 internal static partial class NativeMethods
 {
-	/// <summary>
-	/// https://learn.microsoft.com/windows/win32/api/userenv/nf-userenv-refreshpolicyex
-	/// </summary>
-	internal const uint RP_FORCE = 0x00000001;
 
 	[LibraryImport("userenv.dll", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -306,4 +303,73 @@ internal static partial class NativeMethods
 		internal uint dwProcessId;
 		internal uint dwThreadId;
 	}
+
+	[LibraryImport("kernel32.dll", EntryPoint = "LoadLibraryExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr LoadLibraryExW(string lpFileName, IntPtr hFile, uint dwFlags);
+
+	// Get the address of a procedure (function) from a loaded library
+	// BestFitMapping = false disables the automatic conversion of characters that cannot be represented in the target character set, satisfying the CA2101
+	// Windows uses ANSI encoding for exported function names so we cannot use Unicode for GetProcAddress.
+	[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
+
+	/// <summary>
+	/// Delegate for the function signature of 'MpQueryFileTrustByHandle2'
+	/// </summary>
+	/// <param name="hFile"></param>
+	/// <param name="a2"></param>
+	/// <param name="a3"></param>
+	/// <param name="pParams"></param>
+	/// <param name="extraInfoCount"></param>
+	/// <param name="MpFileTrustExtraInfo"></param>
+	/// <returns></returns>
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate long MpQueryFileTrustByHandle2Delegate(
+		IntPtr hFile, IntPtr a2, IntPtr a3,
+		ref Params pParams, ref ulong extraInfoCount, ref IntPtr MpFileTrustExtraInfo);
+
+	// https://learn.microsoft.com/windows/win32/api/psapi/ns-psapi-performance_information
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct PerformanceInformation
+	{
+		internal uint Size;
+		internal nint CommitTotal;
+		internal nint CommitLimit;
+		internal nint CommitPeak;
+		internal nint PhysicalTotal;
+		internal nint PhysicalAvailable;
+		internal nint SystemCache;
+		internal nint KernelTotal;
+		internal nint KernelPaged;
+		internal nint KernelNonpaged;
+		internal nint PageSize;
+		internal uint HandleCount;
+		internal uint ProcessCount;
+		internal uint ThreadCount;
+	}
+
+	[LibraryImport("psapi.dll", SetLastError = true)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial bool GetPerformanceInfo(out PerformanceInformation pPerformanceInformation, int size);
+
+	[LibraryImport("ole32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CoInitializeEx(IntPtr pvReserved, uint dwCoInit);
+
+	[LibraryImport("ole32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial void CoUninitialize();
+
+	[LibraryImport("ole32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CoCreateInstance(
+		in Guid rclsid,
+		IntPtr pUnkOuter,
+		uint dwClsContext,
+		in Guid riid,
+		out IntPtr ppv);
+
 }

@@ -22,12 +22,25 @@ internal sealed class PackagedAppView(
 	string version,
 	string packageFamilyName,
 	string logo,
-	string packageFamilyNameActual)
+	string publisher,
+	string architecture,
+	string publisherID,
+	string fullName,
+	string description,
+	string installLocation,
+	string installedDate,
+	object? vmRef = null)
 {
 	internal string DisplayName => displayName;
 	internal string Version => version;
 	internal string PackageFamilyName => packageFamilyName;
-	// Since we add "PFN: " to the PackageFamilyName property for display purposes, this will be used to get the unmodified PFN of the app
-	internal string PackageFamilyNameActual => packageFamilyNameActual;
 	internal string Logo => logo;
+	internal string Publisher => publisher;
+	internal string Architecture => architecture;
+	internal string PublisherID => publisherID;
+	internal string FullName => fullName;
+	internal string Description => description;
+	internal string InstallLocation => installLocation;
+	internal string InstalledDate => installedDate;
+	internal object? VMRef => vmRef;
 }

@@ -15,6 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
+using AppControlManager.Others;
 using HardenWindowsSecurity.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -37,10 +39,24 @@ internal sealed partial class Protect : Page
 
 	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
 	{
-		await ShadowEnterAnimation.StartAsync((UIElement)sender);
+		try
+		{
+			await ShadowEnterAnimation.StartAsync((UIElement)sender);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
 	}
 	private async void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
 	{
-		await ShadowExitAnimation.StartAsync((UIElement)sender);
+		try
+		{
+			await ShadowExitAnimation.StartAsync((UIElement)sender);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
 	}
 }

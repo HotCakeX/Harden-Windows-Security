@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
        <OutputType>Exe</OutputType>
+       <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
        <TargetFramework>net10.0-windows10.0.22000.0</TargetFramework>
        <Version>$(FileVersion)</Version>
        <FileVersion>1.0.0.0</FileVersion>

@@ -42,7 +42,7 @@
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
-               
+
                 <!-- Appearance section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance" />
                 <controls:SettingsExpander x:Uid="AppearanceSectionSettingsExpander" IsExpanded="True" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
@@ -106,7 +106,7 @@
                         <customUI:SettingsCardV2 x:Uid="PublishUserActivityInTheOSSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xEC5B;}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.PublishUserActivityInTheOS, Mode=TwoWay}"
                                       x:Uid="ToggleSwitchGeneral"/>
-                        </customUI:SettingsCardV2>                        
+                        </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>

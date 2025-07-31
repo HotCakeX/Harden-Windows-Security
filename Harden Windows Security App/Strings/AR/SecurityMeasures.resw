@@ -1,0 +1,934 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+<data name="PhishingProtectServiceEnabled-MSDefender" xml:space="preserve">
+    <value>خدمة الحماية المحسّنة من التصيد الاحتيالي مُفعّلة.</value>
+</data>
+<data name="NotifyUnsafeApp-MSDefender" xml:space="preserve">
+    <value>الحماية المحسّنة من التصيد الاحتيالي: الإشعار بالتطبيق غير الآمن</value>
+</data>
+<data name="NotifyPasswordReuse-MSDefender" xml:space="preserve">
+    <value>الحماية المحسّنة من التصيد الاحتيالي: الإشعار بإعادة استخدام كلمة المرور</value>
+</data>
+<data name="NotifyMalicious-MSDefender" xml:space="preserve">
+    <value>الحماية المحسّنة من التصيد الاحتيالي: الإشعار بالمحتوى الضار</value>
+</data>
+<data name="CaptureThreatWindow-MSDefender" xml:space="preserve">
+    <value>الحماية المحسّنة من التصيد الاحتيالي: التقاط نافذة التهديد</value>
+</data>
+<data name="PurgeItemsAfterDelay-MSDefender" xml:space="preserve">
+    <value>حذف العناصر بعد التأخير</value>
+</data>
+<data name="IOAVMaxSize-MSDefender" xml:space="preserve">
+    <value>الحد الأقصى لحجم الملفات المُنزلة والمرفقات المطلوب فحصها</value>
+</data>
+<data name="DisableScanningMappedNetworkDrivesForFullScan-MSDefender" xml:space="preserve">
+    <value>فحص محركات الأقراص المعيّنة على الشبكة للفحص الكامل</value>
+</data>
+<data name="DisableScanningNetworkFiles-MSDefender" xml:space="preserve">
+    <value>فحص ملفات الشبكة</value>
+</data>
+<data name="DisableRemovableDriveScanning-MSDefender" xml:space="preserve">
+    <value>فحص محركات الأقراص القابلة للإزالة</value>
+</data>
+<data name="DisableReparsePointScanning-MSDefender" xml:space="preserve">
+    <value>فحص نقاط إعادة التحليل</value>
+</data>
+<data name="ArchiveMaxDepth-MSDefender" xml:space="preserve">
+    <value>أقصى عمق لفحص ملفات الأرشيف</value>
+</data>
+<data name="UpdateOnStartUp-MSDefender" xml:space="preserve">
+    <value>التحقق من أحدث معلومات أمنية للفيروسات وبرامج التجسس عند بدء التشغيل</value>
+</data>
+<data name="AVSignatureDue-MSDefender" xml:space="preserve">
+    <value>تحديد عدد الأيام قبل اعتبار معلومات الأمان الخاصة بالفيروسات قديمة</value>
+</data>
+<data name="ASSignatureDue-MSDefender" xml:space="preserve">
+    <value>تحديد عدد الأيام قبل اعتبار معلومات الأمان الخاصة ببرامج التجسس قديمة</value>
+</data>
+<data name="DisableBlockAtFirstSeen-MSDefender" xml:space="preserve">
+    <value>تفعيل ميزة الحظر عند الرؤية الأولى.</value>
+</data>
+<data name="AllowTelemetry-MSDefender" xml:space="preserve">
+    <value>البيانات التشخيصية الاختيارية مطلوبة لـ Smart App Control وغيرها.</value>
+</data>
+<data name="DisableTelemetryOptInSettingsUx-MSDefender" xml:space="preserve">
+    <value>تكوين واجهة المستخدم لإعدادات الاشتراك في البيانات التشخيصية</value>
+</data>
+<data name="5-MSDefender" xml:space="preserve">
+    <value>الإجراء الافتراضي لمستوى التهديد الشديد = الإزالة</value>
+</data>
+<data name="4-MSDefender" xml:space="preserve">
+    <value>الإجراء الافتراضي لمستوى التهديد المرتفع = الإزالة</value>
+</data>
+<data name="2-MSDefender" xml:space="preserve">
+    <value>الإجراء الافتراضي لمستوى التهديد المتوسط = الحجر الصحي</value>
+</data>
+<data name="1-MSDefender" xml:space="preserve">
+    <value>الإجراء الافتراضي لمستوى التهديد المنخفض = الحجر الصحي</value>
+</data>
+<data name="MeteredConnectionUpdates-MSDefender" xml:space="preserve">
+    <value>السماح لـ Microsoft Defender Antivirus بالتحديث عبر اتصال محدود السعة</value>
+</data>
+<data name="SubmitSamplesConsent-MSDefender" xml:space="preserve">
+    <value>إرسال عينات الملفات عند الحاجة لمزيد من التحليل</value>
+</data>
+<data name="Threats_ThreatSeverityDefaultAction-MSDefender" xml:space="preserve">
+    <value>تكوين الإجراءات الافتراضية لمستويات خطورة التهديدات</value>
+</data>
+<data name="EnableControlledFolderAccess-MSDefender" xml:space="preserve">
+    <value>تفعيل الوصول المُتحكم فيه للمجلدات</value>
+</data>
+<data name="EnableNetworkProtection-MSDefender" xml:space="preserve">
+    <value>تفعيل حماية الشبكة</value>
+</data>
+<data name="AllowNetworkProtectionOnWinServer-MSDefender" xml:space="preserve">
+    <value>تفعيل حماية الشبكة على Windows Server</value>
+</data>
+<data name="TDTFeatureEnabled-MSDefender" xml:space="preserve">
+    <value>تفعيل Intel TDT: تقنية الكشف عن التهديدات.</value>
+</data>
+<data name="MpCloudBlockLevel-MSDefender" xml:space="preserve">
+    <value>تعيين مستوى حظر السحابة إلى القيمة القصوى: عدم التسامح.</value>
+</data>
+<data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
+    <value>تم تعيين مهلة فحص السحابة الممتدة إلى القيمة القصوى."</value>
+</data>
+<data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
+    <value>تفعيل حساب تجزئة الملفات.</value>
+</data>
+<data name="DisableAsyncScanOnOpen-MSDefender" xml:space="preserve">
+    <value>تعطيل الأمان المتساهل لـ Dev Drive حول فحص الملفات.</value>
+</data>
+<data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
+    <value>تفعيل تحديثات Rtp والتوقيع أثناء وضع OOBE.</value>
+</data>
+<data name="BruteForceProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>تفعيل ميزة الحماية من هجمات القوة الغاشمة.</value>
+</data>
+<data name="BruteForceProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>تكوين مستوى عدوانية الحماية من القوة الغاشمة إلى مرتفع.</value>
+</data>
+<data name="RemoteEncryptionProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>تفعيل ميزة الحماية من التشفير عن بُعد.</value>
+</data>
+<data name="RemoteEncryptionProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>تكوين مستوى عدوانية الحماية من التشفير عن بُعد إلى مرتفع.</value>
+</data>
+<data name="DisableEmailScanning-MSDefender" xml:space="preserve">
+    <value>تفعيل فحص البريد الإلكتروني.</value>
+</data>
+<data name="DisableCatchupQuickScan-MSDefender" xml:space="preserve">
+    <value>تفعيل عمليات الفحص السريع الاستدراكية.</value>
+</data>
+<data name="CheckForSignaturesBeforeRunningScan-MSDefender" xml:space="preserve">
+    <value>التحقق من التوقيعات قبل تشغيل الفحص.</value>
+</data>
+<data name="SignatureUpdateInterval-MSDefender" xml:space="preserve">
+    <value>زيادة الفترة الزمنية للتحقق من تحديثات معلومات الأمان.</value>
+</data>
+<data name="SpynetReporting-MSDefender" xml:space="preserve">
+    <value>الانضمام إلى شبكة Microsoft MAPS (المعروفة أيضًا باسم SpyNet) للبقاء على اطلاع بأحدث معلومات الأمان.</value>
+</data>
+<data name="ExploitGuard_ASR_Rules-ASR" xml:space="preserve">
+    <value>تكوين قواعد ASR</value>
+</data>
+  <data name="56a863a9-875e-4185-98a7-b882c64b5ce5-ASR" xml:space="preserve">
+    <value>حظر إساءة استخدام برامج التشغيل الموقّعة المعرضة للخطر المُستغلة</value>
+  </data>
+  <data name="7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c-ASR" xml:space="preserve">
+    <value>حظر Adobe Reader من إنشاء عمليات فرعية</value>
+  </data>
+  <data name="d4f940ab-401b-4efc-aadc-ad5f3c50688a-ASR" xml:space="preserve">
+    <value>حظر جميع تطبيقات Office من إنشاء عمليات فرعية</value>
+  </data>
+  <data name="9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2-ASR" xml:space="preserve">
+    <value>حظر سرقة بيانات الاعتماد من نظام فرعي لسلطة الأمان المحلية في Windows (lsass.exe)</value>
+  </data>
+  <data name="be9ba2d9-53ea-4cdc-84e5-9b1eeee46550-ASR" xml:space="preserve">
+    <value>حظر المحتوى القابل للتنفيذ من عميل البريد الإلكتروني وبريد الويب</value>
+  </data>
+  <data name="01443614-cd74-433a-b99e-2ecdc07bfc25-ASR" xml:space="preserve">
+    <value>حظر تشغيل الملفات القابلة للتنفيذ ما لم تستوفِ معيار الانتشار أو العمر أو القائمة الموثوقة</value>
+  </data>
+  <data name="5beb7efe-fd9a-4556-801d-275e5ffc04cc-ASR" xml:space="preserve">
+    <value>حظر تنفيذ البرامج النصية التي قد تكون مبهمة</value>
+  </data>
+  <data name="d3e037e1-3eb8-44c8-a917-57927947596d-ASR" xml:space="preserve">
+    <value>حظر JavaScript أو VBScript من تشغيل محتوى قابل للتنفيذ تم تنزيله</value>
+  </data>
+  <data name="3b576869-a4ec-4529-8536-b80a7769e899-ASR" xml:space="preserve">
+    <value>حظر تطبيقات Office من إنشاء محتوى قابل للتنفيذ</value>
+  </data>
+  <data name="75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84-ASR" xml:space="preserve">
+    <value>حظر تطبيقات Office من حقن التعليمات البرمجية في عمليات أخرى</value>
+  </data>
+  <data name="26190899-1602-49e8-8b27-eb1d0a1ce869-ASR" xml:space="preserve">
+    <value>حظر تطبيق اتصالات Office من إنشاء عمليات فرعية</value>
+  </data>
+  <data name="e6db77e5-3df2-4cf1-b95a-636979351e5b-ASR" xml:space="preserve">
+    <value>حظر الاستمرارية من خلال اشتراك حدث WMI
+* استثناءات الملفات والمجلدات غير مدعومة.</value>
+  </data>
+  <data name="d1e49aac-8f56-4280-b9ba-993a6d77406c-ASR" xml:space="preserve">
+    <value>حظر إنشاء العمليات الناشئة من أوامر PSExec و WMI</value>
+  </data>
+  <data name="33ddedf1-c6e0-47cb-833e-de6133960387-ASR" xml:space="preserve">
+    <value>حظر إعادة تشغيل الجهاز في الوضع الآمن</value>
+  </data>
+  <data name="b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4-ASR" xml:space="preserve">
+    <value>حظر العمليات غير الموثوقة وغير الموقّعة التي تعمل من USB</value>
+  </data>
+  <data name="c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb-ASR" xml:space="preserve">
+    <value>حظر استخدام أدوات النظام المنسوخة أو المنتحلة</value>
+  </data>
+  <data name="a8f5898e-1dc8-49a9-9878-85004b8a61e6-ASR" xml:space="preserve">
+    <value>حظر إنشاء Webshell للخوادم</value>
+  </data>
+  <data name="92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b-ASR" xml:space="preserve">
+    <value>حظر استدعاءات Win32 API من وحدات ماكرو Office</value>
+  </data>
+  <data name="c1db55ab-c21a-4637-bb3f-a12568109d35-ASR" xml:space="preserve">
+    <value>استخدام الحماية المتقدمة ضد برامج الفدية</value>
+  </data>
+<data name="DisallowStandardUserPINReset-BitLocker" xml:space="preserve">
+    <value>عدم السماح بإعادة تعيين رقم PIN للمستخدم العادي</value>
+</data>
+<data name="UseAdvancedStartup-BitLocker" xml:space="preserve">
+    <value>السماح لنظام التشغيل بطلب مصادقة إضافية عند بدء التشغيل</value>
+</data>
+<data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
+    <value>عدم السماح بـ Bitlocker بدون TPM</value>
+</data>
+<data name="UseTPM-BitLocker" xml:space="preserve">
+    <value>عدم السماح باستخدام TPM بمفرده</value>
+</data>
+<data name="UseTPMPIN-BitLocker" xml:space="preserve">
+    <value>السماح باستخدام TPM + رقم PIN عند بدء التشغيل.</value>
+</data>
+<data name="UseTPMKey-BitLocker" xml:space="preserve">
+    <value>السماح باستخدام TPM + مفتاح عند بدء التشغيل.</value>
+</data>
+<data name="UseTPMKeyPIN-BitLocker" xml:space="preserve">
+    <value>السماح باستخدام TPM + مفتاح بدء التشغيل + رقم PIN عند بدء التشغيل.</value>
+</data>
+<data name="EncryptionMethodWithXtsOs-BitLocker" xml:space="preserve">
+    <value>تكوين طريقة التشفير الصحيحة لمحرك نظام التشغيل: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsFdv-BitLocker" xml:space="preserve">
+    <value>تكوين طريقة التشفير الصحيحة لمحركات البيانات الثابتة: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsRdv-BitLocker" xml:space="preserve">
+    <value>تكوين طريقة التشفير الصحيحة للمحركات القابلة للإزالة: XTS-AES-256</value>
+</data>
+<data name="UseEnhancedPin-BitLocker" xml:space="preserve">
+    <value>استخدام رقم PIN المحسّن بالسماح باستخدام الرموز والأحرف الأخرى في رقم PIN.</value>
+</data>
+<data name="OSEncryptionType-BitLocker" xml:space="preserve">
+    <value>تكوين نوع التشفير الكامل الآمن للقرص لمحرك نظام التشغيل</value>
+</data>
+<data name="RDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>تكوين نوع التشفير الكامل الآمن للقرص للمحركات القابلة للإزالة</value>
+</data>
+<data name="RDVDiscoveryVolumeType-BitLocker" xml:space="preserve">
+    <value>منع الوصول إلى محركات البيانات القابلة للإزالة المحمية بـ BitLocker من إصدارات Windows السابقة</value>
+</data>
+<data name="RDVNoBitLockerToGoReader-BitLocker" xml:space="preserve">
+    <value>عدم تثبيت "BitLocker To Go" Reader على المحركات القابلة للإزالة المنسّقة بـ FAT لأنها غير آمنة.</value>
+</data>
+<data name="MinimumPIN-BitLocker" xml:space="preserve">
+    <value>تكوين الحد الأدنى لطول رقم PIN لبدء التشغيل.</value>
+</data>
+<data name="ACSettingIndex-BitLocker" xml:space="preserve">
+    <value>عدم السماح بحالات الاستعداد (S1-S3) عند السكون (متصل بالكهرباء)</value>
+</data>
+<data name="DCSettingIndex-BitLocker" xml:space="preserve">
+    <value>عدم السماح بحالات الاستعداد (S1-S3) عند السكون (على البطارية)</value>
+</data>
+<data name="ShowHibernateOption-BitLocker" xml:space="preserve">
+    <value>إظهار خيار السبات في خيارات الطاقة في نظام التشغيل حتى تتمكن من إدخال جهازك في وضع السبات إذا أردت.</value>
+</data>
+<data name="FDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>تكوين نوع التشفير الآمن لمحركات البيانات الثابتة</value>
+</data>
+<data name="Functions-TLS" xml:space="preserve">
+    <value>تكوين مجموعات تشفير TLS الصحيحة</value>
+</data>
+<data name="EccCurves-TLS" xml:space="preserve">
+    <value>تكوين منحنيات ECC للخدمة ومواضعها.</value>
+</data>
+<data name="DisabledByDefault1-TLS" xml:space="preserve">
+    <value>تعطيل عميل TLS 1.0 - معطّل بشكل افتراضي</value>
+</data>
+<data name="Enabled1-TLS" xml:space="preserve">
+    <value>تعطيل عميل TLS 1.0 - ممكّن</value>
+</data>
+<data name="DisabledByDefault2-TLS" xml:space="preserve">
+    <value>تعطيل خادم TLS 1.0 - معطّل بشكل افتراضي</value>
+</data>
+<data name="Enabled2-TLS" xml:space="preserve">
+    <value>تعطيل خادم TLS 1.0 - ممكّن</value>
+</data>
+<data name="DisabledByDefault3-TLS" xml:space="preserve">
+    <value>تعطيل عميل TLS 1.1 - معطّل بشكل افتراضي</value>
+</data>
+<data name="Enabled3-TLS" xml:space="preserve">
+    <value>تعطيل عميل TLS 1.1 - ممكّن</value>
+</data>
+<data name="DisabledByDefault4-TLS" xml:space="preserve">
+    <value>تعطيل خادم TLS 1.1 - معطّل بشكل افتراضي</value>
+</data>
+<data name="Enabled4-TLS" xml:space="preserve">
+    <value>تعطيل خادم TLS 1.1 - ممكّن</value>
+</data>
+<data name="Enabled5-TLS" xml:space="preserve">
+    <value>تعطيل مجموعة تشفير NULL</value>
+</data>
+<data name="Enabled6-TLS" xml:space="preserve">
+    <value>تعطيل مجموعة تشفير 56/56</value>
+</data>
+<data name="Enabled7-TLS" xml:space="preserve">
+    <value>تعطيل مجموعة تشفير 40/128</value>
+</data>
+<data name="Enabled8-TLS" xml:space="preserve">
+    <value>تعطيل مجموعة تشفير RC2 56/128</value>
+</data>
+<data name="Enabled9-TLS" xml:space="preserve">
+    <value>تعطيل مجموعة تشفير RC2 128/128</value>
+</data>
+<data name="Enabled10-TLS" xml:space="preserve">
+    <value>تعطيل مجموعة تشفير RC4 40/128</value>
+</data>
+<data name="Enabled11-TLS" xml:space="preserve">
+    <value>تعطيل مجموعة تشفير RC4 56/128</value>
+</data>
+<data name="Enabled12-TLS" xml:space="preserve">
+    <value>تعطيل مجموعة تشفير RC4 64/128</value>
+</data>
+<data name="Enabled13-TLS" xml:space="preserve">
+    <value>تعطيل مجموعة تشفير RC4 128/128</value>
+</data>
+<data name="Enabled14-TLS" xml:space="preserve">
+    <value>تعطيل مجموعة تشفير Triple DES 168</value>
+</data>
+<data name="Enabled15-TLS" xml:space="preserve">
+    <value>تعطيل خوارزمية التجزئة MD5</value>
+</data>
+<data name="Digits-LockScreen" xml:space="preserve">
+    <value>طلب أرقام في رقم PIN لـ Windows Hello</value>
+</data>
+<data name="LowercaseLetters-LockScreen" xml:space="preserve">
+    <value>طلب أحرف صغيرة في رقم PIN لـ Windows Hello</value>
+</data>
+<data name="Expiration-LockScreen" xml:space="preserve">
+    <value>تعيين انتهاء صلاحية رقم PIN لـ Windows Hello</value>
+</data>
+<data name="History-LockScreen" xml:space="preserve">
+    <value>حفظ سجل رقم PIN لـ Windows Hello</value>
+</data>
+<data name="DontDisplayNetworkSelectionUI-LockScreen" xml:space="preserve">
+    <value>عدم عرض واجهة اختيار الشبكة على شاشة القفل</value>
+</data>
+<data name="HideFastUserSwitching-UAC" xml:space="preserve">
+    <value>إخفاء نقاط الدخول للتبديل السريع بين المستخدمين</value>
+</data>
+<data name="EnableVirtualizationBasedSecurity-DeviceGuard" xml:space="preserve">
+    <value>تفعيل الأمان القائم على المحاكاة الافتراضية</value>
+</data>
+<data name="RequirePlatformSecurityFeatures-DeviceGuard" xml:space="preserve">
+    <value>طلب ميزات أمان النظام الأساسي</value>
+</data>
+<data name="HypervisorEnforcedCodeIntegrity-DeviceGuard" xml:space="preserve">
+    <value>سلامة التعليمات البرمجية المفروضة من برنامج Hypervisor - قفل UEFI</value>
+</data>
+<data name="HVCIMATRequired-DeviceGuard" xml:space="preserve">
+    <value>طلب HVCI MAT (جدول سمات الذاكرة)</value>
+</data>
+<data name="LsaCfgFlags-DeviceGuard" xml:space="preserve">
+    <value>تكوين Credential Guard - قفل UEFI</value>
+</data>
+<data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
+    <value>تفعيل System Guard Secure Launch إذا كان دعم الأجهزة موجودًا</value>
+</data>
+<data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
+    <value>تكوين تشغيل Kernel Shadow Stacks</value>
+</data>
+<data name="RunAsPPL-DeviceGuard" xml:space="preserve">
+    <value>تفعيل حماية عملية سلطة الأمان المحلية (LSA) مع قفل UEFI</value>
+</data>
+<data name="MachineIdentityIsolation-DeviceGuard" xml:space="preserve">
+    <value>تكوين تكوين عزل هوية الجهاز</value>
+</data>
+<data name="Mandatory-DeviceGuard" xml:space="preserve">
+    <value>تفعيل VBS وسلامة الذاكرة في الوضع الإلزامي</value>
+</data>
+<data name="EnableFirewallDomain-WindowsFirewall" xml:space="preserve">
+    <value>تفعيل جدار حماية Windows لملف تعريف المجال</value>
+</data>
+<data name="DefaultOutboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>تعيين الإجراء الافتراضي للاتصالات الصادرة لملف تعريف المجال</value>
+</data>
+<data name="DefaultInboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>تعيين الإجراء الافتراضي للاتصالات الواردة لملف تعريف المجال</value>
+</data>
+<data name="DisableNotificationsDomain-WindowsFirewall" xml:space="preserve">
+    <value>عرض الإشعارات لملف تعريف المجال</value>
+</data>
+<data name="LogFilePathDomain-WindowsFirewall" xml:space="preserve">
+    <value>تكوين مسار ملف السجل لملف تعريف المجال</value>
+</data>
+<data name="LogFileSizeDomain-WindowsFirewall" xml:space="preserve">
+    <value>تكوين حجم ملف السجل لملف تعريف المجال</value>
+</data>
+<data name="LogDroppedPacketsDomain-WindowsFirewall" xml:space="preserve">
+    <value>تسجيل الاتصالات المحظورة لملف تعريف المجال</value>
+</data>
+<data name="LogSuccessfulConnectionsDomain-WindowsFirewall" xml:space="preserve">
+    <value>تسجيل الاتصالات الناجحة لملف تعريف المجال</value>
+</data>
+<data name="EnableFirewallPrivate-WindowsFirewall" xml:space="preserve">
+    <value>تفعيل جدار حماية Windows لملف التعريف الخاص</value>
+</data>
+<data name="DisableNotificationsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>عرض الإشعارات لملف التعريف الخاص</value>
+</data>
+<data name="LogFileSizePrivate-WindowsFirewall" xml:space="preserve">
+    <value>تكوين حجم ملف السجل لملف التعريف الخاص</value>
+</data>
+<data name="LogDroppedPacketsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>تسجيل الاتصالات المحظورة لملف التعريف الخاص</value>
+</data>
+<data name="LogFilePathPrivate-WindowsFirewall" xml:space="preserve">
+    <value>تكوين مسار ملف السجل لملف التعريف الخاص</value>
+</data>
+<data name="EnableFirewallPublic-WindowsFirewall" xml:space="preserve">
+    <value>تفعيل جدار حماية Windows لملف التعريف العام</value>
+</data>
+<data name="DisableNotificationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>عرض الإشعارات لملف التعريف العام</value>
+</data>
+<data name="LogFileSizePublic-WindowsFirewall" xml:space="preserve">
+    <value>تكوين حجم ملف السجل لملف التعريف العام</value>
+</data>
+<data name="LogDroppedPacketsPublic-WindowsFirewall" xml:space="preserve">
+    <value>تسجيل الاتصالات المحظورة لملف التعريف العام</value>
+</data>
+<data name="LogFilePathPublic-WindowsFirewall" xml:space="preserve">
+    <value>تكوين مسار ملف السجل لملف التعريف العام</value>
+</data>
+<data name="PolicyVersion-WindowsFirewall" xml:space="preserve">
+    <value>تكوين إصدار سياسة جدار حماية Windows</value>
+</data>
+<data name="EnableNetbios-WindowsNetworking" xml:space="preserve">
+    <value>تعطيل Netbios</value>
+</data>
+<data name="DisableSmartNameResolution-WindowsNetworking" xml:space="preserve">
+    <value>تعطيل تحليل الأسماء الذكي</value>
+</data>
+<data name="EnableMulticast-WindowsNetworking" xml:space="preserve">
+    <value>تعطيل البث المتعدد</value>
+</data>
+<data name="DisableHTTPPrinting-WindowsNetworking" xml:space="preserve">
+    <value>تعطيل طباعة HTTP</value>
+</data>
+<data name="DisableWebPnPDownload-WindowsNetworking" xml:space="preserve">
+    <value>تعطيل تنزيل Web PnP</value>
+</data>
+<data name="EnableLMHOSTS-WindowsNetworking" xml:space="preserve">
+    <value>تعطيل بروتوكول البحث LMHOSTS على جميع محولات الشبكة</value>
+</data>
+<data name="EnableSMBQUICServer-WindowsNetworking" xml:space="preserve">
+    <value>تفعيل خادم SMB عبر QUIC</value>
+</data>
+<data name="EnableSMBQUICClient-WindowsNetworking" xml:space="preserve">
+    <value>تفعيل عميل SMB عبر QUIC</value>
+</data>
+<data name="CipherSuiteOrderServer-WindowsNetworking" xml:space="preserve">
+    <value>تكوين ترتيب مجموعة تشفير آمنة لخادم SMB</value>
+</data>
+<data name="CipherSuiteOrderClient-WindowsNetworking" xml:space="preserve">
+    <value>تكوين ترتيب مجموعة تشفير آمنة لعميل SMB</value>
+</data>
+<data name="MinSmb2DialectServer-WindowsNetworking" xml:space="preserve">
+    <value>تعيين الحد الأدنى لإصدار خادم SMB</value>
+</data>
+<data name="MinSmb2DialectClient-WindowsNetworking" xml:space="preserve">
+    <value>تعيين الحد الأدنى لإصدار عميل SMB</value>
+</data>
+<data name="BlockNTLM-WindowsNetworking" xml:space="preserve">
+    <value>حظر NTLM لـ SMB</value>
+</data>
+<data name="RequireEncryption-WindowsNetworking" xml:space="preserve">
+    <value>طلب التشفير لعميل SMB</value>
+</data>
+<data name="EnableAuthEpResolution-WindowsNetworking" xml:space="preserve">
+    <value>تعطيل مصادقة عميل مخطط نقطة النهاية RPC</value>
+</data>
+<data name="EncryptData-WindowsNetworking" xml:space="preserve">
+    <value>تفعيل تشفير خادم SMB</value>
+</data>
+<data name="ProcessCreationIncludeCmdLine_Enabled-Miscellaneous" xml:space="preserve">
+    <value>تضمين سطر الأوامر في أحداث إنشاء العملية</value>
+</data>
+<data name="DisableLocation-Miscellaneous" xml:space="preserve">
+    <value>تعطيل الموقع</value>
+</data>
+<data name="DisableLocationScripting-Miscellaneous" xml:space="preserve">
+    <value>تعطيل البرامج النصية للموقع</value>
+</data>
+<data name="DisableWindowsLocationProvider-Miscellaneous" xml:space="preserve">
+    <value>تعطيل موفر موقع Windows</value>
+</data>
+<data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
+    <value>تفعيل تخفيف Svchost</value>
+</data>
+<data name="DriverLoadPolicy-Miscellaneous" xml:space="preserve">
+    <value>تعيين سياسة تهيئة برنامج التشغيل عند بدء التمهيد إلى الجيد فقط</value>
+</data>
+<data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
+    <value>تفعيل البحث المحسّن في Window</value>
+</data>
+<data name="allowautoupdatesmeteredStable-Miscellaneous" xml:space="preserve">
+    <value>تعيين Microsoft Edge (المستقر) للتحديث عبر الاتصالات المحدودة السعة</value>
+</data>
+<data name="allowautoupdatesmeteredBeta-Miscellaneous" xml:space="preserve">
+    <value>تعيين Microsoft Edge (بيتا) للتحديث عبر الاتصالات المحدودة السعة</value>
+</data>
+<data name="allowautoupdatesmeteredDev-Miscellaneous" xml:space="preserve">
+    <value>تعيين Microsoft Edge (Dev) للتحديث عبر الاتصالات المحدودة السعة</value>
+</data>
+<data name="EnableCertPaddingCheck-Miscellaneous" xml:space="preserve">
+    <value>تنفيذ التحقق من صحة توقيع WinVerifyTrust الجزء 1</value>
+</data>
+<data name="EnableCertPaddingCheck2-Miscellaneous" xml:space="preserve">
+    <value>تنفيذ التحقق من صحة توقيع WinVerifyTrust الجزء 2</value>
+</data>
+<data name="EnableCbacAndArmor-Miscellaneous" xml:space="preserve">
+    <value>طلب المطالبات والمصادقة المركبة لـ DAC ودرع Kerberos</value>
+</data>
+<data name="WindowsProtectedPrintGroupPolicyState-Miscellaneous" xml:space="preserve">
+    <value>تفعيل الطباعة المحمية من Windows</value>
+</data>
+<data name="LongPathsEnabled-Miscellaneous" xml:space="preserve">
+    <value>تفعيل دعم المسارات الطويلة</value>
+</data>
+<data name="AllowOnlineTips-Miscellaneous" xml:space="preserve">
+    <value>تعطيل النصائح عبر الإنترنت.</value>
+</data>
+<data name="AllowFindMyDevice-Miscellaneous" xml:space="preserve">
+    <value>تعطيل ميزة العثور على جهازي.</value>
+</data>
+<data name="AllowSpeechModelUpdate-Miscellaneous" xml:space="preserve">
+    <value>تعطيل التحديث التلقائي لبيانات الكلام.</value>
+</data>
+<data name="DisabledByGroupPolicy-Miscellaneous" xml:space="preserve">
+    <value>إيقاف معرّف الإعلان، ومنع التطبيقات من استخدام المعرّف للتجارب عبر التطبيقات.</value>
+</data>
+<data name="DisableSoftLanding-Miscellaneous" xml:space="preserve">
+    <value>إيقاف الحصول على نصائح واقتراحات عند استخدام Windows.</value>
+</data>
+<data name="DisableCloudOptimizedContent-Miscellaneous" xml:space="preserve">
+    <value>إيقاف المحتوى المحسّن للسحابة في جميع تجارب Windows.</value>
+</data>
+<data name="DoNotShowFeedbackNotifications-Miscellaneous" xml:space="preserve">
+    <value>عدم إظهار إشعارات الملاحظات.</value>
+</data>
+<data name="AutoDownloadAndUpdateMapData-Miscellaneous" xml:space="preserve">
+    <value>إيقاف التنزيل والتحديث التلقائي لبيانات الخريطة.</value>
+</data>
+<data name="AllowMessageSync-Miscellaneous" xml:space="preserve">
+    <value>تعطيل مزامنة السحابة لخدمة الرسائل للرسائل النصية الخلوية.</value>
+</data>
+<data name="EnableFontProviders-Miscellaneous" xml:space="preserve">
+    <value>حظر Windows من تنزيل كتالوج الخطوط.</value>
+</data>
+<data name="EnableCdp-Miscellaneous" xml:space="preserve">
+    <value>تعطيل ميزة "متابعة التجارب على هذا الجهاز".</value>
+</data>
+<data name="EnableAppUriHandlers-Miscellaneous" xml:space="preserve">
+    <value>تعطيل دعم الربط من الويب إلى التطبيق مع معالجات URI للتطبيق.</value>
+</data>
+<data name="DisableWebSearch-Miscellaneous" xml:space="preserve">
+    <value>عدم البحث في الويب أو عرض نتائج الويب في البحث.</value>
+</data>
+<data name="ConnectedSearchUseWeb-Miscellaneous" xml:space="preserve">
+    <value>عدم السماح بالبحث على الويب.</value>
+</data>
+<data name="AllowAutoWindowsUpdateDownloadOverMeteredNetwork-WindowsUpdate" xml:space="preserve">
+    <value>السماح بتنزيل التحديثات تلقائيًا عبر الاتصالات المحدودة السعة</value>
+</data>
+<data name="AllowTemporaryEnterpriseFeatureControl-WindowsUpdate" xml:space="preserve">
+    <value>تفعيل الميزات المُقدمة عبر الخدمة التي تكون متوقفة بشكل افتراضي</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>تحديد عدد الأيام قبل تثبيت تحديثات الميزات على الأجهزة تلقائيًا</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>تحديد عدد الأيام قبل تثبيت تحديثات الجودة على الأجهزة تلقائيًا</value>
+</data>
+<data name="ConfigureDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>عدد الأيام قبل تثبيت تحديثات الجودة على الأجهزة تلقائيًا</value>
+</data>
+<data name="ConfigureDeadlineGracePeriod-WindowsUpdate" xml:space="preserve">
+    <value>عدد أيام فترة السماح قبل تثبيت تحديثات الجودة على الأجهزة تلقائيًا</value>
+</data>
+<data name="ConfigureDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>عدد الأيام قبل تثبيت تحديثات الميزات على الأجهزة تلقائيًا</value>
+</data>
+<data name="ConfigureDeadlineGracePeriodForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>عدد أيام فترة السماح قبل تثبيت تحديثات الميزات على الأجهزة تلقائيًا</value>
+</data>
+<data name="NoAutoUpdate-WindowsUpdate" xml:space="preserve">
+    <value>تعيين الكمبيوتر لتلقي تحديثات الأمان والتنزيلات المهمة الأخرى من خلال Windows Update</value>
+</data>
+<data name="AUOptions-WindowsUpdate" xml:space="preserve">
+    <value>تنزيل التحديثات تلقائيًا وتثبيتها في يوم الصيانة</value>
+</data>
+<data name="AutomaticMaintenanceEnabled-WindowsUpdate" xml:space="preserve">
+    <value>تثبيت التحديثات أثناء الصيانة التلقائية</value>
+</data>
+<data name="ScheduledInstallDay-WindowsUpdate" xml:space="preserve">
+    <value>تعيين يوم التثبيت المجدول إلى كل يوم</value>
+</data>
+<data name="ScheduledInstallTime-WindowsUpdate" xml:space="preserve">
+    <value>تعيين وقت التثبيت المجدول إلى أي وقت</value>
+</data>
+<data name="AllowMUUpdateService-WindowsUpdate" xml:space="preserve">
+    <value>تثبيت التحديثات لمنتجات Microsoft الأخرى</value>
+</data>
+<data name="RestartNotificationsAllowed2-WindowsUpdate" xml:space="preserve">
+    <value>تفعيل إشعار إعادة التشغيل لـ Windows Update</value>
+</data>
+<data name="RemoveScheduleForWeek-WindowsUpdate" xml:space="preserve">
+    <value>إزالة الجدولة لتثبيت التحديثات فقط في أسابيع محددة.</value>
+</data>
+<data name="SetComplianceDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>تعيين الموعد النهائي للامتثال لتحديثات الميزات.</value>
+</data>
+<data name="SetComplianceDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>تعيين الموعد النهائي للامتثال لتحديثات الجودة.</value>
+</data>
+<data name="BlockThirdPartyCookies-Edge" xml:space="preserve">
+    <value>حظر ملفات تعريف الارتباط من الأطراف الثالثة</value>
+</data>
+<data name="DnsOverHttpsMode-Edge" xml:space="preserve">
+    <value>تعيين وضع DNS عبر HTTPS لاستخدام إعدادات DoH للنظام</value>
+</data>
+<data name="AutomaticHttpsDefault-Edge" xml:space="preserve">
+    <value>ترقية اتصالات HTTP تلقائيًا إلى HTTPS</value>
+</data>
+<data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
+    <value>تفعيل Encrypted Client Hello</value>
+</data>
+<data name="BasicAuthOverHttpEnabled-Edge" xml:space="preserve">
+    <value>حظر المصادقة الأساسية لـ HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControl-Edge" xml:space="preserve">
+    <value>السماح لـ Edge بتلقي ميزات جديدة حتى بعد استخدام السياسات</value>
+</data>
+<data name="AudioSandboxEnabled-Edge" xml:space="preserve">
+    <value>فرض تشغيل عملية الصوت في صندوق الحماية</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSetting-Edge" xml:space="preserve">
+    <value>التوصية بتعيين إعداد مشاركة منطقة نظام التشغيل الإضافية إلى أبدًا</value>
+</data>
+<data name="1-Edge" xml:space="preserve">
+    <value>تعطيل TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="2-Edge" xml:space="preserve">
+    <value>تعطيل TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="3-Edge" xml:space="preserve">
+    <value>تعطيل TLS_RSA_WITH_AES_256_CBC_SHA - (بدون PFS - CBC - SHA1)</value>
+</data>
+<data name="4-Edge" xml:space="preserve">
+    <value>تعطيل TLS_RSA_WITH_AES_128_CBC_SHA - (بدون PFS - CBC - SHA1)</value>
+</data>
+<data name="5-Edge" xml:space="preserve">
+    <value>تعطيل TLS_RSA_WITH_AES_128_GCM_SHA256 - (بدون PFS)</value>
+</data>
+<data name="6-Edge" xml:space="preserve">
+    <value>تعطيل TLS_RSA_WITH_AES_256_GCM_SHA384 - (بدون PFS)</value>
+</data>
+<data name="ExtensionManifestV2Availability-Edge" xml:space="preserve">
+    <value>عدم تعطيل دعم ملحقات Manifest V2 أبدًا</value>
+</data>
+<data name="DefaultWebUsbGuardSetting-Edge" xml:space="preserve">
+    <value>عدم السماح للمواقع بطلب الوصول إلى أجهزة USB المحلية المتصلة أبدًا</value>
+</data>
+<data name="DefaultWindowManagementSetting-Edge" xml:space="preserve">
+    <value>رفض إذن إدارة النوافذ على جميع المواقع بشكل افتراضي</value>
+</data>
+<data name="DynamicCodeSettings-Edge" xml:space="preserve">
+    <value>منع عملية المتصفح من إنشاء رمز ديناميكي</value>
+</data>
+<data name="HideFileExt-NonAdmin" xml:space="preserve">
+    <value>تفعيل إظهار امتدادات الملفات في مستكشف الملفات</value>
+</data>
+<data name="Hidden-NonAdmin" xml:space="preserve">
+    <value>تفعيل إظهار الملفات المخفية في مستكشف الملفات</value>
+</data>
+<data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
+    <value>تعطيل وصول المواقع إلى قائمة اللغات المحلية</value>
+</data>
+<data name="SafeSearchMode-NonAdmin" xml:space="preserve">
+    <value>إيقاف البحث الآمن في بحث Windows</value>
+</data>
+<data name="EnableClipboardHistory-NonAdmin" xml:space="preserve">
+    <value>تفعيل سجل الحافظة</value>
+</data>
+<data name="EnableHwkbTextPrediction-NonAdmin" xml:space="preserve">
+    <value>تشغيل إظهار اقتراحات النص عند الكتابة على لوحة المفاتيح الفعلية</value>
+</data>
+<data name="MultilingualEnabled-NonAdmin" xml:space="preserve">
+    <value>تشغيل اقتراحات النص متعددة اللغات</value>
+</data>
+<data name="Flags-NonAdmin" xml:space="preserve">
+    <value>إيقاف اختصار المفتاح اللاصق بالضغط على مفتاح shift 5 مرات بسرعة</value>
+</data>
+<data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
+    <value>تعطيل إظهار التذكيرات ومكالمات VoIP الواردة على شاشة القفل</value>
+</data>
+<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
+    <value>تعطيل النسخ الاحتياطي لكلمة مرور حساب المسؤول المحلي إلى Active Directory.</value>
+</data>
+<data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
+    <value>تطبيق قيود UAC على الحسابات المحلية في عمليات تسجيل الدخول عبر الشبكة</value>
+</data>
+<data name="RDVDenyCrossOrg-OptionalOverrides" xml:space="preserve">
+    <value>السماح لنظام التشغيل باستخدام محركات الأقراص المشفرة بـ BitLocker التي تم إنشاؤها في مؤسسات أخرى.</value>
+</data>
+<data name="DisableWindowsConsumerFeatures-OptionalOverrides" xml:space="preserve">
+    <value>عدم إيقاف التجارب التي تساعد المستهلكين على الاستفادة القصوى من أجهزتهم وحساب Microsoft.</value>
+</data>
+<data name="AllowGameDVR-OptionalOverrides" xml:space="preserve">
+    <value>السماح باستخدام ميزة Game DVR.</value>
+</data>
+<data name="NC_ShowSharedAccessUI-OptionalOverrides" xml:space="preserve">
+    <value>تفعيل واجهة مستخدم مشاركة اتصال الإنترنت (ICS) للمسؤول المحلي.</value>
+</data>
+<data name="Enabled-OptionalOverrides" xml:space="preserve">
+    <value>السماح للمستخدمين باستخدام ميزة Sudo.</value>
+</data>
+<data name="HideExclusionsFromLocalAdmins-OptionalOverrides" xml:space="preserve">
+    <value>عدم إخفاء الاستثناءات في Microsoft Defender من المسؤولين المحليين.</value>
+</data>
+<data name="fDisableCdm-OptionalOverrides" xml:space="preserve">
+    <value>السماح بتعيين محرك الأقراص في جلسات سطح المكتب البعيد و Hyper-V</value>
+</data>
+<data name="fDisableClip-OptionalOverrides" xml:space="preserve">
+    <value>السماح بمشاركة الحافظة في جلسات سطح المكتب البعيد و Hyper-V</value>
+</data>
+<data name="PolicyVersionOverride-OptionalOverrides" xml:space="preserve">
+    <value>تكوين إصدار سياسة جدار حماية Windows</value>
+</data>
+<data name="DisableNotificationsPrivateOverride-OptionalOverrides" xml:space="preserve">
+    <value>عدم تعطيل الإشعارات في جدار حماية Windows لملف التعريف الخاص</value>
+</data>
+<data name="AllowLocalPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>السماح باستخدام سياسات جدار حماية Windows المحددة في قسم الإعدادات المتقدمة لجدار حماية Windows بدلاً من فرض تلك المحددة في نهج المجموعة فقط.</value>
+</data>
+<data name="AllowLocalIPsecPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>السماح باستخدام سياسات IPSec لجدار حماية Windows المحددة في قسم الإعدادات المتقدمة لجدار حماية Windows بدلاً من فرض تلك المحددة في نهج المجموعة فقط.</value>
+</data>
+<data name="DisableNotificationsPublicOverride-OptionalOverrides" xml:space="preserve">
+    <value>عدم تعطيل الإشعارات في جدار حماية Windows لملف التعريف العام</value>
+</data>
+<data name="RDVDenyWriteAccess-OptionalOverrides" xml:space="preserve">
+    <value>السماح لنظام التشغيل بالكتابة على محركات الأقراص القابلة للإزالة غير المشفرة بواسطة BitLocker</value>
+</data>
+<data name="BlockThirdPartyCookiesRecommended-Edge" xml:space="preserve">
+    <value>التوصية بحظر ملفات تعريف الارتباط من الأطراف الثالثة</value>
+</data>
+<data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
+    <value>تعيين Edge لاستخدام DNS over HTTPS الخاص بالنظام. هذا يجعل MDAG يعمل بشكل صحيح أيضًا</value>
+</data>
+<data name="AutomaticHttpsDefaultEdge-Edge" xml:space="preserve">
+    <value>ترقية اتصالات HTTP تلقائيًا إلى HTTPS</value>
+</data>
+<data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
+    <value>تفعيل Encrypted Client Hello</value>
+</data>
+<data name="BasicAuthOverHttpEnabledEdge-Edge" xml:space="preserve">
+    <value>حظر المصادقة الأساسية لـ HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControlEdge-Edge" xml:space="preserve">
+    <value>السماح للأجهزة التي تستخدم حماية فئة Edge بتلقي ميزات جديدة وتجارب مثل الأجهزة العادية</value>
+</data>
+<data name="AudioSandboxEnabledEdge-Edge" xml:space="preserve">
+    <value>فرض تشغيل عملية الصوت في صندوق الحماية</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSettingEdge-Edge" xml:space="preserve">
+    <value>التوصية بتعيين إعداد مشاركة منطقة نظام التشغيل الإضافية إلى أبدًا.</value>
+</data>
+<data name="TLSCipherSuiteDenyList1-Edge" xml:space="preserve">
+    <value>تعطيل TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList2-Edge" xml:space="preserve">
+    <value>تعطيل TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList3-Edge" xml:space="preserve">
+    <value>تعطيل TLS_RSA_WITH_AES_256_CBC_SHA - (بدون PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList4-Edge" xml:space="preserve">
+    <value>تعطيل TLS_RSA_WITH_AES_128_CBC_SHA - (بدون PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList5-Edge" xml:space="preserve">
+    <value>تعطيل TLS_RSA_WITH_AES_128_GCM_SHA256 - (بدون PFS)</value>
+</data>
+<data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
+    <value>تعطيل TLS_RSA_WITH_AES_256_GCM_SHA384 - (بدون PFS)</value>
+</data>
+<data name="ExtensionManifestV2AvailabilityEdge-Edge" xml:space="preserve">
+    <value>عدم تعطيل دعم ملحقات Manifest V2 أبدًا</value>
+</data>
+<data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
+    <value>عدم السماح للمواقع بطلب الوصول إلى أجهزة USB المحلية المتصلة أبدًا</value>
+</data>
+<data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
+    <value>رفض إذن إدارة النوافذ على جميع المواقع بشكل افتراضي</value>
+</data>
+<data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
+    <value>منع عملية المتصفح من إنشاء رمز ديناميكي</value>
+</data>
+<data name="DisableTLS10-TLS" xml:space="preserve">
+    <value>تعطيل TLS v1</value>
+</data>
+<data name="DisableTLS11-TLS" xml:space="preserve">
+    <value>تعطيل TLS v1.1</value>
+</data>
+<data name="DisableNULL-TLS" xml:space="preserve">
+    <value>تعطيل التشفير الضعيف لـ Schannel: NULL</value>
+</data>
+<data name="DisableDES56-TLS" xml:space="preserve">
+    <value>تعطيل التشفير الضعيف لـ Schannel: DES 56-bit</value>
+</data>
+<data name="DisableRC240-TLS" xml:space="preserve">
+    <value>تعطيل التشفير الضعيف لـ Schannel: RC2 40-bit</value>
+</data>
+<data name="DisableRC256-TLS" xml:space="preserve">
+    <value>تعطيل التشفير الضعيف لـ Schannel: RC2 56-bit</value>
+</data>
+<data name="DisableRC2128-TLS" xml:space="preserve">
+    <value>تعطيل التشفير الضعيف لـ Schannel: RC2 128-bit</value>
+</data>
+<data name="DisableRC440-TLS" xml:space="preserve">
+    <value>تعطيل التشفير الضعيف لـ Schannel: RC4 40-bit</value>
+</data>
+<data name="DisableRC456-TLS" xml:space="preserve">
+    <value>تعطيل التشفير الضعيف لـ Schannel: RC4 56-bit</value>
+</data>
+<data name="DisableRC464-TLS" xml:space="preserve">
+    <value>تعطيل التشفير الضعيف لـ Schannel: RC4 64-bit</value>
+</data>
+<data name="DisableRC4128-TLS" xml:space="preserve">
+    <value>تعطيل التشفير الضعيف لـ Schannel: RC4 128-bit</value>
+</data>
+<data name="DisableTripleDES-TLS" xml:space="preserve">
+    <value>تعطيل التشفير الضعيف لـ Schannel: 3DES 168-bit (Triple DES 168)</value>
+</data>
+<data name="DisableMD5-TLS" xml:space="preserve">
+    <value>تعطيل خوارزمية التجزئة MD5 لـ SChannel.</value>
+</data>
+<data name="BattleNetCipher-TLS" xml:space="preserve">
+    <value>السماح بالتشفير الأقل أمانًا "TLS_RSA_WITH_AES_256_CBC_SHA" لتوفير التوافق مع عميل لعبة Battle Net.</value>
+</data>
+  <data name="SAC-MSDefender" xml:space="preserve">
+    <value>تشغيل Smart App Control. يرجى أيضًا تفعيل البيانات التشخيصية الاختيارية المطلوبة للعمل الصحيح لـ Smart App Control.</value>
+  </data>
+    <data name="InactivityTimeoutSecs-LockScreen" xml:space="preserve">
+    <value>تعيين سياسة حد عدم النشاط للجهاز بحيث يتم قفل الجهاز تلقائيًا بعد 120 ثانية من عدم النشاط.</value>
+  </data>
+      <data name="DisableCAD-LockScreen" xml:space="preserve">
+    <value>تعيين سياسة تسجيل دخول تفاعلية لطلب مجموعة مفاتيح CTRL+ALT+DEL على شاشة القفل قبل أن تتمكن من إدخال بيانات الاعتماد الخاصة بك. يمكن أن يخفف هذا من هجمات معينة تستخدم شاشات قفل مزيفة لالتقاط بيانات اعتماد المستخدم في نص واضح مثل كلمات المرور.</value>
+  </data>
+      <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
+    <value>تعيين سياسة تسجيل دخول تفاعلية لعتبة قفل حساب الجهاز بحيث يتم قفل الجهاز المشفر بـ BitLocker بعد 5 محاولات فاشلة لتسجيل الدخول. ستحتاج إلى إدخال مفتاح استرداد BitLocker لمحرك نظام التشغيل لتسجيل الدخول مرة أخرى.</value>
+  </data>
+      <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
+    <value>تعيين سياسة تسجيل دخول تفاعلية لإيقاف عرض معلومات المستخدم عندما تكون الجلسة مقفلة.</value>
+  </data>
+      <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
+    <value>تعيين سياسة تسجيل دخول تفاعلية لإيقاف عرض اسم المستخدم على شاشة القفل.</value>
+  </data>
+      <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
+    <value>تعيين سياسة تسجيل دخول تفاعلية لإيقاف عرض تفاصيل آخر تسجيل دخول على شاشة القفل.</value>
+  </data>
+  <data name="ConsentPromptBehaviorAdmin-UAC" xml:space="preserve">
+    <value>تعيين سلوك موجه الارتقاء للمسؤولين في وضع موافقة المسؤول: المطالبة بالموافقة على سطح المكتب الآمن</value>
+  </data>
+    <data name="ConsentPromptBehaviorUser-UAC" xml:space="preserve">
+    <value>تعيين سلوك موجه الارتقاء للمستخدمين العاديين: المطالبة ببيانات الاعتماد على سطح المكتب الآمن</value>
+  </data>
+    <data name="ValidateAdminCodeSignatures-UAC" xml:space="preserve">
+    <value>تكوين النظام لرفع صلاحيات الملفات القابلة للتنفيذ الموقعة والمصادق عليها فقط. لن تتمكن أي برامج غير موقعة أو موقعة بشهادات موقعة ذاتيًا من العمل كمسؤول.</value>
+  </data>
+    <data name="ConsentPromptBehaviorEnhancedAdmin-UAC" xml:space="preserve">
+    <value>تعيين سلوك موجه الارتقاء للمسؤولين في وضع حماية الصلاحيات المحسّن: المطالبة ببيانات الاعتماد على سطح المكتب الآمن</value>
+  </data>
+    <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
+    <value>تعيين نوع وضع موافقة المسؤول ليكون وضع موافقة المسؤول مع حماية محسّنة للصلاحيات</value>
+  </data>
+  <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>إزالة مسارات السجل التي يمكن الوصول إليها عن بُعد.</value>
+</data>
+  <data name="AllowedPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>إزالة مسارات السجل والمسارات الفرعية التي يمكن الوصول إليها عن بُعد.</value>
+</data>
+  <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>رفض اتصالات NTLM الواردة لجميع الحسابات.</value>
+</data>
+  <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>رفض اتصالات NTLM الصادرة.</value>
+</data>
+<data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
+    <value>فرض حماية قوية للمفاتيح لمفاتيح المستخدم المخزنة على الكمبيوتر. ستتمكن من حفظ المفاتيح الخاصة للشهادات التي تثبتها على الكمبيوتر بشكل آمن وستكون نفس بيانات الاعتماد مطلوبة عند الوصول إلى المفتاح الخاص مثل عمليات التوقيع.</value>
+</data>
+<data name="LockoutBadCount-LockScreen" xml:space="preserve">
+    <value>تعيين عدد محاولات تسجيل الدخول الفاشلة المسموح بها إلى 5. بالاقتران مع السياسات الأخرى في هذه الفئة، هذا يعني أن كل 5 محاولات تسجيل دخول فاشلة ستحتاج إلى مرور يوم كامل قبل أن يُسمح بـ 5 محاولات أخرى، وإلا سيتم تفعيل Bitlocker، وسيتم إعادة تشغيل النظام وسيُطلب رمز Bitlocker المكون من 48 رقمًا. تمنع هذه السياسة بشكل كبير محاولات القوة الغاشمة.</value>
+</data>
+<data name="ResetLockoutCount-LockScreen" xml:space="preserve">
+    <value>تعيين مدة قفل الحساب إلى 1440 دقيقة أو يوم واحد. بالاقتران مع السياسات الأخرى في هذه الفئة، هذا يعني أن كل 5 محاولات تسجيل دخول فاشلة ستحتاج إلى مرور يوم كامل قبل أن يُسمح بـ 5 محاولات أخرى، وإلا سيتم تفعيل Bitlocker، وسيتم إعادة تشغيل النظام وسيُطلب رمز Bitlocker المكون من 48 رقمًا.</value>
+</data>
+<data name="LockoutDuration-LockScreen" xml:space="preserve">
+    <value>تعيين إعادة تعيين عداد قفل الحساب إلى 1440 دقيقة أو يوم واحد.</value>
+</data>
+</root>

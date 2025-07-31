@@ -4996,12 +4996,6 @@
 <data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
   <value>Ρύθμιση μεγέθους αρχείου καταγραφής ακεραιότητας κώδικα</value>
 </data>
-<data name="VersionLabelFormat" xml:space="preserve">
-  <value>Έκδοση: {0}.{1}.{2}.{3}</value>
-</data>
-<data name="PFNLabelFormat" xml:space="preserve">
-  <value>PFN: {0}</value>
-</data>
 <data name="AppDetailsErrorMessageWithName" xml:space="preserve">
   <value>Παρουσιάστηκε σφάλμα κατά τη λήψη των λεπτομερειών για την εφαρμογή: {0}</value>
 </data>
@@ -5700,5 +5694,38 @@
   </data>
   <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Υποβολή</value>
+  </data>
+  <data name="PFNArchitectureLabel.Text" xml:space="preserve">
+  <value>Αρχιτεκτονική</value>
+</data>
+<data name="PFNPublisherLabel.Text" xml:space="preserve">
+  <value>Εκδότης</value>
+</data>
+<data name="PFNPublisherID.Text" xml:space="preserve">
+  <value>Αναγνωριστικό εκδότη</value>
+</data>
+<data name="PFNDescription.Text" xml:space="preserve">
+  <value>Περιγραφή</value>
+</data>
+<data name="PFNInstallLocation.Text" xml:space="preserve">
+  <value>Τοποθεσία εγκατάστασης</value>
+</data>
+<data name="PFNInstalledDateLabel.Text" xml:space="preserve">
+  <value>Τελευταία τροποποίηση στις</value>
+</data>
+<data name="PFNDisplayNameLabelText" xml:space="preserve">
+  <value>Όνομα εμφάνισης</value>
+</data>
+<data name="PFNFullNameLabel.Text" xml:space="preserve">
+  <value>Πλήρες όνομα</value>
+</data>
+<data name="PFNVersionLabel.Text" xml:space="preserve">
+  <value>Έκδοση</value>
+</data>
+<data name="PFNLabel.Text" xml:space="preserve">
+  <value>Όνομα οικογένειας πακέτου</value>
+</data>
+  <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
+    <value>Άνοιγμα Καταλόγου Αρχείων Καταγραφής</value>
   </data>
 </root>

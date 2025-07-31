@@ -4996,12 +4996,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
     <value>Ustawianie rozmiaru dziennika integralności kodu</value>
   </data>
-  <data name="VersionLabelFormat" xml:space="preserve">
-    <value>Wersja: {0}.{1}.{2}.{3}</value>
-  </data>
-  <data name="PFNLabelFormat" xml:space="preserve">
-    <value>PFN: {0}</value>
-  </data>
   <data name="AppDetailsErrorMessageWithName" xml:space="preserve">
     <value>Wystąpił błąd podczas pobierania szczegółów aplikacji: {0}</value>
   </data>
@@ -5700,5 +5694,38 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Prześlij</value>
+  </data>
+  <data name="PFNArchitectureLabel.Text" xml:space="preserve">
+  <value>Architektura</value>
+</data>
+<data name="PFNPublisherLabel.Text" xml:space="preserve">
+  <value>Wydawca</value>
+</data>
+<data name="PFNPublisherID.Text" xml:space="preserve">
+  <value>ID wydawcy</value>
+</data>
+<data name="PFNDescription.Text" xml:space="preserve">
+  <value>Opis</value>
+</data>
+<data name="PFNInstallLocation.Text" xml:space="preserve">
+  <value>Lokalizacja instalacji</value>
+</data>
+<data name="PFNInstalledDateLabel.Text" xml:space="preserve">
+  <value>Ostatnio zmodyfikowano</value>
+</data>
+<data name="PFNDisplayNameLabelText" xml:space="preserve">
+  <value>Nazwa wyświetlana</value>
+</data>
+<data name="PFNFullNameLabel.Text" xml:space="preserve">
+  <value>Pełna nazwa</value>
+</data>
+<data name="PFNVersionLabel.Text" xml:space="preserve">
+  <value>Wersja</value>
+</data>
+<data name="PFNLabel.Text" xml:space="preserve">
+  <value>Nazwa rodziny pakietu</value>
+</data>
+<data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
+    <value>Otwórz Katalog Logów</value>
   </data>
 </root>

@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"rust-analyzer.showSyntaxTree": true,
+		// Rust Analyzer extension does not respect the `[build] target-dir = "target"` that is specified in the `.cargo/config.toml` file in the project directory.
+		// Using the setting below, we force it to write its files to the `target` folder in the project directory rather than the root/parent directory where global cargo configs are located.
+		"rust-analyzer.cargo.targetDir": "${workspaceFolder}/target",
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.cpptools",
+			"github.copilot",
+			"github.copilot-chat",
+			"rust-lang.rust-analyzer"
+		]
+	}
+}

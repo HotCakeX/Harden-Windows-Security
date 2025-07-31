@@ -106,6 +106,12 @@ internal static class ViewModelProvider
 	private static readonly Lazy<CountryIPBlockingVM> _countryIPBlockingVM = new(() =>
 		new CountryIPBlockingVM(), false);
 
+	private static readonly Lazy<FileReputationVM> _fileReputationVM = new(() =>
+		new FileReputationVM(), false);
+
+	private static readonly Lazy<InstalledAppsManagementVM> _installedAppsManagementVM = new(() =>
+		new InstalledAppsManagementVM(), false);
+
 	// Internal Properties - Core Dependencies \\
 	internal static AppSettings.Main AppSettings => _appSettings.Value;
 
@@ -133,4 +139,6 @@ internal static class ViewModelProvider
 	internal static BitLockerVM BitLockerVM => _bitLockerVM.Value;
 	internal static CertificateCheckingVM CertificateCheckingVM => _certificateCheckingVM.Value;
 	internal static CountryIPBlockingVM CountryIPBlockingVM => _countryIPBlockingVM.Value;
+	internal static FileReputationVM FileReputationVM => _fileReputationVM.Value;
+	internal static InstalledAppsManagementVM InstalledAppsManagementVM => _installedAppsManagementVM.Value;
 }

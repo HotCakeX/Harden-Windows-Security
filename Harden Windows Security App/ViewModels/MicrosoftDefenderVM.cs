@@ -20,24 +20,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenWindowsSecurity.ExploitMitigation;
-using HardenWindowsSecurity.GroupPolicy;
 using HardenWindowsSecurity.Helpers;
 using HardenWindowsSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace HardenWindowsSecurity.ViewModels;
-
-internal enum MUnitOperation
-{
-	Apply,
-	Remove,
-	Verify
-}
 
 internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListViewModel
 {
@@ -50,13 +41,18 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
 
-		_ = Task.Run(CreateUIValuesCategories);
+		// Initializing the cancellable buttons
+		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
+		RemoveAllCancellableButton = new(GlobalVars.GetStr("RemoveAllButtonText/Text"));
+		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
+
+		IMUnitListViewModel.CreateUIValuesCategories(this);
 	}
 
 	/// <summary>
-	/// The main InfoBar for the Settings VM.
+	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
+	public InfoBarSettings MainInfoBar { get; }
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
@@ -64,8 +60,6 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
 	public Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
-	private List<RegistryPolicyEntry> DefenderPolicyFrmJSON { get; set; } = [];
 
 	public bool ElementsAreEnabled
 	{
@@ -78,538 +72,145 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 		}
 	} = true;
 
-	internal static readonly string JSONConfigPath = Path.Combine(AppContext.BaseDirectory, "Resources", "MSDefender.json");
-
 	/// <summary>
 	/// Items Source of the ListView.
 	/// </summary>
 	public ObservableCollection<GroupInfoListForMUnit> ListViewItemsSource { get; set => SP(ref field, value); } = [];
 
+	public List<GroupInfoListForMUnit> ListViewItemsSourceBackingField { get; set; } = [];
+
 	/// <summary>
 	/// Selected Items list in the ListView.
 	/// </summary>
-	internal List<MUnit> ItemsSourceSelectedItems = [];
+	public List<MUnit> ItemsSourceSelectedItems { get; set; } = [];
 
-	// To create a collection of grouped items, create a query that groups
-	// an existing list, or returns a grouped collection from a database.
-	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
-	internal void CreateUIValuesCategories()
+	/// <summary>
+	/// Search keyword for ListView.
+	/// </summary>
+	public string? SearchKeyword { get; set; }
+
+	/// <summary>
+	/// Initialization details for the Apply All button
+	/// </summary>
+	public AnimatedCancellableButtonInitializer ApplyAllCancellableButton { get; }
+
+	/// <summary>
+	/// Initialization details for the Remove All button
+	/// </summary>
+	public AnimatedCancellableButtonInitializer RemoveAllCancellableButton { get; }
+
+	/// <summary>
+	/// Initialization details for the Verify All button
+	/// </summary>
+	public AnimatedCancellableButtonInitializer VerifyAllCancellableButton { get; }
+
+	/// <summary>
+	/// Total number of items loaded (all MUnits)
+	/// </summary>
+	public int TotalItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Number of items currently displayed after filtering
+	/// </summary>
+	public int FilteredItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Number of currently selected items
+	/// </summary>
+	public int SelectedItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Number of items with Undetermined status (N/A state)
+	/// </summary>
+	public int UndeterminedItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Number of items with Applied status
+	/// </summary>
+	public int AppliedItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Number of items with NotApplied status
+	/// </summary>
+	public int NotAppliedItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Creates all MUnits for this ViewModel.
+	/// </summary>
+	/// <returns>List of all MUnits for this ViewModel</returns>
+	public List<MUnit> CreateAllMUnits()
 	{
-		List<MUnit> allResults = [];
-		IEnumerable<GroupInfoListForMUnit> query = [];
+		// Register specialized strategies and dependencies.
+		RegisterSpecializedStrategies();
+		RegisterMUnitDependencies();
 
-		try
-		{
-			_ = Dispatcher.TryEnqueue(() =>
-			{
-				ElementsAreEnabled = false;
-			});
-
-			allResults = CreateGroupPolicyUnits();
-			allResults.AddRange(CreateUnits());
-
-			// Grab Protection Categories objects
-			query = from item in allResults
-
-						// Group the items returned from the query, sort and select the ones you want to keep
-					group item by item.Name![..1].ToUpper() into g
-					orderby g.Key
-
-					// GroupInfoListForMUnit is a simple custom class that has an IEnumerable type attribute, and
-					// a key attribute. The IGrouping-typed variable g now holds the App objects,
-					// and these objects will be used to create a new GroupInfoListForMUnit object.
-					select new GroupInfoListForMUnit(
-						items: g,
-						key: g.Key);
-
-			_ = Dispatcher.TryEnqueue(() =>
-			{
-				ListViewItemsSource = new(query);
-			});
-		}
-
-		catch (Exception ex)
-		{
-			_ = Dispatcher.TryEnqueue(() =>
-			{
-				MainInfoBar.WriteError(ex);
-			});
-		}
-		finally
-		{
-			_ = Dispatcher.TryEnqueue(() =>
-			{
-				ElementsAreEnabled = true;
-			});
-		}
+		List<MUnit> allResults = CreateMUnitsFromPolicies();
+		allResults.AddRange(CreateUnits());
+		return allResults;
 	}
 
 	/// <summary>
-	/// ListView reference of the UI.
+	/// Create MUnits from JSON policies using the centralized method.
 	/// </summary>
-	public ListViewBase? UIListView { get; set; }
-
-	/// <summary>
-	/// For selecting all items on the UI.Will automatically trigger <see cref="ListView_SelectionChanged"/> method as well,
-	/// Adding the items to <see cref="ItemsSourceSelectedItems"/>.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	public void ListView_SelectAll(object sender, RoutedEventArgs e)
+	internal List<MUnit> CreateMUnitsFromPolicies()
 	{
-		foreach (GroupInfoListForMUnit group in ListViewItemsSource)
-		{
-			foreach (MUnit item in group)
-			{
-				UIListView?.SelectedItems.Add(item);
-			}
-		}
+		return MUnit.CreateMUnitsFromPolicies(Categories.MicrosoftDefender);
 	}
 
 	/// <summary>
-	/// For De-selecting all items on the UI.Will automatically trigger <see cref="ListView_SelectionChanged"/> method as well,
-	/// Removing the items from <see cref="ItemsSourceSelectedItems"/>.
+	/// Registers specialized strategies for specific policies.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	public void ListView_RemoveSelections(object sender, RoutedEventArgs e)
+	private void RegisterSpecializedStrategies()
 	{
-		UIListView?.SelectedItems.Clear();
+		// Register specialized verification strategy for Smart App Control so its status can be detected via COM too.
+		SpecializedStrategiesRegistry.RegisterSpecializedVerification(
+			"SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState",
+			new SACSpecVerify()
+		);
+
+		// Register specialized verification strategy for Intel TDT so its status can be detected via COM too.
+		SpecializedStrategiesRegistry.RegisterSpecializedVerification(
+			"Software\\Policies\\Microsoft\\Windows Defender\\Features|TDTFeatureEnabled",
+			new IntelTDTSpecVerify()
+		);
+
+		// SEE THE END OF THE FILE FOR MOAR EXAMPLES
+		/*
+		// E.g., registering specialized apply strategy that runs before the main operation
+		SpecializedStrategiesRegistry.RegisterSpecializedApply(
+			"Software\\Policies\\Microsoft\\Windows Defender\\Features|TDTFeatureEnabled",
+			new TDTPreApplyCheck()
+		);
+
+		// E.g., registering specialized remove strategy that runs after the main operation
+		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
+			"Software\\Policies\\Microsoft\\Windows Defender\\Features|TDTFeatureEnabled",
+			new TDTPostRemoveCleanup()
+		);
+		*/
 	}
 
 	/// <summary>
-	/// Event handler for the SelectionChanged event of the ListView.
-	/// Triggered by <see cref="ListView_SelectAll(object, RoutedEventArgs)"/> and <see cref="ListView_RemoveSelections(object, RoutedEventArgs)"/> to keep things consistent.
+	/// Registers MUnit dependencies to define relationships between security measures.
+	/// This allows automatic application or removal of related policies.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	public void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	private void RegisterMUnitDependencies()
 	{
-		foreach (MUnit item in e.AddedItems.Cast<MUnit>())
-		{
-			ItemsSourceSelectedItems.Add(item);
-		}
+		// Apply/Remove Diagnostic data when Smart App Control gets enabled/disabled.
+		MUnitDependencyRegistry.RegisterDependency(
+			primaryMUnitId: "SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState", // Primary MUnit (KeyName|ValueName)
+			dependentMUnitId: "Software\\Policies\\Microsoft\\Windows\\DataCollection|AllowTelemetry",  // Dependent MUnit (KeyName|ValueName)
+			type: DependencyType.Both,
+			timing: ExecutionTiming.After
+		);
 
-		foreach (MUnit item in e.RemovedItems.Cast<MUnit>())
-		{
-			_ = ItemsSourceSelectedItems.Remove(item);
-		}
-	}
+		MUnitDependencyRegistry.RegisterDependency(
+			primaryMUnitId: "SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState", // Primary MUnit (KeyName|ValueName)
+			dependentMUnitId: "Software\\Policies\\Microsoft\\Windows\\DataCollection|DisableTelemetryOptInSettingsUx",  // Dependent MUnit (KeyName|ValueName)
+			type: DependencyType.Both,
+			timing: ExecutionTiming.After
+		);
 
-	/// <summary>
-	/// Processes MUnits with bulk Group Policy operations.
-	/// </summary>
-	/// <param name="mUnits">The MUnits to process</param>
-	/// <param name="operation">The operation to perform</param>
-	private void ProcessMUnitsWithBulkOperations(List<MUnit> mUnits, MUnitOperation operation)
-	{
-		_ = Task.Run(() =>
-		{
-			try
-			{
-				_ = Dispatcher.TryEnqueue(() =>
-				{
-					ElementsAreEnabled = false;
-					string operationText = operation switch
-					{
-						MUnitOperation.Apply => "Applying",
-						MUnitOperation.Remove => "Removing",
-						MUnitOperation.Verify => "Verifying",
-						_ => "Processing"
-					};
-					MainInfoBar.WriteInfo($"{operationText} {mUnits.Count} security measures...");
-				});
-
-				// Separate Group Policy and non-Group Policy MUnits
-				List<MUnit> groupPolicyMUnits = [];
-				List<MUnit> regularMUnits = [];
-
-				foreach (MUnit mUnit in mUnits)
-				{
-					if (IsGroupPolicyMUnit(mUnit))
-					{
-						groupPolicyMUnits.Add(mUnit);
-					}
-					else
-					{
-						regularMUnits.Add(mUnit);
-					}
-				}
-
-				// Process Group Policy MUnits in bulk
-				if (groupPolicyMUnits.Count > 0)
-				{
-					ProcessGroupPolicyMUnitsBulk(groupPolicyMUnits, operation);
-				}
-
-				// Process regular MUnits individually
-				foreach (MUnit mUnit in regularMUnits)
-				{
-					ProcessRegularMUnit(mUnit, operation);
-				}
-
-				_ = Dispatcher.TryEnqueue(() =>
-				{
-					string operationText = operation switch
-					{
-						MUnitOperation.Apply => "applied",
-						MUnitOperation.Remove => "removed",
-						MUnitOperation.Verify => "verified",
-						_ => "processed"
-					};
-					MainInfoBar.WriteSuccess($"Successfully {operationText} {mUnits.Count} security measures");
-				});
-			}
-			catch (Exception ex)
-			{
-				_ = Dispatcher.TryEnqueue(() =>
-				{
-					string operationText = operation switch
-					{
-						MUnitOperation.Apply => "apply",
-						MUnitOperation.Remove => "remove",
-						MUnitOperation.Verify => "verify",
-						_ => "process"
-					};
-					MainInfoBar.WriteError(ex, $"Failed to {operationText} security measures: ");
-				});
-			}
-			finally
-			{
-				_ = Dispatcher.TryEnqueue(() =>
-				{
-					ElementsAreEnabled = true;
-				});
-			}
-		});
-	}
-
-	/// <summary>
-	/// Determines if an MUnit uses Group Policy strategies
-	/// </summary>
-	/// <param name="mUnit">The MUnit to check</param>
-	/// <returns>True if it's a Group Policy MUnit</returns>
-	private static bool IsGroupPolicyMUnit(MUnit mUnit)
-	{
-		return mUnit.ApplyStrategy is IApplyGroupPolicy ||
-			   mUnit.VerifyStrategy is IVerifyGroupPolicy ||
-			   mUnit.RemoveStrategy is IRemoveGroupPolicy;
-	}
-
-	/// <summary>
-	/// Processes Group Policy MUnits in bulk.
-	/// </summary>
-	/// <param name="groupPolicyMUnits">The Group Policy MUnits to process</param>
-	/// <param name="operation">The operation to perform</param>
-	private static void ProcessGroupPolicyMUnitsBulk(List<MUnit> groupPolicyMUnits, MUnitOperation operation)
-	{
-		try
-		{
-			List<RegistryPolicyEntry> allPolicies = [];
-
-			// Collect all policies from the MUnits
-			foreach (MUnit mUnit in groupPolicyMUnits)
-			{
-				List<RegistryPolicyEntry>? policies = operation switch
-				{
-					MUnitOperation.Apply when mUnit.ApplyStrategy is IApplyGroupPolicy applyStrategy => applyStrategy.Policies,
-					MUnitOperation.Remove when mUnit.RemoveStrategy is IRemoveGroupPolicy removeStrategy => removeStrategy.Policies,
-					MUnitOperation.Verify when mUnit.VerifyStrategy is IVerifyGroupPolicy verifyStrategy => verifyStrategy.Policies,
-					_ => null
-				};
-
-				if (policies != null)
-				{
-					allPolicies.AddRange(policies);
-				}
-			}
-
-			if (allPolicies.Count > 0)
-			{
-				// Perform bulk operation
-				switch (operation)
-				{
-					case MUnitOperation.Apply:
-						RegistryPolicyParser.AddPoliciesToSystem(allPolicies);
-						// Mark all as applied
-						foreach (MUnit mUnit in groupPolicyMUnits)
-						{
-							mUnit.IsApplied = true;
-						}
-						break;
-
-					case MUnitOperation.Remove:
-						RegistryPolicyParser.RemovePoliciesFromSystem(allPolicies);
-						// Mark all as not applied
-						foreach (MUnit mUnit in groupPolicyMUnits)
-						{
-							mUnit.IsApplied = false;
-						}
-						break;
-
-					case MUnitOperation.Verify:
-						Dictionary<RegistryPolicyEntry, bool> verificationResults = RegistryPolicyParser.VerifyPoliciesInSystem(allPolicies);
-
-						// Update status based on verification results
-						foreach (MUnit mUnit in groupPolicyMUnits)
-						{
-							if (mUnit.VerifyStrategy is IVerifyGroupPolicy verifyStrategy)
-							{
-								bool allPoliciesApplied = true;
-								foreach (RegistryPolicyEntry policy in verifyStrategy.Policies)
-								{
-									if (!verificationResults.TryGetValue(policy, out bool isApplied) || !isApplied)
-									{
-										allPoliciesApplied = false;
-										break;
-									}
-								}
-								mUnit.IsApplied = allPoliciesApplied;
-							}
-						}
-						break;
-					default:
-						break;
-				}
-			}
-		}
-		catch (Exception ex)
-		{
-			Logger.Write("Error processing Group Policy MUnits in bulk.");
-			Logger.Write(ErrorWriter.FormatException(ex));
-		}
-	}
-
-	/// <summary>
-	/// Processes a regular (non-Group Policy) MUnit individually
-	/// </summary>
-	/// <param name="mUnit">The MUnit to process</param>
-	/// <param name="operation">The operation to perform</param>
-	private static void ProcessRegularMUnit(MUnit mUnit, MUnitOperation operation)
-	{
-		try
-		{
-			switch (operation)
-			{
-				case MUnitOperation.Apply:
-					mUnit.ApplyStrategy.Apply();
-					mUnit.IsApplied = true;
-					break;
-
-				case MUnitOperation.Remove:
-					mUnit.RemoveStrategy?.Remove();
-					mUnit.IsApplied = false;
-					break;
-
-				case MUnitOperation.Verify:
-					if (mUnit.VerifyStrategy != null)
-					{
-						bool isApplied = mUnit.VerifyStrategy.Verify();
-						mUnit.IsApplied = isApplied;
-					}
-					break;
-				default:
-					break;
-			}
-		}
-		catch (Exception ex)
-		{
-			Logger.Write($"Error processing regular MUnit {mUnit.Name}");
-			Logger.Write(ErrorWriter.FormatException(ex));
-		}
-	}
-
-	/// <summary>
-	/// Apply a single MUnit
-	/// </summary>
-	/// <param name="mUnit">The MUnit to apply</param>
-	internal void ApplyMUnit(MUnit mUnit)
-	{
-		ProcessMUnitsWithBulkOperations([mUnit], MUnitOperation.Apply);
-	}
-
-	/// <summary>
-	/// Remove a single MUnit
-	/// </summary>
-	/// <param name="mUnit">The MUnit to remove</param>
-	internal void RemoveMUnit(MUnit mUnit)
-	{
-		if (mUnit.RemoveStrategy == null)
-		{
-			MainInfoBar.WriteWarning($"Remove strategy not available for: {mUnit.Name}");
-			return;
-		}
-
-		ProcessMUnitsWithBulkOperations([mUnit], MUnitOperation.Remove);
-	}
-
-	/// <summary>
-	/// Verify a single MUnit
-	/// </summary>
-	/// <param name="mUnit">The MUnit to verify</param>
-	internal void VerifyMUnit(MUnit mUnit)
-	{
-		if (mUnit.VerifyStrategy == null)
-		{
-			MainInfoBar.WriteWarning($"Verify strategy not available for: {mUnit.Name}");
-			return;
-		}
-
-		ProcessMUnitsWithBulkOperations([mUnit], MUnitOperation.Verify);
-	}
-
-	/// <summary>
-	/// Apply all MUnits.
-	/// </summary>
-	public void ApplyAllMUnits()
-	{
-		List<MUnit> allMUnits = [];
-		foreach (GroupInfoListForMUnit group in ListViewItemsSource)
-		{
-			allMUnits.AddRange(group);
-		}
-
-		if (allMUnits.Count > 0)
-		{
-			ProcessMUnitsWithBulkOperations(allMUnits, MUnitOperation.Apply);
-		}
-	}
-
-	/// <summary>
-	/// Apply only the selected MUnits.
-	/// </summary>
-	public void ApplySelectedMUnits()
-	{
-		if (ItemsSourceSelectedItems.Count > 0)
-		{
-			ProcessMUnitsWithBulkOperations(ItemsSourceSelectedItems, MUnitOperation.Apply);
-		}
-	}
-
-	/// <summary>
-	/// Remove all MUnits.
-	/// </summary>
-	public void RemoveAllMUnits()
-	{
-		List<MUnit> allMUnits = [];
-		foreach (GroupInfoListForMUnit group in ListViewItemsSource)
-		{
-			foreach (MUnit mUnit in group)
-			{
-				if (mUnit.RemoveStrategy is not null)
-				{
-					allMUnits.Add(mUnit);
-				}
-			}
-		}
-
-		if (allMUnits.Count > 0)
-		{
-			ProcessMUnitsWithBulkOperations(allMUnits, MUnitOperation.Remove);
-		}
-	}
-
-	/// <summary>
-	/// Remove only the selected MUnits.
-	/// </summary>
-	public void RemoveSelectedMUnits()
-	{
-		List<MUnit> allMUnits = [];
-		foreach (MUnit mUnit in ItemsSourceSelectedItems)
-		{
-			if (mUnit.RemoveStrategy is not null)
-			{
-				allMUnits.Add(mUnit);
-			}
-		}
-
-		if (allMUnits.Count > 0)
-		{
-			ProcessMUnitsWithBulkOperations(allMUnits, MUnitOperation.Remove);
-		}
-	}
-
-	/// <summary>
-	/// Verify all MUnits
-	/// </summary>
-	public void VerifyAllMUnits()
-	{
-		List<MUnit> allMUnits = [];
-		foreach (GroupInfoListForMUnit group in ListViewItemsSource)
-		{
-			foreach (MUnit mUnit in group)
-			{
-				if (mUnit.VerifyStrategy is not null)
-				{
-					allMUnits.Add(mUnit);
-				}
-			}
-		}
-
-		if (allMUnits.Count > 0)
-		{
-			ProcessMUnitsWithBulkOperations(allMUnits, MUnitOperation.Verify);
-		}
-	}
-
-	/// <summary>
-	/// Verify only the selected MUnits.
-	/// </summary>
-	public void VerifySelectedMUnits()
-	{
-		List<MUnit> allMUnits = [];
-
-		foreach (MUnit mUnit in ItemsSourceSelectedItems)
-		{
-			if (mUnit.VerifyStrategy is not null)
-			{
-				allMUnits.Add(mUnit);
-			}
-		}
-
-		if (allMUnits.Count > 0)
-		{
-			ProcessMUnitsWithBulkOperations(allMUnits, MUnitOperation.Verify);
-		}
-	}
-
-	/// <summary>
-	/// Create <see cref="MUnit"/> that is for Group Policies only.
-	/// </summary>
-	internal List<MUnit> CreateGroupPolicyUnits()
-	{
-
-		DefenderPolicyFrmJSON = RegistryPolicyEntry.LoadWithFriendlyNameKeyResolve(JSONConfigPath) ?? throw new InvalidOperationException("Defender policies could not be found!");
-
-		List<MUnit> temp = [];
-
-		foreach (RegistryPolicyEntry entry in DefenderPolicyFrmJSON)
-		{
-			// Only add Main Category policies at this point
-			if (entry.SubCategory is not null) continue;
-
-			// Do this for all
-			MUnit _mUnit = new(
-			   category: Categories.MicrosoftDefender,
-			   name: entry.FriendlyName,
-			   applyStrategy: new GroupPolicyApply([entry]),
-			   verifyStrategy: new GroupPolicyVerify([entry]),
-			   removeStrategy: new GroupPolicyRemove([entry]),
-			   defenderVM: this,
-			   url: entry.URL);
-
-			/*
-			// Conditionally replace their verifications
-			if (RegistryPolicyEntry.HasAlternateVerification(entry, "", ""))
-			{
-				_mUnit.VerifyStrategy = new GroupPolicyVerify([entry]);
-			}
-			*/
-
-			temp.Add(_mUnit);
-		}
-
-		return temp;
 	}
 
 	/// <summary>
@@ -632,11 +233,11 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			verifyStrategy: new DefaultVerify(() =>
 			{
-				string result = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get DisableRestorePoint");
+				string result = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 DisableRestorePoint");
 
 				if (bool.TryParse(result, out bool actualResult))
 				{
-					return actualResult;
+					return !actualResult; // Being false == true in this case.
 				}
 
 				return false;
@@ -645,9 +246,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 			removeStrategy: new DefaultRemove(() =>
 			{
 				_ = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "bool Set DisableRestorePoint true");
-			}),
-
-			defenderVM: this
+			})
 			));
 
 		// AllowSwitchToAsyncInspection
@@ -662,7 +261,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			verifyStrategy: new DefaultVerify(() =>
 			{
-				string result = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get AllowSwitchToAsyncInspection");
+				string result = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 AllowSwitchToAsyncInspection");
 
 				if (bool.TryParse(result, out bool actualResult))
 				{
@@ -675,9 +274,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 			removeStrategy: new DefaultRemove(() =>
 			{
 				_ = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "bool Set AllowSwitchToAsyncInspection false");
-			}),
-
-			defenderVM: this
+			})
 			));
 
 		// EnableConvertWarnToBlock
@@ -692,7 +289,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			verifyStrategy: new DefaultVerify(() =>
 			{
-				string result = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get EnableConvertWarnToBlock");
+				string result = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 EnableConvertWarnToBlock");
 
 				if (bool.TryParse(result, out bool actualResult))
 				{
@@ -705,9 +302,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 			removeStrategy: new DefaultRemove(() =>
 			{
 				_ = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "bool Set EnableConvertWarnToBlock false");
-			}),
-
-			defenderVM: this
+			})
 			));
 
 		// BruteForceProtectionLocalNetworkBlocking
@@ -722,7 +317,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			verifyStrategy: new DefaultVerify(() =>
 			{
-				string result = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get BruteForceProtectionLocalNetworkBlocking");
+				string result = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 BruteForceProtectionLocalNetworkBlocking");
 
 				if (bool.TryParse(result, out bool actualResult))
 				{
@@ -735,9 +330,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 			removeStrategy: new DefaultRemove(() =>
 			{
 				_ = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "bool Set BruteForceProtectionLocalNetworkBlocking false");
-			}),
-
-			defenderVM: this
+			})
 			));
 
 		// Adding OneDrive directories to Controlled Folder Access
@@ -756,9 +349,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 					_ = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, $"stringarray Add ControlledFolderAccessProtectedFolders {oneDriveDirsFinal}");
 				}
-			}),
-
-			defenderVM: this
+			})
 			));
 
 
@@ -810,13 +401,13 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 					throw new InvalidOperationException(systemResult.Error);
 				}
 			}),
+			url: "https://support.microsoft.com/office/how-onedrive-safeguards-your-data-in-the-cloud-23c6ea94-3608-48d7-8bf0-80e142edd1e1"
 
-			defenderVM: this
 			));
 
 
 		// Create MUnits for Process Mitigations
-		Manage.CreateMUnitEntries(this, temp);
+		Manage.CreateMUnitEntries(temp);
 
 
 		// BCD NX Bit Policy
@@ -855,9 +446,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 				{
 					throw new InvalidOperationException(GlobalVars.GetStr("SetNXBitError-MSDefender"));
 				}
-			}),
-
-			defenderVM: this
+			})
 			));
 
 
@@ -892,87 +481,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 					}
 				}
 
-			}),
-
-			defenderVM: this
-			));
-
-
-		// Smart App Control
-		temp.Add(new(
-			category: Categories.MicrosoftDefender,
-			name: GlobalVars.GetStr("SAC-MSDefender"),
-
-			applyStrategy: new DefaultApply(() =>
-			{
-				// Turn on SAC via Registry
-				RegistryManager.Manager.EditRegistry(new(
-					source: Source.Registry,
-					keyName: @"SYSTEM\CurrentControlSet\Control\CI\Policy",
-					valueName: "VerifiedAndReputablePolicyState",
-					type: RegistryValueType.REG_DWORD,
-					0,
-					[])
-				{
-					RegValue = "1",
-					policyAction = PolicyAction.Apply
-				});
-
-
-				// Apply policies for optional diagnostic data when SAC is turned on.
-				RegistryPolicyParser.AddPoliciesToSystem(DefenderPolicyFrmJSON.Where(x => x.SubCategory is SubCategories.MSDefender_OptionalDiagnosticData).ToList());
-
-			}),
-
-			verifyStrategy: new DefaultVerify(() =>
-			{
-				string? result = RegistryManager.Manager.ReadRegistry(
-					new(
-					source: Source.Registry,
-					keyName: @"SYSTEM\CurrentControlSet\Control\CI\Policy",
-					valueName: "VerifiedAndReputablePolicyState",
-					type: RegistryValueType.REG_DWORD,
-					0,
-					[])
-					{
-						RegValue = "1"
-					});
-
-
-				if (result is null)
-					return false;
-
-				return string.Equals(result, "1", StringComparison.OrdinalIgnoreCase);
-			}),
-
-			removeStrategy: new DefaultRemove(() =>
-			{
-				// Turn off SAC via Registry
-				RegistryManager.Manager.EditRegistry(new(
-					source: Source.Registry,
-					keyName: @"SYSTEM\CurrentControlSet\Control\CI\Policy",
-					valueName: "VerifiedAndReputablePolicyState",
-					type: RegistryValueType.REG_DWORD,
-					0,
-					[])
-				{
-					RegValue = "0",
-					policyAction = PolicyAction.Apply
-				});
-
-				List<RegistryPolicyEntry> policies = DefenderPolicyFrmJSON.Where(x => x.SubCategory is SubCategories.MSDefender_OptionalDiagnosticData).ToList();
-
-				// Change them to 0 from 1 to disable the MSDefender_OptionalDiagnosticData Sub-Category policies.
-				foreach (RegistryPolicyEntry item in policies)
-				{
-					item.Data = BitConverter.GetBytes(0);
-				}
-
-			}),
-
-			defenderVM: this,
-
-			subCategory: SubCategories.MSDefender_SmartAppControl
+			})
 			));
 
 
@@ -989,8 +498,8 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			verifyStrategy: new DefaultVerify(() =>
 			{
-				string? result1 = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get EngineUpdatesChannel");
-				string? result2 = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get PlatformUpdatesChannel");
+				string? result1 = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 EngineUpdatesChannel");
+				string? result2 = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 PlatformUpdatesChannel");
 
 				if (string.Equals(result1, "2", StringComparison.OrdinalIgnoreCase) &&
 					string.Equals(result2, "2", StringComparison.OrdinalIgnoreCase))
@@ -1005,8 +514,6 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 				_ = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "string Set PlatformUpdatesChannel 0");
 			}),
 
-			defenderVM: this,
-
 			subCategory: SubCategories.MSDefender_BetaUpdateChannelsForDefender
 			));
 
@@ -1017,7 +524,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 	/// <summary>
 	/// Gets the current system process mitigation defaults stored in the registry.
 	/// </summary>
-	internal static Result<AppMitigations> GetSystemPolicy()
+	private static Result<AppMitigations> GetSystemPolicy()
 	{
 		try
 		{
@@ -1032,7 +539,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 	/// <summary>
 	/// Add mitigations for the Process
 	/// </summary>
-	internal static Result AddMitigationsForProcess(string processName, MitigationOptions[]? disableList, MitigationOptions[]? enableList, string[]? EAFModulesList, string? isForce, bool isRemove, bool isReset)
+	private static Result AddMitigationsForProcess(string processName, MitigationOptions[]? disableList, MitigationOptions[]? enableList, string[]? EAFModulesList, string? isForce, bool isRemove, bool isReset)
 	{
 		try
 		{
@@ -1066,7 +573,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 	/// <summary>
 	/// Add mitigations to the System
 	/// </summary>
-	internal static Result AddMitigationsToSystem(MitigationOptions[]? disableList, MitigationOptions[]? enableList, string[]? EAFModulesList, string? isForce, bool isRemove, bool isReset)
+	private static Result AddMitigationsToSystem(MitigationOptions[]? disableList, MitigationOptions[]? enableList, string[]? EAFModulesList, string? isForce, bool isRemove, bool isReset)
 	{
 		try
 		{
@@ -1091,5 +598,79 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 			return Result.Failure($"Failed to add mitigations to system: {ex.Message}");
 		}
 	}
+
+
+	/// <summary>
+	/// Specialized verification for Smart App Control.
+	/// </summary>
+	private sealed class SACSpecVerify : ISpecializedVerificationStrategy
+	{
+		public bool Verify()
+		{
+			try
+			{
+				string result = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 1 SmartAppControlState");
+
+				return string.Equals(result, "on", StringComparison.OrdinalIgnoreCase);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+				return false;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Specialized verification for Intel TDT.
+	/// </summary>
+	private sealed class IntelTDTSpecVerify : ISpecializedVerificationStrategy
+	{
+		public bool Verify()
+		{
+			try
+			{
+				string result = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 1 TDTStatus");
+
+				return string.Equals(result, "enabled", StringComparison.OrdinalIgnoreCase);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+				return false;
+			}
+		}
+	}
+
+
+	/*
+	/// <summary>
+	/// E.g., specialized apply strategy that runs before the main apply operation.
+	/// Can check system prerequisites before applying Intel TDT feature. Not exactly a realistic scenario but trying to be wholesome here for future-proofing.
+	/// </summary>
+	private sealed class TDTPreApplyCheck : ISpecializedApplyStrategy
+	{
+		public ExecutionTiming Timing => ExecutionTiming.Before;
+
+		public void Apply()
+		{
+			// CUSTOM CODE
+		}
+	}
+
+	/// <summary>
+	/// E.g., specialized remove strategy that runs after the main remove operation.
+	/// Maybe a JSON based policy needs some additional personal touch to be completely removed. Again not exactly a realistic scenario but for future-proofing.
+	/// </summary>
+	private sealed class TDTPostRemoveCleanup : ISpecializedRemoveStrategy
+	{
+		public ExecutionTiming Timing => ExecutionTiming.After;
+
+		public void Remove()
+		{
+			// CUSTOM CODE
+		}
+	}
+	*/
 
 }

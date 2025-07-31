@@ -34,8 +34,21 @@
                     Click="{x:Bind ViewModel.LoadLogFiles}"
                     Style="{StaticResource AccentButtonStyle}" />
 
+            <Button Click="{x:Bind ViewModel.OpenLogsDirectory}" >
+                <StackPanel Orientation="Horizontal" Spacing="4">
+
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                              Glyph="&#xE838;"                              
+                              VerticalAlignment="Center"/>
+
+                    <TextBlock x:Uid="OpenLogsDirectoryButtonText"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
             <!-- Search TextBox -->
-            <TextBox PlaceholderText="Search in the logs..."
+            <TextBox x:Uid="SearchBoxTextBox"
                      MinWidth="300"
                      Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 

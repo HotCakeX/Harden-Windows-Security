@@ -12,7 +12,8 @@
     "FriendlyName": "EnableVirtualizationBasedSecurity-DeviceGuard",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#enablevirtualizationbasedsecurity",
     "Category": 8,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -27,7 +28,8 @@
     "FriendlyName": "RequirePlatformSecurityFeatures-DeviceGuard",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#requireplatformsecurityfeatures",
     "Category": 8,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -42,7 +44,8 @@
     "FriendlyName": "HypervisorEnforcedCodeIntegrity-DeviceGuard",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-VirtualizationBasedTechnology?WT.mc_id=Portal-fx#hypervisorenforcedcodeintegrity",
     "Category": 8,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -57,7 +60,8 @@
     "FriendlyName": "HVCIMATRequired-DeviceGuard",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-VirtualizationBasedTechnology?WT.mc_id=Portal-fx#requireuefimemoryattributestable",
     "Category": 8,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -72,7 +76,8 @@
     "FriendlyName": "LsaCfgFlags-DeviceGuard",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#lsacfgflags",
     "Category": 8,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -87,7 +92,8 @@
     "FriendlyName": "MachineIdentityIsolation-DeviceGuard",
     "URL": "",
     "Category": 8,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -102,7 +108,8 @@
     "FriendlyName": "ConfigureSystemGuardLaunch-DeviceGuard",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#configuresystemguardlaunch",
     "Category": 8,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -117,7 +124,8 @@
     "FriendlyName": "ConfigureKernelShadowStacksLaunch-DeviceGuard",
     "URL": "",
     "Category": 8,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -132,7 +140,8 @@
     "FriendlyName": "RunAsPPL-DeviceGuard",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-lsa#configurelsaprotectedprocess",
     "Category": 8,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 1,
@@ -147,6 +156,7 @@
     "FriendlyName": "Mandatory-DeviceGuard",
     "URL": "https://learn.microsoft.com/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity?tabs=reg",
     "Category": 8,
-    "SubCategory": 3
+    "SubCategory": 3,
+    "DefaultRegValue": null
   }
 ]

@@ -697,7 +697,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		try
 		{
 			PFNElementsAreEnabled = false;
-			PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync();
+			PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync(this);
 		}
 		finally
 		{
@@ -798,7 +798,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			try
 			{
 				PFNElementsAreEnabled = false;
-				PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync();
+				PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync(this);
 			}
 			finally
 			{
@@ -871,7 +871,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 				if (selectedItem is PackagedAppView appView)
 				{
 					// Add the selected item's PFN to the list
-					selectedAppsPFNs.Add(appView.PackageFamilyNameActual);
+					selectedAppsPFNs.Add(appView.PackageFamilyName);
 				}
 			}
 
@@ -986,6 +986,118 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	internal async void OpenInPolicyEditor_PFN() => await PolicyEditorViewModel.OpenInPolicyEditor(_PFNDenyPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_PFNDenyPolicyPath);
+
+	/// <summary>
+	/// Event handler for copying app details to clipboard from the context menu.
+	/// </summary>
+	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
+	/// <param name="e">Event arguments</param>
+	internal void CopyAppDetails_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			PFNInfoBar.IsClosable = false;
+
+			if (sender is not MenuFlyoutItem menuItem)
+			{
+				return;
+			}
+
+			// Navigate up the visual tree to find the PackagedAppView data context
+			DependencyObject? current = menuItem;
+			PackagedAppView? targetApp = null;
+
+			while (current is not null)
+			{
+				if (current is FrameworkElement element && element.DataContext is PackagedAppView app)
+				{
+					targetApp = app;
+					break;
+				}
+				current = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(current);
+			}
+
+			if (targetApp is null)
+			{
+				PFNInfoBar.WriteWarning("Could not determine which app's details to copy.");
+				return;
+			}
+
+			ListViewHelper.ConvertRowToText([targetApp], ListViewHelper.PackagedAppPropertyMappings);
+		}
+		catch (Exception ex)
+		{
+			PFNInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			PFNInfoBar.IsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Event handler for opening the installation location of a single app from the context menu.
+	/// </summary>
+	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
+	/// <param name="e">Event arguments</param>
+	internal async void OpenAppLocation_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			PFNInfoBar.IsClosable = false;
+
+			if (sender is not MenuFlyoutItem menuItem)
+			{
+				return;
+			}
+
+			// Navigate up the visual tree to find the PackagedAppView data context
+			DependencyObject? current = menuItem;
+			PackagedAppView? targetApp = null;
+
+			while (current is not null)
+			{
+				if (current is FrameworkElement element && element.DataContext is PackagedAppView app)
+				{
+					targetApp = app;
+					break;
+				}
+				current = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(current);
+			}
+
+			if (targetApp is null)
+			{
+				PFNInfoBar.WriteWarning("Could not determine which app's location to open.");
+				return;
+			}
+
+			if (string.IsNullOrWhiteSpace(targetApp.InstallLocation))
+			{
+				PFNInfoBar.WriteWarning($"No installation location available for {targetApp.DisplayName}.");
+				return;
+			}
+
+			// Check if the directory exists
+			if (!Directory.Exists(targetApp.InstallLocation))
+			{
+				PFNInfoBar.WriteWarning($"Installation location does not exist: {targetApp.InstallLocation}");
+				return;
+			}
+
+			// Open the folder in File Explorer
+			await OpenInDefaultFileHandler(targetApp.InstallLocation);
+
+			PFNInfoBar.WriteInfo($"Opened installation location for {targetApp.DisplayName}");
+		}
+		catch (Exception ex)
+		{
+			PFNInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			PFNInfoBar.IsClosable = true;
+		}
+	}
 
 	#endregion
 

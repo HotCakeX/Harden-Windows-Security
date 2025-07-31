@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -72,24 +73,31 @@ internal sealed partial class ListViewV2 : ListView
 
 	private async void OnListViewV2SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		// Skip if this was triggered by our RightTapped selection
-		if (_skipSelectionChangedCount > 0)
+		try
 		{
-			_skipSelectionChangedCount--;
-			return;
+			// Skip if this was triggered by our RightTapped selection
+			if (_skipSelectionChangedCount > 0)
+			{
+				_skipSelectionChangedCount--;
+				return;
+			}
+
+			ListView lv = (ListView)sender;
+
+			await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(
+					listViewBase: lv,
+					listView: lv,
+					index: lv.SelectedIndex,
+					disableAnimation: false,
+					scrollIfVisible: true,
+					additionalHorizontalOffset: 0,
+					additionalVerticalOffset: 0
+				);
 		}
-
-		ListView lv = (ListView)sender;
-
-		await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(
-				listViewBase: lv,
-				listView: lv,
-				index: lv.SelectedIndex,
-				disableAnimation: false,
-				scrollIfVisible: true,
-				additionalHorizontalOffset: 0,
-				additionalVerticalOffset: 0
-			);
+		catch (Exception ex)
+		{
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
 	}
 
 	// When right-clicking on an unselected row, first it becomes selected and then the context menu will be shown for the selected row

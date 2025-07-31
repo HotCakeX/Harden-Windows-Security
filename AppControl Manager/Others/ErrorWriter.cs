@@ -16,6 +16,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace AppControlManager.Others;
@@ -57,5 +58,95 @@ internal static class ErrorWriter
 
 		_ = sb.AppendLine("==============================");
 		return sb.ToString();
+	}
+
+
+	/// <summary>
+	/// When an exception is raised by the app, writes the full details to the log file for review.
+	/// This version handles all types of exception hierarchies including AggregateExceptions and deeply nested scenarios.
+	/// </summary>
+	/// <param name="ex">The exception to format</param>
+	/// <returns>Formatted string containing complete exception details</returns>
+	internal static string FormatExceptionEx(Exception ex)
+	{
+		StringBuilder sb = new();
+		HashSet<Exception> visited = new(ReferenceEqualityComparer.Instance);
+
+		_ = sb.AppendLine("==== Exception Details ====");
+		FormatExceptionRecursive(ex, sb, visited, 0, "Main");
+		_ = sb.AppendLine("==============================");
+
+		return sb.ToString();
+	}
+
+	/// <summary>
+	/// Recursive helper method to format exception details in any exception hierarchy.
+	/// Handles:
+	/// - Direct exception formatting
+	/// - AggregateException.InnerExceptions collections
+	/// - Regular Exception.InnerException chains
+	/// - Any combination and nesting of the above
+	/// </summary>
+	/// <param name="exception">Current exception to format</param>
+	/// <param name="sb">StringBuilder to append formatted text to</param>
+	/// <param name="visited">Set of already visited exceptions to prevent cycles</param>
+	/// <param name="depth">Current nesting depth for indentation</param>
+	/// <param name="label">Label to identify this exception (e.g., "Main", "Inner", "Aggregate Item 1")</param>
+	private static void FormatExceptionRecursive(Exception exception, StringBuilder sb, HashSet<Exception> visited, int depth, string label)
+	{
+		// Prevent infinite loops from circular exception references
+		if (!visited.Add(exception))
+		{
+			string circularIndent = new(' ', depth * 2);
+			_ = sb.AppendLine($"{circularIndent}-- {label} Exception (Already Processed - Circular Reference) --");
+			return;
+		}
+
+		// Format current exception details
+		string indentString = new(' ', depth * 2);
+		_ = sb.AppendLine($"{indentString}-- {label} Exception --");
+		_ = sb.AppendLine($"{indentString}Message: {exception.Message}");
+		_ = sb.AppendLine($"{indentString}Type: {exception.GetType().FullName}");
+		_ = sb.AppendLine($"{indentString}Source: {exception.Source}");
+		_ = sb.AppendLine($"{indentString}Stack Trace:");
+
+		// Handle stack trace with proper indentation
+		if (!string.IsNullOrEmpty(exception.StackTrace))
+		{
+			string[] stackLines = exception.StackTrace.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
+			foreach (string line in stackLines)
+			{
+				_ = sb.AppendLine($"{indentString}{line}");
+			}
+		}
+		else
+		{
+			_ = sb.AppendLine($"{indentString}(No stack trace available)");
+		}
+
+		// Handle AggregateException's inner exceptions collection
+		if (exception is AggregateException aggregateEx)
+		{
+			if (aggregateEx.InnerExceptions.Count > 0)
+			{
+				_ = sb.AppendLine($"{indentString}Aggregate Inner Exceptions ({aggregateEx.InnerExceptions.Count} total):");
+
+				for (int i = 0; i < aggregateEx.InnerExceptions.Count; i++)
+				{
+					Exception innerEx = aggregateEx.InnerExceptions[i];
+					string aggregateLabel = $"Aggregate Item {i + 1}";
+					_ = sb.AppendLine();
+					FormatExceptionRecursive(innerEx, sb, visited, depth + 1, aggregateLabel);
+				}
+			}
+		}
+
+		// Handle regular InnerException chain (applies to ALL exception types)
+		// This is crucial for formatting nested exceptions in non-AggregateException hierarchies
+		if (exception.InnerException != null)
+		{
+			_ = sb.AppendLine();
+			FormatExceptionRecursive(exception.InnerException, sb, visited, depth + 1, "Inner");
+		}
 	}
 }

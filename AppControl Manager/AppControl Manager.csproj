@@ -1,14 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <!-- https://github.com/microsoft/CsWinRT/blob/master/nuget/Microsoft.Windows.CsWinRT.targets -->
 
     <!-- Global -->
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-
         <RootNamespace>AppControlManager</RootNamespace>
         <ApplicationManifest>app.manifest</ApplicationManifest>
-
         <UseWinUI>true</UseWinUI>
         <EnableMsixTooling>true</EnableMsixTooling>
 
@@ -17,7 +14,7 @@
 
         https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
         -->
-        <WindowsSdkPackageVersion>10.0.26100.68-preview</WindowsSdkPackageVersion>
+        <WindowsSdkPackageVersion>10.0.26100.71</WindowsSdkPackageVersion>
 
         <!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -54,7 +51,7 @@
         <AssemblyName>AppControlManager</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>2.0.34.0</FileVersion>
+        <FileVersion>2.0.35.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
         <StartupObject>AppControlManager.Program</StartupObject>
@@ -92,9 +89,14 @@
     So if we do a direct P/invoke, we can ignore the CA5392 warning, or better yet, delete the DefaultDllImportSearchPath.
     Without the DirectPInvoke, .NET will use the complex probing rules and override mechanism that exist to load the appropriate DLL.
     -->
-    <ItemGroup>
+    <ItemGroup Condition="'$(Platform)' == 'x64' OR '$(RuntimeIdentifier)' == 'win-x64'">
         <DirectPInvoke Include="rust_interop" />
-        <NativeLibrary Include="RustInterop/rust_interop.lib" />
+        <NativeLibrary Include="./eXclude/Rust Interop Library/target/x86_64-pc-windows-msvc/release/rust_interop.lib" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Platform)' == 'arm64' OR '$(RuntimeIdentifier)' == 'win-arm64'">
+        <DirectPInvoke Include="rust_interop" />
+        <NativeLibrary Include="./eXclude/Rust Interop Library/target/aarch64-pc-windows-msvc/release/rust_interop.lib" />
     </ItemGroup>
 
     <!-- Only for Debug -->
@@ -212,7 +214,7 @@
     <ItemGroup>
 
         <!-- Main Packages - Without these packages, there will be compilaton errors related to missing types -->
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250721-build.2183" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250729-build.2185" />
         <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.2.250402" />
@@ -298,9 +300,6 @@
         <Content Include="Shell\Shell.dll">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Update="RustInterop\rust_interop.lib">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
         <None Include="..\LICENSE">
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
@@ -309,15 +308,15 @@
 
     <!-- Only need this for Debug mode when since we don't run the linker every time to absorb the static library -->
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-        <Content Include="RustInterop\RustInterop.dll">
+        <Content Include="RustInterop\rust_interop.dll">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
-    <!-- Remove the RustInterop.dll from the Release build output -->
+    <!-- Remove the rust_interop.dll from the Release build output -->
     <ItemGroup Condition="'$(Configuration)' == 'Release'">
-        <Compile Remove="RustInterop\RustInterop.dll" />
-        <Content Remove="RustInterop\RustInterop.dll" />
-        <None Remove="RustInterop\RustInterop.dll" />
+        <Compile Remove="RustInterop\rust_interop.dll" />
+        <Content Remove="RustInterop\rust_interop.dll" />
+        <None Remove="RustInterop\rust_interop.dll" />
     </ItemGroup>
 
     <ItemGroup>
@@ -365,6 +364,10 @@
         <Compile Remove="eXclude\**" />
         <Content Remove="eXclude\**" />
         <None Remove="eXclude\**" />
+
+        <Compile Remove="target\**" />
+        <Content Remove="target\**" />
+        <None Remove="target\**" />
     </ItemGroup>
 
 </Project>

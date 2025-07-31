@@ -577,4 +577,23 @@ internal static partial class ListViewHelper
 		}
 	}
 
+
+	/// <summary>
+	/// Property mappings for PackagedAppView used for clipboard operations
+	/// </summary>
+	internal static readonly FrozenDictionary<string, (string Label, Func<PackagedAppView, object?> Getter)> PackagedAppPropertyMappings =
+		new Dictionary<string, (string Label, Func<PackagedAppView, object?> Getter)>
+		{
+			["DisplayName"] = (GlobalVars.GetStr("PFNDisplayNameLabelText"), app => app.DisplayName),
+			["Version"] = (GlobalVars.GetStr("PFNVersionLabel/Text"), app => app.Version),
+			["Architecture"] = (GlobalVars.GetStr("PFNArchitectureLabel/Text"), app => app.Architecture),
+			["Publisher"] = (GlobalVars.GetStr("PFNPublisherLabel/Text"), app => app.Publisher),
+			["InstalledDate"] = (GlobalVars.GetStr("PFNInstalledDateLabel/Text"), app => app.InstalledDate),
+			["PackageFamilyName"] = (GlobalVars.GetStr("PFNLabel/Text"), app => app.PackageFamilyName),
+			["PublisherID"] = (GlobalVars.GetStr("PFNPublisherID/Text"), app => app.PublisherID),
+			["Description"] = (GlobalVars.GetStr("PFNDescription/Text"), app => app.Description),
+			["InstallLocation"] = (GlobalVars.GetStr("PFNInstallLocation/Text"), app => app.InstallLocation),
+			["FullName"] = (GlobalVars.GetStr("PFNFullNameLabel/Text"), app => app.FullName)
+		}.ToFrozenDictionary();
+
 }

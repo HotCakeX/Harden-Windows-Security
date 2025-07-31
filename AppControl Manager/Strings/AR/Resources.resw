@@ -4996,12 +4996,6 @@
 <data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
   <value>تعيين حجم سجل سلامة الرمز</value>
 </data>
-<data name="VersionLabelFormat" xml:space="preserve">
-  <value>الإصدار: {0}.{1}.{2}.{3}</value>
-</data>
-<data name="PFNLabelFormat" xml:space="preserve">
-  <value>اسم عائلة الحزمة (PFN): {0}</value>
-</data>
 <data name="AppDetailsErrorMessageWithName" xml:space="preserve">
   <value>حدث خطأ أثناء الحصول على تفاصيل التطبيق: {0}</value>
 </data>
@@ -5700,5 +5694,38 @@
   </data>
   <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>إرسال</value>
+  </data>
+  <data name="PFNArchitectureLabel.Text" xml:space="preserve">
+  <value>البنية</value>
+</data>
+<data name="PFNPublisherLabel.Text" xml:space="preserve">
+  <value>الناشر</value>
+</data>
+<data name="PFNPublisherID.Text" xml:space="preserve">
+  <value>معرف الناشر</value>
+</data>
+<data name="PFNDescription.Text" xml:space="preserve">
+  <value>الوصف</value>
+</data>
+<data name="PFNInstallLocation.Text" xml:space="preserve">
+  <value>موقع التثبيت</value>
+</data>
+<data name="PFNInstalledDateLabel.Text" xml:space="preserve">
+  <value>آخر تعديل في</value>
+</data>
+<data name="PFNDisplayNameLabelText" xml:space="preserve">
+  <value>اسم العرض</value>
+</data>
+<data name="PFNFullNameLabel.Text" xml:space="preserve">
+  <value>الاسم الكامل</value>
+</data>
+<data name="PFNVersionLabel.Text" xml:space="preserve">
+  <value>الإصدار</value>
+</data>
+<data name="PFNLabel.Text" xml:space="preserve">
+  <value>اسم عائلة الحزمة</value>
+</data>
+  <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
+    <value>فتح دليل السجلات</value>
   </data>
 </root>

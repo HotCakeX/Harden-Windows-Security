@@ -402,4 +402,17 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		}
 		catch { }
 	}
+
+	internal async void OpenLogsDirectory()
+	{
+		try
+		{
+			await OpenInDefaultFileHandler(App.LogsDirectory);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
+	}
+
 }

@@ -1,4 +1,4 @@
-name: Build AppControl Manager for Store
+name: Build Harden Windows Security App for Store
 
 on:
   workflow_dispatch: # Only the repository's owner can initiate this workflow
@@ -72,7 +72,7 @@ jobs:
 
           Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
 
-      - name: Installing the necessary programs # Builds the AppControl Manager application securely with 0 usage of 3rd party tools, workflows and such.
+      - name: Installing the necessary programs # Builds the Harden Windows Security application securely with 0 usage of 3rd party tools, workflows and such.
         shell: pwsh
         run: |
           Write-Host -Object "The version of the Winget currently in use:"
@@ -99,7 +99,7 @@ jobs:
       - name: Check out the repository code
         uses: actions/checkout@v4
 
-      - name: Building And Packaging the AppControl Manager
+      - name: Building And Packaging the Harden Windows Security
         id: main_buildOp
         shell: pwsh
         env:
@@ -107,7 +107,7 @@ jobs:
           PARTNERCENTER_CLIENTID: ${{ secrets.PARTNERCENTER_CLIENTID }}
           PARTNERCENTER_CLIENTSECRET: ${{ secrets.PARTNERCENTER_CLIENTSECRET }}
           PARTNERCENTER_TOKENENDPOINT: ${{ secrets.PARTNERCENTER_TOKENENDPOINT }}
-        working-directory: './AppControl Manager' # Setting up working directory to ensure dotnet build will see the global.json file in the "AppControl Manager" sub-directory
+        working-directory: './Harden Windows Security App' # Setting up working directory to ensure dotnet build will see the global.json file in the "Harden Windows Security App" sub-directory
         run: |
           # Requires -Version 7.5
           # Requires -RunAsAdministrator

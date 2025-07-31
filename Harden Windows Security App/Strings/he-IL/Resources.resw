@@ -1,0 +1,2324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="GitHubDocsNavItem.Content" xml:space="preserve">
+    <value>תיעוד GitHub</value>
+  </data>
+  <data name="GitHubDocsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קבל תיעוד מקוון מ-GitHub על איך להשתמש באפליקציה</value>
+  </data>
+  <data name="GitHubDocsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>קבל תיעוד מקוון מ-GitHub על איך להשתמש באפליקציה</value>
+  </data>
+  <data name="LogsNavItem.Content" xml:space="preserve">
+    <value>יומני רישום</value>
+  </data>
+  <data name="SettingsNavItem.Content" xml:space="preserve">
+    <value>הגדרות</value>
+  </data>
+  <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צפה ביומני הרישום של האפליקציה בזמן אמת</value>
+  </data>
+  <data name="LogsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צפה ביומני הרישום של האפליקציה בזמן אמת</value>
+  </data>
+    <data name="UpdateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בדיקת עדכונים</value>
+  </data>
+  <data name="UpdateNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בדיקת עדכונים</value>
+  </data>
+  <data name="UpdateNavItem.Content" xml:space="preserve">
+    <value>עדכון</value>
+  </data>
+    <data name="MainSearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
+    <value>חיפוש פריטי תפריט...</value>
+  </data>
+  <data name="MainSearchAutoSuggestBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הזן שמות פריטי תפריט כדי למצוא אותם במהירות</value>
+  </data>
+  <data name="MainSearchAutoSuggestBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הזן שמות פריטי תפריט כדי למצוא אותם במהירות</value>
+  </data>
+  <data name="RefreshLogFilesButton.Content" xml:space="preserve">
+    <value>רענן את יומני הרישום</value>
+  </data>
+  <data name="RefreshLogFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קבל את יומני הרישום העדכניים ביותר לפגישה הנוכחית על ידי קריאתם מקובץ יומן הרישום בתיקיית התצורות של המשתמש</value>
+  </data>
+  <data name="RefreshLogFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>קבל את יומני הרישום העדכניים ביותר לפגישה הנוכחית על ידי קריאתם מקובץ יומן הרישום בתיקיית התצורות של המשתמש</value>
+  </data>
+  <data name="AppStartupMessage" xml:space="preserve">
+    <value>הפעלת אפליקציה, גרסת סביבת הריצה .NET: {0}</value>
+  </data>
+  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
+    <value>יש מופע נוסף של Harden Windows Security שפועל. זהו רק יומן רישום אינפורמטיבי.</value>
+</data>
+<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <value>זוהתה הפעלה באמצעות קובץ</value>
+</data>
+<data name="FileActivationNoObjectsMessage" xml:space="preserve">
+  <value>האפליקציה הופעלה באמצעות הפעלת קובץ אבל הארגומנטים לא הכילו אובייקטי קובץ</value>
+</data>
+<data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+  <value>האפליקציה הופעלה באמצעות הפעלת קובץ אבל ללא ארגומנטים להפעלת קובץ</value>
+</data>
+<data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+  <value>נדרשה בקשת הרשאות מוגברות כדי לעבד את הקובץ הנבחר אך היא נדחתה על ידי המשתמש. יציאה מהאפליקציה.</value>
+</data>
+<data name="ElevationDeniedMessage" xml:space="preserve">
+  <value>בקשת הרשאות מוגברות נדחתה על ידי המשתמש</value>
+</data>
+<data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+  <value>הייתה בעיה בשמירת גודל החלון בעת סגירת האפליקציה: {0}</value>
+</data>
+<data name="ErrorDialogTitle" xml:space="preserve">
+  <value>אירעה שגיאה</value>
+</data>
+<data name="ErrorDialogContent" xml:space="preserve">
+  <value>אירעה שגיאה לא צפויה: {0}</value>
+</data>
+  <data name="OK" xml:space="preserve">
+    <value>אישור</value>
+  </data>
+      <data name="Cancelling" xml:space="preserve">
+    <value>מבטל...</value>
+  </data>
+    <data name="Cancel" xml:space="preserve">
+    <value>ביטול</value>
+  </data>
+  <data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+  <value>הגדרת גודל יומן רישום Code Integrity</value>
+</data>
+  <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
+    <value>הגדלת גודל יומן רישום Code Integrity ב-1MB מכיוון שהמקום הפנוי הנוכחי שלו קטן מ-1MB.</value>
+  </data>
+    <data name="SettingCodeIntegrityLogSizeMessage" xml:space="preserve">
+    <value>הגדרת גודל יומן רישום Code Integrity ל-{0:N2} MB.</value>
+  </data>
+    <data name="ProvidedLogSizeLessThanOrEqualOneMbNoChangesMadeMessage" xml:space="preserve">
+    <value>גודל יומן הרישום שהוזן קטן או שווה ל-1 MB. לא בוצעו שינויים.</value>
+  </data>
+    <data name="FileRequiresElevatedPermissionsMessage" xml:space="preserve">
+    <value>הקובץ "{0}" דורש הרשאות מוגברות.</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+  <value>סטטוס</value>
+</data>
+  <data name="WarningTitle" xml:space="preserve">
+    <value>אזהרה</value>
+  </data>
+    <data name="ErrorTitle" xml:space="preserve">
+    <value>שגיאה</value>
+  </data>
+    <data name="SuccessTitle" xml:space="preserve">
+    <value>הצלחה</value>
+  </data>
+    <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
+    <value>הפקודה '{0} {1}' נכשלה עם קוד יציאה {2}. שגיאה: {3}</value>
+  </data>
+  <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
+    <value>בקשת הרשאות מוגברות בוטלה על ידי המשתמש.</value>
+  </data>
+    <data name="ActivationManagerFailedWithHRESULTMessage" xml:space="preserve">
+    <value>ActivationManager נכשל עם HRESULT: 0x{0:X}</value>
+  </data>
+  <data name="JumpListNotSupportedMessage" xml:space="preserve">
+  <value>JumpList לא נתמך.</value>
+</data>
+  <data name="AppElevationNoticeMain" xml:space="preserve">
+    <value>אנא הפעל את Harden Windows Security כמנהל מערכת כדי לגשת לעמוד זה</value>
+  </data>
+    <data name="AppElevationNoticeExtraPrompt" xml:space="preserve">
+    <value>תמיד בקש הרשאות מוגברות בהפעלת האפליקציה</value>
+  </data>
+    <data name="AppElevationNoticeTitle" xml:space="preserve">
+    <value>נדרשות הרשאות מנהל מערכת</value>
+  </data>
+    <data name="AppElevationNoticeRelaunch" xml:space="preserve">
+    <value>הפעל מחדש כמנהל</value>
+  </data>
+    <data name="WindowMaximizedMsg" xml:space="preserve">
+    <value>החלון היה מקוסמט כאשר האפליקציה נסגרה בפעם האחרונה, הגדרתו כמקוסמט כעת</value>
+  </data>
+  <data name="SettingWindowSizeMessage" xml:space="preserve">
+  <value>הגדרת גודל החלון חזרה למה שהיה כאשר האפליקציה נסגרה. גובה: {0} - רוחב: {1}</value>
+</data>
+  <data name="SidebarTextBlock.Text" xml:space="preserve">
+    <value>סרגל צד</value>
+  </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>השתמש בסרגל הצד לתכונות נוספות.</value>
+  </data>
+    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
+    <value>מדריך סרגל צד</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>למדריך שימוש בסרגל הצד אנא בקר בעמוד הויקי ב-GitHub על ידי לחיצה/נגיעה כאן.</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>למדריך שימוש בסרגל הצד אנא בקר בעמוד הויקי ב-GitHub על ידי לחיצה/נגיעה כאן.</value>
+  </data>
+    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+    <value>תמיכה - שאל שאלות</value>
+  </data>
+  <data name="SettingsPageTitle.Text" xml:space="preserve">
+    <value>התאם אישית את הגדרות האפליקציה כאן. ההעדפות שלך יישמרו כך שיהיו מוכנות עבורך בכל פעם שתפעיל את Harden Windows Security.</value>
+  </data>
+  <data name="Appearance.Text" xml:space="preserve">
+    <value>מראה</value>
+  </data>
+  <data name="About.Text" xml:space="preserve">
+    <value>אודות</value>
+  </data>
+    <data name="AppearanceSectionSettingsExpander.Header" xml:space="preserve">
+    <value>בחר איך Harden Windows Security ייראה</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השתמש באפשרויות הזמינות השונות כדי לשנות את המראה והאפקטים הוויזואליים של Harden Windows Security</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>השתמש באפשרויות הזמינות השונות כדי לשנות את המראה והאפקטים הוויזואליים של Harden Windows Security</value>
+  </data>
+    <data name="DarkerBackGroundSettingsCard.Description" xml:space="preserve">
+    <value>מתאים בעיקר כאשר משתמשים ב-MicaAlt כרקע.</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.Header" xml:space="preserve">
+    <value>רקע כהה יותר</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>זה יסיר את הצל הבהיר הנוסף מהרקע, נותן מראה כהה יותר בסך הכול למראה של Harden Windows Security.</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>זה יסיר את הצל הבהיר הנוסף מהרקע, נותן מראה כהה יותר בסך הכול למראה של Harden Windows Security.</value>
+  </data>
+    <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>מופעל</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>כבוי</value>
+  </data>
+    <data name="BackgroundStyleSettingsCard.Description" xml:space="preserve">
+    <value>התאם אישית את סגנון רקע האפליקציה</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.Header" xml:space="preserve">
+    <value>סגנון רקע</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>זהו הרקע של Harden Windows Security. השינויים יהיו נראים ברקע.</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>זהו הרקע של Harden Windows Security. השינויים יהיו נראים ברקע.</value>
+  </data>
+    <data name="AppThemeSettingsCard.Description" xml:space="preserve">
+    <value>התאם אישית את הערכת הנושא</value>
+  </data>
+  <data name="AppThemeSettingsCard.Header" xml:space="preserve">
+    <value>ערכת נושא</value>
+  </data>
+  <data name="AppThemeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר ערכת נושא עבור Harden Windows Security</value>
+  </data>
+  <data name="AppThemeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר ערכת נושא עבור Harden Windows Security</value>
+  </data>
+    <data name="MainNavigationIconsSettingsCard.Description" xml:space="preserve">
+    <value>בחר סגנון לאייקונים של הניווט הראשי</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.Header" xml:space="preserve">
+    <value>סגנון אייקונים</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר סגנון לאייקונים של הניווט הראשי.</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר סגנון לאייקונים של הניווט הראשי.</value>
+  </data>
+    <data name="MainNavigationLocationSettingsCard.Description" xml:space="preserve">
+    <value>התאם אישית את מיקום תפריט הניווט</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.Header" xml:space="preserve">
+    <value>תפריט ניווט</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר מיקום לתפריט הניווט</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר מיקום לתפריט הניווט</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.Header" xml:space="preserve">
+    <value>שנה את ההתנהגות של Harden Windows Security ושל רכיבים שונים בתוכו</value>
+  </data>
+  <data name="Behavior.Text" xml:space="preserve">
+    <value>התנהגות</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שנה את ההתנהגות של Harden Windows Security ושל רכיבים שונים בתוכו</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שנה את ההתנהגות של Harden Windows Security ושל רכיבים שונים בתוכו</value>
+  </data>
+    <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Description" xml:space="preserve">
+    <value>בכל פעם שתבחר פריט ברשימה, מרכז את הפריט הזה אנכית על המסך.</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Header" xml:space="preserve">
+    <value>מרכז רשימות אנכית בעת בחירה</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בכל פעם שתבחר פריט ברשימה, מרכז את הפריט הזה אנכית על המסך.</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בכל פעם שתבחר פריט ברשימה, מרכז את הפריט הזה אנכית על המסך.</value>
+  </data>
+    <data name="PromptForElevationSettingsCard.Description" xml:space="preserve">
+    <value>אם זה מופעל, Harden Windows Security יבקש הרשאות מוגברות לפעול עם הרשאות מנהל מערכת בהפעלה.</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.Header" xml:space="preserve">
+    <value>בקש הרשאות מוגברות בהפעלה</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אם זה מופעל, Harden Windows Security יבקש הרשאות מוגברות לפעול עם הרשאות מנהל מערכת בהפעלה.</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אם זה מופעל, Harden Windows Security יבקש הרשאות מוגברות לפעול עם הרשאות מנהל מערכת בהפעלה.</value>
+  </data>
+    <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>מנע מאפליקציות אחרות כמו מקליטי מסך (כולל Recall) להקליט או לצלם צילומי מסך של חלון Harden Windows Security.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>מגן מסך</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מנע מאפליקציות אחרות כמו מקליטי מסך (כולל Recall) להקליט או לצלם צילומי מסך של חלון Harden Windows Security.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מנע מאפליקציות אחרות כמו מקליטי מסך (כולל Recall) להקליט או לצלם צילומי מסך של חלון Harden Windows Security.</value>
+  </data>
+   <data name="PublishUserActivityInTheOSSettingsCard.Description" xml:space="preserve">
+    <value>פרסם פעילויות שונות שאתה מבצע ב-Harden Windows Security למערכת ההפעלה, מה שמאפשר להם להופיע ולהיות זמינים עבורך ב-Microsoft Recall כדי שתוכל לעקוב אחר הפעולות שלך.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.Header" xml:space="preserve">
+    <value>פרסם פעילות במערכת ההפעלה</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פרסם פעילויות שונות שאתה מבצע ב-Harden Windows Security למערכת ההפעלה, מה שמאפשר להם להופיע ולהיות זמינים עבורך ב-Microsoft Recall כדי שתוכל לעקוב אחר הפעולות שלך.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פרסם פעילויות שונות שאתה מבצע ב-Harden Windows Security למערכת ההפעלה, מה שמאפשר להם להופיע ולהיות זמינים עבורך ב-Microsoft Recall כדי שתוכל לעקוב אחר הפעולות שלך.</value>
+  </data>
+    <data name="LanguageTextBlock.Text" xml:space="preserve">
+    <value>שפה</value>
+  </data>
+    <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
+    <value>החלף בין שפות ופריסות ממשק משתמש נתמכות שונות.</value>
+  </data>
+  <data name="LanguageSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החלף בין שפות ופריסות ממשק משתמש נתמכות שונות.</value>
+  </data>
+  <data name="LanguageSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החלף בין שפות ופריסות ממשק משתמש נתמכות שונות.</value>
+  </data>
+    <data name="LanguageSelectionSettingsCard.Description" xml:space="preserve">
+    <value>בחר שפה אחרת מהרשימה</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.Header" xml:space="preserve">
+    <value>בחירת שפה</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר שפה אחרת מהרשימה</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר שפה אחרת מהרשימה</value>
+  </data>
+    <data name="UIFlowDirectionSettingsCard.Description" xml:space="preserve">
+    <value>החלף בין כיווני זרימה מימין לשמאל ומשמאל לימין עבור רכיבי ממשק המשתמש.</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.Header" xml:space="preserve">
+    <value>כיוון זרימה</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החלף בין כיווני זרימה מימין לשמאל ומשמאל לימין עבור רכיבי ממשק המשתמש.</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החלף בין כיווני זרימה מימין לשמאל ומשמאל לימין עבור רכיבי ממשק המשתמש.</value>
+  </data>
+    <data name="UIFlowDirectionToggleSwitch.OnContent" xml:space="preserve">
+    <value>שמאל לימין</value>
+  </data>
+  <data name="UIFlowDirectionToggleSwitch.OffContent" xml:space="preserve">
+    <value>ימין לשמאל</value>
+  </data>
+    <data name="Sound.Text" xml:space="preserve">
+    <value>צליל</value>
+  </data>
+    <data name="AppSoundSettingSettingsCard.Description" xml:space="preserve">
+    <value>שמע משוב אודיו בעת שימוש ברכיבים שונים של Harden Windows Security</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.Header" xml:space="preserve">
+    <value>צליל</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שמע משוב אודיו בעת שימוש ברכיבים שונים של Harden Windows Security</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שמע משוב אודיו בעת שימוש ברכיבים שונים של Harden Windows Security</value>
+  </data>
+    <data name="GitHubRepoHyperLinkButton.Content" xml:space="preserve">
+    <value>מאגר GitHub</value>
+  </data>
+    <data name="SpyNetGirlWebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>אתר SpyNetGirl</value>
+  </data>
+    <data name="MicrosoftStorePageHyperLinkButton.Content" xml:space="preserve">
+    <value>עמוד Microsoft Store</value>
+  </data>
+    <data name="YouTubeChannelHyperLinkButton.Content" xml:space="preserve">
+    <value>ערוץ YouTube</value>
+  </data>
+    <data name="DonationHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התמיכה שלך עוזרת לי להמשיך ליצור ולתחזק את הפרויקט הזה.</value>
+  </data>
+  <data name="DonationHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התמיכה שלך עוזרת לי להמשיך ליצור ולתחזק את הפרויקט הזה.</value>
+  </data>
+    <data name="DonationHyperLinkButton.Content" xml:space="preserve">
+    <value>תרומה</value>
+  </data>
+    <data name="PrivacyPolicyHyperLinkButton.Content" xml:space="preserve">
+    <value>מדיניות פרטיות</value>
+  </data>
+    <data name="SendFeedbackHyperLinkButton.Content" xml:space="preserve">
+    <value>שלח משוב</value>
+  </data>
+    <data name="Icons8WebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>אתר Icons8 לכל האייקונים המשמשים באפליקציה זו</value>
+  </data>
+    <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
+    <value>קוד מקור</value>
+  </data>
+    <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <value>בדוק עדכונים בעמוד זה. אתה יכול גם להפעיל בדיקת עדכונים אוטומטית שתתרחש פעם אחת בהפעלה ותקבל הודעה כאשר גרסה חדשה זמינה.</value>
+  </data>
+    <data name="GuideButtonAtTop.Content" xml:space="preserve">
+    <value>מדריך</value>
+  </data>
+  <data name="GuideButtonAtTop.ToolTipService.ToolTip" xml:space="preserve">
+    <value>לחץ/הקש כדי לבקר במדריך המלא לעמוד זה ב-GitHub</value>
+  </data>
+  <data name="GuideButtonAtTop.AutomationProperties.HelpText" xml:space="preserve">
+    <value>לחץ/הקש כדי לבקר במדריך המלא לעמוד זה ב-GitHub</value>
+  </data>
+    <data name="UpdatePageUpdateStatusInfoBar.Title" xml:space="preserve">
+    <value>סטטוס עדכון</value>
+  </data>
+  <data name="UpdatePageUpdateStatusInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סטטוס עדכון</value>
+  </data>
+    <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
+    <value>מידע נוסף</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פותח את עמוד הויקי הראשי של GitHub עבור Harden Windows Security</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פותח את עמוד הויקי הראשי של GitHub עבור Harden Windows Security</value>
+  </data>
+    <data name="UpdatePageWhatsNewInfoBar.Title" xml:space="preserve">
+    <value>הערות שחרור</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.Message" xml:space="preserve">
+    <value>בדוק את שחרורי GitHub להערות שחרור מלאות</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בדוק את שחרורי GitHub להערות שחרור מלאות</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בדוק את שחרורי GitHub להערות שחרור מלאות</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.Content" xml:space="preserve">
+    <value>ראה מה חדש</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פותח את עמוד השחרורים של GitHub שם תוכל למצוא את הערות השחרור המלאות לעדכון הזמין.</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פותח את עמוד השחרורים של GitHub שם תוכל למצוא את הערות השחרור המלאות לעדכון הזמין.</value>
+  </data>
+    <data name="CheckForUpdateSettingsCard.Description" xml:space="preserve">
+    <value>ברגע שהעדכונים יורדו ומותקנים, בפעם הבאה שתפתח את Harden Windows Security תשתמש בגרסה החדשה.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.Header" xml:space="preserve">
+    <value>בדוק עדכון עבור Harden Windows Security</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ברגע שהעדכונים יורדו ומותקנים, בפעם הבאה שתפתח את Harden Windows Security תשתמש בגרסה החדשה.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ברגע שהעדכונים יורדו ומותקנים, בפעם הבאה שתפתח את Harden Windows Security תשתמש בגרסה החדשה.</value>
+  </data>
+    <data name="UpdatePageCheckForUpdateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>יוריד ויתקין את הגרסה העדכנית ביותר ממאגר GitHub. הזמן שזה לוקח תלוי בחיבור הרשת שלך. גודל הורדה משוער הוא 65 MB.</value>
+  </data>
+  <data name="UpdatePageCheckForUpdateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>יוריד ויתקין את הגרסה העדכנית ביותר ממאגר GitHub. הזמן שזה לוקח תלוי בחיבור הרשת שלך. גודל הורדה משוער הוא 65 MB.</value>
+  </data>
+    <data name="AutoUpdateCheckSettingsCard.Description" xml:space="preserve">
+    <value>בודק אוטומטית עדכון כאשר האפליקציה מופעלת ומודיע לך אם גרסה חדשה זמינה כדי שתוכל להשתמש בעמוד זה כדי להתקין אותה.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.Header" xml:space="preserve">
+    <value>בדיקת עדכון אוטומטית</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בודק אוטומטית עדכון כאשר האפליקציה מופעלת ומודיע לך אם גרסה חדשה זמינה כדי שתוכל להשתמש בעמוד זה כדי להתקין אותה.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בודק אוטומטית עדכון כאשר האפליקציה מופעלת ומודיע לך אם גרסה חדשה זמינה כדי שתוכל להשתמש בעמוד זה כדי להתקין אותה.</value>
+  </data>
+    <data name="HardenedUpdateProcedureSettingsCard.Description" xml:space="preserve">
+    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של האישור שנוצר במכשיר יקושר לחשבון המשתמש, מה שידרוש אישור הנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.Header" xml:space="preserve">
+    <value>הליך עדכון מחוזק</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של האישור שנוצר במכשיר יקושר לחשבון המשתמש, מה שידרוש אישור הנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כאשר אפשרות זו מופעלת, המפתח הפרטי הזמני של האישור שנוצר במכשיר יקושר לחשבון המשתמש, מה שידרוש אישור הנחיות לפני שניתן יהיה להשתמש בו לחתימה.</value>
+  </data>
+    <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פותח את המיני עמוד של Microsoft Store שם תוכל לדרג ולכתוב סקירה עבור Harden Windows Security.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.Header" xml:space="preserve">
+    <value>דרג וסקור</value>
+  </data>
+    <data name="RateAndReviewSettingsCard.Description" xml:space="preserve">
+    <value>פותח את המיני עמוד של Microsoft Store שם תוכל לדרג ולכתוב סקירה עבור Harden Windows Security.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פותח את המיני עמוד של Microsoft Store שם תוכל לדרג ולכתוב סקירה עבור Harden Windows Security.</value>
+  </data>
+    <data name="CheckingForUpdateStore" xml:space="preserve">
+    <value>בודק עדכון ב-Microsoft Store...</value>
+  </data>
+    <data name="NewUpdateIsAvailableStore" xml:space="preserve">
+    <value>עדכון חדש זמין. פותח את Microsoft Store כדי שתוכל להמשיך עם עדכון האפליקציה שם.</value>
+  </data>
+    <data name="ProblemOpeningMSStore" xml:space="preserve">
+    <value>הייתה בעיה בפתיחת עמוד Microsoft Store של Harden Windows Security.</value>
+  </data>
+    <data name="TheAppIsUpToDate" xml:space="preserve">
+    <value>אפליקציית Harden Windows Security מעודכנת.</value>
+  </data>
+   <data name="UpdateCheckError" xml:space="preserve">
+    <value>אירעה שגיאה בעת בדיקת עדכון.</value>
+  </data>
+  <data name="FailedToOpenRating" xml:space="preserve">
+    <value>נכשל בפתיחת עמוד דירוג ב-Microsoft Store.</value>
+  </data>
+  <data name="InstallVersionMessage" xml:space="preserve">
+    <value>התקן גרסה {0}</value>
+  </data>
+    <data name="InstallLatestVer" xml:space="preserve">
+    <value>התקן את הגרסה העדכנית ביותר</value>
+  </data>
+    <data name="WebViewBackButton.Text" xml:space="preserve">
+    <value>אחורה</value>
+  </data>
+  <data name="WebViewForwardButton.Text" xml:space="preserve">
+    <value>קדימה</value>
+  </data>
+  <data name="WebViewReloadButton.Text" xml:space="preserve">
+    <value>טען מחדש</value>
+  </data>
+  <data name="WebViewHomeButton.Text" xml:space="preserve">
+    <value>בית</value>
+  </data>
+  <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>תיעוד</value>
+  </data>
+  <data name="UserCanceledUACMessage" xml:space="preserve">
+  <value>המשתמש ביטל את הודעת UAC.</value>
+  </data>
+  <data name="ProtectionPresets.Text" xml:space="preserve">
+    <value>תצורות הגנה</value>
+  </data>
+    <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר אחת מתצורות ההגנה להחלה, הן קבוצות קונפיגורציה מוגדרות מראש שיועדו לרמות אבטחה שונות.</value>
+  </data>
+  <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר אחת מתצורות ההגנה להחלה, הן קבוצות קונפיגורציה מוגדרות מראש שיועדו לרמות אבטחה שונות.</value>
+  </data>
+    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>בסיסי</value>
+  </data>
+    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>מומלץ</value>
+  </data>
+    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>מלא</value>
+  </data>
+  <data name="ProtectPageTitle.Text" xml:space="preserve">
+    <value>נהל תצורות אבטחה ובחר איך לאבטח את המכשיר שלך.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaseline" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>קו הבסיס של אבטחת Microsoft</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaseline" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>החל את המלצות התצורה לאבטחה של Microsoft. מומלץ מאוד להשתמש בזה.</value>
+  </data>
+  <data name="ProtectCategory_MSFT365AppsSecBaseline" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>קו הבסיס של אבטחת Microsoft 365 Apps</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFT365AppsSecBaseline" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>חזק את אפליקציות Microsoft 365 נגד וקטורי התקפה רבים על ידי החלת המלצות האבטחה של Microsoft.</value>
+  </data>
+  <data name="ProtectCategory_MSFTDefender" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Microsoft Defender</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTDefender" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>הפעל תכונות אבטחה רבות שכבויות כברירת מחדל ב-Microsoft Defender והגבר את האבטחה של הקיימות כדי לספק שכבת הגנה מצוינת נגד תוכנה זדונית.</value>
+  </data>
+  <data name="ProtectCategory_ASRRules" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>צמצום משטח התקפה</value>
+  </data>
+  <data name="ProtectCategory_Description_ASRRules" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>השתמש בכללי צמצום משטח התקפה כדי להוסיף שכבות הגנה מתוחכמות ומתמחות למחסנית האבטחה שלך.</value>
+  </data>
+  <data name="ProtectCategory_BitLocker" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>הגדרות BitLocker</value>
+  </data>
+  <data name="ProtectCategory_Description_BitLocker" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>הגדר את BitLocker לספק את האבטחה וההצפנה הגבוהות ביותר האפשריות לנתונים הנייחים שלך ולוודא שהנתונים שלך יישארו בלתי נגישים במקרה של גניבת מכשיר.</value>
+  </data>
+  <data name="ProtectCategory_DeviceGuard" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Device Guard</value>
+  </data>
+  <data name="ProtectCategory_Description_DeviceGuard" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>נצל והפעל תכונות אבטחה של חומרה שונות שעוזרות לליבת מערכת ההפעלה להגן על עצמה ועל המכשיר נגד תוכנה זדונית מתוחכמת.</value>
+  </data>
+  <data name="ProtectCategory_TLS" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>אבטחת TLS</value>
+  </data>
+  <data name="ProtectCategory_Description_TLS" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>מבטיח שהנתונים שלך יישארו בטוחים יותר בהעברה והחיבורים שלך ישתמשו רק באלגוריתמים בטוחים.</value>
+  </data>
+  <data name="ProtectCategory_LockScreen" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>מסך נעילה</value>
+  </data>
+  <data name="ProtectCategory_Description_LockScreen" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>משפר את האבטחה של מסך הנעילה נגד איומים שונים ומקטין את כמות המידע הנגיש במסך הנעילה למשתמשים לא מאומתים.</value>
+  </data>
+  <data name="ProtectCategory_UAC" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>בקרת חשבונות משתמש</value>
+  </data>
+  <data name="ProtectCategory_Description_UAC" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>שפר את אבטחת בקרת חשבונות המשתמש כך שכל משימה מנהלית תדרוש את ההרשאה המפורשת שלך כדי להתבצע.</value>
+  </data>
+  <data name="ProtectCategory_WindowsFirewall" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>חומת אש של Windows</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsFirewall" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>חזק את חומת האש של Windows נגד איומי רשת והפעל רישום מפורט לתרחישי תגובה לאירועים.</value>
+  </data>
+  <data name="ProtectCategory_OptionalWinFeatures" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>תכונות אופציונליות של Windows</value>
+  </data>
+  <data name="ProtectCategory_Description_OptionalWinFeatures" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>הסר תכונות וכשירויות ישנות ומושמטות ממערכת ההפעלה, מקטין משטח התקפה, שימוש בדיסק ומשפר את האבטחה הכללית.</value>
+  </data>
+  <data name="ProtectCategory_WindowsNetworking" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>רשתות Windows</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsNetworking" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>שפר את האבטחה של מחסנית הרשת של Windows, מבטיח חיבורים בטוחים ומונע שימוש בפרוטוקולים מיושנים ובלתי בטוחים.</value>
+  </data>
+  <data name="ProtectCategory_MiscellaneousConfig" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>תצורות שונות</value>
+  </data>
+  <data name="ProtectCategory_Description_MiscellaneousConfig" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>החל תכונות אבטחה חשובות שונות שלא מתאימות לקטגוריה מתמחה אחרת. אתה יכול להגדיר אותן עוד יותר באמצעות עמוד התצורות השונות.</value>
+  </data>
+  <data name="ProtectCategory_WindowsUpdate" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Windows Update</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsUpdate" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>וודא שעדכוני Windows מותקנים באופן בטוח ובזמן כדי למנוע ניצול של פגיעויות מתוקנות.</value>
+  </data>
+  <data name="ProtectCategory_Edge" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>דפדפן Edge</value>
+  </data>
+  <data name="ProtectCategory_Description_Edge" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>הגדר את דפדפן Edge להיות בטוח יותר ולשתף פחות נתונים עם האתרים שאתה מבקר בהם.</value>
+  </data>
+  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>בדיקת אישורים</value>
+  </data>
+  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>בדוק את האישורים המותקנים וחשף כל אחד מהם שלא שייך למערכת ההפעלה עצמה.</value>
+  </data>
+  <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>חסימת IP לפי מדינה</value>
+  </data>
+  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>חסום את טווחי כתובות ה-IP של מדינות מסוימות ברשימת הסנקציות של ארה"ב לתמיכה בטרור.</value>
+  </data>
+  <data name="ProtectCategory_NonAdmin" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>הגדרות ללא מנהל</value>
+  </data>
+  <data name="ProtectCategory_Description_NonAdmin" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>החל הגדרות אבטחה שלא דורשות הרשאות מנהל מערכת ומתחילות על כל המשתמשים הרגילים והמנהלים.</value>
+  </data>
+  <data name="ProtectSubCategory_SmartAppControl" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>בקרת אפליקציות חכמה</value>
+  </data>
+  <data name="ProtectSubCategory_BetaUpdateChannels" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>הפעל ערוצי עדכון בטא עבור Microsoft Defender</value>
+  </data>
+  <data name="ProtectSubCategory_NoLastSignedIn" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>אל תראה מידע על הכניסה האחרונה במסך הנעילה</value>
+  </data>
+  <data name="ProtectSubCategory_RequireCTRLAltDel" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>דרוש לחיצה על הכפתורים CTRL + Alt + Del במסך הנעילה לפני הזנת פרטי הכניסה.</value>
+  </data>
+  <data name="ProtectSubCategory_NoFastUserSwitching" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>השבת תכונת החלפת משתמשים מהירה.</value>
+  </data>
+  <data name="ProtectSubCategory_OnlyElevateSigned" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>אפשר רק לתוכניות חתומות ומאומתות לפעול עם הרשאות מוגברות.</value>
+  </data>
+  <data name="ProtectSubCategory_MandatoryModeForVBS" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>הפעל את המצב החובה עבור VBS (אבטחה מבוססת וירטואליזציה)</value>
+  </data>
+  <data name="ProtectSubCategory_BlockNTLM" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>חסום לחלוטין את פרוטוקול NTLM.</value>
+  </data>
+  <data name="ProtectSubCategory_ForceStrongKeyProtection" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>דרוש הגנה חזקה למפתחות פרטיים של אישורים שמאוחסנים במכשיר.</value>
+  </data>
+  <data name="ProtectSubCategory_EnableWindowsProtectedPrint" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>הפעל הדפסה מוגנת של Windows.</value>
+  </data>
+  <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>הפעל תמיכה בנתיבי קבצים ארוכים.</value>
+  </data>
+  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>חסום טווחי IP של מדינות ברשימת הסנקציות של OFAC.</value>
+  </data>
+  <data name="ASRNavItem.Content" xml:space="preserve">
+    <value>צמצום משטח התקפה</value>
+  </data>
+  <data name="BitLockerNavItem.Content" xml:space="preserve">
+    <value>BitLocker</value>
+  </data>
+  <data name="DeviceGuardNavItem.Content" xml:space="preserve">
+    <value>Device Guard</value>
+  </data>
+  <data name="TLSSecurityNavItem.Content" xml:space="preserve">
+    <value>אבטחת TLS</value>
+  </data>
+    <data name="LockScreenNavItem.Content" xml:space="preserve">
+    <value>מסך נעילה</value>
+  </data>
+  <data name="UACNavItem.Content" xml:space="preserve">
+    <value>בקרת חשבונות משתמש</value>
+  </data>
+  <data name="WindowsFirewallNavItem.Content" xml:space="preserve">
+    <value>חומת אש של Windows</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.Content" xml:space="preserve">
+    <value>תכונות אופציונליות של Windows</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.Content" xml:space="preserve">
+    <value>רשתות Windows</value>
+  </data>
+  <data name="MiscellaneousNavItem.Content" xml:space="preserve">
+    <value>שונות</value>
+  </data>
+  <data name="WindowsUpdateNavItem.Content" xml:space="preserve">
+    <value>Windows Update</value>
+  </data>
+  <data name="EdgeBrowserNavItem.Content" xml:space="preserve">
+    <value>דפדפן Edge</value>
+  </data>
+  <data name="CertificatesNavItem.Content" xml:space="preserve">
+    <value>אישורים</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.Content" xml:space="preserve">
+    <value>חסימת IP לפי מדינה</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.Content" xml:space="preserve">
+    <value>פקודות ללא מנהל</value>
+  </data>
+  <!--Group Policy Editor ListView Headers Start-->
+  <data name="KeynameHeader.Text" xml:space="preserve">
+    <value>שם מפתח</value>
+  </data>
+  <data name="ValueNameHeader.Text" xml:space="preserve">
+    <value>שם ערך</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>ערך</value>
+  </data>
+  <data name="CategoryHeader.Text" xml:space="preserve">
+    <value>קטגוריה</value>
+  </data>
+  <data name="SubCategoryHeader.Text" xml:space="preserve">
+    <value>תת-קטגוריה</value>
+  </data>
+  <data name="PolicyActionHeader.Text" xml:space="preserve">
+    <value>פעולת מדיניות</value>
+  </data>
+  <data name="FriendlyNameHeader.Text" xml:space="preserve">
+    <value>שם ידידותי</value>
+  </data>
+  <data name="SizeHeader.Text" xml:space="preserve">
+    <value>גודל</value>
+  </data>
+  <!--Group Policy Editor ListView Headers End-->
+  <!--Group Policy Editor ListView Headers Buttons Start-->
+  <data name="KeynameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם מפתח</value>
+  </data>
+  <data name="ValueNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם ערך</value>
+  </data>
+  <data name="ValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ערך</value>
+  </data>
+  <data name="CategoryColumnHeaderBtn.Content" xml:space="preserve">
+    <value>קטגוריה</value>
+  </data>
+  <data name="SubCategoryColumnHeaderBtn.Content" xml:space="preserve">
+    <value>תת-קטגוריה</value>
+  </data>
+  <data name="PolicyActionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>פעולת מדיניות</value>
+  </data>
+  <data name="FriendlyNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם ידידותי</value>
+  </data>
+  <data name="SizeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>גודל</value>
+  </data>
+  <!--Group Policy Editor ListView Headers Buttons End-->
+  <data name="GroupPolicyEditorNavItem.Content" xml:space="preserve">
+    <value>עורך מדיניות קבוצתית</value>
+  </data>
+    <data name="ClearButton.Content" xml:space="preserve">
+    <value>נקה</value>
+  </data>
+  <data name="ClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נקה</value>
+  </data>
+  <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נקה</value>
+  </data>
+  <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
+    <value>פתח וקרא קבצי מדיניות קבוצתית בעמוד זה. אתה יכול לחפש בנתונים ולהסיר מדיניות בודדות מהקובץ. אתה יכול גם לצפות במדיניות התקפות במערכת.</value>
+  </data>
+  <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
+    <value>צפה בנתיב(י) קובץ המדיניות שבחרת.</value>
+  </data>
+    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
+    <value>סך כל המדיניות: 0</value>
+  </data>
+  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
+    <value>המספר הכולל של המדיניות</value>
+  </data>
+  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>המספר הכולל של המדיניות</value>
+  </data>
+  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <value>חפש בנתונים...</value>
+  </data>
+  <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חפש בין הנתונים המוצגים</value>
+  </data>
+  <data name="SearchBoxTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>חפש בין הנתונים המוצגים</value>
+  </data>
+    <data name="CopyRow.Text" xml:space="preserve">
+    <value>העתק שורה</value>
+  </data>
+  <data name="CopyRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק את השורה(ות) הנבחרת(ות) כעת ללוח כטקסטים כדי להדביק אותם בכל עורך טקסט.</value>
+  </data>
+  <data name="CopyRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>העתק את השורה(ות) הנבחרת(ות) כעת ללוח כטקסטים כדי להדביק אותם בכל עורך טקסט.</value>
+  </data>
+  <data name="GenericBrowseButton.Content" xml:space="preserve">
+    <value>עיון</value>
+  </data>
+  <data name="GenericBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון</value>
+  </data>
+  <data name="GenericBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון</value>
+  </data>
+    <data name="GetEffectivePoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>קבל מדיניות תקפות</value>
+  </data>
+  <data name="GetEffectivePoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מציג את המדיניות הקבוצתית התקפות שמוחלות על המערכת הנוכחית.</value>
+  </data>
+  <data name="GetEffectivePoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מציג את המדיניות הקבוצתית התקפות שמוחלות על המערכת הנוכחית.</value>
+  </data>
+  <data name="MoreActionsMenuBar.Title" xml:space="preserve">
+    <value>פעולות נוספות</value>
+  </data>
+  <data name="MoreActionsMenuBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בצע פעולות נוספות באמצעות תכונות מתמחות.</value>
+  </data>
+  <data name="MoreActionsMenuBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בצע פעולות נוספות באמצעות תכונות מתמחות.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.Header" xml:space="preserve">
+    <value>בחר קבצי POL אחרים למיזוג</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.Description" xml:space="preserve">
+    <value>עיון לקבצי POL אחרים שיוזגו עם קובץ ה-POL הראשי. אם קיימת רשומה עם אותו KeyName ו-ValueName גם בקובץ הראשי וגם בקובץ POL אחר, הרשומה מהקובץ האחר תקבל עדיפות ותחליף את הרשומה של קובץ ה-POL הראשי.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון לקבצי POL אחרים שיוזגו עם קובץ ה-POL הראשי. אם קיימת רשומה עם אותו KeyName ו-ValueName גם בקובץ הראשי וגם בקובץ POL אחר, הרשומה מהקובץ האחר תקבל עדיפות ותחליף את הרשומה של קובץ ה-POL הראשי.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון לקבצי POL אחרים שיוזגו עם קובץ ה-POL הראשי. אם קיימת רשומה עם אותו KeyName ו-ValueName גם בקובץ הראשי וגם בקובץ POL אחר, הרשומה מהקובץ האחר תקבל עדיפות ותחליף את הרשומה של קובץ ה-POL הראשי.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.Header" xml:space="preserve">
+    <value>בחר קובץ POL ראשי למיזוג</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.Description" xml:space="preserve">
+    <value>עיון לקובץ ה-POL הראשי. כל קבצי ה-POL האחרים יוסיפו את התוכן שלהם לקובץ זה ויחליפו כל תוכן קיים.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון לקובץ ה-POL הראשי. כל קבצי ה-POL האחרים יוסיפו את התוכן שלהם לקובץ זה ויחליפו כל תוכן קיים.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון לקובץ ה-POL הראשי. כל קבצי ה-POL האחרים יוסיפו את התוכן שלהם לקובץ זה ויחליפו כל תוכן קיים.</value>
+  </data>
+    <data name="POLFilesMergeTitleTextBlock.Text" xml:space="preserve">
+    <value>מזג קבצי מדיניות קבוצתית POL מרובים לאחד</value>
+  </data>
+  <data name="StartPOLFileMergeButton.Content" xml:space="preserve">
+    <value>התחל את המיזוג</value>
+  </data>
+  <data name="StartPOLFileMergeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל למזג את קבצי מדיניות קבוצתית POL הנבחרים.</value>
+  </data>
+  <data name="StartPOLFileMergeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל למזג את קבצי מדיניות קבוצתית POL הנבחרים.</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>פתח סרגל צד</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פותח את סרגל הצד כדי שתוכל לגשת לתכונות נוספות.</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פותח את סרגל הצד כדי שתוכל לגשת לתכונות נוספות.</value>
+  </data>
+  <data name="ClearDataButton.Content" xml:space="preserve">
+    <value>נקה נתונים</value>
+  </data>
+  <data name="ClearDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נקה את כל הנתונים מהתצוגה הרשימתית</value>
+  </data>
+  <data name="ClearDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נקה את כל הנתונים מהתצוגה הרשימתית</value>
+  </data>
+  <data name="LoadButton.Content" xml:space="preserve">
+    <value>טען</value>
+  </data>
+  <data name="LoadButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>טען את נתוני המדיניות הנבחרת.</value>
+  </data>
+  <data name="LoadButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>טען את נתוני המדיניות הנבחרת.</value>
+  </data>
+  <data name="ConvertPOLToJSONTitleTextBlock.Text" xml:space="preserve">
+    <value>המר קבצי מדיניות קבוצתית POL ל-JSON</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.Content" xml:space="preserve">
+    <value>המר</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל להמיר את קבצי מדיניות קבוצתית POL הנבחרים לקבצי JSON עם אותם שמות.</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל להמיר את קבצי מדיניות קבוצתית POL הנבחרים לקבצי JSON עם אותם שמות.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.Header" xml:space="preserve">
+    <value>בחר קבצי POL להמרה ל-JSON</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.Description" xml:space="preserve">
+    <value>עיון לקבצי POL שיומרו לקבצי JSON.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון לקבצי POL שיומרו לקבצי JSON.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון לקבצי POL שיומרו לקבצי JSON.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.Header" xml:space="preserve">
+    <value>בחר תיקיית פלט (אופציונלי)</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.Description" xml:space="preserve">
+    <value>עיון אופציונלי לתיקיה שם כל קבצי ה-JSON יישמרו. אם לא נבחר, כל קובץ JSON יישמר באותה תיקיה כמו קובץ ה-POL הנבחר עם אותו שם.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון אופציונלי לתיקיה שם כל קבצי ה-JSON יישמרו. אם לא נבחר, כל קובץ JSON יישמר באותה תיקיה כמו קובץ ה-POL הנבחר עם אותו שם.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון אופציונלי לתיקיה שם כל קבצי ה-JSON יישמרו. אם לא נבחר, כל קובץ JSON יישמר באותה תיקיה כמו קובץ ה-POL הנבחר עם אותו שם.</value>
+  </data>
+  <data name="SelectedDirectory.Text" xml:space="preserve">
+    <value>צפה בתיקיה שבחרת</value>
+  </data>
+  <data name="ConvertJSONToPolTitleTextBlock.Text" xml:space="preserve">
+    <value>המר קבצי JSON לקבצי מדיניות קבוצתית POL</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.Header" xml:space="preserve">
+    <value>בחר קבצי JSON להמרה ל-POL</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.Description" xml:space="preserve">
+    <value>עיון לקבצי JSON שיומרו לקבצי מדיניות קבוצתית POL.</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון לקבצי JSON שיומרו לקבצי מדיניות קבוצתית POL.</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון לקבצי JSON שיומרו לקבצי מדיניות קבוצתית POL.</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.Content" xml:space="preserve">
+    <value>המר</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל להמיר את קבצי ה-JSON הנבחרים לקבצי מדיניות קבוצתית POL עם אותם שמות.</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל להמיר את קבצי ה-JSON הנבחרים לקבצי מדיניות קבוצתית POL עם אותם שמות.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.Header" xml:space="preserve">
+    <value>בחר תיקיית פלט (אופציונלי)</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.Description" xml:space="preserve">
+    <value>עיון אופציונלי לתיקיה שם כל קבצי ה-POL יישמרו. אם לא נבחר, כל קובץ POL יישמר באותה תיקיה כמו קובץ ה-JSON הנבחר עם אותו שם.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיון אופציונלי לתיקיה שם כל קבצי ה-POL יישמרו. אם לא נבחר, כל קובץ POL יישמר באותה תיקיה כמו קובץ ה-JSON הנבחר עם אותו שם.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיון אופציונלי לתיקיה שם כל קבצי ה-POL יישמרו. אם לא נבחר, כל קובץ POL יישמר באותה תיקיה כמו קובץ ה-JSON הנבחר עם אותו שם.</value>
+  </data>
+  <data name="CopyIndividualItems.Text" xml:space="preserve">
+    <value>העתק פריטים בודדים</value>
+  </data>
+  <data name="CopyIndividualItems.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מרחיב תת-תפריט בריחוף או במגע כך שתהיה לך אפשרות להעתיק פריטים בודדים בכל שורה.</value>
+  </data>
+  <data name="CopyIndividualItems.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מרחיב תת-תפריט בריחוף או במגע כך שתהיה לך אפשרות להעתיק פריטים בודדים בכל שורה.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.Content" xml:space="preserve">
+    <value>Microsoft Defender</value>
+  </data>
+  <data name="EnablingRestorePointScan-MSDefender" xml:space="preserve">
+    <value>הפעל סריקת נקודת שחזור</value>
+  </data>
+  <data name="AllowSwitchToAsyncInspection-MSDefender" xml:space="preserve">
+    <value>בצע אופטימיזציה לביצועי הגנת הרשת של Microsoft Defender על ידי הפיכתה לאסינכרונית.</value>
+  </data>
+  <data name="EnableConvertWarnToBlock-MSDefender" xml:space="preserve">
+    <value>הגדר את הגנת הרשת לחסום תעבורת רשת במקום להציג אזהרה</value>
+  </data>
+  <data name="BruteForceProtectionLocalNetworkBlocking-MSDefender" xml:space="preserve">
+    <value>הרחב כיסוי הגנה מפני כוח גס כדי לחסום כתובות רשת מקומיות.</value>
+  </data>
+    <data name="AddOneDriveDirsToCFA-MSDefender" xml:space="preserve">
+    <value>הוסף תיקיות OneDrive של כל חשבונות המשתמש (חשבונות אישיים ועבודה) לבקרת גישה לתיקיות מוגנות להגנה מפני כופר</value>
+  </data>
+      <data name="EnableMandatoryASLR-MSDefender" xml:space="preserve">
+    <value>הפעל הגנה חובה על ASLR למערכת כולה</value>
+  </data>
+  <data name="ApplyProcessMitigations-MSDefender" xml:space="preserve">
+    <value>החל הקלות תהליכים עבור: {0}</value>
+  </data>
+  <data name="ARM64NoticeForProcessMitigations" xml:space="preserve">
+    <value>זוהה חומרת ARM64, מדלג על הקלות תהליכים בגלל אי-תאימויות פוטנציאליות.</value>
+  </data>
+  <data name="SetNXBit-MSDefender" xml:space="preserve">
+    <value>הפעל מניעת ביצוע נתונים (DEP) לכל האפליקציות, כולל תוכניות 32-bit.</value>
+  </data>
+    <data name="SetNXBitError-MSDefender" xml:space="preserve">
+    <value>נכשל בהגדרת ערך Boot Configuration Data (BCD) No-eXecute (NX).</value>
+  </data>
+  <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
+    <value>הוצא GitHub Desktop ו-Git executables לא תואמים מ-ASLR חובה למערכת כולה.</value>
+  </data>
+  <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
+    <value>הגדר את ערוצי עדכון המנוע והפלטפורמה של Microsoft Defender לבטא.</value>
+  </data>
+  <data name="ApplyAllButtonText.Text" xml:space="preserve">
+    <value>החל הכול</value>
+  </data>
+  <data name="ApplyAllButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החל את כל אמצעי האבטחה בעמוד.</value>
+  </data>
+  <data name="ApplyAllButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החל את כל אמצעי האבטחה בעמוד.</value>
+  </data>
+  <data name="VerifyAllButtonText" xml:space="preserve">
+    <value>אמת הכול</value>
+  </data>
+  <data name="VerifyAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אמת את כל אמצעי האבטחה בעמוד.</value>
+  </data>
+  <data name="VerifyAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אמת את כל אמצעי האבטחה בעמוד.</value>
+  </data>
+  <data name="RemoveAllButtonText.Text" xml:space="preserve">
+    <value>הסר הכול</value>
+  </data>
+  <data name="RemoveAllButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר את כל אמצעי האבטחה בעמוד.</value>
+  </data>
+  <data name="RemoveAllButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר את כל אמצעי האבטחה בעמוד.</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>בחר הכול</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את כל הפריטים בעמוד.</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>בחר את כל הפריטים בעמוד.</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הסר בחירות</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר את כל הבחירות על ידי ביטול בחירתן.</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>הסר את כל הבחירות על ידי ביטול בחירתן.</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>החל נבחרים</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החל רק את אמצעי האבטחה שבחרת.</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>החל רק את אמצעי האבטחה שבחרת.</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>אמת נבחרים</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אמת רק את אמצעי האבטחה שבחרת.</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>אמת רק את אמצעי האבטחה שבחרת.</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הסר נבחרים</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר רק את אמצעי האבטחה שבחרת.</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>הסר רק את אמצעי האבטחה שבחרת.</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.Content" xml:space="preserve">
+    <value>נהל בחירות</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נהל פריטים נבחרים והחל, הסר או אמת אותם.</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>נהל פריטים נבחרים והחל, הסר או אמת אותם.</value>
+  </data>
+  <data name="FileReputationNavItem.Content" xml:space="preserve">
+    <value>מוניטין קבצים</value>
+  </data>
+  <data name="FileReputationNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צפה ובדוק את המוניטין של קובץ לפי אמצעי הביון הענן של Microsoft עבור Defender או Smart Screen.</value>
+  </data>
+  <data name="FileReputationNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צפה ובדוק את המוניטין של קובץ לפי אמצעי הביון הענן של Microsoft עבור Defender או Smart Screen.</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.Text" xml:space="preserve">
+    <value>החל מומלצים</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החל את כל אמצעי האבטחה המומלצים בעמוד.</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החל את כל אמצעי האבטחה המומלצים בעמוד.</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.Text" xml:space="preserve">
+    <value>קבל מצבים עדכניים</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קבל את המצבים העדכניים ביותר של אמצעי האבטחה בעמוד.</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>קבל את המצבים העדכניים ביותר של אמצעי האבטחה בעמוד.</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.Text" xml:space="preserve">
+    <value>קבל הכול</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קבל את כל התכונות והיכולות האופציונליות במערכת ההפעלה הנוכחית.</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>קבל את כל התכונות והיכולות האופציונליות במערכת ההפעלה הנוכחית.</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הפעל פריטים נבחרים</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעל/התקן את הפריטים שבחרת.</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>הפעל/התקן את הפריטים שבחרת.</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>השבת פריטים נבחרים</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השבת/הסר התקנה של הפריטים שבחרת.</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>השבת/הסר התקנה של הפריטים שבחרת.</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.Content" xml:space="preserve">
+    <value>נהל אפליקציות מותקנות</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צפה והסר את התקנת האפליקציות המותקנות.</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צפה והסר את התקנת האפליקציות המותקנות.</value>
+  </data>
+  <data name="MicrosoftDefenderPageTitle.Text" xml:space="preserve">
+    <value>הגדר את כל ההיבטים של Microsoft Defender והפעל רבות מהתכונות שלו שמושבתות כברירת מחדל.</value>
+  </data>
+  <data name="ASRRulesPageTitle.Text" xml:space="preserve">
+    <value>הגדר כל אחד וכל כלל צמצום משטח התקפה בעמוד זה. הם יכולים למנוע זיהום תוכנה זדונית וניצול פגיעויות.</value>
+  </data>
+  <data name="BitLockerPageTitle.Text" xml:space="preserve">
+    <value>בעמוד זה אתה יכול להחיל מדיניות שתהפוך את BitLocker לחזק יותר ממה שהוא כברירת מחדל ולהגן על הנתונים הנייחים שלך.</value>
+  </data>
+  <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
+    <value>מצא את כל האישורים במערכת שלך שלא מבוססים על אישור כלשהו ברשימת אישורי הבסיס המהימנים של Microsoft.</value>
+  </data>
+  <data name="CountryIPBlockingPageTitle.Text" xml:space="preserve">
+    <value>חסום את טווחי כתובות ה-IP של מדינות ברשימות הבאות: נותני חסות מדינתיים לטרור - Office of Foreign Assets Control (OFAC)</value>
+  </data>
+  <data name="DeviceGuardPageTitle.Text" xml:space="preserve">
+    <value>נצל את תכונות האבטחה שמציעה החומרה כדי לחזק את מערכת ההפעלה בשכבות ביצוע שונות מרובות.</value>
+  </data>
+  <data name="EdgePageTitle.Text" xml:space="preserve">
+    <value>החל מדיניות הקשורה לאבטחה ופרטיות על Microsoft Edge כדי להפוך אותו לבטוח ופרטי יותר בעת גלישה ברשת.</value>
+  </data>
+  <data name="LockScreenPageTitle.Text" xml:space="preserve">
+    <value>חזק את מסך הנעילה של מערכת ההפעלה נגד ניצולים אפשריים והקטן את כמות המידע שחשופה לאנשים לא מורשים כאשר המכשיר נעול.</value>
+  </data>
+  <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
+    <value>עמוד זה מכיל אמצעי אבטחה חשובים שלא נופלים לקטגוריות ספציפיות יותר. החלתם יכולה לשפר ולחזק את האבטחה של המערכת והמכשיר שלך.</value>
+  </data>
+  <data name="NonAdminPageTitle.Text" xml:space="preserve">
+    <value>המדיניות בעמוד זה חלה רק על המשתמש הנוכחי ולא מוחלת על כל המערכת לכל המשתמשים. מסיבה זו, אתה לא דורש הרשאת מנהל מערכת כדי להחיל אותן.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
+    <value>קבל, הצג, צפה, הפעל והשבת את כל התכונות והיכולות האופציונליות שמערכת ההפעלה מציעה בצורה מאוחדת.</value>
+  </data>
+  <data name="TLSPageTitle.Text" xml:space="preserve">
+    <value>חזק את ה-SChannel (Secure Channel) במערכת ההפעלה. זהו ספק תמיכת אבטחה (SSP) שפותח על ידי Microsoft שמיישם פרוטוקולי אבטחה כמו Transport Layer Security (TLS).</value>
+  </data>
+  <data name="UACPageTitle.Text" xml:space="preserve">
+    <value>UAC עוזר למנוע שינויים לא מורשים למערכת ההפעלה על ידי בקשת הרשאה או פרטי מנהל מערכת. עמוד זה מציע מדיניות שתחזק את תהליך העבודה הזה.</value>
+  </data>
+  <data name="WindowsFirewallPageTitle.Text" xml:space="preserve">
+    <value>חומת האש של Windows עוזרת להגן על המחשב שלך על ידי סינון תעבורה נכנסת ויוצאת. כאן אתה יכול להחיל כללים ותצורות שונות כדי לשפר את האבטחה שלה.</value>
+  </data>
+  <data name="WindowsNetworkingPageTitle.Text" xml:space="preserve">
+    <value>הגדרות רשתות Windows מאפשרות לך להגדיר היבטים שונים של קישוריות רשת ואבטחה כמו איך המכשיר שלך מתקשר עם מכשירים אחרים ברשת.</value>
+  </data>
+  <data name="WindowsUpdatePageTitle.Text" xml:space="preserve">
+    <value>התקנת עדכוני Windows במהירות האפשרית לאחר שחרורם חיונית לשמירה על האבטחה והיציבות של המערכת שלך, במיוחד נגד ניצולים חדשים וזירו-דיי. עמוד זה עוזר לך לאכוף מדיניות שתוודא שהעדכונים מותקנים בזמן.</value>
+  </data>
+  <data name="FileReputationPageTitle.Text" xml:space="preserve">
+    <value>אמת את המוניטין של קבצים הניתנים להפעלה וקבצים אחרים באמצעות Microsoft Defender Smart Screen או גרף האמצעי החכם של Microsoft.</value>
+  </data>
+  <data name="InstalledAppsManagementPageTitle.Text" xml:space="preserve">
+    <value>צפה ברשימת כל האפליקציות המותקנות במערכת והסר את הלא רצויות.</value>
+  </data>
+  <data name="PFNVersionLabel.Text" xml:space="preserve">
+  <value>גרסה</value>
+</data>
+<data name="PFNLabel.Text" xml:space="preserve">
+  <value>שם משפחת חבילות</value>
+</data>
+<data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+  <value>הייתה שגיאה בקבלת הפרטים עבור האפליקציה: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+  <value>הייתה שגיאה בקבלת הפרטים של אפליקציה</value>
+</data>
+<data name="PFNArchitectureLabel.Text" xml:space="preserve">
+  <value>ארכיטקטורה</value>
+</data>
+<data name="PFNPublisherLabel.Text" xml:space="preserve">
+  <value>מפרסם</value>
+</data>
+<data name="PFNPublisherID.Text" xml:space="preserve">
+  <value>מזהה מפרסם</value>
+</data>
+<data name="PFNDescription.Text" xml:space="preserve">
+  <value>תיאור</value>
+</data>
+<data name="PFNInstallLocation.Text" xml:space="preserve">
+  <value>מיקום התקנה</value>
+</data>
+<data name="PFNInstalledDateLabel.Text" xml:space="preserve">
+  <value>שונה לאחרונה ב</value>
+</data>
+<data name="PFNDisplayNameLabelText" xml:space="preserve">
+  <value>שם תצוגה</value>
+</data>
+<data name="PFNFullNameLabel.Text" xml:space="preserve">
+  <value>שם מלא</value>
+</data>
+  <data name="ProtectPageVerifySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אמת רק את הקטגוריות ותת-הקטגוריות שבחרת.</value>
+  </data>
+    <data name="ProtectPageVerifySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אמת רק את הקטגוריות ותת-הקטגוריות שבחרת.</value>
+  </data>
+    <data name="ProtectPageApplySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החל רק את הקטגוריות ותת-הקטגוריות שבחרת.</value>
+  </data>
+    <data name="ProtectPageApplySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החל רק את הקטגוריות ותת-הקטגוריות שבחרת.</value>
+  </data>
+  <data name="ProtectPageRemoveSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר רק את הקטגוריות ותת-הקטגוריות שבחרת.</value>
+  </data>
+    <data name="ProtectPageRemoveSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר רק את הקטגוריות ותת-הקטגוריות שבחרת.</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>קבל מדיניות אבטחת מערכת</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קבל את כל מדיניות האבטחה של המערכת שמוגדרות כעת.</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>קבל את כל מדיניות האבטחה של המערכת שמוגדרות כעת.</value>
+  </data>
+  <data name="UnsupportedFileTypeError" xml:space="preserve">
+  <value>סוג קובץ לא נתמך: {0}</value>
+</data>
+<data name="GroupPolicyDataLoadedSuccess" xml:space="preserve">
+  <value>נתוני מדיניות קבוצתית נטענו בהצלחה</value>
+</data>
+<data name="SelectMainAndOtherPOLFilesWarning" xml:space="preserve">
+  <value>אנא בחר קובץ POL ראשי ולפחות קובץ POL אחד נוסף למיזוג.</value>
+</data>
+<data name="MergeSummaryHeader" xml:space="preserve">
+  <value>=== סיכום מיזוג ===</value>
+</data>
+<data name="TotalOperationsLog" xml:space="preserve">
+  <value>סך כל הפעולות: {0}</value>
+</data>
+<data name="AddedEntriesLog" xml:space="preserve">
+  <value>רשומות שנוספו: {0}</value>
+</data>
+<data name="TotalEntriesInMergedFileLog" xml:space="preserve">
+  <value>סך כל הרשומות בקובץ הממוזג: {0}</value>
+</data>
+<data name="POLFilesMergedSuccess" xml:space="preserve">
+  <value>קבצי POL מוזגו בהצלחה. בדוק את יומני הרישום לפרטים.</value>
+</data>
+<data name="SelectAtLeastOnePOLFileWarning" xml:space="preserve">
+  <value>אנא בחר לפחות קובץ POL אחד להמרה.</value>
+</data>
+<data name="POLFilesConvertedToJSONSuccess" xml:space="preserve">
+  <value>קבצי POL הומרו ל-JSON בהצלחה. קובץ הפלט הוא: {0}</value>
+</data>
+<data name="SelectAtLeastOneJSONFileWarning" xml:space="preserve">
+  <value>אנא בחר לפחות קובץ JSON אחד להמרה.</value>
+</data>
+<data name="JSONFileConvertedToPOLSuccess" xml:space="preserve">
+  <value>קובץ JSON הומר ל-POL בהצלחה. קובץ הפלט נשמר ב: {0}</value>
+</data>
+<data name="SelectAtLeastOneSecurityINFFileWarning" xml:space="preserve">
+  <value>אנא בחר לפחות קובץ Security INF אחד להמרה.</value>
+</data>
+  <data name="SecurityINFFileConvertedToJSONSuccess" xml:space="preserve">
+    <value>קובץ Security INF הומר ל-JSON בהצלחה. קובץ הפלט הוא: {0}</value>
+  </data>
+  <data name="SecurityPolicyReportSavedSuccess" xml:space="preserve">
+    <value>דוח מדיניות אבטחה נשמר בהצלחה במיקום הבא: {0}</value>
+  </data>
+  <data name="FoundExistingDISMServiceProcess" xml:space="preserve">
+    <value>נמצא תהליך DISMService קיים (PID: {0}), מסיים...</value>
+  </data>
+  <data name="SuccessfullyTerminatedDISMServiceProcess" xml:space="preserve">
+    <value>תהליך DISMService הסתיים בהצלחה (PID: {0})</value>
+  </data>
+  <data name="FailedToTerminateDISMServiceProcess" xml:space="preserve">
+    <value>נכשל בסיום תהליך DISMService (PID: {0}): {1}</value>
+  </data>
+  <data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
+    <value>שגיאה בעת בדיקת תהליכי DISMService קיימים: {0}</value>
+  </data>
+  <data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
+    <value>בדיקת תקינות קובץ שירות DISM נכשלה</value>
+  </data>
+  <data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
+    <value>נכשל באימות תקינות שירות DISM: {0}</value>
+  </data>
+  <data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
+    <value>אימות תקינות קובץ שירות DISM נכשל. לא ניתן להתחיל שירות.</value>
+  </data>
+  <data name="FailedToCreateProcessWin32Error" xml:space="preserve">
+    <value>נכשל ביצירת תהליך. שגיאת Win32: {0}</value>
+  </data>
+  <data name="FailedToStartService" xml:space="preserve">
+    <value>נכשל בהתחלת שירות: {0}</value>
+  </data>
+  <data name="ServiceError" xml:space="preserve">
+    <value>שגיאת שירות: {0}</value>
+  </data>
+  <data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
+    <value>נכשל בהתחלת שירות DISM. וודא ש-DismService.exe נמצא בתיקיית האפליקציה ושאתה פועל כמנהל מערכת.</value>
+  </data>
+  <data name="FailedToInitializeDISMService" xml:space="preserve">
+    <value>נכשל באתחול שירות DISM: {0}</value>
+  </data>
+  <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
+    <value>נטענו בהצלחה {0} תכונות ויכולות Windows.</value>
+  </data>
+  <data name="ProgressInfo" xml:space="preserve">
+    <value>התקדמות: {0}/{1} ({2}%)</value>
+  </data>
+  <data name="ProgressUnknownInfo" xml:space="preserve">
+    <value>התקדמות: {0}/לא ידוע</value>
+  </data>
+  <data name="SuccessfullyEnabledItem" xml:space="preserve">
+    <value>הופעל בהצלחה {0}: {1}</value>
+  </data>
+  <data name="CouldNotVerifyStateAfterEnabling" xml:space="preserve">
+    <value>לא ניתן לאמת מצב לאחר הפעלה {0}: {1}</value>
+  </data>
+  <data name="FailedToEnableItem" xml:space="preserve">
+    <value>נכשל בהפעלת {0}: {1}</value>
+  </data>
+  <data name="ErrorEnablingItem" xml:space="preserve">
+    <value>שגיאה בהפעלת {0}: {1}</value>
+  </data>
+  <data name="SuccessfullyDisabledItem" xml:space="preserve">
+    <value>הושבת בהצלחה {0}: {1}</value>
+  </data>
+  <data name="CouldNotVerifyStateAfterDisabling" xml:space="preserve">
+    <value>לא ניתן לאמת מצב לאחר השבתה {0}: {1}</value>
+  </data>
+  <data name="FailedToDisableItem" xml:space="preserve">
+    <value>נכשל בהשבתת {0}: {1}</value>
+  </data>
+  <data name="ErrorDisablingItem" xml:space="preserve">
+    <value>שגיאה בהשבתת {0}: {1}</value>
+  </data>
+  <data name="NoItemsSelectedForEnable" xml:space="preserve">
+    <value>לא נבחרו פריטים. אנא בחר תכונה או יכולות אחת או יותר להפעלה.</value>
+  </data>
+  <data name="StartingBulkEnableOperation" xml:space="preserve">
+    <value>מתחיל פעולת הפעלה קבוצתית עבור {0} פריטים נבחרים...</value>
+  </data>
+  <data name="SuccessfullyEnabledAllSelectedItems" xml:space="preserve">
+    <value>הופעלו בהצלחה כל {0} הפריטים הנבחרים.</value>
+  </data>
+  <data name="FailedToEnableAllSelectedItems" xml:space="preserve">
+    <value>נכשל בהפעלת כל {0} הפריטים הנבחרים.</value>
+  </data>
+  <data name="BulkEnableCompleted" xml:space="preserve">
+    <value>הפעלה קבוצתית הושלמה: {0} הצליחו, {1} נכשלו.</value>
+  </data>
+  <data name="FailedItems" xml:space="preserve">
+    <value>פריטים שנכשלו: {0}</value>
+  </data>
+  <data name="ErrorDuringBulkEnableOperation" xml:space="preserve">
+    <value>שגיאה במהלך פעולת הפעלה קבוצתית</value>
+  </data>
+  <data name="NoItemsSelectedForDisable" xml:space="preserve">
+    <value>לא נבחרו פריטים. אנא בחר תכונה או יכולות אחת או יותר להשבתה.</value>
+  </data>
+  <data name="StartingBulkDisableOperation" xml:space="preserve">
+    <value>מתחיל פעולת השבתה קבוצתית עבור {0} פריטים נבחרים...</value>
+  </data>
+  <data name="SuccessfullyDisabledAllSelectedItems" xml:space="preserve">
+    <value>הושבתו בהצלחה כל {0} הפריטים הנבחרים.</value>
+  </data>
+  <data name="FailedToDisableAllSelectedItems" xml:space="preserve">
+    <value>נכשל בהשבתת כל {0} הפריטים הנבחרים.</value>
+  </data>
+  <data name="BulkDisableCompleted" xml:space="preserve">
+    <value>השבתה קבוצתית הושלמה: {0} הצליחו, {1} נכשלו.</value>
+  </data>
+  <data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
+    <value>שגיאה במהלך פעולת השבתה קבוצתית</value>
+  </data>
+  <data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
+    <value>נכשל באתחול שירות DISM לחיזוק אבטחה.</value>
+  </data>
+  <data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
+    <value>מתחיל עם {0} תכונות ויכולות אופציונליות של Windows...</value>
+  </data>
+  <data name="SuccessfullyAppliedSecurityHardening" xml:space="preserve">
+    <value>הוחל בהצלחה חיזוק אבטחה על כל {0} התכונות והיכולות האופציונליות של Windows.</value>
+  </data>
+  <data name="FailedToApplySecurityHardening" xml:space="preserve">
+    <value>נכשל בהחלת חיזוק אבטחה על כל {0} הפריטים.</value>
+  </data>
+  <data name="SecurityHardeningCompleted" xml:space="preserve">
+    <value>חיזוק אבטחה הושלם: {0} הצליחו, {1} נכשלו.</value>
+  </data>
+  <data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
+    <value>שגיאה במהלך פעולת חיזוק אבטחה</value>
+  </data>
+  <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
+    <value>נכשל באתחול שירות DISM לאימות.</value>
+  </data>
+  <data name="VerifyingSecurityHardeningState" xml:space="preserve">
+    <value>מאמת מצב חיזוק אבטחה עבור {0} תכונות ויכולות אופציונליות של Windows...</value>
+  </data>
+  <data name="SecurityHardeningVerificationPassed" xml:space="preserve">
+    <value>אימות חיזוק אבטחה עבר: כל {0} הפריטים במצבים הנכונים שלהם.</value>
+  </data>
+  <data name="SecurityHardeningVerificationCompleted" xml:space="preserve">
+    <value>אימות חיזוק אבטחה הושלם: {0} נכונים, {1} שגויים.</value>
+  </data>
+  <data name="IncorrectItems" xml:space="preserve">
+    <value>פריטים שגויים: {0}</value>
+  </data>
+  <data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
+    <value>שגיאה במהלך אימות חיזוק אבטחה</value>
+  </data>
+  <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
+    <value>נכשל באתחול שירות DISM להסרת חיזוק אבטחה.</value>
+  </data>
+  <data name="RemovingSecurityHardening" xml:space="preserve">
+    <value>מסיר חיזוק אבטחה עבור {0} תכונות ויכולות אופציונליות של Windows...</value>
+  </data>
+  <data name="SuccessfullyRemovedSecurityHardening" xml:space="preserve">
+    <value>הוסר בהצלחה חיזוק אבטחה מכל {0} התכונות והיכולות האופציונליות של Windows.</value>
+  </data>
+  <data name="FailedToRemoveSecurityHardening" xml:space="preserve">
+    <value>נכשל בהסרת חיזוק אבטחה מכל {0} הפריטים.</value>
+  </data>
+  <data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
+    <value>הסרת חיזוק אבטחה הושלמה: {0} הצליחו, {1} נכשלו.</value>
+  </data>
+  <data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
+    <value>שגיאה במהלך פעולת הסרת חיזוק אבטחה</value>
+  </data>
+  <data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
+    <value>שגיאה בשחרור קליינט שירות DISM: {0}</value>
+  </data>
+  <data name="NotPresentState" xml:space="preserve">
+    <value>לא קיים</value>
+  </data>
+  <data name="UninstallPendingState" xml:space="preserve">
+    <value>הסרת התקנה ממתינה</value>
+  </data>
+  <data name="StagedState" xml:space="preserve">
+    <value>מוכן</value>
+  </data>
+  <data name="RemovedState" xml:space="preserve">
+    <value>הוסר</value>
+  </data>
+  <data name="InstalledState" xml:space="preserve">
+    <value>מותקן</value>
+  </data>
+  <data name="InstallPendingState" xml:space="preserve">
+    <value>התקנה ממתינה</value>
+  </data>
+  <data name="SupersededState" xml:space="preserve">
+    <value>הוחלף</value>
+  </data>
+  <data name="PartiallyInstalledState" xml:space="preserve">
+    <value>מותקן חלקית</value>
+  </data>
+  <data name="UnknownState" xml:space="preserve">
+    <value>לא ידוע</value>
+  </data>
+  <data name="FeatureType" xml:space="preserve">
+    <value>תכונה</value>
+  </data>
+  <data name="CapabilityType" xml:space="preserve">
+    <value>יכולת</value>
+  </data>
+  <data name="FailedToRetrieveASRRuleIDs" xml:space="preserve">
+    <value>נכשל בקבלת מזהי כללי ASR מהמערכת</value>
+  </data>
+  <data name="FailedToRetrieveASRRuleActions" xml:space="preserve">
+    <value>נכשל בקבלת פעולות כללי ASR מהמערכת</value>
+  </data>
+  <data name="FailedToParseASRRulesData" xml:space="preserve">
+    <value>נכשל בניתוח נתוני כללי ASR מהמערכת</value>
+  </data>
+  <data name="MismatchBetweenIDsAndActionsCount" xml:space="preserve">
+    <value>אי-התאמה בין מספר המזהים ({0}) לבין מספר הפעולות ({1})</value>
+  </data>
+  <data name="SuccessfullyRetrievedASRRuleStates" xml:space="preserve">
+    <value>נתקבלו בהצלחה {0} מצבי כללי ASR מהמערכת</value>
+  </data>
+  <data name="AppliedASRRuleWithState" xml:space="preserve">
+    <value>הוחל כלל ASR {0} עם מצב {1}</value>
+  </data>
+  <data name="AppliedASRRulesSuccessfully" xml:space="preserve">
+    <value>כללי ASR הוחלו בהצלחה</value>
+  </data>
+  <data name="RemovedASRRulesSuccessfully" xml:space="preserve">
+    <value>כללי ASR הוסרו בהצלחה</value>
+  </data>
+  <data name="RetrievedSystemStatesAndUpdatedASRRules" xml:space="preserve">
+    <value>נתקבלו מצבי מערכת ועודכנו {0} כללי ASR. ממשק המשתמש עודכן כדי לשקף את מצב המערכת הנוכחי.</value>
+  </data>
+  <data name="FailedToVerifyASRRules" xml:space="preserve">
+    <value>נכשל באימות כללי ASR</value>
+  </data>
+  <data name="SuccessfullyAppliedRecommendedValuesASRRules" xml:space="preserve">
+    <value>הוחלו בהצלחה כל הערכים המומלצים לכללי ASR.</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppToUninstall" xml:space="preserve">
+    <value>לא ניתן לקבוע איזו אפליקציה להסיר.</value>
+  </data>
+  <data name="StartingUninstallationOfApp" xml:space="preserve">
+    <value>מתחיל הסרת התקנה של האפליקציה: {0}...</value>
+  </data>
+  <data name="SuccessfullyUninstalledApp" xml:space="preserve">
+    <value>הוסרה בהצלחה התקנת האפליקציה: {0}</value>
+  </data>
+  <data name="NoAppsSelectedForUninstallation" xml:space="preserve">
+    <value>לא נבחרו אפליקציות להסרת התקנה.</value>
+  </data>
+  <data name="StartingUninstallationOfMultipleApps" xml:space="preserve">
+    <value>מתחיל הסרת התקנה של {0} אפליקציה(ות)...</value>
+  </data>
+  <data name="AllAppsSuccessfullyUninstalled" xml:space="preserve">
+    <value>כל האפליקציות הוסרו בהצלחה.</value>
+  </data>
+  <data name="ErrorCodeAndText" xml:space="preserve">
+    <value>קוד שגיאה: {0} - טקסט שגיאה: {1}</value>
+  </data>
+  <data name="RemovalCanceled" xml:space="preserve">
+    <value>ההסרה בוטלה</value>
+  </data>
+  <data name="AppSuccessfullyRemoved" xml:space="preserve">
+    <value>האפליקציה עם השם המלא '{0}' הוסרה בהצלחה.</value>
+  </data>
+  <data name="RemovalStatusUnknown" xml:space="preserve">
+    <value>סטטוס הסרה לא ידוע</value>
+  </data>
+  <data name="TryingToRemoveAppForCurrentUserOnly" xml:space="preserve">
+    <value>מנסה להסיר את האפליקציה עם השם המלא '{0}' שוב אבל עבור המשתמש הנוכחי בלבד.</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppLocationToOpen" xml:space="preserve">
+    <value>לא ניתן לקבוע איזה מיקום אפליקציה לפתוח.</value>
+  </data>
+  <data name="NoInstallationLocationAvailable" xml:space="preserve">
+    <value>אין מיקום התקנה זמין עבור {0}.</value>
+  </data>
+  <data name="InstallationLocationDoesNotExist" xml:space="preserve">
+    <value>מיקום התקנה לא קיים: {0}</value>
+  </data>
+  <data name="OpenedInstallationLocation" xml:space="preserve">
+    <value>נפתח מיקום התקנה עבור {0}</value>
+  </data>
+  <data name="CouldNotDetermineWhichAppDetailsToCopy" xml:space="preserve">
+    <value>לא ניתן לקבוע איזה פרטי אפליקציה להעתיק.</value>
+  </data>
+  <data name="JSONDependencyRegistered" xml:space="preserve">
+    <value>תלות JSON נרשמה: {0} - {1} ({2}, {3})</value>
+  </data>
+  <data name="DependencyCycleDetected" xml:space="preserve">
+    <value>זוהה מחזור תלות: מדלג על {0} כדי למנוע לולאה אינסופית</value>
+  </data>
+  <data name="DependencySkip" xml:space="preserve">
+    <value>דילוג תלות: {0} כבר באצווה המעובדת</value>
+  </data>
+  <data name="DependencyResolved" xml:space="preserve">
+    <value>תלות פתורה: {0} - {1} ({2}, {3})</value>
+  </data>
+  <data name="DependencyNotFound" xml:space="preserve">
+    <value>תלות לא נמצאה: {0} מצוין על ידי {1}</value>
+  </data>
+  <data name="SecurityPolicyRegistryApplyBulkInvokeError" xml:space="preserve">
+    <value>SecurityPolicyRegistryApply צריך להיקרא בקבוצה דרך SecurityPolicyManager</value>
+  </data>
+  <data name="GroupPolicyApplyBulkInvokeError" xml:space="preserve">
+    <value>GroupPolicyApply צריך להיקרא בקבוצה דרך ApplyPolicies</value>
+  </data>
+  <data name="RegistryApplyBulkInvokeError" xml:space="preserve">
+    <value>RegistryApply צריך להיקרא בקבוצה דרך RegistryManager.AddPoliciesToSystem</value>
+  </data>
+  <data name="SecurityPolicyRegistryVerifyBulkInvokeError" xml:space="preserve">
+    <value>צריך להיקרא בקבוצה.</value>
+  </data>
+  <data name="SpecializedApplySuccess" xml:space="preserve">
+    <value>החלה מתמחה ({0}): {1}\{2} - הצלחה</value>
+  </data>
+  <data name="SpecializedRemoveSuccess" xml:space="preserve">
+    <value>הסרה מתמחה ({0}): {1}\{2} - הצלחה</value>
+  </data>
+  <data name="ErrorInSpecializedStrategy" xml:space="preserve">
+    <value>שגיאה באסטרטגיה מתמחה {0} ({1}) עבור {2}\{3}.</value>
+  </data>
+  <data name="ProcessingBeforeDependencies" xml:space="preserve">
+    <value>מעבד {0} תלויות-לפני עבור פעולה {1}</value>
+  </data>
+  <data name="ProcessingAfterDependencies" xml:space="preserve">
+    <value>מעבד {0} תלויות-אחרי עבור פעולה {1}</value>
+  </data>
+  <data name="ErrorProcessingGroupPolicyMUnits" xml:space="preserve">
+    <value>שגיאה בעיבוד יחידות M של מדיניות קבוצתית בקבוצה.</value>
+  </data>
+  <data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
+    <value>שגיאה בעיבוד יחידות M של רישום בקבוצה.</value>
+  </data>
+  <data name="ErrorProcessingSecurityPolicyRegistryMUnits" xml:space="preserve">
+    <value>שגיאה בעיבוד יחידות M של רישום מדיניות אבטחה בקבוצה.</value>
+  </data>
+  <data name="FallbackVerifyResult" xml:space="preserve">
+    <value>אימות חלופי: {0}\{1} = {2}</value>
+  </data>
+  <data name="ErrorInFallbackVerification" xml:space="preserve">
+    <value>שגיאה באימות חלופי עבור {0}\{1}: {2}</value>
+  </data>
+  <data name="ErrorProcessingRegularMUnit" xml:space="preserve">
+    <value>שגיאה בעיבוד יחידת M רגילה {0}</value>
+  </data>
+  <data name="ApplyingSecurityMeasures" xml:space="preserve">
+    <value>מחיל {0} אמצעי אבטחה...</value>
+  </data>
+  <data name="RemovingSecurityMeasures" xml:space="preserve">
+    <value>מסיר {0} אמצעי אבטחה...</value>
+  </data>
+  <data name="VerifyingSecurityMeasures" xml:space="preserve">
+    <value>מאמת {0} אמצעי אבטחה...</value>
+  </data>
+  <data name="ProcessingSecurityMeasures" xml:space="preserve">
+    <value>מעבד {0} אמצעי אבטחה...</value>
+  </data>
+  <data name="SuccessfullyAppliedSecurityMeasures" xml:space="preserve">
+    <value>הוחלו בהצלחה {0} אמצעי אבטחה</value>
+  </data>
+  <data name="SuccessfullyRemovedSecurityMeasures" xml:space="preserve">
+    <value>הוסרו בהצלחה {0} אמצעי אבטחה</value>
+  </data>
+  <data name="SuccessfullyVerifiedSecurityMeasures" xml:space="preserve">
+    <value>אומתו בהצלחה {0} אמצעי אבטחה</value>
+  </data>
+  <data name="SuccessfullyProcessedSecurityMeasures" xml:space="preserve">
+    <value>עובדו בהצלחה {0} אמצעי אבטחה</value>
+  </data>
+  <data name="CouldNotLoadPoliciesFromPath" xml:space="preserve">
+    <value>לא ניתן לטעון מדיניות מ: {0}</value>
+  </data>
+  <data name="InvalidSource" xml:space="preserve">
+    <value>מקור לא תקין: {0}</value>
+  </data>
+  <data name="SecurityPolicyRegistryEntryMustHaveDefaultRegValue" xml:space="preserve">
+    <value>רשומת SecurityPolicyRegistry {0}\{1} חייבת לכלול DefaultRegValue לא ריק</value>
+  </data>
+  <data name="ErrorCreatingMUnitsForCategory" xml:space="preserve">
+    <value>שגיאה ביצירת יחידות M עבור קטגוריה {0}: {1}</value>
+  </data>
+  <data name="SUCCESS" xml:space="preserve">
+    <value>הצלחה</value>
+  </data>
+  <data name="FAILED" xml:space="preserve">
+    <value>נכשל</value>
+  </data>
+  <data name="FailedToOpenBCDSystemStore" xml:space="preserve">
+    <value>נכשל בפתיחת חנות מערכת BCD</value>
+  </data>
+  <data name="FailedToParseCurrent EntryGUID" xml:space="preserve">
+    <value>נכשל בניתוח GUID רשומה נוכחית</value>
+  </data>
+  <data name="CurrentBootEntryNotFoundAdministrator" xml:space="preserve">
+    <value>רשומת אתחול נוכחית לא נמצאה. נסה לפעול כמנהל מערכת.</value>
+  </data>
+  <data name="FailedToOpenBCDObject" xml:space="preserve">
+    <value>נכשל בפתיחת אובייקט BCD</value>
+  </data>
+  <data name="FailedToSetBCDElement" xml:space="preserve">
+    <value>נכשל בהגדרת רכיב BCD</value>
+  </data>
+  <data name="MpClientDllNotFound" xml:space="preserve">
+    <value>MpClient.dll לא נמצא</value>
+  </data>
+  <data name="MpQueryFileTrustByHandle2NotFound" xml:space="preserve">
+    <value>MpQueryFileTrustByHandle2 לא נמצא</value>
+  </data>
+  <data name="ErrorOpeningHandleToFile" xml:space="preserve">
+    <value>שגיאה בפתיחת ידית לקובץ '{0}': {1}</value>
+  </data>
+  <data name="ExtraInfoFileReputationCheck" xml:space="preserve">
+    <value>היה מידע נוסף בנוגע לבדיקת מוניטין קובץ: {0}, {1}, {2}, {3}</value>
+  </data>
+  <data name="FailedToQueryReputation" xml:space="preserve">
+    <value>נכשל בשאילתת המוניטין: {0}</value>
+  </data>
+  <data name="HighTrust" xml:space="preserve">
+    <value>אמון גבוה</value>
+  </data>
+  <data name="GoodTrust" xml:space="preserve">
+    <value>אמון טוב</value>
+  </data>
+  <data name="UnavailableOrUnknown" xml:space="preserve">
+    <value>לא זמין או לא ידוע</value>
+  </data>
+  <data name="PotentiallyUnwantedApplication" xml:space="preserve">
+    <value>אפליקציה שלא רצויה פוטנציאלית (PUA)</value>
+  </data>
+  <data name="Malicious" xml:space="preserve">
+    <value>זדוני</value>
+  </data>
+  <data name="UnrecognizedScore" xml:space="preserve">
+    <value>ניקוד לא מזוהה: ({0})</value>
+  </data>
+  <data name="InvalidRegistryBaseKey" xml:space="preserve">
+    <value>מפתח בסיס רישום לא תקין: {0}</value>
+  </data>
+  <data name="RegistryKeyDidNotHaveRegValue" xml:space="preserve">
+    <value>למפתח הרישום לא היה RegValue כלשהו</value>
+  </data>
+  <data name="InvalidRegistryValueType" xml:space="preserve">
+    <value>סוג ערך רישום לא תקין</value>
+  </data>
+  <data name="InvalidActionSpecified" xml:space="preserve">
+    <value>פעולה לא תקינה צוינה: {0}</value>
+  </data>
+  <data name="AppliedRegistryEntry" xml:space="preserve">
+    <value>הוחל: {0}\{1}\{2}</value>
+  </data>
+  <data name="ErrorApplyingRegistryPolicy" xml:space="preserve">
+    <value>שגיאה בהחלת מדיניות רישום {0}\{1}\{2}: {3}</value>
+  </data>
+  <data name="RegistryApplicationComplete" xml:space="preserve">
+    <value>החלת רישום הושלמה: {0} מתוך {1} מדיניות הוחלו בהצלחה</value>
+  </data>
+  <data name="RemovedRegistryEntry" xml:space="preserve">
+    <value>הוסר</value>
+  </data>
+  <data name="ResetToDefaultRegistryEntry" xml:space="preserve">
+    <value>אופס לברירת מחדל</value>
+  </data>
+  <data name="RemovedRegistryEntryFormat" xml:space="preserve">
+    <value>{0}: {1}\{2}\{3}</value>
+  </data>
+  <data name="ErrorRemovingRegistryPolicy" xml:space="preserve">
+    <value>שגיאה בהסרת מדיניות רישום {0}\{1}\{2}: {3}</value>
+  </data>
+  <data name="RegistryRemovalComplete" xml:space="preserve">
+    <value>הסרת רישום הושלמה: {0} מתוך {1} מדיניות הוסרו בהצלחה</value>
+  </data>
+  <data name="VerifyRegistryMatch" xml:space="preserve">
+    <value>אימות: {0}\{1}\{2} = התאמה</value>
+  </data>
+  <data name="VerifyRegistryMismatch" xml:space="preserve">
+    <value>אימות: {0}\{1}\{2} = אי-התאמה</value>
+  </data>
+  <data name="ErrorVerifyingRegistryPolicy" xml:space="preserve">
+    <value>שגיאה באימות מדיניות רישום {0}\{1}\{2}: {3}</value>
+  </data>
+  <data name="RegistryVerificationComplete" xml:space="preserve">
+    <value>אימות רישום הושלם: {0} מתוך {1} מדיניות מתאימות</value>
+  </data>
+  <data name="NoSettingsProvided" xml:space="preserve">
+    <value>לא סופקו הגדרות</value>
+  </data>
+  <data name="SettingSystemAccessPolicyViaSecedit" xml:space="preserve">
+    <value>מגדיר מדיניות גישת מערכת דרך secedit...</value>
+  </data>
+  <data name="CreatedSecurityTemplate" xml:space="preserve">
+    <value>נוצרה תבנית אבטחה: {0}</value>
+  </data>
+  <data name="TemplateContent" xml:space="preserve">
+    <value>תוכן תבנית: {0}</value>
+  </data>
+  <data name="FailedToStartSeceditProcess" xml:space="preserve">
+    <value>נכשל בהתחלת תהליך secedit</value>
+  </data>
+  <data name="SeceditExitCode" xml:space="preserve">
+    <value>קוד יציאה Secedit: {0}</value>
+  </data>
+  <data name="SeceditOutput" xml:space="preserve">
+    <value>פלט Secedit: {0}</value>
+  </data>
+  <data name="SeceditError" xml:space="preserve">
+    <value>שגיאת Secedit: {0}</value>
+  </data>
+  <data name="SeceditCompletedSuccessfully" xml:space="preserve">
+    <value>Secedit הושלם בהצלחה</value>
+  </data>
+  <data name="SeceditFailedWithExitCode" xml:space="preserve">
+    <value>Secedit נכשל עם קוד יציאה: {0}</value>
+  </data>
+  <data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
+    <value>אזהרה: לא ניתן למחוק קבצים זמניים.</value>
+  </data>
+  <data name="SeceditMethodFailed" xml:space="preserve">
+    <value>שיטת Secedit נכשלה.</value>
+  </data>
+  <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
+    <value>לא נמצאו הגדרות [System Access] בקובץ המצוין</value>
+  </data>
+  <data name="ExtractedSystemAccessSettingsFromFile" xml:space="preserve">
+    <value>נחלצו {0} הגדרות System Access מקובץ: {1}</value>
+  </data>
+  <data name="FileNotFoundPath" xml:space="preserve">
+    <value>קובץ לא נמצא: {0}</value>
+  </data>
+  <data name="CreatedPolicyDirectory" xml:space="preserve">
+    <value>נוצרה תיקיית מדיניות: {0}</value>
+  </data>
+  <data name="FileTooSmallForValidHeader" xml:space="preserve">
+    <value>הקובץ קטן מדי כדי להכיל כותרת תקינה</value>
+  </data>
+  <data name="InvalidSignatureExpected" xml:space="preserve">
+    <value>חתימה לא תקינה: 0x{0:X8}. צפוי: 0x{1:X8}</value>
+  </data>
+  <data name="ErrorReadingEntryAtPosition" xml:space="preserve">
+    <value>שגיאה בקריאת רשומה במיקום {0}: {1}</value>
+  </data>
+  <data name="ExpectedOpeningBracketAtStartOfEntry" xml:space="preserve">
+    <value>צפוי סוגריים פותחים בתחילת הרשומה, התקבל: 0x{0:X4}</value>
+  </data>
+  <data name="ExpectedSemicolonDelimiterAfterKeyName" xml:space="preserve">
+    <value>צפויה פסיק-נקודה אחרי שם מפתח, התקבל: 0x{0:X4}</value>
+  </data>
+  <data name="ExpectedSemicolonDelimiterAfterValueName" xml:space="preserve">
+    <value>צפויה פסיק-נקודה אחרי שם ערך, התקבל: 0x{0:X4}</value>
+  </data>
+  <data name="ExpectedSemicolonDelimiterAfterType" xml:space="preserve">
+    <value>צפויה פסיק-נקודה אחרי סוג, התקבל: 0x{0:X4}</value>
+  </data>
+  <data name="ExpectedSemicolonDelimiterAfterSize" xml:space="preserve">
+    <value>צפויה פסיק-נקודה אחרי גודל, התקבל: 0x{0:X4}</value>
+  </data>
+  <data name="CouldNotReadBytesOfData" xml:space="preserve">
+    <value>לא ניתן לקרוא {0} בייטים של נתונים, התקבלו רק {1} בייטים</value>
+  </data>
+  <data name="ExpectedClosingBracketAfterData" xml:space="preserve">
+    <value>צפוי סוגריים סוגרים אחרי נתונים, התקבל: 0x{0:X4}</value>
+  </data>
+  <data name="UnexpectedEndOfStreamReadingUnicodeString" xml:space="preserve">
+    <value>סוף זרם לא צפוי בעת קריאת מחרוזת Unicode</value>
+  </data>
+  <data name="AtLeastOneOtherPolicyFileMustBeProvided" xml:space="preserve">
+    <value>חייב לספק לפחות קובץ מדיניות אחד נוסף</value>
+  </data>
+  <data name="MainPolicyFilePathCannotBeNullOrEmpty" xml:space="preserve">
+    <value>נתיב קובץ מדיניות ראשי לא יכול להיות ריק או null</value>
+  </data>
+  <data name="AtLeastOneOtherPolicyFilePathMustBeProvided" xml:space="preserve">
+    <value>חייב לספק לפחות נתיב קובץ מדיניות אחד נוסף</value>
+  </data>
+  <data name="PolicyFilePathAtIndexCannotBeNullOrEmpty" xml:space="preserve">
+    <value>נתיב קובץ מדיניות באינדקס {0} לא יכול להיות ריק או null</value>
+  </data>
+  <data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
+    <value>נטען קובץ מדיניות קיים עם {0} רשומות</value>
+  </data>
+  <data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
+    <value>קובץ מדיניות לא קיים, יוצר קובץ מדיניות ריק חדש</value>
+  </data>
+  <data name="ReplacedEntries" xml:space="preserve">
+    <value>רשומות שהוחלפו: {0}</value>
+  </data>
+  <data name="PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified" xml:space="preserve">
+    <value>קובץ מדיניות לא קיים, מסמן את כל המדיניות כלא מאומתת</value>
+  </data>
+  <data name="VerificationCompletePolicyFileDoesNotExist" xml:space="preserve">
+    <value>אימות הושלם: 0 מתוך {0} מדיניות מתאימות (קובץ מדיניות לא קיים)</value>
+  </data>
+  <data name="VerifyPolicyMatch" xml:space="preserve">
+    <value>אימות: {0}\{1} = התאמה</value>
+  </data>
+  <data name="VerifyPolicyMismatch" xml:space="preserve">
+    <value>אימות: {0}\{1} = אי-התאמה</value>
+  </data>
+  <data name="VerifyPolicyNotFound" xml:space="preserve">
+    <value>אימות: {0}\{1} = לא נמצא</value>
+  </data>
+  <data name="VerificationCompletePoliciesMatch" xml:space="preserve">
+    <value>אימות הושלם: {0} מתוך {1} מדיניות מתאימות</value>
+  </data>
+  <data name="PolicyFileDoesNotExistNothingToRemove" xml:space="preserve">
+    <value>קובץ מדיניות לא קיים, אין מה להסיר</value>
+  </data>
+  <data name="RemovedPolicyEntry" xml:space="preserve">
+    <value>הוסר: {0}</value>
+  </data>
+  <data name="PolicyRemovalComplete" xml:space="preserve">
+    <value>הסרת מדיניות הושלמה: {0} מדיניות הוסרו</value>
+  </data>
+   <data name="ProtectNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>ראשי</value>
+  </data>
+  <data name="ProtectNavigationViewItem.Content" xml:space="preserve">
+    <value>הגנה</value>
+  </data>
+  <data name="ProtectNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השתמש בסעיף זה לביצוע אוטומטי של החלה, אימות או הסרה של אמצעי אבטחה בכמויות גדולות. קבוצות הגדרות אבטחה קיימות זמינות כדי להקל על קבלת ההחלטות.</value>
+  </data>
+  <data name="ProtectNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>השתמש בסעיף זה לביצוע אוטומטי של החלה, אימות או הסרה של אמצעי אבטחה בכמויות גדולות. קבוצות הגדרות אבטחה קיימות זמינות כדי להקל על קבלת ההחלטות.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החל, אמת או הסר אמצעי אבטחה הקשורים ל-Microsoft Defender.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>החל, אמת או הסר אמצעי אבטחה הקשורים ל-Microsoft Defender.</value>
+  </data>
+  <data name="ASRNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החל, אמת או הסר כללי צמצום משטח התקפה.</value>
+  </data>
+  <data name="ASRNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החל, אמת או הסר כללי צמצום משטח התקפה.</value>
+  </data>
+  <data name="BitLockerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נהל הגדרות אבטחה של BitLocker המשמשות להגדרת אופן האבטחה של המכשיר והנתונים במנוחה.</value>
+  </data>
+  <data name="BitLockerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נהל הגדרות אבטחה של BitLocker המשמשות להגדרת אופן האבטחה של המכשיר והנתונים במנוחה.</value>
+  </data>
+  <data name="TLSSecurityNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נהל TLS וחבילות צפנים להגנה על הנתונים שלך במעבר.</value>
+  </data>
+  <data name="TLSSecurityNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נהל TLS וחבילות צפנים להגנה על הנתונים שלך במעבר.</value>
+  </data>
+  <data name="LockScreenNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חזק את מסך הנעילה וצמצם את כמות המידע הזמין למשתמשים לא מאומתים.</value>
+  </data>
+  <data name="LockScreenNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>חזק את מסך הנעילה וצמצם את כמות המידע הזמין למשתמשים לא מאומתים.</value>
+  </data>
+  <data name="UACNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אבטח את הגבול בין משימות ללא הרשאות מוגברות ומשימות עם הרשאות מוגברות.</value>
+  </data>
+  <data name="UACNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אבטח את הגבול בין משימות ללא הרשאות מוגברות ומשימות עם הרשאות מוגברות.</value>
+  </data>
+  <data name="DeviceGuardNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נצל תכונות אבטחה של חומרה כדי לחזק את מערכת ההפעלה והתוכנה.</value>
+  </data>
+  <data name="DeviceGuardNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>נצל תכונות אבטחה של חומרה כדי לחזק את מערכת ההפעלה והתוכנה.</value>
+  </data>
+  <data name="WindowsFirewallNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קבע תצורה ואמת הגדרות חומת האש של Windows.</value>
+  </data>
+  <data name="WindowsFirewallNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>קבע תצורה ואמת הגדרות חומת האש של Windows.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף, הסר וצפה במצבי כל התכונות והיכולות האופציונליות של Windows.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף, הסר וצפה במצבי כל התכונות והיכולות האופציונליות של Windows.</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אבטח את מערכת ההפעלה שלך ברשת אליה היא מחוברת.</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אבטח את מערכת ההפעלה שלך ברשת אליה היא מחוברת.</value>
+  </data>
+  <data name="MiscellaneousNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צפה, החל או הסר אמצעי אבטחה שאינם נכנסים לקטגוריות ספציפיות יותר.</value>
+  </data>
+  <data name="MiscellaneousNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צפה, החל או הסר אמצעי אבטחה שאינם נכנסים לקטגוריות ספציפיות יותר.</value>
+  </data>
+  <data name="WindowsUpdateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קבע תצורה של הגדרות Windows Update כדי להבטיח שתקבל את עדכוני האבטחה העדכניים ביותר כמה שיותר מהר.</value>
+  </data>
+  <data name="WindowsUpdateNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>קבע תצורה של הגדרות Windows Update כדי להבטיח שתקבל את עדכוני האבטחה העדכניים ביותר כמה שיותר מהר.</value>
+  </data>
+  <data name="EdgeBrowserNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חזק את דפדפן Edge לחוויית גלישה בטוחה ופרטית יותר.</value>
+  </data>
+  <data name="EdgeBrowserNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>חזק את דפדפן Edge לחוויית גלישה בטוחה ופרטית יותר.</value>
+  </data>
+  <data name="CertificatesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מצא את כל האישורים במערכת שלך שאינם מעוגנים לאף אישור ברשימת אישורי השורש המהימנים של Microsoft.</value>
+  </data>
+  <data name="CertificatesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מצא את כל האישורים במערכת שלך שאינם מעוגנים לאף אישור ברשימת אישורי השורש המהימנים של Microsoft.</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>חסום טווחי כתובות IP של מדינות ברשימות הסנקציות הרשמיות השונות של ארצות הברית.</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>חסום טווחי כתובות IP של מדינות ברשימות הסנקציות הרשמיות השונות של ארצות הברית.</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אמת, הסר והחל אמצעי אבטחה שחלים רק על המשתמש הנוכחי.</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>אמת, הסר והחל אמצעי אבטחה שחלים רק על המשתמש הנוכחי.</value>
+  </data>
+  <data name="GroupPolicyEditorNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קרא קבצי Group Policy, ייצא אותם ל-JSON, מזג אותם ואחזר את פרטי מדיניות האבטחה המלאים של המערכת.</value>
+  </data>
+  <data name="GroupPolicyEditorNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>קרא קבצי Group Policy, ייצא אותם ל-JSON, מזג אותם ואחזר את פרטי מדיניות האבטחה המלאים של המערכת.</value>
+  </data>
+    <data name="ApplyText.Text" xml:space="preserve">
+    <value>החל</value>
+  </data>
+      <data name="VerifyText.Text" xml:space="preserve">
+    <value>אמת</value>
+  </data>
+      <data name="RemoveText.Text" xml:space="preserve">
+    <value>הסר</value>
+  </data>
+  <data name="OpenTheFollowingLinkInBrowser" xml:space="preserve">
+    <value>פתח את הקישור הבא בדפדפן: {0}</value>
+  </data>
+  <data name="StatusOverviewText.Text" xml:space="preserve">
+    <value>סקירת סטטוס</value>
+  </data>
+  <data name="SearchSecurityMeasuresPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>חפש אמצעי אבטחה...</value>
+  </data>
+  <data name="SearchFeatureCapabilityPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>חפש בין התכונות והיכולות...</value>
+  </data>
+  <data name="ReputationText.Text" xml:space="preserve">
+    <value>מוניטין</value>
+  </data>
+  <data name="SourceText.Text" xml:space="preserve">
+    <value>מקור</value>
+  </data>
+  <data name="DurationText.Text" xml:space="preserve">
+    <value>משך זמן</value>
+  </data>
+  <data name="CopyToClipBoard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק ללוח</value>
+  </data>
+  <data name="CopyToClipBoard.AutomationProperties.HelpText" xml:space="preserve">
+     <value>העתק ללוח</value>
+  </data>
+  <data name="GetAppsListText.Text" xml:space="preserve">
+    <value>קבל רשימת אפליקציות</value>
+  </data>
+  <data name="UninstallSelectedAppsText.Text" xml:space="preserve">
+    <value>הסר אפליקציות נבחרות</value>
+  </data>
+  <data name="SearchForAppsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>חפש אפליקציות...</value>
+  </data>
+  <data name="UninstallText.Text" xml:space="preserve">
+    <value>הסר התקנה</value>
+  </data>
+    <data name="OpenLocationText.Text" xml:space="preserve">
+    <value>פתח מיקום</value>
+  </data>
+  <data name="CopyAppDetailsText.Text" xml:space="preserve">
+    <value>העתק פרטי אפליקציה</value>
+  </data>
+  <data name="DetailsText.Text" xml:space="preserve">
+    <value>פרטים</value>
+  </data>
+  <data name="ConvertINFToJSONText.Text" xml:space="preserve">
+    <value>המר קובץ INF אבטחה ל-JSON</value>
+  </data>
+    <data name="ConvertINFToJSONButton.Content" xml:space="preserve">
+    <value>המר</value>
+  </data>
+  <data name="ConvertINFToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל להמיר את קובץ INF מדיניות האבטחה הנבחר ל-JSON.</value>
+  </data>
+  <data name="ConvertINFToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל להמיר את קובץ INF מדיניות האבטחה הנבחר ל-JSON.</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.Header" xml:space="preserve">
+    <value>תיקיית פלט לקבצי JSON</value>
+  </data>
+    <data name="OutputDirForJSONSettingsCard.Description" xml:space="preserve">
+    <value>בחר היכן לשמור את קבצי ה-JSON המומרים</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר היכן לשמור את קבצי ה-JSON המומרים</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר היכן לשמור את קבצי ה-JSON המומרים</value>
+  </data>
+    <data name="SelectedINFFilesText.Text" xml:space="preserve">
+    <value>קבצי INF אבטחה נבחרים</value>
+  </data>
+  <data name="SelectedDirectoryText.Text" xml:space="preserve">
+    <value>תיקייה נבחרת</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.Header" xml:space="preserve">
+    <value>בחר קבצי INF אבטחה להמרה ל-JSON</value>
+  </data>
+    <data name="INFToJSONConversionSectionSettingsCard.Description" xml:space="preserve">
+    <value>בחר קובץ INF אבטחה אחד או יותר להמרה לפורמט JSON</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר קובץ INF אבטחה אחד או יותר להמרה לפורמט JSON</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר קובץ INF אבטחה אחד או יותר להמרה לפורמט JSON</value>
+  </data>
+    <data name="SelectedText.Text" xml:space="preserve">
+    <value>נבחר: </value>
+  </data>
+  <data name="StatusAppliedText" xml:space="preserve">
+    <value>סטטוס: הוחל</value>
+  </data>
+    <data name="StatusNotAppliedText" xml:space="preserve">
+    <value>סטטוס: לא הוחל</value>
+  </data>
+    <data name="StatusUndeterminedText" xml:space="preserve">
+    <value>סטטוס: לא נקבע</value>
+  </data>
+  <data name="AppliedText" xml:space="preserve">
+    <value>הוחל</value>
+  </data>
+    <data name="NotAppliedText" xml:space="preserve">
+    <value>לא הוחל</value>
+  </data>
+    <data name="NAText" xml:space="preserve">
+    <value>לא זמין</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+  <value>Harden Windows Security הוא אפליקציה שעוזרת לך להגדיר את המערכת שלך להיות מאובטחת נגד איומים מתקדמים רבים, תוך שימוש רק בכלים ותכונות הזמינים במערכת ההפעלה והמוצעים על ידי Microsoft ללא שימוש בכלים או תוכניות של צד שלישי.</value>
+</data>
+  <data name="LogsPageTitle.Text" xml:space="preserve">
+    <value>להלן הלוגים שאבטחת Windows Harden מייצרת ושומרת אוטומטית בתיקייה המיועדת. הגודל הכולל של תיקיית הלוגים לעולם לא יעבור 1GB.</value>
+  </data>
+  <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
+    <value>פתח תיקיית לוגים</value>
+  </data>
+</root>

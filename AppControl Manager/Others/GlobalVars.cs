@@ -84,10 +84,17 @@ internal static class GlobalVars
 		Environment.GetEnvironmentVariable("SystemDrive") + @"\",
 		"Windows", "schemas", "CodeIntegrity", "cipolicy.xsd");
 
-	// Storing the path to the AppControl Manager folder in the Program Files
-	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "AppControl Manager");
 
-	// Storing the path to User Config JSON file in the AppControl Manager folder in the Program Files
+#if HARDEN_WINDOWS_SECURITY
+	// Storing the path to the app's folder in the Program Files
+	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Harden Windows Security");
+#endif
+#if APP_CONTROL_MANAGER
+	// Storing the path to the app's folder in the Program Files
+	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "AppControl Manager");
+#endif
+
+	// Storing the path to User Config JSON file in the app's folder in the Program Files
 	internal static readonly string UserConfigJson = Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
 
 	// Storing the path to the StagingArea folder in the AppControl Manager folder in the Program Files
@@ -117,6 +124,7 @@ internal static class GlobalVars
 	internal const string JSONAndPOLPickerFilter = "JSON and POL files (*.json;*.pol)|*.json;*.pol";
 	internal const string POLPickerFilter = "Group Policy File|*.pol";
 	internal const string JSONPickerFilter = "JSON Files|*.json";
+	internal const string SecurityINFPickerFilter = "Security INF Files|*.inf";
 
 	// Name of the special automatic supplemental policy
 	internal const string AppControlManagerSpecialPolicyName = "AppControlManagerSupplementalPolicy";
@@ -158,7 +166,7 @@ internal static class GlobalVars
 	internal const string SiPolicyNamespace = "urn:schemas-microsoft-com:sipolicy";
 
 	// When the the list of installed packaged apps is retrieved, this URI is used whenever an installed app doesn't have a valid URI logo path
-	internal const string FallBackAppLogoURI = "ms-appx:///Assets/StoreLogo.backup.png";
+	internal const string FallBackAppLogoURI = "ms-appx:///Assets/Others/AppWithoutIconPlaceHolder.png";
 
 	// Path to the DeviceGuardWMIRetriever program in the App directory
 	internal static readonly string DeviceGuardWMIRetrieverProcessPath = Path.Combine(RustInteropPath, "DeviceGuardWMIRetriever.exe");

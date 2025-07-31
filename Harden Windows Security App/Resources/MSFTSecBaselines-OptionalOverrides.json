@@ -9,10 +9,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 1,
-    "FriendlyName": "Disable backing up local admin account password to Active Directory.",
+    "FriendlyName": "BackupDirectory-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -24,10 +25,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 1,
-    "FriendlyName": "Apply UAC restrictions to local accounts on network logons",
+    "FriendlyName": "LocalAccountTokenFilterPolicy-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -39,10 +41,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 1,
-    "FriendlyName": "Let the OS use BitLocker encrypted drives created in other organizations.",
+    "FriendlyName": "RDVDenyCrossOrg-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -54,10 +57,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 1,
-    "FriendlyName": "Do not turn off experiences that help consumers make the most of their devices and Microsoft account.",
+    "FriendlyName": "DisableWindowsConsumerFeatures-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -69,10 +73,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 1,
-    "FriendlyName": "Allow Game DVR feature to be used.",
+    "FriendlyName": "AllowGameDVR-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -84,10 +89,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 1,
-    "FriendlyName": "Enable Internet Connection Sharing (ICS) user interface for the local Admin.",
+    "FriendlyName": "NC_ShowSharedAccessUI-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -99,10 +105,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 1,
-    "FriendlyName": "Allow users to use Sudo feature.",
+    "FriendlyName": "Enabled-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -114,10 +121,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 1,
-    "FriendlyName": "Do not hide exclusions in the Microsoft Defender from the local Admins.",
+    "FriendlyName": "HideExclusionsFromLocalAdmins-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -129,10 +137,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 1,
-    "FriendlyName": "Allow drive mapping in Remote Desktop Sessions and Hyper-V",
+    "FriendlyName": "fDisableCdm-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -144,10 +153,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 1,
-    "FriendlyName": "Allow Clipboard sharing in Remote Desktop Sessions and Hyper-V",
+    "FriendlyName": "fDisableClip-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -159,10 +169,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 0,
-    "FriendlyName": "Configure Windows Firewall policy version",
+    "FriendlyName": "PolicyVersionOverride-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -174,10 +185,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 0,
-    "FriendlyName": "Do not disable notifications in the Windows Firewall for Private Profile",
+    "FriendlyName": "DisableNotificationsPrivateOverride-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -189,10 +201,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 0,
-    "FriendlyName": "Allow Windows Firewall policies defined in Windows Firewall advanced settings section to be used instead of only enforcing those defined in Group Policy.",
+    "FriendlyName": "AllowLocalPolicyMerge-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -204,10 +217,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 0,
-    "FriendlyName": "Allow Windows Firewall IPSec policies defined in Windows Firewall advanced settings section to be used instead of only enforcing those defined in Group Policy.",
+    "FriendlyName": "AllowLocalIPsecPolicyMerge-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -219,10 +233,11 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 0,
-    "FriendlyName": "Do not disable notifications in the Windows Firewall for Public Profile",
+    "FriendlyName": "DisableNotificationsPublicOverride-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -234,9 +249,10 @@
     "RegValue": "0",
     "Hive": 0,
     "PolicyAction": 1,
-    "FriendlyName": "Let the OS write to removable drives not encrypted by BitLocker",
+    "FriendlyName": "RDVDenyWriteAccess-OptionalOverrides",
     "URL": "",
     "Category": 0,
-    "SubCategory": 99
+    "SubCategory": null,
+    "DefaultRegValue": null
   }
 ]

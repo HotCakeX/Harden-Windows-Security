@@ -62,7 +62,7 @@ First use the Harden Windows Security Module to apply the hardening measures des
 
 ### If you want even more security and control, you have at least 2 more options:
 
-1. you can either use **[Smart App Control](https://learn.microsoft.com/en-us/windows/apps/develop/smart-app-control/overview)**, which deploys an automatic and AI based App Control policy that uses [Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph) to authorize safe and reputable applications and files and blocks unknown and malicious files.
+1. you can either use **[Smart App Control](https://learn.microsoft.com/windows/apps/develop/smart-app-control/overview)**, which deploys an automatic and AI based App Control policy that uses [Intelligent Security Graph](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph) to authorize safe and reputable applications and files and blocks unknown and malicious files.
 
 2. Use [AppControl Manager](https://spynetgirl.github.io/AppControl%20Manager/AppControl%20Manager/) to deploy an App Control policy and have even more control over the operation of the Windows Application Control.
 
@@ -99,17 +99,17 @@ To achieve the Highest level of Security **at Scale** for Businesses, Enterprise
 
 * [Microsoft Defender for Endpoint](https://www.microsoft.com/en-us/security/business/endpoint-security/microsoft-defender-endpoint) - Discover and secure endpoint devices across your multiplatform enterprise.
 
-* [Microsoft Security Copilot](https://www.microsoft.com/en-us/security/business/ai-machine-learning/microsoft-copilot-security) - Build a defense [so automated](https://learn.microsoft.com/en-us/security-copilot/microsoft-security-copilot) that even your intern becomes a cybersecurity expert.
+* [Microsoft Security Copilot](https://www.microsoft.com/en-us/security/business/ai-machine-learning/microsoft-copilot-security) - Build a defense [so automated](https://learn.microsoft.com/security-copilot/microsoft-security-copilot) that even your intern becomes a cybersecurity expert.
 
-* [Confidential Computing on Azure](https://learn.microsoft.com/en-us/azure/confidential-computing/overview-azure-products) - Protect your highly sensitive data while it's in use
+* [Confidential Computing on Azure](https://learn.microsoft.com/azure/confidential-computing/overview-azure-products) - Protect your highly sensitive data while it's in use
 
-* [Confidential AI](https://learn.microsoft.com/en-us/azure/confidential-computing/confidential-ai) - Train your data Privately and Securely on the most advanced AI Super computers
+* [Confidential AI](https://learn.microsoft.com/azure/confidential-computing/confidential-ai) - Train your data Privately and Securely on the most advanced AI Super computers
 
 * [Microsoft Entra conditional access](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-conditional-access) - Increase protection without compromising productivity
 
 * [Microsoft Sentinel](https://azure.microsoft.com/en-us/products/microsoft-sentinel/) - Scalable, cloud-native solution that provides SIEM, SOAR and more!
 
-* [Key Vault](https://azure.microsoft.com/en-us/products/key-vault/) - Safeguard cryptographic keys and other secrets used by cloud apps and services. This [Azure service uses the best products in the world](https://cpl.thalesgroup.com/partners/microsoft) for the job, such as [Thales HSMs](https://cpl.thalesgroup.com/encryption/hardware-security-modules/network-hsms). More info [available here](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/secure-boot-key-generation-and-signing-using-hsm--example).
+* [Key Vault](https://azure.microsoft.com/en-us/products/key-vault/) - Safeguard cryptographic keys and other secrets used by cloud apps and services. This [Azure service uses the best products in the world](https://cpl.thalesgroup.com/partners/microsoft) for the job, such as [Thales HSMs](https://cpl.thalesgroup.com/encryption/hardware-security-modules/network-hsms). More info [available here](https://learn.microsoft.com/windows-hardware/manufacture/desktop/secure-boot-key-generation-and-signing-using-hsm--example).
 
 * [Microsoft Defender for Cloud](https://azure.microsoft.com/en-us/products/defender-for-cloud) - Protect multicloud and hybrid environments with integrated security from code to cloud
 
@@ -117,15 +117,15 @@ To achieve the Highest level of Security **at Scale** for Businesses, Enterprise
 
 * [Microsoft Defender for Identity](https://www.microsoft.com/en-us/security/business/siem-and-xdr/microsoft-defender-for-identity) - Protect your on-premises identities with cloud-powered intelligence.
 
-* [Passwordless authentication options for Azure Active Directory](https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-authentication-passwordless) - Multifactor and Passwordless Authentication, the most secure and convenient way of authentication.
+* [Passwordless authentication options for Azure Active Directory](https://learn.microsoft.com/azure/active-directory/authentication/concept-authentication-passwordless) - Multifactor and Passwordless Authentication, the most secure and convenient way of authentication.
 
 * [PIM (PAM)](https://www.microsoft.com/en-us/security/business/security-101/what-is-privileged-access-management-pam) - Privileged Access Management
 
-* [PAW](https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-devices) - Privileged Access Workstation
+* [PAW](https://learn.microsoft.com/security/privileged-access-workstations/privileged-access-devices) - Privileged Access Workstation
 
 * [SAW](https://www.microsoft.com/insidetrack/blog/improving-security-by-protecting-elevated-privilege-accounts-at-microsoft/) - Secure Admin Workstations
 
-* [List of all Azure security services for Enterprises, Businesses etc.](https://learn.microsoft.com/en-us/azure/security/fundamentals/services-technologies)
+* [List of all Azure security services for Enterprises, Businesses etc.](https://learn.microsoft.com/azure/security/fundamentals/services-technologies)
 
 <br>
 
@@ -141,7 +141,7 @@ To achieve the Highest level of Security **at Scale** for Businesses, Enterprise
 
 Use Microsoft Surface products for the best device and firmware security. They support [secured-core PC specifications](https://www.microsoft.com/en-us/windows/business/windows-11-secured-core-computers), the manufacturing process and platform is trusted and secure.
 
-Make sure to use Surface products that support [Device Firmware Configuration Interface (DFCI)](https://learn.microsoft.com/en-us/mem/autopilot/dfci-management) for extra protection and security. Here is a [list of Surface products](https://learn.microsoft.com/en-us/surface/surface-manage-dfci-guide#dfci-policy-settings-reference-for-surface-devices) that support it.
+Make sure to use Surface products that support [Device Firmware Configuration Interface (DFCI)](https://learn.microsoft.com/mem/autopilot/dfci-management) for extra protection and security. Here is a [list of Surface products](https://learn.microsoft.com/surface/surface-manage-dfci-guide#dfci-policy-settings-reference-for-surface-devices) that support it.
 
 * [How to use Device Firmware Configuration Interface (DFCI) for Surface Devices with Intune](https://techcommunity.microsoft.com/t5/intune-customer-success/how-to-use-device-firmware-configuration-interface-dfci-for/ba-p/3041293)
 
@@ -177,7 +177,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 ### <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/9935-catkeyboard.gif" alt="BYOVD device gif animated"> [Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks](#-protection-against-byovd-bring-your-own-vulnerable-driver-attacks)
 
-* Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include App Control for Business, ASR (Attack Surface Reduction) rules, Dynamic/static root of trust and [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers. They are specially useful for drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things.
+* Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include App Control for Business, ASR (Attack Surface Reduction) rules, Dynamic/static root of trust and [firmware](https://learn.microsoft.com/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers. They are specially useful for drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things.
 
 * Use [Strict Kernel-mode App Control policy for complete BYOVD protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
@@ -189,7 +189,7 @@ You should have an existing [***Unified Contract***](https://www.microsoft.com/e
 
 - GHOST: Global Hunting, Oversight and Strategic Triage
 - [DART](https://www.microsoft.com/en-us/security/blog/2019/03/25/dart-the-microsoft-cybersecurity-team-we-hope-you-never-meet/) - The Microsoft Detection and Response Team
-- [CRSP](https://www.microsoft.com/en-us/security/blog/2021/06/09/crsp-the-emergency-team-fighting-cyber-attacks-beside-customers/) - Global Compromise Recovery Security Practice Team - [including Ransomware](https://learn.microsoft.com/en-us/azure/security/fundamentals/ransomware-detect-respond#road-to-recovery)
+- [CRSP](https://www.microsoft.com/en-us/security/blog/2021/06/09/crsp-the-emergency-team-fighting-cyber-attacks-beside-customers/) - Global Compromise Recovery Security Practice Team - [including Ransomware](https://learn.microsoft.com/azure/security/fundamentals/ransomware-detect-respond#road-to-recovery)
 
 After you've got hacked, you should request them by contacting your Customer Success Account Manager and telling them you need the help of one of these teams.
 
@@ -213,7 +213,7 @@ After you've got hacked, you should request them by contacting your Customer Suc
 
 How to properly perform a pentest and benchmark a system hardened by this repository and make it as close to a real-world scenario as possible:
 
-1. Use a physical machine if possible, it should have Windows 11 certified hardware, [Standard user account](https://learn.microsoft.com/en-us/windows-server/remote/multipoint-services/create-a-standard-user-account).
+1. Use a physical machine if possible, it should have Windows 11 certified hardware, [Standard user account](https://learn.microsoft.com/windows-server/remote/multipoint-services/create-a-standard-user-account).
    * If you can't use a physical machine, use Hyper-V hypervisor. Your host (aka physical machine) must have Windows 11 certified hardware and meet all the hardware and UEFI security requirements explained in the Readme. VMs however are prone to side channel attacks, so don't use that attack vector in pentests if you want more realistic results.
 
 2. First apply the [Harden Windows Security module](https://github.com/HotCakeX/Harden-Windows-Security) *(All categories of it)* and then use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to deploy a suitable [Signed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/The-Strength-of-Signed-App-Control-Policies) App Control policy.

@@ -92,7 +92,7 @@ public partial class App : Application
 	/// </summary>
 	internal static readonly int PackageSource = string.Equals(PFN, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ?
 		0 :
-		(string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) || string.Equals(PFN, "a0eb8225-9ca1-460b-aa8a-2425139fd329_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase)
+		(string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) || string.Equals(PFN, "VioletHansen.HardenWindowsSecurity_ea7andspwdn10", StringComparison.OrdinalIgnoreCase)
 		? 1 : 2);
 
 	/// <summary>
@@ -128,12 +128,21 @@ public partial class App : Application
 	private static Mutex? _mutex;
 	private const string MutexName = $"{AppName}Running";
 
+#if APP_CONTROL_MANAGER
 	/// <summary>
 	/// The directory where the logs will be stored
 	/// </summary>
 	internal static readonly string LogsDirectory = IsElevated ?
 		Path.Combine(GlobalVars.UserConfigDir, "Logs") :
 		Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
+#endif
+
+#if HARDEN_WINDOWS_SECURITY
+	/// <summary>
+	/// The directory where the logs will be stored
+	/// </summary>
+	internal static readonly string LogsDirectory = Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
+#endif
 
 	// To track the currently open Content Dialog across the app. Every piece of code that tries to display a content dialog, whether custom or generic, must assign it first
 	// to this variable before using ShowAsync() method to display it.
@@ -457,7 +466,7 @@ public partial class App : Application
 
 		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase) ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
 
-		NavigationService.RestoreWindowSize(m_window.AppWindow); // Restore window size on startup		
+		NavigationService.RestoreWindowSize(m_window.AppWindow); // Restore window size on startup
 		_nav.mainWindowVM.OnIconsStylesChanged(Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
 		m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
 		m_window.Activate();
@@ -567,7 +576,7 @@ public partial class App : Application
 		_nav.Navigate(IsElevated ? typeof(Pages.CreatePolicy) : typeof(Pages.PolicyEditor));
 #endif
 #if HARDEN_WINDOWS_SECURITY
-		_nav.Navigate(IsElevated ? typeof(Pages.Protect) : typeof(Pages.GitHubDocumentation));
+		_nav.Navigate(IsElevated ? typeof(Pages.Protect) : typeof(Pages.Protects.NonAdmin));
 #endif
 	}
 

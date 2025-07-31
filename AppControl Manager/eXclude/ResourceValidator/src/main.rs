@@ -717,12 +717,11 @@ fn parse_resx_data(path: &PathBuf) -> Result<ResxInfo> {
                     match reader.read_event_into(&mut buf) {
                         Ok(Event::Start(e2)) if e2.name().as_ref() == b"value" => {
                             buf.clear();
-                            if let Ok(Event::Text(txt)) = reader.read_event_into(&mut buf) {
-                                value_text = txt
-                                    .unescape()
-                                    .map_err(|e: quick_xml::Error| {
-                                        anyhow!("XML unescape error: {}", e)
-                                    })?
+                           if let Ok(Event::Text(txt)) = reader.read_event_into(&mut buf) {
+                                value_text = reader
+                                    .decoder()
+                                    .decode(&txt)
+                                    .map_err(|e| anyhow!("XML decode error: {}", e))?
                                     .to_string();
                             }
                         }

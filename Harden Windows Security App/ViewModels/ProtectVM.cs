@@ -19,8 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using HardenWindowsSecurity.Helpers;
 using HardenWindowsSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -38,6 +40,11 @@ internal sealed partial class ProtectVM : ViewModelBase
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
+
+		// Initialize cancellable buttons
+		ApplySelectedCancellableButton = new(GlobalVars.GetStr("ApplySelectedMenuFlyoutItem/Text"));
+		RemoveSelectedCancellableButton = new(GlobalVars.GetStr("RemoveSelectedMenuFlyoutItem/Text"));
+		VerifySelectedCancellableButton = new(GlobalVars.GetStr("VerifySelectedMenuFlyoutItem/Text"));
 
 		// Initial protections category population
 		ProtectionCategoriesListItemsSource = CreateProtectionCategories();
@@ -77,6 +84,70 @@ internal sealed partial class ProtectVM : ViewModelBase
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
 	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Cancellable button for Apply Selected operation
+	/// </summary>
+	internal AnimatedCancellableButtonInitializer ApplySelectedCancellableButton { get; }
+
+	/// <summary>
+	/// Cancellable button for Remove Selected operation
+	/// </summary>
+	internal AnimatedCancellableButtonInitializer RemoveSelectedCancellableButton { get; }
+
+	/// <summary>
+	/// Cancellable button for Verify Selected operation
+	/// </summary>
+	internal AnimatedCancellableButtonInitializer VerifySelectedCancellableButton { get; }
+
+	/// <summary>
+	/// Whether elements are enabled (used to disable non-cancellable buttons during operations)
+	/// </summary>
+	internal bool ElementsAreEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// Enum to track which cancellable operation is currently running
+	/// </summary>
+	internal enum RunningOperation
+	{
+		None,
+		Apply,
+		Remove,
+		Verify
+	}
+
+	/// <summary>
+	/// Tracks which cancellable operation is currently running so that only one of the cancellable buttons will ever be enabled during the operation.
+	/// </summary>
+	internal RunningOperation CurrentRunningOperation
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				// Update button enabled states when the running operation changes
+				IsApplyButtonEnabled = value == RunningOperation.None || value == RunningOperation.Apply;
+				IsRemoveButtonEnabled = value == RunningOperation.None || value == RunningOperation.Remove;
+				IsVerifyButtonEnabled = value == RunningOperation.None || value == RunningOperation.Verify;
+			}
+		}
+	} = RunningOperation.None;
+
+	/// <summary>
+	/// Whether the Apply button should be enabled
+	/// </summary>
+	internal bool IsApplyButtonEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// Whether the Remove button should be enabled
+	/// </summary>
+	internal bool IsRemoveButtonEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// Whether the Verify button should be enabled
+	/// </summary>
+	internal bool IsVerifyButtonEnabled { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
 	/// Selected index for the preset comboBox.
@@ -204,6 +275,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 		{
 			case 0:
 				{
+					/*
+
 					// 1
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftSecurityBaseline,
@@ -221,6 +294,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 						logo: CategoryImages[(int)Categories.Microsoft365AppsSecurityBaseline],
 						subCategories: []
 						));
+
+					*/
 
 					// 3
 					output.Add(new ProtectionCategoryListViewItem(
@@ -262,6 +337,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 				}
 			case 1:
 				{
+					/*
 					// 1
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftSecurityBaseline,
@@ -279,6 +355,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 						logo: CategoryImages[(int)Categories.Microsoft365AppsSecurityBaseline],
 						subCategories: []
 						));
+					*/
 
 					// 3
 					output.Add(new ProtectionCategoryListViewItem(
@@ -418,6 +495,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 				}
 			case 2:
 				{
+					/*
 					// 1
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftSecurityBaseline,
@@ -435,6 +513,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 						logo: CategoryImages[(int)Categories.Microsoft365AppsSecurityBaseline],
 						subCategories: []
 						));
+
+					*/
 
 					// 3
 					output.Add(new ProtectionCategoryListViewItem(
@@ -597,6 +677,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
+					/*
+
 					// 16
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.CertificateChecking,
@@ -605,6 +687,10 @@ internal sealed partial class ProtectVM : ViewModelBase
 						logo: CategoryImages[(int)Categories.CertificateChecking],
 						subCategories: []
 						));
+
+					*/
+
+					/*
 
 					// 17
 					output.Add(new ProtectionCategoryListViewItem(
@@ -618,6 +704,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 							description: GlobalVars.GetStr("ProtectSubCategory_BlockOFACSanctionedCountries"))
 							]
 						));
+
+					*/
 
 					// 18
 					output.Add(new ProtectionCategoryListViewItem(
@@ -658,5 +746,184 @@ internal sealed partial class ProtectVM : ViewModelBase
 																  select new GroupInfoListForProtectionCategories(items: g, key: g.Key);
 
 		return new(query);
+	}
+
+	/// <summary>
+	/// Apply security measures for selected categories
+	/// </summary>
+	internal async void ApplySelectedCategories()
+	{
+		try
+		{
+			await ExecuteSelectedCategoriesOperation(MUnitOperation.Apply, ApplySelectedCancellableButton);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
+	}
+
+	/// <summary>
+	/// Remove security measures for selected categories
+	/// </summary>
+	internal async void RemoveSelectedCategories()
+	{
+		try
+		{
+			await ExecuteSelectedCategoriesOperation(MUnitOperation.Remove, RemoveSelectedCancellableButton);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
+	}
+
+	/// <summary>
+	/// Verify security measures for selected categories
+	/// </summary>
+	internal async void VerifySelectedCategories()
+	{
+		try
+		{
+			await ExecuteSelectedCategoriesOperation(MUnitOperation.Verify, VerifySelectedCancellableButton);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ErrorWriter.FormatException(ex));
+		}
+	}
+
+	/// <summary>
+	/// Execute the specified operation on selected categories
+	/// </summary>
+	/// <param name="operation">The operation to perform</param>
+	/// <param name="button">The cancellable button handling this operation</param>
+	private async Task ExecuteSelectedCategoriesOperation(MUnitOperation operation, AnimatedCancellableButtonInitializer button)
+	{
+		if (ProtectionCategoriesListItemsSourceSelectedItems.Count == 0)
+		{
+			MainInfoBar.WriteWarning("No categories selected. Please select at least one category to process.");
+			return;
+		}
+
+		bool errorsOccurred = false;
+		button.Begin();
+
+		try
+		{
+			// Set flags to disable other operations and UI elements
+			ElementsAreEnabled = false;
+
+			// Set the current running operation to enable/disable appropriate buttons
+			CurrentRunningOperation = operation switch
+			{
+				MUnitOperation.Apply => RunningOperation.Apply,
+				MUnitOperation.Remove => RunningOperation.Remove,
+				MUnitOperation.Verify => RunningOperation.Verify,
+				_ => RunningOperation.None
+			};
+
+			string operationText = operation switch
+			{
+				MUnitOperation.Apply => "Applying",
+				MUnitOperation.Remove => "Removing",
+				MUnitOperation.Verify => "Verifying",
+				_ => "Processing"
+			};
+
+			MainInfoBar.WriteInfo($"{operationText} {ProtectionCategoriesListItemsSourceSelectedItems.Count} selected categories...");
+
+			int processedCategories = 0;
+			int totalCategories = ProtectionCategoriesListItemsSourceSelectedItems.Count;
+
+			foreach (ProtectionCategoryListViewItem selectedCategory in ProtectionCategoriesListItemsSourceSelectedItems)
+			{
+				button.Cts?.Token.ThrowIfCancellationRequested();
+
+				try
+				{
+					// Update progress
+					processedCategories++;
+					MainInfoBar.WriteInfo($"{operationText} category {processedCategories}/{totalCategories}: {selectedCategory.Title}");
+
+					// Get selected sub-categories for this category
+					List<SubCategories> selectedSubCategories = selectedCategory.SubCategories
+						.Where(subCat => true)
+						.Select(subCat => subCat.SubCategory)
+						.ToList();
+
+					// Get processor for this category
+					ICategoryProcessor processor = CategoryProcessorFactory.GetProcessor(selectedCategory.Category);
+
+					// Execute the operation
+					switch (operation)
+					{
+						case MUnitOperation.Apply:
+							await processor.ApplyAllAsync(selectedSubCategories.Count > 0 ? selectedSubCategories : null, button.Cts?.Token);
+							break;
+						case MUnitOperation.Remove:
+							await processor.RemoveAllAsync(selectedSubCategories.Count > 0 ? selectedSubCategories : null, button.Cts?.Token);
+							break;
+						case MUnitOperation.Verify:
+							await processor.VerifyAllAsync(selectedSubCategories.Count > 0 ? selectedSubCategories : null, button.Cts?.Token);
+							break;
+						default:
+							break;
+					}
+
+					button.Cts?.Token.ThrowIfCancellationRequested();
+				}
+				catch (Exception ex)
+				{
+					if (IsCancellationException(ex)) throw;
+
+					// If any category fails, stop all operations
+					MainInfoBar.WriteWarning($"Failed to process category '{selectedCategory.Title}': {ex.Message}");
+					errorsOccurred = true;
+					break;
+				}
+			}
+
+			if (!errorsOccurred)
+			{
+				string operationPastTense = operation switch
+				{
+					MUnitOperation.Apply => "applied",
+					MUnitOperation.Remove => "removed",
+					MUnitOperation.Verify => "verified",
+					_ => "processed"
+				};
+				MainInfoBar.WriteSuccess($"Successfully {operationPastTense} {processedCategories} categories");
+			}
+		}
+		catch (OperationCanceledException)
+		{
+			button.wasCancelled = true;
+			MainInfoBar.WriteWarning($"{operation} operation was cancelled by user");
+		}
+		catch (Exception ex)
+		{
+			errorsOccurred = true;
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			if (button.wasCancelled)
+			{
+				string operationText = operation switch
+				{
+					MUnitOperation.Apply => "Apply",
+					MUnitOperation.Remove => "Remove",
+					MUnitOperation.Verify => "Verify",
+					_ => "Process"
+				};
+				MainInfoBar.WriteWarning($"{operationText} operation was cancelled by user");
+			}
+
+			button.End();
+			// Re-enable UI elements and clear current running operation
+			ElementsAreEnabled = true;
+			CurrentRunningOperation = RunningOperation.None;
+		}
 	}
 }

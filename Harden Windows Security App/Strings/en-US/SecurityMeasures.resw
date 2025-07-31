@@ -85,7 +85,7 @@
     <value>Define the number of days before spyware security intelligence is considered out of date</value>
 </data>
 <data name="DisableBlockAtFirstSeen-MSDefender" xml:space="preserve">
-    <value>Block At First Sight</value>
+    <value>Enable the Block At First Sight feature.</value>
 </data>
 <data name="AllowTelemetry-MSDefender" xml:space="preserve">
     <value>Optional Diagnostic Data Required for Smart App Control etc.</value>
@@ -124,10 +124,10 @@
     <value>Enable Network Protection on Windows Server</value>
 </data>
 <data name="TDTFeatureEnabled-MSDefender" xml:space="preserve">
-    <value>Enable Intel TDT</value>
+    <value>Enable Intel TDT: Threat Detection Technology.</value>
 </data>
 <data name="MpCloudBlockLevel-MSDefender" xml:space="preserve">
-    <value>Cloud Block Level</value>
+    <value>Set the Cloud Block Level to the maximum value: No Tolerance.</value>
 </data>
 <data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
     <value>Extended cloud check timeout set to maximum value."</value>
@@ -136,7 +136,7 @@
     <value>Enable calculation of File Hashes.</value>
 </data>
 <data name="DisableAsyncScanOnOpen-MSDefender" xml:space="preserve">
-    <value>Allow Switch To Async Inspection</value>
+    <value>Disable Dev Drive's lax security around file scanning.</value>
 </data>
 <data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
     <value>Enable Rtp And Signature Update during OOBE mode.</value>
@@ -233,7 +233,7 @@
     <value>Disallow Standard User PIN Reset</value>
 </data>
 <data name="UseAdvancedStartup-BitLocker" xml:space="preserve">
-    <value>Require additional authentication at startup</value>
+    <value>Allow the OS to require additional authentication at startup</value>
 </data>
 <data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
     <value>Don't allow Bitlocker without TPM</value>
@@ -242,40 +242,40 @@
     <value>Don't Allow using TPM alone</value>
 </data>
 <data name="UseTPMPIN-BitLocker" xml:space="preserve">
-    <value>Allow using TPM + PIN</value>
+    <value>Allow using TPM + PIN on Startup.</value>
 </data>
 <data name="UseTPMKey-BitLocker" xml:space="preserve">
-    <value>Allow using TPM + key</value>
+    <value>Allow using TPM + key on Startup.</value>
 </data>
 <data name="UseTPMKeyPIN-BitLocker" xml:space="preserve">
-    <value>Allow using TPM + Startup Key + PIN</value>
+    <value>Allow using TPM + Startup Key + PIN on Startup.</value>
 </data>
 <data name="EncryptionMethodWithXtsOs-BitLocker" xml:space="preserve">
-    <value>Correct Encryption method for OS drive</value>
+    <value>Configure the correct Encryption method for OS drive: XTS-AES-256</value>
 </data>
 <data name="EncryptionMethodWithXtsFdv-BitLocker" xml:space="preserve">
-    <value>Correct Encryption method for fixed data drives</value>
+    <value>Configure the correct Encryption method for fixed data drives: XTS-AES-256</value>
 </data>
 <data name="EncryptionMethodWithXtsRdv-BitLocker" xml:space="preserve">
-    <value>Correct Encryption method for removable drives</value>
+    <value>Configure the correct Encryption method for removable drives: XTS-AES-256</value>
 </data>
 <data name="UseEnhancedPin-BitLocker" xml:space="preserve">
-    <value>Use Enhanced PIN</value>
+    <value>Use Enhanced PIN by allowing symbols and other characters to be used in the PIN.</value>
 </data>
 <data name="OSEncryptionType-BitLocker" xml:space="preserve">
-    <value>Full disk encryption for OS drive</value>
+    <value>Configure secure full disk encryption type for OS drive</value>
 </data>
 <data name="RDVEncryptionType-BitLocker" xml:space="preserve">
-    <value>Full disk encryption for removable drives</value>
+    <value>Configure secure full disk encryption type for removable drives</value>
 </data>
 <data name="RDVDiscoveryVolumeType-BitLocker" xml:space="preserve">
     <value>Prevent access to BitLocker-protected removable data drives from earlier versions of Windows</value>
 </data>
 <data name="RDVNoBitLockerToGoReader-BitLocker" xml:space="preserve">
-    <value>Do not install BitLocker To Go Reader on FAT formatted removable drives</value>
+    <value>Do not install "BitLocker To Go" Reader on FAT formatted removable drives because they are insecure.</value>
 </data>
 <data name="MinimumPIN-BitLocker" xml:space="preserve">
-    <value>Configure minimum PIN length for startup</value>
+    <value>Configure minimum PIN length for startup.</value>
 </data>
 <data name="ACSettingIndex-BitLocker" xml:space="preserve">
     <value>Disallow standby states (S1-S3) when sleeping (plugged in)</value>
@@ -284,10 +284,10 @@
     <value>Disallow standby states (S1-S3) when sleeping (on battery)</value>
 </data>
 <data name="ShowHibernateOption-BitLocker" xml:space="preserve">
-    <value>Show Hibernate Option</value>
+    <value>Show Hibernate Option in the power options in the OS so you can hibernate your device if you want.</value>
 </data>
 <data name="FDVEncryptionType-BitLocker" xml:space="preserve">
-    <value>Secure OS Drive encryption</value>
+    <value>Configure secure encryption type for Fixed Data Drives</value>
 </data>
 <data name="Functions-TLS" xml:space="preserve">
     <value>Configure the correct TLS Cipher Suites</value>
@@ -386,7 +386,7 @@
     <value>Credential Guard Configuration - UEFI Lock</value>
 </data>
 <data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
-    <value>System Guard Launch</value>
+    <value>Enable System Guard Secure Launch if hardware support exist</value>
 </data>
 <data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
     <value>Configure Kernel Shadow Stacks Launch</value>
@@ -482,22 +482,22 @@
     <value>Enable SMB Client Over QUIC</value>
 </data>
 <data name="CipherSuiteOrderServer-WindowsNetworking" xml:space="preserve">
-    <value>SMB Server Cipher Suite Order</value>
+    <value>Configure secure SMB Server Cipher Suite Order</value>
 </data>
 <data name="CipherSuiteOrderClient-WindowsNetworking" xml:space="preserve">
-    <value>SMB Client Cipher Suite Order</value>
+    <value>Configure secure SMB Client Cipher Suite Order</value>
 </data>
 <data name="MinSmb2DialectServer-WindowsNetworking" xml:space="preserve">
-    <value>Sets the minimum SMB server version</value>
+    <value>Set the minimum SMB server version</value>
 </data>
 <data name="MinSmb2DialectClient-WindowsNetworking" xml:space="preserve">
-    <value>Sets the minimum SMB client version</value>
+    <value>Set the minimum SMB client version</value>
 </data>
 <data name="BlockNTLM-WindowsNetworking" xml:space="preserve">
-    <value>Blocks NTLM for SMB</value>
+    <value>Block NTLM for SMB</value>
 </data>
 <data name="RequireEncryption-WindowsNetworking" xml:space="preserve">
-    <value>Requires encryption for SMB client</value>
+    <value>Require encryption for SMB client</value>
 </data>
 <data name="EnableAuthEpResolution-WindowsNetworking" xml:space="preserve">
     <value>Disable RPC Endpoint Mapper Client Authentication</value>
@@ -536,10 +536,10 @@
     <value>Set Microsoft Edge (Dev) to update over Metered connections</value>
 </data>
 <data name="EnableCertPaddingCheck-Miscellaneous" xml:space="preserve">
-    <value>WinVerifyTrust Signature Validation part 1</value>
+    <value>Implement WinVerifyTrust Signature Validation part 1</value>
 </data>
 <data name="EnableCertPaddingCheck2-Miscellaneous" xml:space="preserve">
-    <value>WinVerifyTrust Signature Validation part 2</value>
+    <value>Implement WinVerifyTrust Signature Validation part 2</value>
 </data>
 <data name="EnableCbacAndArmor-Miscellaneous" xml:space="preserve">
     <value>Request claims and compound authentication for DAC and Kerberos armoring</value>
@@ -637,7 +637,6 @@
 <data name="RestartNotificationsAllowed2-WindowsUpdate" xml:space="preserve">
     <value>Enable restart notification for Windows update</value>
 </data>
-
 <data name="RemoveScheduleForWeek-WindowsUpdate" xml:space="preserve">
     <value>Remove scheduling for installing updates only on specific weeks.</value>
 </data>
@@ -702,10 +701,10 @@
     <value>Prevent the browser process from creating dynamic code</value>
 </data>
 <data name="HideFileExt-NonAdmin" xml:space="preserve">
-    <value>Show File extensions</value>
+    <value>Enable showing File extensions in File Explorer</value>
 </data>
 <data name="Hidden-NonAdmin" xml:space="preserve">
-    <value>Show hidden files</value>
+    <value>Enable showing hidden files in File Explorer</value>
 </data>
 <data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
     <value>Disable websites accessing local language list</value>
@@ -727,5 +726,209 @@
 </data>
 <data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
     <value>Disables show reminders and incoming VoIP calls on the lock screen</value>
+</data>
+<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
+    <value>Disable backing up local admin account password to Active Directory.</value>
+</data>
+<data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
+    <value>Apply UAC restrictions to local accounts on network logons</value>
+</data>
+<data name="RDVDenyCrossOrg-OptionalOverrides" xml:space="preserve">
+    <value>Let the OS use BitLocker encrypted drives created in other organizations.</value>
+</data>
+<data name="DisableWindowsConsumerFeatures-OptionalOverrides" xml:space="preserve">
+    <value>Do not turn off experiences that help consumers make the most of their devices and Microsoft account.</value>
+</data>
+<data name="AllowGameDVR-OptionalOverrides" xml:space="preserve">
+    <value>Allow Game DVR feature to be used.</value>
+</data>
+<data name="NC_ShowSharedAccessUI-OptionalOverrides" xml:space="preserve">
+    <value>Enable Internet Connection Sharing (ICS) user interface for the local Admin.</value>
+</data>
+<data name="Enabled-OptionalOverrides" xml:space="preserve">
+    <value>Allow users to use Sudo feature.</value>
+</data>
+<data name="HideExclusionsFromLocalAdmins-OptionalOverrides" xml:space="preserve">
+    <value>Do not hide exclusions in the Microsoft Defender from the local Admins.</value>
+</data>
+<data name="fDisableCdm-OptionalOverrides" xml:space="preserve">
+    <value>Allow drive mapping in Remote Desktop Sessions and Hyper-V</value>
+</data>
+<data name="fDisableClip-OptionalOverrides" xml:space="preserve">
+    <value>Allow Clipboard sharing in Remote Desktop Sessions and Hyper-V</value>
+</data>
+<data name="PolicyVersionOverride-OptionalOverrides" xml:space="preserve">
+    <value>Configure Windows Firewall policy version</value>
+</data>
+<data name="DisableNotificationsPrivateOverride-OptionalOverrides" xml:space="preserve">
+    <value>Do not disable notifications in the Windows Firewall for Private Profile</value>
+</data>
+<data name="AllowLocalPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Allow Windows Firewall policies defined in Windows Firewall advanced settings section to be used instead of only enforcing those defined in Group Policy.</value>
+</data>
+<data name="AllowLocalIPsecPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Allow Windows Firewall IPSec policies defined in Windows Firewall advanced settings section to be used instead of only enforcing those defined in Group Policy.</value>
+</data>
+<data name="DisableNotificationsPublicOverride-OptionalOverrides" xml:space="preserve">
+    <value>Do not disable notifications in the Windows Firewall for Public Profile</value>
+</data>
+<data name="RDVDenyWriteAccess-OptionalOverrides" xml:space="preserve">
+    <value>Let the OS write to removable drives not encrypted by BitLocker</value>
+</data>
+<data name="BlockThirdPartyCookiesRecommended-Edge" xml:space="preserve">
+    <value>Recommends to block 3rd party cookies</value>
+</data>
+<data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
+    <value>Sets Edge to use system's DNS over HTTPS. This makes MDAG to work properly too</value>
+</data>
+<data name="AutomaticHttpsDefaultEdge-Edge" xml:space="preserve">
+    <value>Automatically upgrade HTTP connections to HTTPS</value>
+</data>
+<data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
+    <value>Enable Encrypted Client Hello</value>
+</data>
+<data name="BasicAuthOverHttpEnabledEdge-Edge" xml:space="preserve">
+    <value>Block Basic authentication for HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControlEdge-Edge" xml:space="preserve">
+    <value>Allow devices using the Edge category protection to receive new features and experimentations like normal devices</value>
+</data>
+<data name="AudioSandboxEnabledEdge-Edge" xml:space="preserve">
+    <value>Enforces the audio process to run sandboxed</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSettingEdge-Edge" xml:space="preserve">
+    <value>Recommends that the share additional operating system region setting to be set to never.</value>
+</data>
+<data name="TLSCipherSuiteDenyList1-Edge" xml:space="preserve">
+    <value>Disable TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList2-Edge" xml:space="preserve">
+    <value>Disable TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList3-Edge" xml:space="preserve">
+    <value>Disable TLS_RSA_WITH_AES_256_CBC_SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList4-Edge" xml:space="preserve">
+    <value>Disable TLS_RSA_WITH_AES_128_CBC_SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList5-Edge" xml:space="preserve">
+    <value>Disable TLS_RSA_WITH_AES_128_GCM_SHA256 - (NO PFS)</value>
+</data>
+<data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
+    <value>Disable TLS_RSA_WITH_AES_256_GCM_SHA384 - (NO PFS)</value>
+</data>
+<data name="ExtensionManifestV2AvailabilityEdge-Edge" xml:space="preserve">
+    <value>Never disable Manifest V2 extension support</value>
+</data>
+<data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
+    <value>Never let websites ask to access local USB connected devices</value>
+</data>
+<data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
+    <value>Denies the Window Management permission on all sites by default</value>
+</data>
+<data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
+    <value>Prevent the browser process from creating dynamic code</value>
+</data>
+<data name="DisableTLS10-TLS" xml:space="preserve">
+    <value>Disable TLS v1</value>
+</data>
+<data name="DisableTLS11-TLS" xml:space="preserve">
+    <value>Disable TLS v1.1</value>
+</data>
+<data name="DisableNULL-TLS" xml:space="preserve">
+    <value>Disable the weak Cipher for Schannel: NULL</value>
+</data>
+<data name="DisableDES56-TLS" xml:space="preserve">
+    <value>Disable the weak Cipher for Schannel: DES 56-bit</value>
+</data>
+<data name="DisableRC240-TLS" xml:space="preserve">
+    <value>Disable the weak Cipher for Schannel: RC2 40-bit</value>
+</data>
+<data name="DisableRC256-TLS" xml:space="preserve">
+    <value>Disable the weak Cipher for Schannel: RC2 56-bit</value>
+</data>
+<data name="DisableRC2128-TLS" xml:space="preserve">
+    <value>Disable the weak Cipher for Schannel: RC2 128-bit</value>
+</data>
+<data name="DisableRC440-TLS" xml:space="preserve">
+    <value>Disable the weak Cipher for Schannel: RC4 40-bit</value>
+</data>
+<data name="DisableRC456-TLS" xml:space="preserve">
+    <value>Disable the weak Cipher for Schannel: RC4 56-bit</value>
+</data>
+<data name="DisableRC464-TLS" xml:space="preserve">
+    <value>Disable the weak Cipher for Schannel: RC4 64-bit</value>
+</data>
+<data name="DisableRC4128-TLS" xml:space="preserve">
+    <value>Disable the weak Cipher for Schannel: RC4 128-bit</value>
+</data>
+<data name="DisableTripleDES-TLS" xml:space="preserve">
+    <value>Disable the weak Cipher for Schannel: 3DES 168-bit (Triple DES 168)</value>
+</data>
+<data name="DisableMD5-TLS" xml:space="preserve">
+    <value>Disable MD5 Hashing Algorithm for SChannel.</value>
+</data>
+<data name="BattleNetCipher-TLS" xml:space="preserve">
+    <value>Allow the less secure "TLS_RSA_WITH_AES_256_CBC_SHA" Cipher to be used in order to provide compatibility with the Battle Net game client.</value>
+</data>
+  <data name="SAC-MSDefender" xml:space="preserve">
+    <value>Turn on Smart App Control. Please also enable optional diagnostic data which is needed for proper functioning of Smart App Control.</value>
+  </data>
+    <data name="InactivityTimeoutSecs-LockScreen" xml:space="preserve">
+    <value>Set the Machine inactivity limit policy so the device will automatically lock after 120 seconds of inactivity.</value>
+  </data>
+      <data name="DisableCAD-LockScreen" xml:space="preserve">
+    <value>Set an Interactive logon policy to require CTRL+ALT+DEL key combinations on Lock Screen before you can enter your credentials. This can mitigate certain attacks that utilize fake lock screens in order to capture the user credentials in clear text such as passwords.</value>
+  </data>
+      <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
+    <value>Set an Interactive logon policy for Machine account lockout threshold so that the BitLocker encrypted device will be locked after 5 failed attempts to login. You will require to enter BitLocker recovery key for the OS drive to login again.</value>
+  </data>
+      <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
+    <value>Set an Interactive logon policy to stop displaying user information when the session is locked.</value>
+  </data>
+      <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
+    <value>Set an Interactive logon policy to stop displaying username at Lock Screen.</value>
+  </data>
+      <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
+    <value>Set an Interactive logon policy to stop displaying last signed-in details at Lock Screen.</value>
+  </data>
+  <data name="ConsentPromptBehaviorAdmin-UAC" xml:space="preserve">
+    <value>Set the behavior of the elevation prompt for administrators in Admin Approval Mode: Prompt for Consent on the Secure Desktop</value>
+  </data>
+    <data name="ConsentPromptBehaviorUser-UAC" xml:space="preserve">
+    <value>Set the behavior of the elevation prompt for standard users: Prompt for Credentials on the Secure Desktop</value>
+  </data>
+    <data name="ValidateAdminCodeSignatures-UAC" xml:space="preserve">
+    <value>Configure the system to only elevate executables that are signed and Validated. Any program that is unsigned or signed with self-signed certificates will not be able to run as administrator.</value>
+  </data>
+    <data name="ConsentPromptBehaviorEnhancedAdmin-UAC" xml:space="preserve">
+    <value>Set the behavior of the elevation prompt for administrators in Enhanced Privilege Protection Mode: Prompt for Credentials on the Secure Desktop</value>
+  </data>
+    <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
+    <value>Set the type of Admin Approval Mode to be Admin Approval Mode with enhanced privilege protection</value>
+  </data>
+  <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Remove remotely accessible registry paths.</value>
+</data>
+  <data name="AllowedPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Remove remotely accessible registry paths and subpaths.</value>
+</data>
+  <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Deny incoming NTLM connection for all accounts.</value>
+</data>
+  <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Deny outgoing NTLM connections.</value>
+</data>
+<data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
+    <value>Force strong key protection for user keys stored on the computer. You will be able to securely save private keys of the certificates you install on the computer and also the same credential will be required when accessing the private key such as for signing operations.</value>
+</data>
+<data name="LockoutBadCount-LockScreen" xml:space="preserve">
+    <value>Set the number of allowed failed sign-in attempts to 5. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, system will be restarted and 48-digit Bitlocker code will be asked. This policy greatly prevents brute force attempts.</value>
+</data>
+<data name="ResetLockoutCount-LockScreen" xml:space="preserve">
+    <value>Set the account lockout duration to 1440 minutes or 1 day. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, system will be restarted and 48-digit Bitlocker code will be asked.</value>
+</data>
+<data name="LockoutDuration-LockScreen" xml:space="preserve">
+    <value>Set the reset account lockout counter to 1440 minutes or 1 day.</value>
 </data>
 </root>

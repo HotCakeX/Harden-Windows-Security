@@ -1,0 +1,2324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="GitHubDocsNavItem.Content" xml:space="preserve">
+    <value>Documentación de GitHub</value>
+  </data>
+  <data name="GitHubDocsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Obtener documentación electrónica de GitHub sobre cómo usar la aplicación</value>
+  </data>
+  <data name="GitHubDocsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Obtener documentación electrónica de GitHub sobre cómo usar la aplicación</value>
+  </data>
+  <data name="LogsNavItem.Content" xml:space="preserve">
+    <value>Registros</value>
+  </data>
+  <data name="SettingsNavItem.Content" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
+  <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ver los registros de la aplicación en tiempo real</value>
+  </data>
+  <data name="LogsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ver los registros de la aplicación en tiempo real</value>
+  </data>
+    <data name="UpdateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Buscar actualizaciones</value>
+  </data>
+  <data name="UpdateNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Buscar actualizaciones</value>
+  </data>
+  <data name="UpdateNavItem.Content" xml:space="preserve">
+    <value>Actualización</value>
+  </data>
+    <data name="MainSearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
+    <value>Buscar elementos del menú...</value>
+  </data>
+  <data name="MainSearchAutoSuggestBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ingrese nombres de elementos del menú para encontrarlos rápidamente</value>
+  </data>
+  <data name="MainSearchAutoSuggestBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ingrese nombres de elementos del menú para encontrarlos rápidamente</value>
+  </data>
+  <data name="RefreshLogFilesButton.Content" xml:space="preserve">
+    <value>Actualizar Registros</value>
+  </data>
+  <data name="RefreshLogFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recuperar los registros más recientes para la sesión actual leyéndolos del archivo de registro en la carpeta de configuración del usuario</value>
+  </data>
+  <data name="RefreshLogFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recuperar los registros más recientes para la sesión actual leyéndolos del archivo de registro en la carpeta de configuración del usuario</value>
+  </data>
+  <data name="AppStartupMessage" xml:space="preserve">
+    <value>Inicio de aplicación, versión de runtime .NET: {0}</value>
+  </data>
+  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
+    <value>Hay otra instancia de Harden Windows Security ejecutándose. Esto es solo un registro informativo.</value>
+</data>
+<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <value>Se detectó activación de archivo</value>
+</data>
+<data name="FileActivationNoObjectsMessage" xml:space="preserve">
+  <value>La aplicación se inició a través de activación de archivo pero los argumentos no contenían objetos de archivo</value>
+</data>
+<data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+  <value>La aplicación se inició a través de activación de archivo pero sin argumentos de activación de archivo</value>
+</data>
+<data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+  <value>Se requería una solicitud de elevación para procesar el archivo seleccionado pero fue denegada por el usuario. Saliendo de la aplicación.</value>
+</data>
+<data name="ElevationDeniedMessage" xml:space="preserve">
+  <value>La solicitud de elevación fue denegada por el usuario</value>
+</data>
+<data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+  <value>Hubo un problema guardando el tamaño de la ventana al cerrar la aplicación: {0}</value>
+</data>
+<data name="ErrorDialogTitle" xml:space="preserve">
+  <value>Ocurrió un Error</value>
+</data>
+<data name="ErrorDialogContent" xml:space="preserve">
+  <value>Ocurrió un error inesperado: {0}</value>
+</data>
+  <data name="OK" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+      <data name="Cancelling" xml:space="preserve">
+    <value>Cancelando...</value>
+  </data>
+    <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+  <value>Configurando tamaño del registro de integridad de código</value>
+</data>
+  <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
+    <value>Aumentando el tamaño del registro de integridad de código en 1MB porque su espacio libre actual es menor a 1MB.</value>
+  </data>
+    <data name="SettingCodeIntegrityLogSizeMessage" xml:space="preserve">
+    <value>Configurando el tamaño del registro de integridad de código a {0:N2} MB.</value>
+  </data>
+    <data name="ProvidedLogSizeLessThanOrEqualOneMbNoChangesMadeMessage" xml:space="preserve">
+    <value>El tamaño de registro proporcionado es menor o igual a 1 MB. No se realizaron cambios.</value>
+  </data>
+    <data name="FileRequiresElevatedPermissionsMessage" xml:space="preserve">
+    <value>El archivo "{0}" requiere permisos elevados.</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+  <value>Estado</value>
+</data>
+  <data name="WarningTitle" xml:space="preserve">
+    <value>Advertencia</value>
+  </data>
+    <data name="ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+    <data name="SuccessTitle" xml:space="preserve">
+    <value>Éxito</value>
+  </data>
+    <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
+    <value>El comando '{0} {1}' falló con código de salida {2}. Error: {3}</value>
+  </data>
+  <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
+    <value>La solicitud de elevación fue cancelada por el usuario.</value>
+  </data>
+    <data name="ActivationManagerFailedWithHRESULTMessage" xml:space="preserve">
+    <value>ActivationManager falló con HRESULT: 0x{0:X}</value>
+  </data>
+  <data name="JumpListNotSupportedMessage" xml:space="preserve">
+  <value>JumpList no es compatible.</value>
+</data>
+  <data name="AppElevationNoticeMain" xml:space="preserve">
+    <value>Por favor ejecute Harden Windows Security como Administrador para acceder a esta página</value>
+  </data>
+    <data name="AppElevationNoticeExtraPrompt" xml:space="preserve">
+    <value>Siempre solicitar elevación al iniciar la aplicación</value>
+  </data>
+    <data name="AppElevationNoticeTitle" xml:space="preserve">
+    <value>Se requieren permisos de administrador</value>
+  </data>
+    <data name="AppElevationNoticeRelaunch" xml:space="preserve">
+    <value>Reiniciar como Administrador</value>
+  </data>
+    <data name="WindowMaximizedMsg" xml:space="preserve">
+    <value>La ventana estaba maximizada cuando la aplicación se cerró la última vez, configurándola como maximizada ahora</value>
+  </data>
+  <data name="SettingWindowSizeMessage" xml:space="preserve">
+  <value>Configurando el tamaño de ventana de vuelta a lo que era cuando la aplicación se cerró. Alto: {0} - Ancho: {1}</value>
+</data>
+  <data name="SidebarTextBlock.Text" xml:space="preserve">
+    <value>Barra lateral</value>
+  </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>Use la barra lateral para funciones adicionales.</value>
+  </data>
+    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
+    <value>Guía de la barra lateral</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Para una guía sobre cómo usar la barra lateral, por favor visite la página wiki de GitHub haciendo clic/tocando aquí.</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Para una guía sobre cómo usar la barra lateral, por favor visite la página wiki de GitHub haciendo clic/tocando aquí.</value>
+  </data>
+    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+    <value>Soporte - Hacer preguntas</value>
+  </data>
+  <data name="SettingsPageTitle.Text" xml:space="preserve">
+    <value>Personalice la configuración de su aplicación aquí. Sus preferencias se guardarán para que estén listas para usted cada vez que inicie Harden Windows Security.</value>
+  </data>
+  <data name="Appearance.Text" xml:space="preserve">
+    <value>Apariencia</value>
+  </data>
+  <data name="About.Text" xml:space="preserve">
+    <value>Acerca de</value>
+  </data>
+    <data name="AppearanceSectionSettingsExpander.Header" xml:space="preserve">
+    <value>Haga que Harden Windows Security se vea como usted quiere</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Use las diversas opciones disponibles para cambiar la apariencia y efectos visuales de Harden Windows Security</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Use las diversas opciones disponibles para cambiar la apariencia y efectos visuales de Harden Windows Security</value>
+  </data>
+    <data name="DarkerBackGroundSettingsCard.Description" xml:space="preserve">
+    <value>Principalmente adecuado cuando se usa MicaAlt como fondo.</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.Header" xml:space="preserve">
+    <value>Fondo más oscuro</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eliminará la sombra clara adicional del fondo, dando una apariencia generalmente más oscura a Harden Windows Security.</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eliminará la sombra clara adicional del fondo, dando una apariencia generalmente más oscura a Harden Windows Security.</value>
+  </data>
+    <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>Activado</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+    <data name="BackgroundStyleSettingsCard.Description" xml:space="preserve">
+    <value>Personalice el estilo de fondo de la aplicación</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.Header" xml:space="preserve">
+    <value>Estilo de fondo</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Este es el fondo de Harden Windows Security. Los cambios serán visibles en el fondo.</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Este es el fondo de Harden Windows Security. Los cambios serán visibles en el fondo.</value>
+  </data>
+    <data name="AppThemeSettingsCard.Description" xml:space="preserve">
+    <value>Personalice el tema</value>
+  </data>
+  <data name="AppThemeSettingsCard.Header" xml:space="preserve">
+    <value>Tema</value>
+  </data>
+  <data name="AppThemeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija un tema para Harden Windows Security</value>
+  </data>
+  <data name="AppThemeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija un tema para Harden Windows Security</value>
+  </data>
+    <data name="MainNavigationIconsSettingsCard.Description" xml:space="preserve">
+    <value>Elija un estilo para los iconos de navegación principal</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.Header" xml:space="preserve">
+    <value>Estilo de iconos</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija un estilo para los iconos de navegación principal.</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija un estilo para los iconos de navegación principal.</value>
+  </data>
+    <data name="MainNavigationLocationSettingsCard.Description" xml:space="preserve">
+    <value>Personalice la ubicación del menú de navegación</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.Header" xml:space="preserve">
+    <value>Menú de navegación</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elija una ubicación para el menú de navegación</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elija una ubicación para el menú de navegación</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.Header" xml:space="preserve">
+    <value>Cambie el comportamiento de Harden Windows Security y varios elementos dentro de él</value>
+  </data>
+  <data name="Behavior.Text" xml:space="preserve">
+    <value>Comportamiento</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cambie el comportamiento de Harden Windows Security y varios elementos dentro de él</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cambie el comportamiento de Harden Windows Security y varios elementos dentro de él</value>
+  </data>
+    <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Cada vez que seleccione un elemento en una vista de lista, centre ese elemento verticalmente en la pantalla.</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Centrar vistas de lista verticalmente al seleccionar</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cada vez que seleccione un elemento en una vista de lista, centre ese elemento verticalmente en la pantalla.</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cada vez que seleccione un elemento en una vista de lista, centre ese elemento verticalmente en la pantalla.</value>
+  </data>
+    <data name="PromptForElevationSettingsCard.Description" xml:space="preserve">
+    <value>Si esto está habilitado, Harden Windows Security solicitará elevación para ejecutarse con permisos de administrador al inicio.</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.Header" xml:space="preserve">
+    <value>Solicitar elevación al inicio</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Si esto está habilitado, Harden Windows Security solicitará elevación para ejecutarse con permisos de administrador al inicio.</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Si esto está habilitado, Harden Windows Security solicitará elevación para ejecutarse con permisos de administrador al inicio.</value>
+  </data>
+    <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>Evite que otras aplicaciones como grabadoras de pantalla (incluyendo Recall) graben o tomen capturas de pantalla de la ventana de Harden Windows Security.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>Protección de pantalla</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Evite que otras aplicaciones como grabadoras de pantalla (incluyendo Recall) graben o tomen capturas de pantalla de la ventana de Harden Windows Security.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Evite que otras aplicaciones como grabadoras de pantalla (incluyendo Recall) graben o tomen capturas de pantalla de la ventana de Harden Windows Security.</value>
+  </data>
+   <data name="PublishUserActivityInTheOSSettingsCard.Description" xml:space="preserve">
+    <value>Publique varias actividades que realice en Harden Windows Security al sistema operativo, permitiendo que aparezcan y estén disponibles para usted en Microsoft Recall para que pueda recordar sus acciones.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.Header" xml:space="preserve">
+    <value>Publicar actividad en el SO</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Publique varias actividades que realice en Harden Windows Security al sistema operativo, permitiendo que aparezcan y estén disponibles para usted en Microsoft Recall para que pueda recordar sus acciones.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Publique varias actividades que realice en Harden Windows Security al sistema operativo, permitiendo que aparezcan y estén disponibles para usted en Microsoft Recall para que pueda recordar sus acciones.</value>
+  </data>
+    <data name="LanguageTextBlock.Text" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+    <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
+    <value>Alternar entre diferentes idiomas de interfaz de usuario compatibles y diseños.</value>
+  </data>
+  <data name="LanguageSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alternar entre diferentes idiomas de interfaz de usuario compatibles y diseños.</value>
+  </data>
+  <data name="LanguageSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alternar entre diferentes idiomas de interfaz de usuario compatibles y diseños.</value>
+  </data>
+    <data name="LanguageSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Seleccione un idioma diferente de la lista</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Selección de idioma</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione un idioma diferente de la lista</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione un idioma diferente de la lista</value>
+  </data>
+    <data name="UIFlowDirectionSettingsCard.Description" xml:space="preserve">
+    <value>Alternar entre direcciones de flujo de derecha a izquierda y de izquierda a derecha para elementos de la interfaz de usuario.</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.Header" xml:space="preserve">
+    <value>Dirección de flujo</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alternar entre direcciones de flujo de derecha a izquierda y de izquierda a derecha para elementos de la interfaz de usuario.</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alternar entre direcciones de flujo de derecha a izquierda y de izquierda a derecha para elementos de la interfaz de usuario.</value>
+  </data>
+    <data name="UIFlowDirectionToggleSwitch.OnContent" xml:space="preserve">
+    <value>Izquierda a derecha</value>
+  </data>
+  <data name="UIFlowDirectionToggleSwitch.OffContent" xml:space="preserve">
+    <value>Derecha a izquierda</value>
+  </data>
+    <data name="Sound.Text" xml:space="preserve">
+    <value>Sonido</value>
+  </data>
+    <data name="AppSoundSettingSettingsCard.Description" xml:space="preserve">
+    <value>Escuche retroalimentación de audio al usar diferentes elementos de Harden Windows Security</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.Header" xml:space="preserve">
+    <value>Sonido</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Escuche retroalimentación de audio al usar diferentes elementos de Harden Windows Security</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Escuche retroalimentación de audio al usar diferentes elementos de Harden Windows Security</value>
+  </data>
+    <data name="GitHubRepoHyperLinkButton.Content" xml:space="preserve">
+    <value>Repositorio de GitHub</value>
+  </data>
+    <data name="SpyNetGirlWebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>Sitio web de SpyNetGirl</value>
+  </data>
+    <data name="MicrosoftStorePageHyperLinkButton.Content" xml:space="preserve">
+    <value>Página de Microsoft Store</value>
+  </data>
+    <data name="YouTubeChannelHyperLinkButton.Content" xml:space="preserve">
+    <value>Canal de YouTube</value>
+  </data>
+    <data name="DonationHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Su apoyo me ayuda a seguir creando y manteniendo este proyecto.</value>
+  </data>
+  <data name="DonationHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Su apoyo me ayuda a seguir creando y manteniendo este proyecto.</value>
+  </data>
+    <data name="DonationHyperLinkButton.Content" xml:space="preserve">
+    <value>Donación</value>
+  </data>
+    <data name="PrivacyPolicyHyperLinkButton.Content" xml:space="preserve">
+    <value>Política de privacidad</value>
+  </data>
+    <data name="SendFeedbackHyperLinkButton.Content" xml:space="preserve">
+    <value>Enviar comentarios</value>
+  </data>
+    <data name="Icons8WebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>Sitio web de Icons8 para todos los iconos usados en esta aplicación</value>
+  </data>
+    <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
+    <value>Código fuente</value>
+  </data>
+    <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <value>Busque actualizaciones en esta página. También puede habilitar la verificación automática de actualizaciones que ocurrirá una vez al inicio y se le notificará cuando una nueva versión esté disponible.</value>
+  </data>
+    <data name="GuideButtonAtTop.Content" xml:space="preserve">
+    <value>Guía</value>
+  </data>
+  <data name="GuideButtonAtTop.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Haga clic/toque para visitar la guía completa para esta página en GitHub</value>
+  </data>
+  <data name="GuideButtonAtTop.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Haga clic/toque para visitar la guía completa para esta página en GitHub</value>
+  </data>
+    <data name="UpdatePageUpdateStatusInfoBar.Title" xml:space="preserve">
+    <value>Estado de actualización</value>
+  </data>
+  <data name="UpdatePageUpdateStatusInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Estado de actualización</value>
+  </data>
+    <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
+    <value>Más información</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abre la página wiki principal de GitHub para Harden Windows Security</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abre la página wiki principal de GitHub para Harden Windows Security</value>
+  </data>
+    <data name="UpdatePageWhatsNewInfoBar.Title" xml:space="preserve">
+    <value>Notas de la versión</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.Message" xml:space="preserve">
+    <value>Revise las versiones de GitHub para notas completas de la versión</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Revise las versiones de GitHub para notas completas de la versión</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Revise las versiones de GitHub para notas completas de la versión</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.Content" xml:space="preserve">
+    <value>Ver qué hay de nuevo</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abre la página de versiones de GitHub donde puede encontrar las notas completas de la versión para la actualización disponible.</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abre la página de versiones de GitHub donde puede encontrar las notas completas de la versión para la actualización disponible.</value>
+  </data>
+    <data name="CheckForUpdateSettingsCard.Description" xml:space="preserve">
+    <value>Una vez que las actualizaciones se descarguen e instalen, la próxima vez que abra Harden Windows Security usará la nueva versión.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.Header" xml:space="preserve">
+    <value>Buscar actualización de Harden Windows Security</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Una vez que las actualizaciones se descarguen e instalen, la próxima vez que abra Harden Windows Security usará la nueva versión.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Una vez que las actualizaciones se descarguen e instalen, la próxima vez que abra Harden Windows Security usará la nueva versión.</value>
+  </data>
+    <data name="UpdatePageCheckForUpdateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Descargará e instalará la versión más reciente del repositorio de GitHub. El tiempo requerido depende de su conexión de red. El tamaño aproximado de descarga es 65 MB.</value>
+  </data>
+  <data name="UpdatePageCheckForUpdateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Descargará e instalará la versión más reciente del repositorio de GitHub. El tiempo requerido depende de su conexión de red. El tamaño aproximado de descarga es 65 MB.</value>
+  </data>
+    <data name="AutoUpdateCheckSettingsCard.Description" xml:space="preserve">
+    <value>Verifica automáticamente una actualización cuando la aplicación se inicia y le notifica si una nueva versión está disponible para que pueda usar esta página para instalarla.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.Header" xml:space="preserve">
+    <value>Verificación automática de actualizaciones</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verifica automáticamente una actualización cuando la aplicación se inicia y le notifica si una nueva versión está disponible para que pueda usar esta página para instalarla.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Verifica automáticamente una actualización cuando la aplicación se inicia y le notifica si una nueva versión está disponible para que pueda usar esta página para instalarla.</value>
+  </data>
+    <data name="HardenedUpdateProcedureSettingsCard.Description" xml:space="preserve">
+    <value>Cuando esta opción está habilitada, la clave privada temporal del certificado generado en el dispositivo se vinculará a la cuenta de usuario, requiriendo confirmación de avisos antes de que pueda usarse para firmar.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.Header" xml:space="preserve">
+    <value>Procedimiento de actualización endurecido</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cuando esta opción está habilitada, la clave privada temporal del certificado generado en el dispositivo se vinculará a la cuenta de usuario, requiriendo confirmación de avisos antes de que pueda usarse para firmar.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cuando esta opción está habilitada, la clave privada temporal del certificado generado en el dispositivo se vinculará a la cuenta de usuario, requiriendo confirmación de avisos antes de que pueda usarse para firmar.</value>
+  </data>
+    <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abre la mini página de Microsoft Store donde puede calificar y opcionalmente escribir una reseña para Harden Windows Security.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.Header" xml:space="preserve">
+    <value>Calificar y reseñar</value>
+  </data>
+    <data name="RateAndReviewSettingsCard.Description" xml:space="preserve">
+    <value>Abre la mini página de Microsoft Store donde puede calificar y opcionalmente escribir una reseña para Harden Windows Security.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abre la mini página de Microsoft Store donde puede calificar y opcionalmente escribir una reseña para Harden Windows Security.</value>
+  </data>
+    <data name="CheckingForUpdateStore" xml:space="preserve">
+    <value>Verificando actualización en Microsoft Store...</value>
+  </data>
+    <data name="NewUpdateIsAvailableStore" xml:space="preserve">
+    <value>Una nueva actualización está disponible. Abriendo Microsoft Store para que pueda continuar con la actualización de la aplicación allí.</value>
+  </data>
+    <data name="ProblemOpeningMSStore" xml:space="preserve">
+    <value>Hubo un problema abriendo la página de Microsoft Store de Harden Windows Security.</value>
+  </data>
+    <data name="TheAppIsUpToDate" xml:space="preserve">
+    <value>La aplicación Harden Windows Security está actualizada.</value>
+  </data>
+   <data name="UpdateCheckError" xml:space="preserve">
+    <value>Ocurrió un error al verificar la actualización.</value>
+  </data>
+  <data name="FailedToOpenRating" xml:space="preserve">
+    <value>Falló al abrir la página de calificación en Microsoft Store.</value>
+  </data>
+  <data name="InstallVersionMessage" xml:space="preserve">
+    <value>Instalar versión {0}</value>
+  </data>
+    <data name="InstallLatestVer" xml:space="preserve">
+    <value>Instalar la última versión</value>
+  </data>
+    <data name="WebViewBackButton.Text" xml:space="preserve">
+    <value>Atrás</value>
+  </data>
+  <data name="WebViewForwardButton.Text" xml:space="preserve">
+    <value>Adelante</value>
+  </data>
+  <data name="WebViewReloadButton.Text" xml:space="preserve">
+    <value>Recargar</value>
+  </data>
+  <data name="WebViewHomeButton.Text" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Documentación</value>
+  </data>
+  <data name="UserCanceledUACMessage" xml:space="preserve">
+  <value>El usuario canceló el aviso de UAC.</value>
+  </data>
+  <data name="ProtectionPresets.Text" xml:space="preserve">
+    <value>Configuraciones predefinidas de protección</value>
+  </data>
+    <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione una de las configuraciones predefinidas de protección para aplicar, son conjuntos de configuración predefinidos hechos para diferentes niveles de seguridad.</value>
+  </data>
+  <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione una de las configuraciones predefinidas de protección para aplicar, son conjuntos de configuración predefinidos diseñados para diferentes niveles de seguridad.</value>
+  </data>
+    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>Básico</value>
+  </data>
+    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>Recomendado</value>
+  </data>
+    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>Completo</value>
+  </data>
+  <data name="ProtectPageTitle.Text" xml:space="preserve">
+    <value>Administre las configuraciones de seguridad y elija cómo asegurar su dispositivo.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaseline" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Línea base de seguridad de Microsoft</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaseline" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Aplicar las recomendaciones de configuración de seguridad de Microsoft. Altamente recomendado.</value>
+  </data>
+  <data name="ProtectCategory_MSFT365AppsSecBaseline" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Línea base de seguridad de aplicaciones Microsoft 365</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFT365AppsSecBaseline" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Endurecer las aplicaciones de Microsoft 365 contra múltiples vectores de ataque aplicando recomendaciones de seguridad de Microsoft.</value>
+  </data>
+  <data name="ProtectCategory_MSFTDefender" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Microsoft Defender</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTDefender" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Habilitar muchas características de seguridad que están deshabilitadas por defecto en Microsoft Defender y mejorar la seguridad de las características existentes para proporcionar un excelente nivel de protección contra malware.</value>
+  </data>
+  <data name="ProtectCategory_ASRRules" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Reducción de superficie de ataque</value>
+  </data>
+  <data name="ProtectCategory_Description_ASRRules" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Usar reglas de reducción de superficie de ataque para agregar capas defensivas más avanzadas y especializadas a su conjunto de seguridad.</value>
+  </data>
+  <data name="ProtectCategory_BitLocker" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Configuración de BitLocker</value>
+  </data>
+  <data name="ProtectCategory_Description_BitLocker" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Configurar BitLocker para proporcionar la máxima seguridad y encriptación posible para sus datos en reposo y asegurar que sus datos permanezcan inaccesibles en caso de robo del dispositivo.</value>
+  </data>
+  <data name="ProtectCategory_DeviceGuard" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Device Guard</value>
+  </data>
+  <data name="ProtectCategory_Description_DeviceGuard" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Aprovechar y habilitar varias características de seguridad de hardware que ayudan al kernel del sistema operativo a protegerse a sí mismo y al dispositivo contra malware avanzado.</value>
+  </data>
+  <data name="ProtectCategory_TLS" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Seguridad TLS</value>
+  </data>
+  <data name="ProtectCategory_Description_TLS" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Asegurar que sus datos permanezcan más seguros durante el tránsito y que sus conexiones solo usarán algoritmos seguros.</value>
+  </data>
+  <data name="ProtectCategory_LockScreen" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Pantalla de bloqueo</value>
+  </data>
+  <data name="ProtectCategory_Description_LockScreen" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Mejorar la seguridad de la pantalla de bloqueo contra diversas amenazas y reducir la cantidad de información accesible en la pantalla de bloqueo para usuarios no autorizados.</value>
+  </data>
+  <data name="ProtectCategory_UAC" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Control de cuentas de usuario</value>
+  </data>
+  <data name="ProtectCategory_Description_UAC" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Mejorar la seguridad del control de cuentas de usuario para que cualquier tarea administrativa requiera su permiso explícito para ocurrir.</value>
+  </data>
+  <data name="ProtectCategory_WindowsFirewall" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Firewall de Windows</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsFirewall" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Endurecer el Firewall de Windows contra amenazas de red y habilitar registro detallado para escenarios de respuesta a incidentes.</value>
+  </data>
+  <data name="ProtectCategory_OptionalWinFeatures" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Características opcionales de Windows</value>
+  </data>
+  <data name="ProtectCategory_Description_OptionalWinFeatures" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Remover características y capacidades antiguas y obsoletas del sistema operativo, reduciendo la superficie de ataque y el uso del disco y mejorando la seguridad general.</value>
+  </data>
+  <data name="ProtectCategory_WindowsNetworking" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Redes de Windows</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsNetworking" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Mejorar la seguridad de la pila de red en Windows, asegurar comunicaciones seguras y prevenir el uso de protocolos antiguos e inseguros.</value>
+  </data>
+  <data name="ProtectCategory_MiscellaneousConfig" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Configuraciones misceláneas</value>
+  </data>
+  <data name="ProtectCategory_Description_MiscellaneousConfig" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Aplicar varias características de seguridad importantes que no encajan en otras categorías más especializadas. Puede configurarlas más usando la página de configuraciones misceláneas.</value>
+  </data>
+  <data name="ProtectCategory_WindowsUpdate" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Windows Update</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsUpdate" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Asegurar que las actualizaciones de Windows se instalen de manera segura y oportuna para prevenir la explotación de vulnerabilidades parcheadas.</value>
+  </data>
+  <data name="ProtectCategory_Edge" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Navegador Edge</value>
+  </data>
+  <data name="ProtectCategory_Description_Edge" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Configurar el navegador Edge para ser más seguro y compartir menos datos con los sitios web que visita.</value>
+  </data>
+  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Verificación de certificados</value>
+  </data>
+  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Verificar los certificados instalados y detectar cualquiera que no pertenezca al sistema operativo mismo.</value>
+  </data>
+  <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Bloqueo de IP por país</value>
+  </data>
+  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Bloquear rangos de direcciones IP de países específicos en la lista de sanciones de Estados Unidos por apoyo al terrorismo.</value>
+  </data>
+  <data name="ProtectCategory_NonAdmin" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Configuración de no administrador</value>
+  </data>
+  <data name="ProtectCategory_Description_NonAdmin" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Aplicar configuraciones de seguridad que no requieren permisos de administrador y se aplican a todos los usuarios normales y administradores.</value>
+  </data>
+  <data name="ProtectSubCategory_SmartAppControl" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Control inteligente de aplicaciones</value>
+  </data>
+  <data name="ProtectSubCategory_BetaUpdateChannels" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Habilitar canales de actualización beta para Microsoft Defender</value>
+  </data>
+  <data name="ProtectSubCategory_NoLastSignedIn" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>No mostrar información del último inicio de sesión en la pantalla de bloqueo</value>
+  </data>
+  <data name="ProtectSubCategory_RequireCTRLAltDel" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Requerir presionar las teclas CTRL + Alt + Del en la pantalla de bloqueo antes de ingresar credenciales.</value>
+  </data>
+  <data name="ProtectSubCategory_NoFastUserSwitching" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Deshabilitar la característica de cambio rápido de usuario.</value>
+  </data>
+  <data name="ProtectSubCategory_OnlyElevateSigned" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Permitir solo que programas firmados y verificados se ejecuten con permisos elevados.</value>
+  </data>
+  <data name="ProtectSubCategory_MandatoryModeForVBS" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Habilitar modo obligatorio para VBS (Seguridad basada en virtualización)</value>
+  </data>
+  <data name="ProtectSubCategory_BlockNTLM" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Bloquear completamente el protocolo NTLM.</value>
+  </data>
+  <data name="ProtectSubCategory_ForceStrongKeyProtection" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Requerir protección fuerte para claves privadas de certificados almacenadas en el dispositivo.</value>
+  </data>
+  <data name="ProtectSubCategory_EnableWindowsProtectedPrint" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Habilitar impresión protegida de Windows.</value>
+  </data>
+  <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Habilitar soporte de rutas largas de archivos.</value>
+  </data>
+  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Bloquear rangos IP de países en la lista de sanciones OFAC.</value>
+  </data>
+  <data name="ASRNavItem.Content" xml:space="preserve">
+    <value>Reducción de superficie de ataque</value>
+  </data>
+  <data name="BitLockerNavItem.Content" xml:space="preserve">
+    <value>BitLocker</value>
+  </data>
+  <data name="DeviceGuardNavItem.Content" xml:space="preserve">
+    <value>Device Guard</value>
+  </data>
+  <data name="TLSSecurityNavItem.Content" xml:space="preserve">
+    <value>Seguridad TLS</value>
+  </data>
+    <data name="LockScreenNavItem.Content" xml:space="preserve">
+    <value>Pantalla de bloqueo</value>
+  </data>
+  <data name="UACNavItem.Content" xml:space="preserve">
+    <value>Control de cuentas de usuario</value>
+  </data>
+  <data name="WindowsFirewallNavItem.Content" xml:space="preserve">
+    <value>Firewall de Windows</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.Content" xml:space="preserve">
+    <value>Características opcionales de Windows</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.Content" xml:space="preserve">
+    <value>Redes de Windows</value>
+  </data>
+  <data name="MiscellaneousNavItem.Content" xml:space="preserve">
+    <value>Misceláneas</value>
+  </data>
+  <data name="WindowsUpdateNavItem.Content" xml:space="preserve">
+    <value>Windows Update</value>
+  </data>
+  <data name="EdgeBrowserNavItem.Content" xml:space="preserve">
+    <value>Navegador Edge</value>
+  </data>
+  <data name="CertificatesNavItem.Content" xml:space="preserve">
+    <value>Certificados</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.Content" xml:space="preserve">
+    <value>Bloqueo de IP por país</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.Content" xml:space="preserve">
+    <value>Comandos de no administrador</value>
+  </data>
+  <!--Group Policy Editor ListView Headers Start-->
+  <data name="KeynameHeader.Text" xml:space="preserve">
+    <value>Nombre de clave</value>
+  </data>
+  <data name="ValueNameHeader.Text" xml:space="preserve">
+    <value>Nombre de valor</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+  <data name="CategoryHeader.Text" xml:space="preserve">
+    <value>Categoría</value>
+  </data>
+  <data name="SubCategoryHeader.Text" xml:space="preserve">
+    <value>Subcategoría</value>
+  </data>
+  <data name="PolicyActionHeader.Text" xml:space="preserve">
+    <value>Acción de política</value>
+  </data>
+  <data name="FriendlyNameHeader.Text" xml:space="preserve">
+    <value>Nombre descriptivo</value>
+  </data>
+  <data name="SizeHeader.Text" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
+  <!--Group Policy Editor ListView Headers End-->
+  <!--Group Policy Editor ListView Headers Buttons Start-->
+  <data name="KeynameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Nombre de clave</value>
+  </data>
+  <data name="ValueNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Nombre de valor</value>
+  </data>
+  <data name="ValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+  <data name="CategoryColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Categoría</value>
+  </data>
+  <data name="SubCategoryColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Subcategoría</value>
+  </data>
+  <data name="PolicyActionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Acción de política</value>
+  </data>
+  <data name="FriendlyNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Nombre descriptivo</value>
+  </data>
+  <data name="SizeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
+  <!--Group Policy Editor ListView Headers Buttons End-->
+  <data name="GroupPolicyEditorNavItem.Content" xml:space="preserve">
+    <value>Editor de directivas de grupo</value>
+  </data>
+    <data name="ClearButton.Content" xml:space="preserve">
+    <value>Limpiar</value>
+  </data>
+  <data name="ClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Limpiar</value>
+  </data>
+  <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Limpiar</value>
+  </data>
+  <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
+    <value>Abra y lea archivos de directiva de grupo en esta página. Puede buscar en los datos y eliminar directivas individuales del archivo. También puede ver las directivas efectivas en el sistema.</value>
+  </data>
+  <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
+    <value>Ver la ruta o rutas del archivo de directiva que seleccionó.</value>
+  </data>
+    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Directivas totales: 0</value>
+  </data>
+  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El número total de directivas</value>
+  </data>
+  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El número total de directivas</value>
+  </data>
+  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <value>Buscar en los datos...</value>
+  </data>
+  <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Buscar dentro de los datos mostrados</value>
+  </data>
+  <data name="SearchBoxTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Buscar dentro de los datos mostrados</value>
+  </data>
+    <data name="CopyRow.Text" xml:space="preserve">
+    <value>Copiar fila</value>
+  </data>
+  <data name="CopyRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copiar la(s) fila(s) actualmente seleccionada(s) al portapapeles como textos para que pueda pegarlos en cualquier editor de texto.</value>
+  </data>
+  <data name="CopyRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copiar la(s) fila(s) actualmente seleccionada(s) al portapapeles como textos para que pueda pegarlos en cualquier editor de texto.</value>
+  </data>
+  <data name="GenericBrowseButton.Content" xml:space="preserve">
+    <value>Explorar</value>
+  </data>
+  <data name="GenericBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Explorar</value>
+  </data>
+  <data name="GenericBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Explorar</value>
+  </data>
+    <data name="GetEffectivePoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Obtener directivas efectivas</value>
+  </data>
+  <data name="GetEffectivePoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Lista las directivas de grupo efectivas que se aplican al sistema actual.</value>
+  </data>
+  <data name="GetEffectivePoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Lista las directivas de grupo efectivas que se aplican al sistema actual.</value>
+  </data>
+  <data name="MoreActionsMenuBar.Title" xml:space="preserve">
+    <value>Más acciones</value>
+  </data>
+  <data name="MoreActionsMenuBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Realizar más acciones usando características especializadas.</value>
+  </data>
+  <data name="MoreActionsMenuBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Realizar más acciones usando características especializadas.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.Header" xml:space="preserve">
+    <value>Seleccionar otros archivos POL para fusionar</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.Description" xml:space="preserve">
+    <value>Explore otros archivos POL que se fusionarán con el archivo POL principal. Si existe una entrada con el mismo KeyName y ValueName tanto en el archivo principal como en cualquier otro archivo POL, la entrada del otro archivo tendrá prioridad y reemplazará la entrada del archivo POL principal.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Explore otros archivos POL que se fusionarán con el archivo POL principal. Si existe una entrada con el mismo KeyName y ValueName tanto en el archivo principal como en cualquier otro archivo POL, la entrada del otro archivo tendrá prioridad y reemplazará la entrada del archivo POL principal.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Explore otros archivos POL que se fusionarán con el archivo POL principal. Si existe una entrada con el mismo KeyName y ValueName tanto en el archivo principal como en cualquier otro archivo POL, la entrada del otro archivo tendrá prioridad y reemplazará la entrada del archivo POL principal.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.Header" xml:space="preserve">
+    <value>Seleccionar archivo POL principal para fusionar</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.Description" xml:space="preserve">
+    <value>Explore el archivo POL principal. Todos los otros archivos POL agregarán su contenido a este archivo y reemplazarán cualquier contenido existente.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Explore el archivo POL principal. Todos los otros archivos POL agregarán su contenido a este archivo y reemplazarán cualquier contenido existente.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Explore el archivo POL principal. Todos los otros archivos POL agregarán su contenido a este archivo y reemplazarán cualquier contenido existente.</value>
+  </data>
+    <data name="POLFilesMergeTitleTextBlock.Text" xml:space="preserve">
+    <value>Fusionar múltiples archivos de directiva de grupo POL en uno</value>
+  </data>
+  <data name="StartPOLFileMergeButton.Content" xml:space="preserve">
+    <value>Iniciar fusión</value>
+  </data>
+  <data name="StartPOLFileMergeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Comenzar la fusión de los archivos de directiva de grupo POL seleccionados.</value>
+  </data>
+  <data name="StartPOLFileMergeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Comenzar la fusión de los archivos de directiva de grupo POL seleccionados.</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Abrir barra lateral</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abre la barra lateral para que pueda acceder a características adicionales.</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abre la barra lateral para que pueda acceder a características adicionales.</value>
+  </data>
+  <data name="ClearDataButton.Content" xml:space="preserve">
+    <value>Limpiar datos</value>
+  </data>
+  <data name="ClearDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Limpiar todos los datos de la vista de lista</value>
+  </data>
+  <data name="ClearDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Limpiar todos los datos de la vista de lista</value>
+  </data>
+  <data name="LoadButton.Content" xml:space="preserve">
+    <value>Cargar</value>
+  </data>
+  <data name="LoadButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cargar los datos de la directiva seleccionada.</value>
+  </data>
+  <data name="LoadButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cargar los datos de la directiva seleccionada.</value>
+  </data>
+  <data name="ConvertPOLToJSONTitleTextBlock.Text" xml:space="preserve">
+    <value>Convertir archivos de directiva de grupo POL a JSON</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.Content" xml:space="preserve">
+    <value>Convertir</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Comenzar la conversión de los archivos de directiva de grupo POL seleccionados a archivos JSON con los mismos nombres.</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Comenzar la conversión de los archivos de directiva de grupo POL seleccionados a archivos JSON con los mismos nombres.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.Header" xml:space="preserve">
+    <value>Seleccionar archivos POL para conversión a JSON</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.Description" xml:space="preserve">
+    <value>Explore archivos POL que se convertirán a archivos JSON.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Explore archivos POL que se convertirán a archivos JSON.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Explore archivos POL que se convertirán a archivos JSON.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.Header" xml:space="preserve">
+    <value>Seleccionar directorio de salida (opcional)</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.Description" xml:space="preserve">
+    <value>Exploración opcional de un directorio donde se guardarán todos los archivos JSON. Si no se selecciona, cada archivo JSON se guardará en el mismo directorio que el archivo POL seleccionado con el mismo nombre.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exploración opcional de un directorio donde se guardarán todos los archivos JSON. Si no se selecciona, cada archivo JSON se guardará en el mismo directorio que el archivo POL seleccionado con el mismo nombre.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exploración opcional de un directorio donde se guardarán todos los archivos JSON. Si no se selecciona, cada archivo JSON se guardará en el mismo directorio que el archivo POL seleccionado con el mismo nombre.</value>
+  </data>
+  <data name="SelectedDirectory.Text" xml:space="preserve">
+    <value>Ver el directorio que seleccionó</value>
+  </data>
+  <data name="ConvertJSONToPolTitleTextBlock.Text" xml:space="preserve">
+    <value>Convertir archivos JSON a archivos de directiva de grupo POL</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.Header" xml:space="preserve">
+    <value>Seleccionar archivos JSON para conversión a POL</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.Description" xml:space="preserve">
+    <value>Explore archivos JSON que se convertirán a archivos de directiva de grupo POL.</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Explore archivos JSON que se convertirán a archivos de directiva de grupo POL.</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Explore archivos JSON que se convertirán a archivos de directiva de grupo POL.</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.Content" xml:space="preserve">
+    <value>Convertir</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Comenzar la conversión de los archivos JSON seleccionados a archivos de directiva de grupo POL con los mismos nombres.</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Comenzar la conversión de los archivos JSON seleccionados a archivos de directiva de grupo POL con los mismos nombres.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.Header" xml:space="preserve">
+    <value>Seleccionar directorio de salida (opcional)</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.Description" xml:space="preserve">
+    <value>Exploración opcional de un directorio donde se guardarán todos los archivos POL. Si no se selecciona, cada archivo POL se guardará en el mismo directorio que el archivo JSON seleccionado con el mismo nombre.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exploración opcional de un directorio donde se guardarán todos los archivos POL. Si no se selecciona, cada archivo POL se guardará en el mismo directorio que el archivo JSON seleccionado con el mismo nombre.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exploración opcional de un directorio donde se guardarán todos los archivos POL. Si no se selecciona, cada archivo POL se guardará en el mismo directorio que el archivo JSON seleccionado con el mismo nombre.</value>
+  </data>
+  <data name="CopyIndividualItems.Text" xml:space="preserve">
+    <value>Copiar elementos individuales</value>
+  </data>
+  <data name="CopyIndividualItems.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Expande un submenú al pasar el cursor o tocar para que tenga la opción de copiar elementos individuales en cada fila.</value>
+  </data>
+  <data name="CopyIndividualItems.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Expande un submenú al pasar el cursor o tocar para que tenga la opción de copiar elementos individuales en cada fila.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.Content" xml:space="preserve">
+    <value>Microsoft Defender</value>
+  </data>
+  <data name="EnablingRestorePointScan-MSDefender" xml:space="preserve">
+    <value>Habilitando escaneo de punto de restauración</value>
+  </data>
+  <data name="AllowSwitchToAsyncInspection-MSDefender" xml:space="preserve">
+    <value>Optimizar el rendimiento de la protección de red de Microsoft Defender haciéndola asíncrona.</value>
+  </data>
+  <data name="EnableConvertWarnToBlock-MSDefender" xml:space="preserve">
+    <value>Configurar la protección de red para bloquear el tráfico de red en lugar de mostrar una advertencia</value>
+  </data>
+  <data name="BruteForceProtectionLocalNetworkBlocking-MSDefender" xml:space="preserve">
+    <value>Expandir la cobertura de protección de fuerza bruta para bloquear direcciones de red local.</value>
+  </data>
+    <data name="AddOneDriveDirsToCFA-MSDefender" xml:space="preserve">
+    <value>Agregar carpetas de OneDrive de todas las cuentas de usuario (cuentas personales y de trabajo) al control de acceso de carpetas para protección contra ransomware</value>
+  </data>
+      <data name="EnableMandatoryASLR-MSDefender" xml:space="preserve">
+    <value>Habilitar protección ASLR obligatoria a nivel del sistema</value>
+  </data>
+  <data name="ApplyProcessMitigations-MSDefender" xml:space="preserve">
+    <value>Aplicando mitigaciones de procesos para: {0}</value>
+  </data>
+  <data name="ARM64NoticeForProcessMitigations" xml:space="preserve">
+    <value>Hardware ARM64 detectado, omitiendo mitigaciones de procesos debido a posibles incompatibilidades.</value>
+  </data>
+  <data name="SetNXBit-MSDefender" xml:space="preserve">
+    <value>Activar la prevención de ejecución de datos (DEP) para todas las aplicaciones, incluyendo programas de 32 bits.</value>
+  </data>
+    <data name="SetNXBitError-MSDefender" xml:space="preserve">
+    <value>Falló al establecer el valor Boot Configuration Data (BCD) No-eXecute (NX).</value>
+  </data>
+  <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
+    <value>Excluyendo los ejecutables incompatibles de GitHub Desktop y Git del ASLR obligatorio a nivel del sistema.</value>
+  </data>
+  <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
+    <value>Configurando los canales de actualización del motor y plataforma de Microsoft Defender a beta.</value>
+  </data>
+  <data name="ApplyAllButtonText.Text" xml:space="preserve">
+    <value>Aplicar todo</value>
+  </data>
+  <data name="ApplyAllButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aplicar todas las medidas de seguridad en la página.</value>
+  </data>
+  <data name="ApplyAllButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aplicar todas las medidas de seguridad en la página.</value>
+  </data>
+  <data name="VerifyAllButtonText" xml:space="preserve">
+    <value>Verificar todo</value>
+  </data>
+  <data name="VerifyAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verificar todas las medidas de seguridad en la página.</value>
+  </data>
+  <data name="VerifyAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Verificar todas las medidas de seguridad en la página.</value>
+  </data>
+  <data name="RemoveAllButtonText.Text" xml:space="preserve">
+    <value>Eliminar todo</value>
+  </data>
+  <data name="RemoveAllButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eliminar todas las medidas de seguridad en la página.</value>
+  </data>
+  <data name="RemoveAllButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eliminar todas las medidas de seguridad en la página.</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Seleccionar todo</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccionar todos los elementos en la página.</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Seleccionar todos los elementos en la página.</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Quitar selecciones</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Quitar todas las selecciones deseleccionándolas.</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Quitar todas las selecciones deseleccionándolas.</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Aplicar seleccionados</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aplicar solo las medidas de seguridad que seleccionó.</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Aplicar solo las medidas de seguridad que seleccionó.</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Verificar seleccionados</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verificar solo las medidas de seguridad que seleccionó.</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Verificar solo las medidas de seguridad que seleccionó.</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Eliminar seleccionados</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eliminar solo las medidas de seguridad que seleccionó.</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Eliminar solo las medidas de seguridad que seleccionó.</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.Content" xml:space="preserve">
+    <value>Gestionar selecciones</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gestione los elementos seleccionados y aplique, elimine o verifique.</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Gestione los elementos seleccionados y aplique, elimine o verifique.</value>
+  </data>
+  <data name="FileReputationNavItem.Content" xml:space="preserve">
+    <value>Reputación de archivos</value>
+  </data>
+  <data name="FileReputationNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ver y verificar la reputación de un archivo según la inteligencia en la nube de Microsoft para Defender o Smart Screen.</value>
+  </data>
+  <data name="FileReputationNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ver y verificar la reputación de un archivo según la inteligencia en la nube de Microsoft para Defender o Smart Screen.</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.Text" xml:space="preserve">
+    <value>Aplicar recomendados</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aplicar todas las medidas de seguridad recomendadas en la página.</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aplicar todas las medidas de seguridad recomendadas en la página.</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.Text" xml:space="preserve">
+    <value>Recuperar últimos estados</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recuperar los últimos estados de las medidas de seguridad en la página.</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recuperar los últimos estados de las medidas de seguridad en la página.</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.Text" xml:space="preserve">
+    <value>Recuperar todas</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recuperar todas las características y capacidades opcionales en el sistema operativo actual.</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recuperar todas las características y capacidades opcionales en el sistema operativo actual.</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Habilitar elementos seleccionados</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Habilitar/instalar los elementos que seleccionó.</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Habilitar/instalar los elementos que seleccionó.</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Deshabilitar elementos seleccionados</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Deshabilitar/desinstalar los elementos que seleccionó.</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Deshabilitar/desinstalar los elementos que seleccionó.</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.Content" xml:space="preserve">
+    <value>Gestión de aplicaciones instaladas</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ver y desinstalar aplicaciones instaladas.</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ver y desinstalar aplicaciones instaladas.</value>
+  </data>
+  <data name="MicrosoftDefenderPageTitle.Text" xml:space="preserve">
+    <value>Configure todos los aspectos de Microsoft Defender y habilite muchas de sus características que están deshabilitadas por defecto.</value>
+  </data>
+  <data name="ASRRulesPageTitle.Text" xml:space="preserve">
+    <value>Configure cada regla de reducción de superficie de ataque en esta página. Pueden prevenir infecciones de malware y explotación de vulnerabilidades.</value>
+  </data>
+  <data name="BitLockerPageTitle.Text" xml:space="preserve">
+    <value>En esta página puede aplicar directivas que harán BitLocker más fuerte que el predeterminado y proteger sus datos en reposo.</value>
+  </data>
+  <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
+    <value>Encontrar todos los certificados en su sistema que no tengan raíz en ningún certificado en la lista de certificados raíz confiables de Microsoft.</value>
+  </data>
+  <data name="CountryIPBlockingPageTitle.Text" xml:space="preserve">
+    <value>Bloquear rangos de direcciones IP de países en las siguientes listas: Patrocinadores estatales del terrorismo - Oficina de Control de Activos Extranjeros (OFAC)</value>
+  </data>
+  <data name="DeviceGuardPageTitle.Text" xml:space="preserve">
+    <value>Aprovechar las características de seguridad proporcionadas por el hardware para endurecer el sistema operativo en múltiples capas de ejecución diferentes.</value>
+  </data>
+  <data name="EdgePageTitle.Text" xml:space="preserve">
+    <value>Aplicar directivas relacionadas con la seguridad y privacidad en Microsoft Edge para hacerlo más seguro y privado al navegar por la web.</value>
+  </data>
+  <data name="LockScreenPageTitle.Text" xml:space="preserve">
+    <value>Endurecer la pantalla de bloqueo del sistema operativo contra posibles explotaciones y reducir la cantidad de información expuesta a individuos no autorizados cuando el dispositivo está bloqueado.</value>
+  </data>
+  <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
+    <value>Esta página contiene medidas de seguridad importantes que no encajan en categorías más especializadas. Aplicarlas puede mejorar y fortalecer la seguridad de su sistema y dispositivo.</value>
+  </data>
+  <data name="NonAdminPageTitle.Text" xml:space="preserve">
+    <value>Las directivas en esta página se aplican solo al usuario actual y no se aplican a nivel del sistema para todos los usuarios. Por esta razón, no necesita permisos de administrador para aplicarlas.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
+    <value>Recuperar, ver, habilitar y deshabilitar todas las características y capacidades opcionales proporcionadas por el sistema operativo de manera unificada.</value>
+  </data>
+  <data name="TLSPageTitle.Text" xml:space="preserve">
+    <value>Endurecer SChannel (Canal Seguro) en el sistema operativo. Es el proveedor de soporte de seguridad (SSP) desarrollado por Microsoft que implementa protocolos de seguridad como Transport Layer Security (TLS).</value>
+  </data>
+  <data name="UACPageTitle.Text" xml:space="preserve">
+    <value>UAC ayuda a prevenir cambios no autorizados en el sistema operativo solicitando permiso o credenciales de administrador. Esta página ofrece directivas que endurecerán este flujo de trabajo.</value>
+  </data>
+  <data name="WindowsFirewallPageTitle.Text" xml:space="preserve">
+    <value>El Firewall de Windows ayuda a proteger su computadora filtrando el tráfico entrante y saliente. Aquí puede aplicar varias reglas y configuraciones para mejorar su seguridad.</value>
+  </data>
+  <data name="WindowsNetworkingPageTitle.Text" xml:space="preserve">
+    <value>La configuración de redes de Windows le permite configurar varios aspectos de la conectividad de red y seguridad como la forma en que su dispositivo se comunica con otros dispositivos en la red.</value>
+  </data>
+  <data name="WindowsUpdatePageTitle.Text" xml:space="preserve">
+    <value>Instalar las actualizaciones de Windows lo más pronto posible después de su lanzamiento es vital para mantener la seguridad y estabilidad de su sistema, especialmente contra nuevas explotaciones y zero-day. Esta página le ayuda a forzar directivas que asegurarán que las actualizaciones se instalen de manera oportuna.</value>
+  </data>
+  <data name="FileReputationPageTitle.Text" xml:space="preserve">
+    <value>Verificar la reputación de archivos ejecutables y otros archivos usando Microsoft Defender Smart Screen o el gráfico de inteligencia de seguridad de Microsoft.</value>
+  </data>
+  <data name="InstalledAppsManagementPageTitle.Text" xml:space="preserve">
+    <value>Ver una lista de todas las aplicaciones instaladas en el sistema y desinstalar las no deseadas.</value>
+  </data>
+  <data name="PFNVersionLabel.Text" xml:space="preserve">
+  <value>Versión</value>
+</data>
+<data name="PFNLabel.Text" xml:space="preserve">
+  <value>Nombre de familia de paquete</value>
+</data>
+<data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+  <value>Hubo un error obteniendo los detalles de la aplicación: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+  <value>Hubo un error obteniendo detalles de aplicación</value>
+</data>
+<data name="PFNArchitectureLabel.Text" xml:space="preserve">
+  <value>Arquitectura</value>
+</data>
+<data name="PFNPublisherLabel.Text" xml:space="preserve">
+  <value>Editor</value>
+</data>
+<data name="PFNPublisherID.Text" xml:space="preserve">
+  <value>ID del editor</value>
+</data>
+<data name="PFNDescription.Text" xml:space="preserve">
+  <value>Descripción</value>
+</data>
+<data name="PFNInstallLocation.Text" xml:space="preserve">
+  <value>Ubicación de instalación</value>
+</data>
+<data name="PFNInstalledDateLabel.Text" xml:space="preserve">
+  <value>Última modificación en</value>
+</data>
+<data name="PFNDisplayNameLabelText" xml:space="preserve">
+  <value>Nombre para mostrar</value>
+</data>
+<data name="PFNFullNameLabel.Text" xml:space="preserve">
+  <value>Nombre completo</value>
+</data>
+  <data name="ProtectPageVerifySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verificar solo las categorías y subcategorías que seleccionó.</value>
+  </data>
+    <data name="ProtectPageVerifySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Verificar solo las categorías y subcategorías que seleccionó.</value>
+  </data>
+    <data name="ProtectPageApplySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aplicar solo las categorías y subcategorías que seleccionó.</value>
+  </data>
+    <data name="ProtectPageApplySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aplicar solo las categorías y subcategorías que seleccionó.</value>
+  </data>
+  <data name="ProtectPageRemoveSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eliminar solo las categorías y subcategorías que seleccionó.</value>
+  </data>
+    <data name="ProtectPageRemoveSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eliminar solo las categorías y subcategorías que seleccionó.</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Recuperar directiva de seguridad del sistema</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recuperar todas las directivas de seguridad del sistema que están configuradas actualmente.</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recuperar todas las directivas de seguridad del sistema que están configuradas actualmente.</value>
+  </data>
+  <data name="UnsupportedFileTypeError" xml:space="preserve">
+  <value>Tipo de archivo no compatible: {0}</value>
+</data>
+<data name="GroupPolicyDataLoadedSuccess" xml:space="preserve">
+  <value>Los datos de directiva de grupo se cargaron exitosamente</value>
+</data>
+<data name="SelectMainAndOtherPOLFilesWarning" xml:space="preserve">
+  <value>Por favor seleccione un archivo POL principal y al menos otro archivo POL para fusionar.</value>
+</data>
+<data name="MergeSummaryHeader" xml:space="preserve">
+  <value>=== Resumen de fusión ===</value>
+</data>
+<data name="TotalOperationsLog" xml:space="preserve">
+  <value>Operaciones totales: {0}</value>
+</data>
+<data name="AddedEntriesLog" xml:space="preserve">
+  <value>Entradas agregadas: {0}</value>
+</data>
+<data name="TotalEntriesInMergedFileLog" xml:space="preserve">
+  <value>Entradas totales en archivo fusionado: {0}</value>
+</data>
+<data name="POLFilesMergedSuccess" xml:space="preserve">
+  <value>Los archivos POL se fusionaron exitosamente. Revise los registros para detalles.</value>
+</data>
+<data name="SelectAtLeastOnePOLFileWarning" xml:space="preserve">
+  <value>Por favor seleccione al menos un archivo POL para convertir.</value>
+</data>
+<data name="POLFilesConvertedToJSONSuccess" xml:space="preserve">
+  <value>Los archivos POL se convirtieron a JSON exitosamente. El archivo de salida es: {0}</value>
+</data>
+<data name="SelectAtLeastOneJSONFileWarning" xml:space="preserve">
+  <value>Por favor seleccione al menos un archivo JSON para convertir.</value>
+</data>
+<data name="JSONFileConvertedToPOLSuccess" xml:space="preserve">
+  <value>El archivo JSON se convirtió a POL exitosamente. El archivo de salida se guardó en: {0}</value>
+</data>
+<data name="SelectAtLeastOneSecurityINFFileWarning" xml:space="preserve">
+  <value>Por favor seleccione al menos un archivo Security INF para convertir.</value>
+</data>
+<data name="SecurityINFFileConvertedToJSONSuccess" xml:space="preserve">
+  <value>El archivo Security INF se convirtió a JSON exitosamente. El archivo de salida es: {0}</value>
+</data>
+<data name="SecurityPolicyReportSavedSuccess" xml:space="preserve">
+  <value>El reporte de directiva de seguridad se guardó exitosamente en la siguiente ubicación: {0}</value>
+</data>
+<data name="FoundExistingDISMServiceProcess" xml:space="preserve">
+  <value>Se encontró proceso DISMService existente (PID: {0}), terminando...</value>
+</data>
+<data name="SuccessfullyTerminatedDISMServiceProcess" xml:space="preserve">
+  <value>Proceso DISMService terminado exitosamente (PID: {0})</value>
+</data>
+<data name="FailedToTerminateDISMServiceProcess" xml:space="preserve">
+  <value>Falló al terminar proceso DISMService (PID: {0}): {1}</value>
+</data>
+<data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
+  <value>Error verificando procesos DISMService existentes: {0}</value>
+</data>
+<data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
+  <value>Falló la verificación de integridad del archivo del servicio DISM</value>
+</data>
+<data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
+  <value>Falló al verificar la integridad del servicio DISM: {0}</value>
+</data>
+<data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
+  <value>Falló la verificación de integridad del archivo del servicio DISM. No se puede iniciar el servicio.</value>
+</data>
+<data name="FailedToCreateProcessWin32Error" xml:space="preserve">
+  <value>Falló al crear proceso. Error Win32: {0}</value>
+</data>
+<data name="FailedToStartService" xml:space="preserve">
+  <value>Falló al iniciar servicio: {0}</value>
+</data>
+<data name="ServiceError" xml:space="preserve">
+  <value>Error de servicio: {0}</value>
+</data>
+<data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
+  <value>Falló al iniciar el servicio DISM. Asegúrese de que DismService.exe esté en la carpeta de la aplicación y que esté ejecutando como administrador.</value>
+</data>
+<data name="FailedToInitializeDISMService" xml:space="preserve">
+  <value>Falló al inicializar el servicio DISM: {0}</value>
+</data>
+<data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
+  <value>Se cargaron exitosamente {0} características y capacidades de Windows.</value>
+</data>
+<data name="ProgressInfo" xml:space="preserve">
+  <value>Progreso: {0}/{1} ({2}%)</value>
+</data>
+<data name="ProgressUnknownInfo" xml:space="preserve">
+  <value>Progreso: {0}/desconocido</value>
+</data>
+<data name="SuccessfullyEnabledItem" xml:space="preserve">
+  <value>Se habilitó exitosamente {0}: {1}</value>
+</data>
+<data name="CouldNotVerifyStateAfterEnabling" xml:space="preserve">
+  <value>No se pudo verificar el estado después de habilitar {0}: {1}</value>
+</data>
+<data name="FailedToEnableItem" xml:space="preserve">
+  <value>Falló al habilitar {0}: {1}</value>
+</data>
+<data name="ErrorEnablingItem" xml:space="preserve">
+  <value>Error habilitando {0}: {1}</value>
+</data>
+<data name="SuccessfullyDisabledItem" xml:space="preserve">
+  <value>Se deshabilitó exitosamente {0}: {1}</value>
+</data>
+<data name="CouldNotVerifyStateAfterDisabling" xml:space="preserve">
+  <value>No se pudo verificar el estado después de deshabilitar {0}: {1}</value>
+</data>
+<data name="FailedToDisableItem" xml:space="preserve">
+  <value>Falló al deshabilitar {0}: {1}</value>
+</data>
+<data name="ErrorDisablingItem" xml:space="preserve">
+  <value>Error deshabilitando {0}: {1}</value>
+</data>
+<data name="NoItemsSelectedForEnable" xml:space="preserve">
+  <value>No se seleccionaron elementos. Por favor seleccione una o más características o capacidades para habilitar.</value>
+</data>
+<data name="StartingBulkEnableOperation" xml:space="preserve">
+  <value>Iniciando operación de habilitación masiva para {0} elementos seleccionados...</value>
+</data>
+<data name="SuccessfullyEnabledAllSelectedItems" xml:space="preserve">
+  <value>Se habilitaron exitosamente todos los {0} elementos seleccionados.</value>
+</data>
+<data name="FailedToEnableAllSelectedItems" xml:space="preserve">
+  <value>Falló al habilitar todos los {0} elementos seleccionados.</value>
+</data>
+<data name="BulkEnableCompleted" xml:space="preserve">
+  <value>Habilitación masiva completada: {0} exitosos, {1} fallidos.</value>
+</data>
+<data name="FailedItems" xml:space="preserve">
+  <value>Elementos fallidos: {0}</value>
+</data>
+<data name="ErrorDuringBulkEnableOperation" xml:space="preserve">
+  <value>Error durante operación de habilitación masiva</value>
+</data>
+<data name="NoItemsSelectedForDisable" xml:space="preserve">
+  <value>No se seleccionaron elementos. Por favor seleccione una o más características o capacidades para deshabilitar.</value>
+</data>
+<data name="StartingBulkDisableOperation" xml:space="preserve">
+  <value>Iniciando operación de deshabilitación masiva para {0} elementos seleccionados...</value>
+</data>
+<data name="SuccessfullyDisabledAllSelectedItems" xml:space="preserve">
+  <value>Se deshabilitaron exitosamente todos los {0} elementos seleccionados.</value>
+</data>
+<data name="FailedToDisableAllSelectedItems" xml:space="preserve">
+  <value>Falló al deshabilitar todos los {0} elementos seleccionados.</value>
+</data>
+<data name="BulkDisableCompleted" xml:space="preserve">
+  <value>Deshabilitación masiva completada: {0} exitosos, {1} fallidos.</value>
+</data>
+<data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
+  <value>Error durante operación de deshabilitación masiva</value>
+</data>
+<data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
+  <value>Falló al inicializar el servicio DISM para endurecimiento de seguridad.</value>
+</data>
+<data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
+  <value>Iniciando con {0} características y capacidades opcionales de Windows...</value>
+</data>
+<data name="SuccessfullyAppliedSecurityHardening" xml:space="preserve">
+  <value>Se aplicó exitosamente el endurecimiento de seguridad a todas las {0} características y capacidades opcionales de Windows.</value>
+</data>
+<data name="FailedToApplySecurityHardening" xml:space="preserve">
+  <value>Falló al aplicar endurecimiento de seguridad a todos los {0} elementos.</value>
+</data>
+<data name="SecurityHardeningCompleted" xml:space="preserve">
+  <value>Endurecimiento de seguridad completado: {0} exitosos, {1} fallidos.</value>
+</data>
+<data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
+  <value>Error durante operación de endurecimiento de seguridad</value>
+</data>
+<data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
+  <value>Falló al inicializar el servicio DISM para verificación.</value>
+</data>
+<data name="VerifyingSecurityHardeningState" xml:space="preserve">
+  <value>Verificando estado de endurecimiento de seguridad para {0} características y capacidades opcionales de Windows...</value>
+</data>
+<data name="SecurityHardeningVerificationPassed" xml:space="preserve">
+  <value>Verificación de endurecimiento de seguridad pasada: todos los {0} elementos están en sus estados correctos.</value>
+</data>
+<data name="SecurityHardeningVerificationCompleted" xml:space="preserve">
+  <value>Verificación de endurecimiento de seguridad completada: {0} correctos, {1} incorrectos.</value>
+</data>
+<data name="IncorrectItems" xml:space="preserve">
+  <value>Elementos incorrectos: {0}</value>
+</data>
+<data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
+  <value>Error durante verificación de endurecimiento de seguridad</value>
+</data>
+<data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
+  <value>Falló al inicializar el servicio DISM para remover endurecimiento de seguridad.</value>
+</data>
+<data name="RemovingSecurityHardening" xml:space="preserve">
+  <value>Removiendo endurecimiento de seguridad para {0} características y capacidades opcionales de Windows...</value>
+</data>
+<data name="SuccessfullyRemovedSecurityHardening" xml:space="preserve">
+  <value>Se removió exitosamente el endurecimiento de seguridad de todas las {0} características y capacidades opcionales de Windows.</value>
+</data>
+<data name="FailedToRemoveSecurityHardening" xml:space="preserve">
+  <value>Falló al remover endurecimiento de seguridad de todos los {0} elementos.</value>
+</data>
+<data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
+  <value>Remoción de endurecimiento de seguridad completada: {0} exitosos, {1} fallidos.</value>
+</data>
+<data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
+  <value>Error durante operación de remoción de endurecimiento de seguridad</value>
+</data>
+<data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
+  <value>Error desechando cliente del servicio DISM: {0}</value>
+</data>
+<data name="NotPresentState" xml:space="preserve">
+  <value>No presente</value>
+</data>
+<data name="UninstallPendingState" xml:space="preserve">
+  <value>Desinstalación pendiente</value>
+</data>
+<data name="StagedState" xml:space="preserve">
+  <value>Preparado</value>
+</data>
+<data name="RemovedState" xml:space="preserve">
+  <value>Removido</value>
+</data>
+<data name="InstalledState" xml:space="preserve">
+  <value>Instalado</value>
+</data>
+<data name="InstallPendingState" xml:space="preserve">
+  <value>Instalación pendiente</value>
+</data>
+<data name="SupersededState" xml:space="preserve">
+  <value>Reemplazado</value>
+</data>
+<data name="PartiallyInstalledState" xml:space="preserve">
+  <value>Parcialmente instalado</value>
+</data>
+<data name="UnknownState" xml:space="preserve">
+  <value>Desconocido</value>
+</data>
+<data name="FeatureType" xml:space="preserve">
+  <value>Característica</value>
+</data>
+<data name="CapabilityType" xml:space="preserve">
+  <value>Capacidad</value>
+</data>
+<data name="FailedToRetrieveASRRuleIDs" xml:space="preserve">
+  <value>Falló al recuperar IDs de reglas ASR del sistema</value>
+</data>
+<data name="FailedToRetrieveASRRuleActions" xml:space="preserve">
+  <value>Falló al recuperar acciones de reglas ASR del sistema</value>
+</data>
+<data name="FailedToParseASRRulesData" xml:space="preserve">
+  <value>Falló al analizar datos de reglas ASR del sistema</value>
+</data>
+<data name="MismatchBetweenIDsAndActionsCount" xml:space="preserve">
+  <value>Desajuste entre número de IDs ({0}) y número de acciones ({1})</value>
+</data>
+<data name="SuccessfullyRetrievedASRRuleStates" xml:space="preserve">
+  <value>Se recuperaron exitosamente {0} estados de reglas ASR del sistema</value>
+</data>
+<data name="AppliedASRRuleWithState" xml:space="preserve">
+  <value>Se aplicó regla ASR {0} con estado {1}</value>
+</data>
+<data name="AppliedASRRulesSuccessfully" xml:space="preserve">
+  <value>Las reglas ASR se aplicaron exitosamente</value>
+</data>
+<data name="RemovedASRRulesSuccessfully" xml:space="preserve">
+  <value>Las reglas ASR se removieron exitosamente</value>
+</data>
+<data name="RetrievedSystemStatesAndUpdatedASRRules" xml:space="preserve">
+  <value>Se recuperaron estados del sistema y se actualizaron {0} reglas ASR. La interfaz de usuario se actualizó para reflejar el estado actual del sistema.</value>
+</data>
+<data name="FailedToVerifyASRRules" xml:space="preserve">
+  <value>Falló al verificar reglas ASR</value>
+</data>
+<data name="SuccessfullyAppliedRecommendedValuesASRRules" xml:space="preserve">
+  <value>Se aplicaron exitosamente todos los valores recomendados para reglas ASR.</value>
+</data>
+<data name="CouldNotDetermineWhichAppToUninstall" xml:space="preserve">
+  <value>No se pudo determinar qué aplicación desinstalar.</value>
+</data>
+<data name="StartingUninstallationOfApp" xml:space="preserve">
+  <value>Iniciando desinstalación de aplicación: {0}...</value>
+</data>
+<data name="SuccessfullyUninstalledApp" xml:space="preserve">
+  <value>La aplicación se desinstaló exitosamente: {0}</value>
+</data>
+<data name="NoAppsSelectedForUninstallation" xml:space="preserve">
+  <value>No se seleccionaron aplicaciones para desinstalar.</value>
+</data>
+<data name="StartingUninstallationOfMultipleApps" xml:space="preserve">
+  <value>Iniciando desinstalación de {0} aplicación(es)...</value>
+</data>
+<data name="AllAppsSuccessfullyUninstalled" xml:space="preserve">
+  <value>Todas las aplicaciones se desinstalaron exitosamente.</value>
+</data>
+<data name="ErrorCodeAndText" xml:space="preserve">
+  <value>Código de error: {0} - Texto de error: {1}</value>
+</data>
+<data name="RemovalCanceled" xml:space="preserve">
+  <value>Remoción cancelada</value>
+</data>
+<data name="AppSuccessfullyRemoved" xml:space="preserve">
+  <value>La aplicación con nombre completo '{0}' se removió exitosamente.</value>
+</data>
+<data name="RemovalStatusUnknown" xml:space="preserve">
+  <value>Estado de remoción desconocido</value>
+</data>
+<data name="TryingToRemoveAppForCurrentUserOnly" xml:space="preserve">
+  <value>Intentando remover aplicación con nombre completo '{0}' nuevamente pero solo para el usuario actual.</value>
+</data>
+<data name="CouldNotDetermineWhichAppLocationToOpen" xml:space="preserve">
+  <value>No se pudo determinar qué ubicación de aplicación abrir.</value>
+</data>
+<data name="NoInstallationLocationAvailable" xml:space="preserve">
+  <value>No hay ubicación de instalación disponible para {0}.</value>
+</data>
+<data name="InstallationLocationDoesNotExist" xml:space="preserve">
+  <value>La ubicación de instalación no existe: {0}</value>
+</data>
+<data name="OpenedInstallationLocation" xml:space="preserve">
+  <value>Se abrió la ubicación de instalación para {0}</value>
+</data>
+<data name="CouldNotDetermineWhichAppDetailsToCopy" xml:space="preserve">
+  <value>No se pudo determinar qué detalles de aplicación copiar.</value>
+</data>
+<data name="JSONDependencyRegistered" xml:space="preserve">
+  <value>Dependencia JSON registrada: {0} - {1} ({2}, {3})</value>
+</data>
+<data name="DependencyCycleDetected" xml:space="preserve">
+  <value>Ciclo de dependencia detectado: omitiendo {0} para evitar bucle infinito</value>
+</data>
+<data name="DependencySkip" xml:space="preserve">
+  <value>Omitir dependencia: {0} ya existe en lote de procesamiento</value>
+</data>
+<data name="DependencyResolved" xml:space="preserve">
+  <value>Dependencia resuelta: {0} - {1} ({2}, {3})</value>
+</data>
+<data name="DependencyNotFound" xml:space="preserve">
+  <value>Dependencia no encontrada: {0} referenciada por {1}</value>
+</data>
+<data name="SecurityPolicyRegistryApplyBulkInvokeError" xml:space="preserve">
+  <value>SecurityPolicyRegistryApply debe invocarse en lote a través de SecurityPolicyManager</value>
+</data>
+<data name="GroupPolicyApplyBulkInvokeError" xml:space="preserve">
+  <value>GroupPolicyApply debe invocarse en lote a través de ApplyPolicies</value>
+</data>
+<data name="RegistryApplyBulkInvokeError" xml:space="preserve">
+  <value>RegistryApply debe invocarse en lote a través de RegistryManager.AddPoliciesToSystem</value>
+</data>
+<data name="SecurityPolicyRegistryVerifyBulkInvokeError" xml:space="preserve">
+  <value>Debe invocarse en lote.</value>
+</data>
+<data name="SpecializedApplySuccess" xml:space="preserve">
+  <value>Aplicación especializada ({0}): {1}\{2} - éxito</value>
+</data>
+<data name="SpecializedRemoveSuccess" xml:space="preserve">
+  <value>Remoción especializada ({0}): {1}\{2} - éxito</value>
+</data>
+<data name="ErrorInSpecializedStrategy" xml:space="preserve">
+  <value>Error en estrategia especializada {0} ({1}) para {2}\{3}.</value>
+</data>
+<data name="ProcessingBeforeDependencies" xml:space="preserve">
+  <value>Procesando {0} dependencias-antes para operación {1}</value>
+</data>
+<data name="ProcessingAfterDependencies" xml:space="preserve">
+  <value>Procesando {0} dependencias-después para operación {1}</value>
+</data>
+<data name="ErrorProcessingGroupPolicyMUnits" xml:space="preserve">
+  <value>Error procesando unidades M de directiva de grupo en lote.</value>
+</data>
+<data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
+  <value>Error procesando unidades M del registro en lote.</value>
+</data>
+<data name="ErrorProcessingSecurityPolicyRegistryMUnits" xml:space="preserve">
+  <value>Error procesando unidades M del registro de directiva de seguridad en lote.</value>
+</data>
+<data name="FallbackVerifyResult" xml:space="preserve">
+  <value>Verificación de respaldo: {0}\{1} = {2}</value>
+</data>
+<data name="ErrorInFallbackVerification" xml:space="preserve">
+  <value>Error en verificación de respaldo para {0}\{1}: {2}</value>
+</data>
+<data name="ErrorProcessingRegularMUnit" xml:space="preserve">
+  <value>Error procesando unidad M regular {0}</value>
+</data>
+<data name="ApplyingSecurityMeasures" xml:space="preserve">
+  <value>Aplicando {0} medidas de seguridad...</value>
+</data>
+<data name="RemovingSecurityMeasures" xml:space="preserve">
+  <value>Removiendo {0} medidas de seguridad...</value>
+</data>
+<data name="VerifyingSecurityMeasures" xml:space="preserve">
+  <value>Verificando {0} medidas de seguridad...</value>
+</data>
+<data name="ProcessingSecurityMeasures" xml:space="preserve">
+  <value>Procesando {0} medidas de seguridad...</value>
+</data>
+<data name="SuccessfullyAppliedSecurityMeasures" xml:space="preserve">
+  <value>Se aplicaron exitosamente {0} medidas de seguridad</value>
+</data>
+<data name="SuccessfullyRemovedSecurityMeasures" xml:space="preserve">
+  <value>Se removieron exitosamente {0} medidas de seguridad</value>
+</data>
+<data name="SuccessfullyVerifiedSecurityMeasures" xml:space="preserve">
+  <value>Se verificaron exitosamente {0} medidas de seguridad</value>
+</data>
+<data name="SuccessfullyProcessedSecurityMeasures" xml:space="preserve">
+  <value>Se procesaron exitosamente {0} medidas de seguridad</value>
+</data>
+<data name="CouldNotLoadPoliciesFromPath" xml:space="preserve">
+  <value>No se pudieron cargar directivas desde: {0}</value>
+</data>
+<data name="InvalidSource" xml:space="preserve">
+  <value>Fuente inválida: {0}</value>
+</data>
+<data name="SecurityPolicyRegistryEntryMustHaveDefaultRegValue" xml:space="preserve">
+  <value>La entrada SecurityPolicyRegistry {0}\{1} debe tener DefaultRegValue no vacío</value>
+</data>
+<data name="ErrorCreatingMUnitsForCategory" xml:space="preserve">
+  <value>Error creando unidades M para categoría {0}: {1}</value>
+</data>
+<data name="SUCCESS" xml:space="preserve">
+  <value>ÉXITO</value>
+</data>
+<data name="FAILED" xml:space="preserve">
+  <value>FALLÓ</value>
+</data>
+<data name="FailedToOpenBCDSystemStore" xml:space="preserve">
+  <value>Falló al abrir almacén del sistema BCD</value>
+</data>
+<data name="FailedToParseCurrent EntryGUID" xml:space="preserve">
+  <value>Falló al analizar GUID de entrada actual</value>
+</data>
+<data name="CurrentBootEntryNotFoundAdministrator" xml:space="preserve">
+  <value>Entrada de arranque actual no encontrada. Intente ejecutar como administrador.</value>
+</data>
+<data name="FailedToOpenBCDObject" xml:space="preserve">
+  <value>Falló al abrir objeto BCD</value>
+</data>
+<data name="FailedToSetBCDElement" xml:space="preserve">
+  <value>Falló al establecer elemento BCD</value>
+</data>
+<data name="MpClientDllNotFound" xml:space="preserve">
+  <value>MpClient.dll no encontrado</value>
+</data>
+<data name="MpQueryFileTrustByHandle2NotFound" xml:space="preserve">
+  <value>MpQueryFileTrustByHandle2 no encontrado</value>
+</data>
+<data name="ErrorOpeningHandleToFile" xml:space="preserve">
+  <value>Error abriendo handle para archivo '{0}': {1}</value>
+</data>
+<data name="ExtraInfoFileReputationCheck" xml:space="preserve">
+  <value>Había información extra respecto a la verificación de reputación del archivo: {0}, {1}, {2}, {3}</value>
+</data>
+<data name="FailedToQueryReputation" xml:space="preserve">
+  <value>Falló al consultar reputación: {0}</value>
+</data>
+<data name="HighTrust" xml:space="preserve">
+  <value>Confianza alta</value>
+</data>
+<data name="GoodTrust" xml:space="preserve">
+  <value>Buena confianza</value>
+</data>
+<data name="UnavailableOrUnknown" xml:space="preserve">
+  <value>No disponible o desconocido</value>
+</data>
+<data name="PotentiallyUnwantedApplication" xml:space="preserve">
+  <value>Aplicación potencialmente no deseada (PUA)</value>
+</data>
+<data name="Malicious" xml:space="preserve">
+  <value>Malicioso</value>
+</data>
+<data name="UnrecognizedScore" xml:space="preserve">
+  <value>Puntuación no reconocida: ({0})</value>
+</data>
+<data name="InvalidRegistryBaseKey" xml:space="preserve">
+  <value>Clave base del registro inválida: {0}</value>
+</data>
+<data name="RegistryKeyDidNotHaveRegValue" xml:space="preserve">
+  <value>La clave del registro no tenía ningún RegValue</value>
+</data>
+<data name="InvalidRegistryValueType" xml:space="preserve">
+  <value>Tipo de valor del registro inválido</value>
+</data>
+<data name="InvalidActionSpecified" xml:space="preserve">
+  <value>Acción inválida especificada: {0}</value>
+</data>
+<data name="AppliedRegistryEntry" xml:space="preserve">
+  <value>Aplicado: {0}\{1}\{2}</value>
+</data>
+<data name="ErrorApplyingRegistryPolicy" xml:space="preserve">
+  <value>Error aplicando directiva del registro {0}\{1}\{2}: {3}</value>
+</data>
+<data name="RegistryApplicationComplete" xml:space="preserve">
+  <value>Aplicación del registro completa: {0} de {1} directivas aplicadas exitosamente</value>
+</data>
+<data name="RemovedRegistryEntry" xml:space="preserve">
+  <value>Removido</value>
+</data>
+<data name="ResetToDefaultRegistryEntry" xml:space="preserve">
+  <value>Restablecer a predeterminado</value>
+</data>
+<data name="RemovedRegistryEntryFormat" xml:space="preserve">
+  <value>{0}: {1}\{2}\{3}</value>
+</data>
+<data name="ErrorRemovingRegistryPolicy" xml:space="preserve">
+  <value>Error removiendo directiva del registro {0}\{1}\{2}: {3}</value>
+</data>
+<data name="RegistryRemovalComplete" xml:space="preserve">
+  <value>Remoción del registro completa: {0} de {1} directivas removidas exitosamente</value>
+</data>
+<data name="VerifyRegistryMatch" xml:space="preserve">
+  <value>Verificar: {0}\{1}\{2} = coincide</value>
+</data>
+<data name="VerifyRegistryMismatch" xml:space="preserve">
+  <value>Verificar: {0}\{1}\{2} = no coincide</value>
+</data>
+<data name="ErrorVerifyingRegistryPolicy" xml:space="preserve">
+  <value>Error verificando directiva del registro {0}\{1}\{2}: {3}</value>
+</data>
+<data name="RegistryVerificationComplete" xml:space="preserve">
+  <value>Verificación del registro completa: {0} de {1} directivas coinciden</value>
+</data>
+<data name="NoSettingsProvided" xml:space="preserve">
+  <value>No se proporcionaron configuraciones</value>
+</data>
+<data name="SettingSystemAccessPolicyViaSecedit" xml:space="preserve">
+  <value>Configurando directiva de acceso al sistema vía secedit...</value>
+</data>
+<data name="CreatedSecurityTemplate" xml:space="preserve">
+  <value>Plantilla de seguridad creada: {0}</value>
+</data>
+<data name="TemplateContent" xml:space="preserve">
+  <value>Contenido de plantilla: {0}</value>
+</data>
+<data name="FailedToStartSeceditProcess" xml:space="preserve">
+  <value>Falló al iniciar proceso secedit</value>
+</data>
+<data name="SeceditExitCode" xml:space="preserve">
+  <value>Código de salida de Secedit: {0}</value>
+</data>
+<data name="SeceditOutput" xml:space="preserve">
+  <value>Salida de Secedit: {0}</value>
+</data>
+<data name="SeceditError" xml:space="preserve">
+  <value>Error de Secedit: {0}</value>
+</data>
+<data name="SeceditCompletedSuccessfully" xml:space="preserve">
+  <value>Secedit completado exitosamente</value>
+</data>
+<data name="SeceditFailedWithExitCode" xml:space="preserve">
+  <value>Secedit falló con código de salida: {0}</value>
+</data>
+<data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
+  <value>Advertencia: No se pudieron eliminar archivos temporales.</value>
+</data>
+<data name="SeceditMethodFailed" xml:space="preserve">
+  <value>El método Secedit falló.</value>
+</data>
+<data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
+  <value>No se encontraron configuraciones [System Access] en el archivo especificado</value>
+</data>
+<data name="ExtractedSystemAccessSettingsFromFile" xml:space="preserve">
+  <value>Se extrajeron {0} configuraciones System Access del archivo: {1}</value>
+</data>
+<data name="FileNotFoundPath" xml:space="preserve">
+  <value>Archivo no encontrado: {0}</value>
+</data>
+<data name="CreatedPolicyDirectory" xml:space="preserve">
+  <value>Directorio de directiva creado: {0}</value>
+</data>
+<data name="FileTooSmallForValidHeader" xml:space="preserve">
+  <value>El archivo es demasiado pequeño para contener una cabecera válida</value>
+</data>
+<data name="InvalidSignatureExpected" xml:space="preserve">
+  <value>Firma inválida: 0x{0:X8}. Esperada: 0x{1:X8}</value>
+</data>
+<data name="ErrorReadingEntryAtPosition" xml:space="preserve">
+  <value>Error leyendo entrada en posición {0}: {1}</value>
+</data>
+<data name="ExpectedOpeningBracketAtStartOfEntry" xml:space="preserve">
+  <value>Se esperaba corchete de apertura al inicio de entrada, se obtuvo: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterKeyName" xml:space="preserve">
+  <value>Se esperaba delimitador punto y coma después del nombre de clave, se obtuvo: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterValueName" xml:space="preserve">
+  <value>Se esperaba delimitador punto y coma después del nombre de valor, se obtuvo: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterType" xml:space="preserve">
+  <value>Se esperaba delimitador punto y coma después del tipo, se obtuvo: 0x{0:X4}</value>
+</data>
+<data name="ExpectedSemicolonDelimiterAfterSize" xml:space="preserve">
+  <value>Se esperaba delimitador punto y coma después del tamaño, se obtuvo: 0x{0:X4}</value>
+</data>
+<data name="CouldNotReadBytesOfData" xml:space="preserve">
+  <value>No se pudieron leer {0} bytes de datos, solo se obtuvieron {1} bytes</value>
+</data>
+<data name="ExpectedClosingBracketAfterData" xml:space="preserve">
+  <value>Se esperaba corchete de cierre después de datos, se obtuvo: 0x{0:X4}</value>
+</data>
+<data name="UnexpectedEndOfStreamReadingUnicodeString" xml:space="preserve">
+  <value>Final inesperado de flujo leyendo cadena Unicode</value>
+</data>
+<data name="AtLeastOneOtherPolicyFileMustBeProvided" xml:space="preserve">
+  <value>Debe proporcionarse al menos otro archivo de directiva</value>
+</data>
+<data name="MainPolicyFilePathCannotBeNullOrEmpty" xml:space="preserve">
+  <value>La ruta del archivo de directiva principal no puede ser null o vacía</value>
+</data>
+<data name="AtLeastOneOtherPolicyFilePathMustBeProvided" xml:space="preserve">
+  <value>Debe proporcionarse al menos una ruta de otro archivo de directiva</value>
+</data>
+<data name="PolicyFilePathAtIndexCannotBeNullOrEmpty" xml:space="preserve">
+  <value>La ruta del archivo de directiva en índice {0} no puede ser null o vacía</value>
+</data>
+<data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
+  <value>Se cargó archivo de directiva existente con {0} entradas</value>
+</data>
+<data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
+  <value>El archivo de directiva no existe, creando nuevo archivo de directiva vacío</value>
+</data>
+<data name="ReplacedEntries" xml:space="preserve">
+  <value>Entradas reemplazadas: {0}</value>
+</data>
+<data name="PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified" xml:space="preserve">
+  <value>El archivo de directiva no existe, marcando todas las directivas como no verificadas</value>
+</data>
+<data name="VerificationCompletePolicyFileDoesNotExist" xml:space="preserve">
+  <value>Verificación completa: 0 de {0} directivas coinciden (el archivo de directiva no existe)</value>
+</data>
+<data name="VerifyPolicyMatch" xml:space="preserve">
+  <value>Verificar: {0}\{1} = coincide</value>
+</data>
+<data name="VerifyPolicyMismatch" xml:space="preserve">
+  <value>Verificar: {0}\{1} = no coincide</value>
+</data>
+<data name="VerifyPolicyNotFound" xml:space="preserve">
+  <value>Verificar: {0}\{1} = no encontrada</value>
+</data>
+<data name="VerificationCompletePoliciesMatch" xml:space="preserve">
+  <value>Verificación completa: {0} de {1} directivas coinciden</value>
+</data>
+<data name="PolicyFileDoesNotExistNothingToRemove" xml:space="preserve">
+  <value>El archivo de directiva no existe, nada que remover</value>
+</data>
+<data name="RemovedPolicyEntry" xml:space="preserve">
+  <value>Removido: {0}</value>
+</data>
+<data name="PolicyRemovalComplete" xml:space="preserve">
+  <value>Remoción de directiva completa: {0} directivas removidas</value>
+</data>
+ <data name="ProtectNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>Principal</value>
+  </data>
+  <data name="ProtectNavigationViewItem.Content" xml:space="preserve">
+    <value>Proteger</value>
+  </data>
+  <data name="ProtectNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utilice esta sección para automatizar la aplicación, verificación o eliminación de medidas de seguridad en lotes. Hay configuraciones de seguridad preestablecidas disponibles para facilitar la toma de decisiones.</value>
+  </data>
+  <data name="ProtectNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utilice esta sección para automatizar la aplicación, verificación o eliminación de medidas de seguridad en lotes. Hay configuraciones de seguridad preestablecidas disponibles para facilitar la toma de decisiones.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aplicar, verificar o eliminar medidas de seguridad relacionadas con Microsoft Defender.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Aplicar, verificar o eliminar medidas de seguridad relacionadas con Microsoft Defender.</value>
+  </data>
+  <data name="ASRNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aplicar, verificar o eliminar reglas de reducción de superficie de ataque.</value>
+  </data>
+  <data name="ASRNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aplicar, verificar o eliminar reglas de reducción de superficie de ataque.</value>
+  </data>
+  <data name="BitLockerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Administrar la configuración de seguridad de BitLocker utilizada para definir cómo proteger su dispositivo y datos en reposo.</value>
+  </data>
+  <data name="BitLockerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Administrar la configuración de seguridad de BitLocker utilizada para definir cómo proteger su dispositivo y datos en reposo.</value>
+  </data>
+  <data name="TLSSecurityNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Administrar TLS y conjuntos de cifrado para proteger sus datos en tránsito.</value>
+  </data>
+  <data name="TLSSecurityNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Administrar TLS y conjuntos de cifrado para proteger sus datos en tránsito.</value>
+  </data>
+  <data name="LockScreenNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Reforzar su pantalla de bloqueo y reducir la cantidad de información disponible para usuarios no autenticados.</value>
+  </data>
+  <data name="LockScreenNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Reforzar su pantalla de bloqueo y reducir la cantidad de información disponible para usuarios no autenticados.</value>
+  </data>
+  <data name="UACNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Asegurar los límites entre tareas no elevadas y tareas elevadas.</value>
+  </data>
+  <data name="UACNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Asegurar los límites entre tareas no elevadas y tareas elevadas.</value>
+  </data>
+  <data name="DeviceGuardNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utilizar características de seguridad de hardware para fortalecer el sistema operativo y el software.</value>
+  </data>
+  <data name="DeviceGuardNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Utilizar características de seguridad de hardware para fortalecer el sistema operativo y el software.</value>
+  </data>
+  <data name="WindowsFirewallNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configurar y verificar la configuración del Firewall de Windows.</value>
+  </data>
+  <data name="WindowsFirewallNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Configurar y verificar la configuración del Firewall de Windows.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Agregar, eliminar y ver los estados de todas las características y capacidades opcionales de Windows.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Agregar, eliminar y ver los estados de todas las características y capacidades opcionales de Windows.</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Asegurar su sistema operativo en la red a la que está conectado.</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Asegurar su sistema operativo en la red a la que está conectado.</value>
+  </data>
+  <data name="MiscellaneousNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ver, aplicar o eliminar medidas de seguridad que no caen en categorías más específicas.</value>
+  </data>
+  <data name="MiscellaneousNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ver, aplicar o eliminar medidas de seguridad que no caen en categorías más específicas.</value>
+  </data>
+  <data name="WindowsUpdateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configurar la configuración de Windows Update para asegurar que reciba las últimas actualizaciones de seguridad lo más pronto posible.</value>
+  </data>
+  <data name="WindowsUpdateNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Configurar la configuración de Windows Update para asegurar que reciba las últimas actualizaciones de seguridad lo más pronto posible.</value>
+  </data>
+  <data name="EdgeBrowserNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Fortalecer el navegador Edge para tener una experiencia de navegación más segura y privada.</value>
+  </data>
+  <data name="EdgeBrowserNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Fortalecer el navegador Edge para tener una experiencia de navegación más segura y privada.</value>
+  </data>
+  <data name="CertificatesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Encontrar todos los certificados en su sistema que no tienen raíz en ningún certificado de la lista de certificados raíz confiables de Microsoft.</value>
+  </data>
+  <data name="CertificatesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Encontrar todos los certificados en su sistema que no tienen raíz en ningún certificado de la lista de certificados raíz confiables de Microsoft.</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Bloquear rangos de direcciones IP de países en varias listas oficiales de sanciones de Estados Unidos.</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Bloquear rangos de direcciones IP de países en varias listas oficiales de sanciones de Estados Unidos.</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verificar, eliminar y aplicar medidas de seguridad que solo se aplican al usuario actual.</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Verificar, eliminar y aplicar medidas de seguridad que solo se aplican al usuario actual.</value>
+  </data>
+  <data name="GroupPolicyEditorNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Leer archivos de Directiva de Grupo, exportarlos a JSON, fusionarlos y recuperar los detalles completos de la política de seguridad del sistema.</value>
+  </data>
+  <data name="GroupPolicyEditorNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Leer archivos de Directiva de Grupo, exportarlos a JSON, fusionarlos y recuperar los detalles completos de la política de seguridad del sistema.</value>
+  </data>
+    <data name="ApplyText.Text" xml:space="preserve">
+    <value>Aplicar</value>
+  </data>
+      <data name="VerifyText.Text" xml:space="preserve">
+    <value>Verificar</value>
+  </data>
+      <data name="RemoveText.Text" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="OpenTheFollowingLinkInBrowser" xml:space="preserve">
+    <value>Abrir el siguiente enlace en el navegador: {0}</value>
+  </data>
+  <data name="StatusOverviewText.Text" xml:space="preserve">
+    <value>Resumen del estado</value>
+  </data>
+  <data name="SearchSecurityMeasuresPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Buscar medidas de seguridad...</value>
+  </data>
+  <data name="SearchFeatureCapabilityPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Buscar entre las características y capacidades...</value>
+  </data>
+  <data name="ReputationText.Text" xml:space="preserve">
+    <value>Reputación</value>
+  </data>
+  <data name="SourceText.Text" xml:space="preserve">
+    <value>Fuente</value>
+  </data>
+  <data name="DurationText.Text" xml:space="preserve">
+    <value>Duración</value>
+  </data>
+  <data name="CopyToClipBoard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copiar al portapapeles</value>
+  </data>
+  <data name="CopyToClipBoard.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Copiar al portapapeles</value>
+  </data>
+  <data name="GetAppsListText.Text" xml:space="preserve">
+    <value>Obtener lista de aplicaciones</value>
+  </data>
+  <data name="UninstallSelectedAppsText.Text" xml:space="preserve">
+    <value>Desinstalar aplicaciones seleccionadas</value>
+  </data>
+  <data name="SearchForAppsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Buscar aplicaciones...</value>
+  </data>
+  <data name="UninstallText.Text" xml:space="preserve">
+    <value>Desinstalar</value>
+  </data>
+    <data name="OpenLocationText.Text" xml:space="preserve">
+    <value>Abrir ubicación</value>
+  </data>
+  <data name="CopyAppDetailsText.Text" xml:space="preserve">
+    <value>Copiar detalles de la aplicación</value>
+  </data>
+  <data name="DetailsText.Text" xml:space="preserve">
+    <value>Detalles</value>
+  </data>
+  <data name="ConvertINFToJSONText.Text" xml:space="preserve">
+    <value>Convertir INF de seguridad a JSON</value>
+  </data>
+    <data name="ConvertINFToJSONButton.Content" xml:space="preserve">
+    <value>Convertir</value>
+  </data>
+  <data name="ConvertINFToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Iniciar la conversión del archivo INF de política de seguridad seleccionado a JSON.</value>
+  </data>
+  <data name="ConvertINFToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Iniciar la conversión del archivo INF de política de seguridad seleccionado a JSON.</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.Header" xml:space="preserve">
+    <value>Directorio de salida para archivos JSON</value>
+  </data>
+    <data name="OutputDirForJSONSettingsCard.Description" xml:space="preserve">
+    <value>Seleccionar dónde guardar los archivos JSON convertidos</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccionar dónde guardar los archivos JSON convertidos</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccionar dónde guardar los archivos JSON convertidos</value>
+  </data>
+    <data name="SelectedINFFilesText.Text" xml:space="preserve">
+    <value>Archivos INF de seguridad seleccionados</value>
+  </data>
+  <data name="SelectedDirectoryText.Text" xml:space="preserve">
+    <value>Directorio seleccionado</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.Header" xml:space="preserve">
+    <value>Seleccionar archivos INF de seguridad para conversión JSON</value>
+  </data>
+    <data name="INFToJSONConversionSectionSettingsCard.Description" xml:space="preserve">
+    <value>Elegir uno o más archivos INF de seguridad para convertir a formato JSON</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elegir uno o más archivos INF de seguridad para convertir a formato JSON</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elegir uno o más archivos INF de seguridad para convertir a formato JSON</value>
+  </data>
+    <data name="SelectedText.Text" xml:space="preserve">
+    <value>Seleccionado: </value>
+  </data>
+  <data name="StatusAppliedText" xml:space="preserve">
+    <value>Estado: Aplicado</value>
+  </data>
+    <data name="StatusNotAppliedText" xml:space="preserve">
+    <value>Estado: No aplicado</value>
+  </data>
+    <data name="StatusUndeterminedText" xml:space="preserve">
+    <value>Estado: Indeterminado</value>
+  </data>
+  <data name="AppliedText" xml:space="preserve">
+    <value>Aplicado</value>
+  </data>
+    <data name="NotAppliedText" xml:space="preserve">
+    <value>No aplicado</value>
+  </data>
+    <data name="NAText" xml:space="preserve">
+    <value>No disponible</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+  <value>Harden Windows Security es una aplicación que te ayuda a configurar tu sistema para que sea seguro contra muchas amenazas avanzadas, utilizando únicamente herramientas y características disponibles en el sistema operativo y ofrecidas por Microsoft sin usar ninguna herramienta o programa de terceros.</value>
+</data>
+  <data name="LogsPageTitle.Text" xml:space="preserve">
+    <value>Los siguientes son los registros que Harden Windows Security genera automáticamente y almacena en la carpeta designada. El tamaño total de la carpeta de registros nunca excederá 1GB.</value>
+  </data>
+  <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
+    <value>Abrir Directorio de Registros</value>
+  </data>
+</root>

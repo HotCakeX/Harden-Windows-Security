@@ -120,8 +120,9 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable
 		}
 		else
 		{
-			string tooltipText = $"Open the following link in browser: {LinkUrl}";
-			string helpText = $"Open the following link in browser: {LinkUrl}";
+			string tmp = string.Format(GlobalVars.GetStr("OpenTheFollowingLinkInBrowser"), LinkUrl);
+			string tooltipText = tmp;
+			string helpText = tmp;
 			ToolTipService.SetToolTip(this, tooltipText);
 			AutomationProperties.SetHelpText(this, helpText);
 		}

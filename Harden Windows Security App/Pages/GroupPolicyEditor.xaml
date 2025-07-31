@@ -28,9 +28,11 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,10,6,10">
+        <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,10,6,10">
 
             <TextBlock x:Uid="GroupPolicyEditorPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
+
+            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
 
         </controls:WrapPanel>
 
@@ -75,6 +77,13 @@
                                             Click="{x:Bind ViewModel.OpenSideBar}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8A0;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Uid="RetrieveSecurityPolicyMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.RetrieveSystemSecurityPolicy}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE770;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuBarItem>
@@ -178,7 +187,7 @@
                                                 Margin="10,10,10,0"
                                                 HorizontalAlignment="Center">
 
-                                <!-- Merge Section -->
+                                <!-- Merge POL files Section -->
                                 <Border Padding="10"
                                         CornerRadius="15"
                                         Translation="0, 0, 500"
@@ -198,9 +207,9 @@
                                                 HorizontalAlignment="Center">
 
                                         <TextBlock x:Uid="POLFilesMergeTitleTextBlock"
-                                           Style="{ThemeResource SubtitleTextBlockStyle}"
-                                           HorizontalAlignment="Center"
-                                           HorizontalTextAlignment="Center"/>
+                                                   Style="{ThemeResource SubtitleTextBlockStyle}"
+                                                   HorizontalAlignment="Center"
+                                                   HorizontalTextAlignment="Center"/>
 
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
                                                        x:Uid="SelectMainPolFilesForMergeSettingsCard"
@@ -260,10 +269,10 @@
                                         </customUI:SettingsCardV3>
 
                                         <Button x:Uid="StartPOLFileMergeButton"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                        Click="{x:Bind ViewModel.StartPOLFilesMergeOperation}" />
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                Click="{x:Bind ViewModel.StartPOLFilesMergeOperation}" />
 
                                     </controls:WrapPanel>
 
@@ -453,6 +462,97 @@
 
                                 </Border>
 
+                                <!-- Security INF to JSON Conversion -->
+                                <Border Padding="10"
+                                        CornerRadius="15"
+                                        Translation="0, 0, 500"
+                                        Shadow="{StaticResource SharedShadow}"
+                                        BorderThickness="1">
+                                    <Border.BorderBrush>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#8E2DE2" Offset="0" />
+                                            <GradientStop Color="#4A00E0" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Border.BorderBrush>
+
+                                    <controls:WrapPanel HorizontalSpacing="20"
+                                                        VerticalSpacing="20"
+                                                        Orientation="Vertical"
+                                                        Margin="10,0,10,0"
+                                                        HorizontalAlignment="Center">
+
+                                        <TextBlock x:Uid="ConvertINFToJSONText"
+                                                   Style="{ThemeResource SubtitleTextBlockStyle}"
+                                                   HorizontalAlignment="Center"
+                                                   HorizontalTextAlignment="Center"/>
+
+                                        <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
+                                                                 x:Uid="INFToJSONConversionSectionSettingsCard"
+                                                                 HeaderIcon="{ui:FontIcon Glyph=&#xE8DA;}">
+
+                                            <Button x:Uid="GenericBrowseButton"
+                                                    Click="{x:Bind ViewModel.PickSecurityINFFilesForJSONConversion}">
+
+                                                <Button.Flyout>
+                                                    <Flyout>
+
+                                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedSecurityINFFilesForConversionToJSON}" />
+
+                                                            <TextBlock x:Uid="SelectedINFFilesText" TextWrapping="WrapWholeWords" />
+
+                                                            <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.SelectedSecurityINFFilesForConversionToJSON, Mode=OneWay}" />
+
+                                                        </controls:WrapPanel>
+
+                                                    </Flyout>
+                                                </Button.Flyout>
+
+                                            </Button>
+                                        </customUI:SettingsCardV3>
+
+                                        <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
+                                                                 x:Uid="OutputDirForJSONSettingsCard"
+                                                                 HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}">
+
+                                            <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                    x:Uid="GenericBrowseButton"
+                                                    VerticalAlignment="Center"
+                                                    Click="{x:Bind ViewModel.PickADirectoryForSecurityINFToJSON}">
+
+                                                <Button.Flyout>
+                                                    <Flyout>
+
+                                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearOutputDirForSecurityINFToJSONConversion_Click}" />
+
+                                                            <TextBlock x:Uid="SelectedDirectoryText" TextWrapping="WrapWholeWords" />
+
+                                                            <TextBox Text="{x:Bind ViewModel.OutputDirForSecurityINFToJSONConversion, Mode=OneWay}"
+                                                                     TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                                                     MinWidth="400" IsReadOnly="True" />
+
+                                                        </controls:WrapPanel>
+
+                                                    </Flyout>
+                                                </Button.Flyout>
+
+                                            </Button>
+
+                                        </customUI:SettingsCardV3>
+
+                                        <Button x:Uid="ConvertINFToJSONButton"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                Click="{x:Bind ViewModel.ConvertSecurityINFToJSON}" />
+
+                                    </controls:WrapPanel>
+
+                                </Border>
+
                             </controls:WrapPanel>
 
                         </ScrollViewer>
@@ -486,7 +586,7 @@
                             </Grid.ColumnDefinitions>
                             <Button x:Uid="KeynameColumnHeaderBtn" Tag="KeyName" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
                             <Button x:Uid="ValueNameColumnHeaderBtn" Tag="ValueName" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                            <Button x:Uid="ValueColumnHeaderBtn" Tag="Value" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                            <Button x:Uid="ValueColumnHeaderBtn" Tag="Value" Grid.Column="2" Margin="0" IsHitTestVisible="False" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
                             <Button x:Uid="CategoryColumnHeaderBtn" Tag="Category" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
                             <Button x:Uid="SubCategoryColumnHeaderBtn" Tag="SubCategory" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
                             <Button x:Uid="PolicyActionColumnHeaderBtn" Tag="PolicyAction" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />

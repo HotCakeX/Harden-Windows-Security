@@ -15,10 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenWindowsSecurity.Helpers;
@@ -39,12 +37,19 @@ internal sealed partial class LockScreenVM : ViewModelBase, IMUnitListViewModel
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
+
+		// Initializing the cancellable buttons
+		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
+		RemoveAllCancellableButton = new(GlobalVars.GetStr("RemoveAllButtonText/Text"));
+		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
+
+		IMUnitListViewModel.CreateUIValuesCategories(this);
 	}
 
 	/// <summary>
-	/// The main InfoBar for the Settings VM.
+	/// The main InfoBar for this VM.
 	/// </summary>
-	internal readonly InfoBarSettings MainInfoBar;
+	public InfoBarSettings MainInfoBar { get; }
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
 	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
@@ -64,66 +69,163 @@ internal sealed partial class LockScreenVM : ViewModelBase, IMUnitListViewModel
 		}
 	} = true;
 
-
-	internal static readonly string JSONConfigPath = Path.Combine(AppContext.BaseDirectory, "Resources", "WindowsUpdate.json");
-
 	/// <summary>
 	/// Items Source of the ListView.
 	/// </summary>
 	public ObservableCollection<GroupInfoListForMUnit> ListViewItemsSource { get; set => SP(ref field, value); } = [];
 
+	public List<GroupInfoListForMUnit> ListViewItemsSourceBackingField { get; set; } = [];
+
 	/// <summary>
 	/// Selected Items list in the ListView.
 	/// </summary>
-	internal List<MUnit> ItemsSourceSelectedItems = [];
+	public List<MUnit> ItemsSourceSelectedItems { get; set; } = [];
 
 	/// <summary>
-	/// ListView reference of the UI.
+	/// Search keyword for ListView.
 	/// </summary>
-	public ListViewBase? UIListView { get; set; }
+	public string? SearchKeyword { get; set; }
 
-	public void ApplyAllMUnits()
+	/// <summary>
+	/// Initialization details for the Apply All button
+	/// </summary>
+	public AnimatedCancellableButtonInitializer ApplyAllCancellableButton { get; }
+
+	/// <summary>
+	/// Initialization details for the Remove All button
+	/// </summary>
+	public AnimatedCancellableButtonInitializer RemoveAllCancellableButton { get; }
+
+	/// <summary>
+	/// Initialization details for the Verify All button
+	/// </summary>
+	public AnimatedCancellableButtonInitializer VerifyAllCancellableButton { get; }
+
+	/// <summary>
+	/// Total number of items loaded (all MUnits)
+	/// </summary>
+	public int TotalItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Number of items currently displayed after filtering
+	/// </summary>
+	public int FilteredItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Number of currently selected items
+	/// </summary>
+	public int SelectedItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Number of items with Undetermined status (N/A state)
+	/// </summary>
+	public int UndeterminedItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Number of items with Applied status
+	/// </summary>
+	public int AppliedItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Number of items with NotApplied status
+	/// </summary>
+	public int NotAppliedItemsCount { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Creates all MUnits for this ViewModel.
+	/// </summary>
+	/// <returns>List of all MUnits for this ViewModel</returns>
+	public List<MUnit> CreateAllMUnits()
 	{
-
+		List<MUnit> temp = MUnit.CreateMUnitsFromPolicies(Categories.LockScreen);
+		temp.AddRange(CreateUnits());
+		return temp;
 	}
 
-	public void RemoveAllMUnits()
+	/// <summary>
+	/// Create <see cref="MUnit"/> that is not for Group Policies.
+	/// </summary>
+	internal List<MUnit> CreateUnits()
 	{
+		List<MUnit> temp = [];
 
+		temp.Add(new(
+			category: Categories.LockScreen,
+			name: GlobalVars.GetSecurityStr("LockoutBadCount-LockScreen"),
+
+			applyStrategy: new DefaultApply(() =>
+			{
+				SecurityPolicy.SecurityPolicyWriter.SetLockoutBadCount(5);
+			}),
+
+			verifyStrategy: new DefaultVerify(() =>
+			{
+				SecurityPolicy.SystemAccessInfo states = SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
+
+				// Consider anything less than 5 as valid.
+				return states.LockoutBadCount <= 5;
+			}),
+
+			removeStrategy: new DefaultRemove(() =>
+			{
+				SecurityPolicy.SecurityPolicyWriter.SetLockoutBadCount(10);
+			}),
+
+			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-threshold"
+		));
+
+
+		temp.Add(new(
+			category: Categories.LockScreen,
+			name: GlobalVars.GetSecurityStr("ResetLockoutCount-LockScreen"),
+
+			applyStrategy: new DefaultApply(() =>
+			{
+				// Requires SetLockoutDuration to be applied first otherwise throws error: 87
+				SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(1440);
+				SecurityPolicy.SecurityPolicyWriter.SetResetLockoutCount(1440);
+			}),
+
+			verifyStrategy: new DefaultVerify(() =>
+			{
+				SecurityPolicy.SystemAccessInfo states = SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
+
+				return states.ResetLockoutCount == 1440;
+			}),
+
+			removeStrategy: new DefaultRemove(() =>
+			{
+				SecurityPolicy.SecurityPolicyWriter.SetResetLockoutCount(10);
+			}),
+
+			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/reset-account-lockout-counter-after"
+		));
+
+		temp.Add(new(
+			category: Categories.LockScreen,
+			name: GlobalVars.GetSecurityStr("LockoutDuration-LockScreen"),
+
+			applyStrategy: new DefaultApply(() =>
+			{
+				SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(1440);
+			}),
+
+			verifyStrategy: new DefaultVerify(() =>
+			{
+				SecurityPolicy.SystemAccessInfo states = SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
+
+				return states.LockoutDuration == 1440;
+			}),
+
+			removeStrategy: new DefaultRemove(() =>
+			{
+				SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(10);
+			}),
+
+			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration"
+		));
+
+		return temp;
 	}
 
-	public void VerifyAllMUnits()
-	{
-
-	}
-
-	public void ApplySelectedMUnits()
-	{
-
-	}
-
-	public void RemoveSelectedMUnits()
-	{
-
-	}
-
-	public void VerifySelectedMUnits()
-	{
-
-	}
-
-	public void ListView_SelectAll(object sender, RoutedEventArgs e)
-	{
-
-	}
-
-	public void ListView_RemoveSelections(object sender, RoutedEventArgs e)
-	{
-
-	}
-
-	public void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-	{
-
-	}
 }

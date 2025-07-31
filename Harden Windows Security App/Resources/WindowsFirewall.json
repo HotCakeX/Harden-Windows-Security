@@ -12,7 +12,8 @@
     "FriendlyName": "PolicyVersion-WindowsFirewall",
     "URL": "",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -27,7 +28,8 @@
     "FriendlyName": "EnableFirewallDomain-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofileenablefirewall",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -42,7 +44,8 @@
     "FriendlyName": "DefaultOutboundActionDomain-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofiledefaultoutboundaction",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -57,7 +60,8 @@
     "FriendlyName": "DefaultInboundActionDomain-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofiledefaultinboundaction",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -72,7 +76,8 @@
     "FriendlyName": "DisableNotificationsDomain-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofiledisableinboundnotifications",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -87,7 +92,8 @@
     "FriendlyName": "LogFilePathDomain-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofilelogfilepath",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -102,7 +108,8 @@
     "FriendlyName": "LogFileSizeDomain-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofilelogmaxfilesize",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -117,7 +124,8 @@
     "FriendlyName": "LogDroppedPacketsDomain-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofileenablelogdroppedpackets",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -132,7 +140,8 @@
     "FriendlyName": "LogSuccessfulConnectionsDomain-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofileenablelogsuccessconnections",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -147,7 +156,8 @@
     "FriendlyName": "EnableFirewallPrivate-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofileenablefirewall",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -162,7 +172,8 @@
     "FriendlyName": "DisableNotificationsPrivate-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofiledisableinboundnotifications",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -177,7 +188,8 @@
     "FriendlyName": "LogFileSizePrivate-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofilelogmaxfilesize",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -192,7 +204,8 @@
     "FriendlyName": "LogDroppedPacketsPrivate-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofileenablelogdroppedpackets",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -207,7 +220,8 @@
     "FriendlyName": "LogFilePathPrivate-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofilelogfilepath",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -222,7 +236,8 @@
     "FriendlyName": "EnableFirewallPublic-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstorepublicprofileenablefirewall",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -237,7 +252,8 @@
     "FriendlyName": "DisableNotificationsPublic-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstorepublicprofiledisableinboundnotifications",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -252,7 +268,8 @@
     "FriendlyName": "LogFileSizePublic-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstorepublicprofilelogmaxfilesize",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -267,7 +284,8 @@
     "FriendlyName": "LogDroppedPacketsPublic-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstorepublicprofileenablelogdroppedpackets",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   },
   {
     "Source": 0,
@@ -282,6 +300,7 @@
     "FriendlyName": "LogFilePathPublic-WindowsFirewall",
     "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstorepublicprofilelogfilepath",
     "Category": 9,
-    "SubCategory": null
+    "SubCategory": null,
+    "DefaultRegValue": null
   }
 ]

@@ -1,0 +1,2324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="GitHubDocsNavItem.Content" xml:space="preserve">
+    <value>GitHub ഡോക്യുമെന്റേഷൻ</value>
+  </data>
+  <data name="GitHubDocsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷൻ എങ്ങനെ ഉപയോഗിക്കാം എന്നതിനെക്കുറിച്ച് GitHub-ൽ നിന്ന് ഇലക്ട്രോണിക് ഡോക്യുമെന്റേഷൻ നേടുക</value>
+  </data>
+  <data name="GitHubDocsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷൻ എങ്ങനെ ഉപയോഗിക്കാം എന്നതിനെക്കുറിച്ച് GitHub-ൽ നിന്ന് ഇലക്ട്രോണിക് ഡോക്യുമെന്റേഷൻ നേടുക</value>
+  </data>
+  <data name="LogsNavItem.Content" xml:space="preserve">
+    <value>ലോഗുകൾ</value>
+  </data>
+  <data name="SettingsNavItem.Content" xml:space="preserve">
+    <value>സെറ്റിംഗുകൾ</value>
+  </data>
+  <data name="LogsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷന്റെ ലോഗുകൾ തത്സമയം കാണുക</value>
+  </data>
+  <data name="LogsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷന്റെ ലോഗുകൾ തത്സമയം കാണുക</value>
+  </data>
+    <data name="UpdateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അപ്ഡേറ്റുകൾക്കായി പരിശോധിക്കുക</value>
+  </data>
+  <data name="UpdateNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അപ്ഡേറ്റുകൾക്കായി പരിശോധിക്കുക</value>
+  </data>
+  <data name="UpdateNavItem.Content" xml:space="preserve">
+    <value>അപ്ഡേറ്റ്</value>
+  </data>
+    <data name="MainSearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
+    <value>മെനു ഇനങ്ങൾ തിരയുക...</value>
+  </data>
+  <data name="MainSearchAutoSuggestBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മെനു ഇനങ്ങളുടെ പേരുകൾ വേഗത്തിൽ കണ്ടെത്താൻ നൽകുക</value>
+  </data>
+  <data name="MainSearchAutoSuggestBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>മെനു ഇനങ്ങളുടെ പേരുകൾ വേഗത്തിൽ കണ്ടെത്താൻ നൽകുക</value>
+  </data>
+  <data name="RefreshLogFilesButton.Content" xml:space="preserve">
+    <value>ലോഗുകൾ പുതുക്കുക</value>
+  </data>
+  <data name="RefreshLogFilesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഉപയോക്താവിന്റെ കോൺഫിഗറേഷൻ ഫോൾഡറിലെ ലോഗ് ഫയലിൽ നിന്ന് വായിച്ച് നിലവിലെ സെഷനുവേണ്ടി ഏറ്റവും പുതിയ ലോഗുകൾ നേടുക</value>
+  </data>
+  <data name="RefreshLogFilesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഉപയോക്താവിന്റെ കോൺഫിഗറേഷൻ ഫോൾഡറിലെ ലോഗ് ഫയലിൽ നിന്ന് വായിച്ച് നിലവിലെ സെഷനുവേണ്ടി ഏറ്റവും പുതിയ ലോഗുകൾ നേടുക</value>
+  </data>
+  <data name="AppStartupMessage" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷൻ സ്റ്റാർട്ടപ്പ്, .NET റൺടൈം പതിപ്പ്: {0}</value>
+  </data>
+  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
+    <value>Harden Windows Security-യുടെ മറ്റൊരു ഇൻസ്റ്റൻസ് പ്രവർത്തിക്കുന്നുണ്ട്. ഇത് ഒരു വിവരപരമായ ലോഗ് മാത്രമാണ്.</value>
+</data>
+<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <value>ഫയൽ ആക്ടിവേഷൻ കണ്ടെത്തി</value>
+</data>
+<data name="FileActivationNoObjectsMessage" xml:space="preserve">
+  <value>ആപ്ലിക്കേഷൻ ഫയൽ ആക്ടിവേഷൻ വഴി ആരംഭിച്ചെങ്കിലും ആർഗുമെന്റുകളിൽ ഫയൽ ഒബ്ജക്റ്റുകൾ ഇല്ലായിരുന്നു</value>
+</data>
+<data name="FileActivationNoArgumentsMessage" xml:space="preserve">
+  <value>ആപ്ലിക്കേഷൻ ഫയൽ ആക്ടിവേഷൻ വഴി ആരംഭിച്ചെങ്കിലും ഫയൽ ആക്ടിവേഷൻ ആർഗുമെന്റുകൾ ഇല്ലായിരുന്നു</value>
+</data>
+<data name="ElevationRequiredButDeniedMessage" xml:space="preserve">
+  <value>തിരഞ്ഞെടുത്ത ഫയൽ പ്രോസസ് ചെയ്യാൻ എലിവേഷൻ അഭ്യർത്ഥന ആവശ്യമായിരുന്നു പക്ഷേ ഉപയോക്താവ് നിരസിച്ചു. ആപ്ലിക്കേഷനിൽ നിന്ന് പുറത്തുകടക്കുന്നു.</value>
+</data>
+<data name="ElevationDeniedMessage" xml:space="preserve">
+  <value>ഉപയോക്താവ് എലിവേഷൻ അഭ്യർത്ഥന നിരസിച്ചു</value>
+</data>
+<data name="WindowSizeSaveErrorMessage" xml:space="preserve">
+  <value>ആപ്ലിക്കേഷൻ അടയ്ക്കുമ്പോൾ വിൻഡോ വലുപ്പം സേവ് ചെയ്യുന്നതിൽ പ്രശ്നമുണ്ടായി: {0}</value>
+</data>
+<data name="ErrorDialogTitle" xml:space="preserve">
+  <value>ഒരു പിശക് സംഭവിച്ചു</value>
+</data>
+<data name="ErrorDialogContent" xml:space="preserve">
+  <value>അപ്രതീക്ഷിത പിശക് സംഭവിച്ചു: {0}</value>
+</data>
+  <data name="OK" xml:space="preserve">
+    <value>ശരി</value>
+  </data>
+      <data name="Cancelling" xml:space="preserve">
+    <value>റദ്ദാക്കുന്നു...</value>
+  </data>
+    <data name="Cancel" xml:space="preserve">
+    <value>റദ്ദാക്കുക</value>
+  </data>
+  <data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
+  <value>കോഡ് ഇന്റഗ്രിറ്റി ലോഗ് വലുപ്പം സെറ്റ് ചെയ്യുന്നു</value>
+</data>
+  <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
+    <value>കോഡ് ഇന്റഗ്രിറ്റി ലോഗിന്റെ വലുപ്പം 1MB വർദ്ധിപ്പിക്കുന്നു കാരണം അതിന്റെ നിലവിലെ ഫ്രീ സ്പേസ് 1MB-യിൽ കുറവാണ്.</value>
+  </data>
+    <data name="SettingCodeIntegrityLogSizeMessage" xml:space="preserve">
+    <value>കോഡ് ഇന്റഗ്രിറ്റി ലോഗിന്റെ വലുപ്പം {0:N2} MB ആയി സെറ്റ് ചെയ്യുന്നു.</value>
+  </data>
+    <data name="ProvidedLogSizeLessThanOrEqualOneMbNoChangesMadeMessage" xml:space="preserve">
+    <value>നൽകിയ ലോഗ് വലുപ്പം 1 MB-യേക്കാൾ കുറവോ തുല്യമോ ആണ്. മാറ്റങ്ങളൊന്നും വരുത്തിയിട്ടില്ല.</value>
+  </data>
+    <data name="FileRequiresElevatedPermissionsMessage" xml:space="preserve">
+    <value>ഫയൽ "{0}"-ന് ഉയർന്ന അനുമതികൾ ആവശ്യമാണ്.</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+  <value>നില</value>
+</data>
+  <data name="WarningTitle" xml:space="preserve">
+    <value>മുന്നറിയിപ്പ്</value>
+  </data>
+    <data name="ErrorTitle" xml:space="preserve">
+    <value>പിശക്</value>
+  </data>
+    <data name="SuccessTitle" xml:space="preserve">
+    <value>വിജയം</value>
+  </data>
+    <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
+    <value>കമാൻഡ് '{0} {1}' എക്സിറ്റ് കോഡ് {2} നൊടെ പരാജയപ്പെട്ടു. പിശക്: {3}</value>
+  </data>
+  <data name="ElevationRequestCancelledByUserMessage" xml:space="preserve">
+    <value>ഉപയോക്താവ് എലിവേഷൻ അഭ്യർത്ഥന റദ്ദാക്കി.</value>
+  </data>
+    <data name="ActivationManagerFailedWithHRESULTMessage" xml:space="preserve">
+    <value>ActivationManager HRESULT ഉപയോഗിച്ച് പരാജയപ്പെട്ടു: 0x{0:X}</value>
+  </data>
+  <data name="JumpListNotSupportedMessage" xml:space="preserve">
+  <value>JumpList പിന്തുണയ്ക്കുന്നില്ല.</value>
+</data>
+  <data name="AppElevationNoticeMain" xml:space="preserve">
+    <value>ഈ പേജ് ആക്സസ് ചെയ്യാൻ Harden Windows Security അഡ്മിനിസ്ട്രേറ്ററായി പ്രവർത്തിപ്പിക്കുക</value>
+  </data>
+    <data name="AppElevationNoticeExtraPrompt" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷൻ ആരംഭിക്കുമ്പോൾ എല്ലായ്പ്പോഴും എലിവേഷനു വേണ്ടി ചോദിക്കുക</value>
+  </data>
+    <data name="AppElevationNoticeTitle" xml:space="preserve">
+    <value>അഡ്മിനിസ്ട്രേറ്റർ അനുമതികൾ ആവശ്യമാണ്</value>
+  </data>
+    <data name="AppElevationNoticeRelaunch" xml:space="preserve">
+    <value>അഡ്മിനിസ്ട്രേറ്ററായി വീണ്ടും ലോഞ്ച് ചെയ്യുക</value>
+  </data>
+    <data name="WindowMaximizedMsg" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷൻ അവസാനം അടച്ചപ്പോൾ വിൻഡോ മാക്സിമൈസ് ചെയ്തിരുന്നു, ഇപ്പോൾ അത് മാക്സിമൈസ് ആയി സെറ്റ് ചെയ്യുന്നു</value>
+  </data>
+  <data name="SettingWindowSizeMessage" xml:space="preserve">
+  <value>ആപ്ലിക്കേഷൻ അടച്ചപ്പോഴുള്ള വിൻഡോ വലുപ്പത്തിലേക്ക് തിരികെ സെറ്റ് ചെയ്യുന്നു. ഉയരം: {0} - വീതി: {1}</value>
+</data>
+  <data name="SidebarTextBlock.Text" xml:space="preserve">
+    <value>സൈഡ്ബാർ</value>
+  </data>
+    <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
+    <value>അധിക ഫീച്ചറുകൾക്കായി സൈഡ്ബാർ ഉപയോഗിക്കുക.</value>
+  </data>
+    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
+    <value>സൈഡ്ബാർ ഗൈഡ്</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സൈഡ്ബാർ എങ്ങനെ ഉപയോഗിക്കാം എന്നതിനുള്ള ഗൈഡിനായി, ദയവായി ഇവിടെ ക്ലിക്ക്/ടാപ്പ് ചെയ്ത് GitHub wiki പേജിലേക്ക് പോകുക.</value>
+  </data>
+  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സൈഡ്ബാർ എങ്ങനെ ഉപയോഗിക്കാം എന്നതിനുള്ള ഗൈഡിനായി, ദയവായി ഇവിടെ ക്ലിക്ക്/ടാപ്പ് ചെയ്ത് GitHub wiki പേജിലേക്ക് പോകുക.</value>
+  </data>
+    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+    <value>സഹായം - ചോദ്യങ്ങൾ ചോദിക്കുക</value>
+  </data>
+  <data name="SettingsPageTitle.Text" xml:space="preserve">
+    <value>നിങ്ങളുടെ ആപ്ലിക്കേഷൻ സെറ്റിംഗുകൾ ഇവിടെ കസ്റ്റമൈസ് ചെയ്യുക. നിങ്ങളുടെ മുൻഗണനകൾ സേവ് ചെയ്യപ്പെടും, അതിനാൽ നിങ്ങൾ Harden Windows Security ആരംഭിക്കുമ്പോഴൊക്കെ അവ നിങ്ങൾക്കായി തയ്യാറായിരിക്കും.</value>
+  </data>
+  <data name="Appearance.Text" xml:space="preserve">
+    <value>കാഴ്ച</value>
+  </data>
+  <data name="About.Text" xml:space="preserve">
+    <value>കുറിച്ച്</value>
+  </data>
+    <data name="AppearanceSectionSettingsExpander.Header" xml:space="preserve">
+    <value>Harden Windows Security നിങ്ങൾ ആഗ്രഹിക്കുന്ന രീതിയിൽ കാണിപ്പിക്കുക</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Harden Windows Security-യുടെ കാഴ്ചയും വിഷ്വൽ ഇഫക്റ്റുകളും മാറ്റാൻ ലഭ്യമായ വിവിധ ഓപ്ഷനുകൾ ഉപയോഗിക്കുക</value>
+  </data>
+  <data name="AppearanceSectionSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Harden Windows Security-യുടെ കാഴ്ചയും വിഷ്വൽ ഇഫക്റ്റുകളും മാറ്റാൻ ലഭ്യമായ വിവിധ ഓപ്ഷനുകൾ ഉപയോഗിക്കുക</value>
+  </data>
+    <data name="DarkerBackGroundSettingsCard.Description" xml:space="preserve">
+    <value>പ്രധാനമായും നിങ്ങൾ MicaAlt പശ്ചാത്തലമായി ഉപയോഗിക്കുമ്പോൾ അനുയോജ്യമാണ്.</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.Header" xml:space="preserve">
+    <value>ഇരുണ്ട പശ്ചാത്തലം</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇത് പശ്ചാത്തലത്തിൽ നിന്ന് അധിക ലൈറ്റ് ഷേഡിംഗ് നീക്കം ചെയ്യും, Harden Windows Security-ക്ക് മൊത്തത്തിൽ കൂടുതൽ ഇരുണ്ട കാഴ്ച നൽകും.</value>
+  </data>
+  <data name="DarkerBackGroundSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇത് പശ്ചാത്തലത്തിൽ നിന്ന് അധിക ലൈറ്റ് ഷേഡിംഗ് നീക്കം ചെയ്യും, Harden Windows Security-ക്ക് മൊത്തത്തിൽ കൂടുതൽ ഇരുണ്ട കാഴ്ച നൽകും.</value>
+  </data>
+    <data name="ToggleSwitchGeneral.OnContent" xml:space="preserve">
+    <value>ഓൺ</value>
+  </data>
+  <data name="ToggleSwitchGeneral.OffContent" xml:space="preserve">
+    <value>ഓഫ്</value>
+  </data>
+    <data name="BackgroundStyleSettingsCard.Description" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷന്റെ പശ്ചാത്തല ശൈലി കസ്റ്റമൈസ് ചെയ്യുക</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.Header" xml:space="preserve">
+    <value>പശ്ചാത്തല ശൈലി</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇത് Harden Windows Security-യുടെ പശ്ചാത്തലമാണ്. മാറ്റങ്ങൾ പശ്ചാത്തലത്തിൽ കാണപ്പെടും.</value>
+  </data>
+  <data name="BackgroundStyleSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇത് Harden Windows Security-യുടെ പശ്ചാത്തലമാണ്. മാറ്റങ്ങൾ പശ്ചാത്തലത്തിൽ കാണപ്പെടും.</value>
+  </data>
+    <data name="AppThemeSettingsCard.Description" xml:space="preserve">
+    <value>തീം കസ്റ്റമൈസ് ചെയ്യുക</value>
+  </data>
+  <data name="AppThemeSettingsCard.Header" xml:space="preserve">
+    <value>തീം</value>
+  </data>
+  <data name="AppThemeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Harden Windows Security-ക്കായി ഒരു തീം തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="AppThemeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Harden Windows Security-ക്കായി ഒരു തീം തിരഞ്ഞെടുക്കുക</value>
+  </data>
+    <data name="MainNavigationIconsSettingsCard.Description" xml:space="preserve">
+    <value>പ്രധാന നാവിഗേഷൻ ഐക്കണുകൾക്കായി ഒരു ശൈലി തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.Header" xml:space="preserve">
+    <value>ഐക്കൺ ശൈലി</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രധാന നാവിഗേഷൻ ഐക്കണുകൾക്കായി ഒരു ശൈലി തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="MainNavigationIconsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രധാന നാവിഗേഷൻ ഐക്കണുകൾക്കായി ഒരു ശൈലി തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+    <data name="MainNavigationLocationSettingsCard.Description" xml:space="preserve">
+    <value>നാവിഗേഷൻ മെനുവിന്റെ സ്ഥാനം കസ്റ്റമൈസ് ചെയ്യുക</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.Header" xml:space="preserve">
+    <value>നാവിഗേഷൻ മെനു</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നാവിഗേഷൻ മെനുവിനുള്ള ഒരു സ്ഥാനം തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="MainNavigationLocationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നാവിഗേഷൻ മെനുവിനുള്ള ഒരു സ്ഥാനം തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.Header" xml:space="preserve">
+    <value>Harden Windows Security-യുടെയും അതിനുള്ളിലെ വിവിധ എലമെന്റുകളുടെയും പെരുമാറ്റം മാറ്റുക</value>
+  </data>
+  <data name="Behavior.Text" xml:space="preserve">
+    <value>പെരുമാറ്റം</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Harden Windows Security-യുടെയും അതിനുള്ളിലെ വിവിധ എലമെന്റുകളുടെയും പെരുമാറ്റം മാറ്റുക</value>
+  </data>
+  <data name="BehaviorSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Harden Windows Security-യുടെയും അതിനുള്ളിലെ വിവിധ എലമെന്റുകളുടെയും പെരുമാറ്റം മാറ്റുക</value>
+  </data>
+    <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Description" xml:space="preserve">
+    <value>നിങ്ങൾ ഒരു ലിസ്റ്റ് വ്യൂവിൽ ഒരു ഇനം തിരഞ്ഞെടുക്കുമ്പോഴെല്ലാം, ആ ഇനത്തെ സ്ക്രീനിൽ ലംബമായി മധ്യത്തിൽ വയ്ക്കുക.</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.Header" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കുമ്പോൾ ലിസ്റ്റ് വ്യൂകൾ ലംബമായി മധ്യത്തിൽ വയ്ക്കുക</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ ഒരു ലിസ്റ്റ് വ്യൂവിൽ ഒരു ഇനം തിരഞ്ഞെടുക്കുമ്പോഴെല്ലാം, ആ ഇനത്തെ സ്ക്രീനിൽ ലംബമായി മധ്യത്തിൽ വയ്ക്കുക.</value>
+  </data>
+  <data name="ListViewsCenterVerticallyUponSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങൾ ഒരു ലിസ്റ്റ് വ്യൂവിൽ ഒരു ഇനം തിരഞ്ഞെടുക്കുമ്പോഴെല്ലാം, ആ ഇനത്തെ സ്ക്രീനിൽ ലംബമായി മധ്യത്തിൽ വയ്ക്കുക.</value>
+  </data>
+    <data name="PromptForElevationSettingsCard.Description" xml:space="preserve">
+    <value>ഇത് പ്രാപ്തമാക്കിയാൽ, Harden Windows Security സ്റ്റാർട്ടപ്പിൽ അഡ്മിനിസ്ട്രേറ്റർ അനുമതികളോടെ പ്രവർത്തിക്കാൻ എലിവേഷൻ അഭ്യർത്ഥിക്കും.</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.Header" xml:space="preserve">
+    <value>സ്റ്റാർട്ടപ്പിൽ എലിവേഷനു വേണ്ടി പ്രേരിപ്പിക്കുക</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇത് പ്രാപ്തമാക്കിയാൽ, Harden Windows Security സ്റ്റാർട്ടപ്പിൽ അഡ്മിനിസ്ട്രേറ്റർ അനുമതികളോടെ പ്രവർത്തിക്കാൻ എലിവേഷൻ അഭ്യർത്ഥിക്കും.</value>
+  </data>
+  <data name="PromptForElevationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇത് പ്രാപ്തമാക്കിയാൽ, Harden Windows Security സ്റ്റാർട്ടപ്പിൽ അഡ്മിനിസ്ട്രേറ്റർ അനുമതികളോടെ പ്രവർത്തിക്കാൻ എലിവേഷൻ അഭ്യർത്ഥിക്കും.</value>
+  </data>
+    <data name="ScreenShieldSettingsCard.Description" xml:space="preserve">
+    <value>സ്ക്രീൻ റെക്കോർഡറുകൾ (Recall ഉൾപ്പെടെ) പോലുള്ള മറ്റ് ആപ്ലിക്കേഷനുകൾ Harden Windows Security വിൻഡോ റെക്കോർഡ് ചെയ്യുന്നതോ സ്ക്രീൻഷോട്ട് എടുക്കുന്നതോ തടയുക.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.Header" xml:space="preserve">
+    <value>സ്ക്രീൻ ഷീൽഡ്</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സ്ക്രീൻ റെക്കോർഡറുകൾ (Recall ഉൾപ്പെടെ) പോലുള്ള മറ്റ് ആപ്ലിക്കേഷനുകൾ Harden Windows Security വിൻഡോ റെക്കോർഡ് ചെയ്യുന്നതോ സ്ക്രീൻഷോട്ട് എടുക്കുന്നതോ തടയുക.</value>
+  </data>
+  <data name="ScreenShieldSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സ്ക്രീൻ റെക്കോർഡറുകൾ (Recall ഉൾപ്പെടെ) പോലുള്ള മറ്റ് ആപ്ലിക്കേഷനുകൾ Harden Windows Security വിൻഡോ റെക്കോർഡ് ചെയ്യുന്നതോ സ്ക്രീൻഷോട്ട് എടുക്കുന്നതോ തടയുക.</value>
+  </data>
+   <data name="PublishUserActivityInTheOSSettingsCard.Description" xml:space="preserve">
+    <value>Harden Windows Security-യിൽ നിങ്ങൾ നടത്തുന്ന വിവിധ പ്രവർത്തനങ്ങൾ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ പ്രസിദ്ധീകരിക്കുക, അവ Microsoft Recall-ൽ നിങ്ങൾക്കായി ദൃശ്യമാവുകയും ലഭ്യമാവുകയും ചെയ്യുന്നതിനായി, നിങ്ങളുടെ പ്രവർത്തനങ്ങൾ ഓർക്കാൻ സഹായിക്കുന്നതിന്.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.Header" xml:space="preserve">
+    <value>OS-ൽ പ്രവർത്തനം പ്രസിദ്ധീകരിക്കുക</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Harden Windows Security-യിൽ നിങ്ങൾ നടത്തുന്ന വിവിധ പ്രവർത്തനങ്ങൾ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ പ്രസിദ്ധീകരിക്കുക, അവ Microsoft Recall-ൽ നിങ്ങൾക്കായി ദൃശ്യമാവുകയും ലഭ്യമാവുകയും ചെയ്യുന്നതിനായി, നിങ്ങളുടെ പ്രവർത്തനങ്ങൾ ഓർക്കാൻ സഹായിക്കുന്നതിന്.</value>
+  </data>
+  <data name="PublishUserActivityInTheOSSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Harden Windows Security-യിൽ നിങ്ങൾ നടത്തുന്ന വിവിധ പ്രവർത്തനങ്ങൾ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ പ്രസിദ്ധീകരിക്കുക, അവ Microsoft Recall-ൽ നിങ്ങൾക്കായി ദൃശ്യമാവുകയും ലഭ്യമാവുകയും ചെയ്യുന്നതിനായി, നിങ്ങളുടെ പ്രവർത്തനങ്ങൾ ഓർക്കാൻ സഹായിക്കുന്നതിന്.</value>
+  </data>
+    <data name="LanguageTextBlock.Text" xml:space="preserve">
+    <value>ഭാഷ</value>
+  </data>
+    <data name="LanguageSettingSettingsExpander.Header" xml:space="preserve">
+    <value>വിവിധ പിന്തുണയുള്ള ഉപയോക്തൃ ഇന്റർഫേസ് ഭാഷകളും ലേഔട്ടുകളും തമ്മിൽ ടോഗിൾ ചെയ്യുക.</value>
+  </data>
+  <data name="LanguageSettingSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>വിവിധ പിന്തുണയുള്ള ഉപയോക്തൃ ഇന്റർഫേസ് ഭാഷകളും ലേഔട്ടുകളും തമ്മിൽ ടോഗിൾ ചെയ്യുക.</value>
+  </data>
+  <data name="LanguageSettingSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>വിവിധ പിന്തുണയുള്ള ഉപയോക്തൃ ഇന്റർഫേസ് ഭാഷകളും ലേഔട്ടുകളും തമ്മിൽ ടോഗിൾ ചെയ്യുക.</value>
+  </data>
+    <data name="LanguageSelectionSettingsCard.Description" xml:space="preserve">
+    <value>ലിസ്റ്റിൽ നിന്ന് മറ്റൊരു ഭാഷ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.Header" xml:space="preserve">
+    <value>ഭാഷാ തിരഞ്ഞെടുപ്പ്</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലിസ്റ്റിൽ നിന്ന് മറ്റൊരു ഭാഷ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="LanguageSelectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലിസ്റ്റിൽ നിന്ന് മറ്റൊരു ഭാഷ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+    <data name="UIFlowDirectionSettingsCard.Description" xml:space="preserve">
+    <value>ഉപയോക്തൃ ഇന്റർഫേസ് എലമെന്റുകൾക്കായി വലത്തുനിന്ന് ഇടത്തേക്കും ഇടത്തുനിന്ന് വലത്തേക്കുമുള്ള ഫ്ലോ ദിശകൾ തമ്മിൽ ടോഗിൾ ചെയ്യുക.</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.Header" xml:space="preserve">
+    <value>ഫ്ലോ ദിശ</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഉപയോക്തൃ ഇന്റർഫേസ് എലമെന്റുകൾക്കായി വലത്തുനിന്ന് ഇടത്തേക്കും ഇടത്തുനിന്ന് വലത്തേക്കുമുള്ള ഫ്ലോ ദിശകൾ തമ്മിൽ ടോഗിൾ ചെയ്യുക.</value>
+  </data>
+  <data name="UIFlowDirectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഉപയോക്തൃ ഇന്റർഫേസ് എലമെന്റുകൾക്കായി വലത്തുനിന്ന് ഇടത്തേക്കും ഇടത്തുനിന്ന് വലത്തേക്കുമുള്ള ഫ്ലോ ദിശകൾ തമ്മിൽ ടോഗിൾ ചെയ്യുക.</value>
+  </data>
+    <data name="UIFlowDirectionToggleSwitch.OnContent" xml:space="preserve">
+    <value>ഇടത്തുനിന്ന് വലത്തേക്ക്</value>
+  </data>
+  <data name="UIFlowDirectionToggleSwitch.OffContent" xml:space="preserve">
+    <value>വലത്തുനിന്ന് ഇടത്തേക്ക്</value>
+  </data>
+    <data name="Sound.Text" xml:space="preserve">
+    <value>ശബ്ദം</value>
+  </data>
+    <data name="AppSoundSettingSettingsCard.Description" xml:space="preserve">
+    <value>Harden Windows Security-യുടെ വിവിധ എലമെന്റുകൾ ഉപയോഗിക്കുമ്പോൾ ഓഡിയോ ഫീഡ്ബാക്ക് കേൾക്കുക</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.Header" xml:space="preserve">
+    <value>ശബ്ദം</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Harden Windows Security-യുടെ വിവിധ എലമെന്റുകൾ ഉപയോഗിക്കുമ്പോൾ ഓഡിയോ ഫീഡ്ബാക്ക് കേൾക്കുക</value>
+  </data>
+  <data name="AppSoundSettingSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Harden Windows Security-യുടെ വിവിധ എലമെന്റുകൾ ഉപയോഗിക്കുമ്പോൾ ഓഡിയോ ഫീഡ്ബാക്ക് കേൾക്കുക</value>
+  </data>
+    <data name="GitHubRepoHyperLinkButton.Content" xml:space="preserve">
+    <value>GitHub റിപ്പോസിറ്ററി</value>
+  </data>
+    <data name="SpyNetGirlWebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>SpyNetGirl വെബ്സൈറ്റ്</value>
+  </data>
+    <data name="MicrosoftStorePageHyperLinkButton.Content" xml:space="preserve">
+    <value>Microsoft Store പേജ്</value>
+  </data>
+    <data name="YouTubeChannelHyperLinkButton.Content" xml:space="preserve">
+    <value>YouTube ചാനൽ</value>
+  </data>
+    <data name="DonationHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ പിന്തുണ ഈ പ്രോജക്റ്റ് തുടരാനും പരിപാലിക്കാനും എന്നെ സഹായിക്കുന്നു.</value>
+  </data>
+  <data name="DonationHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങളുടെ പിന്തുണ ഈ പ്രോജക്റ്റ് തുടരാനും പരിപാലിക്കാനും എന്നെ സഹായിക്കുന്നു.</value>
+  </data>
+    <data name="DonationHyperLinkButton.Content" xml:space="preserve">
+    <value>സംഭാവന</value>
+  </data>
+    <data name="PrivacyPolicyHyperLinkButton.Content" xml:space="preserve">
+    <value>സ്വകാര്യതാ നയം</value>
+  </data>
+    <data name="SendFeedbackHyperLinkButton.Content" xml:space="preserve">
+    <value>ഫീഡ്ബാക്ക് അയയ്ക്കുക</value>
+  </data>
+    <data name="Icons8WebsiteHyperLinkButton.Content" xml:space="preserve">
+    <value>ഈ ആപ്ലിക്കേഷനിൽ ഉപയോഗിച്ച എല്ലാ ഐക്കണുകൾക്കുമുള്ള Icons8 വെബ്സൈറ്റ്</value>
+  </data>
+    <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
+    <value>സോഴ്സ് കോഡ്</value>
+  </data>
+    <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <value>ഈ പേജിൽ അപ്ഡേറ്റുകൾക്കായി പരിശോധിക്കുക. സ്റ്റാർട്ടപ്പിൽ ഒരു തവണ സംഭവിക്കുന്ന ഓട്ടോമാറ്റിക് അപ്ഡേറ്റ് ചെക്കിംഗും നിങ്ങൾക്ക് സാധ്യമാക്കാം, പുതിയ പതിപ്പ് ലഭ്യമാകുമ്പോൾ നിങ്ങളെ അറിയിക്കും.</value>
+  </data>
+    <data name="GuideButtonAtTop.Content" xml:space="preserve">
+    <value>ഗൈഡ്</value>
+  </data>
+  <data name="GuideButtonAtTop.ToolTipService.ToolTip" xml:space="preserve">
+    <value>GitHub-ൽ ഈ പേജിനുള്ള പൂർണ്ണ ഗൈഡ് സന്ദർശിക്കാൻ ക്ലിക്ക്/ടാപ്പ് ചെയ്യുക</value>
+  </data>
+  <data name="GuideButtonAtTop.AutomationProperties.HelpText" xml:space="preserve">
+    <value>GitHub-ൽ ഈ പേജിനുള്ള പൂർണ്ണ ഗൈഡ് സന്ദർശിക്കാൻ ക്ലിക്ക്/ടാപ്പ് ചെയ്യുക</value>
+  </data>
+    <data name="UpdatePageUpdateStatusInfoBar.Title" xml:space="preserve">
+    <value>അപ്ഡേറ്റ് നില</value>
+  </data>
+  <data name="UpdatePageUpdateStatusInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അപ്ഡേറ്റ് നില</value>
+  </data>
+    <data name="UpdatePageMoreInfoHyperLinkButton.Content" xml:space="preserve">
+    <value>കൂടുതൽ വിവരങ്ങൾ</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Harden Windows Security-ക്കുള്ള പ്രധാന GitHub wiki പേജ് തുറക്കുന്നു</value>
+  </data>
+  <data name="UpdatePageMoreInfoHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Harden Windows Security-ക്കുള്ള പ്രധാന GitHub wiki പേജ് തുറക്കുന്നു</value>
+  </data>
+    <data name="UpdatePageWhatsNewInfoBar.Title" xml:space="preserve">
+    <value>റിലീസ് കുറിപ്പുകൾ</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.Message" xml:space="preserve">
+    <value>പൂർണ്ണ റിലീസ് കുറിപ്പുകൾക്കായി GitHub റിലീസുകൾ പരിശോധിക്കുക</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പൂർണ്ണ റിലീസ് കുറിപ്പുകൾക്കായി GitHub റിലീസുകൾ പരിശോധിക്കുക</value>
+  </data>
+  <data name="UpdatePageWhatsNewInfoBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പൂർണ്ണ റിലീസ് കുറിപ്പുകൾക്കായി GitHub റിലീസുകൾ പരിശോധിക്കുക</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.Content" xml:space="preserve">
+    <value>പുതിയതെന്തെന്ന് കാണുക</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലഭ്യമായ അപ്ഡേറ്റിനുള്ള പൂർണ്ണ റിലീസ് കുറിപ്പുകൾ കണ്ടെത്താൻ കഴിയുന്ന GitHub റിലീസ് പേജ് തുറക്കുന്നു.</value>
+  </data>
+  <data name="UpdatePageSeeWhatsNewHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലഭ്യമായ അപ്ഡേറ്റിനുള്ള പൂർണ്ണ റിലീസ് കുറിപ്പുകൾ കണ്ടെത്താൻ കഴിയുന്ന GitHub റിലീസ് പേജ് തുറക്കുന്നു.</value>
+  </data>
+    <data name="CheckForUpdateSettingsCard.Description" xml:space="preserve">
+    <value>അപ്ഡേറ്റുകൾ ഡൗൺലോഡും ഇൻസ്റ്റാളും ചെയ്തുകഴിഞ്ഞാൽ, അടുത്ത തവണ നിങ്ങൾ Harden Windows Security തുറക്കുമ്പോൾ നിങ്ങൾ പുതിയ പതിപ്പ് ഉപയോഗിക്കും.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.Header" xml:space="preserve">
+    <value>Harden Windows Security അപ്ഡേറ്റിനായി പരിശോധിക്കുക</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അപ്ഡേറ്റുകൾ ഡൗൺലോഡും ഇൻസ്റ്റാളും ചെയ്തുകഴിഞ്ഞാൽ, അടുത്ത തവണ നിങ്ങൾ Harden Windows Security തുറക്കുമ്പോൾ നിങ്ങൾ പുതിയ പതിപ്പ് ഉപയോഗിക്കും.</value>
+  </data>
+  <data name="CheckForUpdateSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അപ്ഡേറ്റുകൾ ഡൗൺലോഡും ഇൻസ്റ്റാളും ചെയ്തുകഴിഞ്ഞാൽ, അടുത്ത തവണ നിങ്ങൾ Harden Windows Security തുറക്കുമ്പോൾ നിങ്ങൾ പുതിയ പതിപ്പ് ഉപയോഗിക്കും.</value>
+  </data>
+    <data name="UpdatePageCheckForUpdateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>GitHub റിപ്പോസിറ്ററിയിൽ നിന്ന് ഏറ്റവും പുതിയ പതിപ്പ് ഡൗൺലോഡും ഇൻസ്റ്റാളും ചെയ്യും. ആവശ്യമായ സമയം നിങ്ങളുടെ നെറ്റ്‌വർക്ക് കണക്ഷനെ ആശ്രയിച്ചിരിക്കുന്നു. ഏകദേശ ഡൗൺലോഡ് വലുപ്പം 65 MB ആണ്.</value>
+  </data>
+  <data name="UpdatePageCheckForUpdateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>GitHub റിപ്പോസിറ്ററിയിൽ നിന്ന് ഏറ്റവും പുതിയ പതിപ്പ് ഡൗൺലോഡും ഇൻസ്റ്റാളും ചെയ്യും. ആവശ്യമായ സമയം നിങ്ങളുടെ നെറ്റ്‌വർക്ക് കണക്ഷനെ ആശ്രയിച്ചിരിക്കുന്നു. ഏകദേശ ഡൗൺലോഡ് വലുപ്പം 65 MB ആണ്.</value>
+  </data>
+    <data name="AutoUpdateCheckSettingsCard.Description" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷൻ ആരംഭിക്കുമ്പോൾ സ്വയമേവ അപ്ഡേറ്റ് പരിശോധിക്കുകയും പുതിയ പതിപ്പ് ലഭ്യമാണെങ്കിൽ നിങ്ങളെ അറിയിക്കുകയും ചെയ്യുന്നു, അതിനാൽ നിങ്ങൾക്ക് അത് ഇൻസ്റ്റാൾ ചെയ്യാൻ ഈ പേജ് ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.Header" xml:space="preserve">
+    <value>ഓട്ടോമാറ്റിക് അപ്ഡേറ്റ് ചെക്കിംഗ്</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷൻ ആരംഭിക്കുമ്പോൾ സ്വയമേവ അപ്ഡേറ്റ് പരിശോധിക്കുകയും പുതിയ പതിപ്പ് ലഭ്യമാണെങ്കിൽ നിങ്ങളെ അറിയിക്കുകയും ചെയ്യുന്നു, അതിനാൽ നിങ്ങൾക്ക് അത് ഇൻസ്റ്റാൾ ചെയ്യാൻ ഈ പേജ് ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="AutoUpdateCheckSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷൻ ആരംഭിക്കുമ്പോൾ സ്വയമേവ അപ്ഡേറ്റ് പരിശോധിക്കുകയും പുതിയ പതിപ്പ് ലഭ്യമാണെങ്കിൽ നിങ്ങളെ അറിയിക്കുകയും ചെയ്യുന്നു, അതിനാൽ നിങ്ങൾക്ക് അത് ഇൻസ്റ്റാൾ ചെയ്യാൻ ഈ പേജ് ഉപയോഗിക്കാം.</value>
+  </data>
+    <data name="HardenedUpdateProcedureSettingsCard.Description" xml:space="preserve">
+    <value>ഈ ഓപ്ഷൻ പ്രാപ്തമാക്കുമ്പോൾ, ഉപകരണത്തിൽ സൃഷ്ടിക്കപ്പെട്ട സർട്ടിഫിക്കറ്റിന്റെ താൽക്കാലിക സ്വകാര്യ കീ ഉപയോക്തൃ അക്കൗണ്ടുമായി ബന്ധിപ്പിക്കും, ഒപ്പുവയ്ക്കാൻ ഉപയോഗിക്കുന്നതിന് മുമ്പ് പ്രോംപ്റ്റുകളുടെ സ്ഥിരീകരണം ആവശ്യപ്പെടും.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.Header" xml:space="preserve">
+    <value>കർശനമാക്കിയ അപ്ഡേറ്റ് നടപടിക്രമം</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ ഓപ്ഷൻ പ്രാപ്തമാക്കുമ്പോൾ, ഉപകരണത്തിൽ സൃഷ്ടിക്കപ്പെട്ട സർട്ടിഫിക്കറ്റിന്റെ താൽക്കാലിക സ്വകാര്യ കീ ഉപയോക്തൃ അക്കൗണ്ടുമായി ബന്ധിപ്പിക്കും, ഒപ്പുവയ്ക്കാൻ ഉപയോഗിക്കുന്നതിന് മുമ്പ് പ്രോംപ്റ്റുകളുടെ സ്ഥിരീകരണം ആവശ്യപ്പെടും.</value>
+  </data>
+  <data name="HardenedUpdateProcedureSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ ഓപ്ഷൻ പ്രാപ്തമാക്കുമ്പോൾ, ഉപകരണത്തിൽ സൃഷ്ടിക്കപ്പെട്ട സർട്ടിഫിക്കറ്റിന്റെ താൽക്കാലിക സ്വകാര്യ കീ ഉപയോക്തൃ അക്കൗണ്ടുമായി ബന്ധിപ്പിക്കും, ഒപ്പുവയ്ക്കാൻ ഉപയോഗിക്കുന്നതിന് മുമ്പ് പ്രോംപ്റ്റുകളുടെ സ്ഥിരീകരണം ആവശ്യപ്പെടും.</value>
+  </data>
+    <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Store മിനി പേജ് തുറക്കുന്നു, അവിടെ നിങ്ങൾക്ക് Harden Windows Security റേറ്റ് ചെയ്യാനും ഐച്ഛികമായി ഒരു റിവ്യൂ എഴുതാനും കഴിയും.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.Header" xml:space="preserve">
+    <value>റേറ്റ് ചെയ്ത് റിവ്യൂ ചെയ്യുക</value>
+  </data>
+    <data name="RateAndReviewSettingsCard.Description" xml:space="preserve">
+    <value>Microsoft Store മിനി പേജ് തുറക്കുന്നു, അവിടെ നിങ്ങൾക്ക് Harden Windows Security റേറ്റ് ചെയ്യാനും ഐച്ഛികമായി ഒരു റിവ്യൂ എഴുതാനും കഴിയും.</value>
+  </data>
+  <data name="RateAndReviewSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Store മിനി പേജ് തുറക്കുന്നു, അവിടെ നിങ്ങൾക്ക് Harden Windows Security റേറ്റ് ചെയ്യാനും ഐച്ഛികമായി ഒരു റിവ്യൂ എഴുതാനും കഴിയും.</value>
+  </data>
+    <data name="CheckingForUpdateStore" xml:space="preserve">
+    <value>Microsoft Store-ൽ അപ്ഡേറ്റിനായി പരിശോധിക്കുന്നു...</value>
+  </data>
+    <data name="NewUpdateIsAvailableStore" xml:space="preserve">
+    <value>ഒരു പുതിയ അപ്ഡേറ്റ് ലഭ്യമാണ്. Microsoft Store തുറക്കുന്നു, അതിനാൽ നിങ്ങൾക്ക് അവിടെ ആപ്ലിക്കേഷൻ അപ്ഡേറ്റ് തുടരാം.</value>
+  </data>
+    <data name="ProblemOpeningMSStore" xml:space="preserve">
+    <value>Harden Windows Security-യുടെ Microsoft Store പേജ് തുറക്കുന്നതിൽ പ്രശ്നമുണ്ടായി.</value>
+  </data>
+    <data name="TheAppIsUpToDate" xml:space="preserve">
+    <value>Harden Windows Security ആപ്ലിക്കേഷൻ അപ്-ടു-ഡേറ്റ് ആണ്.</value>
+  </data>
+   <data name="UpdateCheckError" xml:space="preserve">
+    <value>അപ്ഡേറ്റ് പരിശോധിക്കുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു.</value>
+  </data>
+  <data name="FailedToOpenRating" xml:space="preserve">
+    <value>Microsoft Store-ൽ റേറ്റിംഗ് പേജ് തുറക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
+  </data>
+  <data name="InstallVersionMessage" xml:space="preserve">
+    <value>പതിപ്പ് {0} ഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+    <data name="InstallLatestVer" xml:space="preserve">
+    <value>ഏറ്റവും പുതിയ പതിപ്പ് ഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+    <data name="WebViewBackButton.Text" xml:space="preserve">
+    <value>പിന്നിലേക്ക്</value>
+  </data>
+  <data name="WebViewForwardButton.Text" xml:space="preserve">
+    <value>മുന്നിലേക്ക്</value>
+  </data>
+  <data name="WebViewReloadButton.Text" xml:space="preserve">
+    <value>പുനഃലോഡ് ചെയ്യുക</value>
+  </data>
+  <data name="WebViewHomeButton.Text" xml:space="preserve">
+    <value>ഹോം</value>
+  </data>
+  <data name="DocumentationNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>ഡോക്യുമെന്റേഷൻ</value>
+  </data>
+  <data name="UserCanceledUACMessage" xml:space="preserve">
+  <value>ഉപയോക്താവ് UAC പ്രോംപ്റ്റ് റദ്ദാക്കി.</value>
+  </data>
+  <data name="ProtectionPresets.Text" xml:space="preserve">
+    <value>സംരക്ഷണ പ്രീസെറ്റുകൾ</value>
+  </data>
+    <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രയോഗിക്കാനുള്ള സംരക്ഷണ പ്രീസെറ്റുകളിൽ ഒന്ന് തിരഞ്ഞെടുക്കുക, അവ വിവിധ സുരക്ഷാ നിലകൾക്കായി നിർമ്മിച്ച മുൻകൂട്ടി നിർണ്ണയിച്ച കോൺഫിഗറേഷൻ സെറ്റുകളാണ്.</value>
+  </data>
+  <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രയോഗിക്കാനുള്ള സംരക്ഷണ പ്രീസെറ്റുകളിൽ ഒന്ന് തിരഞ്ഞെടുക്കുക, അവ വിവിധ സുരക്ഷാ നിലകൾക്കായി രൂപകൽപ്പന ചെയ്ത മുൻകൂട്ടി നിർണ്ണയിച്ച കോൺഫിഗറേഷൻ സെറ്റുകളാണ്.</value>
+  </data>
+    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>അടിസ്ഥാന</value>
+  </data>
+    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>ശുപാർശിത</value>
+  </data>
+    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <value>പൂർണ്ണ</value>
+  </data>
+  <data name="ProtectPageTitle.Text" xml:space="preserve">
+    <value>സുരക്ഷാ കോൺഫിഗറേഷനുകൾ നിയന്ത്രിക്കുകയും നിങ്ങളുടെ ഉപകരണം എങ്ങനെ സുരക്ഷിതമാക്കണമെന്ന് തിരഞ്ഞെടുക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaseline" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Microsoft സുരക്ഷാ അടിത്തറ</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaseline" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Microsoft-ന്റെ സുരക്ഷാ കോൺഫിഗറേഷൻ ശുപാർശകൾ പ്രയോഗിക്കുക. വളരെയധികം ശുപാർശ ചെയ്യുന്നു.</value>
+  </data>
+  <data name="ProtectCategory_MSFT365AppsSecBaseline" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Microsoft 365 ആപ്പുകളുടെ സുരക്ഷാ അടിത്തറ</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFT365AppsSecBaseline" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Microsoft-ന്റെ സുരക്ഷാ ശുപാർശകൾ പ്രയോഗിച്ച് Microsoft 365 ആപ്പുകളെ ഒന്നിലധികം ആക്രമണ വെക്ടറുകൾക്കെതിരെ കഠിനമാക്കുക.</value>
+  </data>
+  <data name="ProtectCategory_MSFTDefender" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Microsoft Defender</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTDefender" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Microsoft Defender-ൽ സ്ഥിരമായി നിഷ്‌ക്രിയമാക്കിയിരിക്കുന്ന നിരവധി സുരക്ഷാ ഫീച്ചറുകൾ പ്രാപ്തമാക്കുകയും മാൽവെയറിനെതിരെ മികച്ച സംരക്ഷണം നൽകാൻ നിലവിലുള്ള ഫീച്ചറുകളുടെ സുരക്ഷ മെച്ചപ്പെടുത്തുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="ProtectCategory_ASRRules" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>ആക്രമണ പ്രതലം കുറയ്ക്കൽ</value>
+  </data>
+  <data name="ProtectCategory_Description_ASRRules" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>നിങ്ങളുടെ സുരക്ഷാ സെറ്റിലേക്ക് കൂടുതൽ വിപുലവും പ്രത്യേകവുമായ പ്രതിരോധ പാളികൾ ചേർക്കാൻ ആക്രമണ പ്രതലം കുറയ്ക്കൽ നിയമങ്ങൾ ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="ProtectCategory_BitLocker" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>BitLocker സെറ്റിംഗുകൾ</value>
+  </data>
+  <data name="ProtectCategory_Description_BitLocker" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>നിങ്ങളുടെ വിശ്രമത്തിലുള്ള ഡാറ്റയ്ക്ക് പരമാവധി സാധ്യമായ സുരക്ഷയും എൻക്രിപ്ഷനും നൽകാനും ഉപകരണ മോഷണത്തിൽ നിങ്ങളുടെ ഡാറ്റ അപ്രാപ്യമായി തുടരുന്നുവെന്ന് ഉറപ്പാക്കാനും BitLocker കോൺഫിഗർ ചെയ്യുക.</value>
+  </data>
+  <data name="ProtectCategory_DeviceGuard" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Device Guard</value>
+  </data>
+  <data name="ProtectCategory_Description_DeviceGuard" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റം കേർണലിനെ വിപുലമായ മാൽവെയറിനെതിരെ സ്വയം പരിരക്ഷിക്കാനും ഉപകരണത്തെ പരിരക്ഷിക്കാനും സഹായിക്കുന്ന വിവിധ ഹാർഡ്‌വെയർ സുരക്ഷാ ഫീച്ചറുകൾ പ്രയോജനപ്പെടുത്തുകയും പ്രാപ്തമാക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="ProtectCategory_TLS" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>TLS സുരക്ഷ</value>
+  </data>
+  <data name="ProtectCategory_Description_TLS" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>ട്രാൻസിറ്റിൽ നിങ്ങളുടെ ഡാറ്റ കൂടുതൽ സുരക്ഷിതമായി തുടരുന്നുവെന്നും നിങ്ങളുടെ കണക്ഷനുകൾ സുരക്ഷിത അൽഗോരിതങ്ങൾ മാത്രം ഉപയോഗിക്കുന്നുവെന്നും ഉറപ്പാക്കുക.</value>
+  </data>
+  <data name="ProtectCategory_LockScreen" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>ലോക്ക് സ്ക്രീൻ</value>
+  </data>
+  <data name="ProtectCategory_Description_LockScreen" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>വിവിധ ഭീഷണികൾക്കെതിരെ ലോക്ക് സ്ക്രീൻ സുരക്ഷ മെച്ചപ്പെടുത്തുകയും ഉപകരണം ലോക്ക് ചെയ്തിരിക്കുമ്പോൾ അനധികൃത ഉപയോക്താക്കൾക്ക് ലോക്ക് സ്ക്രീനിൽ ആക്സസ് ചെയ്യാവുന്ന വിവരങ്ങളുടെ അളവ് കുറയ്ക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="ProtectCategory_UAC" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>ഉപയോക്തൃ അക്കൗണ്ട് നിയന്ത്രണം</value>
+  </data>
+  <data name="ProtectCategory_Description_UAC" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>ഏതെങ്കിലും അഡ്മിനിസ്ട്രേറ്റീവ് ടാസ്ക് സംഭവിക്കുന്നതിന് നിങ്ങളുടെ വ്യക്തമായ അനുമതി ആവശ്യമാക്കുന്നതിന് ഉപയോക്തൃ അക്കൗണ്ട് നിയന്ത്രണത്തിന്റെ സുരക്ഷ മെച്ചപ്പെടുത്തുക.</value>
+  </data>
+  <data name="ProtectCategory_WindowsFirewall" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Windows ഫയർവാൾ</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsFirewall" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>നെറ്റ്‌വർക്ക് ഭീഷണികൾക്കെതിരെ Windows ഫയർവാൾ കഠിനമാക്കുകയും ഇൻസിഡന്റ് റെസ്‌പോൺസ് സാഹചര്യങ്ങൾക്കായി വിശദമായ ലോഗിംഗ് പ്രാപ്തമാക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="ProtectCategory_OptionalWinFeatures" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>ഓപ്ഷണൽ Windows ഫീച്ചറുകൾ</value>
+  </data>
+  <data name="ProtectCategory_Description_OptionalWinFeatures" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ നിന്ന് പഴയതും കാലഹരണപ്പെട്ടതുമായ ഫീച്ചറുകളും കഴിവുകളും നീക്കം ചെയ്യുക, ആക്രമണ പ്രതലവും ഡിസ്ക് ഉപയോഗവും കുറയ്ക്കുകയും മൊത്തത്തിലുള്ള സുരക്ഷ മെച്ചപ്പെടുത്തുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="ProtectCategory_WindowsNetworking" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Windows നെറ്റ്‌വർക്കിംഗ്</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsNetworking" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Windows-ലെ നെറ്റ്‌വർക്ക് സ്റ്റാക്കിന്റെ സുരക്ഷ മെച്ചപ്പെടുത്തുക, സുരക്ഷിത ആശയവിനിമയം ഉറപ്പാക്കുക, പഴയതും സുരക്ഷിതമല്ലാത്തതുമായ പ്രോട്ടോക്കോളുകളുടെ ഉപയോഗം തടയുക.</value>
+  </data>
+  <data name="ProtectCategory_MiscellaneousConfig" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>വിവിധ കോൺഫിഗറേഷനുകൾ</value>
+  </data>
+  <data name="ProtectCategory_Description_MiscellaneousConfig" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>മറ്റ് കൂടുതൽ പ്രത്യേകവൽക്കരിച്ച വിഭാഗങ്ങളിൽ യോജിക്കാത്ത വിവിധ പ്രധാന സുരക്ഷാ ഫീച്ചറുകൾ പ്രയോഗിക്കുക. വിവിധ കോൺഫിഗറേഷനുകൾ പേജ് ഉപയോഗിച്ച് നിങ്ങൾക്ക് ഇവ കൂടുതൽ കോൺഫിഗർ ചെയ്യാം.</value>
+  </data>
+  <data name="ProtectCategory_WindowsUpdate" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Windows Update</value>
+  </data>
+  <data name="ProtectCategory_Description_WindowsUpdate" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>പാച്ച് ചെയ്ത അപകടങ്ങളുടെ ചൂഷണം തടയാൻ Windows അപ്ഡേറ്റുകൾ സുരക്ഷിതവും സമയബന്ധിതവുമായ രീതിയിൽ ഇൻസ്റ്റാൾ ചെയ്യപ്പെടുന്നുവെന്ന് ഉറപ്പാക്കുക.</value>
+  </data>
+  <data name="ProtectCategory_Edge" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Edge ബ്രൗസർ</value>
+  </data>
+  <data name="ProtectCategory_Description_Edge" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Edge ബ്രൗസർ കൂടുതൽ സുരക്ഷിതമാക്കാനും നിങ്ങൾ സന്ദർശിക്കുന്ന വെബ്‌സൈറ്റുകളുമായി കുറച്ച് ഡാറ്റ പങ്കിടാനും കോൺഫിഗർ ചെയ്യുക.</value>
+  </data>
+  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>സർട്ടിഫിക്കറ്റ് പരിശോധന</value>
+  </data>
+  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>ഇൻസ്റ്റാൾ ചെയ്ത സർട്ടിഫിക്കറ്റുകൾ പരിശോധിക്കുകയും ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിനുള്ളിൽ ഉൾപ്പെടാത്ത എന്തും കണ്ടെത്തുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>രാജ്യം അനുസരിച്ച് IP ബ്ലോക്കിംഗ്</value>
+  </data>
+  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>ഭീകരവാദ പിന്തുണയ്ക്കുള്ള യുഎസ് ഉപരോധ പട്ടികയിലുള്ള നിർദ്ദിഷ്ട രാജ്യങ്ങളുടെ IP വിലാസ ശ്രേണികൾ ബ്ലോക്ക് ചെയ്യുക.</value>
+  </data>
+  <data name="ProtectCategory_NonAdmin" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>നോൺ-അഡ്മിൻ സെറ്റിംഗുകൾ</value>
+  </data>
+  <data name="ProtectCategory_Description_NonAdmin" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>അഡ്മിനിസ്ട്രേറ്റർ അനുമതികൾ ആവശ്യമില്ലാത്തതും എല്ലാ സാധാരണ ഉപയോക്താക്കൾക്കും അഡ്മിനിസ്ട്രേറ്റർമാർക്കും ബാധകമാകുന്നതുമായ സുരക്ഷാ സെറ്റിംഗുകൾ പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="ProtectSubCategory_SmartAppControl" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>സ്മാർട്ട് ആപ്പ് നിയന്ത്രണം</value>
+  </data>
+  <data name="ProtectSubCategory_BetaUpdateChannels" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Microsoft Defender-നുള്ള ബീറ്റ അപ്ഡേറ്റ് ചാനലുകൾ പ്രാപ്തമാക്കുക</value>
+  </data>
+  <data name="ProtectSubCategory_NoLastSignedIn" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>ലോക്ക് സ്ക്രീനിൽ അവസാന സൈൻ ഇൻ വിവരങ്ങൾ കാണിക്കരുത്</value>
+  </data>
+  <data name="ProtectSubCategory_RequireCTRLAltDel" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>ക്രെഡൻഷ്യലുകൾ നൽകുന്നതിന് മുമ്പ് ലോക്ക് സ്ക്രീനിൽ CTRL + Alt + Del കീകൾ അമർത്താൻ ആവശ്യപ്പെടുക.</value>
+  </data>
+  <data name="ProtectSubCategory_NoFastUserSwitching" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>ഫാസ്റ്റ് യൂസർ സ്വിച്ചിംഗ് ഫീച്ചർ നിഷ്‌ക്രിയമാക്കുക.</value>
+  </data>
+  <data name="ProtectSubCategory_OnlyElevateSigned" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>ഒപ്പിട്ടതും പരിശോധിച്ചതുമായ പ്രോഗ്രാമുകൾ മാത്രം ഉയർന്ന അനുമതികളോടെ പ്രവർത്തിക്കാൻ അനുവദിക്കുക.</value>
+  </data>
+  <data name="ProtectSubCategory_MandatoryModeForVBS" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>VBS (വേർച്വലൈസേഷൻ-ബേസ്ഡ് സിക്യൂരിറ്റി)-നുള്ള നിർബന്ധിത മോഡ് പ്രാപ്തമാക്കുക</value>
+  </data>
+  <data name="ProtectSubCategory_BlockNTLM" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>NTLM പ്രോട്ടോക്കോൾ പൂർണ്ണമായും ബ്ലോക്ക് ചെയ്യുക.</value>
+  </data>
+  <data name="ProtectSubCategory_ForceStrongKeyProtection" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>ഉപകരണത്തിൽ സൂക്ഷിച്ചിരിക്കുന്ന സർട്ടിഫിക്കറ്റ് സ്വകാര്യ കീകൾക്ക് ശക്തമായ സംരക്ഷണം ആവശ്യപ്പെടുക.</value>
+  </data>
+  <data name="ProtectSubCategory_EnableWindowsProtectedPrint" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Windows പ്രൊട്ടക്ടഡ് പ്രിന്റ് പ്രാപ്തമാക്കുക.</value>
+  </data>
+  <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>ലോംഗ് ഫയൽ പാത്ത് സപ്പോർട്ട് പ്രാപ്തമാക്കുക.</value>
+  </data>
+  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>OFAC ഉപരോധ പട്ടികയിലുള്ള രാജ്യങ്ങളുടെ IP ശ്രേണികൾ ബ്ലോക്ക് ചെയ്യുക.</value>
+  </data>
+  <data name="ASRNavItem.Content" xml:space="preserve">
+    <value>ആക്രമണ പ്രതലം കുറയ്ക്കൽ</value>
+  </data>
+  <data name="BitLockerNavItem.Content" xml:space="preserve">
+    <value>BitLocker</value>
+  </data>
+  <data name="DeviceGuardNavItem.Content" xml:space="preserve">
+    <value>Device Guard</value>
+  </data>
+  <data name="TLSSecurityNavItem.Content" xml:space="preserve">
+    <value>TLS സുരക്ഷ</value>
+  </data>
+    <data name="LockScreenNavItem.Content" xml:space="preserve">
+    <value>ലോക്ക് സ്ക്രീൻ</value>
+  </data>
+  <data name="UACNavItem.Content" xml:space="preserve">
+    <value>ഉപയോക്തൃ അക്കൗണ്ട് നിയന്ത്രണം</value>
+  </data>
+  <data name="WindowsFirewallNavItem.Content" xml:space="preserve">
+    <value>Windows ഫയർവാൾ</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.Content" xml:space="preserve">
+    <value>ഓപ്ഷണൽ Windows ഫീച്ചറുകൾ</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.Content" xml:space="preserve">
+    <value>Windows നെറ്റ്‌വർക്കിംഗ്</value>
+  </data>
+  <data name="MiscellaneousNavItem.Content" xml:space="preserve">
+    <value>വിവിധം</value>
+  </data>
+  <data name="WindowsUpdateNavItem.Content" xml:space="preserve">
+    <value>Windows Update</value>
+  </data>
+  <data name="EdgeBrowserNavItem.Content" xml:space="preserve">
+    <value>Edge ബ്രൗസർ</value>
+  </data>
+  <data name="CertificatesNavItem.Content" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റുകൾ</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.Content" xml:space="preserve">
+    <value>രാജ്യം അനുസരിച്ച് IP ബ്ലോക്കിംഗ്</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.Content" xml:space="preserve">
+    <value>നോൺ-അഡ്മിൻ കമാൻഡുകൾ</value>
+  </data>
+  <!--Group Policy Editor ListView Headers Start-->
+  <data name="KeynameHeader.Text" xml:space="preserve">
+    <value>കീ നാമം</value>
+  </data>
+  <data name="ValueNameHeader.Text" xml:space="preserve">
+    <value>മൂല്യ നാമം</value>
+  </data>
+  <data name="ValueHeader.Text" xml:space="preserve">
+    <value>മൂല്യം</value>
+  </data>
+  <data name="CategoryHeader.Text" xml:space="preserve">
+    <value>വിഭാഗം</value>
+  </data>
+  <data name="SubCategoryHeader.Text" xml:space="preserve">
+    <value>ഉപവിഭാഗം</value>
+  </data>
+  <data name="PolicyActionHeader.Text" xml:space="preserve">
+    <value>നയ പ്രവർത്തനം</value>
+  </data>
+  <data name="FriendlyNameHeader.Text" xml:space="preserve">
+    <value>സൗഹൃദപരമായ നാമം</value>
+  </data>
+  <data name="SizeHeader.Text" xml:space="preserve">
+    <value>വലുപ്പം</value>
+  </data>
+  <!--Group Policy Editor ListView Headers End-->
+  <!--Group Policy Editor ListView Headers Buttons Start-->
+  <data name="KeynameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>കീ നാമം</value>
+  </data>
+  <data name="ValueNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>മൂല്യ നാമം</value>
+  </data>
+  <data name="ValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>മൂല്യം</value>
+  </data>
+  <data name="CategoryColumnHeaderBtn.Content" xml:space="preserve">
+    <value>വിഭാഗം</value>
+  </data>
+  <data name="SubCategoryColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ഉപവിഭാഗം</value>
+  </data>
+  <data name="PolicyActionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>നയ പ്രവർത്തനം</value>
+  </data>
+  <data name="FriendlyNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>സൗഹൃദപരമായ നാമം</value>
+  </data>
+  <data name="SizeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>വലുപ്പം</value>
+  </data>
+  <!--Group Policy Editor ListView Headers Buttons End-->
+  <data name="GroupPolicyEditorNavItem.Content" xml:space="preserve">
+    <value>ഗ്രൂപ്പ് പോളിസി എഡിറ്റർ</value>
+  </data>
+    <data name="ClearButton.Content" xml:space="preserve">
+    <value>മായ്ക്കുക</value>
+  </data>
+  <data name="ClearButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മായ്ക്കുക</value>
+  </data>
+  <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>മായ്ക്കുക</value>
+  </data>
+  <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
+    <value>ഈ പേജിൽ ഗ്രൂപ്പ് പോളിസി ഫയലുകൾ തുറക്കുകയും വായിക്കുകയും ചെയ്യുക. നിങ്ങൾക്ക് ഡാറ്റയിൽ തിരയാനും ഫയലിൽ നിന്ന് വ്യക്തിഗത നയങ്ങൾ നീക്കം ചെയ്യാനും കഴിയും. സിസ്റ്റത്തിലെ ഫലപ്രദമായ നയങ്ങളും നിങ്ങൾക്ക് കാണാം.</value>
+  </data>
+  <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത പോളിസി ഫയലിന്റെ പാത്ത് അല്ലെങ്കിൽ പാത്തുകൾ കാണുക.</value>
+  </data>
+    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
+    <value>ആകെ നയങ്ങൾ: 0</value>
+  </data>
+  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നയങ്ങളുടെ ആകെ എണ്ണം</value>
+  </data>
+  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നയങ്ങളുടെ ആകെ എണ്ണം</value>
+  </data>
+  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <value>ഡാറ്റയിൽ തിരയുക...</value>
+  </data>
+  <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രദർശിപ്പിച്ച ഡാറ്റയ്ക്കുള്ളിൽ തിരയുക</value>
+  </data>
+  <data name="SearchBoxTextBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രദർശിപ്പിച്ച ഡാറ്റയ്ക്കുള്ളിൽ തിരയുക</value>
+  </data>
+    <data name="CopyRow.Text" xml:space="preserve">
+    <value>വരി കോപ്പി ചെയ്യുക</value>
+  </data>
+  <data name="CopyRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിൽ തിരഞ്ഞെടുത്ത വരി/വരികൾ ടെക്സ്റ്റുകളായി ക്ലിപ്പ്ബോർഡിലേക്ക് കോപ്പി ചെയ്യുക, അതിനാൽ നിങ്ങൾക്ക് അത് ഏതെങ്കിലും ടെക്സ്റ്റ് എഡിറ്ററിൽ പേസ്റ്റ് ചെയ്യാം.</value>
+  </data>
+  <data name="CopyRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിൽ തിരഞ്ഞെടുത്ത വരി/വരികൾ ടെക്സ്റ്റുകളായി ക്ലിപ്പ്ബോർഡിലേക്ക് കോപ്പി ചെയ്യുക, അതിനാൽ നിങ്ങൾക്ക് അത് ഏതെങ്കിലും ടെക്സ്റ്റ് എഡിറ്ററിൽ പേസ്റ്റ് ചെയ്യാം.</value>
+  </data>
+  <data name="GenericBrowseButton.Content" xml:space="preserve">
+    <value>ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="GenericBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="GenericBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+    <data name="GetEffectivePoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഫലപ്രദമായ നയങ്ങൾ നേടുക</value>
+  </data>
+  <data name="GetEffectivePoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലെ സിസ്റ്റത്തിൽ ബാധകമാകുന്ന ഫലപ്രദമായ ഗ്രൂപ്പ് നയങ്ങൾ ലിസ്റ്റ് ചെയ്യുന്നു.</value>
+  </data>
+  <data name="GetEffectivePoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിലെ സിസ്റ്റത്തിൽ ബാധകമാകുന്ന ഫലപ്രദമായ ഗ്രൂപ്പ് നയങ്ങൾ ലിസ്റ്റ് ചെയ്യുന്നു.</value>
+  </data>
+  <data name="MoreActionsMenuBar.Title" xml:space="preserve">
+    <value>കൂടുതൽ പ്രവർത്തനങ്ങൾ</value>
+  </data>
+  <data name="MoreActionsMenuBar.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രത്യേകവൽക്കരിച്ച ഫീച്ചറുകൾ ഉപയോഗിച്ച് കൂടുതൽ പ്രവർത്തനങ്ങൾ നടത്തുക.</value>
+  </data>
+  <data name="MoreActionsMenuBar.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രത്യേകവൽക്കരിച്ച ഫീച്ചറുകൾ ഉപയോഗിച്ച് കൂടുതൽ പ്രവർത്തനങ്ങൾ നടത്തുക.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.Header" xml:space="preserve">
+    <value>മെർജിനായി മറ്റ് POL ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.Description" xml:space="preserve">
+    <value>പ്രധാന POL ഫയലുമായി മെർജ് ചെയ്യപ്പെടുന്ന മറ്റ് POL ഫയലുകൾ ബ്രൗസ് ചെയ്യുക. പ്രധാന ഫയലിലും മറ്റേതെങ്കിലും POL ഫയലിലും ഒരേ KeyName, ValueName ഉള്ള എൻട്രി നിലവിലുണ്ടെങ്കിൽ, മറ്റ് ഫയലിന്റെ എൻട്രിക്ക് മുൻഗണന ലഭിക്കുകയും പ്രധാന POL ഫയലിന്റെ എൻട്രി മാറ്റിസ്ഥാപിക്കുകയും ചെയ്യും.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രധാന POL ഫയലുമായി മെർജ് ചെയ്യപ്പെടുന്ന മറ്റ് POL ഫയലുകൾ ബ്രൗസ് ചെയ്യുക. പ്രധാന ഫയലിലും മറ്റേതെങ്കിലും POL ഫയലിലും ഒരേ KeyName, ValueName ഉള്ള എൻട്രി നിലവിലുണ്ടെങ്കിൽ, മറ്റ് ഫയലിന്റെ എൻട്രിക്ക് മുൻഗണന ലഭിക്കുകയും പ്രധാന POL ഫയലിന്റെ എൻട്രി മാറ്റിസ്ഥാപിക്കുകയും ചെയ്യും.</value>
+  </data>
+  <data name="SelectOtherPolFilesForMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രധാന POL ഫയലുമായി മെർജ് ചെയ്യപ്പെടുന്ന മറ്റ് POL ഫയലുകൾ ബ്രൗസ് ചെയ്യുക. പ്രധാന ഫയലിലും മറ്റേതെങ്കിലും POL ഫയലിലും ഒരേ KeyName, ValueName ഉള്ള എൻട്രി നിലവിലുണ്ടെങ്കിൽ, മറ്റ് ഫയലിന്റെ എൻട്രിക്ക് മുൻഗണന ലഭിക്കുകയും പ്രധാന POL ഫയലിന്റെ എൻട്രി മാറ്റിസ്ഥാപിക്കുകയും ചെയ്യും.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.Header" xml:space="preserve">
+    <value>മെർജിനായി പ്രധാന POL ഫയൽ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.Description" xml:space="preserve">
+    <value>പ്രധാന POL ഫയൽ ബ്രൗസ് ചെയ്യുക. മറ്റെല്ലാ POL ഫയലുകളും അവരുടെ ഉള്ളടക്കം ഈ ഫയലിൽ ചേർക്കുകയും നിലവിലുള്ള ഏതെങ്കിലും ഉള്ളടക്കം മാറ്റിസ്ഥാപിക്കുകയും ചെയ്യും.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രധാന POL ഫയൽ ബ്രൗസ് ചെയ്യുക. മറ്റെല്ലാ POL ഫയലുകളും അവരുടെ ഉള്ളടക്കം ഈ ഫയലിൽ ചേർക്കുകയും നിലവിലുള്ള ഏതെങ്കിലും ഉള്ളടക്കം മാറ്റിസ്ഥാപിക്കുകയും ചെയ്യും.</value>
+  </data>
+  <data name="SelectMainPolFilesForMergeSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രധാന POL ഫയൽ ബ്രൗസ് ചെയ്യുക. മറ്റെല്ലാ POL ഫയലുകളും അവരുടെ ഉള്ളടക്കം ഈ ഫയലിൽ ചേർക്കുകയും നിലവിലുള്ള ഏതെങ്കിലും ഉള്ളടക്കം മാറ്റിസ്ഥാപിക്കുകയും ചെയ്യും.</value>
+  </data>
+    <data name="POLFilesMergeTitleTextBlock.Text" xml:space="preserve">
+    <value>ഒന്നിലധികം ഗ്രൂപ്പ് പോളിസി POL ഫയലുകൾ ഒന്നായി മെർജ് ചെയ്യുക</value>
+  </data>
+  <data name="StartPOLFileMergeButton.Content" xml:space="preserve">
+    <value>മെർജ് ആരംഭിക്കുക</value>
+  </data>
+  <data name="StartPOLFileMergeButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഗ്രൂപ്പ് പോളിസി POL ഫയലുകളുടെ മെർജ് ആരംഭിക്കുക.</value>
+  </data>
+  <data name="StartPOLFileMergeButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഗ്രൂപ്പ് പോളിസി POL ഫയലുകളുടെ മെർജ് ആരംഭിക്കുക.</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.Text" xml:space="preserve">
+    <value>സൈഡ്ബാർ തുറക്കുക</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അധിക ഫീച്ചറുകൾ ആക്സസ് ചെയ്യാൻ സൈഡ്ബാർ തുറക്കുന്നു.</value>
+  </data>
+  <data name="OpenSidebarMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അധിക ഫീച്ചറുകൾ ആക്സസ് ചെയ്യാൻ സൈഡ്ബാർ തുറക്കുന്നു.</value>
+  </data>
+  <data name="ClearDataButton.Content" xml:space="preserve">
+    <value>ഡാറ്റ മായ്ക്കുക</value>
+  </data>
+  <data name="ClearDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലിസ്റ്റ് വ്യൂവിൽ നിന്ന് എല്ലാ ഡാറ്റയും മായ്ക്കുക</value>
+  </data>
+  <data name="ClearDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലിസ്റ്റ് വ്യൂവിൽ നിന്ന് എല്ലാ ഡാറ്റയും മായ്ക്കുക</value>
+  </data>
+  <data name="LoadButton.Content" xml:space="preserve">
+    <value>ലോഡ് ചെയ്യുക</value>
+  </data>
+  <data name="LoadButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസിയുടെ ഡാറ്റ ലോഡ് ചെയ്യുക.</value>
+  </data>
+  <data name="LoadButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസിയുടെ ഡാറ്റ ലോഡ് ചെയ്യുക.</value>
+  </data>
+  <data name="ConvertPOLToJSONTitleTextBlock.Text" xml:space="preserve">
+    <value>ഗ്രൂപ്പ് പോളിസി POL ഫയലുകൾ JSON-ലേക്ക് കൺവേർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.Content" xml:space="preserve">
+    <value>കൺവേർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഗ്രൂപ്പ് പോളിസി POL ഫയലുകൾ ഒരേ പേരുകളുള്ള JSON ഫയലുകളാക്കി കൺവേർട്ട് ചെയ്യാൻ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="ConvertPOLToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഗ്രൂപ്പ് പോളിസി POL ഫയലുകൾ ഒരേ പേരുകളുള്ള JSON ഫയലുകളാക്കി കൺവേർട്ട് ചെയ്യാൻ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.Header" xml:space="preserve">
+    <value>JSON കൺവേർഷനായി POL ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.Description" xml:space="preserve">
+    <value>JSON ഫയലുകളാക്കി കൺവേർട്ട് ചെയ്യപ്പെടുന്ന POL ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>JSON ഫയലുകളാക്കി കൺവേർട്ട് ചെയ്യപ്പെടുന്ന POL ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectPOLFilesForJSONConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>JSON ഫയലുകളാക്കി കൺവേർട്ട് ചെയ്യപ്പെടുന്ന POL ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.Header" xml:space="preserve">
+    <value>ഔട്ട്പുട്ട് ഡിറക്ടറി തിരഞ്ഞെടുക്കുക (ഓപ്ഷണൽ)</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.Description" xml:space="preserve">
+    <value>എല്ലാ JSON ഫയലുകളും സേവ് ചെയ്യപ്പെടുന്ന ഒരു ഡിറക്ടറി ഓപ്ഷണലായി ബ്രൗസ് ചെയ്യുക. ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ലെങ്കിൽ, ഓരോ JSON ഫയലും അതേ പേരോടെ തിരഞ്ഞെടുത്ത POL ഫയലിന്റെ അതേ ഡിറക്ടറിയിൽ സേവ് ചെയ്യപ്പെടും.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ JSON ഫയലുകളും സേവ് ചെയ്യപ്പെടുന്ന ഒരു ഡിറക്ടറി ഓപ്ഷണലായി ബ്രൗസ് ചെയ്യുക. ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ലെങ്കിൽ, ഓരോ JSON ഫയലും അതേ പേരോടെ തിരഞ്ഞെടുത്ത POL ഫയലിന്റെ അതേ ഡിറക്ടറിയിൽ സേവ് ചെയ്യപ്പെടും.</value>
+  </data>
+  <data name="OutputDirForJSONConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ JSON ഫയലുകളും സേവ് ചെയ്യപ്പെടുന്ന ഒരു ഡിറക്ടറി ഓപ്ഷണലായി ബ്രൗസ് ചെയ്യുക. ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ലെങ്കിൽ, ഓരോ JSON ഫയലും അതേ പേരോടെ തിരഞ്ഞെടുത്ത POL ഫയലിന്റെ അതേ ഡിറക്ടറിയിൽ സേവ് ചെയ്യപ്പെടും.</value>
+  </data>
+  <data name="SelectedDirectory.Text" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത ഡിറക്ടറി കാണുക</value>
+  </data>
+  <data name="ConvertJSONToPolTitleTextBlock.Text" xml:space="preserve">
+    <value>JSON ഫയലുകൾ ഗ്രൂപ്പ് പോളിസി POL ഫയലുകളാക്കി കൺവേർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.Header" xml:space="preserve">
+    <value>POL കൺവേർഷനായി JSON ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.Description" xml:space="preserve">
+    <value>ഗ്രൂപ്പ് പോളിസി POL ഫയലുകളാക്കി കൺവേർട്ട് ചെയ്യപ്പെടുന്ന JSON ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഗ്രൂപ്പ് പോളിസി POL ഫയലുകളാക്കി കൺവേർട്ട് ചെയ്യപ്പെടുന്ന JSON ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectJSONFilesForPOLConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഗ്രൂപ്പ് പോളിസി POL ഫയലുകളാക്കി കൺവേർട്ട് ചെയ്യപ്പെടുന്ന JSON ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.Content" xml:space="preserve">
+    <value>കൺവേർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത JSON ഫയലുകൾ ഒരേ പേരുകളുള്ള ഗ്രൂപ്പ് പോളിസി POL ഫയലുകളാക്കി കൺവേർട്ട് ചെയ്യാൻ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="ConvertJSONToPOLButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത JSON ഫയലുകൾ ഒരേ പേരുകളുള്ള ഗ്രൂപ്പ് പോളിസി POL ഫയലുകളാക്കി കൺവേർട്ട് ചെയ്യാൻ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.Header" xml:space="preserve">
+    <value>ഔട്ട്പുട്ട് ഡിറക്ടറി തിരഞ്ഞെടുക്കുക (ഓപ്ഷണൽ)</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.Description" xml:space="preserve">
+    <value>എല്ലാ POL ഫയലുകളും സേവ് ചെയ്യപ്പെടുന്ന ഒരു ഡിറക്ടറി ഓപ്ഷണലായി ബ്രൗസ് ചെയ്യുക. ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ലെങ്കിൽ, ഓരോ POL ഫയലും അതേ പേരോടെ തിരഞ്ഞെടുത്ത JSON ഫയലിന്റെ അതേ ഡിറക്ടറിയിൽ സേവ് ചെയ്യപ്പെടും.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ POL ഫയലുകളും സേവ് ചെയ്യപ്പെടുന്ന ഒരു ഡിറക്ടറി ഓപ്ഷണലായി ബ്രൗസ് ചെയ്യുക. ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ലെങ്കിൽ, ഓരോ POL ഫയലും അതേ പേരോടെ തിരഞ്ഞെടുത്ത JSON ഫയലിന്റെ അതേ ഡിറക്ടറിയിൽ സേവ് ചെയ്യപ്പെടും.</value>
+  </data>
+  <data name="OutputDirForPOLConversionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ POL ഫയലുകളും സേവ് ചെയ്യപ്പെടുന്ന ഒരു ഡിറക്ടറി ഓപ്ഷണലായി ബ്രൗസ് ചെയ്യുക. ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ലെങ്കിൽ, ഓരോ POL ഫയലും അതേ പേരോടെ തിരഞ്ഞെടുത്ത JSON ഫയലിന്റെ അതേ ഡിറക്ടറിയിൽ സേവ് ചെയ്യപ്പെടും.</value>
+  </data>
+  <data name="CopyIndividualItems.Text" xml:space="preserve">
+    <value>വ്യക്തിഗത ഇനങ്ങൾ കോപ്പി ചെയ്യുക</value>
+  </data>
+  <data name="CopyIndividualItems.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഹോവർ അല്ലെങ്കിൽ ടച്ചിൽ ഒരു സബ്‌മെനു വികസിപ്പിക്കുന്നു, അതിനാൽ ഓരോ വരിയിലെയും വ്യക്തിഗത ഇനങ്ങൾ കോപ്പി ചെയ്യാനുള്ള ഓപ്ഷൻ നിങ്ങൾക്കുണ്ട്.</value>
+  </data>
+  <data name="CopyIndividualItems.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഹോവർ അല്ലെങ്കിൽ ടച്ചിൽ ഒരു സബ്‌മെനു വികസിപ്പിക്കുന്നു, അതിനാൽ ഓരോ വരിയിലെയും വ്യക്തിഗത ഇനങ്ങൾ കോപ്പി ചെയ്യാനുള്ള ഓപ്ഷൻ നിങ്ങൾക്കുണ്ട്.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.Content" xml:space="preserve">
+    <value>Microsoft Defender</value>
+  </data>
+  <data name="EnablingRestorePointScan-MSDefender" xml:space="preserve">
+    <value>റെസ്റ്റോർ പോയിന്റ് സ്കാൻ പ്രാപ്തമാക്കുന്നു</value>
+  </data>
+  <data name="AllowSwitchToAsyncInspection-MSDefender" xml:space="preserve">
+    <value>Microsoft Defender നെറ്റ്‌വർക്ക് സംരക്ഷണത്തിന്റെ പ്രകടനം അസിൻക്രോണസ് ആക്കി ഒപ്റ്റിമൈസ് ചെയ്യുക.</value>
+  </data>
+  <data name="EnableConvertWarnToBlock-MSDefender" xml:space="preserve">
+    <value>മുന്നറിയിപ്പ് കാണിക്കുന്നതിനുപകരം നെറ്റ്‌വർക്ക് ട്രാഫിക് ബ്ലോക്ക് ചെയ്യാൻ നെറ്റ്‌വർക്ക് സംരക്ഷണം കോൺഫിഗർ ചെയ്യുക</value>
+  </data>
+  <data name="BruteForceProtectionLocalNetworkBlocking-MSDefender" xml:space="preserve">
+    <value>ലോക്കൽ നെറ്റ്‌വർക്ക് വിലാസങ്ങൾ ബ്ലോക്ക് ചെയ്യാൻ ബ്രൂട്ട് ഫോഴ്സ് സംരക്ഷണ കവറേജ് വിപുലീകരിക്കുക.</value>
+  </data>
+    <data name="AddOneDriveDirsToCFA-MSDefender" xml:space="preserve">
+    <value>റാൻസംവെയർ സംരക്ഷണത്തിനായി എല്ലാ ഉപയോക്തൃ അക്കൗണ്ടുകളുടെയും (വ്യക്തിഗതവും ജോലിയും) OneDrive ഫോൾഡറുകൾ കൺട്രോൾഡ് ഫോൾഡർ ആക്സസിലേക്ക് ചേർക്കുക</value>
+  </data>
+      <data name="EnableMandatoryASLR-MSDefender" xml:space="preserve">
+    <value>സിസ്റ്റം-വൈഡ് നിർബന്ധിത ASLR സംരക്ഷണം പ്രാപ്തമാക്കുക</value>
+  </data>
+  <data name="ApplyProcessMitigations-MSDefender" xml:space="preserve">
+    <value>ഇനിപ്പറയുന്നതിനുള്ള പ്രോസസ് മിറ്റിഗേഷനുകൾ പ്രയോഗിക്കുന്നു: {0}</value>
+  </data>
+  <data name="ARM64NoticeForProcessMitigations" xml:space="preserve">
+    <value>ARM64 ഹാർഡ്‌വെയർ കണ്ടെത്തി, സാധ്യമായ പൊരുത്തക്കേടുകൾ കാരണം പ്രോസസ് മിറ്റിഗേഷനുകൾ ഒഴിവാക്കുന്നു.</value>
+  </data>
+  <data name="SetNXBit-MSDefender" xml:space="preserve">
+    <value>32-bit പ്രോഗ്രാമുകൾ ഉൾപ്പെടെ എല്ലാ ആപ്ലിക്കേഷനുകൾക്കും ഡാറ്റാ എക്സിക്യൂഷൻ പ്രിവൻഷൻ (DEP) പ്രാപ്തമാക്കുക.</value>
+  </data>
+    <data name="SetNXBitError-MSDefender" xml:space="preserve">
+    <value>Boot Configuration Data (BCD) No-eXecute (NX) മൂല്യം സെറ്റ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു.</value>
+  </data>
+  <data name="ApplyMandatoryASLRExcl-MSDefender" xml:space="preserve">
+    <value>സിസ്റ്റം-വൈഡ് നിർബന്ധിത ASLR-ൽ നിന്ന് പൊരുത്തമില്ലാത്ത GitHub Desktop, Git എക്സിക്യൂട്ടബിളുകൾ ഒഴിവാക്കുന്നു.</value>
+  </data>
+  <data name="BetaUpdateChannels-MSDefender" xml:space="preserve">
+    <value>Microsoft Defender എഞ്ചിൻ, പ്ലാറ്റ്‌ഫോം അപ്ഡേറ്റ് ചാനലുകൾ ബീറ്റയിലേക്ക് കോൺഫിഗർ ചെയ്യുന്നു.</value>
+  </data>
+  <data name="ApplyAllButtonText.Text" xml:space="preserve">
+    <value>എല്ലാം പ്രയോഗിക്കുക</value>
+  </data>
+  <data name="ApplyAllButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പേജിലെ എല്ലാ സുരക്ഷാ നടപടികളും പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="ApplyAllButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പേജിലെ എല്ലാ സുരക്ഷാ നടപടികളും പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="VerifyAllButtonText" xml:space="preserve">
+    <value>എല്ലാം പരിശോധിക്കുക</value>
+  </data>
+  <data name="VerifyAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പേജിലെ എല്ലാ സുരക്ഷാ നടപടികളും പരിശോധിക്കുക.</value>
+  </data>
+  <data name="VerifyAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പേജിലെ എല്ലാ സുരക്ഷാ നടപടികളും പരിശോധിക്കുക.</value>
+  </data>
+  <data name="RemoveAllButtonText.Text" xml:space="preserve">
+    <value>എല്ലാം നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="RemoveAllButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പേജിലെ എല്ലാ സുരക്ഷാ നടപടികളും നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="RemoveAllButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പേജിലെ എല്ലാ സുരക്ഷാ നടപടികളും നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എല്ലാം തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പേജിലെ എല്ലാ ഇനങ്ങളും തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="SelectAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>പേജിലെ എല്ലാ ഇനങ്ങളും തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുപ്പുകൾ നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അവ തിരഞ്ഞെടുക്കാതിരിക്കുന്നതിലൂടെ എല്ലാ തിരഞ്ഞെടുപ്പുകളും നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="RemoveSelectionsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>അവ തിരഞ്ഞെടുക്കാതിരിക്കുന്നതിലൂടെ എല്ലാ തിരഞ്ഞെടുപ്പുകളും നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവ പ്രയോഗിക്കുക</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത സുരക്ഷാ നടപടികൾ മാത്രം പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="ApplySelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത സുരക്ഷാ നടപടികൾ മാത്രം പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവ പരിശോധിക്കുക</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത സുരക്ഷാ നടപടികൾ മാത്രം പരിശോധിക്കുക.</value>
+  </data>
+  <data name="VerifySelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത സുരക്ഷാ നടപടികൾ മാത്രം പരിശോധിക്കുക.</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവ നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത സുരക്ഷാ നടപടികൾ മാത്രം നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="RemoveSelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത സുരക്ഷാ നടപടികൾ മാത്രം നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.Content" xml:space="preserve">
+    <value>തിരഞ്ഞെടുപ്പുകൾ നിയന്ത്രിക്കുക</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾ നിയന്ത്രിക്കുകയും പ്രയോഗിക്കുക, നീക്കം ചെയ്യുക അല്ലെങ്കിൽ പരിശോധിക്കുക.</value>
+  </data>
+  <data name="ManageSelectionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾ നിയന്ത്രിക്കുകയും പ്രയോഗിക്കുക, നീക്കം ചെയ്യുക അല്ലെങ്കിൽ പരിശോധിക്കുക.</value>
+  </data>
+  <data name="FileReputationNavItem.Content" xml:space="preserve">
+    <value>ഫയൽ പ്രശസ്തി</value>
+  </data>
+  <data name="FileReputationNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Defender അല്ലെങ്കിൽ Smart Screen-നുള്ള Microsoft ക്ലൗഡ് ഇന്റലിജൻസ് അനുസരിച്ച് ഒരു ഫയലിന്റെ പ്രശസ്തി കാണുകയും പരിശോധിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="FileReputationNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Defender അല്ലെങ്കിൽ Smart Screen-നുള്ള Microsoft ക്ലൗഡ് ഇന്റലിജൻസ് അനുസരിച്ച് ഒരു ഫയലിന്റെ പ്രശസ്തി കാണുകയും പരിശോധിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.Text" xml:space="preserve">
+    <value>ശുപാർശിതവ പ്രയോഗിക്കുക</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പേജിലെ എല്ലാ ശുപാർശിത സുരക്ഷാ നടപടികളും പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="ApplyRecommendedButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പേജിലെ എല്ലാ ശുപാർശിത സുരക്ഷാ നടപടികളും പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.Text" xml:space="preserve">
+    <value>ഏറ്റവും പുതിയ നിലകൾ പുനർലഭിക്കുക</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പേജിലെ സുരക്ഷാ നടപടികളുടെ ഏറ്റവും പുതിയ നിലകൾ പുനർലഭിക്കുക.</value>
+  </data>
+  <data name="RetrieveLatestStatesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പേജിലെ സുരക്ഷാ നടപടികളുടെ ഏറ്റവും പുതിയ നിലകൾ പുനർലഭിക്കുക.</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.Text" xml:space="preserve">
+    <value>എല്ലാം പുനർലഭിക്കുക</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലെ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിലെ എല്ലാ ഓപ്ഷണൽ ഫീച്ചറുകളും കഴിവുകളും പുനർലഭിക്കുക.</value>
+  </data>
+  <data name="RetrieveAllOptionalsButtonText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിലെ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിലെ എല്ലാ ഓപ്ഷണൽ ഫീച്ചറുകളും കഴിവുകളും പുനർലഭിക്കുക.</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾ പ്രാപ്തമാക്കുക</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത ഇനങ്ങൾ പ്രാപ്തമാക്കുക/ഇൻസ്റ്റാൾ ചെയ്യുക.</value>
+  </data>
+  <data name="EnableSelectedItemsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത ഇനങ്ങൾ പ്രാപ്തമാക്കുക/ഇൻസ്റ്റാൾ ചെയ്യുക.</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾ പ്രാപ്തമല്ലാതാക്കുക</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത ഇനങ്ങൾ പ്രാപ്തമല്ലാതാക്കുക/അൺഇൻസ്റ്റാൾ ചെയ്യുക.</value>
+  </data>
+  <data name="DisableSelectedItemsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത ഇനങ്ങൾ പ്രാപ്തമല്ലാതാക്കുക/അൺഇൻസ്റ്റാൾ ചെയ്യുക.</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.Content" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പുകളുടെ മാനേജ്മെന്റ്</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പുകൾ കാണുകയും അൺഇൻസ്റ്റാൾ ചെയ്യുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="InstalledAppsManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പുകൾ കാണുകയും അൺഇൻസ്റ്റാൾ ചെയ്യുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="MicrosoftDefenderPageTitle.Text" xml:space="preserve">
+    <value>Microsoft Defender-ന്റെ എല്ലാ വശങ്ങളും കോൺഫിഗർ ചെയ്യുകയും സ്ഥിരമായി പ്രാപ്തമല്ലാത്ത അതിന്റെ പല ഫീച്ചറുകളും പ്രാപ്തമാക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="ASRRulesPageTitle.Text" xml:space="preserve">
+    <value>ഈ പേജിൽ ഓരോ ആക്രമണ പ്രതലം കുറയ്ക്കൽ നിയമവും കോൺഫിഗർ ചെയ്യുക. അവയ്ക്ക് മാൽവെയർ അണുബാധയും അപകട ചൂഷണവും തടയാൻ കഴിയും.</value>
+  </data>
+  <data name="BitLockerPageTitle.Text" xml:space="preserve">
+    <value>ഈ പേജിൽ നിങ്ങൾക്ക് BitLocker-നെ സ്ഥിരമായതിനേക്കാൾ ശക്തമാക്കുകയും നിങ്ങളുടെ ഡാറ്റയെ വിശ്രമത്തിൽ സംരക്ഷിക്കുകയും ചെയ്യുന്ന നയങ്ങൾ പ്രയോഗിക്കാം.</value>
+  </data>
+  <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
+    <value>Microsoft-ന്റെ വിശ്വസനീയ റൂട്ട് സർട്ടിഫിക്കറ്റ് ലിസ്റ്റിലെ ഏതെങ്കിലും സർട്ടിഫിക്കറ്റിൽ റൂട്ട് ഇല്ലാത്ത നിങ്ങളുടെ സിസ്റ്റത്തിലെ എല്ലാ സർട്ടിഫിക്കറ്റുകളും കണ്ടെത്തുക.</value>
+  </data>
+  <data name="CountryIPBlockingPageTitle.Text" xml:space="preserve">
+    <value>ഇനിപ്പറയുന്ന ലിസ്റ്റുകളിലെ രാജ്യങ്ങളുടെ IP വിലാസ ശ്രേണികൾ ബ്ലോക്ക് ചെയ്യുക: സ്റ്റേറ്റ് സ്പോൺസർഡ് ടെററിസം - ഓഫീസ് ഓഫ് ഫോറിൻ അസെറ്റ്‌സ് കൺട്രോൾ (OFAC)</value>
+  </data>
+  <data name="DeviceGuardPageTitle.Text" xml:space="preserve">
+    <value>വിവിധ എക്സിക്യൂഷൻ ലെയറുകളിൽ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തെ കഠിനമാക്കാൻ ഹാർഡ്‌വെയർ നൽകുന്ന സുരക്ഷാ ഫീച്ചറുകൾ പ്രയോജനപ്പെടുത്തുക.</value>
+  </data>
+  <data name="EdgePageTitle.Text" xml:space="preserve">
+    <value>വെബ് ബ്രൗസിംഗിൽ കൂടുതൽ സുരക്ഷിതവും സ്വകാര്യവുമാക്കാൻ Microsoft Edge-ൽ സുരക്ഷയും സ്വകാര്യതയുമായി ബന്ധപ്പെട്ട നയങ്ങൾ പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="LockScreenPageTitle.Text" xml:space="preserve">
+    <value>സാധ്യമായ ചൂഷണങ്ങൾക്കെതിരെ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിന്റെ ലോക്ക് സ്ക്രീൻ കഠിനമാക്കുകയും ഉപകരണം ലോക്ക് ചെയ്തിരിക്കുമ്പോൾ അനധികൃത വ്യക്തികൾക്ക് തുറന്നുകാട്ടുന്ന വിവരങ്ങളുടെ അളവ് കുറയ്ക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
+    <value>ഈ പേജിൽ മറ്റ് കൂടുതൽ പ്രത്യേകവൽക്കരിച്ച വിഭാഗങ്ങളിൽ യോജിക്കാത്ത പ്രധാന സുരക്ഷാ നടപടികൾ അടങ്ങിയിരിക്കുന്നു. ഇവ പ്രയോഗിക്കുന്നത് നിങ്ങളുടെ സിസ്റ്റത്തിന്റെയും ഉപകരണത്തിന്റെയും സുരക്ഷ മെച്ചപ്പെടുത്തുകയും ശക്തിപ്പെടുത്തുകയും ചെയ്യും.</value>
+  </data>
+  <data name="NonAdminPageTitle.Text" xml:space="preserve">
+    <value>ഈ പേജിലെ നയങ്ങൾ നിലവിലെ ഉപയോക്താവിൽ മാത്രം ബാധകമാകുന്നു, എല്ലാ ഉപയോക്താക്കൾക്കുമായി സിസ്റ്റം തലത്തിൽ ബാധകമാകുന്നില്ല. ഈ കാരണത്താൽ, ഇവ പ്രയോഗിക്കാൻ നിങ്ങൾക്ക് അഡ്മിനിസ്ട്രേറ്റർ അനുമതികൾ ആവശ്യമില്ല.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
+    <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റം നൽകുന്ന എല്ലാ ഓപ്ഷണൽ ഫീച്ചറുകളും കഴിവുകളും ഏകീകൃത രീതിയിൽ പുനർലഭിക്കുക, കാണുക, പ്രാപ്തമാക്കുക, പ്രാപ്തമല്ലാതാക്കുക.</value>
+  </data>
+  <data name="TLSPageTitle.Text" xml:space="preserve">
+    <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ SChannel (സെക്യൂർ ചാനൽ) കഠിനമാക്കുക. Transport Layer Security (TLS) പോലുള്ള സുരക്ഷാ പ്രോട്ടോക്കോളുകൾ നടപ്പിലാക്കുന്ന Microsoft വികസിപ്പിച്ച സുരക്ഷാ സപ്പോർട്ട് പ്രൊവൈഡർ (SSP) ആണിത്.</value>
+  </data>
+  <data name="UACPageTitle.Text" xml:space="preserve">
+    <value>UAC അനുമതി അല്ലെങ്കിൽ അഡ്മിനിസ്ട്രേറ്റർ ക്രെഡൻഷ്യലുകൾ അഭ്യർത്ഥിച്ചുകൊണ്ട് ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ അനധികൃത മാറ്റങ്ങൾ തടയാൻ സഹായിക്കുന്നു. ഈ വർക്ക്ഫ്ലോ കഠിനമാക്കുന്ന നയങ്ങൾ ഈ പേജ് നൽകുന്നു.</value>
+  </data>
+  <data name="WindowsFirewallPageTitle.Text" xml:space="preserve">
+    <value>ഇൻകമിംഗ്, ഔട്ട്ഗോയിംഗ് ട്രാഫിക് ഫിൽറ്റർ ചെയ്ത് നിങ്ങളുടെ കമ്പ്യൂട്ടറിന്റെ സുരക്ഷയിൽ Windows ഫയർവാൾ സഹായിക്കുന്നു. ഇവിടെ നിങ്ങൾക്ക് അതിന്റെ സുരക്ഷ മെച്ചപ്പെടുത്താൻ വിവിധ നിയമങ്ങളും കോൺഫിഗറേഷനുകളും പ്രയോഗിക്കാം.</value>
+  </data>
+  <data name="WindowsNetworkingPageTitle.Text" xml:space="preserve">
+    <value>Windows നെറ്റ്‌വർക്കിംഗ് സെറ്റിംഗുകൾ നിങ്ങളുടെ ഉപകരണം നെറ്റ്‌വർക്കിലെ മറ്റ് ഉപകരണങ്ങളുമായി എങ്ങനെ ആശയവിനിമയം നടത്തുന്നു എന്നത് പോലുള്ള നെറ്റ്‌വർക്ക് കണക്റ്റിവിറ്റിയുടെയും സുരക്ഷയുടെയും വിവിധ വശങ്ങൾ കോൺഫിഗർ ചെയ്യാൻ നിങ്ങളെ അനുവദിക്കുന്നു.</value>
+  </data>
+  <data name="WindowsUpdatePageTitle.Text" xml:space="preserve">
+    <value>Windows അപ്ഡേറ്റുകൾ റിലീസിന് ശേഷം എത്രയും വേഗം ഇൻസ്റ്റാൾ ചെയ്യുന്നത് നിങ്ങളുടെ സിസ്റ്റത്തിന്റെ സുരക്ഷയും സ്ഥിരതയും നിലനിർത്താൻ നിർണ്ണായകമാണ്, പ്രത്യേകിച്ച് പുതിയ ചൂഷണങ്ങൾക്കും zero-day കൾക്കുമെതിരെ. അപ്ഡേറ്റുകൾ സമയബന്ധിതമായി ഇൻസ്റ്റാൾ ചെയ്യപ്പെടുന്നുവെന്ന് ഉറപ്പാക്കുന്ന നയങ്ങൾ പ്രയോഗിക്കാൻ ഈ പേജ് നിങ്ങളെ സഹായിക്കുന്നു.</value>
+  </data>
+  <data name="FileReputationPageTitle.Text" xml:space="preserve">
+    <value>Microsoft Defender Smart Screen അല്ലെങ്കിൽ Microsoft-ന്റെ സുരക്ഷാ ഇന്റലിജൻസ് ഗ്രാഫ് ഉപയോഗിച്ച് എക്സിക്യൂട്ടബിൾ ഫയലുകളുടെയും മറ്റ് ഫയലുകളുടെയും പ്രശസ്തി പരിശോധിക്കുക.</value>
+  </data>
+  <data name="InstalledAppsManagementPageTitle.Text" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ഇൻസ്റ്റാൾ ചെയ്ത എല്ലാ ആപ്പുകളുടെയും ലിസ്റ്റ് കാണുകയും അനാവശ്യ ആപ്പുകൾ അൺഇൻസ്റ്റാൾ ചെയ്യുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="PFNVersionLabel.Text" xml:space="preserve">
+  <value>പതിപ്പ്</value>
+</data>
+<data name="PFNLabel.Text" xml:space="preserve">
+  <value>പാക്കേജ് ഫാമിലി നെയിം</value>
+</data>
+<data name="AppDetailsErrorMessageWithName" xml:space="preserve">
+  <value>ആപ്പ് വിശദാംശങ്ങൾ പുനർലഭിക്കുന്നതിൽ പിശക്: {0}</value>
+</data>
+<data name="AppDetailsErrorMessageGeneric" xml:space="preserve">
+  <value>ആപ്പ് വിശദാംശങ്ങൾ പുനർലഭിക്കുന്നതിൽ പിശക്</value>
+</data>
+<data name="PFNArchitectureLabel.Text" xml:space="preserve">
+  <value>ആർക്കിടക്ചർ</value>
+</data>
+<data name="PFNPublisherLabel.Text" xml:space="preserve">
+  <value>പ്രസാധകൻ</value>
+</data>
+<data name="PFNPublisherID.Text" xml:space="preserve">
+  <value>പ്രസാധക ID</value>
+</data>
+<data name="PFNDescription.Text" xml:space="preserve">
+  <value>വിവരണം</value>
+</data>
+<data name="PFNInstallLocation.Text" xml:space="preserve">
+  <value>ഇൻസ്റ്റാൾ സ്ഥാനം</value>
+</data>
+<data name="PFNInstalledDateLabel.Text" xml:space="preserve">
+  <value>അവസാന പരിഷ്‌ക്കരണം</value>
+</data>
+<data name="PFNDisplayNameLabelText" xml:space="preserve">
+  <value>പ്രദർശന നാമം</value>
+</data>
+<data name="PFNFullNameLabel.Text" xml:space="preserve">
+  <value>പൂർണ്ണ നാമം</value>
+</data>
+  <data name="ProtectPageVerifySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത വിഭാഗങ്ങളും ഉപവിഭാഗങ്ങളും മാത്രം പരിശോധിക്കുക.</value>
+  </data>
+    <data name="ProtectPageVerifySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത വിഭാഗങ്ങളും ഉപവിഭാഗങ്ങളും മാത്രം പരിശോധിക്കുക.</value>
+  </data>
+    <data name="ProtectPageApplySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത വിഭാഗങ്ങളും ഉപവിഭാഗങ്ങളും മാത്രം പ്രയോഗിക്കുക.</value>
+  </data>
+    <data name="ProtectPageApplySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത വിഭാഗങ്ങളും ഉപവിഭാഗങ്ങളും മാത്രം പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="ProtectPageRemoveSelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത വിഭാഗങ്ങളും ഉപവിഭാഗങ്ങളും മാത്രം നീക്കം ചെയ്യുക.</value>
+  </data>
+    <data name="ProtectPageRemoveSelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത വിഭാഗങ്ങളും ഉപവിഭാഗങ്ങളും മാത്രം നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>സിസ്റ്റം സുരക്ഷാ നയം പുനർലഭിക്കുക</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിൽ കോൺഫിഗർ ചെയ്തിട്ടുള്ള എല്ലാ സിസ്റ്റം സുരക്ഷാ നയങ്ങളും പുനർലഭിക്കുക.</value>
+  </data>
+  <data name="RetrieveSecurityPolicyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിൽ കോൺഫിഗർ ചെയ്തിട്ടുള്ള എല്ലാ സിസ്റ്റം സുരക്ഷാ നയങ്ങളും പുനർലഭിക്കുക.</value>
+  </data>
+  <data name="UnsupportedFileTypeError" xml:space="preserve">
+  <value>പിന്തുണയില്ലാത്ത ഫയൽ തരം: {0}</value>
+</data>
+<data name="GroupPolicyDataLoadedSuccess" xml:space="preserve">
+  <value>ഗ്രൂപ്പ് പോളിസി ഡാറ്റ വിജയകരമായി ലോഡ് ചെയ്തു</value>
+</data>
+<data name="SelectMainAndOtherPOLFilesWarning" xml:space="preserve">
+  <value>മെർജിനായി ഒരു പ്രധാന POL ഫയലും കുറഞ്ഞത് ഒരു മറ്റ് POL ഫയലും തിരഞ്ഞെടുക്കുക.</value>
+</data>
+<data name="MergeSummaryHeader" xml:space="preserve">
+  <value>=== മെർജ് സംഗ്രഹം ===</value>
+</data>
+<data name="TotalOperationsLog" xml:space="preserve">
+  <value>ആകെ പ്രവർത്തനങ്ങൾ: {0}</value>
+</data>
+<data name="AddedEntriesLog" xml:space="preserve">
+  <value>ചേർത്ത എൻട്രികൾ: {0}</value>
+</data>
+<data name="TotalEntriesInMergedFileLog" xml:space="preserve">
+  <value>മെർജ് ചെയ്ത ഫയലിലെ ആകെ എൻട്രികൾ: {0}</value>
+</data>
+<data name="POLFilesMergedSuccess" xml:space="preserve">
+  <value>POL ഫയലുകൾ വിജയകരമായി മെർജ് ചെയ്തു. വിശദാംശങ്ങൾക്കായി ലോഗുകൾ കാണുക.</value>
+</data>
+<data name="SelectAtLeastOnePOLFileWarning" xml:space="preserve">
+  <value>കൺവേർട്ട് ചെയ്യാൻ കുറഞ്ഞത് ഒരു POL ഫയൽ തിരഞ്ഞെടുക്കുക.</value>
+</data>
+<data name="POLFilesConvertedToJSONSuccess" xml:space="preserve">
+  <value>POL ഫയലുകൾ വിജയകരമായി JSON-ലേക്ക് കൺവേർട്ട് ചെയ്തു. ഔട്ട്പുട്ട് ഫയൽ ഇവിടെയാണ്: {0}</value>
+</data>
+<data name="SelectAtLeastOneJSONFileWarning" xml:space="preserve">
+  <value>കൺവേർട്ട് ചെയ്യാൻ കുറഞ്ഞത് ഒരു JSON ഫയൽ തിരഞ്ഞെടുക്കുക.</value>
+</data>
+<data name="JSONFileConvertedToPOLSuccess" xml:space="preserve">
+  <value>JSON ഫയൽ വിജയകരമായി POL-ലേക്ക് കൺവേർട്ട് ചെയ്തു. ഔട്ട്പുട്ട് ഫയൽ ഈ സ്ഥാനത്ത് സേവ് ചെയ്തു: {0}</value>
+</data>
+<data name="SelectAtLeastOneSecurityINFFileWarning" xml:space="preserve">
+  <value>കൺവേർട്ട് ചെയ്യാൻ കുറഞ്ഞത് ഒരു Security INF ഫയൽ തിരഞ്ഞെടുക്കുക.</value>
+</data>
+<data name="SecurityINFFileConvertedToJSONSuccess" xml:space="preserve">
+  <value>Security INF ഫയൽ വിജയകരമായി JSON-ലേക്ക് കൺവേർട്ട് ചെയ്തു. ഔട്ട്പുട്ട് ഫയൽ ഇവിടെയാണ്: {0}</value>
+</data>
+<data name="SecurityPolicyReportSavedSuccess" xml:space="preserve">
+  <value>സുരക്ഷാ നയ റിപ്പോർട്ട് വിജയകരമായി ഇനിപ്പറയുന്ന സ്ഥാനത്ത് സേവ് ചെയ്തു: {0}</value>
+</data>
+<data name="FoundExistingDISMServiceProcess" xml:space="preserve">
+  <value>നിലവിലുള്ള DISMService പ്രോസസ് കണ്ടെത്തി (PID: {0}), അവസാനിപ്പിക്കുന്നു...</value>
+</data>
+<data name="SuccessfullyTerminatedDISMServiceProcess" xml:space="preserve">
+  <value>DISMService പ്രോസസ് വിജയകരമായി അവസാനിപ്പിച്ചു (PID: {0})</value>
+</data>
+<data name="FailedToTerminateDISMServiceProcess" xml:space="preserve">
+  <value>DISMService പ്രോസസ് അവസാനിപ്പിക്കുന്നതിൽ പരാജയപ്പെട്ടു (PID: {0}): {1}</value>
+</data>
+<data name="ErrorCheckingExistingDISMServiceProcesses" xml:space="preserve">
+  <value>നിലവിലുള്ള DISMService പ്രോസസുകൾ പരിശോധിക്കുന്നതിൽ പിശക്: {0}</value>
+</data>
+<data name="DISMServiceFileIntegrityCheckFailed" xml:space="preserve">
+  <value>DISM സേവന ഫയൽ സമഗ്രത പരിശോധന പരാജയപ്പെട്ടു</value>
+</data>
+<data name="FailedToVerifyDISMServiceIntegrity" xml:space="preserve">
+  <value>DISM സേവന സമഗ്രത പരിശോധിക്കുന്നതിൽ പരാജയപ്പെട്ടു: {0}</value>
+</data>
+<data name="DISMServiceFileIntegrityVerificationFailed" xml:space="preserve">
+  <value>DISM സേവന ഫയൽ സമഗ്രത പരിശോധന പരാജയപ്പെട്ടു. സേവനം ആരംഭിക്കാൻ കഴിയില്ല.</value>
+</data>
+<data name="FailedToCreateProcessWin32Error" xml:space="preserve">
+  <value>പ്രോസസ് സൃഷ്ടിക്കുന്നതിൽ പരാജയപ്പെട്ടു. Win32 പിശക്: {0}</value>
+</data>
+<data name="FailedToStartService" xml:space="preserve">
+  <value>സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു: {0}</value>
+</data>
+<data name="ServiceError" xml:space="preserve">
+  <value>സേവന പിശക്: {0}</value>
+</data>
+<data name="FailedToStartDISMServiceAdministrator" xml:space="preserve">
+  <value>DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു. DismService.exe ആപ്ലിക്കേഷൻ ഫോൾഡറിൽ ഉണ്ടെന്നും നിങ്ങൾ അഡ്മിനിസ്ട്രേറ്ററായി പ്രവർത്തിപ്പിക്കുന്നുവെന്നും ഉറപ്പാക്കുക.</value>
+</data>
+<data name="FailedToInitializeDISMService" xml:space="preserve">
+  <value>DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു: {0}</value>
+</data>
+<data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
+  <value>{0} Windows ഫീച്ചറുകളും കഴിവുകളും വിജയകരമായി ലോഡ് ചെയ്തു.</value>
+</data>
+<data name="ProgressInfo" xml:space="preserve">
+  <value>പുരോഗതി: {0}/{1} ({2}%)</value>
+</data>
+<data name="ProgressUnknownInfo" xml:space="preserve">
+  <value>പുരോഗതി: {0}/അജ്ഞാതം</value>
+</data>
+<data name="SuccessfullyEnabledItem" xml:space="preserve">
+  <value>വിജയകരമായി പ്രാപ്തമാക്കി {0}: {1}</value>
+</data>
+<data name="CouldNotVerifyStateAfterEnabling" xml:space="preserve">
+  <value>പ്രാപ്തമാക്കിയതിന് ശേഷം നില പരിശോധിക്കാൻ കഴിഞ്ഞില്ല {0}: {1}</value>
+</data>
+<data name="FailedToEnableItem" xml:space="preserve">
+  <value>പ്രാപ്തമാക്കുന്നതിൽ പരാജയപ്പെട്ടു {0}: {1}</value>
+</data>
+<data name="ErrorEnablingItem" xml:space="preserve">
+  <value>പ്രാപ്തമാക്കുന്നതിൽ പിശക് {0}: {1}</value>
+</data>
+<data name="SuccessfullyDisabledItem" xml:space="preserve">
+  <value>വിജയകരമായി പ്രാപ്തമല്ലാതാക്കി {0}: {1}</value>
+</data>
+<data name="CouldNotVerifyStateAfterDisabling" xml:space="preserve">
+  <value>പ്രാപ്തമല്ലാതാക്കിയതിന് ശേഷം നില പരിശോധിക്കാൻ കഴിഞ്ഞില്ല {0}: {1}</value>
+</data>
+<data name="FailedToDisableItem" xml:space="preserve">
+  <value>പ്രാപ്തമല്ലാതാക്കുന്നതിൽ പരാജയപ്പെട്ടു {0}: {1}</value>
+</data>
+<data name="ErrorDisablingItem" xml:space="preserve">
+  <value>പ്രാപ്തമല്ലാതാക്കുന്നതിൽ പിശക് {0}: {1}</value>
+</data>
+<data name="NoItemsSelectedForEnable" xml:space="preserve">
+  <value>ഇനങ്ങളൊന്നും തിരഞ്ഞെടുത്തിട്ടില്ല. പ്രാപ്തമാക്കാൻ ഒന്നോ അതിലധികമോ ഫീച്ചറുകളോ കഴിവുകളോ തിരഞ്ഞെടുക്കുക.</value>
+</data>
+<data name="StartingBulkEnableOperation" xml:space="preserve">
+  <value>{0} തിരഞ്ഞെടുത്ത ഇനങ്ങൾക്കായി ബൾക്ക് പ്രാപ്തമാക്കൽ പ്രവർത്തനം ആരംഭിക്കുന്നു...</value>
+</data>
+<data name="SuccessfullyEnabledAllSelectedItems" xml:space="preserve">
+  <value>എല്ലാ {0} തിരഞ്ഞെടുത്ത ഇനങ്ങളും വിജയകരമായി പ്രാപ്തമാക്കി.</value>
+</data>
+<data name="FailedToEnableAllSelectedItems" xml:space="preserve">
+  <value>എല്ലാ {0} തിരഞ്ഞെടുത്ത ഇനങ്ങളും പ്രാപ്തമാക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="BulkEnableCompleted" xml:space="preserve">
+  <value>ബൾക്ക് പ്രാപ്തമാക്കൽ പൂർത്തിയായി: {0} വിജയിച്ചു, {1} പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="FailedItems" xml:space="preserve">
+  <value>പരാജയപ്പെട്ട ഇനങ്ങൾ: {0}</value>
+</data>
+<data name="ErrorDuringBulkEnableOperation" xml:space="preserve">
+  <value>ബൾക്ക് പ്രാപ്തമാക്കൽ പ്രവർത്തനത്തിനിടയിൽ പിശക്</value>
+</data>
+<data name="NoItemsSelectedForDisable" xml:space="preserve">
+  <value>ഇനങ്ങളൊന്നും തിരഞ്ഞെടുത്തിട്ടില്ല. പ്രാപ്തമല്ലാതാക്കാൻ ഒന്നോ അതിലധികമോ ഫീച്ചറുകളോ കഴിവുകളോ തിരഞ്ഞെടുക്കുക.</value>
+</data>
+<data name="StartingBulkDisableOperation" xml:space="preserve">
+  <value>{0} തിരഞ്ഞെടുത്ത ഇനങ്ങൾക്കായി ബൾക്ക് പ്രാപ്തമല്ലാതാക്കൽ പ്രവർത്തനം ആരംഭിക്കുന്നു...</value>
+</data>
+<data name="SuccessfullyDisabledAllSelectedItems" xml:space="preserve">
+  <value>എല്ലാ {0} തിരഞ്ഞെടുത്ത ഇനങ്ങളും വിജയകരമായി പ്രാപ്തമല്ലാതാക്കി.</value>
+</data>
+<data name="FailedToDisableAllSelectedItems" xml:space="preserve">
+  <value>എല്ലാ {0} തിരഞ്ഞെടുത്ത ഇനങ്ങളും പ്രാപ്തമല്ലാതാക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="BulkDisableCompleted" xml:space="preserve">
+  <value>ബൾക്ക് പ്രാപ്തമല്ലാതാക്കൽ പൂർത്തിയായി: {0} വിജയിച്ചു, {1} പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="ErrorDuringBulkDisableOperation" xml:space="preserve">
+  <value>ബൾക്ക് പ്രാപ്തമല്ലാതാക്കൽ പ്രവർത്തനത്തിനിടയിൽ പിശക്</value>
+</data>
+<data name="FailedToInitializeDISMServiceForSecurityHardening" xml:space="preserve">
+  <value>സുരക്ഷാ കാഠിന്യത്തിനായി DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="StartingWithOptionalWindowsFeatures" xml:space="preserve">
+  <value>{0} ഓപ്ഷണൽ Windows ഫീച്ചറുകളും കഴിവുകളുമായി ആരംഭിക്കുന്നു...</value>
+</data>
+<data name="SuccessfullyAppliedSecurityHardening" xml:space="preserve">
+  <value>എല്ലാ {0} ഓപ്ഷണൽ Windows ഫീച്ചറുകളിലും കഴിവുകളിലും സുരക്ഷാ കാഠിന്യം വിജയകരമായി പ്രയോഗിച്ചു.</value>
+</data>
+<data name="FailedToApplySecurityHardening" xml:space="preserve">
+  <value>എല്ലാ {0} ഇനങ്ങളിലും സുരക്ഷാ കാഠിന്യം പ്രയോഗിക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="SecurityHardeningCompleted" xml:space="preserve">
+  <value>സുരക്ഷാ കാഠിന്യം പൂർത്തിയായി: {0} വിജയിച്ചു, {1} പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
+  <value>സുരക്ഷാ കാഠിന്യ പ്രവർത്തനത്തിനിടയിൽ പിശക്</value>
+</data>
+<data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
+  <value>പരിശോധനയ്ക്കായി DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="VerifyingSecurityHardeningState" xml:space="preserve">
+  <value>{0} ഓപ്ഷണൽ Windows ഫീച്ചറുകൾക്കും കഴിവുകൾക്കുമായി സുരക്ഷാ കാഠിന്യ നില പരിശോധിക്കുന്നു...</value>
+</data>
+<data name="SecurityHardeningVerificationPassed" xml:space="preserve">
+  <value>സുരക്ഷാ കാഠിന്യ പരിശോധന വിജയിച്ചു: എല്ലാ {0} ഇനങ്ങളും അവയുടെ ശരിയായ നിലകളിൽ ഉണ്ട്.</value>
+</data>
+<data name="SecurityHardeningVerificationCompleted" xml:space="preserve">
+  <value>സുരക്ഷാ കാഠിന്യ പരിശോധന പൂർത്തിയായി: {0} ശരി, {1} തെറ്റ്.</value>
+</data>
+<data name="IncorrectItems" xml:space="preserve">
+  <value>തെറ്റായ ഇനങ്ങൾ: {0}</value>
+</data>
+<data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
+  <value>സുരക്ഷാ കാഠിന്യ പരിശോധനയ്ക്കിടയിൽ പിശക്</value>
+</data>
+<data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
+  <value>സുരക്ഷാ കാഠിന്യം നീക്കം ചെയ്യുന്നതിനായി DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="RemovingSecurityHardening" xml:space="preserve">
+  <value>{0} ഓപ്ഷണൽ Windows ഫീച്ചറുകൾക്കും കഴിവുകൾക്കുമായി സുരക്ഷാ കാഠിന്യം നീക്കം ചെയ്യുന്നു...</value>
+</data>
+<data name="SuccessfullyRemovedSecurityHardening" xml:space="preserve">
+  <value>എല്ലാ {0} ഓപ്ഷണൽ Windows ഫീച്ചറുകളിൽ നിന്നും കഴിവുകളിൽ നിന്നും സുരക്ഷാ കാഠിന്യം വിജയകരമായി നീക്കം ചെയ്തു.</value>
+</data>
+<data name="FailedToRemoveSecurityHardening" xml:space="preserve">
+  <value>എല്ലാ {0} ഇനങ്ങളിൽ നിന്നും സുരക്ഷാ കാഠിന്യം നീക്കം ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
+  <value>സുരക്ഷാ കാഠിന്യം നീക്കൽ പൂർത്തിയായി: {0} വിജയിച്ചു, {1} പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
+  <value>സുരക്ഷാ കാഠിന്യം നീക്കൽ പ്രവർത്തനത്തിനിടയിൽ പിശക്</value>
+</data>
+<data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
+  <value>DISM സേവന ക്ലയന്റ് ഡിസ്‌പോസ് ചെയ്യുന്നതിൽ പിശക്: {0}</value>
+</data>
+<data name="NotPresentState" xml:space="preserve">
+  <value>ഇല്ല</value>
+</data>
+<data name="UninstallPendingState" xml:space="preserve">
+  <value>അൺഇൻസ്റ്റാൾ ബാക്കി</value>
+</data>
+<data name="StagedState" xml:space="preserve">
+  <value>സ്റ്റേജ് ചെയ്തത്</value>
+</data>
+<data name="RemovedState" xml:space="preserve">
+  <value>നീക്കം ചെയ്തത്</value>
+</data>
+<data name="InstalledState" xml:space="preserve">
+  <value>ഇൻസ്റ്റാൾ ചെയ്തത്</value>
+</data>
+<data name="InstallPendingState" xml:space="preserve">
+  <value>ഇൻസ്റ്റാൾ ബാക്കി</value>
+</data>
+<data name="SupersededState" xml:space="preserve">
+  <value>അതിവർത്തിച്ചത്</value>
+</data>
+<data name="PartiallyInstalledState" xml:space="preserve">
+  <value>ഭാഗികമായി ഇൻസ്റ്റാൾ ചെയ്തത്</value>
+</data>
+<data name="UnknownState" xml:space="preserve">
+  <value>അജ്ഞാതം</value>
+</data>
+<data name="FeatureType" xml:space="preserve">
+  <value>ഫീച്ചർ</value>
+</data>
+<data name="CapabilityType" xml:space="preserve">
+  <value>കഴിവ്</value>
+</data>
+<data name="FailedToRetrieveASRRuleIDs" xml:space="preserve">
+  <value>സിസ്റ്റത്തിൽ നിന്ന് ASR നിയമ IDകൾ പുനർലഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു</value>
+</data>
+<data name="FailedToRetrieveASRRuleActions" xml:space="preserve">
+  <value>സിസ്റ്റത്തിൽ നിന്ന് ASR നിയമ പ്രവർത്തനങ്ങൾ പുനർലഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു</value>
+</data>
+<data name="FailedToParseASRRulesData" xml:space="preserve">
+  <value>സിസ്റ്റത്തിൽ നിന്ന് ASR നിയമ ഡാറ്റ പാഴ്സ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു</value>
+</data>
+<data name="MismatchBetweenIDsAndActionsCount" xml:space="preserve">
+  <value>IDകളുടെ എണ്ണം ({0}) നും പ്രവർത്തനങ്ങളുടെ എണ്ണം ({1}) നും തമ്മിൽ പൊരുത്തക്കേട്</value>
+</data>
+<data name="SuccessfullyRetrievedASRRuleStates" xml:space="preserve">
+  <value>സിസ്റ്റത്തിൽ നിന്ന് {0} ASR നിയമ നിലകൾ വിജയകരമായി പുനർലഭിച്ചു</value>
+</data>
+<data name="AppliedASRRuleWithState" xml:space="preserve">
+  <value>ASR നിയമം {0} നില {1} നൊടെ പ്രയോഗിച്ചു</value>
+</data>
+<data name="AppliedASRRulesSuccessfully" xml:space="preserve">
+  <value>ASR നിയമങ്ങൾ വിജയകരമായി പ്രയോഗിച്ചു</value>
+</data>
+<data name="RemovedASRRulesSuccessfully" xml:space="preserve">
+  <value>ASR നിയമങ്ങൾ വിജയകരമായി നീക്കം ചെയ്തു</value>
+</data>
+<data name="RetrievedSystemStatesAndUpdatedASRRules" xml:space="preserve">
+  <value>സിസ്റ്റം നിലകൾ പുനർലഭിക്കുകയും {0} ASR നിയമങ്ങൾ അപ്ഡേറ്റ് ചെയ്യുകയും ചെയ്തു. നിലവിലെ സിസ്റ്റം നില പ്രതിഫലിപ്പിക്കാൻ യൂസർ ഇന്റർഫേസ് അപ്ഡേറ്റ് ചെയ്തു.</value>
+</data>
+<data name="FailedToVerifyASRRules" xml:space="preserve">
+  <value>ASR നിയമങ്ങൾ പരിശോധിക്കുന്നതിൽ പരാജയപ്പെട്ടു</value>
+</data>
+<data name="SuccessfullyAppliedRecommendedValuesASRRules" xml:space="preserve">
+  <value>ASR നിയമങ്ങൾക്കുള്ള എല്ലാ ശുപാർശിത മൂല്യങ്ങളും വിജയകരമായി പ്രയോഗിച്ചു.</value>
+</data>
+<data name="CouldNotDetermineWhichAppToUninstall" xml:space="preserve">
+  <value>ഏത് ആപ്പ് അൺഇൻസ്റ്റാൾ ചെയ്യണമെന്ന് നിർണ്ണയിക്കാൻ കഴിഞ്ഞില്ല.</value>
+</data>
+<data name="StartingUninstallationOfApp" xml:space="preserve">
+  <value>ആപ്പിന്റെ അൺഇൻസ്റ്റാളേഷൻ ആരംഭിക്കുന്നു: {0}...</value>
+</data>
+<data name="SuccessfullyUninstalledApp" xml:space="preserve">
+  <value>ആപ്പ് വിജയകരമായി അൺഇൻസ്റ്റാൾ ചെയ്തു: {0}</value>
+</data>
+<data name="NoAppsSelectedForUninstallation" xml:space="preserve">
+  <value>അൺഇൻസ്റ്റാളേഷനായി ആപ്പുകളൊന്നും തിരഞ്ഞെടുത്തിട്ടില്ല.</value>
+</data>
+<data name="StartingUninstallationOfMultipleApps" xml:space="preserve">
+  <value>{0} ആപ്പ്(കളുടെ) അൺഇൻസ്റ്റാളേഷൻ ആരംഭിക്കുന്നു...</value>
+</data>
+<data name="AllAppsSuccessfullyUninstalled" xml:space="preserve">
+  <value>എല്ലാ ആപ്പുകളും വിജയകരമായി അൺഇൻസ്റ്റാൾ ചെയ്തു.</value>
+</data>
+<data name="ErrorCodeAndText" xml:space="preserve">
+  <value>പിശക് കോഡ്: {0} - പിശക് ടെക്സ്റ്റ്: {1}</value>
+</data>
+<data name="RemovalCanceled" xml:space="preserve">
+  <value>നീക്കം ചെയ്യൽ റദ്ദാക്കി</value>
+</data>
+<data name="AppSuccessfullyRemoved" xml:space="preserve">
+  <value>പൂർണ്ണ നാമം '{0}' ഉള്ള ആപ്പ് വിജയകരമായി നീക്കം ചെയ്തു.</value>
+</data>
+<data name="RemovalStatusUnknown" xml:space="preserve">
+  <value>നീക്കം ചെയ്യൽ നില അജ്ഞാതം</value>
+</data>
+<data name="TryingToRemoveAppForCurrentUserOnly" xml:space="preserve">
+  <value>പൂർണ്ണ നാമം '{0}' ഉള്ള ആപ്പ് വീണ്ടും നീക്കം ചെയ്യാൻ ശ്രമിക്കുന്നു, പക്ഷേ നിലവിലെ ഉപയോക്താവിന് മാത്രം.</value>
+</data>
+<data name="CouldNotDetermineWhichAppLocationToOpen" xml:space="preserve">
+  <value>ഏത് ആപ്പ് സ്ഥാനം തുറക്കണമെന്ന് നിർണ്ണയിക്കാൻ കഴിഞ്ഞില്ല.</value>
+</data>
+<data name="NoInstallationLocationAvailable" xml:space="preserve">
+  <value>{0}-നുള്ള ഇൻസ്റ്റാളേഷൻ സ്ഥാനം ലഭ്യമല്ല.</value>
+</data>
+<data name="InstallationLocationDoesNotExist" xml:space="preserve">
+  <value>ഇൻസ്റ്റാളേഷൻ സ്ഥാനം നിലവിലില്ല: {0}</value>
+</data>
+<data name="OpenedInstallationLocation" xml:space="preserve">
+  <value>{0}-നുള്ള ഇൻസ്റ്റാളേഷൻ സ്ഥാനം തുറന്നു</value>
+</data>
+<data name="CouldNotDetermineWhichAppDetailsToCopy" xml:space="preserve">
+  <value>ഏത് ആപ്പ് വിശദാംശങ്ങൾ കോപ്പി ചെയ്യണമെന്ന് നിർണ്ണയിക്കാൻ കഴിഞ്ഞില്ല.</value>
+</data>
+<data name="JSONDependencyRegistered" xml:space="preserve">
+  <value>JSON ആശ്രിതത്വം രജിസ്റ്റർ ചെയ്തു: {0} - {1} ({2}, {3})</value>
+</data>
+<data name="DependencyCycleDetected" xml:space="preserve">
+  <value>ആശ്രിതത്വ ചക്രം കണ്ടെത്തി: അനന്ത ലൂപ്പ് ഒഴിവാക്കാൻ {0} ഒഴിവാക്കുന്നു</value>
+</data>
+<data name="DependencySkip" xml:space="preserve">
+  <value>ആശ്രിതത്വം ഒഴിവാക്കുക: {0} പ്രോസസിംഗ് ബാച്ചിൽ ഇതിനകം ഉണ്ട്</value>
+</data>
+<data name="DependencyResolved" xml:space="preserve">
+  <value>ആശ്രിതത്വം പരിഹരിച്ചു: {0} - {1} ({2}, {3})</value>
+</data>
+<data name="DependencyNotFound" xml:space="preserve">
+  <value>ആശ്രിതത്വം കണ്ടെത്തിയില്ല: {0} റഫർ ചെയ്യുന്ന {1}</value>
+</data>
+<data name="SecurityPolicyRegistryApplyBulkInvokeError" xml:space="preserve">
+  <value>SecurityPolicyRegistryApply SecurityPolicyManager വഴി ബൾക്കിൽ ആവാഹിക്കണം</value>
+</data>
+<data name="GroupPolicyApplyBulkInvokeError" xml:space="preserve">
+  <value>GroupPolicyApply ApplyPolicies വഴി ബൾക്കിൽ ആവാഹിക്കണം</value>
+</data>
+<data name="RegistryApplyBulkInvokeError" xml:space="preserve">
+  <value>RegistryApply RegistryManager.AddPoliciesToSystem വഴി ബൾക്കിൽ ആവാഹിക്കണം</value>
+</data>
+<data name="SecurityPolicyRegistryVerifyBulkInvokeError" xml:space="preserve">
+  <value>ബൾക്കിൽ ആവാഹിക്കണം.</value>
+</data>
+<data name="SpecializedApplySuccess" xml:space="preserve">
+  <value>പ്രത്യേകവൽക്കരിച്ച പ്രയോഗം ({0}): {1}\{2} - വിജയം</value>
+</data>
+<data name="SpecializedRemoveSuccess" xml:space="preserve">
+  <value>പ്രത്യേകവൽക്കരിച്ച നീക്കം ({0}): {1}\{2} - വിജയം</value>
+</data>
+<data name="ErrorInSpecializedStrategy" xml:space="preserve">
+  <value>പ്രത്യേകവൽക്കരിച്ച തന്ത്രത്തിൽ പിശക് {0} ({1}) {2}\{3}-നുള്ള.</value>
+</data>
+<data name="ProcessingBeforeDependencies" xml:space="preserve">
+  <value>പ്രവർത്തനം {1}-നുള്ള {0} മുമ്പ്-ആശ്രിതത്വങ്ങൾ പ്രോസസ് ചെയ്യുന്നു</value>
+</data>
+<data name="ProcessingAfterDependencies" xml:space="preserve">
+  <value>പ്രവർത്തനം {1}-നുള്ള {0} ശേഷം-ആശ്രിതത്വങ്ങൾ പ്രോസസ് ചെയ്യുന്നു</value>
+</data>
+<data name="ErrorProcessingGroupPolicyMUnits" xml:space="preserve">
+  <value>ഗ്രൂപ്പ് പോളിസി M യൂണിറ്റുകൾ ബൾക്കിൽ പ്രോസസ് ചെയ്യുന്നതിൽ പിശക്.</value>
+</data>
+<data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
+  <value>രജിസ്ട്രി M യൂണിറ്റുകൾ ബൾക്കിൽ പ്രോസസ് ചെയ്യുന്നതിൽ പിശക്.</value>
+</data>
+<data name="ErrorProcessingSecurityPolicyRegistryMUnits" xml:space="preserve">
+  <value>സുരക്ഷാ നയ രജിസ്ട്രി M യൂണിറ്റുകൾ ബൾക്കിൽ പ്രോസസ് ചെയ്യുന്നതിൽ പിശക്.</value>
+</data>
+<data name="FallbackVerifyResult" xml:space="preserve">
+  <value>ഫാൾബാക്ക് പരിശോധന: {0}\{1} = {2}</value>
+</data>
+<data name="ErrorInFallbackVerification" xml:space="preserve">
+  <value>{0}\{1}-നുള്ള ഫാൾബാക്ക് പരിശോധനയിൽ പിശക്: {2}</value>
+</data>
+<data name="ErrorProcessingRegularMUnit" xml:space="preserve">
+  <value>സാധാരണ M യൂണിറ്റ് {0} പ്രോസസ് ചെയ്യുന്നതിൽ പിശക്</value>
+</data>
+<data name="ApplyingSecurityMeasures" xml:space="preserve">
+  <value>{0} സുരക്ഷാ നടപടികൾ പ്രയോഗിക്കുന്നു...</value>
+</data>
+<data name="RemovingSecurityMeasures" xml:space="preserve">
+  <value>{0} സുരക്ഷാ നടപടികൾ നീക്കം ചെയ്യുന്നു...</value>
+</data>
+<data name="VerifyingSecurityMeasures" xml:space="preserve">
+  <value>{0} സുരക്ഷാ നടപടികൾ പരിശോധിക്കുന്നു...</value>
+</data>
+<data name="ProcessingSecurityMeasures" xml:space="preserve">
+  <value>{0} സുരക്ഷാ നടപടികൾ പ്രോസസ് ചെയ്യുന്നു...</value>
+</data>
+<data name="SuccessfullyAppliedSecurityMeasures" xml:space="preserve">
+  <value>{0} സുരക്ഷാ നടപടികൾ വിജയകരമായി പ്രയോഗിച്ചു</value>
+</data>
+<data name="SuccessfullyRemovedSecurityMeasures" xml:space="preserve">
+  <value>{0} സുരക്ഷാ നടപടികൾ വിജയകരമായി നീക്കം ചെയ്തു</value>
+</data>
+  <data name="SuccessfullyVerifiedSecurityMeasures" xml:space="preserve">
+    <value>{0} സുരക്ഷാ നടപടികൾ വിജയകരമായി പരിശോധിച്ചു</value>
+  </data>
+  <data name="SuccessfullyProcessedSecurityMeasures" xml:space="preserve">
+    <value>{0} സുരക്ഷാ നടപടികൾ വിജയകരമായി പ്രോസസ് ചെയ്തു</value>
+  </data>
+  <data name="CouldNotLoadPoliciesFromPath" xml:space="preserve">
+    <value>ഈ പാത്തിൽ നിന്ന് നയങ്ങൾ ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല: {0}</value>
+  </data>
+  <data name="InvalidSource" xml:space="preserve">
+    <value>അസാധുവായ സ്രോതസ്സ്: {0}</value>
+  </data>
+  <data name="SecurityPolicyRegistryEntryMustHaveDefaultRegValue" xml:space="preserve">
+    <value>SecurityPolicyRegistry എൻട്രി {0}\{1}-നിൽ ശൂന്യമല്ലാത്ത DefaultRegValue ഉണ്ടായിരിക്കണം</value>
+  </data>
+  <data name="ErrorCreatingMUnitsForCategory" xml:space="preserve">
+    <value>വിഭാഗം {0}-നുള്ള M യൂണിറ്റുകൾ സൃഷ്ടിക്കുന്നതിൽ പിശക്: {1}</value>
+  </data>
+  <data name="SUCCESS" xml:space="preserve">
+    <value>വിജയം</value>
+  </data>
+  <data name="FAILED" xml:space="preserve">
+    <value>പരാജയപ്പെട്ടു</value>
+  </data>
+  <data name="FailedToOpenBCDSystemStore" xml:space="preserve">
+    <value>BCD സിസ്റ്റം സ്റ്റോർ തുറക്കുന്നതിൽ പരാജയപ്പെട്ടു</value>
+  </data>
+  <data name="FailedToParseCurrent EntryGUID" xml:space="preserve">
+    <value>നിലവിലെ എൻട്രി GUID പാഴ്സ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു</value>
+  </data>
+  <data name="CurrentBootEntryNotFoundAdministrator" xml:space="preserve">
+    <value>നിലവിലെ ബൂട്ട് എൻട്രി കണ്ടെത്തിയില്ല. അഡ്മിനിസ്ട്രേറ്ററായി പ്രവർത്തിപ്പിക്കാൻ ശ്രമിക്കുക.</value>
+  </data>
+  <data name="FailedToOpenBCDObject" xml:space="preserve">
+    <value>BCD ഒബ്ജക്റ്റ് തുറക്കുന്നതിൽ പരാജയപ്പെട്ടു</value>
+  </data>
+  <data name="FailedToSetBCDElement" xml:space="preserve">
+    <value>BCD എലമെന്റ് സെറ്റ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു</value>
+  </data>
+  <data name="MpClientDllNotFound" xml:space="preserve">
+    <value>MpClient.dll കണ്ടെത്തിയില്ല</value>
+  </data>
+  <data name="MpQueryFileTrustByHandle2NotFound" xml:space="preserve">
+    <value>MpQueryFileTrustByHandle2 കണ്ടെത്തിയില്ല</value>
+  </data>
+  <data name="ErrorOpeningHandleToFile" xml:space="preserve">
+    <value>ഫയൽ '{0}'-നുള്ള ഹാൻഡിൾ തുറക്കുന്നതിൽ പിശക്: {1}</value>
+  </data>
+  <data name="ExtraInfoFileReputationCheck" xml:space="preserve">
+    <value>ഫയൽ പ്രശസ്തി പരിശോധനയെക്കുറിച്ച് അധിക വിവരങ്ങൾ ഉണ്ടായിരുന്നു: {0}, {1}, {2}, {3}</value>
+  </data>
+  <data name="FailedToQueryReputation" xml:space="preserve">
+    <value>പ്രശസ്തി ക്വേരി ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു: {0}</value>
+  </data>
+  <data name="HighTrust" xml:space="preserve">
+    <value>ഉയർന്ന വിശ്വാസ്യത</value>
+  </data>
+  <data name="GoodTrust" xml:space="preserve">
+    <value>നല്ല വിശ്വാസ്യത</value>
+  </data>
+  <data name="UnavailableOrUnknown" xml:space="preserve">
+    <value>ലഭ്യമല്ല അല്ലെങ്കിൽ അജ്ഞാതം</value>
+  </data>
+  <data name="PotentiallyUnwantedApplication" xml:space="preserve">
+    <value>സാധ്യമായ അനാവശ്യ ആപ്ലിക്കേഷൻ (PUA)</value>
+  </data>
+  <data name="Malicious" xml:space="preserve">
+    <value>ദുരുദ്ദേശ്യപരം</value>
+  </data>
+  <data name="UnrecognizedScore" xml:space="preserve">
+    <value>തിരിച്ചറിയാത്ത സ്കോർ: ({0})</value>
+  </data>
+  <data name="InvalidRegistryBaseKey" xml:space="preserve">
+    <value>അസാധുവായ രജിസ്ട്രി ബേസ് കീ: {0}</value>
+  </data>
+  <data name="RegistryKeyDidNotHaveRegValue" xml:space="preserve">
+    <value>രജിസ്ട്രി കീയിൽ RegValue ഇല്ലായിരുന്നു</value>
+  </data>
+  <data name="InvalidRegistryValueType" xml:space="preserve">
+    <value>അസാധുവായ രജിസ്ട്രി വാല്യൂ തരം</value>
+  </data>
+  <data name="InvalidActionSpecified" xml:space="preserve">
+    <value>അസാധുവായ പ്രവർത്തനം നിർദ്ദേശിച്ചു: {0}</value>
+  </data>
+  <data name="AppliedRegistryEntry" xml:space="preserve">
+    <value>പ്രയോഗിച്ചു: {0}\{1}\{2}</value>
+  </data>
+  <data name="ErrorApplyingRegistryPolicy" xml:space="preserve">
+    <value>രജിസ്ട്രി നയം {0}\{1}\{2} പ്രയോഗിക്കുന്നതിൽ പിശക്: {3}</value>
+  </data>
+  <data name="RegistryApplicationComplete" xml:space="preserve">
+    <value>രജിസ്ട്രി ആപ്ലിക്കേഷൻ പൂർത്തിയായി: {1}-ൽ നിന്നും {0} നയങ്ങൾ വിജയകരമായി പ്രയോഗിച്ചു</value>
+  </data>
+  <data name="RemovedRegistryEntry" xml:space="preserve">
+    <value>നീക്കം ചെയ്തു</value>
+  </data>
+  <data name="ResetToDefaultRegistryEntry" xml:space="preserve">
+    <value>ഡിഫോൾട്ടിലേക്ക് പുനഃസജ്ജമാക്കുക</value>
+  </data>
+  <data name="RemovedRegistryEntryFormat" xml:space="preserve">
+    <value>{0}: {1}\{2}\{3}</value>
+  </data>
+  <data name="ErrorRemovingRegistryPolicy" xml:space="preserve">
+    <value>രജിസ്ട്രി നയം {0}\{1}\{2} നീക്കം ചെയ്യുന്നതിൽ പിശക്: {3}</value>
+  </data>
+  <data name="RegistryRemovalComplete" xml:space="preserve">
+    <value>രജിസ്ട്രി നീക്കം പൂർത്തിയായി: {1}-ൽ നിന്നും {0} നയങ്ങൾ വിജയകരമായി നീക്കം ചെയ്തു</value>
+  </data>
+  <data name="VerifyRegistryMatch" xml:space="preserve">
+    <value>പരിശോധന: {0}\{1}\{2} = പൊരുത്തം</value>
+  </data>
+  <data name="VerifyRegistryMismatch" xml:space="preserve">
+    <value>പരിശോധന: {0}\{1}\{2} = പൊരുത്തക്കേട്</value>
+  </data>
+  <data name="ErrorVerifyingRegistryPolicy" xml:space="preserve">
+    <value>രജിസ്ട്രി നയം {0}\{1}\{2} പരിശോധിക്കുന്നതിൽ പിശക്: {3}</value>
+  </data>
+  <data name="RegistryVerificationComplete" xml:space="preserve">
+    <value>രജിസ്ട്രി പരിശോധന പൂർത്തിയായി: {1}-ൽ നിന്നും {0} നയങ്ങൾ പൊരുത്തപ്പെടുന്നു</value>
+  </data>
+  <data name="NoSettingsProvided" xml:space="preserve">
+    <value>സെറ്റിംഗുകളൊന്നും നൽകിയിട്ടില്ല</value>
+  </data>
+  <data name="SettingSystemAccessPolicyViaSecedit" xml:space="preserve">
+    <value>secedit വഴി സിസ്റ്റം ആക്സസ് നയം സെറ്റ് ചെയ്യുന്നു...</value>
+  </data>
+  <data name="CreatedSecurityTemplate" xml:space="preserve">
+    <value>സുരക്ഷാ ടെംപ്ലേറ്റ് സൃഷ്ടിച്ചു: {0}</value>
+  </data>
+  <data name="TemplateContent" xml:space="preserve">
+    <value>ടെംപ്ലേറ്റ് ഉള്ളടക്കം: {0}</value>
+  </data>
+  <data name="FailedToStartSeceditProcess" xml:space="preserve">
+    <value>secedit പ്രോസസ് ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു</value>
+  </data>
+  <data name="SeceditExitCode" xml:space="preserve">
+    <value>Secedit എക്സിറ്റ് കോഡ്: {0}</value>
+  </data>
+  <data name="SeceditOutput" xml:space="preserve">
+    <value>Secedit ഔട്ട്പുട്ട്: {0}</value>
+  </data>
+  <data name="SeceditError" xml:space="preserve">
+    <value>Secedit പിശക്: {0}</value>
+  </data>
+  <data name="SeceditCompletedSuccessfully" xml:space="preserve">
+    <value>Secedit വിജയകരമായി പൂർത്തിയായി</value>
+  </data>
+  <data name="SeceditFailedWithExitCode" xml:space="preserve">
+    <value>Secedit എക്സിറ്റ് കോഡിനൊപ്പം പരാജയപ്പെട്ടു: {0}</value>
+  </data>
+  <data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
+    <value>മുന്നറിയിപ്പ്: താൽക്കാലിക ഫയലുകൾ ഇല്ലാതാക്കാൻ കഴിഞ്ഞില്ല.</value>
+  </data>
+  <data name="SeceditMethodFailed" xml:space="preserve">
+    <value>Secedit രീതി പരാജയപ്പെട്ടു.</value>
+  </data>
+  <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
+    <value>നിർദ്ദിഷ്ട ഫയലിൽ [System Access] സെറ്റിംഗുകളൊന്നും കണ്ടെത്തിയില്ല</value>
+  </data>
+  <data name="ExtractedSystemAccessSettingsFromFile" xml:space="preserve">
+    <value>ഫയലിൽ നിന്ന് {0} System Access സെറ്റിംഗുകൾ എക്സ്ട്രാക്റ്റ് ചെയ്തു: {1}</value>
+  </data>
+  <data name="FileNotFoundPath" xml:space="preserve">
+    <value>ഫയൽ കണ്ടെത്തിയില്ല: {0}</value>
+  </data>
+  <data name="CreatedPolicyDirectory" xml:space="preserve">
+    <value>പോളിസി ഡിറക്ടറി സൃഷ്ടിച്ചു: {0}</value>
+  </data>
+  <data name="FileTooSmallForValidHeader" xml:space="preserve">
+    <value>സാധുവായ ഹെഡറിനായി ഫയൽ വളരെ ചെറുതാണ്</value>
+  </data>
+  <data name="InvalidSignatureExpected" xml:space="preserve">
+    <value>അസാധുവായ ഒപ്പ്: 0x{0:X8}. പ്രതീക്ഷിച്ചത്: 0x{1:X8}</value>
+  </data>
+  <data name="ErrorReadingEntryAtPosition" xml:space="preserve">
+    <value>പൊസിഷൻ {0}-ൽ എൻട്രി വായിക്കുന്നതിൽ പിശക്: {1}</value>
+  </data>
+  <data name="ExpectedOpeningBracketAtStartOfEntry" xml:space="preserve">
+    <value>എൻട്രിയുടെ തുടക്കത്തിൽ ഓപ്പണിംഗ് ബ്രാക്കറ്റ് പ്രതീക്ഷിച്ചു, കിട്ടിയത്: 0x{0:X4}</value>
+  </data>
+  <data name="ExpectedSemicolonDelimiterAfterKeyName" xml:space="preserve">
+    <value>കീ നാമത്തിന് ശേഷം സെമികോളൺ ഡെലിമിറ്റർ പ്രതീക്ഷിച്ചു, കിട്ടിയത്: 0x{0:X4}</value>
+  </data>
+  <data name="ExpectedSemicolonDelimiterAfterValueName" xml:space="preserve">
+    <value>വാല്യൂ നാമത്തിന് ശേഷം സെമികോളൺ ഡെലിമിറ്റർ പ്രതീക്ഷിച്ചു, കിട്ടിയത്: 0x{0:X4}</value>
+  </data>
+  <data name="ExpectedSemicolonDelimiterAfterType" xml:space="preserve">
+    <value>തരത്തിന് ശേഷം സെമികോളൺ ഡെലിമിറ്റർ പ്രതീക്ഷിച്ചു, കിട്ടിയത്: 0x{0:X4}</value>
+  </data>
+  <data name="ExpectedSemicolonDelimiterAfterSize" xml:space="preserve">
+    <value>വലുപ്പത്തിന് ശേഷം സെമികോളൺ ഡെലിമിറ്റർ പ്രതീക്ഷിച്ചു, കിട്ടിയത്: 0x{0:X4}</value>
+  </data>
+  <data name="CouldNotReadBytesOfData" xml:space="preserve">
+    <value>{0} ബൈറ്റുകൾ ഡാറ്റ വായിക്കാൻ കഴിഞ്ഞില്ല, {1} ബൈറ്റുകൾ മാത്രമേ കിട്ടിയുള്ളൂ</value>
+  </data>
+  <data name="ExpectedClosingBracketAfterData" xml:space="preserve">
+    <value>ഡാറ്റയ്ക്ക് ശേഷം ക്ലോസിംഗ് ബ്രാക്കറ്റ് പ്രതീക്ഷിച്ചു, കിട്ടിയത്: 0x{0:X4}</value>
+  </data>
+  <data name="UnexpectedEndOfStreamReadingUnicodeString" xml:space="preserve">
+    <value>യൂണികോഡ് സ്ട്രിംഗ് വായിക്കുമ്പോൾ സ്ട്രീമിന്റെ അപ്രതീക്ഷിത അവസാനം</value>
+  </data>
+  <data name="AtLeastOneOtherPolicyFileMustBeProvided" xml:space="preserve">
+    <value>കുറഞ്ഞത് ഒരു മറ്റ് പോളിസി ഫയൽ നൽകണം</value>
+  </data>
+  <data name="MainPolicyFilePathCannotBeNullOrEmpty" xml:space="preserve">
+    <value>പ്രധാന പോളിസി ഫയൽ പാത്ത് null അല്ലെങ്കിൽ ശൂന്യമാകാൻ പാടില്ല</value>
+  </data>
+  <data name="AtLeastOneOtherPolicyFilePathMustBeProvided" xml:space="preserve">
+    <value>കുറഞ്ഞത് ഒരു മറ്റ് പോളിസി ഫയൽ പാത്ത് നൽകണം</value>
+  </data>
+  <data name="PolicyFilePathAtIndexCannotBeNullOrEmpty" xml:space="preserve">
+    <value>ഇൻഡക്സ് {0}-ലെ പോളിസി ഫയൽ പാത്ത് null അല്ലെങ്കിൽ ശൂന്യമാകാൻ പാടില്ല</value>
+  </data>
+  <data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
+    <value>{0} എൻട്രികളോടെ നിലവിലുള്ള പോളിസി ഫയൽ ലോഡ് ചെയ്തു</value>
+  </data>
+  <data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
+    <value>പോളിസി ഫയൽ നിലവിലില്ല, പുതിയ ശൂന്യ പോളിസി ഫയൽ സൃഷ്ടിക്കുന്നു</value>
+  </data>
+  <data name="ReplacedEntries" xml:space="preserve">
+    <value>മാറ്റിസ്ഥാപിച്ച എൻട്രികൾ: {0}</value>
+  </data>
+  <data name="PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified" xml:space="preserve">
+    <value>പോളിസി ഫയൽ നിലവിലില്ല, എല്ലാ നയങ്ങളെയും പരിശോധിക്കാത്തതായി അടയാളപ്പെടുത്തുന്നു</value>
+  </data>
+  <data name="VerificationCompletePolicyFileDoesNotExist" xml:space="preserve">
+    <value>പരിശോധന പൂർത്തിയായി: {0}-ൽ നിന്നും 0 നയങ്ങൾ പൊരുത്തപ്പെടുന്നു (പോളിസി ഫയൽ നിലവിലില്ല)</value>
+  </data>
+  <data name="VerifyPolicyMatch" xml:space="preserve">
+    <value>പരിശോധന: {0}\{1} = പൊരുത്തം</value>
+  </data>
+  <data name="VerifyPolicyMismatch" xml:space="preserve">
+    <value>പരിശോധന: {0}\{1} = പൊരുത്തക്കേട്</value>
+  </data>
+  <data name="VerifyPolicyNotFound" xml:space="preserve">
+    <value>പരിശോധന: {0}\{1} = കണ്ടെത്തിയില്ല</value>
+  </data>
+  <data name="VerificationCompletePoliciesMatch" xml:space="preserve">
+    <value>പരിശോധന പൂർത്തിയായി: {1}-ൽ നിന്നും {0} നയങ്ങൾ പൊരുത്തപ്പെടുന്നു</value>
+  </data>
+  <data name="PolicyFileDoesNotExistNothingToRemove" xml:space="preserve">
+    <value>പോളിസി ഫയൽ നിലവിലില്ല, നീക്കം ചെയ്യാൻ ഒന്നുമില്ല</value>
+  </data>
+  <data name="RemovedPolicyEntry" xml:space="preserve">
+    <value>നീക്കം ചെയ്തു: {0}</value>
+  </data>
+  <data name="PolicyRemovalComplete" xml:space="preserve">
+    <value>പോളിസി നീക്കം പൂർത്തിയായി: {0} നയങ്ങൾ നീക്കം ചെയ്തു</value>
+  </data>
+   <data name="ProtectNavigationViewItemHeader.Content" xml:space="preserve">
+    <value>പ്രധാനം</value>
+  </data>
+  <data name="ProtectNavigationViewItem.Content" xml:space="preserve">
+    <value>സുരക്ഷ</value>
+  </data>
+  <data name="ProtectNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സുരക്ഷാ നടപടികൾ ബൾക്കിൽ പ്രയോഗിക്കാനും സത്യാപിക്കാനും നീക്കം ചെയ്യാനും ഓട്ടോമേറ്റ് ചെയ്യുന്നതിന് ഈ വിഭാഗം ഉപയോഗിക്കുക. തീരുമാനങ്ങൾ എടുക്കുന്നത് എളുപ്പമാക്കുന്നതിന് സുരക്ഷാ പ്രീസെറ്റുകൾ ലഭ്യമാണ്.</value>
+  </data>
+  <data name="ProtectNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സുരക്ഷാ നടപടികൾ ബൾക്കിൽ പ്രയോഗിക്കാനും സത്യാപിക്കാനും നീക്കം ചെയ്യാനും ഓട്ടോമേറ്റ് ചെയ്യുന്നതിന് ഈ വിഭാഗം ഉപയോഗിക്കുക. തീരുമാനങ്ങൾ എടുക്കുന്നത് എളുപ്പമാക്കുന്നതിന് സുരക്ഷാ പ്രീസെറ്റുകൾ ലഭ്യമാണ്.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Defender-നുമായി ബന്ധപ്പെട്ട സുരക്ഷാ നടപടികൾ പ്രയോഗിക്കുക, സത്യാപിക്കുക അല്ലെങ്കിൽ നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="MicrosoftDefenderNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>Microsoft Defender-നുമായി ബന്ധപ്പെട്ട സുരക്ഷാ നടപടികൾ പ്രയോഗിക്കുക, സത്യാപിക്കുക അല്ലെങ്കിൽ നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="ASRNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആക്രമണ പ്രതല കുറയ്ക്കൽ നിയമങ്ങൾ പ്രയോഗിക്കുക, സത്യാപിക്കുക അല്ലെങ്കിൽ നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="ASRNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആക്രമണ പ്രതല കുറയ്ക്കൽ നിയമങ്ങൾ പ്രയോഗിക്കുക, സത്യാപിക്കുക അല്ലെങ്കിൽ നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="BitLockerNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ ഉപകരണവും ഡാറ്റയും വിശ്രമത്തിൽ എങ്ങനെ സുരക്ഷിതമാക്കണമെന്ന് നിർവചിക്കാൻ ഉപയോഗിക്കുന്ന BitLocker സുരക്ഷാ ക്രമീകരണങ്ങൾ നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="BitLockerNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങളുടെ ഉപകരണവും ഡാറ്റയും വിശ്രമത്തിൽ എങ്ങനെ സുരക്ഷിതമാക്കണമെന്ന് നിർവചിക്കാൻ ഉപയോഗിക്കുന്ന BitLocker സുരക്ഷാ ക്രമീകരണങ്ങൾ നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="TLSSecurityNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ട്രാൻസിറ്റിൽ നിങ്ങളുടെ ഡാറ്റ സംരക്ഷിക്കുന്നതിന് TLS-ഉം സൈഫർ സ്യൂട്ടുകളും നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="TLSSecurityNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ട്രാൻസിറ്റിൽ നിങ്ങളുടെ ഡാറ്റ സംരക്ഷിക്കുന്നതിന് TLS-ഉം സൈഫർ സ്യൂട്ടുകളും നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="LockScreenNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ ലോക്ക് സ്ക്രീൻ ശക്തിപ്പെടുത്തുകയും അംഗീകൃതമല്ലാത്ത ഉപയോക്താക്കൾക്ക് ലഭ്യമായ വിവരങ്ങളുടെ അളവ് കുറയ്ക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="LockScreenNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങളുടെ ലോക്ക് സ്ക്രീൻ ശക്തിപ്പെടുത്തുകയും അംഗീകൃതമല്ലാത്ത ഉപയോക്താക്കൾക്ക് ലഭ്യമായ വിവരങ്ങളുടെ അളവ് കുറയ്ക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="UACNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എലിവേറ്റഡ് അല്ലാത്തതും എലിവേറ്റഡ് ടാസ്കുകളും തമ്മിലുള്ള അതിർത്തി സുരക്ഷിതമാക്കുക.</value>
+  </data>
+  <data name="UACNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എലിവേറ്റഡ് അല്ലാത്തതും എലിവേറ്റഡ് ടാസ്കുകളും തമ്മിലുള്ള അതിർത്തി സുരക്ഷിതമാക്കുക.</value>
+  </data>
+  <data name="DeviceGuardNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>OS-ഉം സോഫ്റ്റ്‌വെയറും കഠിനമാക്കുന്നതിന് ഹാർഡ്‌വെയർ സുരക്ഷാ സവിശേഷതകൾ ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="DeviceGuardNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>OS-ഉം സോഫ്റ്റ്‌വെയറും കഠിനമാക്കുന്നതിന് ഹാർഡ്‌വെയർ സുരക്ഷാ സവിശേഷതകൾ ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="WindowsFirewallNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows ഫയർവാൾ ക്രമീകരണങ്ങൾ കോൺഫിഗർ ചെയ്യുകയും സത്യാപിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="WindowsFirewallNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows ഫയർവാൾ ക്രമീകരണങ്ങൾ കോൺഫിഗർ ചെയ്യുകയും സത്യാപിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ ഓപ്ഷണൽ Windows സവിശേഷതകളുടെയും കഴിവുകളുടെയും അവസ്ഥകൾ ചേർക്കുക, നീക്കം ചെയ്യുക, കാണുക.</value>
+  </data>
+  <data name="OptionalWindowsFeaturesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ ഓപ്ഷണൽ Windows സവിശേഷതകളുടെയും കഴിവുകളുടെയും അവസ്ഥകൾ ചേർക്കുക, നീക്കം ചെയ്യുക, കാണുക.</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ OS ബന്ധിപ്പിച്ചിരിക്കുന്ന നെറ്റ്‌വർക്കിൽ സുരക്ഷിതമാക്കുക.</value>
+  </data>
+  <data name="WindowsNetworkingNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങളുടെ OS ബന്ധിപ്പിച്ചിരിക്കുന്ന നെറ്റ്‌വർക്കിൽ സുരക്ഷിതമാക്കുക.</value>
+  </data>
+  <data name="MiscellaneousNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കൂടുതൽ നിർദ്ദിഷ്ട വിഭാഗങ്ങളിൽ ഉൾപ്പെടാത്ത സുരക്ഷാ നടപടികൾ കാണുക, പ്രയോഗിക്കുക അല്ലെങ്കിൽ നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="MiscellaneousNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കൂടുതൽ നിർദ്ദിഷ്ട വിഭാഗങ്ങളിൽ ഉൾപ്പെടാത്ത സുരക്ഷാ നടപടികൾ കാണുക, പ്രയോഗിക്കുക അല്ലെങ്കിൽ നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="WindowsUpdateNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കഴിയുന്നത്ര വേഗത്തിൽ ഏറ്റവും പുതിയ സുരക്ഷാ അപ്‌ഡേറ്റുകൾ ലഭിക്കുന്നുണ്ടെന്ന് ഉറപ്പാക്കാൻ Windows Update ക്രമീകരണങ്ങൾ കോൺഫിഗർ ചെയ്യുക.</value>
+  </data>
+  <data name="WindowsUpdateNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കഴിയുന്നത്ര വേഗത്തിൽ ഏറ്റവും പുതിയ സുരക്ഷാ അപ്‌ഡേറ്റുകൾ ലഭിക്കുന്നുണ്ടെന്ന് ഉറപ്പാക്കാൻ Windows Update ക്രമീകരണങ്ങൾ കോൺഫിഗർ ചെയ്യുക.</value>
+  </data>
+  <data name="EdgeBrowserNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കൂടുതൽ സുരക്ഷിതവും സ്വകാര്യവുമായ ബ്രൗസിംഗ് അനുഭവത്തിനായി Edge ബ്രൗസർ കഠിനമാക്കുക.</value>
+  </data>
+  <data name="EdgeBrowserNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കൂടുതൽ സുരക്ഷിതവും സ്വകാര്യവുമായ ബ്രൗസിംഗ് അനുഭവത്തിനായി Edge ബ്രൗസർ കഠിനമാക്കുക.</value>
+  </data>
+  <data name="CertificatesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft-ന്റെ വിശ്വസനീയ റൂട്ട് സർട്ടിഫിക്കേറ്റ് ലിസ്റ്റിലെ ഏതെങ്കിലും സർട്ടിഫിക്കേറ്റിൽ റൂട്ട് ചെയ്യാത്ത നിങ്ങളുടെ സിസ്റ്റത്തിലെ എല്ലാ സർട്ടിഫിക്കേറ്റുകളും കണ്ടെത്തുക.</value>
+  </data>
+  <data name="CertificatesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft-ന്റെ വിശ്വസനീയ റൂട്ട് സർട്ടിഫിക്കേറ്റ് ലിസ്റ്റിലെ ഏതെങ്കിലും സർട്ടിഫിക്കേറ്റിൽ റൂട്ട് ചെയ്യാത്ത നിങ്ങളുടെ സിസ്റ്റത്തിലെ എല്ലാ സർട്ടിഫിക്കേറ്റുകളും കണ്ടെത്തുക.</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>വിവിധ യുണൈറ്റഡ് സ്റ്റേറ്റ്സ് ഔദ്യോഗിക ഉപരോധ ലിസ്റ്റുകളിലെ രാജ്യങ്ങളുടെ IP വിലാസ ശ്രേണികൾ ബ്ലോക്ക് ചെയ്യുക.</value>
+  </data>
+  <data name="CountryIPBlockingNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>വിവിധ യുണൈറ്റഡ് സ്റ്റേറ്റ്സ് ഔദ്യോഗിക ഉപരോധ ലിസ്റ്റുകളിലെ രാജ്യങ്ങളുടെ IP വിലാസ ശ്രേണികൾ ബ്ലോക്ക് ചെയ്യുക.</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലെ ഉപയോക്താവിന് മാത്രം ബാധകമായ സുരക്ഷാ നടപടികൾ സത്യാപിക്കുക, നീക്കം ചെയ്യുക, പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="NonAdminCommandsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+     <value>നിലവിലെ ഉപയോക്താവിന് മാത്രം ബാധകമായ സുരക്ഷാ നടപടികൾ സത്യാപിക്കുക, നീക്കം ചെയ്യുക, പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="GroupPolicyEditorNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Group Policy ഫയലുകൾ വായിക്കുക, അവ JSON-ലേക്ക് എക്സ്പോർട്ട് ചെയ്യുക, അവ മേർജ് ചെയ്യുക, സിസ്റ്റത്തിന്റെ പൂർണ്ണ സുരക്ഷാ നയ വിശദാംശങ്ങൾ വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="GroupPolicyEditorNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Group Policy ഫയലുകൾ വായിക്കുക, അവ JSON-ലേക്ക് എക്സ്പോർട്ട് ചെയ്യുക, അവ മേർജ് ചെയ്യുക, സിസ്റ്റത്തിന്റെ പൂർണ്ണ സുരക്ഷാ നയ വിശദാംശങ്ങൾ വീണ്ടെടുക്കുക.</value>
+  </data>
+    <data name="ApplyText.Text" xml:space="preserve">
+    <value>പ്രയോഗിക്കുക</value>
+  </data>
+      <data name="VerifyText.Text" xml:space="preserve">
+    <value>സത്യാപിക്കുക</value>
+  </data>
+      <data name="RemoveText.Text" xml:space="preserve">
+    <value>നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="OpenTheFollowingLinkInBrowser" xml:space="preserve">
+    <value>ഇനിപ്പറയുന്ന ലിങ്ക് ബ്രൗസറിൽ തുറക്കുക: {0}</value>
+  </data>
+  <data name="StatusOverviewText.Text" xml:space="preserve">
+    <value>സ്റ്റാറ്റസ് അവലോകനം</value>
+  </data>
+  <data name="SearchSecurityMeasuresPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>സുരക്ഷാ നടപടികൾക്കായി തിരയുക...</value>
+  </data>
+  <data name="SearchFeatureCapabilityPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>സവിശേഷതകളിലും കഴിവുകളിലും തിരയുക...</value>
+  </data>
+  <data name="ReputationText.Text" xml:space="preserve">
+    <value>പ്രശസ്തി</value>
+  </data>
+  <data name="SourceText.Text" xml:space="preserve">
+    <value>ഉറവിടം</value>
+  </data>
+  <data name="DurationText.Text" xml:space="preserve">
+    <value>കാലാവധി</value>
+  </data>
+  <data name="CopyToClipBoard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തുക</value>
+  </data>
+  <data name="CopyToClipBoard.AutomationProperties.HelpText" xml:space="preserve">
+     <value>ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തുക</value>
+  </data>
+  <data name="GetAppsListText.Text" xml:space="preserve">
+    <value>ആപ്പുകളുടെ ലിസ്റ്റ് നേടുക</value>
+  </data>
+  <data name="UninstallSelectedAppsText.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ആപ്പുകൾ അൺഇൻസ്റ്റാൾ ചെയ്യുക</value>
+  </data>
+  <data name="SearchForAppsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>ആപ്പുകൾക്കായി തിരയുക...</value>
+  </data>
+  <data name="UninstallText.Text" xml:space="preserve">
+    <value>അൺഇൻസ്റ്റാൾ</value>
+  </data>
+    <data name="OpenLocationText.Text" xml:space="preserve">
+    <value>സ്ഥാനം തുറക്കുക</value>
+  </data>
+  <data name="CopyAppDetailsText.Text" xml:space="preserve">
+    <value>ആപ്പ് വിശദാംശങ്ങൾ പകർത്തുക</value>
+  </data>
+  <data name="DetailsText.Text" xml:space="preserve">
+    <value>വിശദാംശങ്ങൾ</value>
+  </data>
+  <data name="ConvertINFToJSONText.Text" xml:space="preserve">
+    <value>സുരക്ഷാ INF-നെ JSON-ആക്കി മാറ്റുക</value>
+  </data>
+    <data name="ConvertINFToJSONButton.Content" xml:space="preserve">
+    <value>മാറ്റുക</value>
+  </data>
+  <data name="ConvertINFToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത സുരക്ഷാ നയ INF ഫയൽ JSON-ആക്കി മാറ്റുന്നത് ആരംഭിക്കുക.</value>
+  </data>
+  <data name="ConvertINFToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത സുരക്ഷാ നയ INF ഫയൽ JSON-ആക്കി മാറ്റുന്നത് ആരംഭിക്കുക.</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.Header" xml:space="preserve">
+    <value>JSON ഫയലുകൾക്കുള്ള ഔട്ട്പുട്ട് ഡയറക്ടറി</value>
+  </data>
+    <data name="OutputDirForJSONSettingsCard.Description" xml:space="preserve">
+    <value>മാറ്റിയ JSON ഫയലുകൾ എവിടെ സേവ് ചെയ്യണമെന്ന് തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മാറ്റിയ JSON ഫയലുകൾ എവിടെ സേവ് ചെയ്യണമെന്ന് തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="OutputDirForJSONSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>മാറ്റിയ JSON ഫയലുകൾ എവിടെ സേവ് ചെയ്യണമെന്ന് തിരഞ്ഞെടുക്കുക</value>
+  </data>
+    <data name="SelectedINFFilesText.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത സുരക്ഷാ INF ഫയലുകൾ</value>
+  </data>
+  <data name="SelectedDirectoryText.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഡയറക്ടറി</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.Header" xml:space="preserve">
+    <value>JSON കൺവർഷനുവേണ്ടി സുരക്ഷാ INF ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+    <data name="INFToJSONConversionSectionSettingsCard.Description" xml:space="preserve">
+    <value>JSON ഫോർമാറ്റിലേക്ക് മാറ്റുന്നതിന് ഒന്നോ അതിലധികമോ സുരക്ഷാ INF ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>JSON ഫോർമാറ്റിലേക്ക് മാറ്റുന്നതിന് ഒന്നോ അതിലധികമോ സുരക്ഷാ INF ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="INFToJSONConversionSectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>JSON ഫോർമാറ്റിലേക്ക് മാറ്റുന്നതിന് ഒന്നോ അതിലധികമോ സുരക്ഷാ INF ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+    <data name="SelectedText.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തത്: </value>
+  </data>
+  <data name="StatusAppliedText" xml:space="preserve">
+    <value>സ്റ്റാറ്റസ്: പ്രയോഗിച്ചു</value>
+  </data>
+    <data name="StatusNotAppliedText" xml:space="preserve">
+    <value>സ്റ്റാറ്റസ്: പ്രയോഗിച്ചിട്ടില്ല</value>
+  </data>
+    <data name="StatusUndeterminedText" xml:space="preserve">
+    <value>സ്റ്റാറ്റസ്: നിർണ്ണയിച്ചിട്ടില്ല</value>
+  </data>
+  <data name="AppliedText" xml:space="preserve">
+    <value>പ്രയോഗിച്ചു</value>
+  </data>
+    <data name="NotAppliedText" xml:space="preserve">
+    <value>പ്രയോഗിച്ചിട്ടില്ല</value>
+  </data>
+    <data name="NAText" xml:space="preserve">
+    <value>ലഭ്യമല്ല</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+  <value>Harden Windows Security എന്നത് നിരവധി വിപുലമായ ഭീഷണികൾക്കെതിരെ സുരക്ഷിതമായിരിക്കാൻ നിങ്ങളുടെ സിസ്റ്റം കോൺഫിഗർ ചെയ്യാൻ സഹായിക്കുന്ന ഒരു ആപ്ലിക്കേഷനാണ്, ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ ലഭ്യമായതും Microsoft നൽകുന്നതുമായ ടൂളുകളും സവിശേഷതകളും മാത്രം ഉപയോഗിച്ച്, മൂന്നാം കക്ഷി ടൂളുകളോ പ്രോഗ്രാമുകളോ ഉപയോഗിക്കാതെ.</value>
+</data>
+  <data name="LogsPageTitle.Text" xml:space="preserve">
+    <value>Harden Windows Security സ്വയമേവ സൃഷ്ടിക്കുകയും നിയുക്ത ഫോൾഡറിൽ സംഭരിക്കുകയും ചെയ്യുന്ന ലോഗുകൾ താഴെ പറഞ്ഞിരിക്കുന്നവയാണ്. ലോഗ് ഫോൾഡറിന്റെ മൊത്തം വലുപ്പം ഒരിക്കലും 1GB കവിയില്ല.</value>
+  </data>
+  <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
+    <value>ലോഗ് ഡയറക്ടറി തുറക്കുക</value>
+  </data>
+</root>

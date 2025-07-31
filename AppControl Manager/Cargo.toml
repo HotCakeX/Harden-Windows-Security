@@ -1,0 +1,29 @@
+[workspace]
+members = [
+  "eXclude/exploit_mitigations",
+  "eXclude/Rust WMI Interop/Microsoft Defender/*",
+  "eXclude/Rust WMI Interop/Device Guard/*",
+  "eXclude/ResourceValidator",
+  "eXclude/dism_capabilities",
+  "eXclude/Rust Interop Library",
+  "eXclude/group_policy"]
+resolver = "3"
+
+[workspace.package]
+edition = "2024"
+authors = ["Violet Hansen"]
+license = "MIT"
+homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
+repository = "https://github.com/HotCakeX/Harden-Windows-Security"
+documentation = "https://github.com/HotCakeX/Harden-Windows-Security"
+publish = false
+rust-version = "1.90"
+
+[profile.release]
+codegen-units = 1
+opt-level = "s"
+split-debuginfo = "packed"
+strip = "symbols"
+lto = "fat"
+incremental = false
+panic = "unwind"

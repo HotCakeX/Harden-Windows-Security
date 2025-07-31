@@ -1962,7 +1962,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		try
 		{
 			PFNElementsAreEnabled = false;
-			PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync();
+			PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync(this);
 		}
 		finally
 		{
@@ -2022,7 +2022,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 	// Used to store the original Apps collection so when we filter the results and then remove the filters,
 	// We can still have access to the original collection of apps
-	private ObservableCollection<GroupInfoListForPackagedAppView>? _originalContacts;
+	private ObservableCollection<GroupInfoListForPackagedAppView>? _AppsListBackingList;
 
 	/// <summary>
 	/// Event handler for when the search box of apps list changes
@@ -2030,17 +2030,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	private void PFNAppFilteringTextBox_TextChanged()
 	{
 		// Store the original collection if it hasn't been saved yet
-		_originalContacts ??= PFNBasedAppsListItemsSource;
+		_AppsListBackingList ??= PFNBasedAppsListItemsSource;
 
 		if (string.IsNullOrWhiteSpace(PFNBasedSearchKeywordForAppsList))
 		{
 			// If the filter is cleared, restore the original collection
-			PFNBasedAppsListItemsSource = _originalContacts;
+			PFNBasedAppsListItemsSource = _AppsListBackingList;
 			return;
 		}
 
 		// Filter the original collection
-		List<GroupInfoListForPackagedAppView> filtered = _originalContacts
+		List<GroupInfoListForPackagedAppView> filtered = _AppsListBackingList
 			.Select(group => new GroupInfoListForPackagedAppView(
 				items: group.Where(app => app.DisplayName.Contains(PFNBasedSearchKeywordForAppsList, StringComparison.OrdinalIgnoreCase)),
 				key: group.Key)).Where(group => group.Any()).ToList();
@@ -2059,7 +2059,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			try
 			{
 				PFNElementsAreEnabled = false;
-				PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync();
+				PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync(this);
 			}
 			finally
 			{
@@ -2153,7 +2153,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 				if (selectedItem is PackagedAppView appView)
 				{
 					// Add the selected item's PFN to the list
-					selectedAppsPFNs.Add(appView.PackageFamilyNameActual);
+					selectedAppsPFNs.Add(appView.PackageFamilyName);
 				}
 			}
 
@@ -2265,6 +2265,118 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	internal async void OpenInPolicyEditor_PFN() => await PolicyEditorViewModel.OpenInPolicyEditor(_PFNSupplementalPolicyPath);
 
 	internal async void OpenInDefaultFileHandler_PFN() => await OpenInDefaultFileHandler(_PFNSupplementalPolicyPath);
+
+	/// <summary>
+	/// Event handler for copying app details to clipboard from the context menu.
+	/// </summary>
+	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
+	/// <param name="e">Event arguments</param>
+	internal void CopyAppDetails_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			PFNInfoBar.IsClosable = false;
+
+			if (sender is not MenuFlyoutItem menuItem)
+			{
+				return;
+			}
+
+			// Navigate up the visual tree to find the PackagedAppView data context
+			DependencyObject? current = menuItem;
+			PackagedAppView? targetApp = null;
+
+			while (current is not null)
+			{
+				if (current is FrameworkElement element && element.DataContext is PackagedAppView app)
+				{
+					targetApp = app;
+					break;
+				}
+				current = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(current);
+			}
+
+			if (targetApp is null)
+			{
+				PFNInfoBar.WriteWarning("Could not determine which app's details to copy.");
+				return;
+			}
+
+			ListViewHelper.ConvertRowToText([targetApp], ListViewHelper.PackagedAppPropertyMappings);
+		}
+		catch (Exception ex)
+		{
+			PFNInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			PFNInfoBar.IsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Event handler for opening the installation location of a single app from the context menu.
+	/// </summary>
+	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
+	/// <param name="e">Event arguments</param>
+	internal async void OpenAppLocation_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			PFNInfoBar.IsClosable = false;
+
+			if (sender is not MenuFlyoutItem menuItem)
+			{
+				return;
+			}
+
+			// Navigate up the visual tree to find the PackagedAppView data context
+			DependencyObject? current = menuItem;
+			PackagedAppView? targetApp = null;
+
+			while (current is not null)
+			{
+				if (current is FrameworkElement element && element.DataContext is PackagedAppView app)
+				{
+					targetApp = app;
+					break;
+				}
+				current = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(current);
+			}
+
+			if (targetApp is null)
+			{
+				PFNInfoBar.WriteWarning("Could not determine which app's location to open.");
+				return;
+			}
+
+			if (string.IsNullOrWhiteSpace(targetApp.InstallLocation))
+			{
+				PFNInfoBar.WriteWarning($"No installation location available for {targetApp.DisplayName}.");
+				return;
+			}
+
+			// Check if the directory exists
+			if (!Directory.Exists(targetApp.InstallLocation))
+			{
+				PFNInfoBar.WriteWarning($"Installation location does not exist: {targetApp.InstallLocation}");
+				return;
+			}
+
+			// Open the folder in File Explorer
+			await OpenInDefaultFileHandler(targetApp.InstallLocation);
+
+			PFNInfoBar.WriteInfo($"Opened installation location for {targetApp.DisplayName}");
+		}
+		catch (Exception ex)
+		{
+			PFNInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			PFNInfoBar.IsClosable = true;
+		}
+	}
 
 	#endregion
 

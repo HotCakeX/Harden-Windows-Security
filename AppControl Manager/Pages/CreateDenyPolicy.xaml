@@ -11,6 +11,7 @@
     xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:others="using:AppControlManager.Others"
+    xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
@@ -29,47 +30,339 @@
 
                 <!-- For the Packaged Apps ListView Grouping -->
                 <CollectionViewSource x:Name="PackagedAppsCollectionViewSource"
-                                      Source="{x:Bind ViewModel.PFNBasedAppsListItemsSource, Mode=OneWay}"
-                                      IsSourceGrouped="True"/>
+                           Source="{x:Bind ViewModel.PFNBasedAppsListItemsSource, Mode=OneWay}"
+                           IsSourceGrouped="True"/>
 
                 <!-- Defines a single App that is displayed in the ListView -->
                 <DataTemplate x:Key="PackagedAppsListViewTemplate" x:DataType="others:PackagedAppView">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                    <Border Background="{ThemeResource LayerFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Margin="4,2"
+                        Padding="16,12">
 
-                        <Border CornerRadius="15" VerticalAlignment="Center"
-                            HorizontalAlignment="Center" BorderThickness="0" Grid.RowSpan="3" Grid.Column="0">
-                            <Image Width ="32" Height="32" Margin="6" Source="{x:Bind Logo}" />
-                        </Border>
+                        <!-- Hover and Selection Visual States -->
+                        <Border.BackgroundTransition>
+                            <BrushTransition Duration="0:0:0.2"/>
+                        </Border.BackgroundTransition>
 
-                        <TextBlock Grid.Column="1"
-                                   Grid.Row="0"
-                                   Text="{x:Bind DisplayName}"
-                                   x:Phase="1"
-                                   Style="{ThemeResource BaseTextBlockStyle}"
-                                   Margin="12,6,0,0"/>
-                        <TextBlock  Grid.Column="1"
-                                   Grid.Row="1"
-                                   Text="{x:Bind Version}"
-                                   x:Phase="2"
-                                   Style="{ThemeResource BodyTextBlockStyle}"
-                                   Margin="12,6,0,0"/>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="MainBorder.Background" Value="{ThemeResource LayerFillColorAltBrush}"/>
+                                        <Setter Target="MainBorder.BorderBrush" Value="{ThemeResource AccentFillColorSecondaryBrush}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="MainBorder.Background" Value="{ThemeResource AccentFillColorDefaultBrush}"/>
+                                        <Setter Target="MainBorder.BorderBrush" Value="{ThemeResource AccentFillColorDefaultBrush}"/>
+                                        <Setter Target="AppNameText.Foreground" Value="{ThemeResource TextOnAccentFillColorPrimaryBrush}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
 
-                        <TextBlock Grid.Column="1"
-                                   Grid.Row="2"
-                                   Text="{x:Bind PackageFamilyName}"
-                                   x:Phase="2"
-                                   Style="{ThemeResource BodyTextBlockStyle}"
-                                   Margin="12,0,0,6"/>
-                    </Grid>
+                        <Grid x:Name="MainBorder">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- App Icon -->
+                            <Border Grid.Column="0"
+                                Background="{ThemeResource LayerFillColorAltBrush}"
+                                CornerRadius="12"
+                                Width="35"
+                                Height="35"
+                                Margin="0,0,16,0"
+                                VerticalAlignment="Top">
+                                <Border.Shadow>
+                                    <ThemeShadow/>
+                                </Border.Shadow>
+                                <Image Source="{x:Bind Logo}"
+                                   Stretch="UniformToFill"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Main Content Area -->
+                            <StackPanel Grid.Column="1"
+                                    Spacing="8"
+                                    VerticalAlignment="Top">
+
+                                <!-- App Name - Primary Information -->
+                                <TextBlock x:Name="AppNameText"
+                                       Text="{x:Bind DisplayName}"
+                                       Style="{ThemeResource SubtitleTextBlockStyle}"
+                                       FontWeight="SemiBold"
+                                       TextWrapping="Wrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       x:Phase="0"/>
+
+                                <!-- Secondary Information -->
+                                <controls:WrapPanel x:Name="SecondaryInfoWrapPanel"
+                                              Orientation="Horizontal"
+                                              HorizontalSpacing="16"
+                                              VerticalSpacing="6">
+
+                                    <!-- Version -->
+                                    <Grid MinWidth="120">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <FontIcon Grid.Column="0"
+                                              Glyph="&#xE895;"
+                                              FontSize="12"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                              Margin="0,0,4,0"
+                                              VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1"
+                                               x:Uid="PFNVersionLabel"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                               Margin="0,0,4,0"
+                                               VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2"
+                                               Text="{x:Bind Version}"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                               x:Phase="1"
+                                               VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <!-- Architecture -->
+                                    <Grid MinWidth="120">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <FontIcon Grid.Column="0"
+                                              Glyph="&#xE7C4;"
+                                              FontSize="12"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                              Margin="0,0,4,0"
+                                              VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1"
+                                               x:Uid="PFNArchitectureLabel"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                               Margin="0,0,4,0"
+                                               VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2"
+                                               Text="{x:Bind Architecture}"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                               x:Phase="1"
+                                               VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <!-- Publisher -->
+                                    <Grid MinWidth="200" MaxWidth="300">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <FontIcon Grid.Column="0"
+                                              Glyph="&#xE7EE;"
+                                              FontSize="12"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                              Margin="0,0,4,0"
+                                              VerticalAlignment="Top"/>
+                                        <TextBlock Grid.Column="1"
+                                               x:Uid="PFNPublisherLabel"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                               Margin="0,0,4,0"
+                                               VerticalAlignment="Top"/>
+                                        <TextBlock Grid.Column="2"
+                                               Text="{x:Bind Publisher}"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                               TextWrapping="Wrap"
+                                               TextTrimming="CharacterEllipsis"
+                                               x:Phase="1"/>
+                                    </Grid>
+
+                                    <!-- Installed Date -->
+                                    <Grid MinWidth="140">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <FontIcon Grid.Column="0"
+                                              Glyph="&#xE787;"
+                                              FontSize="12"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                              Margin="0,0,4,0"
+                                              VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="1"
+                                               x:Uid="PFNInstalledDateLabel"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                               Margin="0,0,4,0"
+                                               VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2"
+                                               Text="{x:Bind InstalledDate}"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                               x:Phase="1"
+                                               VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                </controls:WrapPanel>
+
+                                <!-- Expandable Details Section -->
+                                <Expander x:Name="DetailsExpander"
+                                      HorizontalAlignment="Stretch"
+                                      HorizontalContentAlignment="Stretch"
+                                      CornerRadius="6"
+                                      Background="{ThemeResource LayerFillColorAltBrush}"
+                                      BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                      BorderThickness="1">
+                                    <Expander.Header>
+                                        <TextBlock Text="Details"
+                                               Style="{ThemeResource CaptionTextBlockStyle}"
+                                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                                    </Expander.Header>
+
+                                    <StackPanel Spacing="6" Margin="0,8,0,0">
+
+                                        <!-- Package Family Name -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0"
+                                                   x:Uid="PFNLabel"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   Width="100"
+                                                   Margin="0,0,8,0"/>
+                                            <TextBlock Grid.Column="1"
+                                                   Text="{x:Bind PackageFamilyName}"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   TextWrapping="Wrap"
+                                                   IsTextSelectionEnabled="True"
+                                                   x:Phase="2"/>
+                                        </Grid>
+
+                                        <!-- Publisher ID -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0"
+                                                   x:Uid="PFNPublisherID"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   Width="100"
+                                                   Margin="0,0,8,0"/>
+                                            <TextBlock Grid.Column="1"
+                                                   Text="{x:Bind PublisherID}"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   TextWrapping="Wrap"
+                                                   IsTextSelectionEnabled="True"
+                                                   x:Phase="2"/>
+                                        </Grid>
+
+                                        <!-- Description -->
+                                        <Grid x:Name="DescriptionGrid">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0"
+                                                   x:Uid="PFNDescription"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   Width="100"
+                                                   Margin="0,0,8,0"
+                                                   VerticalAlignment="Top"/>
+                                            <TextBlock Grid.Column="1"
+                                                   Text="{x:Bind Description}"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   TextWrapping="Wrap"
+                                                   IsTextSelectionEnabled="True"
+                                                   x:Phase="2"/>
+                                        </Grid>
+
+                                        <!-- Install Location -->
+                                        <Grid x:Name="InstallLocationGrid">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0"
+                                                   x:Uid="PFNInstallLocation"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   Width="100"
+                                                   Margin="0,0,8,0"
+                                                   VerticalAlignment="Top"/>
+                                            <TextBlock Grid.Column="1"
+                                                   Text="{x:Bind InstallLocation}"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   TextWrapping="Wrap"
+                                                   IsTextSelectionEnabled="True"
+                                                   x:Phase="2"/>
+                                        </Grid>
+
+                                        <!-- Full Name -->
+                                        <Grid x:Name="FullnameGrid">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0"
+                                                   x:Uid="PFNFullNameLabel"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   Width="100"
+                                                   Margin="0,0,8,0"
+                                                   VerticalAlignment="Top"/>
+                                            <TextBlock Grid.Column="1"
+                                                   Text="{x:Bind FullName}"
+                                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                                   TextWrapping="Wrap"
+                                                   IsTextSelectionEnabled="True"
+                                                   x:Phase="2"/>
+                                        </Grid>
+
+                                    </StackPanel>
+                                </Expander>
+
+                            </StackPanel>
+
+                            <!-- Action Button Area -->
+                            <StackPanel Grid.Column="2"
+                                    Orientation="Vertical"
+                                    Spacing="8"
+                                    VerticalAlignment="Top"
+                                    Margin="16,0,0,0">
+
+                                <!-- Quick Action Button -->
+                                <Button Style="{ThemeResource AccentButtonStyle}"
+                                    Width="32"
+                                    Height="32"
+                                    Padding="0"
+                                    CornerRadius="16"
+                                    ToolTipService.ToolTip="Quick Actions">
+                                    <FontIcon Glyph="&#xE712;" FontSize="14"/>
+                                    <Button.Flyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="Open Location"
+                                                        Icon="Folder"
+                                                        Click="{x:Bind ((vm:CreateDenyPolicyVM)VMRef).OpenAppLocation_Click}"/>
+                                            <MenuFlyoutItem Text="Copy App Details"
+                                                            Icon="Copy"
+                                                            Click="{x:Bind ((vm:CreateDenyPolicyVM)VMRef).CopyAppDetails_Click}"/>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
+
+                            </StackPanel>
+
+                        </Grid>
+                    </Border>
                 </DataTemplate>
 
             </Grid.Resources>
@@ -101,7 +394,7 @@
                     </ani:AnimationSet>
                 </ani:Explicit.Animations>
 
-                <Border Height="60"                        
+                <Border Height="60"
                         BorderThickness="0"
                         CornerRadius="18">
 
@@ -498,7 +791,7 @@
                                         ItemsSource="{x:Bind PackagedAppsCollectionViewSource.View, Mode=OneWay}"
                                         BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
                                         Width="450"
-                                        Height="400"
+                                        Height="450"
                                         HorizontalAlignment="Left"
                                         SelectionMode="Multiple"
                                         SelectionChanged="{x:Bind ViewModel.PFNPackagedAppsListView_SelectionChanged}"

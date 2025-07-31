@@ -436,7 +436,7 @@ internal static class SecurityPolicyReader
 	/// Reads the [System Access] policies.
 	/// </summary>
 	/// <returns></returns>
-	private static SystemAccessInfo GetSystemAccess()
+	internal static SystemAccessInfo GetSystemAccess()
 	{
 		SystemAccessInfo systemAccess = new();
 

@@ -15,8 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using Microsoft.UI.Xaml.Controls;
 using HardenWindowsSecurity.ViewModels;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenWindowsSecurity.Pages.Protects;

@@ -20,16 +20,28 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using AppControlManager;
 using AppControlManager.Others;
+using HardenWindowsSecurity.GroupPolicy;
 
 namespace HardenWindowsSecurity.SecurityPolicy;
 
 internal static partial class SecurityPolicyManager
 {
+	/*
+	 E.g.,
+	 Dictionary<string, string> settings = new()
+        {
+            { "PasswordComplexity", "0" },
+            { "MinimumPasswordLength", "10" },
+            { "PasswordHistorySize", "26" },
+            { "MaximumPasswordAge", "24" },
+            { "MinimumPasswordAge", "22" }
+        };
+
+        SecurityPolicyManager.SetSystemAccessPolicy(settings);
+	 */
 
 	/// <summary>
 	/// Sets security policy values in the [System Access] section using secedit by accepting a dictionary of settings.
@@ -40,12 +52,12 @@ internal static partial class SecurityPolicyManager
 	{
 		if (systemAccessSettings.Count is 0)
 		{
-			throw new InvalidOperationException("No settings provided");
+			throw new InvalidOperationException(GlobalVars.GetStr("NoSettingsProvided"));
 		}
 
 		try
 		{
-			Logger.Write("Setting system access policy via secedit...");
+			Logger.Write(GlobalVars.GetStr("SettingSystemAccessPolicyViaSecedit"));
 
 			string tempSecurityTemplate = Path.GetTempFileName() + ".inf";
 			string tempSecurityDatabase = Path.GetTempFileName() + ".sdb";
@@ -70,8 +82,8 @@ Revision=1
 ";
 
 				File.WriteAllText(tempSecurityTemplate, securityTemplate);
-				Logger.Write($"Created security template: {tempSecurityTemplate}");
-				Logger.Write($"Template content:\n{securityTemplate}");
+				Logger.Write(string.Format(GlobalVars.GetStr("CreatedSecurityTemplate"), tempSecurityTemplate));
+				Logger.Write(string.Format(GlobalVars.GetStr("TemplateContent"), securityTemplate));
 
 				// Apply the security template using secedit
 				ProcessStartInfo startInfo = new()
@@ -84,31 +96,31 @@ Revision=1
 					CreateNoWindow = true
 				};
 
-				using Process process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start secedit process");
+				using Process process = Process.Start(startInfo) ?? throw new InvalidOperationException(GlobalVars.GetStr("FailedToStartSeceditProcess"));
 
 				_ = process.WaitForExit(30000); // 30 second timeout
 
 				string output = process.StandardOutput.ReadToEnd();
 				string error = process.StandardError.ReadToEnd();
 
-				Logger.Write($"Secedit exit code: {process.ExitCode}");
+				Logger.Write(string.Format(GlobalVars.GetStr("SeceditExitCode"), process.ExitCode));
 
 				if (!string.IsNullOrEmpty(output))
-					Logger.Write($"Secedit output: {output}");
+					Logger.Write(string.Format(GlobalVars.GetStr("SeceditOutput"), output));
 
 				if (!string.IsNullOrEmpty(error))
-					Logger.Write($"Secedit error: {error}");
+					Logger.Write(string.Format(GlobalVars.GetStr("SeceditError"), error));
 
 				if (process.ExitCode == 0)
 				{
-					Logger.Write("Secedit completed successfully");
+					Logger.Write(GlobalVars.GetStr("SeceditCompletedSuccessfully"));
 
 					// Force a policy refresh
-					RefreshGroupPolicy();
+					RefreshPolicies.Refresh();
 				}
 				else
 				{
-					throw new InvalidOperationException($"Secedit failed with exit code: {process.ExitCode}");
+					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SeceditFailedWithExitCode"), process.ExitCode));
 				}
 			}
 			finally
@@ -124,14 +136,14 @@ Revision=1
 				}
 				catch (Exception ex)
 				{
-					Logger.Write("Warning: Could not delete temporary files.");
+					Logger.Write(GlobalVars.GetStr("WarningCouldNotDeleteTemporaryFiles"));
 					Logger.Write(ErrorWriter.FormatException(ex));
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			Logger.Write("Secedit method failed.");
+			Logger.Write(GlobalVars.GetStr("SeceditMethodFailed"));
 			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 	}
@@ -144,17 +156,17 @@ Revision=1
 	{
 		if (!File.Exists(filePath))
 		{
-			throw new FileNotFoundException($"File not found: {filePath}");
+			throw new FileNotFoundException(string.Format(GlobalVars.GetStr("FileNotFoundPath"), filePath));
 		}
 
 		Dictionary<string, string> systemAccessSettings = ExtractSystemAccessSettings(filePath);
 
 		if (systemAccessSettings.Count == 0)
 		{
-			throw new InvalidOperationException("No [System Access] settings found in the specified file");
+			throw new InvalidOperationException(GlobalVars.GetStr("NoSystemAccessSettingsFoundInFile"));
 		}
 
-		Logger.Write($"Extracted {systemAccessSettings.Count} System Access settings from file: {filePath}");
+		Logger.Write(string.Format(GlobalVars.GetStr("ExtractedSystemAccessSettingsFromFile"), systemAccessSettings.Count, filePath));
 
 		foreach (KeyValuePair<string, string> setting in systemAccessSettings)
 		{
@@ -219,34 +231,6 @@ Revision=1
 
 		return settings;
 	}
-
-	/// <summary>
-	/// Refreshes system policies.
-	/// </summary>
-	private static void RefreshGroupPolicy()
-	{
-		try
-		{
-			Logger.Write("Refreshing group policy with force option...");
-
-			// true = machine policy, RP_FORCE = force refresh
-			bool result = NativeMethods.RefreshPolicyEx(true, NativeMethods.RP_FORCE);
-
-			Logger.Write($"Group policy refresh result: {result}");
-
-			if (!result)
-			{
-				int error = Marshal.GetLastWin32Error();
-				Logger.Write($"RefreshPolicyEx failed with error code: {error}");
-			}
-		}
-		catch (Exception ex)
-		{
-			Logger.Write("Warning: Could not refresh group policy.");
-			Logger.Write(ErrorWriter.FormatException(ex));
-		}
-	}
-
 
 	[GeneratedRegex(@"^([^=]+?)\s*=\s*(.+)$")]
 	private static partial Regex SystemAccessFindingRegex();

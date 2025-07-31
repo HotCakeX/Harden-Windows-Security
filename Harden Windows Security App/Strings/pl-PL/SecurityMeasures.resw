@@ -1,0 +1,934 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+<data name="PhishingProtectServiceEnabled-MSDefender" xml:space="preserve">
+    <value>Ulepszona usługa ochrony przed phishingiem włączona.</value>
+</data>
+<data name="NotifyUnsafeApp-MSDefender" xml:space="preserve">
+    <value>Ulepszona ochrona przed phishingiem: powiadomienie o niebezpiecznej aplikacji</value>
+</data>
+<data name="NotifyPasswordReuse-MSDefender" xml:space="preserve">
+    <value>Ulepszona ochrona przed phishingiem: powiadomienie o ponownym użyciu hasła</value>
+</data>
+<data name="NotifyMalicious-MSDefender" xml:space="preserve">
+    <value>Ulepszona ochrona przed phishingiem: powiadomienie o złośliwej zawartości</value>
+</data>
+<data name="CaptureThreatWindow-MSDefender" xml:space="preserve">
+    <value>Ulepszona ochrona przed phishingiem: przechwytywanie okna zagrożenia</value>
+</data>
+<data name="PurgeItemsAfterDelay-MSDefender" xml:space="preserve">
+    <value>Usuń elementy po opóźnieniu</value>
+</data>
+<data name="IOAVMaxSize-MSDefender" xml:space="preserve">
+    <value>Maksymalny rozmiar pobranych plików i załączników do skanowania</value>
+</data>
+<data name="DisableScanningMappedNetworkDrivesForFullScan-MSDefender" xml:space="preserve">
+    <value>Skanuj zmapowane dyski sieciowe podczas pełnego skanowania</value>
+</data>
+<data name="DisableScanningNetworkFiles-MSDefender" xml:space="preserve">
+    <value>Skanuj pliki sieciowe</value>
+</data>
+<data name="DisableRemovableDriveScanning-MSDefender" xml:space="preserve">
+    <value>Skanuj dyski wymienne</value>
+</data>
+<data name="DisableReparsePointScanning-MSDefender" xml:space="preserve">
+    <value>Skanuj punkty ponownej analizy</value>
+</data>
+<data name="ArchiveMaxDepth-MSDefender" xml:space="preserve">
+    <value>Maksymalna głębokość skanowania plików archiwum</value>
+</data>
+<data name="UpdateOnStartUp-MSDefender" xml:space="preserve">
+    <value>Sprawdź najnowsze informacje o wirusach i programach szpiegujących przy uruchamianiu</value>
+</data>
+<data name="AVSignatureDue-MSDefender" xml:space="preserve">
+    <value>Określ liczbę dni przed uznaniem informacji o wirusach za przestarzałe</value>
+</data>
+<data name="ASSignatureDue-MSDefender" xml:space="preserve">
+    <value>Określ liczbę dni przed uznaniem informacji o programach szpiegujących za przestarzałe</value>
+</data>
+<data name="DisableBlockAtFirstSeen-MSDefender" xml:space="preserve">
+    <value>Włącz funkcję blokowania przy pierwszym wykryciu.</value>
+</data>
+<data name="AllowTelemetry-MSDefender" xml:space="preserve">
+    <value>Opcjonalne dane diagnostyczne wymagane dla Smart App Control i innych funkcji.</value>
+</data>
+<data name="DisableTelemetryOptInSettingsUx-MSDefender" xml:space="preserve">
+    <value>Skonfiguruj interfejs ustawień włączania danych diagnostycznych</value>
+</data>
+<data name="5-MSDefender" xml:space="preserve">
+    <value>Poważny poziom zagrożenia domyślna akcja = Usuń</value>
+</data>
+<data name="4-MSDefender" xml:space="preserve">
+    <value>Wysoki poziom zagrożenia domyślna akcja = Usuń</value>
+</data>
+<data name="2-MSDefender" xml:space="preserve">
+    <value>Średni poziom zagrożenia domyślna akcja = Kwarantanna</value>
+</data>
+<data name="1-MSDefender" xml:space="preserve">
+    <value>Niski poziom zagrożenia domyślna akcja = Kwarantanna</value>
+</data>
+<data name="MeteredConnectionUpdates-MSDefender" xml:space="preserve">
+    <value>Zezwól na aktualizowanie Microsoft Defender Antivirus przez połączenia taryfowe</value>
+</data>
+<data name="SubmitSamplesConsent-MSDefender" xml:space="preserve">
+    <value>Wysyłaj próbki plików, gdy wymagana jest dalsza analiza</value>
+</data>
+<data name="Threats_ThreatSeverityDefaultAction-MSDefender" xml:space="preserve">
+    <value>Skonfiguruj domyślne akcje dla poziomów zagrożeń</value>
+</data>
+<data name="EnableControlledFolderAccess-MSDefender" xml:space="preserve">
+    <value>Włącz kontrolowany dostęp do folderów</value>
+</data>
+<data name="EnableNetworkProtection-MSDefender" xml:space="preserve">
+    <value>Włącz ochronę sieci</value>
+</data>
+<data name="AllowNetworkProtectionOnWinServer-MSDefender" xml:space="preserve">
+    <value>Włącz ochronę sieci na Windows Server</value>
+</data>
+<data name="TDTFeatureEnabled-MSDefender" xml:space="preserve">
+    <value>Włącz Intel TDT: technologię wykrywania zagrożeń.</value>
+</data>
+<data name="MpCloudBlockLevel-MSDefender" xml:space="preserve">
+    <value>Poziom blokowania w chmurze ustawiony na wartość maksymalną: tolerancja zerowa.</value>
+</data>
+<data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
+    <value>Rozszerzony limit czasu sprawdzania w chmurze ustawiony na wartość maksymalną."</value>
+</data>
+<data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
+    <value>Włącz obliczanie wartości hash plików.</value>
+</data>
+<data name="DisableAsyncScanOnOpen-MSDefender" xml:space="preserve">
+    <value>Wyłącz luźne zabezpieczenia Dev Drive dotyczące skanowania plików.</value>
+</data>
+<data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
+    <value>Włącz aktualizacje Rtp i sygnatur podczas trybu OOBE.</value>
+</data>
+<data name="BruteForceProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>Włącz funkcję ochrony przed atakami siłowymi.</value>
+</data>
+<data name="BruteForceProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>Skonfiguruj poziom agresywności ochrony przed atakami siłowymi na wysoki.</value>
+</data>
+<data name="RemoteEncryptionProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>Włącz funkcję ochrony przed zdalnym szyfrowaniem.</value>
+</data>
+<data name="RemoteEncryptionProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>Skonfiguruj poziom agresywności ochrony przed zdalnym szyfrowaniem na wysoki.</value>
+</data>
+<data name="DisableEmailScanning-MSDefender" xml:space="preserve">
+    <value>Włącz skanowanie poczty e-mail.</value>
+</data>
+<data name="DisableCatchupQuickScan-MSDefender" xml:space="preserve">
+    <value>Włącz szybkie skanowanie nadrabiające.</value>
+</data>
+<data name="CheckForSignaturesBeforeRunningScan-MSDefender" xml:space="preserve">
+    <value>Sprawdź sygnatury przed uruchomieniem skanowania.</value>
+</data>
+<data name="SignatureUpdateInterval-MSDefender" xml:space="preserve">
+    <value>Zwiększ interwał sprawdzania aktualizacji informacji zabezpieczeń.</value>
+</data>
+<data name="SpynetReporting-MSDefender" xml:space="preserve">
+    <value>Dołącz do sieci Microsoft MAPS (znanej również jako SpyNet), aby być na bieżąco z najnowszymi informacjami zabezpieczeń.</value>
+</data>
+<data name="ExploitGuard_ASR_Rules-ASR" xml:space="preserve">
+    <value>Skonfiguruj reguły ASR</value>
+</data>
+  <data name="56a863a9-875e-4185-98a7-b882c64b5ce5-ASR" xml:space="preserve">
+    <value>Blokuj nadużywanie wykorzystywanych podatnych podpisanych sterowników</value>
+  </data>
+  <data name="7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c-ASR" xml:space="preserve">
+    <value>Blokuj tworzenie procesów podrzędnych przez Adobe Reader</value>
+  </data>
+  <data name="d4f940ab-401b-4efc-aadc-ad5f3c50688a-ASR" xml:space="preserve">
+    <value>Blokuj tworzenie procesów podrzędnych przez wszystkie aplikacje Office</value>
+  </data>
+  <data name="9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2-ASR" xml:space="preserve">
+    <value>Blokuj kradzież poświadczeń z podsystemu Windows Local Security Authority (lsass.exe)</value>
+  </data>
+  <data name="be9ba2d9-53ea-4cdc-84e5-9b1eeee46550-ASR" xml:space="preserve">
+    <value>Blokuj zawartość wykonywalną z klienta poczty e-mail i poczty webowej</value>
+  </data>
+  <data name="01443614-cd74-433a-b99e-2ecdc07bfc25-ASR" xml:space="preserve">
+    <value>Blokuj uruchamianie plików wykonywalnych, chyba że spełniają kryteria rozpowszechnienia, wieku lub zaufanej listy</value>
+  </data>
+  <data name="5beb7efe-fd9a-4556-801d-275e5ffc04cc-ASR" xml:space="preserve">
+    <value>Blokuj wykonywanie potencjalnie zaciemnionych skryptów</value>
+  </data>
+  <data name="d3e037e1-3eb8-44c8-a917-57927947596d-ASR" xml:space="preserve">
+    <value>Blokuj uruchamianie pobranej zawartości wykonywalnej przez JavaScript lub VBScript</value>
+  </data>
+  <data name="3b576869-a4ec-4529-8536-b80a7769e899-ASR" xml:space="preserve">
+    <value>Blokuj tworzenie zawartości wykonywalnej przez aplikacje Office</value>
+  </data>
+  <data name="75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84-ASR" xml:space="preserve">
+    <value>Blokuj wstrzykiwanie kodu do innych procesów przez aplikacje Office</value>
+  </data>
+  <data name="26190899-1602-49e8-8b27-eb1d0a1ce869-ASR" xml:space="preserve">
+    <value>Blokuj tworzenie procesów podrzędnych przez aplikację komunikacyjną Office</value>
+  </data>
+  <data name="e6db77e5-3df2-4cf1-b95a-636979351e5b-ASR" xml:space="preserve">
+    <value>Blokuj trwałość poprzez subskrypcję zdarzeń WMI
+* Wykluczenia plików i folderów nie są obsługiwane.</value>
+  </data>
+  <data name="d1e49aac-8f56-4280-b9ba-993a6d77406c-ASR" xml:space="preserve">
+    <value>Blokuj tworzenie procesów pochodzących z poleceń PSExec i WMI</value>
+  </data>
+  <data name="33ddedf1-c6e0-47cb-833e-de6133960387-ASR" xml:space="preserve">
+    <value>Blokuj ponowne uruchomienie komputera w trybie awaryjnym</value>
+  </data>
+  <data name="b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4-ASR" xml:space="preserve">
+    <value>Blokuj niezaufane i niepodpisane procesy uruchamiane z USB</value>
+  </data>
+  <data name="c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb-ASR" xml:space="preserve">
+    <value>Blokuj używanie skopiowanych lub podrabianych narzędzi systemowych</value>
+  </data>
+  <data name="a8f5898e-1dc8-49a9-9878-85004b8a61e6-ASR" xml:space="preserve">
+    <value>Blokuj tworzenie webshell dla serwerów</value>
+  </data>
+  <data name="92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b-ASR" xml:space="preserve">
+    <value>Blokuj wywołania Win32 API z makr Office</value>
+  </data>
+  <data name="c1db55ab-c21a-4637-bb3f-a12568109d35-ASR" xml:space="preserve">
+    <value>Użyj zaawansowanej ochrony przed ransomware</value>
+  </data>
+<data name="DisallowStandardUserPINReset-BitLocker" xml:space="preserve">
+    <value>Nie zezwalaj zwykłemu użytkownikowi na resetowanie kodu PIN</value>
+</data>
+<data name="UseAdvancedStartup-BitLocker" xml:space="preserve">
+    <value>Zezwól systemowi operacyjnemu na wymaganie dodatkowego uwierzytelnienia przy uruchamianiu</value>
+</data>
+<data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
+    <value>Nie zezwalaj na BitLocker bez modułu TPM</value>
+</data>
+<data name="UseTPM-BitLocker" xml:space="preserve">
+    <value>Nie zezwalaj tylko na moduł TPM</value>
+</data>
+<data name="UseTPMPIN-BitLocker" xml:space="preserve">
+    <value>Zezwól na TPM + PIN przy uruchamianiu.</value>
+</data>
+<data name="UseTPMKey-BitLocker" xml:space="preserve">
+    <value>Zezwól na TPM + klucz przy uruchamianiu.</value>
+</data>
+<data name="UseTPMKeyPIN-BitLocker" xml:space="preserve">
+    <value>Zezwól na TPM + klucz startowy + PIN przy uruchamianiu.</value>
+</data>
+<data name="EncryptionMethodWithXtsOs-BitLocker" xml:space="preserve">
+    <value>Skonfiguruj prawidłową metodę szyfrowania dla dysków systemu operacyjnego: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsFdv-BitLocker" xml:space="preserve">
+    <value>Skonfiguruj prawidłową metodę szyfrowania dla stałych dysków danych: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsRdv-BitLocker" xml:space="preserve">
+    <value>Skonfiguruj prawidłową metodę szyfrowania dla dysków wymiennych: XTS-AES-256</value>
+</data>
+<data name="UseEnhancedPin-BitLocker" xml:space="preserve">
+    <value>Użyj ulepszonego kodu PIN, zezwalając na symbole i inne znaki w kodzie PIN.</value>
+</data>
+<data name="OSEncryptionType-BitLocker" xml:space="preserve">
+    <value>Skonfiguruj bezpieczny typ pełnego szyfrowania dysku dla dysku systemu operacyjnego</value>
+</data>
+<data name="RDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>Skonfiguruj bezpieczny typ pełnego szyfrowania dysku dla dysków wymiennych</value>
+</data>
+<data name="RDVDiscoveryVolumeType-BitLocker" xml:space="preserve">
+    <value>Zablokuj dostęp do wymiennych dysków danych chronionych przez BitLocker z poprzednich wersji Windows</value>
+</data>
+<data name="RDVNoBitLockerToGoReader-BitLocker" xml:space="preserve">
+    <value>Nie instaluj "BitLocker To Go" Reader na wymiennych dyskach sformatowanych FAT, ponieważ są niezabezpieczone.</value>
+</data>
+<data name="MinimumPIN-BitLocker" xml:space="preserve">
+    <value>Skonfiguruj minimalną długość kodu PIN dla uruchamiania.</value>
+</data>
+<data name="ACSettingIndex-BitLocker" xml:space="preserve">
+    <value>Nie zezwalaj na stany gotowości (S1-S3) podczas snu (podłączony do zasilania)</value>
+</data>
+<data name="DCSettingIndex-BitLocker" xml:space="preserve">
+    <value>Nie zezwalaj na stany gotowości (S1-S3) podczas snu (na baterii)</value>
+</data>
+<data name="ShowHibernateOption-BitLocker" xml:space="preserve">
+    <value>Pokaż opcję hibernacji w opcjach zasilania w systemie operacyjnym, abyś mógł włączyć hibernację urządzenia, jeśli chcesz.</value>
+</data>
+<data name="FDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>Skonfiguruj bezpieczny typ szyfrowania dla stałych dysków danych</value>
+</data>
+<data name="Functions-TLS" xml:space="preserve">
+    <value>Skonfiguruj prawidłowe zestawy szyfrów TLS</value>
+</data>
+<data name="EccCurves-TLS" xml:space="preserve">
+    <value>Skonfiguruj krzywe ECC serwisu i ich stany.</value>
+</data>
+<data name="DisabledByDefault1-TLS" xml:space="preserve">
+    <value>Wyłącz klienta TLS 1.0 - domyślnie wyłączony</value>
+</data>
+<data name="Enabled1-TLS" xml:space="preserve">
+    <value>Wyłącz klienta TLS 1.0 - włączony</value>
+</data>
+<data name="DisabledByDefault2-TLS" xml:space="preserve">
+    <value>Wyłącz serwer TLS 1.0 - domyślnie wyłączony</value>
+</data>
+<data name="Enabled2-TLS" xml:space="preserve">
+    <value>Wyłącz serwer TLS 1.0 - włączony</value>
+</data>
+<data name="DisabledByDefault3-TLS" xml:space="preserve">
+    <value>Wyłącz klienta TLS 1.1 - domyślnie wyłączony</value>
+</data>
+<data name="Enabled3-TLS" xml:space="preserve">
+    <value>Wyłącz klienta TLS 1.1 - włączony</value>
+</data>
+<data name="DisabledByDefault4-TLS" xml:space="preserve">
+    <value>Wyłącz serwer TLS 1.1 - domyślnie wyłączony</value>
+</data>
+<data name="Enabled4-TLS" xml:space="preserve">
+    <value>Wyłącz serwer TLS 1.1 - włączony</value>
+</data>
+<data name="Enabled5-TLS" xml:space="preserve">
+    <value>Wyłącz zestaw szyfrów NULL</value>
+</data>
+<data name="Enabled6-TLS" xml:space="preserve">
+    <value>Wyłącz zestaw szyfrów 56/56</value>
+</data>
+<data name="Enabled7-TLS" xml:space="preserve">
+    <value>Wyłącz zestaw szyfrów 40/128</value>
+</data>
+<data name="Enabled8-TLS" xml:space="preserve">
+    <value>Wyłącz zestaw szyfrów RC2 56/128</value>
+</data>
+<data name="Enabled9-TLS" xml:space="preserve">
+    <value>Wyłącz zestaw szyfrów RC2 128/128</value>
+</data>
+<data name="Enabled10-TLS" xml:space="preserve">
+    <value>Wyłącz zestaw szyfrów RC4 40/128</value>
+</data>
+<data name="Enabled11-TLS" xml:space="preserve">
+    <value>Wyłącz zestaw szyfrów RC4 56/128</value>
+</data>
+<data name="Enabled12-TLS" xml:space="preserve">
+    <value>Wyłącz zestaw szyfrów RC4 64/128</value>
+</data>
+<data name="Enabled13-TLS" xml:space="preserve">
+    <value>Wyłącz zestaw szyfrów RC4 128/128</value>
+</data>
+<data name="Enabled14-TLS" xml:space="preserve">
+    <value>Wyłącz zestaw szyfrów Triple DES 168</value>
+</data>
+<data name="Enabled15-TLS" xml:space="preserve">
+    <value>Wyłącz algorytm hash MD5</value>
+</data>
+<data name="Digits-LockScreen" xml:space="preserve">
+    <value>Wymagaj cyfr w kodzie PIN Windows Hello</value>
+</data>
+<data name="LowercaseLetters-LockScreen" xml:space="preserve">
+    <value>Wymagaj małych liter w kodzie PIN Windows Hello</value>
+</data>
+<data name="Expiration-LockScreen" xml:space="preserve">
+    <value>Ustaw wygaśnięcie dla kodu PIN Windows Hello</value>
+</data>
+<data name="History-LockScreen" xml:space="preserve">
+    <value>Przechowuj historię kodów PIN Windows Hello</value>
+</data>
+<data name="DontDisplayNetworkSelectionUI-LockScreen" xml:space="preserve">
+    <value>Nie wyświetlaj interfejsu wyboru sieci na ekranie blokady</value>
+</data>
+<data name="HideFastUserSwitching-UAC" xml:space="preserve">
+    <value>Ukryj punkty wejścia szybkiego przełączania użytkowników</value>
+</data>
+<data name="EnableVirtualizationBasedSecurity-DeviceGuard" xml:space="preserve">
+    <value>Włącz zabezpieczenia oparte na wirtualizacji</value>
+</data>
+<data name="RequirePlatformSecurityFeatures-DeviceGuard" xml:space="preserve">
+    <value>Wymagaj funkcji zabezpieczeń platformy</value>
+</data>
+<data name="HypervisorEnforcedCodeIntegrity-DeviceGuard" xml:space="preserve">
+    <value>Integralność kodu wymuszana przez hiperwizor - blokada UEFI</value>
+</data>
+<data name="HVCIMATRequired-DeviceGuard" xml:space="preserve">
+    <value>Wymagaj HVCI MAT (tabeli atrybutów pamięci)</value>
+</data>
+<data name="LsaCfgFlags-DeviceGuard" xml:space="preserve">
+    <value>Skonfiguruj Credential Guard - blokada UEFI</value>
+</data>
+<data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
+    <value>Włącz System Guard Secure Launch, jeśli istnieje obsługa sprzętowa</value>
+</data>
+<data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
+    <value>Skonfiguruj uruchamianie Kernel Shadow Stacks</value>
+</data>
+<data name="RunAsPPL-DeviceGuard" xml:space="preserve">
+    <value>Włącz ochronę procesu Local Security Authority (LSA) z blokadą UEFI</value>
+</data>
+<data name="MachineIdentityIsolation-DeviceGuard" xml:space="preserve">
+    <value>Skonfiguruj konfigurację izolacji tożsamości maszyny</value>
+</data>
+<data name="Mandatory-DeviceGuard" xml:space="preserve">
+    <value>Włącz VBS i integralność pamięci w trybie obowiązkowym</value>
+</data>
+<data name="EnableFirewallDomain-WindowsFirewall" xml:space="preserve">
+    <value>Włącz Zaporę Windows dla profilu domeny</value>
+</data>
+<data name="DefaultOutboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>Ustaw domyślną akcję wychodzącą dla profilu domeny</value>
+</data>
+<data name="DefaultInboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>Ustaw domyślną akcję przychodzącą dla profilu domeny</value>
+</data>
+<data name="DisableNotificationsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Wyświetlaj powiadomienia dla profilu domeny</value>
+</data>
+<data name="LogFilePathDomain-WindowsFirewall" xml:space="preserve">
+    <value>Skonfiguruj ścieżkę pliku dziennika dla profilu domeny</value>
+</data>
+<data name="LogFileSizeDomain-WindowsFirewall" xml:space="preserve">
+    <value>Skonfiguruj rozmiar pliku dziennika dla profilu domeny</value>
+</data>
+<data name="LogDroppedPacketsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Rejestruj zablokowane połączenia dla profilu domeny</value>
+</data>
+<data name="LogSuccessfulConnectionsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Rejestruj udane połączenia dla profilu domeny</value>
+</data>
+<data name="EnableFirewallPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Włącz Zaporę Windows dla profilu prywatnego</value>
+</data>
+<data name="DisableNotificationsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Wyświetlaj powiadomienia dla profilu prywatnego</value>
+</data>
+<data name="LogFileSizePrivate-WindowsFirewall" xml:space="preserve">
+    <value>Skonfiguruj rozmiar pliku dziennika dla profilu prywatnego</value>
+</data>
+<data name="LogDroppedPacketsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Rejestruj zablokowane połączenia dla profilu prywatnego</value>
+</data>
+<data name="LogFilePathPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Skonfiguruj ścieżkę pliku dziennika dla profilu prywatnego</value>
+</data>
+<data name="EnableFirewallPublic-WindowsFirewall" xml:space="preserve">
+    <value>Włącz Zaporę Windows dla profilu publicznego</value>
+</data>
+<data name="DisableNotificationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Wyświetlaj powiadomienia dla profilu publicznego</value>
+</data>
+<data name="LogFileSizePublic-WindowsFirewall" xml:space="preserve">
+    <value>Skonfiguruj rozmiar pliku dziennika dla profilu publicznego</value>
+</data>
+<data name="LogDroppedPacketsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Rejestruj zablokowane połączenia dla profilu publicznego</value>
+</data>
+<data name="LogFilePathPublic-WindowsFirewall" xml:space="preserve">
+    <value>Skonfiguruj ścieżkę pliku dziennika dla profilu publicznego</value>
+</data>
+<data name="PolicyVersion-WindowsFirewall" xml:space="preserve">
+    <value>Skonfiguruj wersję zasad Zapory Windows</value>
+</data>
+<data name="EnableNetbios-WindowsNetworking" xml:space="preserve">
+    <value>Wyłącz Netbios</value>
+</data>
+<data name="DisableSmartNameResolution-WindowsNetworking" xml:space="preserve">
+    <value>Wyłącz inteligentne rozpoznawanie nazw</value>
+</data>
+<data name="EnableMulticast-WindowsNetworking" xml:space="preserve">
+    <value>Wyłącz multicast</value>
+</data>
+<data name="DisableHTTPPrinting-WindowsNetworking" xml:space="preserve">
+    <value>Wyłącz drukowanie HTTP</value>
+</data>
+<data name="DisableWebPnPDownload-WindowsNetworking" xml:space="preserve">
+    <value>Wyłącz pobieranie Web PnP</value>
+</data>
+<data name="EnableLMHOSTS-WindowsNetworking" xml:space="preserve">
+    <value>Wyłącz protokół wyszukiwania LMHOSTS na wszystkich kartach sieciowych</value>
+</data>
+<data name="EnableSMBQUICServer-WindowsNetworking" xml:space="preserve">
+    <value>Włącz serwer SMB przez QUIC</value>
+</data>
+<data name="EnableSMBQUICClient-WindowsNetworking" xml:space="preserve">
+    <value>Włącz klienta SMB przez QUIC</value>
+</data>
+<data name="CipherSuiteOrderServer-WindowsNetworking" xml:space="preserve">
+    <value>Skonfiguruj bezpieczną kolejność zestawów szyfrów serwera SMB</value>
+</data>
+<data name="CipherSuiteOrderClient-WindowsNetworking" xml:space="preserve">
+    <value>Skonfiguruj bezpieczną kolejność zestawów szyfrów klienta SMB</value>
+</data>
+<data name="MinSmb2DialectServer-WindowsNetworking" xml:space="preserve">
+    <value>Ustaw minimalną wersję serwera SMB</value>
+</data>
+<data name="MinSmb2DialectClient-WindowsNetworking" xml:space="preserve">
+    <value>Ustaw minimalną wersję klienta SMB</value>
+</data>
+<data name="BlockNTLM-WindowsNetworking" xml:space="preserve">
+    <value>Blokuj NTLM dla SMB</value>
+</data>
+<data name="RequireEncryption-WindowsNetworking" xml:space="preserve">
+    <value>Wymagaj szyfrowania dla klienta SMB</value>
+</data>
+<data name="EnableAuthEpResolution-WindowsNetworking" xml:space="preserve">
+    <value>Wyłącz uwierzytelnianie klienta mapera punktów końcowych RPC</value>
+</data>
+<data name="EncryptData-WindowsNetworking" xml:space="preserve">
+    <value>Włącz szyfrowanie serwera SMB</value>
+</data>
+<data name="ProcessCreationIncludeCmdLine_Enabled-Miscellaneous" xml:space="preserve">
+    <value>Uwzględnij wiersz poleceń w zdarzeniach tworzenia procesów</value>
+</data>
+<data name="DisableLocation-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz lokalizację</value>
+</data>
+<data name="DisableLocationScripting-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz skrypty lokalizacji</value>
+</data>
+<data name="DisableWindowsLocationProvider-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz dostawcę lokalizacji Windows</value>
+</data>
+<data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
+    <value>Włącz środki zaradcze Svchost</value>
+</data>
+<data name="DriverLoadPolicy-Miscellaneous" xml:space="preserve">
+    <value>Ustaw zasadę inicjalizacji sterownika rozruchowego tylko na dobre</value>
+</data>
+<data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
+    <value>Włącz ulepszone wyszukiwanie w Windows</value>
+</data>
+<data name="allowautoupdatesmeteredStable-Miscellaneous" xml:space="preserve">
+    <value>Ustaw Microsoft Edge (stabilny) do aktualizacji przez połączenia taryfowe</value>
+</data>
+<data name="allowautoupdatesmeteredBeta-Miscellaneous" xml:space="preserve">
+    <value>Ustaw Microsoft Edge (beta) do aktualizacji przez połączenia taryfowe</value>
+</data>
+<data name="allowautoupdatesmeteredDev-Miscellaneous" xml:space="preserve">
+    <value>Ustaw Microsoft Edge (dev) do aktualizacji przez połączenia taryfowe</value>
+</data>
+<data name="EnableCertPaddingCheck-Miscellaneous" xml:space="preserve">
+    <value>Wymuś weryfikację podpisu WinVerifyTrust część 1</value>
+</data>
+<data name="EnableCertPaddingCheck2-Miscellaneous" xml:space="preserve">
+    <value>Wymuś weryfikację podpisu WinVerifyTrust część 2</value>
+</data>
+<data name="EnableCbacAndArmor-Miscellaneous" xml:space="preserve">
+    <value>Żądaj oświadczeń i uwierzytelniania złożonego dla DAC i pancerza Kerberos</value>
+</data>
+<data name="WindowsProtectedPrintGroupPolicyState-Miscellaneous" xml:space="preserve">
+    <value>Włącz chronione drukowanie Windows</value>
+</data>
+<data name="LongPathsEnabled-Miscellaneous" xml:space="preserve">
+    <value>Włącz obsługę długich ścieżek</value>
+</data>
+<data name="AllowOnlineTips-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz porady online.</value>
+</data>
+<data name="AllowFindMyDevice-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz funkcję Znajdź moje urządzenie.</value>
+</data>
+<data name="AllowSpeechModelUpdate-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz automatyczną aktualizację danych mowy.</value>
+</data>
+<data name="DisabledByGroupPolicy-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz identyfikator reklamy, uniemożliwiając aplikacjom używanie identyfikatora do doświadczeń między aplikacjami.</value>
+</data>
+<data name="DisableSoftLanding-Miscellaneous" xml:space="preserve">
+    <value>Zatrzymaj otrzymywanie porad i podpowiedzi podczas korzystania z Windows.</value>
+</data>
+<data name="DisableCloudOptimizedContent-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz zawartość zoptymalizowaną pod kątem chmury we wszystkich doświadczeniach Windows.</value>
+</data>
+<data name="DoNotShowFeedbackNotifications-Miscellaneous" xml:space="preserve">
+    <value>Nie pokazuj powiadomień zwrotnych.</value>
+</data>
+<data name="AutoDownloadAndUpdateMapData-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz automatyczne pobieranie i aktualizowanie danych map.</value>
+</data>
+<data name="AllowMessageSync-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz synchronizację w chmurze usługi wiadomości dla wiadomości tekstowych komórkowych.</value>
+</data>
+<data name="EnableFontProviders-Miscellaneous" xml:space="preserve">
+    <value>Zablokuj Windows przed pobieraniem katalogu czcionek.</value>
+</data>
+<data name="EnableCdp-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz funkcję "Kontynuuj doświadczenia na tym urządzeniu".</value>
+</data>
+<data name="EnableAppUriHandlers-Miscellaneous" xml:space="preserve">
+    <value>Wyłącz obsługę łączenia web-aplikacja z obsługą URI aplikacji.</value>
+</data>
+<data name="DisableWebSearch-Miscellaneous" xml:space="preserve">
+    <value>Nie przeszukuj sieci ani nie wyświetlaj wyników sieci w wyszukiwaniu.</value>
+</data>
+<data name="ConnectedSearchUseWeb-Miscellaneous" xml:space="preserve">
+    <value>Nie zezwalaj na wyszukiwanie w sieci.</value>
+</data>
+<data name="AllowAutoWindowsUpdateDownloadOverMeteredNetwork-WindowsUpdate" xml:space="preserve">
+    <value>Zezwól na automatyczne pobieranie aktualizacji przez połączenia taryfowe</value>
+</data>
+<data name="AllowTemporaryEnterpriseFeatureControl-WindowsUpdate" xml:space="preserve">
+    <value>Włącz funkcje prezentowane przez usługę, które są domyślnie wyłączone</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Określ liczbę dni przed automatyczną instalacją aktualizacji funkcji na urządzeniach</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Określ liczbę dni przed automatyczną instalacją aktualizacji jakości na urządzeniach</value>
+</data>
+<data name="ConfigureDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Liczba dni przed automatyczną instalacją aktualizacji jakości na urządzeniach</value>
+</data>
+<data name="ConfigureDeadlineGracePeriod-WindowsUpdate" xml:space="preserve">
+    <value>Liczba dni okresu karencji przed automatyczną instalacją aktualizacji jakości na urządzeniach</value>
+</data>
+<data name="ConfigureDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Liczba dni przed automatyczną instalacją aktualizacji funkcji na urządzeniach</value>
+</data>
+<data name="ConfigureDeadlineGracePeriodForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Liczba dni okresu karencji przed automatyczną instalacją aktualizacji funkcji na urządzeniach</value>
+</data>
+<data name="NoAutoUpdate-WindowsUpdate" xml:space="preserve">
+    <value>Skonfiguruj komputer do odbierania aktualizacji zabezpieczeń i innych ważnych pobrań przez Windows Update</value>
+</data>
+<data name="AUOptions-WindowsUpdate" xml:space="preserve">
+    <value>Automatycznie pobieraj aktualizacje i instaluj w dniu konserwacji</value>
+</data>
+<data name="AutomaticMaintenanceEnabled-WindowsUpdate" xml:space="preserve">
+    <value>Instaluj aktualizacje podczas automatycznej konserwacji</value>
+</data>
+<data name="ScheduledInstallDay-WindowsUpdate" xml:space="preserve">
+    <value>Ustaw zaplanowany dzień instalacji na każdy dzień</value>
+</data>
+<data name="ScheduledInstallTime-WindowsUpdate" xml:space="preserve">
+    <value>Ustaw zaplanowany czas instalacji na dowolny czas</value>
+</data>
+<data name="AllowMUUpdateService-WindowsUpdate" xml:space="preserve">
+    <value>Instaluj aktualizacje dla innych produktów Microsoft</value>
+</data>
+<data name="RestartNotificationsAllowed2-WindowsUpdate" xml:space="preserve">
+    <value>Włącz powiadomienia o ponownym uruchomieniu dla Windows Update</value>
+</data>
+<data name="RemoveScheduleForWeek-WindowsUpdate" xml:space="preserve">
+    <value>Usuń harmonogram instalowania aktualizacji tylko w określonych tygodniach.</value>
+</data>
+<data name="SetComplianceDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Ustaw termin zgodności dla aktualizacji funkcji.</value>
+</data>
+<data name="SetComplianceDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Ustaw termin zgodności dla aktualizacji jakości.</value>
+</data>
+<data name="BlockThirdPartyCookies-Edge" xml:space="preserve">
+    <value>Blokuj pliki cookie stron trzecich</value>
+</data>
+<data name="DnsOverHttpsMode-Edge" xml:space="preserve">
+    <value>Ustaw tryb DNS przez HTTPS, aby używać ustawień DoH systemu</value>
+</data>
+<data name="AutomaticHttpsDefault-Edge" xml:space="preserve">
+    <value>Automatycznie uaktualniaj połączenia HTTP do HTTPS</value>
+</data>
+<data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
+    <value>Włącz zaszyfrowane Client Hello</value>
+</data>
+<data name="BasicAuthOverHttpEnabled-Edge" xml:space="preserve">
+    <value>Blokuj podstawowe uwierzytelnianie dla HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControl-Edge" xml:space="preserve">
+    <value>Zezwól Edge na otrzymywanie nowych funkcji nawet po użyciu zasad</value>
+</data>
+<data name="AudioSandboxEnabled-Edge" xml:space="preserve">
+    <value>Wymuś uruchamianie procesu audio w piaskownicy</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSetting-Edge" xml:space="preserve">
+    <value>Zaleca się ustawienie opcji udostępniania dodatkowego regionu systemu operacyjnego na nigdy</value>
+</data>
+<data name="1-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="2-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="3-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_RSA_WITH_AES_256_CBC_SHA - (Bez PFS - CBC - SHA1)</value>
+</data>
+<data name="4-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_RSA_WITH_AES_128_CBC_SHA - (Bez PFS - CBC - SHA1)</value>
+</data>
+<data name="5-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_RSA_WITH_AES_128_GCM_SHA256 - (Bez PFS)</value>
+</data>
+<data name="6-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_RSA_WITH_AES_256_GCM_SHA384 - (Bez PFS)</value>
+</data>
+<data name="ExtensionManifestV2Availability-Edge" xml:space="preserve">
+    <value>Nigdy nie wyłączaj obsługi rozszerzeń Manifest V2</value>
+</data>
+<data name="DefaultWebUsbGuardSetting-Edge" xml:space="preserve">
+    <value>Nigdy nie zezwalaj witrynom na żądanie dostępu do lokalnie podłączonych urządzeń USB</value>
+</data>
+<data name="DefaultWindowManagementSetting-Edge" xml:space="preserve">
+    <value>Odmów uprawnień zarządzania oknami domyślnie we wszystkich witrynach</value>
+</data>
+<data name="DynamicCodeSettings-Edge" xml:space="preserve">
+    <value>Zapobiegaj generowaniu kodu dynamicznego przez proces przeglądarki</value>
+</data>
+<data name="HideFileExt-NonAdmin" xml:space="preserve">
+    <value>Włącz pokazywanie rozszerzeń plików w Eksploratorze plików</value>
+</data>
+<data name="Hidden-NonAdmin" xml:space="preserve">
+    <value>Włącz pokazywanie ukrytych plików w Eksploratorze plików</value>
+</data>
+<data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
+    <value>Wyłącz dostęp witryn do listy języków lokalnych</value>
+</data>
+<data name="SafeSearchMode-NonAdmin" xml:space="preserve">
+    <value>Wyłącz bezpieczne wyszukiwanie w wyszukiwaniu Windows</value>
+</data>
+<data name="EnableClipboardHistory-NonAdmin" xml:space="preserve">
+    <value>Włącz historię schowka</value>
+</data>
+<data name="EnableHwkbTextPrediction-NonAdmin" xml:space="preserve">
+    <value>Włącz pokazywanie sugestii tekstowych podczas pisania na klawiaturze fizycznej</value>
+</data>
+<data name="MultilingualEnabled-NonAdmin" xml:space="preserve">
+    <value>Włącz wielojęzyczne sugestie tekstowe</value>
+</data>
+<data name="Flags-NonAdmin" xml:space="preserve">
+    <value>Wyłącz skrót klawiszy trwałych poprzez szybkie naciśnięcie klawisza Shift 5 razy</value>
+</data>
+<data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
+    <value>Wyłącz pokazywanie przypomnień i przychodzących połączeń VoIP na ekranie blokady</value>
+</data>
+<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
+    <value>Wyłącz tworzenie kopii zapasowej hasła lokalnego konta administratora w Active Directory.</value>
+</data>
+<data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
+    <value>Wymuś ograniczenia UAC na konta lokalne podczas logowań sieciowych</value>
+</data>
+<data name="RDVDenyCrossOrg-OptionalOverrides" xml:space="preserve">
+    <value>Zezwól systemowi operacyjnemu na używanie dysków zaszyfrowanych przez BitLocker utworzonych w innych organizacjach.</value>
+</data>
+<data name="DisableWindowsConsumerFeatures-OptionalOverrides" xml:space="preserve">
+    <value>Nie wyłączaj doświadczeń, które pomagają konsumentom w pełni wykorzystać swoje urządzenie i konto Microsoft.</value>
+</data>
+<data name="AllowGameDVR-OptionalOverrides" xml:space="preserve">
+    <value>Zezwól na używanie funkcji Game DVR.</value>
+</data>
+<data name="NC_ShowSharedAccessUI-OptionalOverrides" xml:space="preserve">
+    <value>Włącz interfejs udostępniania połączenia internetowego (ICS) dla administratora lokalnego.</value>
+</data>
+<data name="Enabled-OptionalOverrides" xml:space="preserve">
+    <value>Zezwól użytkownikom na używanie funkcji Sudo.</value>
+</data>
+<data name="HideExclusionsFromLocalAdmins-OptionalOverrides" xml:space="preserve">
+    <value>Nie ukrywaj wykluczeń przed lokalnymi administratorami w Microsoft Defender.</value>
+</data>
+<data name="fDisableCdm-OptionalOverrides" xml:space="preserve">
+    <value>Zezwól na mapowanie dysków w sesjach pulpitu zdalnego i Hyper-V</value>
+</data>
+<data name="fDisableClip-OptionalOverrides" xml:space="preserve">
+    <value>Zezwól na udostępnianie schowka w sesjach pulpitu zdalnego i Hyper-V</value>
+</data>
+<data name="PolicyVersionOverride-OptionalOverrides" xml:space="preserve">
+    <value>Skonfiguruj wersję zasad Zapory Windows</value>
+</data>
+<data name="DisableNotificationsPrivateOverride-OptionalOverrides" xml:space="preserve">
+    <value>Nie wyłączaj powiadomień w Zaporze Windows dla profilu prywatnego</value>
+</data>
+<data name="AllowLocalPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Zezwól na używanie zasad Zapory Windows zdefiniowanych w sekcji Zaawansowane ustawienia Zapory Windows zamiast wymuszania tylko tych zdefiniowanych w zasadach grupy.</value>
+</data>
+<data name="AllowLocalIPsecPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Zezwól na używanie zasad IPSec Zapory Windows zdefiniowanych w sekcji Zaawansowane ustawienia Zapory Windows zamiast wymuszania tylko tych zdefiniowanych w zasadach grupy.</value>
+</data>
+<data name="DisableNotificationsPublicOverride-OptionalOverrides" xml:space="preserve">
+    <value>Nie wyłączaj powiadomień w Zaporze Windows dla profilu publicznego</value>
+</data>
+<data name="RDVDenyWriteAccess-OptionalOverrides" xml:space="preserve">
+    <value>Zezwól systemowi operacyjnemu na zapis na dyskach wymiennych niezaszyfrowanych przez BitLocker</value>
+</data>
+<data name="BlockThirdPartyCookiesRecommended-Edge" xml:space="preserve">
+    <value>Zalecaj blokowanie plików cookie stron trzecich</value>
+</data>
+<data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
+    <value>Ustaw Edge do używania DNS over HTTPS systemu. Umożliwia to również prawidłowe działanie MDAG</value>
+</data>
+<data name="AutomaticHttpsDefaultEdge-Edge" xml:space="preserve">
+    <value>Automatycznie uaktualniaj połączenia HTTP do HTTPS</value>
+</data>
+<data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
+    <value>Włącz zaszyfrowane Client Hello</value>
+</data>
+<data name="BasicAuthOverHttpEnabledEdge-Edge" xml:space="preserve">
+    <value>Blokuj podstawowe uwierzytelnianie dla HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControlEdge-Edge" xml:space="preserve">
+    <value>Zezwól urządzeniom korzystającym z zabezpieczeń kategorii Edge na otrzymywanie nowych funkcji i eksperymentów tak jak zwykłe urządzenia</value>
+</data>
+<data name="AudioSandboxEnabledEdge-Edge" xml:space="preserve">
+    <value>Wymuś uruchamianie procesu audio w piaskownicy</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSettingEdge-Edge" xml:space="preserve">
+    <value>Zaleca się ustawienie opcji udostępniania dodatkowego regionu systemu operacyjnego na nigdy.</value>
+</data>
+<data name="TLSCipherSuiteDenyList1-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList2-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList3-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_RSA_WITH_AES_256_CBC_SHA - (Bez PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList4-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_RSA_WITH_AES_128_CBC_SHA - (Bez PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList5-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_RSA_WITH_AES_128_GCM_SHA256 - (Bez PFS)</value>
+</data>
+<data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
+    <value>Wyłącz TLS_RSA_WITH_AES_256_GCM_SHA384 - (Bez PFS)</value>
+</data>
+<data name="ExtensionManifestV2AvailabilityEdge-Edge" xml:space="preserve">
+    <value>Nigdy nie wyłączaj obsługi rozszerzeń Manifest V2</value>
+</data>
+<data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
+    <value>Nigdy nie zezwalaj witrynom na żądanie dostępu do lokalnie podłączonych urządzeń USB</value>
+</data>
+<data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
+    <value>Odmów uprawnień zarządzania oknami domyślnie we wszystkich witrynach</value>
+</data>
+<data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
+    <value>Zapobiegaj generowaniu kodu dynamicznego przez proces przeglądarki</value>
+</data>
+<data name="DisableTLS10-TLS" xml:space="preserve">
+    <value>Wyłącz TLS v1</value>
+</data>
+<data name="DisableTLS11-TLS" xml:space="preserve">
+    <value>Wyłącz TLS v1.1</value>
+</data>
+<data name="DisableNULL-TLS" xml:space="preserve">
+    <value>Wyłącz słabe szyfry dla Schannel: NULL</value>
+</data>
+<data name="DisableDES56-TLS" xml:space="preserve">
+    <value>Wyłącz słabe szyfry dla Schannel: DES 56-bit</value>
+</data>
+<data name="DisableRC240-TLS" xml:space="preserve">
+    <value>Wyłącz słabe szyfry dla Schannel: RC2 40-bit</value>
+</data>
+<data name="DisableRC256-TLS" xml:space="preserve">
+    <value>Wyłącz słabe szyfry dla Schannel: RC2 56-bit</value>
+</data>
+<data name="DisableRC2128-TLS" xml:space="preserve">
+    <value>Wyłącz słabe szyfry dla Schannel: RC2 128-bit</value>
+</data>
+<data name="DisableRC440-TLS" xml:space="preserve">
+    <value>Wyłącz słabe szyfry dla Schannel: RC4 40-bit</value>
+</data>
+<data name="DisableRC456-TLS" xml:space="preserve">
+    <value>Wyłącz słabe szyfry dla Schannel: RC4 56-bit</value>
+</data>
+<data name="DisableRC464-TLS" xml:space="preserve">
+    <value>Wyłącz słabe szyfry dla Schannel: RC4 64-bit</value>
+</data>
+<data name="DisableRC4128-TLS" xml:space="preserve">
+    <value>Wyłącz słabe szyfry dla Schannel: RC4 128-bit</value>
+</data>
+<data name="DisableTripleDES-TLS" xml:space="preserve">
+    <value>Wyłącz słabe szyfry dla Schannel: 3DES 168-bit (Triple DES 168)</value>
+</data>
+<data name="DisableMD5-TLS" xml:space="preserve">
+    <value>Wyłącz algorytm hash MD5 dla SChannel.</value>
+</data>
+<data name="BattleNetCipher-TLS" xml:space="preserve">
+    <value>Zezwól na mniej bezpieczny szyfr "TLS_RSA_WITH_AES_256_CBC_SHA" w celu zapewnienia zgodności z klientem gier Battle Net.</value>
+</data>
+  <data name="SAC-MSDefender" xml:space="preserve">
+    <value>Włącz Smart App Control. Proszę również włączyć opcjonalne dane diagnostyczne wymagane do prawidłowego działania Smart App Control.</value>
+  </data>
+    <data name="InactivityTimeoutSecs-LockScreen" xml:space="preserve">
+    <value>Ustaw zasadę limitu bezczynności maszyny, aby urządzenie automatycznie blokowało się po 120 sekundach bezczynności.</value>
+  </data>
+      <data name="DisableCAD-LockScreen" xml:space="preserve">
+    <value>Ustaw zasadę logowania interaktywnego, aby wymagać kombinacji klawiszy CTRL+ALT+DEL na ekranie blokady przed wprowadzeniem danych uwierzytelniających. Może to złagodzić niektóre ataki wykorzystujące fałszywe ekrany blokady do przechwytywania danych uwierzytelniających użytkownika, takich jak hasła w postaci zwykłego tekstu.</value>
+  </data>
+      <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
+    <value>Ustaw zasadę logowania interaktywnego dla progu blokady konta maszyny, tak aby urządzenie zaszyfrowane przez BitLocker zostało zablokowane po 5 nieudanych próbach logowania. Aby ponownie się zalogować, będziesz musiał wprowadzić klucz odzyskiwania BitLocker dla dysku systemu operacyjnego.</value>
+  </data>
+      <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
+    <value>Ustaw zasadę logowania interaktywnego, aby zatrzymać wyświetlanie informacji o użytkowniku, gdy sesja jest zablokowana.</value>
+  </data>
+      <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
+    <value>Ustaw zasadę logowania interaktywnego, aby zatrzymać wyświetlanie nazwy użytkownika na ekranie blokady.</value>
+  </data>
+      <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
+    <value>Ustaw zasadę logowania interaktywnego, aby zatrzymać wyświetlanie szczegółów ostatniego logowania na ekranie blokady.</value>
+  </data>
+  <data name="ConsentPromptBehaviorAdmin-UAC" xml:space="preserve">
+    <value>Ustaw zachowanie monitu o podniesienie uprawnień dla administratorów w trybie zatwierdzania przez administratora: Monituj o zgodę na bezpiecznym pulpicie</value>
+  </data>
+    <data name="ConsentPromptBehaviorUser-UAC" xml:space="preserve">
+    <value>Ustaw zachowanie monitu o podniesienie uprawnień dla użytkowników standardowych: Monituj o poświadczenia na bezpiecznym pulpicie</value>
+  </data>
+    <data name="ValidateAdminCodeSignatures-UAC" xml:space="preserve">
+    <value>Skonfiguruj system do podnoszenia uprawnień tylko podpisanych i zweryfikowanych plików wykonywalnych. Żaden program, który jest niepodpisany lub podpisany samopodpisanymi certyfikatami, nie będzie mógł działać jako administrator.</value>
+  </data>
+    <data name="ConsentPromptBehaviorEnhancedAdmin-UAC" xml:space="preserve">
+    <value>Ustaw zachowanie monitu o podniesienie uprawnień dla administratorów w trybie ulepszonej ochrony uprawnień: Monituj o poświadczenia na bezpiecznym pulpicie</value>
+  </data>
+    <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
+    <value>Ustaw typ trybu zatwierdzania przez administratora jako tryb zatwierdzania przez administratora z ulepszoną ochroną uprawnień</value>
+  </data>
+  <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Usuń zdalnie dostępne ścieżki rejestru.</value>
+</data>
+  <data name="AllowedPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Usuń zdalnie dostępne ścieżki i podścieżki rejestru.</value>
+</data>
+  <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Odrzuć przychodzące połączenia NTLM dla wszystkich kont.</value>
+</data>
+  <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Odrzuć wychodzące połączenia NTLM.</value>
+</data>
+<data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
+    <value>Wymuś silną ochronę kluczy użytkownika przechowywanych na komputerze. Będziesz mógł bezpiecznie przechowywać klucze prywatne certyfikatów instalowanych na komputerze i dostęp do klucza prywatnego będzie wymagał tych samych poświadczeń jak operacje podpisywania.</value>
+</data>
+<data name="LockoutBadCount-LockScreen" xml:space="preserve">
+    <value>Ustaw dozwoloną liczbę nieudanych prób logowania na 5. W połączeniu z innymi zasadami z tej kategorii oznacza to, że na każde 5 nieudanych prób logowania musi minąć pełny dzień, zanim zostanie dozwolonych kolejnych 5 prób, w przeciwnym razie Bitlocker zostanie aktywowany, system uruchomi się ponownie i poprosi o 48-cyfrowy kod Bitlocker. Ta zasada w dużym stopniu zapobiega atakom siłowym.</value>
+</data>
+<data name="ResetLockoutCount-LockScreen" xml:space="preserve">
+    <value>Ustaw czas trwania blokady konta na 1440 minut lub 1 dzień. W połączeniu z innymi zasadami z tej kategorii oznacza to, że na każde 5 nieudanych prób logowania musi minąć pełny dzień, zanim zostanie dozwolonych kolejnych 5 prób, w przeciwnym razie Bitlocker zostanie aktywowany, system uruchomi się ponownie i poprosi o 48-cyfrowy kod Bitlocker.</value>
+</data>
+<data name="LockoutDuration-LockScreen" xml:space="preserve">
+    <value>Ustaw reset licznika blokady konta na 1440 minut lub 1 dzień.</value>
+</data>
+</root>

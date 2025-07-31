@@ -34,6 +34,9 @@
                     Click="{x:Bind ViewModel.LoadLogFiles}"
                     Style="{StaticResource AccentButtonStyle}" />
 
+            <Button Content="Open Logs Directory"
+                    Click="{x:Bind ViewModel.OpenLogsDirectory}" />
+
             <!-- Search TextBox -->
             <TextBox PlaceholderText="Search in the logs..."
                      MinWidth="300"

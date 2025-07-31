@@ -19,6 +19,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using AppControlManager;
+using AppControlManager.Others;
 
 namespace HardenWindowsSecurity.Protect;
 
@@ -57,13 +58,13 @@ internal static class BCDManager
 			int result = NativeMethods.BcdOpenSystemStore(out storeHandle);
 			if (result != STATUS_SUCCESS)
 			{
-				throw new Win32Exception(NativeMethods.RtlNtStatusToDosError(result), "Failed to open BCD system store");
+				throw new Win32Exception(NativeMethods.RtlNtStatusToDosError(result), GlobalVars.GetStr("FailedToOpenBCDSystemStore"));
 			}
 
 			// Parse the current entry GUID
 			if (!Guid.TryParse(CURRENT_ENTRY_GUID, out Guid currentGuid))
 			{
-				throw new InvalidOperationException("Failed to parse current entry GUID");
+				throw new InvalidOperationException(GlobalVars.GetStr("FailedToParseCurrent EntryGUID"));
 			}
 
 			// Open the current BCD object
@@ -72,9 +73,9 @@ internal static class BCDManager
 			{
 				if (result == STATUS_OBJECT_NAME_NOT_FOUND)
 				{
-					throw new InvalidOperationException("Current boot entry not found. Try running as Administrator.");
+					throw new InvalidOperationException(GlobalVars.GetStr("CurrentBootEntryNotFoundAdministrator"));
 				}
-				throw new Win32Exception(NativeMethods.RtlNtStatusToDosError(result), "Failed to open BCD object");
+				throw new Win32Exception(NativeMethods.RtlNtStatusToDosError(result), GlobalVars.GetStr("FailedToOpenBCDObject"));
 			}
 
 			// Set the nx element
@@ -109,7 +110,7 @@ internal static class BCDManager
 
 			if (result != STATUS_SUCCESS)
 			{
-				throw new Win32Exception(NativeMethods.RtlNtStatusToDosError(result), "Failed to set BCD element");
+				throw new Win32Exception(NativeMethods.RtlNtStatusToDosError(result), GlobalVars.GetStr("FailedToSetBCDElement"));
 			}
 		}
 		finally

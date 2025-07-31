@@ -71,7 +71,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// The main InfoBar for the Settings VM.
+	/// The main InfoBar for this VM.
 	/// </summary>
 	internal readonly InfoBarSettings MainInfoBar;
 

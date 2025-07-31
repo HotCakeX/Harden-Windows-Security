@@ -1,0 +1,934 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+<data name="PhishingProtectServiceEnabled-MSDefender" xml:space="preserve">
+    <value>उन्नत फ़िशिंग सुरक्षा सेवा सक्षम।</value>
+</data>
+<data name="NotifyUnsafeApp-MSDefender" xml:space="preserve">
+    <value>उन्नत फ़िशिंग सुरक्षा: असुरक्षित ऐप सूचना</value>
+</data>
+<data name="NotifyPasswordReuse-MSDefender" xml:space="preserve">
+    <value>उन्नत फ़िशिंग सुरक्षा: पासवर्ड पुनः उपयोग सूचना</value>
+</data>
+<data name="NotifyMalicious-MSDefender" xml:space="preserve">
+    <value>उन्नत फ़िशिंग सुरक्षा: दुर्भावनापूर्ण सामग्री सूचना</value>
+</data>
+<data name="CaptureThreatWindow-MSDefender" xml:space="preserve">
+    <value>उन्नत फ़िशिंग सुरक्षा: खतरा विंडो कैप्चर</value>
+</data>
+<data name="PurgeItemsAfterDelay-MSDefender" xml:space="preserve">
+    <value>देरी के बाद आइटम हटाएं</value>
+</data>
+<data name="IOAVMaxSize-MSDefender" xml:space="preserve">
+    <value>स्कैन करने के लिए डाउनलोड की गई फ़ाइलों और अटैचमेंट का अधिकतम आकार</value>
+</data>
+<data name="DisableScanningMappedNetworkDrivesForFullScan-MSDefender" xml:space="preserve">
+    <value>पूर्ण स्कैन के लिए मैप किए गए नेटवर्क ड्राइव स्कैन करें</value>
+</data>
+<data name="DisableScanningNetworkFiles-MSDefender" xml:space="preserve">
+    <value>नेटवर्क फ़ाइलें स्कैन करें</value>
+</data>
+<data name="DisableRemovableDriveScanning-MSDefender" xml:space="preserve">
+    <value>हटाने योग्य ड्राइव स्कैन करें</value>
+</data>
+<data name="DisableReparsePointScanning-MSDefender" xml:space="preserve">
+    <value>रीपार्स पॉइंट स्कैन करें</value>
+</data>
+<data name="ArchiveMaxDepth-MSDefender" xml:space="preserve">
+    <value>संग्रह फ़ाइलों को स्कैन करने की अधिकतम गहराई</value>
+</data>
+<data name="UpdateOnStartUp-MSDefender" xml:space="preserve">
+    <value>स्टार्टअप पर नवीनतम वायरस और स्पाइवेयर सुरक्षा इंटेलिजेंस की जांच करें</value>
+</data>
+<data name="AVSignatureDue-MSDefender" xml:space="preserve">
+    <value>वायरस सुरक्षा इंटेलिजेंस को पुराना मानने से पहले दिनों की संख्या निर्दिष्ट करें</value>
+</data>
+<data name="ASSignatureDue-MSDefender" xml:space="preserve">
+    <value>स्पाइवेयर सुरक्षा इंटेलिजेंस को पुराना मानने से पहले दिनों की संख्या निर्दिष्ट करें</value>
+</data>
+<data name="DisableBlockAtFirstSeen-MSDefender" xml:space="preserve">
+    <value>पहली बार देखने पर ब्लॉक सुविधा सक्षम करें।</value>
+</data>
+<data name="AllowTelemetry-MSDefender" xml:space="preserve">
+    <value>Smart App Control आदि के लिए वैकल्पिक निदान डेटा आवश्यक है।</value>
+</data>
+<data name="DisableTelemetryOptInSettingsUx-MSDefender" xml:space="preserve">
+    <value>निदान डेटा ऑप्ट-इन सेटिंग्स UI कॉन्फ़िगर करें</value>
+</data>
+<data name="5-MSDefender" xml:space="preserve">
+    <value>गंभीर खतरा स्तर डिफ़ॉल्ट कार्रवाई = निकालें</value>
+</data>
+<data name="4-MSDefender" xml:space="preserve">
+    <value>उच्च खतरा स्तर डिफ़ॉल्ट कार्रवाई = निकालें</value>
+</data>
+<data name="2-MSDefender" xml:space="preserve">
+    <value>मध्यम खतरा स्तर डिफ़ॉल्ट कार्रवाई = क्वारंटाइन</value>
+</data>
+<data name="1-MSDefender" xml:space="preserve">
+    <value>निम्न खतरा स्तर डिफ़ॉल्ट कार्रवाई = क्वारंटाइन</value>
+</data>
+<data name="MeteredConnectionUpdates-MSDefender" xml:space="preserve">
+    <value>Microsoft Defender Antivirus को मीटर्ड कनेक्शन पर अपडेट करने की अनुमति दें</value>
+</data>
+<data name="SubmitSamplesConsent-MSDefender" xml:space="preserve">
+    <value>आगे के विश्लेषण की आवश्यकता होने पर फ़ाइल नमूने भेजें</value>
+</data>
+<data name="Threats_ThreatSeverityDefaultAction-MSDefender" xml:space="preserve">
+    <value>खतरा गंभीरता के लिए डिफ़ॉल्ट कार्रवाई कॉन्फ़िगर करें</value>
+</data>
+<data name="EnableControlledFolderAccess-MSDefender" xml:space="preserve">
+    <value>नियंत्रित फ़ोल्डर एक्सेस सक्षम करें</value>
+</data>
+<data name="EnableNetworkProtection-MSDefender" xml:space="preserve">
+    <value>नेटवर्क सुरक्षा सक्षम करें</value>
+</data>
+<data name="AllowNetworkProtectionOnWinServer-MSDefender" xml:space="preserve">
+    <value>Windows Server पर नेटवर्क सुरक्षा सक्षम करें</value>
+</data>
+<data name="TDTFeatureEnabled-MSDefender" xml:space="preserve">
+    <value>Intel TDT सक्षम करें: खतरा पहचान तकनीक।</value>
+</data>
+<data name="MpCloudBlockLevel-MSDefender" xml:space="preserve">
+    <value>क्लाउड ब्लॉक स्तर को अधिकतम मूल्य पर सेट करें: शून्य सहनशीलता।</value>
+</data>
+<data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
+    <value>विस्तारित क्लाउड चेक टाइमआउट अधिकतम मूल्य पर सेट किया गया।"</value>
+</data>
+<data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
+    <value>फ़ाइल हैश गणना सक्षम करें।</value>
+</data>
+<data name="DisableAsyncScanOnOpen-MSDefender" xml:space="preserve">
+    <value>फ़ाइल स्कैनिंग के आसपास Dev Drive की शिथिल सुरक्षा अक्षम करें।</value>
+</data>
+<data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
+    <value>OOBE मोड के दौरान Rtp और हस्ताक्षर अपडेट सक्षम करें।</value>
+</data>
+<data name="BruteForceProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>ब्रूट फोर्स हमला सुरक्षा सुविधा सक्षम करें।</value>
+</data>
+<data name="BruteForceProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>ब्रूट फोर्स सुरक्षा आक्रामकता स्तर को उच्च पर कॉन्फ़िगर करें।</value>
+</data>
+<data name="RemoteEncryptionProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>रिमोट एन्क्रिप्शन सुरक्षा सुविधा सक्षम करें।</value>
+</data>
+<data name="RemoteEncryptionProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>रिमोट एन्क्रिप्शन सुरक्षा आक्रामकता स्तर को उच्च पर कॉन्फ़िगर करें।</value>
+</data>
+<data name="DisableEmailScanning-MSDefender" xml:space="preserve">
+    <value>ईमेल स्कैनिंग सक्षम करें।</value>
+</data>
+<data name="DisableCatchupQuickScan-MSDefender" xml:space="preserve">
+    <value>कैचअप त्वरित स्कैन सक्षम करें।</value>
+</data>
+<data name="CheckForSignaturesBeforeRunningScan-MSDefender" xml:space="preserve">
+    <value>स्कैन चलाने से पहले हस्ताक्षर जांचें।</value>
+</data>
+<data name="SignatureUpdateInterval-MSDefender" xml:space="preserve">
+    <value>सुरक्षा इंटेलिजेंस अपडेट के लिए जांच अंतराल बढ़ाएं।</value>
+</data>
+<data name="SpynetReporting-MSDefender" xml:space="preserve">
+    <value>नवीनतम सुरक्षा इंटेलिजेंस के साथ अद्यतित रहने के लिए Microsoft MAPS (SpyNet के रूप में भी जाना जाता है) नेटवर्क से जुड़ें।</value>
+</data>
+<data name="ExploitGuard_ASR_Rules-ASR" xml:space="preserve">
+    <value>ASR नियम कॉन्फ़िगर करें</value>
+</data>
+  <data name="56a863a9-875e-4185-98a7-b882c64b5ce5-ASR" xml:space="preserve">
+    <value>शोषित कमजोर हस्ताक्षरित ड्राइवरों के दुरुपयोग को ब्लॉक करें</value>
+  </data>
+  <data name="7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c-ASR" xml:space="preserve">
+    <value>Adobe Reader को चाइल्ड प्रोसेस बनाने से ब्लॉक करें</value>
+  </data>
+  <data name="d4f940ab-401b-4efc-aadc-ad5f3c50688a-ASR" xml:space="preserve">
+    <value>सभी Office एप्लिकेशन को चाइल्ड प्रोसेस बनाने से ब्लॉक करें</value>
+  </data>
+  <data name="9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2-ASR" xml:space="preserve">
+    <value>Windows स्थानीय सुरक्षा प्राधिकरण उपप्रणाली (lsass.exe) से क्रेडेंशियल चोरी को ब्लॉक करें</value>
+  </data>
+  <data name="be9ba2d9-53ea-4cdc-84e5-9b1eeee46550-ASR" xml:space="preserve">
+    <value>ईमेल क्लाइंट और वेबमेल से निष्पादन योग्य सामग्री ब्लॉक करें</value>
+  </data>
+  <data name="01443614-cd74-433a-b99e-2ecdc07bfc25-ASR" xml:space="preserve">
+    <value>निष्पादन योग्य फ़ाइलों को चलने से ब्लॉक करें जब तक वे प्रसार, आयु या विश्वसनीय सूची मानदंड को पूरा न करें</value>
+  </data>
+  <data name="5beb7efe-fd9a-4556-801d-275e5ffc04cc-ASR" xml:space="preserve">
+    <value>संभावित रूप से अस्पष्ट स्क्रिप्ट के निष्पादन को ब्लॉक करें</value>
+  </data>
+  <data name="d3e037e1-3eb8-44c8-a917-57927947596d-ASR" xml:space="preserve">
+    <value>JavaScript या VBScript को डाउनलोड की गई निष्पादन योग्य सामग्री लॉन्च करने से ब्लॉक करें</value>
+  </data>
+  <data name="3b576869-a4ec-4529-8536-b80a7769e899-ASR" xml:space="preserve">
+    <value>Office एप्लिकेशन को निष्पादन योग्य सामग्री बनाने से ब्लॉक करें</value>
+  </data>
+  <data name="75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84-ASR" xml:space="preserve">
+    <value>Office एप्लिकेशन को अन्य प्रक्रियाओं में कोड इंजेक्ट करने से ब्लॉक करें</value>
+  </data>
+  <data name="26190899-1602-49e8-8b27-eb1d0a1ce869-ASR" xml:space="preserve">
+    <value>Office संचार एप्लिकेशन को चाइल्ड प्रोसेस बनाने से ब्लॉक करें</value>
+  </data>
+  <data name="e6db77e5-3df2-4cf1-b95a-636979351e5b-ASR" xml:space="preserve">
+    <value>WMI इवेंट सदस्यता के माध्यम से स्थायित्व को ब्लॉक करें
+* फ़ाइल और फ़ोल्डर बहिष्करण समर्थित नहीं हैं।</value>
+  </data>
+  <data name="d1e49aac-8f56-4280-b9ba-993a6d77406c-ASR" xml:space="preserve">
+    <value>PSExec और WMI कमांड से उत्पन्न प्रक्रिया निर्माण को ब्लॉक करें</value>
+  </data>
+  <data name="33ddedf1-c6e0-47cb-833e-de6133960387-ASR" xml:space="preserve">
+    <value>सुरक्षित मोड में मशीन पुनः आरंभ को ब्लॉक करें</value>
+  </data>
+  <data name="b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4-ASR" xml:space="preserve">
+    <value>USB से चलने वाली अविश्वसनीय और हस्ताक्षर रहित प्रक्रियाओं को ब्लॉक करें</value>
+  </data>
+  <data name="c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb-ASR" xml:space="preserve">
+    <value>कॉपी किए गए या नकली सिस्टम टूल के उपयोग को ब्लॉक करें</value>
+  </data>
+  <data name="a8f5898e-1dc8-49a9-9878-85004b8a61e6-ASR" xml:space="preserve">
+    <value>सर्वर के लिए Webshell निर्माण को ब्लॉक करें</value>
+  </data>
+  <data name="92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b-ASR" xml:space="preserve">
+    <value>Office मैक्रो से Win32 API कॉल को ब्लॉक करें</value>
+  </data>
+  <data name="c1db55ab-c21a-4637-bb3f-a12568109d35-ASR" xml:space="preserve">
+    <value>उन्नत रैंसमवेयर सुरक्षा का उपयोग करें</value>
+  </data>
+<data name="DisallowStandardUserPINReset-BitLocker" xml:space="preserve">
+    <value>मानक उपयोगकर्ता PIN रीसेट की अनुमति न दें</value>
+</data>
+<data name="UseAdvancedStartup-BitLocker" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम को स्टार्टअप पर अतिरिक्त प्रमाणीकरण की आवश्यकता की अनुमति दें</value>
+</data>
+<data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
+    <value>TPM के बिना Bitlocker की अनुमति न दें</value>
+</data>
+<data name="UseTPM-BitLocker" xml:space="preserve">
+    <value>केवल TPM की अनुमति न दें</value>
+</data>
+<data name="UseTPMPIN-BitLocker" xml:space="preserve">
+    <value>स्टार्टअप पर TPM + PIN की अनुमति दें।</value>
+</data>
+<data name="UseTPMKey-BitLocker" xml:space="preserve">
+    <value>स्टार्टअप पर TPM + कुंजी की अनुमति दें।</value>
+</data>
+<data name="UseTPMKeyPIN-BitLocker" xml:space="preserve">
+    <value>स्टार्टअप पर TPM + स्टार्टअप कुंजी + PIN की अनुमति दें।</value>
+</data>
+<data name="EncryptionMethodWithXtsOs-BitLocker" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम ड्राइव के लिए सही एन्क्रिप्शन विधि कॉन्फ़िगर करें: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsFdv-BitLocker" xml:space="preserve">
+    <value>निश्चित डेटा ड्राइव के लिए सही एन्क्रिप्शन विधि कॉन्फ़िगर करें: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsRdv-BitLocker" xml:space="preserve">
+    <value>हटाने योग्य ड्राइव के लिए सही एन्क्रिप्शन विधि कॉन्फ़िगर करें: XTS-AES-256</value>
+</data>
+<data name="UseEnhancedPin-BitLocker" xml:space="preserve">
+    <value>PIN में प्रतीकों और अन्य वर्णों की अनुमति देकर उन्नत PIN का उपयोग करें।</value>
+</data>
+<data name="OSEncryptionType-BitLocker" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम ड्राइव के लिए सुरक्षित पूर्ण डिस्क एन्क्रिप्शन प्रकार कॉन्फ़िगर करें</value>
+</data>
+<data name="RDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>हटाने योग्य ड्राइव के लिए सुरक्षित पूर्ण डिस्क एन्क्रिप्शन प्रकार कॉन्फ़िगर करें</value>
+</data>
+<data name="RDVDiscoveryVolumeType-BitLocker" xml:space="preserve">
+    <value>Windows के पिछले संस्करणों से BitLocker-संरक्षित हटाने योग्य डेटा ड्राइव तक पहुंच रोकें</value>
+</data>
+<data name="RDVNoBitLockerToGoReader-BitLocker" xml:space="preserve">
+    <value>FAT-फॉर्मेटेड हटाने योग्य ड्राइव पर "BitLocker To Go" Reader इंस्टॉल न करें क्योंकि वे असुरक्षित हैं।</value>
+</data>
+<data name="MinimumPIN-BitLocker" xml:space="preserve">
+    <value>स्टार्टअप के लिए न्यूनतम PIN लंबाई कॉन्फ़िगर करें।</value>
+</data>
+<data name="ACSettingIndex-BitLocker" xml:space="preserve">
+    <value>सोते समय स्टैंडबाय स्थिति (S1-S3) की अनुमति न दें (बिजली से जुड़ा)</value>
+</data>
+<data name="DCSettingIndex-BitLocker" xml:space="preserve">
+    <value>सोते समय स्टैंडबाय स्थिति (S1-S3) की अनुमति न दें (बैटरी पर)</value>
+</data>
+<data name="ShowHibernateOption-BitLocker" xml:space="preserve">
+    <value>OS में पावर विकल्पों में हाइबरनेशन विकल्प दिखाएं ताकि आप चाहें तो अपने डिवाइस को हाइबरनेशन में डाल सकें।</value>
+</data>
+<data name="FDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>निश्चित डेटा ड्राइव के लिए सुरक्षित एन्क्रिप्शन प्रकार कॉन्फ़िगर करें</value>
+</data>
+<data name="Functions-TLS" xml:space="preserve">
+    <value>सही TLS साइफर सूट कॉन्फ़िगर करें</value>
+</data>
+<data name="EccCurves-TLS" xml:space="preserve">
+    <value>सेवा ECC वक्र और उनकी स्थिति कॉन्फ़िगर करें।</value>
+</data>
+<data name="DisabledByDefault1-TLS" xml:space="preserve">
+    <value>TLS 1.0 क्लाइंट अक्षम करें - डिफ़ॉल्ट रूप से अक्षम</value>
+</data>
+<data name="Enabled1-TLS" xml:space="preserve">
+    <value>TLS 1.0 क्लाइंट अक्षम करें - सक्षम</value>
+</data>
+<data name="DisabledByDefault2-TLS" xml:space="preserve">
+    <value>TLS 1.0 सर्वर अक्षम करें - डिफ़ॉल्ट रूप से अक्षम</value>
+</data>
+<data name="Enabled2-TLS" xml:space="preserve">
+    <value>TLS 1.0 सर्वर अक्षम करें - सक्षम</value>
+</data>
+<data name="DisabledByDefault3-TLS" xml:space="preserve">
+    <value>TLS 1.1 क्लाइंट अक्षम करें - डिफ़ॉल्ट रूप से अक्षम</value>
+</data>
+<data name="Enabled3-TLS" xml:space="preserve">
+    <value>TLS 1.1 क्लाइंट अक्षम करें - सक्षम</value>
+</data>
+<data name="DisabledByDefault4-TLS" xml:space="preserve">
+    <value>TLS 1.1 सर्वर अक्षम करें - डिफ़ॉल्ट रूप से अक्षम</value>
+</data>
+<data name="Enabled4-TLS" xml:space="preserve">
+    <value>TLS 1.1 सर्वर अक्षम करें - सक्षम</value>
+</data>
+<data name="Enabled5-TLS" xml:space="preserve">
+    <value>NULL साइफर सूट अक्षम करें</value>
+</data>
+<data name="Enabled6-TLS" xml:space="preserve">
+    <value>56/56 साइफर सूट अक्षम करें</value>
+</data>
+<data name="Enabled7-TLS" xml:space="preserve">
+    <value>40/128 साइफर सूट अक्षम करें</value>
+</data>
+<data name="Enabled8-TLS" xml:space="preserve">
+    <value>RC2 56/128 साइफर सूट अक्षम करें</value>
+</data>
+<data name="Enabled9-TLS" xml:space="preserve">
+    <value>RC2 128/128 साइफर सूट अक्षम करें</value>
+</data>
+<data name="Enabled10-TLS" xml:space="preserve">
+    <value>RC4 40/128 साइफर सूट अक्षम करें</value>
+</data>
+<data name="Enabled11-TLS" xml:space="preserve">
+    <value>RC4 56/128 साइफर सूट अक्षम करें</value>
+</data>
+<data name="Enabled12-TLS" xml:space="preserve">
+    <value>RC4 64/128 साइफर सूट अक्षम करें</value>
+</data>
+<data name="Enabled13-TLS" xml:space="preserve">
+    <value>RC4 128/128 साइफर सूट अक्षम करें</value>
+</data>
+<data name="Enabled14-TLS" xml:space="preserve">
+    <value>Triple DES 168 साइफर सूट अक्षम करें</value>
+</data>
+<data name="Enabled15-TLS" xml:space="preserve">
+    <value>MD5 हैश एल्गोरिदम अक्षम करें</value>
+</data>
+<data name="Digits-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN में अंकों की आवश्यकता</value>
+</data>
+<data name="LowercaseLetters-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN में छोटे अक्षरों की आवश्यकता</value>
+</data>
+<data name="Expiration-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN के लिए समाप्ति सेट करें</value>
+</data>
+<data name="History-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN इतिहास संग्रहीत करें</value>
+</data>
+<data name="DontDisplayNetworkSelectionUI-LockScreen" xml:space="preserve">
+    <value>लॉक स्क्रीन पर नेटवर्क चयन UI प्रदर्शित न करें</value>
+</data>
+<data name="HideFastUserSwitching-UAC" xml:space="preserve">
+    <value>फास्ट यूजर स्विचिंग एंट्री पॉइंट छुपाएं</value>
+</data>
+<data name="EnableVirtualizationBasedSecurity-DeviceGuard" xml:space="preserve">
+    <value>वर्चुअलाइजेशन-आधारित सुरक्षा सक्षम करें</value>
+</data>
+<data name="RequirePlatformSecurityFeatures-DeviceGuard" xml:space="preserve">
+    <value>प्लेटफ़ॉर्म सुरक्षा सुविधाओं की आवश्यकता</value>
+</data>
+<data name="HypervisorEnforcedCodeIntegrity-DeviceGuard" xml:space="preserve">
+    <value>हाइपरवाइजर-लागू कोड अखंडता - UEFI लॉक</value>
+</data>
+<data name="HVCIMATRequired-DeviceGuard" xml:space="preserve">
+    <value>HVCI MAT (मेमोरी एट्रिब्यूट टेबल) की आवश्यकता</value>
+</data>
+<data name="LsaCfgFlags-DeviceGuard" xml:space="preserve">
+    <value>Credential Guard कॉन्फ़िगर करें - UEFI लॉक</value>
+</data>
+<data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
+    <value>यदि हार्डवेयर समर्थन मौजूद है तो System Guard Secure Launch सक्षम करें</value>
+</data>
+<data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
+    <value>Kernel Shadow Stacks लॉन्च कॉन्फ़िगर करें</value>
+</data>
+<data name="RunAsPPL-DeviceGuard" xml:space="preserve">
+    <value>UEFI लॉक के साथ स्थानीय सुरक्षा प्राधिकरण (LSA) प्रक्रिया सुरक्षा सक्षम करें</value>
+</data>
+<data name="MachineIdentityIsolation-DeviceGuard" xml:space="preserve">
+    <value>मशीन पहचान अलगाव कॉन्फ़िगरेशन कॉन्फ़िगर करें</value>
+</data>
+<data name="Mandatory-DeviceGuard" xml:space="preserve">
+    <value>अनिवार्य मोड में VBS और मेमोरी अखंडता सक्षम करें</value>
+</data>
+<data name="EnableFirewallDomain-WindowsFirewall" xml:space="preserve">
+    <value>डोमेन प्रोफ़ाइल के लिए Windows फ़ायरवॉल सक्षम करें</value>
+</data>
+<data name="DefaultOutboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>डोमेन प्रोफ़ाइल के लिए डिफ़ॉल्ट आउटबाउंड कार्रवाई सेट करें</value>
+</data>
+<data name="DefaultInboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>डोमेन प्रोफ़ाइल के लिए डिफ़ॉल्ट इनबाउंड कार्रवाई सेट करें</value>
+</data>
+<data name="DisableNotificationsDomain-WindowsFirewall" xml:space="preserve">
+    <value>डोमेन प्रोफ़ाइल के लिए सूचनाएं प्रदर्शित करें</value>
+</data>
+<data name="LogFilePathDomain-WindowsFirewall" xml:space="preserve">
+    <value>डोमेन प्रोफ़ाइल के लिए लॉग फ़ाइल पथ कॉन्फ़िगर करें</value>
+</data>
+<data name="LogFileSizeDomain-WindowsFirewall" xml:space="preserve">
+    <value>डोमेन प्रोफ़ाइल के लिए लॉग फ़ाइल आकार कॉन्फ़िगर करें</value>
+</data>
+<data name="LogDroppedPacketsDomain-WindowsFirewall" xml:space="preserve">
+    <value>डोमेन प्रोफ़ाइल के लिए ब्लॉक किए गए कनेक्शन लॉग करें</value>
+</data>
+<data name="LogSuccessfulConnectionsDomain-WindowsFirewall" xml:space="preserve">
+    <value>डोमेन प्रोफ़ाइल के लिए सफल कनेक्शन लॉग करें</value>
+</data>
+<data name="EnableFirewallPrivate-WindowsFirewall" xml:space="preserve">
+    <value>निजी प्रोफ़ाइल के लिए Windows फ़ायरवॉल सक्षम करें</value>
+</data>
+<data name="DisableNotificationsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>निजी प्रोफ़ाइल के लिए सूचनाएं प्रदर्शित करें</value>
+</data>
+<data name="LogFileSizePrivate-WindowsFirewall" xml:space="preserve">
+    <value>निजी प्रोफ़ाइल के लिए लॉग फ़ाइल आकार कॉन्फ़िगर करें</value>
+</data>
+<data name="LogDroppedPacketsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>निजी प्रोफ़ाइल के लिए ब्लॉक किए गए कनेक्शन लॉग करें</value>
+</data>
+<data name="LogFilePathPrivate-WindowsFirewall" xml:space="preserve">
+    <value>निजी प्रोफ़ाइल के लिए लॉग फ़ाइल पथ कॉन्फ़िगर करें</value>
+</data>
+<data name="EnableFirewallPublic-WindowsFirewall" xml:space="preserve">
+    <value>सार्वजनिक प्रोफ़ाइल के लिए Windows फ़ायरवॉल सक्षम करें</value>
+</data>
+<data name="DisableNotificationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>सार्वजनिक प्रोफ़ाइल के लिए सूचनाएं प्रदर्शित करें</value>
+</data>
+<data name="LogFileSizePublic-WindowsFirewall" xml:space="preserve">
+    <value>सार्वजनिक प्रोफ़ाइल के लिए लॉग फ़ाइल आकार कॉन्फ़िगर करें</value>
+</data>
+<data name="LogDroppedPacketsPublic-WindowsFirewall" xml:space="preserve">
+    <value>सार्वजनिक प्रोफ़ाइल के लिए ब्लॉक किए गए कनेक्शन लॉग करें</value>
+</data>
+<data name="LogFilePathPublic-WindowsFirewall" xml:space="preserve">
+    <value>सार्वजनिक प्रोफ़ाइल के लिए लॉग फ़ाइल पथ कॉन्फ़िगर करें</value>
+</data>
+<data name="PolicyVersion-WindowsFirewall" xml:space="preserve">
+    <value>Windows फ़ायरवॉल नीति संस्करण कॉन्फ़िगर करें</value>
+</data>
+<data name="EnableNetbios-WindowsNetworking" xml:space="preserve">
+    <value>Netbios अक्षम करें</value>
+</data>
+<data name="DisableSmartNameResolution-WindowsNetworking" xml:space="preserve">
+    <value>स्मार्ट नाम रिज़ॉल्यूशन अक्षम करें</value>
+</data>
+<data name="EnableMulticast-WindowsNetworking" xml:space="preserve">
+    <value>मल्टीकास्ट अक्षम करें</value>
+</data>
+<data name="DisableHTTPPrinting-WindowsNetworking" xml:space="preserve">
+    <value>HTTP प्रिंटिंग अक्षम करें</value>
+</data>
+<data name="DisableWebPnPDownload-WindowsNetworking" xml:space="preserve">
+    <value>Web PnP डाउनलोड अक्षम करें</value>
+</data>
+<data name="EnableLMHOSTS-WindowsNetworking" xml:space="preserve">
+    <value>सभी नेटवर्क एडाप्टर पर LMHOSTS लुकअप प्रोटोकॉल अक्षम करें</value>
+</data>
+<data name="EnableSMBQUICServer-WindowsNetworking" xml:space="preserve">
+    <value>QUIC पर SMB सर्वर सक्षम करें</value>
+</data>
+<data name="EnableSMBQUICClient-WindowsNetworking" xml:space="preserve">
+    <value>QUIC पर SMB क्लाइंट सक्षम करें</value>
+</data>
+<data name="CipherSuiteOrderServer-WindowsNetworking" xml:space="preserve">
+    <value>SMB सर्वर सुरक्षित साइफर सूट ऑर्डर कॉन्फ़िगर करें</value>
+</data>
+<data name="CipherSuiteOrderClient-WindowsNetworking" xml:space="preserve">
+    <value>SMB क्लाइंट सुरक्षित साइफर सूट ऑर्डर कॉन्फ़िगर करें</value>
+</data>
+<data name="MinSmb2DialectServer-WindowsNetworking" xml:space="preserve">
+    <value>न्यूनतम SMB सर्वर संस्करण सेट करें</value>
+</data>
+<data name="MinSmb2DialectClient-WindowsNetworking" xml:space="preserve">
+    <value>न्यूनतम SMB क्लाइंट संस्करण सेट करें</value>
+</data>
+<data name="BlockNTLM-WindowsNetworking" xml:space="preserve">
+    <value>SMB के लिए NTLM ब्लॉक करें</value>
+</data>
+<data name="RequireEncryption-WindowsNetworking" xml:space="preserve">
+    <value>SMB क्लाइंट के लिए एन्क्रिप्शन आवश्यक</value>
+</data>
+<data name="EnableAuthEpResolution-WindowsNetworking" xml:space="preserve">
+    <value>RPC एंडपॉइंट मैपर क्लाइंट प्रमाणीकरण अक्षम करें</value>
+</data>
+<data name="EncryptData-WindowsNetworking" xml:space="preserve">
+    <value>SMB सर्वर एन्क्रिप्शन सक्षम करें</value>
+</data>
+<data name="ProcessCreationIncludeCmdLine_Enabled-Miscellaneous" xml:space="preserve">
+    <value>प्रक्रिया निर्माण इवेंट में कमांड लाइन शामिल करें</value>
+</data>
+<data name="DisableLocation-Miscellaneous" xml:space="preserve">
+    <value>स्थान अक्षम करें</value>
+</data>
+<data name="DisableLocationScripting-Miscellaneous" xml:space="preserve">
+    <value>स्थान स्क्रिप्टिंग अक्षम करें</value>
+</data>
+<data name="DisableWindowsLocationProvider-Miscellaneous" xml:space="preserve">
+    <value>Windows स्थान प्रदाता अक्षम करें</value>
+</data>
+<data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
+    <value>Svchost शमन सक्षम करें</value>
+</data>
+<data name="DriverLoadPolicy-Miscellaneous" xml:space="preserve">
+    <value>बूट ड्राइवर इनिशियलाइज़ेशन नीति केवल अच्छे पर सेट करें</value>
+</data>
+<data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
+    <value>Windows में उन्नत खोज सक्षम करें</value>
+</data>
+<data name="allowautoupdatesmeteredStable-Miscellaneous" xml:space="preserve">
+    <value>Microsoft Edge (स्थिर) को मीटर्ड कनेक्शन पर अपडेट करने के लिए सेट करें</value>
+</data>
+<data name="allowautoupdatesmeteredBeta-Miscellaneous" xml:space="preserve">
+    <value>Microsoft Edge (बीटा) को मीटर्ड कनेक्शन पर अपडेट करने के लिए सेट करें</value>
+</data>
+<data name="allowautoupdatesmeteredDev-Miscellaneous" xml:space="preserve">
+    <value>Microsoft Edge (डेव) को मीटर्ड कनेक्शन पर अपडेट करने के लिए सेट करें</value>
+</data>
+<data name="EnableCertPaddingCheck-Miscellaneous" xml:space="preserve">
+    <value>WinVerifyTrust हस्ताक्षर सत्यापन भाग 1 लागू करें</value>
+</data>
+<data name="EnableCertPaddingCheck2-Miscellaneous" xml:space="preserve">
+    <value>WinVerifyTrust हस्ताक्षर सत्यापन भाग 2 लागू करें</value>
+</data>
+<data name="EnableCbacAndArmor-Miscellaneous" xml:space="preserve">
+    <value>DAC और Kerberos कवच के लिए दावे और मिश्रित प्रमाणीकरण का अनुरोध करें</value>
+</data>
+<data name="WindowsProtectedPrintGroupPolicyState-Miscellaneous" xml:space="preserve">
+    <value>Windows संरक्षित प्रिंटिंग सक्षम करें</value>
+</data>
+<data name="LongPathsEnabled-Miscellaneous" xml:space="preserve">
+    <value>लंबे पथ समर्थन सक्षम करें</value>
+</data>
+<data name="AllowOnlineTips-Miscellaneous" xml:space="preserve">
+    <value>ऑनलाइन टिप्स अक्षम करें।</value>
+</data>
+<data name="AllowFindMyDevice-Miscellaneous" xml:space="preserve">
+    <value>मेरा डिवाइस खोजें सुविधा अक्षम करें।</value>
+</data>
+<data name="AllowSpeechModelUpdate-Miscellaneous" xml:space="preserve">
+    <value>स्पीच डेटा का स्वचालित अपडेट अक्षम करें।</value>
+</data>
+<data name="DisabledByGroupPolicy-Miscellaneous" xml:space="preserve">
+    <value>विज्ञापन आईडी बंद करें, ऐप्स को क्रॉस-ऐप अनुभवों के लिए आईडी का उपयोग करने से रोकें।</value>
+</data>
+<data name="DisableSoftLanding-Miscellaneous" xml:space="preserve">
+    <value>Windows का उपयोग करते समय सुझाव और संकेत प्राप्त करना बंद करें।</value>
+</data>
+<data name="DisableCloudOptimizedContent-Miscellaneous" xml:space="preserve">
+    <value>सभी Windows अनुभवों में क्लाउड-अनुकूलित सामग्री बंद करें।</value>
+</data>
+<data name="DoNotShowFeedbackNotifications-Miscellaneous" xml:space="preserve">
+    <value>फीडबैक सूचनाएं न दिखाएं।</value>
+</data>
+<data name="AutoDownloadAndUpdateMapData-Miscellaneous" xml:space="preserve">
+    <value>मैप डेटा का स्वचालित डाउनलोड और अपडेट बंद करें।</value>
+</data>
+<data name="AllowMessageSync-Miscellaneous" xml:space="preserve">
+    <value>सेलुलर टेक्स्ट संदेशों के लिए संदेश सेवा की क्लाउड सिंक अक्षम करें।</value>
+</data>
+<data name="EnableFontProviders-Miscellaneous" xml:space="preserve">
+    <value>Windows को फ़ॉन्ट कैटलॉग डाउनलोड करने से ब्लॉक करें।</value>
+</data>
+<data name="EnableCdp-Miscellaneous" xml:space="preserve">
+    <value>"इस डिवाइस पर अनुभव जारी रखें" सुविधा अक्षम करें।</value>
+</data>
+<data name="EnableAppUriHandlers-Miscellaneous" xml:space="preserve">
+    <value>ऐप URI हैंडलर के साथ वेब-टू-ऐप लिंकिंग के लिए समर्थन अक्षम करें।</value>
+</data>
+<data name="DisableWebSearch-Miscellaneous" xml:space="preserve">
+    <value>वेब खोज न करें या खोज में वेब परिणाम न दिखाएं।</value>
+</data>
+<data name="ConnectedSearchUseWeb-Miscellaneous" xml:space="preserve">
+    <value>वेब खोज की अनुमति न दें।</value>
+</data>
+<data name="AllowAutoWindowsUpdateDownloadOverMeteredNetwork-WindowsUpdate" xml:space="preserve">
+    <value>मीटर्ड कनेक्शन पर अपडेट स्वचालित रूप से डाउनलोड करने की अनुमति दें</value>
+</data>
+<data name="AllowTemporaryEnterpriseFeatureControl-WindowsUpdate" xml:space="preserve">
+    <value>सेवा के माध्यम से प्रस्तुत की गई सुविधाएं सक्षम करें जो डिफ़ॉल्ट रूप से बंद हैं</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>डिवाइसों पर फीचर अपडेट स्वचालित रूप से इंस्टॉल होने से पहले दिनों की संख्या निर्दिष्ट करें</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>डिवाइसों पर गुणवत्ता अपडेट स्वचालित रूप से इंस्टॉल होने से पहले दिनों की संख्या निर्दिष्ट करें</value>
+</data>
+<data name="ConfigureDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>डिवाइसों पर गुणवत्ता अपडेट स्वचालित रूप से इंस्टॉल होने से पहले दिनों की संख्या</value>
+</data>
+<data name="ConfigureDeadlineGracePeriod-WindowsUpdate" xml:space="preserve">
+    <value>डिवाइसों पर गुणवत्ता अपडेट स्वचालित रूप से इंस्टॉल होने से पहले अनुग्रह अवधि के दिनों की संख्या</value>
+</data>
+<data name="ConfigureDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>डिवाइसों पर फीचर अपडेट स्वचालित रूप से इंस्टॉल होने से पहले दिनों की संख्या</value>
+</data>
+<data name="ConfigureDeadlineGracePeriodForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>डिवाइसों पर फीचर अपडेट स्वचालित रूप से इंस्टॉल होने से पहले अनुग्रह अवधि के दिनों की संख्या</value>
+</data>
+<data name="NoAutoUpdate-WindowsUpdate" xml:space="preserve">
+    <value>Windows Update के माध्यम से सुरक्षा अपडेट और अन्य महत्वपूर्ण डाउनलोड प्राप्त करने के लिए कंप्यूटर सेट करें</value>
+</data>
+<data name="AUOptions-WindowsUpdate" xml:space="preserve">
+    <value>अपडेट स्वचालित रूप से डाउनलोड करें और रखरखाव दिवस पर इंस्टॉल करें</value>
+</data>
+<data name="AutomaticMaintenanceEnabled-WindowsUpdate" xml:space="preserve">
+    <value>स्वचालित रखरखाव के दौरान अपडेट इंस्टॉल करें</value>
+</data>
+<data name="ScheduledInstallDay-WindowsUpdate" xml:space="preserve">
+    <value>निर्धारित इंस्टॉल दिन को हर दिन पर सेट करें</value>
+</data>
+<data name="ScheduledInstallTime-WindowsUpdate" xml:space="preserve">
+    <value>निर्धारित इंस्टॉल समय को किसी भी समय पर सेट करें</value>
+</data>
+<data name="AllowMUUpdateService-WindowsUpdate" xml:space="preserve">
+    <value>अन्य Microsoft उत्पादों के लिए अपडेट इंस्टॉल करें</value>
+</data>
+<data name="RestartNotificationsAllowed2-WindowsUpdate" xml:space="preserve">
+    <value>Windows Update के लिए पुनः आरंभ सूचना सक्षम करें</value>
+</data>
+<data name="RemoveScheduleForWeek-WindowsUpdate" xml:space="preserve">
+    <value>केवल विशिष्ट सप्ताह में अपडेट इंस्टॉल करने के लिए शेड्यूल हटाएं।</value>
+</data>
+<data name="SetComplianceDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>फीचर अपडेट के लिए अनुपालन समय सीमा सेट करें।</value>
+</data>
+<data name="SetComplianceDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>गुणवत्ता अपडेट के लिए अनुपालन समय सीमा सेट करें।</value>
+</data>
+<data name="BlockThirdPartyCookies-Edge" xml:space="preserve">
+    <value>तृतीय-पक्ष कुकीज़ ब्लॉक करें</value>
+</data>
+<data name="DnsOverHttpsMode-Edge" xml:space="preserve">
+    <value>सिस्टम की DoH सेटिंग्स का उपयोग करने के लिए DNS ओवर HTTPS मोड सेट करें</value>
+</data>
+<data name="AutomaticHttpsDefault-Edge" xml:space="preserve">
+    <value>HTTP कनेक्शन को स्वचालित रूप से HTTPS में अपग्रेड करें</value>
+</data>
+<data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
+    <value>एन्क्रिप्टेड क्लाइंट हैलो सक्षम करें</value>
+</data>
+<data name="BasicAuthOverHttpEnabled-Edge" xml:space="preserve">
+    <value>HTTP के लिए बेसिक प्रमाणीकरण ब्लॉक करें</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControl-Edge" xml:space="preserve">
+    <value>Edge को नीतियों का उपयोग करने के बाद भी नई सुविधाएं प्राप्त करने की अनुमति दें</value>
+</data>
+<data name="AudioSandboxEnabled-Edge" xml:space="preserve">
+    <value>ऑडियो प्रक्रिया को सैंडबॉक्स में चलाने के लिए बाध्य करें</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSetting-Edge" xml:space="preserve">
+    <value>अतिरिक्त OS क्षेत्र साझा करने की सेटिंग को कभी नहीं पर सेट करने की अनुशंसा की जाती है</value>
+</data>
+<data name="1-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA अक्षम करें - (CBC - SHA1)</value>
+</data>
+<data name="2-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA अक्षम करें - (CBC - SHA1)</value>
+</data>
+<data name="3-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_CBC_SHA अक्षम करें - (PFS के बिना - CBC - SHA1)</value>
+</data>
+<data name="4-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_CBC_SHA अक्षम करें - (PFS के बिना - CBC - SHA1)</value>
+</data>
+<data name="5-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_GCM_SHA256 अक्षम करें - (PFS के बिना)</value>
+</data>
+<data name="6-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_GCM_SHA384 अक्षम करें - (PFS के बिना)</value>
+</data>
+<data name="ExtensionManifestV2Availability-Edge" xml:space="preserve">
+    <value>Manifest V2 एक्सटेंशन के लिए समर्थन कभी अक्षम न करें</value>
+</data>
+<data name="DefaultWebUsbGuardSetting-Edge" xml:space="preserve">
+    <value>साइटों को स्थानीय कनेक्टेड USB डिवाइसों तक पहुंच का अनुरोध करने की कभी अनुमति न दें</value>
+</data>
+<data name="DefaultWindowManagementSetting-Edge" xml:space="preserve">
+    <value>डिफ़ॉल्ट रूप से सभी साइटों पर विंडो प्रबंधन अनुमति अस्वीकार करें</value>
+</data>
+<data name="DynamicCodeSettings-Edge" xml:space="preserve">
+    <value>ब्राउज़र प्रक्रिया को गतिशील कोड उत्पन्न करने से रोकें</value>
+</data>
+<data name="HideFileExt-NonAdmin" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर में फ़ाइल एक्सटेंशन दिखाना सक्षम करें</value>
+</data>
+<data name="Hidden-NonAdmin" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर में छुपी हुई फ़ाइलें दिखाना सक्षम करें</value>
+</data>
+<data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
+    <value>वेबसाइटों की स्थानीय भाषाओं की सूची तक पहुंच अक्षम करें</value>
+</data>
+<data name="SafeSearchMode-NonAdmin" xml:space="preserve">
+    <value>Windows खोज में सुरक्षित खोज बंद करें</value>
+</data>
+<data name="EnableClipboardHistory-NonAdmin" xml:space="preserve">
+    <value>क्लिपबोर्ड इतिहास सक्षम करें</value>
+</data>
+<data name="EnableHwkbTextPrediction-NonAdmin" xml:space="preserve">
+    <value>भौतिक कीबोर्ड पर टाइप करते समय पाठ सुझाव दिखाना चालू करें</value>
+</data>
+<data name="MultilingualEnabled-NonAdmin" xml:space="preserve">
+    <value>बहुभाषी पाठ सुझाव चालू करें</value>
+</data>
+<data name="Flags-NonAdmin" xml:space="preserve">
+    <value>Shift कुंजी को 5 बार तेज़ी से दबाकर स्टिकी कुंजी शॉर्टकट बंद करें</value>
+</data>
+<data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
+    <value>लॉक स्क्रीन पर रिमाइंडर और इनकमिंग VoIP कॉल दिखाना अक्षम करें</value>
+</data>
+<data name="BackupDirectory-OptionalOverrides" xml:space="preserve">
+    <value>Active Directory में स्थानीय व्यवस्थापक खाता पासवर्ड का बैकअप अक्षम करें।</value>
+</data>
+<data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
+    <value>नेटवर्क लॉगऑन पर स्थानीय खातों पर UAC प्रतिबंध लागू करें</value>
+</data>
+<data name="RDVDenyCrossOrg-OptionalOverrides" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम को अन्य संगठनों में बनाई गई BitLocker-एन्क्रिप्टेड ड्राइव का उपयोग करने की अनुमति दें।</value>
+</data>
+<data name="DisableWindowsConsumerFeatures-OptionalOverrides" xml:space="preserve">
+    <value>उपभोक्ताओं को अपने डिवाइस और Microsoft खाते का अधिकतम लाभ उठाने में मदद करने वाले अनुभवों को बंद न करें।</value>
+</data>
+<data name="AllowGameDVR-OptionalOverrides" xml:space="preserve">
+    <value>Game DVR सुविधा के उपयोग की अनुमति दें।</value>
+</data>
+<data name="NC_ShowSharedAccessUI-OptionalOverrides" xml:space="preserve">
+    <value>स्थानीय व्यवस्थापक के लिए इंटरनेट कनेक्शन शेयरिंग (ICS) UI सक्षम करें।</value>
+</data>
+<data name="Enabled-OptionalOverrides" xml:space="preserve">
+    <value>उपयोगकर्ताओं को Sudo सुविधा का उपयोग करने की अनुमति दें।</value>
+</data>
+<data name="HideExclusionsFromLocalAdmins-OptionalOverrides" xml:space="preserve">
+    <value>Microsoft Defender में बहिष्करणों को स्थानीय व्यवस्थापकों से न छुपाएं।</value>
+</data>
+<data name="fDisableCdm-OptionalOverrides" xml:space="preserve">
+    <value>रिमोट डेस्कटॉप सत्र और Hyper-V में ड्राइव मैपिंग की अनुमति दें</value>
+</data>
+<data name="fDisableClip-OptionalOverrides" xml:space="preserve">
+    <value>रिमोट डेस्कटॉप सत्र और Hyper-V में क्लिपबोर्ड साझाकरण की अनुमति दें</value>
+</data>
+<data name="PolicyVersionOverride-OptionalOverrides" xml:space="preserve">
+    <value>Windows फ़ायरवॉल नीति संस्करण कॉन्फ़िगर करें</value>
+</data>
+<data name="DisableNotificationsPrivateOverride-OptionalOverrides" xml:space="preserve">
+    <value>निजी प्रोफ़ाइल के लिए Windows फ़ायरवॉल में सूचनाएं अक्षम न करें</value>
+</data>
+<data name="AllowLocalPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>केवल समूह नीति में परिभाषित नीतियों को लागू करने के बजाय Windows फ़ायरवॉल उन्नत सेटिंग अनुभाग में परिभाषित Windows फ़ायरवॉल नीतियों के उपयोग की अनुमति दें।</value>
+</data>
+<data name="AllowLocalIPsecPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>केवल समूह नीति में परिभाषित नीतियों को लागू करने के बजाय Windows फ़ायरवॉल उन्नत सेटिंग अनुभाग में परिभाषित IPSec Windows फ़ायरवॉल नीतियों के उपयोग की अनुमति दें।</value>
+</data>
+<data name="DisableNotificationsPublicOverride-OptionalOverrides" xml:space="preserve">
+    <value>सार्वजनिक प्रोफ़ाइल के लिए Windows फ़ायरवॉल में सूचनाएं अक्षम न करें</value>
+</data>
+<data name="RDVDenyWriteAccess-OptionalOverrides" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम को BitLocker द्वारा एन्क्रिप्ट नहीं की गई हटाने योग्य ड्राइव पर लिखने की अनुमति दें</value>
+</data>
+<data name="BlockThirdPartyCookiesRecommended-Edge" xml:space="preserve">
+    <value>तृतीय-पक्ष कुकीज़ ब्लॉक करने की अनुशंसा करें</value>
+</data>
+<data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
+    <value>Edge को सिस्टम का DNS over HTTPS उपयोग करने के लिए सेट करें। यह MDAG को भी सही तरीके से काम करने देता है</value>
+</data>
+<data name="AutomaticHttpsDefaultEdge-Edge" xml:space="preserve">
+    <value>HTTP कनेक्शन को स्वचालित रूप से HTTPS में अपग्रेड करें</value>
+</data>
+<data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
+    <value>एन्क्रिप्टेड क्लाइंट हैलो सक्षम करें</value>
+</data>
+<data name="BasicAuthOverHttpEnabledEdge-Edge" xml:space="preserve">
+    <value>HTTP के लिए बेसिक प्रमाणीकरण ब्लॉक करें</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControlEdge-Edge" xml:space="preserve">
+    <value>Edge श्रेणी सुरक्षा का उपयोग करने वाले उपकरणों को सामान्य उपकरणों की तरह नई सुविधाएं और प्रयोग प्राप्त करने की अनुमति दें</value>
+</data>
+<data name="AudioSandboxEnabledEdge-Edge" xml:space="preserve">
+    <value>ऑडियो प्रक्रिया को सैंडबॉक्स में चलाने के लिए बाध्य करें</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSettingEdge-Edge" xml:space="preserve">
+    <value>अतिरिक्त OS क्षेत्र साझा करने की सेटिंग को कभी नहीं पर सेट करने की अनुशंसा की जाती है।</value>
+</data>
+<data name="TLSCipherSuiteDenyList1-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA अक्षम करें - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList2-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA अक्षम करें - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList3-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_CBC_SHA अक्षम करें - (PFS के बिना - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList4-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_CBC_SHA अक्षम करें - (PFS के बिना - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList5-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_GCM_SHA256 अक्षम करें - (PFS के बिना)</value>
+</data>
+<data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_GCM_SHA384 अक्षम करें - (PFS के बिना)</value>
+</data>
+<data name="ExtensionManifestV2AvailabilityEdge-Edge" xml:space="preserve">
+    <value>Manifest V2 एक्सटेंशन के लिए समर्थन कभी अक्षम न करें</value>
+</data>
+<data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
+    <value>साइटों को स्थानीय कनेक्टेड USB डिवाइसों तक पहुंच का अनुरोध करने की कभी अनुमति न दें</value>
+</data>
+<data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
+    <value>डिफ़ॉल्ट रूप से सभी साइटों पर विंडो प्रबंधन अनुमति अस्वीकार करें</value>
+</data>
+<data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
+    <value>ब्राउज़र प्रक्रिया को गतिशील कोड उत्पन्न करने से रोकें</value>
+</data>
+<data name="DisableTLS10-TLS" xml:space="preserve">
+    <value>TLS v1 अक्षम करें</value>
+</data>
+<data name="DisableTLS11-TLS" xml:space="preserve">
+    <value>TLS v1.1 अक्षम करें</value>
+</data>
+<data name="DisableNULL-TLS" xml:space="preserve">
+    <value>Schannel के लिए कमजोर साइफर अक्षम करें: NULL</value>
+</data>
+<data name="DisableDES56-TLS" xml:space="preserve">
+    <value>Schannel के लिए कमजोर साइफर अक्षम करें: DES 56-bit</value>
+</data>
+<data name="DisableRC240-TLS" xml:space="preserve">
+    <value>Schannel के लिए कमजोर साइफर अक्षम करें: RC2 40-bit</value>
+</data>
+<data name="DisableRC256-TLS" xml:space="preserve">
+    <value>Schannel के लिए कमजोर साइफर अक्षम करें: RC2 56-bit</value>
+</data>
+<data name="DisableRC2128-TLS" xml:space="preserve">
+    <value>Schannel के लिए कमजोर साइफर अक्षम करें: RC2 128-bit</value>
+</data>
+<data name="DisableRC440-TLS" xml:space="preserve">
+    <value>Schannel के लिए कमजोर साइफर अक्षम करें: RC4 40-bit</value>
+</data>
+<data name="DisableRC456-TLS" xml:space="preserve">
+    <value>Schannel के लिए कमजोर साइफर अक्षम करें: RC4 56-bit</value>
+</data>
+<data name="DisableRC464-TLS" xml:space="preserve">
+    <value>Schannel के लिए कमजोर साइफर अक्षम करें: RC4 64-bit</value>
+</data>
+<data name="DisableRC4128-TLS" xml:space="preserve">
+    <value>Schannel के लिए कमजोर साइफर अक्षम करें: RC4 128-bit</value>
+</data>
+<data name="DisableTripleDES-TLS" xml:space="preserve">
+    <value>Schannel के लिए कमजोर साइफर अक्षम करें: 3DES 168-bit (Triple DES 168)</value>
+</data>
+<data name="DisableMD5-TLS" xml:space="preserve">
+    <value>SChannel के लिए MD5 हैश एल्गोरिदम अक्षम करें।</value>
+</data>
+<data name="BattleNetCipher-TLS" xml:space="preserve">
+    <value>Battle Net गेम क्लाइंट के साथ संगतता प्रदान करने के लिए कम सुरक्षित साइफर "TLS_RSA_WITH_AES_256_CBC_SHA" की अनुमति दें।</value>
+</data>
+  <data name="SAC-MSDefender" xml:space="preserve">
+    <value>Smart App Control सक्षम करें। कृपया Smart App Control के उचित कार्य के लिए आवश्यक वैकल्पिक निदान डेटा भी सक्षम करें।</value>
+  </data>
+    <data name="InactivityTimeoutSecs-LockScreen" xml:space="preserve">
+    <value>मशीन निष्क्रियता सीमा नीति सेट करें ताकि डिवाइस 120 सेकंड की निष्क्रियता के बाद स्वचालित रूप से लॉक हो जाए।</value>
+  </data>
+      <data name="DisableCAD-LockScreen" xml:space="preserve">
+    <value>आपके क्रेडेंशियल दर्ज करने से पहले लॉक स्क्रीन पर CTRL+ALT+DEL कुंजी संयोजन की आवश्यकता के लिए इंटरैक्टिव लॉगऑन नीति सेट करें। यह कुछ हमलों को कम कर सकता है जो नकली लॉक स्क्रीन का उपयोग करके उपयोगकर्ता क्रेडेंशियल जैसे पासवर्ड को स्पष्ट पाठ में कैप्चर करते हैं।</value>
+  </data>
+      <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
+    <value>मशीन खाता लॉकआउट थ्रेशोल्ड के लिए इंटरैक्टिव लॉगऑन नीति सेट करें ताकि BitLocker-एन्क्रिप्टेड डिवाइस 5 असफल लॉगिन प्रयासों के बाद लॉक हो जाए। फिर से लॉगिन करने के लिए आपको ऑपरेटिंग सिस्टम ड्राइव के लिए BitLocker रिकवरी कुंजी दर्ज करनी होगी।</value>
+  </data>
+      <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
+    <value>सत्र लॉक होने पर उपयोगकर्ता जानकारी प्रदर्शित करना बंद करने के लिए इंटरैक्टिव लॉगऑन नीति सेट करें।</value>
+  </data>
+      <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
+    <value>लॉक स्क्रीन पर उपयोगकर्ता नाम प्रदर्शित करना बंद करने के लिए इंटरैक्टिव लॉगऑन नीति सेट करें।</value>
+  </data>
+      <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
+    <value>लॉक स्क्रीन पर अंतिम लॉगिन विवरण प्रदर्शित करना बंद करने के लिए इंटरैक्टिव लॉगऑन नीति सेट करें।</value>
+  </data>
+  <data name="ConsentPromptBehaviorAdmin-UAC" xml:space="preserve">
+    <value>व्यवस्थापक अनुमोदन मोड में व्यवस्थापकों के लिए उन्नयन प्रॉम्प्ट व्यवहार सेट करें: सुरक्षित डेस्कटॉप पर सहमति के लिए प्रॉम्प्ट करें</value>
+  </data>
+    <data name="ConsentPromptBehaviorUser-UAC" xml:space="preserve">
+    <value>मानक उपयोगकर्ताओं के लिए उन्नयन प्रॉम्प्ट व्यवहार सेट करें: सुरक्षित डेस्कटॉप पर क्रेडेंशियल के लिए प्रॉम्प्ट करें</value>
+  </data>
+    <data name="ValidateAdminCodeSignatures-UAC" xml:space="preserve">
+    <value>केवल हस्ताक्षरित और मान्य निष्पादन योग्य फ़ाइलों को उन्नत करने के लिए सिस्टम कॉन्फ़िगर करें। कोई भी प्रोग्राम जो अहस्ताक्षरित है या स्व-हस्ताक्षरित प्रमाणपत्रों से हस्ताक्षरित है, व्यवस्थापक के रूप में चलने में सक्षम नहीं होगा।</value>
+  </data>
+    <data name="ConsentPromptBehaviorEnhancedAdmin-UAC" xml:space="preserve">
+    <value>उन्नत विशेषाधिकार सुरक्षा मोड में व्यवस्थापकों के लिए उन्नयन प्रॉम्प्ट व्यवहार सेट करें: सुरक्षित डेस्कटॉप पर क्रेडेंशियल के लिए प्रॉम्प्ट करें</value>
+  </data>
+    <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
+    <value>व्यवस्थापक अनुमोदन मोड प्रकार को उन्नत विशेषाधिकार सुरक्षा के साथ व्यवस्थापक अनुमोदन मोड होने के लिए सेट करें</value>
+  </data>
+  <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>दूरस्थ रूप से पहुंच योग्य रजिस्ट्री पथ हटाएं।</value>
+</data>
+  <data name="AllowedPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>दूरस्थ रूप से पहुंच योग्य रजिस्ट्री पथ और उपपथ हटाएं।</value>
+</data>
+  <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>सभी खातों के लिए इनकमिंग NTLM कनेक्शन अस्वीकार करें।</value>
+</data>
+  <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>आउटगोइंग NTLM कनेक्शन अस्वीकार करें।</value>
+</data>
+<data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
+    <value>कंप्यूटर पर संग्रहीत उपयोगकर्ता कुंजियों के लिए मजबूत कुंजी सुरक्षा लागू करें। आप कंप्यूटर पर इंस्टॉल किए गए प्रमाणपत्रों की निजी कुंजियों को सुरक्षित रूप से सहेज सकेंगे और हस्ताक्षर संचालन जैसे निजी कुंजी तक पहुंच के लिए समान क्रेडेंशियल की आवश्यकता होगी।</value>
+</data>
+<data name="LockoutBadCount-LockScreen" xml:space="preserve">
+    <value>असफल लॉगिन प्रयासों की अनुमत संख्या 5 पर सेट करें। इस श्रेणी की अन्य नीतियों के साथ संयोजन में, इसका अर्थ है कि प्रत्येक 5 असफल लॉगिन प्रयासों के लिए 5 और प्रयासों की अनुमति देने से पहले एक पूरा दिन बीतना होगा, अन्यथा Bitlocker सक्रिय हो जाएगा, सिस्टम पुनः आरंभ होगा और 48-अंकीय Bitlocker कोड मांगा जाएगा। यह नीति बृट फोर्स प्रयासों को बहुत हद तक रोकती है।</value>
+</data>
+<data name="ResetLockoutCount-LockScreen" xml:space="preserve">
+    <value>खाता लॉकआउट अवधि को 1440 मिनट या 1 दिन पर सेट करें। इस श्रेणी की अन्य नीतियों के साथ संयोजन में, इसका अर्थ है कि प्रत्येक 5 असफल लॉगिन प्रयासों के लिए 5 और प्रयासों की अनुमति देने से पहले एक पूरा दिन बीतना होगा, अन्यथा Bitlocker सक्रिय हो जाएगा, सिस्टम पुनः आरंभ होगा और 48-अंकीय Bitlocker कोड मांगा जाएगा।</value>
+</data>
+<data name="LockoutDuration-LockScreen" xml:space="preserve">
+    <value>खाता लॉकआउट काउंटर रीसेट को 1440 मिनट या 1 दिन पर सेट करें।</value>
+</data>
+</root>

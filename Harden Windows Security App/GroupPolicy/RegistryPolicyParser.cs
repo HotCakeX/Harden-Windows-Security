@@ -19,16 +19,78 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using AppControlManager;
+using System.Security.Cryptography;
+using System.Threading;
 using AppControlManager.Others;
 
 namespace HardenWindowsSecurity.GroupPolicy;
 
-
 internal static class RegistryPolicyParser
 {
-	internal const string LocalPolicyFilePath = @"C:\Windows\System32\GroupPolicy\Machine\Registry.pol";
+	internal static readonly string LocalPolicyFilePath = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "GroupPolicy", "Machine", "Registry.pol");
+
+	/// <summary>
+	/// Lock to synchronize access to the policy file operations.
+	/// </summary>
+	private static readonly Lock _policyFileLock = new();
+
+	/// <summary>
+	/// Executes a file operation with retry logic and exponential backoff for handling sharing violations.
+	/// </summary>
+	/// <typeparam name="T">Return type of the operation</typeparam>
+	/// <param name="operation">The file operation to execute</param>
+	/// <param name="maxRetries">Maximum number of retry attempts</param>
+	/// <param name="baseDelayMs">Base delay in milliseconds for exponential backoff</param>
+	/// <returns>Result of the operation</returns>
+	private static T ExecuteWithRetry<T>(Func<T> operation, int maxRetries = 5, int baseDelayMs = 100)
+	{
+		int attempt = 0;
+		while (true)
+		{
+			try
+			{
+				return operation();
+			}
+			catch (IOException ex) when (IsFileSharingViolation(ex) && attempt < maxRetries)
+			{
+				attempt++;
+				int delay = baseDelayMs * (int)Math.Pow(2, attempt - 1);
+
+				// Some jitter to prevent thundering herd
+				using RandomNumberGenerator rng = RandomNumberGenerator.Create();
+				byte[] randomBytes = new byte[4];
+				rng.GetBytes(randomBytes);
+				int jitter = Math.Abs(BitConverter.ToInt32(randomBytes, 0)) % (delay / 4);
+				int totalDelay = delay + jitter;
+
+				Logger.Write($"File sharing violation on attempt {attempt}/{maxRetries + 1}. Retrying in {totalDelay}ms. Error: {ex.Message}");
+
+				Thread.Sleep(totalDelay);
+			}
+			catch (UnauthorizedAccessException ex) when (attempt < maxRetries)
+			{
+				attempt++;
+				int delay = baseDelayMs * (int)Math.Pow(2, attempt - 1);
+
+				Logger.Write($"Access denied on attempt {attempt}/{maxRetries + 1}. Retrying in {delay}ms. Error: {ex.Message}");
+
+				Thread.Sleep(delay);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Determines if an IOException is a file sharing violation.
+	/// </summary>
+	/// <param name="ex">The IOException to check</param>
+	/// <returns>True if it's a sharing violation</returns>
+	private static bool IsFileSharingViolation(IOException ex)
+	{
+		return ex.HResult == unchecked((int)0x80070020) || // ERROR_SHARING_VIOLATION
+			   ex.HResult == unchecked((int)0x80070021) || // ERROR_LOCK_VIOLATION
+			   ex.Message.Contains("being used by another process", StringComparison.OrdinalIgnoreCase) ||
+			   ex.Message.Contains("sharing violation", StringComparison.OrdinalIgnoreCase);
+	}
 
 	/// <summary>
 	/// Parses a .POL file from the specified file path.
@@ -39,10 +101,13 @@ internal static class RegistryPolicyParser
 	internal static RegistryPolicyFile ParseFile(string filePath)
 	{
 		if (!File.Exists(filePath))
-			throw new FileNotFoundException($"File not found: {filePath}");
+			throw new FileNotFoundException(string.Format(GlobalVars.GetStr("FileNotFoundPath"), filePath));
 
-		using FileStream fileStream = File.OpenRead(filePath);
-		return ParseStream(fileStream);
+		return ExecuteWithRetry(() =>
+		{
+			using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+			return ParseStream(fileStream);
+		});
 	}
 
 	internal static RegistryPolicyFile ParseStream(Stream stream)
@@ -51,13 +116,13 @@ internal static class RegistryPolicyParser
 
 		// Read header
 		if (stream.Length < 8)
-			throw new InvalidDataException("File is too small to contain a valid header");
+			throw new InvalidDataException(GlobalVars.GetStr("FileTooSmallForValidHeader"));
 
 		uint signature = reader.ReadUInt32();
 		uint version = reader.ReadUInt32();
 
 		if (signature != RegistryPolicyFile.REGISTRY_FILE_SIGNATURE)
-			throw new InvalidDataException($"Invalid signature: 0x{signature:X8}. Expected: 0x{RegistryPolicyFile.REGISTRY_FILE_SIGNATURE:X8}");
+			throw new InvalidDataException(string.Format(GlobalVars.GetStr("InvalidSignatureExpected"), signature, RegistryPolicyFile.REGISTRY_FILE_SIGNATURE));
 
 		List<RegistryPolicyEntry> entries = [];
 
@@ -77,7 +142,7 @@ internal static class RegistryPolicyParser
 			}
 			catch (Exception ex)
 			{
-				throw new InvalidDataException($"Error reading entry at position {stream.Position}: {ex.Message}", ex);
+				throw new InvalidDataException(string.Format(GlobalVars.GetStr("ErrorReadingEntryAtPosition"), stream.Position, ex.Message), ex);
 			}
 		}
 
@@ -93,7 +158,7 @@ internal static class RegistryPolicyParser
 		// Read opening bracket '[' (should be '[' in Unicode)
 		ushort openingBracket = reader.ReadUInt16();
 		if (openingBracket != 0x005B) // '[' in Unicode
-			throw new InvalidDataException($"Expected opening bracket at start of entry, got: 0x{openingBracket:X4}");
+			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedOpeningBracketAtStartOfEntry"), openingBracket));
 
 		// Read key name (null-terminated Unicode string)
 		string keyName = ReadUnicodeString(reader);
@@ -101,7 +166,7 @@ internal static class RegistryPolicyParser
 		// Read semicolon delimiter (should be ';' in Unicode)
 		ushort delimiter1 = reader.ReadUInt16();
 		if (delimiter1 != 0x003B) // ';' in Unicode
-			throw new InvalidDataException($"Expected semicolon delimiter after key name, got: 0x{delimiter1:X4}");
+			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedSemicolonDelimiterAfterKeyName"), delimiter1));
 
 		// Read value name (null-terminated Unicode string)
 		string valueName = ReadUnicodeString(reader);
@@ -109,7 +174,7 @@ internal static class RegistryPolicyParser
 		// Read semicolon delimiter
 		ushort delimiter2 = reader.ReadUInt16();
 		if (delimiter2 != 0x003B) // ';' in Unicode
-			throw new InvalidDataException($"Expected semicolon delimiter after value name, got: 0x{delimiter2:X4}");
+			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedSemicolonDelimiterAfterValueName"), delimiter2));
 
 		// Read type (4 bytes)
 		RegistryValueType type = (RegistryValueType)reader.ReadUInt32();
@@ -117,7 +182,7 @@ internal static class RegistryPolicyParser
 		// Read semicolon delimiter
 		ushort delimiter3 = reader.ReadUInt16();
 		if (delimiter3 != 0x003B) // ';' in Unicode
-			throw new InvalidDataException($"Expected semicolon delimiter after type, got: 0x{delimiter3:X4}");
+			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedSemicolonDelimiterAfterType"), delimiter3));
 
 		// Read size (4 bytes)
 		uint size = reader.ReadUInt32();
@@ -125,7 +190,7 @@ internal static class RegistryPolicyParser
 		// Read semicolon delimiter
 		ushort delimiter4 = reader.ReadUInt16();
 		if (delimiter4 != 0x003B) // ';' in Unicode
-			throw new InvalidDataException($"Expected semicolon delimiter after size, got: 0x{delimiter4:X4}");
+			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedSemicolonDelimiterAfterSize"), delimiter4));
 
 		// Read data
 		byte[] data;
@@ -133,7 +198,7 @@ internal static class RegistryPolicyParser
 		{
 			data = reader.ReadBytes((int)size);
 			if (data.Length != size)
-				throw new InvalidDataException($"Could not read {size} bytes of data, only got {data.Length} bytes");
+				throw new InvalidDataException(string.Format(GlobalVars.GetStr("CouldNotReadBytesOfData"), size, data.Length));
 		}
 		else
 		{
@@ -143,7 +208,7 @@ internal static class RegistryPolicyParser
 		// Read closing bracket ']' (should be ']' in Unicode)
 		ushort closingBracket = reader.ReadUInt16();
 		if (closingBracket != 0x005D) // ']' in Unicode
-			throw new InvalidDataException($"Expected closing bracket after data, got: 0x{closingBracket:X4}");
+			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedClosingBracketAfterData"), closingBracket));
 
 		return new RegistryPolicyEntry(source: Source.GroupPolicy, keyName: keyName, valueName: valueName, type: type, size: size, data: data);
 	}
@@ -155,7 +220,7 @@ internal static class RegistryPolicyParser
 		while (true)
 		{
 			if (reader.BaseStream.Position + 2 > reader.BaseStream.Length)
-				throw new EndOfStreamException("Unexpected end of stream while reading Unicode string");
+				throw new EndOfStreamException(GlobalVars.GetStr("UnexpectedEndOfStreamReadingUnicodeString"));
 
 			ushort ch = reader.ReadUInt16();
 			if (ch == 0) // Null terminator
@@ -174,8 +239,12 @@ internal static class RegistryPolicyParser
 	/// <param name="policyFile"></param>
 	internal static void WriteFile(string filePath, RegistryPolicyFile policyFile)
 	{
-		using FileStream fileStream = File.Create(filePath);
-		WriteStream(fileStream, policyFile);
+		_ = ExecuteWithRetry(() =>
+	   {
+		   using FileStream fileStream = new(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
+		   WriteStream(fileStream, policyFile);
+		   return true;
+	   });
 	}
 
 	private static void WriteStream(Stream stream, RegistryPolicyFile policyFile)
@@ -288,7 +357,9 @@ internal static class RegistryPolicyParser
 	internal static MergeResult MergePolicyFilesWithReport(RegistryPolicyFile mainPolicyFile, params RegistryPolicyFile[] otherPolicyFiles)
 	{
 		if (otherPolicyFiles.Length == 0)
-			throw new ArgumentException("At least one other policy file must be provided", nameof(otherPolicyFiles));
+			throw new ArgumentException(GlobalVars.GetStr("AtLeastOneOtherPolicyFileMustBeProvided"), nameof(otherPolicyFiles));
+
+		CSEMgr.RegisterCSEGuids();
 
 		// Dictionary to store entries with KeyName+ValueName as the key for uniqueness
 		Dictionary<string, RegistryPolicyEntry> mergedEntries = new(StringComparer.OrdinalIgnoreCase);
@@ -355,10 +426,10 @@ internal static class RegistryPolicyParser
 	internal static MergeResult MergePolicyFilesWithReport(string mainPolicyFilePath, params string[] otherPolicyFilePaths)
 	{
 		if (string.IsNullOrWhiteSpace(mainPolicyFilePath))
-			throw new ArgumentException("Main policy file path cannot be null or empty", nameof(mainPolicyFilePath));
+			throw new ArgumentException(GlobalVars.GetStr("MainPolicyFilePathCannotBeNullOrEmpty"), nameof(mainPolicyFilePath));
 
 		if (otherPolicyFilePaths.Length == 0)
-			throw new ArgumentException("At least one other policy file path must be provided", nameof(otherPolicyFilePaths));
+			throw new ArgumentException(GlobalVars.GetStr("AtLeastOneOtherPolicyFilePathMustBeProvided"), nameof(otherPolicyFilePaths));
 
 		// Parse the main policy file
 		RegistryPolicyFile mainPolicyFile = ParseFile(mainPolicyFilePath);
@@ -368,7 +439,7 @@ internal static class RegistryPolicyParser
 		for (int i = 0; i < otherPolicyFilePaths.Length; i++)
 		{
 			if (string.IsNullOrWhiteSpace(otherPolicyFilePaths[i]))
-				throw new ArgumentException($"Policy file path at index {i} cannot be null or empty", nameof(otherPolicyFilePaths));
+				throw new ArgumentException(string.Format(GlobalVars.GetStr("PolicyFilePathAtIndexCannotBeNullOrEmpty"), i), nameof(otherPolicyFilePaths));
 
 			otherPolicyFiles[i] = ParseFile(otherPolicyFilePaths[i]);
 		}
@@ -383,77 +454,86 @@ internal static class RegistryPolicyParser
 	/// <param name="policies">Policies to add to the system.</param>
 	internal static void AddPoliciesToSystem(List<RegistryPolicyEntry> policies)
 	{
-		// Read the current system policies
-		RegistryPolicyFile policyFile = ParseFile(LocalPolicyFilePath);
-
-		// Dictionary to store entries with KeyName+ValueName as the key for uniqueness
-		Dictionary<string, RegistryPolicyEntry> mergedEntries = new(StringComparer.OrdinalIgnoreCase);
-		List<MergeOperation> operations = [];
-
-		// First add all entries from the main policy file (no operations recorded for these)
-		foreach (RegistryPolicyEntry entry in policyFile.Entries)
+		lock (_policyFileLock)
 		{
-			string key = $"{entry.KeyName}|{entry.ValueName}";
-			mergedEntries[key] = entry;
-		}
-
-		// Then process entries from other policies
-		foreach (RegistryPolicyEntry entry in policies)
-		{
-			string key = $"{entry.KeyName}|{entry.ValueName}";
-
-			if (mergedEntries.TryGetValue(key, out RegistryPolicyEntry? existingEntry))
+			try
 			{
-				// Entry exists in main file, check if it's actually different
-				if (!EntriesAreEquivalent(existingEntry, entry))
+				CSEMgr.RegisterCSEGuids();
+
+				// Read the current system policies
+				RegistryPolicyFile policyFile = ParseFile(LocalPolicyFilePath);
+				Logger.Write(string.Format(GlobalVars.GetStr("LoadedExistingPolicyFileWithEntries"), policyFile.Entries.Count));
+
+				// Dictionary to store entries with KeyName+ValueName as the key for uniqueness
+				Dictionary<string, RegistryPolicyEntry> mergedEntries = new(StringComparer.OrdinalIgnoreCase);
+				List<MergeOperation> operations = [];
+
+				// First add all entries from the main policy file (no operations recorded for these)
+				foreach (RegistryPolicyEntry entry in policyFile.Entries)
 				{
-					// Only record as replacement if the entries are actually different
-					operations.Add(new MergeOperation(operationType: OperationType.Replaced, keyName: entry.KeyName, valueName: entry.ValueName, oldEntry: existingEntry, newEntry: entry));
-					mergedEntries[key] = entry; // Replace with new entry
+					string key = $"{entry.KeyName}|{entry.ValueName}";
+					mergedEntries[key] = entry;
 				}
-				// If entries are equivalent, do nothing (no operation recorded)
+
+				// Then process entries from other policies
+				foreach (RegistryPolicyEntry entry in policies)
+				{
+					string key = $"{entry.KeyName}|{entry.ValueName}";
+
+					if (mergedEntries.TryGetValue(key, out RegistryPolicyEntry? existingEntry))
+					{
+						// Entry exists in main file, check if it's actually different
+						if (!EntriesAreEquivalent(existingEntry, entry))
+						{
+							// Only record as replacement if the entries are actually different
+							operations.Add(new MergeOperation(operationType: OperationType.Replaced, keyName: entry.KeyName, valueName: entry.ValueName, oldEntry: existingEntry, newEntry: entry));
+							mergedEntries[key] = entry; // Replace with new entry
+						}
+						// If entries are equivalent, do nothing (no operation recorded)
+					}
+					else
+					{
+						// New entry that doesn't exist in main file
+						operations.Add(new MergeOperation(operationType: OperationType.Added, keyName: entry.KeyName, valueName: entry.ValueName, oldEntry: null, newEntry: entry));
+						mergedEntries[key] = entry;
+					}
+				}
+
+				// Create a new policy file with the merged entries
+				List<RegistryPolicyEntry> finalEntries = mergedEntries.Values.ToList();
+
+				RegistryPolicyFile mergedFile = new(
+					signature: RegistryPolicyFile.REGISTRY_FILE_SIGNATURE,
+					version: RegistryPolicyFile.REGISTRY_FILE_VERSION,
+					entries: finalEntries
+				);
+
+				// Replace the system policy with the new one.
+				WriteFile(LocalPolicyFilePath, mergedFile);
+
+				// Print merge operations
+				foreach (MergeOperation operation in operations)
+				{
+					Logger.Write(operation.ToString());
+				}
+
+				Logger.Write(string.Format(GlobalVars.GetStr("TotalOperationsLog"), operations.Count));
+				Logger.Write(string.Format(GlobalVars.GetStr("AddedEntriesLog"), operations.Count(op => op.OperationType == OperationType.Added)));
+				Logger.Write(string.Format(GlobalVars.GetStr("ReplacedEntries"), operations.Count(op => op.OperationType == OperationType.Replaced)));
+
+				RefreshPolicies.Refresh();
 			}
-			else
+			catch (Exception ex)
 			{
-				// New entry that doesn't exist in main file
-				operations.Add(new MergeOperation(operationType: OperationType.Added, keyName: entry.KeyName, valueName: entry.ValueName, oldEntry: null, newEntry: entry));
-				mergedEntries[key] = entry;
+				Logger.Write(ErrorWriter.FormatException(ex));
+				throw;
 			}
-		}
-
-		// Create a new policy file with the merged entries
-		List<RegistryPolicyEntry> finalEntries = mergedEntries.Values.ToList();
-
-		RegistryPolicyFile mergedFile = new(
-			signature: RegistryPolicyFile.REGISTRY_FILE_SIGNATURE,
-			version: RegistryPolicyFile.REGISTRY_FILE_VERSION,
-			entries: finalEntries
-		);
-
-		// Replace the system policy with the new one.
-		WriteFile(LocalPolicyFilePath, mergedFile);
-
-		// Print merge operations
-		foreach (MergeOperation operation in operations)
-		{
-			Logger.Write(operation.ToString());
-		}
-
-		Logger.Write($"Total operations: {operations.Count}");
-		Logger.Write($"Added entries: {operations.Count(op => op.OperationType == OperationType.Added)}");
-		Logger.Write($"Replaced entries: {operations.Count(op => op.OperationType == OperationType.Replaced)}");
-
-		bool result = NativeMethods.RefreshPolicyEx(true, NativeMethods.RP_FORCE);
-
-		if (!result)
-		{
-			int error = Marshal.GetLastWin32Error();
-			Logger.Write($"RefreshPolicyEx failed with error code: {error}");
 		}
 	}
 
 	/// <summary>
 	/// Verifies if the specified policies exist in the system and match the expected values.
+	/// Returns false for all policies if the policy file doesn't exist.
 	/// </summary>
 	/// <param name="policies">Policies to verify in the system.</param>
 	/// <returns>A dictionary with policy entries as keys and their verification status (true if applied, false if not applied or different) as values</returns>
@@ -463,6 +543,21 @@ internal static class RegistryPolicyParser
 
 		try
 		{
+			// Check if the policy file exists
+			if (!File.Exists(LocalPolicyFilePath))
+			{
+				Logger.Write(GlobalVars.GetStr("PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified"));
+
+				// Mark all policies as unverified since the file doesn't exist
+				foreach (RegistryPolicyEntry policy in policies)
+				{
+					verificationResults[policy] = false;
+				}
+
+				Logger.Write(string.Format(GlobalVars.GetStr("VerificationCompletePolicyFileDoesNotExist"), policies.Count));
+				return verificationResults;
+			}
+
 			// Read the current system policies
 			RegistryPolicyFile policyFile = ParseFile(LocalPolicyFilePath);
 
@@ -485,17 +580,19 @@ internal static class RegistryPolicyParser
 					bool isEquivalent = EntriesAreEquivalent(policy, systemPolicy);
 					verificationResults[policy] = isEquivalent;
 
-					Logger.Write($"VERIFY: {policy.KeyName}\\{policy.ValueName} = {(isEquivalent ? "MATCH" : "MISMATCH")}");
+					Logger.Write(isEquivalent ?
+						string.Format(GlobalVars.GetStr("VerifyPolicyMatch"), policy.KeyName, policy.ValueName) :
+						string.Format(GlobalVars.GetStr("VerifyPolicyMismatch"), policy.KeyName, policy.ValueName));
 				}
 				else
 				{
 					// Policy doesn't exist in system
 					verificationResults[policy] = false;
-					Logger.Write($"VERIFY: {policy.KeyName}\\{policy.ValueName} = NOT FOUND");
+					Logger.Write(string.Format(GlobalVars.GetStr("VerifyPolicyNotFound"), policy.KeyName, policy.ValueName));
 				}
 			}
 
-			Logger.Write($"Verification complete: {verificationResults.Count(kvp => kvp.Value)} of {policies.Count} policies match");
+			Logger.Write(string.Format(GlobalVars.GetStr("VerificationCompletePoliciesMatch"), verificationResults.Count(kvp => kvp.Value), policies.Count));
 		}
 		catch (Exception ex)
 		{
@@ -513,61 +610,73 @@ internal static class RegistryPolicyParser
 
 	/// <summary>
 	/// Removes the specified policies from the system.
+	/// Gracefully handles the case where the policy file doesn't exist.
 	/// </summary>
 	/// <param name="policies">Policies to remove from the system.</param>
 	internal static void RemovePoliciesFromSystem(List<RegistryPolicyEntry> policies)
 	{
-		// Read the current system policies
-		RegistryPolicyFile policyFile = ParseFile(LocalPolicyFilePath);
-
-		// Set of keys to remove
-		HashSet<string> policiesToRemove = new(StringComparer.OrdinalIgnoreCase);
-		foreach (RegistryPolicyEntry policy in policies)
+		lock (_policyFileLock)
 		{
-			string key = $"{policy.KeyName}|{policy.ValueName}";
-			_ = policiesToRemove.Add(key);
-		}
-
-		// Filter out the policies to be removed
-		List<RegistryPolicyEntry> remainingEntries = [];
-		List<string> removedEntries = [];
-
-		foreach (RegistryPolicyEntry entry in policyFile.Entries)
-		{
-			string key = $"{entry.KeyName}|{entry.ValueName}";
-			if (policiesToRemove.Contains(key))
+			try
 			{
-				removedEntries.Add($"{entry.KeyName}\\{entry.ValueName}");
+				if (!File.Exists(LocalPolicyFilePath))
+				{
+					Logger.Write(GlobalVars.GetStr("PolicyFileDoesNotExistNothingToRemove"));
+					return;
+				}
+
+				// Read the current system policies
+				RegistryPolicyFile policyFile = ParseFile(LocalPolicyFilePath);
+
+				// Set of keys to remove
+				HashSet<string> policiesToRemove = new(StringComparer.OrdinalIgnoreCase);
+				foreach (RegistryPolicyEntry policy in policies)
+				{
+					string key = $"{policy.KeyName}|{policy.ValueName}";
+					_ = policiesToRemove.Add(key);
+				}
+
+				// Filter out the policies to be removed
+				List<RegistryPolicyEntry> remainingEntries = [];
+				List<string> removedEntries = [];
+
+				foreach (RegistryPolicyEntry entry in policyFile.Entries)
+				{
+					string key = $"{entry.KeyName}|{entry.ValueName}";
+					if (policiesToRemove.Contains(key))
+					{
+						removedEntries.Add($"{entry.KeyName}\\{entry.ValueName}");
+					}
+					else
+					{
+						remainingEntries.Add(entry);
+					}
+				}
+
+				// Create a new policy file without the removed entries
+				RegistryPolicyFile updatedFile = new(
+					signature: RegistryPolicyFile.REGISTRY_FILE_SIGNATURE,
+					version: RegistryPolicyFile.REGISTRY_FILE_VERSION,
+					entries: remainingEntries
+				);
+
+				// Write the updated policy file
+				WriteFile(LocalPolicyFilePath, updatedFile);
+
+				foreach (string removedEntry in removedEntries)
+				{
+					Logger.Write(string.Format(GlobalVars.GetStr("RemovedPolicyEntry"), removedEntry));
+				}
+
+				RefreshPolicies.Refresh();
+
+				Logger.Write(string.Format(GlobalVars.GetStr("PolicyRemovalComplete"), removedEntries.Count));
 			}
-			else
+			catch (Exception ex)
 			{
-				remainingEntries.Add(entry);
+				Logger.Write(ErrorWriter.FormatException(ex));
+				throw;
 			}
 		}
-
-		// Create a new policy file without the removed entries
-		RegistryPolicyFile updatedFile = new(
-			signature: RegistryPolicyFile.REGISTRY_FILE_SIGNATURE,
-			version: RegistryPolicyFile.REGISTRY_FILE_VERSION,
-			entries: remainingEntries
-		);
-
-		// Write the updated policy file
-		WriteFile(LocalPolicyFilePath, updatedFile);
-
-		foreach (string removedEntry in removedEntries)
-		{
-			Logger.Write($"REMOVED: {removedEntry}");
-		}
-
-		bool result = NativeMethods.RefreshPolicyEx(true, NativeMethods.RP_FORCE);
-
-		if (!result)
-		{
-			int error = Marshal.GetLastWin32Error();
-			Logger.Write($"RefreshPolicyEx failed with error code: {error}");
-		}
-
-		Logger.Write($"Policy removal complete: {removedEntries.Count} policies removed");
 	}
 }

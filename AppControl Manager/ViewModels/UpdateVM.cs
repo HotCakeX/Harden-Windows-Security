@@ -102,17 +102,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// <summary>
 	/// Content of the main update button
 	/// </summary>
-	internal string UpdateButtonContent
-	{
-		get; set
-		{
-			// This is changed by other non-UI threads.
-			_ = Dispatcher.TryEnqueue(() =>
-			{
-				_ = SP(ref field, value);
-			});
-		}
-	} = GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip");
+	internal string UpdateButtonContent { get; set => SP(ref field, value); } = GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip");
 
 	/// <summary>
 	/// To determine whether to use the user-supplied package or continue with downloading the package from GitHub.
@@ -412,7 +402,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 							*/
 
 
-							ASROutput = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get AttackSurfaceReductionOnlyExclusions");
+							ASROutput = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 AttackSurfaceReductionOnlyExclusions");
 
 							// If there are ASR rule exclusions, find ones that belong to AppControl Manager and remove them
 							// Before adding new ones for the new version

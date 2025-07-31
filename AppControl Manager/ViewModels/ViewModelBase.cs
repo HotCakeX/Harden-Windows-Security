@@ -96,7 +96,16 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 			return false;
 
 		field = newValue;
-		OnPropertyChanged(propertyName);
+
+		if (App.AppDispatcher.HasThreadAccess)
+		{
+			OnPropertyChanged(propertyName);
+		}
+		else
+		{
+			_ = App.AppDispatcher.TryEnqueue(() => OnPropertyChanged(propertyName));
+		}
+
 		return true;
 	}
 
@@ -114,7 +123,15 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 			return false;
 
 		field = newValue;
-		OnPropertyChanged(propertyName);
+
+		if (App.AppDispatcher.HasThreadAccess)
+		{
+			OnPropertyChanged(propertyName);
+		}
+		else
+		{
+			_ = App.AppDispatcher.TryEnqueue(() => OnPropertyChanged(propertyName));
+		}
 
 		if (App.Settings.SoundSetting && !string.IsNullOrEmpty(field))
 		{
@@ -235,65 +252,116 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		FileHashes
 	}
 
+
 	/// <summary>
 	/// Handles different types of exceptions, used mainly by methods that deal with cancellable workflows.
+	/// It can detect OperationCanceledException at any nesting level within any exception hierarchy.
 	/// </summary>
-	/// <param name="exception"></param>
-	/// <param name="errorsOccurred"></param>
-	/// <param name="wasCancelled"></param>
-	/// <param name="infoBarSettings"></param>
-	/// <param name="errorMessage"></param>
+	/// <param name="exception">The exception to analyze</param>
+	/// <param name="errorsOccurred">Reference to error flag</param>
+	/// <param name="wasCancelled">Reference to cancellation flag</param>
+	/// <param name="infoBarSettings">InfoBar for displaying messages</param>
+	/// <param name="errorMessage">Optional error message</param>
 	internal static void HandleExceptions(
-	   Exception exception,
-	   ref bool errorsOccurred,
-	   ref bool wasCancelled,
-	   InfoBarSettings infoBarSettings,
-	   string? errorMessage = null)
+		Exception exception,
+		ref bool errorsOccurred,
+		ref bool wasCancelled,
+		InfoBarSettings infoBarSettings,
+		string? errorMessage = null)
 	{
+		// Find OperationCanceledException at any nesting level
+		bool containsCancellation = ContainsOperationCanceledException(exception);
 
-		// Check if it's an OperationCanceledException directly
-		if (exception is OperationCanceledException)
+		if (containsCancellation)
 		{
 			wasCancelled = true;
 			// Don't log this as an error, it's expected behavior
-			return;
-		}
-
-		// Check if it's an AggregateException
-		else if (exception is AggregateException aggregateEx)
-		{
-
-			// Check if any of the inner exceptions is an OperationCanceledException
-			bool containsCancellation = false;
-			aggregateEx.Handle(innerEx =>
-			{
-				if (innerEx is OperationCanceledException)
-				{
-					containsCancellation = true;
-					return true; // Mark this exception as handled
-				}
-				return false; // Don't handle other exceptions
-			});
-
-			if (containsCancellation)
-			{
-				wasCancelled = true;
-				// Don't log this as an error, it's expected behavior
-			}
-			else
-			{
-				errorsOccurred = true;
-				infoBarSettings.WriteError(aggregateEx);
-			}
 		}
 		else
 		{
-			// Handle any other exception type
 			errorsOccurred = true;
-
 			infoBarSettings.WriteError(exception, errorMessage);
 		}
 	}
+
+	/// <summary>
+	/// Recursively searches for OperationCanceledException in any exception hierarchy.
+	/// Handles deeply nested exceptions including AggregateExceptions, regular InnerException chains,
+	/// and any combination thereof.
+	/// </summary>
+	/// <param name="exception">The exception to search</param>
+	/// <returns>True if OperationCanceledException is found at any nesting level</returns>
+	private static bool ContainsOperationCanceledException(Exception exception)
+	{
+		// A HashSet to prevent infinite loops in case of circular references
+		HashSet<Exception> visited = new(ReferenceEqualityComparer.Instance);
+		return ContainsOperationCanceledExceptionRecursive(exception, visited);
+	}
+
+	/// <summary>
+	/// Recursive helper method to search for OperationCanceledException in any exception hierarchy.
+	/// This method comprehensively searches through:
+	/// - Direct exception type checking
+	/// - AggregateException.InnerExceptions collections
+	/// - Regular Exception.InnerException chains
+	/// - Any combination and nesting of the above
+	/// </summary>
+	/// <param name="exception">Current exception to examine</param>
+	/// <param name="visited">Set of already visited exceptions to prevent cycles</param>
+	/// <returns>True if OperationCanceledException is found</returns>
+	private static bool ContainsOperationCanceledExceptionRecursive(Exception exception, HashSet<Exception> visited)
+	{
+		// Prevent infinite loops from circular exception references
+		if (!visited.Add(exception))
+		{
+			return false;
+		}
+
+		// Check if current exception is OperationCanceledException
+		if (exception is OperationCanceledException)
+		{
+			return true;
+		}
+
+		// Handle AggregateException's inner exceptions collection
+		if (exception is AggregateException aggregateEx)
+		{
+			foreach (Exception innerEx in aggregateEx.InnerExceptions)
+			{
+				if (ContainsOperationCanceledExceptionRecursive(innerEx, visited))
+				{
+					return true;
+				}
+			}
+		}
+
+		// Handle regular InnerException chain (applies to ALL exception types)
+		// This is crucial for detecting nested exceptions in non-AggregateException hierarchies
+		if (exception.InnerException != null)
+		{
+			if (ContainsOperationCanceledExceptionRecursive(exception.InnerException, visited))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	/// <summary>
+	/// Determines if an exception hierarchy contains an OperationCanceledException at any nesting level.
+	/// This method can handle deeply nested exceptions including AggregateExceptions and regular InnerException chains.
+	/// Returns true if cancellation was detected, false otherwise.
+	/// </summary>
+	/// <param name="exception">The exception to analyze</param>
+	/// <returns>True if OperationCanceledException is found at any nesting level, false otherwise</returns>
+	internal static bool IsCancellationException(Exception exception)
+	{
+		HashSet<Exception> visited = new(ReferenceEqualityComparer.Instance);
+		return ContainsOperationCanceledExceptionRecursive(exception, visited);
+	}
+
 
 #if APP_CONTROL_MANAGER
 	/// <summary>

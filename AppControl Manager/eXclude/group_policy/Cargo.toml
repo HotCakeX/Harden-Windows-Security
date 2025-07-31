@@ -1,0 +1,26 @@
+[package]
+name = "group_policy"
+version = "1.0.0"
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+publish.workspace = true
+rust-version.workspace = true
+documentation.workspace = true
+
+[[bin]]
+name = "group_policy"
+path = "src/main.rs"
+
+[dependencies]
+windows = { version = "*", features = [
+    "Win32_Foundation",
+    "Win32_System_Com",
+    "Win32_System_Ole",
+    "Win32_System_Registry",
+    "Win32_UI_Shell",
+    "Win32_UI_Shell_Common",
+    "Win32_System_Memory"
+] }

@@ -85,7 +85,6 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="Protect:SubCategoryDefinition">
                                 <CheckBox Content="{x:Bind Description}"
-                                          IsEnabled="False"
                                           IsChecked="True"
                                           ToolTipService.ToolTip="{x:Bind Description}"
                                           AutomationProperties.HelpText="{x:Bind Description}" />
@@ -124,27 +123,85 @@
                 </ani:AnimationSet>
             </ani:Explicit.Animations>
 
-            <Border Height="60"
-                    BorderThickness="0"
+            <Border BorderThickness="0"
+                    Padding="5"
                     CornerRadius="18">
 
-                <StackPanel Orientation="Horizontal"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="1"
+                <controls:WrapPanel Orientation="Horizontal"
                             Margin="10"
+                            HorizontalSpacing="15"
+                            VerticalSpacing="12"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
 
-                    <TextBlock x:Uid="ProtectionPresets" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="Bold" />
+                    <TextBlock x:Uid="ProtectionPresets" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,4,0" FontWeight="Bold" />
 
                     <ComboBox x:Uid="ProtectionPresetsComboBox"
+                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                               SelectedIndex="{x:Bind ViewModel.ProtectionPresetsSelectedIndex, Mode=TwoWay}">
                         <ComboBoxItem x:Uid="BasicProtectionPresetComboBoxItem"/>
                         <ComboBoxItem x:Uid="RecommendedProtectionPresetComboBoxItem"/>
                         <ComboBoxItem x:Uid="CompleteProtectionPresetComboBoxItem"/>
                     </ComboBox>
 
-                </StackPanel>
+                    <!-- Apply Selected Button -->
+                    <customUI:AnimatedCancellableButton x:Uid="ProtectPageApplySelectedButton"
+									IsEnabled="{x:Bind ViewModel.IsApplyButtonEnabled, Mode=OneWay}"
+									CancelMethod="{x:Bind ViewModel.ApplySelectedCancellableButton.Cancel, Mode=OneWay}"
+									ExternalOperationInProgress="{x:Bind ViewModel.ApplySelectedCancellableButton.IsOperationInProgress, Mode=OneWay}"
+									ExternalIsCancelState="{x:Bind ViewModel.ApplySelectedCancellableButton.IsCancelState, Mode=OneWay}"
+									ExternalIsCancellingState="{x:Bind ViewModel.ApplySelectedCancellableButton.IsCancellingState, Mode=OneWay}"
+									ExternalIsAnimating="{x:Bind ViewModel.ApplySelectedCancellableButton.IsAnimating, Mode=OneWay}"
+									ExternalButtonContent="{x:Bind ViewModel.ApplySelectedCancellableButton.ButtonContent, Mode=OneWay}"
+									ExternalOriginalText="{x:Bind ViewModel.ApplySelectedCancellableButton.OriginalText, Mode=OneWay}"
+									ExternalInternalIsCancelState="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsCancelState, Mode=OneWay}"
+									ExternalInternalIsCancellingState="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+									ExternalInternalIsAnimating="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsAnimating, Mode=OneWay}"
+									ExternalInternalIsOperationInProgress="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+									ExternalInternalSuppressExternalClick="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+									ExternalShadowAnimationRunning="{x:Bind ViewModel.ApplySelectedCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+									ExternalOperationStarted="{x:Bind ViewModel.ApplySelectedCancellableButton.OperationStarted, Mode=OneWay}"
+									Click="{x:Bind ViewModel.ApplySelectedCategories}"/>
+
+                    <!-- Verify Selected Button -->
+                    <customUI:AnimatedCancellableButton x:Uid="ProtectPageVerifySelectedButton"
+									IsEnabled="{x:Bind ViewModel.IsVerifyButtonEnabled, Mode=OneWay}"
+									CancelMethod="{x:Bind ViewModel.VerifySelectedCancellableButton.Cancel, Mode=OneWay}"
+									ExternalOperationInProgress="{x:Bind ViewModel.VerifySelectedCancellableButton.IsOperationInProgress, Mode=OneWay}"
+									ExternalIsCancelState="{x:Bind ViewModel.VerifySelectedCancellableButton.IsCancelState, Mode=OneWay}"
+									ExternalIsCancellingState="{x:Bind ViewModel.VerifySelectedCancellableButton.IsCancellingState, Mode=OneWay}"
+									ExternalIsAnimating="{x:Bind ViewModel.VerifySelectedCancellableButton.IsAnimating, Mode=OneWay}"
+									ExternalButtonContent="{x:Bind ViewModel.VerifySelectedCancellableButton.ButtonContent, Mode=OneWay}"
+									ExternalOriginalText="{x:Bind ViewModel.VerifySelectedCancellableButton.OriginalText, Mode=OneWay}"
+									ExternalInternalIsCancelState="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsCancelState, Mode=OneWay}"
+									ExternalInternalIsCancellingState="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+									ExternalInternalIsAnimating="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsAnimating, Mode=OneWay}"
+									ExternalInternalIsOperationInProgress="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+									ExternalInternalSuppressExternalClick="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+									ExternalShadowAnimationRunning="{x:Bind ViewModel.VerifySelectedCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+									ExternalOperationStarted="{x:Bind ViewModel.VerifySelectedCancellableButton.OperationStarted, Mode=OneWay}"
+									Click="{x:Bind ViewModel.VerifySelectedCategories}"/>
+
+                    <!-- Remove Selected Button -->
+                    <customUI:AnimatedCancellableButton x:Uid="ProtectPageRemoveSelectedButton"
+									IsEnabled="{x:Bind ViewModel.IsRemoveButtonEnabled, Mode=OneWay}"
+									CancelMethod="{x:Bind ViewModel.RemoveSelectedCancellableButton.Cancel, Mode=OneWay}"
+									ExternalOperationInProgress="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsOperationInProgress, Mode=OneWay}"
+									ExternalIsCancelState="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsCancelState, Mode=OneWay}"
+									ExternalIsCancellingState="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsCancellingState, Mode=OneWay}"
+									ExternalIsAnimating="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsAnimating, Mode=OneWay}"
+									ExternalButtonContent="{x:Bind ViewModel.RemoveSelectedCancellableButton.ButtonContent, Mode=OneWay}"
+									ExternalOriginalText="{x:Bind ViewModel.RemoveSelectedCancellableButton.OriginalText, Mode=OneWay}"
+									ExternalInternalIsCancelState="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsCancelState, Mode=OneWay}"
+									ExternalInternalIsCancellingState="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+									ExternalInternalIsAnimating="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsAnimating, Mode=OneWay}"
+									ExternalInternalIsOperationInProgress="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+									ExternalInternalSuppressExternalClick="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+									ExternalShadowAnimationRunning="{x:Bind ViewModel.RemoveSelectedCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+									ExternalOperationStarted="{x:Bind ViewModel.RemoveSelectedCancellableButton.OperationStarted, Mode=OneWay}"
+									Click="{x:Bind ViewModel.RemoveSelectedCategories}"/>
+
+                </controls:WrapPanel>
 
             </Border>
 

@@ -4996,12 +4996,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 <data name="SettingCodeIntegrityLogSizeMessageOnly" xml:space="preserve">
   <value>Estableciendo el tamaño del registro de integridad de código</value>
 </data>
-<data name="VersionLabelFormat" xml:space="preserve">
-  <value>Versión: {0}.{1}.{2}.{3}</value>
-</data>
-<data name="PFNLabelFormat" xml:space="preserve">
-  <value>PFN: {0}</value>
-</data>
 <data name="AppDetailsErrorMessageWithName" xml:space="preserve">
   <value>Hubo un error al obtener los detalles de la aplicación: {0}</value>
 </data>
@@ -5700,5 +5694,38 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="SubmitButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Enviar</value>
+  </data>
+  <data name="PFNArchitectureLabel.Text" xml:space="preserve">
+  <value>Arquitectura</value>
+</data>
+<data name="PFNPublisherLabel.Text" xml:space="preserve">
+  <value>Editor</value>
+</data>
+<data name="PFNPublisherID.Text" xml:space="preserve">
+  <value>ID del editor</value>
+</data>
+<data name="PFNDescription.Text" xml:space="preserve">
+  <value>Descripción</value>
+</data>
+<data name="PFNInstallLocation.Text" xml:space="preserve">
+  <value>Ubicación de instalación</value>
+</data>
+<data name="PFNInstalledDateLabel.Text" xml:space="preserve">
+  <value>Última modificación el</value>
+</data>
+<data name="PFNDisplayNameLabelText" xml:space="preserve">
+  <value>Nombre para mostrar</value>
+</data>
+<data name="PFNFullNameLabel.Text" xml:space="preserve">
+  <value>Nombre completo</value>
+</data>
+<data name="PFNVersionLabel.Text" xml:space="preserve">
+  <value>Versión</value>
+</data>
+<data name="PFNLabel.Text" xml:space="preserve">
+  <value>Nombre de familia del paquete</value>
+</data>
+  <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
+    <value>Abrir Directorio de Registros</value>
   </data>
 </root>

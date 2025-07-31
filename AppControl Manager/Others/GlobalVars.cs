@@ -17,8 +17,8 @@
 
 using System;
 using System.IO;
-#if HARDEN_WINDOWS_SECURITY
-using HardenWindowsSecurity;
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity;
 #endif
 using Microsoft.Windows.ApplicationModel.Resources;
 
@@ -32,7 +32,7 @@ internal static class GlobalVars
 	// Instantiate the ResourceLoader object to access the strings in the Resource.resw file
 	internal static ResourceLoader Rizz = new();
 
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 
 	internal static Windows.ApplicationModel.Resources.ResourceLoader SecurityMeasuresRizzLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse("SecurityMeasures");
 
@@ -85,9 +85,9 @@ internal static class GlobalVars
 		"Windows", "schemas", "CodeIntegrity", "cipolicy.xsd");
 
 
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 	// Storing the path to the app's folder in the Program Files
-	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Harden Windows Security");
+	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Harden System Security");
 #endif
 #if APP_CONTROL_MANAGER
 	// Storing the path to the app's folder in the Program Files

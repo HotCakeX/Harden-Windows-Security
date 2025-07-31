@@ -29,10 +29,10 @@ using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.Graphics;
 
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 using AppControlManager;
 using AppControlManager.ViewModels;
-namespace HardenWindowsSecurity.ViewModels;
+namespace HardenSystemSecurity.ViewModels;
 #endif
 #if APP_CONTROL_MANAGER
 namespace AppControlManager.ViewModels;

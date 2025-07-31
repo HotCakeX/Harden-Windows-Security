@@ -28,9 +28,9 @@ using Windows.ApplicationModel.UserActivities;
 using CommunityToolkit.WinUI;
 
 
-#if HARDEN_WINDOWS_SECURITY
-using HardenWindowsSecurity.AppSettings;
-using HardenWindowsSecurity;
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity.AppSettings;
+using HardenSystemSecurity;
 #endif
 
 #if APP_CONTROL_MANAGER
@@ -64,7 +64,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	internal AppSettings.Main AppSettings => App.Settings;
 #endif
 
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 	/// <summary>
 	/// An instance property reference to the App settings that pages can x:Bind to.
 	/// </summary>

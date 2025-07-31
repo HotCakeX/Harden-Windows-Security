@@ -30,10 +30,10 @@ using WinRT;
 #if APP_CONTROL_MANAGER
 namespace AppControlManager.WindowComponents;
 #endif
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 using AppControlManager.WindowComponents;
-using HardenWindowsSecurity.ViewModels;
-namespace HardenWindowsSecurity.WindowComponents;
+using HardenSystemSecurity.ViewModels;
+namespace HardenSystemSecurity.WindowComponents;
 #endif
 
 internal sealed class NavigationService
@@ -51,7 +51,7 @@ private readonly SidebarVM sidebarVM;
 	}
 #endif
 
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 	internal NavigationService(MainWindowVM _MainWindowVM)
 	{
 		mainWindowVM = _MainWindowVM;

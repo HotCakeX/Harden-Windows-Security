@@ -27,9 +27,9 @@ using System.Threading.Tasks;
 using Windows.UI;
 using AppControlManager.Others;
 
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 #pragma warning disable CA1852
-using HardenWindowsSecurity;
+using HardenSystemSecurity;
 #endif
 
 namespace AppControlManager.CustomUIElements;

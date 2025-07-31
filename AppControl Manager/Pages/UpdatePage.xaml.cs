@@ -18,8 +18,8 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
-#if HARDEN_WINDOWS_SECURITY
-namespace HardenWindowsSecurity.Pages;
+#if HARDEN_SYSTEM_SECURITY
+namespace HardenSystemSecurity.Pages;
 #endif
 #if APP_CONTROL_MANAGER
 namespace AppControlManager.Pages;

@@ -23,9 +23,9 @@ using AppControlManager.ViewModels;
 namespace AppControlManager.Pages;
 #endif
 
-#if HARDEN_WINDOWS_SECURITY
-using HardenWindowsSecurity.ViewModels;
-namespace HardenWindowsSecurity.Pages;
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity.ViewModels;
+namespace HardenSystemSecurity.Pages;
 #endif
 
 /// <summary>

@@ -22,10 +22,10 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.System;
 
-#if HARDEN_WINDOWS_SECURITY
-using HardenWindowsSecurity.Others;
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity.Others;
 using AppControlManager.ViewModels;
-namespace HardenWindowsSecurity.ViewModels;
+namespace HardenSystemSecurity.ViewModels;
 #endif
 
 #if APP_CONTROL_MANAGER

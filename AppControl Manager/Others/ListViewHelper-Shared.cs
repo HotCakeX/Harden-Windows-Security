@@ -31,8 +31,8 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 
-#if HARDEN_WINDOWS_SECURITY
-using HardenWindowsSecurity;
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity;
 #endif
 
 namespace AppControlManager.Others;
@@ -66,7 +66,7 @@ internal static partial class ListViewHelper
 		DenyPolicy_PFNBasedRules = 14,
 		Deployment_IntuneGroupsListView = 15,
 
-		// For Harden Windows Security App
+		// For Harden System Security App
 		GroupPolicyEditor = 10000,
 		MicrosoftDefender = 10001
 	}

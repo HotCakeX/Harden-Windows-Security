@@ -21,11 +21,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Services.Store;
 
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 using AppControlManager.Others;
-using HardenWindowsSecurity.ViewModels;
-using UpdateVM = HardenWindowsSecurity.ViewModels.UpdateVM;
-namespace HardenWindowsSecurity.Others;
+using HardenSystemSecurity.ViewModels;
+using UpdateVM = HardenSystemSecurity.ViewModels.UpdateVM;
+namespace HardenSystemSecurity.Others;
 #endif
 
 #if APP_CONTROL_MANAGER

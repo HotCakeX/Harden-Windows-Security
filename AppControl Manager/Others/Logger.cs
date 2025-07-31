@@ -20,8 +20,8 @@ using System.IO;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-#if HARDEN_WINDOWS_SECURITY
-using HardenWindowsSecurity;
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity;
 #endif
 
 namespace AppControlManager.Others;

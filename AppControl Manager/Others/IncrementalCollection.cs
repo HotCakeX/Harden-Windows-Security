@@ -29,8 +29,8 @@ using System.ComponentModel;
 using System.Threading;
 using System.Runtime;
 
-#if HARDEN_WINDOWS_SECURITY
-using HardenWindowsSecurity;
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity;
 #endif
 
 namespace AppControlManager.Others;

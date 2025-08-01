@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::ffi::{CStr, CString};
 use std::fs::File;
 use std::io::Read;
@@ -6,8 +7,9 @@ use std::os::raw::{c_char, c_int};
 use std::path::Path;
 use std::ptr;
 use windows::{
-    core::*, Win32::Foundation::HWND, Win32::System::Com::*,
-    Win32::UI::Shell::Common::COMDLG_FILTERSPEC, Win32::UI::Shell::*,
+    Win32::Foundation::HWND, Win32::Foundation::*, Win32::System::Com::*,
+    Win32::System::Variant::*, Win32::System::Wmi::*, Win32::UI::Shell::Common::COMDLG_FILTERSPEC,
+    Win32::UI::Shell::*, core::*,
 };
 
 // Region - BINARY SECURITY ANALYZER
@@ -579,7 +581,6 @@ pub extern "C" fn release_analysis_results(results: *mut SecurityAnalysisCollect
 }
 
 // End Region - BINARY SECURITY ANALYZER
-
 
 // CLSID for TaskbarList COM object
 const CLSID_TASKBARLIST: GUID = GUID::from_u128(0x56FDF344_FD6D_11d0_958A_006097C9A090);
@@ -1686,3 +1687,743 @@ pub unsafe extern "system" fn relaunch_app_elevated(
     unsafe { CoUninitialize() };
     hr
 }
+
+// Region - GPU DETECTION
+
+// COM constants for GPU detection
+const RPC_C_AUTHN_WINNT_GPU: u32 = 10;
+const RPC_C_AUTHZ_NONE_GPU: u32 = 0;
+const RPC_C_AUTHN_LEVEL_CALL_GPU: u32 = 3;
+const RPC_C_IMP_LEVEL_IMPERSONATE_GPU: u32 = 3;
+const EOAC_NONE_GPU: i32 = 0;
+
+#[repr(C)]
+pub struct GpuInformation {
+    pub name: *mut c_char,
+    pub brand: *mut c_char,
+    pub vendor_id: u32,
+    pub device_id: u32,
+    pub description: *mut c_char,
+    pub manufacturer: *mut c_char,
+    pub pnp_device_id: *mut c_char,
+    pub adapter_ram: u32,
+    pub driver_version: *mut c_char,
+    pub driver_date: *mut c_char,
+    pub is_available: c_int, // Using c_int for better C# interop (bool -> int)
+    pub config_manager_error_code: u32,
+    pub error_code: c_int,
+    pub error_message: *mut c_char,
+}
+
+#[repr(C)]
+pub struct GpuInformationCollection {
+    pub gpu_information: *mut GpuInformation,
+    pub total_count: c_int,
+}
+
+struct GpuDetectorInternal {
+    vendor_ids: HashMap<u32, &'static str>,
+}
+
+// RAII guard for COM cleanup in GPU detection
+struct ComGuardGpu {}
+
+impl Drop for ComGuardGpu {
+    fn drop(&mut self) {
+        unsafe {
+            CoUninitialize();
+        }
+    }
+}
+
+// The IDs here were taken from: https://devicehunt.com/all-pci-vendors
+impl GpuDetectorInternal {
+    fn new() -> Self {
+        let mut vendor_ids: HashMap<u32, &'static str> = HashMap::new();
+        vendor_ids.insert(0x10DE, "NVIDIA");
+        vendor_ids.insert(0x1002, "AMD");
+        vendor_ids.insert(0x8086, "Intel");
+        vendor_ids.insert(0x1414, "Microsoft");
+        vendor_ids.insert(0x5333, "S3 Graphics");
+        vendor_ids.insert(0x102B, "Matrox");
+        vendor_ids.insert(0x1039, "Silicon Integrated Systems");
+        vendor_ids.insert(0x126F, "Silicon Motion");
+        vendor_ids.insert(0x15AD, "VMware");
+        vendor_ids.insert(0x1013, "Cirrus Logic");
+        vendor_ids.insert(0x121A, "3dfx Interactive");
+
+        Self { vendor_ids }
+    }
+
+    fn detect_gpus_via_wmi(&self) -> Result<Vec<GpuInformationInternal>> {
+        let mut gpus: Vec<GpuInformationInternal> = Vec::new();
+
+        unsafe {
+            // Initialize COM
+            let hr: HRESULT = CoInitializeEx(None, COINIT_APARTMENTTHREADED);
+            if hr.is_err() && hr != HRESULT(-2147417850) {
+                return Err(Error::from_win32());
+            }
+
+            let _com_guard: ComGuardGpu = ComGuardGpu {};
+
+            // Create WMI locator
+            let locator: IWbemLocator = CoCreateInstance(&WbemLocator, None, CLSCTX_INPROC_SERVER)?;
+
+            // Connect to WMI namespace
+            let namespace: BSTR = BSTR::from("ROOT\\CIMV2");
+            let services: IWbemServices = locator.ConnectServer(
+                &namespace,
+                &BSTR::new(),
+                &BSTR::new(),
+                &BSTR::new(),
+                0,
+                &BSTR::new(),
+                None,
+            )?;
+
+            // Setting security levels on the proxy
+            CoSetProxyBlanket(
+                &services,
+                RPC_C_AUTHN_WINNT_GPU,
+                RPC_C_AUTHZ_NONE_GPU,
+                None,
+                RPC_C_AUTHN_LEVEL(RPC_C_AUTHN_LEVEL_CALL_GPU),
+                RPC_C_IMP_LEVEL(RPC_C_IMP_LEVEL_IMPERSONATE_GPU),
+                None,
+                EOLE_AUTHENTICATION_CAPABILITIES(EOAC_NONE_GPU),
+            )?;
+
+            // Do a Query
+            let query_language: BSTR = BSTR::from("WQL");
+            let query: BSTR = BSTR::from("SELECT * FROM Win32_VideoController");
+            let enumerator: IEnumWbemClassObject = services.ExecQuery(
+                &query_language,
+                &query,
+                WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+                None,
+            )?;
+
+            // Enumerate results
+            loop {
+                let mut objects: [Option<IWbemClassObject>; 1] = [None];
+                let mut returned: u32 = 0;
+
+                let hr: HRESULT = enumerator.Next(WBEM_INFINITE, &mut objects, &mut returned);
+
+                if hr != S_OK || returned == 0 {
+                    break;
+                }
+
+                if let Some(obj) = &objects[0] {
+                    match self.process_gpu_object(obj) {
+                        Ok(Some(gpu)) => gpus.push(gpu),
+                        Ok(None) => {}
+                        Err(e) => {
+                            // Create error GPU entry
+                            gpus.push(GpuInformationInternal {
+                                name: "Unknown GPU".to_string(),
+                                brand: "Unknown".to_string(),
+                                vendor_id: 0,
+                                device_id: 0,
+                                description: "Error processing GPU".to_string(),
+                                manufacturer: "Unknown".to_string(),
+                                pnp_device_id: "Unknown".to_string(),
+                                adapter_ram: 0,
+                                driver_version: "Unknown".to_string(),
+                                driver_date: "Unknown".to_string(),
+                                is_available: false,
+                                config_manager_error_code: 0,
+                                error_code: 4001,
+                                error_message: format!("Error processing GPU object: {}", e),
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        Ok(gpus)
+    }
+
+    fn process_gpu_object(&self, obj: &IWbemClassObject) -> Result<Option<GpuInformationInternal>> {
+        let mut gpu: GpuInformationInternal = GpuInformationInternal::default();
+
+        gpu.name = self.get_string_property(obj, "Name").unwrap_or_default();
+        gpu.description = self
+            .get_string_property(obj, "Description")
+            .unwrap_or_default();
+        gpu.manufacturer = self
+            .get_string_property(obj, "AdapterCompatibility")
+            .unwrap_or_default();
+        gpu.pnp_device_id = self
+            .get_string_property(obj, "PNPDeviceID")
+            .unwrap_or_default();
+        gpu.driver_version = self
+            .get_string_property(obj, "DriverVersion")
+            .unwrap_or_default();
+        gpu.driver_date = self
+            .get_string_property(obj, "DriverDate")
+            .unwrap_or_default();
+        gpu.is_available = self.get_u32_property(obj, "Availability").unwrap_or(0) == 3;
+        gpu.config_manager_error_code = self
+            .get_u32_property(obj, "ConfigManagerErrorCode")
+            .unwrap_or(0);
+        gpu.adapter_ram = self.get_u32_property(obj, "AdapterRAM").unwrap_or(0);
+
+        // Extract vendor and device IDs from PNPDeviceID
+        let (vendor_id, device_id): (u32, u32) = self.extract_pci_ids(&gpu.pnp_device_id);
+        gpu.vendor_id = vendor_id;
+        gpu.device_id = device_id;
+
+        // Determine brand based on vendor ID and name analysis
+        gpu.brand = self.determine_brand(&gpu.name, &gpu.manufacturer, vendor_id);
+
+        // Only return if it's a real GPU
+        if self.is_real_gpu(&gpu) {
+            Ok(Some(gpu))
+        } else {
+            Ok(None)
+        }
+    }
+
+    fn get_string_property(&self, obj: &IWbemClassObject, property_name: &str) -> Result<String> {
+        unsafe {
+            let prop_name: BSTR = BSTR::from(property_name);
+            let mut variant: VARIANT = std::mem::zeroed();
+
+            obj.Get(&prop_name, 0, &mut variant, None, None)?;
+
+            let result_string: String = self.extract_string_from_variant(&variant);
+            let _ = VariantClear(&mut variant);
+
+            Ok(result_string.trim().to_string())
+        }
+    }
+
+    fn get_u32_property(&self, obj: &IWbemClassObject, property_name: &str) -> Result<u32> {
+        unsafe {
+            let prop_name: BSTR = BSTR::from(property_name);
+            let mut variant: VARIANT = std::mem::zeroed();
+
+            obj.Get(&prop_name, 0, &mut variant, None, None)?;
+
+            let result: u32 = self.extract_u32_from_variant(&variant);
+            let _ = VariantClear(&mut variant);
+
+            Ok(result)
+        }
+    }
+
+    fn extract_string_from_variant(&self, variant: &VARIANT) -> String {
+        unsafe {
+            let variant_ptr: *const VARIANT = variant as *const VARIANT;
+            let variant_bytes: &[u8] = std::slice::from_raw_parts(
+                variant_ptr as *const u8,
+                std::mem::size_of::<VARIANT>(),
+            );
+
+            let vt: u16 = u16::from_le_bytes([variant_bytes[0], variant_bytes[1]]);
+
+            if vt == 8 {
+                let bstr_ptr_bytes: &[u8] = &variant_bytes[8..16];
+                let bstr_ptr: *const u16 = *(bstr_ptr_bytes.as_ptr() as *const *const u16);
+
+                if !bstr_ptr.is_null() {
+                    let length_ptr: *const u32 = bstr_ptr.offset(-2) as *const u32;
+                    let length: u32 = *length_ptr / 2;
+
+                    if length > 0 && length < 65536 {
+                        let slice: &[u16] = std::slice::from_raw_parts(bstr_ptr, length as usize);
+                        return String::from_utf16_lossy(slice);
+                    }
+                }
+            }
+
+            String::new()
+        }
+    }
+
+    fn extract_u32_from_variant(&self, variant: &VARIANT) -> u32 {
+        unsafe {
+            let variant_ptr: *const VARIANT = variant as *const VARIANT;
+            let variant_bytes: &[u8] = std::slice::from_raw_parts(
+                variant_ptr as *const u8,
+                std::mem::size_of::<VARIANT>(),
+            );
+
+            let vt: u16 = u16::from_le_bytes([variant_bytes[0], variant_bytes[1]]);
+
+            match vt {
+                19 => {
+                    let value_bytes: &[u8] = &variant_bytes[8..12];
+                    u32::from_le_bytes([
+                        value_bytes[0],
+                        value_bytes[1],
+                        value_bytes[2],
+                        value_bytes[3],
+                    ])
+                }
+                3 => {
+                    let value_bytes: &[u8] = &variant_bytes[8..12];
+                    let signed_value: i32 = i32::from_le_bytes([
+                        value_bytes[0],
+                        value_bytes[1],
+                        value_bytes[2],
+                        value_bytes[3],
+                    ]);
+                    if signed_value >= 0 {
+                        signed_value as u32
+                    } else {
+                        0
+                    }
+                }
+                18 => {
+                    let value_bytes: &[u8] = &variant_bytes[8..10];
+                    u16::from_le_bytes([value_bytes[0], value_bytes[1]]) as u32
+                }
+                2 => {
+                    let value_bytes: &[u8] = &variant_bytes[8..10];
+                    let signed_value: i16 = i16::from_le_bytes([value_bytes[0], value_bytes[1]]);
+                    if signed_value >= 0 {
+                        signed_value as u32
+                    } else {
+                        0
+                    }
+                }
+                17 => variant_bytes[8] as u32,
+                16 => {
+                    let signed_value: i8 = variant_bytes[8] as i8;
+                    if signed_value >= 0 {
+                        signed_value as u32
+                    } else {
+                        0
+                    }
+                }
+                _ => 0,
+            }
+        }
+    }
+
+    fn extract_pci_ids(&self, pnp_device_id: &str) -> (u32, u32) {
+        let mut vendor_id: u32 = 0;
+        let mut device_id: u32 = 0;
+
+        if pnp_device_id.is_empty() {
+            return (vendor_id, device_id);
+        }
+
+        let parts: Vec<&str> = pnp_device_id.split('\\').collect();
+        if parts.len() > 1 {
+            let ven_dev_part: &str = parts[1];
+            let ven_dev_parts: Vec<&str> = ven_dev_part.split('&').collect();
+
+            for part in ven_dev_parts {
+                if part.to_uppercase().starts_with("VEN_") {
+                    if let Some(ven_hex) = part.get(4..) {
+                        if let Ok(ven) = u32::from_str_radix(ven_hex, 16) {
+                            vendor_id = ven;
+                        }
+                    }
+                } else if part.to_uppercase().starts_with("DEV_") {
+                    if let Some(dev_hex) = part.get(4..) {
+                        if let Ok(dev) = u32::from_str_radix(dev_hex, 16) {
+                            device_id = dev;
+                        }
+                    }
+                }
+            }
+        }
+
+        (vendor_id, device_id)
+    }
+
+    fn determine_brand(&self, name: &str, manufacturer: &str, vendor_id: u32) -> String {
+        if let Some(&brand) = self.vendor_ids.get(&vendor_id) {
+            return brand.to_string();
+        }
+
+        let combined_text: String = format!("{} {}", name, manufacturer).to_lowercase();
+
+        let nvidia_patterns: [&str; 8] = [
+            "nvidia", "geforce", "quadro", "tesla", "rtx", "gtx", "titan", "nvs",
+        ];
+        for pattern in &nvidia_patterns {
+            if combined_text.contains(pattern) {
+                return "NVIDIA".to_string();
+            }
+        }
+
+        let amd_patterns: [&str; 9] = [
+            "amd",
+            "radeon",
+            "firepro",
+            "advanced micro devices",
+            "rx ",
+            "vega",
+            "navi",
+            "rdna",
+            "ati",
+        ];
+        for pattern in &amd_patterns {
+            if combined_text.contains(pattern) {
+                return "AMD".to_string();
+            }
+        }
+
+        let intel_patterns: [&str; 6] = [
+            "intel",
+            "hd graphics",
+            "iris",
+            "uhd graphics",
+            "arc",
+            "xe graphics",
+        ];
+        for pattern in &intel_patterns {
+            if combined_text.contains(pattern) {
+                return "Intel".to_string();
+            }
+        }
+
+        if vendor_id != 0 {
+            format!("Unknown (0x{:04X})", vendor_id)
+        } else {
+            "Unknown".to_string()
+        }
+    }
+
+    fn is_real_gpu(&self, gpu: &GpuInformationInternal) -> bool {
+        let name_lower: String = gpu.name.to_lowercase();
+        let desc_lower: String = gpu.description.to_lowercase();
+
+        let virtual_patterns: [&str; 8] = [
+            "microsoft basic display adapter",
+            "microsoft basic display driver",
+            "remote desktop",
+            "teamviewer",
+            "vnc",
+            "virtual display",
+            "virtual adapter",
+            "software adapter",
+        ];
+
+        for pattern in &virtual_patterns {
+            if name_lower.contains(pattern) || desc_lower.contains(pattern) {
+                return false;
+            }
+        }
+
+        if gpu.vendor_id == 0 {
+            return false;
+        }
+
+        self.vendor_ids.contains_key(&gpu.vendor_id)
+            || gpu.brand.eq_ignore_ascii_case("NVIDIA")
+            || gpu.brand.eq_ignore_ascii_case("AMD")
+            || gpu.brand.eq_ignore_ascii_case("Intel")
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+struct GpuInformationInternal {
+    name: String,
+    brand: String,
+    vendor_id: u32,
+    device_id: u32,
+    description: String,
+    manufacturer: String,
+    pnp_device_id: String,
+    adapter_ram: u32,
+    driver_version: String,
+    driver_date: String,
+    is_available: bool,
+    config_manager_error_code: u32,
+    error_code: i32,
+    error_message: String,
+}
+
+fn create_fallback_gpu_error_result() -> GpuInformation {
+    let name_c: *mut c_char = CString::new("Unknown GPU")
+        .unwrap_or_else(|_| CString::new("Invalid").unwrap())
+        .into_raw();
+    let brand_c: *mut c_char = CString::new("Unknown")
+        .unwrap_or_else(|_| CString::new("Invalid").unwrap())
+        .into_raw();
+    let description_c: *mut c_char = CString::new("GPU detection error")
+        .unwrap_or_else(|_| CString::new("Invalid").unwrap())
+        .into_raw();
+    let manufacturer_c: *mut c_char = CString::new("Unknown")
+        .unwrap_or_else(|_| CString::new("Invalid").unwrap())
+        .into_raw();
+    let pnp_device_id_c: *mut c_char = CString::new("Unknown")
+        .unwrap_or_else(|_| CString::new("Invalid").unwrap())
+        .into_raw();
+    let driver_version_c: *mut c_char = CString::new("Unknown")
+        .unwrap_or_else(|_| CString::new("Invalid").unwrap())
+        .into_raw();
+    let driver_date_c: *mut c_char = CString::new("Unknown")
+        .unwrap_or_else(|_| CString::new("Invalid").unwrap())
+        .into_raw();
+    let error_message_c: *mut c_char = CString::new("String encoding error").unwrap().into_raw();
+
+    GpuInformation {
+        name: name_c,
+        brand: brand_c,
+        vendor_id: 0,
+        device_id: 0,
+        description: description_c,
+        manufacturer: manufacturer_c,
+        pnp_device_id: pnp_device_id_c,
+        adapter_ram: 0,
+        driver_version: driver_version_c,
+        driver_date: driver_date_c,
+        is_available: 0,
+        config_manager_error_code: 0,
+        error_code: 5001,
+        error_message: error_message_c,
+    }
+}
+
+/// Detects all GPUs in the system via WMI
+/// Returns: GpuInformationCollection with detected GPU information
+/// Caller must free the returned collection using release_gpu_information()
+#[unsafe(no_mangle)]
+pub extern "C" fn detect_system_gpus() -> *mut GpuInformationCollection {
+    let detector: GpuDetectorInternal = GpuDetectorInternal::new();
+    let detected_gpus: std::result::Result<Vec<GpuInformationInternal>, windows::core::Error> =
+        detector.detect_gpus_via_wmi();
+
+    let gpu_data: Vec<GpuInformationInternal> = match detected_gpus {
+        Ok(gpus) => {
+            if gpus.is_empty() {
+                // Create a default "no GPUs found" entry
+                vec![GpuInformationInternal {
+                    name: "No GPUs detected".to_string(),
+                    brand: "Unknown".to_string(),
+                    vendor_id: 0,
+                    device_id: 0,
+                    description: "No video controllers found".to_string(),
+                    manufacturer: "Unknown".to_string(),
+                    pnp_device_id: "Unknown".to_string(),
+                    adapter_ram: 0,
+                    driver_version: "Unknown".to_string(),
+                    driver_date: "Unknown".to_string(),
+                    is_available: false,
+                    config_manager_error_code: 0,
+                    error_code: 6001,
+                    error_message: "No GPUs detected in the system".to_string(),
+                }]
+            } else {
+                gpus
+            }
+        }
+        Err(e) => vec![GpuInformationInternal {
+            name: "GPU Detection Error".to_string(),
+            brand: "Unknown".to_string(),
+            vendor_id: 0,
+            device_id: 0,
+            description: "Failed to detect GPUs".to_string(),
+            manufacturer: "Unknown".to_string(),
+            pnp_device_id: "Unknown".to_string(),
+            adapter_ram: 0,
+            driver_version: "Unknown".to_string(),
+            driver_date: "Unknown".to_string(),
+            is_available: false,
+            config_manager_error_code: 0,
+            error_code: 7001,
+            error_message: format!("GPU detection error: {}", e),
+        }],
+    };
+
+    let mut gpu_information_results: Vec<GpuInformation> = Vec::new();
+
+    for gpu_data_item in gpu_data {
+        // Try to create CStrings, but if any fail, create a fallback error result
+        let name_c: *mut c_char = match CString::new(gpu_data_item.name) {
+            Ok(s) => s.into_raw(),
+            Err(_) => {
+                gpu_information_results.push(create_fallback_gpu_error_result());
+                continue;
+            }
+        };
+
+        let brand_c: *mut c_char = match CString::new(gpu_data_item.brand) {
+            Ok(s) => s.into_raw(),
+            Err(_) => {
+                unsafe {
+                    let _ = CString::from_raw(name_c);
+                }
+                gpu_information_results.push(create_fallback_gpu_error_result());
+                continue;
+            }
+        };
+
+        let description_c: *mut c_char = match CString::new(gpu_data_item.description) {
+            Ok(s) => s.into_raw(),
+            Err(_) => {
+                unsafe {
+                    let _ = CString::from_raw(name_c);
+                    let _ = CString::from_raw(brand_c);
+                }
+                gpu_information_results.push(create_fallback_gpu_error_result());
+                continue;
+            }
+        };
+
+        let manufacturer_c: *mut c_char = match CString::new(gpu_data_item.manufacturer) {
+            Ok(s) => s.into_raw(),
+            Err(_) => {
+                unsafe {
+                    let _ = CString::from_raw(name_c);
+                    let _ = CString::from_raw(brand_c);
+                    let _ = CString::from_raw(description_c);
+                }
+                gpu_information_results.push(create_fallback_gpu_error_result());
+                continue;
+            }
+        };
+
+        let pnp_device_id_c: *mut c_char = match CString::new(gpu_data_item.pnp_device_id) {
+            Ok(s) => s.into_raw(),
+            Err(_) => {
+                unsafe {
+                    let _ = CString::from_raw(name_c);
+                    let _ = CString::from_raw(brand_c);
+                    let _ = CString::from_raw(description_c);
+                    let _ = CString::from_raw(manufacturer_c);
+                }
+                gpu_information_results.push(create_fallback_gpu_error_result());
+                continue;
+            }
+        };
+
+        let driver_version_c: *mut c_char = match CString::new(gpu_data_item.driver_version) {
+            Ok(s) => s.into_raw(),
+            Err(_) => {
+                unsafe {
+                    let _ = CString::from_raw(name_c);
+                    let _ = CString::from_raw(brand_c);
+                    let _ = CString::from_raw(description_c);
+                    let _ = CString::from_raw(manufacturer_c);
+                    let _ = CString::from_raw(pnp_device_id_c);
+                }
+                gpu_information_results.push(create_fallback_gpu_error_result());
+                continue;
+            }
+        };
+
+        let driver_date_c: *mut c_char = match CString::new(gpu_data_item.driver_date) {
+            Ok(s) => s.into_raw(),
+            Err(_) => {
+                unsafe {
+                    let _ = CString::from_raw(name_c);
+                    let _ = CString::from_raw(brand_c);
+                    let _ = CString::from_raw(description_c);
+                    let _ = CString::from_raw(manufacturer_c);
+                    let _ = CString::from_raw(pnp_device_id_c);
+                    let _ = CString::from_raw(driver_version_c);
+                }
+                gpu_information_results.push(create_fallback_gpu_error_result());
+                continue;
+            }
+        };
+
+        let error_message_c: *mut c_char = match CString::new(gpu_data_item.error_message) {
+            Ok(s) => s.into_raw(),
+            Err(_) => {
+                unsafe {
+                    let _ = CString::from_raw(name_c);
+                    let _ = CString::from_raw(brand_c);
+                    let _ = CString::from_raw(description_c);
+                    let _ = CString::from_raw(manufacturer_c);
+                    let _ = CString::from_raw(pnp_device_id_c);
+                    let _ = CString::from_raw(driver_version_c);
+                    let _ = CString::from_raw(driver_date_c);
+                }
+                gpu_information_results.push(create_fallback_gpu_error_result());
+                continue;
+            }
+        };
+
+        gpu_information_results.push(GpuInformation {
+            name: name_c,
+            brand: brand_c,
+            vendor_id: gpu_data_item.vendor_id,
+            device_id: gpu_data_item.device_id,
+            description: description_c,
+            manufacturer: manufacturer_c,
+            pnp_device_id: pnp_device_id_c,
+            adapter_ram: gpu_data_item.adapter_ram,
+            driver_version: driver_version_c,
+            driver_date: driver_date_c,
+            is_available: if gpu_data_item.is_available { 1 } else { 0 },
+            config_manager_error_code: gpu_data_item.config_manager_error_code,
+            error_code: gpu_data_item.error_code,
+            error_message: error_message_c,
+        });
+    }
+
+    let result_count: c_int = gpu_information_results.len() as c_int;
+    let results_ptr: *mut GpuInformation = gpu_information_results.as_mut_ptr();
+    std::mem::forget(gpu_information_results);
+
+    let gpu_information_collection: Box<GpuInformationCollection> =
+        Box::new(GpuInformationCollection {
+            gpu_information: results_ptr,
+            total_count: result_count,
+        });
+
+    Box::into_raw(gpu_information_collection)
+}
+
+/// Releases GPU information collection and frees all associated memory
+/// Must be called for every collection returned by detect_system_gpus()
+#[unsafe(no_mangle)]
+pub extern "C" fn release_gpu_information(results: *mut GpuInformationCollection) {
+    if results.is_null() {
+        return;
+    }
+
+    unsafe {
+        let gpu_collection: Box<GpuInformationCollection> = Box::from_raw(results);
+
+        for i in 0..gpu_collection.total_count {
+            let result: *mut GpuInformation = gpu_collection.gpu_information.add(i as usize);
+
+            if !(*result).name.is_null() {
+                let _ = CString::from_raw((*result).name);
+            }
+            if !(*result).brand.is_null() {
+                let _ = CString::from_raw((*result).brand);
+            }
+            if !(*result).description.is_null() {
+                let _ = CString::from_raw((*result).description);
+            }
+            if !(*result).manufacturer.is_null() {
+                let _ = CString::from_raw((*result).manufacturer);
+            }
+            if !(*result).pnp_device_id.is_null() {
+                let _ = CString::from_raw((*result).pnp_device_id);
+            }
+            if !(*result).driver_version.is_null() {
+                let _ = CString::from_raw((*result).driver_version);
+            }
+            if !(*result).driver_date.is_null() {
+                let _ = CString::from_raw((*result).driver_date);
+            }
+            if !(*result).error_message.is_null() {
+                let _ = CString::from_raw((*result).error_message);
+            }
+        }
+
+        if !gpu_collection.gpu_information.is_null() {
+            let _ = Vec::from_raw_parts(
+                gpu_collection.gpu_information,
+                gpu_collection.total_count as usize,
+                gpu_collection.total_count as usize,
+            );
+        }
+    }
+}
+
+// End Region - GPU DETECTION

@@ -35,10 +35,10 @@ using AppControlManager.WindowComponents;
 namespace AppControlManager;
 #endif
 
-#if HARDEN_WINDOWS_SECURITY
-using HardenWindowsSecurity.ViewModels;
-using HardenWindowsSecurity.WindowComponents;
-namespace HardenWindowsSecurity;
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity.ViewModels;
+using HardenSystemSecurity.WindowComponents;
+namespace HardenSystemSecurity;
 #endif
 
 /// <summary>
@@ -424,13 +424,13 @@ internal sealed partial class MainWindow : Window
 			ViewModel.RebuildBreadcrumbMappings();
 			ViewModel.RebuildNavigationPageToItemContentMapForSearch();
 
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 
 			TitleBarSearchBox.PlaceholderText = GlobalVars.GetStr("MainSearchAutoSuggestBox/PlaceholderText");
 			AutomationProperties.SetHelpText(TitleBarSearchBox, GlobalVars.GetStr("MainSearchAutoSuggestBox/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(TitleBarSearchBox, GlobalVars.GetStr("MainSearchAutoSuggestBox/ToolTipService/ToolTip"));
 
-			// Main navigation items for Harden Windows Security
+			// Main navigation items for Harden System Security
 			ProtectNavigationViewItemHeader.Content = GlobalVars.GetStr("ProtectNavigationViewItemHeader/Content");
 
 			ProtectNavItem.Content = GlobalVars.GetStr("ProtectNavigationViewItem/Content");

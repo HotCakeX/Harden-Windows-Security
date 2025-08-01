@@ -25,8 +25,8 @@ using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 
-#if HARDEN_WINDOWS_SECURITY
-namespace HardenWindowsSecurity.ViewModels;
+#if HARDEN_SYSTEM_SECURITY
+namespace HardenSystemSecurity.ViewModels;
 #endif
 
 #if APP_CONTROL_MANAGER

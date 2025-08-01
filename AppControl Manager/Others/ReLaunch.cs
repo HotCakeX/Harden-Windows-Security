@@ -18,8 +18,8 @@
 using System;
 using System.Runtime.InteropServices;
 
-#if HARDEN_WINDOWS_SECURITY
-using HardenWindowsSecurity;
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity;
 #endif
 
 namespace AppControlManager.Others;

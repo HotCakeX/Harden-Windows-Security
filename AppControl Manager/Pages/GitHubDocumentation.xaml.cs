@@ -23,8 +23,8 @@ using Microsoft.UI.Xaml.Navigation;
 #if APP_CONTROL_MANAGER
 namespace AppControlManager.Pages;
 #endif
-#if HARDEN_WINDOWS_SECURITY
-namespace HardenWindowsSecurity.Pages;
+#if HARDEN_SYSTEM_SECURITY
+namespace HardenSystemSecurity.Pages;
 #endif
 
 /// <summary>
@@ -86,7 +86,7 @@ internal sealed partial class GitHubDocumentation : Page
 #if APP_CONTROL_MANAGER
 		GitHubDocumentationWebView2.Source = new Uri("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction");
 #endif
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 		GitHubDocumentationWebView2.Source = new Uri("https://github.com/HotCakeX/Harden-Windows-Security");
 #endif
 	}

@@ -39,12 +39,12 @@ using Microsoft.UI.Dispatching;
 // To learn more about WinUI abd the WinUI project structure see: http://aka.ms/winui-project-info
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/windows/apps/windows-app-sdk/applifecycle/applifecycle
 
-#if HARDEN_WINDOWS_SECURITY
-using HardenWindowsSecurity.Others;
-using HardenWindowsSecurity.ViewModels;
-using HardenWindowsSecurity.WindowComponents;
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity.Others;
+using HardenSystemSecurity.ViewModels;
+using HardenSystemSecurity.WindowComponents;
 using AppControlManager;
-namespace HardenWindowsSecurity;
+namespace HardenSystemSecurity;
 #endif
 #if APP_CONTROL_MANAGER
 using AppControlManager.WindowComponents;
@@ -61,8 +61,8 @@ public partial class App : Application
 {
 #pragma warning restore CA1515
 
-#if HARDEN_WINDOWS_SECURITY
-	internal const string AppName = "HardenWindowsSecurity";
+#if HARDEN_SYSTEM_SECURITY
+	internal const string AppName = "HardenSystemSecurity";
 #endif
 #if APP_CONTROL_MANAGER
 	internal const string AppName = "AppControlManager";
@@ -92,7 +92,7 @@ public partial class App : Application
 	/// </summary>
 	internal static readonly int PackageSource = string.Equals(PFN, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ?
 		0 :
-		(string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) || string.Equals(PFN, "VioletHansen.HardenWindowsSecurity_ea7andspwdn10", StringComparison.OrdinalIgnoreCase)
+		(string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) || string.Equals(PFN, "VioletHansen.HardenSystemSecurity_ea7andspwdn10", StringComparison.OrdinalIgnoreCase)
 		? 1 : 2);
 
 	/// <summary>
@@ -137,7 +137,7 @@ public partial class App : Application
 		Path.Combine(Path.GetTempPath(), $"{AppName}Logs");
 #endif
 
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 	/// <summary>
 	/// The directory where the logs will be stored
 	/// </summary>
@@ -238,7 +238,7 @@ public partial class App : Application
 #if APP_CONTROL_MANAGER
 	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 #endif
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 	protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 #endif
 
@@ -575,7 +575,7 @@ public partial class App : Application
 		// Navigate to the CreatePolicy page when the window is loaded and is Admin, else Policy Editor
 		_nav.Navigate(IsElevated ? typeof(Pages.CreatePolicy) : typeof(Pages.PolicyEditor));
 #endif
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 		_nav.Navigate(IsElevated ? typeof(Pages.Protect) : typeof(Pages.Protects.NonAdmin));
 #endif
 	}
@@ -616,7 +616,7 @@ public partial class App : Application
 	/// </summary>
 	private void Window_Closed(object sender, WindowEventArgs e)
 	{
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 		// Terminate our DISM exe if it's still running and user closed the window.
 		DismServiceClient.TerminateActiveService();
 #endif

@@ -25,10 +25,10 @@ using Microsoft.Windows.Globalization;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Dispatching;
 
-#if HARDEN_WINDOWS_SECURITY
+#if HARDEN_SYSTEM_SECURITY
 using AppControlManager.ViewModels;
-using HardenWindowsSecurity.WindowComponents;
-namespace HardenWindowsSecurity.ViewModels;
+using HardenSystemSecurity.WindowComponents;
+namespace HardenSystemSecurity.ViewModels;
 #endif
 
 #if APP_CONTROL_MANAGER

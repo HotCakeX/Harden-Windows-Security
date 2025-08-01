@@ -1,7 +1,6 @@
 ProgramName,Mitigation,Action,RemovalAllowed,Comment
 msedge.exe,DisableExtensionPoints,Enable,True,Edge All Channels - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
 msedge.exe,CFG,Enable,True,Edge All Channels - Enabled by default System-Wide
-msedge.exe,StrictCFG,Enable,True,Edge All Channels - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
 msedge.exe,MicrosoftSignedOnly,Enable,True,Edge All Channels - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
 msedge.exe,AllowStoreSignedBinaries,Enable,True,Edge All Channels - Applications that are distributed by the Microsoft Store are digitally signed by the Microsoft Store and adding this configuration allows binaries that have gone through the store certification process to be loaded by the application.
 msedge.exe,EnforceModuleDependencySigning,Enable,True,Edge All Channels - helps protect against attacks that attempt to substitute code for dlls that are statically linked by Windows binaries.

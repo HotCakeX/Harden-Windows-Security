@@ -23,8 +23,8 @@ using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 using Windows.Storage;
 
-#if HARDEN_WINDOWS_SECURITY
-namespace HardenWindowsSecurity.AppSettings;
+#if HARDEN_SYSTEM_SECURITY
+namespace HardenSystemSecurity.AppSettings;
 #endif
 #if APP_CONTROL_MANAGER
 namespace AppControlManager.AppSettings;

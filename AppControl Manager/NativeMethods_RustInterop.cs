@@ -148,4 +148,22 @@ internal unsafe static partial class NativeMethods
 	internal static partial void release_analysis_results(IntPtr results);
 
 
+#if DEBUG
+	[LibraryImport("RustInterop/rust_interop.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
+#endif
+#if !DEBUG
+	[LibraryImport("rust_interop")]
+#endif
+	internal static partial IntPtr detect_system_gpus();
+
+#if DEBUG
+	[LibraryImport("RustInterop/rust_interop.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
+#endif
+#if !DEBUG
+	[LibraryImport("rust_interop")]
+#endif
+	internal static partial void release_gpu_information(IntPtr results);
+
 }

@@ -26,8 +26,8 @@ using Windows.Foundation;
 using Windows.UI;
 using Microsoft.UI;
 
-#if HARDEN_WINDOWS_SECURITY
-using HardenWindowsSecurity;
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity;
 #pragma warning disable CA1812
 #endif
 

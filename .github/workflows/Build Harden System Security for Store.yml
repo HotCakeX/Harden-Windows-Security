@@ -121,11 +121,10 @@ jobs:
                   [bool]$Upload
               )
 
-              Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1 -Force
-
               $ErrorActionPreference = 'Stop'
-              # Start the stopwatch
               $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+
+              Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1 -Force
 
               [System.String]$script:AppControlManagerDirectory
 

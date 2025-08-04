@@ -1,3 +1,17 @@
-* Improved various aspects of ListViews in the app. Their column widths have more paddings to look better when the list is empty. Also some ListViews wouldn't maintain horizontal scroll position when you performed search and column sorting. This has been fixed.
+* Reduced the size of the package generated for AppControl Manager by not bundling the library that is already absorbed into the main executable.
+
+* Improved resiliency when working with UI elements ensuring they always automatically use the correct thread.
+
+* Significantly improved the design and features of the List Views that offer selecting packaged apps to create App Control policies for, which are in the Create Supplemental Policy page and Create Deny Policy page.
 
 * Updated NuGet dependencies.
+
+* Added a localized description to the app that now appears when fetching the list of installed apps.
+
+* In the MDE Advanced Hunting page, added new filtering options based on each property. That means you can filter the data based on Device/Computer name, Policy name and so on. There are 18 different properties to use for filtering.
+
+* All of the List Views in the app now have column resizing capability. Simply use the newly added separators on the headers to resize each column.
+
+* All of the pages that show file scan results now have the option to export the ListView items to JSON file.
+
+

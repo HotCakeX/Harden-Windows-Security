@@ -256,11 +256,11 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// The method used to open the GetCIHashes page from other parts of the application.
+	/// The method used to open the <see cref="GetCIHashes"/> page from other parts of the application.
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <returns></returns>
-	internal async Task OpenInGetCIHashes(string filePath)
+	internal async Task OpenInGetCIHashes(string? filePath)
 	{
 		try
 		{

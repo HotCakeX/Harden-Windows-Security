@@ -785,6 +785,16 @@
                         </Button.Content>
                     </Button>
 
+                    <Button Click="{x:Bind ViewModel.ExportToJsonButton_Click}"
+                            x:Uid="ExportToJSONButton">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <FontIcon Glyph="&#xE96A;" />
+                                <TextBlock x:Uid="ExportToJSONButtonText" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
                 </controls:WrapPanel>
 
             </Expander.Content>

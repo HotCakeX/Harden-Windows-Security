@@ -251,7 +251,9 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	{
 		PolicyEditor,
 		FileSignature,
-		FileHashes
+		FileHashes,
+		DeployRMMAuditPolicy,
+		DeployRMMBlockPolicy
 	}
 
 

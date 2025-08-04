@@ -814,4 +814,19 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			}
 		}
 	}
+
+	/// <summary>
+	/// Exports data to JSON.
+	/// </summary>
+	internal async void ExportToJsonButton_Click()
+	{
+		try
+		{
+			await FileIdentity.ExportToJson(FileIdentities, MainInfoBar);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
 }

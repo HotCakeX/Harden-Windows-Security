@@ -1660,4 +1660,34 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		_OpenInFileExplorer_EventLogs();
 		args.Handled = true;
 	}
+
+	/// <summary>
+	/// Exports Event Logs data to JSON.
+	/// </summary>
+	internal async void ExportEventLogsToJsonButton_Click()
+	{
+		try
+		{
+			await FileIdentity.ExportToJson(EventLogsFileIdentities, Step1InfoBar);
+		}
+		catch (Exception ex)
+		{
+			Step1InfoBar.WriteError(ex);
+		}
+	}
+
+	/// <summary>
+	/// Exports Local Files data to JSON.
+	/// </summary>
+	internal async void ExportLocalFilesToJsonButton_Click()
+	{
+		try
+		{
+			await FileIdentity.ExportToJson(LocalFilesFileIdentities, Step1InfoBar);
+		}
+		catch (Exception ex)
+		{
+			Step1InfoBar.WriteError(ex);
+		}
+	}
 }

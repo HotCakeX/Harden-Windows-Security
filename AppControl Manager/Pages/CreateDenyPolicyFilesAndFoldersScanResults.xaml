@@ -28,54 +28,74 @@
 
         </controls:WrapPanel>
 
-        <Border Grid.Row="1" Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
+        <Expander Grid.Row="1" Margin="0,0,0,10" Padding="8" HorizontalAlignment="Stretch">
+            <Expander.Header>
 
-            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
-                <ProgressRing x:Name="SelectLogsProgressRing" Visibility="Collapsed" IsActive="False" />
+                    <ProgressRing x:Name="SelectLogsProgressRing" Visibility="Collapsed" IsActive="False" />
 
-                <DropDownButton x:Uid="ExtraActionsDropDownButton">
-                    <DropDownButton.Flyout>
+                    <DropDownButton x:Uid="ExtraActionsDropDownButton">
+                        <DropDownButton.Flyout>
 
-                        <MenuFlyout Placement="Bottom">
+                            <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.SelectAll_Click}">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE762;"/>
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.SelectAll_Click}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE762;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.DeSelectAll_Click}">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE8E6;"/>
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.DeSelectAll_Click}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8E6;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Click="{x:Bind ViewModel.ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
-                                <MenuFlyoutItem.Icon>
-                                    <SymbolIcon Symbol="Delete" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                <MenuFlyoutItem Click="{x:Bind ViewModel.ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
+                                    <MenuFlyoutItem.Icon>
+                                        <SymbolIcon Symbol="Delete" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                        </MenuFlyout>
+                            </MenuFlyout>
 
-                    </DropDownButton.Flyout>
-                </DropDownButton>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
 
-                <TextBox x:Uid="TotalLogsTextBlock"
+                    <TextBox x:Uid="TotalLogsTextBlock"
                          Text="{x:Bind ViewModel.TotalCountOfTheFilesTextBox, Mode=OneWay}"
                          IsReadOnly="True"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center"/>
 
-                <TextBox Width="300"
+                    <TextBox Width="300"
                          x:Uid="SearchBoxTextBox"
                          Text="{x:Bind ViewModel.FilesAndFoldersScanResultsSearchTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center" />
 
-            </controls:WrapPanel>
-        </Border>
+                </controls:WrapPanel>
+            </Expander.Header>
+
+            <Expander.Content>
+
+                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+
+                    <Button Click="{x:Bind ViewModel.ExportFilesAndFoldersToJsonButton_Click}"
+                            x:Uid="ExportToJSONButton">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <FontIcon Glyph="&#xE96A;" />
+                                <TextBlock x:Uid="ExportToJSONButtonText" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                </controls:WrapPanel>
+
+            </Expander.Content>
+        </Expander>
 
         <customUI:ListViewV2 x:Name="FileIdentitiesListView"
           RegistryKey="DenyPolicy_FilesAndFolders_ScanResults"
@@ -302,24 +322,24 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth1}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth2}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth3}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth4}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth5}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth6}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth7}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth8}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth9}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth10}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth11}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth12}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth13}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth14}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth15}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth16}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth17}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth18}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth12, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth13, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth14, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth15, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth16, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth17, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind ParentViewModelCreateDenyPolicyVM.ColumnWidth18, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind FileName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
                         <TextBlock Text="{x:Bind SignatureStatus}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>

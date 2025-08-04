@@ -621,7 +621,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <returns></returns>
-	internal async Task OpenInViewFileCertificatesVM(string filePath)
+	internal async Task OpenInViewFileCertificatesVM(string? filePath)
 	{
 		try
 		{

@@ -18,7 +18,7 @@
 
 <h6 align="center">
 
-<a href="https://x.com/intent/post?text=Harden+Windows+Security+%7C+Suitable+for+all+security+levels+and+requirements&hashtags=Windows%2CCyberSecurity&url=https%3A%2F%2Fgithub.com%2FHotCakeX%2FHarden-Windows-Security"><img src="https://raw.githubusercontent.com/HotCakeX/.github/7f64c27fdd600175e29ebad839e81a6ec8deb85c/Pictures/SVG/Share%20it%20on%20X.svg" alt="X Share button"></a> <a href="https://dotnet.microsoft.com/en-us/download"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Badges/.NET9.svg" alt=".NET Badge"></a> <a href="https://github.com/PowerShell/PowerShell"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Badges/PowerShell.svg" alt="PowerShell Badge"></a> <a href="https://visualstudio.microsoft.com/"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Badges/VisualStudio.svg" alt="Visual Studio Badge"></a>
+<a href="https://x.com/intent/post?text=Harden+Windows+Security+%7C+Suitable+for+all+security+levels+and+requirements&hashtags=Windows%2CCyberSecurity&url=https%3A%2F%2Fgithub.com%2FHotCakeX%2FHarden-Windows-Security"><img src="https://raw.githubusercontent.com/HotCakeX/.github/7f64c27fdd600175e29ebad839e81a6ec8deb85c/Pictures/SVG/Share%20it%20on%20X.svg" alt="X Share button"></a> <a href="https://dotnet.microsoft.com/en-us/download"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Badges/.NET9.svg" alt=".NET Badge"></a> <a href="https://visualstudio.microsoft.com/"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Badges/VisualStudio.svg" alt="Visual Studio Badge"></a>
 
 </h6>
 

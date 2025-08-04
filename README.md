@@ -13,7 +13,7 @@
 </div>
 
 <div align="center">
-<a href="https://www.powershellgallery.com/packages/Harden-Windows-Security-Module"><img src="https://img.shields.io/powershellgallery/v/Harden-Windows-Security-Module?include_prereleases&logo=Github&logoColor=rgb(76%2C%2082%2C%20112)&label=Harden%20Windows%20Security%20Module&labelColor=rgb(233%2C255%2C125)&color=rgb(246%2C%2082%2C%20160)" alt="PowerShell Gallery Version (including pre-releases)"></a> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"><img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/SVG/AppControlManager%20Install.svg" alt="AppControl Manager Install"></a>
+<a href="https://apps.microsoft.com/detail/9P7GGFL7DX57"><img src="https://raw.githubusercontent.com/HotCakeX/.github/12a994d0fd231bc9fd0104decece5851179910c0/Pictures/SVG/Badges/HardenSystemSecurityInstallBadge.svg" alt="Microsoft Store page of Harden System Security App"></a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/102a789ed8d91dad3bad1eed72bb5f7fe7d72689/Pictures/Gifs/snowsgiving2phibiscarf-mid.gif" height="25" alt="Link"> <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"><img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/SVG/AppControlManager%20Install.svg" alt="AppControl Manager Install"></a>
 </div>
 
 <h6 align="center">

@@ -56,8 +56,49 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value), AuthenticationContext.MDEAdvancedHunting);
 
 		ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
+
+		// To adjust the initial width of the columns, giving them nice paddings.
+		CalculateColumnWidths();
 	}
 
+	#region Property Filter Implementation
+
+	/// <summary>
+	/// Currently selected property filter
+	/// </summary>
+	internal ListViewHelper.PropertyFilterItem? SelectedPropertyFilter { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// The value to filter by for the selected property
+	/// </summary>
+	internal string? PropertyFilterValue
+	{
+		get; set
+		{
+			if (SPT(ref field, value))
+			{
+				ApplyFilters();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Applies the property-based filter to the data
+	/// </summary>
+	internal void ApplyPropertyFilter() => ApplyFilters();
+
+	/// <summary>
+	/// Clears the current property filter
+	/// </summary>
+	internal void ClearPropertyFilter()
+	{
+		SelectedPropertyFilter = null;
+		PropertyFilterValue = null;
+		DatePickerDate = null;
+		ApplyFilters();
+	}
+
+	#endregion Property Filter Implementation
 
 	#region MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
@@ -441,17 +482,19 @@ DeviceEvents
 	}
 
 	/// <summary>
-	/// Applies the date and search filters to the data in the ListView.
+	/// Applies the date, search, and property filters to the data in the ListView.
 	/// </summary>
 	private void ApplyFilters()
 	{
 		ListViewHelper.ApplyFilters(
-		   allFileIdentities: AllFileIdentities.AsEnumerable(),
-		   filteredCollection: FileIdentities,
-		   searchText: SearchBoxText,
-		   selectedDate: DatePickerDate,
-		   regKey: ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting
-	   );
+			allFileIdentities: AllFileIdentities.AsEnumerable(),
+			filteredCollection: FileIdentities,
+			searchText: SearchBoxText,
+			selectedDate: DatePickerDate,
+			regKey: ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting,
+			selectedPropertyFilter: SelectedPropertyFilter,
+			propertyFilterValue: PropertyFilterValue
+		);
 		UpdateTotalLogs();
 	}
 
@@ -962,13 +1005,14 @@ DeviceEvents
 			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
-					mapping.Getter,
-					SearchBoxText,
-					AllFileIdentities,
-					FileIdentities,
-					SortState,
-					key,
-					regKey: ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting);
+					keySelector: mapping.Getter,
+					searchBoxText: SearchBoxText,
+					originalList: AllFileIdentities,
+					observableCollection: FileIdentities,
+					sortState: SortState,
+					newKey: key,
+					regKey: ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting,
+					propertyFilterValue: PropertyFilterValue);
 			}
 		}
 	}

@@ -63,12 +63,12 @@ internal sealed partial class StrictKernelPolicyScanResults : Page
 			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
-					mapping.Getter,
-					ViewModel.StrictKernelModeResultsSearchTextBox,
-					ViewModel.StrictKernelModeScanResultsList,
-					ViewModel.StrictKernelModeScanResults,
-					ViewModel.SortStateStrictKernelMode,
-					key,
+					keySelector: mapping.Getter,
+					searchBoxText: ViewModel.StrictKernelModeResultsSearchTextBox,
+					originalList: ViewModel.StrictKernelModeScanResultsList,
+					observableCollection: ViewModel.StrictKernelModeScanResults,
+					sortState: ViewModel.SortStateStrictKernelMode,
+					newKey: key,
 					regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults);
 			}
 		}

@@ -65,10 +65,10 @@
         </Border>
 
         <customUI:ListViewV2 x:Name="FileIdentitiesListView"
-            RegistryKey="Allow_New_Apps_EventLogs_ScanResults"
-            Grid.Row="1"
-            SelectionMode="Extended"
-            ItemsSource="{x:Bind ViewModel.EventLogsFileIdentities, Mode=OneWay}">
+    RegistryKey="Allow_New_Apps_EventLogs_ScanResults"
+    Grid.Row="1"
+    SelectionMode="Extended"
+    ItemsSource="{x:Bind ViewModel.EventLogsFileIdentities, Mode=OneWay}">
 
             <customUI:ListViewV2.Header>
 
@@ -78,28 +78,31 @@
                     </interactivity:Interaction.Behaviors>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs6, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs7, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs8, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs9, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs10, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs11, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs12, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs13, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs14, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs15, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs16, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs17, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs18, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs19, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs20, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs21, Mode=OneWay}" />
+                            <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs1, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs2, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs3, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs4, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs5, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs6, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs7, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs8, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs9, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs10, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs11, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs12, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs13, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs14, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs15, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs16, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs17, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs18, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs19, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs20, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthEventLogs21, Mode=TwoWay}" MinWidth="50" />
                         </Grid.ColumnDefinitions>
+
+                        <!-- Header Buttons -->
                         <Button x:Uid="FileNameColumnHeaderBtn" Tag="FileName" Grid.Column="0" Margin="10,0,2,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click_EventLogs}" />
                         <Button x:Uid="TimeCreatedColumnHeaderBtn" Tag="TimeCreated" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click_EventLogs}" />
                         <Button x:Uid="SignatureStatusColumnHeaderBtn" Tag="SignatureStatus" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click_EventLogs}" />
@@ -121,6 +124,28 @@
                         <Button x:Uid="PolicyGUIDColumnHeaderBtn" Tag="PolicyGUID" Grid.Column="18" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click_EventLogs}" />
                         <Button x:Uid="PolicyNameColumnHeaderBtn" Tag="PolicyName" Grid.Column="19" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click_EventLogs}" />
                         <Button x:Uid="ComputerNameColumnHeaderBtn" Tag="ComputerName" Grid.Column="20" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click_EventLogs}" />
+
+                        <!-- GridSplitters between columns -->
+                        <controls:GridSplitter Grid.Column="1" />
+                        <controls:GridSplitter Grid.Column="2" />
+                        <controls:GridSplitter Grid.Column="3" />
+                        <controls:GridSplitter Grid.Column="4" />
+                        <controls:GridSplitter Grid.Column="5" />
+                        <controls:GridSplitter Grid.Column="6" />
+                        <controls:GridSplitter Grid.Column="7" />
+                        <controls:GridSplitter Grid.Column="8" />
+                        <controls:GridSplitter Grid.Column="9" />
+                        <controls:GridSplitter Grid.Column="10" />
+                        <controls:GridSplitter Grid.Column="11" />
+                        <controls:GridSplitter Grid.Column="12" />
+                        <controls:GridSplitter Grid.Column="13" />
+                        <controls:GridSplitter Grid.Column="14" />
+                        <controls:GridSplitter Grid.Column="15" />
+                        <controls:GridSplitter Grid.Column="16" />
+                        <controls:GridSplitter Grid.Column="17" />
+                        <controls:GridSplitter Grid.Column="18" />
+                        <controls:GridSplitter Grid.Column="19" />
+                        <controls:GridSplitter Grid.Column="20" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>

@@ -108,20 +108,23 @@ internal static class GPUInfoManager
 	}
 
 	/// <summary>
-	/// Checks if the system has any NVIDIA GPUs.
+	/// Checks if the system only has 1 GPU and it's Intel.
 	/// </summary>
-	/// <returns>True if at least one NVIDIA GPU is detected, false otherwise.</returns>
-	internal static bool HasNvidiaGPU()
+	/// <returns></returns>
+	internal static bool HasOnlyIntelGPU()
 	{
-		IReadOnlyCollection<GpuInfo> gpus = GetSystemGPUs();
+		List<GpuInfo> gpus = GetSystemGPUs();
+
+		if (gpus.Count != 1)
+			return false;
 
 		foreach (GpuInfo gpu in gpus)
 		{
-			if (gpu.Brand.Equals("NVIDIA", StringComparison.OrdinalIgnoreCase))
+			if (gpu.Brand.Equals("Intel", StringComparison.OrdinalIgnoreCase))
 				return true;
 
-			// Also check by vendor ID as backup (0x10DE is NVIDIA's vendor ID)
-			if (gpu.VendorId == 0x10DE) // 4318
+			// Also check by vendor ID as backup
+			if (gpu.VendorId == 0x8086) // 32902
 				return true;
 		}
 

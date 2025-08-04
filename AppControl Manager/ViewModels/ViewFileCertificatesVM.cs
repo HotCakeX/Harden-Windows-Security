@@ -45,6 +45,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
 
+		// To adjust the initial width of the columns, giving them nice paddings.
 		CalculateColumnWidths();
 	}
 
@@ -235,12 +236,12 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			if (FileCertificateInfoColPropertyMappings.TryGetValue(key, out (string Label, Func<FileCertificateInfoCol, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
-					mapping.Getter,
-					SearchBoxTextBox,
-					FilteredCertificates,
-					FileCertificates,
-					SortState,
-					key,
+					keySelector: mapping.Getter,
+					searchBoxText: SearchBoxTextBox,
+					originalList: FilteredCertificates,
+					observableCollection: FileCertificates,
+					sortState: SortState,
+					newKey: key,
 					regKey: ListViewHelper.ListViewsRegistry.View_File_Certificates);
 			}
 		}

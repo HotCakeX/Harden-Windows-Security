@@ -16,16 +16,16 @@
 //
 
 using System;
+using System.Threading.Tasks;
+using AppControlManager.Others;
+using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Media;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
-using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI.Media;
-using System.Threading.Tasks;
 using Windows.UI;
-using AppControlManager.Others;
 
 #if HARDEN_SYSTEM_SECURITY
 #pragma warning disable CA1852

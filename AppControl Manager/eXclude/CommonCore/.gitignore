@@ -1,0 +1,6 @@
+/bin
+/obj
+/.vs
+/X64Output
+/ARM64Output
+CommonCore.csproj.user

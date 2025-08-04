@@ -253,21 +253,24 @@
                                     </interactivity:Interaction.Behaviors>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth1, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth2, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth3, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth4, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth5, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth6, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth7, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth8, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth9, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth10, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth11, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth12, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth13, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth14, Mode=OneWay}" />
+                                            <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth2, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth3, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth4, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth5, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth6, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth7, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth8, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth9, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth10, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth11, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth12, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth13, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.FileBasedColumnWidth14, Mode=TwoWay}" MinWidth="50" />
                                         </Grid.ColumnDefinitions>
+
+                                        <!-- Header TextBlocks -->
                                         <TextBlock x:Uid="IDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock x:Uid="FriendlyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Hash" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
@@ -282,6 +285,21 @@
                                         <TextBlock x:Uid="PackageVersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="App IDs" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Type" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+
+                                        <!-- GridSplitters between columns -->
+                                        <controls:GridSplitter Grid.Column="1" />
+                                        <controls:GridSplitter Grid.Column="2" />
+                                        <controls:GridSplitter Grid.Column="3" />
+                                        <controls:GridSplitter Grid.Column="4" />
+                                        <controls:GridSplitter Grid.Column="5" />
+                                        <controls:GridSplitter Grid.Column="6" />
+                                        <controls:GridSplitter Grid.Column="7" />
+                                        <controls:GridSplitter Grid.Column="8" />
+                                        <controls:GridSplitter Grid.Column="9" />
+                                        <controls:GridSplitter Grid.Column="10" />
+                                        <controls:GridSplitter Grid.Column="11" />
+                                        <controls:GridSplitter Grid.Column="12" />
+                                        <controls:GridSplitter Grid.Column="13" />
                                     </Grid>
                                 </Border>
                             </customUI:ListViewV2.Header>
@@ -362,12 +380,12 @@
                         </win:Grid.ChildrenTransitions>
 
                         <customUI:ListViewV2 RegistryKey="PolicyEditor_SignatureBasedRules"
-                                             SelectionMode="Extended"
-                                             AllowDrop="{x:Bind ViewModel.IsNotElevated}"
-                                             CanDragItems="{x:Bind ViewModel.IsNotElevated}"
-                                             CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
-                                             IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                                             ItemsSource="{x:Bind ViewModel.SignatureRulesCollection, Mode=OneWay}">
+                     SelectionMode="Extended"
+                     AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+                     CanDragItems="{x:Bind ViewModel.IsNotElevated}"
+                     CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
+                     IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                     ItemsSource="{x:Bind ViewModel.SignatureRulesCollection, Mode=OneWay}">
 
                             <customUI:ListViewV2.Header>
 
@@ -377,14 +395,17 @@
                                     </interactivity:Interaction.Behaviors>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth1, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth2, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth3, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth4, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth5, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth6, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth7, Mode=OneWay}" />
+                                            <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->
+                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth2, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth3, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth4, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth5, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth6, Mode=TwoWay}" MinWidth="50" />
+                                            <ColumnDefinition Width="{x:Bind ViewModel.SignatureBasedColumnWidth7, Mode=TwoWay}" MinWidth="50" />
                                         </Grid.ColumnDefinitions>
+
+                                        <!-- Header TextBlocks -->
                                         <TextBlock x:Uid="IDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Name" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Cert Root" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
@@ -392,6 +413,14 @@
                                         <TextBlock Text="Cert OEM ID" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Cert EKU" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
                                         <TextBlock Text="Cert Issuer" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+
+                                        <!-- GridSplitters between columns -->
+                                        <controls:GridSplitter Grid.Column="1" />
+                                        <controls:GridSplitter Grid.Column="2" />
+                                        <controls:GridSplitter Grid.Column="3" />
+                                        <controls:GridSplitter Grid.Column="4" />
+                                        <controls:GridSplitter Grid.Column="5" />
+                                        <controls:GridSplitter Grid.Column="6" />
                                     </Grid>
                                 </Border>
                             </customUI:ListViewV2.Header>

@@ -37,6 +37,8 @@ using HardenSystemSecurity;
 using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics;
 using AppControlManager.IntelGathering;
+using System.Collections.ObjectModel;
+
 #endif
 
 namespace AppControlManager.ViewModels;
@@ -435,7 +437,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 	private static readonly TimeSpan TypeWriterAudioStartTime = TimeSpan.FromMilliseconds(167);
 
-	[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
 	internal static void EmitTypingSound()
 	{
 		if (!App.Settings.SoundSetting) return;
@@ -448,5 +449,15 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// The current user's profile directory path.
 	/// </summary>
 	internal static readonly string UserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+#if APP_CONTROL_MANAGER
+
+	// Create PropertyFilterItem collections only once lazily.
+	private static readonly Lazy<ObservableCollection<ListViewHelper.PropertyFilterItem>> _lazyItems
+		= new(valueFactory: ListViewHelper.CreatePropertyFilterItems, isThreadSafe: true);
+
+	internal ObservableCollection<ListViewHelper.PropertyFilterItem> PropertyFilterItems => _lazyItems.Value;
+
+#endif
 
 }

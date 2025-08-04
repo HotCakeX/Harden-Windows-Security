@@ -75,6 +75,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			() => Step3InfoBar_IsClosable, value => Step3InfoBar_IsClosable = value,
 			() => Step3InfoBar_Title, value => Step3InfoBar_Title = value);
 
+		// To adjust the initial width of the columns, giving them nice paddings.
 		CalculateColumnWidthLocalFiles();
 		CalculateColumnWidthEventLogs();
 	}
@@ -1615,12 +1616,12 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
-					mapping.Getter,
-					LocalFilesAllFileIdentitiesSearchText,
-					LocalFilesAllFileIdentities,
-					LocalFilesFileIdentities,
-					SortStateLocalFiles,
-					key,
+					keySelector: mapping.Getter,
+					searchBoxText: LocalFilesAllFileIdentitiesSearchText,
+					originalList: LocalFilesAllFileIdentities,
+					observableCollection: LocalFilesFileIdentities,
+					sortState: SortStateLocalFiles,
+					newKey: key,
 					regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults);
 			}
 		}
@@ -1633,13 +1634,14 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			// Look up the mapping using the key.
 			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
-				ListViewHelper.SortColumn(mapping.Getter,
-										  EventLogsAllFileIdentitiesSearchText,
-										  EventLogsAllFileIdentities,
-										  EventLogsFileIdentities,
-										  SortStateEventLogs,
-										  key,
-										  regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults);
+				ListViewHelper.SortColumn(
+						keySelector: mapping.Getter,
+						searchBoxText: EventLogsAllFileIdentitiesSearchText,
+						originalList: EventLogsAllFileIdentities,
+						observableCollection: EventLogsFileIdentities,
+						sortState: SortStateEventLogs,
+						newKey: key,
+						regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults);
 			}
 		}
 	}

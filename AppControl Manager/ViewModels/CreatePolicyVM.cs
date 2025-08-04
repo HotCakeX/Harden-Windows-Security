@@ -20,6 +20,7 @@ using System.IO;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.Pages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -760,6 +761,11 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void RMMBlockingPolicyCreateButton_Click()
 	{
+		await RMMBlockingPolicyCreateButton_Private();
+	}
+
+	private async Task RMMBlockingPolicyCreateButton_Private()
+	{
 		bool errorsOccurred = false;
 
 		try
@@ -807,6 +813,46 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal async void OpenInDefaultFileHandler_RMMBlockingPolicy() => await OpenInDefaultFileHandler(_policyPathRMMBlocking);
 
 	internal async void OpenInConfigurePolicyRuleOptions_RMMBlockingPolicy() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathRMMBlocking);
+
+	/// <summary>
+	/// The method used to open the <see cref="CreatePolicy"/> page from other parts of the application.
+	/// </summary>
+	/// <param name="type"></param>
+	/// <returns></returns>
+	internal async Task OpenInCreatePolicy(LaunchProtocolActions type)
+	{
+		try
+		{
+			App._nav.Navigate(typeof(CreatePolicy), null);
+
+			switch (type)
+			{
+				case LaunchProtocolActions.DeployRMMAuditPolicy:
+					{
+						RMMBlockingCreateAndDeploy = true;
+						RMMBlockingAudit = true;
+						await RMMBlockingPolicyCreateButton_Private();
+						break;
+					}
+				case LaunchProtocolActions.DeployRMMBlockPolicy:
+					{
+						RMMBlockingCreateAndDeploy = true;
+						RMMBlockingAudit = false;
+						await RMMBlockingPolicyCreateButton_Private();
+						break;
+					}
+				case LaunchProtocolActions.PolicyEditor:
+				case LaunchProtocolActions.FileSignature:
+				case LaunchProtocolActions.FileHashes:
+				default:
+					break;
+			}
+		}
+		catch (Exception ex)
+		{
+			RMMBlockingInfoBar.WriteError(ex);
+		}
+	}
 
 	#endregion
 

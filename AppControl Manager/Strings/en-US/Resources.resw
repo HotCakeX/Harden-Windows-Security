@@ -5728,4 +5728,20 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Open Logs Directory</value>
   </data>
+  <!--New-->
+  <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>Export To JSON File</value>
+  </data>
+    <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Export all of the data in the ListView to JSON.</value>
+  </data>
+    <data name="ExportToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+     <value>Export all of the data in the ListView to JSON.</value>
+  </data>
+  <data name="ExportingToJSONMsg" xml:space="preserve">
+     <value>Exporting data to JSON file, please wait...</value>
+  </data>
+    <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
+     <value>Successfully exported {0} data to JSON and saved them in: '{1}'</value>
+  </data>
 </root>

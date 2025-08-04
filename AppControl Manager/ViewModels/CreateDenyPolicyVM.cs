@@ -619,6 +619,21 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		UpdateTotalFiles();
 	}
 
+	/// <summary>
+	/// Exports data to JSON.
+	/// </summary>
+	internal async void ExportFilesAndFoldersToJsonButton_Click()
+	{
+		try
+		{
+			await FileIdentity.ExportToJson(FilesAndFoldersScanResults, FilesAndFoldersInfoBar);
+		}
+		catch (Exception ex)
+		{
+			FilesAndFoldersInfoBar.WriteError(ex);
+		}
+	}
+
 	#endregion
 
 	#region Package Family Names

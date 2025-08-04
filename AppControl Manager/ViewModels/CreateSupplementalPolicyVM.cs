@@ -749,6 +749,21 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		args.Handled = true;
 	}
 
+	/// <summary>
+	/// Exports data to JSON.
+	/// </summary>
+	internal async void ExportFilesAndFoldersToJsonButton_Click()
+	{
+		try
+		{
+			await FileIdentity.ExportToJson(FilesAndFoldersScanResults, FilesAndFoldersInfoBar);
+		}
+		catch (Exception ex)
+		{
+			FilesAndFoldersInfoBar.WriteError(ex);
+		}
+	}
+
 	#endregion
 
 	#region Certificates scan
@@ -1872,6 +1887,21 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	{
 		_OpenInFileExplorerStrictKernelMode();
 		args.Handled = true;
+	}
+
+	/// <summary>
+	/// Exports data to JSON.
+	/// </summary>
+	internal async void ExportStrictKernelModeToJsonButton_Click()
+	{
+		try
+		{
+			await FileIdentity.ExportToJson(StrictKernelModeScanResults, StrictKernelModeInfoBar);
+		}
+		catch (Exception ex)
+		{
+			StrictKernelModeInfoBar.WriteError(ex);
+		}
 	}
 
 	#endregion

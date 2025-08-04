@@ -28,58 +28,78 @@
 
         </controls:WrapPanel>
 
-        <Border Grid.Row="1" Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
+        <Expander Grid.Row="1" Margin="0,0,0,10" Padding="8" HorizontalAlignment="Stretch">
+            <Expander.Header>
 
-            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
-                <DropDownButton x:Uid="ExtraActionsDropDownButton">
-                    <DropDownButton.Flyout>
+                    <DropDownButton x:Uid="ExtraActionsDropDownButton">
+                        <DropDownButton.Flyout>
 
-                        <MenuFlyout Placement="Bottom">
+                            <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.StrictKernel_SelectAll_Click}">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE762;"/>
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.StrictKernel_SelectAll_Click}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE762;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.StrictKernel_DeSelectAll_Click}">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE8E6;"/>
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.StrictKernel_DeSelectAll_Click}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8E6;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Click="{x:Bind ViewModel.StrictKernel_ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
-                                <MenuFlyoutItem.Icon>
-                                    <SymbolIcon Symbol="Delete" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                <MenuFlyoutItem Click="{x:Bind ViewModel.StrictKernel_ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
+                                    <MenuFlyoutItem.Icon>
+                                        <SymbolIcon Symbol="Delete" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                        </MenuFlyout>
+                            </MenuFlyout>
 
-                    </DropDownButton.Flyout>
-                </DropDownButton>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
 
-                <TextBox x:Uid="TotalLogsTextBlock"
+                    <TextBox x:Uid="TotalLogsTextBlock"
                 Text="{x:Bind ViewModel.TotalCountOfTheFilesStrictKernelModeTextBox, Mode=OneWay}"
                 IsReadOnly="True"
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"/>
 
-                <TextBox Width="300"
+                    <TextBox Width="300"
                          x:Uid="SearchBoxTextBox"
                          Text="{x:Bind ViewModel.StrictKernelModeResultsSearchTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center" />
 
-            </controls:WrapPanel>
-        </Border>
+                </controls:WrapPanel>
+            </Expander.Header>
+
+            <Expander.Content>
+
+                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+
+                    <Button Click="{x:Bind ViewModel.ExportStrictKernelModeToJsonButton_Click}"
+                            x:Uid="ExportToJSONButton">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <FontIcon Glyph="&#xE96A;" />
+                                <TextBlock x:Uid="ExportToJSONButtonText" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                </controls:WrapPanel>
+
+            </Expander.Content>
+        </Expander>
 
         <customUI:ListViewV2 x:Name="FileIdentitiesListView"
-RegistryKey="SupplementalPolicy_StrictKernelMode_ScanResults"
-Grid.Row="2"
-SelectionMode="Extended"
-ItemsSource="{x:Bind ViewModel.StrictKernelModeScanResults, Mode=OneWay}">
+                             RegistryKey="SupplementalPolicy_StrictKernelMode_ScanResults"
+                             Grid.Row="2"
+                             SelectionMode="Extended"
+                             ItemsSource="{x:Bind ViewModel.StrictKernelModeScanResults, Mode=OneWay}">
 
             <customUI:ListViewV2.Header>
 

@@ -69,283 +69,302 @@
             </customUI:InfoBarV2.ActionButton>
         </customUI:InfoBarV2>
 
-        <Border Grid.Row="2" Margin="0,10,0,10"
-            Style="{StaticResource GridCardStyle}" Padding="8">
+        <Expander Grid.Row="2" Margin="0,10,0,10" Padding="8" HorizontalAlignment="Stretch">
+            <Expander.Header>
 
-            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
-                <ProgressRing Visibility="{x:Bind ViewModel.ScanLogsProgressRingVisibility, Mode=OneWay}"
+                    <ProgressRing Visibility="{x:Bind ViewModel.ScanLogsProgressRingVisibility, Mode=OneWay}"
                               IsActive="{x:Bind ViewModel.ScanLogsProgressRingIsActive, Mode=OneWay}" />
 
-                <!-- Scan button -->
-                <Button x:Uid="ScanLogsButton"
+                    <!-- Scan button -->
+                    <Button x:Uid="ScanLogsButton"
                         Style="{StaticResource AccentButtonStyle}"
                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                         Click="{x:Bind ViewModel.ScanLogs_Click}" >
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xEE6F;" />
-                            <TextBlock x:Uid="ScanLogsTextBlock" Margin="5,0,0,0" />
-                        </StackPanel>
-                    </Button.Content>
-                </Button>
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xEE6F;" />
+                                <TextBlock x:Uid="ScanLogsTextBlock" Margin="5,0,0,0" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
 
-                <SplitButton ToolTipService.ToolTip="Create the supplemental policy"
+                    <SplitButton ToolTipService.ToolTip="Create the supplemental policy"
                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                              Click="{x:Bind ViewModel.CreatePolicyButton_Click}">
 
-                    <SplitButton.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xECCD;" />
-                            <TextBlock Text="{x:Bind ViewModel.CreatePolicyButtonContent, Mode=OneWay}" Margin="5,0,0,0" />
-                        </StackPanel>
-                    </SplitButton.Content>
+                        <SplitButton.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xECCD;" />
+                                <TextBlock Text="{x:Bind ViewModel.CreatePolicyButtonContent, Mode=OneWay}" Margin="5,0,0,0" />
+                            </StackPanel>
+                        </SplitButton.Content>
 
-                    <SplitButton.Flyout>
-                        <Flyout Placement="Bottom">
+                        <SplitButton.Flyout>
+                            <Flyout Placement="Bottom">
 
-                            <Flyout.FlyoutPresenterStyle>
-                                <Style TargetType="FlyoutPresenter">
-                                    <Setter Property="Padding" Value="0" />
-                                    <!-- Same corner radius as the one in PanelStyle  -->
-                                    <Setter Property="CornerRadius" Value="8" />
+                                <Flyout.FlyoutPresenterStyle>
+                                    <Style TargetType="FlyoutPresenter">
+                                        <Setter Property="Padding" Value="0" />
+                                        <!-- Same corner radius as the one in PanelStyle  -->
+                                        <Setter Property="CornerRadius" Value="8" />
 
-                                    <!--
+                                        <!--
                                     Important: the "resolution order" for widths (at least in winui) is minwidth, maxwidth, width
                                     Width does not override MaxWidth
                                     https://learn.microsoft.com/uwp/api/windows.ui.xaml.frameworkelement.maxwidth?view=winrt-26100#remarks
                                     -->
-                                    <Setter Property="MaxWidth" Value="1234" />
-                                </Style>
-                            </Flyout.FlyoutPresenterStyle>
+                                        <Setter Property="MaxWidth" Value="1234" />
+                                    </Style>
+                                </Flyout.FlyoutPresenterStyle>
 
-                            <StackPanel VerticalAlignment="Top" Orientation="Vertical" Spacing="8">
-                                <controls:Segmented x:Name="segmentedControl"
+                                <StackPanel VerticalAlignment="Top" Orientation="Vertical" Spacing="8">
+                                    <controls:Segmented x:Name="segmentedControl"
                                                     HorizontalAlignment="Stretch"
                                                     SelectedIndex="{x:Bind ViewModel.SelectedCreationMethod, Mode=TwoWay}">
-                                    <controls:SegmentedItem x:Uid="AddToPolicySegmentedItem"
+                                        <controls:SegmentedItem x:Uid="AddToPolicySegmentedItem"
                                                             Tag="AddToPolicy"
                                                             Width="160"
                                                             Icon="{ui:FontIcon Glyph=&#xEB49;}" />
-                                    <controls:SegmentedItem x:Uid="BasePolicyFileSegmentedItem"
+                                        <controls:SegmentedItem x:Uid="BasePolicyFileSegmentedItem"
                                                             Tag="BasePolicyFile"
                                                             Width="160"
                                                             Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
-                                    <controls:SegmentedItem x:Uid="BasePolicyGUIDSegmentedItem"
+                                        <controls:SegmentedItem x:Uid="BasePolicyGUIDSegmentedItem"
                                                             Tag="BaseGUID"
                                                             Width="160"
                                                             Icon="{ui:FontIcon Glyph=&#xEB49;}"/>
-                                </controls:Segmented>
-                                <controls:SwitchPresenter Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center">
+                                    </controls:Segmented>
+                                    <controls:SwitchPresenter Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center">
 
-                                    <controls:Case Value="AddToPolicy">
-                                        <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
+                                        <controls:Case Value="AddToPolicy">
+                                            <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
                                             animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
                                             Style="{StaticResource PanelStyle}">
 
-                                            <TextBlock Margin="5"
+                                                <TextBlock Margin="5"
                                                        VerticalAlignment="Center"
                                                        x:Uid="AddToPolicyDescription"
                                                        Width="310"
                                                        TextWrapping="WrapWholeWords"/>
 
-                                            <Button Margin="5"
+                                                <Button Margin="5"
                                                     x:Uid="FileBrowseButton"
                                                     Style="{StaticResource AccentButtonStyle}"
                                                     Click="{x:Bind ViewModel.AddToPolicyButton_Click}" />
 
-                                        </StackPanel>
-                                    </controls:Case>
-                                    <controls:Case Value="BasePolicyFile">
-                                        <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
+                                            </StackPanel>
+                                        </controls:Case>
+                                        <controls:Case Value="BasePolicyFile">
+                                            <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
                                                     animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
                                                     Style="{StaticResource PanelStyle}">
 
-                                            <TextBlock Margin="5"
+                                                <TextBlock Margin="5"
                                                        VerticalAlignment="Center"
                                                        x:Uid="BasePolicyFileDescription"
                                                        TextWrapping="WrapWholeWords"
                                                        Width="310" />
 
-                                            <Button Margin="5"
+                                                <Button Margin="5"
                                                     x:Uid="FileBrowseButton"
                                                     Style="{StaticResource AccentButtonStyle}"
                                                     Click="{x:Bind ViewModel.BasePolicyFileButton_Click}" />
-                                        </StackPanel>
-                                    </controls:Case>
+                                            </StackPanel>
+                                        </controls:Case>
 
-                                    <controls:Case Value="BaseGUID">
-                                        <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
+                                        <controls:Case Value="BaseGUID">
+                                            <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
                                              animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
                                              Style="{StaticResource PanelStyle}">
 
-                                            <TextBox x:Uid="BasePolicyGUIDDescription"
+                                                <TextBox x:Uid="BasePolicyGUIDDescription"
                                                      Width="300" Margin="10"
                                                      Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      VerticalAlignment="Center"
                                                      VerticalContentAlignment="Center" />
 
-                                            <Button Margin="5"
+                                                <Button Margin="5"
                                                     x:Uid="SubmitButton"
                                                     Style="{StaticResource AccentButtonStyle}"
                                                     Click="{x:Bind ViewModel.BaseGUIDSubmitButton_Click}" />
-                                        </StackPanel>
-                                    </controls:Case>
-                                </controls:SwitchPresenter>
-                            </StackPanel>
-                        </Flyout>
-                    </SplitButton.Flyout>
-                </SplitButton>
+                                            </StackPanel>
+                                        </controls:Case>
+                                    </controls:SwitchPresenter>
+                                </StackPanel>
+                            </Flyout>
+                        </SplitButton.Flyout>
+                    </SplitButton>
 
-                <customUI:ButtonV2 Content="Select Code Integrity EVTX Files"
+                    <customUI:ButtonV2 Content="Select Code Integrity EVTX Files"
                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                    Click="{x:Bind ViewModel.SelectCodeIntegrityEVTXFiles_Click}">
-                    <customUI:ButtonV2.Flyout>
-                        <Flyout>
-                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                        <customUI:ButtonV2.Flyout>
+                            <Flyout>
+                                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click}" />
+                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click}" />
 
-                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+                                    <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                <TextBox Text="{x:Bind ViewModel.CodeIntegrityEVTX, Mode=OneWay}"
+                                    <TextBox Text="{x:Bind ViewModel.CodeIntegrityEVTX, Mode=OneWay}"
                                          TextWrapping="Wrap"
                                          AcceptsReturn="True"
                                          IsSpellCheckEnabled="False"
                                          MinWidth="400"
                                          IsReadOnly="True" />
 
-                            </controls:WrapPanel>
-                        </Flyout>
-                    </customUI:ButtonV2.Flyout>
-                </customUI:ButtonV2>
+                                </controls:WrapPanel>
+                            </Flyout>
+                        </customUI:ButtonV2.Flyout>
+                    </customUI:ButtonV2>
 
-                <customUI:ButtonV2 Content="Select AppLocker EVTX Files"
+                    <customUI:ButtonV2 Content="Select AppLocker EVTX Files"
                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                    Click="{x:Bind ViewModel.SelectAppLockerEVTXFiles_Click}">
-                    <customUI:ButtonV2.Flyout>
-                        <Flyout>
-                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                        <customUI:ButtonV2.Flyout>
+                            <Flyout>
+                                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectedAppLockerEVTXFilesFlyout_Clear_Click}" />
+                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectedAppLockerEVTXFilesFlyout_Clear_Click}" />
 
-                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+                                    <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                <TextBox Text="{x:Bind ViewModel.AppLockerEVTX, Mode=OneWay}"
+                                    <TextBox Text="{x:Bind ViewModel.AppLockerEVTX, Mode=OneWay}"
                                          TextWrapping="Wrap"
                                          AcceptsReturn="True"
                                          IsSpellCheckEnabled="False"
                                          MinWidth="400"
                                          IsReadOnly="True" />
 
-                            </controls:WrapPanel>
-                        </Flyout>
-                    </customUI:ButtonV2.Flyout>
-                </customUI:ButtonV2>
+                                </controls:WrapPanel>
+                            </Flyout>
+                        </customUI:ButtonV2.Flyout>
+                    </customUI:ButtonV2>
 
-                <DropDownButton x:Uid="ExtraActionsDropDownButton"
+                    <DropDownButton x:Uid="ExtraActionsDropDownButton"
                                 IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
-                    <DropDownButton.Flyout>
+                        <DropDownButton.Flyout>
 
-                        <MenuFlyout Placement="Bottom">
+                            <MenuFlyout Placement="Bottom">
 
-                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.SelectAll_Click}">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE762;"/>
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.SelectAll_Click}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE762;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.DeSelectAll_Click}">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE8E6;"/>
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem" Click="{x:Bind ViewModel.DeSelectAll_Click}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8E6;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                            <MenuFlyoutItem Click="{x:Bind ViewModel.ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
-                                <MenuFlyoutItem.Icon>
-                                    <SymbolIcon Symbol="Delete" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                <MenuFlyoutItem Click="{x:Bind ViewModel.ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
+                                    <MenuFlyoutItem.Icon>
+                                        <SymbolIcon Symbol="Delete" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                            <MenuFlyoutSeparator/>
+                                <MenuFlyoutSeparator/>
 
-                            <ToggleMenuFlyoutItem x:Uid="DeployAfterCreationMenuFlyoutItem" IsChecked="{x:Bind ViewModel.DeployPolicyToggle, Mode=TwoWay}">
-                                <ToggleMenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE896;"/>
-                                </ToggleMenuFlyoutItem.Icon>
+                                <ToggleMenuFlyoutItem x:Uid="DeployAfterCreationMenuFlyoutItem" IsChecked="{x:Bind ViewModel.DeployPolicyToggle, Mode=TwoWay}">
+                                    <ToggleMenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE896;"/>
+                                    </ToggleMenuFlyoutItem.Icon>
 
-                            </ToggleMenuFlyoutItem>
+                                </ToggleMenuFlyoutItem>
 
-                        </MenuFlyout>
+                            </MenuFlyout>
 
-                    </DropDownButton.Flyout>
-                </DropDownButton>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
 
-                <TextBox x:Uid="TotalLogsTextBlock"
+                    <TextBox x:Uid="TotalLogsTextBlock"
                          Text="{x:Bind ViewModel.TotalCountOfTheFilesTextBox, Mode=OneWay}"
                          IsReadOnly="True"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center"/>
 
-                <TextBox Width="300"
+                    <TextBox Width="300"
                          IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                          x:Uid="SearchBoxTextBox"
                          Text="{x:Bind ViewModel.SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center" />
 
-                <Button x:Uid="PolicyNameColumnHeaderBtn" IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
-                    <Button.Flyout>
-                        <Flyout>
-                            <Flyout.FlyoutPresenterStyle>
-                                <Style TargetType="FlyoutPresenter">
-                                    <Setter Property="CornerRadius" Value="8" />
-                                    <Setter Property="MaxWidth" Value="1234" />
-                                </Style>
-                            </Flyout.FlyoutPresenterStyle>
+                    <Button x:Uid="PolicyNameColumnHeaderBtn" IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
+                        <Button.Flyout>
+                            <Flyout>
+                                <Flyout.FlyoutPresenterStyle>
+                                    <Style TargetType="FlyoutPresenter">
+                                        <Setter Property="CornerRadius" Value="8" />
+                                        <Setter Property="MaxWidth" Value="1234" />
+                                    </Style>
+                                </Flyout.FlyoutPresenterStyle>
 
-                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="3" VerticalSpacing="8">
-                                <TextBox Width="300"
+                                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="3" VerticalSpacing="8">
+                                    <TextBox Width="300"
                                          Header="Optional: Choose a policy name"
                                          Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          PlaceholderText="Policy Name..."/>
-                            </controls:WrapPanel>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
+                                </controls:WrapPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
 
-                <CalendarDatePicker x:Uid="FilterByDateCalendarDatePicker"
+                    <CalendarDatePicker x:Uid="FilterByDateCalendarDatePicker"
                                     Date="{x:Bind ViewModel.DatePickerDate, Mode=TwoWay}"
                                     IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
 
-                <ComboBox x:Uid="ScanLevelComboBox"
+                    <ComboBox x:Uid="ScanLevelComboBox"
                           IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                           SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
                           SelectedIndex="0"
                           ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
-                                <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                    <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
 
 
-                <ToggleButton IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"
+                    <ToggleButton IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"
                               IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                               x:Uid="OnlyIncludeSelectedItemsToggleButton" />
 
-            </controls:WrapPanel>
-        </Border>
+                </controls:WrapPanel>
+            </Expander.Header>
+
+            <Expander.Content>
+
+                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+
+                    <Button Click="{x:Bind ViewModel.ExportToJsonButton_Click}"
+                            x:Uid="ExportToJSONButton">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <FontIcon Glyph="&#xE96A;" />
+                                <TextBlock x:Uid="ExportToJSONButtonText" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                </controls:WrapPanel>
+
+            </Expander.Content>
+        </Expander>
 
         <customUI:ListViewV2 x:Name="FileIdentitiesListView"
-          RegistryKey="Event_Logs"
-          Grid.Row="3"
-          SelectionMode="Extended"
-          ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}">
+                             RegistryKey="Event_Logs"
+                             Grid.Row="3"
+                             SelectionMode="Extended"
+                             ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}">
 
             <customUI:ListViewV2.Header>
 

@@ -1048,4 +1048,27 @@ DeviceEvents
 		AuthCompanionCLS?.Dispose();
 	}
 
+	/// <summary>
+	/// Event handler for the Export To JSON button
+	/// </summary>
+	internal async void ExportToJsonButton_Click()
+	{
+		try
+		{
+			AreElementsEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			await FileIdentity.ExportToJson(FileIdentities, MainInfoBar);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
 }

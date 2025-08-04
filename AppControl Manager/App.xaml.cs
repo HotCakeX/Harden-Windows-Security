@@ -505,6 +505,8 @@ public partial class App : Application
 			{
 				if (Enum.TryParse(Settings.LaunchActivationAction, true, out ViewModelBase.LaunchProtocolActions parsedAction))
 				{
+					// TODO: Remove this suppression after implementing policy deployment through CLI properly.
+#pragma warning disable IDE0010
 					switch (parsedAction)
 					{
 						case ViewModelBase.LaunchProtocolActions.PolicyEditor:

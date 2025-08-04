@@ -17,8 +17,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using AppControlManager.Others;
 using AppControlManager.ViewModels;
 
 namespace AppControlManager.IntelGathering;
@@ -334,4 +339,48 @@ internal sealed class FileIdentity
 		}
 		return hash;
 	}
+
+	/// <summary>
+	/// Exports the FileIdentities to JSON with UI interaction and state management.
+	/// </summary>
+	/// <param name="fileIdentities">The collection of FileIdentity objects to export</param>
+	/// <param name="infoBarSettings">InfoBar settings for displaying messages</param>
+	internal static async Task ExportToJson(
+		IEnumerable<FileIdentity> fileIdentities,
+		InfoBarSettings infoBarSettings)
+	{
+		DateTime now = DateTime.Now;
+		string formattedDateTime = now.ToString("yyyy-MM-dd_HH-mm-ss");
+		string fileName = $"AppControlManager_Data_Export_{formattedDateTime}.json";
+
+		string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, fileName);
+
+		if (savePath is null)
+			return;
+
+		infoBarSettings.WriteInfo(GlobalVars.GetStr("ExportingToJSONMsg"));
+
+		List<FileIdentity> dataToExport = [];
+
+		await Task.Run(() =>
+		{
+			dataToExport = fileIdentities.ToList();
+
+			string jsonString = JsonSerializer.Serialize(
+				dataToExport,
+				FileIdentityJsonSerializationContext.Default.ListFileIdentity);
+
+			File.WriteAllText(savePath, jsonString);
+		});
+
+		infoBarSettings.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedDataToJSON"), dataToExport.Count, savePath));
+	}
+}
+
+[JsonSerializable(typeof(FileIdentity))]
+[JsonSerializable(typeof(FileIdentity[]))]
+[JsonSerializable(typeof(List<FileIdentity>))]
+[JsonSerializable(typeof(ObservableCollection<FileIdentity>))]
+internal sealed partial class FileIdentityJsonSerializationContext : JsonSerializerContext
+{
 }

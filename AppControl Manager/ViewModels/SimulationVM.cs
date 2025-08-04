@@ -295,12 +295,12 @@ internal sealed partial class SimulationVM : ViewModelBase
 			if (SimulationOutputPropertyMappings.TryGetValue(key, out (string Label, Func<SimulationOutput, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
-					mapping.Getter,
-					SearchBoxTextBox,
-					AllSimulationOutputs,
-					SimulationOutputs,
-					SortState,
-					key,
+					keySelector: mapping.Getter,
+					searchBoxText: SearchBoxTextBox,
+					originalList: AllSimulationOutputs,
+					observableCollection: SimulationOutputs,
+					sortState: SortState,
+					newKey: key,
 					regKey: ListViewHelper.ListViewsRegistry.Simulation);
 			}
 		}

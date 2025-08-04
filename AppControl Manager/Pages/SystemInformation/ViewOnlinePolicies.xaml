@@ -398,14 +398,14 @@
         </Border>
 
         <customUI:ListViewV2
-           RegistryKey="Online_Deployed_Policies"
-           Grid.Row="2"
-           SelectionMode="Single"
-           IsEnabled="{x:Bind ViewModel.ListViewState, Mode=OneWay}"
-           SelectedIndex="{x:Bind ViewModel.ListViewSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-           SelectedItem="{x:Bind ViewModel.ListViewSelectedPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-           ItemsSource="{x:Bind ViewModel.AllPolicies, Mode=OneWay}"
-           SelectionChanged="{x:Bind ViewModel.DeployedPolicies_SelectionChanged}">
+RegistryKey="Online_Deployed_Policies"
+Grid.Row="2"
+SelectionMode="Single"
+IsEnabled="{x:Bind ViewModel.ListViewState, Mode=OneWay}"
+SelectedIndex="{x:Bind ViewModel.ListViewSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+SelectedItem="{x:Bind ViewModel.ListViewSelectedPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+ItemsSource="{x:Bind ViewModel.AllPolicies, Mode=OneWay}"
+SelectionChanged="{x:Bind ViewModel.DeployedPolicies_SelectionChanged}">
 
             <customUI:ListViewV2.Header>
 
@@ -415,19 +415,29 @@
                     </interactivity:Interaction.Behaviors>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth6, Mode=OneWay}" />
+                            <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth3, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth4, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth6, Mode=TwoWay}" MinWidth="50" />
                         </Grid.ColumnDefinitions>
+
+                        <!-- Header Buttons -->
                         <Button x:Uid="PolicyIDColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
                         <Button x:Uid="BasePolicyIDColumnHeaderBtn" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="BasePolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
                         <Button x:Uid="FriendlyNameColumnHeaderBtn" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="FriendlyName" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
                         <Button x:Uid="VersionColumnHeaderBtn" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="Version" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
                         <Button x:Uid="IsSignedPolicyColumnHeaderBtn" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsSignedPolicy" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
                         <Button x:Uid="PolicyOptionsColumnHeaderBtn" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyOptions" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+
+                        <!-- GridSplitters between columns -->
+                        <controls:GridSplitter Grid.Column="1" />
+                        <controls:GridSplitter Grid.Column="2" />
+                        <controls:GridSplitter Grid.Column="3" />
+                        <controls:GridSplitter Grid.Column="4" />
+                        <controls:GridSplitter Grid.Column="5" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>

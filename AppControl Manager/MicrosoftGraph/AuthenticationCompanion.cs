@@ -18,10 +18,10 @@
 using System;
 using System.Collections.Specialized;
 using System.Threading;
-using Microsoft.UI.Xaml;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.Identity.Client;
+using Microsoft.UI.Xaml;
 
 namespace AppControlManager.MicrosoftGraph;
 

@@ -45,6 +45,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
 
+		// To adjust the initial width of the columns, giving them nice paddings.
 		CalculateColumnWidths();
 	}
 
@@ -725,12 +726,12 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			if (CiPolicyInfoPropertyMappings.TryGetValue(key, out (string Label, Func<CiPolicyInfo, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
-					mapping.Getter,
-					SearchBoxTextBox,
-					AllPoliciesOutput,
-					AllPolicies,
-					SortState,
-					key,
+					keySelector: mapping.Getter,
+					searchBoxText: SearchBoxTextBox,
+					originalList: AllPoliciesOutput,
+					observableCollection: AllPolicies,
+					sortState: SortState,
+					newKey: key,
 					regKey: ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies);
 			}
 		}

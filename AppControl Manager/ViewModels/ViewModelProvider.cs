@@ -16,11 +16,11 @@
 //
 
 using System;
+using System.Threading;
 using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.WindowComponents;
 using Windows.Storage;
-using System.Threading;
 
 namespace AppControlManager.ViewModels;
 

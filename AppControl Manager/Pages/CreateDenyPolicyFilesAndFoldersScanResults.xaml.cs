@@ -78,12 +78,12 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
-					mapping.Getter,
-					ViewModel.FilesAndFoldersScanResultsSearchTextBox,
-					ViewModel.filesAndFoldersScanResultsList,
-					ViewModel.FilesAndFoldersScanResults,
-					ViewModel.SortStateFilesAndFolders,
-					key,
+					keySelector: mapping.Getter,
+					searchBoxText: ViewModel.FilesAndFoldersScanResultsSearchTextBox,
+					originalList: ViewModel.filesAndFoldersScanResultsList,
+					observableCollection: ViewModel.FilesAndFoldersScanResults,
+					sortState: ViewModel.SortStateFilesAndFolders,
+					newKey: key,
 					regKey: ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults);
 			}
 		}

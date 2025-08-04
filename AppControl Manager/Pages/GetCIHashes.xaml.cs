@@ -16,13 +16,13 @@
 //
 
 using System;
+using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Media;
-using AppControlManager.ViewModels;
 
 namespace AppControlManager.Pages;
 

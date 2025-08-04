@@ -76,10 +76,10 @@
         </Border>
 
         <customUI:ListViewV2 x:Name="FileIdentitiesListView"
-            RegistryKey="SupplementalPolicy_StrictKernelMode_ScanResults"
-            Grid.Row="2"
-            SelectionMode="Extended"
-            ItemsSource="{x:Bind ViewModel.StrictKernelModeScanResults, Mode=OneWay}">
+RegistryKey="SupplementalPolicy_StrictKernelMode_ScanResults"
+Grid.Row="2"
+SelectionMode="Extended"
+ItemsSource="{x:Bind ViewModel.StrictKernelModeScanResults, Mode=OneWay}">
 
             <customUI:ListViewV2.Header>
 
@@ -89,25 +89,28 @@
                     </interactivity:Interaction.Behaviors>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode6, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode7, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode8, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode9, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode10, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode11, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode12, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode13, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode14, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode15, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode16, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode17, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode18, Mode=OneWay}" />
+                            <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode1, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode2, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode3, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode4, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode5, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode6, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode7, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode8, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode9, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode10, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode11, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode12, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode13, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode14, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode15, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode16, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode17, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidthStrictKernelMode18, Mode=TwoWay}" MinWidth="50" />
                         </Grid.ColumnDefinitions>
+
+                        <!-- Header Buttons -->
                         <Button x:Uid="FileNameColumnHeaderBtn" Tag="FileName" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
                         <Button x:Uid="SignatureStatusColumnHeaderBtn" Tag="SignatureStatus" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
                         <Button x:Uid="OriginalFileNameColumnHeaderBtn" Tag="OriginalFileName" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
@@ -126,6 +129,25 @@
                         <Button x:Uid="FilePublishersColumnHeaderBtn" Tag="FilePublishersToDisplay" Grid.Column="15" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
                         <Button x:Uid="IsECCSignedColumnHeaderBtn" Tag="IsECCSigned" Grid.Column="16" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
                         <Button x:Uid="OpusDataColumnHeaderBtn" Tag="Opus" Grid.Column="17" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="HeaderColumnSortingButton_Click"/>
+
+                        <!-- GridSplitters between columns -->
+                        <controls:GridSplitter Grid.Column="1" />
+                        <controls:GridSplitter Grid.Column="2" />
+                        <controls:GridSplitter Grid.Column="3" />
+                        <controls:GridSplitter Grid.Column="4" />
+                        <controls:GridSplitter Grid.Column="5" />
+                        <controls:GridSplitter Grid.Column="6" />
+                        <controls:GridSplitter Grid.Column="7" />
+                        <controls:GridSplitter Grid.Column="8" />
+                        <controls:GridSplitter Grid.Column="9" />
+                        <controls:GridSplitter Grid.Column="10" />
+                        <controls:GridSplitter Grid.Column="11" />
+                        <controls:GridSplitter Grid.Column="12" />
+                        <controls:GridSplitter Grid.Column="13" />
+                        <controls:GridSplitter Grid.Column="14" />
+                        <controls:GridSplitter Grid.Column="15" />
+                        <controls:GridSplitter Grid.Column="16" />
+                        <controls:GridSplitter Grid.Column="17" />
                     </Grid>
                 </Border>
             </customUI:ListViewV2.Header>

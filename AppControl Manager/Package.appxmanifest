@@ -144,6 +144,15 @@
           </uap:Protocol>
         </uap:Extension>
 
+        <!-- Service -->
+
+        <!--
+        <desktop6:Extension Category="windows.service" Executable="QuantumRelay.exe" EntryPoint="main">
+            <desktop6:Service Name="QuantumRelay" StartupType="auto" StartAccount="localSystem">
+            </desktop6:Service>
+        </desktop6:Extension>
+        -->
+
       </Extensions>
 
     </Application>
@@ -154,5 +163,11 @@
     <rescap:Capability Name="runFullTrust" />
     <rescap:Capability Name="allowElevation" />
     <rescap:Capability Name="packageQuery" />
+
+     <!--
+    <rescap:Capability Name="localSystemServices" />
+    <rescap:Capability Name="packagedServices" />
+    -->
+    
   </Capabilities>
 </Package>

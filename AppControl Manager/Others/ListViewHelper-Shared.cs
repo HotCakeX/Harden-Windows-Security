@@ -258,7 +258,8 @@ internal static partial class ListViewHelper
 		ObservableCollection<TElement> observableCollection,
 		SortState sortState,
 		string newKey,
-		ListViewsRegistry regKey)
+		ListViewsRegistry regKey,
+		string? propertyFilterValue = null)
 	{
 		// Get the ListView ScrollViewer info
 		ScrollViewer? Sv = GetScrollViewerFromCache(regKey);
@@ -281,7 +282,8 @@ internal static partial class ListViewHelper
 		}
 
 		// Choose the source (filtered vs. original)
-		bool isSearchEmpty = string.IsNullOrWhiteSpace(searchBoxText);
+		// If either the property search has text or the regular search box has text then use the Obvs Collection because that means the user is currently seeing a filtered data.
+		bool isSearchEmpty = string.IsNullOrEmpty(searchBoxText) && string.IsNullOrEmpty(propertyFilterValue);
 		List<TElement> sourceData = isSearchEmpty
 			? originalList
 			: observableCollection.ToList();

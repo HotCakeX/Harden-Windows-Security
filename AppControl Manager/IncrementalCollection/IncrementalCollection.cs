@@ -18,16 +18,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.IO.MemoryMappedFiles;
+using System.Runtime;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Data;
 using Windows.Foundation;
-using System.ComponentModel;
-using System.Threading;
-using System.Runtime;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity;

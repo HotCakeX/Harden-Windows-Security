@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using AppControlManager.ViewModels;
 
 namespace AppControlManager.IntelGathering;
@@ -25,73 +26,144 @@ namespace AppControlManager.IntelGathering;
 internal sealed class FileIdentity
 {
 	// The origin of this File Identity object, where it came from and how it was compiled
+	[JsonInclude]
 	internal FileIdentityOrigin Origin { get; init; }
 
 	// Whether the file is signed or unsigned
+	[JsonInclude]
 	internal SignatureStatus SignatureStatus { get; set; }
 
 	// Properties related to logs
+	[JsonInclude]
 	internal EventAction Action { get; init; }
+
+	[JsonInclude]
 	internal int EventID { get; init; }
+
+	[JsonInclude]
 	internal DateTime? TimeCreated { get; init; }
+
+	[JsonInclude]
 	internal string? ComputerName { get; init; }
+
+	[JsonInclude]
 	internal Guid? PolicyGUID { get; init; }
+
+	[JsonInclude]
 	internal bool? UserWriteable { get; init; }
+
+	[JsonInclude]
 	internal string? ProcessName { get; init; }
+
+	[JsonInclude]
 	internal string? RequestedSigningLevel { get; init; }
+
+	[JsonInclude]
 	internal string? ValidatedSigningLevel { get; init; }
+
+	[JsonInclude]
 	internal string? Status { get; init; }
+
+	[JsonInclude]
 	internal long? USN { get; init; }
+
+	[JsonInclude]
 	internal string? PolicyName { get; init; }
+
+	[JsonInclude]
 	internal string? PolicyID { get; init; }
+
+	[JsonInclude]
 	internal string? PolicyHash { get; init; }
+
+	[JsonInclude]
 	internal string? UserID { get; init; }
 
 	// Properties applicable to files in general
+	[JsonInclude]
 	internal string? FilePath { get; set; }
+
+	[JsonInclude]
 	internal string? FileName { get; set; }
+
+	[JsonInclude]
 	internal string? SHA1Hash { get; set; } // SHA1 Authenticode Hash with fallback to Flat hash for incompatible files
+
+	[JsonInclude]
 	internal string? SHA256Hash { get; set; } // SHA256 Authenticode Hash with fallback to Flat hash for incompatible files
+
+	[JsonInclude]
 	internal string? SHA1PageHash { get; set; } // 1st Page hash - Local file scanning provides this
+
+	[JsonInclude]
 	internal string? SHA256PageHash { get; set; } // 1st Page hash - Local file scanning provides this
+
+	[JsonInclude]
 	internal string? SHA1FlatHash { get; set; } // Flat file hashes - Event logs provide this
+
+	[JsonInclude]
 	internal string? SHA256FlatHash { get; set; } // Flat file hashes - Event logs provide this
+
+	[JsonInclude]
 	internal int SISigningScenario { get; set; } // 1 for user mode files - 0 for kernel mode files
+
+	[JsonInclude]
 	internal string? OriginalFileName { get; set; }
+
+	[JsonInclude]
 	internal string? InternalName { get; set; }
+
+	[JsonInclude]
 	internal string? FileDescription { get; set; }
+
+	[JsonInclude]
 	internal string? ProductName { get; set; }
+
+	[JsonInclude]
 	internal Version? FileVersion { get; set; }
+
+	[JsonInclude]
 	internal string? PackageFamilyName { get; set; }
 
 	// Signer and certificate information with a custom comparer to ensure data with the same PublisherTBSHash and IssuerTBSHash do not exist
+	[JsonIgnore]
 	internal HashSet<FileSignerInfo> FileSignerInfos { get; set; } = new HashSet<FileSignerInfo>(new FileSignerInfoComparer());
 
 	// Just for display purposes, only contains CNs of the signers
 	// FileSignerInfos is the one that has actual signing data.
+	[JsonIgnore]
 	internal HashSet<string> FilePublishers { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
 	// Computed property to join FilePublishers into a comma-separated string
+	[JsonInclude]
 	internal string FilePublishersToDisplay => string.Join(", ", FilePublishers);
 
 	// If the file has a WHQL signer
+	[JsonInclude]
 	internal bool? HasWHQLSigner { get; set; }
 
 	// Determines whether the file is signed by ECC algorithm or not
 	// AppControl does not support ECC Signed files yet
+	[JsonInclude]
 	internal bool? IsECCSigned { get; set; }
 
 	// Computed property to gather all OPUSInfo from FileSignerInfos and save them in a comma-separated string for displaying purposes only
+	[JsonInclude]
 	internal string Opus => string.Join(", ", FileSignerInfos
 		.Where(signerInfo => !string.IsNullOrEmpty(signerInfo.OPUSInfo))
 		.Select(signerInfo => signerInfo.OPUSInfo));
 
 	// Properties for the parent view model of every page that hosts ListViews for FileIdentity.
 	// They store references to the view model classes so we can access them via compiled binding in XAML.
+	[JsonIgnore]
 	internal AllowNewAppsVM? ParentViewModelAllowNewApps { get; set; }
+	[JsonIgnore]
 	internal CreateDenyPolicyVM? ParentViewModelCreateDenyPolicyVM { get; set; }
+	[JsonIgnore]
 	internal CreateSupplementalPolicyVM? ParentViewModelCreateSupplementalPolicyVM { get; set; }
+	[JsonIgnore]
 	internal EventLogsPolicyCreationVM? ParentViewModelEventLogsPolicyCreationVM { get; set; }
+	[JsonIgnore]
 	internal MDEAHPolicyCreationVM? ParentViewModelMDEAHPolicyCreationVM { get; set; }
 
 	/// <summary>

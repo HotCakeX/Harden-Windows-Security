@@ -73,7 +73,7 @@ internal static partial class ListViewHelper
 
 
 	/// <summary>
-	/// Applies the search (and optional date) filters to the provided data.
+	/// Applies the search, date, and property filters to the provided data.
 	/// </summary>
 	/// <param name="allFileIdentities">
 	/// The complete list of FileIdentity objects (unfiltered).
@@ -88,12 +88,20 @@ internal static partial class ListViewHelper
 	/// An optional DateTimeOffset for date filtering. If null, no date filtering is applied.
 	/// </param>
 	/// <param name="regKey">used to find the ListView in the cache.</param>
+	/// <param name="selectedPropertyFilter">
+	/// An optional PropertyFilterItem for property-based filtering. If null, no property filtering is applied.
+	/// </param>
+	/// <param name="propertyFilterValue">
+	/// The value to filter by for the selected property. If null or empty, no property filtering is applied.
+	/// </param>
 	internal static void ApplyFilters(
 		IEnumerable<FileIdentity> allFileIdentities,
 		ObservableCollection<FileIdentity> filteredCollection,
 		string? searchText,
 		DateTimeOffset? selectedDate,
-		ListViewsRegistry regKey
+		ListViewsRegistry regKey,
+		PropertyFilterItem? selectedPropertyFilter = null,
+		string? propertyFilterValue = null
 		)
 	{
 
@@ -144,6 +152,18 @@ internal static partial class ListViewHelper
 			);
 		}
 
+		// Apply property-based filter if specified
+		if (selectedPropertyFilter is not null && !string.IsNullOrEmpty(propertyFilterValue))
+		{
+			string filterValue = propertyFilterValue.Trim();
+			filteredResults = filteredResults.Where(item =>
+			{
+				object? propertyValue = selectedPropertyFilter.Getter(item);
+				return propertyValue is not null &&
+					   propertyValue.ToString()?.Contains(filterValue, StringComparison.OrdinalIgnoreCase) == true;
+			});
+		}
+
 		// Clear the ObservableCollection
 		filteredCollection.Clear();
 
@@ -153,11 +173,36 @@ internal static partial class ListViewHelper
 			filteredCollection.Add(item);
 		}
 
-
 		if (Sv != null && savedHorizontal.HasValue)
 		{
 			// restore horizontal scroll position
 			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 		}
+	}
+
+	/// <summary>
+	/// Creates a collection of PropertyFilterItem objects from FileIdentityPropertyMappings for use in ComboBox binding
+	/// </summary>
+	/// <returns>ObservableCollection of PropertyFilterItem objects</returns>
+	internal static ObservableCollection<PropertyFilterItem> CreatePropertyFilterItems()
+	{
+		ObservableCollection<PropertyFilterItem> items = [];
+		foreach (KeyValuePair<string, (string Label, Func<FileIdentity, object?> Getter)> mapping in FileIdentityPropertyMappings)
+		{
+			items.Add(new PropertyFilterItem(mapping.Key, mapping.Value.Label, mapping.Value.Getter));
+		}
+		return items;
+	}
+
+	/// <summary>
+	/// Represents a property that can be used for filtering
+	/// </summary>
+	internal sealed class PropertyFilterItem(string propertyKey, string displayName, Func<FileIdentity, object?> getter)
+	{
+		internal string PropertyKey => propertyKey;
+		internal string DisplayName => displayName;
+		internal Func<FileIdentity, object?> Getter => getter;
+
+		public override string ToString() => DisplayName;
 	}
 }

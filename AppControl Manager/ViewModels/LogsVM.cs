@@ -22,10 +22,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 
 #if HARDEN_SYSTEM_SECURITY
+using AppControlManager.ViewModels;
 namespace HardenSystemSecurity.ViewModels;
 #endif
 

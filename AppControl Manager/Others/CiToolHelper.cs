@@ -29,12 +29,15 @@ namespace AppControlManager.Others;
 // Any code that wants to use CiTool.exe must go through this class rather than contacting it directly
 internal static class CiToolHelper
 {
+	// Combine the path to CiTool.exe using the system's special folder path
+	private static readonly string CiToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
+
 	/// <summary>
 	/// Converts a 64-bit unsigned integer into a version type, used for converting the numbers from CiTool.exe output to proper versions.
 	/// </summary>
 	/// <param name="number">The 64-bit unsigned integer as a string.</param>
 	/// <returns>The parsed version</returns>
-	internal static Version Measure(string number)
+	private static Version Measure(string number)
 	{
 		try
 		{
@@ -73,7 +76,6 @@ internal static class CiToolHelper
 		}
 	}
 
-
 	/// <summary>
 	/// Gets a list of App Control policies on the system with filtering
 	/// </summary>
@@ -87,13 +89,10 @@ internal static class CiToolHelper
 		// Create an empty list of Policy objects to return at the end
 		List<CiPolicyInfo> policies = [];
 
-		// Combine the path to CiTool.exe using the system's special folder path
-		string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
-
 		// Set up the process start info to run CiTool.exe with necessary arguments
 		ProcessStartInfo processStartInfo = new()
 		{
-			FileName = ciToolPath,
+			FileName = CiToolPath,
 			Arguments = "-lp -json",   // Arguments to list policies and output as JSON
 			RedirectStandardOutput = true, // Capture the standard output
 			UseShellExecute = false,   // Do not use the OS shell to start the process
@@ -116,6 +115,10 @@ internal static class CiToolHelper
 				GlobalVars.GetStr("CommandExecutionFailedMessage"),
 				process.ExitCode));
 		}
+
+		// Execute CiTool.exe through the QuantumRelay service
+		// List<string> arguments = ["-lp", "-json"];
+		// string jsonOutput = AccessBridge.ExecuteCiToolAsync(arguments).GetAwaiter().GetResult();
 
 		// Parse the JSON into a JsonElement for easy traversal
 		using JsonDocument document = JsonDocument.Parse(Encoding.UTF8.GetBytes(jsonOutput));
@@ -162,7 +165,6 @@ internal static class CiToolHelper
 		return policies;
 	}
 
-
 	/// <summary>
 	/// Removes a deployed App Control policy from the system
 	/// </summary>
@@ -183,13 +185,10 @@ internal static class CiToolHelper
 		policyId = policyId.Trim('"', '"');
 		policyId = policyId.Trim('{', '}');
 
-		// Combine the path to CiTool.exe using the system's special folder path
-		string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
-
 		// Set up the process start info to run CiTool.exe with necessary arguments
 		ProcessStartInfo processStartInfo = new()
 		{
-			FileName = ciToolPath,
+			FileName = CiToolPath,
 			Arguments = $"--remove-policy \"{{{policyId}}}\" -json",   // Arguments to remove an App Control policy
 			RedirectStandardOutput = true, // Capture the standard output
 			UseShellExecute = false,   // Do not use the OS shell to start the process
@@ -216,8 +215,12 @@ internal static class CiToolHelper
 				)
 			);
 		}
-	}
 
+		// Execute CiTool.exe through the QuantumRelay service
+		// List<string> arguments = ["--remove-policy", $"\"{{{policyId}}}\"", "-json"];
+		// string jsonOutput = AccessBridge.ExecuteCiToolAsync(arguments).GetAwaiter().GetResult();
+		// Logger.Write(jsonOutput, LogTypeIntel.Information);
+	}
 
 	/// <summary>
 	/// Removes multiple deployed App Control policy from the system
@@ -226,10 +229,8 @@ internal static class CiToolHelper
 	/// <exception cref="ArgumentException"></exception>
 	internal static void RemovePolicy(List<string> policyIds)
 	{
-
 		foreach (string policyId in policyIds)
 		{
-
 			if (string.IsNullOrWhiteSpace(policyId))
 			{
 				continue;
@@ -240,13 +241,10 @@ internal static class CiToolHelper
 			string ID = policyId.Trim('"', '"');
 			ID = ID.Trim('{', '}');
 
-			// Combine the path to CiTool.exe using the system's special folder path
-			string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
-
 			// Set up the process start info to run CiTool.exe with necessary arguments
 			ProcessStartInfo processStartInfo = new()
 			{
-				FileName = ciToolPath,
+				FileName = CiToolPath,
 				Arguments = $"--remove-policy \"{{{ID}}}\" -json",   // Arguments to remove an App Control policy
 				RedirectStandardOutput = true, // Capture the standard output
 				UseShellExecute = false,   // Do not use the OS shell to start the process
@@ -273,9 +271,13 @@ internal static class CiToolHelper
 					)
 				);
 			}
+
+			// Execute CiTool.exe through the QuantumRelay service
+			// List<string> arguments = ["--remove-policy", $"\"{{{ID}}}\"", "-json"];
+			// string jsonOutput = AccessBridge.ExecuteCiToolAsync(arguments).GetAwaiter().GetResult();
+			// Logger.Write(jsonOutput, LogTypeIntel.Information);
 		}
 	}
-
 
 	/// <summary>
 	/// Deploys a Code Integrity policy on the system by accepting the .CIP file path
@@ -302,11 +304,6 @@ internal static class CiToolHelper
 				CipPath);
 		}
 
-		// Combine the path to CiTool.exe using the system's special folder path
-		string ciToolPath = Path.Combine(
-			Environment.GetFolderPath(Environment.SpecialFolder.System),
-			"CiTool.exe");
-
 		Logger.Write(
 			string.Format(
 				GlobalVars.GetStr("DeployingCipFileMessage"),
@@ -315,7 +312,7 @@ internal static class CiToolHelper
 		// Set up the process start info to run CiTool.exe with necessary arguments
 		ProcessStartInfo processStartInfo = new()
 		{
-			FileName = ciToolPath,
+			FileName = CiToolPath,
 			Arguments = $"--update-policy \"{CipPath}\" -json",   // Arguments to update the App Control policy
 			RedirectStandardOutput = true, // Capture the standard output
 			UseShellExecute = false,   // Do not use the OS shell to start the process
@@ -342,8 +339,12 @@ internal static class CiToolHelper
 					)
 				);
 		}
-	}
 
+		// Execute CiTool.exe through the QuantumRelay service
+		// List<string> arguments = ["--update-policy", $"\"{CipPath}\"", "-json"];
+		// string jsonOutput = AccessBridge.ExecuteCiToolAsync(arguments).GetAwaiter().GetResult();
+		// Logger.Write(jsonOutput, LogTypeIntel.Information);
+	}
 
 	/// <summary>
 	/// Refreshes the currently deployed policies on the system
@@ -351,13 +352,10 @@ internal static class CiToolHelper
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void RefreshPolicy()
 	{
-		// Combine the path to CiTool.exe using the system's special folder path
-		string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
-
 		// Set up the process start info to run CiTool.exe with the refresh argument
 		ProcessStartInfo processStartInfo = new()
 		{
-			FileName = ciToolPath,
+			FileName = CiToolPath,
 			Arguments = "--refresh -json",  // Arguments to refresh App Control policies
 			RedirectStandardOutput = true,  // Capture the standard output
 			UseShellExecute = false,        // Do not use the OS shell to start the process
@@ -384,15 +382,17 @@ internal static class CiToolHelper
 					)
 				);
 		}
+
+		// Execute CiTool.exe through the QuantumRelay service
+		// List<string> arguments = ["--refresh", "-json"];
+		// string jsonOutput = AccessBridge.ExecuteCiToolAsync(arguments).GetAwaiter().GetResult();
+		// Logger.Write(jsonOutput, LogTypeIntel.Information);
 	}
-
 }
-
 
 // Extension methods for JsonElement to simplify retrieving properties with default values
 internal static class JsonElementExtensions
 {
-
 	/// <summary>
 	/// Retrieves the value of a string property from a JSON element. If the property does not exist
 	/// or is not a string, the provided default value is returned.

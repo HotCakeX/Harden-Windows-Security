@@ -804,12 +804,12 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 			{
 				ListViewHelper.SortColumn(
-					mapping.Getter,
-					SearchBoxText,
-					AllFileIdentities,
-					FileIdentities,
-					SortState,
-					key,
+					keySelector: mapping.Getter,
+					searchBoxText: SearchBoxText,
+					originalList: AllFileIdentities,
+					observableCollection: FileIdentities,
+					sortState: SortState,
+					newKey: key,
 					regKey: ListViewHelper.ListViewsRegistry.Event_Logs);
 			}
 		}

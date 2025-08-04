@@ -16,11 +16,11 @@
 //
 
 using System;
-using AppControlManager.Others;
-using Microsoft.UI.Xaml.Controls;
 using AppControlManager.IntelGathering;
+using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 

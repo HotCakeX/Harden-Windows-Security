@@ -42,7 +42,7 @@ internal sealed class NavigationService
 	private bool NavItemsHaveBeenCollected;
 
 #if APP_CONTROL_MANAGER
-private readonly SidebarVM sidebarVM;
+	private readonly SidebarVM sidebarVM;
 
 	internal NavigationService(MainWindowVM _MainWindowVM, SidebarVM _SidebarVM)
 	{

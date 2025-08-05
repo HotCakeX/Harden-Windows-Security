@@ -148,8 +148,6 @@ public partial class App : Application
 	// to this variable before using ShowAsync() method to display it.
 	internal static ContentDialog? CurrentlyOpenContentDialog;
 
-	internal static NavigationService _nav => ViewModelProvider.NavigationService;
-
 #if APP_CONTROL_MANAGER
 	private static PolicyEditorVM PolicyEditorViewModel => ViewModelProvider.PolicyEditorVM;
 #endif
@@ -462,7 +460,7 @@ public partial class App : Application
 		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase) ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
 
 		NavigationService.RestoreWindowSize(m_window.AppWindow); // Restore window size on startup
-		_nav.mainWindowVM.OnIconsStylesChanged(Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
+		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
 		m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
 		m_window.Activate();
 
@@ -595,10 +593,10 @@ public partial class App : Application
 	{
 #if APP_CONTROL_MANAGER
 		// Navigate to the CreatePolicy page when the window is loaded and is Admin, else Policy Editor
-		_nav.Navigate(IsElevated ? typeof(Pages.CreatePolicy) : typeof(Pages.PolicyEditor));
+		ViewModelProvider.NavigationService.Navigate(IsElevated ? typeof(Pages.CreatePolicy) : typeof(Pages.PolicyEditor));
 #endif
 #if HARDEN_SYSTEM_SECURITY
-		_nav.Navigate(IsElevated ? typeof(Pages.Protect) : typeof(Pages.Protects.NonAdmin));
+		ViewModelProvider.NavigationService.Navigate(IsElevated ? typeof(Pages.Protect) : typeof(Pages.Protects.NonAdmin));
 #endif
 	}
 

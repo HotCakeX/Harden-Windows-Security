@@ -235,12 +235,7 @@ public partial class App : Application
 	/// Invoked when the application is launched.
 	/// </summary>
 	/// <param name="args">Details about the launch request and process.</param>
-#if APP_CONTROL_MANAGER
 	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-#endif
-#if HARDEN_SYSTEM_SECURITY
-	protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-#endif
 
 	{
 		// Register the Jump List tasks
@@ -478,9 +473,10 @@ public partial class App : Application
 
 		if (!string.IsNullOrWhiteSpace(Settings.FileActivatedLaunchArg))
 		{
-#if APP_CONTROL_MANAGER
+
 			Logger.Write(string.Format(GlobalVars.GetStr("FileActivationLaunchMessage"), Settings.FileActivatedLaunchArg));
 
+#if APP_CONTROL_MANAGER
 			try
 			{
 				await PolicyEditorViewModel.OpenInPolicyEditor(Settings.FileActivatedLaunchArg);
@@ -554,6 +550,30 @@ public partial class App : Application
 				Settings.LaunchActivationAction = string.Empty;
 			}
 #endif
+
+
+#if HARDEN_SYSTEM_SECURITY
+
+			try
+			{
+				await ViewModelProvider.GroupPolicyEditorVM.OpenInGroupPolicyEditor(Settings.FileActivatedLaunchArg);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+
+				// Continue doing the normal navigation if there was a problem
+				InitialNav();
+			}
+			finally
+			{
+				// Clear the file activated launch args after it's been used
+				Settings.FileActivatedLaunchArg = string.Empty;
+			}
+
+#endif
+
+
 		}
 		else
 		{

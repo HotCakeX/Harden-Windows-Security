@@ -92,6 +92,30 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badgeAndTileText"/>
       </uap:VisualElements>
+
+      <Extensions>
+
+        <uap3:Extension Category="windows.appExecutionAlias" Executable="HardenSystemSecurity.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias>
+            <desktop:ExecutionAlias Alias="HSS.exe" />
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
+
+        <!-- POL File Association -->
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="harden-system-security.grouppolicy" DesiredView="default">
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="application/pol">.pol</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>Group Policy file</uap:DisplayName>
+            <uap:InfoTip>Open a .pol file in the Group Policy Editor</uap:InfoTip>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Assets\External\POLIcon.png</uap:Logo>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+
+      </Extensions>
+
     </Application>
   </Applications>
 

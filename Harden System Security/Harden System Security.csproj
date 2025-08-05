@@ -247,8 +247,8 @@
         <Compile Include="..\AppControl Manager\CustomUIElements\SettingsCardV2.cs" Link="CustomUIElements\SettingsCardV2.cs" />
         <Compile Include="..\AppControl Manager\CustomUIElements\SettingsCardV3.cs" Link="CustomUIElements\SettingsCardV3.cs" />
         <Compile Include="..\AppControl Manager\CustomUIElements\StickyHeaderBehaviorV2.cs" Link="CustomUIElements\StickyHeaderBehaviorV2.cs" />
-        <Compile Include="..\AppControl Manager\IncrementalCollection\GenericIncrementalCollection.cs" Link="GenericIncrementalCollection.cs" />
-        <Compile Include="..\AppControl Manager\IncrementalCollection\IncrementalCollection.cs" Link="IncrementalCollection.cs" />
+        <Compile Include="..\AppControl Manager\IncrementalCollection\GenericIncrementalCollection.cs" Link="IncrementalCollection\GenericIncrementalCollection.cs" />
+        <Compile Include="..\AppControl Manager\IncrementalCollection\IncrementalCollection.cs" Link="IncrementalCollection\IncrementalCollection.cs" />
         <Compile Include="..\AppControl Manager\MainWindow.xaml.cs" Link="MainWindow.xaml.cs" />
         <Compile Include="..\AppControl Manager\NativeMethods.cs" Link="NativeMethods.cs" />
         <Compile Include="..\AppControl Manager\NativeMethods_RustInterop.cs" Link="NativeMethods_RustInterop.cs" />
@@ -258,7 +258,7 @@
         <Compile Include="..\AppControl Manager\Others\EventLogUtility.cs" Link="Others\EventLogUtility.cs" />
         <Compile Include="..\AppControl Manager\Others\FileAccessCheck.cs" Link="Others\FileAccessCheck.cs" />
         <Compile Include="..\AppControl Manager\Others\FileDialogHelper.cs" Link="Others\FileDialogHelper.cs" />
-        <Compile Include="..\AppControl Manager\Others\GlobalVars.cs" Link="Others\GlobalVars.cs" />       
+        <Compile Include="..\AppControl Manager\Others\GlobalVars.cs" Link="Others\GlobalVars.cs" />
         <Compile Include="..\AppControl Manager\Others\InfoBarSettings.cs" Link="Others\InfoBarSettings.cs" />
         <Compile Include="..\AppControl Manager\Others\LanguageOption.cs" Link="Others\LanguageOption.cs" />
         <Compile Include="..\AppControl Manager\Others\ListViewHelper-Shared.cs" Link="Others\ListViewHelper-Shared.cs" />

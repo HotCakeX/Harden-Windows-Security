@@ -434,7 +434,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 			if (filePath is null) return;
 
 			// Navigate to the Configure Policy Rule Options page
-			App._nav.Navigate(typeof(Pages.ConfigurePolicyRuleOptions), null);
+			ViewModelProvider.NavigationService.Navigate(typeof(Pages.ConfigurePolicyRuleOptions), null);
 
 			// Assign the policy file path to the local variable
 			SelectedFilePath = filePath;

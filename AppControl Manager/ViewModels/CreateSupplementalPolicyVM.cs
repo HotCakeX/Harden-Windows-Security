@@ -398,7 +398,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// </summary>
 	internal void FilesAndFoldersViewFileDetailsSettingsCard_Click()
 	{
-		App._nav.Navigate(typeof(CreateSupplementalPolicyFilesAndFoldersScanResults), null);
+		ViewModelProvider.NavigationService.Navigate(typeof(CreateSupplementalPolicyFilesAndFoldersScanResults), null);
 	}
 
 	/// <summary>
@@ -1401,7 +1401,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 	internal void DetectedKernelModeFilesDetailsSettingsCard_Click()
 	{
-		App._nav.Navigate(typeof(StrictKernelPolicyScanResults), null);
+		ViewModelProvider.NavigationService.Navigate(typeof(StrictKernelPolicyScanResults), null);
 	}
 
 	/// <summary>

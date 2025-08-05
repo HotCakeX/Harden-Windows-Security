@@ -148,10 +148,6 @@ public partial class App : Application
 	// to this variable before using ShowAsync() method to display it.
 	internal static ContentDialog? CurrentlyOpenContentDialog;
 
-#if APP_CONTROL_MANAGER
-	private static PolicyEditorVM PolicyEditorViewModel => ViewModelProvider.PolicyEditorVM;
-#endif
-
 	/// <summary>
 	/// Initializes the singleton application object. This is the first line of authored code
 	/// executed, and as such is the logical equivalent of main() or WinMain().
@@ -320,7 +316,6 @@ public partial class App : Application
 
 					Logger.Write($"Protocol Activation Detected: {protocolName}");
 
-
 					Match match = ProtocolDetailsExtraction.Match(protocolName);
 
 					string? action = null;
@@ -477,7 +472,7 @@ public partial class App : Application
 #if APP_CONTROL_MANAGER
 			try
 			{
-				await PolicyEditorViewModel.OpenInPolicyEditor(Settings.FileActivatedLaunchArg);
+				await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(Settings.FileActivatedLaunchArg);
 			}
 			catch (Exception ex)
 			{
@@ -505,7 +500,7 @@ public partial class App : Application
 					{
 						case ViewModelBase.LaunchProtocolActions.PolicyEditor:
 							{
-								await PolicyEditorViewModel.OpenInPolicyEditor(Settings.LaunchActivationFilePath);
+								await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(Settings.LaunchActivationFilePath);
 								break;
 							}
 						case ViewModelBase.LaunchProtocolActions.FileSignature:

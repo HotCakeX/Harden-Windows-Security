@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
@@ -87,6 +88,29 @@
 
             <!-- Ensure the custom button maintains the regular button styles -->
             <Style TargetType="customUI:ButtonV2" BasedOn="{StaticResource DefaultButtonStyle}" />
+
+            <Style TargetType="controls:GridSplitter">
+                <Setter Property="Foreground" Value="DarkGray" />
+                <Setter Property="Opacity" Value="0.5" />
+                <Setter Property="Width" Value="6" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="ResizeDirection" Value="Auto" />
+                <Setter Property="ResizeBehavior" Value="BasedOnAlignment" />
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <TranslateTransform X="-3" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- The styles of the Wrap Panel which is at the top of almost every page -->
+            <Style x:Key="PageHeaderWrapPanelStyle" TargetType="controls:WrapPanel">
+                <Setter Property="Grid.Row" Value="0"/>
+                <Setter Property="VerticalSpacing" Value="4"/>
+                <Setter Property="HorizontalSpacing" Value="4"/>
+                <Setter Property="Orientation" Value="Vertical"/>
+                <Setter Property="Margin" Value="6,0,6,5"/>
+            </Style>
 
         </ResourceDictionary>
     </Application.Resources>

@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -191,7 +192,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 		// Hide the dialog box
 		this.Hide();
 
-		App._nav.Navigate(typeof(Pages.Settings), null);
+		ViewModelProvider.NavigationService.Navigate(typeof(Pages.Settings), null);
 	}
 
 	/// <summary>

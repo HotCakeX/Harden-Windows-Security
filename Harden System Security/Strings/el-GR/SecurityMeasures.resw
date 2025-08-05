@@ -823,12 +823,6 @@
 <data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
     <value>Αποτροπή της διεργασίας του προγράμματος περιήγησης από τη δημιουργία δυναμικού κώδικα</value>
 </data>
-<data name="DisableTLS10-TLS" xml:space="preserve">
-    <value>Απενεργοποίηση TLS v1</value>
-</data>
-<data name="DisableTLS11-TLS" xml:space="preserve">
-    <value>Απενεργοποίηση TLS v1.1</value>
-</data>
 <data name="DisableNULL-TLS" xml:space="preserve">
     <value>Απενεργοποίηση της αδύναμης Κρυπτογράφησης για Schannel: NULL</value>
 </data>
@@ -924,5 +918,29 @@
 </data>
 <data name="LockoutDuration-LockScreen" xml:space="preserve">
     <value>Ορισμός επαναφοράς μετρητή κλειδώματος λογαριασμού σε 1440 λεπτά ή 1 ημέρα.</value>
+</data>
+<data name="DisableTLS10ClientPart1-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση TLS v1 Client - Μέρος 1</value>
+</data>
+<data name="DisableTLS10ClientPart2-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση TLS v1 Client - Μέρος 2</value>
+</data>
+<data name="DisableTLS10ServerPart1-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση TLS v1 Server - Μέρος 1</value>
+</data>
+<data name="DisableTLS10ServerPart2-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση TLS v1 Server - Μέρος 2</value>
+</data>
+<data name="DisableTLS11ClientPart1-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση TLS v1.1 Client - Μέρος 1</value>
+</data>
+<data name="DisableTLS11ClientPart2-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση TLS v1.1 Client - Μέρος 2</value>
+</data>
+<data name="DisableTLS11ServerPart1-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση TLS v1.1 Server - Μέρος 1</value>
+</data>
+<data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
+    <value>Απενεργοποίηση TLS v1.1 Server - Μέρος 2</value>
 </data>
 </root>

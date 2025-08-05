@@ -823,12 +823,6 @@
 <data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
     <value>Zapobiegaj generowaniu kodu dynamicznego przez proces przeglądarki</value>
 </data>
-<data name="DisableTLS10-TLS" xml:space="preserve">
-    <value>Wyłącz TLS v1</value>
-</data>
-<data name="DisableTLS11-TLS" xml:space="preserve">
-    <value>Wyłącz TLS v1.1</value>
-</data>
 <data name="DisableNULL-TLS" xml:space="preserve">
     <value>Wyłącz słabe szyfry dla Schannel: NULL</value>
 </data>
@@ -924,5 +918,29 @@
 </data>
 <data name="LockoutDuration-LockScreen" xml:space="preserve">
     <value>Ustaw reset licznika blokady konta na 1440 minut lub 1 dzień.</value>
+</data>
+<data name="DisableTLS10ClientPart1-TLS" xml:space="preserve">
+    <value>Wyłącz klienta TLS v1 - Część 1</value>
+</data>
+<data name="DisableTLS10ClientPart2-TLS" xml:space="preserve">
+    <value>Wyłącz klienta TLS v1 - Część 2</value>
+</data>
+<data name="DisableTLS10ServerPart1-TLS" xml:space="preserve">
+    <value>Wyłącz serwer TLS v1 - Część 1</value>
+</data>
+<data name="DisableTLS10ServerPart2-TLS" xml:space="preserve">
+    <value>Wyłącz serwer TLS v1 - Część 2</value>
+</data>
+<data name="DisableTLS11ClientPart1-TLS" xml:space="preserve">
+    <value>Wyłącz klienta TLS v1.1 - Część 1</value>
+</data>
+<data name="DisableTLS11ClientPart2-TLS" xml:space="preserve">
+    <value>Wyłącz klienta TLS v1.1 - Część 2</value>
+</data>
+<data name="DisableTLS11ServerPart1-TLS" xml:space="preserve">
+    <value>Wyłącz serwer TLS v1.1 - Część 1</value>
+</data>
+<data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
+    <value>Wyłącz serwer TLS v1.1 - Część 2</value>
 </data>
 </root>

@@ -2321,4 +2321,31 @@
     <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Άνοιγμα Καταλόγου Αρχείων Καταγραφής</value>
   </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Description" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένο, εμφανίζει μια προεπισκόπηση της ιστοσελίδας για κάθε μέτρο ασφαλείας όταν τοποθετείτε το δείκτη του ποντικιού πάνω από το κουμπί σύνδεσμου του.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Header" xml:space="preserve">
+    <value>Εμφάνιση Προεπισκοπήσεων Συνδέσμων για Μέτρα Ασφαλείας</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένο, εμφανίζει μια προεπισκόπηση της ιστοσελίδας για κάθε μέτρο ασφαλείας όταν τοποθετείτε το δείκτη του ποντικιού πάνω από το κουμπί σύνδεσμου του.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένο, εμφανίζει μια προεπισκόπηση της ιστοσελίδας για κάθε μέτρο ασφαλείας όταν τοποθετείτε το δείκτη του ποντικιού πάνω από το κουμπί σύνδεσμου του.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Description" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένο, οι προβολές λίστας που εμφανίζουν στοιχεία σε ομάδες δεν έχουν πλέον κολλώδεις κεφαλίδες. Οι κεφαλίδες τους θα μετακινούνται μαζί με τα υπόλοιπα στοιχεία.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Header" xml:space="preserve">
+    <value>Ενεργοποίηση Κολλωδών Κεφαλίδων για Ομαδοποιημένες Προβολές Λίστας</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένο, οι προβολές λίστας που εμφανίζουν στοιχεία σε ομάδες δεν έχουν πλέον κολλώδεις κεφαλίδες. Οι κεφαλίδες τους θα μετακινούνται μαζί με τα υπόλοιπα στοιχεία.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Όταν είναι ενεργοποιημένο, οι προβολές λίστας που εμφανίζουν στοιχεία σε ομάδες δεν έχουν πλέον κολλώδεις κεφαλίδες. Οι κεφαλίδες τους θα μετακινούνται μαζί με τα υπόλοιπα στοιχεία.</value>
+  </data>
+  <data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>Η εφαρμογή εκκινήθηκε με ενεργοποίηση αρχείου για το ακόλουθο αρχείο: '{0}'</value>
+</data>
 </root>

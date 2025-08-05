@@ -626,7 +626,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		try
 		{
 			// Navigate to the View File Certificates page
-			App._nav.Navigate(typeof(Pages.ViewFileCertificates), null);
+			ViewModelProvider.NavigationService.Navigate(typeof(Pages.ViewFileCertificates), null);
 
 			selectedFile = filePath;
 

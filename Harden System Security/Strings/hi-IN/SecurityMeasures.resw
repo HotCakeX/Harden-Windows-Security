@@ -823,12 +823,6 @@
 <data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
     <value>ब्राउज़र प्रक्रिया को गतिशील कोड उत्पन्न करने से रोकें</value>
 </data>
-<data name="DisableTLS10-TLS" xml:space="preserve">
-    <value>TLS v1 अक्षम करें</value>
-</data>
-<data name="DisableTLS11-TLS" xml:space="preserve">
-    <value>TLS v1.1 अक्षम करें</value>
-</data>
 <data name="DisableNULL-TLS" xml:space="preserve">
     <value>Schannel के लिए कमजोर साइफर अक्षम करें: NULL</value>
 </data>
@@ -924,5 +918,29 @@
 </data>
 <data name="LockoutDuration-LockScreen" xml:space="preserve">
     <value>खाता लॉकआउट काउंटर रीसेट को 1440 मिनट या 1 दिन पर सेट करें।</value>
+</data>
+<data name="DisableTLS10ClientPart1-TLS" xml:space="preserve">
+    <value>TLS v1 क्लाइंट अक्षम करें - भाग 1</value>
+</data>
+<data name="DisableTLS10ClientPart2-TLS" xml:space="preserve">
+    <value>TLS v1 क्लाइंट अक्षम करें - भाग 2</value>
+</data>
+<data name="DisableTLS10ServerPart1-TLS" xml:space="preserve">
+    <value>TLS v1 सर्वर अक्षम करें - भाग 1</value>
+</data>
+<data name="DisableTLS10ServerPart2-TLS" xml:space="preserve">
+    <value>TLS v1 सर्वर अक्षम करें - भाग 2</value>
+</data>
+<data name="DisableTLS11ClientPart1-TLS" xml:space="preserve">
+    <value>TLS v1.1 क्लाइंट अक्षम करें - भाग 1</value>
+</data>
+<data name="DisableTLS11ClientPart2-TLS" xml:space="preserve">
+    <value>TLS v1.1 क्लाइंट अक्षम करें - भाग 2</value>
+</data>
+<data name="DisableTLS11ServerPart1-TLS" xml:space="preserve">
+    <value>TLS v1.1 सर्वर अक्षम करें - भाग 1</value>
+</data>
+<data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
+    <value>TLS v1.1 सर्वर अक्षम करें - भाग 2</value>
 </data>
 </root>

@@ -247,13 +247,13 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// <summary>
 	/// All of the activations used and detected by the app, either via Protocol, Launch arguments and so on.
 	/// </summary>
-	internal enum LaunchProtocolActions
+	internal enum LaunchProtocolActions : uint
 	{
-		PolicyEditor,
-		FileSignature,
-		FileHashes,
-		DeployRMMAuditPolicy,
-		DeployRMMBlockPolicy
+		PolicyEditor = 0,
+		FileSignature = 1,
+		FileHashes = 2,
+		DeployRMMAuditPolicy = 3,
+		DeployRMMBlockPolicy = 4
 	}
 
 

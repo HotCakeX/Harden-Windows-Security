@@ -264,7 +264,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	{
 		try
 		{
-			App._nav.Navigate(typeof(GetCIHashes), null);
+			ViewModelProvider.NavigationService.Navigate(typeof(GetCIHashes), null);
 			selectedFile = filePath;
 			await Calculate();
 		}

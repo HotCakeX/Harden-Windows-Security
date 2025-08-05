@@ -2321,4 +2321,31 @@
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Open Logs Directory</value>
   </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Description" xml:space="preserve">
+    <value>When enabled, shows a preview of the web page for each security measure when you hover over its link button.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Header" xml:space="preserve">
+    <value>Show Link Previews for Security Measures</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>When enabled, shows a preview of the web page for each security measure when you hover over its link button.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>When enabled, shows a preview of the web page for each security measure when you hover over its link button.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Description" xml:space="preserve">
+    <value>When enabled, list views that show items in groups no longer have sticky headers. Their headers will scroll with the rest of the items.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Header" xml:space="preserve">
+    <value>Enable Sticky Headers for Grouped List Views</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>When enabled, list views that show items in groups no longer have sticky headers. Their headers will scroll with the rest of the items.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>When enabled, list views that show items in groups no longer have sticky headers. Their headers will scroll with the rest of the items.</value>
+  </data>
+  <data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>The app was launched with file activation for the following file: '{0}'</value>
+</data>
 </root>

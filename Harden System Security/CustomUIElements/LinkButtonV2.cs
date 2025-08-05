@@ -18,10 +18,13 @@
 using System;
 using System.Threading.Tasks;
 using AppControlManager.Others;
+using AppControlManager.Pages;
+using HardenSystemSecurity;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -43,6 +46,7 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable
 	private const double ButtonSize = 32.0;
 	private new const double CornerRadius = 16.0;
 	private static readonly TimeSpan AnimationDuration = TimeSpan.FromMilliseconds(1000);
+	private static readonly TimeSpan HoverDelay = TimeSpan.FromMilliseconds(500);
 
 	private static readonly Color GradientColor1 = Color.FromArgb(255, 238, 156, 167);
 	private static readonly Color GradientColor2 = Color.FromArgb(255, 255, 221, 225);
@@ -55,8 +59,12 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable
 	private LinearGradientBrush? _gradientBrush;
 	private SolidColorBrush? _grayBrush;
 	private SolidColorBrush? _hotPinkBrush;
+	private Flyout? _previewFlyout;
+	private DispatcherTimer? _hoverTimer;
+	private Frame? _currentPreviewFrame; // Track current frame for proper disposal
 	private bool _isDisposed;
 	private bool _isPointerOver;
+	private bool _isFlyoutOpen;
 
 	internal static readonly DependencyProperty LinkUrlProperty =
 		DependencyProperty.Register(
@@ -84,6 +92,8 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable
 
 		CreateBrushes();
 		CreateVisualStructure();
+		CreateFlyout();
+		CreateHoverTimer();
 		UpdateEnabledState();
 
 		Loaded += LinkButtonV2_Loaded;
@@ -95,6 +105,166 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable
 		PointerCanceled += LinkButtonV2_PointerCanceled;
 		PointerCaptureLost += LinkButtonV2_PointerCaptureLost;
 		Tapped += LinkButtonV2_Tapped;
+	}
+
+	/// <summary>
+	/// Creates the flyout for link preview functionality only if enabled in settings
+	/// </summary>
+	private void CreateFlyout()
+	{
+		// Only create flyout if link previews are enabled in settings
+		if (!App.Settings.LinkPreviewsForSecurityMeasure)
+		{
+			return;
+		}
+
+		_previewFlyout = new Flyout
+		{
+			Placement = FlyoutPlacementMode.Bottom,
+			ShouldConstrainToRootBounds = false,
+			AreOpenCloseAnimationsEnabled = false,
+
+			// Adjusts the flyout's default padding and margin
+			FlyoutPresenterStyle = new Style(typeof(FlyoutPresenter))
+			{
+				Setters =   {
+								new Setter(MarginProperty, new Thickness(0)),
+								new Setter(PaddingProperty, new Thickness(4)),
+								new Setter(CornerRadiusProperty, new CornerRadius(15))
+							}
+			}
+		};
+
+		_previewFlyout.Opened += PreviewFlyout_Opened;
+		_previewFlyout.Closed += PreviewFlyout_Closed;
+	}
+
+	/// <summary>
+	/// Creates the hover timer for delayed flyout display
+	/// </summary>
+	private void CreateHoverTimer()
+	{
+		_hoverTimer = new DispatcherTimer
+		{
+			Interval = HoverDelay
+		};
+		_hoverTimer.Tick += HoverTimer_Tick;
+	}
+
+	/// <summary>
+	/// Handles hover timer tick to show flyout after delay
+	/// </summary>
+	private void HoverTimer_Tick(object? sender, object e)
+	{
+		if (_isDisposed) return;
+
+		_hoverTimer?.Stop();
+
+		if (_isPointerOver && !_isFlyoutOpen && !string.IsNullOrWhiteSpace(LinkUrl))
+		{
+			ShowPreviewFlyout();
+		}
+	}
+
+	/// <summary>
+	/// Shows the preview flyout in a frame only if enabled in settings
+	/// </summary>
+	private void ShowPreviewFlyout()
+	{
+		// Check if link previews are enabled in settings before showing flyout
+		if (_isDisposed || _previewFlyout == null || !App.Settings.LinkPreviewsForSecurityMeasure)
+			return;
+
+		try
+		{
+			// Clean up any existing frame first
+			CleanupCurrentFrame();
+
+			_currentPreviewFrame = new Frame
+			{
+				Width = 400,
+				Height = 300,
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				VerticalAlignment = VerticalAlignment.Stretch
+			};
+
+			// Navigate to LinkPreview page
+			bool navigationSucceeded = _currentPreviewFrame.Navigate(typeof(LinkPreview));
+
+			if (!navigationSucceeded)
+			{
+				// Clean up frame if navigation failed
+				CleanupCurrentFrame();
+				return;
+			}
+
+			// Set the URL on the preview page
+			if (_currentPreviewFrame.Content is LinkPreview previewPage)
+			{
+				previewPage.PreviewUrl = LinkUrl;
+				_previewFlyout.Content = _currentPreviewFrame;
+				_previewFlyout.ShowAt(this);
+			}
+			else
+			{
+				// Clean up frame if we couldn't get the preview page
+				CleanupCurrentFrame();
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"LinkButtonV2 show preview flyout failed: {ex.Message}");
+			_isFlyoutOpen = false;
+			// Clean up frame on error
+			CleanupCurrentFrame();
+		}
+	}
+
+	/// <summary>
+	/// Properly cleans up the current preview frame and its content
+	/// </summary>
+	private void CleanupCurrentFrame()
+	{
+		if (_currentPreviewFrame != null)
+		{
+			// If the frame has content that implements IDisposable, dispose it
+			if (_currentPreviewFrame.Content is IDisposable disposableContent)
+			{
+				try
+				{
+					disposableContent.Dispose();
+				}
+				catch (Exception ex)
+				{
+					Logger.Write($"LinkButtonV2 frame content disposal failed: {ex.Message}");
+				}
+			}
+
+			// Clear the content and nullify the frame
+			_currentPreviewFrame.Content = null;
+			_currentPreviewFrame = null;
+		}
+	}
+
+	/// <summary>
+	/// Handles flyout opened event
+	/// </summary>
+	private void PreviewFlyout_Opened(object? sender, object e)
+	{
+		_isFlyoutOpen = true;
+	}
+
+	/// <summary>
+	/// Handles flyout closed event to reset state and clean up resources
+	/// </summary>
+	private void PreviewFlyout_Closed(object? sender, object e)
+	{
+		_isFlyoutOpen = false;
+
+		// Clean up the flyout content and current frame
+		_ = (_previewFlyout?.Content = null);
+
+		CleanupCurrentFrame();
 	}
 
 	private static void OnLinkUrlChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -297,6 +467,12 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable
 			_ = (_linkIcon?.Foreground = _hotPinkBrush);
 
 			_hoverInStoryboard?.Begin();
+
+			// Start hover timer for Flyout only if enabled in settings
+			if (!string.IsNullOrWhiteSpace(LinkUrl) && !_isFlyoutOpen && App.Settings.LinkPreviewsForSecurityMeasure)
+			{
+				_hoverTimer?.Start();
+			}
 		}
 		catch (Exception ex)
 		{
@@ -311,6 +487,7 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable
 		try
 		{
 			_isPointerOver = false;
+			_hoverTimer?.Stop();
 			_hoverInStoryboard?.Stop();
 
 			// Revert to gray brush
@@ -382,6 +559,7 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable
 		try
 		{
 			_isPointerOver = false;
+			_hoverTimer?.Stop();
 			_hoverInStoryboard?.Stop();
 
 			if (_borderElement != null)
@@ -451,20 +629,44 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable
 	{
 		try
 		{
+			// Stop and dispose timer
+			if (_hoverTimer != null)
+			{
+				_hoverTimer.Stop();
+				_hoverTimer.Tick -= HoverTimer_Tick;
+				_hoverTimer = null;
+			}
+
+			// Stop animations
 			_hoverInStoryboard?.Stop();
 			_hoverOutStoryboard?.Stop();
 
+			// Clear animation children and dispose
 			_hoverInStoryboard?.Children.Clear();
 			_hoverOutStoryboard?.Children.Clear();
 			_hoverInStoryboard = null;
 			_hoverOutStoryboard = null;
 
+			// Clean up flyout and its content
+			if (_previewFlyout != null)
+			{
+				_previewFlyout.Opened -= PreviewFlyout_Opened;
+				_previewFlyout.Closed -= PreviewFlyout_Closed;
+				_previewFlyout.Content = null;
+				_previewFlyout = null;
+			}
+
+			// Clean up current frame and its content
+			CleanupCurrentFrame();
+
+			// Clear references to UI elements
 			_borderElement = null;
 			_linkIcon = null;
 			_gradientBrush = null;
 			_grayBrush = null;
 			_hotPinkBrush = null;
 
+			// Unsubscribe from all events
 			Loaded -= LinkButtonV2_Loaded;
 			Unloaded -= LinkButtonV2_Unloaded;
 			PointerEntered -= LinkButtonV2_PointerEntered;

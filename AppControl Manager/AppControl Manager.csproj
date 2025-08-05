@@ -9,6 +9,9 @@
         <UseWinUI>true</UseWinUI>
         <EnableMsixTooling>true</EnableMsixTooling>
 
+        <!-- https://learn.microsoft.com/en-us/microsoft-edge/webview2/how-to/static -->
+        <WebView2LoaderPreference>Static</WebView2LoaderPreference>
+
         <!-- Defined by CsWinRT https://github.com/microsoft/CsWinRT
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
 

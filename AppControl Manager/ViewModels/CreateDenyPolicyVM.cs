@@ -533,7 +533,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 	internal void FilesAndFoldersViewFileDetailsSettingsCard_Click()
 	{
-		App._nav.Navigate(typeof(CreateDenyPolicyFilesAndFoldersScanResults), null);
+		ViewModelProvider.NavigationService.Navigate(typeof(CreateDenyPolicyFilesAndFoldersScanResults), null);
 	}
 
 	/// <summary>

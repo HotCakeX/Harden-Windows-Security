@@ -2321,4 +2321,31 @@
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>ലോഗ് ഡയറക്ടറി തുറക്കുക</value>
   </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Description" xml:space="preserve">
+    <value>പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, നിങ്ങൾ ഓരോ സുരക്ഷാ നടപടികളുടെയും ലിങ്ക് ബട്ടണിൽ ഹോവർ ചെയ്യുമ്പോൾ വെബ് പേജിന്റെ പ്രിവ്യൂ കാണിക്കുന്നു.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Header" xml:space="preserve">
+    <value>സുരക്ഷാ നടപടികൾക്കായി ലിങ്ക് പ്രിവ്യൂകൾ കാണിക്കുക</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, നിങ്ങൾ ഓരോ സുരക്ഷാ നടപടികളുടെയും ലിങ്ക് ബട്ടണിൽ ഹോവർ ചെയ്യുമ്പോൾ വെബ് പേജിന്റെ പ്രിവ്യൂ കാണിക്കുന്നു.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, നിങ്ങൾ ഓരോ സുരക്ഷാ നടപടികളുടെയും ലിങ്ക് ബട്ടണിൽ ഹോവർ ചെയ്യുമ്പോൾ വെബ് പേജിന്റെ പ്രിവ്യൂ കാണിക്കുന്നു.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Description" xml:space="preserve">
+    <value>പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, ഗ്രൂപ്പുകളിൽ ഇനങ്ങൾ കാണിക്കുന്ന ലിസ്റ്റ് വ്യൂകൾക്ക് ഇനി സ്റ്റിക്കി ഹെഡറുകൾ ഉണ്ടാകില്ല. അവയുടെ ഹെഡറുകൾ മറ്റ് ഇനങ്ങളോടൊപ്പം സ്ക്രോൾ ചെയ്യും.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Header" xml:space="preserve">
+    <value>ഗ്രൂപ്പുചെയ്ത ലിസ്റ്റ് വ്യൂകൾക്കായി സ്റ്റിക്കി ഹെഡറുകൾ പ്രവർത്തനക്ഷമമാക്കുക</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, ഗ്രൂപ്പുകളിൽ ഇനങ്ങൾ കാണിക്കുന്ന ലിസ്റ്റ് വ്യൂകൾക്ക് ഇനി സ്റ്റിക്കി ഹെഡറുകൾ ഉണ്ടാകില്ല. അവയുടെ ഹെഡറുകൾ മറ്റ് ഇനങ്ങളോടൊപ്പം സ്ക്രോൾ ചെയ്യും.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രവർത്തനക്ഷമമാക്കുമ്പോൾ, ഗ്രൂപ്പുകളിൽ ഇനങ്ങൾ കാണിക്കുന്ന ലിസ്റ്റ് വ്യൂകൾക്ക് ഇനി സ്റ്റിക്കി ഹെഡറുകൾ ഉണ്ടാകില്ല. അവയുടെ ഹെഡറുകൾ മറ്റ് ഇനങ്ങളോടൊപ്പം സ്ക്രോൾ ചെയ്യും.</value>
+  </data>
+  <data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>ഈ ഫയലിനായി ഫയൽ ആക്ടിവേഷനോടൊപ്പം ആപ്ലിക്കേഷൻ സമാരംഭിച്ചു: '{0}'</value>
+</data>
 </root>

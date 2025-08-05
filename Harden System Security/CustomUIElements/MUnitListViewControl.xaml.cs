@@ -18,9 +18,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using HardenSystemSecurity;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
@@ -30,13 +32,57 @@ namespace AppControlManager.CustomUIElements;
 
 internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 {
+	private HardenSystemSecurity.AppSettings.Main AppSettings => App.Settings;
+
 	internal MUnitListViewControl()
 	{
 		this.InitializeComponent();
 		this.Unloaded += MUnitListViewControl_Unloaded;
+
+		// Configure the ItemsStackPanel after the control is loaded
+		this.Loaded += MUnitListViewControl_Loaded;
 	}
 
 	private bool _isDisposed;
+
+	/// <summary>
+	/// Handles the Loaded event to configure the ItemsStackPanel with current settings
+	/// </summary>
+	private void MUnitListViewControl_Loaded(object sender, RoutedEventArgs e)
+	{
+		// Set the initial value and configure the panel
+		ConfigureItemsStackPanel();
+
+		// Subscribe to AppSettings property changes when control is loaded
+		if (AppSettings is INotifyPropertyChanged notifyPropertyChanged)
+		{
+			notifyPropertyChanged.PropertyChanged -= AppSettings_PropertyChanged; // Ensure no duplicate subscription
+			notifyPropertyChanged.PropertyChanged += AppSettings_PropertyChanged;
+		}
+	}
+
+	/// <summary>
+	/// Event handler for AppSettings property changes to ensure immediate updates
+	/// </summary>
+	private void AppSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		if (e.PropertyName == nameof(AppSettings.StickyHeadersForListViews))
+		{
+			// Update the ItemsStackPanel when the setting changes
+			ConfigureItemsStackPanel();
+		}
+	}
+
+	/// <summary>
+	/// Configures the ItemsStackPanel with the current AppSettings value
+	/// </summary>
+	private void ConfigureItemsStackPanel()
+	{
+		if (MainListView.ItemsPanelRoot is ItemsStackPanel itemsStackPanel)
+		{
+			itemsStackPanel.AreStickyGroupHeadersEnabled = AppSettings.StickyHeadersForListViews;
+		}
+	}
 
 	internal static readonly DependencyProperty ListViewItemsSourceProperty =
 		DependencyProperty.Register(
@@ -214,6 +260,9 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 			control.RestoreSelectionFromViewModel();
 			// Subscribe to status changes for all MUnits to track status counts
 			control.SubscribeToStatusChanges();
+
+			// Configure the ItemsStackPanel when items source changes
+			control.ConfigureItemsStackPanel();
 		}
 	}
 
@@ -273,7 +322,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// <summary>
 	/// Handles property changes from MUnits to update status counts
 	/// </summary>
-	private void MUnit_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+	private void MUnit_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
 		if (_isDisposed) return;
 
@@ -839,10 +888,17 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		if (_isDisposed) return;
 		_isDisposed = true;
 
+		// Unsubscribe from AppSettings property changes
+		if (AppSettings is INotifyPropertyChanged notifyPropertyChanged)
+		{
+			notifyPropertyChanged.PropertyChanged -= AppSettings_PropertyChanged;
+		}
+
 		// Unsubscribe from all MUnit events
 		UnsubscribeFromAllMUnits();
 
-		// Unregister from Unloaded event
+		// Unregister from events
 		this.Unloaded -= MUnitListViewControl_Unloaded;
+		this.Loaded -= MUnitListViewControl_Loaded;
 	}
 }

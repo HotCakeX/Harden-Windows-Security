@@ -2321,4 +2321,31 @@
     <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>فتح دليل السجلات</value>
   </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Description" xml:space="preserve">
+    <value>عند التمكين، يعرض معاينة لصفحة الويب لكل إجراء أمني عندما تحوم فوق زر الرابط الخاص به.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Header" xml:space="preserve">
+    <value>إظهار معاينات الروابط لإجراءات الأمان</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عند التمكين، يعرض معاينة لصفحة الويب لكل إجراء أمني عندما تحوم فوق زر الرابط الخاص به.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عند التمكين، يعرض معاينة لصفحة الويب لكل إجراء أمني عندما تحوم فوق زر الرابط الخاص به.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Description" xml:space="preserve">
+    <value>عند التمكين، عروض القوائم التي تظهر العناصر في مجموعات لن تعود تحتوي على رؤوس ثابتة. ستتحرك رؤوسها مع باقي العناصر.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Header" xml:space="preserve">
+    <value>تمكين الرؤوس الثابتة لعروض القوائم المجمعة</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عند التمكين، عروض القوائم التي تظهر العناصر في مجموعات لن تعود تحتوي على رؤوس ثابتة. ستتحرك رؤوسها مع باقي العناصر.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عند التمكين، عروض القوائم التي تظهر العناصر في مجموعات لن تعود تحتوي على رؤوس ثابتة. ستتحرك رؤوسها مع باقي العناصر.</value>
+  </data>
+  <data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>تم تشغيل التطبيق مع تفعيل الملف للملف التالي: '{0}'</value>
+</data>
 </root>

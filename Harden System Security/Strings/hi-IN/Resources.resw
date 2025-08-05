@@ -2321,4 +2321,31 @@
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>लॉग डायरेक्टरी खोलें</value>
   </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Description" xml:space="preserve">
+    <value>जब सक्षम किया गया हो, तो यह प्रत्येक सुरक्षा उपाय के लिए वेब पेज का पूर्वावलोकन दिखाता है जब आप इसके लिंक बटन पर होवर करते हैं।</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Header" xml:space="preserve">
+    <value>सुरक्षा उपायों के लिए लिंक पूर्वावलोकन दिखाएं</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>जब सक्षम किया गया हो, तो यह प्रत्येक सुरक्षा उपाय के लिए वेब पेज का पूर्वावलोकन दिखाता है जब आप इसके लिंक बटन पर होवर करते हैं।</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>जब सक्षम किया गया हो, तो यह प्रत्येक सुरक्षा उपाय के लिए वेब पेज का पूर्वावलोकन दिखाता है जब आप इसके लिंक बटन पर होवर करते हैं।</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Description" xml:space="preserve">
+    <value>जब सक्षम किया गया हो, तो सूची दृश्य जो समूहों में आइटम दिखाते हैं उनमें अब चिपकने वाले हेडर नहीं होंगे। उनके हेडर बाकी आइटमों के साथ स्क्रॉल होंगे।</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Header" xml:space="preserve">
+    <value>समूहीकृत सूची दृश्यों के लिए चिपकने वाले हेडर सक्षम करें</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>जब सक्षम किया गया हो, तो सूची दृश्य जो समूहों में आइटम दिखाते हैं उनमें अब चिपकने वाले हेडर नहीं होंगे। उनके हेडर बाकी आइटमों के साथ स्क्रॉल होंगे।</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>जब सक्षम किया गया हो, तो सूची दृश्य जो समूहों में आइटम दिखाते हैं उनमें अब चिपकने वाले हेडर नहीं होंगे। उनके हेडर बाकी आइटमों के साथ स्क्रॉल होंगे।</value>
+  </data>
+  <data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>एप्लिकेशन निम्नलिखित फ़ाइल के लिए फ़ाइल सक्रियण के साथ लॉन्च किया गया था: '{0}'</value>
+</data>
 </root>

@@ -28,7 +28,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,10,6,10">
+        <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
 
             <TextBlock x:Uid="GroupPolicyEditorPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
@@ -575,14 +575,14 @@
                         </interactivity:Interaction.Behaviors>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth3, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth4, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth6, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth7, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth8, Mode=OneWay}" />
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=TwoWay}" MinWidth="50" />
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth3, Mode=TwoWay}" MinWidth="50" />
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth4, Mode=TwoWay}" MinWidth="50" />
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=TwoWay}" MinWidth="50" />
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth6, Mode=TwoWay}" MinWidth="50" />
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth7, Mode=TwoWay}" MinWidth="50" />
+                                <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth8, Mode=TwoWay}" MinWidth="50" />
                             </Grid.ColumnDefinitions>
                             <Button x:Uid="KeynameColumnHeaderBtn" Tag="KeyName" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
                             <Button x:Uid="ValueNameColumnHeaderBtn" Tag="ValueName" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
@@ -592,6 +592,16 @@
                             <Button x:Uid="PolicyActionColumnHeaderBtn" Tag="PolicyAction" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
                             <Button x:Uid="FriendlyNameColumnHeaderBtn" Tag="FriendlyName" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
                             <Button x:Uid="SizeColumnHeaderBtn" Tag="Size" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+
+                            <!-- GridSplitters between columns -->
+                            <controls:GridSplitter Grid.Column="1" />
+                            <controls:GridSplitter Grid.Column="2" />
+                            <controls:GridSplitter Grid.Column="3" />
+                            <controls:GridSplitter Grid.Column="4" />
+                            <controls:GridSplitter Grid.Column="5" />
+                            <controls:GridSplitter Grid.Column="6" />
+                            <controls:GridSplitter Grid.Column="7" />
+
                         </Grid>
                     </Border>
                 </customUI:ListViewV2.Header>

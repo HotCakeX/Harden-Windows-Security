@@ -117,7 +117,6 @@ jobs:
                   [bool]$InstallDeps,
                   [bool]$Workflow,
                   [bool]$UpdateWorkLoads,
-                  [bool]$Install,
                   [bool]$Upload
               )
 
@@ -684,10 +683,6 @@ jobs:
                   Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value 'SBOM_NAME=manifest.spdx.json'
               }
 
-              if ($Install) {
-                  (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1') + "AppControl -Verbose -MSIXBundlePath '$MSIXBundle'" | Invoke-Expression
-              }
-
               if ($Upload) {
                   dotnet clean '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release
                   dotnet build '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release --verbosity minimal
@@ -725,6 +720,6 @@ jobs:
           }
 
           # For GitHub workflow
-          Build_HSS -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $true
+          Build_HSS -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Upload $true
           # Local - ARM64 + X64
-          # Build_HSS -DownloadRepo $false -InstallDeps $false -Workflow $false -UpdateWorkLoads $false -Install $false -Upload $false
+          # Build_HSS -DownloadRepo $false -InstallDeps $false -Workflow $false -UpdateWorkLoads $false -Upload $false

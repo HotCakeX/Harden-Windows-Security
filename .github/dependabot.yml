@@ -11,7 +11,7 @@ updates:
     directories:
       - "/AppControl Manager/"
       - "/Harden-Windows-Security Module/"
-      - "/Harden Windows Security App/"
+      - "/Harden System Security/"
     schedule:
       interval: "weekly"
       day: "tuesday"
@@ -21,7 +21,7 @@ updates:
     directories:
       - "/AppControl Manager/"
       - "/Harden-Windows-Security Module/"
-      - "/Harden Windows Security App/"
+      - "/Harden System Security/"
     schedule:
       interval: "daily"
       time: "07:30"

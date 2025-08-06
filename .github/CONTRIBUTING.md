@@ -18,6 +18,8 @@ When submitting a Pull Request (PR), please enable the "Allow edits by maintaine
 
 If your PR includes C# code, make sure it adheres to the coding styles enforced by the .editorconfig files located in the respective project directories. This helps maintain consistency across the codebase.
 
+If your PR includes Rust code, always make sure it adheres to the latest available Rust edition at the time of writing your code and it uses the latest available Rust toolchain version. Your code must not generate any errors or warnings whatsoever during compilation for the release profile.
+
 ## Type of Code
 
-Contributions should be written in C# or lower-level languages if necessary. Higher-level scripting languages are not suitable for this project.
+The only type of code Contributions accepted at this time are C# and Rust. Please contact me first if you want to contribute in other languages.

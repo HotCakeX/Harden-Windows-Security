@@ -3,7 +3,7 @@ Please follow these guidelines when contributing:
 ## Repository Structure
 - `AppControl Manager/`: The main directory for the AppControl Manager application.
 - `AppControl Manager/eXclude/`: Ignore everything in this directory, they are not part of the AppControl Manager application files.
-- `Harden Windows Security App/`: The main directory for the Harden Windows Security application.
+- `Harden System Security/`: The main directory for the Harden System Security application.
 - `Harden-Windows-Security Module/`: The main directory for the Harden Windows Security PowerShell module.
 
 ## Key Guidelines

@@ -15,6 +15,7 @@ body:
       label: Product
       description: Which Product Does This Bug Belong To?
       options:
+        - Harden System Security App
         - Harden Windows Security Module
         - AppControl Manager
     validations:

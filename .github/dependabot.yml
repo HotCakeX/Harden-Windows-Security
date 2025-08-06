@@ -37,16 +37,7 @@ updates:
       - "Dependabot"
   - package-ecosystem: "cargo"
     directories:
-      - "/AppControl Manager/"
-      - "/AppControl Manager/eXclude/ResourceValidator/"
-      - "/AppControl Manager/eXclude/Rust WMI Interop/Device Guard/Library/"
-      - "/AppControl Manager/eXclude/Rust WMI Interop/Device Guard/Program/"
-      - "/AppControl Manager/eXclude/Rust WMI Interop/Microsoft Defender/Program/"
-      - "/AppControl Manager/eXclude/Rust WMI Interop/Microsoft Defender/Library/"
-      - "/AppControl Manager/eXclude/Rust WMI Interop/Microsoft Defender/Printing raw data with types/"
-      - "/AppControl Manager/eXclude/exploit_mitigations/"
-      - "/AppControl Manager/eXclude/dism_capabilities/"
-      - "/AppControl Manager/eXclude/group_policy/"
+      - "/AppControl Manager/"      
     schedule:
       interval: "daily"
       time: "07:30"

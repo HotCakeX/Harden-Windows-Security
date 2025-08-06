@@ -30,11 +30,11 @@
 
             <!-- Defines a single MUnit that is displayed in the ListView -->
             <DataTemplate x:Key="MUnitListViewTemplate"
-                  x:DataType="protect:MUnit">
+                          x:DataType="protect:MUnit">
                 <Border BorderThickness="1"
                         BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
                         CornerRadius="8"
-                        Padding="16"
+                        Padding="12"
                         Margin="0,4,0,4"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <ani:Implicit.HideAnimations>
@@ -52,7 +52,6 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <!-- Status Indicator and SubCategory Label -->
@@ -65,9 +64,9 @@
 
                             <!-- Status Indicator -->
                             <customUI:StatusIndicatorV2 Grid.Column="0"
-                                                        Status="{x:Bind StatusState, Mode=OneWay}"
-                                                        VerticalAlignment="Center"
-                                                        Margin="12,0,12,0"/>
+                                            Status="{x:Bind StatusState, Mode=OneWay}"
+                                            VerticalAlignment="Center"
+                                            Margin="12,0,12,0"/>
 
                             <!-- SubCategory Label (only if not null) -->
                             <Border Grid.Column="2"
@@ -84,108 +83,119 @@
                                     </LinearGradientBrush>
                                 </Border.Background>
                                 <TextBlock Text="{x:Bind SubCategoryName, Mode=OneWay}"
-                                           FontSize="11"
-                                           FontWeight="SemiBold"
-                                           Foreground="White"/>
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="White"/>
                             </Border>
                         </Grid>
 
                         <!-- Security Measure Name -->
                         <TextBlock Grid.Row="1"
-                                   Text="{x:Bind Name}"
-                                   ToolTipService.ToolTip="{x:Bind Name}"
-                                   AutomationProperties.HelpText="{x:Bind Name}"
-                                   TextWrapping="WrapWholeWords"
-                                   x:Phase="1"
-                                   Style="{ThemeResource SubtitleTextBlockStyle}"
-                                   Margin="0,0,0,8"/>
-
-                        <!-- Link Button -->
-                        <customUI:LinkButtonV2 Grid.Row="2"
-                                               LinkUrl="{x:Bind URL}"
-                                               HorizontalAlignment="Left"
-                                               Margin="0,0,0,12"
-                                               Visibility="{x:Bind HasURL, Mode=OneWay}"/>
+                       Text="{x:Bind Name}"
+                       ToolTipService.ToolTip="{x:Bind Name}"
+                       AutomationProperties.HelpText="{x:Bind Name}"
+                       TextWrapping="WrapWholeWords"
+                       x:Phase="1"
+                       Style="{ThemeResource SubtitleTextBlockStyle}"
+                       Margin="0,0,0,8"/>
 
                         <!-- Separator -->
-                        <Border Grid.Row="3"
+                        <Border Grid.Row="2"
                                 Height="1"
                                 Background="{ThemeResource SystemControlForegroundBaseLowBrush}"
                                 Margin="0,0,0,12"/>
 
-                        <!-- Action Buttons -->
-                        <StackPanel Grid.Row="4"
-                                    Orientation="Horizontal"
-                                    Spacing="8"
-                                    HorizontalAlignment="Right">
+                        <!-- Action Buttons Row and LinkButton -->
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-                            <Button Click="{x:Bind ApplyMUnit}">
-                                <ani:Implicit.HideAnimations>
-                                    <ani:ScaleAnimation Duration="0:0:0.2" To="0.9"/>
-                                </ani:Implicit.HideAnimations>
-                                <ani:Implicit.ShowAnimations>
-                                    <ani:ScaleAnimation Duration="0:0:0.2" From="0.9" To="1.0"/>
-                                </ani:Implicit.ShowAnimations>
-                                <StackPanel Orientation="Horizontal" Spacing="4">
+                            <!-- Link Button on the left -->
+                            <customUI:LinkButtonV2 Grid.Column="0"
+                                       LinkUrl="{x:Bind URL}"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Visibility="{x:Bind HasURL, Mode=OneWay}"/>
 
-                                    <AnimatedIcon Height="18" Width="18">
-                                        <AnimatedIcon.Source>
-                                            <animatedvisuals:Spinner/>
-                                        </AnimatedIcon.Source>
-                                    </AnimatedIcon>
+                            <!-- Action Buttons on the right -->
+                            <StackPanel Grid.Column="2"
+                                        Orientation="Horizontal"
+                                        Spacing="8"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center">
 
-                                    <TextBlock x:Uid="ApplyText"
-                                               FontSize="12"
-                                               FontWeight="SemiBold"
-                                               VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
+                                <Button Click="{x:Bind ApplyMUnit}">
+                                    <ani:Implicit.HideAnimations>
+                                        <ani:ScaleAnimation Duration="0:0:0.2" To="0.9"/>
+                                    </ani:Implicit.HideAnimations>
+                                    <ani:Implicit.ShowAnimations>
+                                        <ani:ScaleAnimation Duration="0:0:0.2" From="0.9" To="1.0"/>
+                                    </ani:Implicit.ShowAnimations>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
 
-                            <Button Click="{x:Bind VerifyMUnit}">
-                                <ani:Implicit.HideAnimations>
-                                    <ani:ScaleAnimation Duration="0:0:0.2" To="0.9"/>
-                                </ani:Implicit.HideAnimations>
-                                <ani:Implicit.ShowAnimations>
-                                    <ani:ScaleAnimation Duration="0:0:0.2" From="0.9" To="1.0"/>
-                                </ani:Implicit.ShowAnimations>
-                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <AnimatedIcon Height="18" Width="18">
+                                            <AnimatedIcon.Source>
+                                                <animatedvisuals:Spinner/>
+                                            </AnimatedIcon.Source>
+                                        </AnimatedIcon>
 
-                                    <AnimatedIcon Height="18" Width="18">
-                                        <AnimatedIcon.Source>
-                                            <animatedvisuals:Verify/>
-                                        </AnimatedIcon.Source>
-                                    </AnimatedIcon>
+                                        <TextBlock x:Uid="ApplyText"
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
 
-                                    <TextBlock x:Uid="VerifyText"
-                                               FontSize="12"
-                                               FontWeight="SemiBold"
-                                               VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
+                                <Button Click="{x:Bind VerifyMUnit}">
+                                    <ani:Implicit.HideAnimations>
+                                        <ani:ScaleAnimation Duration="0:0:0.2" To="0.9"/>
+                                    </ani:Implicit.HideAnimations>
+                                    <ani:Implicit.ShowAnimations>
+                                        <ani:ScaleAnimation Duration="0:0:0.2" From="0.9" To="1.0"/>
+                                    </ani:Implicit.ShowAnimations>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
 
-                            <Button Click="{x:Bind RemoveMUnit}">
-                                <ani:Implicit.HideAnimations>
-                                    <ani:ScaleAnimation Duration="0:0:0.2" To="0.9"/>
-                                </ani:Implicit.HideAnimations>
-                                <ani:Implicit.ShowAnimations>
-                                    <ani:ScaleAnimation Duration="0:0:0.2" From="0.9" To="1.0"/>
-                                </ani:Implicit.ShowAnimations>
-                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <AnimatedIcon Height="18" Width="18">
+                                            <AnimatedIcon.Source>
+                                                <animatedvisuals:Verify/>
+                                            </AnimatedIcon.Source>
+                                        </AnimatedIcon>
 
-                                    <AnimatedIcon Height="18" Width="18">
-                                        <AnimatedIcon.Source>
-                                            <animatedvisuals:Caution/>
-                                        </AnimatedIcon.Source>
-                                    </AnimatedIcon>
+                                        <TextBlock x:Uid="VerifyText"
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
 
-                                    <TextBlock x:Uid="RemoveText"
-                                               FontSize="12"
-                                               FontWeight="SemiBold"
-                                               VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
+                                <Button Click="{x:Bind RemoveMUnit}">
+                                    <ani:Implicit.HideAnimations>
+                                        <ani:ScaleAnimation Duration="0:0:0.2" To="0.9"/>
+                                    </ani:Implicit.HideAnimations>
+                                    <ani:Implicit.ShowAnimations>
+                                        <ani:ScaleAnimation Duration="0:0:0.2" From="0.9" To="1.0"/>
+                                    </ani:Implicit.ShowAnimations>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
 
-                        </StackPanel>
+                                        <AnimatedIcon Height="18" Width="18">
+                                            <AnimatedIcon.Source>
+                                                <animatedvisuals:Caution/>
+                                            </AnimatedIcon.Source>
+                                        </AnimatedIcon>
+
+                                        <TextBlock x:Uid="RemoveText"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+
+                            </StackPanel>
+
+                        </Grid>
 
                     </Grid>
                 </Border>
@@ -193,7 +203,7 @@
         </Grid.Resources>
 
         <!-- Control Bar with Search and Buttons -->
-        <Border Grid.Row="0" Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="12">
+        <Border Grid.Row="0" Margin="0,0,0,5" Style="{StaticResource GridCardStyle}" Padding="12">
             <ani:Implicit.HideAnimations>
                 <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
                 <ani:TranslationAnimation Duration="0:0:0.3" To="0,-30,0"/>
@@ -216,8 +226,8 @@
                         <ani:ScaleAnimation Duration="0:0:0.3" To="0.95"/>
                     </ani:Implicit.HideAnimations>
                     <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" Delay="0:0:0.1"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.95" To="1.0" Delay="0:0:0.1"/>
+                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.95" To="1.0"/>
                     </ani:Implicit.ShowAnimations>
 
                     <Grid>
@@ -255,8 +265,8 @@
                         <ani:ScaleAnimation Duration="0:0:0.3" To="0.95"/>
                     </ani:Implicit.HideAnimations>
                     <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" Delay="0:0:0.2"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.95" To="1.0" Delay="0:0:0.2"/>
+                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.95" To="1.0"/>
                     </ani:Implicit.ShowAnimations>
 
                     <StackPanel Orientation="Horizontal" Spacing="8">
@@ -413,8 +423,8 @@
                         <ani:ScaleAnimation Duration="0:0:0.3" To="0.9"/>
                     </ani:Implicit.HideAnimations>
                     <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" Delay="0:0:0.2"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0" Delay="0:0:0.2"/>
+                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0"/>
                     </ani:Implicit.ShowAnimations>
 
                 </customUI:AnimatedCancellableButton>
@@ -443,8 +453,8 @@
                         <ani:ScaleAnimation Duration="0:0:0.3" To="0.9"/>
                     </ani:Implicit.HideAnimations>
                     <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" Delay="0:0:0.3"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0" Delay="0:0:0.3"/>
+                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0"/>
                     </ani:Implicit.ShowAnimations>
 
                 </customUI:AnimatedCancellableButton>
@@ -472,8 +482,8 @@
                         <ani:ScaleAnimation Duration="0:0:0.3" To="0.9"/>
                     </ani:Implicit.HideAnimations>
                     <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" Delay="0:0:0.4"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0" Delay="0:0:0.4"/>
+                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0"/>
                     </ani:Implicit.ShowAnimations>
 
                 </customUI:AnimatedCancellableButton>
@@ -484,8 +494,8 @@
                         <ani:ScaleAnimation Duration="0:0:0.3" To="0.9"/>
                     </ani:Implicit.HideAnimations>
                     <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" Delay="0:0:0.5"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0" Delay="0:0:0.5"/>
+                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0"/>
                     </ani:Implicit.ShowAnimations>
 
                     <DropDownButton.Flyout>
@@ -535,8 +545,8 @@
                         <ani:ScaleAnimation Duration="0:0:0.3" To="0.95"/>
                     </ani:Implicit.HideAnimations>
                     <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" Delay="0:0:0.6"/>
-                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.95" To="1.0" Delay="0:0:0.6"/>
+                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.95" To="1.0"/>
                     </ani:Implicit.ShowAnimations>
 
                     <TextBlock FontSize="14"
@@ -570,13 +580,15 @@
                 <ani:TranslationAnimation Duration="0:0:0.4" To="0,20,0"/>
             </ani:Implicit.HideAnimations>
             <ani:Implicit.ShowAnimations>
-                <ani:OpacityAnimation Duration="0:0:0.7" From="0.0" To="1.0" Delay="0:0:0.2"/>
-                <ani:TranslationAnimation Duration="0:0:0.7" From="0,20,0" To="0,0,0" Delay="0:0:0.2"/>
+                <ani:OpacityAnimation Duration="0:0:0.7" From="0.0" To="1.0"/>
+                <ani:TranslationAnimation Duration="0:0:0.7" From="0,20,0" To="0,0,0"/>
             </ani:Implicit.ShowAnimations>
 
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsStackPanel AreStickyGroupHeadersEnabled="True"/>
+                    <!-- Can't use x:Bind here, setting this in the code-behind -->
+                    <!-- https://github.com/microsoft/microsoft-ui-xaml/issues/10070 -->
+                    <ItemsStackPanel />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.GroupStyle>

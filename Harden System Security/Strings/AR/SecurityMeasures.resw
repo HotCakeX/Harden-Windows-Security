@@ -823,12 +823,6 @@
 <data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
     <value>منع عملية المتصفح من إنشاء رمز ديناميكي</value>
 </data>
-<data name="DisableTLS10-TLS" xml:space="preserve">
-    <value>تعطيل TLS v1</value>
-</data>
-<data name="DisableTLS11-TLS" xml:space="preserve">
-    <value>تعطيل TLS v1.1</value>
-</data>
 <data name="DisableNULL-TLS" xml:space="preserve">
     <value>تعطيل التشفير الضعيف لـ Schannel: NULL</value>
 </data>
@@ -924,5 +918,29 @@
 </data>
 <data name="LockoutDuration-LockScreen" xml:space="preserve">
     <value>تعيين إعادة تعيين عداد قفل الحساب إلى 1440 دقيقة أو يوم واحد.</value>
+</data>
+<data name="DisableTLS10ClientPart1-TLS" xml:space="preserve">
+    <value>تعطيل عميل TLS الإصدار 1 - الجزء 1</value>
+</data>
+<data name="DisableTLS10ClientPart2-TLS" xml:space="preserve">
+    <value>تعطيل عميل TLS الإصدار 1 - الجزء 2</value>
+</data>
+<data name="DisableTLS10ServerPart1-TLS" xml:space="preserve">
+    <value>تعطيل خادم TLS الإصدار 1 - الجزء 1</value>
+</data>
+<data name="DisableTLS10ServerPart2-TLS" xml:space="preserve">
+    <value>تعطيل خادم TLS الإصدار 1 - الجزء 2</value>
+</data>
+<data name="DisableTLS11ClientPart1-TLS" xml:space="preserve">
+    <value>تعطيل عميل TLS الإصدار 1.1 - الجزء 1</value>
+</data>
+<data name="DisableTLS11ClientPart2-TLS" xml:space="preserve">
+    <value>تعطيل عميل TLS الإصدار 1.1 - الجزء 2</value>
+</data>
+<data name="DisableTLS11ServerPart1-TLS" xml:space="preserve">
+    <value>تعطيل خادم TLS الإصدار 1.1 - الجزء 1</value>
+</data>
+<data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
+    <value>تعطيل خادم TLS الإصدار 1.1 - الجزء 2</value>
 </data>
 </root>

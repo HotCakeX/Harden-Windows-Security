@@ -823,7 +823,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	{
 		try
 		{
-			App._nav.Navigate(typeof(CreatePolicy), null);
+			ViewModelProvider.NavigationService.Navigate(typeof(CreatePolicy), null);
 
 			switch (type)
 			{

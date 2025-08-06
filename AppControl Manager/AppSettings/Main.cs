@@ -56,6 +56,7 @@ internal sealed partial class Main : ViewModelBase
 		MainWindowHeight = ReadValue(nameof(MainWindowHeight), MainWindowHeight);
 		MainWindowIsMaximized = ReadValue(nameof(MainWindowIsMaximized), MainWindowIsMaximized);
 		ListViewsVerticalCentering = ReadValue(nameof(ListViewsVerticalCentering), ListViewsVerticalCentering);
+		StickyHeadersForListViews = ReadValue(nameof(StickyHeadersForListViews), StickyHeadersForListViews);
 		CacheSecurityCatalogsScanResults = ReadValue(nameof(CacheSecurityCatalogsScanResults), CacheSecurityCatalogsScanResults);
 		PromptForElevationOnStartup = ReadValue(nameof(PromptForElevationOnStartup), PromptForElevationOnStartup);
 		AutomaticAssignmentSidebar = ReadValue(nameof(AutomaticAssignmentSidebar), AutomaticAssignmentSidebar);
@@ -68,6 +69,7 @@ internal sealed partial class Main : ViewModelBase
 		LaunchActivationAction = ReadValue(nameof(LaunchActivationAction), LaunchActivationAction);
 		ScreenShield = ReadValue(nameof(ScreenShield), ScreenShield);
 		PublishUserActivityInTheOS = ReadValue(nameof(PublishUserActivityInTheOS), PublishUserActivityInTheOS);
+		LinkPreviewsForSecurityMeasure = ReadValue(nameof(LinkPreviewsForSecurityMeasure), LinkPreviewsForSecurityMeasure);
 	}
 
 	/// <summary>
@@ -265,6 +267,22 @@ internal sealed partial class Main : ViewModelBase
 	}
 
 	/// <summary>
+	/// Whether ListView headers remain visible when scrolling through the list content.
+	/// Only applies to ListViews that have items grouping.
+	/// </summary>
+	internal bool StickyHeadersForListViews
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(StickyHeadersForListViews), field);
+			}
+		}
+	} = true;
+
+	/// <summary>
 	/// Cache the security catalog scan results to speed up various components of the app that use them.
 	/// </summary>
 	internal bool CacheSecurityCatalogsScanResults
@@ -445,6 +463,21 @@ internal sealed partial class Main : ViewModelBase
 			if (SP(ref field, value))
 			{
 				SaveValue(nameof(PublishUserActivityInTheOS), field);
+			}
+		}
+	} = true;
+
+	/// <summary>
+	/// Whether link previews are enabled for security measures when hovering over.
+	/// </summary>
+	internal bool LinkPreviewsForSecurityMeasure
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(LinkPreviewsForSecurityMeasure), field);
 			}
 		}
 	} = true;

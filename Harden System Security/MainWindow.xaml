@@ -413,7 +413,7 @@
                                    Padding="10"
                                    AutomationProperties.LandmarkType="Custom"
                                    AutomationProperties.LocalizedLandmarkType="Bread Crumb Bar Navigation and Page Title"
-                                   Margin="20,10,0,10"
+                                   Margin="20,10,0,5"
                                    ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
                                    ItemClicked="{x:Bind Nav.BreadcrumbBar_ItemClicked}">
 
@@ -427,7 +427,7 @@
 
                     </BreadcrumbBar>
 
-                    <!--  Note the use of a TwoWay binding here, this is required for this control to work.  -->
+                    <!-- Note the use of a TwoWay binding here, this is required for this control to work.  -->
                     <controls:PropertySizer HorizontalAlignment="Left"
                                             Grid.Row="1"
                                             Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
@@ -437,7 +437,7 @@
 
                     <!-- Global margin settings for every page's content -->
                     <Frame x:Name="ContentFrame"
-                           Margin="15,15,15,10"
+                           Margin="15,10,15,10"
                            Grid.Row="1"
                            AutomationProperties.LandmarkType="Main" />
 

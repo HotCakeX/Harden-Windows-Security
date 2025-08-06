@@ -23,7 +23,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,0,6,10">
+            <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
 
                 <TextBlock x:Uid="SettingsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
@@ -107,6 +107,14 @@
                             <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.PublishUserActivityInTheOS, Mode=TwoWay}"
                                       x:Uid="ToggleSwitchGeneral"/>
                         </customUI:SettingsCardV2>
+                        <customUI:SettingsCardV2 x:Uid="ShowLinkPreviewsForSecurityItemsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF6FA;}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.LinkPreviewsForSecurityMeasure, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"/>
+                        </customUI:SettingsCardV2>
+                        <customUI:SettingsCardV2 x:Uid="StickyHeadersForListViewsSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE879;}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.StickyHeadersForListViews, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"/>
+                        </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
@@ -153,7 +161,7 @@
                 <!-- About section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                        x:Uid="About" />
-                <controls:SettingsExpander Header="AppControl Manager"
+                <controls:SettingsExpander Header="Harden System Security"
                                        IsExpanded="True"
                                        Description="{x:Bind ViewModel.CopyRightSettingsExpanderDescription, Mode=OneTime}"
                                        HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png}">
@@ -166,18 +174,17 @@
 
                                 <StackPanel Orientation="Vertical">
                                     <HyperlinkButton x:Uid="GitHubRepoHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
-                                    <HyperlinkButton x:Uid="MicrosoftStorePageHyperLinkButton" NavigateUri="https://apps.microsoft.com/detail/9PNG1JDDTGP8" />
+                                    <HyperlinkButton x:Uid="MicrosoftStorePageHyperLinkButton" NavigateUri="https://apps.microsoft.com/detail/9P7GGFL7DX57" />
                                 </StackPanel>
 
                                 <StackPanel Orientation="Vertical">
                                     <HyperlinkButton x:Uid="SpyNetGirlWebsiteHyperLinkButton" NavigateUri="https://spynetgirl.github.io/" />
                                     <HyperlinkButton x:Uid="YouTubeChannelHyperLinkButton" NavigateUri="https://www.youtube.com/@hotcakex" />
-                                    <HyperlinkButton x:Uid="DonationHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#donations-" />
+                                    <HyperlinkButton x:Uid="DonationHyperLinkButton" FontWeight="ExtraBold" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#donations-" />
                                 </StackPanel>
 
                                 <StackPanel Orientation="Vertical">
                                     <HyperlinkButton Content="X" NavigateUri="https://x.com/CyberCakeX" />
-                                    <HyperlinkButton x:Uid="PrivacyPolicyHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Privacy-Policy-for-the-AppControl-Manager" />
                                 </StackPanel>
 
                             </controls:WrapPanel>
@@ -189,7 +196,7 @@
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
                     <HyperlinkButton x:Uid="SendFeedbackHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
                     <HyperlinkButton x:Uid="Icons8WebsiteHyperLinkButton" NavigateUri="https://icons8.com" />
-                    <HyperlinkButton x:Uid="SourceCodeHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager" />
+                    <HyperlinkButton x:Uid="SourceCodeHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security" />
                 </controls:WrapPanel>
 
             </StackPanel>

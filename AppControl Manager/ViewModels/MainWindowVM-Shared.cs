@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using AppControlManager.Others;
@@ -153,6 +152,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		SidebarPaneIsOpen = !SidebarPaneIsOpen;
 	}
 
+#if APP_CONTROL_MANAGER
 	/// <summary>
 	/// Event handler for the Sidebar button to open the user config directory
 	/// </summary>
@@ -164,6 +164,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			UseShellExecute = true
 		});
 	}
+#endif
 
 	/// <summary>
 	/// Event handler for the hamburger/main menu button click

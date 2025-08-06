@@ -313,7 +313,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -409,7 +409,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			MainInfoBar.WriteError(ex);
 		}
 	}
 
@@ -675,7 +675,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					});
 				}
 			});
-
 		}
 		catch (Exception ex)
 		{
@@ -810,4 +809,26 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	#endregion
 
+	/// <summary>
+	/// Method used to open the Group Policy Editor with the selected policy file.
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <returns></returns>
+	internal async Task OpenInGroupPolicyEditor(string? filePath)
+	{
+		if (filePath is null)
+			return;
+		try
+		{
+			SelectedFile = filePath;
+
+			ViewModelProvider.NavigationService.Navigate(typeof(Pages.GroupPolicyEditor));
+
+			await ProcessSelectedFilePrivate();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
 }

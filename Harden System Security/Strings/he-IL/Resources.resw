@@ -2321,4 +2321,31 @@
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>פתח תיקיית לוגים</value>
   </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Description" xml:space="preserve">
+    <value>כאשר מופעל, מציג תצוגה מקדימה של דף האינטרנט עבור כל אמצעי אבטחה כאשר אתה מרחף מעל כפתור הקישור שלו.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Header" xml:space="preserve">
+    <value>הצג תצוגות מקדימות של קישורים עבור אמצעי אבטחה</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כאשר מופעל, מציג תצוגה מקדימה של דף האינטרנט עבור כל אמצעי אבטחה כאשר אתה מרחף מעל כפתור הקישור שלו.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כאשר מופעל, מציג תצוגה מקדימה של דף האינטרנט עבור כל אמצעי אבטחה כאשר אתה מרחף מעל כפתור הקישור שלו.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Description" xml:space="preserve">
+    <value>כאשר מופעל, תצוגות רשימה המציגות פריטים בקבוצות כבר לא יהיו להן כותרות דביקות. הכותרות שלהן יגללו יחד עם שאר הפריטים.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Header" xml:space="preserve">
+    <value>אפשר כותרות דביקות עבור תצוגות רשימה מקובצות</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כאשר מופעל, תצוגות רשימה המציגות פריטים בקבוצות כבר לא יהיו להן כותרות דביקות. הכותרות שלהן יגללו יחד עם שאר הפריטים.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כאשר מופעל, תצוגות רשימה המציגות פריטים בקבוצות כבר לא יהיו להן כותרות דביקות. הכותרות שלהן יגללו יחד עם שאר הפריטים.</value>
+  </data>
+  <data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>היישום הופעל עם הפעלת קובץ עבור הקובץ הבא: '{0}'</value>
+</data>
 </root>

@@ -2321,4 +2321,31 @@
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Abrir Directorio de Registros</value>
   </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Description" xml:space="preserve">
+    <value>Cuando está habilitado, muestra una vista previa de la página web para cada medida de seguridad cuando pasas el cursor sobre su botón de enlace.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Header" xml:space="preserve">
+    <value>Mostrar vistas previas de enlaces para medidas de seguridad</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cuando está habilitado, muestra una vista previa de la página web para cada medida de seguridad cuando pasas el cursor sobre su botón de enlace.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cuando está habilitado, muestra una vista previa de la página web para cada medida de seguridad cuando pasas el cursor sobre su botón de enlace.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Description" xml:space="preserve">
+    <value>Cuando está habilitado, las vistas de lista que muestran elementos en grupos ya no tendrán encabezados pegajosos. Sus encabezados se desplazarán junto con el resto de los elementos.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Header" xml:space="preserve">
+    <value>Habilitar encabezados pegajosos para vistas de lista agrupadas</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cuando está habilitado, las vistas de lista que muestran elementos en grupos ya no tendrán encabezados pegajosos. Sus encabezados se desplazarán junto con el resto de los elementos.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cuando está habilitado, las vistas de lista que muestran elementos en grupos ya no tendrán encabezados pegajosos. Sus encabezados se desplazarán junto con el resto de los elementos.</value>
+  </data>
+  <data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>La aplicación se inició con activación de archivo para el siguiente archivo: '{0}'</value>
+</data>
 </root>

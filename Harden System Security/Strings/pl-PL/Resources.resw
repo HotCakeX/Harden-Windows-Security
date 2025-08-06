@@ -2321,4 +2321,31 @@
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Otwórz Katalog Logów</value>
   </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Description" xml:space="preserve">
+    <value>Po włączeniu pokazuje podgląd strony internetowej dla każdego środka bezpieczeństwa, gdy najeżdżasz na jego przycisk linku.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.Header" xml:space="preserve">
+    <value>Pokaż podglądy linków dla środków bezpieczeństwa</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Po włączeniu pokazuje podgląd strony internetowej dla każdego środka bezpieczeństwa, gdy najeżdżasz na jego przycisk linku.</value>
+  </data>
+  <data name="ShowLinkPreviewsForSecurityItemsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Po włączeniu pokazuje podgląd strony internetowej dla każdego środka bezpieczeństwa, gdy najeżdżasz na jego przycisk linku.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Description" xml:space="preserve">
+    <value>Po włączeniu widoki list, które pokazują elementy w grupach, nie będą już miały przyklejonych nagłówków. Ich nagłówki będą przewijały się razem z pozostałymi elementami.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.Header" xml:space="preserve">
+    <value>Włącz przyklejone nagłówki dla pogrupowanych widoków list</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Po włączeniu widoki list, które pokazują elementy w grupach, nie będą już miały przyklejonych nagłówków. Ich nagłówki będą przewijały się razem z pozostałymi elementami.</value>
+  </data>
+  <data name="StickyHeadersForListViewsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Po włączeniu widoki list, które pokazują elementy w grupach, nie będą już miały przyklejonych nagłówków. Ich nagłówki będą przewijały się razem z pozostałymi elementami.</value>
+  </data>
+  <data name="FileActivationLaunchMessage" xml:space="preserve">
+  <value>Aplikacja została uruchomiona z aktywacją pliku dla następującego pliku: '{0}'</value>
+</data>
 </root>

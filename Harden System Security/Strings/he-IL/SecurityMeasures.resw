@@ -823,12 +823,6 @@
 <data name="DynamicCodeSettingsEdge-Edge" xml:space="preserve">
     <value>מניעת תהליך הדפדפן מיצירת קוד דינמי</value>
 </data>
-<data name="DisableTLS10-TLS" xml:space="preserve">
-    <value>ביטול TLS v1</value>
-</data>
-<data name="DisableTLS11-TLS" xml:space="preserve">
-    <value>ביטול TLS v1.1</value>
-</data>
 <data name="DisableNULL-TLS" xml:space="preserve">
     <value>ביטול הצופן החלש עבור Schannel: NULL</value>
 </data>
@@ -924,5 +918,29 @@
 </data>
 <data name="LockoutDuration-LockScreen" xml:space="preserve">
     <value>הגדרת איפוס מונה נעילת חשבון ל-1440 דקות או יום אחד.</value>
+</data>
+<data name="DisableTLS10ClientPart1-TLS" xml:space="preserve">
+    <value>השבת לקוח TLS גרסה 1 - חלק 1</value>
+</data>
+<data name="DisableTLS10ClientPart2-TLS" xml:space="preserve">
+    <value>השבת לקוח TLS גרסה 1 - חלק 2</value>
+</data>
+<data name="DisableTLS10ServerPart1-TLS" xml:space="preserve">
+    <value>השבת שרת TLS גרסה 1 - חלק 1</value>
+</data>
+<data name="DisableTLS10ServerPart2-TLS" xml:space="preserve">
+    <value>השבת שרת TLS גרסה 1 - חלק 2</value>
+</data>
+<data name="DisableTLS11ClientPart1-TLS" xml:space="preserve">
+    <value>השבת לקוח TLS גרסה 1.1 - חלק 1</value>
+</data>
+<data name="DisableTLS11ClientPart2-TLS" xml:space="preserve">
+    <value>השבת לקוח TLS גרסה 1.1 - חלק 2</value>
+</data>
+<data name="DisableTLS11ServerPart1-TLS" xml:space="preserve">
+    <value>השבת שרת TLS גרסה 1.1 - חלק 1</value>
+</data>
+<data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
+    <value>השבת שרת TLS גרסה 1.1 - חלק 2</value>
 </data>
 </root>

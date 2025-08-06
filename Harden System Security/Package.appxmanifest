@@ -35,7 +35,7 @@
   <Identity
     Name="VioletHansen.HardenSystemSecurity"
     Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189"
-    Version="1.0.1.0" />
+    Version="1.0.2.0" />
 
   <mp:PhoneIdentity PhoneProductId="74d36aa3-e613-41ec-808e-c5d051224316" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 
@@ -92,6 +92,30 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badgeAndTileText"/>
       </uap:VisualElements>
+
+      <Extensions>
+
+        <uap3:Extension Category="windows.appExecutionAlias" Executable="HardenSystemSecurity.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias>
+            <desktop:ExecutionAlias Alias="HSS.exe" />
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
+
+        <!-- POL File Association -->
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="harden-system-security.grouppolicy" DesiredView="default">
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="application/pol">.pol</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>Group Policy file</uap:DisplayName>
+            <uap:InfoTip>Open a .pol file in the Group Policy Editor</uap:InfoTip>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Assets\External\POLIcon.png</uap:Logo>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+
+      </Extensions>
+
     </Application>
   </Applications>
 

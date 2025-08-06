@@ -148,12 +148,6 @@ public partial class App : Application
 	// to this variable before using ShowAsync() method to display it.
 	internal static ContentDialog? CurrentlyOpenContentDialog;
 
-	internal static NavigationService _nav => ViewModelProvider.NavigationService;
-
-#if APP_CONTROL_MANAGER
-	private static PolicyEditorVM PolicyEditorViewModel => ViewModelProvider.PolicyEditorVM;
-#endif
-
 	/// <summary>
 	/// Initializes the singleton application object. This is the first line of authored code
 	/// executed, and as such is the logical equivalent of main() or WinMain().
@@ -235,12 +229,7 @@ public partial class App : Application
 	/// Invoked when the application is launched.
 	/// </summary>
 	/// <param name="args">Details about the launch request and process.</param>
-#if APP_CONTROL_MANAGER
 	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-#endif
-#if HARDEN_SYSTEM_SECURITY
-	protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-#endif
 
 	{
 		// Register the Jump List tasks
@@ -467,7 +456,7 @@ public partial class App : Application
 		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase) ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
 
 		NavigationService.RestoreWindowSize(m_window.AppWindow); // Restore window size on startup
-		_nav.mainWindowVM.OnIconsStylesChanged(Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
+		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
 		m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
 		m_window.Activate();
 
@@ -478,12 +467,13 @@ public partial class App : Application
 
 		if (!string.IsNullOrWhiteSpace(Settings.FileActivatedLaunchArg))
 		{
-#if APP_CONTROL_MANAGER
+
 			Logger.Write(string.Format(GlobalVars.GetStr("FileActivationLaunchMessage"), Settings.FileActivatedLaunchArg));
 
+#if APP_CONTROL_MANAGER
 			try
 			{
-				await PolicyEditorViewModel.OpenInPolicyEditor(Settings.FileActivatedLaunchArg);
+				await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(Settings.FileActivatedLaunchArg);
 			}
 			catch (Exception ex)
 			{
@@ -511,7 +501,7 @@ public partial class App : Application
 					{
 						case ViewModelBase.LaunchProtocolActions.PolicyEditor:
 							{
-								await PolicyEditorViewModel.OpenInPolicyEditor(Settings.LaunchActivationFilePath);
+								await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(Settings.LaunchActivationFilePath);
 								break;
 							}
 						case ViewModelBase.LaunchProtocolActions.FileSignature:
@@ -554,6 +544,30 @@ public partial class App : Application
 				Settings.LaunchActivationAction = string.Empty;
 			}
 #endif
+
+
+#if HARDEN_SYSTEM_SECURITY
+
+			try
+			{
+				await ViewModelProvider.GroupPolicyEditorVM.OpenInGroupPolicyEditor(Settings.FileActivatedLaunchArg);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+
+				// Continue doing the normal navigation if there was a problem
+				InitialNav();
+			}
+			finally
+			{
+				// Clear the file activated launch args after it's been used
+				Settings.FileActivatedLaunchArg = string.Empty;
+			}
+
+#endif
+
+
 		}
 		else
 		{
@@ -575,10 +589,10 @@ public partial class App : Application
 	{
 #if APP_CONTROL_MANAGER
 		// Navigate to the CreatePolicy page when the window is loaded and is Admin, else Policy Editor
-		_nav.Navigate(IsElevated ? typeof(Pages.CreatePolicy) : typeof(Pages.PolicyEditor));
+		ViewModelProvider.NavigationService.Navigate(IsElevated ? typeof(Pages.CreatePolicy) : typeof(Pages.PolicyEditor));
 #endif
 #if HARDEN_SYSTEM_SECURITY
-		_nav.Navigate(IsElevated ? typeof(Pages.Protect) : typeof(Pages.Protects.NonAdmin));
+		ViewModelProvider.NavigationService.Navigate(IsElevated ? typeof(Pages.Protect) : typeof(Pages.Protects.NonAdmin));
 #endif
 	}
 

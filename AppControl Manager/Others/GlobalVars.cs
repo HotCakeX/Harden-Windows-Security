@@ -18,7 +18,6 @@
 using System;
 using System.IO;
 #if HARDEN_SYSTEM_SECURITY
-using HardenSystemSecurity;
 #endif
 using Microsoft.Windows.ApplicationModel.Resources;
 
@@ -83,7 +82,6 @@ internal static class GlobalVars
 	internal static readonly string CISchemaPath = Path.Combine(
 		Environment.GetEnvironmentVariable("SystemDrive") + @"\",
 		"Windows", "schemas", "CodeIntegrity", "cipolicy.xsd");
-
 
 #if HARDEN_SYSTEM_SECURITY
 	// Storing the path to the app's folder in the Program Files
@@ -187,6 +185,8 @@ internal static class GlobalVars
 	/// </summary>
 	internal static readonly string SystemDrive = Environment.GetEnvironmentVariable("SystemDrive") ?? "C:";
 
+#if APP_CONTROL_MANAGER
+
 	static GlobalVars()
 	{
 		if (!App.IsElevated)
@@ -198,4 +198,7 @@ internal static class GlobalVars
 			_ = Directory.CreateDirectory(UserConfigDir);
 		}
 	}
+
+#endif
+
 }

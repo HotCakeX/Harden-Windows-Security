@@ -376,7 +376,7 @@
 
             <TextBlock x:Uid="InstalledAppsManagementPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
+            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps" />
 
         </controls:WrapPanel>
 

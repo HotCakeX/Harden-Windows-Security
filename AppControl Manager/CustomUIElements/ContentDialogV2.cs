@@ -65,16 +65,6 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	private static readonly Thickness ShadowThickness = new(ShadowMargin, ShadowMargin, ShadowMargin, ShadowMargin);
 	private static readonly Thickness BorderThick = new(0.7);
 
-	// Static cached shadow instance for performance
-	private static readonly AttachedCardShadow CachedShadow = new()
-	{
-		Offset = ShadowOffset,
-		Color = ShadowColor,
-		BlurRadius = ShadowBlurRadius,
-		Opacity = ShadowOpacity,
-		CornerRadius = ShadowCornerRadius
-	};
-
 	// Event handlers stored as fields to enable proper cleanup
 	private readonly RoutedEventHandler? _loadedHandler;
 	private readonly TypedEventHandler<ContentDialog, ContentDialogOpenedEventArgs>? _openedHandler;
@@ -367,6 +357,45 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			// Reset shadow applied flag for potential reuse
 			_shadowApplied = false;
 
+			// Detach any custom shadow we attached to the container and to the dialog itself
+			try
+			{
+				if (_shadowContainer is not null)
+				{
+#pragma warning disable CS8625
+					Effects.SetShadow(_shadowContainer, null);
+#pragma warning restore CS8625
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+			}
+
+			try
+			{
+#pragma warning disable CS8625
+				Effects.SetShadow(this, null);
+#pragma warning restore CS8625
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+			}
+
+			// Clear global reference if this dialog is the currently open one
+			try
+			{
+				if (ReferenceEquals(App.CurrentlyOpenContentDialog, this))
+				{
+					App.CurrentlyOpenContentDialog = null;
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ErrorWriter.FormatException(ex));
+			}
+
 			// Clean up event handlers to prevent memory leaks
 			CleanupEventHandlers();
 		}
@@ -469,42 +498,32 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 	}
 
-	// Method returning cached shadow instance for performance
+	// Create a fresh shadow instance per application
 	private static AttachedCardShadow CreateShadow()
 	{
 		try
 		{
-			return CachedShadow;
+			return new AttachedCardShadow
+			{
+				Offset = ShadowOffset,
+				Color = ShadowColor,
+				BlurRadius = ShadowBlurRadius,
+				Opacity = ShadowOpacity,
+				CornerRadius = ShadowCornerRadius
+			};
 		}
 		catch (Exception ex)
 		{
 			Logger.Write(ErrorWriter.FormatException(ex));
-			// Return a new instance as fallback
+			// Final fallback: return an empty shadow instance (must never throw)
 			try
 			{
-				return new AttachedCardShadow
-				{
-					Offset = ShadowOffset,
-					Color = ShadowColor,
-					BlurRadius = ShadowBlurRadius,
-					Opacity = ShadowOpacity,
-					CornerRadius = ShadowCornerRadius
-				};
+				return new AttachedCardShadow();
 			}
-			catch (Exception innerEx)
+			catch (Exception finalEx)
 			{
-				Logger.Write(ErrorWriter.FormatException(innerEx));
-				// Return basic shadow as final fallback - must never throw
-				try
-				{
-					return new AttachedCardShadow();
-				}
-				catch (Exception finalEx)
-				{
-					Logger.Write(ErrorWriter.FormatException(finalEx));
-					// If we can't create any shadow, return null - handled by caller
-					return null!;
-				}
+				Logger.Write(ErrorWriter.FormatException(finalEx));
+				return null!;
 			}
 		}
 	}
@@ -1785,6 +1804,45 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 					Logger.Write(ErrorWriter.FormatException(ex));
 				}
 
+				// Ensure we detach any shadow in case Closing didn't run
+				try
+				{
+					if (_shadowContainer is not null)
+					{
+#pragma warning disable CS8625
+						Effects.SetShadow(_shadowContainer, null);
+#pragma warning restore CS8625
+					}
+				}
+				catch (Exception ex)
+				{
+					Logger.Write(ErrorWriter.FormatException(ex));
+				}
+
+				try
+				{
+#pragma warning disable CS8625
+					Effects.SetShadow(this, null);
+#pragma warning restore CS8625
+				}
+				catch (Exception ex)
+				{
+					Logger.Write(ErrorWriter.FormatException(ex));
+				}
+
+				// Clear global reference if it still points to this dialog
+				try
+				{
+					if (ReferenceEquals(App.CurrentlyOpenContentDialog, this))
+					{
+						App.CurrentlyOpenContentDialog = null;
+					}
+				}
+				catch (Exception ex)
+				{
+					Logger.Write(ErrorWriter.FormatException(ex));
+				}
+
 				try
 				{
 					// Clear visual tree references
@@ -1827,18 +1885,6 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			{
 				Logger.Write(ErrorWriter.FormatException(innerEx));
 			}
-		}
-	}
-
-	~ContentDialogV2()
-	{
-		try
-		{
-			Dispose(false);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ErrorWriter.FormatException(ex));
 		}
 	}
 }

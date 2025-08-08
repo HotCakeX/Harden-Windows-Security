@@ -73,10 +73,17 @@ internal sealed class RegistryPolicyEntry(
 	[JsonPropertyName("RegValue")]
 	internal string? RegValue { get; set; }
 
+	/// <summary>
+	/// This is only used for Registry keys.
+	/// i.e., those whose <see cref="Source"/> is <see cref="Source.Registry"/>.
+	/// It is not used when applying Group Policies.
+	/// Group Policies are only affected by <see cref="GroupPolicyContext"/>.
+	/// Security Group Policies don't use it either because they always write to "MACHINE": <see cref="SecurityPolicy.SecurityPolicyRegistryManager.ParseRegistryPath"/>
+	/// </summary>
 	[JsonInclude]
 	[JsonPropertyOrder(7)]
 	[JsonPropertyName("Hive")]
-	internal Hive hive { get; init; }
+	internal Hive? hive { get; init; }
 
 	[JsonInclude]
 	[JsonPropertyOrder(8)]

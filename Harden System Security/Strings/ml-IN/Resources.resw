@@ -2348,4 +2348,68 @@
   <data name="FileActivationLaunchMessage" xml:space="preserve">
   <value>ഈ ഫയലിനായി ഫയൽ ആക്ടിവേഷനോടൊപ്പം ആപ്ലിക്കേഷൻ സമാരംഭിച്ചു: '{0}'</value>
 </data>
+ <data name="MicrosoftSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>മൈക്രോസോഫ്റ്റ് സുരക്ഷാ അടിസ്ഥാനം</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Microsoft 365 ആപ്പുകളുടെ സുരക്ഷാ അടിസ്ഥാനം</value>
+  </data>
+    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>ഈ പേജിൽ മൈക്രോസോഫ്റ്റ് സുരക്ഷാ അടിസ്ഥാനം പ്രയോഗിക്കുക. ഏതു സജ്ജീകരണങ്ങൾ പ്രയോഗിച്ചിട്ടുണ്ടെന്നും ഏതുവ അല്ലെന്നും കാണിക്കുന്ന കൃത്യമായ റിപ്പോർട്ട് ലഭിക്കാൻ സിസ്റ്റം പാലിക്കൽ സ്ഥിരീകരിക്കാനും നിങ്ങൾക്ക് കഴിയും. അടിസ്ഥാനം പ്രയോഗിച്ച നയങ്ങൾ നീക്കം ചെയ്യാനും നിങ്ങൾക്ക് കഴിയും.</value>
+  </data>
+    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>ഈ പേജിൽ Microsoft 365 ആപ്പുകളുടെ സുരക്ഷാ അടിസ്ഥാനം പ്രയോഗിക്കുക. ഏതു സജ്ജീകരണങ്ങൾ പ്രയോഗിച്ചിട്ടുണ്ടെന്നും ഏതുവ അല്ലെന്നും കാണിക്കുന്ന കൃത്യമായ റിപ്പോർട്ട് ലഭിക്കാൻ സിസ്റ്റം പാലിക്കൽ സ്ഥിരീകരിക്കാനും നിങ്ങൾക്ക് കഴിയും. അടിസ്ഥാനം പ്രയോഗിച്ച നയങ്ങൾ നീക്കം ചെയ്യാനും നിങ്ങൾക്ക് കഴിയും.</value>
+  </data>
+   <!--Security Baselines ListView Headers Start-->
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>ഉറവിടം</value>
+  </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>അവസ്ഥ</value>
+  </data>
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
+    <value>നിലവിലെ മൂല്യം</value>
+  </data>
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+    <value>പ്രതീക്ഷിത മൂല്യം</value>
+  </data>
+  <!--Security Baselines ListView Headers End-->
+  <!--Security Baselines ListView Headers Buttons Start-->
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ഉറവിടം</value>
+  </data>
+    <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>അവസ്ഥ</value>
+  </data>
+  <data name="CurrentValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>നിലവിലെ മൂല്യം</value>
+  </data>
+  <data name="ExpectedValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>പ്രതീക്ഷിത മൂല്യം</value>
+  </data>
+  <!--Security Baselines ListView Headers Buttons End-->
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഫലപ്രദമായ നയങ്ങൾ നേടുക (ഉപയോക്താവ്)</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലെ ഉപയോക്താവിൽ പ്രയോഗിച്ച ഫലപ്രദമായ ഗ്രൂപ്പ് നയങ്ങളുടെ പട്ടിക നൽകുന്നു.</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിലെ ഉപയോക്താവിൽ പ്രയോഗിച്ച ഫലപ്രദമായ ഗ്രൂപ്പ് നയങ്ങളുടെ പട്ടിക നൽകുന്നു.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
+    <value>മൈക്രോസോഫ്റ്റ് അടിസ്ഥാന അതിലംഘനങ്ങൾ</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+    <value>മൈക്രോസോഫ്റ്റ് സുരക്ഷാ അടിസ്ഥാനങ്ങൾ പ്രയോഗിച്ചതിനുശേഷം പ്രവർത്തനരഹിതമാക്കിയ ഓപ്പറേറ്റിംഗ് സിസ്റ്റം സവിശേഷതകൾ പുനഃസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രദർശിപ്പിക്കുന്ന ഡാറ്റ JSON ഫയലിലേക്ക് കയറ്റുമതി ചെയ്യുന്നു. അത് സംരക്ഷിക്കേണ്ട സ്ഥലം തിരഞ്ഞെടുക്കാൻ നിങ്ങൾക്ക് കഴിയും.</value>
+  </data>
+  <data name="ExportToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രദർശിപ്പിക്കുന്ന ഡാറ്റ JSON ഫയലിലേക്ക് കയറ്റുമതി ചെയ്യുന്നു. അത് സംരക്ഷിക്കേണ്ട സ്ഥലം തിരഞ്ഞെടുക്കാൻ നിങ്ങൾക്ക് കഴിയും.</value>
+  </data>
+  <data name="ExportToJsonButton.Content" xml:space="preserve">
+    <value>JSON-ലേക്ക് കയറ്റുമതി ചെയ്യുക</value>
+  </data>
 </root>

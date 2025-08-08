@@ -1699,7 +1699,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 				string sys32Dir = new(Path.Combine(GlobalVars.SystemDrive, "Windows", "System32"));
 
-				(IEnumerable<string>, int) filesOutput = FileUtility.GetFilesFast([sys32Dir], null, [".dll", ".sys"]);
+				(IEnumerable<string>, int) filesOutput = FileUtility.GetFilesFast(new[] { sys32Dir }, null, [".dll", ".sys"]);
 
 				kernelModeDriversList.AddRange(filesOutput.Item1);
 

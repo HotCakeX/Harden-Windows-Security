@@ -63,20 +63,6 @@ internal static class CategoryProcessorFactory
 
 	#region Concrete processor implementations for MUnit-based categories
 
-	private sealed class MicrosoftSecurityBaselineProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.MicrosoftSecurityBaseline;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFTSecBaseline");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.MicrosoftSecurityBaseline);
-	}
-
-	private sealed class Microsoft365AppsSecurityBaselineProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.Microsoft365AppsSecurityBaseline;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFT365AppsSecBaseline");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.Microsoft365AppsSecurityBaseline);
-	}
-
 	private sealed class MicrosoftDefenderProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.MicrosoftDefender;
@@ -178,6 +164,54 @@ internal static class CategoryProcessorFactory
 	#endregion
 
 	#region Custom processor for Optional Windows Features
+
+	private sealed class MicrosoftSecurityBaselineProcessor : ICategoryProcessor
+	{
+		public Categories Category => Categories.MicrosoftSecurityBaseline;
+		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFTSecBaseline");
+
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		{
+			MicrosoftSecurityBaselineVM vm = ViewModelProvider.MicrosoftSecurityBaselineVM;
+			await vm.ApplyInternal();
+		}
+
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		{
+			MicrosoftSecurityBaselineVM vm = ViewModelProvider.MicrosoftSecurityBaselineVM;
+			await vm.RemoveInternal();
+		}
+
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		{
+			MicrosoftSecurityBaselineVM vm = ViewModelProvider.MicrosoftSecurityBaselineVM;
+			await vm.VerifyInternal();
+		}
+	}
+
+	private sealed class Microsoft365AppsSecurityBaselineProcessor : ICategoryProcessor
+	{
+		public Categories Category => Categories.MicrosoftSecurityBaseline;
+		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFT365AppsSecBaseline");
+
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		{
+			Microsoft365AppsSecurityBaselineVM vm = ViewModelProvider.Microsoft365AppsSecurityBaselineVM;
+			await vm.ApplyInternal();
+		}
+
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		{
+			Microsoft365AppsSecurityBaselineVM vm = ViewModelProvider.Microsoft365AppsSecurityBaselineVM;
+			await vm.RemoveInternal();
+		}
+
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		{
+			Microsoft365AppsSecurityBaselineVM vm = ViewModelProvider.Microsoft365AppsSecurityBaselineVM;
+			await vm.VerifyInternal();
+		}
+	}
 
 	// These are the ViewModels that don't use MUnit and have custom logics.
 

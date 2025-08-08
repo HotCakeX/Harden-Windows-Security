@@ -2348,4 +2348,68 @@
   <data name="FileActivationLaunchMessage" xml:space="preserve">
   <value>Aplikacja została uruchomiona z aktywacją pliku dla następującego pliku: '{0}'</value>
 </data>
+ <data name="MicrosoftSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Podstawa zabezpieczeń Microsoft</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Podstawa zabezpieczeń aplikacji Microsoft 365</value>
+  </data>
+    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>Zastosuj podstawę zabezpieczeń Microsoft na tej stronie. Możesz również zweryfikować zgodność systemu, aby uzyskać precyzyjny raport pokazujący, które ustawienia są zastosowane, a które nie. Możesz również usunąć zasady zastosowane przez podstawę.</value>
+  </data>
+    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>Zastosuj podstawę zabezpieczeń aplikacji Microsoft 365 na tej stronie. Możesz również zweryfikować zgodność systemu, aby uzyskać precyzyjny raport pokazujący, które ustawienia są zastosowane, a które nie. Możesz również usunąć zasady zastosowane przez podstawę.</value>
+  </data>
+   <!--Security Baselines ListView Headers Start-->
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>Źródło</value>
+  </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
+    <value>Bieżąca wartość</value>
+  </data>
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+    <value>Oczekiwana wartość</value>
+  </data>
+  <!--Security Baselines ListView Headers End-->
+  <!--Security Baselines ListView Headers Buttons Start-->
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Źródło</value>
+  </data>
+    <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="CurrentValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Bieżąca wartość</value>
+  </data>
+  <data name="ExpectedValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Oczekiwana wartość</value>
+  </data>
+  <!--Security Baselines ListView Headers Buttons End-->
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Pobierz skuteczne zasady (Użytkownik)</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetla skuteczne zasady grupy zastosowane do bieżącego użytkownika.</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetla skuteczne zasady grupy zastosowane do bieżącego użytkownika.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
+    <value>Zastąpienia podstaw Microsoft</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+    <value>Przywróć funkcje systemu operacyjnego, które zostały wyłączone po zastosowaniu podstaw zabezpieczeń Microsoft.</value>
+  </data>
+  <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eksportuje wyświetlane dane do pliku JSON. Będziesz mógł wybrać lokalizację, w której zostanie zapisany.</value>
+  </data>
+  <data name="ExportToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eksportuje wyświetlane dane do pliku JSON. Będziesz mógł wybrać lokalizację, w której zostanie zapisany.</value>
+  </data>
+  <data name="ExportToJsonButton.Content" xml:space="preserve">
+    <value>Eksportuj do JSON</value>
+  </data>
 </root>

@@ -26,7 +26,7 @@ internal unsafe static partial class NativeMethods
 {
 
 	// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecontextw
-	[LibraryImport("advapi32.dll", EntryPoint = "CryptAcquireContextW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[LibraryImport("ADVAPI32", EntryPoint = "CryptAcquireContextW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool CryptAcquireContext(
@@ -38,7 +38,7 @@ internal unsafe static partial class NativeMethods
 
 
 	// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptcreatehash
-	[LibraryImport("advapi32.dll", EntryPoint = "CryptCreateHash", SetLastError = true)]
+	[LibraryImport("ADVAPI32", EntryPoint = "CryptCreateHash", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool CryptCreateHash(
@@ -50,7 +50,7 @@ internal unsafe static partial class NativeMethods
 
 
 	// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-crypthashdata
-	[LibraryImport("advapi32.dll", EntryPoint = "CryptHashData", SetLastError = true)]
+	[LibraryImport("ADVAPI32", EntryPoint = "CryptHashData", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool CryptHashData(
@@ -61,7 +61,7 @@ internal unsafe static partial class NativeMethods
 
 
 	// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptgethashparam
-	[LibraryImport("advapi32.dll", EntryPoint = "CryptGetHashParam", SetLastError = true)]
+	[LibraryImport("ADVAPI32", EntryPoint = "CryptGetHashParam", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool CryptGetHashParam(
@@ -73,14 +73,14 @@ internal unsafe static partial class NativeMethods
 
 
 	// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptdestroyhash
-	[LibraryImport("advapi32.dll", EntryPoint = "CryptDestroyHash", SetLastError = true)]
+	[LibraryImport("ADVAPI32", EntryPoint = "CryptDestroyHash", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool CryptDestroyHash(IntPtr hHash);
 
 
 	// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptreleasecontext
-	[LibraryImport("advapi32.dll", EntryPoint = "CryptReleaseContext", SetLastError = true)]
+	[LibraryImport("ADVAPI32", EntryPoint = "CryptReleaseContext", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool CryptReleaseContext(IntPtr hProv, uint dwFlags);
@@ -290,7 +290,7 @@ internal unsafe static partial class NativeMethods
 
 
 	// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-openscmanagerw
-	[LibraryImport("advapi32.dll", EntryPoint = "OpenSCManagerW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[LibraryImport("ADVAPI32", EntryPoint = "OpenSCManagerW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr OpenSCManager(
 		   string? lpMachineName,
@@ -300,7 +300,7 @@ internal unsafe static partial class NativeMethods
 
 
 	// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-openservicew
-	[LibraryImport("advapi32.dll", EntryPoint = "OpenServiceW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[LibraryImport("ADVAPI32", EntryPoint = "OpenServiceW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr OpenService(
 		IntPtr hSCManager,
@@ -310,7 +310,7 @@ internal unsafe static partial class NativeMethods
 
 
 	// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-changeserviceconfigw
-	[LibraryImport("advapi32.dll", EntryPoint = "ChangeServiceConfigW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[LibraryImport("ADVAPI32", EntryPoint = "ChangeServiceConfigW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool ChangeServiceConfig(
@@ -329,7 +329,7 @@ internal unsafe static partial class NativeMethods
 
 
 	// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-closeservicehandle
-	[LibraryImport("advapi32.dll", SetLastError = true)]
+	[LibraryImport("ADVAPI32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool CloseServiceHandle(
@@ -338,7 +338,7 @@ internal unsafe static partial class NativeMethods
 
 
 	// https://learn.microsoft.com//windows/win32/api/winreg/nf-winreg-regnotifychangekeyvalue
-	[LibraryImport("advapi32.dll", SetLastError = true)]
+	[LibraryImport("ADVAPI32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int RegNotifyChangeKeyValue(
 		SafeRegistryHandle hKey,
@@ -596,7 +596,7 @@ internal unsafe static partial class NativeMethods
 	/// <param name="hWnd"></param>
 	/// <param name="dwAffinity"></param>
 	/// <returns></returns>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
@@ -612,7 +612,7 @@ internal unsafe static partial class NativeMethods
 
 
 	// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowplacement
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool GetWindowPlacement(IntPtr hWnd, ref Others.Win32InteropInternal.WINDOWPLACEMENT lpwndpl);
@@ -669,11 +669,11 @@ internal unsafe static partial class NativeMethods
 	internal static partial int BCryptDestroyHash(IntPtr hHash);
 
 
-	[LibraryImport("user32.dll", EntryPoint = "SetWindowLongPtrW")]
+	[LibraryImport("USER32", EntryPoint = "SetWindowLongPtrW")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, nint newProc);
 
-	[LibraryImport("user32.dll", EntryPoint = "GetWindowLongPtrW")]
+	[LibraryImport("USER32", EntryPoint = "GetWindowLongPtrW")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
 

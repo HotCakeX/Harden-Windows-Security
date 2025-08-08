@@ -32,7 +32,7 @@
 
             <TextBlock x:Uid="GroupPolicyEditorPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
+            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy-Editor" />
 
         </controls:WrapPanel>
 
@@ -70,6 +70,12 @@
                                             Click="{x:Bind ViewModel.GetEffectivePolicies_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEF90;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Uid="GetEffectiveUserPoliciesMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.GetEffectiveUserPolicies_Click}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE7EE;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator />

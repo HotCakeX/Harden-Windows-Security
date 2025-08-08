@@ -284,7 +284,6 @@ internal sealed partial class ASRVM : ViewModelBase
 					data: stateBytes)
 				{
 					RegValue = ((uint)entry.State).ToString(),
-					hive = entry.PolicyEntry.hive,
 					policyAction = entry.PolicyEntry.policyAction,
 					FriendlyName = entry.PolicyEntry.FriendlyName,
 					URL = entry.PolicyEntry.URL,
@@ -296,7 +295,7 @@ internal sealed partial class ASRVM : ViewModelBase
 				List<RegistryPolicyEntry> policiesToApply = [updatedEntry, ParentPolicy!];
 
 				// Apply the policies to the system
-				RegistryPolicyParser.AddPoliciesToSystem(policiesToApply);
+				RegistryPolicyParser.AddPoliciesToSystem(policiesToApply, GroupPolicyContext.Machine);
 
 			});
 
@@ -346,7 +345,6 @@ internal sealed partial class ASRVM : ViewModelBase
 						stateBytes)
 					{
 						RegValue = ((uint)entry.State).ToString(),
-						hive = entry.PolicyEntry.hive,
 						policyAction = entry.PolicyEntry.policyAction,
 						FriendlyName = entry.PolicyEntry.FriendlyName,
 						URL = entry.PolicyEntry.URL,
@@ -357,7 +355,7 @@ internal sealed partial class ASRVM : ViewModelBase
 					policiesToApply.Add(updatedEntry);
 				}
 
-				RegistryPolicyParser.AddPoliciesToSystem(policiesToApply);
+				RegistryPolicyParser.AddPoliciesToSystem(policiesToApply, GroupPolicyContext.Machine);
 
 			});
 
@@ -382,7 +380,7 @@ internal sealed partial class ASRVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 
-			await Task.Run(() => RegistryPolicyParser.RemovePoliciesFromSystem(ASRPolicyFromJSON));
+			await Task.Run(() => RegistryPolicyParser.RemovePoliciesFromSystem(ASRPolicyFromJSON, GroupPolicyContext.Machine));
 
 			// Reset all UI states to NotConfigured
 			foreach (ASRRuleEntry entry in ASRItemsLVBound)
@@ -456,7 +454,7 @@ internal sealed partial class ASRVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-				RegistryPolicyParser.AddPoliciesToSystem(ASRPolicyFromJSON);
+				RegistryPolicyParser.AddPoliciesToSystem(ASRPolicyFromJSON, GroupPolicyContext.Machine);
 			});
 
 			// Update UI to reflect the recommended states

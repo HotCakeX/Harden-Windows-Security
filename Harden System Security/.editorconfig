@@ -1286,3 +1286,6 @@ dotnet_diagnostic.IL3056.severity = error
 
 # IL4000: Return value does not match FeatureGuard annotations of the property. The check should return false whenever any of the features referenced in the FeatureGuard annotations is disabled.
 dotnet_diagnostic.IL4000.severity = error
+
+# IL3000: Avoid accessing Assembly file path when publishing as a single file
+dotnet_diagnostic.IL3000.severity = error

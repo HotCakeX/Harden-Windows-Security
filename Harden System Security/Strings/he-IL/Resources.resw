@@ -2348,4 +2348,68 @@
   <data name="FileActivationLaunchMessage" xml:space="preserve">
   <value>היישום הופעל עם הפעלת קובץ עבור הקובץ הבא: '{0}'</value>
 </data>
+ <data name="MicrosoftSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>בסיס אבטחה של מיקרוסופט</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>בסיס אבטחה ליישומי Microsoft 365</value>
+  </data>
+    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>יישם את בסיס האבטחה של מיקרוסופט בעמוד זה. תוכל גם לאמת תאימות המערכת כדי לקבל דוח מדויק המציג אילו הגדרות מיושמות ואילו לא. תוכל להסיר את המדיניות שיושמה על ידי הבסיס גם כן.</value>
+  </data>
+    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>יישם את בסיס האבטחה ליישומי Microsoft 365 בעמוד זה. תוכל גם לאמת תאימות המערכת כדי לקבל דוח מדויק המציג אילו הגדרות מיושמות ואילו לא. תוכל להסיר את המדיניות שיושמה על ידי הבסיס גם כן.</value>
+  </data>
+   <!--Security Baselines ListView Headers Start-->
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>מקור</value>
+  </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>סטטוס</value>
+  </data>
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
+    <value>ערך נוכחי</value>
+  </data>
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+    <value>ערך צפוי</value>
+  </data>
+  <!--Security Baselines ListView Headers End-->
+  <!--Security Baselines ListView Headers Buttons Start-->
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מקור</value>
+  </data>
+    <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>סטטוס</value>
+  </data>
+  <data name="CurrentValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ערך נוכחי</value>
+  </data>
+  <data name="ExpectedValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ערך צפוי</value>
+  </data>
+  <!--Security Baselines ListView Headers Buttons End-->
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>קבל מדיניות פעילה (משתמש)</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מציג את המדיניות הקבוצתית הפעילה המיושמת על המשתמש הנוכחי.</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מציג את המדיניות הקבוצתית הפעילה המיושמת על המשתמש הנוכחי.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
+    <value>עקיפות בסיסי מיקרוסופט</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+    <value>שחזר תכונות מערכת הפעלה שהושבתו לאחר יישום בסיסי האבטחה של מיקרוסופט.</value>
+  </data>
+  <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מייצא את הנתונים המוצגים לקובץ JSON. תוכל לבחור את המיקום בו הם יישמרו.</value>
+  </data>
+  <data name="ExportToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מייצא את הנתונים המוצגים לקובץ JSON. תוכל לבחור את המיקום בו הם יישמרו.</value>
+  </data>
+  <data name="ExportToJsonButton.Content" xml:space="preserve">
+    <value>ייצא ל-JSON</value>
+  </data>
 </root>

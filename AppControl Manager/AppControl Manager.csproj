@@ -17,7 +17,7 @@
 
         https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
         -->
-        <WindowsSdkPackageVersion>10.0.26100.71</WindowsSdkPackageVersion>
+        <WindowsSdkPackageVersion>10.0.26100.73-preview</WindowsSdkPackageVersion>
 
         <!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -54,7 +54,7 @@
         <AssemblyName>AppControlManager</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>2.0.35.0</FileVersion>
+        <FileVersion>2.0.36.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
         <StartupObject>AppControlManager.Program</StartupObject>
@@ -78,9 +78,6 @@
 
         <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
         <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
-
-        <!-- https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/issues/5226 -->
-        <NoWarn>IL3000</NoWarn>
 
     </PropertyGroup>
 
@@ -191,6 +188,23 @@
         <IlcArg Include="--verbose" />
 
         <!--  <IlcArg Include="- -methodbodyfolding" /> -->
+
+        <!--
+            https://learn.microsoft.com/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexw
+            https://learn.microsoft.com/cpp/build/reference/dependentloadflag
+            https://learn.microsoft.com/dotnet/core/deploying/native-aot/interop#direct-pinvoke-calls
+            Without setting this, the result of the "dumpbin.exe /loadconfig HardenSystemSecurity.exe" will show: 0000 Dependent Load Flag
+            After setting it we'll see: 0800 Dependent Load Flag.
+
+            The dll names are case-insensitive.
+            LibraryImport doesn't need the ".dll" extension.
+            
+        -->
+        <LinkerArg Include="/DEPENDENTLOADFLAG:0x800" />
+
+        <DirectPInvoke Include="USER32" />
+        <DirectPInvoke Include="ADVAPI32" />
+
     </ItemGroup>
 
 
@@ -217,7 +231,7 @@
     <ItemGroup>
 
         <!-- Main Packages - Without these packages, there will be compilaton errors related to missing types -->
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250731-build.2197" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250811-build.2202" />
         <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.2.250402" />
@@ -230,26 +244,26 @@
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
         <PackageReference Include="Microsoft.Identity.Client" Version="4.74.1" />
         <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.74.1" />
-        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.250720.1" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0-preview.6.25358.103" />
-        <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0-preview.6.25358.103" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0-preview.7.25380.108" />
+        <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0-preview.7.25380.108" />
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
         <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
-        <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.13.0" />
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3351.48" />
+        <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.13.1" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3405.78" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4654" />
         <PackageReference Include="Microsoft.Windows.SDK.Win32Docs" Version="0.1.42-alpha" />
         <PackageReference Include="Microsoft.Windows.SDK.Win32Metadata" Version="63.0.31-preview" />
         <PackageReference Include="Microsoft.Windows.WDK.Win32Metadata" Version="0.13.25-experimental" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
-        <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.6.25358.103" />
-        <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.6.25358.103" />
-        <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.3" />
+        <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.7.25380.108" />
+        <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.7.25380.108" />
+        <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.4" />
 
     </ItemGroup>
 

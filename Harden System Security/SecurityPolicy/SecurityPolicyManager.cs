@@ -183,10 +183,21 @@ Revision=1
 	/// <returns>Dictionary of System Access settings</returns>
 	private static Dictionary<string, string> ExtractSystemAccessSettings(string filePath)
 	{
-		Dictionary<string, string> settings = new(StringComparer.Ordinal);
-
 		string[] lines = File.ReadAllLines(filePath);
+		return ExtractSystemAccessSettingsCore(lines);
+	}
 
+	[GeneratedRegex(@"^([^=]+?)\s*=\s*(.+)$")]
+	private static partial Regex SystemAccessFindingRegex();
+
+	/// <summary>
+	/// Core method that extracts [System Access] settings from lines of text.
+	/// </summary>
+	/// <param name="lines">Lines of text from the INF file</param>
+	/// <returns>Dictionary of System Access settings</returns>
+	private static Dictionary<string, string> ExtractSystemAccessSettingsCore(IEnumerable<string> lines)
+	{
+		Dictionary<string, string> settings = new(StringComparer.Ordinal);
 		bool inSystemAccessSection = false;
 
 		foreach (string line in lines)
@@ -210,7 +221,7 @@ Revision=1
 			// If we're in the System Access section and the line contains a setting
 			if (inSystemAccessSection && !string.IsNullOrEmpty(trimmedLine) && !trimmedLine.StartsWith(';'))
 			{
-				// Use regex to match both "key = value" and "key=value" formats just in case the format is different!
+				// Match both "key = value" and "key=value" formats just in case the format is different!
 				Match match = SystemAccessFindingRegex().Match(trimmedLine);
 
 				if (match.Success)
@@ -232,7 +243,24 @@ Revision=1
 		return settings;
 	}
 
-	[GeneratedRegex(@"^([^=]+?)\s*=\s*(.+)$")]
-	private static partial Regex SystemAccessFindingRegex();
+	/// <summary>
+	/// Extracts [System Access] settings from a StreamReader.
+	/// </summary>
+	/// <param name="reader">StreamReader for the INF content</param>
+	/// <returns>Dictionary of System Access settings</returns>
+	internal static Dictionary<string, string> ExtractSystemAccessSettingsFromReader(StreamReader reader)
+	{
+		// Lazy enumerable that reads lines from the StreamReader
+		static IEnumerable<string> ReadAllLines(StreamReader reader)
+		{
+			string? line;
+			while ((line = reader.ReadLine()) is not null)
+			{
+				yield return line;
+			}
+		}
+
+		return ExtractSystemAccessSettingsCore(ReadAllLines(reader));
+	}
 
 }

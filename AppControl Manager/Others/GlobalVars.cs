@@ -73,7 +73,8 @@ internal static class GlobalVars
 	}
 
 	// User Mode block rules
-	internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");
+	//internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");
+	internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol");
 
 	// Kernel Mode block rules
 	internal static readonly Uri MSFTRecommendedDriverBlockRulesURL = new("https://aka.ms/VulnerableDriverBlockList");

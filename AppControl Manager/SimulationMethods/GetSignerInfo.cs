@@ -16,6 +16,7 @@
 //
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -26,6 +27,22 @@ namespace AppControlManager.SimulationMethods;
 
 internal static class GetSignerInfo
 {
+
+	/// <summary>
+	/// Well-known IDs for replacing root certificate values
+	/// </summary>
+	private static readonly FrozenSet<string> wellKnownIDs = FrozenSet.ToFrozenSet(
+		new[]
+			{
+				"03", "04", "05", "06", "07", "09", "0A", "0E", "0G", "0H", "0I"
+			}, StringComparer.OrdinalIgnoreCase
+	);
+
+	/// <summary>
+	/// WHQL EKU Hex value
+	/// </summary>
+	private const string WHQLEkuHex = "010A2B0601040182370A0305";
+
 	/// <summary>
 	/// Takes an XML policy content as input and returns an array of Signer objects
 	/// The output contains as much info as possible about each signer
@@ -106,15 +123,6 @@ internal static class GetSignerInfo
 		// Unique IDs of all Denied Signers
 		HashSet<string> allDeniedSigners = new(deniedUMCISigners, StringComparer.OrdinalIgnoreCase);
 		allDeniedSigners.UnionWith(deniedKMCISigners);
-
-		// Well-known IDs for replacing root certificate values
-		HashSet<string> wellKnownIDs = new(
-		[
-			"03", "04", "05", "06", "07", "09", "0A", "0E", "0G", "0H", "0I"
-		], StringComparer.OrdinalIgnoreCase);
-
-		// WHQL EKU Hex value
-		const string whqlEKUHex = "010A2B0601040182370A0305";
 
 		// An empty list to store the output
 		List<SignerX> output = [];
@@ -353,7 +361,7 @@ internal static class GetSignerInfo
 				if (EkuValue is not null)
 				{
 					// Check if the current EKU of the signer is WHQL
-					if (string.Equals(EkuValue, whqlEKUHex, StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(EkuValue, WHQLEkuHex, StringComparison.OrdinalIgnoreCase))
 					{
 						IsWHQL = true;
 					}

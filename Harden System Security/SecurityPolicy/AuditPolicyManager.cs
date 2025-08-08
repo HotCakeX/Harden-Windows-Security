@@ -1,0 +1,721 @@
+// MIT License
+//
+// Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+//
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using AppControlManager;
+using AppControlManager.Others;
+
+namespace HardenSystemSecurity.SecurityPolicy;
+
+/// <summary>
+/// Represents a single audit policy entry with subcategory information
+/// </summary>
+/// <param name="subcategoryGuid">The GUID of the audit subcategory</param>
+/// <param name="subcategoryName">The friendly name of the subcategory</param>
+/// <param name="categoryGuid">The GUID of the parent category</param>
+/// <param name="categoryName">The friendly name of the parent category</param>
+/// <param name="auditingInformation">The current audit setting</param>
+internal sealed class AuditPolicyInfo(
+	Guid subcategoryGuid,
+	string subcategoryName,
+	Guid categoryGuid,
+	string categoryName,
+	uint auditingInformation)
+{
+	internal Guid SubcategoryGuid => subcategoryGuid;
+	internal string SubcategoryName => subcategoryName;
+	internal Guid CategoryGuid => categoryGuid;
+	internal string CategoryName => categoryName;
+	internal uint AuditingInformation => auditingInformation;
+
+	/// <summary>
+	/// Gets the human-readable audit setting
+	/// </summary>
+	internal string AuditSettingDescription => GetAuditSettingDescription(auditingInformation);
+
+	/// <summary>
+	/// Converts audit setting numeric value to human-readable description.
+	/// </summary>
+	/// <param name="auditingInformation">Numeric audit setting value</param>
+	/// <returns>Human-readable description</returns>
+	internal static string GetAuditSettingDescription(uint auditingInformation)
+	{
+		return auditingInformation switch
+		{
+			0 => "No auditing",
+			1 => "Success",
+			2 => "Failure",
+			3 => "Success and Failure",
+			_ => "Unknown"
+		};
+	}
+}
+
+/// <summary>
+/// Represents a CSV audit policy entry to be applied
+/// </summary>
+/// <param name="subcategoryGuid">The GUID of the audit subcategory</param>
+/// <param name="subcategoryName">The friendly name of the subcategory</param>
+/// <param name="inclusionSetting">The inclusion setting from CSV</param>
+/// <param name="settingValue">The numeric setting value</param>
+internal sealed class CsvAuditPolicyEntry(
+	Guid subcategoryGuid,
+	string subcategoryName,
+	string inclusionSetting,
+	uint settingValue)
+{
+	internal Guid SubcategoryGuid => subcategoryGuid;
+	internal string SubcategoryName => subcategoryName;
+	internal string InclusionSetting => inclusionSetting;
+	internal uint SettingValue => settingValue;
+}
+
+/// <summary>
+/// Ensures required privileges are enabled for audit policy enumeration / modification.
+/// This guarantees that calls to Audit* APIs succeed when run as admin where the privileges
+/// are present but initially disabled in the process token.
+/// If they are not enabled, the API calls will not fail but policies will not be applied either.
+/// </summary>
+internal static class AuditPrivilegeHelper
+{
+	private const string SecurityPrivilegeName = "SeSecurityPrivilege";
+
+	private const uint TOKEN_QUERY = 0x0008;
+	private const uint TOKEN_ADJUST_PRIVILEGES = 0x0020;
+	private const uint SE_PRIVILEGE_ENABLED = 0x00000002;
+
+	/// <summary>
+	/// Ensures we only attempt once per process
+	/// </summary>
+	private static bool _attempted;
+
+	private static readonly Lock _lock = new();
+
+	/// <summary>
+	/// Ensure required privileges are enabled exactly once per process.
+	/// Safe to call multiple times; subsequent calls are no-ops.
+	/// </summary>
+	internal static void EnsurePrivileges()
+	{
+		if (_attempted)
+		{
+			return;
+		}
+
+		lock (_lock)
+		{
+			if (_attempted)
+			{
+				return;
+			}
+
+			IntPtr processHandle = Process.GetCurrentProcess().Handle;
+
+			bool opened = NativeMethods.OpenProcessToken(processHandle, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, out nint tokenHandle);
+			if (!opened)
+			{
+				int err = Marshal.GetLastWin32Error();
+				throw new InvalidOperationException("OpenProcessToken failed. Win32 Error: " + err);
+			}
+
+			try
+			{
+				EnablePrivilege(tokenHandle, SecurityPrivilegeName);
+			}
+			finally
+			{
+				_ = NativeMethods.CloseHandle(tokenHandle);
+			}
+
+			_attempted = true;
+		}
+	}
+
+	/// <summary>
+	/// Enables a single privilege on the process token.
+	/// </summary>
+	/// <param name="tokenHandle">Token</param>
+	/// <param name="privilegeName">Privilege name</param>
+	private static void EnablePrivilege(IntPtr tokenHandle, string privilegeName)
+	{
+		bool lookup = NativeMethods.LookupPrivilegeValue(null, privilegeName, out NativeMethods.LUID luid);
+		if (!lookup)
+		{
+			int errLookup = Marshal.GetLastWin32Error();
+			throw new InvalidOperationException("LookupPrivilegeValue failed for " + privilegeName + ". Win32 Error: " + errLookup);
+		}
+
+		NativeMethods.TOKEN_PRIVILEGES tp = new()
+		{
+			PrivilegeCount = 1,
+			Privileges = new NativeMethods.LUID_AND_ATTRIBUTES
+			{
+				Luid = luid,
+				Attributes = SE_PRIVILEGE_ENABLED
+			}
+		};
+
+		bool adjusted = NativeMethods.AdjustTokenPrivileges(tokenHandle, false, ref tp, 0, IntPtr.Zero, IntPtr.Zero);
+		int adjustError = Marshal.GetLastWin32Error();
+
+		if (!adjusted)
+		{
+			throw new InvalidOperationException("AdjustTokenPrivileges failed for " + privilegeName + ". Win32 Error: " + adjustError);
+		}
+
+		if (adjustError == 1300) // ERROR_NOT_ALL_ASSIGNED
+		{
+			throw new InvalidOperationException("Privilege not assigned: " + privilegeName);
+		}
+	}
+}
+
+/// <summary>
+/// Manages audit policy operations including reading current policies and applying CSV-based policies.
+/// </summary>
+internal static class AuditPolicyManager
+{
+	/// <summary>
+	/// Gets the category GUID for a given subcategory GUID
+	/// </summary>
+	/// <param name="subcategoryGuid">The subcategory GUID</param>
+	/// <returns>The parent category GUID</returns>
+	private static Guid GetCategoryGuidForSubcategory(Guid subcategoryGuid)
+	{
+		// Ensure privileges before calling enumeration APIs
+		AuditPrivilegeHelper.EnsurePrivileges();
+
+		if (!NativeMethods.AuditEnumerateCategories(out IntPtr categoriesPtr, out uint categoriesCount))
+		{
+			int lastError = Marshal.GetLastWin32Error();
+			throw new InvalidOperationException($"Failed to enumerate audit categories. Win32 Error: {lastError}");
+		}
+
+		try
+		{
+			int guidSize = Marshal.SizeOf<Guid>();
+
+			for (uint i = 0; i < categoriesCount; i++)
+			{
+				IntPtr categoryGuidPtr = IntPtr.Add(categoriesPtr, (int)i * guidSize);
+				Guid categoryGuid = Marshal.PtrToStructure<Guid>(categoryGuidPtr);
+
+				if (!NativeMethods.AuditEnumerateSubCategories(categoryGuidPtr, true, out IntPtr subCatPtr, out uint subCatCount))
+					continue;
+
+				try
+				{
+					for (uint j = 0; j < subCatCount; j++)
+					{
+						Guid subGuid = Marshal.PtrToStructure<Guid>(IntPtr.Add(subCatPtr, (int)j * guidSize));
+						if (subGuid == subcategoryGuid)
+						{
+							return categoryGuid;
+						}
+					}
+				}
+				finally
+				{
+					NativeMethods.AuditFree(subCatPtr);
+				}
+			}
+		}
+		finally
+		{
+			NativeMethods.AuditFree(categoriesPtr);
+		}
+
+		throw new InvalidOperationException($"Failed to get Category ID for the SubCategory: {subcategoryGuid}");
+	}
+
+	/// <summary>
+	/// Gets the current audit policy settings for all available subcategories
+	/// </summary>
+	/// <returns>List of all audit policy information</returns>
+	internal static List<AuditPolicyInfo> GetAllAuditPolicies()
+	{
+		// Ensure privileges before any enumeration/query
+		AuditPrivilegeHelper.EnsurePrivileges();
+
+		List<AuditPolicyInfo> auditPolicies = [];
+
+		if (!NativeMethods.AuditEnumerateCategories(out IntPtr categoriesPtr, out uint categoriesCount))
+		{
+			int lastError = Marshal.GetLastWin32Error();
+			throw new InvalidOperationException($"Failed to enumerate audit categories. Win32 Error: {lastError}");
+		}
+
+		try
+		{
+			int guidSize = Marshal.SizeOf<Guid>();
+			List<(Guid subCategoryGuid, Guid categoryGuid)> allSubCategories = [];
+
+			// Enumerate all subcategories for each category
+			for (uint i = 0; i < categoriesCount; i++)
+			{
+				IntPtr categoryGuidPtr = IntPtr.Add(categoriesPtr, (int)i * guidSize);
+				Guid categoryGuid = Marshal.PtrToStructure<Guid>(categoryGuidPtr);
+
+				if (!NativeMethods.AuditEnumerateSubCategories(categoryGuidPtr, true, out IntPtr subCatPtr, out uint subCatCount))
+				{
+					continue; // Skip categories that fail to enumerate
+				}
+
+				try
+				{
+					for (uint j = 0; j < subCatCount; j++)
+					{
+						Guid subCategoryGuid = Marshal.PtrToStructure<Guid>(IntPtr.Add(subCatPtr, (int)j * guidSize));
+						allSubCategories.Add((subCategoryGuid, categoryGuid));
+					}
+				}
+				finally
+				{
+					NativeMethods.AuditFree(subCatPtr);
+				}
+			}
+
+			if (allSubCategories.Count == 0)
+			{
+				throw new InvalidOperationException("No audit subcategories found on the system");
+			}
+
+			// Query audit policies for all subcategories in smaller batches to avoid API limits
+			const int batchSize = 50;
+			for (int batchStart = 0; batchStart < allSubCategories.Count; batchStart += batchSize)
+			{
+				int currentBatchSize = Math.Min(batchSize, allSubCategories.Count - batchStart);
+
+				IntPtr batchGuidsPtr = Marshal.AllocHGlobal(currentBatchSize * guidSize);
+				try
+				{
+					// Copy GUIDs for this batch
+					for (int i = 0; i < currentBatchSize; i++)
+					{
+						Marshal.StructureToPtr(allSubCategories[batchStart + i].subCategoryGuid,
+							IntPtr.Add(batchGuidsPtr, i * guidSize), false);
+					}
+
+					if (!NativeMethods.AuditQuerySystemPolicy(batchGuidsPtr, (uint)currentBatchSize, out IntPtr auditPolicyPtr))
+					{
+						int lastError = Marshal.GetLastWin32Error();
+						throw new InvalidOperationException($"Failed to query audit system policy for batch starting at {batchStart}. Win32 Error: {lastError}");
+					}
+
+					if (auditPolicyPtr == IntPtr.Zero)
+					{
+						throw new InvalidOperationException($"AuditQuerySystemPolicy returned null pointer for batch starting at {batchStart}");
+					}
+
+					try
+					{
+						for (int i = 0; i < currentBatchSize; i++)
+						{
+							AUDIT_POLICY_INFORMATION info = Marshal.PtrToStructure<AUDIT_POLICY_INFORMATION>(
+								IntPtr.Add(auditPolicyPtr, i * Marshal.SizeOf<AUDIT_POLICY_INFORMATION>()));
+
+							string subcategoryName = GetSubcategoryName(allSubCategories[batchStart + i].subCategoryGuid);
+							string categoryName = GetCategoryName(allSubCategories[batchStart + i].categoryGuid);
+
+							auditPolicies.Add(new AuditPolicyInfo(
+								subcategoryGuid: allSubCategories[batchStart + i].subCategoryGuid,
+								subcategoryName: subcategoryName,
+								categoryGuid: allSubCategories[batchStart + i].categoryGuid,
+								categoryName: categoryName,
+								auditingInformation: info.AuditingInformation
+							));
+						}
+					}
+					finally
+					{
+						NativeMethods.AuditFree(auditPolicyPtr);
+					}
+				}
+				finally
+				{
+					Marshal.FreeHGlobal(batchGuidsPtr);
+				}
+			}
+		}
+		finally
+		{
+			NativeMethods.AuditFree(categoriesPtr);
+		}
+
+		Logger.Write($"Retrieved audit policies for {auditPolicies.Count} subcategories");
+		return auditPolicies;
+	}
+
+	/// <summary>
+	/// Gets the current audit policy settings for specific subcategory GUIDs
+	/// </summary>
+	/// <param name="subcategoryGuids">Array of subcategory GUIDs to query</param>
+	/// <returns>Dictionary where key is GUID and value is the audit setting</returns>
+	internal static Dictionary<Guid, uint> GetSpecificAuditPolicies(Guid[] subcategoryGuids)
+	{
+		// Ensure privileges
+		AuditPrivilegeHelper.EnsurePrivileges();
+
+		if (subcategoryGuids.Length == 0)
+		{
+			return [];
+		}
+
+		Dictionary<Guid, uint> results = [];
+		int guidSize = Marshal.SizeOf<Guid>();
+		IntPtr guidsPtr = Marshal.AllocHGlobal(subcategoryGuids.Length * guidSize);
+
+		try
+		{
+			for (int i = 0; i < subcategoryGuids.Length; i++)
+			{
+				Marshal.StructureToPtr(subcategoryGuids[i], IntPtr.Add(guidsPtr, i * guidSize), false);
+			}
+
+			if (!NativeMethods.AuditQuerySystemPolicy(guidsPtr, (uint)subcategoryGuids.Length, out IntPtr auditPolicyPtr))
+			{
+				int lastError = Marshal.GetLastWin32Error();
+				throw new InvalidOperationException($"Failed to query specific audit policies. Win32 Error: {lastError}");
+			}
+
+			if (auditPolicyPtr == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("AuditQuerySystemPolicy returned null pointer for specific audit policies");
+			}
+
+			try
+			{
+				for (int i = 0; i < subcategoryGuids.Length; i++)
+				{
+					AUDIT_POLICY_INFORMATION info = Marshal.PtrToStructure<AUDIT_POLICY_INFORMATION>(
+						IntPtr.Add(auditPolicyPtr, i * Marshal.SizeOf<AUDIT_POLICY_INFORMATION>()));
+
+					results[subcategoryGuids[i]] = info.AuditingInformation;
+				}
+			}
+			finally
+			{
+				NativeMethods.AuditFree(auditPolicyPtr);
+			}
+		}
+		finally
+		{
+			Marshal.FreeHGlobal(guidsPtr);
+		}
+
+		Logger.Write($"Retrieved audit policies for {results.Count} specific subcategories");
+		return results;
+	}
+
+	/// <summary>
+	/// Parses a CSV file containing audit policy settings.
+	/// This CSV file type is found in the Microsoft Security Baselines.
+	/// </summary>
+	/// <param name="csvFilePath">Path to the CSV file</param>
+	/// <returns>List of CSV audit policy entries</returns>
+	/// <exception cref="FileNotFoundException">Thrown when CSV file doesn't exist</exception>
+	/// <exception cref="InvalidDataException">Thrown when CSV format is invalid</exception>
+	private static List<CsvAuditPolicyEntry> ParseAuditPolicyCsv(string csvFilePath)
+	{
+		if (!File.Exists(csvFilePath))
+			throw new FileNotFoundException($"CSV file not found: {csvFilePath}");
+
+		List<CsvAuditPolicyEntry> entries = [];
+		string[] lines = File.ReadAllLines(csvFilePath, Encoding.UTF8);
+
+		if (lines.Length < 2)
+			throw new InvalidDataException("CSV file must contain at least a header and one data row");
+
+		// Skip header row (index 0)
+		for (int i = 1; i < lines.Length; i++)
+		{
+			string line = lines[i].Trim();
+			if (string.IsNullOrEmpty(line))
+				continue;
+
+			try
+			{
+				CsvAuditPolicyEntry? entry = ParseCsvLine(line, i + 1);
+				if (entry != null)
+				{
+					entries.Add(entry);
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new InvalidDataException($"Error parsing CSV line {i + 1}: {ex.Message}", ex);
+			}
+		}
+
+		if (entries.Count == 0)
+		{
+			throw new InvalidDataException("No valid audit policy entries found in CSV file");
+		}
+
+		Logger.Write($"Parsed {entries.Count} audit policy entries from CSV");
+		return entries;
+	}
+
+	/// <summary>
+	/// Applies audit policies from a CSV file to the system.
+	/// The CSV file is in Microsoft Security Baselines.
+	/// </summary>
+	/// <param name="csvFilePath">Path to the CSV file containing audit policies</param>		
+	internal static void ApplyAuditPoliciesFromCsv(string csvFilePath)
+	{
+		// Ensure privileges
+		AuditPrivilegeHelper.EnsurePrivileges();
+
+		List<CsvAuditPolicyEntry> csvEntries = ParseAuditPolicyCsv(csvFilePath);
+
+		// Apply the audit policies
+		SetAuditPolicies(ConvertCSVEntriesToAuditPolicyInfo(csvEntries));
+
+		Logger.Write($"Successfully applied {csvEntries.Count} audit policies from CSV");
+	}
+
+	internal static AUDIT_POLICY_INFORMATION[] ConvertCSVEntriesToAuditPolicyInfo(List<CsvAuditPolicyEntry> entries)
+	{
+		// Ensure privileges
+		AuditPrivilegeHelper.EnsurePrivileges();
+
+		// Convert CSV entries to audit policy structures
+		AUDIT_POLICY_INFORMATION[] auditPolicies = new AUDIT_POLICY_INFORMATION[entries.Count];
+
+		for (int i = 0; i < entries.Count; i++)
+		{
+			auditPolicies[i] = new AUDIT_POLICY_INFORMATION
+			{
+				AuditSubCategoryGuid = entries[i].SubcategoryGuid,
+				AuditingInformation = entries[i].SettingValue,
+				AuditCategoryGuid = GetCategoryGuidForSubcategory(entries[i].SubcategoryGuid)
+			};
+		}
+
+		return auditPolicies;
+	}
+
+	/// <summary>
+	/// Sets multiple audit policies on the system
+	/// </summary>
+	/// <param name="auditPolicies">Array of audit policy information structures</param>
+	/// <returns></returns>
+	internal static void SetAuditPolicies(AUDIT_POLICY_INFORMATION[] auditPolicies)
+	{
+		// Ensure privileges
+		AuditPrivilegeHelper.EnsurePrivileges();
+
+		if (auditPolicies.Length == 0)
+		{
+			return;
+		}
+
+		int structSize = Marshal.SizeOf<AUDIT_POLICY_INFORMATION>();
+		IntPtr policiesPtr = Marshal.AllocHGlobal(auditPolicies.Length * structSize);
+
+		try
+		{
+			for (int i = 0; i < auditPolicies.Length; i++)
+			{
+				Marshal.StructureToPtr(auditPolicies[i], IntPtr.Add(policiesPtr, i * structSize), false);
+			}
+
+			bool result = NativeMethods.AuditSetSystemPolicy(policiesPtr, (uint)auditPolicies.Length);
+
+			if (!result)
+			{
+				int lastError = Marshal.GetLastWin32Error();
+				throw new InvalidOperationException($"Failed to apply audit policy to the system. Win32 Error: {lastError}");
+			}
+		}
+		finally
+		{
+			Marshal.FreeHGlobal(policiesPtr);
+		}
+	}
+
+	/// <summary>
+	/// Parses a single CSV line into an audit policy entry.
+	/// </summary>
+	/// <param name="line">CSV line to parse</param>
+	/// <param name="lineNumber">Line number for error reporting</param>
+	/// <returns>CsvAuditPolicyEntry or null if parsing fails</returns>
+	internal static CsvAuditPolicyEntry? ParseCsvLine(string line, int lineNumber)
+	{
+		// Split CSV line, handling quoted values
+		string[] parts = SplitCsvLine(line);
+
+		if (parts.Length < 7)
+		{
+			throw new InvalidDataException($"Line {lineNumber}: Expected at least 7 columns, got {parts.Length}");
+		}
+
+		// Extract relevant columns:
+		// 0: Machine Name, 1: Policy Target, 2: Subcategory, 3: Subcategory GUID, 
+		// 4: Inclusion Setting, 5: Exclusion Setting, 6: Setting Value
+
+		string subcategoryName = parts[2].Trim();
+		string guidString = parts[3].Trim();
+		string inclusionSetting = parts[4].Trim();
+		string settingValueString = parts[6].Trim();
+
+		// Parse GUID - remove curly braces if present
+		guidString = guidString.Trim('{', '}');
+		if (!Guid.TryParse(guidString, out Guid subcategoryGuid))
+		{
+			throw new InvalidDataException($"Line {lineNumber}: Invalid GUID format: {guidString}");
+		}
+
+		// Parse setting value
+		if (!uint.TryParse(settingValueString, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint settingValue))
+		{
+			throw new InvalidDataException($"Line {lineNumber}: Invalid setting value: {settingValueString}");
+		}
+
+		// Validate setting value range (0-3)
+		if (settingValue > 3)
+		{
+			throw new InvalidDataException($"Line {lineNumber}: Setting value out of range (0-3): {settingValue}");
+		}
+
+		return new CsvAuditPolicyEntry(
+			subcategoryGuid: subcategoryGuid,
+			subcategoryName: subcategoryName,
+			inclusionSetting: inclusionSetting,
+			settingValue: settingValue
+		);
+	}
+
+	/// <summary>
+	/// Splits a CSV line into parts, handling quoted values.
+	/// </summary>
+	/// <param name="line">CSV line to split</param>
+	/// <returns>Array of CSV parts</returns>
+	private static string[] SplitCsvLine(string line)
+	{
+		List<string> parts = [];
+		StringBuilder currentPart = new();
+		bool inQuotes = false;
+
+		for (int i = 0; i < line.Length; i++)
+		{
+			char c = line[i];
+
+			if (c == '"')
+			{
+				inQuotes = !inQuotes;
+			}
+			else if (c == ',' && !inQuotes)
+			{
+				parts.Add(currentPart.ToString());
+				_ = currentPart.Clear();
+			}
+			else
+			{
+				_ = currentPart.Append(c);
+			}
+		}
+
+		// Add the last part
+		parts.Add(currentPart.ToString());
+
+		return [.. parts];
+	}
+
+	/// <summary>
+	/// Gets the friendly name of an audit subcategory.
+	/// </summary>
+	/// <param name="subcategoryGuid">The subcategory GUID</param>
+	/// <returns>Friendly name or GUID string if lookup fails</returns>
+	private static string GetSubcategoryName(Guid subcategoryGuid)
+	{
+		IntPtr guidPtr = Marshal.AllocHGlobal(Marshal.SizeOf<Guid>());
+		try
+		{
+			Marshal.StructureToPtr(subcategoryGuid, guidPtr, false);
+
+			if (NativeMethods.AuditLookupSubCategoryNameW(guidPtr, out IntPtr namePtr) && namePtr != IntPtr.Zero)
+			{
+				try
+				{
+					string? name = Marshal.PtrToStringUni(namePtr);
+					return name ?? subcategoryGuid.ToString("B");
+				}
+				finally
+				{
+					// Free the string allocated by the API
+					Marshal.FreeHGlobal(namePtr);
+				}
+			}
+		}
+		catch
+		{
+			// Fall through to return GUID string
+		}
+		finally
+		{
+			Marshal.FreeHGlobal(guidPtr);
+		}
+
+		return subcategoryGuid.ToString("B");
+	}
+
+	/// <summary>
+	/// Gets the friendly name of an audit category
+	/// </summary>
+	/// <param name="categoryGuid">The category GUID</param>
+	/// <returns>Friendly name or GUID string if lookup fails</returns>
+	private static string GetCategoryName(Guid categoryGuid)
+	{
+		IntPtr guidPtr = Marshal.AllocHGlobal(Marshal.SizeOf<Guid>());
+		try
+		{
+			Marshal.StructureToPtr(categoryGuid, guidPtr, false);
+
+			if (NativeMethods.AuditLookupCategoryNameW(guidPtr, out IntPtr namePtr) && namePtr != IntPtr.Zero)
+			{
+				try
+				{
+					string? name = Marshal.PtrToStringUni(namePtr);
+					return name ?? categoryGuid.ToString("B");
+				}
+				finally
+				{
+					// Free the string allocated by the API
+					Marshal.FreeHGlobal(namePtr);
+				}
+			}
+		}
+		catch
+		{
+			// Fall through to return GUID string
+		}
+		finally
+		{
+			Marshal.FreeHGlobal(guidPtr);
+		}
+
+		return categoryGuid.ToString("B");
+	}
+}

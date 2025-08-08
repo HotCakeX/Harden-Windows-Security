@@ -42,7 +42,7 @@ internal static class FileAttribDeDuplication
 	/// <param name="kernelModeAllowedSigners"></param>
 	/// <param name="kernelModeDeniedSigners"></param>
 	internal static void EnsureUniqueFileAttributes(
-		ref IEnumerable<object> fileRulesNode,
+		ref List<object> fileRulesNode,
 		List<Signer> signers,
 		IEnumerable<AllowedSigner> userModeAllowedSigners,
 		IEnumerable<DeniedSigner> userModeDeniedSigners,
@@ -164,7 +164,7 @@ internal static class FileAttribDeDuplication
 		// Step 6: Update the FileRules collection to remove duplicate FileAttrib objects.
 		List<object> fileRulesItems = [.. fileRulesNode];
 		_ = fileRulesItems.RemoveAll(item => item is FileAttrib fa && fileAttribIdsToRemove.Contains(fa.ID));
-		fileRulesNode = [.. fileRulesItems];
+		fileRulesNode = fileRulesItems.ToList();
 
 
 		// Step 7: Post-process each signer to deduplicate FileAttribRef arrays.

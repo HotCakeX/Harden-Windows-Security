@@ -28,6 +28,8 @@
 
             <TextBlock x:Uid="NonAdminPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
+            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures" />
+
         </controls:WrapPanel>
 
         <customUI:InfoBarV2 Grid.Row="1"

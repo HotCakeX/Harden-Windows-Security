@@ -2348,4 +2348,68 @@
   <data name="FileActivationLaunchMessage" xml:space="preserve">
   <value>Η εφαρμογή εκκινήθηκε με ενεργοποίηση αρχείου για το ακόλουθο αρχείο: '{0}'</value>
 </data>
+ <data name="MicrosoftSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Βασική γραμμή ασφάλειας Microsoft</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Βασική γραμμή ασφάλειας εφαρμογών Microsoft 365</value>
+  </data>
+    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>Εφαρμόστε την βασική γραμμή ασφάλειας Microsoft σε αυτή τη σελίδα. Μπορείτε επίσης να επαληθεύσετε τη συμμόρφωση του συστήματος για να λάβετε μια ακριβή αναφορά που δείχνει ποιες ρυθμίσεις εφαρμόζονται και ποιες όχι. Μπορείτε να αφαιρέσετε τις πολιτικές που εφαρμόζονται από την βασική γραμμή επίσης.</value>
+  </data>
+    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>Εφαρμόστε την βασική γραμμή ασφάλειας εφαρμογών Microsoft 365 σε αυτή τη σελίδα. Μπορείτε επίσης να επαληθεύσετε τη συμμόρφωση του συστήματος για να λάβετε μια ακριβή αναφορά που δείχνει ποιες ρυθμίσεις εφαρμόζονται και ποιες όχι. Μπορείτε να αφαιρέσετε τις πολιτικές που εφαρμόζονται από την βασική γραμμή επίσης.</value>
+  </data>
+   <!--Security Baselines ListView Headers Start-->
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>Πηγή</value>
+  </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>Κατάσταση</value>
+  </data>
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
+    <value>Τρέχουσα τιμή</value>
+  </data>
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+    <value>Αναμενόμενη τιμή</value>
+  </data>
+  <!--Security Baselines ListView Headers End-->
+  <!--Security Baselines ListView Headers Buttons Start-->
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Πηγή</value>
+  </data>
+    <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Κατάσταση</value>
+  </data>
+  <data name="CurrentValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Τρέχουσα τιμή</value>
+  </data>
+  <data name="ExpectedValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αναμενόμενη τιμή</value>
+  </data>
+  <!--Security Baselines ListView Headers Buttons End-->
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Λήψη αποτελεσματικών πολιτικών (Χρήστης)</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Παραθέτει τις αποτελεσματικές πολιτικές ομάδας που εφαρμόζονται στον τρέχοντα χρήστη.</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Παραθέτει τις αποτελεσματικές πολιτικές ομάδας που εφαρμόζονται στον τρέχοντα χρήστη.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
+    <value>Παρακάμψεις βασικών γραμμών Microsoft</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+    <value>Επαναφέρετε τα χαρακτηριστικά του λειτουργικού συστήματος που έχουν απενεργοποιηθεί μετά την εφαρμογή των βασικών γραμμών ασφάλειας Microsoft.</value>
+  </data>
+  <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εξάγει τα δεδομένα που εμφανίζονται σε αρχείο JSON. Θα μπορείτε να επιλέξετε την τοποθεσία όπου θα αποθηκευτεί.</value>
+  </data>
+  <data name="ExportToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εξάγει τα δεδομένα που εμφανίζονται σε αρχείο JSON. Θα μπορείτε να επιλέξετε την τοποθεσία όπου θα αποθηκευτεί.</value>
+  </data>
+  <data name="ExportToJsonButton.Content" xml:space="preserve">
+    <value>Εξαγωγή σε JSON</value>
+  </data>
 </root>

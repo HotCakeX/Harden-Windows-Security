@@ -17,7 +17,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using AppControlManager;
 using AppControlManager.Others;
 using Microsoft.Win32;
@@ -88,6 +90,296 @@ internal static class SecurityPolicyWriter
 		catch
 		{
 			return false;
+		}
+	}
+
+	/// <summary>
+	/// Sets privilege rights (user rights assignments) for specified privileges.
+	/// This method configures the [Privilege Rights] section equivalent.
+	/// </summary>
+	/// <param name="privilegeRights">Dictionary where key is privilege name and value is array of SIDs/account names</param>
+	/// <returns></returns>
+	internal static void SetPrivilegeRights(Dictionary<string, string[]> privilegeRights)
+	{
+		if (privilegeRights.Count == 0)
+		{
+			throw new InvalidOperationException("No privilege rights provided to set");
+		}
+
+		LSA_OBJECT_ATTRIBUTES lsaAttr = new()
+		{
+			Length = Marshal.SizeOf<LSA_OBJECT_ATTRIBUTES>(),
+			RootDirectory = IntPtr.Zero,
+			ObjectName = IntPtr.Zero,
+			Attributes = 0,
+			SecurityDescriptor = IntPtr.Zero,
+			SecurityQualityOfService = IntPtr.Zero
+		};
+
+		LSA_UNICODE_STRING system = new(null);
+
+		// Full access
+		uint desiredAccess = 0x000F0FFF;
+
+		uint openPolicyStatus = NativeMethods.LsaOpenPolicy(ref system, ref lsaAttr, (int)desiredAccess, out nint policyHandle);
+
+		if (openPolicyStatus != SecurityPolicyReader.STATUS_SUCCESS)
+		{
+			throw new InvalidOperationException($"Failed to open LSA policy. Status: 0x{openPolicyStatus:X8} ({GetLsaErrorMessage(openPolicyStatus)})");
+		}
+
+		try
+		{
+			foreach (KeyValuePair<string, string[]> privilege in privilegeRights)
+			{
+				SetSinglePrivilegeRight(policyHandle, privilege.Key, privilege.Value);
+
+				Logger.Write($"Successfully set privilege right: {privilege.Key} with {privilege.Value.Length} assignments");
+			}
+		}
+		finally
+		{
+			_ = NativeMethods.LsaClose(policyHandle);
+		}
+	}
+
+	/// <summary>
+	/// Converts LSA error codes to readable messages.
+	/// </summary>
+	/// <param name="status">LSA status code</param>
+	/// <returns>Human-readable error message</returns>
+	private static string GetLsaErrorMessage(uint status)
+	{
+		return status switch
+		{
+			0xC0000022 => "ACCESS_DENIED - Insufficient privileges or access rights",
+			0xC000000D => "INVALID_PARAMETER - One or more parameters are invalid",
+			0xC0000034 => "OBJECT_NAME_NOT_FOUND - The specified object was not found",
+			0xC00000BB => "NOT_SUPPORTED - The operation is not supported",
+			0xC0000001 => "UNSUCCESSFUL - The operation was unsuccessful",
+			_ => $"Unknown LSA error code: 0x{status:X8}"
+		};
+	}
+
+	/// <summary>
+	/// Sets a single privilege right surgically by comparing current assignments with desired assignments
+	/// and only removing/adding accounts that need to be changed.
+	/// </summary>
+	/// <param name="policyHandle">Handle to the LSA policy</param>
+	/// <param name="privilegeName">Name of the privilege (e.g., "SeServiceLogonRight")</param>
+	/// <param name="accountSidsOrNames">Array of SIDs or account names to assign the privilege to</param>
+	/// <returns></returns>
+	private static void SetSinglePrivilegeRight(nint policyHandle, string privilegeName, string[] accountSidsOrNames)
+	{
+		LSA_UNICODE_STRING userRight = new(privilegeName);
+
+		HashSet<string> currentSids = new(StringComparer.OrdinalIgnoreCase);
+		HashSet<string> desiredSids = new(StringComparer.OrdinalIgnoreCase);
+
+		// Open a separate policy handle specifically for enumeration with the correct access rights
+		LSA_OBJECT_ATTRIBUTES enumLsaAttr = new()
+		{
+			Length = Marshal.SizeOf<LSA_OBJECT_ATTRIBUTES>(),
+			RootDirectory = IntPtr.Zero,
+			ObjectName = IntPtr.Zero,
+			Attributes = 0,
+			SecurityDescriptor = IntPtr.Zero,
+			SecurityQualityOfService = IntPtr.Zero
+		};
+
+		LSA_UNICODE_STRING enumSystem = new(null);
+
+		// Specific access rights for enumeration: POLICY_LOOKUP_NAMES | POLICY_VIEW_LOCAL_INFORMATION
+		// Using full access wouldn't work.
+		uint enumDesiredAccess = 0x00000800 | 0x00000001;
+
+		uint enumOpenStatus = NativeMethods.LsaOpenPolicy(ref enumSystem, ref enumLsaAttr, (int)enumDesiredAccess, out nint enumPolicyHandle);
+
+		if (enumOpenStatus == SecurityPolicyReader.STATUS_SUCCESS)
+		{
+			try
+			{
+				// Get all current accounts with this privilege using the enumeration-specific handle
+				uint enumStatus = NativeMethods.LsaEnumerateAccountsWithUserRight(enumPolicyHandle, ref userRight, out nint enumBuffer, out int countReturned);
+
+				if (enumStatus == SecurityPolicyReader.STATUS_SUCCESS)
+				{
+					// Collect current SIDs if any exist
+					if (enumBuffer != IntPtr.Zero && countReturned > 0)
+					{
+						try
+						{
+							for (int i = 0; i < countReturned; i++)
+							{
+								LSA_ENUMERATION_INFORMATION info = Marshal.PtrToStructure<LSA_ENUMERATION_INFORMATION>(
+									IntPtr.Add(enumBuffer, i * Marshal.SizeOf<LSA_ENUMERATION_INFORMATION>()));
+
+								try
+								{
+									SecurityIdentifier sid = new(info.PSid);
+									_ = currentSids.Add(sid.Value);
+								}
+								catch
+								{
+									// Skip if we can't convert to SID
+								}
+							}
+						}
+						finally
+						{
+							_ = NativeMethods.LsaFreeMemory(enumBuffer);
+						}
+					}
+					// If enumBuffer is Zero or countReturned is 0, it means no accounts have this privilege (which is valid)
+				}
+				// https://learn.microsoft.com/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
+				else if (enumStatus == 0xC0000034) // STATUS_OBJECT_NAME_NOT_FOUND - no accounts have this privilege
+				{
+					Logger.Write($"No accounts currently have privilege {privilegeName}");
+				}
+				else if (enumStatus == 0x8000001A) // STATUS_NO_MORE_ENTRIES - privilege has no assignments.
+				{
+					Logger.Write($"Privilege {privilegeName} has no current assignments");
+				}
+				else
+				{
+					throw new InvalidOperationException($"Could not enumerate current accounts for privilege {privilegeName}. Status: 0x{enumStatus:X8}.");
+				}
+			}
+			finally
+			{
+				_ = NativeMethods.LsaClose(enumPolicyHandle);
+			}
+		}
+		else
+		{
+			throw new InvalidOperationException($"Could not open LSA policy for enumeration of privilege {privilegeName}. Status: 0x{enumOpenStatus:X8}.");
+		}
+
+		// Converting desired account names/SIDs to normalized SID strings
+		foreach (string accountSidOrName in accountSidsOrNames)
+		{
+			if (string.IsNullOrWhiteSpace(accountSidOrName))
+				continue;
+
+			string normalizedSid = GetNormalizedSidString(accountSidOrName);
+			if (!string.IsNullOrEmpty(normalizedSid))
+			{
+				_ = desiredSids.Add(normalizedSid);
+			}
+			else
+			{
+				Logger.Write($"Could not resolve SID for account: {accountSidOrName}", LogTypeIntel.Warning);
+			}
+		}
+
+		// Remove accounts that shouldn't have the privilege (current - desired)
+		HashSet<string> sidsToRemove = new(currentSids.Except(desiredSids, StringComparer.OrdinalIgnoreCase), StringComparer.OrdinalIgnoreCase);
+		foreach (string sidToRemove in sidsToRemove)
+		{
+			IntPtr sidPtr = GetSidPtrFromString(sidToRemove);
+			if (sidPtr != IntPtr.Zero)
+			{
+				try
+				{
+					uint removeStatus = NativeMethods.LsaRemoveAccountRights(policyHandle, sidPtr, false, ref userRight, 1);
+					if (removeStatus != SecurityPolicyReader.STATUS_SUCCESS)
+					{
+						throw new InvalidOperationException($"Could not remove privilege {privilegeName} from SID {sidToRemove}. Status: 0x{removeStatus:X8}");
+					}
+					else
+					{
+						Logger.Write($"Removed privilege {privilegeName} from SID {sidToRemove}");
+					}
+				}
+				finally
+				{
+					Marshal.FreeHGlobal(sidPtr);
+				}
+			}
+		}
+
+		// Add accounts that should have the privilege but don't (desired - current)
+		HashSet<string> sidsToAdd = new(desiredSids.Except(currentSids, StringComparer.OrdinalIgnoreCase), StringComparer.OrdinalIgnoreCase);
+		foreach (string sidToAdd in sidsToAdd)
+		{
+			IntPtr sidPtr = GetSidPtrFromString(sidToAdd);
+			if (sidPtr != IntPtr.Zero)
+			{
+				try
+				{
+					uint addStatus = NativeMethods.LsaAddAccountRights(policyHandle, sidPtr, ref userRight, 1);
+					if (addStatus != SecurityPolicyReader.STATUS_SUCCESS)
+					{
+						throw new InvalidOperationException($"Failed to add privilege {privilegeName} to SID {sidToAdd}. Status: 0x{addStatus:X8}");
+					}
+					else
+					{
+						Logger.Write($"Added privilege {privilegeName} to SID {sidToAdd}");
+					}
+				}
+				finally
+				{
+					Marshal.FreeHGlobal(sidPtr);
+				}
+			}
+		}
+
+		Logger.Write($"Privilege {privilegeName}: {sidsToRemove.Count} removed, {sidsToAdd.Count} added, {currentSids.Intersect(desiredSids, StringComparer.OrdinalIgnoreCase).Count()} unchanged");
+	}
+
+	/// <summary>
+	/// Normalizes a SID or account name to a SID string for comparison purposes.
+	/// </summary>
+	/// <param name="sidOrAccountName">SID string (with or without *) or account name</param>
+	/// <returns>Normalized SID string or empty string if resolution failed</returns>
+	private static string GetNormalizedSidString(string sidOrAccountName)
+	{
+		try
+		{
+			// Remove * prefix if present (secedit export format)
+			string cleanInput = sidOrAccountName.StartsWith('*') ? sidOrAccountName[1..] : sidOrAccountName;
+
+			// Try as SID first
+			try
+			{
+				SecurityIdentifier sid = new(cleanInput);
+				return sid.Value;
+			}
+			catch
+			{
+				// Try as account name
+				NTAccount account = new(cleanInput);
+				SecurityIdentifier resolvedSid = (SecurityIdentifier)account.Translate(typeof(SecurityIdentifier));
+				return resolvedSid.Value;
+			}
+		}
+		catch
+		{
+			return string.Empty;
+		}
+	}
+
+	/// <summary>
+	/// Converts a SID string to an IntPtr for use with LSA APIs.
+	/// </summary>
+	/// <param name="sidString">SID string to convert</param>
+	/// <returns>Pointer to SID or IntPtr.Zero if conversion failed</returns>
+	private static IntPtr GetSidPtrFromString(string sidString)
+	{
+		try
+		{
+			SecurityIdentifier sid = new(sidString);
+			byte[] sidBytes = new byte[sid.BinaryLength];
+			sid.GetBinaryForm(sidBytes, 0);
+
+			IntPtr sidPtr = Marshal.AllocHGlobal(sidBytes.Length);
+			Marshal.Copy(sidBytes, 0, sidPtr, sidBytes.Length);
+			return sidPtr;
+		}
+		catch
+		{
+			return IntPtr.Zero;
 		}
 	}
 
@@ -535,5 +827,4 @@ internal static class SecurityPolicyWriter
 			_ = NativeMethods.NetApiBufferFree(buffer);
 		}
 	}
-
 }

@@ -2348,4 +2348,68 @@
   <data name="FileActivationLaunchMessage" xml:space="preserve">
   <value>تم تشغيل التطبيق مع تفعيل الملف للملف التالي: '{0}'</value>
 </data>
+ <data name="MicrosoftSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>خط الأساس الأمني لمايكروسوفت</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>خط الأساس الأمني لتطبيقات Microsoft 365</value>
+  </data>
+    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>طبق خط الأساس الأمني لمايكروسوفت في هذه الصفحة. يمكنك أيضاً التحقق من امتثال النظام للحصول على تقرير دقيق يوضح الإعدادات المطبقة والغير مطبقة. يمكنك إزالة السياسات المطبقة بواسطة خط الأساس أيضاً.</value>
+  </data>
+    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>طبق خط الأساس الأمني لتطبيقات Microsoft 365 في هذه الصفحة. يمكنك أيضاً التحقق من امتثال النظام للحصول على تقرير دقيق يوضح الإعدادات المطبقة والغير مطبقة. يمكنك إزالة السياسات المطبقة بواسطة خط الأساس أيضاً.</value>
+  </data>
+   <!--Security Baselines ListView Headers Start-->
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>المصدر</value>
+  </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
+    <value>القيمة الحالية</value>
+  </data>
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+    <value>القيمة المتوقعة</value>
+  </data>
+  <!--Security Baselines ListView Headers End-->
+  <!--Security Baselines ListView Headers Buttons Start-->
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>المصدر</value>
+  </data>
+    <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="CurrentValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>القيمة الحالية</value>
+  </data>
+  <data name="ExpectedValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>القيمة المتوقعة</value>
+  </data>
+  <!--Security Baselines ListView Headers Buttons End-->
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>الحصول على السياسات الفعالة (المستخدم)</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يسرد سياسات المجموعة الفعالة المطبقة على المستخدم الحالي.</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يسرد سياسات المجموعة الفعالة المطبقة على المستخدم الحالي.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
+    <value>تجاوزات خطوط الأساس لمايكروسوفت</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+    <value>استعادة ميزات نظام التشغيل التي تم تعطيلها بعد تطبيق خطوط الأساس الأمنية لمايكروسوفت.</value>
+  </data>
+  <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يصدر البيانات المعروضة إلى ملف JSON. ستتمكن من اختيار الموقع الذي سيتم حفظها فيه.</value>
+  </data>
+  <data name="ExportToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يصدر البيانات المعروضة إلى ملف JSON. ستتمكن من اختيار الموقع الذي سيتم حفظها فيه.</value>
+  </data>
+  <data name="ExportToJsonButton.Content" xml:space="preserve">
+    <value>تصدير إلى JSON</value>
+  </data>
 </root>

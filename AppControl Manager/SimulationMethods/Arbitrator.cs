@@ -31,7 +31,7 @@ internal static class Arbitrator
 {
 
 	// An array of SpecificFileNames
-	private static readonly IEnumerable<string> specificFileNames = ["OriginalFileName", "InternalName", "ProductName", "Version", "FileDescription"];
+	private static readonly List<string> specificFileNames = ["OriginalFileName", "InternalName", "ProductName", "Version", "FileDescription"];
 
 	/// <summary>
 	/// The method that compares the signer information from the App Control policy XML file with the certificate details of the signed file

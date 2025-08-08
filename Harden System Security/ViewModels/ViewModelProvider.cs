@@ -112,6 +112,15 @@ internal static class ViewModelProvider
 	private static readonly Lazy<InstalledAppsManagementVM> _installedAppsManagementVM = new(() =>
 		new InstalledAppsManagementVM(), false);
 
+	private static readonly Lazy<MicrosoftSecurityBaselineVM> _microsoftSecurityBaselineVM = new(() =>
+		new MicrosoftSecurityBaselineVM(), false);
+
+	private static readonly Lazy<Microsoft365AppsSecurityBaselineVM> _microsoft365AppsSecurityBaselineVM = new(() =>
+		new Microsoft365AppsSecurityBaselineVM(), false);
+
+	private static readonly Lazy<MicrosoftBaseLinesOverridesVM> _microsoftBaseLinesOverridesVM = new(() =>
+		new MicrosoftBaseLinesOverridesVM(), false);
+
 	// Internal Properties - Core Dependencies \\
 	internal static AppSettings.Main AppSettings => _appSettings.Value;
 
@@ -141,4 +150,7 @@ internal static class ViewModelProvider
 	internal static CountryIPBlockingVM CountryIPBlockingVM => _countryIPBlockingVM.Value;
 	internal static FileReputationVM FileReputationVM => _fileReputationVM.Value;
 	internal static InstalledAppsManagementVM InstalledAppsManagementVM => _installedAppsManagementVM.Value;
+	internal static MicrosoftSecurityBaselineVM MicrosoftSecurityBaselineVM => _microsoftSecurityBaselineVM.Value;
+	internal static Microsoft365AppsSecurityBaselineVM Microsoft365AppsSecurityBaselineVM => _microsoft365AppsSecurityBaselineVM.Value;
+	internal static MicrosoftBaseLinesOverridesVM MicrosoftBaseLinesOverridesVM => _microsoftBaseLinesOverridesVM.Value;
 }

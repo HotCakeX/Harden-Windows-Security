@@ -21,6 +21,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -628,7 +629,11 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		}
 
 		// Extracted the XML content from the markdown string will saved in this variable
-		string xmlContent;
+		string xmlContent = ExtractXmlFromHtml(msftUserModeBlockRulesAsString);
+
+		/*
+
+		This is for using GitHub's source.		 
 
 		// Extract the XML content with Regex
 		Match match = XMLCaptureRegex().Match(msftUserModeBlockRulesAsString);
@@ -643,6 +648,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 			throw new InvalidOperationException(
 				GlobalVars.GetStr("NoXmlContentFoundForUserModeBlockRulesErrorMessage"));
 		}
+		*/
 
 		// Load the XML content into an XmlDocument
 		XmlDocument userModeBlockRulesXML = new();
@@ -720,6 +726,38 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		return finalPolicyPath;
 	}
 
+
+	// Extracts the first <code class="lang-xml">...</code> block, decodes HTML entities and returns the raw XML text ready for XmlDocument.LoadXml.
+	private static string ExtractXmlFromHtml(string content)
+	{
+		Match match = CodeBlockRegex().Match(content);
+		if (!match.Success)
+		{
+			throw new InvalidOperationException("No <code class=\"lang-xml\">...</code> block found in the provided content.");
+		}
+
+		string encoded = match.Groups["xml"].Value;
+		if (encoded.Length == 0)
+		{
+			throw new InvalidOperationException(
+				GlobalVars.GetStr("NoXmlContentFoundForUserModeBlockRulesErrorMessage"));
+		}
+
+		// Decode HTML entities (&lt;, &gt;, &amp;, etc.) to obtain real XML.
+		string decoded = WebUtility.HtmlDecode(encoded);
+
+		// Basic sanity validation to catch unexpected extraction issues.
+		bool appearsXml =
+			decoded.StartsWith("<?xml", StringComparison.OrdinalIgnoreCase) ||
+			decoded.StartsWith("<SiPolicy", StringComparison.OrdinalIgnoreCase);
+
+		if (!appearsXml)
+		{
+			throw new InvalidOperationException("Extracted content does not look like the expected XML policy.");
+		}
+
+		return decoded;
+	}
 
 	/// <summary>
 	/// Creates SignedAndReputable App Control policy which is based on AllowMicrosoft template policy.
@@ -933,11 +971,21 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 		return finalPolicyPath;
 	}
 
+	/*
+	 
 	/// <summary>
 	/// Regex pattern to capture XML content between ```xml and ```
 	/// </summary>
 	/// <returns></returns>
 	[GeneratedRegex(@"```xml\s*(.*?)\s*```", RegexOptions.Compiled | RegexOptions.Singleline)]
 	private static partial Regex XMLCaptureRegex();
+	
+	 */
 
+	// Captures the first <code class="lang-xml">...</code> block (case-insensitive) into the named group "xml".
+	// Singleline so '.' spans newlines.
+	[GeneratedRegex("<code\\s+class\\s*=\\s*\"lang-xml\"\\s*>(?<xml>.*?)</code>",
+		RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant,
+		6000)]
+	private static partial Regex CodeBlockRegex();
 }

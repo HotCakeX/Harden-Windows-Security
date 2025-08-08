@@ -275,8 +275,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 		{
 			case 0:
 				{
-					/*
-
 					// 1
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftSecurityBaseline,
@@ -294,8 +292,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						logo: CategoryImages[(int)Categories.Microsoft365AppsSecurityBaseline],
 						subCategories: []
 						));
-
-					*/
 
 					// 3
 					output.Add(new ProtectionCategoryListViewItem(
@@ -337,7 +333,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 				}
 			case 1:
 				{
-					/*
+
 					// 1
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftSecurityBaseline,
@@ -355,7 +351,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						logo: CategoryImages[(int)Categories.Microsoft365AppsSecurityBaseline],
 						subCategories: []
 						));
-					*/
 
 					// 3
 					output.Add(new ProtectionCategoryListViewItem(
@@ -495,7 +490,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 				}
 			case 2:
 				{
-					/*
+
 					// 1
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftSecurityBaseline,
@@ -513,8 +508,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						logo: CategoryImages[(int)Categories.Microsoft365AppsSecurityBaseline],
 						subCategories: []
 						));
-
-					*/
 
 					// 3
 					output.Add(new ProtectionCategoryListViewItem(

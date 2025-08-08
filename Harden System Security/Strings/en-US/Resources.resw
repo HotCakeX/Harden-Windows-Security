@@ -963,7 +963,7 @@
     <value>Browse</value>
   </data>
     <data name="GetEffectivePoliciesMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Get Effective Policies</value>
+    <value>Get Effective Policies (System)</value>
   </data>
   <data name="GetEffectivePoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Lists the effective Group Policies applied to the current system.</value>
@@ -2348,4 +2348,68 @@
   <data name="FileActivationLaunchMessage" xml:space="preserve">
   <value>The app was launched with file activation for the following file: '{0}'</value>
 </data>
+  <data name="MicrosoftSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Microsoft Security Baseline</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Microsoft 365 Apps Security Baseline</value>
+  </data>
+    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>Apply Microsoft Security Baseline in this page. You can also verify system compliance to get a precise report showing which settings are applied and which are not. You can remove the policies applied by the baseline as well.</value>
+  </data>
+    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>Apply Microsoft 365 Apps Security Baseline in this page. You can also verify system compliance to get a precise report showing which settings are applied and which are not. You can remove the policies applied by the baseline as well.</value>
+  </data>
+   <!--Security Baselines ListView Headers Start-->
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>Source</value>
+  </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
+    <value>Current Value</value>
+  </data>
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+    <value>Expected Value</value>
+  </data>
+  <!--Security Baselines ListView Headers End-->
+  <!--Security Baselines ListView Headers Buttons Start-->
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Source</value>
+  </data>
+    <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="CurrentValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Current Value</value>
+  </data>
+  <data name="ExpectedValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Expected Value</value>
+  </data>
+  <!--Security Baselines ListView Headers Buttons End-->
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Get Effective Policies (User)</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Lists the effective Group Policies applied to the current User.</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Lists the effective Group Policies applied to the current User.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
+    <value>Microsoft Baselines Overrides</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+    <value>Restore Operation System features that have been disabled after applying Microsoft Security Baselines.</value>
+  </data>
+  <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exports the data being displayed to a JSON file. You will be able to pick the location where it will be saved.</value>
+  </data>
+  <data name="ExportToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exports the data being displayed to a JSON file. You will be able to pick the location where it will be saved.</value>
+  </data>
+  <data name="ExportToJsonButton.Content" xml:space="preserve">
+    <value>Export To JSON</value>
+  </data>
 </root>

@@ -1727,7 +1727,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		name:                   "Windows-Defender-ApplicationGuard",
 		type:                   DISMResultType.Feature,
 		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Enable,
+		removeStrategy:         ApplyOperation.Disable, // It's deprecated, don't enable it since it's not even enabled in 24H2 and later.
 		validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
 		DismPackageFeatureState.DismStateNotPresent]
 	)

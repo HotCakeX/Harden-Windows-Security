@@ -47,3 +47,31 @@ There are different settings and options you can use to fine tune the policy acc
 * **Test Mode**: Boot Options Menu, such as Safe mode, is disabled for all App Control policies by default. Using Test Mode will allow access to it. It will also automatically enable the `Audit` mode for the policy in case of a failure in a driver that is critical to system boot. It's only recommended to use this setting in a test environment and not in production due to security reasons.
 
 <br>
+
+## Downloads Defense Measures <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/DownloadsDefenseMeasures.png" alt="Downloads Defense Measures icon" width="35">
+
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Readme%20Categories/Downloads%20Defense%20Measures/Downloads%20Defense%20Measures.png" alt="Downloads Defense Measures - Harden Windows Security GitHub repository" width="300"></p>
+
+<br>
+
+**T**o combat the threat of more sophisticated malware, a preemptive measure is taken by creating and deploying an [App Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) policy on the system. This policy blocks the execution of executables and [other potentially harmful file types](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/feature-availability) in the Downloads folder.
+
+This policy defends the system from malware that can launch itself automatically after being downloaded from the Internet and has the potential to protect against zero-click exploits. The user must ensure the file's safety and explicitly transfer it to a different folder before running it.
+
+The App Control policy employs a wildcard pattern to prevent any file from running in the Downloads folder. Additionally, it verifies that the system downloads folder in the user directory matches the downloads folder in the Edge browser's settings. If there is a discrepancy, a warning message is displayed on the console.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+Creates a custom [App Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) policy that blocks the execution of the following executables:
+
+* wscript.exe
+* mshta.exe
+* cscript.exe
+
+They are [insecure](https://textslashplain.com/2024/05/20/attack-techniques-full-trust-script-downloads/), unsandboxed script hosts that pose a security risk.
+
+<br>

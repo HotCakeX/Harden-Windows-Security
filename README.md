@@ -33,7 +33,7 @@
   <a href="#resources">Resources</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
   <a href="#license">License</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
   <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki"><b>Wiki</b></a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
-  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions">Basic FAQs</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing"> <a href="#roadmap">Roadmap</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing"> <a href="#donation">Donation</a>
+  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions">Basic FAQs</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing"> <a href="#roadmap">Roadmap</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing"> <a href="#donation"><b>Donation</b></a>
 </p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/febfcc2b3be66ef0d5ecd74694157622a7fde865/Pictures/SVG/SVG%20line%20wave%20yellow%20pink%20inverted.svg" width= "300000" alt="horizontal super thin rainbow RGB line">
@@ -58,15 +58,35 @@
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github-pink.svg" alt="GitHub logo pink SVG"> Install + Start Harden Windows Security Using GUI (Graphical User Interface)
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/.github/9b2e88aad5ba54000a24c904e1f473b039202691/Pictures/Harden%20System%20Security%20Icons/ICON-SVG-SIMPLIFIED.svg" alt="GitHub logo pink SVG"> [Install the Harden System Security From Microsoft Store](https://apps.microsoft.com/detail/9p7ggfl7dx57)
+
+<a href="https://apps.microsoft.com/detail?referrer=appbadge&mode=direct">
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="250"/>
+</a>
+
+* [**Documentation**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security)
+
+<br>
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/e98e3a322d2bd04b6a77e2cd4d2d8909d0eb6af0/Pictures/Gifs/HardenWindowsSecurityApp.gif" width="750" alt="Harden System Security App Demo">
+
+</div>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+#### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github-pink.svg" alt="GitHub logo pink SVG"> Install + Start Harden Windows Security Using GUI (Graphical User Interface) - Will be Deprecated Soon.
 
 ```powershell
 (irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'P'|iex
 ```
 
-<br>
-
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg" alt="PowerShell icon Pink"> Or Just Install the Harden Windows Security
+#### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg" alt="PowerShell icon Pink"> Or Install the Harden Windows Security
 
 [**Check the Documentation for How to use and Complete Info**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
 
@@ -113,7 +133,7 @@ Unprotect-WindowsSecurity # CLI Mode
 ### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/.github/65086755cd831ab6bbb4eddf10b7b716cee12a48/Pictures/AppControl%20Manager%20Icons/Icon%20smaller.png" alt="GitHub logo pink SVG"> [Install the AppControl Manager From Microsoft Store](https://apps.microsoft.com/detail/9PNG1JDDTGP8)
 
 <a href="https://apps.microsoft.com/detail/9png1jddtgp8?mode=direct">
-	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="install AppControl Manager from Microsoft Store"/>
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="250" alt="install AppControl Manager from Microsoft Store"/>
 </a>
 
 * [**YouTube demo**](https://www.youtube.com/watch?v=SzMs13n7elE)
@@ -1645,7 +1665,6 @@ This repository uses effective methods that make it easy to verify:
 
 * [![PSScriptAnalyzer](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml)
 * [![Repository And Package Scan on Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Repository%20And%20Package%20Scan%20on%20Virus%20Total.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Repository%20And%20Package%20Scan%20on%20Virus%20Total.yml)
-* [![CodeQL Advanced - Security](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/CodeQL%20Advanced%20-%20Security.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/CodeQL%20Advanced%20-%20Security.yml)
 * [![CodeQL Advanced - Quality](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/CodeQL%20Advanced%20-%20Quality.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/CodeQL%20Advanced%20-%20Quality.yml)
 * [![Sync to Azure DevOps](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Sync%20to%20Azure%20DevOps.yaml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Sync%20to%20Azure%20DevOps.yaml)
 * [![Build AppControl Manager MSIX Package](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml)
@@ -1837,6 +1856,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [The Microsoft Incident Response Ninja Hub](https://aka.ms/MicrosoftIRNinjaHub)
 - [Understanding the Microsoft Pluton security processor](https://techcommunity.microsoft.com/blog/windows-itpro-blog/understanding-the-microsoft-pluton-security-processor/4370413)
 - [Important Security Topics from Azure and Security MVPs](https://techcommunity.microsoft.com/blog/mvp-blog/mvp%E2%80%99s-favorite-content-important-security-topics-from-azure-and-security-mvps/4382196)
+- [Security leadership in the age of constant disruption](https://blogs.windows.com/windowsexperience/2025/08/05/security-leadership-in-the-age-of-constant-disruption/)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

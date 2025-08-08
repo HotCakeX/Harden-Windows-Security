@@ -31,6 +31,32 @@
 
 <br>
 
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/9b2e88aad5ba54000a24c904e1f473b039202691/Pictures/Harden%20System%20Security%20Icons/ICON-SVG-SIMPLIFIED.svg" width="50"> [Harden System Security](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security)  <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
+
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-365-Apps-Security-Baselines.png" alt="Harden System Security Menu Item" width="30"> [Microsoft 365 Apps Security Baseline](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-365-Apps-Security-Baseline)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsDefender.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Defender](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ASRrules.png" alt="Harden System Security Menu Item" width="30"> [Attack Surface Reduction](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png" alt="Harden System Security Menu Item" width="30"> [Bitlocker](https://github.com/HotCakeX/Harden-Windows-Security/wiki/BitLocker)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/DeviceGuard.png" alt="Harden System Security Menu Item" width="30"> [Device Guard](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png" alt="Harden System Security Menu Item" width="30"> [TLS Security](https://github.com/HotCakeX/Harden-Windows-Security/wiki/TLS-Security)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LockScreen.png" alt="Harden System Security Menu Item" width="30"> [Lock Screen](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Lock-Screen)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png" alt="Harden System Security Menu Item" width="30"> [User Account Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/User-Account-Control)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Firewall.png" alt="Harden System Security Menu Item" width="30"> [Windows Firewall](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/OptionalFeatures.png" alt="Harden System Security Menu Item" width="30"> [Optional Windows Features](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Networking.png" alt="Harden System Security Menu Item" width="30"> [Windows Networking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Networking)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/MiscellaneousCommands.png" alt="Harden System Security Menu Item" width="30"> [Miscellaneous Configurations](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Miscellaneous-Configurations)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsUpdate.png" alt="Harden System Security Menu Item" width="30"> [Windows Update](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Update)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/EdgeBrowser.png" alt="Harden System Security Menu Item" width="30"> [Edge Browser](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edge-Browser)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Certificate.png" alt="Harden System Security Menu Item" width="30"> [Certificate Checking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Certificate-Checking)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/CountryIPBlocking.png" alt="Harden System Security Menu Item" width="30"> [Country IP Blocking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking)
+- <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/NonAdmin.png" alt="Harden System Security Menu Item" width="30"> [Non Admin Measures](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/Star.gif" alt="Harden System Security Menu Item" width="30"> [Group Policy Editor](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy-Editor)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/Toolbox.gif" alt="Harden System Security Menu Item" width="30"> [Manage Installed Apps](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/kawaii.gif" alt="Harden System Security Menu Item" width="30"> [File Reputation](https://github.com/HotCakeX/Harden-Windows-Security/wiki/File-Reputation)
+
+<br>
+
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/purplewings.gif" width="50"> [Harden Windows Security Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
 
 <br>

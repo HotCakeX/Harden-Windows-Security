@@ -60,7 +60,7 @@
 
 ### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/.github/9b2e88aad5ba54000a24c904e1f473b039202691/Pictures/Harden%20System%20Security%20Icons/ICON-SVG-SIMPLIFIED.svg" alt="GitHub logo pink SVG"> [Install the Harden System Security From Microsoft Store](https://apps.microsoft.com/detail/9p7ggfl7dx57)
 
-<a href="https://apps.microsoft.com/detail?referrer=appbadge&mode=direct">
+<a href="https://apps.microsoft.com/detail/9p7ggfl7dx57?referrer=appbadge&mode=direct">
 	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="250"/>
 </a>
 

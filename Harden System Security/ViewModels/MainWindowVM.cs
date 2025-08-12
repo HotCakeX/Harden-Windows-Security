@@ -201,7 +201,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			pages: [typeof(Pages.Protects.Microsoft365AppsSecurityBaseline)]
 		);
 
-		breadCrumbMappingsV2[typeof(Pages.Protects.Microsoft365AppsSecurityBaseline)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.Protects.MicrosoftBaseLinesOverrides)] = new PageTitleMap
 		(
 			titles: [GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content")],
 			pages: [typeof(Pages.Protects.MicrosoftBaseLinesOverrides)]

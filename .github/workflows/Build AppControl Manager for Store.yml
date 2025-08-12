@@ -97,7 +97,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install Microsoft.VCRedist: $LASTEXITCODE") }
 
       - name: Check out the repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Building And Packaging the AppControl Manager
         id: main_buildOp

@@ -114,6 +114,37 @@
 
                 <Button x:Uid="ExportToJsonButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ExportToJson}" />
 
+                <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        x:Uid="DownloadURLButton"
+                        VerticalAlignment="Center">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" Spacing="7">
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                      Glyph="&#xE774;"/>
+                            <TextBlock x:Uid="DownloadURLButtonText"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel Orientation="Vertical"
+                                        Spacing="10"
+                                        HorizontalAlignment="Center">
+                                <TextBox Text="{x:Bind ViewModel.DownloadURL, Mode=TwoWay}"
+                                         MaxWidth="250"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Top"
+                                         TextWrapping="Wrap"/>
+
+                                <Button x:Uid="ResetURLButton"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Bottom"
+                                        Click="{x:Bind ViewModel.ResetToDefaultUrl}"/>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
                 <TextBox Text="{x:Bind ViewModel.TotalResults, Mode=OneWay}"
                          IsReadOnly="True"
                          VerticalAlignment="Center"

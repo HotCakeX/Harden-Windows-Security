@@ -26,6 +26,7 @@ using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace HardenSystemSecurity.ViewModels;
@@ -839,11 +840,35 @@ internal sealed partial class ProtectVM : ViewModelBase
 					processedCategories++;
 					MainInfoBar.WriteInfo($"{operationText} category {processedCategories}/{totalCategories}: {selectedCategory.Title}");
 
-					// Get selected sub-categories for this category
-					List<SubCategories> selectedSubCategories = selectedCategory.SubCategories
-						.Where(subCat => true)
-						.Select(subCat => subCat.SubCategory)
-						.ToList();
+					// Get selected sub-categories for this category (only checked ones)
+					List<SubCategories> selectedSubCategories = [];
+
+					// Find the corresponding UI element to check which sub-categories are actually checked
+					if (UIListView != null)
+					{
+						// Find the UI representation of this category in the ListView
+						foreach (object? item in UIListView.Items)
+						{
+							if (item is ProtectionCategoryListViewItem uiItem && uiItem.Category == selectedCategory.Category)
+							{
+								// Get the ItemContainer for this item
+								if (UIListView.ContainerFromItem(item) is ListViewItem container)
+								{
+									// Find all CheckBox controls in the container
+									List<CheckBox> checkBoxes = FindVisualChildren<CheckBox>(container);
+
+									for (int i = 0; i < checkBoxes.Count && i < selectedCategory.SubCategories.Count; i++)
+									{
+										if (checkBoxes[i].IsChecked == true)
+										{
+											selectedSubCategories.Add(selectedCategory.SubCategories[i].SubCategory);
+										}
+									}
+								}
+								break;
+							}
+						}
+					}
 
 					// Get processor for this category
 					ICategoryProcessor processor = CategoryProcessorFactory.GetProcessor(selectedCategory.Category);
@@ -918,5 +943,33 @@ internal sealed partial class ProtectVM : ViewModelBase
 			ElementsAreEnabled = true;
 			CurrentRunningOperation = RunningOperation.None;
 		}
+	}
+
+	/// <summary>
+	/// Helper method to find visual children of a specific type
+	/// </summary>
+	/// <typeparam name="T">The type of children to find</typeparam>
+	/// <param name="parent">The parent element</param>
+	/// <returns>List of children of the specified type</returns>
+	private static List<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
+	{
+		List<T> children = [];
+
+		if (parent == null) return children;
+
+		int childCount = VisualTreeHelper.GetChildrenCount(parent);
+		for (int i = 0; i < childCount; i++)
+		{
+			DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+
+			if (child is T typedChild)
+			{
+				children.Add(typedChild);
+			}
+
+			children.AddRange(FindVisualChildren<T>(child));
+		}
+
+		return children;
 	}
 }

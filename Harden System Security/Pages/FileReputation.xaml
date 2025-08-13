@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:protect="using:HardenSystemSecurity.Protect"
@@ -16,7 +15,9 @@
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+          DragOver="{x:Bind ViewModel.OnDragOver}"
+          Drop="{x:Bind ViewModel.OnDrop}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -52,7 +53,15 @@
 
                 <Button x:Uid="GenericBrowseButton"
                         VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                         Click="{x:Bind ViewModel.BrowseForFile}" />
+
+                <!-- Drag and drop hint shown when not elevated -->
+                <TextBlock x:Uid="DragAndDropHintFileReputation"
+                           Visibility="{x:Bind ViewModel.IsNotElevated}"
+                           VerticalAlignment="Center"
+                           Opacity="0.7"
+                           FontStyle="Italic" />
 
             </controls:WrapPanel>
         </Border>
@@ -70,14 +79,6 @@
                 <Border Style="{StaticResource GridCardStyle}"
                         Padding="20"
                         CornerRadius="8">
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:TranslationAnimation Duration="0:0:0.3" To="0,-20,0"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" Delay="0:0:0.1"/>
-                        <ani:TranslationAnimation Duration="0:0:0.5" From="0,-20,0" To="0,0,0" Delay="0:0:0.1"/>
-                    </ani:Implicit.ShowAnimations>
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -113,12 +114,6 @@
                                 Style="{StaticResource AccentButtonStyle}"
                                 Width="40"
                                 Height="40">
-                            <ani:Implicit.HideAnimations>
-                                <ani:ScaleAnimation Duration="0:0:0.2" To="0.8"/>
-                            </ani:Implicit.HideAnimations>
-                            <ani:Implicit.ShowAnimations>
-                                <ani:ScaleAnimation Duration="0:0:0.2" From="0.8" To="1.0"/>
-                            </ani:Implicit.ShowAnimations>
                         </Button>
                     </Grid>
                 </Border>
@@ -127,14 +122,6 @@
                 <Border Style="{StaticResource GridCardStyle}"
                         Padding="20"
                         CornerRadius="8">
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:TranslationAnimation Duration="0:0:0.3" To="0,-20,0"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" Delay="0:0:0.2"/>
-                        <ani:TranslationAnimation Duration="0:0:0.5" From="0,-20,0" To="0,0,0" Delay="0:0:0.2"/>
-                    </ani:Implicit.ShowAnimations>
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -170,12 +157,6 @@
                                 Style="{StaticResource AccentButtonStyle}"
                                 Width="40"
                                 Height="40">
-                            <ani:Implicit.HideAnimations>
-                                <ani:ScaleAnimation Duration="0:0:0.2" To="0.8"/>
-                            </ani:Implicit.HideAnimations>
-                            <ani:Implicit.ShowAnimations>
-                                <ani:ScaleAnimation Duration="0:0:0.2" From="0.8" To="1.0"/>
-                            </ani:Implicit.ShowAnimations>
                         </Button>
                     </Grid>
                 </Border>
@@ -184,14 +165,6 @@
                 <Border Style="{StaticResource GridCardStyle}"
                         Padding="20"
                         CornerRadius="8">
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:TranslationAnimation Duration="0:0:0.3" To="0,-20,0"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" Delay="0:0:0.3"/>
-                        <ani:TranslationAnimation Duration="0:0:0.5" From="0,-20,0" To="0,0,0" Delay="0:0:0.3"/>
-                    </ani:Implicit.ShowAnimations>
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -227,12 +200,6 @@
                                 Style="{StaticResource AccentButtonStyle}"
                                 Width="40"
                                 Height="40">
-                            <ani:Implicit.HideAnimations>
-                                <ani:ScaleAnimation Duration="0:0:0.2" To="0.8"/>
-                            </ani:Implicit.HideAnimations>
-                            <ani:Implicit.ShowAnimations>
-                                <ani:ScaleAnimation Duration="0:0:0.2" From="0.8" To="1.0"/>
-                            </ani:Implicit.ShowAnimations>
                         </Button>
                     </Grid>
                 </Border>
@@ -241,14 +208,6 @@
                 <Border Style="{StaticResource GridCardStyle}"
                         Padding="20"
                         CornerRadius="8">
-                    <ani:Implicit.HideAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
-                        <ani:TranslationAnimation Duration="0:0:0.3" To="0,-20,0"/>
-                    </ani:Implicit.HideAnimations>
-                    <ani:Implicit.ShowAnimations>
-                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0" Delay="0:0:0.4"/>
-                        <ani:TranslationAnimation Duration="0:0:0.5" From="0,-20,0" To="0,0,0" Delay="0:0:0.4"/>
-                    </ani:Implicit.ShowAnimations>
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -284,12 +243,6 @@
                                 Style="{StaticResource AccentButtonStyle}"
                                 Width="40"
                                 Height="40">
-                            <ani:Implicit.HideAnimations>
-                                <ani:ScaleAnimation Duration="0:0:0.2" To="0.8"/>
-                            </ani:Implicit.HideAnimations>
-                            <ani:Implicit.ShowAnimations>
-                                <ani:ScaleAnimation Duration="0:0:0.2" From="0.8" To="1.0"/>
-                            </ani:Implicit.ShowAnimations>
                         </Button>
                     </Grid>
                 </Border>

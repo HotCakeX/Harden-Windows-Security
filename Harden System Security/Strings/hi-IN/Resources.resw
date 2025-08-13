@@ -169,9 +169,6 @@
     <data name="ErrorTitle" xml:space="preserve">
     <value>त्रुटि</value>
   </data>
-    <data name="SuccessTitle" xml:space="preserve">
-    <value>सफलता</value>
-  </data>
     <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>कमांड '{0} {1}' एक्जिट कोड {2} के साथ विफल हुआ। त्रुटि: {3}</value>
   </data>
@@ -2411,5 +2408,185 @@
   </data>
   <data name="ExportToJsonButton.Content" xml:space="preserve">
     <value>JSON में निर्यात करें</value>
+  </data>
+    <data name="OpenProcessTokenFailedError" xml:space="preserve">
+  <value>OpenProcessToken असफल। Win32 त्रुटि: {0}</value>
+</data>
+<data name="LookupPrivilegeValueFailedError" xml:space="preserve">
+  <value>LookupPrivilegeValue {0} के लिए असफल। Win32 त्रुटि: {1}</value>
+</data>
+<data name="AdjustTokenPrivilegesFailedError" xml:space="preserve">
+  <value>AdjustTokenPrivileges {0} के लिए असफल। Win32 त्रुटि: {1}</value>
+</data>
+<data name="PrivilegeNotAssignedError" xml:space="preserve">
+  <value>विशेषाधिकार असाइन नहीं किया गया: {0}</value>
+</data>
+<data name="FailedToEnumerateAuditCategoriesError" xml:space="preserve">
+  <value>ऑडिट श्रेणियों की गणना में असफल। Win32 त्रुटि: {0}</value>
+</data>
+<data name="FailedToGetCategoryIdForSubCategoryError" xml:space="preserve">
+  <value>उप-श्रेणी के लिए श्रेणी ID प्राप्त करने में असफल: {0}</value>
+</data>
+<data name="NoAuditSubcategoriesFoundError" xml:space="preserve">
+  <value>सिस्टम पर कोई ऑडिट उप-श्रेणियां नहीं मिलीं</value>
+</data>
+<data name="FailedToQueryAuditSystemPolicyBatchError" xml:space="preserve">
+  <value>{0} से शुरू होने वाले बैच के लिए ऑडिट सिस्टम नीति की क्वेरी में असफल। Win32 त्रुटि: {1}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullBatchError" xml:space="preserve">
+  <value>AuditQuerySystemPolicy ने {0} से शुरू होने वाले बैच के लिए नल पॉइंटर लौटाया</value>
+</data>
+<data name="RetrievedAuditPoliciesForSubcategoriesMessage" xml:space="preserve">
+  <value>{0} उप-श्रेणियों के लिए ऑडिट नीतियां पुनर्प्राप्त की गईं</value>
+</data>
+<data name="FailedToQuerySpecificAuditPoliciesError" xml:space="preserve">
+  <value>विशिष्ट ऑडिट नीतियों की क्वेरी में असफल। Win32 त्रुटि: {0}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullSpecificError" xml:space="preserve">
+  <value>AuditQuerySystemPolicy ने विशिष्ट ऑडिट नीतियों के लिए नल पॉइंटर लौटाया</value>
+</data>
+<data name="RetrievedAuditPoliciesForSpecificSubcategoriesMessage" xml:space="preserve">
+  <value>{0} विशिष्ट उप-श्रेणियों के लिए ऑडिट नीतियां पुनर्प्राप्त की गईं</value>
+</data>
+<data name="CsvFileNotFoundError" xml:space="preserve">
+  <value>CSV फ़ाइल नहीं मिली: {0}</value>
+</data>
+<data name="CsvFileMustContainHeaderAndDataError" xml:space="preserve">
+  <value>CSV फ़ाइल में कम से कम एक हेडर और एक डेटा पंक्ति होनी चाहिए</value>
+</data>
+<data name="ErrorParsingCsvLineError" xml:space="preserve">
+  <value>CSV पंक्ति {0} को पार्स करने में त्रुटि: {1}</value>
+</data>
+<data name="NoValidAuditPolicyEntriesFoundError" xml:space="preserve">
+  <value>CSV फ़ाइल में कोई वैध ऑडिट नीति प्रविष्टियां नहीं मिलीं</value>
+</data>
+<data name="ParsedAuditPolicyEntriesFromCsvMessage" xml:space="preserve">
+  <value>CSV से {0} ऑडिट नीति प्रविष्टियां पार्स की गईं</value>
+</data>
+<data name="SuccessfullyAppliedAuditPoliciesFromCsvMessage" xml:space="preserve">
+  <value>CSV से {0} ऑडिट नीतियां सफलतापूर्वक लागू की गईं</value>
+</data>
+<data name="FailedToApplyAuditPolicyToSystemError" xml:space="preserve">
+  <value>सिस्टम पर ऑडिट नीति लागू करने में असफल। Win32 त्रुटि: {0}</value>
+</data>
+<data name="CsvLineExpectedColumnsError" xml:space="preserve">
+  <value>पंक्ति {0}: कम से कम 7 कॉलम अपेक्षित, {1} मिले</value>
+</data>
+<data name="CsvLineInvalidGuidFormatError" xml:space="preserve">
+  <value>पंक्ति {0}: अमान्य GUID प्रारूप: {1}</value>
+</data>
+<data name="CsvLineInvalidSettingValueError" xml:space="preserve">
+  <value>पंक्ति {0}: अमान्य सेटिंग मान: {1}</value>
+</data>
+<data name="CsvLineSettingValueOutOfRangeError" xml:space="preserve">
+  <value>पंक्ति {0}: सेटिंग मान सीमा से बाहर (0-3): {1}</value>
+</data>
+<data name="NoAuditingText" xml:space="preserve">
+  <value>कोई ऑडिटिंग नहीं</value>
+</data>
+<data name="SuccessText" xml:space="preserve">
+  <value>सफलता</value>
+</data>
+<data name="FailureText" xml:space="preserve">
+  <value>असफलता</value>
+</data>
+<data name="SuccessAndFailureText" xml:space="preserve">
+  <value>सफलता और असफलता</value>
+</data>
+  <data name="MicrosoftSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>इस पृष्ठ में Microsoft सुरक्षा आधारभूत को लागू करें, सत्यापित करें और हटाएं।</value>
+  </data>
+    <data name="MicrosoftSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>इस पृष्ठ में Microsoft सुरक्षा आधारभूत को लागू करें, सत्यापित करें और हटाएं।</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>इस पृष्ठ में Microsoft 365 Apps सुरक्षा आधारभूत को लागू करें, सत्यापित करें और हटाएं।</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>इस पृष्ठ में Microsoft 365 Apps सुरक्षा आधारभूत को लागू करें, सत्यापित करें और हटाएं।</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft आधारभूत के लिए वैकल्पिक ओवरराइड लागू करें, सत्यापित करें और हटाएं।</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+     <value>Microsoft आधारभूत के लिए वैकल्पिक ओवरराइड लागू करें, सत्यापित करें और हटाएं।</value>
+  </data>
+  <data name="DragAndDropHintFileReputation.Text" xml:space="preserve">
+     <value>या फ़ाइलों को यहां खींचें और छोड़ें</value>
+  </data>
+    <data name="DragAndDropHintFileReputationCaption" xml:space="preserve">
+     <value>प्रतिष्ठा जांचने के लिए फ़ाइल छोड़ें</value>
+  </data>
+  <data name="NoVerificationResultsToExport" xml:space="preserve">
+  <value>निर्यात करने के लिए कोई सत्यापन परिणाम नहीं</value>
+</data>
+<data name="ExportFileNameFormat" xml:space="preserve">
+  <value>HardenSystemSecurity_Data_Export_{0}.json</value>
+</data>
+<data name="SuccessfullyExportedVerificationResults" xml:space="preserve">
+  <value>{0} सत्यापन परिणाम सफलतापूर्वक {1} में निर्यात किए गए</value>
+</data>
+<data name="ApplyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Microsoft सुरक्षा आधारभूत लागू की जा रही है...</value>
+</data>
+<data name="MicrosoftSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>Microsoft सुरक्षा आधारभूत सफलतापूर्वक लागू की गई</value>
+</data>
+<data name="ApplyOperationCancelledByUser" xml:space="preserve">
+  <value>लागू करने का ऑपरेशन उपयोगकर्ता द्वारा रद्द किया गया</value>
+</data>
+<data name="RemovingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Microsoft सुरक्षा आधारभूत हटाई जा रही है...</value>
+</data>
+<data name="MicrosoftSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>Microsoft सुरक्षा आधारभूत सफलतापूर्वक हटाई गई</value>
+</data>
+<data name="RemoveOperationCancelledByUser" xml:space="preserve">
+  <value>हटाने का ऑपरेशन उपयोगकर्ता द्वारा रद्द किया गया</value>
+</data>
+<data name="VerifyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Microsoft सुरक्षा आधारभूत सत्यापित की जा रही है...</value>
+</data>
+<data name="NoResultsReturnedFromVerificationProcess" xml:space="preserve">
+  <value>सत्यापन प्रक्रिया से कोई परिणाम वापस नहीं आए।</value>
+</data>
+<data name="VerificationCompletedCompliantPolicies" xml:space="preserve">
+  <value>सत्यापन पूर्ण: {0}/{1} नीतियां अनुपालित हैं</value>
+</data>
+<data name="VerifyOperationCancelledByUser" xml:space="preserve">
+  <value>सत्यापन ऑपरेशन उपयोगकर्ता द्वारा रद्द किया गया</value>
+</data>
+<data name="ApplyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Microsoft 365 Apps सुरक्षा आधारभूत लागू की जा रही है...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>Microsoft 365 Apps सुरक्षा आधारभूत सफलतापूर्वक लागू की गई</value>
+</data>
+<data name="RemovingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Microsoft 365 Apps सुरक्षा आधारभूत हटाई जा रही है...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>Microsoft 365 Apps सुरक्षा आधारभूत सफलतापूर्वक हटाई गई</value>
+</data>
+<data name="VerifyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Microsoft 365 Apps सुरक्षा आधारभूत सत्यापित की जा रही है...</value>
+</data>
+<data name="ResetURLButton.Content" xml:space="preserve">
+    <value>रीसेट</value>
+  </data>
+  <data name="ResetURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डाउनलोड URL को डिफ़ॉल्ट मान पर रीसेट करें।</value>
+  </data>
+  <data name="ResetURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>डाउनलोड URL को डिफ़ॉल्ट मान पर रीसेट करें।</value>
+  </data>
+  <data name="DownloadURLButtonText.Text" xml:space="preserve">
+    <value>डाउनलोड URL</value>
+  </data>
+  <data name="DownloadURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आधारभूत के डाउनलोड URL को देखें और प्रबंधित करें।</value>
+  </data>
+  <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>आधारभूत के डाउनलोड URL को देखें और प्रबंधित करें।</value>
   </data>
 </root>

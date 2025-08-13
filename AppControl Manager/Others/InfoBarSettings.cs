@@ -106,7 +106,7 @@ internal sealed class InfoBarSettings(
 	{
 		IsOpen = true;
 		Message = Msg;
-		Title = title ?? GlobalVars.GetStr("SuccessTitle");
+		Title = title ?? GlobalVars.GetStr("SuccessText");
 		Logger.Write(title is not null ? title + ": " + Msg : Msg);
 		Severity = InfoBarSeverity.Success;
 		IsClosable = true;

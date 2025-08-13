@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using AppControlManager.Others;
@@ -55,25 +57,30 @@ internal static partial class SecurityPolicyManager
 			throw new InvalidOperationException(GlobalVars.GetStr("NoSettingsProvided"));
 		}
 
+		string programDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+		string secureWorkDir = Path.Combine(programDataPath, "HardenSystemSecurity");
+
+		string uniqueSuffix = Guid.NewGuid().ToString("N");
+		string tempSecurityTemplate = Path.Combine(secureWorkDir, $"policy_{uniqueSuffix}.inf");
+		string tempSecurityDatabase = Path.Combine(secureWorkDir, $"policy_{uniqueSuffix}.sdb");
+
 		try
 		{
 			Logger.Write(GlobalVars.GetStr("SettingSystemAccessPolicyViaSecedit"));
 
-			string tempSecurityTemplate = Path.GetTempFileName() + ".inf";
-			string tempSecurityDatabase = Path.GetTempFileName() + ".sdb";
+			// Ensure secure directory exists with proper ACLs
+			EnsureSecureDirectory(secureWorkDir);
 
-			try
+			// Build the [System Access] section
+			StringBuilder systemAccessSection = new();
+
+			foreach (KeyValuePair<string, string> setting in systemAccessSettings)
 			{
-				// Build the [System Access] section
-				StringBuilder systemAccessSection = new();
+				_ = systemAccessSection.AppendLine(CultureInfo.InvariantCulture, $"{setting.Key} = {setting.Value}");
+			}
 
-				foreach (KeyValuePair<string, string> setting in systemAccessSettings)
-				{
-					_ = systemAccessSection.AppendLine(CultureInfo.InvariantCulture, $"{setting.Key} = {setting.Value}");
-				}
-
-				// Create a security template with the system access settings
-				string securityTemplate = $@"[Unicode]
+			// Create a security template with the system access settings
+			string securityTemplate = $@"[Unicode]
 Unicode=yes
 [System Access]
 {systemAccessSection}[Version]
@@ -81,71 +88,134 @@ signature=""$CHICAGO$""
 Revision=1
 ";
 
-				File.WriteAllText(tempSecurityTemplate, securityTemplate);
-				Logger.Write(string.Format(GlobalVars.GetStr("CreatedSecurityTemplate"), tempSecurityTemplate));
-				Logger.Write(string.Format(GlobalVars.GetStr("TemplateContent"), securityTemplate));
+			File.WriteAllText(tempSecurityTemplate, securityTemplate);
+			Logger.Write(string.Format(GlobalVars.GetStr("CreatedSecurityTemplate"), tempSecurityTemplate));
+			Logger.Write(string.Format(GlobalVars.GetStr("TemplateContent"), securityTemplate));
 
-				// Apply the security template using secedit
-				ProcessStartInfo startInfo = new()
-				{
-					FileName = "secedit.exe",
-					Arguments = $"/configure /db \"{tempSecurityDatabase}\" /cfg \"{tempSecurityTemplate}\" /areas SECURITYPOLICY",
-					UseShellExecute = false,
-					RedirectStandardOutput = true,
-					RedirectStandardError = true,
-					CreateNoWindow = true
-				};
-
-				using Process process = Process.Start(startInfo) ?? throw new InvalidOperationException(GlobalVars.GetStr("FailedToStartSeceditProcess"));
-
-				_ = process.WaitForExit(30000); // 30 second timeout
-
-				string output = process.StandardOutput.ReadToEnd();
-				string error = process.StandardError.ReadToEnd();
-
-				Logger.Write(string.Format(GlobalVars.GetStr("SeceditExitCode"), process.ExitCode));
-
-				if (!string.IsNullOrEmpty(output))
-					Logger.Write(string.Format(GlobalVars.GetStr("SeceditOutput"), output));
-
-				if (!string.IsNullOrEmpty(error))
-					Logger.Write(string.Format(GlobalVars.GetStr("SeceditError"), error));
-
-				if (process.ExitCode == 0)
-				{
-					Logger.Write(GlobalVars.GetStr("SeceditCompletedSuccessfully"));
-
-					// Force a policy refresh
-					RefreshPolicies.Refresh();
-				}
-				else
-				{
-					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SeceditFailedWithExitCode"), process.ExitCode));
-				}
-			}
-			finally
+			// Apply the security template using secedit
+			ProcessStartInfo startInfo = new()
 			{
-				// Clean up temporary files
+				FileName = "secedit.exe",
+				Arguments = $"/configure /db \"{tempSecurityDatabase}\" /cfg \"{tempSecurityTemplate}\" /areas SECURITYPOLICY",
+				UseShellExecute = false,
+				RedirectStandardOutput = true,
+				RedirectStandardError = true,
+				CreateNoWindow = true
+			};
+
+			using Process process = Process.Start(startInfo) ?? throw new InvalidOperationException(GlobalVars.GetStr("FailedToStartSeceditProcess"));
+
+			_ = process.WaitForExit(30000); // 30 second timeout
+
+			string output = process.StandardOutput.ReadToEnd();
+			string error = process.StandardError.ReadToEnd();
+
+			Logger.Write(string.Format(GlobalVars.GetStr("SeceditExitCode"), process.ExitCode));
+
+			if (!string.IsNullOrEmpty(output))
+			{
+				Logger.Write(string.Format(GlobalVars.GetStr("SeceditOutput"), output));
+			}
+
+			if (!string.IsNullOrEmpty(error))
+			{
+				Logger.Write(string.Format(GlobalVars.GetStr("SeceditError"), error));
+			}
+
+			if (process.ExitCode == 0)
+			{
+				Logger.Write(GlobalVars.GetStr("SeceditCompletedSuccessfully"));
+
+				// Force a policy refresh
+				RefreshPolicies.Refresh();
+			}
+			else
+			{
+				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SeceditFailedWithExitCode"), process.ExitCode));
+			}
+		}
+		finally
+		{
+			if (Directory.Exists(secureWorkDir))
+			{
 				try
 				{
-					if (File.Exists(tempSecurityTemplate))
-						File.Delete(tempSecurityTemplate);
-
-					if (File.Exists(tempSecurityDatabase))
-						File.Delete(tempSecurityDatabase);
+					Directory.Delete(secureWorkDir, true);
 				}
-				catch (Exception ex)
+				catch (Exception dirDelEx)
 				{
-					Logger.Write(GlobalVars.GetStr("WarningCouldNotDeleteTemporaryFiles"));
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ErrorWriter.FormatException(dirDelEx));
 				}
 			}
 		}
-		catch (Exception ex)
+	}
+
+	/// <summary>
+	/// Ensures the secure directory exists with required ACLs:
+	/// - Administrators: Full Control
+	/// - SYSTEM: Full Control
+	/// - Users (Built-in Users group): Read & Execute (no write / delete)
+	/// Inheritance is enabled for child objects.
+	/// </summary>
+	/// <param name="directoryPath">Target directory path</param>
+	/// <param name="createdDirectory">Reference flag set to true if the directory was newly created</param>
+	private static void EnsureSecureDirectory(string directoryPath)
+	{
+		if (Directory.Exists(directoryPath))
 		{
-			Logger.Write(GlobalVars.GetStr("SeceditMethodFailed"));
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Directory.Delete(directoryPath, true);
 		}
+
+		DirectoryInfo directoryInfo = Directory.CreateDirectory(directoryPath);
+
+		DirectorySecurity security = new();
+
+		SecurityIdentifier adminsSid = new(WellKnownSidType.BuiltinAdministratorsSid, null);
+		SecurityIdentifier systemSid = new(WellKnownSidType.LocalSystemSid, null);
+		SecurityIdentifier usersSid = new(WellKnownSidType.BuiltinUsersSid, null);
+
+		const InheritanceFlags inheritance = InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit;
+		const PropagationFlags propagation = PropagationFlags.None;
+
+		// Administrators - Full Control
+		FileSystemAccessRule adminsRule = new(
+			adminsSid,
+			FileSystemRights.FullControl,
+			inheritance,
+			propagation,
+			AccessControlType.Allow);
+
+		// SYSTEM - Full Control
+		FileSystemAccessRule systemRule = new(
+			systemSid,
+			FileSystemRights.FullControl,
+			inheritance,
+			propagation,
+			AccessControlType.Allow);
+
+		// Users - Read & Execute only 
+		FileSystemRights usersRights =
+			FileSystemRights.ReadAndExecute |
+			FileSystemRights.ListDirectory |
+			FileSystemRights.ReadAttributes |
+			FileSystemRights.ReadExtendedAttributes |
+			FileSystemRights.ReadPermissions;
+
+		FileSystemAccessRule usersRule = new(
+			usersSid,
+			usersRights,
+			inheritance,
+			propagation,
+			AccessControlType.Allow);
+
+		// Protect (disable inheritance) and clear existing ACLs first
+		// Then set hardened rules
+		security.SetAccessRuleProtection(true, false);
+		security.SetAccessRule(adminsRule);
+		security.SetAccessRule(systemRule);
+		security.SetAccessRule(usersRule);
+
+		directoryInfo.SetAccessControl(security);
 	}
 
 	/// <summary>

@@ -146,10 +146,11 @@ internal static class FileTrustChecker
 				keyName: @"SYSTEM\CurrentControlSet\Control\CI\Policy",
 				valueName: "VerifiedAndReputablePolicyState",
 				type: RegistryValueType.REG_DWORD,
-				0,
-				[])
+				size: 0,
+				data: [])
 				{
-					RegValue = "1"
+					RegValue = "1",
+					hive = Hive.HKLM
 				});
 
 		if (string.Equals(result, "1", StringComparison.OrdinalIgnoreCase))

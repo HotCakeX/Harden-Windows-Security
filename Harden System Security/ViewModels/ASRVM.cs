@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -187,6 +188,7 @@ internal sealed partial class ASRVM : ViewModelBase
 			}
 
 			ASRItemsLVBound.Add(entry);
+			AllASRRules.Add(entry);
 		}
 	}
 
@@ -490,6 +492,50 @@ internal sealed partial class ASRVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Search box for the ASR rules.
+	/// </summary>
+	internal string? SearchKeyword
+	{
+		get; set
+		{
+			if (SPT(ref field, value))
+				SearchBox_TextChanged();
+		}
+	}
+
+	/// <summary>
+	/// Backing field for all ASR rules to preserve original data during filtering.
+	/// </summary>
+	internal readonly List<ASRRuleEntry> AllASRRules = [];
+
+	/// <summary>
+	/// Event handler for the SearchBox text change
+	/// </summary>
+	internal void SearchBox_TextChanged()
+	{
+		string? searchTerm = SearchKeyword?.Trim();
+
+		if (searchTerm is null)
+			return;
+
+		// Perform a case-insensitive search in all relevant fields
+		List<ASRRuleEntry> filteredResults = AllASRRules.Where(rule =>
+			(rule.PolicyEntry.FriendlyName is not null && rule.PolicyEntry.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(rule.PolicyEntry.ValueName is not null && rule.PolicyEntry.ValueName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(rule.PolicyEntry.Category is not null && rule.PolicyEntry.Category.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true) ||
+			(rule.PolicyEntry.SubCategory is not null && rule.PolicyEntry.SubCategory.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true) ||
+			rule.State.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+		).ToList();
+
+		ASRItemsLVBound.Clear();
+
+		foreach (ASRRuleEntry item in filteredResults)
+		{
+			ASRItemsLVBound.Add(item);
 		}
 	}
 }

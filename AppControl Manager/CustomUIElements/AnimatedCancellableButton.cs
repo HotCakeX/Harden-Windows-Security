@@ -74,11 +74,6 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 	private bool _inColorTransition;
 	private const double SHADOW_OPACITY = 0.85;
 
-	/*
-
-	Could use it here: Effects.SetShadow(this, TransparentShadow);
-	But this also works: Effects.SetShadow(this, null);
-
 	private static readonly AttachedCardShadow TransparentShadow = new()
 	{
 		Color = TransparentColor,
@@ -87,7 +82,6 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 		Opacity = 0.0,
 		CornerRadius = 0.0
 	};
-	*/
 
 	private static readonly Color[] _shadowColors = [
 		Color.FromArgb(255, 255, 192, 203), // Pink
@@ -106,9 +100,9 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 			typeof(AnimatedCancellableButton),
 			new PropertyMetadata(null));
 
-	internal Func<Task> CancelMethod
+	internal Func<Task>? CancelMethod
 	{
-		get => (Func<Task>)GetValue(CancelMethodProperty);
+		get => (Func<Task>?)GetValue(CancelMethodProperty);
 		set => SetValue(CancelMethodProperty, value);
 	}
 
@@ -435,15 +429,30 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 
 	private void InvokeCancelMethodSafely()
 	{
-		_ = Task.Run(async () =>
+		CancellationTokenSource? cts = null;
+		lock (_stateLock)
 		{
-			try
+			if (!_isDisposed && !_isDisposing && _disposalCancellationTokenSource is not null)
 			{
-				await CancelMethod.Invoke();
+				cts = _disposalCancellationTokenSource;
 			}
-			catch (Exception)
-			{ }
-		});
+		}
+
+		if (CancelMethod is not null && cts is not null)
+		{
+			_ = Task.Run(async () =>
+			{
+				try
+				{
+					if (!cts.Token.IsCancellationRequested)
+					{
+						await CancelMethod.Invoke();
+					}
+				}
+				catch (Exception)
+				{ }
+			}, cts.Token);
+		}
 	}
 
 	private AttachedCardShadow? CreateShadow()
@@ -683,9 +692,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 
 			if (_hasShadowApplied)
 			{
-#pragma warning disable CS8625
-				Effects.SetShadow(this, null);
-#pragma warning restore CS8625
+				Effects.SetShadow(this, TransparentShadow);
 				_hasShadowApplied = false;
 			}
 
@@ -1000,12 +1007,15 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 
 		AnimateToState(false, true);
 
-		try
+		if (CancelMethod is not null)
 		{
-			await CancelMethod.Invoke();
+			try
+			{
+				await CancelMethod.Invoke();
+			}
+			catch (Exception)
+			{ }
 		}
-		catch (Exception)
-		{ }
 	}
 
 	private void AnimateToState(bool toCancelState, bool toCancellingState)
@@ -1195,9 +1205,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 			{
 				try
 				{
-#pragma warning disable CS8625
-					Effects.SetShadow(this, null);
-#pragma warning restore CS8625
+					Effects.SetShadow(this, TransparentShadow);
 				}
 				catch (Exception)
 				{ }

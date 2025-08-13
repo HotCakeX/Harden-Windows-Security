@@ -63,11 +63,11 @@ internal sealed class AuditPolicyInfo(
 	{
 		return auditingInformation switch
 		{
-			0 => "No auditing",
-			1 => "Success",
-			2 => "Failure",
-			3 => "Success and Failure",
-			_ => "Unknown"
+			0 => GlobalVars.GetStr("NoAuditingText"),
+			1 => GlobalVars.GetStr("SuccessText"),
+			2 => GlobalVars.GetStr("FailureText"),
+			3 => GlobalVars.GetStr("SuccessAndFailureText"),
+			_ => GlobalVars.GetStr("UnknownState")
 		};
 	}
 }
@@ -136,7 +136,7 @@ internal static class AuditPrivilegeHelper
 			if (!opened)
 			{
 				int err = Marshal.GetLastWin32Error();
-				throw new InvalidOperationException("OpenProcessToken failed. Win32 Error: " + err);
+				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("OpenProcessTokenFailedError"), err));
 			}
 
 			try
@@ -163,7 +163,7 @@ internal static class AuditPrivilegeHelper
 		if (!lookup)
 		{
 			int errLookup = Marshal.GetLastWin32Error();
-			throw new InvalidOperationException("LookupPrivilegeValue failed for " + privilegeName + ". Win32 Error: " + errLookup);
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("LookupPrivilegeValueFailedError"), privilegeName, errLookup));
 		}
 
 		NativeMethods.TOKEN_PRIVILEGES tp = new()
@@ -181,12 +181,12 @@ internal static class AuditPrivilegeHelper
 
 		if (!adjusted)
 		{
-			throw new InvalidOperationException("AdjustTokenPrivileges failed for " + privilegeName + ". Win32 Error: " + adjustError);
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AdjustTokenPrivilegesFailedError"), privilegeName, adjustError));
 		}
 
 		if (adjustError == 1300) // ERROR_NOT_ALL_ASSIGNED
 		{
-			throw new InvalidOperationException("Privilege not assigned: " + privilegeName);
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("PrivilegeNotAssignedError"), privilegeName));
 		}
 	}
 }
@@ -209,7 +209,7 @@ internal static class AuditPolicyManager
 		if (!NativeMethods.AuditEnumerateCategories(out IntPtr categoriesPtr, out uint categoriesCount))
 		{
 			int lastError = Marshal.GetLastWin32Error();
-			throw new InvalidOperationException($"Failed to enumerate audit categories. Win32 Error: {lastError}");
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToEnumerateAuditCategoriesError"), lastError));
 		}
 
 		try
@@ -246,7 +246,7 @@ internal static class AuditPolicyManager
 			NativeMethods.AuditFree(categoriesPtr);
 		}
 
-		throw new InvalidOperationException($"Failed to get Category ID for the SubCategory: {subcategoryGuid}");
+		throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToGetCategoryIdForSubCategoryError"), subcategoryGuid));
 	}
 
 	/// <summary>
@@ -263,7 +263,7 @@ internal static class AuditPolicyManager
 		if (!NativeMethods.AuditEnumerateCategories(out IntPtr categoriesPtr, out uint categoriesCount))
 		{
 			int lastError = Marshal.GetLastWin32Error();
-			throw new InvalidOperationException($"Failed to enumerate audit categories. Win32 Error: {lastError}");
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToEnumerateAuditCategoriesError"), lastError));
 		}
 
 		try
@@ -298,7 +298,7 @@ internal static class AuditPolicyManager
 
 			if (allSubCategories.Count == 0)
 			{
-				throw new InvalidOperationException("No audit subcategories found on the system");
+				throw new InvalidOperationException(GlobalVars.GetStr("NoAuditSubcategoriesFoundError"));
 			}
 
 			// Query audit policies for all subcategories in smaller batches to avoid API limits
@@ -320,12 +320,12 @@ internal static class AuditPolicyManager
 					if (!NativeMethods.AuditQuerySystemPolicy(batchGuidsPtr, (uint)currentBatchSize, out IntPtr auditPolicyPtr))
 					{
 						int lastError = Marshal.GetLastWin32Error();
-						throw new InvalidOperationException($"Failed to query audit system policy for batch starting at {batchStart}. Win32 Error: {lastError}");
+						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToQueryAuditSystemPolicyBatchError"), batchStart, lastError));
 					}
 
 					if (auditPolicyPtr == IntPtr.Zero)
 					{
-						throw new InvalidOperationException($"AuditQuerySystemPolicy returned null pointer for batch starting at {batchStart}");
+						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("AuditQuerySystemPolicyReturnedNullBatchError"), batchStart));
 					}
 
 					try
@@ -363,7 +363,7 @@ internal static class AuditPolicyManager
 			NativeMethods.AuditFree(categoriesPtr);
 		}
 
-		Logger.Write($"Retrieved audit policies for {auditPolicies.Count} subcategories");
+		Logger.Write(string.Format(GlobalVars.GetStr("RetrievedAuditPoliciesForSubcategoriesMessage"), auditPolicies.Count));
 		return auditPolicies;
 	}
 
@@ -396,12 +396,12 @@ internal static class AuditPolicyManager
 			if (!NativeMethods.AuditQuerySystemPolicy(guidsPtr, (uint)subcategoryGuids.Length, out IntPtr auditPolicyPtr))
 			{
 				int lastError = Marshal.GetLastWin32Error();
-				throw new InvalidOperationException($"Failed to query specific audit policies. Win32 Error: {lastError}");
+				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToQuerySpecificAuditPoliciesError"), lastError));
 			}
 
 			if (auditPolicyPtr == IntPtr.Zero)
 			{
-				throw new InvalidOperationException("AuditQuerySystemPolicy returned null pointer for specific audit policies");
+				throw new InvalidOperationException(GlobalVars.GetStr("AuditQuerySystemPolicyReturnedNullSpecificError"));
 			}
 
 			try
@@ -424,7 +424,7 @@ internal static class AuditPolicyManager
 			Marshal.FreeHGlobal(guidsPtr);
 		}
 
-		Logger.Write($"Retrieved audit policies for {results.Count} specific subcategories");
+		Logger.Write(string.Format(GlobalVars.GetStr("RetrievedAuditPoliciesForSpecificSubcategoriesMessage"), results.Count));
 		return results;
 	}
 
@@ -439,13 +439,13 @@ internal static class AuditPolicyManager
 	private static List<CsvAuditPolicyEntry> ParseAuditPolicyCsv(string csvFilePath)
 	{
 		if (!File.Exists(csvFilePath))
-			throw new FileNotFoundException($"CSV file not found: {csvFilePath}");
+			throw new FileNotFoundException(string.Format(GlobalVars.GetStr("CsvFileNotFoundError"), csvFilePath));
 
 		List<CsvAuditPolicyEntry> entries = [];
 		string[] lines = File.ReadAllLines(csvFilePath, Encoding.UTF8);
 
 		if (lines.Length < 2)
-			throw new InvalidDataException("CSV file must contain at least a header and one data row");
+			throw new InvalidDataException(GlobalVars.GetStr("CsvFileMustContainHeaderAndDataError"));
 
 		// Skip header row (index 0)
 		for (int i = 1; i < lines.Length; i++)
@@ -464,16 +464,16 @@ internal static class AuditPolicyManager
 			}
 			catch (Exception ex)
 			{
-				throw new InvalidDataException($"Error parsing CSV line {i + 1}: {ex.Message}", ex);
+				throw new InvalidDataException(string.Format(GlobalVars.GetStr("ErrorParsingCsvLineError"), i + 1, ex.Message), ex);
 			}
 		}
 
 		if (entries.Count == 0)
 		{
-			throw new InvalidDataException("No valid audit policy entries found in CSV file");
+			throw new InvalidDataException(GlobalVars.GetStr("NoValidAuditPolicyEntriesFoundError"));
 		}
 
-		Logger.Write($"Parsed {entries.Count} audit policy entries from CSV");
+		Logger.Write(string.Format(GlobalVars.GetStr("ParsedAuditPolicyEntriesFromCsvMessage"), entries.Count));
 		return entries;
 	}
 
@@ -492,7 +492,7 @@ internal static class AuditPolicyManager
 		// Apply the audit policies
 		SetAuditPolicies(ConvertCSVEntriesToAuditPolicyInfo(csvEntries));
 
-		Logger.Write($"Successfully applied {csvEntries.Count} audit policies from CSV");
+		Logger.Write(string.Format(GlobalVars.GetStr("SuccessfullyAppliedAuditPoliciesFromCsvMessage"), csvEntries.Count));
 	}
 
 	internal static AUDIT_POLICY_INFORMATION[] ConvertCSVEntriesToAuditPolicyInfo(List<CsvAuditPolicyEntry> entries)
@@ -546,7 +546,7 @@ internal static class AuditPolicyManager
 			if (!result)
 			{
 				int lastError = Marshal.GetLastWin32Error();
-				throw new InvalidOperationException($"Failed to apply audit policy to the system. Win32 Error: {lastError}");
+				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToApplyAuditPolicyToSystemError"), lastError));
 			}
 		}
 		finally
@@ -568,7 +568,7 @@ internal static class AuditPolicyManager
 
 		if (parts.Length < 7)
 		{
-			throw new InvalidDataException($"Line {lineNumber}: Expected at least 7 columns, got {parts.Length}");
+			throw new InvalidDataException(string.Format(GlobalVars.GetStr("CsvLineExpectedColumnsError"), lineNumber, parts.Length));
 		}
 
 		// Extract relevant columns:
@@ -584,19 +584,19 @@ internal static class AuditPolicyManager
 		guidString = guidString.Trim('{', '}');
 		if (!Guid.TryParse(guidString, out Guid subcategoryGuid))
 		{
-			throw new InvalidDataException($"Line {lineNumber}: Invalid GUID format: {guidString}");
+			throw new InvalidDataException(string.Format(GlobalVars.GetStr("CsvLineInvalidGuidFormatError"), lineNumber, guidString));
 		}
 
 		// Parse setting value
 		if (!uint.TryParse(settingValueString, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint settingValue))
 		{
-			throw new InvalidDataException($"Line {lineNumber}: Invalid setting value: {settingValueString}");
+			throw new InvalidDataException(string.Format(GlobalVars.GetStr("CsvLineInvalidSettingValueError"), lineNumber, settingValueString));
 		}
 
 		// Validate setting value range (0-3)
 		if (settingValue > 3)
 		{
-			throw new InvalidDataException($"Line {lineNumber}: Setting value out of range (0-3): {settingValue}");
+			throw new InvalidDataException(string.Format(GlobalVars.GetStr("CsvLineSettingValueOutOfRangeError"), lineNumber, settingValue));
 		}
 
 		return new CsvAuditPolicyEntry(

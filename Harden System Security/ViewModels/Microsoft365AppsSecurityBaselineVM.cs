@@ -294,15 +294,15 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
-			MainInfoBar.WriteInfo("Applying Microsoft 365 Apps Security Baseline...");
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("ApplyingMicrosoft365AppsSecurityBaseline"));
 
 			List<VerificationResult>? results = await MSBaseline.DownloadAndProcessSecurityBaseline(
-				new Uri(@"https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202412.zip"),
+				new Uri(DownloadURL),
 				MSBaseline.Action.Apply,
 				microsoft365AppsSecurityBaselineVMRef: this,
 				cancellationToken: ApplyAllCancellableButton.Cts?.Token);
 
-			MainInfoBar.WriteSuccess("Microsoft 365 Apps Security Baseline applied successfully");
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("Microsoft365AppsSecurityBaselineAppliedSuccessfully"));
 
 			await VerifyInternal();
 		}
@@ -314,7 +314,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			if (ApplyAllCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning("Apply operation was cancelled by user");
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("ApplyOperationCancelledByUser"));
 			}
 
 			ApplyAllCancellableButton.End();
@@ -341,15 +341,15 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
-			MainInfoBar.WriteInfo("Removing Microsoft 365 Apps Security Baseline...");
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("RemovingMicrosoft365AppsSecurityBaseline"));
 
 			List<VerificationResult>? results = await MSBaseline.DownloadAndProcessSecurityBaseline(
-				new Uri(@"https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202412.zip"),
+				new Uri(DownloadURL),
 				MSBaseline.Action.Remove,
 				microsoft365AppsSecurityBaselineVMRef: this,
 				cancellationToken: RemoveAllCancellableButton.Cts?.Token);
 
-			MainInfoBar.WriteSuccess("Microsoft 365 Apps Security Baseline removed successfully");
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("Microsoft365AppsSecurityBaselineRemovedSuccessfully"));
 
 			await VerifyInternal();
 		}
@@ -361,7 +361,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			if (RemoveAllCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning("Remove operation was cancelled by user");
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("RemoveOperationCancelledByUser"));
 			}
 
 			RemoveAllCancellableButton.End();
@@ -388,13 +388,13 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
-			MainInfoBar.WriteInfo("Verifying Microsoft 365 Apps Security Baseline...");
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("VerifyingMicrosoft365AppsSecurityBaseline"));
 
 			List<VerificationResult>? results = await MSBaseline.DownloadAndProcessSecurityBaseline(
-				new Uri(@"https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202412.zip"),
+				new Uri(DownloadURL),
 				MSBaseline.Action.Verify,
 				microsoft365AppsSecurityBaselineVMRef: this,
-				cancellationToken: VerifyAllCancellableButton.Cts?.Token) ?? throw new InvalidOperationException("There were no results returned from the verification process.");
+				cancellationToken: VerifyAllCancellableButton.Cts?.Token) ?? throw new InvalidOperationException(GlobalVars.GetStr("NoResultsReturnedFromVerificationProcess"));
 
 			// Clear existing results
 			AllVerificationResults.Clear();
@@ -411,7 +411,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 			TotalResults = VerificationResults.Count.ToString();
 
 			int compliantCount = results.Count(r => r.IsCompliant);
-			MainInfoBar.WriteSuccess($"Verification completed: {compliantCount}/{results.Count} policies are compliant");
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("VerificationCompletedCompliantPolicies"), compliantCount, results.Count));
 
 		}
 		catch (Exception ex)
@@ -422,7 +422,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			if (VerifyAllCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning("Verify operation was cancelled by user");
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("VerifyOperationCancelledByUser"));
 			}
 
 			VerifyAllCancellableButton.End();
@@ -455,13 +455,13 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			if (VerificationResults.Count == 0)
 			{
-				MainInfoBar.WriteWarning("No verification results to export");
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoVerificationResultsToExport"));
 				return;
 			}
 
 			DateTime now = DateTime.Now;
 			string formattedDateTime = now.ToString("yyyy-MM-dd_HH-mm-ss");
-			string fileName = $"HardenSystemSecurity_Data_Export_{formattedDateTime}.json";
+			string fileName = string.Format(GlobalVars.GetStr("ExportFileNameFormat"), formattedDateTime);
 
 			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, fileName);
 
@@ -476,7 +476,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 				await Dispatcher.EnqueueAsync(() =>
 				{
-					MainInfoBar.WriteSuccess($"Successfully exported {resultsToExport.Count} verification results to {savePath}");
+					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedVerificationResults"), resultsToExport.Count, savePath));
 				});
 			});
 		}
@@ -485,4 +485,19 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 			MainInfoBar.WriteError(ex);
 		}
 	}
+
+	/// <summary>
+	/// Custom URL input for the baseline download
+	/// </summary>
+	internal string DownloadURL { get; set => SP(ref field, value); } = DefaultDownloadUrl;
+
+	/// <summary>
+	/// Default URL.
+	/// </summary>
+	internal const string DefaultDownloadUrl = @"https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202412.zip";
+
+	/// <summary>
+	/// Resets to the default URL
+	/// </summary>
+	internal void ResetToDefaultUrl() => DownloadURL = DefaultDownloadUrl;
 }

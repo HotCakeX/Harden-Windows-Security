@@ -16,12 +16,15 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -69,31 +72,67 @@ internal sealed partial class FileReputationVM : ViewModelBase
 	internal string? HandleText { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// Event handler for the browse button
+	/// Handles when files are dragged over the page.
 	/// </summary>
-	internal async void BrowseForFile()
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void OnDragOver(object sender, DragEventArgs e)
 	{
-
-		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
-
-		if (string.IsNullOrEmpty(selectedFile))
+		if (e.DataView.Contains(StandardDataFormats.StorageItems))
 		{
-			return;
+			e.AcceptedOperation = DataPackageOperation.Copy;
+			e.DragUIOverride.Caption = GlobalVars.GetStr("DragAndDropHintFileReputationCaption");
+			e.DragUIOverride.IsCaptionVisible = true;
+			e.DragUIOverride.IsContentVisible = true;
 		}
+		else
+		{
+			e.AcceptedOperation = DataPackageOperation.None;
+		}
+	}
 
+	/// <summary>
+	/// Handles when files are dropped on the page.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal async void OnDrop(object sender, DragEventArgs e)
+	{
+		if (e.DataView.Contains(StandardDataFormats.StorageItems))
+		{
+			try
+			{
+				IReadOnlyList<IStorageItem> items = await e.DataView.GetStorageItemsAsync();
+
+				if (items.Count > 0 && items[0] is StorageFile file)
+				{
+					await ProcessFile(file.Path);
+				}
+			}
+			catch (Exception ex)
+			{
+				MainInfoBar.WriteError(ex);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Processes the selected file.
+	/// </summary>
+	/// <param name="filePath">Path to the file to process</param>
+	private async Task ProcessFile(string filePath)
+	{
 		try
 		{
-
 			ElementsAreEnabled = false;
 			MainInfoBarIsClosable = false;
 
-			FileTrustChecker.FileTrustResult? result = await Task.Run(() => FileTrustChecker.CheckFileTrust(selectedFile));
+			FileTrustChecker.FileTrustResult? result = await Task.Run(() => FileTrustChecker.CheckFileTrust(filePath));
 
 			ReputationText = result?.Reputation;
 			SourceText = result?.Source.ToString();
 			DurationText = result?.Duration;
 			HandleText = result?.Handle;
-
 		}
 		catch (Exception ex)
 		{
@@ -104,6 +143,21 @@ internal sealed partial class FileReputationVM : ViewModelBase
 			ElementsAreEnabled = true;
 			MainInfoBarIsClosable = true;
 		}
+	}
+
+	/// <summary>
+	/// Event handler for the browse button.
+	/// </summary>
+	internal async void BrowseForFile()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+
+		if (string.IsNullOrEmpty(selectedFile))
+		{
+			return;
+		}
+
+		await ProcessFile(selectedFile);
 	}
 
 	// Event handlers for the copy buttons

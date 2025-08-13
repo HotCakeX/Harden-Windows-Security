@@ -169,9 +169,6 @@
     <data name="ErrorTitle" xml:space="preserve">
     <value>خطأ</value>
   </data>
-    <data name="SuccessTitle" xml:space="preserve">
-    <value>نجح</value>
-  </data>
     <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>فشل الأمر '{0} {1}' برمز خروج {2}. الخطأ: {3}</value>
   </data>
@@ -2411,5 +2408,185 @@
   </data>
   <data name="ExportToJsonButton.Content" xml:space="preserve">
     <value>تصدير إلى JSON</value>
+  </data>
+    <data name="OpenProcessTokenFailedError" xml:space="preserve">
+  <value>فشل في OpenProcessToken. خطأ Win32: {0}</value>
+</data>
+<data name="LookupPrivilegeValueFailedError" xml:space="preserve">
+  <value>فشل في LookupPrivilegeValue للقيمة {0}. خطأ Win32: {1}</value>
+</data>
+<data name="AdjustTokenPrivilegesFailedError" xml:space="preserve">
+  <value>فشل في AdjustTokenPrivileges للقيمة {0}. خطأ Win32: {1}</value>
+</data>
+<data name="PrivilegeNotAssignedError" xml:space="preserve">
+  <value>الامتياز غير مُخصص: {0}</value>
+</data>
+<data name="FailedToEnumerateAuditCategoriesError" xml:space="preserve">
+  <value>فشل في تعداد فئات المراجعة. خطأ Win32: {0}</value>
+</data>
+<data name="FailedToGetCategoryIdForSubCategoryError" xml:space="preserve">
+  <value>فشل في الحصول على معرف الفئة للفئة الفرعية: {0}</value>
+</data>
+<data name="NoAuditSubcategoriesFoundError" xml:space="preserve">
+  <value>لم يتم العثور على فئات فرعية للمراجعة في النظام</value>
+</data>
+<data name="FailedToQueryAuditSystemPolicyBatchError" xml:space="preserve">
+  <value>فشل في استعلام سياسة مراجعة النظام للدفعة التي تبدأ في {0}. خطأ Win32: {1}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullBatchError" xml:space="preserve">
+  <value>أرجع AuditQuerySystemPolicy مؤشراً فارغاً للدفعة التي تبدأ في {0}</value>
+</data>
+<data name="RetrievedAuditPoliciesForSubcategoriesMessage" xml:space="preserve">
+  <value>تم استرداد سياسات المراجعة لـ {0} فئة فرعية</value>
+</data>
+<data name="FailedToQuerySpecificAuditPoliciesError" xml:space="preserve">
+  <value>فشل في استعلام سياسات المراجعة المحددة. خطأ Win32: {0}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullSpecificError" xml:space="preserve">
+  <value>أرجع AuditQuerySystemPolicy مؤشراً فارغاً لسياسات المراجعة المحددة</value>
+</data>
+<data name="RetrievedAuditPoliciesForSpecificSubcategoriesMessage" xml:space="preserve">
+  <value>تم استرداد سياسات المراجعة لـ {0} فئة فرعية محددة</value>
+</data>
+<data name="CsvFileNotFoundError" xml:space="preserve">
+  <value>ملف CSV غير موجود: {0}</value>
+</data>
+<data name="CsvFileMustContainHeaderAndDataError" xml:space="preserve">
+  <value>يجب أن يحتوي ملف CSV على عنوان وصف بيانات واحد على الأقل</value>
+</data>
+<data name="ErrorParsingCsvLineError" xml:space="preserve">
+  <value>خطأ في تحليل سطر CSV {0}: {1}</value>
+</data>
+<data name="NoValidAuditPolicyEntriesFoundError" xml:space="preserve">
+  <value>لم يتم العثور على إدخالات سياسة مراجعة صالحة في ملف CSV</value>
+</data>
+<data name="ParsedAuditPolicyEntriesFromCsvMessage" xml:space="preserve">
+  <value>تم تحليل {0} إدخال سياسة مراجعة من ملف CSV</value>
+</data>
+<data name="SuccessfullyAppliedAuditPoliciesFromCsvMessage" xml:space="preserve">
+  <value>تم تطبيق {0} سياسة مراجعة بنجاح من ملف CSV</value>
+</data>
+<data name="FailedToApplyAuditPolicyToSystemError" xml:space="preserve">
+  <value>فشل في تطبيق سياسة المراجعة على النظام. خطأ Win32: {0}</value>
+</data>
+<data name="CsvLineExpectedColumnsError" xml:space="preserve">
+  <value>السطر {0}: متوقع 7 أعمدة على الأقل، تم الحصول على {1}</value>
+</data>
+<data name="CsvLineInvalidGuidFormatError" xml:space="preserve">
+  <value>السطر {0}: تنسيق GUID غير صالح: {1}</value>
+</data>
+<data name="CsvLineInvalidSettingValueError" xml:space="preserve">
+  <value>السطر {0}: قيمة إعداد غير صالحة: {1}</value>
+</data>
+<data name="CsvLineSettingValueOutOfRangeError" xml:space="preserve">
+  <value>السطر {0}: قيمة الإعداد خارج النطاق (0-3): {1}</value>
+</data>
+<data name="NoAuditingText" xml:space="preserve">
+  <value>بدون مراجعة</value>
+</data>
+<data name="SuccessText" xml:space="preserve">
+  <value>نجح</value>
+</data>
+<data name="FailureText" xml:space="preserve">
+  <value>فشل</value>
+</data>
+<data name="SuccessAndFailureText" xml:space="preserve">
+  <value>نجح وفشل</value>
+</data>
+  <data name="MicrosoftSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تطبيق والتحقق من وإزالة خط الأساس الأمني لمايكروسوفت في هذه الصفحة.</value>
+  </data>
+    <data name="MicrosoftSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تطبيق والتحقق من وإزالة خط الأساس الأمني لمايكروسوفت في هذه الصفحة.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تطبيق والتحقق من وإزالة خط الأساس الأمني لتطبيقات Microsoft 365 في هذه الصفحة.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تطبيق والتحقق من وإزالة خط الأساس الأمني لتطبيقات Microsoft 365 في هذه الصفحة.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تطبيق والتحقق من وإزالة التجاوزات الاختيارية لخطوط الأساس من مايكروسوفت.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+     <value>تطبيق والتحقق من وإزالة التجاوزات الاختيارية لخطوط الأساس من مايكروسوفت.</value>
+  </data>
+  <data name="DragAndDropHintFileReputation.Text" xml:space="preserve">
+     <value>أو اسحب وأفلت الملفات هنا</value>
+  </data>
+    <data name="DragAndDropHintFileReputationCaption" xml:space="preserve">
+     <value>أفلت الملف للتحقق من السمعة</value>
+  </data>
+  <data name="NoVerificationResultsToExport" xml:space="preserve">
+  <value>لا توجد نتائج تحقق للتصدير</value>
+</data>
+<data name="ExportFileNameFormat" xml:space="preserve">
+  <value>HardenSystemSecurity_Data_Export_{0}.json</value>
+</data>
+<data name="SuccessfullyExportedVerificationResults" xml:space="preserve">
+  <value>تم تصدير {0} نتيجة تحقق بنجاح إلى {1}</value>
+</data>
+<data name="ApplyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>تطبيق خط الأساس الأمني لمايكروسوفت...</value>
+</data>
+<data name="MicrosoftSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>تم تطبيق خط الأساس الأمني لمايكروسوفت بنجاح</value>
+</data>
+<data name="ApplyOperationCancelledByUser" xml:space="preserve">
+  <value>تم إلغاء عملية التطبيق بواسطة المستخدم</value>
+</data>
+<data name="RemovingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>إزالة خط الأساس الأمني لمايكروسوفت...</value>
+</data>
+<data name="MicrosoftSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>تم إزالة خط الأساس الأمني لمايكروسوفت بنجاح</value>
+</data>
+<data name="RemoveOperationCancelledByUser" xml:space="preserve">
+  <value>تم إلغاء عملية الإزالة بواسطة المستخدم</value>
+</data>
+<data name="VerifyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>التحقق من خط الأساس الأمني لمايكروسوفت...</value>
+</data>
+<data name="NoResultsReturnedFromVerificationProcess" xml:space="preserve">
+  <value>لم يتم إرجاع نتائج من عملية التحقق.</value>
+</data>
+<data name="VerificationCompletedCompliantPolicies" xml:space="preserve">
+  <value>اكتمل التحقق: {0}/{1} سياسة متوافقة</value>
+</data>
+<data name="VerifyOperationCancelledByUser" xml:space="preserve">
+  <value>تم إلغاء عملية التحقق بواسطة المستخدم</value>
+</data>
+<data name="ApplyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>تطبيق خط الأساس الأمني لتطبيقات Microsoft 365...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>تم تطبيق خط الأساس الأمني لتطبيقات Microsoft 365 بنجاح</value>
+</data>
+<data name="RemovingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>إزالة خط الأساس الأمني لتطبيقات Microsoft 365...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>تم إزالة خط الأساس الأمني لتطبيقات Microsoft 365 بنجاح</value>
+</data>
+<data name="VerifyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>التحقق من خط الأساس الأمني لتطبيقات Microsoft 365...</value>
+</data>
+<data name="ResetURLButton.Content" xml:space="preserve">
+    <value>إعادة تعيين</value>
+  </data>
+  <data name="ResetURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إعادة تعيين رابط التحميل إلى القيمة الافتراضية.</value>
+  </data>
+  <data name="ResetURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>إعادة تعيين رابط التحميل إلى القيمة الافتراضية.</value>
+  </data>
+  <data name="DownloadURLButtonText.Text" xml:space="preserve">
+    <value>رابط التحميل</value>
+  </data>
+  <data name="DownloadURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض وإدارة رابط تحميل خط الأساس.</value>
+  </data>
+  <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>عرض وإدارة رابط تحميل خط الأساس.</value>
   </data>
 </root>

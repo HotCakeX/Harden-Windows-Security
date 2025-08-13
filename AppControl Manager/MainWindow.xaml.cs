@@ -535,6 +535,18 @@ internal sealed partial class MainWindow : Window
 
 			SidebarHelpHyperlinkTextBlock.Text = GlobalVars.GetStr("SidebarHelpHyperlinkTextBlock/Text");
 
+			MicrosoftSecurityBaselineNavItem.Content = GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/Content");
+			AutomationProperties.SetHelpText(MicrosoftSecurityBaselineNavItem, GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(MicrosoftSecurityBaselineNavItem, GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/ToolTipService/ToolTip"));
+
+			MicrosoftBaseLinesOverridesNavItem.Content = GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content");
+			AutomationProperties.SetHelpText(MicrosoftBaseLinesOverridesNavItem, GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(MicrosoftBaseLinesOverridesNavItem, GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/ToolTipService/ToolTip"));
+
+			Microsoft365AppsSecurityBaselineNavItem.Content = GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content");
+			AutomationProperties.SetHelpText(Microsoft365AppsSecurityBaselineNavItem, GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(Microsoft365AppsSecurityBaselineNavItem, GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/ToolTipService/ToolTip"));
+
 #endif
 
 #if APP_CONTROL_MANAGER

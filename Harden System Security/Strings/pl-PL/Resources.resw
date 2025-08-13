@@ -169,9 +169,6 @@
     <data name="ErrorTitle" xml:space="preserve">
     <value>Błąd</value>
   </data>
-    <data name="SuccessTitle" xml:space="preserve">
-    <value>Sukces</value>
-  </data>
     <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>Polecenie '{0} {1}' nie powiodło się z kodem wyjścia {2}. Błąd: {3}</value>
   </data>
@@ -2411,5 +2408,185 @@
   </data>
   <data name="ExportToJsonButton.Content" xml:space="preserve">
     <value>Eksportuj do JSON</value>
+  </data>
+    <data name="OpenProcessTokenFailedError" xml:space="preserve">
+  <value>OpenProcessToken nie powiodło się. Błąd Win32: {0}</value>
+</data>
+<data name="LookupPrivilegeValueFailedError" xml:space="preserve">
+  <value>LookupPrivilegeValue nie powiodło się dla {0}. Błąd Win32: {1}</value>
+</data>
+<data name="AdjustTokenPrivilegesFailedError" xml:space="preserve">
+  <value>AdjustTokenPrivileges nie powiodło się dla {0}. Błąd Win32: {1}</value>
+</data>
+<data name="PrivilegeNotAssignedError" xml:space="preserve">
+  <value>Uprawnienie nie zostało przyznane: {0}</value>
+</data>
+<data name="FailedToEnumerateAuditCategoriesError" xml:space="preserve">
+  <value>Nie udało się wyliczyć kategorii audytu. Błąd Win32: {0}</value>
+</data>
+<data name="FailedToGetCategoryIdForSubCategoryError" xml:space="preserve">
+  <value>Nie udało się uzyskać ID kategorii dla podkategorii: {0}</value>
+</data>
+<data name="NoAuditSubcategoriesFoundError" xml:space="preserve">
+  <value>Nie znaleziono podkategorii audytu w systemie</value>
+</data>
+<data name="FailedToQueryAuditSystemPolicyBatchError" xml:space="preserve">
+  <value>Nie udało się wykonać zapytania o zasady audytu systemu dla partii rozpoczynającej się od {0}. Błąd Win32: {1}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullBatchError" xml:space="preserve">
+  <value>AuditQuerySystemPolicy zwróciło wskaźnik null dla partii rozpoczynającej się od {0}</value>
+</data>
+<data name="RetrievedAuditPoliciesForSubcategoriesMessage" xml:space="preserve">
+  <value>Pobrano zasady audytu dla {0} podkategorii</value>
+</data>
+<data name="FailedToQuerySpecificAuditPoliciesError" xml:space="preserve">
+  <value>Nie udało się wykonać zapytania o określone zasady audytu. Błąd Win32: {0}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullSpecificError" xml:space="preserve">
+  <value>AuditQuerySystemPolicy zwróciło wskaźnik null dla określonych zasad audytu</value>
+</data>
+<data name="RetrievedAuditPoliciesForSpecificSubcategoriesMessage" xml:space="preserve">
+  <value>Pobrano zasady audytu dla {0} określonych podkategorii</value>
+</data>
+<data name="CsvFileNotFoundError" xml:space="preserve">
+  <value>Plik CSV nie został znaleziony: {0}</value>
+</data>
+<data name="CsvFileMustContainHeaderAndDataError" xml:space="preserve">
+  <value>Plik CSV musi zawierać co najmniej nagłówek i jeden wiersz danych</value>
+</data>
+<data name="ErrorParsingCsvLineError" xml:space="preserve">
+  <value>Błąd analizy wiersza CSV {0}: {1}</value>
+</data>
+<data name="NoValidAuditPolicyEntriesFoundError" xml:space="preserve">
+  <value>Nie znaleziono prawidłowych wpisów zasad audytu w pliku CSV</value>
+</data>
+<data name="ParsedAuditPolicyEntriesFromCsvMessage" xml:space="preserve">
+  <value>Przeanalizowano {0} wpisów zasad audytu z pliku CSV</value>
+</data>
+<data name="SuccessfullyAppliedAuditPoliciesFromCsvMessage" xml:space="preserve">
+  <value>Pomyślnie zastosowano {0} zasad audytu z pliku CSV</value>
+</data>
+<data name="FailedToApplyAuditPolicyToSystemError" xml:space="preserve">
+  <value>Nie udało się zastosować zasad audytu do systemu. Błąd Win32: {0}</value>
+</data>
+<data name="CsvLineExpectedColumnsError" xml:space="preserve">
+  <value>Wiersz {0}: Oczekiwano co najmniej 7 kolumn, otrzymano {1}</value>
+</data>
+<data name="CsvLineInvalidGuidFormatError" xml:space="preserve">
+  <value>Wiersz {0}: Nieprawidłowy format GUID: {1}</value>
+</data>
+<data name="CsvLineInvalidSettingValueError" xml:space="preserve">
+  <value>Wiersz {0}: Nieprawidłowa wartość ustawienia: {1}</value>
+</data>
+<data name="CsvLineSettingValueOutOfRangeError" xml:space="preserve">
+  <value>Wiersz {0}: Wartość ustawienia poza zakresem (0-3): {1}</value>
+</data>
+<data name="NoAuditingText" xml:space="preserve">
+  <value>Brak audytu</value>
+</data>
+<data name="SuccessText" xml:space="preserve">
+  <value>Sukces</value>
+</data>
+<data name="FailureText" xml:space="preserve">
+  <value>Niepowodzenie</value>
+</data>
+<data name="SuccessAndFailureText" xml:space="preserve">
+  <value>Sukces i Niepowodzenie</value>
+</data>
+  <data name="MicrosoftSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zastosuj, zweryfikuj i usuń linię bazową bezpieczeństwa Microsoft na tej stronie.</value>
+  </data>
+    <data name="MicrosoftSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zastosuj, zweryfikuj i usuń linię bazową bezpieczeństwa Microsoft na tej stronie.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zastosuj, zweryfikuj i usuń linię bazową bezpieczeństwa Microsoft 365 Apps na tej stronie.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zastosuj, zweryfikuj i usuń linię bazową bezpieczeństwa Microsoft 365 Apps na tej stronie.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zastosuj, zweryfikuj i usuń opcjonalne nadpisania dla linii bazowych Microsoft.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+     <value>Zastosuj, zweryfikuj i usuń opcjonalne nadpisania dla linii bazowych Microsoft.</value>
+  </data>
+  <data name="DragAndDropHintFileReputation.Text" xml:space="preserve">
+     <value>lub przeciągnij i upuść pliki tutaj</value>
+  </data>
+    <data name="DragAndDropHintFileReputationCaption" xml:space="preserve">
+     <value>Upuść plik, aby sprawdzić reputację</value>
+  </data>
+  <data name="NoVerificationResultsToExport" xml:space="preserve">
+  <value>Brak wyników weryfikacji do eksportu</value>
+</data>
+<data name="ExportFileNameFormat" xml:space="preserve">
+  <value>HardenSystemSecurity_Data_Export_{0}.json</value>
+</data>
+<data name="SuccessfullyExportedVerificationResults" xml:space="preserve">
+  <value>Pomyślnie wyeksportowano {0} wyników weryfikacji do {1}</value>
+</data>
+<data name="ApplyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Stosowanie linii bazowej bezpieczeństwa Microsoft...</value>
+</data>
+<data name="MicrosoftSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>Linia bazowa bezpieczeństwa Microsoft została pomyślnie zastosowana</value>
+</data>
+<data name="ApplyOperationCancelledByUser" xml:space="preserve">
+  <value>Operacja stosowania została anulowana przez użytkownika</value>
+</data>
+<data name="RemovingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Usuwanie linii bazowej bezpieczeństwa Microsoft...</value>
+</data>
+<data name="MicrosoftSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>Linia bazowa bezpieczeństwa Microsoft została pomyślnie usunięta</value>
+</data>
+<data name="RemoveOperationCancelledByUser" xml:space="preserve">
+  <value>Operacja usuwania została anulowana przez użytkownika</value>
+</data>
+<data name="VerifyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Weryfikowanie linii bazowej bezpieczeństwa Microsoft...</value>
+</data>
+<data name="NoResultsReturnedFromVerificationProcess" xml:space="preserve">
+  <value>Nie zwrócono żadnych wyników z procesu weryfikacji.</value>
+</data>
+<data name="VerificationCompletedCompliantPolicies" xml:space="preserve">
+  <value>Weryfikacja zakończona: {0}/{1} zasad jest zgodnych</value>
+</data>
+<data name="VerifyOperationCancelledByUser" xml:space="preserve">
+  <value>Operacja weryfikacji została anulowana przez użytkownika</value>
+</data>
+<data name="ApplyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Stosowanie linii bazowej bezpieczeństwa Microsoft 365 Apps...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>Linia bazowa bezpieczeństwa Microsoft 365 Apps została pomyślnie zastosowana</value>
+</data>
+<data name="RemovingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Usuwanie linii bazowej bezpieczeństwa Microsoft 365 Apps...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>Linia bazowa bezpieczeństwa Microsoft 365 Apps została pomyślnie usunięta</value>
+</data>
+<data name="VerifyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Weryfikowanie linii bazowej bezpieczeństwa Microsoft 365 Apps...</value>
+</data>
+<data name="ResetURLButton.Content" xml:space="preserve">
+    <value>Resetuj</value>
+  </data>
+  <data name="ResetURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Resetuj adres URL pobierania do wartości domyślnej.</value>
+  </data>
+  <data name="ResetURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Resetuj adres URL pobierania do wartości domyślnej.</value>
+  </data>
+  <data name="DownloadURLButtonText.Text" xml:space="preserve">
+    <value>Adres URL Pobierania</value>
+  </data>
+  <data name="DownloadURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetl i zarządzaj adresem URL pobierania linii bazowej.</value>
+  </data>
+  <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Wyświetl i zarządzaj adresem URL pobierania linii bazowej.</value>
   </data>
 </root>

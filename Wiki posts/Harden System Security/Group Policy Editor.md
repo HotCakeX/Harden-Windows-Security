@@ -1,5 +1,13 @@
 # Group Policy Editor | Harden System Security
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/9f8c01aea24dd33804e794ab1fbcb68fb71609dc/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Group%20Policy%20Editor.png" alt="Group Policy Editor | Harden System Security">
+
+</div>
+
+<br>
+
 The Group Policy Editor page enables you to retrieve the effective policies on the system. You can sort and search through this data via the available UI controls. You can also browse for `.POL` group policy files on your system or a shared network location in order to inspect it.
 
 Since the [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) can be set as the default handler of the `.POL` files, this page is also displayed when you double-click or tap on any `.POL` file in the File Explorer.

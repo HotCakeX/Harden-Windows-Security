@@ -18,6 +18,18 @@ Each security measure has the following details:
 
 <br>
 
+You can change the download URL of the Microsoft Security Baselines in this page too if you need. This can come handy if you want to apply an older baseline on your system or to just change the URL to point to another address such as an alternative mirror.
+
+<br>
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/9f8c01aea24dd33804e794ab1fbcb68fb71609dc/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Microsoft%20Security%20Baseline.png" alt="Microsoft Security Baselines | Harden System Security">
+
+</div>
+
+<br>
+
 > [!TIP]\
 > [Official Documentation for the Microsoft Security Baseline](https://learn.microsoft.com/windows/security/operating-system-security/device-management/windows-security-configuration-framework/windows-security-baselines#what-are-security-baselines)
 >

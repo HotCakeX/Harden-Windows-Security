@@ -16,6 +16,20 @@ Each security measure has the following details:
 4. `Current Value`: The current value of the security measure on the system.
 5. `Expected Value`: The correct and secure value the security measure should be in order to be compliant.
 
+<br>
+
+You can change the download URL of the Microsoft 365 Apps Security Baselines in this page too if you need. This can come handy if you want to apply an older baseline on your system or to just change the URL to point to another address such as an alternative mirror.
+
+<br>
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/9f8c01aea24dd33804e794ab1fbcb68fb71609dc/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Microsoft%20365%20Apps%20Security%20Baselines.png" alt="Microsoft 365 Apps Security Baseline | Harden System Security">
+
+</div>
+
+<br>
+
 > [!TIP]\
 > [More info in Microsoft Learn](https://learn.microsoft.com/deployoffice/security/security-baseline)
 >

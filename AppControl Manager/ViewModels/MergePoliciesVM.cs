@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
@@ -95,7 +96,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 			await Task.Run(() =>
 			{
 				// Perform the merge operation
-				SiPolicy.Merger.Merge(MainPolicy, OtherPolicies.UniqueItems);
+				SiPolicy.Merger.Merge(MainPolicy, OtherPolicies.UniqueItems.ToList());
 
 				// If user chose to deploy the policy after merge
 				if (ShouldDeploy)

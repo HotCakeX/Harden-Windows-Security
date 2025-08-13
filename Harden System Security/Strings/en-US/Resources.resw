@@ -169,9 +169,6 @@
     <data name="ErrorTitle" xml:space="preserve">
     <value>Error</value>
   </data>
-    <data name="SuccessTitle" xml:space="preserve">
-    <value>Success</value>
-  </data>
     <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>The command '{0} {1}' failed with exit code {2}. Error: {3}</value>
   </data>
@@ -963,7 +960,7 @@
     <value>Browse</value>
   </data>
     <data name="GetEffectivePoliciesMenuFlyoutItem.Text" xml:space="preserve">
-    <value>Get Effective Policies</value>
+    <value>Get Effective Policies (System)</value>
   </data>
   <data name="GetEffectivePoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Lists the effective Group Policies applied to the current system.</value>
@@ -2348,4 +2345,248 @@
   <data name="FileActivationLaunchMessage" xml:space="preserve">
   <value>The app was launched with file activation for the following file: '{0}'</value>
 </data>
+  <data name="MicrosoftSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Microsoft Security Baseline</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Microsoft 365 Apps Security Baseline</value>
+  </data>
+    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>Apply Microsoft Security Baseline in this page. You can also verify system compliance to get a precise report showing which settings are applied and which are not. You can remove the policies applied by the baseline as well.</value>
+  </data>
+    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>Apply Microsoft 365 Apps Security Baseline in this page. You can also verify system compliance to get a precise report showing which settings are applied and which are not. You can remove the policies applied by the baseline as well.</value>
+  </data>
+   <!--Security Baselines ListView Headers Start-->
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>Source</value>
+  </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
+    <value>Current Value</value>
+  </data>
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+    <value>Expected Value</value>
+  </data>
+  <!--Security Baselines ListView Headers End-->
+  <!--Security Baselines ListView Headers Buttons Start-->
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Source</value>
+  </data>
+    <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="CurrentValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Current Value</value>
+  </data>
+  <data name="ExpectedValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Expected Value</value>
+  </data>
+  <!--Security Baselines ListView Headers Buttons End-->
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Get Effective Policies (User)</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Lists the effective Group Policies applied to the current User.</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Lists the effective Group Policies applied to the current User.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
+    <value>Microsoft Baselines Overrides</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+    <value>Restore Operation System features that have been disabled after applying Microsoft Security Baselines.</value>
+  </data>
+  <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Exports the data being displayed to a JSON file. You will be able to pick the location where it will be saved.</value>
+  </data>
+  <data name="ExportToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exports the data being displayed to a JSON file. You will be able to pick the location where it will be saved.</value>
+  </data>
+  <data name="ExportToJsonButton.Content" xml:space="preserve">
+    <value>Export To JSON</value>
+  </data>
+  <data name="OpenProcessTokenFailedError" xml:space="preserve">
+  <value>OpenProcessToken failed. Win32 Error: {0}</value>
+</data>
+<data name="LookupPrivilegeValueFailedError" xml:space="preserve">
+  <value>LookupPrivilegeValue failed for {0}. Win32 Error: {1}</value>
+</data>
+<data name="AdjustTokenPrivilegesFailedError" xml:space="preserve">
+  <value>AdjustTokenPrivileges failed for {0}. Win32 Error: {1}</value>
+</data>
+<data name="PrivilegeNotAssignedError" xml:space="preserve">
+  <value>Privilege not assigned: {0}</value>
+</data>
+<data name="FailedToEnumerateAuditCategoriesError" xml:space="preserve">
+  <value>Failed to enumerate audit categories. Win32 Error: {0}</value>
+</data>
+<data name="FailedToGetCategoryIdForSubCategoryError" xml:space="preserve">
+  <value>Failed to get Category ID for the SubCategory: {0}</value>
+</data>
+<data name="NoAuditSubcategoriesFoundError" xml:space="preserve">
+  <value>No audit subcategories found on the system</value>
+</data>
+<data name="FailedToQueryAuditSystemPolicyBatchError" xml:space="preserve">
+  <value>Failed to query audit system policy for batch starting at {0}. Win32 Error: {1}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullBatchError" xml:space="preserve">
+  <value>AuditQuerySystemPolicy returned null pointer for batch starting at {0}</value>
+</data>
+<data name="RetrievedAuditPoliciesForSubcategoriesMessage" xml:space="preserve">
+  <value>Retrieved audit policies for {0} subcategories</value>
+</data>
+<data name="FailedToQuerySpecificAuditPoliciesError" xml:space="preserve">
+  <value>Failed to query specific audit policies. Win32 Error: {0}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullSpecificError" xml:space="preserve">
+  <value>AuditQuerySystemPolicy returned null pointer for specific audit policies</value>
+</data>
+<data name="RetrievedAuditPoliciesForSpecificSubcategoriesMessage" xml:space="preserve">
+  <value>Retrieved audit policies for {0} specific subcategories</value>
+</data>
+<data name="CsvFileNotFoundError" xml:space="preserve">
+  <value>CSV file not found: {0}</value>
+</data>
+<data name="CsvFileMustContainHeaderAndDataError" xml:space="preserve">
+  <value>CSV file must contain at least a header and one data row</value>
+</data>
+<data name="ErrorParsingCsvLineError" xml:space="preserve">
+  <value>Error parsing CSV line {0}: {1}</value>
+</data>
+<data name="NoValidAuditPolicyEntriesFoundError" xml:space="preserve">
+  <value>No valid audit policy entries found in CSV file</value>
+</data>
+<data name="ParsedAuditPolicyEntriesFromCsvMessage" xml:space="preserve">
+  <value>Parsed {0} audit policy entries from CSV</value>
+</data>
+<data name="SuccessfullyAppliedAuditPoliciesFromCsvMessage" xml:space="preserve">
+  <value>Successfully applied {0} audit policies from CSV</value>
+</data>
+<data name="FailedToApplyAuditPolicyToSystemError" xml:space="preserve">
+  <value>Failed to apply audit policy to the system. Win32 Error: {0}</value>
+</data>
+<data name="CsvLineExpectedColumnsError" xml:space="preserve">
+  <value>Line {0}: Expected at least 7 columns, got {1}</value>
+</data>
+<data name="CsvLineInvalidGuidFormatError" xml:space="preserve">
+  <value>Line {0}: Invalid GUID format: {1}</value>
+</data>
+<data name="CsvLineInvalidSettingValueError" xml:space="preserve">
+  <value>Line {0}: Invalid setting value: {1}</value>
+</data>
+<data name="CsvLineSettingValueOutOfRangeError" xml:space="preserve">
+  <value>Line {0}: Setting value out of range (0-3): {1}</value>
+</data>
+<data name="NoAuditingText" xml:space="preserve">
+  <value>No auditing</value>
+</data>
+<data name="SuccessText" xml:space="preserve">
+  <value>Success</value>
+</data>
+<data name="FailureText" xml:space="preserve">
+  <value>Failure</value>
+</data>
+<data name="SuccessAndFailureText" xml:space="preserve">
+  <value>Success and Failure</value>
+</data>
+  <data name="MicrosoftSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Apply, Verify and Remove Microsoft Security Baseline in this page.</value>
+  </data>
+    <data name="MicrosoftSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Apply, Verify and Remove Microsoft Security Baseline in this page.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Apply, Verify and Remove Microsoft 365 Apps Security Baseline in this page.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Apply, Verify and Remove Microsoft 365 Apps Security Baseline in this page.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Apply, Verify and Remove optional overrides for Microsoft Baselines.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+     <value>Apply, Verify and Remove optional overrides for Microsoft Baselines.</value>
+  </data>
+  <data name="DragAndDropHintFileReputation.Text" xml:space="preserve">
+     <value>or drag and drop files here</value>
+  </data>
+    <data name="DragAndDropHintFileReputationCaption" xml:space="preserve">
+     <value>Drop file to check reputation</value>
+  </data>
+  <data name="NoVerificationResultsToExport" xml:space="preserve">
+  <value>No verification results to export</value>
+</data>
+<data name="ExportFileNameFormat" xml:space="preserve">
+  <value>HardenSystemSecurity_Data_Export_{0}.json</value>
+</data>
+<data name="SuccessfullyExportedVerificationResults" xml:space="preserve">
+  <value>Successfully exported {0} verification results to {1}</value>
+</data>
+<data name="ApplyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Applying Microsoft Security Baseline...</value>
+</data>
+<data name="MicrosoftSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>Microsoft Security Baseline applied successfully</value>
+</data>
+<data name="ApplyOperationCancelledByUser" xml:space="preserve">
+  <value>Apply operation was cancelled by user</value>
+</data>
+<data name="RemovingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Removing Microsoft Security Baseline...</value>
+</data>
+<data name="MicrosoftSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>Microsoft Security Baseline removed successfully</value>
+</data>
+<data name="RemoveOperationCancelledByUser" xml:space="preserve">
+  <value>Remove operation was cancelled by user</value>
+</data>
+<data name="VerifyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Verifying Microsoft Security Baseline...</value>
+</data>
+<data name="NoResultsReturnedFromVerificationProcess" xml:space="preserve">
+  <value>There were no results returned from the verification process.</value>
+</data>
+<data name="VerificationCompletedCompliantPolicies" xml:space="preserve">
+  <value>Verification completed: {0}/{1} policies are compliant</value>
+</data>
+<data name="VerifyOperationCancelledByUser" xml:space="preserve">
+  <value>Verify operation was cancelled by user</value>
+</data>
+<data name="ApplyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Applying Microsoft 365 Apps Security Baseline...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>Microsoft 365 Apps Security Baseline applied successfully</value>
+</data>
+<data name="RemovingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Removing Microsoft 365 Apps Security Baseline...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>Microsoft 365 Apps Security Baseline removed successfully</value>
+</data>
+<data name="VerifyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Verifying Microsoft 365 Apps Security Baseline...</value>
+</data>
+<data name="ResetURLButton.Content" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="ResetURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Reset the download URL back to the default value.</value>
+  </data>
+  <data name="ResetURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Reset the download URL back to the default value.</value>
+  </data>
+  <data name="DownloadURLButtonText.Text" xml:space="preserve">
+    <value>Download URL</value>
+  </data>
+  <data name="DownloadURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>View and manage the download URL of the baseline.</value>
+  </data>
+  <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>View and manage the download URL of the baseline.</value>
+  </data>
 </root>

@@ -88,6 +88,9 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	// Track pending DispatcherQueue operations to prevent crashes during navigation
 	private readonly System.Collections.Generic.List<Action> _pendingDispatcherOperations = [];
 
+	// token for IsOpen property-changed callback
+	private long _isOpenCallbackToken = -1;
+
 	// Animation type enumeration defining all supported animation styles
 	internal enum InfoBarAnimationType
 	{
@@ -127,7 +130,8 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 		// Register for IsOpen property changes - this is how to detect when ViewModel changes the property
 		// This callback is essential for responding to two-way binding changes from the ViewModel
-		_ = this.RegisterPropertyChangedCallback(IsOpenProperty, OnIsOpenPropertyChanged);
+		// Track the registration token so we can unregister during cleanup
+		_isOpenCallbackToken = this.RegisterPropertyChangedCallback(IsOpenProperty, OnIsOpenPropertyChanged);
 	}
 
 	/// <summary>
@@ -553,8 +557,13 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			// Clean up animation resources
 			CleanupAnimations();
 
-			// Stop and dispose timer
-			_closeButtonTimer?.Stop();
+			// Stop and detach timer to eliminate handler references
+			if (_closeButtonTimer != null)
+			{
+				// unsubscribe to avoid retaining this via delegate
+				_closeButtonTimer.Tick -= CloseButtonTimer_Tick;
+				_closeButtonTimer.Stop();
+			}
 
 			// Cancel all pending DispatcherQueue operations
 			CancelAllPendingDispatcherOperations();
@@ -564,6 +573,23 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 			// Reset all state flags
 			ResetAllStateToDefaults();
+
+			// Unregister the IsOpen property-changed callback if registered
+			if (_isOpenCallbackToken >= 0)
+			{
+				try
+				{
+					UnregisterPropertyChangedCallback(IsOpenProperty, _isOpenCallbackToken);
+				}
+				catch (Exception ex)
+				{
+					Logger.Write($"InfoBarV2 property callback unregister error: {ex.Message}");
+				}
+				finally
+				{
+					_isOpenCallbackToken = -1;
+				}
+			}
 
 			// Mark as disposed
 			lock (_stateLock)

@@ -27,7 +27,6 @@ using Windows.System;
 using Windows.ApplicationModel.UserActivities;
 using CommunityToolkit.WinUI;
 
-
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.AppSettings;
 using HardenSystemSecurity;
@@ -38,7 +37,6 @@ using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics;
 using AppControlManager.IntelGathering;
 using System.Collections.ObjectModel;
-
 #endif
 
 namespace AppControlManager.ViewModels;
@@ -434,7 +432,9 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 	private static readonly MediaPlayer TypeWriterMediaPlayer = new()
 	{
-		Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/Audio/TypeWriter.wav"))
+		Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/Audio/TypeWriter.wav")),
+		// https://learn.microsoft.com/uwp/api/windows.media.systemmediatransportcontrols
+		CommandManager = { IsEnabled = false } // Disable System Media Transport Controls (SMTC) to prevent the audio from being displayed by the OS.
 	};
 
 	private static readonly TimeSpan TypeWriterAudioStartTime = TimeSpan.FromMilliseconds(167);

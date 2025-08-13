@@ -188,6 +188,24 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("InstalledAppsManagementNavItem/Content")],
 			pages: [typeof(Pages.InstalledAppsManagement)]
 		);
+
+		breadCrumbMappingsV2[typeof(Pages.Protects.MicrosoftSecurityBaseline)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/Content")],
+			pages: [typeof(Pages.Protects.MicrosoftSecurityBaseline)]
+		);
+
+		breadCrumbMappingsV2[typeof(Pages.Protects.Microsoft365AppsSecurityBaseline)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content")],
+			pages: [typeof(Pages.Protects.Microsoft365AppsSecurityBaseline)]
+		);
+
+		breadCrumbMappingsV2[typeof(Pages.Protects.MicrosoftBaseLinesOverrides)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content")],
+			pages: [typeof(Pages.Protects.MicrosoftBaseLinesOverrides)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -224,7 +242,10 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		// { "CountryIPBlocking", typeof(Pages.Protects.CountryIPBlocking) },
 		{ "NonAdmin", typeof(Pages.Protects.NonAdmin) },
 		{ "FileReputation", typeof(Pages.FileReputation) },
-		{ "InstalledAppsManagement", typeof(Pages.InstalledAppsManagement) }
+		{ "InstalledAppsManagement", typeof(Pages.InstalledAppsManagement) },
+		{ "MicrosoftSecurityBaseline", typeof(Pages.Protects.MicrosoftSecurityBaseline) },
+		{ "Microsoft365AppsSecurityBaseline", typeof(Pages.Protects.Microsoft365AppsSecurityBaseline) },
+		{ "MicrosoftBaseLinesOverrides", typeof(Pages.Protects.MicrosoftBaseLinesOverrides) }
 	};
 
 
@@ -262,6 +283,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("NonAdminCommandsNavItem/Content")] = typeof(Pages.Protects.NonAdmin);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("FileReputationNavItem/Content")] = typeof(Pages.FileReputation);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("InstalledAppsManagementNavItem/Content")] = typeof(Pages.InstalledAppsManagement);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/Content")] = typeof(Pages.Protects.MicrosoftSecurityBaseline);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content")] = typeof(Pages.Protects.Microsoft365AppsSecurityBaseline);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content")] = typeof(Pages.Protects.MicrosoftBaseLinesOverrides);
 	}
 
 	/// <summary>

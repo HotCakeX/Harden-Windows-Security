@@ -34,6 +34,7 @@ using AppControlManager.ViewModels;
 namespace HardenSystemSecurity.ViewModels;
 #endif
 #if APP_CONTROL_MANAGER
+using System.Diagnostics;
 namespace AppControlManager.ViewModels;
 #endif
 
@@ -51,7 +52,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// It is populated in the class initializer.
 	/// Since the app uses it multiple times, we only populate this list once to reuse it in subsequent calls.
 	/// </summary>
-	internal IEnumerable<NavigationViewItem> allNavigationItems = [];
+	internal List<NavigationViewItem> allNavigationItems = [];
 
 	/// <summary>
 	/// Every page in the application must be defined in this dictionary.

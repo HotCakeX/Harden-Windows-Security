@@ -169,9 +169,6 @@
     <data name="ErrorTitle" xml:space="preserve">
     <value>שגיאה</value>
   </data>
-    <data name="SuccessTitle" xml:space="preserve">
-    <value>הצלחה</value>
-  </data>
     <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>הפקודה '{0} {1}' נכשלה עם קוד יציאה {2}. שגיאה: {3}</value>
   </data>
@@ -2348,4 +2345,248 @@
   <data name="FileActivationLaunchMessage" xml:space="preserve">
   <value>היישום הופעל עם הפעלת קובץ עבור הקובץ הבא: '{0}'</value>
 </data>
+ <data name="MicrosoftSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>בסיס אבטחה של מיקרוסופט</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>בסיס אבטחה ליישומי Microsoft 365</value>
+  </data>
+    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>יישם את בסיס האבטחה של מיקרוסופט בעמוד זה. תוכל גם לאמת תאימות המערכת כדי לקבל דוח מדויק המציג אילו הגדרות מיושמות ואילו לא. תוכל להסיר את המדיניות שיושמה על ידי הבסיס גם כן.</value>
+  </data>
+    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>יישם את בסיס האבטחה ליישומי Microsoft 365 בעמוד זה. תוכל גם לאמת תאימות המערכת כדי לקבל דוח מדויק המציג אילו הגדרות מיושמות ואילו לא. תוכל להסיר את המדיניות שיושמה על ידי הבסיס גם כן.</value>
+  </data>
+   <!--Security Baselines ListView Headers Start-->
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>מקור</value>
+  </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>סטטוס</value>
+  </data>
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
+    <value>ערך נוכחי</value>
+  </data>
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+    <value>ערך צפוי</value>
+  </data>
+  <!--Security Baselines ListView Headers End-->
+  <!--Security Baselines ListView Headers Buttons Start-->
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מקור</value>
+  </data>
+    <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>סטטוס</value>
+  </data>
+  <data name="CurrentValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ערך נוכחי</value>
+  </data>
+  <data name="ExpectedValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ערך צפוי</value>
+  </data>
+  <!--Security Baselines ListView Headers Buttons End-->
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>קבל מדיניות פעילה (משתמש)</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מציג את המדיניות הקבוצתית הפעילה המיושמת על המשתמש הנוכחי.</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מציג את המדיניות הקבוצתית הפעילה המיושמת על המשתמש הנוכחי.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
+    <value>עקיפות בסיסי מיקרוסופט</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+    <value>שחזר תכונות מערכת הפעלה שהושבתו לאחר יישום בסיסי האבטחה של מיקרוסופט.</value>
+  </data>
+  <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מייצא את הנתונים המוצגים לקובץ JSON. תוכל לבחור את המיקום בו הם יישמרו.</value>
+  </data>
+  <data name="ExportToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מייצא את הנתונים המוצגים לקובץ JSON. תוכל לבחור את המיקום בו הם יישמרו.</value>
+  </data>
+  <data name="ExportToJsonButton.Content" xml:space="preserve">
+    <value>ייצא ל-JSON</value>
+  </data>
+    <data name="OpenProcessTokenFailedError" xml:space="preserve">
+  <value>OpenProcessToken נכשל. שגיאת Win32: {0}</value>
+</data>
+<data name="LookupPrivilegeValueFailedError" xml:space="preserve">
+  <value>LookupPrivilegeValue נכשל עבור {0}. שגיאת Win32: {1}</value>
+</data>
+<data name="AdjustTokenPrivilegesFailedError" xml:space="preserve">
+  <value>AdjustTokenPrivileges נכשל עבור {0}. שגיאת Win32: {1}</value>
+</data>
+<data name="PrivilegeNotAssignedError" xml:space="preserve">
+  <value>הרשאה לא הוקצתה: {0}</value>
+</data>
+<data name="FailedToEnumerateAuditCategoriesError" xml:space="preserve">
+  <value>נכשל במניית קטגוריות ביקורת. שגיאת Win32: {0}</value>
+</data>
+<data name="FailedToGetCategoryIdForSubCategoryError" xml:space="preserve">
+  <value>נכשל בקבלת מזהה קטגוריה עבור תת-הקטגוריה: {0}</value>
+</data>
+<data name="NoAuditSubcategoriesFoundError" xml:space="preserve">
+  <value>לא נמצאו תת-קטגוריות ביקורת במערכת</value>
+</data>
+<data name="FailedToQueryAuditSystemPolicyBatchError" xml:space="preserve">
+  <value>נכשל בשאילתת מדיניות ביקורת מערכת עבור אצווה המתחילה ב-{0}. שגיאת Win32: {1}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullBatchError" xml:space="preserve">
+  <value>AuditQuerySystemPolicy החזיר מצביע null עבור אצווה המתחילה ב-{0}</value>
+</data>
+<data name="RetrievedAuditPoliciesForSubcategoriesMessage" xml:space="preserve">
+  <value>אוחזרו מדיניויות ביקורת עבור {0} תת-קטגוריות</value>
+</data>
+<data name="FailedToQuerySpecificAuditPoliciesError" xml:space="preserve">
+  <value>נכשל בשאילתת מדיניויות ביקורת ספציפיות. שגיאת Win32: {0}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullSpecificError" xml:space="preserve">
+  <value>AuditQuerySystemPolicy החזיר מצביע null עבור מדיניויות ביקורת ספציפיות</value>
+</data>
+<data name="RetrievedAuditPoliciesForSpecificSubcategoriesMessage" xml:space="preserve">
+  <value>אוחזרו מדיניויות ביקורת עבור {0} תת-קטגוריות ספציפיות</value>
+</data>
+<data name="CsvFileNotFoundError" xml:space="preserve">
+  <value>קובץ CSV לא נמצא: {0}</value>
+</data>
+<data name="CsvFileMustContainHeaderAndDataError" xml:space="preserve">
+  <value>קובץ CSV חייב להכיל לפחות כותרת ושורת נתונים אחת</value>
+</data>
+<data name="ErrorParsingCsvLineError" xml:space="preserve">
+  <value>שגיאה בפענוח שורת CSV {0}: {1}</value>
+</data>
+<data name="NoValidAuditPolicyEntriesFoundError" xml:space="preserve">
+  <value>לא נמצאו רשומות מדיניות ביקורת תקפות בקובץ CSV</value>
+</data>
+<data name="ParsedAuditPolicyEntriesFromCsvMessage" xml:space="preserve">
+  <value>פוענחו {0} רשומות מדיניות ביקורת מקובץ CSV</value>
+</data>
+<data name="SuccessfullyAppliedAuditPoliciesFromCsvMessage" xml:space="preserve">
+  <value>הוחלו בהצלחה {0} מדיניויות ביקורת מקובץ CSV</value>
+</data>
+<data name="FailedToApplyAuditPolicyToSystemError" xml:space="preserve">
+  <value>נכשל בהחלת מדיניות ביקורת על המערכת. שגיאת Win32: {0}</value>
+</data>
+<data name="CsvLineExpectedColumnsError" xml:space="preserve">
+  <value>שורה {0}: צפויות לפחות 7 עמודות, התקבלו {1}</value>
+</data>
+<data name="CsvLineInvalidGuidFormatError" xml:space="preserve">
+  <value>שורה {0}: פורמט GUID לא תקף: {1}</value>
+</data>
+<data name="CsvLineInvalidSettingValueError" xml:space="preserve">
+  <value>שורה {0}: ערך הגדרה לא תקף: {1}</value>
+</data>
+<data name="CsvLineSettingValueOutOfRangeError" xml:space="preserve">
+  <value>שורה {0}: ערך הגדרה מחוץ לטווח (0-3): {1}</value>
+</data>
+<data name="NoAuditingText" xml:space="preserve">
+  <value>ללא ביקורת</value>
+</data>
+<data name="SuccessText" xml:space="preserve">
+  <value>הצלחה</value>
+</data>
+<data name="FailureText" xml:space="preserve">
+  <value>כשלון</value>
+</data>
+<data name="SuccessAndFailureText" xml:space="preserve">
+  <value>הצלחה וכשלון</value>
+</data>
+  <data name="MicrosoftSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החל, אמת והסר קו בסיס אבטחה של מיקרוסופט בעמוד זה.</value>
+  </data>
+    <data name="MicrosoftSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החל, אמת והסר קו בסיס אבטחה של מיקרוסופט בעמוד זה.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החל, אמת והסר קו בסיס אבטחה של Microsoft 365 Apps בעמוד זה.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החל, אמת והסר קו בסיס אבטחה של Microsoft 365 Apps בעמוד זה.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החל, אמת והסר עקיפות אופציונליות עבור קווי בסיס של מיקרוסופט.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+     <value>החל, אמת והסר עקיפות אופציונליות עבור קווי בסיס של מיקרוסופט.</value>
+  </data>
+  <data name="DragAndDropHintFileReputation.Text" xml:space="preserve">
+     <value>או גרור ושחרר קבצים כאן</value>
+  </data>
+    <data name="DragAndDropHintFileReputationCaption" xml:space="preserve">
+     <value>שחרר קובץ לבדיקת מוניטין</value>
+  </data>
+  <data name="NoVerificationResultsToExport" xml:space="preserve">
+  <value>אין תוצאות אימות לייצוא</value>
+</data>
+<data name="ExportFileNameFormat" xml:space="preserve">
+  <value>HardenSystemSecurity_Data_Export_{0}.json</value>
+</data>
+<data name="SuccessfullyExportedVerificationResults" xml:space="preserve">
+  <value>יוצאו בהצלחה {0} תוצאות אימות ל-{1}</value>
+</data>
+<data name="ApplyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>מחיל קו בסיס אבטחה של מיקרוסופט...</value>
+</data>
+<data name="MicrosoftSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>קו בסיס אבטחה של מיקרוסופט הוחל בהצלחה</value>
+</data>
+<data name="ApplyOperationCancelledByUser" xml:space="preserve">
+  <value>פעולת ההחלה בוטלה על ידי המשתמש</value>
+</data>
+<data name="RemovingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>מסיר קו בסיס אבטחה של מיקרוסופט...</value>
+</data>
+<data name="MicrosoftSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>קו בסיס אבטחה של מיקרוסופט הוסר בהצלחה</value>
+</data>
+<data name="RemoveOperationCancelledByUser" xml:space="preserve">
+  <value>פעולת ההסרה בוטלה על ידי המשתמש</value>
+</data>
+<data name="VerifyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>מאמת קו בסיס אבטחה של מיקרוסופט...</value>
+</data>
+<data name="NoResultsReturnedFromVerificationProcess" xml:space="preserve">
+  <value>לא הוחזרו תוצאות מתהליך האימות.</value>
+</data>
+<data name="VerificationCompletedCompliantPolicies" xml:space="preserve">
+  <value>אימות הושלם: {0}/{1} מדיניויות תואמות</value>
+</data>
+<data name="VerifyOperationCancelledByUser" xml:space="preserve">
+  <value>פעולת האימות בוטלה על ידי המשתמש</value>
+</data>
+<data name="ApplyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>מחיל קו בסיס אבטחה של Microsoft 365 Apps...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>קו בסיס אבטחה של Microsoft 365 Apps הוחל בהצלחה</value>
+</data>
+<data name="RemovingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>מסיר קו בסיס אבטחה של Microsoft 365 Apps...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>קו בסיס אבטחה של Microsoft 365 Apps הוסר בהצלחה</value>
+</data>
+<data name="VerifyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>מאמת קו בסיס אבטחה של Microsoft 365 Apps...</value>
+</data>
+<data name="ResetURLButton.Content" xml:space="preserve">
+    <value>איפוס</value>
+  </data>
+  <data name="ResetURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אפס את כתובת ההורדה חזרה לערך ברירת המחדל.</value>
+  </data>
+  <data name="ResetURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>אפס את כתובת ההורדה חזרה לערך ברירת המחדל.</value>
+  </data>
+  <data name="DownloadURLButtonText.Text" xml:space="preserve">
+    <value>כתובת הורדה</value>
+  </data>
+  <data name="DownloadURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צפה ונהל את כתובת ההורדה של קו הבסיס.</value>
+  </data>
+  <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>צפה ונהל את כתובת ההורדה של קו הבסיס.</value>
+  </data>
 </root>

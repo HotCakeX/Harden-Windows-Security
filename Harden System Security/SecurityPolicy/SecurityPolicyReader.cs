@@ -16,6 +16,7 @@
 //
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -164,10 +165,56 @@ internal static class SecurityPolicyReader
 	}
 
 	/// <summary>
+	/// All of the items in the [Privilege Rights] section of the secedit export.
+	/// They must be update as needed if/when OS updates add/remove any of them.
+	/// </summary>
+	private static readonly string[] privilegeNames =
+	[
+		"SeNetworkLogonRight",
+		"SeDenyNetworkLogonRight",
+		"SeRemoteInteractiveLogonRight",
+		"SeDenyRemoteInteractiveLogonRight",
+		"SeInteractiveLogonRight",
+		"SeDenyInteractiveLogonRight",
+		"SeBackupPrivilege",
+		"SeRestorePrivilege",
+		"SeTakeOwnershipPrivilege",
+		"SeSecurityPrivilege",
+		"SeSystemEnvironmentPrivilege",
+		"SeCreatePagefilePrivilege",
+		"SeCreatePermanentPrivilege",
+		"SeCreateTokenPrivilege",
+		"SeCreateGlobalPrivilege",
+		"SeCreateSymbolicLinkPrivilege",
+		"SeChangeNotifyPrivilege",
+		"SeSystemtimePrivilege",
+		"SeDebugPrivilege",
+		"SeImpersonatePrivilege",
+		"SeLoadDriverPrivilege",
+		"SeLockMemoryPrivilege",
+		"SeManageVolumePrivilege",
+		"SeRemoteShutdownPrivilege",
+		"SeProfileSingleProcessPrivilege",
+		"SeSystemProfilePrivilege",
+		"SeAssignPrimaryTokenPrivilege",
+		"SeShutdownPrivilege",
+		"SeUndockPrivilege",
+		"SeIncreaseQuotaPrivilege",
+		"SeIncreaseBasePriorityPrivilege",
+		"SeIncreaseWorkingSetPrivilege",
+		"SeTimeZonePrivilege",
+		"SeAuditPrivilege",
+		"SeTrustedCredManAccessPrivilege",
+		"SeTcbPrivilege",
+		"SeEnableDelegationPrivilege",
+		"SeDelegateSessionUserImpersonatePrivilege"
+	];
+
+	/// <summary>
 	/// Gets the information for the [Privilege Rights] section.
 	/// </summary>
 	/// <returns></returns>
-	private static Dictionary<string, string[]> GetPrivilegeRights()
+	internal static Dictionary<string, string[]> GetPrivilegeRights()
 	{
 		Dictionary<string, string[]> privilegeRights = new(StringComparer.Ordinal);
 		LSA_OBJECT_ATTRIBUTES lsaAttr = new()
@@ -189,44 +236,6 @@ internal static class SecurityPolicyReader
 
 		try
 		{
-			// All of the items in the [Privilege Rights] section of the secedit export.
-			// They must be update as needed if/when OS updates add/remove any of them.
-			string[] privilegeNames =
-			[
-				"SeNetworkLogonRight",
-				"SeBackupPrivilege",
-				"SeChangeNotifyPrivilege",
-				"SeSystemtimePrivilege",
-				"SeCreatePagefilePrivilege",
-				"SeDebugPrivilege",
-				"SeRemoteShutdownPrivilege",
-				"SeAuditPrivilege",
-				"SeIncreaseQuotaPrivilege",
-				"SeIncreaseBasePriorityPrivilege",
-				"SeLoadDriverPrivilege",
-				"SeBatchLogonRight",
-				"SeServiceLogonRight",
-				"SeInteractiveLogonRight",
-				"SeSecurityPrivilege",
-				"SeSystemEnvironmentPrivilege",
-				"SeProfileSingleProcessPrivilege",
-				"SeSystemProfilePrivilege",
-				"SeAssignPrimaryTokenPrivilege",
-				"SeRestorePrivilege",
-				"SeShutdownPrivilege",
-				"SeTakeOwnershipPrivilege",
-				"SeDenyInteractiveLogonRight",
-				"SeUndockPrivilege",
-				"SeManageVolumePrivilege",
-				"SeRemoteInteractiveLogonRight",
-				"SeImpersonatePrivilege",
-				"SeCreateGlobalPrivilege",
-				"SeIncreaseWorkingSetPrivilege",
-				"SeTimeZonePrivilege",
-				"SeCreateSymbolicLinkPrivilege",
-				"SeDelegateSessionUserImpersonatePrivilege"
-			];
-
 			foreach (string privilege in privilegeNames)
 			{
 				LSA_UNICODE_STRING userRight = new(privilege);
@@ -270,86 +279,90 @@ internal static class SecurityPolicyReader
 	}
 
 	/// <summary>
+	/// Used by the <see cref="GetRegistryValues"/> method.
+	/// It needs to stay up to date if new security policies need to be verified such as new entries added to the exported INF file by Secedit.
+	/// </summary>
+	private static readonly FrozenDictionary<string, (RegistryKey rootKey, string subKey, string valueName, int type)> registryPaths = new Dictionary<string, (RegistryKey rootKey, string subKey, string valueName, int type)>(StringComparer.Ordinal)
+	{
+		{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\CachedLogonsCount", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "CachedLogonsCount", 1) },
+		{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ForceUnlockLogon", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "ForceUnlockLogon", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\PasswordExpiryWarning", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "PasswordExpiryWarning", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ScRemoveOption", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "ScRemoveOption", 1) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ConsentPromptBehaviorAdmin", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorEnhancedAdmin", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ConsentPromptBehaviorEnhancedAdmin", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ConsentPromptBehaviorUser", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "DontDisplayLastUserName", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "DontDisplayLockedUserId", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "DontDisplayUserName", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableInstallerDetection", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableInstallerDetection", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableLUA", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableSecureUIAPaths", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableSecureUIAPaths", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableUIADesktopToggle", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableUIADesktopToggle", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableVirtualization", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableVirtualization", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\FilterAdministratorToken", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "FilterAdministratorToken", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "InactivityTimeoutSecs", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeCaption", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "LegalNoticeCaption", 1) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeText", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "LegalNoticeText", 7) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "MaxDevicePasswordFailedAttempts", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\PromptOnSecureDesktop", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "PromptOnSecureDesktop", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ScForceOption", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ScForceOption", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ShutdownWithoutLogon", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ShutdownWithoutLogon", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\TypeOfAdminApprovalMode", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "TypeOfAdminApprovalMode", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\UndockWithoutLogon", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "UndockWithoutLogon", 4) },
+		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ValidateAdminCodeSignatures", 4) },
+		{ @"MACHINE\Software\Policies\Microsoft\Cryptography\ForceKeyProtection", (Registry.LocalMachine, @"Software\Policies\Microsoft\Cryptography", "ForceKeyProtection", 4) },
+		{ @"MACHINE\Software\Policies\Microsoft\Windows\Safer\CodeIdentifiers\AuthenticodeEnabled", (Registry.LocalMachine, @"Software\Policies\Microsoft\Windows\Safer\CodeIdentifiers", "AuthenticodeEnabled", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\AuditBaseObjects", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "AuditBaseObjects", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\CrashOnAuditFail", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "CrashOnAuditFail", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\DisableDomainCreds", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "DisableDomainCreds", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\EveryoneIncludesAnonymous", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "EveryoneIncludesAnonymous", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy\Enabled", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy", "Enabled", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\ForceGuest", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "ForceGuest", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\FullPrivilegeAuditing", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "FullPrivilegeAuditing", 3) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\LimitBlankPasswordUse", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "LimitBlankPasswordUse", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\LmCompatibilityLevel", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "LmCompatibilityLevel", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\allownullsessionfallback", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "allownullsessionfallback", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\NTLMMinClientSec", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "NTLMMinClientSec", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\NTLMMinServerSec", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "NTLMMinServerSec", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\RestrictReceivingNTLMTraffic", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "RestrictReceivingNTLMTraffic", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\RestrictSendingNTLMTraffic", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "RestrictSendingNTLMTraffic", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\NoLMHash", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "NoLMHash", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymous", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "RestrictAnonymous", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymousSAM", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "RestrictAnonymousSAM", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\RestrictRemoteSAM", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "RestrictRemoteSAM", 1) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\SCENoApplyLegacyAuditPolicy", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "SCENoApplyLegacyAuditPolicy", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers\AddPrinterDrivers", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers", "AddPrinterDrivers", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine", (Registry.LocalMachine, @"System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths", "Machine", 7) },
+		{ @"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine", (Registry.LocalMachine, @"System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths", "Machine", 7) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\Kernel\ObCaseInsensitive", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager\Kernel", "ObCaseInsensitive", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\Memory Management\ClearPageFileAtShutdown", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager\Memory Management", "ClearPageFileAtShutdown", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\ProtectionMode", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager", "ProtectionMode", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\SubSystems\optional", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager\SubSystems", "optional", 7) },
+		{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableForcedLogOff", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "EnableForcedLogOff", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "EnableSecuritySignature", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\NullSessionPipes", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "NullSessionPipes", 7) },
+		{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "RequireSecuritySignature", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RestrictNullSessAccess", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "RestrictNullSessAccess", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnablePlainTextPassword", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanmanWorkstation\Parameters", "EnablePlainTextPassword", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnableSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanmanWorkstation\Parameters", "EnableSecuritySignature", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\RequireSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanmanWorkstation\Parameters", "RequireSecuritySignature", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\LDAP\LDAPClientConfidentiality", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LDAP", "LDAPClientConfidentiality", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\LDAP\LDAPClientIntegrity", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LDAP", "LDAPClientIntegrity", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "DisablePasswordChange", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\MaximumPasswordAge", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "MaximumPasswordAge", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireSignOrSeal", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "RequireSignOrSeal", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireStrongKey", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "RequireStrongKey", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SealSecureChannel", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "SealSecureChannel", 4) },
+		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SignSecureChannel", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "SignSecureChannel", 4) }
+	}.ToFrozenDictionary(StringComparer.Ordinal);
+
+	/// <summary>
 	/// Gets the Registry data for the [Registry Values] section.
 	/// </summary>
 	/// <returns></returns>
-	private static List<RegistryValue> GetRegistryValues()
+	internal static List<RegistryValue> GetRegistryValues()
 	{
 		List<RegistryValue> registryValues = [];
-
-		Dictionary<string, (RegistryKey rootKey, string subKey, string valueName, int type)> registryPaths = new(StringComparer.Ordinal)
-		{
-			{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\CachedLogonsCount", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "CachedLogonsCount", 1) },
-			{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ForceUnlockLogon", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "ForceUnlockLogon", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\PasswordExpiryWarning", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "PasswordExpiryWarning", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ScRemoveOption", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "ScRemoveOption", 1) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ConsentPromptBehaviorAdmin", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorEnhancedAdmin", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ConsentPromptBehaviorEnhancedAdmin", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ConsentPromptBehaviorUser", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "DontDisplayLastUserName", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "DontDisplayLockedUserId", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "DontDisplayUserName", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableInstallerDetection", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableInstallerDetection", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableLUA", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableSecureUIAPaths", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableSecureUIAPaths", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableUIADesktopToggle", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableUIADesktopToggle", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableVirtualization", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableVirtualization", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\FilterAdministratorToken", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "FilterAdministratorToken", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "InactivityTimeoutSecs", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeCaption", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "LegalNoticeCaption", 1) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeText", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "LegalNoticeText", 7) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "MaxDevicePasswordFailedAttempts", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\PromptOnSecureDesktop", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "PromptOnSecureDesktop", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ScForceOption", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ScForceOption", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ShutdownWithoutLogon", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ShutdownWithoutLogon", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\TypeOfAdminApprovalMode", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "TypeOfAdminApprovalMode", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\UndockWithoutLogon", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "UndockWithoutLogon", 4) },
-			{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ValidateAdminCodeSignatures", 4) },
-			{ @"MACHINE\Software\Policies\Microsoft\Cryptography\ForceKeyProtection", (Registry.LocalMachine, @"Software\Policies\Microsoft\Cryptography", "ForceKeyProtection", 4) },
-			{ @"MACHINE\Software\Policies\Microsoft\Windows\Safer\CodeIdentifiers\AuthenticodeEnabled", (Registry.LocalMachine, @"Software\Policies\Microsoft\Windows\Safer\CodeIdentifiers", "AuthenticodeEnabled", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\AuditBaseObjects", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "AuditBaseObjects", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\CrashOnAuditFail", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "CrashOnAuditFail", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\DisableDomainCreds", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "DisableDomainCreds", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\EveryoneIncludesAnonymous", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "EveryoneIncludesAnonymous", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy\Enabled", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy", "Enabled", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\ForceGuest", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "ForceGuest", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\FullPrivilegeAuditing", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "FullPrivilegeAuditing", 3) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\LimitBlankPasswordUse", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "LimitBlankPasswordUse", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\LmCompatibilityLevel", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "LmCompatibilityLevel", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\allownullsessionfallback", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "allownullsessionfallback", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\NTLMMinClientSec", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "NTLMMinClientSec", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\NTLMMinServerSec", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "NTLMMinServerSec", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\RestrictReceivingNTLMTraffic", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "RestrictReceivingNTLMTraffic", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\RestrictSendingNTLMTraffic", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "RestrictSendingNTLMTraffic", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\NoLMHash", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "NoLMHash", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymous", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "RestrictAnonymous", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymousSAM", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "RestrictAnonymousSAM", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\RestrictRemoteSAM", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "RestrictRemoteSAM", 1) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Lsa\SCENoApplyLegacyAuditPolicy", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "SCENoApplyLegacyAuditPolicy", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers\AddPrinterDrivers", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers", "AddPrinterDrivers", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine", (Registry.LocalMachine, @"System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths", "Machine", 7) },
-			{ @"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine", (Registry.LocalMachine, @"System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths", "Machine", 7) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\Kernel\ObCaseInsensitive", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager\Kernel", "ObCaseInsensitive", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\Memory Management\ClearPageFileAtShutdown", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager\Memory Management", "ClearPageFileAtShutdown", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\ProtectionMode", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager", "ProtectionMode", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\SubSystems\optional", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager\SubSystems", "optional", 7) },
-			{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableForcedLogOff", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "EnableForcedLogOff", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "EnableSecuritySignature", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\NullSessionPipes", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "NullSessionPipes", 7) },
-			{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "RequireSecuritySignature", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RestrictNullSessAccess", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "RestrictNullSessAccess", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnablePlainTextPassword", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanmanWorkstation\Parameters", "EnablePlainTextPassword", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnableSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanmanWorkstation\Parameters", "EnableSecuritySignature", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\RequireSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanmanWorkstation\Parameters", "RequireSecuritySignature", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\LDAP\LDAPClientConfidentiality", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LDAP", "LDAPClientConfidentiality", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\LDAP\LDAPClientIntegrity", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LDAP", "LDAPClientIntegrity", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "DisablePasswordChange", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\MaximumPasswordAge", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "MaximumPasswordAge", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireSignOrSeal", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "RequireSignOrSeal", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireStrongKey", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "RequireStrongKey", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SealSecureChannel", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "SealSecureChannel", 4) },
-			{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SignSecureChannel", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "SignSecureChannel", 4) }
-		};
 
 		foreach (KeyValuePair<string, (RegistryKey rootKey, string subKey, string valueName, int type)> item in registryPaths)
 		{

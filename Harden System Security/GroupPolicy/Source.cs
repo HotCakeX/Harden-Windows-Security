@@ -17,6 +17,9 @@
 
 namespace HardenSystemSecurity.GroupPolicy;
 
+/// <summary>
+/// The source of the policy in the JSON file.
+/// </summary>
 internal enum Source : uint
 {
 	GroupPolicy = 0,

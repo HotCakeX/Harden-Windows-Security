@@ -59,7 +59,7 @@ internal static partial class NativeMethods
 		out IntPtr Buffer
 	);
 
-	[LibraryImport("advapi32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[LibraryImport("ADVAPI32", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint LsaOpenPolicy(
 		ref LSA_UNICODE_STRING SystemName,
@@ -68,7 +68,7 @@ internal static partial class NativeMethods
 		out IntPtr PolicyHandle
 	);
 
-	[LibraryImport("advapi32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[LibraryImport("ADVAPI32", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint LsaEnumerateAccountsWithUserRight(
 		IntPtr PolicyHandle,
@@ -77,15 +77,15 @@ internal static partial class NativeMethods
 		out int CountReturned
 	);
 
-	[LibraryImport("advapi32.dll", SetLastError = true)]
+	[LibraryImport("ADVAPI32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int LsaClose(IntPtr PolicyHandle);
 
-	[LibraryImport("advapi32.dll", SetLastError = true)]
+	[LibraryImport("ADVAPI32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int LsaFreeMemory(IntPtr Buffer);
 
-	[LibraryImport("advapi32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[LibraryImport("ADVAPI32", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint LsaQueryInformationPolicy(
 		IntPtr PolicyHandle,
@@ -93,7 +93,7 @@ internal static partial class NativeMethods
 		out IntPtr Buffer
 	);
 
-	[LibraryImport("advapi32.dll", SetLastError = true)]
+	[LibraryImport("ADVAPI32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool AuditEnumerateCategories(
@@ -101,7 +101,7 @@ internal static partial class NativeMethods
 		out uint pCountReturned
 	);
 
-	[LibraryImport("advapi32.dll", SetLastError = true)]
+	[LibraryImport("ADVAPI32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool AuditEnumerateSubCategories(
@@ -111,7 +111,7 @@ internal static partial class NativeMethods
 		out uint pCountReturned
 	);
 
-	[LibraryImport("advapi32.dll", SetLastError = true)]
+	[LibraryImport("ADVAPI32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool AuditQuerySystemPolicy(
@@ -120,7 +120,7 @@ internal static partial class NativeMethods
 		out IntPtr ppAuditPolicy
 	);
 
-	[LibraryImport("advapi32.dll", SetLastError = true)]
+	[LibraryImport("ADVAPI32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial void AuditFree(IntPtr Buffer);
 
@@ -371,5 +371,90 @@ internal static partial class NativeMethods
 		uint dwClsContext,
 		in Guid riid,
 		out IntPtr ppv);
+
+	[LibraryImport("ADVAPI32", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint LsaAddAccountRights(
+	IntPtr PolicyHandle,
+	IntPtr AccountSid,
+	ref LSA_UNICODE_STRING UserRights,
+	uint CountOfRights
+	);
+
+	[LibraryImport("ADVAPI32", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint LsaRemoveAccountRights(
+		IntPtr PolicyHandle,
+		IntPtr AccountSid,
+		[MarshalAs(UnmanagedType.Bool)] bool AllRights,
+		ref LSA_UNICODE_STRING UserRights,
+		uint CountOfRights
+	);
+
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool AuditSetSystemPolicy(
+	IntPtr pAuditPolicy,
+	uint PolicyCount
+	);
+
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool AuditLookupSubCategoryNameW(
+		IntPtr pAuditSubCategoryGuid,
+		out IntPtr ppszSubCategoryName
+	);
+
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool AuditLookupCategoryNameW(
+		IntPtr pAuditCategoryGuid,
+		out IntPtr ppszCategoryName
+	);
+
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct TOKEN_PRIVILEGES
+	{
+		internal uint PrivilegeCount;
+		internal LUID_AND_ATTRIBUTES Privileges;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct LUID
+	{
+		internal uint LowPart;
+		internal int HighPart;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct LUID_AND_ATTRIBUTES
+	{
+		internal LUID Luid;
+		internal uint Attributes;
+	}
+
+
+	// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
+
+
+	// https://learn.microsoft.com/windows/win32/api/winbase/nf-winbase-lookupprivilegevaluew
+	[LibraryImport("ADVAPI32", SetLastError = true, EntryPoint = "LookupPrivilegeValueW", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool LookupPrivilegeValue(string? lpSystemName, string lpName, out LUID lpLuid);
+
+	// https://learn.microsoft.com/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool AdjustTokenPrivileges(IntPtr TokenHandle, [MarshalAs(UnmanagedType.Bool)] bool DisableAllPrivileges,
+		ref TOKEN_PRIVILEGES NewState, uint BufferLength, IntPtr PreviousState, IntPtr ReturnLength);
 
 }

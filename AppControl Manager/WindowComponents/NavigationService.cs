@@ -532,12 +532,8 @@ internal sealed class NavigationService
 		if (MainNavigation is null) return;
 
 		mainWindowVM.allNavigationItems =
-		[                 .. MainNavigation.MenuItems
-							 .OfType<NavigationViewItem>()
-							 .SelectMany(GetAllChildren)
-,
-			 .. MainNavigation.FooterMenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren),
-			];
+			MainNavigation.MenuItems.OfType<NavigationViewItem>()
+							 .SelectMany(GetAllChildren).Concat(MainNavigation.FooterMenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren)).ToList();
 
 		static IEnumerable<NavigationViewItem> GetAllChildren(NavigationViewItem parent) =>
 			new[] { parent }.Concat(parent.MenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren));

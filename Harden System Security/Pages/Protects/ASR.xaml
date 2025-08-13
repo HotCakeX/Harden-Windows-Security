@@ -110,7 +110,7 @@
 
             <TextBlock x:Uid="ASRRulesPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
+            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction" />
 
         </controls:WrapPanel>
 
@@ -123,13 +123,19 @@
         <Border Grid.Row="2" Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          HorizontalSpacing="10"
-                          VerticalSpacing="10">
+                                VerticalAlignment="Center"
+                                HorizontalSpacing="10"
+                                VerticalSpacing="10">
 
                 <ProgressRing IsActive="True"
-                        Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
-                        VerticalAlignment="Center" />
+                              Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
+                              VerticalAlignment="Center" />
+
+                <TextBox MinWidth="200"
+                         x:Uid="SearchBoxTextBox"
+                         VerticalAlignment="Center"
+                         Text="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalContentAlignment="Center" />
 
                 <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ApplyAllRules}">
 

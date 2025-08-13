@@ -33,13 +33,15 @@ internal static class SecurityINFParser
 	/// <param name="filePath">Path to the Security INF file</param>
 	/// <returns>List of RegistryPolicyEntry objects</returns>
 	/// <exception cref="FileNotFoundException">Thrown when the file doesn't exist</exception>
+	/// <exception cref="ArgumentException">Thrown when parameters are invalid</exception>
 	internal static List<RegistryPolicyEntry> ParseSecurityINFFile(string filePath)
 	{
 		if (!File.Exists(filePath))
 			throw new FileNotFoundException($"Security INF file not found: {filePath}");
 
-		List<RegistryPolicyEntry> policies = [];
 		string[] lines = File.ReadAllLines(filePath, Encoding.UTF8);
+
+		List<RegistryPolicyEntry> policies = [];
 		bool inRegistryValuesSection = false;
 
 		foreach (string line in lines)
@@ -85,7 +87,7 @@ internal static class SecurityINFParser
 	/// </summary>
 	/// <param name="line">The line to parse</param>
 	/// <returns>RegistryPolicyEntry object or null if parsing fails</returns>
-	private static RegistryPolicyEntry? ParseRegistryValueLine(string line)
+	internal static RegistryPolicyEntry? ParseRegistryValueLine(string line)
 	{
 		try
 		{
@@ -120,7 +122,8 @@ internal static class SecurityINFParser
 				FriendlyName = "",
 				URL = "",
 				Category = null,
-				SubCategory = null
+				SubCategory = null,
+				DefaultRegValue = null
 			};
 		}
 		catch

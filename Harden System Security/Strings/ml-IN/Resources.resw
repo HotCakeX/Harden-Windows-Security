@@ -169,9 +169,6 @@
     <data name="ErrorTitle" xml:space="preserve">
     <value>പിശക്</value>
   </data>
-    <data name="SuccessTitle" xml:space="preserve">
-    <value>വിജയം</value>
-  </data>
     <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>കമാൻഡ് '{0} {1}' എക്സിറ്റ് കോഡ് {2} നൊടെ പരാജയപ്പെട്ടു. പിശക്: {3}</value>
   </data>
@@ -2348,4 +2345,248 @@
   <data name="FileActivationLaunchMessage" xml:space="preserve">
   <value>ഈ ഫയലിനായി ഫയൽ ആക്ടിവേഷനോടൊപ്പം ആപ്ലിക്കേഷൻ സമാരംഭിച്ചു: '{0}'</value>
 </data>
+ <data name="MicrosoftSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>മൈക്രോസോഫ്റ്റ് സുരക്ഷാ അടിസ്ഥാനം</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Microsoft 365 ആപ്പുകളുടെ സുരക്ഷാ അടിസ്ഥാനം</value>
+  </data>
+    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>ഈ പേജിൽ മൈക്രോസോഫ്റ്റ് സുരക്ഷാ അടിസ്ഥാനം പ്രയോഗിക്കുക. ഏതു സജ്ജീകരണങ്ങൾ പ്രയോഗിച്ചിട്ടുണ്ടെന്നും ഏതുവ അല്ലെന്നും കാണിക്കുന്ന കൃത്യമായ റിപ്പോർട്ട് ലഭിക്കാൻ സിസ്റ്റം പാലിക്കൽ സ്ഥിരീകരിക്കാനും നിങ്ങൾക്ക് കഴിയും. അടിസ്ഥാനം പ്രയോഗിച്ച നയങ്ങൾ നീക്കം ചെയ്യാനും നിങ്ങൾക്ക് കഴിയും.</value>
+  </data>
+    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>ഈ പേജിൽ Microsoft 365 ആപ്പുകളുടെ സുരക്ഷാ അടിസ്ഥാനം പ്രയോഗിക്കുക. ഏതു സജ്ജീകരണങ്ങൾ പ്രയോഗിച്ചിട്ടുണ്ടെന്നും ഏതുവ അല്ലെന്നും കാണിക്കുന്ന കൃത്യമായ റിപ്പോർട്ട് ലഭിക്കാൻ സിസ്റ്റം പാലിക്കൽ സ്ഥിരീകരിക്കാനും നിങ്ങൾക്ക് കഴിയും. അടിസ്ഥാനം പ്രയോഗിച്ച നയങ്ങൾ നീക്കം ചെയ്യാനും നിങ്ങൾക്ക് കഴിയും.</value>
+  </data>
+   <!--Security Baselines ListView Headers Start-->
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>ഉറവിടം</value>
+  </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>അവസ്ഥ</value>
+  </data>
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
+    <value>നിലവിലെ മൂല്യം</value>
+  </data>
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+    <value>പ്രതീക്ഷിത മൂല്യം</value>
+  </data>
+  <!--Security Baselines ListView Headers End-->
+  <!--Security Baselines ListView Headers Buttons Start-->
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ഉറവിടം</value>
+  </data>
+    <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>അവസ്ഥ</value>
+  </data>
+  <data name="CurrentValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>നിലവിലെ മൂല്യം</value>
+  </data>
+  <data name="ExpectedValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>പ്രതീക്ഷിത മൂല്യം</value>
+  </data>
+  <!--Security Baselines ListView Headers Buttons End-->
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഫലപ്രദമായ നയങ്ങൾ നേടുക (ഉപയോക്താവ്)</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലെ ഉപയോക്താവിൽ പ്രയോഗിച്ച ഫലപ്രദമായ ഗ്രൂപ്പ് നയങ്ങളുടെ പട്ടിക നൽകുന്നു.</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിലെ ഉപയോക്താവിൽ പ്രയോഗിച്ച ഫലപ്രദമായ ഗ്രൂപ്പ് നയങ്ങളുടെ പട്ടിക നൽകുന്നു.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
+    <value>മൈക്രോസോഫ്റ്റ് അടിസ്ഥാന അതിലംഘനങ്ങൾ</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+    <value>മൈക്രോസോഫ്റ്റ് സുരക്ഷാ അടിസ്ഥാനങ്ങൾ പ്രയോഗിച്ചതിനുശേഷം പ്രവർത്തനരഹിതമാക്കിയ ഓപ്പറേറ്റിംഗ് സിസ്റ്റം സവിശേഷതകൾ പുനഃസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രദർശിപ്പിക്കുന്ന ഡാറ്റ JSON ഫയലിലേക്ക് കയറ്റുമതി ചെയ്യുന്നു. അത് സംരക്ഷിക്കേണ്ട സ്ഥലം തിരഞ്ഞെടുക്കാൻ നിങ്ങൾക്ക് കഴിയും.</value>
+  </data>
+  <data name="ExportToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രദർശിപ്പിക്കുന്ന ഡാറ്റ JSON ഫയലിലേക്ക് കയറ്റുമതി ചെയ്യുന്നു. അത് സംരക്ഷിക്കേണ്ട സ്ഥലം തിരഞ്ഞെടുക്കാൻ നിങ്ങൾക്ക് കഴിയും.</value>
+  </data>
+  <data name="ExportToJsonButton.Content" xml:space="preserve">
+    <value>JSON-ലേക്ക് കയറ്റുമതി ചെയ്യുക</value>
+  </data>
+    <data name="OpenProcessTokenFailedError" xml:space="preserve">
+  <value>OpenProcessToken പരാജയപ്പെട്ടു. Win32 പിശക്: {0}</value>
+</data>
+<data name="LookupPrivilegeValueFailedError" xml:space="preserve">
+  <value>LookupPrivilegeValue {0} ന് പരാജയപ്പെട്ടു. Win32 പിശക്: {1}</value>
+</data>
+<data name="AdjustTokenPrivilegesFailedError" xml:space="preserve">
+  <value>AdjustTokenPrivileges {0} ന് പരാജയപ്പെട്ടു. Win32 പിശക്: {1}</value>
+</data>
+<data name="PrivilegeNotAssignedError" xml:space="preserve">
+  <value>പ്രിവിലേജ് നിയുക്തമാക്കിയില്ല: {0}</value>
+</data>
+<data name="FailedToEnumerateAuditCategoriesError" xml:space="preserve">
+  <value>ഓഡിറ്റ് വിഭാഗങ്ങൾ എണ്ണാൻ പരാജയപ്പെട്ടു. Win32 പിശക്: {0}</value>
+</data>
+<data name="FailedToGetCategoryIdForSubCategoryError" xml:space="preserve">
+  <value>ഉപവിഭാഗത്തിന് വിഭാഗ ID ലഭിക്കാൻ പരാജയപ്പെട്ടു: {0}</value>
+</data>
+<data name="NoAuditSubcategoriesFoundError" xml:space="preserve">
+  <value>സിസ്റ്റത്തിൽ ഓഡിറ്റ് ഉപവിഭാഗങ്ങൾ കണ്ടെത്തിയില്ല</value>
+</data>
+<data name="FailedToQueryAuditSystemPolicyBatchError" xml:space="preserve">
+  <value>{0} ൽ ആരംഭിക്കുന്ന ബാച്ചിന് ഓഡിറ്റ് സിസ്റ്റം നയം അന്വേഷിക്കാൻ പരാജയപ്പെട്ടു. Win32 പിശക്: {1}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullBatchError" xml:space="preserve">
+  <value>AuditQuerySystemPolicy {0} ൽ ആരംഭിക്കുന്ന ബാച്ചിന് null പോയിന്റർ തിരികെ നൽകി</value>
+</data>
+<data name="RetrievedAuditPoliciesForSubcategoriesMessage" xml:space="preserve">
+  <value>{0} ഉപവിഭാഗങ്ങൾക്കായി ഓഡിറ്റ് നയങ്ങൾ വീണ്ടെടുത്തു</value>
+</data>
+<data name="FailedToQuerySpecificAuditPoliciesError" xml:space="preserve">
+  <value>നിർദ്ദിഷ്ട ഓഡിറ്റ് നയങ്ങൾ അന്വേഷിക്കാൻ പരാജയപ്പെട്ടു. Win32 പിശക്: {0}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullSpecificError" xml:space="preserve">
+  <value>AuditQuerySystemPolicy നിർദ്ദിഷ്ട ഓഡിറ്റ് നയങ്ങൾക്കായി null പോയിന്റർ തിരികെ നൽകി</value>
+</data>
+<data name="RetrievedAuditPoliciesForSpecificSubcategoriesMessage" xml:space="preserve">
+  <value>{0} നിർദ്ദിഷ്ട ഉപവിഭാഗങ്ങൾക്കായി ഓഡിറ്റ് നയങ്ങൾ വീണ്ടെടുത്തു</value>
+</data>
+<data name="CsvFileNotFoundError" xml:space="preserve">
+  <value>CSV ഫയൽ കണ്ടെത്തിയില്ല: {0}</value>
+</data>
+<data name="CsvFileMustContainHeaderAndDataError" xml:space="preserve">
+  <value>CSV ഫയലിൽ കുറഞ്ഞത് ഒരു ഹെഡറും ഒരു ഡാറ്റാ വരിയും ഉണ്ടായിരിക്കണം</value>
+</data>
+<data name="ErrorParsingCsvLineError" xml:space="preserve">
+  <value>CSV വരി {0} പാഴ്സ് ചെയ്യുന്നതിൽ പിശക്: {1}</value>
+</data>
+<data name="NoValidAuditPolicyEntriesFoundError" xml:space="preserve">
+  <value>CSV ഫയലിൽ സാധുവായ ഓഡിറ്റ് പോളിസി എൻട്രികൾ കണ്ടെത്തിയില്ല</value>
+</data>
+<data name="ParsedAuditPolicyEntriesFromCsvMessage" xml:space="preserve">
+  <value>CSV ൽ നിന്ന് {0} ഓഡിറ്റ് പോളിസി എൻട്രികൾ പാഴ്സ് ചെയ്തു</value>
+</data>
+<data name="SuccessfullyAppliedAuditPoliciesFromCsvMessage" xml:space="preserve">
+  <value>CSV ൽ നിന്ന് {0} ഓഡിറ്റ് പോളിസികൾ വിജയകരമായി പ്രയോഗിച്ചു</value>
+</data>
+<data name="FailedToApplyAuditPolicyToSystemError" xml:space="preserve">
+  <value>സിസ്റ്റത്തിൽ ഓഡിറ്റ് പോളിസി പ്രയോഗിക്കാൻ പരാജയപ്പെട്ടു. Win32 പിശക്: {0}</value>
+</data>
+<data name="CsvLineExpectedColumnsError" xml:space="preserve">
+  <value>വരി {0}: കുറഞ്ഞത് 7 കോളങ്ങൾ പ്രതീക്ഷിച്ചു, {1} കിട്ടി</value>
+</data>
+<data name="CsvLineInvalidGuidFormatError" xml:space="preserve">
+  <value>വരി {0}: അസാധുവായ GUID ഫോർമാറ്റ്: {1}</value>
+</data>
+<data name="CsvLineInvalidSettingValueError" xml:space="preserve">
+  <value>വരി {0}: അസാധുവായ സെറ്റിംഗ് മൂല്യം: {1}</value>
+</data>
+<data name="CsvLineSettingValueOutOfRangeError" xml:space="preserve">
+  <value>വരി {0}: സെറ്റിംഗ് മൂല്യം പരിധിക്ക് പുറത്ത് (0-3): {1}</value>
+</data>
+<data name="NoAuditingText" xml:space="preserve">
+  <value>ഓഡിറ്റിംഗ് ഇല്ല</value>
+</data>
+<data name="SuccessText" xml:space="preserve">
+  <value>വിജയം</value>
+</data>
+<data name="FailureText" xml:space="preserve">
+  <value>പരാജയം</value>
+</data>
+<data name="SuccessAndFailureText" xml:space="preserve">
+  <value>വിജയവും പരാജയവും</value>
+</data>
+  <data name="MicrosoftSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ പേജിൽ Microsoft സുരക്ഷാ അടിത്തറ പ്രയോഗിക്കുക, പരിശോധിക്കുക, നീക്കം ചെയ്യുക.</value>
+  </data>
+    <data name="MicrosoftSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ പേജിൽ Microsoft സുരക്ഷാ അടിത്തറ പ്രയോഗിക്കുക, പരിശോധിക്കുക, നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ പേജിൽ Microsoft 365 Apps സുരക്ഷാ അടിത്തറ പ്രയോഗിക്കുക, പരിശോധിക്കുക, നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ പേജിൽ Microsoft 365 Apps സുരക്ഷാ അടിത്തറ പ്രയോഗിക്കുക, പരിശോധിക്കുക, നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft അടിത്തറകൾക്കായി ഓപ്‌ഷണൽ ഓവർറൈഡുകൾ പ്രയോഗിക്കുക, പരിശോധിക്കുക, നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+     <value>Microsoft അടിത്തറകൾക്കായി ഓപ്‌ഷണൽ ഓവർറൈഡുകൾ പ്രയോഗിക്കുക, പരിശോധിക്കുക, നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="DragAndDropHintFileReputation.Text" xml:space="preserve">
+     <value>അല്ലെങ്കിൽ ഫയലുകൾ ഇവിടെ വലിച്ചിട്ട് വിടുക</value>
+  </data>
+    <data name="DragAndDropHintFileReputationCaption" xml:space="preserve">
+     <value>പ്രശസ്തി പരിശോധിക്കാൻ ഫയൽ വിടുക</value>
+  </data>
+  <data name="NoVerificationResultsToExport" xml:space="preserve">
+  <value>എക്‌സ്‌പോർട്ട് ചെയ്യാൻ പരിശോധന ഫലങ്ങളൊന്നുമില്ല</value>
+</data>
+<data name="ExportFileNameFormat" xml:space="preserve">
+  <value>HardenSystemSecurity_Data_Export_{0}.json</value>
+</data>
+<data name="SuccessfullyExportedVerificationResults" xml:space="preserve">
+  <value>{0} പരിശോധന ഫലങ്ങൾ വിജയകരമായി {1} ലേക്ക് എക്‌സ്‌പോർട്ട് ചെയ്തു</value>
+</data>
+<data name="ApplyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Microsoft സുരക്ഷാ അടിത്തറ പ്രയോഗിക്കുന്നു...</value>
+</data>
+<data name="MicrosoftSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>Microsoft സുരക്ഷാ അടിത്തറ വിജയകരമായി പ്രയോഗിച്ചു</value>
+</data>
+<data name="ApplyOperationCancelledByUser" xml:space="preserve">
+  <value>പ്രയോഗിക്കൽ പ്രവർത്തനം ഉപയോക്താവ് റദ്ദാക്കി</value>
+</data>
+<data name="RemovingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Microsoft സുരക്ഷാ അടിത്തറ നീക്കം ചെയ്യുന്നു...</value>
+</data>
+<data name="MicrosoftSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>Microsoft സുരക്ഷാ അടിത്തറ വിജയകരമായി നീക്കം ചെയ്തു</value>
+</data>
+<data name="RemoveOperationCancelledByUser" xml:space="preserve">
+  <value>നീക്കം ചെയ്യൽ പ്രവർത്തനം ഉപയോക്താവ് റദ്ദാക്കി</value>
+</data>
+<data name="VerifyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Microsoft സുരക്ഷാ അടിത്തറ പരിശോധിക്കുന്നു...</value>
+</data>
+<data name="NoResultsReturnedFromVerificationProcess" xml:space="preserve">
+  <value>പരിശോധന പ്രക്രിയയിൽ നിന്ന് ഫലങ്ങളൊന്നും തിരികെ കിട്ടിയില്ല.</value>
+</data>
+<data name="VerificationCompletedCompliantPolicies" xml:space="preserve">
+  <value>പരിശോധന പൂർത്തിയായി: {0}/{1} പോളിസികൾ അനുവദനീയമാണ്</value>
+</data>
+<data name="VerifyOperationCancelledByUser" xml:space="preserve">
+  <value>പരിശോധന പ്രവർത്തനം ഉപയോക്താവ് റദ്ദാക്കി</value>
+</data>
+<data name="ApplyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Microsoft 365 Apps സുരക്ഷാ അടിത്തറ പ്രയോഗിക്കുന്നു...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>Microsoft 365 Apps സുരക്ഷാ അടിത്തറ വിജയകരമായി പ്രയോഗിച്ചു</value>
+</data>
+<data name="RemovingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Microsoft 365 Apps സുരക്ഷാ അടിത്തറ നീക്കം ചെയ്യുന്നു...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>Microsoft 365 Apps സുരക്ഷാ അടിത്തറ വിജയകരമായി നീക്കം ചെയ്തു</value>
+</data>
+<data name="VerifyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Microsoft 365 Apps സുരക്ഷാ അടിത്തറ പരിശോധിക്കുന്നു...</value>
+</data>
+<data name="ResetURLButton.Content" xml:space="preserve">
+    <value>പുനഃസജ്ജീകരിക്കുക</value>
+  </data>
+  <data name="ResetURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡൗൺലോഡ് URL ഡിഫോൾട്ട് മൂല്യത്തിലേക്ക് പുനഃസജ്ജീകരിക്കുക.</value>
+  </data>
+  <data name="ResetURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>ഡൗൺലോഡ് URL ഡിഫോൾട്ട് മൂല്യത്തിലേക്ക് പുനഃസജ്ജീകരിക്കുക.</value>
+  </data>
+  <data name="DownloadURLButtonText.Text" xml:space="preserve">
+    <value>ഡൗൺലോഡ് URL</value>
+  </data>
+  <data name="DownloadURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അടിത്തറയുടെ ഡൗൺലോഡ് URL കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>അടിത്തറയുടെ ഡൗൺലോഡ് URL കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
+  </data>
 </root>

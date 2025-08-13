@@ -153,7 +153,7 @@ internal sealed partial class ListViewV2 : ListView
 	/// <param name="e"></param>
 	private void OnUnloaded(object? sender, RoutedEventArgs e)
 	{
-		ListViewHelper.Unregister(RegistryKey);
+		ListViewHelper.Unregister(RegistryKey, this);
 	}
 
 }

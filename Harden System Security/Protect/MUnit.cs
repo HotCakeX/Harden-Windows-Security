@@ -937,7 +937,7 @@ internal sealed partial class MUnit(
 						cancellationToken?.ThrowIfCancellationRequested();
 
 						// Execute main bulk apply operation
-						RegistryPolicyParser.AddPoliciesToSystem(allPolicies);
+						RegistryPolicyParser.AddPoliciesToSystem(allPolicies, GroupPolicyContext.Machine);
 
 						// Execute-After specialized apply strategies
 						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
@@ -984,7 +984,7 @@ internal sealed partial class MUnit(
 						cancellationToken?.ThrowIfCancellationRequested();
 
 						// Execute main bulk remove operation
-						RegistryPolicyParser.RemovePoliciesFromSystem(allPolicies);
+						RegistryPolicyParser.RemovePoliciesFromSystem(allPolicies, GroupPolicyContext.Machine);
 
 						// Execute-After specialized remove strategies
 						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
@@ -1013,7 +1013,7 @@ internal sealed partial class MUnit(
 					case MUnitOperation.Verify:
 						cancellationToken?.ThrowIfCancellationRequested();
 
-						Dictionary<RegistryPolicyEntry, bool> verificationResults = RegistryPolicyParser.VerifyPoliciesInSystem(allPolicies);
+						Dictionary<RegistryPolicyEntry, bool> verificationResults = RegistryPolicyParser.VerifyPoliciesInSystem(allPolicies, GroupPolicyContext.Machine);
 
 						// Update status based on verification results, with fallback support
 						foreach (MUnit mUnit in groupPolicyMUnits)

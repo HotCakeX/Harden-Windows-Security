@@ -64,7 +64,7 @@ internal static class CatRootScanner
 		}
 
 		// Get the .cat files in the CatRoot directories
-		(IEnumerable<string>, int) detectedCatFiles = FileUtility.GetFilesFast([.. DirectoriesToScan], null, [".cat"]);
+		(IEnumerable<string>, int) detectedCatFiles = FileUtility.GetFilesFast(DirectoriesToScan, null, [".cat"]);
 
 		Logger.Write(string.Format(
 			GlobalVars.GetStr("IncludingSecurityCatalogsScanCountMessage"),

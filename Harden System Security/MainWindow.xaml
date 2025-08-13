@@ -182,6 +182,30 @@
                 <NavigationViewItem x:Name="ProtectNavItem" x:Uid="ProtectNavigationViewItem" Icon="{x:Bind ViewModel.ProtectIcon, Mode=OneWay}" Tag="Protect" IsExpanded="True">
 
                     <NavigationViewItem.MenuItems>
+                        <NavigationViewItem x:Name="MicrosoftSecurityBaselineNavItem" x:Uid="MicrosoftSecurityBaselineNavItem" Tag="MicrosoftSecurityBaseline">
+                            <NavigationViewItem.Icon>
+                                <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/Microsoft-Security-Baseline.png"
+                                            ShowAsMonochrome="False"
+                                            Margin="-5" />
+                            </NavigationViewItem.Icon>
+                        </NavigationViewItem>
+
+                        <NavigationViewItem x:Name="MicrosoftBaseLinesOverridesNavItem" x:Uid="MicrosoftBaseLinesOverridesNavItem" Tag="MicrosoftBaseLinesOverrides">
+                            <NavigationViewItem.Icon>
+                                <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/MicrosoftBaseLinesOverrides.png"
+                                            ShowAsMonochrome="False"
+                                            Margin="-5" />
+                            </NavigationViewItem.Icon>
+                        </NavigationViewItem>
+
+                        <NavigationViewItem x:Name="Microsoft365AppsSecurityBaselineNavItem" x:Uid="Microsoft365AppsSecurityBaselineNavItem" Tag="Microsoft365AppsSecurityBaseline">
+                            <NavigationViewItem.Icon>
+                                <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/Microsoft-365-Apps-Security-Baselines.png"
+                                            ShowAsMonochrome="False"
+                                            Margin="-5" />
+                            </NavigationViewItem.Icon>
+                        </NavigationViewItem>
+
                         <NavigationViewItem x:Name="MicrosoftDefenderNavItem" x:Uid="MicrosoftDefenderNavItem" Tag="MicrosoftDefender">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/WindowsDefender.png"

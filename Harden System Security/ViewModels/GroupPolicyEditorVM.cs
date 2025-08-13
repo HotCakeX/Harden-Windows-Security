@@ -403,7 +403,24 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	{
 		try
 		{
-			SelectedFile = RegistryPolicyParser.LocalPolicyFilePath;
+			SelectedFile = RegistryPolicyParser.LocalPolicyMachineFilePath;
+
+			await ProcessSelectedFilePrivate();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	/// <summary>
+	/// Retrieves and loads the effective Group Policies for the User.
+	/// </summary>
+	internal async void GetEffectiveUserPolicies_Click()
+	{
+		try
+		{
+			SelectedFile = RegistryPolicyParser.LocalPolicyUserFilePath;
 
 			await ProcessSelectedFilePrivate();
 		}

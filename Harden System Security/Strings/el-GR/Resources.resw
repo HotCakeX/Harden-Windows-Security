@@ -169,9 +169,6 @@
     <data name="ErrorTitle" xml:space="preserve">
     <value>Σφάλμα</value>
   </data>
-    <data name="SuccessTitle" xml:space="preserve">
-    <value>Επιτυχία</value>
-  </data>
     <data name="CommandFailedWithExitCodeErrorMessage" xml:space="preserve">
     <value>Η εντολή '{0} {1}' απέτυχε με κωδικό εξόδου {2}. Σφάλμα: {3}</value>
   </data>
@@ -2348,4 +2345,248 @@
   <data name="FileActivationLaunchMessage" xml:space="preserve">
   <value>Η εφαρμογή εκκινήθηκε με ενεργοποίηση αρχείου για το ακόλουθο αρχείο: '{0}'</value>
 </data>
+ <data name="MicrosoftSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Βασική γραμμή ασφάλειας Microsoft</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
+    <value>Βασική γραμμή ασφάλειας εφαρμογών Microsoft 365</value>
+  </data>
+    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>Εφαρμόστε την βασική γραμμή ασφάλειας Microsoft σε αυτή τη σελίδα. Μπορείτε επίσης να επαληθεύσετε τη συμμόρφωση του συστήματος για να λάβετε μια ακριβή αναφορά που δείχνει ποιες ρυθμίσεις εφαρμόζονται και ποιες όχι. Μπορείτε να αφαιρέσετε τις πολιτικές που εφαρμόζονται από την βασική γραμμή επίσης.</value>
+  </data>
+    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <value>Εφαρμόστε την βασική γραμμή ασφάλειας εφαρμογών Microsoft 365 σε αυτή τη σελίδα. Μπορείτε επίσης να επαληθεύσετε τη συμμόρφωση του συστήματος για να λάβετε μια ακριβή αναφορά που δείχνει ποιες ρυθμίσεις εφαρμόζονται και ποιες όχι. Μπορείτε να αφαιρέσετε τις πολιτικές που εφαρμόζονται από την βασική γραμμή επίσης.</value>
+  </data>
+   <!--Security Baselines ListView Headers Start-->
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>Πηγή</value>
+  </data>
+    <data name="StatusHeader.Text" xml:space="preserve">
+    <value>Κατάσταση</value>
+  </data>
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
+    <value>Τρέχουσα τιμή</value>
+  </data>
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+    <value>Αναμενόμενη τιμή</value>
+  </data>
+  <!--Security Baselines ListView Headers End-->
+  <!--Security Baselines ListView Headers Buttons Start-->
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Πηγή</value>
+  </data>
+    <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Κατάσταση</value>
+  </data>
+  <data name="CurrentValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Τρέχουσα τιμή</value>
+  </data>
+  <data name="ExpectedValueColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αναμενόμενη τιμή</value>
+  </data>
+  <!--Security Baselines ListView Headers Buttons End-->
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Λήψη αποτελεσματικών πολιτικών (Χρήστης)</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Παραθέτει τις αποτελεσματικές πολιτικές ομάδας που εφαρμόζονται στον τρέχοντα χρήστη.</value>
+  </data>
+  <data name="GetEffectiveUserPoliciesMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Παραθέτει τις αποτελεσματικές πολιτικές ομάδας που εφαρμόζονται στον τρέχοντα χρήστη.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
+    <value>Παρακάμψεις βασικών γραμμών Microsoft</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+    <value>Επαναφέρετε τα χαρακτηριστικά του λειτουργικού συστήματος που έχουν απενεργοποιηθεί μετά την εφαρμογή των βασικών γραμμών ασφάλειας Microsoft.</value>
+  </data>
+  <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εξάγει τα δεδομένα που εμφανίζονται σε αρχείο JSON. Θα μπορείτε να επιλέξετε την τοποθεσία όπου θα αποθηκευτεί.</value>
+  </data>
+  <data name="ExportToJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εξάγει τα δεδομένα που εμφανίζονται σε αρχείο JSON. Θα μπορείτε να επιλέξετε την τοποθεσία όπου θα αποθηκευτεί.</value>
+  </data>
+  <data name="ExportToJsonButton.Content" xml:space="preserve">
+    <value>Εξαγωγή σε JSON</value>
+  </data>
+    <data name="OpenProcessTokenFailedError" xml:space="preserve">
+  <value>Το OpenProcessToken απέτυχε. Σφάλμα Win32: {0}</value>
+</data>
+<data name="LookupPrivilegeValueFailedError" xml:space="preserve">
+  <value>Το LookupPrivilegeValue απέτυχε για {0}. Σφάλμα Win32: {1}</value>
+</data>
+<data name="AdjustTokenPrivilegesFailedError" xml:space="preserve">
+  <value>Το AdjustTokenPrivileges απέτυχε για {0}. Σφάλμα Win32: {1}</value>
+</data>
+<data name="PrivilegeNotAssignedError" xml:space="preserve">
+  <value>Δικαίωμα δεν εκχωρήθηκε: {0}</value>
+</data>
+<data name="FailedToEnumerateAuditCategoriesError" xml:space="preserve">
+  <value>Αποτυχία απαρίθμησης κατηγοριών ελέγχου. Σφάλμα Win32: {0}</value>
+</data>
+<data name="FailedToGetCategoryIdForSubCategoryError" xml:space="preserve">
+  <value>Αποτυχία λήψης ID κατηγορίας για την υποκατηγορία: {0}</value>
+</data>
+<data name="NoAuditSubcategoriesFoundError" xml:space="preserve">
+  <value>Δεν βρέθηκαν υποκατηγορίες ελέγχου στο σύστημα</value>
+</data>
+<data name="FailedToQueryAuditSystemPolicyBatchError" xml:space="preserve">
+  <value>Αποτυχία ερωτήματος πολιτικής ελέγχου συστήματος για παρτίδα που ξεκινά από {0}. Σφάλμα Win32: {1}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullBatchError" xml:space="preserve">
+  <value>Το AuditQuerySystemPolicy επέστρεψε null δείκτη για παρτίδα που ξεκινά από {0}</value>
+</data>
+<data name="RetrievedAuditPoliciesForSubcategoriesMessage" xml:space="preserve">
+  <value>Ανακτήθηκαν πολιτικές ελέγχου για {0} υποκατηγορίες</value>
+</data>
+<data name="FailedToQuerySpecificAuditPoliciesError" xml:space="preserve">
+  <value>Αποτυχία ερωτήματος συγκεκριμένων πολιτικών ελέγχου. Σφάλμα Win32: {0}</value>
+</data>
+<data name="AuditQuerySystemPolicyReturnedNullSpecificError" xml:space="preserve">
+  <value>Το AuditQuerySystemPolicy επέστρεψε null δείκτη για συγκεκριμένες πολιτικές ελέγχου</value>
+</data>
+<data name="RetrievedAuditPoliciesForSpecificSubcategoriesMessage" xml:space="preserve">
+  <value>Ανακτήθηκαν πολιτικές ελέγχου για {0} συγκεκριμένες υποκατηγορίες</value>
+</data>
+<data name="CsvFileNotFoundError" xml:space="preserve">
+  <value>Αρχείο CSV δεν βρέθηκε: {0}</value>
+</data>
+<data name="CsvFileMustContainHeaderAndDataError" xml:space="preserve">
+  <value>Το αρχείο CSV πρέπει να περιέχει τουλάχιστον μια κεφαλίδα και μια γραμμή δεδομένων</value>
+</data>
+<data name="ErrorParsingCsvLineError" xml:space="preserve">
+  <value>Σφάλμα ανάλυσης γραμμής CSV {0}: {1}</value>
+</data>
+<data name="NoValidAuditPolicyEntriesFoundError" xml:space="preserve">
+  <value>Δεν βρέθηκαν έγκυρες καταχωρήσεις πολιτικής ελέγχου στο αρχείο CSV</value>
+</data>
+<data name="ParsedAuditPolicyEntriesFromCsvMessage" xml:space="preserve">
+  <value>Αναλύθηκαν {0} καταχωρήσεις πολιτικής ελέγχου από CSV</value>
+</data>
+<data name="SuccessfullyAppliedAuditPoliciesFromCsvMessage" xml:space="preserve">
+  <value>Εφαρμόστηκαν επιτυχώς {0} πολιτικές ελέγχου από CSV</value>
+</data>
+<data name="FailedToApplyAuditPolicyToSystemError" xml:space="preserve">
+  <value>Αποτυχία εφαρμογής πολιτικής ελέγχου στο σύστημα. Σφάλμα Win32: {0}</value>
+</data>
+<data name="CsvLineExpectedColumnsError" xml:space="preserve">
+  <value>Γραμμή {0}: Αναμενόταν τουλάχιστον 7 στήλες, λήφθηκαν {1}</value>
+</data>
+<data name="CsvLineInvalidGuidFormatError" xml:space="preserve">
+  <value>Γραμμή {0}: Μη έγκυρη μορφή GUID: {1}</value>
+</data>
+<data name="CsvLineInvalidSettingValueError" xml:space="preserve">
+  <value>Γραμμή {0}: Μη έγκυρη τιμή ρύθμισης: {1}</value>
+</data>
+<data name="CsvLineSettingValueOutOfRangeError" xml:space="preserve">
+  <value>Γραμμή {0}: Τιμή ρύθμισης εκτός εύρους (0-3): {1}</value>
+</data>
+<data name="NoAuditingText" xml:space="preserve">
+  <value>Χωρίς έλεγχο</value>
+</data>
+<data name="SuccessText" xml:space="preserve">
+  <value>Επιτυχία</value>
+</data>
+<data name="FailureText" xml:space="preserve">
+  <value>Αποτυχία</value>
+</data>
+<data name="SuccessAndFailureText" xml:space="preserve">
+  <value>Επιτυχία και Αποτυχία</value>
+</data>
+  <data name="MicrosoftSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εφαρμογή, επαλήθευση και αφαίρεση της γραμμής βάσης ασφαλείας Microsoft σε αυτή τη σελίδα.</value>
+  </data>
+    <data name="MicrosoftSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμογή, επαλήθευση και αφαίρεση της γραμμής βάσης ασφαλείας Microsoft σε αυτή τη σελίδα.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εφαρμογή, επαλήθευση και αφαίρεση της γραμμής βάσης ασφαλείας Microsoft 365 Apps σε αυτή τη σελίδα.</value>
+  </data>
+  <data name="Microsoft365AppsSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμογή, επαλήθευση και αφαίρεση της γραμμής βάσης ασφαλείας Microsoft 365 Apps σε αυτή τη σελίδα.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εφαρμογή, επαλήθευση και αφαίρεση προαιρετικών παρακάμψεων για γραμμές βάσης Microsoft.</value>
+  </data>
+  <data name="MicrosoftBaseLinesOverridesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+     <value>Εφαρμογή, επαλήθευση και αφαίρεση προαιρετικών παρακάμψεων για γραμμές βάσης Microsoft.</value>
+  </data>
+  <data name="DragAndDropHintFileReputation.Text" xml:space="preserve">
+     <value>ή σύρετε και αφήστε αρχεία εδώ</value>
+  </data>
+    <data name="DragAndDropHintFileReputationCaption" xml:space="preserve">
+     <value>Αφήστε το αρχείο για έλεγχο φήμης</value>
+  </data>
+  <data name="NoVerificationResultsToExport" xml:space="preserve">
+  <value>Δεν υπάρχουν αποτελέσματα επαλήθευσης για εξαγωγή</value>
+</data>
+<data name="ExportFileNameFormat" xml:space="preserve">
+  <value>HardenSystemSecurity_Data_Export_{0}.json</value>
+</data>
+<data name="SuccessfullyExportedVerificationResults" xml:space="preserve">
+  <value>Εξήχθησαν επιτυχώς {0} αποτελέσματα επαλήθευσης στο {1}</value>
+</data>
+<data name="ApplyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Εφαρμογή γραμμής βάσης ασφαλείας Microsoft...</value>
+</data>
+<data name="MicrosoftSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>Η γραμμή βάσης ασφαλείας Microsoft εφαρμόστηκε επιτυχώς</value>
+</data>
+<data name="ApplyOperationCancelledByUser" xml:space="preserve">
+  <value>Η λειτουργία εφαρμογής ακυρώθηκε από τον χρήστη</value>
+</data>
+<data name="RemovingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Αφαίρεση γραμμής βάσης ασφαλείας Microsoft...</value>
+</data>
+<data name="MicrosoftSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>Η γραμμή βάσης ασφαλείας Microsoft αφαιρέθηκε επιτυχώς</value>
+</data>
+<data name="RemoveOperationCancelledByUser" xml:space="preserve">
+  <value>Η λειτουργία αφαίρεσης ακυρώθηκε από τον χρήστη</value>
+</data>
+<data name="VerifyingMicrosoftSecurityBaseline" xml:space="preserve">
+  <value>Επαλήθευση γραμμής βάσης ασφαλείας Microsoft...</value>
+</data>
+<data name="NoResultsReturnedFromVerificationProcess" xml:space="preserve">
+  <value>Δεν επιστράφηκαν αποτελέσματα από τη διαδικασία επαλήθευσης.</value>
+</data>
+<data name="VerificationCompletedCompliantPolicies" xml:space="preserve">
+  <value>Η επαλήθευση ολοκληρώθηκε: {0}/{1} πολιτικές είναι συμβατές</value>
+</data>
+<data name="VerifyOperationCancelledByUser" xml:space="preserve">
+  <value>Η λειτουργία επαλήθευσης ακυρώθηκε από τον χρήστη</value>
+</data>
+<data name="ApplyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Εφαρμογή γραμμής βάσης ασφαλείας Microsoft 365 Apps...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineAppliedSuccessfully" xml:space="preserve">
+  <value>Η γραμμή βάσης ασφαλείας Microsoft 365 Apps εφαρμόστηκε επιτυχώς</value>
+</data>
+<data name="RemovingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Αφαίρεση γραμμής βάσης ασφαλείας Microsoft 365 Apps...</value>
+</data>
+<data name="Microsoft365AppsSecurityBaselineRemovedSuccessfully" xml:space="preserve">
+  <value>Η γραμμή βάσης ασφαλείας Microsoft 365 Apps αφαιρέθηκε επιτυχώς</value>
+</data>
+<data name="VerifyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
+  <value>Επαλήθευση γραμμής βάσης ασφαλείας Microsoft 365 Apps...</value>
+</data>
+<data name="ResetURLButton.Content" xml:space="preserve">
+    <value>Επαναφορά</value>
+  </data>
+  <data name="ResetURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαναφορά της διεύθυνσης URL λήψης στην προεπιλεγμένη τιμή.</value>
+  </data>
+  <data name="ResetURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Επαναφορά της διεύθυνσης URL λήψης στην προεπιλεγμένη τιμή.</value>
+  </data>
+  <data name="DownloadURLButtonText.Text" xml:space="preserve">
+    <value>Διεύθυνση URL Λήψης</value>
+  </data>
+  <data name="DownloadURLButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβολή και διαχείριση της διεύθυνσης URL λήψης της γραμμής βάσης.</value>
+  </data>
+  <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Προβολή και διαχείριση της διεύθυνσης URL λήψης της γραμμής βάσης.</value>
+  </data>
 </root>

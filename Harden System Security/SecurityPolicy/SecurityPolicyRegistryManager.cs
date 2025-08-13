@@ -30,6 +30,7 @@ internal static class SecurityPolicyRegistryManager
 	/// <summary>
 	/// Applies multiple security policy registry entries in bulk.
 	/// For source 2 (SecurityPolicyRegistry), applying means setting the registry value to the RegValue.
+	/// These are items under the "[Registry Values]" section in the Secedit exported INF data.
 	/// </summary>
 	/// <param name="policies">List of security policy registry entries to apply</param>
 	internal static void AddPoliciesToSystem(List<RegistryPolicyEntry> policies)
@@ -38,11 +39,8 @@ internal static class SecurityPolicyRegistryManager
 
 		foreach (RegistryPolicyEntry policy in policies)
 		{
-			// Validate that DefaultRegValue is not null for SecurityPolicyRegistry entries
-			if (policy.DefaultRegValue is null)
-			{
-				throw new InvalidOperationException($"SecurityPolicyRegistry entry {policy.KeyName}\\{policy.ValueName} must have a non-null DefaultRegValue");
-			}
+
+			// Not Checking if policy.DefaultRegValue is null here since the policies from Microsoft Security Baselines don't assign this info!
 
 			// Parse registry path to extract the actual registry path
 			string registryPath = ParseRegistryPath(policy.KeyName);
@@ -130,8 +128,7 @@ internal static class SecurityPolicyRegistryManager
 		Dictionary<RegistryPolicyEntry, bool> verificationResults = [];
 
 		// Get current security policy information
-		SecurityPolicyInfo securityPolicy = SecurityPolicyReader.GetSecurityPolicyInfo();
-		List<RegistryValue> registryValues = securityPolicy.RegistryValues;
+		List<RegistryValue> registryValues = SecurityPolicyReader.GetRegistryValues();
 
 		foreach (RegistryPolicyEntry policy in policies)
 		{
@@ -165,7 +162,6 @@ internal static class SecurityPolicyRegistryManager
 
 	/// <summary>
 	/// Parses the registry path from the KeyName to extract the actual registry path.
-	/// Removes the "MACHINE\" prefix if present.
 	/// </summary>
 	/// <param name="keyName">The key name from the policy entry</param>
 	/// <returns>The parsed registry path</returns>

@@ -18,7 +18,7 @@
 namespace HardenSystemSecurity.SecurityPolicy;
 
 /// <summary>
-/// Represents a single value defined in the [Registry Values]
+/// Represents a single value defined in the [Registry Values] section of the INF file exported by Secedit.
 /// </summary>
 /// <param name="name"></param>
 /// <param name="type"></param>

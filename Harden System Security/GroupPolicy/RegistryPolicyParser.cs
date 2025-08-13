@@ -27,7 +27,8 @@ namespace HardenSystemSecurity.GroupPolicy;
 
 internal static class RegistryPolicyParser
 {
-	internal static readonly string LocalPolicyFilePath = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "GroupPolicy", "Machine", "Registry.pol");
+	internal static readonly string LocalPolicyMachineFilePath = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "GroupPolicy", "Machine", "Registry.pol");
+	internal static readonly string LocalPolicyUserFilePath = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "GroupPolicy", "User", "Registry.pol");
 
 	/// <summary>
 	/// Lock to synchronize access to the policy file operations.
@@ -452,16 +453,18 @@ internal static class RegistryPolicyParser
 	/// Adds the policies it receives to the system and logs the merge operation results.
 	/// </summary>
 	/// <param name="policies">Policies to add to the system.</param>
-	internal static void AddPoliciesToSystem(List<RegistryPolicyEntry> policies)
+	internal static void AddPoliciesToSystem(List<RegistryPolicyEntry> policies, GroupPolicyContext context)
 	{
 		lock (_policyFileLock)
 		{
 			try
 			{
+				string PolicyContextFilePath = context is GroupPolicyContext.Machine ? LocalPolicyMachineFilePath : LocalPolicyUserFilePath;
+
 				CSEMgr.RegisterCSEGuids();
 
 				// Read the current system policies
-				RegistryPolicyFile policyFile = ParseFile(LocalPolicyFilePath);
+				RegistryPolicyFile policyFile = ParseFile(PolicyContextFilePath);
 				Logger.Write(string.Format(GlobalVars.GetStr("LoadedExistingPolicyFileWithEntries"), policyFile.Entries.Count));
 
 				// Dictionary to store entries with KeyName+ValueName as the key for uniqueness
@@ -509,7 +512,7 @@ internal static class RegistryPolicyParser
 				);
 
 				// Replace the system policy with the new one.
-				WriteFile(LocalPolicyFilePath, mergedFile);
+				WriteFile(PolicyContextFilePath, mergedFile);
 
 				// Print merge operations
 				foreach (MergeOperation operation in operations)
@@ -537,14 +540,16 @@ internal static class RegistryPolicyParser
 	/// </summary>
 	/// <param name="policies">Policies to verify in the system.</param>
 	/// <returns>A dictionary with policy entries as keys and their verification status (true if applied, false if not applied or different) as values</returns>
-	internal static Dictionary<RegistryPolicyEntry, bool> VerifyPoliciesInSystem(List<RegistryPolicyEntry> policies)
+	internal static Dictionary<RegistryPolicyEntry, bool> VerifyPoliciesInSystem(List<RegistryPolicyEntry> policies, GroupPolicyContext context)
 	{
 		Dictionary<RegistryPolicyEntry, bool> verificationResults = [];
 
 		try
 		{
+			string PolicyContextFilePath = context is GroupPolicyContext.Machine ? LocalPolicyMachineFilePath : LocalPolicyUserFilePath;
+
 			// Check if the policy file exists
-			if (!File.Exists(LocalPolicyFilePath))
+			if (!File.Exists(PolicyContextFilePath))
 			{
 				Logger.Write(GlobalVars.GetStr("PolicyFileDoesNotExistMarkingAllPoliciesAsNotVerified"));
 
@@ -559,7 +564,7 @@ internal static class RegistryPolicyParser
 			}
 
 			// Read the current system policies
-			RegistryPolicyFile policyFile = ParseFile(LocalPolicyFilePath);
+			RegistryPolicyFile policyFile = ParseFile(PolicyContextFilePath);
 
 			// Lookup dictionary for faster searches
 			Dictionary<string, RegistryPolicyEntry> systemPolicies = new(StringComparer.OrdinalIgnoreCase);
@@ -613,20 +618,22 @@ internal static class RegistryPolicyParser
 	/// Gracefully handles the case where the policy file doesn't exist.
 	/// </summary>
 	/// <param name="policies">Policies to remove from the system.</param>
-	internal static void RemovePoliciesFromSystem(List<RegistryPolicyEntry> policies)
+	internal static void RemovePoliciesFromSystem(List<RegistryPolicyEntry> policies, GroupPolicyContext context)
 	{
 		lock (_policyFileLock)
 		{
 			try
 			{
-				if (!File.Exists(LocalPolicyFilePath))
+				string PolicyContextFilePath = context is GroupPolicyContext.Machine ? LocalPolicyMachineFilePath : LocalPolicyUserFilePath;
+
+				if (!File.Exists(PolicyContextFilePath))
 				{
 					Logger.Write(GlobalVars.GetStr("PolicyFileDoesNotExistNothingToRemove"));
 					return;
 				}
 
 				// Read the current system policies
-				RegistryPolicyFile policyFile = ParseFile(LocalPolicyFilePath);
+				RegistryPolicyFile policyFile = ParseFile(PolicyContextFilePath);
 
 				// Set of keys to remove
 				HashSet<string> policiesToRemove = new(StringComparer.OrdinalIgnoreCase);
@@ -661,7 +668,7 @@ internal static class RegistryPolicyParser
 				);
 
 				// Write the updated policy file
-				WriteFile(LocalPolicyFilePath, updatedFile);
+				WriteFile(PolicyContextFilePath, updatedFile);
 
 				foreach (string removedEntry in removedEntries)
 				{

@@ -81,12 +81,11 @@ internal static class AddSigningDetails
 		};
 
 
-		// If the policy has <Signers> node
+		// If the policy has <Signers> node.
 		if (policyObject.Signers is not null)
 		{
-			// Convert the signers array to list for easy manipulation
+			// Convert the existing signers array to list for easy manipulation
 			List<Signer> currentSignersList = [.. policyObject.Signers];
-
 
 			currentSignersList.Add(updatePolicySigner);
 
@@ -97,25 +96,21 @@ internal static class AddSigningDetails
 				currentSignersList.Add(supplementalPolicySigner);
 			}
 
-			// Converting to IEnumerable is required to assign it properly to the Signers nodes
-			IEnumerable<Signer> currentSignersEnumerable = [.. currentSignersList];
-
-			policyObject.Signers = [.. currentSignersEnumerable];
+			policyObject.Signers = currentSignersList.ToArray();
 		}
+		// If the policy has no <Signers> node.
 		else
 		{
-			IEnumerable<Signer> signersList;
+			List<Signer> signersList = [];
+
+			signersList.Add(updatePolicySigner);
 
 			if (policyObject.PolicyType is not PolicyType.SupplementalPolicy)
 			{
-				signersList = [updatePolicySigner, supplementalPolicySigner];
-			}
-			else
-			{
-				signersList = [updatePolicySigner];
+				signersList.Add(supplementalPolicySigner);
 			}
 
-			policyObject.Signers = [.. signersList];
+			policyObject.Signers = signersList.ToArray();
 		}
 
 

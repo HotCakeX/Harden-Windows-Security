@@ -92,7 +92,7 @@ internal sealed partial class ListViewV3 : ListView
 
 	private void OnUnloaded(object? sender, RoutedEventArgs e)
 	{
-		ListViewHelper.Unregister(RegistryKey);
+		ListViewHelper.Unregister(RegistryKey, this);
 	}
 
 	// Since we have a ScrollView around the page, it captures the mouse Scroll Wheel events.

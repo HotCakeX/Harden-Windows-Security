@@ -55,7 +55,7 @@ internal static class Merger
 	/// </summary>
 	/// <param name="mainXmlFilePath"></param>
 	/// <param name="otherXmlFilePaths"></param>
-	internal static void Merge(string mainXmlFilePath, IReadOnlyCollection<string> otherXmlFilePaths)
+	internal static void Merge(string mainXmlFilePath, List<string> otherXmlFilePaths)
 	{
 		// Close the empty nodes in the main policy
 		CloseEmptyXmlNodesSemantic.Close(mainXmlFilePath);
@@ -78,7 +78,7 @@ internal static class Merger
 
 		// Collections used to store the data and pass between methods
 		IEnumerable<EKU> ekusToUse = [];
-		IEnumerable<object> fileRulesNode = [];
+		List<object> fileRulesNode = [];
 		List<Signer> signers = [];
 		IEnumerable<CiSigner> ciSigners = [];
 		IEnumerable<AllowedSigner> userModeAllowedSigners = [];
@@ -161,7 +161,7 @@ internal static class Merger
 	internal static void PolicyDeserializer(
 		List<SiPolicy> allPolicies,
 		ref IEnumerable<EKU> ekusToUse,
-		ref IEnumerable<object> fileRulesNode,
+		ref List<object> fileRulesNode,
 		ref List<Signer> signers,
 		ref IEnumerable<CiSigner> ciSigners,
 		ref IEnumerable<AllowedSigner> userModeAllowedSigners,
@@ -298,7 +298,7 @@ internal static class Merger
 		Task.WaitAll(taskEkusToUse, taskFileRulesNode, taskSigners, taskCiSigners, taskUserModeAllowedSigners, taskUserModeDeniedSigners, taskKernelModeAllowedSigners, taskKernelModeDeniedSigners);
 
 		ekusToUse = taskEkusToUse.Result;
-		fileRulesNode = taskFileRulesNode.Result;
+		fileRulesNode = taskFileRulesNode.Result.ToList();
 		signers = [.. taskSigners.Result];
 		ciSigners = taskCiSigners.Result;
 		userModeAllowedSigners = taskUserModeAllowedSigners.Result;

@@ -68,7 +68,9 @@ internal static partial class ListViewHelper
 
 		// For Harden System Security App
 		GroupPolicyEditor = 10000,
-		MicrosoftDefender = 10001
+		MicrosoftDefender = 10001,
+		MicrosoftSecurityBaseline = 10002,
+		Microsoft365AppsSecurityBaseline = 10003
 	}
 
 	/// <summary>
@@ -98,20 +100,18 @@ internal static partial class ListViewHelper
 	/// Removes the references to a ListView and its ScrollViewer in the caches.
 	/// </summary>
 	/// <param name="key"></param>
-	internal static void Unregister(ListViewsRegistry key)
+	internal static void Unregister(ListViewsRegistry key, ListView instance)
 	{
-		// Logger.Write("Unregistering ListView from the cache");
+		// Always remove the exact instance from the tracking map.
+		_ = ObjRemovalTracking.Remove(instance);
 
-		if (ListViewsCache.TryGetValue(key, out ListView? lv))
+		// Only clear the caches if they still point to this specific instance.
+		// The goal is to be race-safe so we compare references always to avoid accidentally removing tracking for a page that was quickly loaded and registered its ListView.
+		if (ListViewsCache.TryGetValue(key, out ListView? current) && ReferenceEquals(current, instance))
 		{
-			if (ObjRemovalTracking.Remove(lv))
-			{
-				// Logger.Write("Removed a ListView reference from ObjRemovalTracking");
-			}
+			_ = ListViewsCache.Remove(key);
+			_ = ListViewsScrollViewerCache.Remove(key);
 		}
-
-		_ = ListViewsCache.Remove(key);
-		_ = ListViewsScrollViewerCache.Remove(key);
 	}
 
 	/// <summary>

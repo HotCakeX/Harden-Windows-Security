@@ -468,7 +468,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			});
 
 			// Collections to deserialize the policy object into
-			IEnumerable<object> fileRulesNode = [];
+			List<object> fileRulesNode = [];
 			List<Signer> signers = [];
 			IEnumerable<CiSigner> ciSigners = [];
 			IEnumerable<AllowedSigner> userModeAllowedSigners = [];
@@ -1671,7 +1671,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		if (lv is null) return;
 
 		// Collect the selected items to delete - without ToList() or [.. ], only half of the selected items are removed from the collection
-		IEnumerable<PolicyEditor.FileBasedRulesForListView> itemsToDelete = [.. lv.SelectedItems.Cast<PolicyEditor.FileBasedRulesForListView>()];
+		List<PolicyEditor.FileBasedRulesForListView> itemsToDelete = lv.SelectedItems.Cast<PolicyEditor.FileBasedRulesForListView>().ToList();
 
 		// Iterate over the copy to remove each item
 		foreach (PolicyEditor.FileBasedRulesForListView item in itemsToDelete)
@@ -1691,7 +1691,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		if (lv is null) return;
 
 		// Collect the selected items to delete - without ToList() or [.. ], only half of the selected items are removed from the collection
-		IEnumerable<PolicyEditor.SignatureBasedRulesForListView> itemsToDelete = [.. lv.SelectedItems.Cast<PolicyEditor.SignatureBasedRulesForListView>()];
+		List<PolicyEditor.SignatureBasedRulesForListView> itemsToDelete = lv.SelectedItems.Cast<PolicyEditor.SignatureBasedRulesForListView>().ToList();
 
 		// Iterate over the copy to remove each item
 		foreach (PolicyEditor.SignatureBasedRulesForListView item in itemsToDelete)

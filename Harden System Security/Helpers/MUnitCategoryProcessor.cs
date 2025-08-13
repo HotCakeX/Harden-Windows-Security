@@ -48,7 +48,7 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 	{
 		if (selectedSubCategories == null || selectedSubCategories.Count == 0)
 		{
-			// Don't include any sub-category if null or 0
+			// If no sub-categories are selected, only include MUnits without sub-categories
 			return allMUnits.Where(x => x.SubCategory is null).ToList();
 		}
 

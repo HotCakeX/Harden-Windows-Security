@@ -63,6 +63,28 @@ Please feel free to open a discussion if you have any questions about the build 
 
 <br>
 
+## Security
+
+Harden System Security is architected with a security-first philosophy from its inception. Every feature is designed and implemented with an offensive security mindset, ensuring that security is never an afterthought—and never will be. When selecting a solution tasked with defending critical systems, the last thing you want is a so‑called security tool that silently broadens your attack surface or neglects foundational safeguards. This application is built to be inherently trustworthy, defensible, and resilient.
+
+### Dependencies
+
+Harden System Security explicitly and unequivocally maintains zero third‑party dependencies. It relies solely on the .NET SDK, the Windows App SDK, and a minimal set of small trusted Microsoft platform components for the User Interface. This deliberate constraint sharply reduces the attack surface and virtually eliminates common software supply chain attack vectors. Rather than pulling transient packages to satisfy feature gaps, required capabilities are purpose‑built in-house—implemented correctly, audibly, and securely. While this increases development effort and time, the mission and deployment contexts of this application more than justify the investment.
+
+Leveraging GitHub's native automation (including Dependabot) alongside Microsoft's patch cadence, security and platform updates can be integrated and released rapidly, preserving both stability and assurance.
+
+### Exploit Protection
+
+The application avoids dynamic code generation, enhancing security posture and reducing vulnerability exposure. This design ensures compatibility with advanced OS-level exploit mitigation. The Harden System Security supports [process mitigations / Exploit Protections](https://learn.microsoft.com/defender-endpoint/exploit-protection-reference) such as: `Blocking low integrity images`, `Blocking remote images`, `Blocking untrusted fonts`, `Strict Control Flow Guard`, `Disabling extension points`, `Export Address Filtering`, `Hardware enforced stack protection`, `Import Address Filtering`, `Validate handle usage`, `Validate stack integrity`.
+
+This disciplined approach bolsters resistance against memory corruption, injection, and tampering techniques frequently leveraged by sophisticated adversaries.
+
+### Code Review
+
+The codebase is extensively and thoughtfully documented, enabling reviewers to trace logic, validate control flows, and assess security-relevant decisions with minimal friction. I remain fully available to clarify design rationale, threat assumptions, or implementation details whenever deeper scrutiny is desired.
+
+<br>
+
 ## Documentation
 
 Full documentation for every single feature of the Harden System Security app is available on [the GitHub Wiki](https://github.com/HotCakeX/Harden-Windows-Security/wiki#-harden-system-security--)

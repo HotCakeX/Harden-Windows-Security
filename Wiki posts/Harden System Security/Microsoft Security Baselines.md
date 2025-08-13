@@ -22,6 +22,15 @@ You can change the download URL of the Microsoft Security Baselines in this page
 
 <br>
 
+> [!NOTE]  
+> When applying the Microsoft Security Baseline, Harden System Security app will **automatically download the latest version directly from Microsoft's servers** or from the URL you provided, process it entirely **in memory**, and apply it without writing any temporary files to disk. The same is true for verification or removal processes.
+>  
+> While this approach increases development complexity, it significantly improves security by preventing malicious interference with temporary files before application.  
+>  
+> The app caches the baseline in memory to avoid unnecessary re-downloads. The cache expires every **2 hours**, after which it is refreshed with the latest data from the Microsoft Server/Custom URL you provided, and this only happens if the app is open. The cache is compressed to minimize memory usage.
+
+<br>
+
 <div align="center">
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/9f8c01aea24dd33804e794ab1fbcb68fb71609dc/Pictures/PNG%20and%20JPG/Harden%20System%20Security%20page%20screenshots/Microsoft%20Security%20Baseline.png" alt="Microsoft Security Baselines | Harden System Security">

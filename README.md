@@ -1912,6 +1912,7 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 <a href="https://orcid.org/0009-0000-6616-4938"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/orcid_icon.png" alt="Orcid profile and icon"></a>
 <a href="https://spynetgirl.medium.com/"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/e0759dbc5b10c7ff9c10d09a49639e40ec780151/Private/Images/Socials/medium.svg" alt="Medium profile and icon"></a> <a href="https://www.facebook.com/VioletCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/Facebook.svg" alt="Facebook profile and icon"></a>
 <a href="https://mvp.microsoft.com/en-US/mvp/profile/4edbca65-7979-4779-b7e4-d182e123259b"><img width="30" height="35" src="https://mvp.microsoft.com/Assets/UserProfile/MVP/Badge.svg" alt="MVP profile and icon"></a>
+<a href="https://www.credly.com/users/hotcakex/"><img width="35" height="35" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/b4ae6b295182e6cc73c0a85cb3bfa154f10a89f7/Private/Images/Socials/Credly.svg" alt="Credly profile and icon"></a>
 </p>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell module">

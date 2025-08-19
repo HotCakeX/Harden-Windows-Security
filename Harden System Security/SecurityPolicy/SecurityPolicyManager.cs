@@ -193,7 +193,7 @@ Revision=1
 			propagation,
 			AccessControlType.Allow);
 
-		// Users - Read & Execute only 
+		// Users - Read & Execute only
 		FileSystemRights usersRights =
 			FileSystemRights.ReadAndExecute |
 			FileSystemRights.ListDirectory |

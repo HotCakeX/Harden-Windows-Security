@@ -2836,10 +2836,10 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="AppControlStatusTextBlock.Text" xml:space="preserve">
     <value>Stan kontroli aplikacji dla firm</value>
   </data>
-  <data name="UMCITextBlock.Text" xml:space="preserve">
+  <data name="UMCITextBlock.Header" xml:space="preserve">
     <value>Integralność kodu w trybie użytkownika</value>
   </data>
-  <data name="KMCITextBlock.Text" xml:space="preserve">
+  <data name="KMCITextBlock.Header" xml:space="preserve">
     <value>Integralność kodu w trybie jądra</value>
   </data>
   <data name="BasePolicies.Text" xml:space="preserve">

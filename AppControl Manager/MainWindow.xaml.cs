@@ -531,8 +531,6 @@ internal sealed partial class MainWindow : Window
 
 			SidebarMainCaptionTextBlock.Text = GlobalVars.GetStr("SidebarMainCaptionTextBlock/Text");
 
-			SidebarGuideHyperlinkButton.Content = GlobalVars.GetStr("SidebarGuideHyperlinkButton/Content");
-
 			SidebarHelpHyperlinkTextBlock.Text = GlobalVars.GetStr("SidebarHelpHyperlinkTextBlock/Text");
 
 			MicrosoftSecurityBaselineNavItem.Content = GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/Content");

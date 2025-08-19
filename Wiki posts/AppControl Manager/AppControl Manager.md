@@ -522,15 +522,15 @@ function Build_ACM {
 
     #region --- Compile C++ projects ---
 
-    ### ManageDefender
+    ### ComManager
 
-    . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
+    . $MSBuildPath 'eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for X64. Exit Code: $LASTEXITCODE") }
 
     if (!$X64ONLY) {
 
-        . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
+        . $MSBuildPath 'eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
 
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for ARM64. Exit Code: $LASTEXITCODE") }
     }
@@ -598,41 +598,6 @@ function Build_ACM {
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed checking for Rust version. Exit Code: $LASTEXITCODE") }
 
     [string]$Current_Location = (Get-Location).Path
-
-    Set-Location -Path '.\eXclude\Rust WMI Interop\Device Guard\Program'
-
-    if (Test-Path -PathType Leaf -LiteralPath 'Cargo.lock') {
-        Remove-Item -Force -LiteralPath 'Cargo.lock'
-    }
-
-    cargo clean
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning the Rust project. Exit Code: $LASTEXITCODE") }
-
-    cargo update --verbose
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed updating Rust. Exit Code: $LASTEXITCODE") }
-
-    cargo tree
-
-    rustup show active-toolchain
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed showing active Rust toolchain. Exit Code: $LASTEXITCODE") }
-
-    cargo build_x64
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 Device Guard Rust project. Exit Code: $LASTEXITCODE") }
-
-    if (!$X64ONLY) {
-
-        cargo build_arm64
-
-        if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building arm64 Device Guard Rust project. Exit Code: $LASTEXITCODE") }
-
-    }
-
-    Set-Location -Path $Current_Location
-
 
     Set-Location -Path '.\eXclude\Rust Interop Library'
 
@@ -741,9 +706,7 @@ function Build_ACM {
 
     Copy-Item -Path '.\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
 
-    Copy-Item -Path '.\eXclude\C++ WMI Interop\ManageDefender\x64\Release\ManageDefender-x64.exe' -Destination '.\CppInterop\ManageDefender.exe' -Force
-
-    Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\x86_64-pc-windows-msvc\release\DeviceGuardWMIRetriever-X64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
+    Copy-Item -Path '.\eXclude\ComManager\x64\Release\ComManager-x64.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
     # Generate for X64 architecture
     dotnet clean 'AppControl Manager.slnx' --configuration Release
@@ -762,9 +725,7 @@ function Build_ACM {
 
         Copy-Item -Path '.\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
 
-        Copy-Item -Path '.\eXclude\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination '.\CppInterop\ManageDefender.exe' -Force
-
-        Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
+        Copy-Item -Path '.\eXclude\ComManager\ARM64\Release\ComManager-ARM64.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
         # Generate for ARM64 architecture
         dotnet clean 'AppControl Manager.slnx' --configuration Release

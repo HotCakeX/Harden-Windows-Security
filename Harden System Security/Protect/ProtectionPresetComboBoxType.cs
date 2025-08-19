@@ -15,32 +15,15 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace AppControlManager.SimulationMethods;
+namespace HardenSystemSecurity.Protect;
 
-internal enum MatchLevel
+/// <summary>
+/// Represents a protection preset item for ComboBox with rating display.
+/// </summary>
+/// <param name="friendlyName">The display name of the preset for UI.</param>
+/// <param name="rating">The rating displayed on the UI.</param>
+internal sealed class ProtectionPresetComboBoxType(string friendlyName, int rating)
 {
-	AllowAllRule, // The policy is a black list, contains allow all rules
-	FileHash, // The file is allowed by Authenticode/Page/Flat hash
-	CatalogHash, // The file is allowed by Signer and file's signature is on the system in a security catalog
-	FilePath, // The file is allowed by its path
-	WHQLFilePublisher,
-	WHQLPublisher,
-	WHQL,
-	SignedVersion,
-	FilePublisher,
-	Publisher,
-	PcaCertificateOrRootCertificate,
-	LeafCertificate,
-	NoMatch // File is Not allowed
-}
-
-internal enum SpecificFileNamMatchLevel
-{
-	OriginalFileName,
-	InternalName,
-	ProductName,
-	FileDescription,
-	PackageFamilyName,
-	Version,
-	NotApplicable
+	internal string FriendlyName => friendlyName;
+	internal int Rating => rating;
 }

@@ -27,7 +27,7 @@ namespace HardenSystemSecurity.GroupPolicy;
 /// <summary>
 /// GroupPolicyObject wrapper.
 /// Extension GUIDs and their friendlier names can be found here: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{GUID}
-/// 
+///
 /// </summary>
 internal sealed partial class GroupPolicyObject : IDisposable
 {
@@ -370,7 +370,7 @@ internal static class CSEMgr
 					pGuidExtension: extensionGuid,
 					pGuid: HWSAppAdminToolGUID);
 
-				if (result != 0 && result != -2147024864) // S_OK = 0 And -2147024864 is for file in use. 
+				if (result != 0 && result != -2147024864) // S_OK = 0 And -2147024864 is for file in use.
 				{
 					throw new InvalidOperationException($"Failed to register {configurationType} CSE GUID {extensionGuid:B}. HRESULT: 0x{result:X8}");
 				}

@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:vm="using:HardenSystemSecurity.ViewModels"
     xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -16,27 +17,184 @@
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     mc:Ignorable="d">
 
-    <Grid>
+    <Page.Resources>
+        <!-- Custom DataTemplate for ComboBox Items showing targeted lists -->
+        <DataTemplate x:Key="ComboBoxItemTemplate" x:DataType="vm:ComboBoxItemModelForCountryIPBlocking">
+            <StackPanel Orientation="Vertical" Margin="5" MinWidth="250">
+                <TextBlock Text="{x:Bind Title}" 
+                           FontWeight="SemiBold" 
+                           TextWrapping="WrapWholeWords"
+                           Margin="0,0,0,5"/>
+                <HyperlinkButton x:Uid="LearnMoreHyperLinkButton"
+                                 NavigateUri="{x:Bind LearnMoreUrl}"
+                                 FontSize="12"
+                                 Padding="3"
+                                 HorizontalAlignment="Left"/>
+            </StackPanel>
+        </DataTemplate>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <!-- Custom DataTemplate for individual countries ComboBox Items -->
+        <DataTemplate x:Key="CountryComboBoxItemTemplate" x:DataType="vm:CountryData">
+            <StackPanel Orientation="Vertical" Margin="5" MinWidth="300">
+                <TextBlock Text="{x:Bind FriendlyName}" 
+                           FontWeight="SemiBold" 
+                           TextWrapping="WrapWholeWords"
+                           Margin="0,0,0,2"/>
+                <TextBlock Text="{x:Bind Alpha2Code}" 
+                           FontSize="11"
+                           Opacity="0.8"
+                           TextWrapping="WrapWholeWords"
+                           Margin="0,0,0,4"/>
 
-        <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
+                <!-- IPv4 and IPv6 hyperlink buttons -->
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <HyperlinkButton Content="IPv4 Source" 
+                                     NavigateUri="{x:Bind IPv4Link}"
+                                     FontSize="10"
+                                     Padding="2"
+                                     HorizontalAlignment="Left"/>
+                    <HyperlinkButton Content="IPv6 Source" 
+                                     NavigateUri="{x:Bind IPv6Link}"
+                                     FontSize="10"
+                                     Padding="2"
+                                     HorizontalAlignment="Left"/>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
 
-            <TextBlock x:Uid="CountryIPBlockingPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
+    <ScrollViewer>
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking" />
+        <Grid Margin="5,0,5,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        </controls:WrapPanel>
+            <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
+                <TextBlock x:Uid="CountryIPBlockingPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
+                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking" />
+            </controls:WrapPanel>
 
-        <customUI:InfoBarV2 Grid.Row="1"
+            <customUI:InfoBarV2 Grid.Row="1"
                     IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                     Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                     Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                     IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-    </Grid>
+            <ProgressBar Grid.Row="2" 
+                         IsIndeterminate="True" 
+                         Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
+                         Margin="0,10,0,10"/>
+
+            <Border Grid.Row="3" CornerRadius="12" Padding="20" HorizontalAlignment="Stretch" BorderThickness="2" Margin="0,10,0,10">
+                <Border.BorderBrush>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#FBD3E9" Offset="0"/>
+                        <GradientStop Color="#BB377D" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.BorderBrush>
+                <StackPanel>
+
+                    <TextBlock HorizontalAlignment="Center" x:Uid="TargetedListsText" Style="{StaticResource TitleTextBlockStyle}"/>
+                    <TextBlock x:Uid="TargetedListsDescriptionText" Style="{StaticResource CaptionTextBlockStyle}" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+                    <HyperlinkButton FontSize="12" Padding="2" NavigateUri="https://github.com/HotCakeX/Official-IANA-IP-blocks" x:Uid="LearnMoreHyperLinkButton" HorizontalAlignment="Center" Margin="0,3,0,15" />
+
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox VerticalAlignment="Center" 
+                              Grid.Column="0" 
+                              MinWidth="200" 
+                              Margin="0,0,20,0"
+                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                              SelectedIndex="{x:Bind ViewModel.TargetedListSelectedIndex, Mode=TwoWay}"
+                              ItemTemplate="{StaticResource ComboBoxItemTemplate}"
+                              ItemsSource="{x:Bind ViewModel.TargetedLists, Mode=OneWay}"/>
+
+                        <StackPanel Grid.Column="1" 
+                               Orientation="Vertical" 
+                               Spacing="10"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left">
+                            <Button x:Uid="AddCountryFirewallRulesButton"
+                                Click="{x:Bind ViewModel.TargetedListAdd}" 
+                                MinWidth="100"
+                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                            <Button x:Uid="RemoveCountryFirewallRulesButton"
+                                Click="{x:Bind ViewModel.TargetedListRemove}" 
+                                MinWidth="100"
+                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="4" CornerRadius="12" Padding="20" BorderThickness="2" HorizontalAlignment="Stretch" Margin="0,10,0,10">
+                <Border.BorderBrush>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#654ea3" Offset="0"/>
+                        <GradientStop Color="#eaafc8" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.BorderBrush>
+                <StackPanel>
+
+                    <TextBlock HorizontalAlignment="Center" x:Uid="IndividualCountryIPBlockingText" Style="{StaticResource TitleTextBlockStyle}"/>
+                    <TextBlock x:Uid="IndividualCountryIPBlockingDescriptionText" Style="{StaticResource CaptionTextBlockStyle}" HorizontalAlignment="Center" Margin="0,5,0,0" />
+                    <HyperlinkButton FontSize="12" Padding="2" NavigateUri="https://github.com/HotCakeX/Official-IANA-IP-blocks" x:Uid="LearnMoreHyperLinkButton" Margin="0,3,0,15"  HorizontalAlignment="Center"/>
+
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Country selection with search -->
+                        <StackPanel Grid.Column="0" 
+                               VerticalAlignment="Top" 
+                               Margin="0,0,20,0">
+
+                            <!-- Search box for countries -->
+                            <TextBox x:Uid="SearchCountriesTextBox" 
+                                     Text="{x:Bind ViewModel.CountrySearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                     MinWidth="300"
+                                     Margin="0,0,0,8"/>
+
+                            <!-- Countries ComboBox -->
+                            <ComboBox VerticalAlignment="Center" 
+                                 MinWidth="300" 
+                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                 SelectedIndex="{x:Bind ViewModel.CountrySelectedIndex, Mode=TwoWay}"
+                                 ItemTemplate="{StaticResource CountryComboBoxItemTemplate}"
+                                 ItemsSource="{x:Bind ViewModel.CountryLists, Mode=OneWay}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" 
+                                    Orientation="Vertical" 
+                                    Spacing="10"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Left">
+                            <Button x:Uid="AddCountryFirewallRulesButton"
+                                    MinWidth="100"
+                                    Click="{x:Bind ViewModel.CountryAdd}"
+                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                            <Button x:Uid="RemoveCountryFirewallRulesButton"
+                                    MinWidth="100"
+                                    Click="{x:Bind ViewModel.CountryRemove}"
+                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+    </ScrollViewer>
+
 </Page>

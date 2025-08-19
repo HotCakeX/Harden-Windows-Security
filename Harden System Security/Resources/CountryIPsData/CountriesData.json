@@ -1,0 +1,1724 @@
+[
+  {
+    "Alpha2Code": "AF",
+    "Alpha3Code": "AFG",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AF.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AF.txt",
+    "FriendlyName": "Afghanistan"
+  },
+  {
+    "Alpha2Code": "AL",
+    "Alpha3Code": "ALB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AL.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AL.txt",
+    "FriendlyName": "Albania"
+  },
+  {
+    "Alpha2Code": "DZ",
+    "Alpha3Code": "DZA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/DZ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/DZ.txt",
+    "FriendlyName": "Algeria"
+  },
+  {
+    "Alpha2Code": "AS",
+    "Alpha3Code": "ASM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AS.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AS.txt",
+    "FriendlyName": "American Samoa"
+  },
+  {
+    "Alpha2Code": "AD",
+    "Alpha3Code": "AND",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AD.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AD.txt",
+    "FriendlyName": "Andorra"
+  },
+  {
+    "Alpha2Code": "AO",
+    "Alpha3Code": "AGO",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AO.txt",
+    "FriendlyName": "Angola"
+  },
+  {
+    "Alpha2Code": "AI",
+    "Alpha3Code": "AIA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AI.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AI.txt",
+    "FriendlyName": "Anguilla"
+  },
+  {
+    "Alpha2Code": "AQ",
+    "Alpha3Code": "ATA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AQ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AQ.txt",
+    "FriendlyName": "Antarctica"
+  },
+  {
+    "Alpha2Code": "AG",
+    "Alpha3Code": "ATG",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AG.txt",
+    "FriendlyName": "Antigua and Barbuda"
+  },
+  {
+    "Alpha2Code": "AR",
+    "Alpha3Code": "ARG",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AR.txt",
+    "FriendlyName": "Argentina"
+  },
+  {
+    "Alpha2Code": "AM",
+    "Alpha3Code": "ARM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AM.txt",
+    "FriendlyName": "Armenia"
+  },
+  {
+    "Alpha2Code": "AW",
+    "Alpha3Code": "ABW",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AW.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AW.txt",
+    "FriendlyName": "Aruba"
+  },
+  {
+    "Alpha2Code": "AU",
+    "Alpha3Code": "AUS",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AU.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AU.txt",
+    "FriendlyName": "Australia"
+  },
+  {
+    "Alpha2Code": "AT",
+    "Alpha3Code": "AUT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AT.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AT.txt",
+    "FriendlyName": "Austria"
+  },
+  {
+    "Alpha2Code": "AZ",
+    "Alpha3Code": "AZE",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AZ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AZ.txt",
+    "FriendlyName": "Azerbaijan"
+  },
+  {
+    "Alpha2Code": "BS",
+    "Alpha3Code": "BHS",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BS.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BS.txt",
+    "FriendlyName": "Bahamas (the)"
+  },
+  {
+    "Alpha2Code": "BH",
+    "Alpha3Code": "BHR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BH.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BH.txt",
+    "FriendlyName": "Bahrain"
+  },
+  {
+    "Alpha2Code": "BD",
+    "Alpha3Code": "BGD",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BD.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BD.txt",
+    "FriendlyName": "Bangladesh"
+  },
+  {
+    "Alpha2Code": "BB",
+    "Alpha3Code": "BRB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BB.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BB.txt",
+    "FriendlyName": "Barbados"
+  },
+  {
+    "Alpha2Code": "BY",
+    "Alpha3Code": "BLR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BY.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BY.txt",
+    "FriendlyName": "Belarus"
+  },
+  {
+    "Alpha2Code": "BE",
+    "Alpha3Code": "BEL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BE.txt",
+    "FriendlyName": "Belgium"
+  },
+  {
+    "Alpha2Code": "BZ",
+    "Alpha3Code": "BLZ",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BZ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BZ.txt",
+    "FriendlyName": "Belize"
+  },
+  {
+    "Alpha2Code": "BJ",
+    "Alpha3Code": "BEN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BJ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BJ.txt",
+    "FriendlyName": "Benin"
+  },
+  {
+    "Alpha2Code": "BM",
+    "Alpha3Code": "BMU",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BM.txt",
+    "FriendlyName": "Bermuda"
+  },
+  {
+    "Alpha2Code": "BT",
+    "Alpha3Code": "BTN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BT.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BT.txt",
+    "FriendlyName": "Bhutan"
+  },
+  {
+    "Alpha2Code": "BO",
+    "Alpha3Code": "BOL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BO.txt",
+    "FriendlyName": "Bolivia (Plurinational State of)"
+  },
+  {
+    "Alpha2Code": "BQ",
+    "Alpha3Code": "BES",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BQ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BQ.txt",
+    "FriendlyName": "Bonaire, Sint Eustatius and Saba"
+  },
+  {
+    "Alpha2Code": "BA",
+    "Alpha3Code": "BIH",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BA.txt",
+    "FriendlyName": "Bosnia and Herzegovina"
+  },
+  {
+    "Alpha2Code": "BW",
+    "Alpha3Code": "BWA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BW.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BW.txt",
+    "FriendlyName": "Botswana"
+  },
+  {
+    "Alpha2Code": "BV",
+    "Alpha3Code": "BVT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BV.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BV.txt",
+    "FriendlyName": "Bouvet Island"
+  },
+  {
+    "Alpha2Code": "BR",
+    "Alpha3Code": "BRA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BR.txt",
+    "FriendlyName": "Brazil"
+  },
+  {
+    "Alpha2Code": "IO",
+    "Alpha3Code": "IOT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/IO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/IO.txt",
+    "FriendlyName": "British Indian Ocean Territory (the)"
+  },
+  {
+    "Alpha2Code": "BN",
+    "Alpha3Code": "BRN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BN.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BN.txt",
+    "FriendlyName": "Brunei Darussalam"
+  },
+  {
+    "Alpha2Code": "BG",
+    "Alpha3Code": "BGR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BG.txt",
+    "FriendlyName": "Bulgaria"
+  },
+  {
+    "Alpha2Code": "BF",
+    "Alpha3Code": "BFA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BF.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BF.txt",
+    "FriendlyName": "Burkina Faso"
+  },
+  {
+    "Alpha2Code": "BI",
+    "Alpha3Code": "BDI",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BI.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BI.txt",
+    "FriendlyName": "Burundi"
+  },
+  {
+    "Alpha2Code": "CV",
+    "Alpha3Code": "CPV",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CV.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CV.txt",
+    "FriendlyName": "Cabo Verde"
+  },
+  {
+    "Alpha2Code": "KH",
+    "Alpha3Code": "KHM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/KH.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/KH.txt",
+    "FriendlyName": "Cambodia"
+  },
+  {
+    "Alpha2Code": "CM",
+    "Alpha3Code": "CMR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CM.txt",
+    "FriendlyName": "Cameroon"
+  },
+  {
+    "Alpha2Code": "CA",
+    "Alpha3Code": "CAN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CA.txt",
+    "FriendlyName": "Canada"
+  },
+  {
+    "Alpha2Code": "KY",
+    "Alpha3Code": "CYM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/KY.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/KY.txt",
+    "FriendlyName": "Cayman Islands (the)"
+  },
+  {
+    "Alpha2Code": "CF",
+    "Alpha3Code": "CAF",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CF.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CF.txt",
+    "FriendlyName": "Central African Republic (the)"
+  },
+  {
+    "Alpha2Code": "TD",
+    "Alpha3Code": "TCD",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TD.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TD.txt",
+    "FriendlyName": "Chad"
+  },
+  {
+    "Alpha2Code": "CL",
+    "Alpha3Code": "CHL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CL.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CL.txt",
+    "FriendlyName": "Chile"
+  },
+  {
+    "Alpha2Code": "CN",
+    "Alpha3Code": "CHN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CN.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CN.txt",
+    "FriendlyName": "China"
+  },
+  {
+    "Alpha2Code": "CX",
+    "Alpha3Code": "CXR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CX.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CX.txt",
+    "FriendlyName": "Christmas Island"
+  },
+  {
+    "Alpha2Code": "CC",
+    "Alpha3Code": "CCK",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CC.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CC.txt",
+    "FriendlyName": "Cocos (Keeling) Islands (the)"
+  },
+  {
+    "Alpha2Code": "CO",
+    "Alpha3Code": "COL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CO.txt",
+    "FriendlyName": "Colombia"
+  },
+  {
+    "Alpha2Code": "KM",
+    "Alpha3Code": "COM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/KM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/KM.txt",
+    "FriendlyName": "Comoros (the)"
+  },
+  {
+    "Alpha2Code": "CD",
+    "Alpha3Code": "COD",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CD.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CD.txt",
+    "FriendlyName": "Congo (the Democratic Republic of the)"
+  },
+  {
+    "Alpha2Code": "CG",
+    "Alpha3Code": "COG",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CG.txt",
+    "FriendlyName": "Congo (the)"
+  },
+  {
+    "Alpha2Code": "CK",
+    "Alpha3Code": "COK",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CK.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CK.txt",
+    "FriendlyName": "Cook Islands (the)"
+  },
+  {
+    "Alpha2Code": "CR",
+    "Alpha3Code": "CRI",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CR.txt",
+    "FriendlyName": "Costa Rica"
+  },
+  {
+    "Alpha2Code": "HR",
+    "Alpha3Code": "HRV",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/HR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/HR.txt",
+    "FriendlyName": "Croatia"
+  },
+  {
+    "Alpha2Code": "CU",
+    "Alpha3Code": "CUB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CU.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CU.txt",
+    "FriendlyName": "Cuba"
+  },
+  {
+    "Alpha2Code": "CW",
+    "Alpha3Code": "CUW",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CW.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CW.txt",
+    "FriendlyName": "Curaçao"
+  },
+  {
+    "Alpha2Code": "CY",
+    "Alpha3Code": "CYP",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CY.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CY.txt",
+    "FriendlyName": "Cyprus"
+  },
+  {
+    "Alpha2Code": "CZ",
+    "Alpha3Code": "CZE",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CZ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CZ.txt",
+    "FriendlyName": "Czechia"
+  },
+  {
+    "Alpha2Code": "CI",
+    "Alpha3Code": "CIV",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CI.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CI.txt",
+    "FriendlyName": "Côte d'Ivoire"
+  },
+  {
+    "Alpha2Code": "DK",
+    "Alpha3Code": "DNK",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/DK.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/DK.txt",
+    "FriendlyName": "Denmark"
+  },
+  {
+    "Alpha2Code": "DJ",
+    "Alpha3Code": "DJI",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/DJ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/DJ.txt",
+    "FriendlyName": "Djibouti"
+  },
+  {
+    "Alpha2Code": "DM",
+    "Alpha3Code": "DMA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/DM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/DM.txt",
+    "FriendlyName": "Dominica"
+  },
+  {
+    "Alpha2Code": "DO",
+    "Alpha3Code": "DOM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/DO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/DO.txt",
+    "FriendlyName": "Dominican Republic (the)"
+  },
+  {
+    "Alpha2Code": "EC",
+    "Alpha3Code": "ECU",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/EC.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/EC.txt",
+    "FriendlyName": "Ecuador"
+  },
+  {
+    "Alpha2Code": "EG",
+    "Alpha3Code": "EGY",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/EG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/EG.txt",
+    "FriendlyName": "Egypt"
+  },
+  {
+    "Alpha2Code": "SV",
+    "Alpha3Code": "SLV",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SV.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SV.txt",
+    "FriendlyName": "El Salvador"
+  },
+  {
+    "Alpha2Code": "GQ",
+    "Alpha3Code": "GNQ",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GQ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GQ.txt",
+    "FriendlyName": "Equatorial Guinea"
+  },
+  {
+    "Alpha2Code": "ER",
+    "Alpha3Code": "ERI",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/ER.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/ER.txt",
+    "FriendlyName": "Eritrea"
+  },
+  {
+    "Alpha2Code": "EE",
+    "Alpha3Code": "EST",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/EE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/EE.txt",
+    "FriendlyName": "Estonia"
+  },
+  {
+    "Alpha2Code": "SZ",
+    "Alpha3Code": "SWZ",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SZ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SZ.txt",
+    "FriendlyName": "Eswatini"
+  },
+  {
+    "Alpha2Code": "ET",
+    "Alpha3Code": "ETH",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/ET.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/ET.txt",
+    "FriendlyName": "Ethiopia"
+  },
+  {
+    "Alpha2Code": "FK",
+    "Alpha3Code": "FLK",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/FK.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/FK.txt",
+    "FriendlyName": "Falkland Islands (the) [Malvinas]"
+  },
+  {
+    "Alpha2Code": "FO",
+    "Alpha3Code": "FRO",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/FO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/FO.txt",
+    "FriendlyName": "Faroe Islands (the)"
+  },
+  {
+    "Alpha2Code": "FJ",
+    "Alpha3Code": "FJI",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/FJ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/FJ.txt",
+    "FriendlyName": "Fiji"
+  },
+  {
+    "Alpha2Code": "FI",
+    "Alpha3Code": "FIN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/FI.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/FI.txt",
+    "FriendlyName": "Finland"
+  },
+  {
+    "Alpha2Code": "FR",
+    "Alpha3Code": "FRA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/FR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/FR.txt",
+    "FriendlyName": "France"
+  },
+  {
+    "Alpha2Code": "GF",
+    "Alpha3Code": "GUF",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GF.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GF.txt",
+    "FriendlyName": "French Guiana"
+  },
+  {
+    "Alpha2Code": "PF",
+    "Alpha3Code": "PYF",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PF.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PF.txt",
+    "FriendlyName": "French Polynesia"
+  },
+  {
+    "Alpha2Code": "TF",
+    "Alpha3Code": "ATF",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TF.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TF.txt",
+    "FriendlyName": "French Southern Territories (the)"
+  },
+  {
+    "Alpha2Code": "GA",
+    "Alpha3Code": "GAB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GA.txt",
+    "FriendlyName": "Gabon"
+  },
+  {
+    "Alpha2Code": "GM",
+    "Alpha3Code": "GMB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GM.txt",
+    "FriendlyName": "Gambia (the)"
+  },
+  {
+    "Alpha2Code": "GE",
+    "Alpha3Code": "GEO",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GE.txt",
+    "FriendlyName": "Georgia"
+  },
+  {
+    "Alpha2Code": "DE",
+    "Alpha3Code": "DEU",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/DE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/DE.txt",
+    "FriendlyName": "Germany"
+  },
+  {
+    "Alpha2Code": "GH",
+    "Alpha3Code": "GHA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GH.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GH.txt",
+    "FriendlyName": "Ghana"
+  },
+  {
+    "Alpha2Code": "GI",
+    "Alpha3Code": "GIB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GI.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GI.txt",
+    "FriendlyName": "Gibraltar"
+  },
+  {
+    "Alpha2Code": "GR",
+    "Alpha3Code": "GRC",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GR.txt",
+    "FriendlyName": "Greece"
+  },
+  {
+    "Alpha2Code": "GL",
+    "Alpha3Code": "GRL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GL.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GL.txt",
+    "FriendlyName": "Greenland"
+  },
+  {
+    "Alpha2Code": "GD",
+    "Alpha3Code": "GRD",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GD.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GD.txt",
+    "FriendlyName": "Grenada"
+  },
+  {
+    "Alpha2Code": "GP",
+    "Alpha3Code": "GLP",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GP.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GP.txt",
+    "FriendlyName": "Guadeloupe"
+  },
+  {
+    "Alpha2Code": "GU",
+    "Alpha3Code": "GUM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GU.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GU.txt",
+    "FriendlyName": "Guam"
+  },
+  {
+    "Alpha2Code": "GT",
+    "Alpha3Code": "GTM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GT.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GT.txt",
+    "FriendlyName": "Guatemala"
+  },
+  {
+    "Alpha2Code": "GG",
+    "Alpha3Code": "GGY",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GG.txt",
+    "FriendlyName": "Guernsey"
+  },
+  {
+    "Alpha2Code": "GN",
+    "Alpha3Code": "GIN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GN.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GN.txt",
+    "FriendlyName": "Guinea"
+  },
+  {
+    "Alpha2Code": "GW",
+    "Alpha3Code": "GNB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GW.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GW.txt",
+    "FriendlyName": "Guinea-Bissau"
+  },
+  {
+    "Alpha2Code": "GY",
+    "Alpha3Code": "GUY",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GY.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GY.txt",
+    "FriendlyName": "Guyana"
+  },
+  {
+    "Alpha2Code": "HT",
+    "Alpha3Code": "HTI",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/HT.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/HT.txt",
+    "FriendlyName": "Haiti"
+  },
+  {
+    "Alpha2Code": "HM",
+    "Alpha3Code": "HMD",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/HM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/HM.txt",
+    "FriendlyName": "Heard Island and McDonald Islands"
+  },
+  {
+    "Alpha2Code": "VA",
+    "Alpha3Code": "VAT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/VA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/VA.txt",
+    "FriendlyName": "Holy See (the)"
+  },
+  {
+    "Alpha2Code": "HN",
+    "Alpha3Code": "HND",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/HN.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/HN.txt",
+    "FriendlyName": "Honduras"
+  },
+  {
+    "Alpha2Code": "HK",
+    "Alpha3Code": "HKG",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/HK.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/HK.txt",
+    "FriendlyName": "Hong Kong"
+  },
+  {
+    "Alpha2Code": "HU",
+    "Alpha3Code": "HUN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/HU.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/HU.txt",
+    "FriendlyName": "Hungary"
+  },
+  {
+    "Alpha2Code": "IS",
+    "Alpha3Code": "ISL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/IS.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/IS.txt",
+    "FriendlyName": "Iceland"
+  },
+  {
+    "Alpha2Code": "IN",
+    "Alpha3Code": "IND",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/IN.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/IN.txt",
+    "FriendlyName": "India"
+  },
+  {
+    "Alpha2Code": "ID",
+    "Alpha3Code": "IDN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/ID.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/ID.txt",
+    "FriendlyName": "Indonesia"
+  },
+  {
+    "Alpha2Code": "IR",
+    "Alpha3Code": "IRN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/IR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/IR.txt",
+    "FriendlyName": "Iran (Islamic Republic of)"
+  },
+  {
+    "Alpha2Code": "IQ",
+    "Alpha3Code": "IRQ",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/IQ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/IQ.txt",
+    "FriendlyName": "Iraq"
+  },
+  {
+    "Alpha2Code": "IE",
+    "Alpha3Code": "IRL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/IE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/IE.txt",
+    "FriendlyName": "Ireland"
+  },
+  {
+    "Alpha2Code": "IM",
+    "Alpha3Code": "IMN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/IM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/IM.txt",
+    "FriendlyName": "Isle of Man"
+  },
+  {
+    "Alpha2Code": "IT",
+    "Alpha3Code": "ITA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/IT.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/IT.txt",
+    "FriendlyName": "Italy"
+  },
+  {
+    "Alpha2Code": "JM",
+    "Alpha3Code": "JAM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/JM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/JM.txt",
+    "FriendlyName": "Jamaica"
+  },
+  {
+    "Alpha2Code": "JP",
+    "Alpha3Code": "JPN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/JP.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/JP.txt",
+    "FriendlyName": "Japan"
+  },
+  {
+    "Alpha2Code": "JE",
+    "Alpha3Code": "JEY",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/JE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/JE.txt",
+    "FriendlyName": "Jersey"
+  },
+  {
+    "Alpha2Code": "JO",
+    "Alpha3Code": "JOR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/JO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/JO.txt",
+    "FriendlyName": "Jordan"
+  },
+  {
+    "Alpha2Code": "KZ",
+    "Alpha3Code": "KAZ",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/KZ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/KZ.txt",
+    "FriendlyName": "Kazakhstan"
+  },
+  {
+    "Alpha2Code": "KE",
+    "Alpha3Code": "KEN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/KE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/KE.txt",
+    "FriendlyName": "Kenya"
+  },
+  {
+    "Alpha2Code": "KI",
+    "Alpha3Code": "KIR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/KI.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/KI.txt",
+    "FriendlyName": "Kiribati"
+  },
+  {
+    "Alpha2Code": "KP",
+    "Alpha3Code": "PRK",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/KP.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/KP.txt",
+    "FriendlyName": "Korea (the Democratic People's Republic of)"
+  },
+  {
+    "Alpha2Code": "KR",
+    "Alpha3Code": "KOR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/KR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/KR.txt",
+    "FriendlyName": "Korea (the Republic of)"
+  },
+  {
+    "Alpha2Code": "KW",
+    "Alpha3Code": "KWT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/KW.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/KW.txt",
+    "FriendlyName": "Kuwait"
+  },
+  {
+    "Alpha2Code": "KG",
+    "Alpha3Code": "KGZ",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/KG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/KG.txt",
+    "FriendlyName": "Kyrgyzstan"
+  },
+  {
+    "Alpha2Code": "LA",
+    "Alpha3Code": "LAO",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/LA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/LA.txt",
+    "FriendlyName": "Lao People's Democratic Republic (the)"
+  },
+  {
+    "Alpha2Code": "LV",
+    "Alpha3Code": "LVA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/LV.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/LV.txt",
+    "FriendlyName": "Latvia"
+  },
+  {
+    "Alpha2Code": "LB",
+    "Alpha3Code": "LBN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/LB.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/LB.txt",
+    "FriendlyName": "Lebanon"
+  },
+  {
+    "Alpha2Code": "LS",
+    "Alpha3Code": "LSO",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/LS.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/LS.txt",
+    "FriendlyName": "Lesotho"
+  },
+  {
+    "Alpha2Code": "LR",
+    "Alpha3Code": "LBR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/LR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/LR.txt",
+    "FriendlyName": "Liberia"
+  },
+  {
+    "Alpha2Code": "LY",
+    "Alpha3Code": "LBY",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/LY.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/LY.txt",
+    "FriendlyName": "Libya"
+  },
+  {
+    "Alpha2Code": "LI",
+    "Alpha3Code": "LIE",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/LI.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/LI.txt",
+    "FriendlyName": "Liechtenstein"
+  },
+  {
+    "Alpha2Code": "LT",
+    "Alpha3Code": "LTU",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/LT.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/LT.txt",
+    "FriendlyName": "Lithuania"
+  },
+  {
+    "Alpha2Code": "LU",
+    "Alpha3Code": "LUX",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/LU.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/LU.txt",
+    "FriendlyName": "Luxembourg"
+  },
+  {
+    "Alpha2Code": "MO",
+    "Alpha3Code": "MAC",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MO.txt",
+    "FriendlyName": "Macao"
+  },
+  {
+    "Alpha2Code": "MG",
+    "Alpha3Code": "MDG",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MG.txt",
+    "FriendlyName": "Madagascar"
+  },
+  {
+    "Alpha2Code": "MW",
+    "Alpha3Code": "MWI",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MW.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MW.txt",
+    "FriendlyName": "Malawi"
+  },
+  {
+    "Alpha2Code": "MY",
+    "Alpha3Code": "MYS",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MY.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MY.txt",
+    "FriendlyName": "Malaysia"
+  },
+  {
+    "Alpha2Code": "MV",
+    "Alpha3Code": "MDV",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MV.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MV.txt",
+    "FriendlyName": "Maldives"
+  },
+  {
+    "Alpha2Code": "ML",
+    "Alpha3Code": "MLI",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/ML.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/ML.txt",
+    "FriendlyName": "Mali"
+  },
+  {
+    "Alpha2Code": "MT",
+    "Alpha3Code": "MLT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MT.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MT.txt",
+    "FriendlyName": "Malta"
+  },
+  {
+    "Alpha2Code": "MH",
+    "Alpha3Code": "MHL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MH.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MH.txt",
+    "FriendlyName": "Marshall Islands (the)"
+  },
+  {
+    "Alpha2Code": "MQ",
+    "Alpha3Code": "MTQ",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MQ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MQ.txt",
+    "FriendlyName": "Martinique"
+  },
+  {
+    "Alpha2Code": "MR",
+    "Alpha3Code": "MRT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MR.txt",
+    "FriendlyName": "Mauritania"
+  },
+  {
+    "Alpha2Code": "MU",
+    "Alpha3Code": "MUS",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MU.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MU.txt",
+    "FriendlyName": "Mauritius"
+  },
+  {
+    "Alpha2Code": "YT",
+    "Alpha3Code": "MYT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/YT.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/YT.txt",
+    "FriendlyName": "Mayotte"
+  },
+  {
+    "Alpha2Code": "MX",
+    "Alpha3Code": "MEX",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MX.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MX.txt",
+    "FriendlyName": "Mexico"
+  },
+  {
+    "Alpha2Code": "FM",
+    "Alpha3Code": "FSM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/FM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/FM.txt",
+    "FriendlyName": "Micronesia (Federated States of)"
+  },
+  {
+    "Alpha2Code": "MD",
+    "Alpha3Code": "MDA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MD.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MD.txt",
+    "FriendlyName": "Moldova (the Republic of)"
+  },
+  {
+    "Alpha2Code": "MC",
+    "Alpha3Code": "MCO",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MC.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MC.txt",
+    "FriendlyName": "Monaco"
+  },
+  {
+    "Alpha2Code": "MN",
+    "Alpha3Code": "MNG",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MN.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MN.txt",
+    "FriendlyName": "Mongolia"
+  },
+  {
+    "Alpha2Code": "ME",
+    "Alpha3Code": "MNE",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/ME.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/ME.txt",
+    "FriendlyName": "Montenegro"
+  },
+  {
+    "Alpha2Code": "MS",
+    "Alpha3Code": "MSR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MS.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MS.txt",
+    "FriendlyName": "Montserrat"
+  },
+  {
+    "Alpha2Code": "MA",
+    "Alpha3Code": "MAR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MA.txt",
+    "FriendlyName": "Morocco"
+  },
+  {
+    "Alpha2Code": "MZ",
+    "Alpha3Code": "MOZ",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MZ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MZ.txt",
+    "FriendlyName": "Mozambique"
+  },
+  {
+    "Alpha2Code": "MM",
+    "Alpha3Code": "MMR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MM.txt",
+    "FriendlyName": "Myanmar"
+  },
+  {
+    "Alpha2Code": "NA",
+    "Alpha3Code": "NAM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NA.txt",
+    "FriendlyName": "Namibia"
+  },
+  {
+    "Alpha2Code": "NR",
+    "Alpha3Code": "NRU",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NR.txt",
+    "FriendlyName": "Nauru"
+  },
+  {
+    "Alpha2Code": "NP",
+    "Alpha3Code": "NPL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NP.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NP.txt",
+    "FriendlyName": "Nepal"
+  },
+  {
+    "Alpha2Code": "NL",
+    "Alpha3Code": "NLD",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NL.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NL.txt",
+    "FriendlyName": "Netherlands (the)"
+  },
+  {
+    "Alpha2Code": "NC",
+    "Alpha3Code": "NCL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NC.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NC.txt",
+    "FriendlyName": "New Caledonia"
+  },
+  {
+    "Alpha2Code": "NZ",
+    "Alpha3Code": "NZL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NZ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NZ.txt",
+    "FriendlyName": "New Zealand"
+  },
+  {
+    "Alpha2Code": "NI",
+    "Alpha3Code": "NIC",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NI.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NI.txt",
+    "FriendlyName": "Nicaragua"
+  },
+  {
+    "Alpha2Code": "NE",
+    "Alpha3Code": "NER",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NE.txt",
+    "FriendlyName": "Niger (the)"
+  },
+  {
+    "Alpha2Code": "NG",
+    "Alpha3Code": "NGA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NG.txt",
+    "FriendlyName": "Nigeria"
+  },
+  {
+    "Alpha2Code": "NU",
+    "Alpha3Code": "NIU",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NU.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NU.txt",
+    "FriendlyName": "Niue"
+  },
+  {
+    "Alpha2Code": "NF",
+    "Alpha3Code": "NFK",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NF.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NF.txt",
+    "FriendlyName": "Norfolk Island"
+  },
+  {
+    "Alpha2Code": "MP",
+    "Alpha3Code": "MNP",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MP.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MP.txt",
+    "FriendlyName": "Northern Mariana Islands (the)"
+  },
+  {
+    "Alpha2Code": "NO",
+    "Alpha3Code": "NOR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/NO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/NO.txt",
+    "FriendlyName": "Norway"
+  },
+  {
+    "Alpha2Code": "OM",
+    "Alpha3Code": "OMN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/OM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/OM.txt",
+    "FriendlyName": "Oman"
+  },
+  {
+    "Alpha2Code": "PK",
+    "Alpha3Code": "PAK",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PK.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PK.txt",
+    "FriendlyName": "Pakistan"
+  },
+  {
+    "Alpha2Code": "PW",
+    "Alpha3Code": "PLW",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PW.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PW.txt",
+    "FriendlyName": "Palau"
+  },
+  {
+    "Alpha2Code": "PA",
+    "Alpha3Code": "PAN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PA.txt",
+    "FriendlyName": "Panama"
+  },
+  {
+    "Alpha2Code": "PG",
+    "Alpha3Code": "PNG",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PG.txt",
+    "FriendlyName": "Papua New Guinea"
+  },
+  {
+    "Alpha2Code": "PY",
+    "Alpha3Code": "PRY",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PY.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PY.txt",
+    "FriendlyName": "Paraguay"
+  },
+  {
+    "Alpha2Code": "PE",
+    "Alpha3Code": "PER",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PE.txt",
+    "FriendlyName": "Peru"
+  },
+  {
+    "Alpha2Code": "PH",
+    "Alpha3Code": "PHL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PH.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PH.txt",
+    "FriendlyName": "Philippines (the)"
+  },
+  {
+    "Alpha2Code": "PN",
+    "Alpha3Code": "PCN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PN.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PN.txt",
+    "FriendlyName": "Pitcairn"
+  },
+  {
+    "Alpha2Code": "PL",
+    "Alpha3Code": "POL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PL.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PL.txt",
+    "FriendlyName": "Poland"
+  },
+  {
+    "Alpha2Code": "PT",
+    "Alpha3Code": "PRT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PT.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PT.txt",
+    "FriendlyName": "Portugal"
+  },
+  {
+    "Alpha2Code": "PR",
+    "Alpha3Code": "PRI",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PR.txt",
+    "FriendlyName": "Puerto Rico"
+  },
+  {
+    "Alpha2Code": "QA",
+    "Alpha3Code": "QAT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/QA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/QA.txt",
+    "FriendlyName": "Qatar"
+  },
+  {
+    "Alpha2Code": "MK",
+    "Alpha3Code": "MKD",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MK.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MK.txt",
+    "FriendlyName": "Republic of North Macedonia"
+  },
+  {
+    "Alpha2Code": "RO",
+    "Alpha3Code": "ROU",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/RO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/RO.txt",
+    "FriendlyName": "Romania"
+  },
+  {
+    "Alpha2Code": "RU",
+    "Alpha3Code": "RUS",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/RU.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/RU.txt",
+    "FriendlyName": "Russian Federation (the)"
+  },
+  {
+    "Alpha2Code": "RW",
+    "Alpha3Code": "RWA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/RW.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/RW.txt",
+    "FriendlyName": "Rwanda"
+  },
+  {
+    "Alpha2Code": "RE",
+    "Alpha3Code": "REU",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/RE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/RE.txt",
+    "FriendlyName": "Réunion"
+  },
+  {
+    "Alpha2Code": "BL",
+    "Alpha3Code": "BLM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/BL.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/BL.txt",
+    "FriendlyName": "Saint Barthélemy"
+  },
+  {
+    "Alpha2Code": "SH",
+    "Alpha3Code": "SHN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SH.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SH.txt",
+    "FriendlyName": "Saint Helena, Ascension and Tristan da Cunha"
+  },
+  {
+    "Alpha2Code": "KN",
+    "Alpha3Code": "KNA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/KN.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/KN.txt",
+    "FriendlyName": "Saint Kitts and Nevis"
+  },
+  {
+    "Alpha2Code": "LC",
+    "Alpha3Code": "LCA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/LC.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/LC.txt",
+    "FriendlyName": "Saint Lucia"
+  },
+  {
+    "Alpha2Code": "MF",
+    "Alpha3Code": "MAF",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/MF.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/MF.txt",
+    "FriendlyName": "Saint Martin (French part)"
+  },
+  {
+    "Alpha2Code": "PM",
+    "Alpha3Code": "SPM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/PM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/PM.txt",
+    "FriendlyName": "Saint Pierre and Miquelon"
+  },
+  {
+    "Alpha2Code": "VC",
+    "Alpha3Code": "VCT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/VC.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/VC.txt",
+    "FriendlyName": "Saint Vincent and the Grenadines"
+  },
+  {
+    "Alpha2Code": "WS",
+    "Alpha3Code": "WSM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/WS.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/WS.txt",
+    "FriendlyName": "Samoa"
+  },
+  {
+    "Alpha2Code": "SM",
+    "Alpha3Code": "SMR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SM.txt",
+    "FriendlyName": "San Marino"
+  },
+  {
+    "Alpha2Code": "ST",
+    "Alpha3Code": "STP",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/ST.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/ST.txt",
+    "FriendlyName": "Sao Tome and Principe"
+  },
+  {
+    "Alpha2Code": "SA",
+    "Alpha3Code": "SAU",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SA.txt",
+    "FriendlyName": "Saudi Arabia"
+  },
+  {
+    "Alpha2Code": "SN",
+    "Alpha3Code": "SEN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SN.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SN.txt",
+    "FriendlyName": "Senegal"
+  },
+  {
+    "Alpha2Code": "RS",
+    "Alpha3Code": "SRB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/RS.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/RS.txt",
+    "FriendlyName": "Serbia"
+  },
+  {
+    "Alpha2Code": "SC",
+    "Alpha3Code": "SYC",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SC.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SC.txt",
+    "FriendlyName": "Seychelles"
+  },
+  {
+    "Alpha2Code": "SL",
+    "Alpha3Code": "SLE",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SL.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SL.txt",
+    "FriendlyName": "Sierra Leone"
+  },
+  {
+    "Alpha2Code": "SG",
+    "Alpha3Code": "SGP",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SG.txt",
+    "FriendlyName": "Singapore"
+  },
+  {
+    "Alpha2Code": "SX",
+    "Alpha3Code": "SXM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SX.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SX.txt",
+    "FriendlyName": "Sint Maarten (Dutch part)"
+  },
+  {
+    "Alpha2Code": "SK",
+    "Alpha3Code": "SVK",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SK.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SK.txt",
+    "FriendlyName": "Slovakia"
+  },
+  {
+    "Alpha2Code": "SI",
+    "Alpha3Code": "SVN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SI.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SI.txt",
+    "FriendlyName": "Slovenia"
+  },
+  {
+    "Alpha2Code": "SB",
+    "Alpha3Code": "SLB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SB.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SB.txt",
+    "FriendlyName": "Solomon Islands"
+  },
+  {
+    "Alpha2Code": "SO",
+    "Alpha3Code": "SOM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SO.txt",
+    "FriendlyName": "Somalia"
+  },
+  {
+    "Alpha2Code": "ZA",
+    "Alpha3Code": "ZAF",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/ZA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/ZA.txt",
+    "FriendlyName": "South Africa"
+  },
+  {
+    "Alpha2Code": "GS",
+    "Alpha3Code": "SGS",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GS.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GS.txt",
+    "FriendlyName": "South Georgia and the South Sandwich Islands"
+  },
+  {
+    "Alpha2Code": "SS",
+    "Alpha3Code": "SSD",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SS.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SS.txt",
+    "FriendlyName": "South Sudan"
+  },
+  {
+    "Alpha2Code": "ES",
+    "Alpha3Code": "ESP",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/ES.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/ES.txt",
+    "FriendlyName": "Spain"
+  },
+  {
+    "Alpha2Code": "LK",
+    "Alpha3Code": "LKA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/LK.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/LK.txt",
+    "FriendlyName": "Sri Lanka"
+  },
+  {
+    "Alpha2Code": "SD",
+    "Alpha3Code": "SDN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SD.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SD.txt",
+    "FriendlyName": "Sudan (the)"
+  },
+  {
+    "Alpha2Code": "SR",
+    "Alpha3Code": "SUR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SR.txt",
+    "FriendlyName": "Suriname"
+  },
+  {
+    "Alpha2Code": "SJ",
+    "Alpha3Code": "SJM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SJ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SJ.txt",
+    "FriendlyName": "Svalbard and Jan Mayen"
+  },
+  {
+    "Alpha2Code": "SE",
+    "Alpha3Code": "SWE",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SE.txt",
+    "FriendlyName": "Sweden"
+  },
+  {
+    "Alpha2Code": "CH",
+    "Alpha3Code": "CHE",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/CH.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/CH.txt",
+    "FriendlyName": "Switzerland"
+  },
+  {
+    "Alpha2Code": "SY",
+    "Alpha3Code": "SYR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/SY.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/SY.txt",
+    "FriendlyName": "Syrian Arab Republic"
+  },
+  {
+    "Alpha2Code": "TW",
+    "Alpha3Code": "TWN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TW.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TW.txt",
+    "FriendlyName": "Taiwan (Province of China)"
+  },
+  {
+    "Alpha2Code": "TJ",
+    "Alpha3Code": "TJK",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TJ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TJ.txt",
+    "FriendlyName": "Tajikistan"
+  },
+  {
+    "Alpha2Code": "TZ",
+    "Alpha3Code": "TZA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TZ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TZ.txt",
+    "FriendlyName": "Tanzania, United Republic of"
+  },
+  {
+    "Alpha2Code": "TH",
+    "Alpha3Code": "THA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TH.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TH.txt",
+    "FriendlyName": "Thailand"
+  },
+  {
+    "Alpha2Code": "TL",
+    "Alpha3Code": "TLS",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TL.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TL.txt",
+    "FriendlyName": "Timor-Leste"
+  },
+  {
+    "Alpha2Code": "TG",
+    "Alpha3Code": "TGO",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TG.txt",
+    "FriendlyName": "Togo"
+  },
+  {
+    "Alpha2Code": "TK",
+    "Alpha3Code": "TKL",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TK.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TK.txt",
+    "FriendlyName": "Tokelau"
+  },
+  {
+    "Alpha2Code": "TO",
+    "Alpha3Code": "TON",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TO.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TO.txt",
+    "FriendlyName": "Tonga"
+  },
+  {
+    "Alpha2Code": "TT",
+    "Alpha3Code": "TTO",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TT.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TT.txt",
+    "FriendlyName": "Trinidad and Tobago"
+  },
+  {
+    "Alpha2Code": "TN",
+    "Alpha3Code": "TUN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TN.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TN.txt",
+    "FriendlyName": "Tunisia"
+  },
+  {
+    "Alpha2Code": "TR",
+    "Alpha3Code": "TUR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TR.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TR.txt",
+    "FriendlyName": "Turkey"
+  },
+  {
+    "Alpha2Code": "TM",
+    "Alpha3Code": "TKM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TM.txt",
+    "FriendlyName": "Turkmenistan"
+  },
+  {
+    "Alpha2Code": "TC",
+    "Alpha3Code": "TCA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TC.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TC.txt",
+    "FriendlyName": "Turks and Caicos Islands (the)"
+  },
+  {
+    "Alpha2Code": "TV",
+    "Alpha3Code": "TUV",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/TV.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/TV.txt",
+    "FriendlyName": "Tuvalu"
+  },
+  {
+    "Alpha2Code": "UG",
+    "Alpha3Code": "UGA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/UG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/UG.txt",
+    "FriendlyName": "Uganda"
+  },
+  {
+    "Alpha2Code": "UA",
+    "Alpha3Code": "UKR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/UA.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/UA.txt",
+    "FriendlyName": "Ukraine"
+  },
+  {
+    "Alpha2Code": "AE",
+    "Alpha3Code": "ARE",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AE.txt",
+    "FriendlyName": "United Arab Emirates (the)"
+  },
+  {
+    "Alpha2Code": "GB",
+    "Alpha3Code": "GBR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/GB.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/GB.txt",
+    "FriendlyName": "United Kingdom of Great Britain and Northern Ireland (the)"
+  },
+  {
+    "Alpha2Code": "UM",
+    "Alpha3Code": "UMI",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/UM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/UM.txt",
+    "FriendlyName": "United States Minor Outlying Islands (the)"
+  },
+  {
+    "Alpha2Code": "UY",
+    "Alpha3Code": "URY",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/UY.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/UY.txt",
+    "FriendlyName": "Uruguay"
+  },
+  {
+    "Alpha2Code": "UZ",
+    "Alpha3Code": "UZB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/UZ.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/UZ.txt",
+    "FriendlyName": "Uzbekistan"
+  },
+  {
+    "Alpha2Code": "VU",
+    "Alpha3Code": "VUT",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/VU.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/VU.txt",
+    "FriendlyName": "Vanuatu"
+  },
+  {
+    "Alpha2Code": "VE",
+    "Alpha3Code": "VEN",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/VE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/VE.txt",
+    "FriendlyName": "Venezuela (Bolivarian Republic of)"
+  },
+  {
+    "Alpha2Code": "VN",
+    "Alpha3Code": "VNM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/VN.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/VN.txt",
+    "FriendlyName": "Viet Nam"
+  },
+  {
+    "Alpha2Code": "VG",
+    "Alpha3Code": "VGB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/VG.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/VG.txt",
+    "FriendlyName": "Virgin Islands (British)"
+  },
+  {
+    "Alpha2Code": "VI",
+    "Alpha3Code": "VIR",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/VI.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/VI.txt",
+    "FriendlyName": "Virgin Islands (U.S.)"
+  },
+  {
+    "Alpha2Code": "WF",
+    "Alpha3Code": "WLF",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/WF.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/WF.txt",
+    "FriendlyName": "Wallis and Futuna"
+  },
+  {
+    "Alpha2Code": "EH",
+    "Alpha3Code": "ESH",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/EH.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/EH.txt",
+    "FriendlyName": "Western Sahara"
+  },
+  {
+    "Alpha2Code": "YE",
+    "Alpha3Code": "YEM",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/YE.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/YE.txt",
+    "FriendlyName": "Yemen"
+  },
+  {
+    "Alpha2Code": "ZM",
+    "Alpha3Code": "ZMB",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/ZM.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/ZM.txt",
+    "FriendlyName": "Zambia"
+  },
+  {
+    "Alpha2Code": "ZW",
+    "Alpha3Code": "ZWE",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/ZW.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/ZW.txt",
+    "FriendlyName": "Zimbabwe"
+  },
+  {
+    "Alpha2Code": "AX",
+    "Alpha3Code": "ALA",
+    "IPv4Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV4/AX.txt",
+    "IPv6Link": "https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/TXT/IPV6/AX.txt",
+    "FriendlyName": "Åland Islands"
+  }
+]

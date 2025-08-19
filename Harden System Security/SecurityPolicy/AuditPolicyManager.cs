@@ -481,7 +481,7 @@ internal static class AuditPolicyManager
 	/// Applies audit policies from a CSV file to the system.
 	/// The CSV file is in Microsoft Security Baselines.
 	/// </summary>
-	/// <param name="csvFilePath">Path to the CSV file containing audit policies</param>		
+	/// <param name="csvFilePath">Path to the CSV file containing audit policies</param>
 	internal static void ApplyAuditPoliciesFromCsv(string csvFilePath)
 	{
 		// Ensure privileges
@@ -572,7 +572,7 @@ internal static class AuditPolicyManager
 		}
 
 		// Extract relevant columns:
-		// 0: Machine Name, 1: Policy Target, 2: Subcategory, 3: Subcategory GUID, 
+		// 0: Machine Name, 1: Policy Target, 2: Subcategory, 3: Subcategory GUID,
 		// 4: Inclusion Setting, 5: Exclusion Setting, 6: Setting Value
 
 		string subcategoryName = parts[2].Trim();

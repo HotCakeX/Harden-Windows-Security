@@ -548,7 +548,7 @@ internal static class MSBaseline
 			// Find machine registry.pol files
 			FindPolicyFiles(extractedFiles, guidDir, "Machine", machinePolicyFiles);
 
-			// Find user registry.pol files  
+			// Find user registry.pol files
 			FindPolicyFiles(extractedFiles, guidDir, "User", userPolicyFiles);
 
 			// Find audit.csv files
@@ -1237,7 +1237,7 @@ internal static class MSBaseline
 			// Find machine registry.pol files
 			FindPolicyFiles(extractedFiles, guidDir, "Machine", machinePolicyFiles);
 
-			// Find user registry.pol files  
+			// Find user registry.pol files
 			FindPolicyFiles(extractedFiles, guidDir, "User", userPolicyFiles);
 
 			// Don't process audit CSV files or security INF files during removal.
@@ -1708,7 +1708,7 @@ internal static class MSBaseline
 	}
 
 	/// <summary>
-	/// Parses a single line from the [Privilege Rights] section.	
+	/// Parses a single line from the [Privilege Rights] section.
 	/// </summary>
 	/// <param name="line">Line to parse</param>
 	/// <param name="privilegeRights">Dictionary to store parsed values</param>

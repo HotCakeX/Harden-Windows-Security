@@ -604,13 +604,13 @@
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>اختر إحدى إعدادات الحماية المسبقة للتطبيق، وهي مجموعات تكوين محددة مسبقاً مصممة لمستويات أمان مختلفة.</value>
   </data>
-    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="BasicProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>أساسي</value>
   </data>
-    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="RecommendedProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>موصى به</value>
   </data>
-    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>شامل</value>
   </data>
   <data name="ProtectPageTitle.Text" xml:space="preserve">
@@ -2588,5 +2588,47 @@
   </data>
   <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
    <value>عرض وإدارة رابط تحميل خط الأساس.</value>
+  </data>
+   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>إضافة</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة قواعد جدار الحماية للعنصر المحدد.</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>إضافة قواعد جدار الحماية للعنصر المحدد.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>إزالة</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إزالة قواعد جدار الحماية للعنصر المحدد.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>إزالة قواعد جدار الحماية للعنصر المحدد.</value>
+  </data>
+  <data name="TargetedListsText.Text" xml:space="preserve">
+   <value>القوائم المستهدفة</value>
+  </data>
+  <data name="TargetedListsDescriptionText.Text" xml:space="preserve">
+   <value>قوائم مستهدفة مُجمَّعة مسبقاً ومحدثة يومياً تحتوي على نطاقات عناوين IP خاصة بدول محددة، مما يتيح التنفيذ المبسط لمتطلبات الامتثال وسياسات الأمان من خلال ضوابط الحجب الفعالة لجدار حماية ويندوز.</value>
+  </data>
+  <data name="IndividualCountryIPBlockingText.Text" xml:space="preserve">
+   <value>حجب IP لدولة فردية</value>
+  </data>
+  <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
+   <value>استخدم نطاقات عناوين IP للدول المحدثة يومياً لحجب دول محددة على نظامك عبر قواعد جدار حماية ويندوز.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
+    <value>اعرف المزيد</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انقر أو اضغط هنا لفتح صفحة ويب تحتوي على معلومات أكثر تفصيلاً.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>انقر أو اضغط هنا لفتح صفحة ويب تحتوي على معلومات أكثر تفصيلاً.</value>
+  </data>
+  <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
+   <value>البحث عن الدول...</value>
   </data>
 </root>

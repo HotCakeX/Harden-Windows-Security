@@ -604,13 +604,13 @@
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>പ്രയോഗിക്കാനുള്ള സംരക്ഷണ പ്രീസെറ്റുകളിൽ ഒന്ന് തിരഞ്ഞെടുക്കുക, അവ വിവിധ സുരക്ഷാ നിലകൾക്കായി രൂപകൽപ്പന ചെയ്ത മുൻകൂട്ടി നിർണ്ണയിച്ച കോൺഫിഗറേഷൻ സെറ്റുകളാണ്.</value>
   </data>
-    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="BasicProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>അടിസ്ഥാന</value>
   </data>
-    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="RecommendedProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>ശുപാർശിത</value>
   </data>
-    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>പൂർണ്ണ</value>
   </data>
   <data name="ProtectPageTitle.Text" xml:space="preserve">
@@ -2588,5 +2588,47 @@
   </data>
   <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
    <value>അടിത്തറയുടെ ഡൗൺലോഡ് URL കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
+  </data>
+   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>ചേർക്കുക</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനത്തിനായി ഫയർവാൾ നിയമങ്ങൾ ചേർക്കുക.</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>തിരഞ്ഞെടുത്ത ഇനത്തിനായി ഫയർവാൾ നിയമങ്ങൾ ചേർക്കുക.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനത്തിനായി ഫയർവാൾ നിയമങ്ങൾ നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>തിരഞ്ഞെടുത്ത ഇനത്തിനായി ഫയർവാൾ നിയമങ്ങൾ നീക്കം ചെയ്യുക.</value>
+  </data>
+  <data name="TargetedListsText.Text" xml:space="preserve">
+   <value>ലക്ഷ്യമിടുന്ന പട്ടികകൾ</value>
+  </data>
+  <data name="TargetedListsDescriptionText.Text" xml:space="preserve">
+   <value>രാജ്യ-നിർദ്ദിഷ്ട IP വിലാസ ശ്രേണികൾ അടങ്ങിയ മുൻകൂട്ടി സംകലിതവും ദിനംപ്രതി അപ്ഡേറ്റ് ചെയ്യുന്നതുമായ ലക്ഷ്യമിടുന്ന പട്ടികകൾ, കാര്യക്ഷമമായ Windows ഫയർവാൾ ബ്ലോക്കിംഗ് നിയന്ത്രണങ്ങളിലൂടെ അനുപാലന ആവശ്യകതകളുടെയും സുരക്ഷാ നയങ്ങളുടെയും കാര്യക്ഷമമായ നടപ്പാക്കൽ സാധ്യമാക്കുന്നു.</value>
+  </data>
+  <data name="IndividualCountryIPBlockingText.Text" xml:space="preserve">
+   <value>വ്യക്തിഗത രാജ്യ IP ബ്ലോക്കിംഗ്</value>
+  </data>
+  <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
+   <value>Windows ഫയർവാൾ നിയമങ്ങളിലൂടെ നിങ്ങളുടെ സിസ്റ്റത്തിൽ നിർദ്ദിഷ്ട രാജ്യങ്ങളെ ബ്ലോക്ക് ചെയ്യാൻ ദിനംപ്രതി അപ്ഡേറ്റ് ചെയ്യുന്ന രാജ്യ IP വിലാസ ശ്രേണികൾ ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
+    <value>കൂടുതൽ അറിയുക</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കൂടുതൽ വിശദമായ വിവരങ്ങളുള്ള വെബ് പേജ് തുറക്കാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>കൂടുതൽ വിശദമായ വിവരങ്ങളുള്ള വെബ് പേജ് തുറക്കാൻ ഇവിടെ ക്ലിക്ക് ചെയ്യുകയോ ടാപ്പ് ചെയ്യുകയോ ചെയ്യുക.</value>
+  </data>
+  <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
+   <value>രാജ്യങ്ങൾ തിരയുക...</value>
   </data>
 </root>

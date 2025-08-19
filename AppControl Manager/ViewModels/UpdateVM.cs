@@ -389,20 +389,11 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 						string? ASROutput = null;
 
+						const string comCommand = "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionOnlyExclusions";
+
 						try
 						{
-							/*
-							// Execute the query to get the MpPreferences
-							using ManagementObjectSearcher searcher = new("ROOT\\Microsoft\\Windows\\Defender", $"SELECT AttackSurfaceReductionOnlyExclusions FROM MSFT_MpPreference");
-							ManagementObjectCollection results = searcher.Get();
-
-							// Retrieve the property value for AttackSurfaceReductionOnlyExclusions
-							ManagementBaseObject? result = results.Cast<ManagementBaseObject>().FirstOrDefault();
-							string[]? currentAttackSurfaceReductionExclusions = result?["AttackSurfaceReductionOnlyExclusions"] as string[];
-							*/
-
-
-							ASROutput = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 AttackSurfaceReductionOnlyExclusions");
+							ASROutput = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, comCommand);
 
 							// If there are ASR rule exclusions, find ones that belong to AppControl Manager and remove them
 							// Before adding new ones for the new version
@@ -430,20 +421,11 @@ internal sealed partial class UpdateVM : ViewModelBase
 									// If any of the rules belong to the AppControl Manager
 									if (asrRulesToRemove.Count > 0)
 									{
-
 										// Remove ASR rule exclusions that belong to all previous app versions
-
-										/*
-										using ManagementClass managementClass = new(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
-										ManagementBaseObject inParams = managementClass.GetMethodParameters("Remove");
-										inParams["AttackSurfaceReductionOnlyExclusions"] = stringArrayRepo;
-										_ = managementClass.InvokeMethod("Remove", inParams, null);
-										*/
-
 										// Wrap them with double quotes and separate them with a space
 										string asrRulesToRemoveFinal = string.Join(" ", asrRulesToRemove.Select(item => $"\"{item}\""));
 
-										_ = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, $"stringarray remove AttackSurfaceReductionOnlyExclusions {asrRulesToRemoveFinal}");
+										_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $@"stringarray ROOT\Microsoft\Windows\Defender MSFT_MpPreference remove AttackSurfaceReductionOnlyExclusions {asrRulesToRemoveFinal}");
 									}
 								}
 							}
@@ -501,7 +483,10 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 						try
 						{
-
+							// Problem: This won't get the latest version of the app as long as the current app version is still open, preventing the new app version from being fully installed.
+							// Solution: Going through the installation process for the 2nd time, after the first one has completed and app is restarted, resolves it.
+							// Note: This obviously only applies to the Non-Store versions of the app.
+							// Possible remedy: replace the version manually via string manipulation.
 							Package AppControlManagerPackage = packageManager.FindPackages("AppControlManager_sadt7br7jpt02").First();
 
 							string AppControlInstallFolder = AppControlManagerPackage.EffectivePath;
@@ -510,29 +495,8 @@ internal sealed partial class UpdateVM : ViewModelBase
 							string path1 = Path.Combine(AppControlInstallFolder, "AppControlManager.exe");
 							string path2 = Path.Combine(AppControlInstallFolder, "AppControlManager.dll");
 
-
-							/*
-							// Connect to the WMI namespace again
-							ManagementScope scope = new(@"\\.\ROOT\Microsoft\Windows\Defender");
-							scope.Connect();
-
-							// Create an instance of the MSFT_MpPreference class for Add method
-							using ManagementClass mpPreferenceClass = new(scope, new ManagementPath("MSFT_MpPreference"), null);
-
-
-							// Get the available methods for the class
-							ManagementBaseObject methodParams = mpPreferenceClass.GetMethodParameters("Add");
-
-							// Create a string array containing the paths which is what AttackSurfaceReductionOnlyExclusions accepts
-							methodParams["AttackSurfaceReductionOnlyExclusions"] = new string[] { path1, path2 };
-
-							// Invoke the Add method to add the paths to the ASR rules exclusions
-							_ = mpPreferenceClass.InvokeMethod("Add", methodParams, null);
-							*/
-
-							// Adding the 2 extra executables included in the package so they will be allowed to run as well
-							_ = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, $"stringarray add AttackSurfaceReductionOnlyExclusions \"{path1}\" \"{path2}\" \"{GlobalVars.ManageDefenderProcessPath}\" \"{GlobalVars.DeviceGuardWMIRetrieverProcessPath}\" ");
-
+							// Adding the extra executables included in the package so they will be allowed to run as well
+							_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{path1}\" \"{path2}\" \"{GlobalVars.ComManagerProcessPath}\" ");
 						}
 						catch (Exception ex)
 						{

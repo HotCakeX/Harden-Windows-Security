@@ -16,9 +16,12 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Others;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
@@ -58,11 +61,11 @@ internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 	/// </summary>
 	/// <param name="status"></param>
 	/// <returns></returns>
-	private static string? GetPolicyStatus(int? status) => status switch
+	private static string? GetPolicyStatus(object? status) => status switch
 	{
-		0 => GlobalVars.GetStr("NotRunningOrDisabled"),
-		1 => GlobalVars.GetStr("AuditMode"),
-		2 => GlobalVars.GetStr("EnforcedMode"),
+		0L => GlobalVars.GetStr("NotRunningOrDisabled"),
+		1L => GlobalVars.GetStr("AuditMode"),
+		2L => GlobalVars.GetStr("EnforcedMode"),
 		_ => null
 	};
 
@@ -83,14 +86,23 @@ internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 				codeIntegrityOptions.Add(item);
 			}
 
-			UMCI = null;
-			KMCI = null;
+			const string command = @"get root\Microsoft\Windows\DeviceGuard Win32_DeviceGuard";
 
 			// Get the Application Control Status
-			DeviceGuardInteropClass? DGStatus = await Task.Run(DeviceGuardInfo.GetDeviceGuardStatus);
-
-			UMCI = GetPolicyStatus(DGStatus.UsermodeCodeIntegrityPolicyEnforcementStatus);
-			KMCI = GetPolicyStatus(DGStatus.CodeIntegrityPolicyEnforcementStatus);
+			await Task.Run(async () =>
+			{
+				string result = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, command) ?? throw new InvalidOperationException($"No output were returned from {GlobalVars.ComManagerProcessPath}");
+				List<Dictionary<string, object?>> deserializedData = ComJsonDeserializer.DeserializeInstances(result);
+				Dictionary<string, object?>? processedData = deserializedData.FirstOrDefault();
+				if (processedData is not null)
+				{
+					await App.AppDispatcher.EnqueueAsync(() =>
+					{
+						UMCI = GetPolicyStatus(processedData["UsermodeCodeIntegrityPolicyEnforcementStatus"]);
+						KMCI = GetPolicyStatus(processedData["CodeIntegrityPolicyEnforcementStatus"]);
+					});
+				}
+			});
 		}
 		catch (Exception ex)
 		{

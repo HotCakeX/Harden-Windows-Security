@@ -38,7 +38,7 @@
                 <StackPanel Orientation="Horizontal" Spacing="4">
 
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                              Glyph="&#xE838;"                              
+                              Glyph="&#xE838;"
                               VerticalAlignment="Center"/>
 
                     <TextBlock x:Uid="OpenLogsDirectoryButtonText"

@@ -604,13 +604,13 @@
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>בחר אחת מתצורות ההגנה להחלה, הן קבוצות קונפיגורציה מוגדרות מראש שיועדו לרמות אבטחה שונות.</value>
   </data>
-    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="BasicProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>בסיסי</value>
   </data>
-    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="RecommendedProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>מומלץ</value>
   </data>
-    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>מלא</value>
   </data>
   <data name="ProtectPageTitle.Text" xml:space="preserve">
@@ -2588,5 +2588,47 @@
   </data>
   <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
    <value>צפה ונהל את כתובת ההורדה של קו הבסיס.</value>
+  </data>
+   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>הוסף</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף כללי חומת אש עבור הפריט שנבחר.</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>הוסף כללי חומת אש עבור הפריט שנבחר.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>הסר</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר כללי חומת אש עבור הפריט שנבחר.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>הסר כללי חומת אש עבור הפריט שנבחר.</value>
+  </data>
+  <data name="TargetedListsText.Text" xml:space="preserve">
+   <value>רשימות ממוקדות</value>
+  </data>
+  <data name="TargetedListsDescriptionText.Text" xml:space="preserve">
+   <value>רשימות ממוקדות מוכנות מראש ומתעדכנות יומית המכילות טווחי כתובות IP ספציפיות למדינה, המאפשרות יישום יעיל של דרישות ציות ומדיניות אבטחה באמצעות בקרות חסימה יעילות של חומת האש של Windows.</value>
+  </data>
+  <data name="IndividualCountryIPBlockingText.Text" xml:space="preserve">
+   <value>חסימת IP של מדינה בודדת</value>
+  </data>
+  <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
+   <value>השתמש בטווחי כתובות IP של מדינות המתעדכנים יומית כדי לחסום מדינות ספציפיות במערכת שלך באמצעות כללי חומת האש של Windows.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
+    <value>קרא עוד</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>לחץ או הקש כאן כדי לפתוח דף אינטרנט עם מידע מפורט יותר.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>לחץ או הקש כאן כדי לפתוח דף אינטרנט עם מידע מפורט יותר.</value>
+  </data>
+  <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
+   <value>חפש מדינות...</value>
   </data>
 </root>

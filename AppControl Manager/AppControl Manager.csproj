@@ -24,7 +24,7 @@
         so that the App will be installable on any system that neither has the .NET runtime nor the latest AppSDK
 
         Without this, we'd have to download the latest SDK and install it manually on the user's system, which will add the relevant packages
-        and satisfy the requirements of the MSIX instlaler.
+        and satisfy the requirements of the MSIX installer.
         https://learn.microsoft.com/windows/apps/windows-app-sdk/downloads
         -->
         <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
@@ -54,7 +54,7 @@
         <AssemblyName>AppControlManager</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>2.0.36.0</FileVersion>
+        <FileVersion>2.0.37.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
         <StartupObject>AppControlManager.Program</StartupObject>
@@ -137,7 +137,7 @@
         If we use "- -methodbodyfolding" parameter of the ILC.exe only, the stack traces will sometimes be nonsensical,
         because they will have methods we're not calling (they got folded with something we're actually calling)
 
-        This is the only suported way to enable folding. Disabling stack traces means I don't care about stack, feel free to fold method bodies.
+        This is the only supported way to enable folding. Disabling stack traces means I don't care about stack, feel free to fold method bodies.
         -->
         <StackTraceSupport>true</StackTraceSupport>
 
@@ -198,7 +198,7 @@
 
             The dll names are case-insensitive.
             LibraryImport doesn't need the ".dll" extension.
-            
+
         -->
         <LinkerArg Include="/DEPENDENTLOADFLAG:0x800" />
 
@@ -230,7 +230,7 @@
     -->
     <ItemGroup>
 
-        <!-- Main Packages - Without these packages, there will be compilaton errors related to missing types -->
+        <!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
         <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250811-build.2202" />
         <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
@@ -242,8 +242,8 @@
         <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250402" />
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-        <PackageReference Include="Microsoft.Identity.Client" Version="4.74.1" />
-        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.74.1" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.76.0" />
+        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.76.0" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.250720.1" />
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
         <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0-preview.7.25380.108" />
@@ -254,9 +254,9 @@
         <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
-        <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.13.1" />
+        <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.14.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3405.78" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4654" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4948" />
         <PackageReference Include="Microsoft.Windows.SDK.Win32Docs" Version="0.1.42-alpha" />
         <PackageReference Include="Microsoft.Windows.SDK.Win32Metadata" Version="63.0.31-preview" />
         <PackageReference Include="Microsoft.Windows.WDK.Win32Metadata" Version="0.13.25-experimental" />
@@ -278,7 +278,7 @@
         <Content Include="Assets\Square44x44Logo.scale-200.png" />
         <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
         <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-        <Content Include="CppInterop\ManageDefender.exe">
+        <Content Include="CppInterop\ComManager.exe">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="CppInterop\ScheduledTaskManager.exe">
@@ -311,9 +311,6 @@
         <Content Include="Resources\StrictKernelMode_NoFlightRoots.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="RustInterop\DeviceGuardWMIRetriever.exe">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <Content Include="Shell\Shell.dll">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
@@ -323,7 +320,7 @@
         </None>
     </ItemGroup>
 
-    <!-- Only need this for Debug mode when since we don't run the linker every time to absorb the static library -->
+    <!-- Only need this for Debug mode since we don't run the linker every time to absorb the static library -->
     <ItemGroup Condition="'$(Configuration)' == 'Debug'">
         <Content Include="RustInterop\rust_interop.dll">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>

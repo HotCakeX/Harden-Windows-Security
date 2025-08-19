@@ -2836,10 +2836,10 @@
   <data name="AppControlStatusTextBlock.Text" xml:space="preserve">
     <value>ബിസിനസ്സിനായുള്ള ആപ്ലിക്കേഷൻ കൺട്രോൾ നില</value>
   </data>
-  <data name="UMCITextBlock.Text" xml:space="preserve">
+  <data name="UMCITextBlock.Header" xml:space="preserve">
     <value>യൂസർ മോഡ് കോഡ് ഇന്റഗ്രിറ്റി</value>
   </data>
-  <data name="KMCITextBlock.Text" xml:space="preserve">
+  <data name="KMCITextBlock.Header" xml:space="preserve">
     <value>കേർണൽ മോഡ് കോഡ് ഇന്റഗ്രിറ്റി</value>
   </data>
   <data name="BasePolicies.Text" xml:space="preserve">

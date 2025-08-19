@@ -81,7 +81,7 @@ The `.cip` binary is composed of two concatenated parts:
 
 <br>
 
-The **Version Identifier** serves to signal exactly which subsequent versioned blocks (V3, V4, …, V8) are encoded in the body. This is a brilliant implementation done by Microsoft which enables backward compatibility: older policies omit higher-numbered blocks, preventing attempts to read beyond EOF. 
+The **Version Identifier** serves to signal exactly which subsequent versioned blocks (V3, V4, …, V8) are encoded in the body. This is a brilliant implementation done by Microsoft which enables backward compatibility: older policies omit higher-numbered blocks, preventing attempts to read beyond EOF.
 
 ### 1.4 Body Serialization
 

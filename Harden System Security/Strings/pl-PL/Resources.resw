@@ -604,13 +604,13 @@
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Wybierz jeden z szablonów ochrony do zastosowania, są to predefiniowane zestawy konfiguracji zaprojektowane dla różnych poziomów bezpieczeństwa.</value>
   </data>
-    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="BasicProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Podstawowy</value>
   </data>
-    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="RecommendedProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Zalecany</value>
   </data>
-    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Kompletny</value>
   </data>
   <data name="ProtectPageTitle.Text" xml:space="preserve">
@@ -2588,5 +2588,47 @@
   </data>
   <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
    <value>Wyświetl i zarządzaj adresem URL pobierania linii bazowej.</value>
+  </data>
+   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj reguły zapory sieciowej dla wybranego elementu.</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Dodaj reguły zapory sieciowej dla wybranego elementu.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń reguły zapory sieciowej dla wybranego elementu.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Usuń reguły zapory sieciowej dla wybranego elementu.</value>
+  </data>
+  <data name="TargetedListsText.Text" xml:space="preserve">
+   <value>Listy Docelowe</value>
+  </data>
+  <data name="TargetedListsDescriptionText.Text" xml:space="preserve">
+   <value>Prekompilowane i codziennie aktualizowane listy docelowe zawierające zakresy adresów IP specyficzne dla kraju, umożliwiające usprawnienie wdrażania wymagań zgodności i polityk bezpieczeństwa poprzez wydajne kontrole blokujące zapory Windows.</value>
+  </data>
+  <data name="IndividualCountryIPBlockingText.Text" xml:space="preserve">
+   <value>Blokowanie IP Pojedynczego Kraju</value>
+  </data>
+  <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
+   <value>Użyj codziennie aktualizowanych zakresów adresów IP krajów, aby blokować określone kraje w swoim systemie za pomocą reguł zapory Windows.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
+    <value>Dowiedz się więcej</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknij lub stuknij tutaj, aby otworzyć stronę internetową z bardziej szczegółowymi informacjami.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Kliknij lub stuknij tutaj, aby otworzyć stronę internetową z bardziej szczegółowymi informacjami.</value>
+  </data>
+  <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
+   <value>Wyszukaj kraje...</value>
   </data>
 </root>

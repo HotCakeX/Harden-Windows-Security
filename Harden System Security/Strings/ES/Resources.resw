@@ -604,13 +604,13 @@
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Seleccione una de las configuraciones predefinidas de protección para aplicar, son conjuntos de configuración predefinidos diseñados para diferentes niveles de seguridad.</value>
   </data>
-    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="BasicProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Básico</value>
   </data>
-    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="RecommendedProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Recomendado</value>
   </data>
-    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Completo</value>
   </data>
   <data name="ProtectPageTitle.Text" xml:space="preserve">
@@ -2588,5 +2588,47 @@
   </data>
   <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
    <value>Ver y gestionar la URL de descarga de la línea base.</value>
+  </data>
+   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>Agregar</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Agregar reglas de firewall para el elemento seleccionado.</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Agregar reglas de firewall para el elemento seleccionado.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Quitar reglas de firewall para el elemento seleccionado.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Quitar reglas de firewall para el elemento seleccionado.</value>
+  </data>
+  <data name="TargetedListsText.Text" xml:space="preserve">
+   <value>Listas Dirigidas</value>
+  </data>
+  <data name="TargetedListsDescriptionText.Text" xml:space="preserve">
+   <value>Listas dirigidas precompiladas y actualizadas diariamente que contienen rangos de direcciones IP específicos por país, permitiendo la implementación simplificada de requisitos de cumplimiento y políticas de seguridad a través de controles de bloqueo eficientes del Firewall de Windows.</value>
+  </data>
+  <data name="IndividualCountryIPBlockingText.Text" xml:space="preserve">
+   <value>Bloqueo de IP de País Individual</value>
+  </data>
+  <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
+   <value>Utilice rangos de direcciones IP de países actualizados diariamente para bloquear países específicos en su sistema a través de reglas del Firewall de Windows.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
+    <value>Aprender Más</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Haga clic o toque aquí para abrir una página web con información más detallada.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Haga clic o toque aquí para abrir una página web con información más detallada.</value>
+  </data>
+  <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
+   <value>Buscar países...</value>
   </data>
 </root>

@@ -151,9 +151,6 @@ internal static class GlobalVars
 	// Path to the empty policy file in app resources
 	internal static readonly string EmptyPolicyPath = Path.Combine(AppContext.BaseDirectory, "Resources", "EmptyPolicy.xml");
 
-	// Path to the RustInterop directory
-	private static readonly string RustInteropPath = Path.Combine(AppContext.BaseDirectory, "RustInterop");
-
 	// Path to the CppInteropPath directory
 	private static readonly string CppInteropPath = Path.Combine(AppContext.BaseDirectory, "CppInterop");
 
@@ -172,11 +169,8 @@ internal static class GlobalVars
 	// When the the list of installed packaged apps is retrieved, this URI is used whenever an installed app doesn't have a valid URI logo path
 	internal const string FallBackAppLogoURI = "ms-appx:///Assets/Others/AppWithoutIconPlaceHolder.png";
 
-	// Path to the DeviceGuardWMIRetriever program in the App directory
-	internal static readonly string DeviceGuardWMIRetrieverProcessPath = Path.Combine(RustInteropPath, "DeviceGuardWMIRetriever.exe");
-
-	// Path to the ManageDefender program in the App directory
-	internal static readonly string ManageDefenderProcessPath = Path.Combine(CppInteropPath, "ManageDefender.exe");
+	// Path to the ComManager program in the App directory
+	internal static readonly string ComManagerProcessPath = Path.Combine(CppInteropPath, "ComManager.exe");
 
 	// Path to the ScheduledTaskManager program in the App directory
 	internal static readonly string ScheduledTaskManagerProcessPath = Path.Combine(CppInteropPath, "ScheduledTaskManager.exe");

@@ -206,6 +206,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content")],
 			pages: [typeof(Pages.Protects.MicrosoftBaseLinesOverrides)]
 		);
+
+		breadCrumbMappingsV2[typeof(Pages.Protects.CountryIPBlocking)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("CountryIPBlockingNavItem/Content")],
+			pages: [typeof(Pages.Protects.CountryIPBlocking)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -239,7 +245,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "WinUpdate", typeof(Pages.Protects.WindowsUpdate) },
 		{ "Edge", typeof(Pages.Protects.Edge) },
 		// { "Certificates", typeof(Pages.Protects.CertificateChecking) },
-		// { "CountryIPBlocking", typeof(Pages.Protects.CountryIPBlocking) },
+		{ "CountryIPBlocking", typeof(Pages.Protects.CountryIPBlocking) },
 		{ "NonAdmin", typeof(Pages.Protects.NonAdmin) },
 		{ "FileReputation", typeof(Pages.FileReputation) },
 		{ "InstalledAppsManagement", typeof(Pages.InstalledAppsManagement) },
@@ -279,7 +285,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("WindowsUpdateNavItem/Content")] = typeof(Pages.Protects.WindowsUpdate);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("EdgeBrowserNavItem/Content")] = typeof(Pages.Protects.Edge);
 		// NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CertificatesNavItem/Content")] = typeof(Pages.Protects.CertificateChecking);
-		//NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CountryIPBlockingNavItem/Content")] = typeof(Pages.Protects.CountryIPBlocking);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CountryIPBlockingNavItem/Content")] = typeof(Pages.Protects.CountryIPBlocking);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("NonAdminCommandsNavItem/Content")] = typeof(Pages.Protects.NonAdmin);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("FileReputationNavItem/Content")] = typeof(Pages.FileReputation);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("InstalledAppsManagementNavItem/Content")] = typeof(Pages.InstalledAppsManagement);

@@ -138,10 +138,16 @@
 
                     <ComboBox x:Uid="ProtectionPresetsComboBox"
                               IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                              ItemsSource="{x:Bind ViewModel.ProtectionPresetsSource}"
                               SelectedIndex="{x:Bind ViewModel.ProtectionPresetsSelectedIndex, Mode=TwoWay}">
-                        <ComboBoxItem x:Uid="BasicProtectionPresetComboBoxItem"/>
-                        <ComboBoxItem x:Uid="RecommendedProtectionPresetComboBoxItem"/>
-                        <ComboBoxItem x:Uid="CompleteProtectionPresetComboBoxItem"/>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="Protect:ProtectionPresetComboBoxType">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                    <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
 
                     <!-- Apply Selected Button -->

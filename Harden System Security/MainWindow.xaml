@@ -318,7 +318,7 @@
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Name="CountryIPBlockingNavItem" Visibility="Collapsed" x:Uid="CountryIPBlockingNavItem" Tag="CountryIPBlocking">
+                        <NavigationViewItem x:Name="CountryIPBlockingNavItem" x:Uid="CountryIPBlockingNavItem" Tag="CountryIPBlocking">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/CountryIPBlocking.png"
                                 ShowAsMonochrome="False"
@@ -386,17 +386,7 @@
                                 <TextBlock x:Name="SidebarTextBlock" x:Uid="SidebarTextBlock" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
 
                                 <TextBlock x:Name="SidebarMainCaptionTextBlock" x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
-
-                                <HyperlinkButton x:Name="SidebarGuideHyperlinkButton"
-                                                 x:Uid="SidebarGuideHyperlinkButton"
-                                                 HorizontalAlignment="Center"
-                                                 NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar"
-                                                 Padding="12,8"
-                                                 CornerRadius="6"
-                                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                 BorderThickness="1"/>
-
+                            
                                 <HyperlinkButton x:Name="SidebarHelpHyperlinkButton"
                                                  HorizontalAlignment="Center"
                                                  NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/discussions"
@@ -415,6 +405,15 @@
                                                    FontWeight="SemiBold"/>
                                     </StackPanel>
                                 </HyperlinkButton>
+
+                                <HyperlinkButton Content="AppControl Manager"
+                                                 HorizontalAlignment="Center"
+                                                 NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"
+                                                 Padding="12,8"
+                                                 CornerRadius="6"
+                                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                 BorderThickness="1"/>
 
                             </controls:WrapPanel>
 

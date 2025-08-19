@@ -604,13 +604,13 @@
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>लागू करने के लिए सुरक्षा प्रीसेट में से एक चुनें, ये विभिन्न सुरक्षा स्तरों के लिए डिज़ाइन किए गए पूर्व-निर्धारित कॉन्फ़िगरेशन सेट हैं।</value>
   </data>
-    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="BasicProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>बुनियादी</value>
   </data>
-    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="RecommendedProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>अनुशंसित</value>
   </data>
-    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>पूर्ण</value>
   </data>
   <data name="ProtectPageTitle.Text" xml:space="preserve">
@@ -2588,5 +2588,47 @@
   </data>
   <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
    <value>आधारभूत के डाउनलोड URL को देखें और प्रबंधित करें।</value>
+  </data>
+   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>जोड़ें</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित आइटम के लिए फ़ायरवॉल नियम जोड़ें।</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>चयनित आइटम के लिए फ़ायरवॉल नियम जोड़ें।</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>हटाएं</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित आइटम के लिए फ़ायरवॉल नियम हटाएं।</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>चयनित आइटम के लिए फ़ायरवॉल नियम हटाएं।</value>
+  </data>
+  <data name="TargetedListsText.Text" xml:space="preserve">
+   <value>लक्षित सूचियां</value>
+  </data>
+  <data name="TargetedListsDescriptionText.Text" xml:space="preserve">
+   <value>पूर्व-संकलित और दैनिक अपडेट की जाने वाली लक्षित सूचियां जिनमें देश-विशिष्ट IP पता श्रेणियां शामिल हैं, जो कुशल Windows फ़ायरवॉल अवरोधन नियंत्रणों के माध्यम से अनुपालन आवश्यकताओं और सुरक्षा नीतियों के सुव्यवस्थित कार्यान्वयन को सक्षम बनाती हैं।</value>
+  </data>
+  <data name="IndividualCountryIPBlockingText.Text" xml:space="preserve">
+   <value>व्यक्तिगत देश IP अवरोधन</value>
+  </data>
+  <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
+   <value>Windows फ़ायरवॉल नियमों के माध्यम से अपने सिस्टम पर विशिष्ट देशों को अवरुद्ध करने के लिए दैनिक अपडेट होने वाली देशीय IP पता श्रेणियों का उपयोग करें।</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
+    <value>और जानें</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अधिक विस्तृत जानकारी के साथ वेब पेज खोलने के लिए यहां क्लिक या टैप करें।</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>अधिक विस्तृत जानकारी के साथ वेब पेज खोलने के लिए यहां क्लिक या टैप करें।</value>
+  </data>
+  <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
+   <value>देश खोजें...</value>
   </data>
 </root>

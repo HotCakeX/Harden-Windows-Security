@@ -37,7 +37,7 @@ updates:
       - "Dependabot"
   - package-ecosystem: "cargo"
     directories:
-      - "/AppControl Manager/"      
+      - "/AppControl Manager/"
     schedule:
       interval: "daily"
       time: "07:30"

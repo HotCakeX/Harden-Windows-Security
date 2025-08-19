@@ -1,8 +1,6 @@
 [workspace]
 members = [
   "eXclude/exploit_mitigations",
-  "eXclude/Rust WMI Interop/Microsoft Defender/*",
-  "eXclude/Rust WMI Interop/Device Guard/*",
   "eXclude/ResourceValidator",
   "eXclude/dism_capabilities",
   "eXclude/Rust Interop Library",

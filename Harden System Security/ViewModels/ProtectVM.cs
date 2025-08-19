@@ -53,6 +53,16 @@ internal sealed partial class ProtectVM : ViewModelBase
 	}
 
 	/// <summary>
+	/// The protection presets source for the ComboBox with ratings.
+	/// </summary>
+	internal readonly List<ProtectionPresetComboBoxType> ProtectionPresetsSource =
+	[
+		new ProtectionPresetComboBoxType(GlobalVars.GetStr("BasicProtectionPresetComboBoxItemText"), 1),
+		new ProtectionPresetComboBoxType(GlobalVars.GetStr("RecommendedProtectionPresetComboBoxItemText"), 3),
+		new ProtectionPresetComboBoxType(GlobalVars.GetStr("CompleteProtectionPresetComboBoxItemText"), 5)
+	];
+
+	/// <summary>
 	/// The order of these must match the order of the Categories Enum.
 	/// </summary>
 	private readonly BitmapImage[] CategoryImages = [

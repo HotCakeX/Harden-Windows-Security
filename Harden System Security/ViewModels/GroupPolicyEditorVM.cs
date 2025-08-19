@@ -339,8 +339,10 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 				if (string.Equals(fileExtension, ".json", StringComparison.OrdinalIgnoreCase))
 				{
-
 					List<RegistryPolicyEntry> policy = RegistryPolicyEntry.Load(SelectedFile);
+
+					// Retrieve friendly names
+					AdmxAdmlParser.PopulateFriendlyNames(policy);
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
@@ -348,17 +350,17 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 						{
 							// Assign the ParentVM instance to this class.
 							item.ParentVM = this;
-
 							Policies.Add(item);
 							AllPolicies.Add(item);
 						}
-
 					});
 				}
 				else if (string.Equals(fileExtension, ".pol", StringComparison.OrdinalIgnoreCase))
 				{
-
 					RegistryPolicyFile policy = RegistryPolicyParser.ParseFile(SelectedFile);
+
+					// Retrieve friendly names
+					AdmxAdmlParser.PopulateFriendlyNames(policy.Entries);
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
@@ -366,7 +368,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 						{
 							// Assign the ParentVM instance to this class.
 							item.ParentVM = this;
-
 							Policies.Add(item);
 							AllPolicies.Add(item);
 						}
@@ -380,9 +381,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			});
 
 			CalculateColumnWidths();
-
 			TotalPolicies = Policies.Count.ToString();
-
 			MainInfoBar.WriteSuccess(GlobalVars.GetStr("GroupPolicyDataLoadedSuccess"));
 		}
 		catch (Exception ex)
@@ -577,13 +576,16 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 				{
 					RegistryPolicyFile policy = RegistryPolicyParser.ParseFile(item);
 
+					// Retrieve friendly names
+					AdmxAdmlParser.PopulateFriendlyNames(policy.Entries);
+
 					string? saveLoc = null;
 
 					if (OutputDirForJsonFilesAfterConversion is null)
 					{
 						saveLoc = Path.Combine(
-						Path.GetDirectoryName(item) ?? GlobalVars.SystemDrive,
-						Path.GetFileNameWithoutExtension(item) + ".json");
+							Path.GetDirectoryName(item) ?? GlobalVars.SystemDrive,
+							Path.GetFileNameWithoutExtension(item) + ".json");
 					}
 					else
 					{

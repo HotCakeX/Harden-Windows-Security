@@ -604,13 +604,13 @@
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Επιλέξτε μία από τις προκαθορισμένες ρυθμίσεις προστασίας για εφαρμογή, είναι προκαθορισμένα σύνολα διαμορφώσεων που σχεδιάστηκαν για διαφορετικά επίπεδα ασφάλειας.</value>
   </data>
-    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="BasicProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Βασικό</value>
   </data>
-    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="RecommendedProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Συνιστώμενο</value>
   </data>
-    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Πλήρες</value>
   </data>
   <data name="ProtectPageTitle.Text" xml:space="preserve">
@@ -2588,5 +2588,47 @@
   </data>
   <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
    <value>Προβολή και διαχείριση της διεύθυνσης URL λήψης της γραμμής βάσης.</value>
+  </data>
+   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>Προσθήκη</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη κανόνων τείχους προστασίας για το επιλεγμένο στοιχείο.</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Προσθήκη κανόνων τείχους προστασίας για το επιλεγμένο στοιχείο.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>Αφαίρεση</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αφαίρεση κανόνων τείχους προστασίας για το επιλεγμένο στοιχείο.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Αφαίρεση κανόνων τείχους προστασίας για το επιλεγμένο στοιχείο.</value>
+  </data>
+  <data name="TargetedListsText.Text" xml:space="preserve">
+   <value>Στοχευμένες Λίστες</value>
+  </data>
+  <data name="TargetedListsDescriptionText.Text" xml:space="preserve">
+   <value>Προμεταγλωττισμένες και ημερησίως ενημερωμένες στοχευμένες λίστες που περιέχουν εύρη διευθύνσεων IP ειδικά για χώρες, επιτρέποντας την εξορθολογισμένη υλοποίηση απαιτήσεων συμμόρφωσης και πολιτικών ασφαλείας μέσω αποτελεσματικών ελέγχων αποκλεισμού του Τείχους Προστασίας των Windows.</value>
+  </data>
+  <data name="IndividualCountryIPBlockingText.Text" xml:space="preserve">
+   <value>Αποκλεισμός IP Μεμονωμένης Χώρας</value>
+  </data>
+  <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
+   <value>Χρησιμοποιήστε ημερησίως ενημερωμένα εύρη διευθύνσεων IP χωρών για να αποκλείσετε συγκεκριμένες χώρες στο σύστημά σας μέσω κανόνων Τείχους Προστασίας των Windows.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
+    <value>Μάθετε Περισσότερα</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κάντε κλικ ή πατήστε εδώ για να ανοίξετε μια ιστοσελίδα με πιο λεπτομερείς πληροφορίες.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Κάντε κλικ ή πατήστε εδώ για να ανοίξετε μια ιστοσελίδα με πιο λεπτομερείς πληροφορίες.</value>
+  </data>
+  <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
+   <value>Αναζήτηση χωρών...</value>
   </data>
 </root>

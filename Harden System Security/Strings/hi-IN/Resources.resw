@@ -2631,4 +2631,346 @@
   <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
    <value>देश खोजें...</value>
   </data>
+  <!--Certificates ListView Headers Start-->
+  <data name="StoreLocationHeader.Text" xml:space="preserve">
+    <value>स्टोर स्थान</value>
+  </data>
+    <data name="StoreNameHeader.Text" xml:space="preserve">
+    <value>स्टोर नाम</value>
+  </data>
+  <data name="SubjectHeader.Text" xml:space="preserve">
+    <value>विषय</value>
+  </data>
+  <data name="IssuerHeader.Text" xml:space="preserve">
+    <value>जारीकर्ता</value>
+  </data>
+  <data name="ThumbprintHeader.Text" xml:space="preserve">
+    <value>अंगूठाछाप</value>
+  </data>
+    <data name="RootSubjectHeader.Text" xml:space="preserve">
+    <value>मूल विषय</value>
+  </data>
+  <data name="RootSha256Header.Text" xml:space="preserve">
+    <value>मूल SHA256</value>
+  </data>
+  <!--Certificates ListView Headers End-->
+  <!--Certificates ListView Headers Buttons Start-->
+  <data name="StoreLocationColumnHeaderBtn.Content" xml:space="preserve">
+    <value>स्टोर स्थान</value>
+  </data>
+    <data name="StoreNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>स्टोर नाम</value>
+  </data>
+  <data name="SubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>विषय</value>
+  </data>
+  <data name="IssuerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>जारीकर्ता</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>अंगूठाछाप</value>
+  </data>
+  <data name="RootSubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>मूल विषय</value>
+  </data>
+  <data name="RootSha256ColumnHeaderBtn.Content" xml:space="preserve">
+    <value>मूल SHA256</value>
+  </data>
+  <!--Certificates ListView Headers Buttons End-->
+  <data name="StartAnalysisButton.Content" xml:space="preserve">
+    <value>विश्लेषण प्रारंभ करें</value>
+  </data>
+  <data name="StartAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>माइक्रोसॉफ्ट की विश्वसनीय मूल प्रमाणपत्र प्रोग्राम सूची डाउनलोड करता है और स्थानीय मशीन और वर्तमान उपयोगकर्ता प्रमाणपत्र स्टोर्स में सभी प्रमाणपत्रों को ढूंढता है जो उस विश्वसनीय सूची में किसी भी प्रमाणपत्र से जुड़े नहीं हैं। आप अपने सिस्टम से अविश्वसनीय प्रमाणपत्रों को भी हटा सकेंगे।</value>
+  </data>
+  <data name="StartAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>माइक्रोसॉफ्ट की विश्वसनीय मूल प्रमाणपत्र प्रोग्राम सूची डाउनलोड करता है और स्थानीय मशीन और वर्तमान उपयोगकर्ता प्रमाणपत्र स्टोर्स में सभी प्रमाणपत्रों को ढूंढता है जो उस विश्वसनीय सूची में किसी भी प्रमाणपत्र से जुड़े नहीं हैं। आप अपने सिस्टम से अविश्वसनीय प्रमाणपत्रों को भी हटा सकेंगे।</value>
+  </data>
+  <data name="GetLocalCertificatesButton.Content" xml:space="preserve">
+    <value>स्थानीय प्रमाणपत्र प्राप्त करें</value>
+  </data>
+  <data name="GetLocalCertificatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>स्थानीय मशीन और वर्तमान उपयोगकर्ता प्रमाणपत्र स्टोर्स से सभी स्थानीय प्रमाणपत्र पुनर्प्राप्त करता है, उन सभी को सूची में दिखाता है और आपको उन्हें क्रमबद्ध करने, उनमें खोज करने, उनके विवरण कॉपी करने या उन्हें हटाने की अनुमति देता है।</value>
+  </data>
+  <data name="GetLocalCertificatesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>स्थानीय मशीन और वर्तमान उपयोगकर्ता प्रमाणपत्र स्टोर्स से सभी स्थानीय प्रमाणपत्र पुनर्प्राप्त करता है, उन सभी को सूची में दिखाता है और आपको उन्हें क्रमबद्ध करने, उनमें खोज करने, उनके विवरण कॉपी करने या उन्हें हटाने की अनुमति देता है।</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.Content" xml:space="preserve">
+    <value>समाप्त प्रमाणपत्र शामिल करें</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>परिणामों में समाप्त या अभी तक वैध नहीं प्रमाणपत्र शामिल करें।</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>परिणामों में समाप्त या अभी तक वैध नहीं प्रमाणपत्र शामिल करें।</value>
+  </data>
+  <data name="SearchCertificatesTextBox.PlaceholderText" xml:space="preserve">
+   <value>प्रमाणपत्र खोजें...</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.Text" xml:space="preserve">
+   <value>प्रमाणपत्र विश्वास सूची हेडर जानकारी</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.ToolTipService.ToolTip" xml:space="preserve">
+    <value>प्रमाणपत्र विश्वास सूची हेडर जानकारी</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.AutomationProperties.HelpText" xml:space="preserve">
+   <value>प्रमाणपत्र विश्वास सूची हेडर जानकारी</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.Content" xml:space="preserve">
+    <value>CTL हेडर जानकारी</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>माइक्रोसॉफ्ट के सर्वर से डाउनलोड की गई प्रमाणपत्र विश्वसनीय सूची फाइलों के बारे में विस्तृत जानकारी प्रदर्शित करता है।</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>माइक्रोसॉफ्ट के सर्वर से डाउनलोड की गई प्रमाणपत्र विश्वसनीय सूची फाइलों के बारे में विस्तृत जानकारी प्रदर्शित करता है।</value>
+  </data>
+  <data name="MainInfoBarDeleteCertificateSelectMessage" xml:space="preserve">
+  <value>कृपया हटाने के लिए एक प्रमाणपत्र चुनें।</value>
+</data>
+<data name="DeleteCertificateDialogTitle" xml:space="preserve">
+  <value>प्रमाणपत्र हटाएं</value>
+</data>
+<data name="DeleteCertificateDialogContent" xml:space="preserve">
+  <value>क्या आप वाकई इस प्रमाणपत्र को हटाना चाहते हैं?
+
+विषय: {0}
+स्टोर: {1}\{2}
+अंगूठाछाप: {3}</value>
+</data>
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
+  <value>हटाएं</value>
+</data>
+<data name="InvalidStoreLocationWarning" xml:space="preserve">
+  <value>अमान्य स्टोर स्थान: {0}</value>
+</data>
+<data name="CertificateNotFoundInStoreWarning" xml:space="preserve">
+  <value>प्रमाणपत्र स्टोर में नहीं मिला।</value>
+</data>
+<data name="CertificateDeletedSuccessMessage" xml:space="preserve">
+  <value>प्रमाणपत्र सफलतापूर्वक {0}\{1} से हटा दिया गया</value>
+</data>
+<data name="StartingCertificateAnalysisMessage" xml:space="preserve">
+  <value>प्रमाणपत्र विश्लेषण प्रारंभ किया जा रहा है...</value>
+</data>
+<data name="StlFileParsedMessage" xml:space="preserve">
+  <value>STL फाइल ने {1} मिलीसेकंड में {0} विषयों का विश्लेषण किया।</value>
+</data>
+<data name="CertificateAnalysisCompletedMessage" xml:space="preserve">
+  <value>प्रमाणपत्र विश्लेषण पूरा हुआ। {0} प्रमाणपत्र मिले जो STL रूट्स से जुड़े नहीं हैं।</value>
+</data>
+<data name="RetrievingAllCertificatesMessage" xml:space="preserve">
+  <value>प्रमाणपत्र स्टोर्स से सभी प्रमाणपत्र प्राप्त किए जा रहे हैं...</value>
+</data>
+<data name="RetrievedCertificatesMessage" xml:space="preserve">
+  <value>{1} मिलीसेकंड में {0} प्रमाणपत्र प्राप्त किए गए।</value>
+</data>
+<data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
+  <value>प्रमाणपत्र प्राप्ति पूरी हुई। कुल {0} प्रमाणपत्र मिले।</value>
+</data>
+<data name="NoRootCertificate" xml:space="preserve">
+  <value>(कोई मूल नहीं)</value>
+</data>
+<data name="NoCertificateHash" xml:space="preserve">
+  <value>(कोई नहीं)</value>
+</data>
+<data name="EmptyValue" xml:space="preserve">
+  <value>खाली</value>
+</data>
+<data name="InputFileIsNeitherCABNorSTLError" xml:space="preserve">
+  <value>इनपुट फाइल न तो वैध CAB फाइल है और न ही STL फाइल है।</value>
+</data>
+<data name="CABFileContainsMoreThanOneFileError" xml:space="preserve">
+  <value>CAB फाइल में एक से अधिक फाइल है। बिल्कुल एक STL फाइल अपेक्षित थी।</value>
+</data>
+<data name="NoSTLFileFoundInCABError" xml:space="preserve">
+  <value>CAB संग्रह में कोई STL फाइल नहीं मिली।</value>
+</data>
+<data name="CABFileEmptyError" xml:space="preserve">
+  <value>CAB फाइल खाली है या इसमें निकालने योग्य कोई फाइल नहीं है।</value>
+</data>
+<data name="TooManyRedirectsError" xml:space="preserve">
+  <value>बहुत अधिक रीडायरेक्ट्स।</value>
+</data>
+<data name="RedirectResponseMissingLocationError" xml:space="preserve">
+  <value>रीडायरेक्ट प्रतिक्रिया में स्थान हेडर गुम है।</value>
+</data>
+<data name="SignatureVerificationFailedError" xml:space="preserve">
+  <value>SignedCms के लिए हस्ताक्षर सत्यापन असफल।</value>
+</data>
+<data name="SignerCertificateNotPresentError" xml:space="preserve">
+  <value>हस्ताक्षरकर्ता प्रमाणपत्र SignedCms में मौजूद नहीं है।</value>
+</data>
+<data name="SigningChainRootMismatchError" xml:space="preserve">
+  <value>हस्ताक्षर श्रृंखला रूट प्रदान किए गए CA प्रमाणपत्र से मेल नहीं खाता।</value>
+</data>
+<data name="UnexpectedTrailingDataCTLError" xml:space="preserve">
+  <value>शीर्ष-स्तर CTL अनुक्रम के बाद अप्रत्याशित अनुगामी डेटा।</value>
+</data>
+<data name="VersionIntegerOutOfRangeError" xml:space="preserve">
+  <value>संस्करण पूर्णांक मान सीमा से बाहर।</value>
+</data>
+<data name="MissingUsageSequenceError" xml:space="preserve">
+  <value>उपयोग अनुक्रम अनुपस्थित।</value>
+</data>
+<data name="UnexpectedTrailingDataUsageSequenceError" xml:space="preserve">
+  <value>उपयोग अनुक्रम के अंदर अप्रत्याशित अनुगामी डेटा।</value>
+</data>
+<data name="MissingThisUpdateError" xml:space="preserve">
+  <value>thisUpdate अनुपस्थित।</value>
+</data>
+<data name="MissingAlgorithmIdentifierError" xml:space="preserve">
+  <value>एल्गोरिदम पहचानकर्ता अनुपस्थित।</value>
+</data>
+<data name="UnexpectedTrailingDataTrustedSubjectError" xml:space="preserve">
+  <value>TrustedSubjectType के अंदर अप्रत्याशित अनुगामी डेटा।</value>
+</data>
+<data name="UnexpectedTrailingDataCTLElementsError" xml:space="preserve">
+  <value>CTL तत्वों के बाद अप्रत्याशित अनुगामी डेटा।</value>
+</data>
+<data name="SubjectMissingFriendlyNameError" xml:space="preserve">
+  <value>विषय में अनुकूल नाम अनुपस्थित है।</value>
+</data>
+<data name="UnexpectedTrailingDataEKUSequenceError" xml:space="preserve">
+  <value>EKU अनुक्रम के बाद अप्रत्याशित अनुगामी डेटा।</value>
+</data>
+<data name="InvalidFILETIMEError" xml:space="preserve">
+  <value>अमान्य FILETIME का सामना हुआ।</value>
+</data>
+<data name="BEGINCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>PEM में BEGIN CERTIFICATE मार्कर नहीं मिला।</value>
+</data>
+<data name="ENDCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>PEM में END CERTIFICATE मार्कर नहीं मिला।</value>
+</data>
+<data name="InvalidBase64ContentError" xml:space="preserve">
+  <value>PEM प्रमाणपत्र में अमान्य base64 सामग्री।</value>
+</data>
+<data name="EmptyEntryNameSkippingMessage" xml:space="preserve">
+  <value>खाली प्रविष्टि नाम, छोड़ा जा रहा है।</value>
+</data>
+<data name="LoadingCountriesDataMessage" xml:space="preserve">
+  <value>देशों का डेटा लोड किया जा रहा है...</value>
+</data>
+<data name="CountriesLoadedSuccessMessage" xml:space="preserve">
+  <value>सफलतापूर्वक {0} देश लोड किए गए</value>
+</data>
+<data name="CreatingRulesForMessage" xml:space="preserve">
+  <value>{0} के लिए नियम बनाए जा रहे हैं</value>
+</data>
+<data name="RemovingRulesForMessage" xml:space="preserve">
+  <value>{0} के लिए नियम हटाए जा रहे हैं</value>
+</data>
+<data name="SuccessfullyAddedIPRangeMessage" xml:space="preserve">
+  <value>ब्लॉकिंग के लिए चयनित IP रेंज सफलतापूर्वक जोड़ा गया</value>
+</data>
+<data name="SuccessfullyRemovedIPRangeMessage" xml:space="preserve">
+  <value>ब्लॉकिंग के लिए चयनित IP रेंज सफलतापूर्वक हटाया गया</value>
+</data>
+<data name="PleaseSelectCountryWarning" xml:space="preserve">
+  <value>कृपया सूची से एक देश चुनें</value>
+</data>
+<data name="CreatingIPv4RulesMessage" xml:space="preserve">
+  <value>{0} के लिए IPv4 नियम बनाए जा रहे हैं</value>
+</data>
+<data name="CreatingIPv6RulesMessage" xml:space="preserve">
+  <value>{0} के लिए IPv6 नियम बनाए जा रहे हैं</value>
+</data>
+<data name="RemovingIPv4RulesMessage" xml:space="preserve">
+  <value>{0} के लिए IPv4 नियम हटाए जा रहे हैं</value>
+</data>
+<data name="RemovingIPv6RulesMessage" xml:space="preserve">
+  <value>{0} के लिए IPv6 नियम हटाए जा रहे हैं</value>
+</data>
+<data name="SuccessfullyAddedIPBlockingRulesMessage" xml:space="preserve">
+  <value>{0} के लिए IP ब्लॉकिंग नियम सफलतापूर्वक जोड़े गए</value>
+</data>
+<data name="SuccessfullyRemovedIPBlockingRulesMessage" xml:space="preserve">
+  <value>{0} के लिए IP ब्लॉकिंग नियम सफलतापूर्वक हटाए गए</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>STA में GroupPolicyObject बनाने में असफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>STA थ्रेड में COM प्रारंभ करने में असफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>GroupPolicyObject बनाने में असफल - STA थ्रेड से null पॉइंटर वापस आया</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>COM प्रारंभ करने में असफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>स्थानीय मशीन GPO खोलने में असफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>COM अपवाद: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>{0} CSE GUID {1:B} पंजीकृत करने में असफल। HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>{0} CSE GUID {1:B} पंजीकृत करने में असफल: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="DeleteRow.Text" xml:space="preserve">
+    <value>हटाएं</value>
+  </data>
+  <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वर्तमान में चयनित आइटम(आइटम्स) को हटाएं।</value>
+  </data>
+  <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वर्तमान में चयनित आइटम(आइटम्स) को हटाएं।</value>
+  </data>
+      <data name="AuditPoliciesNavItem.Content" xml:space="preserve">
+    <value>ऑडिट नीतियां</value>
+  </data>
+    <data name="AuditPoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम की सभी ऑडिट नीतियों को देखें और प्रबंधित करें।</value>
+  </data>
+  <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम की सभी ऑडिट नीतियों को देखें और प्रबंधित करें।</value>
+  </data>
+    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <value>सिस्टम की सभी ऑडिट नीतियों को देखें और प्रबंधित करें।</value>
+  </data>
+  <!--Audit Policies ListView Headers Start-->
+  <data name="AuditSettingHeader.Text" xml:space="preserve">
+    <value>ऑडिट सेटिंग</value>
+  </data>
+  <data name="CategoryGUIDHeader.Text" xml:space="preserve">
+    <value>श्रेणी GUID</value>
+  </data>
+    <data name="SubcategoryGUIDHeader.Text" xml:space="preserve">
+    <value>उपश्रेणी GUID</value>
+  </data>
+  <!--Audit Policies ListView Headers End-->
+  <!--Audit Policies ListView Headers Buttons Start-->
+  <data name="AuditSettingColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ऑडिट सेटिंग</value>
+  </data>
+  <data name="CategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>श्रेणी GUID</value>
+  </data>
+  <data name="SubcategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>उपश्रेणी GUID</value>
+  </data>
+  <!--Audit Policies ListView Headers Buttons End-->
+  <data name="RetrieveAuditPoliciesButton.Content" xml:space="preserve">
+    <value>ऑडिट नीतियां प्राप्त करें</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम से सभी ऑडिट नीतियां प्राप्त करता है।</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>सिस्टम से सभी ऑडिट नीतियां प्राप्त करता है।</value>
+  </data>
+  <data name="SearchAuditPoliciesPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>ऑडिट नीतियां खोजें...</value>
+  </data>
+  <data name="AuditPolicyAppliedSuccess" xml:space="preserve">
+    <value>{0} के लिए ऑडिट नीति परिवर्तन {1} पर सफलतापूर्वक लागू किया गया</value>
+  </data>
+  <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
+    <value>सफलतापूर्वक {0} ऑडिट नीतियां लोड की गईं।</value>
+  </data>
 </root>

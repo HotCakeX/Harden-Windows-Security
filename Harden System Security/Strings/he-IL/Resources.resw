@@ -2631,4 +2631,346 @@
   <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
    <value>חפש מדינות...</value>
   </data>
+  <!--Certificates ListView Headers Start-->
+  <data name="StoreLocationHeader.Text" xml:space="preserve">
+    <value>מיקום מחסן</value>
+  </data>
+    <data name="StoreNameHeader.Text" xml:space="preserve">
+    <value>שם מחסן</value>
+  </data>
+  <data name="SubjectHeader.Text" xml:space="preserve">
+    <value>נושא</value>
+  </data>
+  <data name="IssuerHeader.Text" xml:space="preserve">
+    <value>מנפיק</value>
+  </data>
+  <data name="ThumbprintHeader.Text" xml:space="preserve">
+    <value>טביעת אצבע</value>
+  </data>
+    <data name="RootSubjectHeader.Text" xml:space="preserve">
+    <value>נושא בסיס</value>
+  </data>
+  <data name="RootSha256Header.Text" xml:space="preserve">
+    <value>SHA256 בסיס</value>
+  </data>
+  <!--Certificates ListView Headers End-->
+  <!--Certificates ListView Headers Buttons Start-->
+  <data name="StoreLocationColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מיקום מחסן</value>
+  </data>
+    <data name="StoreNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם מחסן</value>
+  </data>
+  <data name="SubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>נושא</value>
+  </data>
+  <data name="IssuerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מנפיק</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>טביעת אצבע</value>
+  </data>
+  <data name="RootSubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>נושא בסיס</value>
+  </data>
+  <data name="RootSha256ColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA256 בסיס</value>
+  </data>
+  <!--Certificates ListView Headers Buttons End-->
+  <data name="StartAnalysisButton.Content" xml:space="preserve">
+    <value>התחל ניתוח</value>
+  </data>
+  <data name="StartAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מוריד את רשימת התוכנית לתעודות בסיס מהימנות של מיקרוסופט ומוצא את כל התעודות במחסני התעודות של המחשב המקומי והמשתמש הנוכחי שאינן מבוססות על תעודות כלשהן ברשימה המהימנה הזו. תוכל גם למחוק את התעודות הלא מהימנות מהמערכת שלך.</value>
+  </data>
+  <data name="StartAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>מוריד את רשימת התוכנית לתעודות בסיס מהימנות של מיקרוסופט ומוצא את כל התעודות במחסני התעודות של המחשב המקומי והמשתמש הנוכחי שאינן מבוססות על תעודות כלשהן ברשימה המהימנה הזו. תוכל גם למחוק את התעודות הלא מהימנות מהמערכת שלך.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.Content" xml:space="preserve">
+    <value>קבל תעודות מקומיות</value>
+  </data>
+  <data name="GetLocalCertificatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מאחזר את כל התעודות המקומיות ממחסני התעודות של המחשב המקומי והמשתמש הנוכחי, מציג אותן ברשימה ומאפשר לך למיין אותן, לחפש בהן, להעתיק את הפרטים שלהן או למחוק אותן.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>מאחזר את כל התעודות המקומיות ממחסני התעודות של המחשב המקומי והמשתמש הנוכחי, מציג אותן ברשימה ומאפשר לך למיין אותן, לחפש בהן, להעתיק את הפרטים שלהן או למחוק אותן.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.Content" xml:space="preserve">
+    <value>כלול פגות תוקף</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כלול תעודות שפג תוקפן או שטרם תקפות בתוצאות.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>כלול תעודות שפג תוקפן או שטרם תקפות בתוצאות.</value>
+  </data>
+  <data name="SearchCertificatesTextBox.PlaceholderText" xml:space="preserve">
+   <value>חפש תעודות...</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.Text" xml:space="preserve">
+   <value>מידע כותרת רשימת אמון תעודות</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מידע כותרת רשימת אמון תעודות</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.AutomationProperties.HelpText" xml:space="preserve">
+   <value>מידע כותרת רשימת אמון תעודות</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.Content" xml:space="preserve">
+    <value>מידע כותרת CTL</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מציג מידע מפורט על קבצי רשימת התעודות המהימנות שהורדו מהשרת של מיקרוסופט.</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>מציג מידע מפורט על קבצי רשימת התעודות המהימנות שהורדו מהשרת של מיקרוסופט.</value>
+  </data>
+  <data name="MainInfoBarDeleteCertificateSelectMessage" xml:space="preserve">
+  <value>אנא בחר תעודה למחיקה.</value>
+</data>
+<data name="DeleteCertificateDialogTitle" xml:space="preserve">
+  <value>מחק תעודה</value>
+</data>
+<data name="DeleteCertificateDialogContent" xml:space="preserve">
+  <value>האם אתה בטוח שברצונך למחוק את התעודה הזו?
+
+נושא: {0}
+מחסן: {1}\{2}
+טביעת אצבע: {3}</value>
+</data>
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
+  <value>מחק</value>
+</data>
+<data name="InvalidStoreLocationWarning" xml:space="preserve">
+  <value>מיקום מחסן לא חוקי: {0}</value>
+</data>
+<data name="CertificateNotFoundInStoreWarning" xml:space="preserve">
+  <value>התעודה לא נמצאה במחסן.</value>
+</data>
+<data name="CertificateDeletedSuccessMessage" xml:space="preserve">
+  <value>התעודה נמחקה בהצלחה מ-{0}\{1}</value>
+</data>
+<data name="StartingCertificateAnalysisMessage" xml:space="preserve">
+  <value>מתחיל ניתוח תעודות...</value>
+</data>
+<data name="StlFileParsedMessage" xml:space="preserve">
+  <value>קובץ STL פוענח {0} נושאים תוך {1} אלפיות שנייה.</value>
+</data>
+<data name="CertificateAnalysisCompletedMessage" xml:space="preserve">
+  <value>ניתוח התעודות הושלם. נמצאו {0} תעודות שאינן קשורות לשורשי STL.</value>
+</data>
+<data name="RetrievingAllCertificatesMessage" xml:space="preserve">
+  <value>מאחזר את כל התעודות ממחסני התעודות...</value>
+</data>
+<data name="RetrievedCertificatesMessage" xml:space="preserve">
+  <value>אוחזרו {0} תעודות תוך {1} אלפיות שנייה.</value>
+</data>
+<data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
+  <value>אחזור התעודות הושלם. נמצאו {0} תעודות בסך הכל.</value>
+</data>
+<data name="NoRootCertificate" xml:space="preserve">
+  <value>(אין בסיס)</value>
+</data>
+<data name="NoCertificateHash" xml:space="preserve">
+  <value>(אין)</value>
+</data>
+<data name="EmptyValue" xml:space="preserve">
+  <value>ריק</value>
+</data>
+<data name="InputFileIsNeitherCABNorSTLError" xml:space="preserve">
+  <value>קובץ הקלט אינו קובץ CAB תקף ולא קובץ STL.</value>
+</data>
+<data name="CABFileContainsMoreThanOneFileError" xml:space="preserve">
+  <value>קובץ CAB מכיל יותר מקובץ אחד. צפוי בדיוק קובץ STL אחד.</value>
+</data>
+<data name="NoSTLFileFoundInCABError" xml:space="preserve">
+  <value>לא נמצא קובץ STL בארכיון CAB.</value>
+</data>
+<data name="CABFileEmptyError" xml:space="preserve">
+  <value>קובץ CAB ריק או אינו מכיל קבצים הניתנים לחילוץ.</value>
+</data>
+<data name="TooManyRedirectsError" xml:space="preserve">
+  <value>יותר מדי הפניות.</value>
+</data>
+<data name="RedirectResponseMissingLocationError" xml:space="preserve">
+  <value>תגובת הפניה חסרה כותרת מיקום.</value>
+</data>
+<data name="SignatureVerificationFailedError" xml:space="preserve">
+  <value>אימות חתימה נכשל עבור SignedCms.</value>
+</data>
+<data name="SignerCertificateNotPresentError" xml:space="preserve">
+  <value>תעודת החותם לא קיימת ב-SignedCms.</value>
+</data>
+<data name="SigningChainRootMismatchError" xml:space="preserve">
+  <value>שורש שרשרת החתימה אינו תואם לתעודת הרשות המסמיכה שסופקה.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLError" xml:space="preserve">
+  <value>נתונים נגררים לא צפויים אחרי רצף CTL ברמה העליונה.</value>
+</data>
+<data name="VersionIntegerOutOfRangeError" xml:space="preserve">
+  <value>ערך מספר הגרסה מחוץ לטווח.</value>
+</data>
+<data name="MissingUsageSequenceError" xml:space="preserve">
+  <value>רצף שימוש חסר.</value>
+</data>
+<data name="UnexpectedTrailingDataUsageSequenceError" xml:space="preserve">
+  <value>נתונים נגררים לא צפויים בתוך רצף שימוש.</value>
+</data>
+<data name="MissingThisUpdateError" xml:space="preserve">
+  <value>thisUpdate חסר.</value>
+</data>
+<data name="MissingAlgorithmIdentifierError" xml:space="preserve">
+  <value>מזהה אלגוריתם חסר.</value>
+</data>
+<data name="UnexpectedTrailingDataTrustedSubjectError" xml:space="preserve">
+  <value>נתונים נגררים לא צפויים בתוך TrustedSubjectType.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLElementsError" xml:space="preserve">
+  <value>נתונים נגררים לא צפויים אחרי רכיבי CTL.</value>
+</data>
+<data name="SubjectMissingFriendlyNameError" xml:space="preserve">
+  <value>נושא חסר שם ידידותי.</value>
+</data>
+<data name="UnexpectedTrailingDataEKUSequenceError" xml:space="preserve">
+  <value>נתונים נגררים לא צפויים אחרי רצף EKU.</value>
+</data>
+<data name="InvalidFILETIMEError" xml:space="preserve">
+  <value>FILETIME לא חוקי.</value>
+</data>
+<data name="BEGINCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>סמן BEGIN CERTIFICATE לא נמצא ב-PEM.</value>
+</data>
+<data name="ENDCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>סמן END CERTIFICATE לא נמצא ב-PEM.</value>
+</data>
+<data name="InvalidBase64ContentError" xml:space="preserve">
+  <value>תוכן base64 לא חוקי בתעודת PEM.</value>
+</data>
+<data name="EmptyEntryNameSkippingMessage" xml:space="preserve">
+  <value>שם רשומה ריק, מדלג.</value>
+</data>
+<data name="LoadingCountriesDataMessage" xml:space="preserve">
+  <value>טוען נתוני מדינות...</value>
+</data>
+<data name="CountriesLoadedSuccessMessage" xml:space="preserve">
+  <value>נטענו בהצלחה {0} מדינות</value>
+</data>
+<data name="CreatingRulesForMessage" xml:space="preserve">
+  <value>יוצר כללים עבור {0}</value>
+</data>
+<data name="RemovingRulesForMessage" xml:space="preserve">
+  <value>מסיר כללים עבור {0}</value>
+</data>
+<data name="SuccessfullyAddedIPRangeMessage" xml:space="preserve">
+  <value>נוסף בהצלחה טווח הכתובות IP שנבחר לחסימה</value>
+</data>
+<data name="SuccessfullyRemovedIPRangeMessage" xml:space="preserve">
+  <value>הוסר בהצלחה טווח הכתובות IP שנבחר לחסימה</value>
+</data>
+<data name="PleaseSelectCountryWarning" xml:space="preserve">
+  <value>אנא בחר מדינה מהרשימה</value>
+</data>
+<data name="CreatingIPv4RulesMessage" xml:space="preserve">
+  <value>יוצר כללי IPv4 עבור {0}</value>
+</data>
+<data name="CreatingIPv6RulesMessage" xml:space="preserve">
+  <value>יוצר כללי IPv6 עבור {0}</value>
+</data>
+<data name="RemovingIPv4RulesMessage" xml:space="preserve">
+  <value>מסיר כללי IPv4 עבור {0}</value>
+</data>
+<data name="RemovingIPv6RulesMessage" xml:space="preserve">
+  <value>מסיר כללי IPv6 עבור {0}</value>
+</data>
+<data name="SuccessfullyAddedIPBlockingRulesMessage" xml:space="preserve">
+  <value>נוספו בהצלחה כללי חסימת IP עבור {0}</value>
+</data>
+<data name="SuccessfullyRemovedIPBlockingRulesMessage" xml:space="preserve">
+  <value>הוסרו בהצלחה כללי חסימת IP עבור {0}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>נכשל ביצירת GroupPolicyObject ב-STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>נכשל באתחול COM בחוט STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>נכשל ביצירת GroupPolicyObject - מצביע ריק הוחזר מחוט STA</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>נכשל באתחול COM. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>נכשל בפתיחת GPO של המחשב המקומי. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>חריגת COM: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>נכשל ברישום {0} CSE GUID {1:B}. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>נכשל ברישום {0} CSE GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="DeleteRow.Text" xml:space="preserve">
+    <value>מחק</value>
+  </data>
+  <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את הפריט(ים) שנבחר(ו) כרגע.</value>
+  </data>
+  <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מחק את הפריט(ים) שנבחר(ו) כרגע.</value>
+  </data>
+      <data name="AuditPoliciesNavItem.Content" xml:space="preserve">
+    <value>מדיניות ביקורת</value>
+  </data>
+    <data name="AuditPoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צפיה וניהול של כל מדיניות הביקורת במערכת.</value>
+  </data>
+  <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צפיה וניהול של כל מדיניות הביקורת במערכת.</value>
+  </data>
+    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <value>צפיה וניהול של כל מדיניות הביקורת במערכת.</value>
+  </data>
+  <!--Audit Policies ListView Headers Start-->
+  <data name="AuditSettingHeader.Text" xml:space="preserve">
+    <value>הגדרת ביקורת</value>
+  </data>
+  <data name="CategoryGUIDHeader.Text" xml:space="preserve">
+    <value>GUID קטגוריה</value>
+  </data>
+    <data name="SubcategoryGUIDHeader.Text" xml:space="preserve">
+    <value>GUID תת-קטגוריה</value>
+  </data>
+  <!--Audit Policies ListView Headers End-->
+  <!--Audit Policies ListView Headers Buttons Start-->
+  <data name="AuditSettingColumnHeaderBtn.Content" xml:space="preserve">
+    <value>הגדרת ביקורת</value>
+  </data>
+  <data name="CategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>GUID קטגוריה</value>
+  </data>
+  <data name="SubcategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>GUID תת-קטגוריה</value>
+  </data>
+  <!--Audit Policies ListView Headers Buttons End-->
+  <data name="RetrieveAuditPoliciesButton.Content" xml:space="preserve">
+    <value>אחזור מדיניות ביקורת</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מאחזר את כל מדיניות הביקורת מהמערכת.</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>מאחזר את כל מדיניות הביקורת מהמערכת.</value>
+  </data>
+  <data name="SearchAuditPoliciesPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>חיפוש מדיניות ביקורת...</value>
+  </data>
+  <data name="AuditPolicyAppliedSuccess" xml:space="preserve">
+    <value>מדיניות הביקורת עבור {0} הוחלה בהצלחה ל-{1}</value>
+  </data>
+  <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
+    <value>נטענו בהצלחה {0} מדיניות ביקורת.</value>
+  </data>
 </root>

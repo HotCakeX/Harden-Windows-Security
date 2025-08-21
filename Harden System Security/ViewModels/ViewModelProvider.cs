@@ -121,6 +121,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<MicrosoftBaseLinesOverridesVM> _microsoftBaseLinesOverridesVM = new(() =>
 		new MicrosoftBaseLinesOverridesVM(), false);
 
+	private static readonly Lazy<AuditPoliciesVM> _auditPoliciesVM = new(() =>
+		new AuditPoliciesVM(), false);
+
 	// Internal Properties - Core Dependencies \\
 	internal static AppSettings.Main AppSettings => _appSettings.Value;
 
@@ -153,4 +156,5 @@ internal static class ViewModelProvider
 	internal static MicrosoftSecurityBaselineVM MicrosoftSecurityBaselineVM => _microsoftSecurityBaselineVM.Value;
 	internal static Microsoft365AppsSecurityBaselineVM Microsoft365AppsSecurityBaselineVM => _microsoft365AppsSecurityBaselineVM.Value;
 	internal static MicrosoftBaseLinesOverridesVM MicrosoftBaseLinesOverridesVM => _microsoftBaseLinesOverridesVM.Value;
+	internal static AuditPoliciesVM AuditPoliciesVM => _auditPoliciesVM.Value;
 }

@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class WindowsFirewall : Page
 {
-	private WindowsFirewallVM ViewModel { get; } = ViewModelProvider.WindowsFirewallVM;
+	private WindowsFirewallVM ViewModel => ViewModelProvider.WindowsFirewallVM;
 
 	internal WindowsFirewall()
 	{

@@ -147,7 +147,7 @@ internal struct LSA_ENUMERATION_INFORMATION
 }
 
 // https://learn.microsoft.com/windows/win32/api/ntsecapi/ns-ntsecapi-audit_policy_information
-[StructLayout(LayoutKind.Sequential)]
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 internal struct AUDIT_POLICY_INFORMATION
 {
 	internal Guid AuditSubCategoryGuid;

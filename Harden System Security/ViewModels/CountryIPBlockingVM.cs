@@ -211,7 +211,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			Logger.Write("Loading countries data...");
+			Logger.Write(GlobalVars.GetStr("LoadingCountriesDataMessage"));
 
 			await Task.Run(() =>
 			{
@@ -232,7 +232,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				});
 			});
 
-			Logger.Write($"Successfully loaded {_allCountries.Count} countries");
+			Logger.Write(string.Format(GlobalVars.GetStr("CountriesLoadedSuccessMessage"), _allCountries.Count));
 		}
 		catch (Exception ex)
 		{
@@ -262,7 +262,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 							const string ruleName = "State Sponsors of Terrorism IP range blocking";
 							_ = App.AppDispatcher.TryEnqueue(() =>
 							{
-								MainInfoBar.WriteInfo($"Creating rules for {ruleName}");
+								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), ruleName));
 							});
 							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt true"));
 							break;
@@ -272,7 +272,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 							const string ruleName = "OFAC Sanctioned Countries IP range blocking";
 							_ = App.AppDispatcher.TryEnqueue(() =>
 							{
-								MainInfoBar.WriteInfo($"Creating rules for {ruleName}");
+								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), ruleName));
 							});
 							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt true"));
 							break;
@@ -281,7 +281,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				}
 			});
 
-			MainInfoBar.WriteSuccess("Successfully added the selected IP range for blocking");
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyAddedIPRangeMessage"));
 		}
 		catch (Exception ex)
 		{
@@ -311,7 +311,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 							const string ruleName = "State Sponsors of Terrorism IP range blocking";
 							_ = App.AppDispatcher.TryEnqueue(() =>
 							{
-								MainInfoBar.WriteInfo($"Removing rules for {ruleName}");
+								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), ruleName));
 							});
 							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt false"));
 							break;
@@ -321,7 +321,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 							const string ruleName = "OFAC Sanctioned Countries IP range blocking";
 							_ = App.AppDispatcher.TryEnqueue(() =>
 							{
-								MainInfoBar.WriteInfo($"Removing rules for {ruleName}");
+								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), ruleName));
 							});
 							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt false"));
 							break;
@@ -330,7 +330,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				}
 			});
 
-			MainInfoBar.WriteSuccess("Successfully removed the selected IP range for blocking");
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyRemovedIPRangeMessage"));
 		}
 		catch (Exception ex)
 		{
@@ -351,7 +351,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		{
 			if (CountrySelectedIndex < 0 || CountrySelectedIndex >= CountryLists.Count)
 			{
-				MainInfoBar.WriteWarning("Please select a country from the list");
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("PleaseSelectCountryWarning"));
 				return;
 			}
 
@@ -366,7 +366,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 
 				_ = App.AppDispatcher.TryEnqueue(() =>
 				{
-					MainInfoBar.WriteInfo($"Creating IPv4 rules for {selectedCountry.FriendlyName}");
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingIPv4RulesMessage"), selectedCountry.FriendlyName));
 				});
 
 				// Add IPv4 rules
@@ -374,14 +374,14 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 
 				_ = App.AppDispatcher.TryEnqueue(() =>
 				{
-					MainInfoBar.WriteInfo($"Creating IPv6 rules for {selectedCountry.FriendlyName}");
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingIPv6RulesMessage"), selectedCountry.FriendlyName));
 				});
 
 				// Add IPv6 rules
 				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} true"));
 			});
 
-			MainInfoBar.WriteSuccess($"Successfully added IP blocking rules for {selectedCountry.FriendlyName}");
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyAddedIPBlockingRulesMessage"), selectedCountry.FriendlyName));
 		}
 		catch (Exception ex)
 		{
@@ -402,7 +402,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		{
 			if (CountrySelectedIndex < 0 || CountrySelectedIndex >= CountryLists.Count)
 			{
-				MainInfoBar.WriteWarning("Please select a country from the list");
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("PleaseSelectCountryWarning"));
 				return;
 			}
 
@@ -417,7 +417,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 
 				_ = App.AppDispatcher.TryEnqueue(() =>
 				{
-					MainInfoBar.WriteInfo($"Removing IPv4 rules for {selectedCountry.FriendlyName}");
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingIPv4RulesMessage"), selectedCountry.FriendlyName));
 				});
 
 				// Remove IPv4 rules
@@ -425,14 +425,14 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 
 				_ = App.AppDispatcher.TryEnqueue(() =>
 				{
-					MainInfoBar.WriteInfo($"Removing IPv6 rules for {selectedCountry.FriendlyName}");
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingIPv6RulesMessage"), selectedCountry.FriendlyName));
 				});
 
 				// Remove IPv6 rules
 				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} false"));
 			});
 
-			MainInfoBar.WriteSuccess($"Successfully removed IP blocking rules for {selectedCountry.FriendlyName}");
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyRemovedIPBlockingRulesMessage"), selectedCountry.FriendlyName));
 		}
 		catch (Exception ex)
 		{

@@ -2631,4 +2631,346 @@
   <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
    <value>البحث عن الدول...</value>
   </data>
+  <!--Certificates ListView Headers Start-->
+  <data name="StoreLocationHeader.Text" xml:space="preserve">
+    <value>موقع المخزن</value>
+  </data>
+    <data name="StoreNameHeader.Text" xml:space="preserve">
+    <value>اسم المخزن</value>
+  </data>
+  <data name="SubjectHeader.Text" xml:space="preserve">
+    <value>الموضوع</value>
+  </data>
+  <data name="IssuerHeader.Text" xml:space="preserve">
+    <value>المُصدِر</value>
+  </data>
+  <data name="ThumbprintHeader.Text" xml:space="preserve">
+    <value>البصمة</value>
+  </data>
+    <data name="RootSubjectHeader.Text" xml:space="preserve">
+    <value>موضوع الجذر</value>
+  </data>
+  <data name="RootSha256Header.Text" xml:space="preserve">
+    <value>SHA256 الجذر</value>
+  </data>
+  <!--Certificates ListView Headers End-->
+  <!--Certificates ListView Headers Buttons Start-->
+  <data name="StoreLocationColumnHeaderBtn.Content" xml:space="preserve">
+    <value>موقع المخزن</value>
+  </data>
+    <data name="StoreNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>اسم المخزن</value>
+  </data>
+  <data name="SubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>الموضوع</value>
+  </data>
+  <data name="IssuerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>المُصدِر</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>البصمة</value>
+  </data>
+  <data name="RootSubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>موضوع الجذر</value>
+  </data>
+  <data name="RootSha256ColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA256 الجذر</value>
+  </data>
+  <!--Certificates ListView Headers Buttons End-->
+  <data name="StartAnalysisButton.Content" xml:space="preserve">
+    <value>بدء التحليل</value>
+  </data>
+  <data name="StartAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يقوم بتنزيل قائمة برنامج شهادات الجذر الموثوقة من مايكروسوفت ويجد جميع الشهادات في مخازن شهادات الجهاز المحلي والمستخدم الحالي التي لا تستند إلى أي شهادات في تلك القائمة الموثوقة. ستتمكن أيضاً من حذف الشهادات غير الموثوقة من نظامك.</value>
+  </data>
+  <data name="StartAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>يقوم بتنزيل قائمة برنامج شهادات الجذر الموثوقة من مايكروسوفت ويجد جميع الشهادات في مخازن شهادات الجهاز المحلي والمستخدم الحالي التي لا تستند إلى أي شهادات في تلك القائمة الموثوقة. ستتمكن أيضاً من حذف الشهادات غير الموثوقة من نظامك.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.Content" xml:space="preserve">
+    <value>الحصول على الشهادات المحلية</value>
+  </data>
+  <data name="GetLocalCertificatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يسترد جميع الشهادات المحلية من مخازن شهادات الجهاز المحلي والمستخدم الحالي، ويعرضها جميعاً في القائمة ويتيح لك ترتيبها والبحث خلالها ونسخ تفاصيلها أو حذفها.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>يسترد جميع الشهادات المحلية من مخازن شهادات الجهاز المحلي والمستخدم الحالي، ويعرضها جميعاً في القائمة ويتيح لك ترتيبها والبحث خلالها ونسخ تفاصيلها أو حذفها.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.Content" xml:space="preserve">
+    <value>تضمين منتهية الصلاحية</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تضمين الشهادات منتهية الصلاحية أو غير صالحة بعد في النتائج.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>تضمين الشهادات منتهية الصلاحية أو غير صالحة بعد في النتائج.</value>
+  </data>
+  <data name="SearchCertificatesTextBox.PlaceholderText" xml:space="preserve">
+   <value>البحث في الشهادات...</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.Text" xml:space="preserve">
+   <value>معلومات رأس قائمة ثقة الشهادات</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.ToolTipService.ToolTip" xml:space="preserve">
+    <value>معلومات رأس قائمة ثقة الشهادات</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.AutomationProperties.HelpText" xml:space="preserve">
+   <value>معلومات رأس قائمة ثقة الشهادات</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.Content" xml:space="preserve">
+    <value>معلومات رأس CTL</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يعرض معلومات تفصيلية حول ملفات قائمة الشهادات الموثوقة المنزلة من خادم مايكروسوفت.</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>يعرض معلومات تفصيلية حول ملفات قائمة الشهادات الموثوقة المنزلة من خادم مايكروسوفت.</value>
+  </data>
+  <data name="MainInfoBarDeleteCertificateSelectMessage" xml:space="preserve">
+  <value>يرجى تحديد شهادة للحذف.</value>
+</data>
+<data name="DeleteCertificateDialogTitle" xml:space="preserve">
+  <value>حذف الشهادة</value>
+</data>
+<data name="DeleteCertificateDialogContent" xml:space="preserve">
+  <value>هل أنت متأكد من أنك تريد حذف هذه الشهادة؟
+
+الموضوع: {0}
+المخزن: {1}\{2}
+البصمة: {3}</value>
+</data>
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
+  <value>حذف</value>
+</data>
+<data name="InvalidStoreLocationWarning" xml:space="preserve">
+  <value>موقع مخزن غير صالح: {0}</value>
+</data>
+<data name="CertificateNotFoundInStoreWarning" xml:space="preserve">
+  <value>الشهادة غير موجودة في المخزن.</value>
+</data>
+<data name="CertificateDeletedSuccessMessage" xml:space="preserve">
+  <value>تم حذف الشهادة بنجاح من {0}\{1}</value>
+</data>
+<data name="StartingCertificateAnalysisMessage" xml:space="preserve">
+  <value>بدء تحليل الشهادات...</value>
+</data>
+<data name="StlFileParsedMessage" xml:space="preserve">
+  <value>تم تحليل ملف STL لـ {0} موضوع في {1} مللي ثانية.</value>
+</data>
+<data name="CertificateAnalysisCompletedMessage" xml:space="preserve">
+  <value>اكتمل تحليل الشهادات. تم العثور على {0} شهادة لا ترتبط بجذور STL.</value>
+</data>
+<data name="RetrievingAllCertificatesMessage" xml:space="preserve">
+  <value>استرداد جميع الشهادات من مخازن الشهادات...</value>
+</data>
+<data name="RetrievedCertificatesMessage" xml:space="preserve">
+  <value>تم استرداد {0} شهادة في {1} مللي ثانية.</value>
+</data>
+<data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
+  <value>اكتمل استرداد الشهادات. تم العثور على {0} شهادة إجمالي.</value>
+</data>
+<data name="NoRootCertificate" xml:space="preserve">
+  <value>(لا يوجد جذر)</value>
+</data>
+<data name="NoCertificateHash" xml:space="preserve">
+  <value>(لا يوجد)</value>
+</data>
+<data name="EmptyValue" xml:space="preserve">
+  <value>فارغ</value>
+</data>
+<data name="InputFileIsNeitherCABNorSTLError" xml:space="preserve">
+  <value>الملف المدخل ليس ملف CAB صالح ولا ملف STL.</value>
+</data>
+<data name="CABFileContainsMoreThanOneFileError" xml:space="preserve">
+  <value>يحتوي ملف CAB على أكثر من ملف واحد. متوقع ملف STL واحد فقط.</value>
+</data>
+<data name="NoSTLFileFoundInCABError" xml:space="preserve">
+  <value>لم يتم العثور على ملف STL في أرشيف CAB.</value>
+</data>
+<data name="CABFileEmptyError" xml:space="preserve">
+  <value>ملف CAB فارغ أو لا يحتوي على ملفات قابلة للاستخراج.</value>
+</data>
+<data name="TooManyRedirectsError" xml:space="preserve">
+  <value>عمليات إعادة توجيه كثيرة جداً.</value>
+</data>
+<data name="RedirectResponseMissingLocationError" xml:space="preserve">
+  <value>استجابة إعادة التوجيه تفتقر إلى رأس الموقع.</value>
+</data>
+<data name="SignatureVerificationFailedError" xml:space="preserve">
+  <value>فشل التحقق من التوقيع لـ SignedCms.</value>
+</data>
+<data name="SignerCertificateNotPresentError" xml:space="preserve">
+  <value>شهادة الموقِّع غير موجودة في SignedCms.</value>
+</data>
+<data name="SigningChainRootMismatchError" xml:space="preserve">
+  <value>جذر سلسلة التوقيع لا يتطابق مع شهادة السلطة المرجعية المقدمة.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLError" xml:space="preserve">
+  <value>بيانات لاحقة غير متوقعة بعد تسلسل CTL من المستوى الأعلى.</value>
+</data>
+<data name="VersionIntegerOutOfRangeError" xml:space="preserve">
+  <value>قيمة رقم الإصدار خارج النطاق.</value>
+</data>
+<data name="MissingUsageSequenceError" xml:space="preserve">
+  <value>تسلسل الاستخدام مفقود.</value>
+</data>
+<data name="UnexpectedTrailingDataUsageSequenceError" xml:space="preserve">
+  <value>بيانات لاحقة غير متوقعة داخل تسلسل الاستخدام.</value>
+</data>
+<data name="MissingThisUpdateError" xml:space="preserve">
+  <value>thisUpdate مفقود.</value>
+</data>
+<data name="MissingAlgorithmIdentifierError" xml:space="preserve">
+  <value>معرف الخوارزمية مفقود.</value>
+</data>
+<data name="UnexpectedTrailingDataTrustedSubjectError" xml:space="preserve">
+  <value>بيانات لاحقة غير متوقعة داخل TrustedSubjectType.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLElementsError" xml:space="preserve">
+  <value>بيانات لاحقة غير متوقعة بعد عناصر CTL.</value>
+</data>
+<data name="SubjectMissingFriendlyNameError" xml:space="preserve">
+  <value>الموضوع يفتقر إلى الاسم الودود.</value>
+</data>
+<data name="UnexpectedTrailingDataEKUSequenceError" xml:space="preserve">
+  <value>بيانات لاحقة غير متوقعة بعد تسلسل EKU.</value>
+</data>
+<data name="InvalidFILETIMEError" xml:space="preserve">
+  <value>FILETIME غير صالح.</value>
+</data>
+<data name="BEGINCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>لم يتم العثور على علامة BEGIN CERTIFICATE في PEM.</value>
+</data>
+<data name="ENDCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>لم يتم العثور على علامة END CERTIFICATE في PEM.</value>
+</data>
+<data name="InvalidBase64ContentError" xml:space="preserve">
+  <value>محتوى base64 غير صالح في شهادة PEM.</value>
+</data>
+<data name="EmptyEntryNameSkippingMessage" xml:space="preserve">
+  <value>اسم الإدخال فارغ، يتم التخطي.</value>
+</data>
+<data name="LoadingCountriesDataMessage" xml:space="preserve">
+  <value>تحميل بيانات البلدان...</value>
+</data>
+<data name="CountriesLoadedSuccessMessage" xml:space="preserve">
+  <value>تم تحميل {0} بلد بنجاح</value>
+</data>
+<data name="CreatingRulesForMessage" xml:space="preserve">
+  <value>إنشاء قواعد لـ {0}</value>
+</data>
+<data name="RemovingRulesForMessage" xml:space="preserve">
+  <value>إزالة قواعد لـ {0}</value>
+</data>
+<data name="SuccessfullyAddedIPRangeMessage" xml:space="preserve">
+  <value>تمت إضافة نطاق IP المحدد للحجب بنجاح</value>
+</data>
+<data name="SuccessfullyRemovedIPRangeMessage" xml:space="preserve">
+  <value>تمت إزالة نطاق IP المحدد للحجب بنجاح</value>
+</data>
+<data name="PleaseSelectCountryWarning" xml:space="preserve">
+  <value>يرجى تحديد بلد من القائمة</value>
+</data>
+<data name="CreatingIPv4RulesMessage" xml:space="preserve">
+  <value>إنشاء قواعد IPv4 لـ {0}</value>
+</data>
+<data name="CreatingIPv6RulesMessage" xml:space="preserve">
+  <value>إنشاء قواعد IPv6 لـ {0}</value>
+</data>
+<data name="RemovingIPv4RulesMessage" xml:space="preserve">
+  <value>إزالة قواعد IPv4 لـ {0}</value>
+</data>
+<data name="RemovingIPv6RulesMessage" xml:space="preserve">
+  <value>إزالة قواعد IPv6 لـ {0}</value>
+</data>
+<data name="SuccessfullyAddedIPBlockingRulesMessage" xml:space="preserve">
+  <value>تمت إضافة قواعد حجب IP لـ {0} بنجاح</value>
+</data>
+<data name="SuccessfullyRemovedIPBlockingRulesMessage" xml:space="preserve">
+  <value>تمت إزالة قواعد حجب IP لـ {0} بنجاح</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>فشل في إنشاء GroupPolicyObject في STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>فشل في تهيئة COM في خيط STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>فشل في إنشاء GroupPolicyObject - تم إرجاع مؤشر فارغ من خيط STA</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>فشل في تهيئة COM. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>فشل في فتح GPO للجهاز المحلي. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>استثناء COM: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>فشل في تسجيل {0} CSE GUID {1:B}. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>فشل في تسجيل {0} CSE GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="DeleteRow.Text" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حذف العنصر (العناصر) المحدد حالياً.</value>
+  </data>
+  <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حذف العنصر (العناصر) المحدد حالياً.</value>
+  </data>
+      <data name="AuditPoliciesNavItem.Content" xml:space="preserve">
+    <value>سياسات التدقيق</value>
+  </data>
+    <data name="AuditPoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض وإدارة جميع سياسات التدقيق في النظام.</value>
+  </data>
+  <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عرض وإدارة جميع سياسات التدقيق في النظام.</value>
+  </data>
+    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <value>عرض وإدارة جميع سياسات التدقيق في النظام.</value>
+  </data>
+  <!--Audit Policies ListView Headers Start-->
+  <data name="AuditSettingHeader.Text" xml:space="preserve">
+    <value>إعداد التدقيق</value>
+  </data>
+  <data name="CategoryGUIDHeader.Text" xml:space="preserve">
+    <value>معرف الفئة GUID</value>
+  </data>
+    <data name="SubcategoryGUIDHeader.Text" xml:space="preserve">
+    <value>معرف الفئة الفرعية GUID</value>
+  </data>
+  <!--Audit Policies ListView Headers End-->
+  <!--Audit Policies ListView Headers Buttons Start-->
+  <data name="AuditSettingColumnHeaderBtn.Content" xml:space="preserve">
+    <value>إعداد التدقيق</value>
+  </data>
+  <data name="CategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>معرف الفئة GUID</value>
+  </data>
+  <data name="SubcategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>معرف الفئة الفرعية GUID</value>
+  </data>
+  <!--Audit Policies ListView Headers Buttons End-->
+  <data name="RetrieveAuditPoliciesButton.Content" xml:space="preserve">
+    <value>استرداد سياسات التدقيق</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يسترد جميع سياسات التدقيق من النظام.</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>يسترد جميع سياسات التدقيق من النظام.</value>
+  </data>
+  <data name="SearchAuditPoliciesPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>البحث في سياسات التدقيق...</value>
+  </data>
+  <data name="AuditPolicyAppliedSuccess" xml:space="preserve">
+    <value>تم تطبيق تغيير سياسة التدقيق لـ {0} إلى {1} بنجاح</value>
+  </data>
+  <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
+    <value>تم تحميل {0} سياسة تدقيق بنجاح.</value>
+  </data>
 </root>

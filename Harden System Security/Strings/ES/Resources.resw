@@ -2631,4 +2631,346 @@
   <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
    <value>Buscar países...</value>
   </data>
+  <!--Certificates ListView Headers Start-->
+  <data name="StoreLocationHeader.Text" xml:space="preserve">
+    <value>Ubicación del Almacén</value>
+  </data>
+    <data name="StoreNameHeader.Text" xml:space="preserve">
+    <value>Nombre del Almacén</value>
+  </data>
+  <data name="SubjectHeader.Text" xml:space="preserve">
+    <value>Sujeto</value>
+  </data>
+  <data name="IssuerHeader.Text" xml:space="preserve">
+    <value>Emisor</value>
+  </data>
+  <data name="ThumbprintHeader.Text" xml:space="preserve">
+    <value>Huella Digital</value>
+  </data>
+    <data name="RootSubjectHeader.Text" xml:space="preserve">
+    <value>Sujeto Raíz</value>
+  </data>
+  <data name="RootSha256Header.Text" xml:space="preserve">
+    <value>SHA256 Raíz</value>
+  </data>
+  <!--Certificates ListView Headers End-->
+  <!--Certificates ListView Headers Buttons Start-->
+  <data name="StoreLocationColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Ubicación del Almacén</value>
+  </data>
+    <data name="StoreNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Nombre del Almacén</value>
+  </data>
+  <data name="SubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Sujeto</value>
+  </data>
+  <data name="IssuerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Emisor</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Huella Digital</value>
+  </data>
+  <data name="RootSubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Sujeto Raíz</value>
+  </data>
+  <data name="RootSha256ColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA256 Raíz</value>
+  </data>
+  <!--Certificates ListView Headers Buttons End-->
+  <data name="StartAnalysisButton.Content" xml:space="preserve">
+    <value>Iniciar Análisis</value>
+  </data>
+  <data name="StartAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Descarga la lista del Programa de Certificados Raíz de Confianza de Microsoft y encuentra todos los certificados en los almacenes de certificados de Máquina Local y Usuario Actual que no están basados en ningún certificado de esa lista de confianza. También podrás eliminar los certificados no confiables de tu sistema.</value>
+  </data>
+  <data name="StartAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Descarga la lista del Programa de Certificados Raíz de Confianza de Microsoft y encuentra todos los certificados en los almacenes de certificados de Máquina Local y Usuario Actual que no están basados en ningún certificado de esa lista de confianza. También podrás eliminar los certificados no confiables de tu sistema.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.Content" xml:space="preserve">
+    <value>Obtener Certificados Locales</value>
+  </data>
+  <data name="GetLocalCertificatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recupera todos los certificados locales de los almacenes de certificados de Máquina Local y Usuario Actual, los muestra todos en la Lista y te permite ordenarlos, buscar en ellos, copiar sus detalles o eliminarlos.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Recupera todos los certificados locales de los almacenes de certificados de Máquina Local y Usuario Actual, los muestra todos en la Lista y te permite ordenarlos, buscar en ellos, copiar sus detalles o eliminarlos.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.Content" xml:space="preserve">
+    <value>Incluir Vencidos</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Incluir certificados vencidos o aún no válidos en los resultados.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Incluir certificados vencidos o aún no válidos en los resultados.</value>
+  </data>
+  <data name="SearchCertificatesTextBox.PlaceholderText" xml:space="preserve">
+   <value>Buscar certificados...</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.Text" xml:space="preserve">
+   <value>Información de Encabezado de Lista de Confianza de Certificados</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Información de Encabezado de Lista de Confianza de Certificados</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Información de Encabezado de Lista de Confianza de Certificados</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.Content" xml:space="preserve">
+    <value>Info de Encabezado CTL</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Muestra información detallada sobre los archivos de Lista de Certificados de Confianza descargados del Servidor de Microsoft.</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Muestra información detallada sobre los archivos de Lista de Certificados de Confianza descargados del Servidor de Microsoft.</value>
+  </data>
+  <data name="MainInfoBarDeleteCertificateSelectMessage" xml:space="preserve">
+  <value>Por favor seleccione un certificado para eliminar.</value>
+</data>
+<data name="DeleteCertificateDialogTitle" xml:space="preserve">
+  <value>Eliminar Certificado</value>
+</data>
+<data name="DeleteCertificateDialogContent" xml:space="preserve">
+  <value>¿Está seguro de que desea eliminar este certificado?
+
+Sujeto: {0}
+Almacén: {1}\{2}
+Huella Digital: {3}</value>
+</data>
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
+  <value>Eliminar</value>
+</data>
+<data name="InvalidStoreLocationWarning" xml:space="preserve">
+  <value>Ubicación de almacén inválida: {0}</value>
+</data>
+<data name="CertificateNotFoundInStoreWarning" xml:space="preserve">
+  <value>Certificado no encontrado en el almacén.</value>
+</data>
+<data name="CertificateDeletedSuccessMessage" xml:space="preserve">
+  <value>Certificado eliminado exitosamente de {0}\{1}</value>
+</data>
+<data name="StartingCertificateAnalysisMessage" xml:space="preserve">
+  <value>Iniciando análisis de certificados...</value>
+</data>
+<data name="StlFileParsedMessage" xml:space="preserve">
+  <value>Archivo STL procesado {0} sujetos en {1} ms.</value>
+</data>
+<data name="CertificateAnalysisCompletedMessage" xml:space="preserve">
+  <value>Análisis de certificados completado. Se encontraron {0} certificados que no se vinculan con raíces STL.</value>
+</data>
+<data name="RetrievingAllCertificatesMessage" xml:space="preserve">
+  <value>Recuperando todos los certificados de los almacenes de certificados...</value>
+</data>
+<data name="RetrievedCertificatesMessage" xml:space="preserve">
+  <value>Se recuperaron {0} certificados en {1} ms.</value>
+</data>
+<data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
+  <value>Recuperación de certificados completada. Se encontraron {0} certificados en total.</value>
+</data>
+<data name="NoRootCertificate" xml:space="preserve">
+  <value>(sin raíz)</value>
+</data>
+<data name="NoCertificateHash" xml:space="preserve">
+  <value>(ninguno)</value>
+</data>
+<data name="EmptyValue" xml:space="preserve">
+  <value>VACÍO</value>
+</data>
+<data name="InputFileIsNeitherCABNorSTLError" xml:space="preserve">
+  <value>El archivo de entrada no es ni un archivo CAB válido ni un archivo STL.</value>
+</data>
+<data name="CABFileContainsMoreThanOneFileError" xml:space="preserve">
+  <value>El archivo CAB contiene más de un archivo. Se esperaba exactamente un archivo STL.</value>
+</data>
+<data name="NoSTLFileFoundInCABError" xml:space="preserve">
+  <value>No se encontró archivo STL en el archivo CAB.</value>
+</data>
+<data name="CABFileEmptyError" xml:space="preserve">
+  <value>El archivo CAB está vacío o no contiene archivos extraíbles.</value>
+</data>
+<data name="TooManyRedirectsError" xml:space="preserve">
+  <value>Demasiadas redirecciones.</value>
+</data>
+<data name="RedirectResponseMissingLocationError" xml:space="preserve">
+  <value>La respuesta de redirección carece del encabezado Location.</value>
+</data>
+<data name="SignatureVerificationFailedError" xml:space="preserve">
+  <value>Falló la verificación de firma para SignedCms.</value>
+</data>
+<data name="SignerCertificateNotPresentError" xml:space="preserve">
+  <value>Certificado del firmante no presente en SignedCms.</value>
+</data>
+<data name="SigningChainRootMismatchError" xml:space="preserve">
+  <value>La raíz de la cadena de firma no coincide con el certificado de CA proporcionado.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLError" xml:space="preserve">
+  <value>Datos finales inesperados después de la SECUENCIA CTL de nivel superior.</value>
+</data>
+<data name="VersionIntegerOutOfRangeError" xml:space="preserve">
+  <value>Valor entero de versión fuera de rango.</value>
+</data>
+<data name="MissingUsageSequenceError" xml:space="preserve">
+  <value>Secuencia de uso faltante.</value>
+</data>
+<data name="UnexpectedTrailingDataUsageSequenceError" xml:space="preserve">
+  <value>Datos finales inesperados dentro de la secuencia de uso.</value>
+</data>
+<data name="MissingThisUpdateError" xml:space="preserve">
+  <value>thisUpdate faltante.</value>
+</data>
+<data name="MissingAlgorithmIdentifierError" xml:space="preserve">
+  <value>Identificador de algoritmo faltante.</value>
+</data>
+<data name="UnexpectedTrailingDataTrustedSubjectError" xml:space="preserve">
+  <value>Datos finales inesperados dentro de TrustedSubjectType.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLElementsError" xml:space="preserve">
+  <value>Datos finales inesperados después de elementos CTL.</value>
+</data>
+<data name="SubjectMissingFriendlyNameError" xml:space="preserve">
+  <value>Sujeto carece de nombre amigable.</value>
+</data>
+<data name="UnexpectedTrailingDataEKUSequenceError" xml:space="preserve">
+  <value>Datos finales inesperados después de la secuencia EKU.</value>
+</data>
+<data name="InvalidFILETIMEError" xml:space="preserve">
+  <value>FILETIME inválido encontrado.</value>
+</data>
+<data name="BEGINCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>Marcador BEGIN CERTIFICATE no encontrado en PEM.</value>
+</data>
+<data name="ENDCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>Marcador END CERTIFICATE no encontrado en PEM.</value>
+</data>
+<data name="InvalidBase64ContentError" xml:space="preserve">
+  <value>Contenido base64 inválido en certificado PEM.</value>
+</data>
+<data name="EmptyEntryNameSkippingMessage" xml:space="preserve">
+  <value>Nombre de entrada vacío, omitiendo.</value>
+</data>
+<data name="LoadingCountriesDataMessage" xml:space="preserve">
+  <value>Cargando datos de países...</value>
+</data>
+<data name="CountriesLoadedSuccessMessage" xml:space="preserve">
+  <value>Se cargaron exitosamente {0} países</value>
+</data>
+<data name="CreatingRulesForMessage" xml:space="preserve">
+  <value>Creando reglas para {0}</value>
+</data>
+<data name="RemovingRulesForMessage" xml:space="preserve">
+  <value>Eliminando reglas para {0}</value>
+</data>
+<data name="SuccessfullyAddedIPRangeMessage" xml:space="preserve">
+  <value>Se agregó exitosamente el rango IP seleccionado para bloqueo</value>
+</data>
+<data name="SuccessfullyRemovedIPRangeMessage" xml:space="preserve">
+  <value>Se eliminó exitosamente el rango IP seleccionado para bloqueo</value>
+</data>
+<data name="PleaseSelectCountryWarning" xml:space="preserve">
+  <value>Por favor seleccione un país de la lista</value>
+</data>
+<data name="CreatingIPv4RulesMessage" xml:space="preserve">
+  <value>Creando reglas IPv4 para {0}</value>
+</data>
+<data name="CreatingIPv6RulesMessage" xml:space="preserve">
+  <value>Creando reglas IPv6 para {0}</value>
+</data>
+<data name="RemovingIPv4RulesMessage" xml:space="preserve">
+  <value>Eliminando reglas IPv4 para {0}</value>
+</data>
+<data name="RemovingIPv6RulesMessage" xml:space="preserve">
+  <value>Eliminando reglas IPv6 para {0}</value>
+</data>
+<data name="SuccessfullyAddedIPBlockingRulesMessage" xml:space="preserve">
+  <value>Se agregaron exitosamente las reglas de bloqueo IP para {0}</value>
+</data>
+<data name="SuccessfullyRemovedIPBlockingRulesMessage" xml:space="preserve">
+  <value>Se eliminaron exitosamente las reglas de bloqueo IP para {0}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>Error al crear GroupPolicyObject en STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>Error al inicializar COM en hilo STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>Error al crear GroupPolicyObject - puntero nulo devuelto desde hilo STA</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>Error al inicializar COM. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>Error al abrir GPO de máquina local. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>Excepción COM: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>Error al registrar {0} CSE GUID {1:B}. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>Error al registrar {0} CSE GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="DeleteRow.Text" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eliminar el(los) elemento(s) seleccionado(s) actualmente.</value>
+  </data>
+  <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eliminar el(los) elemento(s) seleccionado(s) actualmente.</value>
+  </data>
+      <data name="AuditPoliciesNavItem.Content" xml:space="preserve">
+    <value>Políticas de Auditoría</value>
+  </data>
+    <data name="AuditPoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ver y administrar todas las Políticas de Auditoría del sistema.</value>
+  </data>
+  <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ver y administrar todas las Políticas de Auditoría del sistema.</value>
+  </data>
+    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <value>Ver y administrar todas las Políticas de Auditoría del sistema.</value>
+  </data>
+  <!--Audit Policies ListView Headers Start-->
+  <data name="AuditSettingHeader.Text" xml:space="preserve">
+    <value>Configuración de Auditoría</value>
+  </data>
+  <data name="CategoryGUIDHeader.Text" xml:space="preserve">
+    <value>GUID de Categoría</value>
+  </data>
+    <data name="SubcategoryGUIDHeader.Text" xml:space="preserve">
+    <value>GUID de Subcategoría</value>
+  </data>
+  <!--Audit Policies ListView Headers End-->
+  <!--Audit Policies ListView Headers Buttons Start-->
+  <data name="AuditSettingColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Configuración de Auditoría</value>
+  </data>
+  <data name="CategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>GUID de Categoría</value>
+  </data>
+  <data name="SubcategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>GUID de Subcategoría</value>
+  </data>
+  <!--Audit Policies ListView Headers Buttons End-->
+  <data name="RetrieveAuditPoliciesButton.Content" xml:space="preserve">
+    <value>Recuperar Políticas de Auditoría</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recupera todas las Políticas de Auditoría del sistema.</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Recupera todas las Políticas de Auditoría del sistema.</value>
+  </data>
+  <data name="SearchAuditPoliciesPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Buscar políticas de auditoría...</value>
+  </data>
+  <data name="AuditPolicyAppliedSuccess" xml:space="preserve">
+    <value>Se aplicó exitosamente el cambio de política de auditoría para {0} a {1}</value>
+  </data>
+  <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
+    <value>Se cargaron exitosamente {0} políticas de auditoría.</value>
+  </data>
 </root>

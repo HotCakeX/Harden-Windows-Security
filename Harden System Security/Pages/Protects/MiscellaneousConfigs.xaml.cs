@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class MiscellaneousConfigs : Page
 {
-	private MiscellaneousConfigsVM ViewModel { get; } = ViewModelProvider.MiscellaneousConfigsVM;
+	private MiscellaneousConfigsVM ViewModel => ViewModelProvider.MiscellaneousConfigsVM;
 
 	internal MiscellaneousConfigs()
 	{

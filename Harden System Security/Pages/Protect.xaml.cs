@@ -27,7 +27,7 @@ namespace HardenSystemSecurity.Pages;
 
 internal sealed partial class Protect : Page
 {
-	private ProtectVM ViewModel { get; } = ViewModelProvider.ProtectVM;
+	private ProtectVM ViewModel => ViewModelProvider.ProtectVM;
 
 	internal Protect()
 	{

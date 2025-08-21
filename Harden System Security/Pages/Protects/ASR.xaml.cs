@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class ASR : Page
 {
-	private ASRVM ViewModel { get; } = ViewModelProvider.ASRVM;
+	private ASRVM ViewModel => ViewModelProvider.ASRVM;
 
 	internal ASR()
 	{

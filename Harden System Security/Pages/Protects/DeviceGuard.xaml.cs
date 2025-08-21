@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class DeviceGuard : Page
 {
-	private DeviceGuardVM ViewModel { get; } = ViewModelProvider.DeviceGuardVM;
+	private DeviceGuardVM ViewModel => ViewModelProvider.DeviceGuardVM;
 
 	internal DeviceGuard()
 	{

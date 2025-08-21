@@ -106,6 +106,30 @@ The Harden System Security fully supports the following languages.
 
 <br>
 
+## Under the Hood: Files and Directories Structures Explained
+
+Here are the breakdown of some of the directories and files used by the Harden System Security app.
+
+* [Animated Icon Sources](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icon%20Sources) is the location hosting JSON content of the Lottie animations used for the animated buttons.
+
+* [Animated Icons](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icons) contain source generated files used for animated icons in various parts of it app.
+
+* [Resources](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources) directory contains JSON data used by the app to apply Security Measures for the following sources: `Group Policies`, `Registry Keys`, `Security Policies Registry Keys`.
+
+* [CountryIPsData](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/CountryIPsData) contains the JSON files used by the app in the [Country IP Blocking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking) page.
+
+* [Mitigations](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/Mitigations) contains files used by the app to apply, verify or remove Exploit Protection for different processes defined in it.
+
+* [DISMService.exe](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden%20System%20Security/DISMService.exe) is one of the components of the Harden System Security app that provides DISM functionalities via named pipe.
+
+* [CppInterop](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/CppInterop) directory contains parts of the Harden System Security app written in C++.
+
+<br>
+
+If you'd like to know more about a specific file or directory please feel free to reach out.
+
+<br>
+
 ## How To Build The Harden System Security Locally?
 
 You can build the Harden System Security application directly from the source code locally on your device without using any 3rd party tools in a completely automated way. It will create the MSIXBundle file containing the X64 and ARM64 MSIX packages.

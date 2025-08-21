@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class WindowsUpdate : Page
 {
-	private WindowsUpdateVM ViewModel { get; } = ViewModelProvider.WindowsUpdateVM;
+	private WindowsUpdateVM ViewModel => ViewModelProvider.WindowsUpdateVM;
 
 	internal WindowsUpdate()
 	{

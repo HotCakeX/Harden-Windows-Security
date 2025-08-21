@@ -16,6 +16,7 @@
 //
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using HardenSystemSecurity.SecurityPolicy;
 using static HardenSystemSecurity.ExploitMitigation.Main;
@@ -456,5 +457,25 @@ internal static partial class NativeMethods
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool AdjustTokenPrivileges(IntPtr TokenHandle, [MarshalAs(UnmanagedType.Bool)] bool DisableAllPrivileges,
 		ref TOKEN_PRIVILEGES NewState, uint BufferLength, IntPtr PreviousState, IntPtr ReturnLength);
+
+
+	[LibraryImport("cabinet.dll")]
+	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr FDICreate(IntPtr pfnalloc, IntPtr pfnfree, IntPtr pfnopen, IntPtr pfnread, IntPtr pfnwrite, IntPtr pfnclose, IntPtr pfnseek, int cpuType, IntPtr perf);
+
+
+	[LibraryImport("cabinet.dll")]
+	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial bool FDIDestroy(IntPtr hdfi);
+
+
+	[LibraryImport("cabinet.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial bool FDICopy(IntPtr hdfi, string pszCabinet, string pszCabPath, int flags, IntPtr fnNotify, IntPtr fnDecrypt, IntPtr userData);
 
 }

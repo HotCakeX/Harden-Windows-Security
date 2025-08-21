@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class OptionalWindowsFeatures : Page
 {
-	private OptionalWindowsFeaturesVM ViewModel { get; } = ViewModelProvider.OptionalWindowsFeaturesVM;
+	private OptionalWindowsFeaturesVM ViewModel => ViewModelProvider.OptionalWindowsFeaturesVM;
 
 	internal OptionalWindowsFeatures()
 	{

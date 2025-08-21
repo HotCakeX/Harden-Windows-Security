@@ -81,7 +81,7 @@
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
         <ErrorReport>send</ErrorReport>
-        <FileVersion>1.0.4.0</FileVersion>
+        <FileVersion>1.0.5.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <NeutralLanguage>en-US</NeutralLanguage>
         <StartupObject>HardenSystemSecurity.Program</StartupObject>
@@ -419,7 +419,6 @@
     <ItemGroup>
         <Compile Remove="ReleaseNotes.txt" />
         <Content Remove="ReleaseNotes.txt" />
-        <None Remove="Pages\Protects\MicrosoftBaseLinesOverrides.xaml" />
         <None Remove="ReleaseNotes.txt" />
 
         <Compile Remove="ARM64MSBuildLog.binlog" />
@@ -463,6 +462,9 @@
         <Content Include="Resources\BitLockerSettings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Resources\Certificate\Microsoft Root CA 2010.crt">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="Resources\CountryIPsData\CountriesData.json">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
@@ -505,12 +507,6 @@
         <Content Include="Resources\WindowsUpdateConfigurations.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Page Update="Pages\Protects\MicrosoftBaseLinesOverrides.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
     </ItemGroup>
 
 </Project>

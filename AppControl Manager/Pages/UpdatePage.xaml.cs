@@ -31,7 +31,7 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class UpdatePage : Page
 {
-	private ViewModels.UpdateVM ViewModel { get; } = ViewModels.ViewModelProvider.UpdateVM;
+	private ViewModels.UpdateVM ViewModel => ViewModels.ViewModelProvider.UpdateVM;
 
 	internal UpdatePage()
 	{

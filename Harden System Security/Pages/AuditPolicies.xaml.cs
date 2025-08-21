@@ -19,13 +19,13 @@ using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
-namespace HardenSystemSecurity.Pages.Protects;
+namespace HardenSystemSecurity.Pages;
 
-internal sealed partial class CountryIPBlocking : Page
+internal sealed partial class AuditPolicies : Page
 {
-	private CountryIPBlockingVM ViewModel => ViewModelProvider.CountryIPBlockingVM;
+	private AuditPoliciesVM ViewModel => ViewModelProvider.AuditPoliciesVM;
 
-	internal CountryIPBlocking()
+	internal AuditPolicies()
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;

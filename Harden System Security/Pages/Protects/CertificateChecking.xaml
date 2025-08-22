@@ -12,6 +12,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:protect="using:HardenSystemSecurity.Protect"
+    xmlns:Vyre="using:HardenSystemSecurity.Vyre"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     mc:Ignorable="d">
@@ -19,6 +20,7 @@
     <Grid>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -37,6 +39,350 @@
                     Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                     Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                     IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+
+        <Border Grid.Row="2" Margin="0,10,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
+
+            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                HorizontalSpacing="10"
+                                VerticalSpacing="10">
+
+                <ProgressRing Visibility="{x:Bind ViewModel.ProgressBarVisibility,Mode=OneWay}"
+                              VerticalAlignment="Center"
+                              IsIndeterminate="True" />
+
+                <TextBox Width="300"
+                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                         x:Uid="SearchCertificatesTextBox"
+                         Text="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Center" />
+
+                <ToggleButton IsChecked="{x:Bind ViewModel.IncludeExpiredCertificates, Mode=TwoWay}"
+                              x:Uid="IncludeExpiredCertsToggleButton"
+                              VerticalAlignment="Center"
+                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+
+                <Button x:Uid="StartAnalysisButton"
+                        VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.StartCertificateAnalysis}" />
+
+                <Button x:Uid="GetLocalCertificatesButton"
+                        VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.RetrieveAllCertificates}" />
+
+                <Button x:Uid="ClearButton"
+                        VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.ClearCertificateData}" />
+
+                <!-- CTL Header Info Button -->
+                <Button x:Uid="CTLHeaderInfoFlyoutButton"
+                        VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+
+                    <Button.Flyout>
+                        <Flyout>
+                            <ScrollViewer>
+                                <StackPanel Spacing="12" Margin="4">
+
+                                    <TextBlock x:Uid="CertificatesCTLHeaderInfo"
+                                               Style="{StaticResource SubtitleTextBlockStyle}"
+                                               HorizontalAlignment="Center"
+                                               Margin="0,0,0,16"/>
+
+                                    <!-- PKCS7 Message Info -->
+                                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Padding="8">
+                                        <StackPanel Spacing="6">
+                                            <TextBlock Text="PKCS7 Message:" FontWeight="SemiBold" Style="{StaticResource BodyTextBlockStyle}"/>
+                                            <TextBlock Text="  CMSG_SIGNED(2)" FontFamily="Consolas" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                            <TextBlock Text="  CMSG_SIGNED_DATA_PKCS_1_5_VERSION(1)" FontFamily="Consolas" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                            <TextBlock Text="  Content Type: '1.3.6.1.4.1.311.10.1' Certificate Trust List" FontFamily="Consolas" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- CTL Information -->
+                                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Padding="8">
+                                        <StackPanel Spacing="8">
+                                            <TextBlock Text="Certificate Trust List:" FontWeight="SemiBold" Style="{StaticResource BodyTextBlockStyle}"/>
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="140"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="Version:" FontWeight="Medium"/>
+                                                <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.CtlVersion, Mode=OneWay}" FontFamily="Consolas"/>
+                                            </Grid>
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="140"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="Usage Entries:" FontWeight="Medium"/>
+                                                <TextBlock Grid.Column="1" Text="1" FontFamily="Consolas"/>
+                                            </Grid>
+
+                                            <StackPanel>
+                                                <TextBlock Text="Usage:" FontWeight="Medium" Margin="0,0,0,4"/>
+                                                <TextBlock FontFamily="Consolas" Style="{StaticResource CaptionTextBlockStyle}">
+                                                     <Run Text="  [0] "/>
+                                                     <Run Text="{x:Bind ViewModel.CtlUsageOid, Mode=OneWay}"/>
+                                                     <Run Text=" "/>
+                                                     <Run Text="{x:Bind ViewModel.CtlUsageFriendlyName, Mode=OneWay}"/>
+                                                </TextBlock>
+                                            </StackPanel>
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="140"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="Sequence Number:" FontWeight="Medium"/>
+                                                <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.CtlSequenceNumber, Mode=OneWay}" FontFamily="Consolas"/>
+                                            </Grid>
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="140"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="ThisUpdate:" FontWeight="Medium"/>
+                                                <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.CtlThisUpdate, Mode=OneWay}" FontFamily="Consolas"/>
+                                            </Grid>
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="140"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="NextUpdate:" FontWeight="Medium"/>
+                                                <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.CtlNextUpdate, Mode=OneWay}" FontFamily="Consolas"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Subject Algorithm -->
+                                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Padding="8">
+                                        <StackPanel Spacing="8">
+                                            <TextBlock Text="Subject Algorithm:" FontWeight="SemiBold" Style="{StaticResource BodyTextBlockStyle}"/>
+
+                                            <StackPanel>
+                                                <TextBlock Text="Algorithm ObjectId:" FontWeight="Medium" Margin="0,0,0,2"/>
+                                                <TextBlock FontFamily="Consolas" Style="{StaticResource CaptionTextBlockStyle}">
+                                                        <Run Text="{x:Bind ViewModel.CtlAlgorithmOid, Mode=OneWay}"/>
+                                                        <Run Text=" "/>
+                                                        <Run Text="{x:Bind ViewModel.CtlAlgorithmOidFriendlyName, Mode=OneWay}"/>
+                                                </TextBlock>
+                                            </StackPanel>
+
+                                            <StackPanel>
+                                                <TextBlock Text="Algorithm Parameters:" FontWeight="Medium" Margin="0,0,0,2"/>
+                                                <TextBlock Text="{x:Bind ViewModel.CtlAlgorithmParameters, Mode=OneWay}" 
+                                       FontFamily="Consolas" 
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- CTL Entries Count -->
+                                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Padding="8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="140"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="CTL Entries:" FontWeight="SemiBold"/>
+                                            <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.CtlEntryCount, Mode=OneWay}" FontFamily="Consolas" FontWeight="SemiBold"/>
+                                        </Grid>
+                                    </Border>
+
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <TextBox Text="{x:Bind ViewModel.TotalCertificatesCount, Mode=OneWay}"
+                         PlaceholderText="Total Certificates"
+                         IsReadOnly="True"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Center"/>
+
+            </controls:WrapPanel>
+
+        </Border>
+
+        <customUI:ListViewV2 Grid.Row="3"
+                             RegistryKey="CertificateChecking_NonStlCerts"
+                             IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                             ItemsSource="{x:Bind ViewModel.NonStlCertificates, Mode=OneWay}"
+                             SelectionMode="Single">
+
+            <customUI:ListViewV2.Header>
+
+                <Border CornerRadius="5" Background="Black">
+                    <interactivity:Interaction.Behaviors>
+                        <customUI:StickyHeaderBehaviorV2/>
+                    </interactivity:Interaction.Behaviors>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{x:Bind ViewModel.StoreLocationColumnWidth, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.StoreNameColumnWidth, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.SubjectColumnWidth, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.IssuerColumnWidth, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ThumbprintColumnWidth, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.RootSubjectColumnWidth, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.RootSha256ColumnWidth, Mode=TwoWay}" MinWidth="50" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Uid="StoreLocationColumnHeaderBtn" Tag="StoreLocation" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="StoreNameColumnHeaderBtn" Tag="StoreName" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="SubjectColumnHeaderBtn" Tag="Subject" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IssuerColumnHeaderBtn" Tag="Issuer" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="ThumbprintColumnHeaderBtn" Tag="Thumbprint" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="RootSubjectColumnHeaderBtn" Tag="RootSubject" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="RootSha256ColumnHeaderBtn" Tag="RootSha256" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+
+                        <!-- GridSplitters between columns -->
+                        <controls:GridSplitter Grid.Column="1" />
+                        <controls:GridSplitter Grid.Column="2" />
+                        <controls:GridSplitter Grid.Column="3" />
+                        <controls:GridSplitter Grid.Column="4" />
+                        <controls:GridSplitter Grid.Column="5" />
+                        <controls:GridSplitter Grid.Column="6" />
+
+                    </Grid>
+                </Border>
+            </customUI:ListViewV2.Header>
+
+            <!-- DataTemplate for ListView items -->
+            <customUI:ListViewV2.ItemTemplate>
+                <DataTemplate x:DataType="Vyre:NonStlRootCert">
+                    <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
+                    <Grid Background="Transparent">
+                        <Grid.ContextFlyout>
+                            <MenuFlyout>
+
+                                <MenuFlyoutItem Text="Copy Row" Click="{x:Bind VMRef.CopySelectedCertificates_Click}">
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMRef.CopySelectedCertificates_Click}"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <MenuFlyoutSeparator />
+
+                                <MenuFlyoutItem Text="Delete Certificate" Click="{x:Bind VMRef.DeleteSelectedCertificate_Click}">
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Key="Delete" Invoked="{x:Bind VMRef.DeleteSelectedCertificate_Click}"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE74D;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <MenuFlyoutSeparator />
+
+                                <MenuFlyoutSubItem Text="Copy Individual Items">
+                                    <MenuFlyoutSubItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutSubItem.Icon>
+
+                                    <MenuFlyoutSubItem.Items>
+
+                                        <MenuFlyoutItem x:Uid="StoreLocationHeader" Tag="StoreLocation" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="StoreNameHeader" Tag="StoreName" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SubjectHeader" Tag="Subject" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="IssuerHeader" Tag="Issuer" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="ThumbprintHeader" Tag="Thumbprint" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="RootSubjectHeader" Tag="RootSubject" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="RootSha256Header" Tag="RootSha256" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                    </MenuFlyoutSubItem.Items>
+
+                                </MenuFlyoutSubItem>
+
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{x:Bind VMRef.StoreLocationColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMRef.StoreNameColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMRef.SubjectColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMRef.IssuerColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMRef.ThumbprintColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMRef.RootSubjectColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMRef.RootSha256ColumnWidth, Mode=OneWay}" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{x:Bind StoreLocationString}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                        <TextBlock Text="{x:Bind StoreNameString}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                        <TextBlock Text="{x:Bind Subject}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                        <TextBlock Text="{x:Bind Issuer}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                        <TextBlock Text="{x:Bind LeafThumbprintSha1}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                        <TextBlock Text="{x:Bind RootSubject}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                        <TextBlock Text="{x:Bind RootSha256Hex}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6" FontFamily="Consolas"/>
+                    </Grid>
+                </DataTemplate>
+            </customUI:ListViewV2.ItemTemplate>
+        </customUI:ListViewV2>
 
     </Grid>
 </Page>

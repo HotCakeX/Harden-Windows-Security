@@ -244,6 +244,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	#endregion
 
 	#region Copy
+
 	/// <summary>
 	/// Converts the properties of a RegistryPolicyEntry row into a labeled, formatted string for copying to clipboard.
 	/// </summary>
@@ -280,6 +281,96 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			ListViewHelper.CopyToClipboard<RegistryPolicyEntry>(ci => map.Getter(ci)?.ToString(), lv);
 		}
 	}
+	#endregion
+
+	#region Delete	
+
+	/// <summary>
+	/// Deletes the selected policies from the currently loaded POL file and refreshes the UI.
+	/// </summary>
+	internal async void DeleteSelectedPolicies_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.GroupPolicyEditor);
+
+		if (lv is null || lv.SelectedItems.Count == 0)
+		{
+			MainInfoBar.WriteWarning("No policies selected for deletion.");
+			return;
+		}
+
+		// Check if we have a valid POL file loaded
+		if (string.IsNullOrEmpty(SelectedFile) || !IsValidPOLFile(SelectedFile))
+		{
+			MainInfoBar.WriteWarning("No valid POL file is currently loaded. Please load a POL file first.");
+			return;
+		}
+
+		try
+		{
+			ElementsAreEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			// Get the selected policies
+			List<RegistryPolicyEntry> policiesToDelete = [];
+			foreach (object item in lv.SelectedItems)
+			{
+				if (item is RegistryPolicyEntry policy)
+				{
+					policiesToDelete.Add(policy);
+				}
+			}
+
+			if (policiesToDelete.Count == 0)
+			{
+				MainInfoBar.WriteWarning("No policies selected for deletion.");
+				return;
+			}
+
+			await Task.Run(() =>
+			{
+				// Remove policies directly from the loaded POL file
+				RegistryPolicyParser.RemovePoliciesFromPOLFile(SelectedFile, policiesToDelete);
+			});
+
+			// Remove policies from UI collections
+			foreach (RegistryPolicyEntry policy in policiesToDelete)
+			{
+				_ = Policies.Remove(policy);
+				_ = AllPolicies.Remove(policy);
+			}
+
+			// Update UI
+			TotalPolicies = Policies.Count.ToString();
+			CalculateColumnWidths();
+
+			MainInfoBar.WriteSuccess($"Successfully deleted {policiesToDelete.Count} policies from the POL file.");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Checks if the specified file is a valid POL file that exists on disk.
+	/// </summary>
+	/// <param name="filePath">The file path to check</param>
+	/// <returns>True if it's a valid POL file that exists, false otherwise</returns>
+	private static bool IsValidPOLFile(string filePath)
+	{
+		if (string.IsNullOrEmpty(filePath))
+			return false;
+
+		// Check if it's a POL file and exists
+		return string.Equals(Path.GetExtension(filePath), ".pol", StringComparison.OrdinalIgnoreCase) &&
+			   File.Exists(filePath);
+	}
+
 	#endregion
 
 	/// <summary>

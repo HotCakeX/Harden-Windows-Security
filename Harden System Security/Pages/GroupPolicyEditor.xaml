@@ -620,6 +620,17 @@
                             <Grid.ContextFlyout>
                                 <MenuFlyout>
 
+                                    <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind ParentVM.DeleteSelectedPolicies_Click}">
+                                        <MenuFlyoutItem.KeyboardAccelerators>
+                                            <KeyboardAccelerator Key="Delete" Invoked="{x:Bind ParentVM.DeleteSelectedPolicies_Click}"/>
+                                        </MenuFlyoutItem.KeyboardAccelerators>
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE74D;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutSeparator />
+
                                     <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentVM.CopySelectedPolicies_Click}">
                                         <MenuFlyoutItem.KeyboardAccelerators>
                                             <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentVM.CopySelectedPolicies_Click}"/>

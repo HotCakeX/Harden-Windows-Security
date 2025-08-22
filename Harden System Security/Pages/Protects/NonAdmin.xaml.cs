@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class NonAdmin : Page
 {
-	private NonAdminVM ViewModel { get; } = ViewModelProvider.NonAdminVM;
+	private NonAdminVM ViewModel => ViewModelProvider.NonAdminVM;
 
 	internal NonAdmin()
 	{

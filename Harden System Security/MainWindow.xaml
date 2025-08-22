@@ -310,7 +310,7 @@
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Name="CertificatesNavItem" Visibility="Collapsed" x:Uid="CertificatesNavItem" Tag="Certificates">
+                        <NavigationViewItem x:Name="CertificatesNavItem" x:Uid="CertificatesNavItem" Tag="Certificates">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/Certificate.png"
                                 ShowAsMonochrome="False"
@@ -340,6 +340,7 @@
                 <NavigationViewItem x:Name="InstalledAppsManagementNavItem" x:Uid="InstalledAppsManagementNavItem" Icon="{x:Bind ViewModel.InstalledAppsManagementIcon, Mode=OneWay}" Tag="InstalledAppsManagement"/>
                 <NavigationViewItem x:Name="FileReputationNavItem" x:Uid="FileReputationNavItem" Icon="{x:Bind ViewModel.FileReputationIcon, Mode=OneWay}" Tag="FileReputation"/>
                 <NavigationViewItem x:Name="GroupPolicyEditorNavItem" x:Uid="GroupPolicyEditorNavItem" Icon="{x:Bind ViewModel.GroupPolicyEditorIcon, Mode=OneWay}" Tag="GroupPolicyEditor"/>
+                <NavigationViewItem x:Name="AuditPoliciesNavItem" x:Uid="AuditPoliciesNavItem" Icon="{x:Bind ViewModel.AuditPoliciesIcon, Mode=OneWay}" Tag="AuditPolicies"/>
 
                 <!-- Documentation Group -->
                 <NavigationViewItemHeader x:Name="DocumentationNavigationViewItemHeader" x:Uid="DocumentationNavigationViewItemHeader"/>

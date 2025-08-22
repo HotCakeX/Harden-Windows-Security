@@ -1,1 +1,7 @@
-* First version of the Harden System Security on the Microsoft Store!
+🎉 Certificates Management: A new page dedicated to enumerating every certificate across all stores in the Local Machine and Current User scopes. Certificates can be sorted, searched, and removed as needed. There is a key capability identifying certificates that are not rooted to the Microsoft's Trusted Roots list and presents options for remediation. When evaluating trust, the app does not rely on the system's certificate store; it uses an independent, built-in trust anchor to validate certificates, so its checks remain unaffected by a potentially compromised system store.
+
+🎊 Audit Policies Management: A new page that retrieves every audit policy on the system — currently numbering approximately 540 items — far more comprehensive than what tools like auditpol report. You can search, sort, and modify each policy's state individually.
+
+🪅 Enhanced Group Policy Editor: You may now remove any policy from a .POL file — whether a system .POL or one you opened in the app. All edits are correctly persisted back to the selected .POL file.
+
+🌐 Improved localization and globalization support for the languages the app currently supports.

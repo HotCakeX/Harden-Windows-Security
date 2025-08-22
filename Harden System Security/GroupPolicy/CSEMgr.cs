@@ -65,7 +65,7 @@ internal sealed partial class GroupPolicyObject : IDisposable
 					unchecked((int)0x80004002) => "E_NOINTERFACE",
 					unchecked((int)0x80040111) => "CLASS_E_CLASSNOTAVAILABLE:.",
 					unchecked((int)0x80040154) => "REGDB_E_CLASSNOTREG: Group Policy class not registered.",
-					_ => $"Failed to create GroupPolicyObject in STA. HRESULT: 0x{hr:X8}"
+					_ => string.Format(GlobalVars.GetStr("FailedToCreateGroupPolicyObjectError"), hr)
 				};
 				throw new InvalidOperationException(errorMessage);
 			}
@@ -86,7 +86,7 @@ internal sealed partial class GroupPolicyObject : IDisposable
 					int initHr = NativeMethods.CoInitializeEx(IntPtr.Zero, CSEMgr.COINIT_APARTMENTTHREADED);
 					if (initHr != CSEMgr.S_OK && initHr != CSEMgr.S_FALSE)
 					{
-						throw new InvalidOperationException($"Failed to initialize COM in STA thread. HRESULT: 0x{initHr:X8}");
+						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToInitializeCOMInSTAError"), initHr));
 					}
 
 					try
@@ -105,7 +105,7 @@ internal sealed partial class GroupPolicyObject : IDisposable
 								unchecked((int)0x80004002) => "E_NOINTERFACE",
 								unchecked((int)0x80040111) => "CLASS_E_CLASSNOTAVAILABLE:.",
 								unchecked((int)0x80040154) => "REGDB_E_CLASSNOTREG: Group Policy class not registered.",
-								_ => $"Failed to create GroupPolicyObject in STA. HRESULT: 0x{hr:X8}"
+								_ => string.Format(GlobalVars.GetStr("FailedToCreateGroupPolicyObjectError"), hr)
 							};
 							throw new InvalidOperationException(errorMessage);
 						}
@@ -136,7 +136,7 @@ internal sealed partial class GroupPolicyObject : IDisposable
 
 			if (resultPointer == IntPtr.Zero)
 			{
-				throw new InvalidOperationException("Failed to create GroupPolicyObject - null pointer returned from STA thread");
+				throw new InvalidOperationException(GlobalVars.GetStr("FailedToCreateGroupPolicyObjectNullPointerError"));
 			}
 
 			return (resultPointer, true);
@@ -167,7 +167,7 @@ internal sealed partial class GroupPolicyObject : IDisposable
 		else
 		{
 			// Some other COM initialization error
-			throw new InvalidOperationException($"Failed to initialize COM. HRESULT: 0x{hr:X8}");
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToInitializeCOMError"), hr));
 		}
 
 		_shouldUninitializeCom = shouldUninitialize;
@@ -322,7 +322,7 @@ internal static class CSEMgr
 			int result = gpo.OpenLocalMachineGPO(GPO_OPEN_LOAD_REGISTRY);
 			if (result != 0) // S_OK = 0
 			{
-				throw new InvalidOperationException($"Failed to open local machine GPO. HRESULT: 0x{result:X8}");
+				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToOpenLocalMachineGPOError"), result));
 			}
 
 			// Register machine CSE GUIDs
@@ -337,7 +337,7 @@ internal static class CSEMgr
 		}
 		catch (COMException ex)
 		{
-			Logger.Write($"COM Exception: {ex.Message} (HRESULT: 0x{ex.HResult:X8})");
+			Logger.Write(string.Format(GlobalVars.GetStr("COMExceptionMessage"), ex.Message, ex.HResult));
 			throw;
 		}
 	}
@@ -372,14 +372,14 @@ internal static class CSEMgr
 
 				if (result != 0 && result != -2147024864) // S_OK = 0 And -2147024864 is for file in use.
 				{
-					throw new InvalidOperationException($"Failed to register {configurationType} CSE GUID {extensionGuid:B}. HRESULT: 0x{result:X8}");
+					throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToRegisterCSEGUIDError"), configurationType, extensionGuid, result));
 				}
 
 				// Logger.Write($"Successfully registered {configurationType} CSE GUID: {extensionGuid:B}");
 			}
 			catch (COMException ex)
 			{
-				Logger.Write($"Failed to register {configurationType} CSE GUID {extensionGuid:B}: {ex.Message} (HRESULT: 0x{ex.HResult:X8})");
+				Logger.Write(string.Format(GlobalVars.GetStr("FailedToRegisterCSEGUIDCOMError"), configurationType, extensionGuid, ex.Message, ex.HResult));
 				throw;
 			}
 		}

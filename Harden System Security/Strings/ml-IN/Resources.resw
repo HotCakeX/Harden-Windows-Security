@@ -2631,4 +2631,346 @@
   <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
    <value>രാജ്യങ്ങൾ തിരയുക...</value>
   </data>
+  <!--Certificates ListView Headers Start-->
+  <data name="StoreLocationHeader.Text" xml:space="preserve">
+    <value>സ്റ്റോർ സ്ഥാനം</value>
+  </data>
+    <data name="StoreNameHeader.Text" xml:space="preserve">
+    <value>സ്റ്റോർ പേര്</value>
+  </data>
+  <data name="SubjectHeader.Text" xml:space="preserve">
+    <value>വിഷയം</value>
+  </data>
+  <data name="IssuerHeader.Text" xml:space="preserve">
+    <value>നൽകുന്നവർ</value>
+  </data>
+  <data name="ThumbprintHeader.Text" xml:space="preserve">
+    <value>വിരലടയാളം</value>
+  </data>
+    <data name="RootSubjectHeader.Text" xml:space="preserve">
+    <value>റൂട്ട് വിഷയം</value>
+  </data>
+  <data name="RootSha256Header.Text" xml:space="preserve">
+    <value>റൂട്ട് SHA256</value>
+  </data>
+  <!--Certificates ListView Headers End-->
+  <!--Certificates ListView Headers Buttons Start-->
+  <data name="StoreLocationColumnHeaderBtn.Content" xml:space="preserve">
+    <value>സ്റ്റോർ സ്ഥാനം</value>
+  </data>
+    <data name="StoreNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>സ്റ്റോർ പേര്</value>
+  </data>
+  <data name="SubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>വിഷയം</value>
+  </data>
+  <data name="IssuerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>നൽകുന്നവർ</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>വിരലടയാളം</value>
+  </data>
+  <data name="RootSubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>റൂട്ട് വിഷയം</value>
+  </data>
+  <data name="RootSha256ColumnHeaderBtn.Content" xml:space="preserve">
+    <value>റൂട്ട് SHA256</value>
+  </data>
+  <!--Certificates ListView Headers Buttons End-->
+  <data name="StartAnalysisButton.Content" xml:space="preserve">
+    <value>വിശകലനം ആരംഭിക്കുക</value>
+  </data>
+  <data name="StartAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മൈക്രോസോഫ്റ്റിന്റെ വിശ്വസനീയ റൂട്ട് സർട്ടിഫിക്കറ്റ് പ്രോഗ്രാം ലിസ്റ്റ് ഡൗൺലോഡ് ചെയ്യുകയും ലോക്കൽ മെഷീൻ, കറന്റ് യൂസർ സർട്ടിഫിക്കറ്റ് സ്റ്റോറുകളിലെ ആ വിശ്വസനീയ ലിസ്റ്റിലെ ഏതെങ്കിലും സർട്ടിഫിക്കറ്റുകളുമായി ബന്ധമില്ലാത്ത എല്ലാ സർട്ടിഫിക്കറ്റുകളും കണ്ടെത്തുകയും ചെയ്യുന്നു. നിങ്ങളുടെ സിസ്റ്റത്തിൽ നിന്ന് അവിശ്വസനീയ സർട്ടിഫിക്കറ്റുകൾ ഡിലീറ്റ് ചെയ്യാനും നിങ്ങൾക്ക് കഴിയും.</value>
+  </data>
+  <data name="StartAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>മൈക്രോസോഫ്റ്റിന്റെ വിശ്വസനീയ റൂട്ട് സർട്ടിഫിക്കറ്റ് പ്രോഗ്രാം ലിസ്റ്റ് ഡൗൺലോഡ് ചെയ്യുകയും ലോക്കൽ മെഷീൻ, കറന്റ് യൂസർ സർട്ടിഫിക്കറ്റ് സ്റ്റോറുകളിലെ ആ വിശ്വസനീയ ലിസ്റ്റിലെ ഏതെങ്കിലും സർട്ടിഫിക്കറ്റുകളുമായി ബന്ധമില്ലാത്ത എല്ലാ സർട്ടിഫിക്കറ്റുകളും കണ്ടെത്തുകയും ചെയ്യുന്നു. നിങ്ങളുടെ സിസ്റ്റത്തിൽ നിന്ന് അവിശ്വസനീയ സർട്ടിഫിക്കറ്റുകൾ ഡിലീറ്റ് ചെയ്യാനും നിങ്ങൾക്ക് കഴിയും.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.Content" xml:space="preserve">
+    <value>ലോക്കൽ സർട്ടിഫിക്കറ്റുകൾ നേടുക</value>
+  </data>
+  <data name="GetLocalCertificatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലോക്കൽ മെഷീൻ, കറന്റ് യൂസർ സർട്ടിഫിക്കറ്റ് സ്റ്റോറുകളിൽ നിന്ന് എല്ലാ ലോക്കൽ സർട്ടിഫിക്കറ്റുകളും റിട്രീവ് ചെയ്യുകയും അവയെല്ലാം ലിസ്റ്റിൽ കാണിക്കുകയും നിങ്ങളെ അവ സോർട്ട് ചെയ്യാനോ തിരയാനോ വിശദാംശങ്ങൾ കോപ്പി ചെയ്യാനോ ഡിലീറ്റ് ചെയ്യാനോ അനുവദിക്കുകയും ചെയ്യുന്നു.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>ലോക്കൽ മെഷീൻ, കറന്റ് യൂസർ സർട്ടിഫിക്കറ്റ് സ്റ്റോറുകളിൽ നിന്ന് എല്ලാ ലോക്കൽ സർട്ടിഫിക്കറ്റുകളും റിട്രീവ് ചെയ്യുകയും അവയെല്ലാം ലിസ്റ്റിൽ കാണിക്കുകയും നിങ്ങളെ അവ സോർട്ട് ചെയ്യാനോ തിരയാനോ വിശദാംശങ്ങൾ കോപ്പി ചെയ്യാനോ ഡിലീറ്റ് ചെയ്യാനോ അനുവദിക്കുകയും ചെയ്യുന്നു.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.Content" xml:space="preserve">
+    <value>കാലഹരണപ്പെട്ടവ ഉൾപ്പെടുത്തുക</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കാലഹരണപ്പെട്ടതോ ഇനിയും സാധുവാകാത്തതോ ആയ സർട്ടിഫിക്കറ്റുകൾ ഫലങ്ങളിൽ ഉൾപ്പെടുത്തുക.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>കാലഹരണപ്പെട്ടതോ ഇനിയും സാധുവാകാത്തതോ ആയ സർട്ടിഫിക്കറ്റുകൾ ഫലങ്ങളിൽ ഉൾപ്പെടുത്തുക.</value>
+  </data>
+  <data name="SearchCertificatesTextBox.PlaceholderText" xml:space="preserve">
+   <value>സർട്ടിഫിക്കറ്റുകൾ തിരയുക...</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.Text" xml:space="preserve">
+   <value>സർട്ടിഫിക്കറ്റ് ട്രസ്റ്റ് ലിസ്റ്റ് ഹെഡർ വിവരങ്ങൾ</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റ് ട്രസ്റ്റ് ലിസ്റ്റ് ഹെഡർ വിവരങ്ങൾ</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.AutomationProperties.HelpText" xml:space="preserve">
+   <value>സർട്ടിഫിക്കറ്റ് ട്രസ്റ്റ് ലിസ്റ്റ് ഹെഡർ വിവരങ്ങൾ</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.Content" xml:space="preserve">
+    <value>CTL ഹെഡർ വിവരം</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മൈക്രോസോഫ്റ്റിന്റെ സെർവറിൽ നിന്ന് ഡൗൺലോഡ് ചെയ്ത സർട്ടിഫിക്കറ്റ് വിശ്വസനീയ ലിസ്റ്റ് ഫയലുകളെക്കുറിച്ചുള്ള വിശദമായ വിവരങ്ങൾ പ്രദർശിപ്പിക്കുന്നു.</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>മൈക്രോസോഫ്റ്റിന്റെ സെർവറിൽ നിന്ന് ഡൗൺലോഡ് ചെയ്ത സർട്ടിഫിക്കറ്റ് വിശ്വസനീയ ലിസ്റ്റ് ഫയലുകളെക്കുറിച്ചുള്ള വിശദമായ വിവരങ്ങൾ പ്രദർശിപ്പിക്കുന്നു.</value>
+  </data>
+  <data name="MainInfoBarDeleteCertificateSelectMessage" xml:space="preserve">
+  <value>ദയവായി ഡിലീറ്റ് ചെയ്യാൻ ഒരു സർട്ടിഫിക്കറ്റ് തിരഞ്ഞെടുക്കുക.</value>
+</data>
+<data name="DeleteCertificateDialogTitle" xml:space="preserve">
+  <value>സർട്ടിഫിക്കറ്റ് ഡിലീറ്റ് ചെയ്യുക</value>
+</data>
+<data name="DeleteCertificateDialogContent" xml:space="preserve">
+  <value>നിങ്ങൾക്ക് ഈ സർട്ടിഫിക്കറ്റ് ഡിലീറ്റ് ചെയ്യണമെന്ന് ഉറപ്പാണോ?
+
+വിഷയം: {0}
+സ്റ്റോർ: {1}\{2}
+വിരലടയാളം: {3}</value>
+</data>
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
+  <value>ഡിലീറ്റ് ചെയ്യുക</value>
+</data>
+<data name="InvalidStoreLocationWarning" xml:space="preserve">
+  <value>അസാധുവായ സ്റ്റോർ സ്ഥാനം: {0}</value>
+</data>
+<data name="CertificateNotFoundInStoreWarning" xml:space="preserve">
+  <value>സർട്ടിഫിക്കറ്റ് സ്റ്റോറിൽ കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="CertificateDeletedSuccessMessage" xml:space="preserve">
+  <value>സർട്ടിഫിക്കറ്റ് വിജയകരമായി {0}\{1} ൽ നിന്ന് ഡിലീറ്റ് ചെയ്തു</value>
+</data>
+<data name="StartingCertificateAnalysisMessage" xml:space="preserve">
+  <value>സർട്ടിഫിക്കറ്റ് വിശകലനം ആരംഭിക്കുന്നു...</value>
+</data>
+<data name="StlFileParsedMessage" xml:space="preserve">
+  <value>STL ഫയൽ {1} ms ൽ {0} വിഷയങ്ങൾ പാഴ്സ് ചെയ്തു.</value>
+</data>
+<data name="CertificateAnalysisCompletedMessage" xml:space="preserve">
+  <value>സർട്ടിഫിക്കറ്റ് വിശകലനം പൂർത്തിയായി. STL റൂട്ടുകളുമായി ബന്ധമില്ലാത്ത {0} സർട്ടിഫിക്കറ്റുകൾ കണ്ടെത്തി.</value>
+</data>
+<data name="RetrievingAllCertificatesMessage" xml:space="preserve">
+  <value>സർട്ടിഫിക്കറ്റ് സ്റ്റോറുകളിൽ നിന്ന് എല്ലാ സർട്ടിഫിക്കറ്റുകളും റിട്രീവ് ചെയ്യുന്നു...</value>
+</data>
+<data name="RetrievedCertificatesMessage" xml:space="preserve">
+  <value>{1} ms ൽ {0} സർട്ടിഫിക്കറ്റുകൾ റിട്രീവ് ചെയ്തു.</value>
+</data>
+<data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
+  <value>സർട്ടിഫിക്കറ്റ് റിട്രീവൽ പൂർത്തിയായി. മൊത്തം {0} സർട്ടിഫിക്കറ്റുകൾ കണ്ടെത്തി.</value>
+</data>
+<data name="NoRootCertificate" xml:space="preserve">
+  <value>(റൂട്ട് ഇല്ല)</value>
+</data>
+<data name="NoCertificateHash" xml:space="preserve">
+  <value>(ഒന്നുമില്ല)</value>
+</data>
+<data name="EmptyValue" xml:space="preserve">
+  <value>ശൂന്യം</value>
+</data>
+<data name="InputFileIsNeitherCABNorSTLError" xml:space="preserve">
+  <value>ഇൻപുട്ട് ഫയൽ സാധുവായ CAB ഫയലോ STL ഫയലോ അല്ല.</value>
+</data>
+<data name="CABFileContainsMoreThanOneFileError" xml:space="preserve">
+  <value>CAB ഫയലിൽ ഒന്നിൽ കൂടുതൽ ഫയലുകൾ അടങ്ങിയിരിക്കുന്നു. കൃത്യമായി ഒരു STL ഫയൽ പ്രതീക്ഷിച്ചിരുന്നു.</value>
+</data>
+<data name="NoSTLFileFoundInCABError" xml:space="preserve">
+  <value>CAB ആർക്കൈവിൽ STL ഫയൽ കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="CABFileEmptyError" xml:space="preserve">
+  <value>CAB ഫയൽ ശൂന്യമാണ് അല്ലെങ്കിൽ എക്സ്ട്രാക്റ്റ് ചെയ്യാവുന്ന ഫയലുകൾ അടങ്ങിയിട്ടില്ല.</value>
+</data>
+<data name="TooManyRedirectsError" xml:space="preserve">
+  <value>വളരെയധികം റീഡയറക്റ്റുകൾ.</value>
+</data>
+<data name="RedirectResponseMissingLocationError" xml:space="preserve">
+  <value>റീഡയറക്റ്റ് പ്രതികരണത്തിൽ ലൊക്കേഷൻ ഹെഡർ കാണുന്നില്ല.</value>
+</data>
+<data name="SignatureVerificationFailedError" xml:space="preserve">
+  <value>SignedCms ന് വേണ്ടിയുള്ള ഒപ്പ് സത്യാപനം പരാജയപ്പെട്ടു.</value>
+</data>
+<data name="SignerCertificateNotPresentError" xml:space="preserve">
+  <value>ഒപ്പിടുന്നവരുടെ സർട്ടിഫിക്കറ്റ് SignedCms ൽ ഇല്ല.</value>
+</data>
+<data name="SigningChainRootMismatchError" xml:space="preserve">
+  <value>ഒപ്പിടൽ ചെയിൻ റൂട്ട് നൽകിയ CA സർട്ടിഫിക്കറ്റുമായി പൊരുത്തപ്പെടുന്നില്ല.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLError" xml:space="preserve">
+  <value>ടോപ്പ് ലെവൽ CTL സീക്വൻസിനു ശേഷം അപ്രതീക്ഷിത ട്രെയിലിംഗ് ഡേറ്റ.</value>
+</data>
+<data name="VersionIntegerOutOfRangeError" xml:space="preserve">
+  <value>വേർഷൻ ഇൻറിജർ മൂല്യം പരിധിക്ക് പുറത്ത്.</value>
+</data>
+<data name="MissingUsageSequenceError" xml:space="preserve">
+  <value>ഉപയോഗ സീക്വൻസ് കാണുന്നില്ല.</value>
+</data>
+<data name="UnexpectedTrailingDataUsageSequenceError" xml:space="preserve">
+  <value>ഉപയോഗ സീക്വൻസിനുള്ളിൽ അപ്രതീക്ഷിത ട്രെയിലിംഗ് ഡേറ്റ.</value>
+</data>
+<data name="MissingThisUpdateError" xml:space="preserve">
+  <value>thisUpdate കാണുന്നില്ല.</value>
+</data>
+<data name="MissingAlgorithmIdentifierError" xml:space="preserve">
+  <value>ആൽഗോരിദം ഐഡന്റിഫയർ കാണുന്നില്ല.</value>
+</data>
+<data name="UnexpectedTrailingDataTrustedSubjectError" xml:space="preserve">
+  <value>TrustedSubjectType നുള്ളിൽ അപ്രതീക്ഷിത ട്രെയിലിംഗ് ഡേറ്റ.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLElementsError" xml:space="preserve">
+  <value>CTL എലമെന്റുകൾക്ക് ശേഷം അപ്രതീക്ഷിത ട്രെയിലിംഗ് ഡേറ്റ.</value>
+</data>
+<data name="SubjectMissingFriendlyNameError" xml:space="preserve">
+  <value>വിഷയത്തിൽ സൗഹൃദ നാമം കാണുന്നില്ല.</value>
+</data>
+<data name="UnexpectedTrailingDataEKUSequenceError" xml:space="preserve">
+  <value>EKU സീക്വൻസിനു ശേഷം അപ്രതീക്ഷിത ട്രെയിലിംഗ് ഡേറ്റ.</value>
+</data>
+<data name="InvalidFILETIMEError" xml:space="preserve">
+  <value>അസാധുവായ FILETIME എൻകൌണ്ടർ ചെയ്തു.</value>
+</data>
+<data name="BEGINCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>PEM ൽ BEGIN CERTIFICATE മാർക്കർ കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="ENDCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>PEM ൽ END CERTIFICATE മാർക്കർ കണ്ടെത്തിയില്ല.</value>
+</data>
+<data name="InvalidBase64ContentError" xml:space="preserve">
+  <value>PEM സർട്ടിഫിക്കറ്റിൽ അസാധുവായ base64 ഉള്ളടക്കം.</value>
+</data>
+<data name="EmptyEntryNameSkippingMessage" xml:space="preserve">
+  <value>ശൂന്യമായ എൻട്രി നാമം, ഒഴിവാക്കുന്നു.</value>
+</data>
+<data name="LoadingCountriesDataMessage" xml:space="preserve">
+  <value>രാജ്യങ്ങളുടെ ഡേറ്റ ലോഡ് ചെയ്യുന്നു...</value>
+</data>
+<data name="CountriesLoadedSuccessMessage" xml:space="preserve">
+  <value>വിജയകരമായി {0} രാജ്യങ്ങൾ ലോഡ് ചെയ്തു</value>
+</data>
+<data name="CreatingRulesForMessage" xml:space="preserve">
+  <value>{0} ന് വേണ്ടി റൂൾസ് സൃഷ്ടിക്കുന്നു</value>
+</data>
+<data name="RemovingRulesForMessage" xml:space="preserve">
+  <value>{0} ന് വേണ്ടിയുള്ള റൂൾസ് നീക്കം ചെയ്യുന്നു</value>
+</data>
+<data name="SuccessfullyAddedIPRangeMessage" xml:space="preserve">
+  <value>ബ്ലോക്കിങ്ങിനായി തിരഞ്ഞെടുത്ത IP റേഞ്ച് വിജയകരമായി ചേർത്തു</value>
+</data>
+<data name="SuccessfullyRemovedIPRangeMessage" xml:space="preserve">
+  <value>ബ്ലോക്കിങ്ങിനായി തിരഞ്ഞെടുത്ത IP റേഞ്ച് വിജയകരമായി നീക്കം ചെയ്തു</value>
+</data>
+<data name="PleaseSelectCountryWarning" xml:space="preserve">
+  <value>ദയവായി ലിസ്റ്റിൽ നിന്ന് ഒരു രാജ്യം തിരഞ്ഞെടുക്കുക</value>
+</data>
+<data name="CreatingIPv4RulesMessage" xml:space="preserve">
+  <value>{0} ന് വേണ്ടി IPv4 റൂൾസ് സൃഷ്ടിക്കുന്നു</value>
+</data>
+<data name="CreatingIPv6RulesMessage" xml:space="preserve">
+  <value>{0} ന് വേണ്ടി IPv6 റൂൾസ് സൃഷ്ടിക്കുന്നു</value>
+</data>
+<data name="RemovingIPv4RulesMessage" xml:space="preserve">
+  <value>{0} ന് വേണ്ടിയുള്ള IPv4 റൂൾസ് നീക്കം ചെയ്യുന്നു</value>
+</data>
+<data name="RemovingIPv6RulesMessage" xml:space="preserve">
+  <value>{0} ന് വേണ്ടിയുള്ള IPv6 റൂൾസ് നീക്കം ചെയ്യുന്നു</value>
+</data>
+<data name="SuccessfullyAddedIPBlockingRulesMessage" xml:space="preserve">
+  <value>{0} ന് വേണ്ടിയുള്ള IP ബ്ലോക്കിംഗ് റൂൾസ് വിജയകരമായി ചേർത്തു</value>
+</data>
+<data name="SuccessfullyRemovedIPBlockingRulesMessage" xml:space="preserve">
+  <value>{0} ന് വേണ്ടിയുള്ള IP ബ്ലോക്കിംഗ് റൂൾസ് വിജയകരമായി നീക്കം ചെയ്തു</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>STA യിൽ GroupPolicyObject സൃഷ്ടിക്കുന്നതിൽ പരാജയപ്പെട്ടു. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>STA ത്രെഡിൽ COM ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>GroupPolicyObject സൃഷ്ടിക്കുന്നതിൽ പരാജയപ്പെട്ടു - STA ത്രെഡിൽ നിന്ന് null പോയിന്റർ തിരികെ വന്നു</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>COM ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>ലോക്കൽ മെഷീൻ GPO തുറക്കുന്നതിൽ പരാജയപ്പെട്ടു. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>COM എക്സെപ്ഷൻ: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>{0} CSE GUID {1:B} രജിസ്റ്റർ ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>{0} CSE GUID {1:B} രജിസ്റ്റർ ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="DeleteRow.Text" xml:space="preserve">
+    <value>ഡിലീറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിൽ തിരഞ്ഞെടുത്ത ഇനം(കൾ) ഡിലീറ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിൽ തിരഞ്ഞെടുത്ത ഇനം(കൾ) ഡിലീറ്റ് ചെയ്യുക.</value>
+  </data>
+      <data name="AuditPoliciesNavItem.Content" xml:space="preserve">
+    <value>ഓഡിറ്റ് നയങ്ങൾ</value>
+  </data>
+    <data name="AuditPoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ എല്ലാ ഓഡിറ്റ് നയങ്ങളും കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ എല്ലാ ഓഡിറ്റ് നയങ്ങളും കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
+  </data>
+    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ എല്ലാ ഓഡിറ്റ് നയങ്ങളും കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <!--Audit Policies ListView Headers Start-->
+  <data name="AuditSettingHeader.Text" xml:space="preserve">
+    <value>ഓഡിറ്റ് ക്രമീകരണം</value>
+  </data>
+  <data name="CategoryGUIDHeader.Text" xml:space="preserve">
+    <value>വിഭാഗം GUID</value>
+  </data>
+    <data name="SubcategoryGUIDHeader.Text" xml:space="preserve">
+    <value>ഉപവിഭാഗം GUID</value>
+  </data>
+  <!--Audit Policies ListView Headers End-->
+  <!--Audit Policies ListView Headers Buttons Start-->
+  <data name="AuditSettingColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ഓഡിറ്റ് ക്രമീകരണം</value>
+  </data>
+  <data name="CategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>വിഭാഗം GUID</value>
+  </data>
+  <data name="SubcategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ഉപവിഭാഗം GUID</value>
+  </data>
+  <!--Audit Policies ListView Headers Buttons End-->
+  <data name="RetrieveAuditPoliciesButton.Content" xml:space="preserve">
+    <value>ഓഡിറ്റ് നയങ്ങൾ വീണ്ടെടുക്കുക</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ നിന്ന് എല്ലാ ഓഡിറ്റ് നയങ്ങളും വീണ്ടെടുക്കുന്നു.</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>സിസ്റ്റത്തിൽ നിന്ന് എല്ലാ ഓഡിറ്റ് നയങ്ങളും വീണ്ടെടുക്കുന്നു.</value>
+  </data>
+  <data name="SearchAuditPoliciesPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>ഓഡിറ്റ് നയങ്ങൾ തിരയുക...</value>
+  </data>
+  <data name="AuditPolicyAppliedSuccess" xml:space="preserve">
+    <value>{0} എന്നതിനുള്ള ഓഡിറ്റ് നയ മാറ്റം {1} ലേക്ക് വിജയകരമായി പ്രയോഗിച്ചു</value>
+  </data>
+  <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
+    <value>വിജയകരമായി {0} ഓഡിറ്റ് നയങ്ങൾ ലോഡ് ചെയ്തു.</value>
+  </data>
 </root>

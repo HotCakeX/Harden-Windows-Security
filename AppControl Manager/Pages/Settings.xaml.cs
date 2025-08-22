@@ -30,7 +30,7 @@ namespace HardenSystemSecurity.Pages;
 internal sealed partial class Settings : Page
 {
 
-	private SettingsVM ViewModel { get; } = ViewModelProvider.SettingsVM;
+	private SettingsVM ViewModel => ViewModelProvider.SettingsVM;
 	private MainWindowVM ViewModelMainWindow { get; } = ViewModelProvider.MainWindowVM;
 
 	internal Settings()

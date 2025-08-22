@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class WindowsNetworking : Page
 {
-	private WindowsNetworkingVM ViewModel { get; } = ViewModelProvider.WindowsNetworkingVM;
+	private WindowsNetworkingVM ViewModel => ViewModelProvider.WindowsNetworkingVM;
 
 	internal WindowsNetworking()
 	{

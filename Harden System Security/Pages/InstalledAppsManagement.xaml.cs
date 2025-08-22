@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages;
 
 internal sealed partial class InstalledAppsManagement : Page
 {
-	private InstalledAppsManagementVM ViewModel { get; } = ViewModelProvider.InstalledAppsManagementVM;
+	private InstalledAppsManagementVM ViewModel => ViewModelProvider.InstalledAppsManagementVM;
 
 	internal InstalledAppsManagement()
 	{

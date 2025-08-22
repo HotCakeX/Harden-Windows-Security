@@ -34,7 +34,7 @@ namespace HardenSystemSecurity.Pages;
 /// </summary>
 internal sealed partial class Logs : Page
 {
-	private LogsVM ViewModel { get; } = ViewModelProvider.LogsVM;
+	private LogsVM ViewModel => ViewModelProvider.LogsVM;
 
 	internal Logs()
 	{

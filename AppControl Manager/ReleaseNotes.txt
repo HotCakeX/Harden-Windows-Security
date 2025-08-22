@@ -1,9 +1,1 @@
-* Updated dependencies to the latest versions, including the .NET SDK.
-
-* Fixed an issue related to retrieving the Microsoft recommended User-Mode block rules. Microsoft set the entire repository responsible for hosting the list as Private. Now the app no longer tries to access the repository and instead retrieves the list from the Microsoft Learn page directly.
-
-* When sound is on (it is off by default) in the AppControl Manager, the typing effect's audio no longer appears in the OS media controls.
-
-* Further strengthened both app's security by adopting "DEPENDENTLOADFLAG" flag forcing the app to always find DLLs it needs from the System32 directory only.
-
-* Improved memory management by tightening resource usage in various UI elements of AppControl Manager.
+* Updated dependencies to the latest versions.

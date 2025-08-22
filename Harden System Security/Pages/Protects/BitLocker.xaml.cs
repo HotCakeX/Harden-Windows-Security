@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class BitLocker : Page
 {
-	private BitLockerVM ViewModel { get; } = ViewModelProvider.BitLockerVM;
+	private BitLockerVM ViewModel => ViewModelProvider.BitLockerVM;
 
 	internal BitLocker()
 	{

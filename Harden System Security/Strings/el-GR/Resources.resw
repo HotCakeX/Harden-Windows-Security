@@ -2631,4 +2631,346 @@
   <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
    <value>Αναζήτηση χωρών...</value>
   </data>
+  <!--Certificates ListView Headers Start-->
+  <data name="StoreLocationHeader.Text" xml:space="preserve">
+    <value>Τοποθεσία Αποθήκης</value>
+  </data>
+    <data name="StoreNameHeader.Text" xml:space="preserve">
+    <value>Όνομα Αποθήκης</value>
+  </data>
+  <data name="SubjectHeader.Text" xml:space="preserve">
+    <value>Θέμα</value>
+  </data>
+  <data name="IssuerHeader.Text" xml:space="preserve">
+    <value>Εκδότης</value>
+  </data>
+  <data name="ThumbprintHeader.Text" xml:space="preserve">
+    <value>Αποτύπωμα</value>
+  </data>
+    <data name="RootSubjectHeader.Text" xml:space="preserve">
+    <value>Θέμα Ρίζας</value>
+  </data>
+  <data name="RootSha256Header.Text" xml:space="preserve">
+    <value>SHA256 Ρίζας</value>
+  </data>
+  <!--Certificates ListView Headers End-->
+  <!--Certificates ListView Headers Buttons Start-->
+  <data name="StoreLocationColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Τοποθεσία Αποθήκης</value>
+  </data>
+    <data name="StoreNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Όνομα Αποθήκης</value>
+  </data>
+  <data name="SubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Θέμα</value>
+  </data>
+  <data name="IssuerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Εκδότης</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αποτύπωμα</value>
+  </data>
+  <data name="RootSubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Θέμα Ρίζας</value>
+  </data>
+  <data name="RootSha256ColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA256 Ρίζας</value>
+  </data>
+  <!--Certificates ListView Headers Buttons End-->
+  <data name="StartAnalysisButton.Content" xml:space="preserve">
+    <value>Έναρξη Ανάλυσης</value>
+  </data>
+  <data name="StartAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κατεβάζει τη λίστα του Προγράμματος Αξιόπιστων Πιστοποιητικών Ρίζας της Microsoft και βρίσκει όλα τα πιστοποιητικά στις αποθήκες πιστοποιητικών Τοπικού Μηχανήματος και Τρέχοντος Χρήστη που δεν βασίζονται σε κανένα πιστοποιητικό από αυτή την αξιόπιστη λίστα. Θα μπορείτε επίσης να διαγράψετε τα μη αξιόπιστα πιστοποιητικά από το σύστημά σας.</value>
+  </data>
+  <data name="StartAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Κατεβάζει τη λίστα του Προγράμματος Αξιόπιστων Πιστοποιητικών Ρίζας της Microsoft και βρίσκει όλα τα πιστοποιητικά στις αποθήκες πιστοποιητικών Τοπικού Μηχανήματος και Τρέχοντος Χρήστη που δεν βασίζονται σε κανένα πιστοποιητικό από αυτή την αξιόπιστη λίστα. Θα μπορείτε επίσης να διαγράψετε τα μη αξιόπιστα πιστοποιητικά από το σύστημά σας.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.Content" xml:space="preserve">
+    <value>Λήψη Τοπικών Πιστοποιητικών</value>
+  </data>
+  <data name="GetLocalCertificatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανακτά όλα τα τοπικά πιστοποιητικά από τις αποθήκες πιστοποιητικών Τοπικού Μηχανήματος και Τρέχοντος Χρήστη, τα εμφανίζει όλα στη Λίστα και σας επιτρέπει να τα ταξινομήσετε, να τα αναζητήσετε, να αντιγράψετε τις λεπτομέρειές τους ή να τα διαγράψετε.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Ανακτά όλα τα τοπικά πιστοποιητικά από τις αποθήκες πιστοποιητικών Τοπικού Μηχανήματος και Τρέχοντος Χρήστη, τα εμφανίζει όλα στη Λίστα και σας επιτρέπει να τα ταξινομήσετε, να τα αναζητήσετε, να αντιγράψετε τις λεπτομέρειές τους ή να τα διαγράψετε.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.Content" xml:space="preserve">
+    <value>Συμπερίληψη Ληγμένων</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Συμπερίληψη ληγμένων ή μη έγκυρων ακόμη πιστοποιητικών στα αποτελέσματα.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Συμπερίληψη ληγμένων ή μη έγκυρων ακόμη πιστοποιητικών στα αποτελέσματα.</value>
+  </data>
+  <data name="SearchCertificatesTextBox.PlaceholderText" xml:space="preserve">
+   <value>Αναζήτηση πιστοποιητικών...</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.Text" xml:space="preserve">
+   <value>Πληροφορίες Κεφαλίδας Λίστας Εμπιστοσύνης Πιστοποιητικών</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Πληροφορίες Κεφαλίδας Λίστας Εμπιστοσύνης Πιστοποιητικών</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Πληροφορίες Κεφαλίδας Λίστας Εμπιστοσύνης Πιστοποιητικών</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.Content" xml:space="preserve">
+    <value>Πληροφορίες Κεφαλίδας CTL</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εμφανίζει λεπτομερείς πληροφορίες για τα αρχεία Λίστας Αξιόπιστων Πιστοποιητικών που κατεβάστηκαν από τον Διακομιστή της Microsoft.</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Εμφανίζει λεπτομερείς πληροφορίες για τα αρχεία Λίστας Αξιόπιστων Πιστοποιητικών που κατεβάστηκαν από τον Διακομιστή της Microsoft.</value>
+  </data>
+  <data name="MainInfoBarDeleteCertificateSelectMessage" xml:space="preserve">
+  <value>Παρακαλώ επιλέξτε ένα πιστοποιητικό για διαγραφή.</value>
+</data>
+<data name="DeleteCertificateDialogTitle" xml:space="preserve">
+  <value>Διαγραφή Πιστοποιητικού</value>
+</data>
+<data name="DeleteCertificateDialogContent" xml:space="preserve">
+  <value>Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το πιστοποιητικό;
+
+Θέμα: {0}
+Αποθήκη: {1}\{2}
+Αποτύπωμα: {3}</value>
+</data>
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
+  <value>Διαγραφή</value>
+</data>
+<data name="InvalidStoreLocationWarning" xml:space="preserve">
+  <value>Μη έγκυρη τοποθεσία αποθήκης: {0}</value>
+</data>
+<data name="CertificateNotFoundInStoreWarning" xml:space="preserve">
+  <value>Το πιστοποιητικό δεν βρέθηκε στην αποθήκη.</value>
+</data>
+<data name="CertificateDeletedSuccessMessage" xml:space="preserve">
+  <value>Το πιστοποιητικό διαγράφηκε επιτυχώς από {0}\{1}</value>
+</data>
+<data name="StartingCertificateAnalysisMessage" xml:space="preserve">
+  <value>Έναρξη ανάλυσης πιστοποιητικών...</value>
+</data>
+<data name="StlFileParsedMessage" xml:space="preserve">
+  <value>Το αρχείο STL ανέλυσε {0} θέματα σε {1} ms.</value>
+</data>
+<data name="CertificateAnalysisCompletedMessage" xml:space="preserve">
+  <value>Η ανάλυση πιστοποιητικών ολοκληρώθηκε. Βρέθηκαν {0} πιστοποιητικά που δεν συνδέονται με ρίζες STL.</value>
+</data>
+<data name="RetrievingAllCertificatesMessage" xml:space="preserve">
+  <value>Ανάκτηση όλων των πιστοποιητικών από τις αποθήκες πιστοποιητικών...</value>
+</data>
+<data name="RetrievedCertificatesMessage" xml:space="preserve">
+  <value>Ανακτήθηκαν {0} πιστοποιητικά σε {1} ms.</value>
+</data>
+<data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
+  <value>Η ανάκτηση πιστοποιητικών ολοκληρώθηκε. Βρέθηκαν {0} συνολικά πιστοποιητικά.</value>
+</data>
+<data name="NoRootCertificate" xml:space="preserve">
+  <value>(χωρίς ρίζα)</value>
+</data>
+<data name="NoCertificateHash" xml:space="preserve">
+  <value>(κανένα)</value>
+</data>
+<data name="EmptyValue" xml:space="preserve">
+  <value>ΚΕΝΟ</value>
+</data>
+<data name="InputFileIsNeitherCABNorSTLError" xml:space="preserve">
+  <value>Το αρχείο εισόδου δεν είναι ούτε έγκυρο αρχείο CAB ούτε αρχείο STL.</value>
+</data>
+<data name="CABFileContainsMoreThanOneFileError" xml:space="preserve">
+  <value>Το αρχείο CAB περιέχει περισσότερα από ένα αρχεία. Αναμενόταν ακριβώς ένα αρχείο STL.</value>
+</data>
+<data name="NoSTLFileFoundInCABError" xml:space="preserve">
+  <value>Δεν βρέθηκε αρχείο STL στο αρχείο CAB.</value>
+</data>
+<data name="CABFileEmptyError" xml:space="preserve">
+  <value>Το αρχείο CAB είναι κενό ή δεν περιέχει εξαγώγιμα αρχεία.</value>
+</data>
+<data name="TooManyRedirectsError" xml:space="preserve">
+  <value>Πάρα πολλές ανακατευθύνσεις.</value>
+</data>
+<data name="RedirectResponseMissingLocationError" xml:space="preserve">
+  <value>Η απάντηση ανακατεύθυνσης λείπει η κεφαλίδα Location.</value>
+</data>
+<data name="SignatureVerificationFailedError" xml:space="preserve">
+  <value>Η επαλήθευση υπογραφής απέτυχε για το SignedCms.</value>
+</data>
+<data name="SignerCertificateNotPresentError" xml:space="preserve">
+  <value>Το πιστοποιητικό υπογράφοντος δεν υπάρχει στο SignedCms.</value>
+</data>
+<data name="SigningChainRootMismatchError" xml:space="preserve">
+  <value>Η ρίζα της αλυσίδας υπογραφής δεν ταιριάζει με το παρεχόμενο πιστοποιητικό CA.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLError" xml:space="preserve">
+  <value>Μη αναμενόμενα δεδομένα ουράς μετά την ΑΚΟΛΟΥΘΙΑ CTL ανωτάτου επιπέδου.</value>
+</data>
+<data name="VersionIntegerOutOfRangeError" xml:space="preserve">
+  <value>Η ακέραια τιμή έκδοσης είναι εκτός εύρους.</value>
+</data>
+<data name="MissingUsageSequenceError" xml:space="preserve">
+  <value>Λείπει η ακολουθία χρήσης.</value>
+</data>
+<data name="UnexpectedTrailingDataUsageSequenceError" xml:space="preserve">
+  <value>Μη αναμενόμενα δεδομένα ουράς μέσα στην ακολουθία χρήσης.</value>
+</data>
+<data name="MissingThisUpdateError" xml:space="preserve">
+  <value>Λείπει το thisUpdate.</value>
+</data>
+<data name="MissingAlgorithmIdentifierError" xml:space="preserve">
+  <value>Λείπει ο αναγνωριστής αλγορίθμου.</value>
+</data>
+<data name="UnexpectedTrailingDataTrustedSubjectError" xml:space="preserve">
+  <value>Μη αναμενόμενα δεδομένα ουράς μέσα στο TrustedSubjectType.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLElementsError" xml:space="preserve">
+  <value>Μη αναμενόμενα δεδομένα ουράς μετά τα στοιχεία CTL.</value>
+</data>
+<data name="SubjectMissingFriendlyNameError" xml:space="preserve">
+  <value>Το θέμα λείπει φιλικό όνομα.</value>
+</data>
+<data name="UnexpectedTrailingDataEKUSequenceError" xml:space="preserve">
+  <value>Μη αναμενόμενα δεδομένα ουράς μετά την ακολουθία EKU.</value>
+</data>
+<data name="InvalidFILETIMEError" xml:space="preserve">
+  <value>Αντιμετωπίστηκε μη έγκυρο FILETIME.</value>
+</data>
+<data name="BEGINCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>Ο δείκτης BEGIN CERTIFICATE δεν βρέθηκε στο PEM.</value>
+</data>
+<data name="ENDCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>Ο δείκτης END CERTIFICATE δεν βρέθηκε στο PEM.</value>
+</data>
+<data name="InvalidBase64ContentError" xml:space="preserve">
+  <value>Μη έγκυρο περιεχόμενο base64 στο πιστοποιητικό PEM.</value>
+</data>
+<data name="EmptyEntryNameSkippingMessage" xml:space="preserve">
+  <value>Κενό όνομα εγγραφής, παράληψη.</value>
+</data>
+<data name="LoadingCountriesDataMessage" xml:space="preserve">
+  <value>Φόρτωση δεδομένων χωρών...</value>
+</data>
+<data name="CountriesLoadedSuccessMessage" xml:space="preserve">
+  <value>Φορτώθηκαν επιτυχώς {0} χώρες</value>
+</data>
+<data name="CreatingRulesForMessage" xml:space="preserve">
+  <value>Δημιουργία κανόνων για {0}</value>
+</data>
+<data name="RemovingRulesForMessage" xml:space="preserve">
+  <value>Κατάργηση κανόνων για {0}</value>
+</data>
+<data name="SuccessfullyAddedIPRangeMessage" xml:space="preserve">
+  <value>Προστέθηκε επιτυχώς το επιλεγμένο εύρος IP για αποκλεισμό</value>
+</data>
+<data name="SuccessfullyRemovedIPRangeMessage" xml:space="preserve">
+  <value>Καταργήθηκε επιτυχώς το επιλεγμένο εύρος IP για αποκλεισμό</value>
+</data>
+<data name="PleaseSelectCountryWarning" xml:space="preserve">
+  <value>Παρακαλώ επιλέξτε μια χώρα από τη λίστα</value>
+</data>
+<data name="CreatingIPv4RulesMessage" xml:space="preserve">
+  <value>Δημιουργία κανόνων IPv4 για {0}</value>
+</data>
+<data name="CreatingIPv6RulesMessage" xml:space="preserve">
+  <value>Δημιουργία κανόνων IPv6 για {0}</value>
+</data>
+<data name="RemovingIPv4RulesMessage" xml:space="preserve">
+  <value>Κατάργηση κανόνων IPv4 για {0}</value>
+</data>
+<data name="RemovingIPv6RulesMessage" xml:space="preserve">
+  <value>Κατάργηση κανόνων IPv6 για {0}</value>
+</data>
+<data name="SuccessfullyAddedIPBlockingRulesMessage" xml:space="preserve">
+  <value>Προστέθηκαν επιτυχώς κανόνες αποκλεισμού IP για {0}</value>
+</data>
+<data name="SuccessfullyRemovedIPBlockingRulesMessage" xml:space="preserve">
+  <value>Καταργήθηκαν επιτυχώς κανόνες αποκλεισμού IP για {0}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>Αποτυχία δημιουργίας GroupPolicyObject στο STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>Αποτυχία αρχικοποίησης COM στο νήμα STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>Αποτυχία δημιουργίας GroupPolicyObject - επιστράφηκε null pointer από το νήμα STA</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>Αποτυχία αρχικοποίησης COM. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>Αποτυχία ανοίγματος GPO τοπικού μηχανήματος. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>Εξαίρεση COM: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>Αποτυχία καταχώρησης {0} CSE GUID {1:B}. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>Αποτυχία καταχώρησης {0} CSE GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="DeleteRow.Text" xml:space="preserve">
+    <value>Διαγραφή</value>
+  </data>
+  <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγραφή του/των επιλεγμένου/ων στοιχείου/ων.</value>
+  </data>
+  <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγραφή του/των επιλεγμένου/ων στοιχείου/ων.</value>
+  </data>
+      <data name="AuditPoliciesNavItem.Content" xml:space="preserve">
+    <value>Πολιτικές Ελέγχου</value>
+  </data>
+    <data name="AuditPoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβολή και διαχείριση όλων των Πολιτικών Ελέγχου του συστήματος.</value>
+  </data>
+  <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προβολή και διαχείριση όλων των Πολιτικών Ελέγχου του συστήματος.</value>
+  </data>
+    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <value>Προβολή και διαχείριση όλων των Πολιτικών Ελέγχου του συστήματος.</value>
+  </data>
+  <!--Audit Policies ListView Headers Start-->
+  <data name="AuditSettingHeader.Text" xml:space="preserve">
+    <value>Ρύθμιση Ελέγχου</value>
+  </data>
+  <data name="CategoryGUIDHeader.Text" xml:space="preserve">
+    <value>GUID Κατηγορίας</value>
+  </data>
+    <data name="SubcategoryGUIDHeader.Text" xml:space="preserve">
+    <value>GUID Υποκατηγορίας</value>
+  </data>
+  <!--Audit Policies ListView Headers End-->
+  <!--Audit Policies ListView Headers Buttons Start-->
+  <data name="AuditSettingColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Ρύθμιση Ελέγχου</value>
+  </data>
+  <data name="CategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>GUID Κατηγορίας</value>
+  </data>
+  <data name="SubcategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>GUID Υποκατηγορίας</value>
+  </data>
+  <!--Audit Policies ListView Headers Buttons End-->
+  <data name="RetrieveAuditPoliciesButton.Content" xml:space="preserve">
+    <value>Ανάκτηση Πολιτικών Ελέγχου</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανακτά όλες τις Πολιτικές Ελέγχου από το σύστημα.</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Ανακτά όλες τις Πολιτικές Ελέγχου από το σύστημα.</value>
+  </data>
+  <data name="SearchAuditPoliciesPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Αναζήτηση πολιτικών ελέγχου...</value>
+  </data>
+  <data name="AuditPolicyAppliedSuccess" xml:space="preserve">
+    <value>Η αλλαγή πολιτικής ελέγχου για το {0} εφαρμόστηκε επιτυχώς στο {1}</value>
+  </data>
+  <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
+    <value>Φορτώθηκαν επιτυχώς {0} πολιτικές ελέγχου.</value>
+  </data>
 </root>

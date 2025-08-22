@@ -70,7 +70,9 @@ internal static partial class ListViewHelper
 		GroupPolicyEditor = 10000,
 		MicrosoftDefender = 10001,
 		MicrosoftSecurityBaseline = 10002,
-		Microsoft365AppsSecurityBaseline = 10003
+		Microsoft365AppsSecurityBaseline = 10003,
+		CertificateChecking_NonStlCerts = 10004,
+		AuditPolicies = 10005
 	}
 
 	/// <summary>

@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class Edge : Page
 {
-	private EdgeVM ViewModel { get; } = ViewModelProvider.EdgeVM;
+	private EdgeVM ViewModel => ViewModelProvider.EdgeVM;
 
 	internal Edge()
 	{

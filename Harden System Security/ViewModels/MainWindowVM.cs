@@ -212,6 +212,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("CountryIPBlockingNavItem/Content")],
 			pages: [typeof(Pages.Protects.CountryIPBlocking)]
 		);
+
+		breadCrumbMappingsV2[typeof(Pages.AuditPolicies)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("AuditPoliciesNavItem/Content")],
+			pages: [typeof(Pages.AuditPolicies)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -244,14 +250,15 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "Miscellaneous", typeof(Pages.Protects.MiscellaneousConfigs) },
 		{ "WinUpdate", typeof(Pages.Protects.WindowsUpdate) },
 		{ "Edge", typeof(Pages.Protects.Edge) },
-		// { "Certificates", typeof(Pages.Protects.CertificateChecking) },
+		{ "Certificates", typeof(Pages.Protects.CertificateChecking) },
 		{ "CountryIPBlocking", typeof(Pages.Protects.CountryIPBlocking) },
 		{ "NonAdmin", typeof(Pages.Protects.NonAdmin) },
 		{ "FileReputation", typeof(Pages.FileReputation) },
 		{ "InstalledAppsManagement", typeof(Pages.InstalledAppsManagement) },
 		{ "MicrosoftSecurityBaseline", typeof(Pages.Protects.MicrosoftSecurityBaseline) },
 		{ "Microsoft365AppsSecurityBaseline", typeof(Pages.Protects.Microsoft365AppsSecurityBaseline) },
-		{ "MicrosoftBaseLinesOverrides", typeof(Pages.Protects.MicrosoftBaseLinesOverrides) }
+		{ "MicrosoftBaseLinesOverrides", typeof(Pages.Protects.MicrosoftBaseLinesOverrides) },
+		{ "AuditPolicies", typeof(Pages.AuditPolicies) }
 	};
 
 
@@ -284,7 +291,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MiscellaneousNavItem/Content")] = typeof(Pages.Protects.MiscellaneousConfigs);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("WindowsUpdateNavItem/Content")] = typeof(Pages.Protects.WindowsUpdate);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("EdgeBrowserNavItem/Content")] = typeof(Pages.Protects.Edge);
-		// NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CertificatesNavItem/Content")] = typeof(Pages.Protects.CertificateChecking);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CertificatesNavItem/Content")] = typeof(Pages.Protects.CertificateChecking);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CountryIPBlockingNavItem/Content")] = typeof(Pages.Protects.CountryIPBlocking);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("NonAdminCommandsNavItem/Content")] = typeof(Pages.Protects.NonAdmin);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("FileReputationNavItem/Content")] = typeof(Pages.FileReputation);
@@ -292,6 +299,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/Content")] = typeof(Pages.Protects.MicrosoftSecurityBaseline);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content")] = typeof(Pages.Protects.Microsoft365AppsSecurityBaseline);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content")] = typeof(Pages.Protects.MicrosoftBaseLinesOverrides);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("AuditPoliciesNavItem/Content")] = typeof(Pages.AuditPolicies);
 	}
 
 	/// <summary>
@@ -344,6 +352,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the File Installed Apps Management item.
 	/// </summary>
 	internal IconElement? InstalledAppsManagementIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the Audit Policies item.
+	/// </summary>
+	internal IconElement? AuditPoliciesIcon { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -415,6 +428,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Toolbox()
 					};
 
+					AuditPoliciesIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -8, -8, -8),
+						Source = new ChocolateBar()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -464,6 +483,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					AuditPoliciesIcon = new FontIcon
+					{
+						Glyph = "\uE9D5",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -476,6 +501,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					GroupPolicyEditorIcon = new FontIcon { Glyph = "\uE70F" };
 					FileReputationIcon = new FontIcon { Glyph = "\uEA91" };
 					InstalledAppsManagementIcon = new FontIcon { Glyph = "\uE71D" };
+					AuditPoliciesIcon = new FontIcon { Glyph = "\uE9D5" };
 					break;
 				}
 		}

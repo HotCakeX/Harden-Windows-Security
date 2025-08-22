@@ -49,7 +49,7 @@ internal sealed partial class MainWindow : Window
 {
 
 #pragma warning disable CA1822
-	private MainWindowVM ViewModel { get; } = ViewModelProvider.MainWindowVM;
+	private MainWindowVM ViewModel => ViewModelProvider.MainWindowVM;
 	private AppSettings.Main AppSettings { get; } = App.Settings;
 #if APP_CONTROL_MANAGER
 	private SidebarVM sidebarVM { get; } = ViewModelProvider.SidebarVM;
@@ -544,6 +544,10 @@ internal sealed partial class MainWindow : Window
 			Microsoft365AppsSecurityBaselineNavItem.Content = GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content");
 			AutomationProperties.SetHelpText(Microsoft365AppsSecurityBaselineNavItem, GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(Microsoft365AppsSecurityBaselineNavItem, GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/ToolTipService/ToolTip"));
+
+			AuditPoliciesNavItem.Content = GlobalVars.GetStr("AuditPoliciesNavItem/Content");
+			AutomationProperties.SetHelpText(AuditPoliciesNavItem, GlobalVars.GetStr("AuditPoliciesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(AuditPoliciesNavItem, GlobalVars.GetStr("AuditPoliciesNavItem/ToolTipService/ToolTip"));
 
 #endif
 

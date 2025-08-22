@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class CertificateChecking : Page
 {
-	private CertificateCheckingVM ViewModel { get; } = ViewModelProvider.CertificateCheckingVM;
+	private CertificateCheckingVM ViewModel => ViewModelProvider.CertificateCheckingVM;
 
 	internal CertificateChecking()
 	{

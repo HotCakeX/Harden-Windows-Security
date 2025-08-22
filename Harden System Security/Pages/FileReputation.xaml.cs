@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages;
 
 internal sealed partial class FileReputation : Page
 {
-	private FileReputationVM ViewModel { get; } = ViewModelProvider.FileReputationVM;
+	private FileReputationVM ViewModel => ViewModelProvider.FileReputationVM;
 
 	internal FileReputation()
 	{

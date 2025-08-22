@@ -1522,30 +1522,51 @@ internal static partial class CabinetArchiveExtractor
 			return syntheticHandle;
 		}
 
-		private int ReadCabinetStream(IntPtr handle, byte[] destinationBuffer, int requestedBytes)
+		private int ReadCabinetStream(IntPtr handle, IntPtr destinationBuffer, int requestedBytes)
 		{
+			// Look up current read position for the synthetic handle
 			if (!syntheticHandleTable.TryGetValue(handle, out object? posObj))
 			{
-				return -1;
+				return -1; // signal error to FDI
 			}
+
 			int currentPosition = (int)posObj;
 			int remaining = cabinetContentBytes.Length - currentPosition;
 			int bytesToRead = remaining < requestedBytes ? remaining : requestedBytes;
+
 			if (bytesToRead > 0)
 			{
-				Array.Copy(cabinetContentBytes, currentPosition, destinationBuffer, 0, bytesToRead);
+				// Copy from managed CAB buffer into native buffer (provided by FDI)
+				Marshal.Copy(cabinetContentBytes, currentPosition, destinationBuffer, bytesToRead);
 				syntheticHandleTable[handle] = currentPosition + bytesToRead;
 			}
+
 			return bytesToRead;
 		}
 
-		private int WriteDecompressedData(IntPtr handle, byte[] sourceBuffer, int sourceCount)
+		private int WriteDecompressedData(IntPtr handle, IntPtr sourceBuffer, int sourceCount)
 		{
 			if (currentFileAccumulationStream == null)
 			{
-				return -1;
+				return -1; // no active output stream
 			}
-			currentFileAccumulationStream.Write(sourceBuffer, 0, sourceCount);
+			if (sourceCount <= 0)
+			{
+				return 0;
+			}
+
+			// Copy from native buffer (FDI output) into our accumulation stream
+			byte[] temp = System.Buffers.ArrayPool<byte>.Shared.Rent(sourceCount);
+			try
+			{
+				Marshal.Copy(sourceBuffer, temp, 0, sourceCount);
+				currentFileAccumulationStream.Write(temp, 0, sourceCount);
+			}
+			finally
+			{
+				System.Buffers.ArrayPool<byte>.Shared.Return(temp);
+			}
+
 			return sourceCount;
 		}
 
@@ -1591,12 +1612,13 @@ internal static partial class CabinetArchiveExtractor
 			return newPosition;
 		}
 
-		private IntPtr HandleFdiNotification(FdiNotificationType notificationType, FdiNotificationRecord notificationRecord)
+		private IntPtr HandleFdiNotification(FdiNotificationType notificationType, ref FdiNotificationRecord notificationRecord)
 		{
 			switch (notificationType)
 			{
 				case FdiNotificationType.COPY_FILE:
 					{
+						// Begin a new file entry and prepare to accumulate its data
 						CabinetFileEntry entry = new(notificationRecord)
 						{
 							_handle = new IntPtr(syntheticHandleTable.Count + 1)
@@ -1608,19 +1630,32 @@ internal static partial class CabinetArchiveExtractor
 
 				case FdiNotificationType.CLOSE_FILE_INFO:
 					{
+						// Finish accumulating the file and emit it through the callback
 						if (syntheticHandleTable.TryGetValue(notificationRecord.hf, out object? stored) && stored is CabinetFileEntry entry)
 						{
 							_ = CloseHandleOrEntry(notificationRecord.hf);
 							entryCallback(entry);
-							return new IntPtr(1);
+							return new IntPtr(1); // success/continue
 						}
-						return IntPtr.Zero;
+						return IntPtr.Zero; // abort if handle was unknown
 					}
 
 				case FdiNotificationType.CABINET_INFO:
-				case FdiNotificationType.PARTIAL_FILE:
-				case FdiNotificationType.NEXT_CABINET:
+					// Got to return non-zero here to allow FDICopy to proceed
+					return new IntPtr(1);
+
 				case FdiNotificationType.ENUMERATE:
+					// Not used; returning non-zero is the safe "continue"
+					return new IntPtr(1);
+
+				case FdiNotificationType.PARTIAL_FILE:
+					// Not supporting partial files; return 0 to skip/abort this entry
+					return IntPtr.Zero;
+
+				case FdiNotificationType.NEXT_CABINET:
+					// Not supporting spanned cabinets; returning 0 will abort here
+					return IntPtr.Zero;
+
 				default:
 					return IntPtr.Zero;
 			}
@@ -1673,10 +1708,10 @@ internal static partial class CabinetArchiveExtractor
 	private delegate IntPtr FdiOpenDelegate(string pszFile, int oflag, int pmode);
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate int FdiReadDelegate(IntPtr hf, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] byte[] pv, int cb);
+	private delegate int FdiReadDelegate(IntPtr hf, IntPtr pv, int cb);
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate int FdiWriteDelegate(IntPtr hf, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] byte[] pv, int cb);
+	private delegate int FdiWriteDelegate(IntPtr hf, IntPtr pv, int cb);
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	private delegate int FdiCloseDelegate(IntPtr hf);
@@ -1685,7 +1720,7 @@ internal static partial class CabinetArchiveExtractor
 	private delegate int FdiSeekDelegate(IntPtr hf, int dist, SeekOrigin seektype);
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate IntPtr FdiNotifyDelegate(FdiNotificationType fdint, FdiNotificationRecord pfdin);
+	private delegate IntPtr FdiNotifyDelegate(FdiNotificationType fdint, ref FdiNotificationRecord pfdin);
 
 	internal sealed class CabinetFileEntry
 	{

@@ -81,7 +81,7 @@
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
         <ErrorReport>send</ErrorReport>
-        <FileVersion>1.0.5.0</FileVersion>
+        <FileVersion>1.0.6.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <NeutralLanguage>en-US</NeutralLanguage>
         <StartupObject>HardenSystemSecurity.Program</StartupObject>

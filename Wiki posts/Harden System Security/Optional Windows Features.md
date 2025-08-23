@@ -4,7 +4,20 @@
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> The [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) [disables](https://learn.microsoft.com/powershell/module/dism/disable-windowsoptionalfeature) the following rarely used features in [Windows optional features](https://learn.microsoft.com/windows/application-management/add-apps-and-features#use-windows-powershell-to-disable-specific-features) (Control Panel):
+## Full Customization
+
+In this page, the Harden System Security app offers a fully featured list of every single Windows Feature and Capability with searching and sorting functionalities, allowing you to easily enable or disable each of them with real time progress display.
+
+<br>
+
+## Recommended Configurations
+
+> [!NOTE]\
+> This feature will be coming soon!
+
+The app offers a quick to configure the Windows features and capabilities for optimal security, when you use this feature, it will make the following changes:
+
+- The [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) [disables](https://learn.microsoft.com/powershell/module/dism/disable-windowsoptionalfeature) the following rarely used features in [Windows optional features](https://learn.microsoft.com/windows/application-management/add-apps-and-features#use-windows-powershell-to-disable-specific-features) (Control Panel):
 
     - PowerShell v2: because it's old and doesn't support [AMSI](https://devblogs.microsoft.com/powershell/powershell-the-blue-team/#antimalware-scan-interface-integration).
 
@@ -18,7 +31,7 @@
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Uninstalls](https://learn.microsoft.com/powershell/module/dism/remove-windowscapability) these optional features (Windows Settings -> Apps -> Optional Features):
+- [Uninstalls](https://learn.microsoft.com/powershell/module/dism/remove-windowscapability) these optional features (Windows Settings -> Apps -> Optional Features):
 
     - Notepad (system): legacy Notepad program. Windows 11 has multi-tabbed modern Notepad app.
 
@@ -36,7 +49,7 @@
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Enables](https://learn.microsoft.com/powershell/module/dism/enable-windowsoptionalfeature) these optional features (Control Panel):
+- [Enables](https://learn.microsoft.com/powershell/module/dism/enable-windowsoptionalfeature) these optional features (Control Panel):
 
     - [Windows Sandbox](https://learn.microsoft.com/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview): install, test and use programs in a disposable virtual operation system, completely separate from your  main OS
 

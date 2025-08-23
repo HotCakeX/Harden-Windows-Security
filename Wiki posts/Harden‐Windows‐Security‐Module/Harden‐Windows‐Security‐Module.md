@@ -6,6 +6,61 @@
 
 <br>
 
+> [!NOTE]\
+> Please use the **new [Harden System Security App](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security).** It is superior in every possible way. This module is deprecated.
+
+<br>
+
+#### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github-pink.svg" alt="GitHub logo pink SVG"> Install + Start Harden Windows Security Using GUI (Graphical User Interface) - Will be Deprecated Soon.
+
+```powershell
+(irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'P'|iex
+```
+
+#### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg" alt="PowerShell icon Pink"> Or Install the Harden Windows Security
+
+[**Check the Documentation for How to use and Complete Info**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
+
+<details>
+<summary>
+
+Click/Tap here for commands
+
+```powershell
+Install-Module -Name 'Harden-Windows-Security-Module' -Force
+```
+
+</summary>
+
+```powershell
+Protect-WindowsSecurity -GUI # GUI Mode
+```
+```powershell
+Protect-WindowsSecurity # CLI Mode
+```
+```powershell
+Confirm-SystemCompliance # CLI Mode
+```
+```powershell
+Unprotect-WindowsSecurity # CLI Mode
+```
+
+</details>
+
+<br>
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/83ea20c080abf135f9f805d832679c7cc5e390cb/Pictures/APNGs/HardenWindowsSecurityDemo.apng" width="750" alt="Harden Windows Security App Demo">
+
+</div>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 Harden Windows Security is a PowerShell module designed to simplify the application of critical security configurations in Windows. This tool offers a range of intuitive and innovative methods to enhance your system's security posture effortlessly. Detailed explanations of all available security measures can be found in the repository's README file. Harden Windows Security provides several modes of interaction to cater to different user preferences:
 
 * Graphical User Interface (GUI): For those who prefer an interactive experience, a fully-featured GUI is available.

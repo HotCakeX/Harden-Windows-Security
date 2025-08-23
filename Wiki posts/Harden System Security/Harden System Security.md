@@ -2,7 +2,9 @@
 
 Harden System Security is a modern secure lightweight application that can help you harden, secure and lock down your system. It is designed to be user-friendly and efficient, providing a range of features to enhance the security of your Windows operating system.
 
-## How To Install or Update The App
+It always stays up to date with the latest security patches and provides constant and consistent maintenance and support.
+
+## How To Install or Update The App<img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/heart-purple.gif" width="35">
 
 ### Use The [Microsoft Store](https://apps.microsoft.com/detail/9p7ggfl7dx57)
 
@@ -43,7 +45,7 @@ Please feel free to open a discussion if you have any questions about the build 
 
 <br>
 
-## Technical Details of The App
+## Technical Details of The App <img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/pinkbow.gif" width="32">
 
 * Secure and transparent development and build process.
 * Built using [WinUI3](https://learn.microsoft.com/windows/apps/winui/winui3/) / [XAML](https://github.com/microsoft/microsoft-ui-xaml) / [C#](https://learn.microsoft.com/dotnet/csharp/).
@@ -63,7 +65,26 @@ Please feel free to open a discussion if you have any questions about the build 
 
 <br>
 
-## Security
+## Features <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Features.png">
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> No Windows functionality is removed/disabled against Microsoft's recommendations.
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> All of the links in the documentations and sources are from official Microsoft websites, straight from the source. No bias, No FUD, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles, and such.
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> When a security measure is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from the app in order to prevent any problems and because it won't be necessary anymore. **Community feedback will always be taken into account when doing so.**
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Applying the security measures can make your system compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/windows-hardware/design/device-experiences/oem-highly-secure-11#what-makes-a-secured-core-pc) - <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard">Check Device Guard category for more info</a>
+> [Secured-core](https://learn.microsoft.com/windows-hardware/design/device-experiences/oem-highly-secure-11) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Since I originally created this repository for myself and people I care about, I always maintain it to the highest possible standard.
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> If you have multiple accounts on your device, you only need to apply the security measures 1 time with Admin privileges, that will make system-wide changes. Then you can ***optionally*** run the app, without Admin privileges, for each standard user to apply the [Non-Admin category](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures).
+
+<br>
+
+## Security <img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/pinkbutterflyholopastel.gif" width="35">
 
 Harden System Security is architected with a security-first philosophy from its inception. Every feature is designed and implemented with an offensive security mindset, ensuring that security is never an afterthought—and never will be. When selecting a solution tasked with defending critical systems, the last thing you want is a so‑called security tool that silently broadens your attack surface or neglects foundational safeguards. This application is built to be inherently trustworthy, defensible, and resilient.
 
@@ -85,9 +106,51 @@ The codebase is extensively and thoughtfully documented, enabling reviewers to t
 
 <br>
 
-## Documentation
+## Documentation <img src="https://raw.githubusercontent.com/HotCakeX/.github/c26ab12b9bc18eb51041857c6244d6abe11a707a/Pictures/Gifs/peaheartbento.gif" width="40">
 
-Full documentation for every single feature of the Harden System Security app is available on [the GitHub Wiki](https://github.com/HotCakeX/Harden-Windows-Security/wiki#-harden-system-security--)
+> [!NOTE]\
+> Mixing 3rd party security solutions with advanced Microsoft Defender features or other features offered by the Harden System Security app is not recommended as it can create conflicts.
+
+### Symbols Reference
+
+The following chart explains various symbols you will see throughout the documentations for the Harden System Security app, helping you understand how they are each applied.
+
+<div align="center">
+
+| Indicator| Description                   |
+|:--------:|:-----------------------------:|
+| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> | Security measure is applied via Registry/API/COM etc. |
+| <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> | Security measure is applied via Group Policies |
+| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="25" alt="Rotating green checkmark denoting CSP"> | [CSP](https://learn.microsoft.com/windows/configuration/provisioning-packages/how-it-pros-can-use-configuration-service-providers) for the security measure |
+| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> | Sub-category |
+
+</div>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/be5b79427cba6546ece58984428841a4d1a31789/Pictures/Gifs/Harden%20System%20Security%20Menu/Protect.gif" alt="Harden System Security Menu Item" width="30"> [Protect](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect)
+
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines)
+    - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/d32e4aced203262acc7eff373e888f22247a4212/images/MicrosoftBaseLinesOverrides.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Security Baselines Overrides](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-365-Apps-Security-Baselines.png" alt="Harden System Security Menu Item" width="30"> [Microsoft 365 Apps Security Baseline](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-365-Apps-Security-Baseline)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsDefender.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Defender](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ASRrules.png" alt="Harden System Security Menu Item" width="30"> [Attack Surface Reduction](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png" alt="Harden System Security Menu Item" width="30"> [Bitlocker](https://github.com/HotCakeX/Harden-Windows-Security/wiki/BitLocker)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/DeviceGuard.png" alt="Harden System Security Menu Item" width="30"> [Device Guard](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png" alt="Harden System Security Menu Item" width="30"> [TLS Security](https://github.com/HotCakeX/Harden-Windows-Security/wiki/TLS-Security)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LockScreen.png" alt="Harden System Security Menu Item" width="30"> [Lock Screen](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Lock-Screen)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png" alt="Harden System Security Menu Item" width="30"> [User Account Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/User-Account-Control)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Firewall.png" alt="Harden System Security Menu Item" width="30"> [Windows Firewall](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/OptionalFeatures.png" alt="Harden System Security Menu Item" width="30"> [Optional Windows Features](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Networking.png" alt="Harden System Security Menu Item" width="30"> [Windows Networking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Networking)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/MiscellaneousCommands.png" alt="Harden System Security Menu Item" width="30"> [Miscellaneous Configurations](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Miscellaneous-Configurations)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsUpdate.png" alt="Harden System Security Menu Item" width="30"> [Windows Update](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Update)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/EdgeBrowser.png" alt="Harden System Security Menu Item" width="30"> [Edge Browser](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edge-Browser)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Certificate.png" alt="Harden System Security Menu Item" width="30"> [Certificate Checking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Certificate-Checking)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/CountryIPBlocking.png" alt="Harden System Security Menu Item" width="30"> [Country IP Blocking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/NonAdmin.png" alt="Harden System Security Menu Item" width="30"> [Non Admin Measures](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/Star.gif" alt="Harden System Security Menu Item" width="30"> [Group Policy Editor](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy-Editor)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/Toolbox.gif" alt="Harden System Security Menu Item" width="30"> [Manage Installed Apps](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/kawaii.gif" alt="Harden System Security Menu Item" width="30"> [File Reputation](https://github.com/HotCakeX/Harden-Windows-Security/wiki/File-Reputation)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/be5b79427cba6546ece58984428841a4d1a31789/Pictures/Gifs/Harden%20System%20Security%20Menu/ChocolateBar.gif" alt="Harden System Security Menu Item" width="30"> [Audit Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Audit-Policies)
 
 <br>
 

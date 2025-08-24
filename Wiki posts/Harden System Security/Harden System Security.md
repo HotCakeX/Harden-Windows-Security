@@ -175,7 +175,7 @@ Here are the breakdown of some of the directories and files used by the Harden S
 
 * [Animated Icon Sources](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icon%20Sources) is the location hosting JSON content of the Lottie animations used for the animated buttons.
 
-* [Animated Icons](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icons) contain source generated files used for animated icons in various parts of it app.
+* [Animated Icons](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icons) contain source generated files used for animated icons in various parts of the app.
 
 * [Resources](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources) directory contains JSON data used by the app to apply Security Measures for the following sources: `Group Policies`, `Registry Keys`, `Security Policies Registry Keys`.
 

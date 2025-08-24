@@ -2973,4 +2973,52 @@ Odcisk Palca: {3}</value>
   <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
     <value>Pomyślnie załadowano {0} zasad audytu.</value>
   </data>
+  <data name="NoAuditPoliciesAvailable" xml:space="preserve">
+    <value>Brak zasad audytu do eksportu. Proszę najpierw pobrać zasady audytu.</value>
+  </data>
+  <data name="SuccessfullyExportedAuditPolicies" xml:space="preserve">
+    <value>Pomyślnie wyeksportowano {0} zasad audytu do {1}</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Importuje zasady audytu z pliku JSON i stosuje je w systemie. Będzie można wybrać plik JSON do importu.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importuje zasady audytu z pliku JSON i stosuje je w systemie. Będzie można wybrać plik JSON do importu.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.Content" xml:space="preserve">
+    <value>Importuj i Zastosuj</value>
+  </data>
+  <data name="NoAuditPoliciesAvailableToImport" xml:space="preserve">
+    <value>Nie znaleziono prawidłowych zasad audytu w pliku JSON.</value>
+  </data>
+  <data name="NoAuditPoliciesApplicableInJSON" xml:space="preserve">
+    <value>Nie znaleziono odpowiednich zasad audytu w pliku JSON dla tego systemu.</value>
+  </data>
+  <data name="SuccessfullyImportedAuditPolicies" xml:space="preserve">
+    <value>Pomyślnie zaimportowano {0} zasad audytu z {1}</value>
+  </data>
+  <data name="ApplyRecommendedConfigurations" xml:space="preserve">
+    <value>Zastosuj Rekomendacje</value>
+  </data>
+  <data name="VerifyRecommendedConfigurations" xml:space="preserve">
+    <value>Zweryfikuj Rekomendacje</value>
+  </data>
+  <data name="RemoveRecommendedConfigurations" xml:space="preserve">
+    <value>Usuń Rekomendacje</value>
+  </data>
+  <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Skopiuj wybrane elementy do schowka.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Skopiuj wybrane elementy do schowka.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>Kopiuj Wybrane</value>
+  </data>
+  <data name="NoCertificatesAvailableForExport" xml:space="preserve">
+    <value>Brak certyfikatu do eksportu. Proszę najpierw pobrać certyfikaty.</value>
+  </data>
+  <data name="SuccessfullyExportedCertificates" xml:space="preserve">
+    <value>Pomyślnie wyeksportowano {0} certyfikatów do {1}</value>
+  </data>
 </root>

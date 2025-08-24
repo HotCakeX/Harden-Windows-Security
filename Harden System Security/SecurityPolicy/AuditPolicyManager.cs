@@ -17,11 +17,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using AppControlManager;
 using AppControlManager.Others;
@@ -45,14 +47,29 @@ internal sealed partial class AuditPolicyInfo(
 	string categoryName,
 	uint auditingInformation) : ViewModelBase
 {
+	[JsonInclude]
+	[JsonPropertyOrder(4)]
 	internal Guid SubcategoryGuid => subcategoryGuid;
+
+	[JsonInclude]
+	[JsonPropertyOrder(1)]
 	internal string SubcategoryName => subcategoryName;
+
+	[JsonInclude]
+	[JsonPropertyOrder(3)]
 	internal Guid CategoryGuid => categoryGuid;
+
+	[JsonInclude]
+	[JsonPropertyOrder(0)]
 	internal string CategoryName => categoryName;
 
+	[JsonIgnore]
 	private uint _originalAuditingInformation = auditingInformation;
+	[JsonIgnore]
 	private uint _currentAuditingInformation = auditingInformation;
 
+	[JsonInclude]
+	[JsonPropertyOrder(2)]
 	internal uint AuditingInformation
 	{
 		get => _currentAuditingInformation;
@@ -72,11 +89,13 @@ internal sealed partial class AuditPolicyInfo(
 		}
 	}
 
+	[JsonIgnore]
 	internal uint OriginalAuditingInformation => _originalAuditingInformation;
 
 	/// <summary>
 	/// Gets whether there are pending changes (current value different from original)
 	/// </summary>
+	[JsonIgnore]
 	internal bool HasPendingChanges => _currentAuditingInformation != _originalAuditingInformation;
 
 	/// <summary>
@@ -102,16 +121,19 @@ internal sealed partial class AuditPolicyInfo(
 	/// <summary>
 	/// Gets the human-readable audit setting
 	/// </summary>
+	[JsonIgnore]
 	internal string AuditSettingDescription => GetAuditSettingDescription(_currentAuditingInformation);
 
 	/// <summary>
 	/// Reference to the View Model that contains the List View that hosts this type.
 	/// </summary>
+	[JsonIgnore]
 	internal AuditPoliciesVM? VMRef;
 
 	/// <summary>
 	/// Gets or sets the selected index for the ComboBox binding (0-3)
 	/// </summary>
+	[JsonIgnore]
 	internal int SelectedAuditSettingIndex
 	{
 		get => (int)_currentAuditingInformation;
@@ -138,6 +160,18 @@ internal sealed partial class AuditPolicyInfo(
 			_ => GlobalVars.GetStr("UnknownState")
 		};
 	}
+}
+
+[JsonSerializable(typeof(AuditPolicyInfo))]
+[JsonSerializable(typeof(List<AuditPolicyInfo>))]
+[JsonSerializable(typeof(ObservableCollection<AuditPolicyInfo>))]
+[JsonSourceGenerationOptions(
+	WriteIndented = true,
+	PropertyNamingPolicy = JsonKnownNamingPolicy.Unspecified,
+	PropertyNameCaseInsensitive = true,
+	DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
+internal sealed partial class AuditPolicyJsonContext : JsonSerializerContext
+{
 }
 
 /// <summary>
@@ -301,7 +335,10 @@ internal static class AuditPolicyManager
 				IntPtr categoryGuidPtr = IntPtr.Add(categoriesPtr, (int)i * guidSize);
 				Guid categoryGuid = Marshal.PtrToStructure<Guid>(categoryGuidPtr);
 
-				if (!NativeMethods.AuditEnumerateSubCategories(categoryGuidPtr, true, out IntPtr subCatPtr, out uint subCatCount))
+				// Setting this to FALSE correctly restricts enumeration to subcategories actually belonging to the category.
+				// When TRUE, the API returns ALL subcategories irrespective of the supplied category GUID.
+				// That causes every subcategory to appear under every category. (60 * 9 = 540!!)
+				if (!NativeMethods.AuditEnumerateSubCategories(categoryGuidPtr, false, out IntPtr subCatPtr, out uint subCatCount))
 					continue;
 
 				try
@@ -357,7 +394,9 @@ internal static class AuditPolicyManager
 				IntPtr categoryGuidPtr = IntPtr.Add(categoriesPtr, (int)i * guidSize);
 				Guid categoryGuid = Marshal.PtrToStructure<Guid>(categoryGuidPtr);
 
-				if (!NativeMethods.AuditEnumerateSubCategories(categoryGuidPtr, true, out IntPtr subCatPtr, out uint subCatCount))
+				// FALSE for the 'AllSubCategories' parameter so we only get subcategories that belong to this category.
+				// TRUE would produce every subcategory for every category, causing duplicates and incorrect category mapping.
+				if (!NativeMethods.AuditEnumerateSubCategories(categoryGuidPtr, false, out IntPtr subCatPtr, out uint subCatCount))
 				{
 					continue; // Skip categories that fail to enumerate
 				}

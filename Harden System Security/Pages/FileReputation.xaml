@@ -54,7 +54,16 @@
                 <Button x:Uid="GenericBrowseButton"
                         VerticalAlignment="Center"
                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.BrowseForFile}" />
+                        Click="{x:Bind ViewModel.BrowseForFile}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
                 <!-- Drag and drop hint shown when not elevated -->
                 <TextBlock x:Uid="DragAndDropHintFileReputation"

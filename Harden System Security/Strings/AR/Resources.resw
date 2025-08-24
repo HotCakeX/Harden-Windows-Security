@@ -2973,4 +2973,52 @@
   <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
     <value>تم تحميل {0} سياسة تدقيق بنجاح.</value>
   </data>
+  <data name="NoAuditPoliciesAvailable" xml:space="preserve">
+    <value>لا توجد سياسات مراجعة للتصدير. يرجى استرداد سياسات المراجعة أولاً.</value>
+  </data>
+  <data name="SuccessfullyExportedAuditPolicies" xml:space="preserve">
+    <value>تم تصدير {0} سياسات المراجعة بنجاح إلى {1}</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>يستورد سياسات المراجعة من ملف JSON ويطبقها على النظام. ستتمكن من اختيار ملف JSON للاستيراد.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يستورد سياسات المراجعة من ملف JSON ويطبقها على النظام. ستتمكن من اختيار ملف JSON للاستيراد.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.Content" xml:space="preserve">
+    <value>استيراد وتطبيق</value>
+  </data>
+  <data name="NoAuditPoliciesAvailableToImport" xml:space="preserve">
+    <value>لم يتم العثور على سياسات مراجعة صالحة في ملف JSON.</value>
+  </data>
+  <data name="NoAuditPoliciesApplicableInJSON" xml:space="preserve">
+    <value>لم يتم العثور على سياسات مراجعة قابلة للتطبيق في ملف JSON لهذا النظام.</value>
+  </data>
+  <data name="SuccessfullyImportedAuditPolicies" xml:space="preserve">
+    <value>تم استيراد {0} سياسات المراجعة بنجاح من {1}</value>
+  </data>
+  <data name="ApplyRecommendedConfigurations" xml:space="preserve">
+    <value>تطبيق التوصيات</value>
+  </data>
+  <data name="VerifyRecommendedConfigurations" xml:space="preserve">
+    <value>التحقق من التوصيات</value>
+  </data>
+  <data name="RemoveRecommendedConfigurations" xml:space="preserve">
+    <value>إزالة التوصيات</value>
+  </data>
+  <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نسخ العناصر المحددة إلى الحافظة.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نسخ العناصر المحددة إلى الحافظة.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>نسخ المحدد</value>
+  </data>
+  <data name="NoCertificatesAvailableForExport" xml:space="preserve">
+    <value>لا توجد شهادة للتصدير. يرجى استرداد الشهادات أولاً.</value>
+  </data>
+  <data name="SuccessfullyExportedCertificates" xml:space="preserve">
+    <value>تم تصدير {0} شهادات بنجاح إلى {1}</value>
+  </data>
 </root>

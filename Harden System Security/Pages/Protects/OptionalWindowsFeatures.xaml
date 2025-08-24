@@ -224,6 +224,90 @@
 
                 </Button>
 
+                <customUI:AnimatedCancellableButton
+                    CancelMethod="{x:Bind ViewModel.ApplyCancellableButton.Cancel, Mode=OneWay}"
+                    ExternalOperationInProgress="{x:Bind ViewModel.ApplyCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                    ExternalIsCancelState="{x:Bind ViewModel.ApplyCancellableButton.IsCancelState, Mode=OneWay}"
+                    ExternalIsCancellingState="{x:Bind ViewModel.ApplyCancellableButton.IsCancellingState, Mode=OneWay}"
+                    ExternalIsAnimating="{x:Bind ViewModel.ApplyCancellableButton.IsAnimating, Mode=OneWay}"
+                    ExternalButtonContent="{x:Bind ViewModel.ApplyCancellableButton.ButtonContent, Mode=OneWay}"
+                    ExternalOriginalText="{x:Bind ViewModel.ApplyCancellableButton.OriginalText, Mode=OneWay}"
+                    ExternalInternalIsCancelState="{x:Bind ViewModel.ApplyCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                    ExternalInternalIsCancellingState="{x:Bind ViewModel.ApplyCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                    ExternalInternalIsAnimating="{x:Bind ViewModel.ApplyCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                    ExternalInternalIsOperationInProgress="{x:Bind ViewModel.ApplyCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                    ExternalInternalSuppressExternalClick="{x:Bind ViewModel.ApplyCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+                    ExternalShadowAnimationRunning="{x:Bind ViewModel.ApplyCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+                    ExternalOperationStarted="{x:Bind ViewModel.ApplyCancellableButton.OperationStarted, Mode=OneWay}"
+                    Click="{x:Bind ViewModel.ApplySecurityHardeningUI}">
+
+                    <ani:Implicit.HideAnimations>
+                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.3" To="0.9"/>
+                    </ani:Implicit.HideAnimations>
+                    <ani:Implicit.ShowAnimations>
+                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0"/>
+                    </ani:Implicit.ShowAnimations>
+
+                </customUI:AnimatedCancellableButton>
+
+                <customUI:AnimatedCancellableButton
+                    CancelMethod="{x:Bind ViewModel.VerifyCancellableButton.Cancel, Mode=OneWay}"
+                    ExternalOperationInProgress="{x:Bind ViewModel.VerifyCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                    ExternalIsCancelState="{x:Bind ViewModel.VerifyCancellableButton.IsCancelState, Mode=OneWay}"
+                    ExternalIsCancellingState="{x:Bind ViewModel.VerifyCancellableButton.IsCancellingState, Mode=OneWay}"
+                    ExternalIsAnimating="{x:Bind ViewModel.VerifyCancellableButton.IsAnimating, Mode=OneWay}"
+                    ExternalButtonContent="{x:Bind ViewModel.VerifyCancellableButton.ButtonContent, Mode=OneWay}"
+                    ExternalOriginalText="{x:Bind ViewModel.VerifyCancellableButton.OriginalText, Mode=OneWay}"
+                    ExternalInternalIsCancelState="{x:Bind ViewModel.VerifyCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                    ExternalInternalIsCancellingState="{x:Bind ViewModel.VerifyCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                    ExternalInternalIsAnimating="{x:Bind ViewModel.VerifyCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                    ExternalInternalIsOperationInProgress="{x:Bind ViewModel.VerifyCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                    ExternalInternalSuppressExternalClick="{x:Bind ViewModel.VerifyCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+                    ExternalShadowAnimationRunning="{x:Bind ViewModel.VerifyCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+                    ExternalOperationStarted="{x:Bind ViewModel.VerifyCancellableButton.OperationStarted, Mode=OneWay}"
+                    Click="{x:Bind ViewModel.VerifySecurityHardeningUI}">
+
+                    <ani:Implicit.HideAnimations>
+                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.3" To="0.9"/>
+                    </ani:Implicit.HideAnimations>
+                    <ani:Implicit.ShowAnimations>
+                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0"/>
+                    </ani:Implicit.ShowAnimations>
+
+                </customUI:AnimatedCancellableButton>
+
+                <customUI:AnimatedCancellableButton
+                    CancelMethod="{x:Bind ViewModel.RemoveCancellableButton.Cancel, Mode=OneWay}"
+                    ExternalOperationInProgress="{x:Bind ViewModel.RemoveCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                    ExternalIsCancelState="{x:Bind ViewModel.RemoveCancellableButton.IsCancelState, Mode=OneWay}"
+                    ExternalIsCancellingState="{x:Bind ViewModel.RemoveCancellableButton.IsCancellingState, Mode=OneWay}"
+                    ExternalIsAnimating="{x:Bind ViewModel.RemoveCancellableButton.IsAnimating, Mode=OneWay}"
+                    ExternalButtonContent="{x:Bind ViewModel.RemoveCancellableButton.ButtonContent, Mode=OneWay}"
+                    ExternalOriginalText="{x:Bind ViewModel.RemoveCancellableButton.OriginalText, Mode=OneWay}"
+                    ExternalInternalIsCancelState="{x:Bind ViewModel.RemoveCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                    ExternalInternalIsCancellingState="{x:Bind ViewModel.RemoveCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                    ExternalInternalIsAnimating="{x:Bind ViewModel.RemoveCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                    ExternalInternalIsOperationInProgress="{x:Bind ViewModel.RemoveCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                    ExternalInternalSuppressExternalClick="{x:Bind ViewModel.RemoveCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+                    ExternalShadowAnimationRunning="{x:Bind ViewModel.RemoveCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+                    ExternalOperationStarted="{x:Bind ViewModel.RemoveCancellableButton.OperationStarted, Mode=OneWay}"
+                    Click="{x:Bind ViewModel.RemoveSecurityHardeningUI}">
+
+                    <ani:Implicit.HideAnimations>
+                        <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.3" To="0.9"/>
+                    </ani:Implicit.HideAnimations>
+                    <ani:Implicit.ShowAnimations>
+                        <ani:OpacityAnimation Duration="0:0:0.5" From="0.0" To="1.0"/>
+                        <ani:ScaleAnimation Duration="0:0:0.5" From="0.9" To="1.0"/>
+                    </ani:Implicit.ShowAnimations>
+
+                </customUI:AnimatedCancellableButton>
+
                 <!-- Manage Selections Dropdown -->
                 <DropDownButton x:Uid="ManageSelectionsDropDownButton">
                     <DropDownButton.Flyout>

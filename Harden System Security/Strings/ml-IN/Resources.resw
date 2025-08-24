@@ -2973,4 +2973,52 @@
   <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
     <value>വിജയകരമായി {0} ഓഡിറ്റ് നയങ്ങൾ ലോഡ് ചെയ്തു.</value>
   </data>
+  <data name="NoAuditPoliciesAvailable" xml:space="preserve">
+    <value>കയറ്റുമതി ചെയ്യാൻ ഓഡിറ്റ് നയങ്ങളൊന്നുമില്ല. ദയവായി ആദ്യം ഓഡിറ്റ് നയങ്ങൾ വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="SuccessfullyExportedAuditPolicies" xml:space="preserve">
+    <value>വിജയകരമായി {0} ഓഡിറ്റ് നയങ്ങൾ {1} ലേക്ക് കയറ്റുമതി ചെയ്തു</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>JSON ഫയലിൽ നിന്ന് ഓഡിറ്റ് നയങ്ങൾ ഇറക്കുമതി ചെയ്യുകയും സിസ്റ്റത്തിൽ പ്രയോഗിക്കുകയും ചെയ്യുന്നു. നിങ്ങൾക്ക് ഇറക്കുമതിക്കായി JSON ഫയൽ തിരഞ്ഞെടുക്കാൻ കഴിയും.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>JSON ഫയലിൽ നിന്ന് ഓഡിറ്റ് നയങ്ങൾ ഇറക്കുമതി ചെയ്യുകയും സിസ്റ്റത്തിൽ പ്രയോഗിക്കുകയും ചെയ്യുന്നു. നിങ്ങൾക്ക് ഇറക്കുമതിക്കായി JSON ഫയൽ തിരഞ്ഞെടുക്കാൻ കഴിയും.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.Content" xml:space="preserve">
+    <value>ഇറക്കുമതി ചെയ്ത് പ്രയോഗിക്കുക</value>
+  </data>
+  <data name="NoAuditPoliciesAvailableToImport" xml:space="preserve">
+    <value>JSON ഫയലിൽ സാധുവായ ഓഡിറ്റ് നയങ്ങൾ കണ്ടെത്തിയില്ല.</value>
+  </data>
+  <data name="NoAuditPoliciesApplicableInJSON" xml:space="preserve">
+    <value>ഈ സിസ്റ്റത്തിന് JSON ഫയലിൽ പ്രയോഗിക്കാവുന്ന ഓഡിറ്റ് നയങ്ങൾ കണ്ടെത്തിയില്ല.</value>
+  </data>
+  <data name="SuccessfullyImportedAuditPolicies" xml:space="preserve">
+    <value>വിജയകരമായി {1} ൽ നിന്ന് {0} ഓഡിറ്റ് നയങ്ങൾ ഇറക്കുമതി ചെയ്തു</value>
+  </data>
+  <data name="ApplyRecommendedConfigurations" xml:space="preserve">
+    <value>ശുപാർശകൾ പ്രയോഗിക്കുക</value>
+  </data>
+  <data name="VerifyRecommendedConfigurations" xml:space="preserve">
+    <value>ശുപാർശകൾ സ്ഥിരീകരിക്കുക</value>
+  </data>
+  <data name="RemoveRecommendedConfigurations" xml:space="preserve">
+    <value>ശുപാർശകൾ നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾ ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തുക.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഇനങ്ങൾ ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തുക.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്തവ പകർത്തുക</value>
+  </data>
+  <data name="NoCertificatesAvailableForExport" xml:space="preserve">
+    <value>കയറ്റുമതി ചെയ്യാൻ സർട്ടിഫിക്കറ്റില്ല. ദയവായി ആദ്യം സർട്ടിഫിക്കറ്റുകൾ വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="SuccessfullyExportedCertificates" xml:space="preserve">
+    <value>വിജയകരമായി {0} സർട്ടിഫിക്കറ്റുകൾ {1} ലേക്ക് കയറ്റുമതി ചെയ്തു</value>
+  </data>
 </root>

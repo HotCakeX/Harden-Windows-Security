@@ -110,9 +110,27 @@
                     ExternalOperationStarted="{x:Bind ViewModel.VerifyAllCancellableButton.OperationStarted, Mode=OneWay}"
                     Click="{x:Bind ViewModel.VerifySecurityBaseline}"/>
 
-                <Button x:Uid="ClearDataButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ClearData}" />
+                <Button x:Uid="ClearDataButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ClearData}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xED62;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
-                <Button x:Uid="ExportToJsonButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ExportToJson}" />
+                <Button x:Uid="ExportToJsonButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ExportToJson}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE74E;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
                 <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                         x:Uid="DownloadURLButton"

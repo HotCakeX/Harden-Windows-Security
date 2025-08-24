@@ -28,6 +28,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json.Serialization;
 using AppControlManager;
 using AppControlManager.Others;
 
@@ -201,15 +202,46 @@ internal sealed class NonStlRootCert(
 	string rootSubject,
 	string rootSha256Hex)
 {
+	[JsonInclude]
+	[JsonPropertyName("Store Location")]
 	internal string StoreLocationString => storeLocationString;
+
+	[JsonInclude]
+	[JsonPropertyName("Store Name")]
 	internal string StoreNameString => storeNameString;
+
+	[JsonInclude]
+	[JsonPropertyName("Subject")]
 	internal string Subject => subject;
+
+	[JsonInclude]
+	[JsonPropertyName("Issuer")]
 	internal string Issuer => issuer;
+
+	[JsonInclude]
+	[JsonPropertyName("Leaf Certificate Thumbprint - SHA1")]
 	internal string LeafThumbprintSha1 => leafThumbprintSha1;
+
+	[JsonInclude]
+	[JsonPropertyName("Root Certificate Subject")]
 	internal string RootSubject => rootSubject;
+
+	[JsonInclude]
+	[JsonPropertyName("Root Certificate SHA256 Hash")]
 	internal string RootSha256Hex => rootSha256Hex;
 
+	[JsonIgnore]
 	internal ViewModels.CertificateCheckingVM? VMRef;
+}
+
+/// <summary>
+/// JSON source generation context for <see cref="NonStlRootCert"/> serialization
+/// </summary>
+[JsonSourceGenerationOptions(WriteIndented = true, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+[JsonSerializable(typeof(NonStlRootCert))]
+[JsonSerializable(typeof(List<NonStlRootCert>))]
+internal sealed partial class NonStlRootCertJsonContext : JsonSerializerContext
+{
 }
 
 /// <summary>

@@ -2973,4 +2973,52 @@
   <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
     <value>सफलतापूर्वक {0} ऑडिट नीतियां लोड की गईं।</value>
   </data>
+  <data name="NoAuditPoliciesAvailable" xml:space="preserve">
+    <value>निर्यात के लिए कोई ऑडिट नीतियाँ नहीं। कृपया पहले ऑडिट नीतियाँ प्राप्त करें।</value>
+  </data>
+  <data name="SuccessfullyExportedAuditPolicies" xml:space="preserve">
+    <value>सफलतापूर्वक {0} ऑडिट नीतियाँ {1} में निर्यात की गईं</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>JSON फाइल से ऑडिट नीतियाँ आयात करता है और उन्हें सिस्टम में लागू करता है। आप आयात करने के लिए JSON फाइल चुन सकेंगे।</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>JSON फाइल से ऑडिट नीतियाँ आयात करता है और उन्हें सिस्टम में लागू करता है। आप आयात करने के लिए JSON फाइल चुन सकेंगे।</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.Content" xml:space="preserve">
+    <value>आयात करें और लागू करें</value>
+  </data>
+  <data name="NoAuditPoliciesAvailableToImport" xml:space="preserve">
+    <value>JSON फाइल में कोई वैध ऑडिट नीतियाँ नहीं मिलीं।</value>
+  </data>
+  <data name="NoAuditPoliciesApplicableInJSON" xml:space="preserve">
+    <value>इस सिस्टम के लिए JSON फाइल में कोई लागू होने वाली ऑडिट नीतियाँ नहीं मिलीं।</value>
+  </data>
+  <data name="SuccessfullyImportedAuditPolicies" xml:space="preserve">
+    <value>सफलतापूर्वक {1} से {0} ऑडिट नीतियाँ आयात की गईं</value>
+  </data>
+  <data name="ApplyRecommendedConfigurations" xml:space="preserve">
+    <value>सुझाव लागू करें</value>
+  </data>
+  <data name="VerifyRecommendedConfigurations" xml:space="preserve">
+    <value>सुझाव सत्यापित करें</value>
+  </data>
+  <data name="RemoveRecommendedConfigurations" xml:space="preserve">
+    <value>सुझाव हटाएं</value>
+  </data>
+  <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित आइटमों को क्लिपबोर्ड में कॉपी करें।</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित आइटमों को क्लिपबोर्ड में कॉपी करें।</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>चयनित कॉपी करें</value>
+  </data>
+  <data name="NoCertificatesAvailableForExport" xml:space="preserve">
+    <value>निर्यात के लिए कोई प्रमाणपत्र नहीं। कृपया पहले प्रमाणपत्र प्राप्त करें।</value>
+  </data>
+  <data name="SuccessfullyExportedCertificates" xml:space="preserve">
+    <value>सफलतापूर्वक {0} प्रमाणपत्र {1} में निर्यात किए गए</value>
+  </data>
 </root>

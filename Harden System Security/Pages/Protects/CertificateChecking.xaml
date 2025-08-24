@@ -61,27 +61,85 @@
                 <ToggleButton IsChecked="{x:Bind ViewModel.IncludeExpiredCertificates, Mode=TwoWay}"
                               x:Uid="IncludeExpiredCertsToggleButton"
                               VerticalAlignment="Center"
-                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                    <ToggleButton.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE823;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ToggleButton.ContentTemplate>
+                </ToggleButton>
 
                 <Button x:Uid="StartAnalysisButton"
                         VerticalAlignment="Center"
                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.StartCertificateAnalysis}" />
+                        Click="{x:Bind ViewModel.StartCertificateAnalysis}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE9D9;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
                 <Button x:Uid="GetLocalCertificatesButton"
                         VerticalAlignment="Center"
                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.RetrieveAllCertificates}" />
+                        Click="{x:Bind ViewModel.RetrieveAllCertificates}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE770;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
                 <Button x:Uid="ClearButton"
                         VerticalAlignment="Center"
                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.ClearCertificateData}" />
+                        Click="{x:Bind ViewModel.ClearCertificateData}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xED62;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
+                <Button x:Uid="ExportToJsonButton"
+                        VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.ExportToJson_Click}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE74E;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
                 <!-- CTL Header Info Button -->
                 <Button x:Uid="CTLHeaderInfoFlyoutButton"
                         VerticalAlignment="Center"
                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE946;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
 
                     <Button.Flyout>
                         <Flyout>

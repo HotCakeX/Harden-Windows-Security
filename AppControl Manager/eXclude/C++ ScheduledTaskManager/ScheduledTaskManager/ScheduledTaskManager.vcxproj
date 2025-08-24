@@ -74,6 +74,7 @@
            <GenerateDebugInformation>true</GenerateDebugInformation>
            <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
            <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+           <DependentLoadFlags>0x800</DependentLoadFlags>
        </Link>
    </ItemDefinitionGroup>
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
@@ -87,6 +88,7 @@
            <MultiProcessorCompilation>true</MultiProcessorCompilation>
            <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
            <GuardSignedReturns>true</GuardSignedReturns>
+           <GuardEHContMetadata>true</GuardEHContMetadata>
        </ClCompile>
        <Link>
            <SubSystem>Console</SubSystem>
@@ -95,6 +97,7 @@
            <GenerateDebugInformation>true</GenerateDebugInformation>
            <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
            <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+           <DependentLoadFlags>0x800</DependentLoadFlags>
        </Link>
    </ItemDefinitionGroup>
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -113,6 +116,7 @@
            <CETCompat>true</CETCompat>
            <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
            <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+           <DependentLoadFlags>0x800</DependentLoadFlags>
        </Link>
    </ItemDefinitionGroup>
    <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -126,6 +130,7 @@
            <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
            <MultiProcessorCompilation>true</MultiProcessorCompilation>
            <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+           <GuardEHContMetadata>true</GuardEHContMetadata>
        </ClCompile>
        <Link>
            <SubSystem>Console</SubSystem>
@@ -135,6 +140,7 @@
            <CETCompat>true</CETCompat>
            <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
            <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+           <DependentLoadFlags>0x800</DependentLoadFlags>
        </Link>
    </ItemDefinitionGroup>
    <ItemGroup>

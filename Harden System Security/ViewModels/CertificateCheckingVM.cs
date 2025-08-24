@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -756,6 +757,55 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		SearchKeyword = null;
 		CurrentCtlHeader = null;
 		CalculateColumnWidths();
+	}
+
+	#endregion
+
+	#region Export
+
+	/// <summary>
+	/// Exports the current certificates to a JSON file
+	/// </summary>
+	internal async void ExportToJson_Click()
+	{
+		try
+		{
+			if (NonStlCertificates.Count == 0)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoCertificatesAvailableForExport"));
+				return;
+			}
+
+			ElementsAreEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
+					"Certificates|*.JSON",
+					"Certificates.JSON");
+
+			if (saveLocation is null)
+				return;
+
+			List<NonStlRootCert> certificatesToExport = NonStlCertificates.ToList();
+
+			await Task.Run(() =>
+			{
+				string jsonString = JsonSerializer.Serialize(certificatesToExport, NonStlRootCertJsonContext.Default.ListNonStlRootCert);
+
+				File.WriteAllText(saveLocation, jsonString, Encoding.UTF8);
+			});
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedCertificates"), certificatesToExport.Count, saveLocation));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
 	}
 
 	#endregion

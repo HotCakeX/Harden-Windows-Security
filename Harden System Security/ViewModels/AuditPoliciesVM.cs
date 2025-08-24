@@ -19,7 +19,10 @@ using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -158,11 +161,11 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 
 		// Perform a case-insensitive search in all relevant fields
 		List<AuditPolicyInfo> filteredResults = AllAuditPolicies.Where(policy =>
-			(policy.CategoryName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(policy.SubcategoryName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(policy.CategoryGuid.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(policy.SubcategoryGuid.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(policy.AuditSettingDescription.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+			policy.CategoryName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+			policy.SubcategoryName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+			policy.CategoryGuid.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+			policy.SubcategoryGuid.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+			policy.AuditSettingDescription.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
 		).ToList();
 
 		AuditPolicies.Clear();
@@ -263,6 +266,133 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		}
 	}
 	#endregion
+
+	#region Export
+
+	/// <summary>
+	/// Exports the current audit policies to a JSON file
+	/// </summary>
+	internal async void ExportToJson_Click()
+	{
+		try
+		{
+			if (AuditPolicies.Count == 0)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoAuditPoliciesAvailable"));
+				return;
+			}
+
+			ElementsAreEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
+					"Audit Policies|*.JSON",
+					"Audit Policies.JSON");
+
+			if (saveLocation is null)
+				return;
+
+			List<AuditPolicyInfo> policiesToExport = AuditPolicies.ToList();
+
+			await Task.Run(() =>
+			{
+				string jsonString = JsonSerializer.Serialize(policiesToExport, AuditPolicyJsonContext.Default.ListAuditPolicyInfo);
+
+				File.WriteAllText(saveLocation, jsonString, Encoding.UTF8);
+			});
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedAuditPolicies"), policiesToExport.Count, saveLocation));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	#endregion
+
+	/// <summary>
+	/// Imports audit policies from a JSON file and applies them to the system
+	/// </summary>
+	internal async void ImportFromJson_Click()
+	{
+		try
+		{
+			ElementsAreEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			string? selectedFilePath = FileDialogHelper.ShowFilePickerDialog(GlobalVars.JSONPickerFilter);
+
+			if (selectedFilePath is null)
+				return;
+
+			List<AuditPolicyInfo>? importedPolicies = await Task.Run(() =>
+			{
+				string jsonContent = File.ReadAllText(selectedFilePath, Encoding.UTF8);
+				return JsonSerializer.Deserialize(jsonContent, AuditPolicyJsonContext.Default.ListAuditPolicyInfo);
+			});
+
+			if (importedPolicies is null || importedPolicies.Count == 0)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoAuditPoliciesAvailableToImport"));
+				return;
+			}
+
+			// Convert imported policies to AUDIT_POLICY_INFORMATION array for application
+			List<AUDIT_POLICY_INFORMATION> policiesToApply = [];
+
+			foreach (AuditPolicyInfo importedPolicy in importedPolicies)
+			{
+				// Validate that the subcategory GUID exists on this system
+				try
+				{
+					Guid categoryGuid = AuditPolicyManager.GetCategoryGuidForSubcategory(importedPolicy.SubcategoryGuid);
+
+					policiesToApply.Add(new AUDIT_POLICY_INFORMATION
+					{
+						AuditSubCategoryGuid = importedPolicy.SubcategoryGuid,
+						AuditingInformation = importedPolicy.AuditingInformation,
+						AuditCategoryGuid = categoryGuid
+					});
+				}
+				catch (InvalidOperationException)
+				{
+					Logger.Write($"Skipping unknown subcategory: {importedPolicy.SubcategoryName} ({importedPolicy.SubcategoryGuid})");
+				}
+			}
+
+			if (policiesToApply.Count == 0)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoAuditPoliciesApplicableInJSON"));
+				return;
+			}
+
+			// Apply the policies to the system
+			await Task.Run(() =>
+			{
+				AuditPolicyManager.SetAuditPolicies(policiesToApply.ToArray());
+			});
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyImportedAuditPolicies"), policiesToApply.Count, selectedFilePath));
+
+			// Refresh the list view to show the updated policies
+			await RetrieveAuditPoliciesPrivate();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
 
 	#region Audit Policy Application
 

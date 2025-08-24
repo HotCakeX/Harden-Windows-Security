@@ -72,6 +72,9 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	// Flag to track if any animation is currently in progress to prevent conflicts
 	private bool _animationInProgress;
 
+	// Enables one-time activation of text selection on the internal "Message" TextBlock
+	private bool _messageTextSelectionEnabled;
+
 	// Timer used for close button handling - needed to work around InfoBar's internal close timing
 	private readonly DispatcherTimer _closeButtonTimer;
 
@@ -132,6 +135,15 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		// This callback is essential for responding to two-way binding changes from the ViewModel
 		// Track the registration token so we can unregister during cleanup
 		_isOpenCallbackToken = this.RegisterPropertyChangedCallback(IsOpenProperty, OnIsOpenPropertyChanged);
+	}
+
+	// Override to enable text selection on the internal "Message" TextBlock after the template is applied.
+	protected override void OnApplyTemplate()
+	{
+		base.OnApplyTemplate();
+
+		// Enable selection each time the template is (re)applied
+		EnableMessageTextSelection();
 	}
 
 	/// <summary>
@@ -1866,6 +1878,69 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			_hideStoryboard.Children.Clear();
 			_hideStoryboard = null;
 		}
+	}
+
+	/// <summary>
+	/// Enables text selection on the internal TextBlock named "Message".
+	/// </summary>
+	private void EnableMessageTextSelection()
+	{
+		// Skip if already done for current template, or if control is disposing/unloading.
+		if (_messageTextSelectionEnabled || _isDisposed || _isUnloading)
+		{
+			return;
+		}
+
+		try
+		{
+			DependencyObject? messageElement = TryFindChildByName(this, "Message");
+			if (messageElement is TextBlock messageTextBlock)
+			{
+				messageTextBlock.IsTextSelectionEnabled = true;
+				_messageTextSelectionEnabled = true;
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"InfoBarV2 EnableMessageTextSelection error: {ex.Message}");
+		}
+	}
+
+	/// <summary>
+	/// Recursively searches the visual tree beneath <paramref name="parent"/> for a FrameworkElement
+	/// whose Name matches <paramref name="controlName"/>. Returns the first match or null.
+	/// </summary>
+	/// <param name="parent">Root element to begin search.</param>
+	/// <param name="controlName">Name of the child control to locate.</param>
+	/// <returns>The matching DependencyObject or null.</returns>
+	private static DependencyObject? TryFindChildByName(DependencyObject parent, string controlName)
+	{
+		if (parent == null)
+		{
+			return null;
+		}
+
+		int childCount = VisualTreeHelper.GetChildrenCount(parent);
+		for (int i = 0; i < childCount; i++)
+		{
+			DependencyObject child = VisualTreeHelper.GetChild(parent, i);
+
+			if (child is FrameworkElement frameworkElement)
+			{
+				if (string.Equals(frameworkElement.Name, controlName, StringComparison.OrdinalIgnoreCase))
+				{
+					return child;
+				}
+			}
+
+			DependencyObject? result = TryFindChildByName(child, controlName);
+			if (result != null)
+			{
+				return result;
+			}
+		}
+
+		return null;
 	}
 
 	#endregion

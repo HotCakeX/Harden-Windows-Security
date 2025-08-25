@@ -22,4 +22,16 @@
         <Description>Partner Center</Description>
         <DebugType>none</DebugType>
     </PropertyGroup>
+
+    <ItemGroup>
+        <IlcArg Include="--debug" />
+        <IlcArg Include="--verbose" />
+        <LinkerArg Include="/DEPENDENTLOADFLAG:0x800" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.7.25380.108" />
+        <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.7.25380.108" />
+    </ItemGroup>
+
 </Project>

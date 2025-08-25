@@ -34,7 +34,7 @@ jobs:
     steps:
 
       - name: Updating Winget
-        shell: powershell # Change to pwsh once Windows-latest starts using Server 2025 and change Winget file downloads to use -parallel
+        shell: pwsh
         run: |
           try {
               Write-Host -Object 'The version of the pre-installed Winget on the Runner:'
@@ -57,7 +57,7 @@ jobs:
               'Winget.msixbundle'                    = $WingetURL
               'License1.xml'                         = $WingetLicense
           }
-          $Downloads.GetEnumerator() | ForEach-Object -Process {
+          $Downloads.GetEnumerator() | ForEach-Object -Parallel {
               Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
           }
 

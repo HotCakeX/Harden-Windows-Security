@@ -2973,4 +2973,52 @@
   <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
     <value>Φορτώθηκαν επιτυχώς {0} πολιτικές ελέγχου.</value>
   </data>
+  <data name="NoAuditPoliciesAvailable" xml:space="preserve">
+    <value>Δεν υπάρχουν πολιτικές ελέγχου για εξαγωγή. Παρακαλώ ανακτήστε πρώτα τις πολιτικές ελέγχου.</value>
+  </data>
+  <data name="SuccessfullyExportedAuditPolicies" xml:space="preserve">
+    <value>Εξήχθησαν επιτυχώς {0} πολιτικές ελέγχου στο {1}</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Εισάγει πολιτικές ελέγχου από αρχείο JSON και τις εφαρμόζει στο σύστημα. Θα μπορείτε να επιλέξετε το αρχείο JSON για εισαγωγή.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εισάγει πολιτικές ελέγχου από αρχείο JSON και τις εφαρμόζει στο σύστημα. Θα μπορείτε να επιλέξετε το αρχείο JSON για εισαγωγή.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.Content" xml:space="preserve">
+    <value>Εισαγωγή και Εφαρμογή</value>
+  </data>
+  <data name="NoAuditPoliciesAvailableToImport" xml:space="preserve">
+    <value>Δεν βρέθηκαν έγκυρες πολιτικές ελέγχου στο αρχείο JSON.</value>
+  </data>
+  <data name="NoAuditPoliciesApplicableInJSON" xml:space="preserve">
+    <value>Δεν βρέθηκαν εφαρμόσιμες πολιτικές ελέγχου στο αρχείο JSON για αυτό το σύστημα.</value>
+  </data>
+  <data name="SuccessfullyImportedAuditPolicies" xml:space="preserve">
+    <value>Εισήχθησαν επιτυχώς {0} πολιτικές ελέγχου από το {1}</value>
+  </data>
+  <data name="ApplyRecommendedConfigurations" xml:space="preserve">
+    <value>Εφαρμογή Συστάσεων</value>
+  </data>
+  <data name="VerifyRecommendedConfigurations" xml:space="preserve">
+    <value>Επαλήθευση Συστάσεων</value>
+  </data>
+  <data name="RemoveRecommendedConfigurations" xml:space="preserve">
+    <value>Αφαίρεση Συστάσεων</value>
+  </data>
+  <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγράψτε τα επιλεγμένα στοιχεία στο πρόχειρο.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αντιγράψτε τα επιλεγμένα στοιχεία στο πρόχειρο.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>Αντιγραφή Επιλεγμένων</value>
+  </data>
+  <data name="NoCertificatesAvailableForExport" xml:space="preserve">
+    <value>Δεν υπάρχει πιστοποιητικό για εξαγωγή. Παρακαλώ ανακτήστε πρώτα τα πιστοποιητικά.</value>
+  </data>
+  <data name="SuccessfullyExportedCertificates" xml:space="preserve">
+    <value>Εξήχθησαν επιτυχώς {0} πιστοποιητικά στο {1}</value>
+  </data>
 </root>

@@ -38,7 +38,7 @@
                  x:Uid="UpdatePageUpdateStatusInfoBar"
                  Grid.Row="1">
                 <customUI:InfoBarV2.ActionButton>
-                    <HyperlinkButton x:Uid="UpdatePageMoreInfoHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
+                    <HyperlinkButton x:Uid="UpdatePageMoreInfoHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security" />
                 </customUI:InfoBarV2.ActionButton>
             </customUI:InfoBarV2>
 

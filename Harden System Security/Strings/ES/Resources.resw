@@ -2973,4 +2973,52 @@ Huella Digital: {3}</value>
   <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
     <value>Se cargaron exitosamente {0} políticas de auditoría.</value>
   </data>
+  <data name="NoAuditPoliciesAvailable" xml:space="preserve">
+    <value>No hay políticas de auditoría para exportar. Por favor recupere primero las políticas de auditoría.</value>
+  </data>
+  <data name="SuccessfullyExportedAuditPolicies" xml:space="preserve">
+    <value>Se exportaron exitosamente {0} políticas de auditoría a {1}</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Importa políticas de auditoría desde un archivo JSON y las aplica al sistema. Podrá seleccionar el archivo JSON a importar.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importa políticas de auditoría desde un archivo JSON y las aplica al sistema. Podrá seleccionar el archivo JSON a importar.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.Content" xml:space="preserve">
+    <value>Importar y Aplicar</value>
+  </data>
+  <data name="NoAuditPoliciesAvailableToImport" xml:space="preserve">
+    <value>No se encontraron políticas de auditoría válidas en el archivo JSON.</value>
+  </data>
+  <data name="NoAuditPoliciesApplicableInJSON" xml:space="preserve">
+    <value>No se encontraron políticas de auditoría aplicables en el archivo JSON para este sistema.</value>
+  </data>
+  <data name="SuccessfullyImportedAuditPolicies" xml:space="preserve">
+    <value>Se importaron exitosamente {0} políticas de auditoría desde {1}</value>
+  </data>
+  <data name="ApplyRecommendedConfigurations" xml:space="preserve">
+    <value>Aplicar Recomendaciones</value>
+  </data>
+  <data name="VerifyRecommendedConfigurations" xml:space="preserve">
+    <value>Verificar Recomendaciones</value>
+  </data>
+  <data name="RemoveRecommendedConfigurations" xml:space="preserve">
+    <value>Remover Recomendaciones</value>
+  </data>
+  <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copiar los elementos seleccionados al portapapeles.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copiar los elementos seleccionados al portapapeles.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>Copiar Seleccionado</value>
+  </data>
+  <data name="NoCertificatesAvailableForExport" xml:space="preserve">
+    <value>No hay certificado para exportar. Por favor recupere primero los certificados.</value>
+  </data>
+  <data name="SuccessfullyExportedCertificates" xml:space="preserve">
+    <value>Se exportaron exitosamente {0} certificados a {1}</value>
+  </data>
 </root>

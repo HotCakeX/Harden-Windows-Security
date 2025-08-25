@@ -53,12 +53,30 @@
                 <Button x:Uid="RetrieveAuditPoliciesButton"
                         VerticalAlignment="Center"
                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.RetrieveAuditPolicies_Click}" />
+                        Click="{x:Bind ViewModel.RetrieveAuditPolicies_Click}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
                 <Button x:Uid="ClearDataButton"
                         VerticalAlignment="Center"
                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.ClearData}" />
+                        Click="{x:Bind ViewModel.ClearData}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xED62;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
                 <TextBox Text="{x:Bind ViewModel.TotalPolicies, Mode=OneWay}"
                          IsReadOnly="True"
@@ -72,6 +90,34 @@
                          x:Uid="SearchAuditPoliciesPlaceHolder"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center" />
+
+                <Button VerticalAlignment="Center"
+                        x:Uid="ExportToJsonButton"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.ExportToJson_Click}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE74E;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
+                <Button VerticalAlignment="Center"
+                        x:Uid="ImportAndApplyAuditPoliciesFromJsonButton"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.ImportFromJson_Click}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE8B5;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
             </controls:WrapPanel>
         </Border>

@@ -2973,4 +2973,52 @@
   <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
     <value>נטענו בהצלחה {0} מדיניות ביקורת.</value>
   </data>
+  <data name="NoAuditPoliciesAvailable" xml:space="preserve">
+    <value>אין מדיניות ביקורת לייצוא. אנא אחזר מדיניות ביקורת תחילה.</value>
+  </data>
+  <data name="SuccessfullyExportedAuditPolicies" xml:space="preserve">
+    <value>יוצאו בהצלחה {0} מדיניות ביקורת אל {1}</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>מייבא מדיניות ביקורת מקובץ JSON ומיישם אותן במערכת. תוכל לבחור את קובץ ה-JSON לייבוא.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מייבא מדיניות ביקורת מקובץ JSON ומיישם אותן במערכת. תוכל לבחור את קובץ ה-JSON לייבוא.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.Content" xml:space="preserve">
+    <value>ייבוא ויישום</value>
+  </data>
+  <data name="NoAuditPoliciesAvailableToImport" xml:space="preserve">
+    <value>לא נמצאו מדיניות ביקורת תקפות בקובץ ה-JSON.</value>
+  </data>
+  <data name="NoAuditPoliciesApplicableInJSON" xml:space="preserve">
+    <value>לא נמצאו מדיניות ביקורת ישימות בקובץ ה-JSON עבור מערכת זו.</value>
+  </data>
+  <data name="SuccessfullyImportedAuditPolicies" xml:space="preserve">
+    <value>יובאו בהצלחה {0} מדיניות ביקורת מ-{1}</value>
+  </data>
+  <data name="ApplyRecommendedConfigurations" xml:space="preserve">
+    <value>יישום המלצות</value>
+  </data>
+  <data name="VerifyRecommendedConfigurations" xml:space="preserve">
+    <value>אימות המלצות</value>
+  </data>
+  <data name="RemoveRecommendedConfigurations" xml:space="preserve">
+    <value>הסרת המלצות</value>
+  </data>
+  <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק את הפריטים הנבחרים ללוח.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>העתק את הפריטים הנבחרים ללוח.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>העתק נבחרים</value>
+  </data>
+  <data name="NoCertificatesAvailableForExport" xml:space="preserve">
+    <value>אין אישור לייצוא. אנא אחזר אישורים תחילה.</value>
+  </data>
+  <data name="SuccessfullyExportedCertificates" xml:space="preserve">
+    <value>יוצאו בהצלחה {0} אישורים אל {1}</value>
+  </data>
 </root>

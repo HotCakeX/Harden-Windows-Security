@@ -12,9 +12,6 @@ In this page, the Harden System Security app offers a fully featured list of eve
 
 ## Recommended Configurations
 
-> [!NOTE]\
-> This feature will be coming soon!
-
 The app offers a quick to configure the Windows features and capabilities for optimal security, when you use this feature, it will make the following changes:
 
 - The [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) [disables](https://learn.microsoft.com/powershell/module/dism/disable-windowsoptionalfeature) the following rarely used features in [Windows optional features](https://learn.microsoft.com/windows/application-management/add-apps-and-features#use-windows-powershell-to-disable-specific-features) (Control Panel):

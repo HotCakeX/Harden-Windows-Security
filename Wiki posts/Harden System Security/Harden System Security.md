@@ -755,7 +755,7 @@ function Build_HSS {
         [System.String]$TokenEndpoint = $env:PARTNERCENTER_TOKENENDPOINT
         [System.String]$ClientId = $env:PARTNERCENTER_CLIENTID
         [System.String]$ClientSecret = $env:PARTNERCENTER_CLIENTSECRET
-        [System.String]$ApplicationId = $env:PARTNERCENTER_APPLICATIONID
+        [System.String]$ApplicationId = $env:PARTNERCENTER_APPLICATIONID_HSS
 
         [System.String]$PackageFilePath = $MSIXBundle
         [System.String]$ReleaseNotesFilePath = (Resolve-Path -Path ReleaseNotes.txt).Path

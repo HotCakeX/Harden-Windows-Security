@@ -1,7 +1,15 @@
-🎉 Certificates Management: A new page dedicated to enumerating every certificate across all stores in the Local Machine and Current User scopes. Certificates can be sorted, searched, and removed as needed. There is a key capability identifying certificates that are not rooted to the Microsoft's Trusted Roots list and presents options for remediation. When evaluating trust, the app does not rely on the system's certificate store; it uses an independent, built-in trust anchor to validate certificates, so its checks remain unaffected by a potentially compromised system store.
+You can now export all Audit Policies from a system to a file after retrieving them. Additionally, you can import this file back into the app to automatically apply the same policies on another system. This allows you to create a custom Audit Policies template once and effortlessly re-use it across multiple systems using the Harden System Security app. Having such ability has been one of the community's top requests. This behavior will be expanded to more sections of the app in the near future.
 
-🎊 Audit Policies Management: A new page that retrieves every audit policy on the system — currently numbering approximately 540 items — far more comprehensive than what tools like auditpol report. You can search, sort, and modify each policy's state individually.
+Fixed an issue in Audit Policies retrieval, it now displays the correct number of audit policies that are available.
 
-🪅 Enhanced Group Policy Editor: You may now remove any policy from a .POL file — whether a system .POL or one you opened in the app. All edits are correctly persisted back to the selected .POL file.
+Updated the More Info link in the Update page when checking for update, it now points to the Harden System Security app's home page in the repository wiki.
 
-🌐 Improved localization and globalization support for the languages the app currently supports.
+Added webpage reference URLs for some the security measures that didn't have it.
+
+Added icons to the buttons in the UI that didn't have it. Now all of the buttons have icons for better visual representation.
+
+The Optional Windows Features page now displays the progress with more details, including the current action taking place and the name of the item. The same data are logged too.
+
+The Optional Windows Features page now has 3 additional buttons for applying/removing/verifying recommended configurations. The page has a Retrieve button that shows over 500 items. The 3 new buttons have specific tasks according to the document linked above where they only enable/disable certain features and capabilities in the OS for optimal security. This is the same feature that the module has.
+
+Please visit the GitHub for the rest of the release notes.

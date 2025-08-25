@@ -123,14 +123,35 @@
                                Spacing="10"
                                VerticalAlignment="Top"
                                HorizontalAlignment="Left">
+
                             <Button x:Uid="AddCountryFirewallRulesButton"
                                 Click="{x:Bind ViewModel.TargetedListAdd}" 
                                 MinWidth="100"
-                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE710;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+
                             <Button x:Uid="RemoveCountryFirewallRulesButton"
                                 Click="{x:Bind ViewModel.TargetedListRemove}" 
                                 MinWidth="100"
-                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE738;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+
                         </StackPanel>
                     </Grid>
                 </StackPanel>
@@ -181,14 +202,35 @@
                                     Spacing="10"
                                     VerticalAlignment="Top"
                                     HorizontalAlignment="Left">
+
                             <Button x:Uid="AddCountryFirewallRulesButton"
                                     MinWidth="100"
                                     Click="{x:Bind ViewModel.CountryAdd}"
-                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE710;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+
                             <Button x:Uid="RemoveCountryFirewallRulesButton"
                                     MinWidth="100"
                                     Click="{x:Bind ViewModel.CountryRemove}"
-                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE738;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+
                         </StackPanel>
                     </Grid>
                 </StackPanel>

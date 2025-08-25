@@ -86,6 +86,11 @@ Please feel free to open a discussion if you have any questions about the build 
 
 ## Security <img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/pinkbutterflyholopastel.gif" width="35">
 
+> [!IMPORTANT]\
+> The Harden System Security application is built publicly using a [GitHub Workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/runs/17206622843/workflow) and uploaded to the Microsoft Partner Center for validation and signing. The action uses [SBOM (Software Bill of Materials)](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies) generation to comply with the highest [security standards](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) such as [SLSA](https://slsa.dev/spec/v1.0/levels) level 3. [GitHub's CodeQL Advanced workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml) with extended security model scans the entire repository. All of the dependencies of any project in this repository are uploaded to GitHub and are available in the [Dependency Graph](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies).
+
+<br>
+
 Harden System Security is architected with a security-first philosophy from its inception. Every feature is designed and implemented with an offensive security mindset, ensuring that security is never an afterthought—and never will be. When selecting a solution tasked with defending critical systems, the last thing you want is a so‑called security tool that silently broadens your attack surface or neglects foundational safeguards. This application is built to be inherently trustworthy, defensible, and resilient.
 
 ### Dependencies
@@ -506,12 +511,28 @@ function Build_HSS {
     #region --- C# projects ---
 
     dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release
+    
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning DISMService (first pass). Exit Code: $LASTEXITCODE") }
+    
     dotnet build '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release --verbosity minimal
-    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
-
+   
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building DISMService (first pass). Exit Code: $LASTEXITCODE") }
+    
+    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Platform=x64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-x64.pubxml" /t:Publish -v:minimal
+    
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for x64. Exit Code: $LASTEXITCODE") }
+    
     dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release
+    
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning DISMService (second pass). Exit Code: $LASTEXITCODE") }
+    
     dotnet build '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release --verbosity minimal
-    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Platform=arm64 /p:PublishProfile=win-arm64 /t:Publish -v:minimal
+
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building DISMService (second pass). Exit Code: $LASTEXITCODE") }
+    
+    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Platform=arm64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-arm64.pubxml" /t:Publish -v:minimal
+
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for ARM64. Exit Code: $LASTEXITCODE") }
 
     #endregion
 

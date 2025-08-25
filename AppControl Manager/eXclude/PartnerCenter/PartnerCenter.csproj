@@ -1,25 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
-       <OutputType>Exe</OutputType>
-       <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
-       <TargetFramework>net10.0-windows10.0.22000.0</TargetFramework>
-       <Version>$(FileVersion)</Version>
-       <FileVersion>1.0.0.0</FileVersion>
-       <AssemblyVersion>$(FileVersion)</AssemblyVersion>
-       <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-       <StackTraceSupport>false</StackTraceSupport>
-       <PublishAot>True</PublishAot>
-       <PublishTrimmed>True</PublishTrimmed>
-       <TrimMode>full</TrimMode>
-       <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-       <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
-       <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
-       <TrimmerSingleWarn>false</TrimmerSingleWarn>
-       <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-       <OptimizationPreference>Speed</OptimizationPreference>
-       <Title>Partner Center</Title>
-       <Copyright>Violet Hansen</Copyright>
-       <Description>Partner Center</Description>
-       <DebugType>none</DebugType>
-   </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
+        <TargetFramework>net10.0-windows10.0.22000.0</TargetFramework>
+        <Version>$(FileVersion)</Version>
+        <FileVersion>1.0.0.0</FileVersion>
+        <AssemblyVersion>$(FileVersion)</AssemblyVersion>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <StackTraceSupport>false</StackTraceSupport>
+        <PublishAot>True</PublishAot>
+        <PublishTrimmed>True</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+        <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <OptimizationPreference>Speed</OptimizationPreference>
+        <Title>Partner Center</Title>
+        <Copyright>Violet Hansen</Copyright>
+        <Description>Partner Center</Description>
+        <DebugType>none</DebugType>
+    </PropertyGroup>
 </Project>

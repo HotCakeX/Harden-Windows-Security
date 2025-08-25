@@ -511,27 +511,21 @@ function Build_HSS {
     #region --- C# projects ---
 
     dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release
-    
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning DISMService (first pass). Exit Code: $LASTEXITCODE") }
-    
+
     dotnet build '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release --verbosity minimal
-   
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building DISMService (first pass). Exit Code: $LASTEXITCODE") }
-    
-    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Platform=x64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-x64.pubxml" /t:Publish -v:minimal
-    
+
+    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Configuration=Release /p:Platform=x64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-x64.pubxml" /t:Publish -v:minimal
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for x64. Exit Code: $LASTEXITCODE") }
-    
+
     dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release
-    
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning DISMService (second pass). Exit Code: $LASTEXITCODE") }
-    
+
     dotnet build '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release --verbosity minimal
-
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building DISMService (second pass). Exit Code: $LASTEXITCODE") }
-    
-    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Platform=arm64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-arm64.pubxml" /t:Publish -v:minimal
 
+    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Configuration=Release /p:Platform=arm64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-arm64.pubxml" /t:Publish -v:minimal
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for ARM64. Exit Code: $LASTEXITCODE") }
 
     #endregion
@@ -771,7 +765,7 @@ function Build_HSS {
     if ($Upload) {
         dotnet clean '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release
         dotnet build '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release --verbosity minimal
-        dotnet msbuild '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
+        dotnet msbuild '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Configuration=Release /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
 
         [System.String]$TokenEndpoint = $env:PARTNERCENTER_TOKENENDPOINT
         [System.String]$ClientId = $env:PARTNERCENTER_CLIENTID

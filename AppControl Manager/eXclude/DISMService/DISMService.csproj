@@ -1,20 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
-       <OutputType>WinExe</OutputType>
-       <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
-       <PublishAot>True</PublishAot>
-       <OptimizationPreference>Size</OptimizationPreference>
-       <PublishTrimmed>True</PublishTrimmed>
-       <TrimMode>full</TrimMode>
-       <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-       <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
-       <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
-       <TrimmerSingleWarn>false</TrimmerSingleWarn>
-       <UseNativeHttpHandler>false</UseNativeHttpHandler>
-       <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-       <Http3Support>false</Http3Support>
-       <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-       <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-       <DebugType>none</DebugType>
-   </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+        <Version>$(FileVersion)</Version>
+        <FileVersion>1.0.0.0</FileVersion>
+        <Title>DISMService</Title>
+        <Copyright>Violet Hansen</Copyright>
+        <Description>DISM Service Component</Description>
+        <AssemblyVersion>$(FileVersion)</AssemblyVersion>
+        <PublishAot>True</PublishAot>
+        <OptimizationPreference>Size</OptimizationPreference>
+        <PublishTrimmed>True</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+        <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+        <UseNativeHttpHandler>false</UseNativeHttpHandler>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <Http3Support>false</Http3Support>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <DebugType>none</DebugType>
+    </PropertyGroup>
 </Project>

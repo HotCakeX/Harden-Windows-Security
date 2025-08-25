@@ -781,7 +781,7 @@ jobs:
               if ($Upload) {
                   dotnet clean '.\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release
                   dotnet build '.\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release --verbosity minimal
-                  dotnet msbuild '.\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
+                  dotnet msbuild '.\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Configuration=Release /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
 
                   [System.String]$TokenEndpoint = $env:PARTNERCENTER_TOKENENDPOINT
                   [System.String]$ClientId = $env:PARTNERCENTER_CLIENTID

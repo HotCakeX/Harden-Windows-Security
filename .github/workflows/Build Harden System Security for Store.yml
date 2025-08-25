@@ -406,13 +406,19 @@ jobs:
 
               #region --- C# projects ---
 
+              dotnet restore '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' -r win-x64
+              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed restoring DISMService for x64. Exit Code: $LASTEXITCODE") }
+
+              dotnet restore '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' -r win-arm64
+              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed restoring DISMService for ARM64. Exit Code: $LASTEXITCODE") }
+
               dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning DISMService (first pass). Exit Code: $LASTEXITCODE") }
 
               dotnet build '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release --verbosity minimal
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building DISMService (first pass). Exit Code: $LASTEXITCODE") }
 
-              dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Configuration=Release /p:Platform=x64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-x64.pubxml" /t:Publish -v:minimal
+              dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Configuration=Release /restore /p:Platform=x64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-x64.pubxml" /t:Publish -v:minimal
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for x64. Exit Code: $LASTEXITCODE") }
 
               dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release
@@ -421,7 +427,7 @@ jobs:
               dotnet build '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release --verbosity minimal
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building DISMService (second pass). Exit Code: $LASTEXITCODE") }
 
-              dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Configuration=Release /p:Platform=arm64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-arm64.pubxml" /t:Publish -v:minimal
+              dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Configuration=Release /restore /p:Platform=arm64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-arm64.pubxml" /t:Publish -v:minimal
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for ARM64. Exit Code: $LASTEXITCODE") }
 
               #endregion

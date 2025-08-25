@@ -1099,7 +1099,7 @@
   <data name="CertificateBuildError" xml:space="preserve">
     <value>Παρουσιάστηκαν σφάλματα κατά τη δημιουργία του πιστοποιητικού</value>
   </data>
-  <data name="SuccessTitle" xml:space="preserve">
+  <data name="SuccessText" xml:space="preserve">
     <value>Επιτυχία</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
@@ -1244,9 +1244,6 @@
     <value>Επιλογές Πολιτικής</value>
   </data>
   <!-- End of For CI Policy Info ListViews Column Header Buttons -->
-  <data name="Copy" xml:space="preserve">
-    <value>Αντιγραφή </value>
-  </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>ID Πολιτικής: </value>
   </data>
@@ -3091,9 +3088,6 @@
   <data name="CreatingSnapBackGuarantee" xml:space="preserve">
     <value>Δημιουργία εγγύησης SnapBack Λειτουργίας Επιβολής</value>
   </data>
-  <data name="DeployingAuditModePolicy" xml:space="preserve">
-    <value>Ανάπτυξη της πολιτικής Λειτουργίας Ελέγχου</value>
-  </data>
   <data name="ScanningSelectedDirectories" xml:space="preserve">
     <value>Σάρωση των επιλεγμένων καταλόγων</value>
   </data>
@@ -3105,9 +3099,6 @@
   </data>
   <data name="ResetSuccessful" xml:space="preserve">
     <value>Η επαναφορά ήταν επιτυχής.</value>
-  </data>
-  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
-    <value>Ανάπτυξη της πολιτικής Λειτουργίας Επιβολής επειδή ο χρήστης αποφάσισε να επαναφέρει τη λειτουργία</value>
   </data>
   <data name="DeployingEnforceMode" xml:space="preserve">
     <value>Ανάπτυξη της πολιτικής Λειτουργίας Επιβολής.</value>
@@ -3694,9 +3685,6 @@
   <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
     <value>Δεν ήταν δυνατός ο κατακερματισμός {0} χρησιμοποιώντας {1}</value>
   </data>
-  <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
-    <value>Η μεταβλητή περιβάλλοντος SystemDrive είναι null</value>
-  </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
     <value>Ανανέωση των πολιτικών Ελέγχου Εφαρμογών του συστήματος</value>
   </data>
@@ -4143,12 +4131,6 @@
   </data>
   <data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
     <value>Διαμόρφωση και εκκίνηση των απαιτούμενων υπηρεσιών ISG</value>
-  </data>
-  <data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
-    <value>Προσπάθεια αποσειριοποίησης του αποτελέσματος JSON του Device Guard.</value>
-  </data>
-  <data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
-    <value>Η αποσειριοποίηση JSON του Device Guard απέτυχε. Ακατέργαστο JSON:</value>
   </data>
   <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
     <value>Αύξηση του μεγέθους αρχείου καταγραφής Ακεραιότητας Κώδικα κατά 1MB επειδή ο διαθέσιμος χώρος είναι λιγότερος από 1MB.</value>
@@ -5727,5 +5709,29 @@
 </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Άνοιγμα Καταλόγου Αρχείων Καταγραφής</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>Εξαγωγή σε αρχείο JSON</value>
+  </data>
+    <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εξαγωγή όλων των δεδομένων στο ListView σε JSON.</value>
+  </data>
+    <data name="ExportToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+     <value>Εξαγωγή όλων των δεδομένων στο ListView σε JSON.</value>
+  </data>
+  <data name="ExportingToJSONMsg" xml:space="preserve">
+     <value>Γίνεται εξαγωγή δεδομένων σε αρχείο JSON, παρακαλώ περιμένετε...</value>
+  </data>
+    <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
+     <value>Εξήχθησαν επιτυχώς {0} δεδομένα σε JSON και αποθηκεύτηκαν σε: '{1}'</value>
+  </data>
+    <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγραφή των επιλεγμένων στοιχείων στο πρόχειρο.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αντιγραφή των επιλεγμένων στοιχείων στο πρόχειρο.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>Αντιγραφή επιλεγμένων</value>
   </data>
 </root>

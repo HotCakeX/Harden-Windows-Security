@@ -34,7 +34,7 @@
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
 
         https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref -->
-        <WindowsSdkPackageVersion>10.0.26100.73-preview</WindowsSdkPackageVersion>
+        <WindowsSdkPackageVersion>10.0.26100.75</WindowsSdkPackageVersion>
 
         <!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -81,7 +81,7 @@
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
         <ErrorReport>send</ErrorReport>
-        <FileVersion>1.0.7.0</FileVersion>
+        <FileVersion>1.0.8.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <NeutralLanguage>en-US</NeutralLanguage>
         <StartupObject>HardenSystemSecurity.Program</StartupObject>
@@ -328,6 +328,8 @@
         <Compile Include="..\AppControl Manager\Others\PackagedAppView.cs" Link="Others\PackagedAppView.cs" />
         <Compile Include="..\AppControl Manager\Others\GroupInfoListForPackagedAppView.cs" Link="Others\GroupInfoListForPackagedAppView.cs" />
         <Compile Include="..\AppControl Manager\Others\GetAppsList.cs" Link="Others\GetAppsList.cs" />
+        <Compile Include="..\AppControl Manager\Others\ComJsonDeserializer.cs" Link="Others\ComJsonDeserializer.cs" />
+        <Compile Include="..\AppControl Manager\Others\IExplicitDisposeOptIn.cs" Link="Others\IExplicitDisposeOptIn.cs" />
     </ItemGroup>
 
     <!-- Nuget packages
@@ -338,7 +340,7 @@
     <ItemGroup>
 
         <!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250811-build.2202" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250828-build.2223" />
         <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.2.250402" />

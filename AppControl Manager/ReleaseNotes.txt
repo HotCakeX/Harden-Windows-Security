@@ -1,1 +1,5 @@
 * Updated dependencies to the latest versions.
+
+* The texts displayed in the Info Bars throughout the app are now selectable.
+
+* Improved the Logs page by making it easier to copy any number of logs to the clipboard via the new button.

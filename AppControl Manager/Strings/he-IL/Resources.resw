@@ -1099,7 +1099,7 @@
   <data name="CertificateBuildError" xml:space="preserve">
     <value>אירעו שגיאות במהלך בניית התעודה</value>
   </data>
-  <data name="SuccessTitle" xml:space="preserve">
+  <data name="SuccessText" xml:space="preserve">
     <value>הצלחה</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
@@ -1244,9 +1244,6 @@
     <value>אפשרויות מדיניות</value>
   </data>
   <!-- End of For CI Policy Info ListViews Column Header Buttons -->
-  <data name="Copy" xml:space="preserve">
-    <value>העתק</value>
-  </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>מזהה מדיניות: </value>
   </data>
@@ -3091,9 +3088,6 @@
 <data name="CreatingSnapBackGuarantee" xml:space="preserve">
   <value>יוצר ערבות SnapBack במצב אכיפה</value>
 </data>
-<data name="DeployingAuditModePolicy" xml:space="preserve">
-  <value>פורסת את מדיניות מצב הביקורת</value>
-</data>
 <data name="ScanningSelectedDirectories" xml:space="preserve">
   <value>סורקת את הספריות הנבחרות</value>
 </data>
@@ -3105,9 +3099,6 @@
 </data>
 <data name="ResetSuccessful" xml:space="preserve">
   <value>האתחול בוצע בהצלחה.</value>
-</data>
-<data name="DeployingEnforceModeCuzReset" xml:space="preserve">
-  <value>פורסת את מדיניות מצב האכיפה מכיוון שהמשתמש החליט לאתחל את הפעולה</value>
 </data>
 <data name="DeployingEnforceMode" xml:space="preserve">
   <value>פורסת את מדיניות מצב האכיפה.</value>
@@ -3695,9 +3686,6 @@
   <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
     <value>לא ניתן לבצע Hash ל-{0} באמצעות {1}</value>
   </data>
-  <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
-    <value>משתנה הסביבה SystemDrive הוא null</value>
-  </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
     <value>מרענן את מדיניות App Control של המערכת</value>
   </data>
@@ -4144,12 +4132,6 @@
 </data>
 <data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
     <value>מגדיר ומפעיל את שירותי ISG הדרושים</value>
-</data>
-<data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
-    <value>מנסה לדסיריאליזציה של תוצאת Device Guard JSON.</value>
-</data>
-<data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
-    <value>הדסיריאליזציה של Device Guard JSON נכשלה. JSON גולמי:</value>
 </data>
 <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
     <value>מגדיל את גודל יומן שלמות הקוד ב-1MB מכיוון שהשטח הפנוי הנוכחי קטן מ-1MB.</value>
@@ -5728,5 +5710,29 @@
 </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>פתח תיקיית לוגים</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>ייצוא לקובץ JSON</value>
+  </data>
+    <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ייצוא כל הנתונים ב-ListView ל-JSON.</value>
+  </data>
+    <data name="ExportToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+     <value>ייצוא כל הנתונים ב-ListView ל-JSON.</value>
+  </data>
+  <data name="ExportingToJSONMsg" xml:space="preserve">
+     <value>מייצא נתונים לקובץ JSON, אנא המתן...</value>
+  </data>
+    <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
+     <value>יוצאו בהצלחה {0} נתונים ל-JSON ונשמרו ב: '{1}'</value>
+  </data>
+    <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק את הפריטים שנבחרו ללוח.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>העתק את הפריטים שנבחרו ללוח.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>העתק נבחרים</value>
   </data>
 </root>

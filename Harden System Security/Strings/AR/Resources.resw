@@ -1592,9 +1592,6 @@
   <data name="SecurityHardeningCompleted" xml:space="preserve">
     <value>اكتملت تقوية الأمان: {0} نجح، {1} فشل.</value>
   </data>
-  <data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
-    <value>خطأ أثناء عملية تقوية الأمان</value>
-  </data>
   <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
     <value>فشل في تهيئة خدمة DISM للتحقق.</value>
   </data>
@@ -1610,9 +1607,6 @@
   <data name="IncorrectItems" xml:space="preserve">
     <value>العناصر غير الصحيحة: {0}</value>
   </data>
-  <data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
-    <value>خطأ أثناء التحقق من تقوية الأمان</value>
-  </data>
   <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
     <value>فشل في تهيئة خدمة DISM لإزالة تقوية الأمان.</value>
   </data>
@@ -1627,9 +1621,6 @@
   </data>
   <data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
     <value>اكتملت إزالة تقوية الأمان: {0} نجح، {1} فشل.</value>
-  </data>
-  <data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
-    <value>خطأ أثناء عملية إزالة تقوية الأمان</value>
   </data>
   <data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
     <value>خطأ في التخلص من عميل خدمة DISM: {0}</value>
@@ -1976,12 +1967,6 @@
   <data name="SeceditFailedWithExitCode" xml:space="preserve">
     <value>فشل Secedit برمز خروج: {0}</value>
   </data>
-  <data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
-    <value>تحذير: لا يمكن حذف الملفات المؤقتة.</value>
-  </data>
-  <data name="SeceditMethodFailed" xml:space="preserve">
-    <value>فشلت طريقة Secedit.</value>
-  </data>
   <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
     <value>لم يتم العثور على إعدادات [System Access] في الملف المحدد</value>
   </data>
@@ -1990,9 +1975,6 @@
   </data>
   <data name="FileNotFoundPath" xml:space="preserve">
     <value>الملف غير موجود: {0}</value>
-  </data>
-  <data name="CreatedPolicyDirectory" xml:space="preserve">
-    <value>تم إنشاء دليل السياسة: {0}</value>
   </data>
   <data name="FileTooSmallForValidHeader" xml:space="preserve">
     <value>الملف صغير جداً لاحتواء رأس صالح</value>
@@ -2041,9 +2023,6 @@
   </data>
   <data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
     <value>تم تحميل ملف سياسة موجود مع {0} مدخل</value>
-  </data>
-  <data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
-    <value>ملف السياسة غير موجود، إنشاء ملف سياسة فارغ جديد</value>
   </data>
   <data name="ReplacedEntries" xml:space="preserve">
     <value>المدخلات المستبدلة: {0}</value>
@@ -3021,4 +3000,290 @@
   <data name="SuccessfullyExportedCertificates" xml:space="preserve">
     <value>تم تصدير {0} شهادات بنجاح إلى {1}</value>
   </data>
+        <!--BitLocker Volumes ListView Headers Start-->
+  <data name="MountPointHeader.Text" xml:space="preserve">
+    <value>نقطة التحميل</value>
+  </data>
+  <data name="ProtectionStatusHeader.Text" xml:space="preserve">
+    <value>حالة الحماية</value>
+  </data>
+  <data name="ConversionStatusHeader.Text" xml:space="preserve">
+    <value>حالة التحويل</value>
+  </data>
+  <data name="EncryptionMethodHeader.Text" xml:space="preserve">
+    <value>أسلوب التشفير</value>
+  </data>
+    <data name="EncryptionPercentageHeader.Text" xml:space="preserve">
+    <value>نسبة التشفير</value>
+  </data>
+    <data name="WipePercentageHeader.Text" xml:space="preserve">
+    <value>نسبة المسح</value>
+  </data>
+    <data name="AutoUnlockEnabledHeader.Text" xml:space="preserve">
+    <value>تمكين الفتح التلقائي</value>
+  </data>
+    <data name="AutoUnlockKeyStoredHeader.Text" xml:space="preserve">
+    <value>تم تخزين مفتاح الفتح التلقائي</value>
+  </data>
+    <data name="VolumeTypeHeader.Text" xml:space="preserve">
+    <value>نوع وحدة التخزين</value>
+  </data>
+    <data name="CapacityGBHeader.Text" xml:space="preserve">
+    <value>السعة GB</value>
+  </data>
+    <data name="FileSystemTypeHeader.Text" xml:space="preserve">
+    <value>نوع نظام الملفات</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers End-->
+  <!--BitLocker Volumes ListView Headers Buttons Start-->
+<data name="MountPointColumnHeaderBtn.Content" xml:space="preserve">
+    <value>نقطة التحميل</value>
+  </data>
+  <data name="ProtectionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>حالة الحماية</value>
+  </data>
+  <data name="ConversionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>حالة التحويل</value>
+  </data>
+  <data name="EncryptionMethodColumnHeaderBtn.Content" xml:space="preserve">
+    <value>أسلوب التشفير</value>
+  </data>
+    <data name="EncryptionPercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>نسبة التشفير</value>
+  </data>
+    <data name="WipePercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>نسبة المسح</value>
+  </data>
+    <data name="AutoUnlockEnabledColumnHeaderBtn.Content" xml:space="preserve">
+    <value>تمكين الفتح التلقائي</value>
+  </data>
+    <data name="AutoUnlockKeyStoredColumnHeaderBtn.Content" xml:space="preserve">
+    <value>تم تخزين مفتاح الفتح التلقائي</value>
+  </data>
+    <data name="VolumeTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>نوع وحدة التخزين</value>
+  </data>
+    <data name="CapacityGBColumnHeaderBtn.Content" xml:space="preserve">
+    <value>السعة GB</value>
+  </data>
+    <data name="FileSystemTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>نوع نظام الملفات</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers Buttons End-->
+  <data name="RetrieveBitLockerVolumesButton.Content" xml:space="preserve">
+    <value>استرجاع وحدات تخزين BitLocker</value>
+  </data>
+    <data name="RetrieveBitLockerVolumesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يسترجع جميع الوحدات ومعلومات BitLocker ذات الصلة بكامل التفاصيل ويعرضها لك.</value>
+  </data>
+  <data name="RetrieveBitLockerVolumesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يسترجع جميع الوحدات ومعلومات BitLocker ذات الصلة بكامل التفاصيل ويعرضها لك.</value>
+  </data>
+  <data name="CloseButton.Content" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+    <data name="CloseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="CloseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="CopyButton.Content" xml:space="preserve">
+    <value>نسخ</value>
+  </data>
+    <data name="CopyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نسخ</value>
+  </data>
+  <data name="CopyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نسخ</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.Content" xml:space="preserve">
+    <value>حذف واقي المفتاح</value>
+  </data>
+    <data name="DeleteBLKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يحذف واقي المفتاح من وحدة التخزين المحددة.</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يحذف واقي المفتاح من وحدة التخزين المحددة.</value>
+  </data>
+  <data name="NoKeyProtectorsFoundMsg.Text" xml:space="preserve">
+    <value>لم يتم العثور على واقيات مفاتيح لهذه الوحدة.</value>
+  </data>
+  <data name="SelectVolumeFirstToSeeKeyProtectorsMsg.Text" xml:space="preserve">
+    <value>حدد وحدة تخزين أولاً لعرض واقيات المفاتيح الخاصة بها.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.Text" xml:space="preserve">
+    <value>واقيات المفاتيح لـ</value>
+  </data>
+  <data name="KeyProtectorsForMsg.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض جميع واقيات المفاتيح للوحدة المحددة.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عرض جميع واقيات المفاتيح للوحدة المحددة.</value>
+  </data>
+  <data name="RecoveryPassword.Text" xml:space="preserve">
+    <value>كلمة مرور الاسترداد</value>
+  </data>
+  <data name="CertificateType.Text" xml:space="preserve">
+    <value>نوع الشهادة</value>
+  </data>
+  <data name="FileName.Text" xml:space="preserve">
+    <value>اسم الملف</value>
+  </data>
+  <data name="AutoUnlock.Text" xml:space="preserve">
+    <value>فتح تلقائي</value>
+  </data>
+  <data name="Type.Text" xml:space="preserve">
+    <value>النوع</value>
+  </data>
+  <data name="Thumbprint.Text" xml:space="preserve">
+    <value>البصمة</value>
+  </data>
+  <data name="ID.Text" xml:space="preserve">
+    <value>المعرف</value>
+  </data>
+  <data name="BitLockerManagementTab.Header" xml:space="preserve">
+    <value>الإدارة</value>
+  </data>
+  <data name="BitLockerManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إدارة كل جانب من وحدات تخزين BitLocker مثل التشفير، فك التشفير، النسخ الاحتياطي والمزيد.</value>
+  </data>
+  <data name="BitLockerManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إدارة كل جانب من وحدات تخزين BitLocker مثل التشفير، فك التشفير، النسخ الاحتياطي والمزيد.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>تدابير الأمان</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إدارة تدابير الأمان المتعلقة بـ BitLocker.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إدارة تدابير الأمان المتعلقة بـ BitLocker.</value>
+  </data>
+  <data name="AddKeyProtectorButton.Content" xml:space="preserve">
+    <value>إضافة واقي مفتاح</value>
+  </data>
+  <data name="AddKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح جديد إلى وحدة التخزين المحددة. واقيات المفاتيح تتيح لك فتح الوحدة.</value>
+  </data>
+  <data name="AddKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح جديد إلى وحدة التخزين المحددة. واقيات المفاتيح تتيح لك فتح الوحدة.</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.Title" xml:space="preserve">
+    <value>إضافة واقي مفتاح</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>إضافة</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.CloseButtonText" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="AddKeyProtectorContentDialogSubTitle.Text" xml:space="preserve">
+    <value>استخدم هذا القسم لإضافة واقي مفتاح جديد إلى الوحدة المحددة.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM</value>
+  </data>
+    <data name="TPMKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN</value>
+  </data>
+    <data name="TPMPINKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + PIN.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + PIN.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + مفتاح بدء التشغيل</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN + مفتاح بدء التشغيل</value>
+  </data>
+    <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + PIN + مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + PIN + مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>مفتاح بدء التشغيل</value>
+  </data>
+    <data name="StartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="TPMSectionTitle.Text" xml:space="preserve">
+    <value>وحدة النظام الأساسي الموثوقة</value>
+  </data>
+  <data name="TPMSectionDescription.Text" xml:space="preserve">
+    <value>يستخدم BitLocker وحدة TPM الخاصة بالجهاز لحماية مفتاح التشفير.</value>
+  </data>
+  <data name="TPMSectionBody.Text" xml:space="preserve">
+    <value>مع هذا الواقي، يكون الوصول إلى محرك الأقراص المشفر متاحاً فقط عند اتصاله بلوحة أم مزودة بـ TPM وتظل سلامة إقلاع النظام سليمة. عادةً ما تنطبق الحمايات المستندة إلى TPM فقط على وحدات نظام التشغيل.</value>
+  </data>
+  <data name="TPMPINSectionTitle.Text" xml:space="preserve">
+    <value>TPM ورقم تعريف شخصي</value>
+  </data>
+  <data name="TPMPINSectionDescription.Text" xml:space="preserve">
+    <value>يقترن BitLocker مع TPM برقم PIN للمستخدم. افتراضياً يكون PIN من 4 إلى 20 رقماً؛ مع تمكين PIN المحسّن يمكن أن يكون من 4 إلى 20 حرفاً (حروف، رموز، مسافات أو أرقام).</value>
+  </data>
+  <data name="TPMStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM ومفتاح بدء التشغيل</value>
+  </data>
+  <data name="TPMStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>يستخدم BitLocker الـ TPM مع إدخال من محرك أقراص USB. لبدء تشغيل الجهاز يجب توصيل محرك الـ USB.</value>
+  </data>
+  <data name="TPMPINStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM وPIN ومفتاح بدء التشغيل</value>
+  </data>
+  <data name="TPMPINStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>يستخدم BitLocker مزيجاً من TPM وPIN بدء التشغيل وإدخال من محرك أقراص USB يحتوي مفتاحاً خارجياً. هذه هي التهيئة الأكثر أماناً لـ BitLocker وتوفر مصادقة متعددة العوامل.</value>
+  </data>
+  <data name="StartupKeySectionTitle.Text" xml:space="preserve">
+    <value>مفتاح بدء التشغيل</value>
+  </data>
+  <data name="StartupKeySectionDescription.Text" xml:space="preserve">
+    <value>يستخدم BitLocker إدخالاً من محرك أقراص USB يحتوي المفتاح الخارجي. يجب توصيل جهاز USB قبل أن يتمكن النظام من الإقلاع.</value>
+  </data>
+  <data name="RetrievingBitLockerVolumesEllipsis" xml:space="preserve">
+  <value>جارٍ استرجاع وحدات BitLocker...</value>
+</data>
+<data name="LoadedBitLockerVolumesCount" xml:space="preserve">
+  <value>تم تحميل {0} من وحدات BitLocker.</value>
+</data>
+<data name="NoOutputReturnedFromPath" xml:space="preserve">
+  <value>لا يوجد مخرجات تم إرجاعها من {0}</value>
+</data>
+<data name="NoBitLockerVolumesDetected" xml:space="preserve">
+  <value>لم يتم اكتشاف أي وحدات BitLocker.</value>
+</data>
+<data name="ParentVolumeForKeyProtectorNotFound" xml:space="preserve">
+  <value>لم يتم العثور على وحدة تخزين أصل لواقي المفتاح.</value>
+</data>
+<data name="RemovingKeyProtectorFromVolume" xml:space="preserve">
+  <value>إزالة واقي مفتاح {0} من {1}</value>
+</data>
+<data name="ExternalKeyRemovalConditionalSuccess" xml:space="preserve">
+  <value>إذا لم يكن واقي المفتاح ExternalKey ذو المعرّف {0} من {1} مستخدماً لإبقاء محرك الأقراص مفتوحاً، فقد أزيل. مزيد من المعلومات متاحة في صفحة السجلات.</value>
+</data>
+<data name="SuccessfullyRemovedKeyProtector" xml:space="preserve">
+  <value>تمت إزالة واقي المفتاح من النوع {0} ذو المعرّف {1} بنجاح من {2}.</value>
+</data>
+<data name="NoBitLockerVolumeSelected" xml:space="preserve">
+  <value>لم يتم تحديد وحدة تخزين BitLocker.</value>
+</data>
 </root>

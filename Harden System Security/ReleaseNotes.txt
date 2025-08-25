@@ -1,15 +1,3 @@
-You can now export all Audit Policies from a system to a file after retrieving them. Additionally, you can import this file back into the app to automatically apply the same policies on another system. This allows you to create a custom Audit Policies template once and effortlessly re-use it across multiple systems using the Harden System Security app. Having such ability has been one of the community's top requests. This behavior will be expanded to more sections of the app in the near future.
+* Updated dependencies to the latest versions.
 
-Fixed an issue in Audit Policies retrieval, it now displays the correct number of audit policies that are available.
-
-Updated the More Info link in the Update page when checking for update, it now points to the Harden System Security app's home page in the repository wiki.
-
-Added webpage reference URLs for some the security measures that didn't have it.
-
-Added icons to the buttons in the UI that didn't have it. Now all of the buttons have icons for better visual representation.
-
-The Optional Windows Features page now displays the progress with more details, including the current action taking place and the name of the item. The same data are logged too.
-
-The Optional Windows Features page now has 3 additional buttons for applying/removing/verifying recommended configurations. The page has a Retrieve button that shows over 500 items. The 3 new buttons have specific tasks according to the document linked above where they only enable/disable certain features and capabilities in the OS for optimal security. This is the same feature that the module has.
-
-Please visit the GitHub for the rest of the release notes.
+* Added a new section to the BitLocker page called "Management". It allows you to view all of the details of each volume and see if any of them is BitLocker encrypted. You can also view key protectors of the unlocked drives and back them up for safe keeping. There is also an option to delete any existing key protector. This section is going to get more features in the next update.

@@ -27,9 +27,13 @@ using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace AppControlManager.CustomUIElements;
 
+/// <summary>
+/// UserControl that hosts the grouped ListView of MUnits plus command bar.
+/// </summary>
 internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 {
 	private HardenSystemSecurity.AppSettings.Main AppSettings => App.Settings;
@@ -45,6 +49,115 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 	private bool _isDisposed;
 
+	#region Explicit Disposal Control (NEW)
+
+	/// <summary>
+	/// DependencyProperty to control whether this control disposes itself automatically on Unloaded.
+	/// When set to true, disposal is skipped on Unloaded and must be invoked explicitly by the host
+	/// (e.g. in Page.OnNavigatedFrom). Default is false.
+	/// </summary>
+	internal static readonly DependencyProperty DisposeOnlyOnExplicitCallProperty =
+		DependencyProperty.Register(
+			nameof(DisposeOnlyOnExplicitCall),
+			typeof(bool),
+			typeof(MUnitListViewControl),
+			new PropertyMetadata(false));
+
+	/// <summary>
+	/// Wrapper so XAML can set the property.
+	/// </summary>
+	public bool DisposeOnlyOnExplicitCall
+	{
+		get => (bool)GetValue(DisposeOnlyOnExplicitCallProperty);
+		set => SetValue(DisposeOnlyOnExplicitCallProperty, value);
+	}
+
+	/// <summary>
+	/// DependencyProperty that, when true, attempts to mark all child controls that implement <see cref="IExplicitDisposalOptIn"/>
+	/// with their own DisposeOnlyOnExplicitCall flag so they also survive transient unloads under a TabView.
+	/// </summary>
+	internal static readonly DependencyProperty ChildButtonsDisposeOnlyOnExplicitCallProperty =
+		DependencyProperty.Register(
+			nameof(ChildButtonsDisposeOnlyOnExplicitCall),
+			typeof(bool),
+			typeof(MUnitListViewControl),
+			new PropertyMetadata(false, OnChildButtonsDisposeOnlyOnExplicitCallChanged));
+
+	public bool ChildButtonsDisposeOnlyOnExplicitCall
+	{
+		get => (bool)GetValue(ChildButtonsDisposeOnlyOnExplicitCallProperty);
+		set => SetValue(ChildButtonsDisposeOnlyOnExplicitCallProperty, value);
+	}
+
+	private static void OnChildButtonsDisposeOnlyOnExplicitCallChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is MUnitListViewControl control && (bool)e.NewValue)
+		{
+			control.TrySetChildExplicitDisposalOptIn();
+			control.HookListViewRealizationEvents();
+		}
+	}
+
+	/// <summary>
+	/// Hooks realization-related events so that controls created after initial traversal (due to virtualization or later template materialization)
+	/// also receive the explicit disposal flag.
+	/// </summary>
+	private void HookListViewRealizationEvents()
+	{
+		if (MainListView == null) return;
+		// Avoid duplicate subscriptions
+		MainListView.ContainerContentChanging -= MainListView_ContainerContentChanging;
+		MainListView.ContainerContentChanging += MainListView_ContainerContentChanging;
+	}
+
+	private void MainListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+	{
+		if (!_isDisposed && ChildButtonsDisposeOnlyOnExplicitCall && args.ItemContainer is not null)
+		{
+			// Traverse the container's subtree to set the flag on any new controls
+			TrySetChildExplicitDisposalOptIn(args.ItemContainer);
+		}
+	}
+
+	/// <summary>
+	/// Traverses visual tree breadth-first to set DisposeOnlyOnExplicitCall = true
+	/// on any descendant implementing <see cref="IExplicitDisposalOptIn"/>.
+	/// </summary>
+	private void TrySetChildExplicitDisposalOptIn(DependencyObject? rootOverride = null)
+	{
+		if (_isDisposed) return;
+		if (!ChildButtonsDisposeOnlyOnExplicitCall) return;
+
+		try
+		{
+			DependencyObject start = rootOverride ?? this;
+			Queue<DependencyObject> queue = new();
+			queue.Enqueue(start);
+
+			while (queue.Count > 0)
+			{
+				DependencyObject current = queue.Dequeue();
+				int count = VisualTreeHelper.GetChildrenCount(current);
+				for (int i = 0; i < count; i++)
+				{
+					DependencyObject child = VisualTreeHelper.GetChild(current, i);
+
+					if (child is IExplicitDisposalOptIn explicitControl && !explicitControl.DisposeOnlyOnExplicitCall)
+					{
+						explicitControl.DisposeOnlyOnExplicitCall = true;
+					}
+
+					queue.Enqueue(child);
+				}
+			}
+		}
+		catch
+		{
+		}
+	}
+
+	#endregion
+
 	/// <summary>
 	/// Handles the Loaded event to configure the ItemsStackPanel with current settings
 	/// </summary>
@@ -58,6 +171,13 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		{
 			notifyPropertyChanged.PropertyChanged -= AppSettings_PropertyChanged; // Ensure no duplicate subscription
 			notifyPropertyChanged.PropertyChanged += AppSettings_PropertyChanged;
+		}
+
+		// If caller requested propagation to child controls, attempt it now (some may already be realized).
+		if (ChildButtonsDisposeOnlyOnExplicitCall)
+		{
+			TrySetChildExplicitDisposalOptIn();
+			HookListViewRealizationEvents();
 		}
 	}
 
@@ -263,6 +383,13 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 			// Configure the ItemsStackPanel when items source changes
 			control.ConfigureItemsStackPanel();
+
+			// If requested, propagate explicit-disposal configuration to child controls (they may appear now)
+			if (control.ChildButtonsDisposeOnlyOnExplicitCall)
+			{
+				control.TrySetChildExplicitDisposalOptIn();
+				control.HookListViewRealizationEvents();
+			}
 		}
 	}
 
@@ -480,6 +607,12 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 			RestoreSelectionFromViewModel();
 			// Re-subscribe to status changes after clearing search
 			SubscribeToStatusChanges();
+
+			// Re-apply child explicit disposal if requested
+			if (ChildButtonsDisposeOnlyOnExplicitCall)
+			{
+				TrySetChildExplicitDisposalOptIn();
+			}
 			return;
 		}
 
@@ -516,11 +649,16 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		RestoreSelectionFromViewModel();
 		// Re-subscribe to status changes after filtering
 		SubscribeToStatusChanges();
+
+		if (ChildButtonsDisposeOnlyOnExplicitCall)
+		{
+			TrySetChildExplicitDisposalOptIn();
+		}
 	}
 
 	/// <summary>
-	/// For selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged"/> method as well,
-	/// Adding the items to <see cref="ItemsSourceSelectedItems"/>.
+	/// For selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged(object, SelectionChangedEventArgs)"/> method as well,
+	/// Adding the items to <see cref="IMUnitListViewModel.ItemsSourceSelectedItems"/>.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
@@ -538,8 +676,8 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	}
 
 	/// <summary>
-	/// For De-selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged"/> method as well,
-	/// Removing the items from <see cref="ItemsSourceSelectedItems"/>.
+	/// For De-selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged(object, SelectionChangedEventArgs)"/> method as well,
+	/// Removing the items from <see cref="IMUnitListViewModel.ItemsSourceSelectedItems"/>.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
@@ -880,6 +1018,11 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// </summary>
 	private void MUnitListViewControl_Unloaded(object sender, RoutedEventArgs e)
 	{
+		// If the host requested explicit disposal, skip automatic disposal here.
+		if (DisposeOnlyOnExplicitCall)
+		{
+			return;
+		}
 		Dispose();
 	}
 
@@ -892,6 +1035,12 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		if (AppSettings is INotifyPropertyChanged notifyPropertyChanged)
 		{
 			notifyPropertyChanged.PropertyChanged -= AppSettings_PropertyChanged;
+		}
+
+		// Unsubscribe ListView realization handler if present
+		if (MainListView != null)
+		{
+			MainListView.ContainerContentChanging -= MainListView_ContainerContentChanging;
 		}
 
 		// Unsubscribe from all MUnit events

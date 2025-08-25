@@ -1,0 +1,287 @@
+<customUI:ContentDialogV2
+    x:Class="HardenSystemSecurity.CustomUIElements.AddKeyProtectorDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    mc:Ignorable="d"
+    x:Uid="AddKeyProtectorContentDialog"
+    DefaultButton="Close"
+    IsPrimaryButtonEnabled="True"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <customUI:ContentDialogV2.Resources>
+
+        <ResourceDictionary>
+            <!-- To use the PivotSegmentedStyle for the Segmented element -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///CommunityToolkit.WinUI.Controls.Segmented/Segmented/Segmented.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <x:Double x:Key="ContentDialogMaxWidth">1200</x:Double>
+
+            <!-- Uniform panel dimensions ensures each section has identical size -->
+            <x:Double x:Key="PanelUniformWidth">560</x:Double>
+            <x:Double x:Key="PanelUniformHeight">260</x:Double>
+
+            <!-- Style applied to each switched panel -->
+            <Style x:Key="PanelStyle" TargetType="StackPanel">
+                <Setter Property="Width" Value="{StaticResource PanelUniformWidth}"/>
+                <Setter Property="Height" Value="{StaticResource PanelUniformHeight}"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="16"/>
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+                <Setter Property="Spacing" Value="10"/>
+            </Style>
+
+            <!-- Show (enter) animations -->
+            <animations:ImplicitAnimationSet x:Key="ShowTransitions">
+                <animations:OffsetAnimation
+                EasingMode="EaseOut"
+                From="0,24,0"
+                To="0"
+                Duration="0:0:0.35"/>
+                <animations:OpacityAnimation
+                EasingMode="EaseOut"
+                From="0"
+                To="1"
+                Duration="0:0:0.20"/>
+            </animations:ImplicitAnimationSet>
+
+            <!-- Hide (exit) animations -->
+            <animations:ImplicitAnimationSet x:Key="HideTransitions">
+                <animations:OffsetAnimation
+                EasingMode="EaseOut"
+                From="0"
+                To="0,24,0"
+                Duration="0:0:0.18"/>
+                <animations:OpacityAnimation
+                EasingMode="EaseOut"
+                From="1"
+                To="0"
+                Duration="0:0:0.12"/>
+            </animations:ImplicitAnimationSet>
+        </ResourceDictionary>
+    </customUI:ContentDialogV2.Resources>
+
+    <Grid RowSpacing="12" Padding="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Header text -->
+            <RowDefinition Height="*"/>
+            <!-- SwitchPresenter -->
+            <RowDefinition Height="Auto"/>
+            <!-- Segmented selector -->
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   x:Uid="AddKeyProtectorContentDialogSubTitle"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,2"
+                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+        <!-- Center the content panels -->
+        <Grid Grid.Row="1"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Top">
+
+            <controls:SwitchPresenter
+                Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}">
+
+                <controls:Case Value="TPM">
+                    <ScrollViewer>
+                        <StackPanel Style="{StaticResource PanelStyle}"
+                                    animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                    animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                            <TextBlock x:Uid="TPMSectionTitle"
+                                       Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock x:Uid="TPMSectionDescription"
+                                       Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                            <Border Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+                                    Padding="14"
+                                    CornerRadius="8">
+                                <TextBlock x:Uid="TPMSectionBody" TextWrapping="Wrap"/>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </controls:Case>
+
+                <controls:Case Value="TPMPIN">
+                    <ScrollViewer>
+                        <StackPanel Style="{StaticResource PanelStyle}"
+                                    animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                    animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                            <TextBlock x:Uid="TPMPINSectionTitle"
+                                       Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock x:Uid="TPMPINSectionDescription"
+                                       Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                        Padding="12"
+                                        CornerRadius="6">
+                                <StackPanel Spacing="6">
+                                    <TextBlock Text="Enter a PIN"/>
+                                    <TextBox PlaceholderText="Required length is determined by the policies."/>
+                                </StackPanel>
+                            </Border>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </controls:Case>
+
+                <controls:Case Value="TPMStartupKey">
+                    <ScrollViewer>
+                        <StackPanel Style="{StaticResource PanelStyle}"
+                                    animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                    animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                            <TextBlock x:Uid="TPMStartupKeySectionTitle"
+                                       Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock x:Uid="TPMStartupKeySectionDescription"
+                                       Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </controls:Case>
+
+                <controls:Case Value="TPMPINStartupKey">
+                    <ScrollViewer>
+                        <StackPanel Style="{StaticResource PanelStyle}"
+                                    animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                    animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                            <TextBlock x:Uid="TPMPINStartupKeySectionTitle"
+                                       Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock x:Uid="TPMPINStartupKeySectionDescription"
+                                       Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </controls:Case>
+
+                <controls:Case Value="StartupKey">
+                    <ScrollViewer>
+                        <StackPanel Style="{StaticResource PanelStyle}"
+                                    animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                    animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                            <TextBlock x:Uid="StartupKeySectionTitle"
+                                       Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock x:Uid="StartupKeySectionDescription"
+                                       Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </controls:Case>
+
+            </controls:SwitchPresenter>
+        </Grid>
+
+        <!-- Segmented control -->
+        <controls:Segmented Grid.Row="2"
+                            x:Name="segmentedControl"
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource PivotSegmentedStyle}"
+                            SelectedIndex="{x:Bind SelectedKeyProtectorType, Mode=TwoWay}">
+            <controls:SegmentedItem x:Uid="TPMKeyProtectorSegmentedItem"
+                                    Tag="TPM">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xE950;"
+                                       Width="20"
+                                       Height="20"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="TPMPINKeyProtectorSegmentedItem"
+                                    Tag="TPMPIN">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xEF3E;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="TPMStartupKeyKeyProtectorSegmentedItem"
+                                    Tag="TPMStartupKey">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xE9A9;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="TPMPINStartupKeyKeyProtectorSegmentedItem"
+                                    Tag="TPMPINStartupKey">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xEA18;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="StartupKeyKeyProtectorSegmentedItem"
+                                    Tag="StartupKey">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xE8D7;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+        </controls:Segmented>
+    </Grid>
+</customUI:ContentDialogV2>

@@ -283,7 +283,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	}
 	#endregion
 
-	#region Delete	
+	#region Delete
 
 	/// <summary>
 	/// Deletes the selected policies from the currently loaded POL file and refreshes the UI.

@@ -1099,7 +1099,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CertificateBuildError" xml:space="preserve">
     <value>Ocurrieron errores al crear el certificado</value>
   </data>
-  <data name="SuccessTitle" xml:space="preserve">
+  <data name="SuccessText" xml:space="preserve">
     <value>Éxito</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
@@ -1244,9 +1244,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Opciones de Directiva</value>
   </data>
   <!-- End of For CI Policy Info ListViews Column Header Buttons -->
-  <data name="Copy" xml:space="preserve">
-    <value>Copiar </value>
-  </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>ID de Directiva: </value>
   </data>
@@ -3091,9 +3088,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CreatingSnapBackGuarantee" xml:space="preserve">
     <value>Creando garantía de SnapBack en Modo Forzado</value>
   </data>
-  <data name="DeployingAuditModePolicy" xml:space="preserve">
-    <value>Implementando la directiva en modo Auditoría</value>
-  </data>
   <data name="ScanningSelectedDirectories" xml:space="preserve">
     <value>Escaneando los directorios seleccionados</value>
   </data>
@@ -3105,9 +3099,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="ResetSuccessful" xml:space="preserve">
     <value>El restablecimiento fue exitoso.</value>
-  </data>
-  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
-    <value>Implementando la directiva en modo Forzado porque el usuario decidió restablecer la operación</value>
   </data>
   <data name="DeployingEnforceMode" xml:space="preserve">
     <value>Implementando la directiva en modo Forzado.</value>
@@ -3694,9 +3685,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
     <value>No se pudo aplicar hash a {0} usando {1}</value>
   </data>
-    <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
-    <value>La variable de entorno SystemDrive es nula</value>
-  </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
     <value>Actualizando las directivas de App Control del sistema</value>
   </data>
@@ -4143,12 +4131,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
     <value>Configurando e iniciando los servicios relacionados con ISG requeridos</value>
-  </data>
-  <data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
-    <value>Intentando deserializar el resultado JSON de Device Guard.</value>
-  </data>
-  <data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
-    <value>La deserialización JSON de Device Guard falló. JSON sin procesar:</value>
   </data>
   <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
     <value>Aumentando el tamaño del registro de Integridad de Código en 1MB porque su espacio libre actual es inferior a 1MB.</value>
@@ -5727,5 +5709,29 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Abrir Directorio de Registros</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>Exportar a archivo JSON</value>
+  </data>
+    <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exportar todos los datos en el ListView a JSON.</value>
+  </data>
+    <data name="ExportToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+     <value>Exportar todos los datos en el ListView a JSON.</value>
+  </data>
+  <data name="ExportingToJSONMsg" xml:space="preserve">
+     <value>Exportando datos a archivo JSON, por favor espere...</value>
+  </data>
+    <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
+     <value>Se exportaron correctamente {0} datos a JSON y se guardaron en: '{1}'</value>
+  </data>
+    <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copiar los elementos seleccionados al portapapeles.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copiar los elementos seleccionados al portapapeles.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>Copiar seleccionados</value>
   </data>
 </root>

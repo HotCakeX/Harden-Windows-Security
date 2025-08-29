@@ -1099,7 +1099,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="CertificateBuildError" xml:space="preserve">
     <value>प्रमाणपत्र बनाते समय त्रुटियाँ हुईं</value>
   </data>
-  <data name="SuccessTitle" xml:space="preserve">
+  <data name="SuccessText" xml:space="preserve">
     <value>सफलता</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
@@ -1244,9 +1244,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>नीति विकल्प</value>
   </data>
   <!-- End of For CI Policy Info ListViews Column Header Buttons -->
-  <data name="Copy" xml:space="preserve">
-    <value>कॉपी </value>
-  </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>नीति आईडी: </value>
   </data>
@@ -3091,9 +3088,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="CreatingSnapBackGuarantee" xml:space="preserve">
     <value>प्रवर्तन मोड स्नैपबैक गारंटी बना रहे हैं</value>
   </data>
-  <data name="DeployingAuditModePolicy" xml:space="preserve">
-    <value>रिकॉर्ड मोड नीति तैनात की जा रही है</value>
-  </data>
   <data name="ScanningSelectedDirectories" xml:space="preserve">
     <value>चयनित निर्देशिकाओं को स्कैन कर रहे हैं</value>
   </data>
@@ -3105,9 +3099,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="ResetSuccessful" xml:space="preserve">
     <value>रीसेट सफल हुआ।</value>
-  </data>
-  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
-    <value>उपयोगकर्ता ने ऑपरेशन रीसेट किया इसलिए प्रवर्तन मोड नीति तैनात की जा रही है</value>
   </data>
   <data name="DeployingEnforceMode" xml:space="preserve">
     <value>प्रवर्तन मोड नीति तैनात की जा रही है।</value>
@@ -3694,9 +3685,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
     <value>{1} का उपयोग करके {0} का hash नहीं किया जा सका</value>
   </data>
-  <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
-    <value>SystemDrive environment variable null है</value>
-  </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
     <value>सिस्टम App Control नीतियाँ रिफ्रेश कर रहे हैं</value>
   </data>
@@ -4143,12 +4131,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
     <value>आवश्यक ISG संबंधित सेवाओं को कॉन्फ़िगर और प्रारंभ कर रहे हैं</value>
-  </data>
-  <data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
-    <value>Device Guard JSON परिणाम को डिसीरियलाइज़ करने का प्रयास कर रहे हैं।</value>
-  </data>
-  <data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
-    <value>Device Guard JSON डिसीरियलाइज़ेशन विफल हुआ। कच्चा JSON:</value>
   </data>
   <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
     <value>Code Integrity लॉग आकार को 1MB बढ़ा रहे हैं क्योंकि इसकी वर्तमान फ्री स्पेस 1MB से कम है।</value>
@@ -5727,5 +5709,29 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>लॉग डायरेक्टरी खोलें</value>
+  </data>
+    <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित आइटमों को क्लिपबोर्ड में कॉपी करें।</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित आइटमों को क्लिपबोर्ड में कॉपी करें।</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>चयनित कॉपी करें</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>JSON फ़ाइल में निर्यात करें</value>
+  </data>
+    <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ListView में सभी डेटा को JSON में निर्यात करें.</value>
+  </data>
+    <data name="ExportToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+     <value>ListView में सभी डेटा को JSON में निर्यात करें.</value>
+  </data>
+  <data name="ExportingToJSONMsg" xml:space="preserve">
+     <value>डेटा को JSON फ़ाइल में निर्यात किया जा रहा है, कृपया प्रतीक्षा करें...</value>
+  </data>
+    <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
+     <value>सफलतापूर्वक {0} डेटा को JSON में निर्यात कर उन्हें यहाँ सहेजा गया: '{1}'</value>
   </data>
 </root>

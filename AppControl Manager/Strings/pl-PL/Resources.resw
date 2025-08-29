@@ -1099,7 +1099,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="CertificateBuildError" xml:space="preserve">
     <value>Wystąpiły błędy podczas tworzenia certyfikatu</value>
   </data>
-  <data name="SuccessTitle" xml:space="preserve">
+  <data name="SuccessText" xml:space="preserve">
     <value>Sukces</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
@@ -1244,9 +1244,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Opcje zasad</value>
   </data>
   <!-- End of For CI Policy Info ListViews Column Header Buttons -->
-  <data name="Copy" xml:space="preserve">
-    <value>Kopiuj </value>
-  </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>Identyfikator zasad: </value>
   </data>
@@ -3091,9 +3088,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="CreatingSnapBackGuarantee" xml:space="preserve">
     <value>Tworzenie gwarancji SnapBack trybu wymuszonego</value>
   </data>
-  <data name="DeployingAuditModePolicy" xml:space="preserve">
-    <value>Wdrażanie zasad trybu inspekcji</value>
-  </data>
   <data name="ScanningSelectedDirectories" xml:space="preserve">
     <value>Skanowanie wybranych katalogów</value>
   </data>
@@ -3105,9 +3099,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="ResetSuccessful" xml:space="preserve">
     <value>Resetowanie zakończyło się pomyślnie.</value>
-  </data>
-  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
-    <value>Wdrażanie zasad trybu wymuszonego, ponieważ użytkownik zdecydował się zresetować operację</value>
   </data>
   <data name="DeployingEnforceMode" xml:space="preserve">
     <value>Wdrażanie zasad trybu wymuszonego.</value>
@@ -3694,9 +3685,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
     <value>Nie można obliczyć skrótu dla {0} przy użyciu {1}</value>
   </data>
-    <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
-    <value>Zmienna środowiskowa SystemDrive ma wartość null</value>
-  </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
     <value>Odświeżanie zasad kontroli aplikacji systemu</value>
   </data>
@@ -4143,12 +4131,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
     <value>Konfigurowanie i uruchamianie wymaganych usług związanych z ISG</value>
-  </data>
-  <data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
-    <value>Próba deserializacji wyniku JSON Device Guard.</value>
-  </data>
-  <data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
-    <value>Deserializacja JSON Device Guard nie powiodła się. Surowy JSON:</value>
   </data>
   <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
     <value>Zwiększanie rozmiaru dziennika integralności kodu o 1 MB, ponieważ jego bieżące wolne miejsce jest mniejsze niż 1 MB.</value>
@@ -5727,5 +5709,29 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
 </data>
 <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Otwórz Katalog Logów</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>Eksport do pliku JSON</value>
+  </data>
+    <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eksport wszystkich danych w ListView do JSON.</value>
+  </data>
+    <data name="ExportToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+     <value>Eksport wszystkich danych w ListView do JSON.</value>
+  </data>
+  <data name="ExportingToJSONMsg" xml:space="preserve">
+     <value>Eksportowanie danych do pliku JSON, proszę czekać...</value>
+  </data>
+    <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
+     <value>Pomyślnie wyeksportowano {0} danych do JSON i zapisano je w: '{1}'</value>
+  </data>
+    <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Skopiuj wybrane elementy do schowka.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Skopiuj wybrane elementy do schowka.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>Kopiuj wybrane</value>
   </data>
 </root>

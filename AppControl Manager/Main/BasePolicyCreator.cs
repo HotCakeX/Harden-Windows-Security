@@ -633,7 +633,7 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 
 		/*
 
-		This is for using GitHub's source.		 
+		This is for using GitHub's source.
 
 		// Extract the XML content with Regex
 		Match match = XMLCaptureRegex().Match(msftUserModeBlockRulesAsString);
@@ -972,14 +972,14 @@ Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;""
 	}
 
 	/*
-	 
+
 	/// <summary>
 	/// Regex pattern to capture XML content between ```xml and ```
 	/// </summary>
 	/// <returns></returns>
 	[GeneratedRegex(@"```xml\s*(.*?)\s*```", RegexOptions.Compiled | RegexOptions.Singleline)]
 	private static partial Regex XMLCaptureRegex();
-	
+
 	 */
 
 	// Captures the first <code class="lang-xml">...</code> block (case-insensitive) into the named group "xml".

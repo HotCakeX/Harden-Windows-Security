@@ -1592,9 +1592,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>Η ενίσχυση ασφάλειας ολοκληρώθηκε: {0} επέτυχαν, {1} απέτυχαν.</value>
 </data>
-<data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
-  <value>Σφάλμα κατά τη λειτουργία ενίσχυσης ασφάλειας</value>
-</data>
 <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
   <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM για επαλήθευση.</value>
 </data>
@@ -1610,9 +1607,6 @@
 <data name="IncorrectItems" xml:space="preserve">
   <value>Εσφαλμένα στοιχεία: {0}</value>
 </data>
-<data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
-  <value>Σφάλμα κατά την επαλήθευση ενίσχυσης ασφάλειας</value>
-</data>
 <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
   <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM για αφαίρεση ενίσχυσης ασφάλειας.</value>
 </data>
@@ -1627,9 +1621,6 @@
 </data>
 <data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
   <value>Η αφαίρεση ενίσχυσης ασφάλειας ολοκληρώθηκε: {0} επέτυχαν, {1} απέτυχαν.</value>
-</data>
-<data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
-  <value>Σφάλμα κατά τη λειτουργία αφαίρεσης ενίσχυσης ασφάλειας</value>
 </data>
 <data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
   <value>Σφάλμα απόρριψης πελάτη υπηρεσίας DISM: {0}</value>
@@ -1976,12 +1967,6 @@
 <data name="SeceditFailedWithExitCode" xml:space="preserve">
   <value>Το Secedit απέτυχε με κωδικό εξόδου: {0}</value>
 </data>
-<data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
-  <value>Προειδοποίηση: Δεν ήταν δυνατή η διαγραφή προσωρινών αρχείων.</value>
-</data>
-<data name="SeceditMethodFailed" xml:space="preserve">
-  <value>Η μέθοδος Secedit απέτυχε.</value>
-</data>
 <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
   <value>Δεν βρέθηκαν ρυθμίσεις [System Access] στο καθορισμένο αρχείο</value>
 </data>
@@ -1990,9 +1975,6 @@
 </data>
 <data name="FileNotFoundPath" xml:space="preserve">
   <value>Το αρχείο δεν βρέθηκε: {0}</value>
-</data>
-<data name="CreatedPolicyDirectory" xml:space="preserve">
-  <value>Δημιουργήθηκε φάκελος πολιτικής: {0}</value>
 </data>
 <data name="FileTooSmallForValidHeader" xml:space="preserve">
   <value>Το αρχείο είναι πολύ μικρό για να περιέχει έγκυρη κεφαλίδα</value>
@@ -2041,9 +2023,6 @@
 </data>
 <data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
   <value>Φορτώθηκε υπάρχον αρχείο πολιτικής με {0} καταχωρήσεις</value>
-</data>
-<data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
-  <value>Το αρχείο πολιτικής δεν υπάρχει, δημιουργία νέου κενού αρχείου πολιτικής</value>
 </data>
 <data name="ReplacedEntries" xml:space="preserve">
   <value>Αντικατεστημένες καταχωρήσεις: {0}</value>
@@ -3021,4 +3000,290 @@
   <data name="SuccessfullyExportedCertificates" xml:space="preserve">
     <value>Εξήχθησαν επιτυχώς {0} πιστοποιητικά στο {1}</value>
   </data>
+        <!--BitLocker Volumes ListView Headers Start-->
+  <data name="MountPointHeader.Text" xml:space="preserve">
+    <value>Σημείο προσάρτησης</value>
+  </data>
+  <data name="ProtectionStatusHeader.Text" xml:space="preserve">
+    <value>Κατάσταση προστασίας</value>
+  </data>
+  <data name="ConversionStatusHeader.Text" xml:space="preserve">
+    <value>Κατάσταση μετατροπής</value>
+  </data>
+  <data name="EncryptionMethodHeader.Text" xml:space="preserve">
+    <value>Μέθοδος κρυπτογράφησης</value>
+  </data>
+    <data name="EncryptionPercentageHeader.Text" xml:space="preserve">
+    <value>Ποσοστό κρυπτογράφησης</value>
+  </data>
+    <data name="WipePercentageHeader.Text" xml:space="preserve">
+    <value>Ποσοστό διαγραφής</value>
+  </data>
+    <data name="AutoUnlockEnabledHeader.Text" xml:space="preserve">
+    <value>Αυτόματο ξεκλείδωμα ενεργό</value>
+  </data>
+    <data name="AutoUnlockKeyStoredHeader.Text" xml:space="preserve">
+    <value>Κλειδί αυτόματου ξεκλειδώματος αποθηκεύτηκε</value>
+  </data>
+    <data name="VolumeTypeHeader.Text" xml:space="preserve">
+    <value>Τύπος τόμου</value>
+  </data>
+    <data name="CapacityGBHeader.Text" xml:space="preserve">
+    <value>Χωρητικότητα GB</value>
+  </data>
+    <data name="FileSystemTypeHeader.Text" xml:space="preserve">
+    <value>Τύπος συστήματος αρχείων</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers End-->
+  <!--BitLocker Volumes ListView Headers Buttons Start-->
+<data name="MountPointColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Σημείο προσάρτησης</value>
+  </data>
+  <data name="ProtectionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Κατάσταση προστασίας</value>
+  </data>
+  <data name="ConversionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Κατάσταση μετατροπής</value>
+  </data>
+  <data name="EncryptionMethodColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Μέθοδος κρυπτογράφησης</value>
+  </data>
+    <data name="EncryptionPercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Ποσοστό κρυπτογράφησης</value>
+  </data>
+    <data name="WipePercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Ποσοστό διαγραφής</value>
+  </data>
+    <data name="AutoUnlockEnabledColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αυτόματο ξεκλείδωμα ενεργό</value>
+  </data>
+    <data name="AutoUnlockKeyStoredColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Κλειδί αυτόματου ξεκλειδώματος αποθηκεύτηκε</value>
+  </data>
+    <data name="VolumeTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Τύπος τόμου</value>
+  </data>
+    <data name="CapacityGBColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Χωρητικότητα GB</value>
+  </data>
+    <data name="FileSystemTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Τύπος συστήματος αρχείων</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers Buttons End-->
+  <data name="RetrieveBitLockerVolumesButton.Content" xml:space="preserve">
+    <value>Ανάκτηση τόμων BitLocker</value>
+  </data>
+    <data name="RetrieveBitLockerVolumesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανακτά όλους τους τόμους και τις σχετικές πληροφορίες BitLocker με πλήρεις λεπτομέρειες και τους εμφανίζει.</value>
+  </data>
+  <data name="RetrieveBitLockerVolumesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανακτά όλους τους τόμους και τις σχετικές πληροφορίες BitLocker με πλήρεις λεπτομέρειες και τους εμφανίζει.</value>
+  </data>
+  <data name="CloseButton.Content" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+    <data name="CloseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+  <data name="CloseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+  <data name="CopyButton.Content" xml:space="preserve">
+    <value>Αντιγραφή</value>
+  </data>
+    <data name="CopyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγραφή</value>
+  </data>
+  <data name="CopyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αντιγραφή</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.Content" xml:space="preserve">
+    <value>Διαγραφή προστασίας κλειδιού</value>
+  </data>
+    <data name="DeleteBLKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγράφει την προστασία κλειδιού από τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγράφει την προστασία κλειδιού από τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="NoKeyProtectorsFoundMsg.Text" xml:space="preserve">
+    <value>Δεν βρέθηκαν προστασίες κλειδιού για αυτόν τον τόμο.</value>
+  </data>
+  <data name="SelectVolumeFirstToSeeKeyProtectorsMsg.Text" xml:space="preserve">
+    <value>Επιλέξτε πρώτα έναν τόμο για να δείτε τις προστασίες κλειδιού του.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.Text" xml:space="preserve">
+    <value>Προστασίες κλειδιού για</value>
+  </data>
+  <data name="KeyProtectorsForMsg.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εμφάνιση όλων των προστασιών κλειδιού για τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εμφάνιση όλων των προστασιών κλειδιού για τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="RecoveryPassword.Text" xml:space="preserve">
+    <value>Κωδικός ανάκτησης</value>
+  </data>
+  <data name="CertificateType.Text" xml:space="preserve">
+    <value>Τύπος πιστοποιητικού</value>
+  </data>
+  <data name="FileName.Text" xml:space="preserve">
+    <value>Όνομα αρχείου</value>
+  </data>
+  <data name="AutoUnlock.Text" xml:space="preserve">
+    <value>Αυτόματο ξεκλείδωμα</value>
+  </data>
+  <data name="Type.Text" xml:space="preserve">
+    <value>Τύπος</value>
+  </data>
+  <data name="Thumbprint.Text" xml:space="preserve">
+    <value>Αποτύπωμα</value>
+  </data>
+  <data name="ID.Text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="BitLockerManagementTab.Header" xml:space="preserve">
+    <value>Διαχείριση</value>
+  </data>
+  <data name="BitLockerManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχείριση κάθε πτυχής των τόμων BitLocker όπως κρυπτογράφηση, αποκρυπτογράφηση, δημιουργία αντιγράφων ασφαλείας και άλλα.</value>
+  </data>
+  <data name="BitLockerManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαχείριση κάθε πτυχής των τόμων BitLocker όπως κρυπτογράφηση, αποκρυπτογράφηση, δημιουργία αντιγράφων ασφαλείας και άλλα.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>Μέτρα ασφαλείας</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχείριση μέτρων ασφαλείας σχετικών με το BitLocker.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαχείριση μέτρων ασφαλείας σχετικών με το BitLocker.</value>
+  </data>
+  <data name="AddKeyProtectorButton.Content" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού</value>
+  </data>
+  <data name="AddKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθέστε νέα προστασία κλειδιού στον επιλεγμένο τόμο. Οι προστασίες κλειδιού επιτρέπουν το ξεκλείδωμα του τόμου.</value>
+  </data>
+  <data name="AddKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθέστε νέα προστασία κλειδιού στον επιλεγμένο τόμο. Οι προστασίες κλειδιού επιτρέπουν το ξεκλείδωμα του τόμου.</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.Title" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Προσθήκη</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Άκυρο</value>
+  </data>
+  <data name="AddKeyProtectorContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Χρησιμοποιήστε αυτή την ενότητα για να προσθέσετε νέα προστασία κλειδιού στον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM</value>
+  </data>
+    <data name="TPMKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN</value>
+  </data>
+    <data name="TPMPINKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + PIN.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + PIN.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + κλειδί εκκίνησης</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + κλειδί εκκίνησης.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + κλειδί εκκίνησης.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN + κλειδί εκκίνησης</value>
+  </data>
+    <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + PIN + κλειδί εκκίνησης.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + PIN + κλειδί εκκίνησης.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Κλειδί εκκίνησης</value>
+  </data>
+    <data name="StartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κλειδί εκκίνησης.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κλειδί εκκίνησης.</value>
+  </data>
+  <data name="TPMSectionTitle.Text" xml:space="preserve">
+    <value>Έμπιστη Μονάδα Πλατφόρμας</value>
+  </data>
+  <data name="TPMSectionDescription.Text" xml:space="preserve">
+    <value>Το BitLocker χρησιμοποιεί το TPM της συσκευής για την προστασία του κλειδιού κρυπτογράφησης.</value>
+  </data>
+  <data name="TPMSectionBody.Text" xml:space="preserve">
+    <value>Με αυτή την προστασία, ο κρυπτογραφημένος δίσκος είναι προσβάσιμος μόνο όταν είναι συνδεδεμένος σε μητρική με TPM και η ακεραιότητα εκκίνησης του συστήματος παραμένει άθικτη. Προστασίες βασισμένες σε TPM εφαρμόζονται συνήθως μόνο σε τόμους λειτουργικού συστήματος.</value>
+  </data>
+  <data name="TPMPINSectionTitle.Text" xml:space="preserve">
+    <value>TPM και Προσωπικός Αριθμός (PIN)</value>
+  </data>
+  <data name="TPMPINSectionDescription.Text" xml:space="preserve">
+    <value>Το BitLocker ζευγοποιεί το TPM με PIN χρήστη. Προεπιλογή 4–20 ψηφία· με ενισχυμένα PIN επιτρέπονται 4–20 χαρακτήρες (γράμματα, σύμβολα, κενά ή αριθμοί).</value>
+  </data>
+  <data name="TPMStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM και κλειδί εκκίνησης</value>
+  </data>
+  <data name="TPMStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>Το BitLocker χρησιμοποιεί το TPM μαζί με είσοδο από μονάδα USB. Για εκκίνηση της συσκευής πρέπει να είναι συνδεδεμένη η USB.</value>
+  </data>
+  <data name="TPMPINStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM, PIN και κλειδί εκκίνησης</value>
+  </data>
+  <data name="TPMPINStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>Το BitLocker χρησιμοποιεί συνδυασμό TPM, PIN εκκίνησης και είσοδο από μονάδα USB με εξωτερικό κλειδί. Αυτή είναι η πιο ασφαλής διαμόρφωση του BitLocker και παρέχει πολυπαραγοντικό έλεγχο ταυτότητας.</value>
+  </data>
+  <data name="StartupKeySectionTitle.Text" xml:space="preserve">
+    <value>Κλειδί εκκίνησης</value>
+  </data>
+  <data name="StartupKeySectionDescription.Text" xml:space="preserve">
+    <value>Το BitLocker χρησιμοποιεί είσοδο από μονάδα USB που περιέχει το εξωτερικό κλειδί. Η συσκευή USB πρέπει να συνδεθεί πριν την εκκίνηση.</value>
+  </data>
+  <data name="RetrievingBitLockerVolumesEllipsis" xml:space="preserve">
+  <value>Ανάκτηση τόμων BitLocker...</value>
+</data>
+<data name="LoadedBitLockerVolumesCount" xml:space="preserve">
+  <value>Φορτώθηκαν {0} τόμοι BitLocker.</value>
+</data>
+<data name="NoOutputReturnedFromPath" xml:space="preserve">
+  <value>Δεν επεστράφη έξοδος από {0}</value>
+</data>
+<data name="NoBitLockerVolumesDetected" xml:space="preserve">
+  <value>Δεν εντοπίστηκαν τόμοι BitLocker.</value>
+</data>
+<data name="ParentVolumeForKeyProtectorNotFound" xml:space="preserve">
+  <value>Ο γονικός τόμος για την προστασία κλειδιού δεν βρέθηκε.</value>
+</data>
+<data name="RemovingKeyProtectorFromVolume" xml:space="preserve">
+  <value>Αφαίρεση προστασίας κλειδιού {0} από {1}</value>
+</data>
+<data name="ExternalKeyRemovalConditionalSuccess" xml:space="preserve">
+  <value>Αν η προστασία κλειδιού ExternalKey με ID {0} από {1} δεν χρησιμοποιούνταν για να παραμένει ο δίσκος ξεκλείδωτος, αφαιρέθηκε. Περισσότερες πληροφορίες διαθέσιμες στη σελίδα Καταγραφών.</value>
+</data>
+<data name="SuccessfullyRemovedKeyProtector" xml:space="preserve">
+  <value>Η προστασία κλειδιού τύπου {0} με ID {1} αφαιρέθηκε επιτυχώς από {2}.</value>
+</data>
+<data name="NoBitLockerVolumeSelected" xml:space="preserve">
+  <value>Δεν έχει επιλεγεί τόμος BitLocker.</value>
+</data>
 </root>

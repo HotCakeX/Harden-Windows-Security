@@ -147,7 +147,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BitLocker/BitLockerDisable.cpp" />
+    <ClCompile Include="BitLocker/BitLockerEnable.cpp" />
+    <ClCompile Include="BitLocker/BitLockerEnableAutoUnlock.cpp" />
+    <ClCompile Include="BitLocker/BitLockerEnableKeyProtectors.cpp" />
+    <ClCompile Include="BitLocker/BitLockerManager.cpp" />
+    <ClCompile Include="BitLocker/BitLockerRemoveKeyProtector.cpp" />
+    <ClCompile Include="ComHelpers.cpp" />
     <ClCompile Include="ComManager.cpp" />
+    <ClCompile Include="Firewall/FirewallManager.cpp" />
+    <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="StringUtilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BitLocker/BitLockerDisable.h" />
+    <ClInclude Include="BitLocker/BitLockerEnable.h" />
+    <ClInclude Include="BitLocker/BitLockerEnableAutoUnlock.h" />
+    <ClInclude Include="BitLocker/BitLockerEnableKeyProtectors.h" />
+    <ClInclude Include="BitLocker/BitLockerManager.h" />
+    <ClInclude Include="BitLocker/BitLockerRemoveKeyProtector.h" />
+    <ClInclude Include="ComHelpers.h" />
+    <ClInclude Include="Firewall/FirewallManager.h" />
+    <ClInclude Include="Globals.h" />
+    <ClInclude Include="StringUtilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

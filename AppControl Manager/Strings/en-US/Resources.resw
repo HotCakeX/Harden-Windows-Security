@@ -1099,7 +1099,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CertificateBuildError" xml:space="preserve">
     <value>Errors occurred while building the certificate</value>
   </data>
-  <data name="SuccessTitle" xml:space="preserve">
+  <data name="SuccessText" xml:space="preserve">
     <value>Success</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
@@ -1244,9 +1244,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Policy Options</value>
   </data>
   <!-- End of For CI Policy Info ListViews Column Header Buttons -->
-  <data name="Copy" xml:space="preserve">
-    <value>Copy </value>
-  </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>Policy ID: </value>
   </data>
@@ -3091,9 +3088,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CreatingSnapBackGuarantee" xml:space="preserve">
     <value>Creating Enforced Mode SnapBack guarantee</value>
   </data>
-  <data name="DeployingAuditModePolicy" xml:space="preserve">
-    <value>Deploying the Audit mode policy</value>
-  </data>
   <data name="ScanningSelectedDirectories" xml:space="preserve">
     <value>Scanning the selected directories</value>
   </data>
@@ -3105,9 +3099,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ResetSuccessful" xml:space="preserve">
     <value>Reset was successful.</value>
-  </data>
-  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
-    <value>Deploying the Enforced mode policy because user decided to reset the operation</value>
   </data>
   <data name="DeployingEnforceMode" xml:space="preserve">
     <value>Deploying the Enforced mode policy.</value>
@@ -3694,9 +3685,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
     <value>Could not hash {0} using {1}</value>
   </data>
-    <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
-    <value>SystemDrive environment variable is null</value>
-  </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
     <value>Refreshing the system App Control policies</value>
   </data>
@@ -4143,12 +4131,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
     <value>Configuring and starting the required ISG related services</value>
-  </data>
-  <data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
-    <value>Attempting to deserialize the Device Guard JSON result.</value>
-  </data>
-  <data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
-    <value>Device Guard JSON deserialization failed. Raw JSON:</value>
   </data>
   <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
     <value>Increasing the Code Integrity log size by 1MB because its current free space is less than 1MB.</value>
@@ -5728,7 +5710,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Open Logs Directory</value>
   </data>
-  <!--New-->
   <data name="ExportToJSONButtonText.Text" xml:space="preserve">
     <value>Export To JSON File</value>
   </data>
@@ -5743,5 +5724,14 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
     <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
      <value>Successfully exported {0} data to JSON and saved them in: '{1}'</value>
+  </data>
+    <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copy the selected items to the clipboard.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copy the selected items to the clipboard.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>Copy Selected</value>
   </data>
 </root>

@@ -251,8 +251,8 @@
 
                                             <StackPanel>
                                                 <TextBlock Text="Algorithm Parameters:" FontWeight="Medium" Margin="0,0,0,2"/>
-                                                <TextBlock Text="{x:Bind ViewModel.CtlAlgorithmParameters, Mode=OneWay}" 
-                                       FontFamily="Consolas" 
+                                                <TextBlock Text="{x:Bind ViewModel.CtlAlgorithmParameters, Mode=OneWay}"
+                                       FontFamily="Consolas"
                                        Style="{StaticResource CaptionTextBlockStyle}"
                                        TextWrapping="Wrap"/>
                                             </StackPanel>

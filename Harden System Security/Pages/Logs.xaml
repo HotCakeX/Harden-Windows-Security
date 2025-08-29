@@ -27,7 +27,7 @@
 
         <controls:WrapPanel Orientation="Horizontal" Grid.Row="1" Margin="10" HorizontalSpacing="10" VerticalSpacing="10">
             <!-- ComboBox for selecting log files -->
-            <ComboBox ItemsSource="{x:Bind ViewModel.LogFiles}"                     
+            <ComboBox ItemsSource="{x:Bind ViewModel.LogFiles}"
                       SelectedItem="{x:Bind ViewModel.SelectedLogFile, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate x:DataType="systemIO:FileInfo">

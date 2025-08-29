@@ -1592,9 +1592,6 @@
   <data name="SecurityHardeningCompleted" xml:space="preserve">
     <value>חיזוק אבטחה הושלם: {0} הצליחו, {1} נכשלו.</value>
   </data>
-  <data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
-    <value>שגיאה במהלך פעולת חיזוק אבטחה</value>
-  </data>
   <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
     <value>נכשל באתחול שירות DISM לאימות.</value>
   </data>
@@ -1610,9 +1607,6 @@
   <data name="IncorrectItems" xml:space="preserve">
     <value>פריטים שגויים: {0}</value>
   </data>
-  <data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
-    <value>שגיאה במהלך אימות חיזוק אבטחה</value>
-  </data>
   <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
     <value>נכשל באתחול שירות DISM להסרת חיזוק אבטחה.</value>
   </data>
@@ -1627,9 +1621,6 @@
   </data>
   <data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
     <value>הסרת חיזוק אבטחה הושלמה: {0} הצליחו, {1} נכשלו.</value>
-  </data>
-  <data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
-    <value>שגיאה במהלך פעולת הסרת חיזוק אבטחה</value>
   </data>
   <data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
     <value>שגיאה בשחרור קליינט שירות DISM: {0}</value>
@@ -1976,12 +1967,6 @@
   <data name="SeceditFailedWithExitCode" xml:space="preserve">
     <value>Secedit נכשל עם קוד יציאה: {0}</value>
   </data>
-  <data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
-    <value>אזהרה: לא ניתן למחוק קבצים זמניים.</value>
-  </data>
-  <data name="SeceditMethodFailed" xml:space="preserve">
-    <value>שיטת Secedit נכשלה.</value>
-  </data>
   <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
     <value>לא נמצאו הגדרות [System Access] בקובץ המצוין</value>
   </data>
@@ -1990,9 +1975,6 @@
   </data>
   <data name="FileNotFoundPath" xml:space="preserve">
     <value>קובץ לא נמצא: {0}</value>
-  </data>
-  <data name="CreatedPolicyDirectory" xml:space="preserve">
-    <value>נוצרה תיקיית מדיניות: {0}</value>
   </data>
   <data name="FileTooSmallForValidHeader" xml:space="preserve">
     <value>הקובץ קטן מדי כדי להכיל כותרת תקינה</value>
@@ -2041,9 +2023,6 @@
   </data>
   <data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
     <value>נטען קובץ מדיניות קיים עם {0} רשומות</value>
-  </data>
-  <data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
-    <value>קובץ מדיניות לא קיים, יוצר קובץ מדיניות ריק חדש</value>
   </data>
   <data name="ReplacedEntries" xml:space="preserve">
     <value>רשומות שהוחלפו: {0}</value>
@@ -3021,4 +3000,290 @@
   <data name="SuccessfullyExportedCertificates" xml:space="preserve">
     <value>יוצאו בהצלחה {0} אישורים אל {1}</value>
   </data>
+        <!--BitLocker Volumes ListView Headers Start-->
+  <data name="MountPointHeader.Text" xml:space="preserve">
+    <value>נקודת עיגון</value>
+  </data>
+  <data name="ProtectionStatusHeader.Text" xml:space="preserve">
+    <value>מצב הגנה</value>
+  </data>
+  <data name="ConversionStatusHeader.Text" xml:space="preserve">
+    <value>מצב המרה</value>
+  </data>
+  <data name="EncryptionMethodHeader.Text" xml:space="preserve">
+    <value>שיטת הצפנה</value>
+  </data>
+    <data name="EncryptionPercentageHeader.Text" xml:space="preserve">
+    <value>אחוז הצפנה</value>
+  </data>
+    <data name="WipePercentageHeader.Text" xml:space="preserve">
+    <value>אחוז מחיקה</value>
+  </data>
+    <data name="AutoUnlockEnabledHeader.Text" xml:space="preserve">
+    <value>פתיחה אוטומטית מופעלת</value>
+  </data>
+    <data name="AutoUnlockKeyStoredHeader.Text" xml:space="preserve">
+    <value>מפתח פתיחה אוטומטית מאוחסן</value>
+  </data>
+    <data name="VolumeTypeHeader.Text" xml:space="preserve">
+    <value>סוג כרך</value>
+  </data>
+    <data name="CapacityGBHeader.Text" xml:space="preserve">
+    <value>קיבולת GB</value>
+  </data>
+    <data name="FileSystemTypeHeader.Text" xml:space="preserve">
+    <value>סוג מערכת קבצים</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers End-->
+  <!--BitLocker Volumes ListView Headers Buttons Start-->
+<data name="MountPointColumnHeaderBtn.Content" xml:space="preserve">
+    <value>נקודת עיגון</value>
+  </data>
+  <data name="ProtectionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מצב הגנה</value>
+  </data>
+  <data name="ConversionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מצב המרה</value>
+  </data>
+  <data name="EncryptionMethodColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שיטת הצפנה</value>
+  </data>
+    <data name="EncryptionPercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>אחוז הצפנה</value>
+  </data>
+    <data name="WipePercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>אחוז מחיקה</value>
+  </data>
+    <data name="AutoUnlockEnabledColumnHeaderBtn.Content" xml:space="preserve">
+    <value>פתיחה אוטומטית מופעלת</value>
+  </data>
+    <data name="AutoUnlockKeyStoredColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מפתח פתיחה אוטומטית מאוחסן</value>
+  </data>
+    <data name="VolumeTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>סוג כרך</value>
+  </data>
+    <data name="CapacityGBColumnHeaderBtn.Content" xml:space="preserve">
+    <value>קיבולת GB</value>
+  </data>
+    <data name="FileSystemTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>סוג מערכת קבצים</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers Buttons End-->
+  <data name="RetrieveBitLockerVolumesButton.Content" xml:space="preserve">
+    <value>שליפת כרכי BitLocker</value>
+  </data>
+    <data name="RetrieveBitLockerVolumesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מאחזר את כל הכרכים ואת כל פרטי BitLocker המלאים שלהם ומציג עבורך.</value>
+  </data>
+  <data name="RetrieveBitLockerVolumesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מאחזר את כל הכרכים ואת כל פרטי BitLocker המלאים שלהם ומציג עבורך.</value>
+  </data>
+  <data name="CloseButton.Content" xml:space="preserve">
+    <value>סגור</value>
+  </data>
+    <data name="CloseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סגור</value>
+  </data>
+  <data name="CloseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סגור</value>
+  </data>
+  <data name="CopyButton.Content" xml:space="preserve">
+    <value>העתק</value>
+  </data>
+    <data name="CopyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק</value>
+  </data>
+  <data name="CopyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>העתק</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.Content" xml:space="preserve">
+    <value>מחיקת גורם הגנה</value>
+  </data>
+    <data name="DeleteBLKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מוחק את גורם ההגנה מן הכרך שנבחר.</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מוחק את גורם ההגנה מן הכרך שנבחר.</value>
+  </data>
+  <data name="NoKeyProtectorsFoundMsg.Text" xml:space="preserve">
+    <value>לא נמצאו גורמי הגנה לכרך זה.</value>
+  </data>
+  <data name="SelectVolumeFirstToSeeKeyProtectorsMsg.Text" xml:space="preserve">
+    <value>בחר תחילה כרך כדי להציג את גורמי ההגנה שלו.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.Text" xml:space="preserve">
+    <value>גורמי הגנה עבור</value>
+  </data>
+  <data name="KeyProtectorsForMsg.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מציג את כל גורמי ההגנה עבור הכרך שנבחר.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מציג את כל גורמי ההגנה עבור הכרך שנבחר.</value>
+  </data>
+  <data name="RecoveryPassword.Text" xml:space="preserve">
+    <value>סיסמת שחזור</value>
+  </data>
+  <data name="CertificateType.Text" xml:space="preserve">
+    <value>סוג אישור</value>
+  </data>
+  <data name="FileName.Text" xml:space="preserve">
+    <value>שם קובץ</value>
+  </data>
+  <data name="AutoUnlock.Text" xml:space="preserve">
+    <value>פתיחה אוטומטית</value>
+  </data>
+  <data name="Type.Text" xml:space="preserve">
+    <value>סוג</value>
+  </data>
+  <data name="Thumbprint.Text" xml:space="preserve">
+    <value>טביעת אצבע</value>
+  </data>
+  <data name="ID.Text" xml:space="preserve">
+    <value>מזהה</value>
+  </data>
+  <data name="BitLockerManagementTab.Header" xml:space="preserve">
+    <value>ניהול</value>
+  </data>
+  <data name="BitLockerManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נהל כל היבט של כרכי BitLocker כגון הצפנה, פענוח, גיבוי ועוד.</value>
+  </data>
+  <data name="BitLockerManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נהל כל היבט של כרכי BitLocker כגון הצפנה, פענוח, גיבוי ועוד.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>אמצעי אבטחה</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נהל אמצעי אבטחה הקשורים ל-BitLocker.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נהל אמצעי אבטחה הקשורים ל-BitLocker.</value>
+  </data>
+  <data name="AddKeyProtectorButton.Content" xml:space="preserve">
+    <value>הוסף גורם הגנה</value>
+  </data>
+  <data name="AddKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף גורם הגנה חדש לכרך שנבחר. גורמי הגנה מאפשרים לך לפתוח את הכרך.</value>
+  </data>
+  <data name="AddKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף גורם הגנה חדש לכרך שנבחר. גורמי הגנה מאפשרים לך לפתוח את הכרך.</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.Title" xml:space="preserve">
+    <value>הוסף גורם הגנה</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>הוסף</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.CloseButtonText" xml:space="preserve">
+    <value>ביטול</value>
+  </data>
+  <data name="AddKeyProtectorContentDialogSubTitle.Text" xml:space="preserve">
+    <value>השתמש במקטע זה כדי להוסיף גורם הגנה חדש לכרך שנבחר.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM</value>
+  </data>
+    <data name="TPMKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף גורם הגנה TPM.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף גורם הגנה TPM.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN</value>
+  </data>
+    <data name="TPMPINKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף גורם הגנה TPM + PIN.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף גורם הגנה TPM + PIN.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + מפתח אתחול</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף גורם הגנה TPM + מפתח אתחול.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף גורם הגנה TPM + מפתח אתחול.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN + מפתח אתחול</value>
+  </data>
+    <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף גורם הגנה TPM + PIN + מפתח אתחול.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף גורם הגנה TPM + PIN + מפתח אתחול.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>מפתח אתחול</value>
+  </data>
+    <data name="StartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף גורם הגנה מפתח אתחול.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף גורם הגנה מפתח אתחול.</value>
+  </data>
+  <data name="TPMSectionTitle.Text" xml:space="preserve">
+    <value>מודול פלטפורמה מהימנה</value>
+  </data>
+  <data name="TPMSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker משתמש ב-TPM של ההתקן כדי להגן על מפתח ההצפנה.</value>
+  </data>
+  <data name="TPMSectionBody.Text" xml:space="preserve">
+    <value>עם גורם הגנה זה, הכונן המוצפן נגיש רק כאשר הוא מחובר ללוח אם עם TPM ושלמות האתחול של המערכת נשמרת. גורמי הגנה מבוססי TPM חלים בדרך כלל רק על כרכי מערכת ההפעלה.</value>
+  </data>
+  <data name="TPMPINSectionTitle.Text" xml:space="preserve">
+    <value>TPM ומספר זיהוי אישי</value>
+  </data>
+  <data name="TPMPINSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker מצמד את ה-TPM עם קוד PIN של משתמש. ברירת המחדל ל-PIN היא 4–20 ספרות; עם PIN משופר מותר, הוא יכול להיות 4–20 תווים (אותיות, סמלים, רווחים או מספרים).</value>
+  </data>
+  <data name="TPMStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM ומפתח אתחול</value>
+  </data>
+  <data name="TPMStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker משתמש ב-TPM יחד עם קלט מכונן הבזק USB. כדי לאתחל את ההתקן, יש לחבר את כונן ה-USB.</value>
+  </data>
+  <data name="TPMPINStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM, PIN ומפתח אתחול</value>
+  </data>
+  <data name="TPMPINStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker משתמש בשילוב של TPM, PIN אתחול וקלט מכונן הבזק USB המכיל מפתח חיצוני. זו התצורה המאובטחת ביותר של BitLocker ומספקת אימות רב-גורמי.</value>
+  </data>
+  <data name="StartupKeySectionTitle.Text" xml:space="preserve">
+    <value>מפתח אתחול</value>
+  </data>
+  <data name="StartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker משתמש בקלט מכונן הבזק USB המכיל את המפתח החיצוני. יש לחבר את התקן ה-USB לפני שהמערכת יכולה לאתחל.</value>
+  </data>
+  <data name="RetrievingBitLockerVolumesEllipsis" xml:space="preserve">
+  <value>מאחזר כרכי BitLocker...</value>
+</data>
+<data name="LoadedBitLockerVolumesCount" xml:space="preserve">
+  <value>נטענו {0} כרכי BitLocker.</value>
+</data>
+<data name="NoOutputReturnedFromPath" xml:space="preserve">
+  <value>לא הוחזר פלט מ-{0}</value>
+</data>
+<data name="NoBitLockerVolumesDetected" xml:space="preserve">
+  <value>לא זוהו כרכי BitLocker.</value>
+</data>
+<data name="ParentVolumeForKeyProtectorNotFound" xml:space="preserve">
+  <value>כרך אב עבור גורם ההגנה לא נמצא.</value>
+</data>
+<data name="RemovingKeyProtectorFromVolume" xml:space="preserve">
+  <value>מסיר גורם הגנה {0} מ-{1}</value>
+</data>
+<data name="ExternalKeyRemovalConditionalSuccess" xml:space="preserve">
+  <value>אם גורם ההגנה ExternalKey עם המזהה {0} מ-{1} לא שימש להשארת הכונן פתוח, הוא הוסר. מידע נוסף זמין בדף היומנים.</value>
+</data>
+<data name="SuccessfullyRemovedKeyProtector" xml:space="preserve">
+  <value>גורם ההגנה מסוג {0} עם המזהה {1} הוסר בהצלחה מ-{2}.</value>
+</data>
+<data name="NoBitLockerVolumeSelected" xml:space="preserve">
+  <value>לא נבחר כרך BitLocker.</value>
+</data>
 </root>

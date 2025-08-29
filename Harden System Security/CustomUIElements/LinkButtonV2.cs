@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using HardenSystemSecurity;
+using HardenSystemSecurity.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
@@ -38,7 +39,7 @@ namespace AppControlManager.CustomUIElements;
 /// <summary>
 /// A custom UserControl with circular border, animation on hover, acts as a HyperLinkButton.
 /// </summary>
-internal sealed partial class LinkButtonV2 : UserControl, IDisposable
+internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicitDisposalOptIn
 {
 	private const string LinkIconGlyph = "\uE71B";
 	private new const double BorderThickness = 2.0;
@@ -77,6 +78,23 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable
 	{
 		get => (string)GetValue(LinkUrlProperty);
 		set => SetValue(LinkUrlProperty, value);
+	}
+
+	// Explicit disposal opt-in DP
+	internal static readonly DependencyProperty DisposeOnlyOnExplicitCallProperty =
+		DependencyProperty.Register(
+			nameof(DisposeOnlyOnExplicitCall),
+			typeof(bool),
+			typeof(LinkButtonV2),
+			new PropertyMetadata(false));
+
+	/// <summary>
+	/// When true, skips disposal on Unloaded (parent will dispose explicitly).
+	/// </summary>
+	public bool DisposeOnlyOnExplicitCall
+	{
+		get => (bool)GetValue(DisposeOnlyOnExplicitCallProperty);
+		set => SetValue(DisposeOnlyOnExplicitCallProperty, value);
 	}
 
 	internal event RoutedEventHandler? Click;
@@ -621,6 +639,11 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable
 
 	private void LinkButtonV2_Unloaded(object sender, RoutedEventArgs e)
 	{
+		// Skip disposal if explicit-only flag is set.
+		if (DisposeOnlyOnExplicitCall)
+		{
+			return;
+		}
 		if (_isDisposed) return;
 		PerformCleanup();
 	}

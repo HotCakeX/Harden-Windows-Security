@@ -5,7 +5,7 @@ on:
 
 # Prevent the workflow from running more than once per change
 concurrency:
-  group: ${{ github.ref }}
+  group: ACMBuildWorkFlow
   cancel-in-progress: true
 
 jobs:

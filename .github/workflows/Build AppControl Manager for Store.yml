@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2025
 
     # Create outputs for this job where only other job that use "needs" keyword can use them. This job itself cannot access them.
     outputs:
@@ -33,44 +33,44 @@ jobs:
 
     steps:
 
-      - name: Updating Winget
-        shell: powershell # Change to pwsh once Windows-latest starts using Server 2025 and change Winget file downloads to use -parallel
-        run: |
-          try {
-              Write-Host -Object 'The version of the pre-installed Winget on the Runner:'
-              Write-Host -Object (winget --version)
-          }
-          catch {
-              Write-Host -Object 'Winget is not installed.'
-          }
-
-          # Retrieve the latest Winget release information
-          $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'
-          $LatestRelease = $WingetReleases | Select-Object -First 1
-          # Direct links to the latest Winget release assets
-          [string]$WingetURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('.msixbundle') } | Select-Object -First 1
-          [string]$WingetLicense = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('License1.xml') } | Select-Object -First 1
-          [string]$LatestWingetReleaseDependenciesZipURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('DesktopAppInstaller_Dependencies.zip') } | Select-Object -First 1
-          [hashtable]$Downloads = @{
-              # 'Winget.msixbundle'                 = 'https://aka.ms/getwinget' This is updated slower than the GitHub release
-              'DesktopAppInstaller_Dependencies.zip' = $LatestWingetReleaseDependenciesZipURL
-              'Winget.msixbundle'                    = $WingetURL
-              'License1.xml'                         = $WingetLicense
-          }
-          $Downloads.GetEnumerator() | ForEach-Object -Process {
-              Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
-          }
-
-          Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
-          # Get the paths to all of the dependencies
-          [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
-
-          # Required to update the Winget
-          Stop-Process -Name 'WindowsTerminal' -Force -ErrorAction Ignore
-
-          Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
-
-          Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
+#      - name: Updating Winget
+#        shell: pwsh
+#        run: |
+#          try {
+#              Write-Host -Object 'The version of the pre-installed Winget on the Runner:'
+#              Write-Host -Object (winget --version)
+#          }
+#          catch {
+#              Write-Host -Object 'Winget is not installed.'
+#          }
+#
+#          # Retrieve the latest Winget release information
+#          $WingetReleases = Invoke-RestMethod -Uri 'https://api.github.com/repos/microsoft/winget-cli/releases'
+#          $LatestRelease = $WingetReleases | Select-Object -First 1
+#          # Direct links to the latest Winget release assets
+#          [string]$WingetURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('.msixbundle') } | Select-Object -First 1
+#          [string]$WingetLicense = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('License1.xml') } | Select-Object -First 1
+#          [string]$LatestWingetReleaseDependenciesZipURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('DesktopAppInstaller_Dependencies.zip') } | Select-Object -First 1
+#          [hashtable]$Downloads = @{
+#              # 'Winget.msixbundle'                 = 'https://aka.ms/getwinget' This is updated slower than the GitHub release
+#              'DesktopAppInstaller_Dependencies.zip' = $LatestWingetReleaseDependenciesZipURL
+#              'Winget.msixbundle'                    = $WingetURL
+#              'License1.xml'                         = $WingetLicense
+#          }
+#          $Downloads.GetEnumerator() | ForEach-Object -Parallel {
+#              Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
+#          }
+#
+#          Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
+#          # Get the paths to all of the dependencies
+#          [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
+#
+#          # Required to update the Winget
+#          Stop-Process -Name 'WindowsTerminal' -Force -ErrorAction Ignore
+#
+#          Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
+#
+#          Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
 
       - name: Installing the necessary programs # Builds the AppControl Manager application securely with 0 usage of 3rd party tools, workflows and such.
         shell: pwsh

@@ -127,12 +127,16 @@ internal sealed class ApplicationPackage
 		HashSet<string> extraProperties = new(actualProperties);
 		extraProperties.ExceptWith(expectedProperties);
 
-		// Throw exceptions if there are discrepancies, shouldn't continue.
-		if (missingProperties.Count > 0)
-		{
-			throw new InvalidOperationException($"Missing required properties in ApplicationPackage JSON: {string.Join(", ", missingProperties)}");
-		}
+		// TargetPlatform property disappears from all packages once we mark the oldest package for deletion!
+		// So commenting this check because it would just always throw and wouldn't let us continue.
 
+		// Throw exceptions if there are discrepancies, shouldn't continue.
+		// if (missingProperties.Count > 0)
+		// {
+		//	throw new InvalidOperationException($"Missing required properties in ApplicationPackage JSON: {string.Join(", ", missingProperties)}");
+		// }
+
+		// Throwing on extra properties is good to keep because that means we need to update the JSON class for source-generated (de)serialization.
 		if (extraProperties.Count > 0)
 		{
 			throw new InvalidOperationException($"Unexpected extra properties in ApplicationPackage JSON: {string.Join(", ", extraProperties)}. This may indicate new features have been added to the API that are not supported by this version of the code.");
@@ -140,31 +144,13 @@ internal sealed class ApplicationPackage
 	}
 
 	/// <summary>
-	/// Validates an ApplicationPackage.
+	/// An ApplicationPackage from JsonElement with validation.
 	/// </summary>
-	/// <param name="jsonElement"></param>
-	/// <returns>An ApplicationPackage from JsonElement with validation.</returns>
-	/// <exception cref="InvalidOperationException"></exception>
 	internal static ApplicationPackage FromJsonElement(JsonElement jsonElement)
 	{
-		string? fileStatus = null;
-		if (jsonElement.TryGetProperty("fileStatus", out JsonElement statusElement))
-		{
-			fileStatus = statusElement.GetString();
-		}
+		ValidateJsonStructure(jsonElement);
 
-		// Only perform strict validation if not PendingDelete
-		if (!string.Equals(fileStatus, "PendingDelete", StringComparison.OrdinalIgnoreCase))
-		{
-			ValidateJsonStructure(jsonElement);
-		}
-		// else: Skip validation intentionally for PendingDelete packages to avoid false failures when the API omits properties (e.g., targetPlatform) for those entries.
-		// We don't need to validate them anyway since we're getting rid of them.
-
-		ApplicationPackage? package = JsonSerializer.Deserialize(
-			jsonElement.GetRawText(),
-			ApplicationPackageJsonContext.Default.ApplicationPackage);
-
+		ApplicationPackage? package = JsonSerializer.Deserialize(jsonElement.GetRawText(), ApplicationPackageJsonContext.Default.ApplicationPackage);
 		return package ?? throw new InvalidOperationException("Failed to deserialize ApplicationPackage");
 	}
 }

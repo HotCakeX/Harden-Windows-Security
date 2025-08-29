@@ -140,13 +140,31 @@ internal sealed class ApplicationPackage
 	}
 
 	/// <summary>
-	/// An ApplicationPackage from JsonElement with validation.
+	/// Validates an ApplicationPackage.
 	/// </summary>
+	/// <param name="jsonElement"></param>
+	/// <returns>An ApplicationPackage from JsonElement with validation.</returns>
+	/// <exception cref="InvalidOperationException"></exception>
 	internal static ApplicationPackage FromJsonElement(JsonElement jsonElement)
 	{
-		ValidateJsonStructure(jsonElement);
+		string? fileStatus = null;
+		if (jsonElement.TryGetProperty("fileStatus", out JsonElement statusElement))
+		{
+			fileStatus = statusElement.GetString();
+		}
 
-		ApplicationPackage? package = JsonSerializer.Deserialize(jsonElement.GetRawText(), ApplicationPackageJsonContext.Default.ApplicationPackage);
+		// Only perform strict validation if not PendingDelete
+		if (!string.Equals(fileStatus, "PendingDelete", StringComparison.OrdinalIgnoreCase))
+		{
+			ValidateJsonStructure(jsonElement);
+		}
+		// else: Skip validation intentionally for PendingDelete packages to avoid false failures when the API omits properties (e.g., targetPlatform) for those entries.
+		// We don't need to validate them anyway since we're getting rid of them.
+
+		ApplicationPackage? package = JsonSerializer.Deserialize(
+			jsonElement.GetRawText(),
+			ApplicationPackageJsonContext.Default.ApplicationPackage);
+
 		return package ?? throw new InvalidOperationException("Failed to deserialize ApplicationPackage");
 	}
 }

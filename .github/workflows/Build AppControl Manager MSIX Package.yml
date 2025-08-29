@@ -72,29 +72,29 @@ jobs:
 #
 #          Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
 #
-#      - name: Installing the necessary programs # Builds the AppControl Manager application securely with 0 usage of 3rd party tools, workflows and such.
-#        shell: pwsh
-#        run: |
-#          Write-Host -Object "The version of the Winget currently in use:"
-#          Write-Host -Object (winget --version)
-#
-#          winget source update
-#
-#          Write-Host -Object "`nInstalling Rust toolchain" -ForegroundColor Magenta
-#          $null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
-#          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install the Rust toolchain: $LASTEXITCODE") }
-#
-#          Write-Host -Object "`nInstalling .NET SDK" -ForegroundColor Magenta
-#          $null = winget install --id Microsoft.DotNet.SDK.Preview --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
-#          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install .NET SDK: $LASTEXITCODE") }
-#
-#          Write-Host -Object "`nInstalling Visual Studio Build Tools" -ForegroundColor Magenta
-#          $null = winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
-#          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install Visual Studio Build Tools: $LASTEXITCODE") }
-#
-#          Write-Host -Object "`nInstalling Visual C++ Redistributable" -ForegroundColor Magenta
-#          $null = winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
-#          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install Microsoft.VCRedist: $LASTEXITCODE") }
+      - name: Installing the necessary programs # Builds the AppControl Manager application securely with 0 usage of 3rd party tools, workflows and such.
+        shell: pwsh
+        run: |
+          Write-Host -Object "The version of the Winget currently in use:"
+          Write-Host -Object (winget --version)
+
+          winget source update
+
+          Write-Host -Object "`nInstalling Rust toolchain" -ForegroundColor Magenta
+          $null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install the Rust toolchain: $LASTEXITCODE") }
+
+          Write-Host -Object "`nInstalling .NET SDK" -ForegroundColor Magenta
+          $null = winget install --id Microsoft.DotNet.SDK.Preview --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install .NET SDK: $LASTEXITCODE") }
+
+          Write-Host -Object "`nInstalling Visual Studio Build Tools" -ForegroundColor Magenta
+          $null = winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
+          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install Visual Studio Build Tools: $LASTEXITCODE") }
+
+          Write-Host -Object "`nInstalling Visual C++ Redistributable" -ForegroundColor Magenta
+          $null = winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install Microsoft.VCRedist: $LASTEXITCODE") }
 
       - name: Check out the repository code
         uses: actions/checkout@v5

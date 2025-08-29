@@ -21,8 +21,8 @@
         <!-- Custom DataTemplate for ComboBox Items showing targeted lists -->
         <DataTemplate x:Key="ComboBoxItemTemplate" x:DataType="vm:ComboBoxItemModelForCountryIPBlocking">
             <StackPanel Orientation="Vertical" Margin="5" MinWidth="250">
-                <TextBlock Text="{x:Bind Title}" 
-                           FontWeight="SemiBold" 
+                <TextBlock Text="{x:Bind Title}"
+                           FontWeight="SemiBold"
                            TextWrapping="WrapWholeWords"
                            Margin="0,0,0,5"/>
                 <HyperlinkButton x:Uid="LearnMoreHyperLinkButton"
@@ -36,11 +36,11 @@
         <!-- Custom DataTemplate for individual countries ComboBox Items -->
         <DataTemplate x:Key="CountryComboBoxItemTemplate" x:DataType="vm:CountryData">
             <StackPanel Orientation="Vertical" Margin="5" MinWidth="300">
-                <TextBlock Text="{x:Bind FriendlyName}" 
-                           FontWeight="SemiBold" 
+                <TextBlock Text="{x:Bind FriendlyName}"
+                           FontWeight="SemiBold"
                            TextWrapping="WrapWholeWords"
                            Margin="0,0,0,2"/>
-                <TextBlock Text="{x:Bind Alpha2Code}" 
+                <TextBlock Text="{x:Bind Alpha2Code}"
                            FontSize="11"
                            Opacity="0.8"
                            TextWrapping="WrapWholeWords"
@@ -48,12 +48,12 @@
 
                 <!-- IPv4 and IPv6 hyperlink buttons -->
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <HyperlinkButton Content="IPv4 Source" 
+                    <HyperlinkButton Content="IPv4 Source"
                                      NavigateUri="{x:Bind IPv4Link}"
                                      FontSize="10"
                                      Padding="2"
                                      HorizontalAlignment="Left"/>
-                    <HyperlinkButton Content="IPv6 Source" 
+                    <HyperlinkButton Content="IPv6 Source"
                                      NavigateUri="{x:Bind IPv6Link}"
                                      FontSize="10"
                                      Padding="2"
@@ -85,8 +85,8 @@
                     Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                     IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-            <ProgressBar Grid.Row="2" 
-                         IsIndeterminate="True" 
+            <ProgressBar Grid.Row="2"
+                         IsIndeterminate="True"
                          Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
                          Margin="0,10,0,10"/>
 
@@ -109,23 +109,23 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox VerticalAlignment="Center" 
-                              Grid.Column="0" 
-                              MinWidth="200" 
+                        <ComboBox VerticalAlignment="Center"
+                              Grid.Column="0"
+                              MinWidth="200"
                               Margin="0,0,20,0"
                               IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                               SelectedIndex="{x:Bind ViewModel.TargetedListSelectedIndex, Mode=TwoWay}"
                               ItemTemplate="{StaticResource ComboBoxItemTemplate}"
                               ItemsSource="{x:Bind ViewModel.TargetedLists, Mode=OneWay}"/>
 
-                        <StackPanel Grid.Column="1" 
-                               Orientation="Vertical" 
+                        <StackPanel Grid.Column="1"
+                               Orientation="Vertical"
                                Spacing="10"
                                VerticalAlignment="Top"
                                HorizontalAlignment="Left">
 
                             <Button x:Uid="AddCountryFirewallRulesButton"
-                                Click="{x:Bind ViewModel.TargetedListAdd}" 
+                                Click="{x:Bind ViewModel.TargetedListAdd}"
                                 MinWidth="100"
                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
                                 <Button.ContentTemplate>
@@ -139,7 +139,7 @@
                             </Button>
 
                             <Button x:Uid="RemoveCountryFirewallRulesButton"
-                                Click="{x:Bind ViewModel.TargetedListRemove}" 
+                                Click="{x:Bind ViewModel.TargetedListRemove}"
                                 MinWidth="100"
                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
                                 <Button.ContentTemplate>
@@ -177,28 +177,28 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Country selection with search -->
-                        <StackPanel Grid.Column="0" 
-                               VerticalAlignment="Top" 
+                        <StackPanel Grid.Column="0"
+                               VerticalAlignment="Top"
                                Margin="0,0,20,0">
 
                             <!-- Search box for countries -->
-                            <TextBox x:Uid="SearchCountriesTextBox" 
+                            <TextBox x:Uid="SearchCountriesTextBox"
                                      Text="{x:Bind ViewModel.CountrySearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                      MinWidth="300"
                                      Margin="0,0,0,8"/>
 
                             <!-- Countries ComboBox -->
-                            <ComboBox VerticalAlignment="Center" 
-                                 MinWidth="300" 
+                            <ComboBox VerticalAlignment="Center"
+                                 MinWidth="300"
                                  IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                  SelectedIndex="{x:Bind ViewModel.CountrySelectedIndex, Mode=TwoWay}"
                                  ItemTemplate="{StaticResource CountryComboBoxItemTemplate}"
                                  ItemsSource="{x:Bind ViewModel.CountryLists, Mode=OneWay}"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1" 
-                                    Orientation="Vertical" 
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Vertical"
                                     Spacing="10"
                                     VerticalAlignment="Top"
                                     HorizontalAlignment="Left">

@@ -481,7 +481,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 			{
 				foreach (AuditPolicyInfo item in allAuditPolicies)
 				{
-					item.VMRef = this; // Adding reference to this VM for the List View in XAML.		
+					item.VMRef = this; // Adding reference to this VM for the List View in XAML.
 					AuditPolicies.Add(item);
 				}
 			});

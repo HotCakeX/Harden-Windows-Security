@@ -234,7 +234,7 @@ fn main() -> Result<()> {
         for (file, keys) in prune_report {
             println!("  File: {:?}", file); // Show the file path
             for k in keys {
-                println!("    - {}", k); // List each pruned key
+                println!("    - {}", k);
             }
         }
     }
@@ -590,7 +590,7 @@ fn update_single_cs_file(
     let processed_content = process_conditional_compilation(&content, define_constants);
 
     // Replace each old key's GetStr call with the new key in the processed content
-    let mut modified_content = content.clone();
+    let mut modified_content: String = content.clone();
     for old in old_keys {
         // Match `GlobalVars.GetStr("old_key")` with optional whitespace
         let call_pattern: String = format!(
@@ -622,25 +622,25 @@ fn update_single_cs_file(
 fn process_conditional_compilation(content: &str, define_constants: &HashSet<String>) -> String {
     let mut result = String::new();
     let lines: Vec<&str> = content.lines().collect();
-    let mut i = 0;
+    let mut i: usize = 0;
 
     while i < lines.len() {
-        let line = lines[i].trim();
+        let line: &str = lines[i].trim();
 
         if line.starts_with("#if ") {
             // Extract the condition after #if
-            let condition = line[4..].trim();
+            let condition: &str = line[4..].trim();
 
             // Check if this condition is defined in our constants
-            let is_defined = define_constants.contains(condition);
+            let is_defined: bool = define_constants.contains(condition);
 
             // Find the matching #endif
-            let mut if_depth = 1;
-            let mut j = i + 1;
-            let mut section_content = String::new();
+            let mut if_depth: i32 = 1;
+            let mut j: usize = i + 1;
+            let mut section_content: String = String::new();
 
             while j < lines.len() && if_depth > 0 {
-                let current_line = lines[j].trim();
+                let current_line: &str = lines[j].trim();
 
                 if current_line.starts_with("#if ") {
                     if_depth += 1;
@@ -685,7 +685,7 @@ fn parse_resx_data(path: &PathBuf) -> Result<ResxInfo> {
     let mut buf: Vec<u8> = Vec::new(); // Buffer for XML events
     let mut key_values: HashMap<String, Vec<String>> = HashMap::new(); // Stores key-value pairs
     let mut key_counts: HashMap<String, usize> = HashMap::new(); // Tracks key occurrences
-    let mut total_entries = 0; // Counts total <data> elements
+    let mut total_entries: usize = 0; // Counts total <data> elements
 
     // Parse the XML file event by event
     loop {
@@ -806,7 +806,7 @@ fn scan_cs_for_getstring(
     let pattern = Regex::new(r#"GlobalVars\.GetStr\s*\(\s*"(?P<key>[^"]+)"\s*\)"#)
         .expect("Failed to compile regex");
 
-    let mut keys = HashSet::new(); // Collect unique keys
+    let mut keys: HashSet<String> = HashSet::new(); // Collect unique keys
 
     // Scan local .cs files
     visit_dir(root, &pattern, &mut keys, define_constants)?; // Recursively scan files
@@ -872,7 +872,7 @@ fn scan_xaml_for_xuid_keys(root: &PathBuf) -> Result<HashSet<String>> {
     let xuid_pattern = Regex::new(r#"<[A-Za-z0-9_:]+\b[^>]*\bx:Uid\s*=\s*"([^"]+)""#)
         .expect("Failed to compile x:Uid regex");
 
-    let mut keys = HashSet::new(); // Collect unique resource keys
+    let mut keys: HashSet<String> = HashSet::new(); // Collect unique resource keys
 
     visit_xaml_dir(root, &xuid_pattern, &mut keys)?; // Recursively scan XAML files
 
@@ -1002,7 +1002,7 @@ fn visit_resources_extras(
                 if ext.eq_ignore_ascii_case("resx") || ext.eq_ignore_ascii_case("resw") {
                     let text: String = fs::read_to_string(&path)
                         .with_context(|| format!("Failed to read {:?}", path))?;
-                    let mut file_extras = Vec::new();
+                    let mut file_extras: Vec<String> = Vec::new();
                     // Check each <data> block's key
                     for cap in data_re.captures_iter(&text) {
                         if let Some(m) = cap.name("key") {
@@ -1058,7 +1058,7 @@ fn visit_resources(
         } else if path.is_file() {
             if let Some(ext) = path.extension().and_then(|e: &std::ffi::OsStr| e.to_str()) {
                 if ext.eq_ignore_ascii_case("resx") || ext.eq_ignore_ascii_case("resw") {
-                    let mut text = fs::read_to_string(&path)
+                    let mut text: String = fs::read_to_string(&path)
                         .with_context(|| format!("Failed to read {:?}", path))?;
                     let mut removed_keys: Vec<String> = Vec::new();
 
@@ -1120,7 +1120,7 @@ fn visit_and_normalize(dir: &PathBuf, re: &Regex, modified: &mut Vec<PathBuf>) -
         } else if path.is_file() {
             if let Some(ext) = path.extension().and_then(|e: &std::ffi::OsStr| e.to_str()) {
                 if ext.eq_ignore_ascii_case("cs") || ext.eq_ignore_ascii_case("xaml") {
-                    let content = fs::read_to_string(&path)
+                    let content: String = fs::read_to_string(&path)
                         .with_context(|| format!("Failed to read {:?}", path))?;
 
                     // Replace excessive empty lines with two newlines
@@ -1239,7 +1239,9 @@ fn validate_xuid_usage(
     allowed.insert(
         "SegmentedItem",
         vec![
-            "Content"
+            "Content",
+            "AutomationProperties.HelpText",
+            "ToolTipService.ToolTip",
         ],
     );
     allowed.insert(
@@ -1400,7 +1402,9 @@ fn validate_xuid_usage(
     allowed.insert(
         "TabViewItem",
         vec![
-            "Header"
+            "Header",
+            "AutomationProperties.HelpText",
+            "ToolTipService.ToolTip",
         ],
     );
     allowed.insert(
@@ -1413,6 +1417,14 @@ fn validate_xuid_usage(
         "CalendarDatePicker",
         vec![
             "PlaceholderText",
+            "AutomationProperties.HelpText",
+            "ToolTipService.ToolTip",
+        ],
+    );
+    allowed.insert(
+        "MenuBarItem",
+        vec![
+            "Title",
             "AutomationProperties.HelpText",
             "ToolTipService.ToolTip",
         ],

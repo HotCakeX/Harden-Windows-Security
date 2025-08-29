@@ -1099,7 +1099,7 @@
   <data name="CertificateBuildError" xml:space="preserve">
     <value>حدثت أخطاء أثناء إنشاء الشهادة</value>
   </data>
-  <data name="SuccessTitle" xml:space="preserve">
+  <data name="SuccessText" xml:space="preserve">
     <value>نجاح</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
@@ -1244,9 +1244,6 @@
     <value>خيارات السياسة</value>
   </data>
   <!-- End of For CI Policy Info ListViews Column Header Buttons -->
-  <data name="Copy" xml:space="preserve">
-    <value>نسخ </value>
-  </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>معرف النهج: </value>
   </data>
@@ -3091,9 +3088,6 @@
   <data name="CreatingSnapBackGuarantee" xml:space="preserve">
     <value>جارٍ إنشاء ضمان SnapBack لوضع الإنفاذ</value>
   </data>
-  <data name="DeployingAuditModePolicy" xml:space="preserve">
-    <value>جارٍ نشر سياسة وضع التدقيق</value>
-  </data>
   <data name="ScanningSelectedDirectories" xml:space="preserve">
     <value>جارٍ فحص الدلائل المحددة</value>
   </data>
@@ -3105,9 +3099,6 @@
   </data>
   <data name="ResetSuccessful" xml:space="preserve">
     <value>تمت إعادة التعيين بنجاح.</value>
-  </data>
-  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
-    <value>جارٍ نشر سياسة وضع الإنفاذ لأن المستخدم قرر إعادة تعيين العملية</value>
   </data>
   <data name="DeployingEnforceMode" xml:space="preserve">
     <value>جارٍ نشر سياسة وضع الإنفاذ.</value>
@@ -3694,9 +3685,6 @@
   <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
     <value>تعذر تجزئة {0} باستخدام {1}</value>
   </data>
-    <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
-    <value>متغير البيئة SystemDrive فارغ</value>
-  </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
     <value>جارٍ تحديث سياسات App Control للنظام</value>
   </data>
@@ -4143,12 +4131,6 @@
   </data>
   <data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
     <value>تكوين وبدء الخدمات المطلوبة المتعلقة بـ ISG</value>
-  </data>
-  <data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
-    <value>محاولة إلغاء تسلسل نتيجة JSON لـ Device Guard.</value>
-  </data>
-  <data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
-    <value>فشل إلغاء تسلسل JSON لـ Device Guard. JSON الخام:</value>
   </data>
   <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
     <value>زيادة حجم سجل تكامل التعليمات البرمجية بمقدار 1 ميجابايت لأن مساحته الحالية أقل من 1 ميجابايت.</value>
@@ -5727,5 +5709,29 @@
 </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>فتح دليل السجلات</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>تصدير إلى ملف JSON</value>
+  </data>
+    <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تصدير جميع البيانات في ListView إلى JSON.</value>
+  </data>
+    <data name="ExportToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+     <value>تصدير جميع البيانات في ListView إلى JSON.</value>
+  </data>
+  <data name="ExportingToJSONMsg" xml:space="preserve">
+     <value>جارٍ تصدير البيانات إلى ملف JSON، يرجى الانتظار...</value>
+  </data>
+    <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
+     <value>تم تصدير {0} من البيانات إلى JSON وحفظها في: '{1}'</value>
+  </data>
+    <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نسخ العناصر المحددة إلى الحافظة.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نسخ العناصر المحددة إلى الحافظة.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>نسخ المحدد</value>
   </data>
 </root>

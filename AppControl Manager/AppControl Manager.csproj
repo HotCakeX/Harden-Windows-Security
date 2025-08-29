@@ -17,7 +17,7 @@
 
         https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
         -->
-        <WindowsSdkPackageVersion>10.0.26100.73-preview</WindowsSdkPackageVersion>
+        <WindowsSdkPackageVersion>10.0.26100.75</WindowsSdkPackageVersion>
 
         <!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -54,7 +54,7 @@
         <AssemblyName>AppControlManager</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>2.0.37.0</FileVersion>
+        <FileVersion>2.0.38.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
         <StartupObject>AppControlManager.Program</StartupObject>
@@ -231,7 +231,7 @@
     <ItemGroup>
 
         <!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
-        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250811-build.2202" />
+        <PackageReference Include="CommunityToolkit.Labs.WinUI.Shimmer" Version="0.1.250828-build.2223" />
         <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.2.250402" />

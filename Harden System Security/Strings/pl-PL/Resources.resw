@@ -1592,9 +1592,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>Wzmocnienie bezpieczeństwa zakończone: {0} udane, {1} nieudane.</value>
 </data>
-<data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
-  <value>Błąd podczas operacji wzmocnienia bezpieczeństwa</value>
-</data>
 <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
   <value>Nie udało się zainicjować usługi DISM do weryfikacji.</value>
 </data>
@@ -1610,9 +1607,6 @@
 <data name="IncorrectItems" xml:space="preserve">
   <value>Niepoprawne elementy: {0}</value>
 </data>
-<data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
-  <value>Błąd podczas weryfikacji wzmocnienia bezpieczeństwa</value>
-</data>
 <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
   <value>Nie udało się zainicjować usługi DISM do usunięcia wzmocnienia bezpieczeństwa.</value>
 </data>
@@ -1627,9 +1621,6 @@
 </data>
 <data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
   <value>Usuwanie wzmocnienia bezpieczeństwa zakończone: {0} udane, {1} nieudane.</value>
-</data>
-<data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
-  <value>Błąd podczas operacji usuwania wzmocnienia bezpieczeństwa</value>
 </data>
 <data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
   <value>Błąd podczas usuwania klienta usługi DISM: {0}</value>
@@ -1976,12 +1967,6 @@
 <data name="SeceditFailedWithExitCode" xml:space="preserve">
   <value>Secedit nie powiodło się z kodem wyjścia: {0}</value>
 </data>
-<data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
-  <value>Ostrzeżenie: Nie można usunąć plików tymczasowych.</value>
-</data>
-<data name="SeceditMethodFailed" xml:space="preserve">
-  <value>Metoda Secedit nie powiodła się.</value>
-</data>
 <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
   <value>Nie znaleziono ustawień [System Access] w określonym pliku</value>
 </data>
@@ -1990,9 +1975,6 @@
 </data>
 <data name="FileNotFoundPath" xml:space="preserve">
   <value>Nie znaleziono pliku: {0}</value>
-</data>
-<data name="CreatedPolicyDirectory" xml:space="preserve">
-  <value>Utworzono katalog zasad: {0}</value>
 </data>
 <data name="FileTooSmallForValidHeader" xml:space="preserve">
   <value>Plik jest zbyt mały na prawidłowy nagłówek</value>
@@ -2041,9 +2023,6 @@
 </data>
 <data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
   <value>Załadowano istniejący plik zasad z {0} wpisami</value>
-</data>
-<data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
-  <value>Plik zasad nie istnieje, tworzenie nowego pustego pliku zasad</value>
 </data>
 <data name="ReplacedEntries" xml:space="preserve">
   <value>Zastąpione wpisy: {0}</value>
@@ -3021,4 +3000,290 @@ Odcisk Palca: {3}</value>
   <data name="SuccessfullyExportedCertificates" xml:space="preserve">
     <value>Pomyślnie wyeksportowano {0} certyfikatów do {1}</value>
   </data>
+        <!--BitLocker Volumes ListView Headers Start-->
+  <data name="MountPointHeader.Text" xml:space="preserve">
+    <value>Punkt montowania</value>
+  </data>
+  <data name="ProtectionStatusHeader.Text" xml:space="preserve">
+    <value>Status ochrony</value>
+  </data>
+  <data name="ConversionStatusHeader.Text" xml:space="preserve">
+    <value>Status konwersji</value>
+  </data>
+  <data name="EncryptionMethodHeader.Text" xml:space="preserve">
+    <value>Metoda szyfrowania</value>
+  </data>
+    <data name="EncryptionPercentageHeader.Text" xml:space="preserve">
+    <value>Procent szyfrowania</value>
+  </data>
+    <data name="WipePercentageHeader.Text" xml:space="preserve">
+    <value>Procent wymazywania</value>
+  </data>
+    <data name="AutoUnlockEnabledHeader.Text" xml:space="preserve">
+    <value>Automatyczne odblokowanie włączone</value>
+  </data>
+    <data name="AutoUnlockKeyStoredHeader.Text" xml:space="preserve">
+    <value>Zapisano klucz auto-odblokowania</value>
+  </data>
+    <data name="VolumeTypeHeader.Text" xml:space="preserve">
+    <value>Typ woluminu</value>
+  </data>
+    <data name="CapacityGBHeader.Text" xml:space="preserve">
+    <value>Pojemność GB</value>
+  </data>
+    <data name="FileSystemTypeHeader.Text" xml:space="preserve">
+    <value>Typ systemu plików</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers End-->
+  <!--BitLocker Volumes ListView Headers Buttons Start-->
+<data name="MountPointColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Punkt montowania</value>
+  </data>
+  <data name="ProtectionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Status ochrony</value>
+  </data>
+  <data name="ConversionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Status konwersji</value>
+  </data>
+  <data name="EncryptionMethodColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Metoda szyfrowania</value>
+  </data>
+    <data name="EncryptionPercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Procent szyfrowania</value>
+  </data>
+    <data name="WipePercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Procent wymazywania</value>
+  </data>
+    <data name="AutoUnlockEnabledColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Automatyczne odblokowanie włączone</value>
+  </data>
+    <data name="AutoUnlockKeyStoredColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Zapisano klucz auto-odblokowania</value>
+  </data>
+    <data name="VolumeTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Typ woluminu</value>
+  </data>
+    <data name="CapacityGBColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Pojemność GB</value>
+  </data>
+    <data name="FileSystemTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Typ systemu plików</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers Buttons End-->
+  <data name="RetrieveBitLockerVolumesButton.Content" xml:space="preserve">
+    <value>Pobierz woluminy BitLocker</value>
+  </data>
+    <data name="RetrieveBitLockerVolumesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobiera wszystkie woluminy i ich szczegółowe informacje BitLocker oraz wyświetla je.</value>
+  </data>
+  <data name="RetrieveBitLockerVolumesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobiera wszystkie woluminy i ich szczegółowe informacje BitLocker oraz wyświetla je.</value>
+  </data>
+  <data name="CloseButton.Content" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+    <data name="CloseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="CloseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="CopyButton.Content" xml:space="preserve">
+    <value>Kopiuj</value>
+  </data>
+    <data name="CopyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopiuj</value>
+  </data>
+  <data name="CopyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kopiuj</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.Content" xml:space="preserve">
+    <value>Usuń zabezpieczenie klucza</value>
+  </data>
+    <data name="DeleteBLKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuwa zabezpieczenie klucza z wybranego woluminu.</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuwa zabezpieczenie klucza z wybranego woluminu.</value>
+  </data>
+  <data name="NoKeyProtectorsFoundMsg.Text" xml:space="preserve">
+    <value>Nie znaleziono zabezpieczeń klucza dla tego woluminu.</value>
+  </data>
+  <data name="SelectVolumeFirstToSeeKeyProtectorsMsg.Text" xml:space="preserve">
+    <value>Najpierw wybierz wolumin aby zobaczyć jego zabezpieczenia klucza.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.Text" xml:space="preserve">
+    <value>Zabezpieczenia klucza dla</value>
+  </data>
+  <data name="KeyProtectorsForMsg.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetlanie wszystkich zabezpieczeń klucza dla wybranego woluminu.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetlanie wszystkich zabezpieczeń klucza dla wybranego woluminu.</value>
+  </data>
+  <data name="RecoveryPassword.Text" xml:space="preserve">
+    <value>Hasło odzyskiwania</value>
+  </data>
+  <data name="CertificateType.Text" xml:space="preserve">
+    <value>Typ certyfikatu</value>
+  </data>
+  <data name="FileName.Text" xml:space="preserve">
+    <value>Nazwa pliku</value>
+  </data>
+  <data name="AutoUnlock.Text" xml:space="preserve">
+    <value>Auto-odblokowanie</value>
+  </data>
+  <data name="Type.Text" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Thumbprint.Text" xml:space="preserve">
+    <value>Odcisk</value>
+  </data>
+  <data name="ID.Text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="BitLockerManagementTab.Header" xml:space="preserve">
+    <value>Zarządzanie</value>
+  </data>
+  <data name="BitLockerManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj każdym aspektem woluminów BitLocker: szyfrowanie, deszyfrowanie, kopie zapasowe i więcej.</value>
+  </data>
+  <data name="BitLockerManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zarządzaj każdym aspektem woluminów BitLocker: szyfrowanie, deszyfrowanie, kopie zapasowe i więcej.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>Środki bezpieczeństwa</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj środkami bezpieczeństwa związanymi z BitLocker.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zarządzaj środkami bezpieczeństwa związanymi z BitLocker.</value>
+  </data>
+  <data name="AddKeyProtectorButton.Content" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza</value>
+  </data>
+  <data name="AddKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj nowe zabezpieczenie klucza do wybranego woluminu. Zabezpieczenia klucza umożliwiają odblokowanie woluminu.</value>
+  </data>
+  <data name="AddKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj nowe zabezpieczenie klucza do wybranego woluminu. Zabezpieczenia klucza umożliwiają odblokowanie woluminu.</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.Title" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="AddKeyProtectorContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Użyj tej sekcji aby dodać nowe zabezpieczenie klucza do wybranego woluminu.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM</value>
+  </data>
+    <data name="TPMKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN</value>
+  </data>
+    <data name="TPMPINKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + PIN.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + PIN.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + klucz startowy</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + klucz startowy.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + klucz startowy.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN + klucz startowy</value>
+  </data>
+    <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + PIN + klucz startowy.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + PIN + klucz startowy.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Klucz startowy</value>
+  </data>
+    <data name="StartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza klucz startowy.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza klucz startowy.</value>
+  </data>
+  <data name="TPMSectionTitle.Text" xml:space="preserve">
+    <value>Zaufany moduł platformy</value>
+  </data>
+  <data name="TPMSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker używa TPM urządzenia do ochrony klucza szyfrowania.</value>
+  </data>
+  <data name="TPMSectionBody.Text" xml:space="preserve">
+    <value>Z tym zabezpieczeniem zaszyfrowany dysk jest dostępny tylko gdy jest podłączony do płyty głównej z TPM i integralność rozruchu systemu pozostaje nienaruszona. Zabezpieczenia oparte na TPM zwykle dotyczą tylko woluminów systemu operacyjnego.</value>
+  </data>
+  <data name="TPMPINSectionTitle.Text" xml:space="preserve">
+    <value>TPM i numer PIN</value>
+  </data>
+  <data name="TPMPINSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker łączy TPM z PIN użytkownika. Domyślnie PIN to 4–20 cyfr; przy włączonych rozszerzonych PIN może to być 4–20 znaków (litery, symbole, spacje lub cyfry).</value>
+  </data>
+  <data name="TPMStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM i klucz startowy</value>
+  </data>
+  <data name="TPMStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker używa TPM wraz z danymi z dysku USB. Aby uruchomić urządzenie, dysk USB musi być podłączony.</value>
+  </data>
+  <data name="TPMPINStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM, PIN i klucz startowy</value>
+  </data>
+  <data name="TPMPINStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker używa kombinacji TPM, PIN rozruchu oraz danych z dysku USB zawierającego klucz zewnętrzny. To najbezpieczniejsza konfiguracja BitLocker zapewniająca wieloskładnikowe uwierzytelnianie.</value>
+  </data>
+  <data name="StartupKeySectionTitle.Text" xml:space="preserve">
+    <value>Klucz startowy</value>
+  </data>
+  <data name="StartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker używa danych z dysku USB zawierającego klucz zewnętrzny. Dysk USB musi być podłączony przed uruchomieniem systemu.</value>
+  </data>
+  <data name="RetrievingBitLockerVolumesEllipsis" xml:space="preserve">
+  <value>Pobieranie woluminów BitLocker...</value>
+</data>
+<data name="LoadedBitLockerVolumesCount" xml:space="preserve">
+  <value>Załadowano {0} woluminów BitLocker.</value>
+</data>
+<data name="NoOutputReturnedFromPath" xml:space="preserve">
+  <value>Brak zwróconego wyniku z {0}</value>
+</data>
+<data name="NoBitLockerVolumesDetected" xml:space="preserve">
+  <value>Nie wykryto woluminów BitLocker.</value>
+</data>
+<data name="ParentVolumeForKeyProtectorNotFound" xml:space="preserve">
+  <value>Wolumin nadrzędny dla zabezpieczenia klucza nie został znaleziony.</value>
+</data>
+<data name="RemovingKeyProtectorFromVolume" xml:space="preserve">
+  <value>Usuwanie zabezpieczenia klucza {0} z {1}</value>
+</data>
+<data name="ExternalKeyRemovalConditionalSuccess" xml:space="preserve">
+  <value>Jeśli zabezpieczenie klucza ExternalKey o ID {0} z {1} nie było używane do utrzymania dysku odblokowanego, zostało usunięte. Więcej informacji na stronie dzienników.</value>
+</data>
+<data name="SuccessfullyRemovedKeyProtector" xml:space="preserve">
+  <value>Pomyślnie usunięto zabezpieczenie klucza typu {0} o ID {1} z {2}.</value>
+</data>
+<data name="NoBitLockerVolumeSelected" xml:space="preserve">
+  <value>Nie wybrano woluminu BitLocker.</value>
+</data>
 </root>

@@ -1592,9 +1592,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>സുരക്ഷാ കാഠിന്യം പൂർത്തിയായി: {0} വിജയിച്ചു, {1} പരാജയപ്പെട്ടു.</value>
 </data>
-<data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
-  <value>സുരക്ഷാ കാഠിന്യ പ്രവർത്തനത്തിനിടയിൽ പിശക്</value>
-</data>
 <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
   <value>പരിശോധനയ്ക്കായി DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
 </data>
@@ -1610,9 +1607,6 @@
 <data name="IncorrectItems" xml:space="preserve">
   <value>തെറ്റായ ഇനങ്ങൾ: {0}</value>
 </data>
-<data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
-  <value>സുരക്ഷാ കാഠിന്യ പരിശോധനയ്ക്കിടയിൽ പിശക്</value>
-</data>
 <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
   <value>സുരക്ഷാ കാഠിന്യം നീക്കം ചെയ്യുന്നതിനായി DISM സേവനം ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു.</value>
 </data>
@@ -1627,9 +1621,6 @@
 </data>
 <data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
   <value>സുരക്ഷാ കാഠിന്യം നീക്കൽ പൂർത്തിയായി: {0} വിജയിച്ചു, {1} പരാജയപ്പെട്ടു.</value>
-</data>
-<data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
-  <value>സുരക്ഷാ കാഠിന്യം നീക്കൽ പ്രവർത്തനത്തിനിടയിൽ പിശക്</value>
 </data>
 <data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
   <value>DISM സേവന ക്ലയന്റ് ഡിസ്‌പോസ് ചെയ്യുന്നതിൽ പിശക്: {0}</value>
@@ -1976,12 +1967,6 @@
   <data name="SeceditFailedWithExitCode" xml:space="preserve">
     <value>Secedit എക്സിറ്റ് കോഡിനൊപ്പം പരാജയപ്പെട്ടു: {0}</value>
   </data>
-  <data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
-    <value>മുന്നറിയിപ്പ്: താൽക്കാലിക ഫയലുകൾ ഇല്ലാതാക്കാൻ കഴിഞ്ഞില്ല.</value>
-  </data>
-  <data name="SeceditMethodFailed" xml:space="preserve">
-    <value>Secedit രീതി പരാജയപ്പെട്ടു.</value>
-  </data>
   <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
     <value>നിർദ്ദിഷ്ട ഫയലിൽ [System Access] സെറ്റിംഗുകളൊന്നും കണ്ടെത്തിയില്ല</value>
   </data>
@@ -1990,9 +1975,6 @@
   </data>
   <data name="FileNotFoundPath" xml:space="preserve">
     <value>ഫയൽ കണ്ടെത്തിയില്ല: {0}</value>
-  </data>
-  <data name="CreatedPolicyDirectory" xml:space="preserve">
-    <value>പോളിസി ഡിറക്ടറി സൃഷ്ടിച്ചു: {0}</value>
   </data>
   <data name="FileTooSmallForValidHeader" xml:space="preserve">
     <value>സാധുവായ ഹെഡറിനായി ഫയൽ വളരെ ചെറുതാണ്</value>
@@ -2041,9 +2023,6 @@
   </data>
   <data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
     <value>{0} എൻട്രികളോടെ നിലവിലുള്ള പോളിസി ഫയൽ ലോഡ് ചെയ്തു</value>
-  </data>
-  <data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
-    <value>പോളിസി ഫയൽ നിലവിലില്ല, പുതിയ ശൂന്യ പോളിസി ഫയൽ സൃഷ്ടിക്കുന്നു</value>
   </data>
   <data name="ReplacedEntries" xml:space="preserve">
     <value>മാറ്റിസ്ഥാപിച്ച എൻട്രികൾ: {0}</value>
@@ -3021,4 +3000,290 @@
   <data name="SuccessfullyExportedCertificates" xml:space="preserve">
     <value>വിജയകരമായി {0} സർട്ടിഫിക്കറ്റുകൾ {1} ലേക്ക് കയറ്റുമതി ചെയ്തു</value>
   </data>
+        <!--BitLocker Volumes ListView Headers Start-->
+  <data name="MountPointHeader.Text" xml:space="preserve">
+    <value>മൗണ്ട് പോയിന്റ്</value>
+  </data>
+  <data name="ProtectionStatusHeader.Text" xml:space="preserve">
+    <value>സംരക്ഷണ നില</value>
+  </data>
+  <data name="ConversionStatusHeader.Text" xml:space="preserve">
+    <value>പരിവർത്തന നില</value>
+  </data>
+  <data name="EncryptionMethodHeader.Text" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ രീതി</value>
+  </data>
+    <data name="EncryptionPercentageHeader.Text" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ ശതമാനം</value>
+  </data>
+    <data name="WipePercentageHeader.Text" xml:space="preserve">
+    <value>വൈപ്പ് ശതമാനം</value>
+  </data>
+    <data name="AutoUnlockEnabledHeader.Text" xml:space="preserve">
+    <value>ഓട്ടോ അൺലോക്ക് സജ്ജമാക്കി</value>
+  </data>
+    <data name="AutoUnlockKeyStoredHeader.Text" xml:space="preserve">
+    <value>ഓട്ടോ അൺലോക്ക് കീ സേവ് ചെയ്തു</value>
+  </data>
+    <data name="VolumeTypeHeader.Text" xml:space="preserve">
+    <value>വാള്യം തരം</value>
+  </data>
+    <data name="CapacityGBHeader.Text" xml:space="preserve">
+    <value>ശേഷി GB</value>
+  </data>
+    <data name="FileSystemTypeHeader.Text" xml:space="preserve">
+    <value>ഫയൽസിസ്റ്റം തരം</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers End-->
+  <!--BitLocker Volumes ListView Headers Buttons Start-->
+<data name="MountPointColumnHeaderBtn.Content" xml:space="preserve">
+    <value>മൗണ്ട് പോയിന്റ്</value>
+  </data>
+  <data name="ProtectionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>സംരക്ഷണ നില</value>
+  </data>
+  <data name="ConversionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>പരിവർത്തന നില</value>
+  </data>
+  <data name="EncryptionMethodColumnHeaderBtn.Content" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ രീതി</value>
+  </data>
+    <data name="EncryptionPercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ ശതമാനം</value>
+  </data>
+    <data name="WipePercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>വൈപ്പ് ശതമാനം</value>
+  </data>
+    <data name="AutoUnlockEnabledColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ഓട്ടോ അൺലോക്ക് സജ്ജമാക്കി</value>
+  </data>
+    <data name="AutoUnlockKeyStoredColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ഓട്ടോ അൺലോക്ക് കീ സേവ് ചെയ്തു</value>
+  </data>
+    <data name="VolumeTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>വാള്യം തരം</value>
+  </data>
+    <data name="CapacityGBColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ശേഷി GB</value>
+  </data>
+    <data name="FileSystemTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ഫയൽസിസ്റ്റം തരം</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers Buttons End-->
+  <data name="RetrieveBitLockerVolumesButton.Content" xml:space="preserve">
+    <value>BitLocker വാള്യങ്ങൾ റിട്രീവ് ചെയ്യുക</value>
+  </data>
+    <data name="RetrieveBitLockerVolumesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എല്ലാ വാള്യങ്ങളും അവയുടെ BitLocker ബന്ധപ്പെട്ട മുഴുവൻ വിശദാംശങ്ങളും ശേഖരിച്ചു പട്ടികയാക്കുന്നു.</value>
+  </data>
+  <data name="RetrieveBitLockerVolumesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എല്ലാ വാള്യങ്ങളും അവയുടെ BitLocker ബന്ധപ്പെട്ട മുഴുവൻ വിശദാംശങ്ങളും ശേഖരിച്ചു പട്ടികയാക്കുന്നു.</value>
+  </data>
+  <data name="CloseButton.Content" xml:space="preserve">
+    <value>അടയ്ക്കുക</value>
+  </data>
+    <data name="CloseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അടയ്ക്കുക</value>
+  </data>
+  <data name="CloseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അടയ്ക്കുക</value>
+  </data>
+  <data name="CopyButton.Content" xml:space="preserve">
+    <value>പകർത്തുക</value>
+  </data>
+    <data name="CopyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പകർത്തുക</value>
+  </data>
+  <data name="CopyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പകർത്തുക</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.Content" xml:space="preserve">
+    <value>കീ പ്രൊട്ടക്ടർ മായ്ക്കുക</value>
+  </data>
+    <data name="DeleteBLKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വാള്യത്തിൽ നിന്ന് കീ പ്രൊട്ടക്ടർ നീക്കുന്നു.</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വാള്യത്തിൽ നിന്ന് കീ പ്രൊട്ടക്ടർ നീക്കുന്നു.</value>
+  </data>
+  <data name="NoKeyProtectorsFoundMsg.Text" xml:space="preserve">
+    <value>ഈ വാള്യത്തിന് കീ പ്രൊട്ടക്ടറൊന്നും കണ്ടെത്തിയില്ല.</value>
+  </data>
+  <data name="SelectVolumeFirstToSeeKeyProtectorsMsg.Text" xml:space="preserve">
+    <value>കീ പ്രൊട്ടക്ടറുകൾ കാണാൻ ആദ്യം ഒരു വാള്യം തെരഞ്ഞടുക്കുക.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.Text" xml:space="preserve">
+    <value>കീ പ്രൊട്ടക്ടറുകൾ -</value>
+  </data>
+  <data name="KeyProtectorsForMsg.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വാള്യത്തിന് എല്ലാ കീ പ്രൊട്ടക്ടറുകളും പ്രദർശിപ്പിക്കുന്നു.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വാള്യത്തിന് എല്ലാ കീ പ്രൊട്ടക്ടറുകളും പ്രദർശിപ്പിക്കുന്നു.</value>
+  </data>
+  <data name="RecoveryPassword.Text" xml:space="preserve">
+    <value>റിക്കവറി പാസ്‌വേഡ്</value>
+  </data>
+  <data name="CertificateType.Text" xml:space="preserve">
+    <value>സർ‌ട്ടിഫിക്കറ്റ് തരം</value>
+  </data>
+  <data name="FileName.Text" xml:space="preserve">
+    <value>ഫയൽ പേര്</value>
+  </data>
+  <data name="AutoUnlock.Text" xml:space="preserve">
+    <value>ഓട്ടോ അൺലോക്ക്</value>
+  </data>
+  <data name="Type.Text" xml:space="preserve">
+    <value>തരം</value>
+  </data>
+  <data name="Thumbprint.Text" xml:space="preserve">
+    <value>തമ്പ്പ്രിന്റ്</value>
+  </data>
+  <data name="ID.Text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="BitLockerManagementTab.Header" xml:space="preserve">
+    <value>മാനേജ്മെന്റ്</value>
+  </data>
+  <data name="BitLockerManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ, ഡീക്രിപ്ഷൻ, ബാക്കപ്പ് എന്നിവ ഉൾപ്പെടെ BitLocker വാള്യങ്ങളുടെ എല്ലാ വശങ്ങളും കൈകാര്യം ചെയ്യുക.</value>
+  </data>
+  <data name="BitLockerManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ, ഡീക്രിപ്ഷൻ, ബാക്കപ്പ് എന്നിവ ഉൾപ്പെടെ BitLocker വാള്യങ്ങളുടെ എല്ലാ വശങ്ങളും കൈകാര്യം ചെയ്യുക.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>സുരക്ഷാ നടപടികൾ</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>BitLocker ബന്ധപ്പെട്ട സുരക്ഷാ നടപടികൾ നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>BitLocker ബന്ധപ്പെട്ട സുരക്ഷാ നടപടികൾ നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="AddKeyProtectorButton.Content" xml:space="preserve">
+    <value>കീ പ്രൊട്ടക്ടർ ചേർക്കുക</value>
+  </data>
+  <data name="AddKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വാള്യത്തിൽ പുതിയ കീ പ്രൊട്ടക്ടർ ചേർക്കുക. കീ പ്രൊട്ടക്ടറുകൾ വാള്യം അൺലോക്ക് ചെയ്യാൻ സഹായിക്കുന്നു.</value>
+  </data>
+  <data name="AddKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വാള്യത്തിൽ പുതിയ കീ പ്രൊട്ടക്ടർ ചേർക്കുക. കീ പ്രൊട്ടക്ടറുകൾ വാള്യം അൺലോക്ക് ചെയ്യാൻ സഹായിക്കുന്നു.</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.Title" xml:space="preserve">
+    <value>കീ പ്രൊട്ടക്ടർ ചേർക്കുക</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>ചേർക്കുക</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.CloseButtonText" xml:space="preserve">
+    <value>റദ്ദാക്കുക</value>
+  </data>
+  <data name="AddKeyProtectorContentDialogSubTitle.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വാള്യത്തിൽ പുതിയ കീ പ്രൊട്ടക്ടർ ചേർക്കാൻ ഈ വിഭാഗം ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM</value>
+  </data>
+    <data name="TPMKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു TPM കീ പ്രൊട്ടക്ടർ ചേർക്കുക.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു TPM കീ പ്രൊട്ടക്ടർ ചേർക്കുക.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN</value>
+  </data>
+    <data name="TPMPINKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു TPM + PIN കീ പ്രൊട്ടക്ടർ ചേർക്കുക.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു TPM + PIN കീ പ്രൊട്ടക്ടർ ചേർക്കുക.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + സ്റ്റാർട്ടപ്പ് കീ</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു TPM + സ്റ്റാർട്ടപ്പ് കീ പ്രൊട്ടക്ടർ ചേർക്കുക.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു TPM + സ്റ്റാർട്ടപ്പ് കീ പ്രൊട്ടക്ടർ ചേർക്കുക.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN + സ്റ്റാർട്ടപ്പ് കീ</value>
+  </data>
+    <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു TPM + PIN + സ്റ്റാർട്ടപ്പ് കീ പ്രൊട്ടക്ടർ ചേർക്കുക.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു TPM + PIN + സ്റ്റാർട്ടപ്പ് കീ പ്രൊട്ടക്ടർ ചേർക്കുക.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>സ്റ്റാർട്ടപ്പ് കീ</value>
+  </data>
+    <data name="StartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു സ്റ്റാർട്ടപ്പ് കീ പ്രൊട്ടക്ടർ ചേർക്കുക.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു സ്റ്റാർട്ടപ്പ് കീ പ്രൊട്ടക്ടർ ചേർക്കുക.</value>
+  </data>
+  <data name="TPMSectionTitle.Text" xml:space="preserve">
+    <value>ട്രസ്റ്റഡ് പ്ലാറ്റ്ഫോം മോഡ്യൂൾ</value>
+  </data>
+  <data name="TPMSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker ഉപകരണത്തിന്റെ TPM ഉപയോഗിച്ച് എൻക്രിപ്ഷൻ കീ സംരക്ഷിക്കുന്നു.</value>
+  </data>
+  <data name="TPMSectionBody.Text" xml:space="preserve">
+    <value>ഈ പ്രൊട്ടക്ടർ ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്ത ഡ്രൈവ് TPM ഉള്ള മാതൃബോർഡിൽ ബന്ധിപ്പിച്ചിരിക്കുമ്പോഴും സിസ്റ്റം ബൂട്ട് സമഗ്രത നിലനിൽക്കുമ്പോഴും മാത്രമേ പ്രവേശനയോഗ്യമാകൂ. TPM അടിസ്ഥാനത്തിലുള്ള പ്രൊട്ടക്ടറുകൾ സാധാരണയായി OS വാള്യങ്ങൾക്ക് മാത്രം ബാധകം.</value>
+  </data>
+  <data name="TPMPINSectionTitle.Text" xml:space="preserve">
+    <value>TPM പിന്നീട് PIN</value>
+  </data>
+  <data name="TPMPINSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker TPM നെ ഉപയോക്തൃ PIN നോട് ചേർക്കുന്നു. ഡിഫോൾട്ടായി PIN 4–20 അക്കങ്ങൾ; വിപുലിത PIN ൽ 4–20 പ്രതീകങ്ങൾ (അക്ഷരങ്ങൾ, ചിഹ്നങ്ങൾ, സ്പേസുകൾ, അക്കങ്ങൾ) ആകാം.</value>
+  </data>
+  <data name="TPMStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM പിന്നെ സ്റ്റാർട്ടപ്പ് കീ</value>
+  </data>
+  <data name="TPMStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker TPM ഉം USB ഫ്ലാഷ് ഡ്രൈവിൽ നിന്നുള്ള ഇൻപുട്ടും ഉപയോഗിക്കുന്നു. ഉപകരണം ബൂട്ട് ചെയ്യാൻ USB ഡ്രൈവ് ബന്ധിപ്പിക്കപ്പെട്ടിരിക്കണം.</value>
+  </data>
+  <data name="TPMPINStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM, PIN, സ്റ്റാർട്ടപ്പ് കീ</value>
+  </data>
+  <data name="TPMPINStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker TPM, സ്റ്റാർട്ടപ്പ് PIN, പുറം കീ ഉള്ള USB ഫ്ലാഷ് ഡ്രൈവ് എന്നിവയുടെ സംയോജനം ഉപയോഗിക്കുന്നു. ഇത് BitLocker ന്റെ ഏറ്റവും സുരക്ഷിതമായ ക്രമീകരണമാണ്; മൾട്ടി-ഫാക்டர் ദൃഡീകരണം നൽകുന്നു.</value>
+  </data>
+  <data name="StartupKeySectionTitle.Text" xml:space="preserve">
+    <value>സ്റ്റാർട്ടപ്പ് കീ</value>
+  </data>
+  <data name="StartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker പുറം കീ അടങ്ങിയ USB ഫ്ലാഷ് ഡ്രൈവ് ഇൻപുട്ട് ഉപയോഗിക്കുന്നു. സിസ്റ്റം ബൂട്ട് ചെയ്യുന്നതിനുമുൻപ് USB ഉപകരണം ബന്ധിപ്പിക്കണം.</value>
+  </data>
+  <data name="RetrievingBitLockerVolumesEllipsis" xml:space="preserve">
+  <value>BitLocker വാള്യങ്ങൾ ശേഖരിക്കുന്നു...</value>
+</data>
+<data name="LoadedBitLockerVolumesCount" xml:space="preserve">
+  <value>{0} BitLocker വാള്യങ്ങൾ ലോഡ് ചെയ്തു.</value>
+</data>
+<data name="NoOutputReturnedFromPath" xml:space="preserve">
+  <value>{0} മുതൽ ഔട്ട്പുട്ടൊന്നും ലഭിച്ചില്ല</value>
+</data>
+<data name="NoBitLockerVolumesDetected" xml:space="preserve">
+  <value>BitLocker വാള്യങ്ങൾ കണ്ടെത്താനായില്ല.</value>
+</data>
+<data name="ParentVolumeForKeyProtectorNotFound" xml:space="preserve">
+  <value>കീ പ്രൊട്ടക്ടറിന്റെ പാരന്റ് വാള്യം കണ്ടെത്താനായില്ല.</value>
+</data>
+<data name="RemovingKeyProtectorFromVolume" xml:space="preserve">
+  <value>{1}ൽ നിന്നും കീ പ്രൊട്ടക്ടർ {0} നീക്കം ചെയ്യുന്നു</value>
+</data>
+<data name="ExternalKeyRemovalConditionalSuccess" xml:space="preserve">
+  <value>{1} ലെ ID {0} ഉള്ള ExternalKey കീ പ്രൊട്ടക്ടർ ഡ്രൈവ് അൺലോക്ക് നിലനിർത്താൻ ഉപയോഗിച്ചിരുന്നില്ലെങ്കിൽ അത് നീക്കം ചെയ്തു. കൂടുതൽ വിവരം ലോഗ് പേജിൽ.</value>
+</data>
+<data name="SuccessfullyRemovedKeyProtector" xml:space="preserve">
+  <value>തരം {0} ഉള്ള ID {1} ആയ കീ പ്രൊട്ടക്ടർ വിജയകരമായി {2} ല്‍ നിന്ന് നീക്കം ചെയ്തു.</value>
+</data>
+<data name="NoBitLockerVolumeSelected" xml:space="preserve">
+  <value>ഒരു BitLocker വാള്യവും തിരഞ്ഞെടുത്തിട്ടില്ല.</value>
+</data>
 </root>

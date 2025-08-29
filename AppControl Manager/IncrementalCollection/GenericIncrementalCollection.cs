@@ -267,7 +267,7 @@ internal sealed class GenericIncrementalCollection<TDataSource, TDataType> : Obs
 
 	/// <summary>
 	/// Releases all resources used by the incremental collection.
-	/// </summary>	
+	/// </summary>
 	private void Dispose(bool disposing)
 	{
 		if (!_isDisposed && disposing)

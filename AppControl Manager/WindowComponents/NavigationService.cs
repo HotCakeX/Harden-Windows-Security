@@ -204,7 +204,10 @@ internal sealed class NavigationService
 					Title = GlobalVars.GetStr("AppElevationNoticeTitle"),
 					Content = panel,
 					CloseButtonText = GlobalVars.GetStr("Cancel"),
-					SecondaryButtonText = GlobalVars.GetStr("AppElevationNoticeRelaunch")
+					SecondaryButtonText = GlobalVars.GetStr("AppElevationNoticeRelaunch"),
+					Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+					FlowDirection = Enum.Parse<FlowDirection>(App.Settings.ApplicationGlobalFlowDirection),
+					DefaultButton = ContentDialogButton.Secondary
 				};
 
 				// Show the dialog and wait for user response

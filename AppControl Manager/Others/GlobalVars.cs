@@ -172,9 +172,6 @@ internal static class GlobalVars
 	// Path to the ComManager program in the App directory
 	internal static readonly string ComManagerProcessPath = Path.Combine(CppInteropPath, "ComManager.exe");
 
-	// Path to the ScheduledTaskManager program in the App directory
-	internal static readonly string ScheduledTaskManagerProcessPath = Path.Combine(CppInteropPath, "ScheduledTaskManager.exe");
-
 	/// <summary>
 	/// To store the path to the system drive
 	/// </summary>

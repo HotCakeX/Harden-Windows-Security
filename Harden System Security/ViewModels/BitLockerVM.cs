@@ -19,8 +19,10 @@ using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -30,6 +32,7 @@ using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -148,6 +151,94 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 		return MUnit.CreateMUnitsFromPolicies(Categories.BitLockerSettings);
 	}
 
+	/// <summary>
+	/// Traverses the visual tree breadth-first and disposes any descendant control that:
+	///  - Implements IExplicitDisposalOptIn (meaning it skipped disposal on Unloaded)
+	///  - Implements IDisposable
+	/// This keeps the logic generic (works for AnimatedCancellableButton, LinkButtonV2, StatusIndicatorV2, etc.).
+	/// </summary>
+	internal static void DisposeExplicitOptInDescendants(FrameworkElement root)
+	{
+		if (root == null)
+		{
+			return;
+		}
+
+		Queue<DependencyObject> queue = new();
+		queue.Enqueue(root);
+
+		while (queue.Count > 0)
+		{
+			DependencyObject current = queue.Dequeue();
+			int childCount = VisualTreeHelper.GetChildrenCount(current);
+			for (int i = 0; i < childCount; i++)
+			{
+				DependencyObject child = VisualTreeHelper.GetChild(current, i);
+
+				// If it opted in and is disposable, dispose it.
+				if (child is IExplicitDisposalOptIn explicitOptIn &&
+					child is IDisposable disposable &&
+					explicitOptIn.DisposeOnlyOnExplicitCall)
+				{
+					try
+					{
+						disposable.Dispose();
+					}
+					catch
+					{
+						// Swallow: disposal errors should not block the rest.
+					}
+				}
+
+				queue.Enqueue(child);
+			}
+		}
+	}
+
+	/// <summary>
+	/// This is used to apply the BitLocker category before enabling BitLocker encryption for any drive.
+	/// Ensures the correct policies are in place in order to use enhanced security features of BitLocker.
+	/// </summary>
+	/// <param name="cancellationToken"></param>
+	/// <returns></returns>
+	private async Task ApplyAllBitLockerSecurityMeasuresAsync(CancellationToken? cancellationToken = null)
+	{
+		bool errorsOccurred = false;
+		ApplyAllCancellableButton.Begin();
+		try
+		{
+			ElementsAreEnabled = false;
+			MainInfoBar.WriteInfo("Applying all BitLocker security measures...");
+
+			// Use the full unfiltered backing list so search filters do not hide items from processing
+			List<MUnit> allMUnits = [];
+			foreach (GroupInfoListForMUnit group in ListViewItemsSourceBackingField)
+			{
+				allMUnits.AddRange(group);
+			}
+
+			await MUnit.ProcessMUnitsWithBulkOperations(this, allMUnits, MUnitOperation.Apply, cancellationToken);
+		}
+		catch (Exception ex)
+		{
+			HandleExceptions(ex, ref errorsOccurred, ref ApplyAllCancellableButton.wasCancelled, MainInfoBar);
+		}
+		finally
+		{
+			if (ApplyAllCancellableButton.wasCancelled)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("ApplyOperationCancelledByUser"));
+			}
+			else if (!errorsOccurred)
+			{
+				MainInfoBar.WriteSuccess("Successfully applied all BitLocker security measures");
+			}
+
+			ApplyAllCancellableButton.End();
+			ElementsAreEnabled = true;
+		}
+	}
+
 	#region BITLOCKER Management
 
 	internal readonly ObservableCollection<BitLockerVolume> BitLockerVolumes = [];
@@ -162,6 +253,9 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 			if (SP(ref field, value))
 			{
 				BitLockerProgressVisibility = value ? Visibility.Collapsed : Visibility.Visible;
+
+				// Keep the other specific enablement controls in sync with the main one.
+				IsSuspendFeatureEnabled = BitLockerUiEnabled;
 			}
 		}
 	} = true;
@@ -206,6 +300,9 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 				OnPropertyChanged(nameof(NoSelectionVisibility));
 				OnPropertyChanged(nameof(NoProtectorsVisibility));
 				OnPropertyChanged(nameof(HasProtectorsVisibility));
+
+				// Only enable the Suspend feature if OS drive is selected.
+				IsSuspendFeatureEnabled = SelectedBitLockerVolume?.VolumeType is VolumeType.OperationSystem;
 			}
 		}
 	}
@@ -216,11 +313,15 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 	internal bool IsBitLockerDetailsPaneOpen { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// Close pane (also clears selection).
+	/// Whether the Suspend feature is enabled.
+	/// </summary>
+	internal bool IsSuspendFeatureEnabled { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Closes the sidebar pane.
 	/// </summary>
 	internal void CloseBitLockerDetailsPane()
 	{
-		SelectedBitLockerVolume = null;
 		IsBitLockerDetailsPaneOpen = false;
 	}
 
@@ -586,7 +687,7 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 			// Instead the message will be logged.
 			string command = $"bitlocker removekp \"{volume.MountPoint}\" \"{keyProtector.ID}\" true";
 
-			await Task.Run(() => ProcessStarter.RunCommandInRealTime(GlobalVars.ComManagerProcessPath, command));
+			await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
 
 			// Refresh the volume list to reflect changes.
 			await GetVolumes();
@@ -626,7 +727,7 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 		try
 		{
 			// Instantiate the Content Dialog
-			using AddKeyProtectorDialog customDialog = new(SelectedBitLockerVolume);
+			using AddKeyProtectorDialog customDialog = new(SelectedBitLockerVolume, AllBitLockerVolumes);
 
 			// Show the dialog and await its result
 			ContentDialogResult result = await customDialog.ShowAsync();
@@ -634,13 +735,108 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 			// Ensure primary button was selected
 			if (result is ContentDialogResult.Primary)
 			{
+				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddingItemToAnotherMsg"), customDialog.SelectedKeyProtectorType, SelectedBitLockerVolume.MountPoint));
 
+				string command = string.Empty;
+
+				switch (customDialog.SelectedKeyProtectorType)
+				{
+					case KeyProtectorType.Tpm:
+						{
+							command = $"bitlocker addtpm \"{SelectedBitLockerVolume.MountPoint}\"";
+
+							break;
+						}
+					case KeyProtectorType.TpmPin:
+						{
+							if (string.IsNullOrWhiteSpace(customDialog.PIN))
+								throw new InvalidOperationException(GlobalVars.GetStr("NoPINEnteredError"));
+
+							command = $"bitlocker addtpm+pin \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.PIN}\"";
+
+							break;
+						}
+					case KeyProtectorType.TpmStartupKey:
+						{
+							if (customDialog.SelectedRemovableDrive is null)
+								throw new InvalidOperationException(GlobalVars.GetStr("NoRemovableDriveSelectedError"));
+
+							command = $"bitlocker addtpm+startup \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.SelectedRemovableDrive.MountPoint}\"";
+
+							break;
+						}
+					case KeyProtectorType.TpmPinStartupKey:
+						{
+							if (customDialog.SelectedRemovableDrive is null)
+								throw new InvalidOperationException(GlobalVars.GetStr("NoRemovableDriveSelectedError"));
+
+							if (string.IsNullOrWhiteSpace(customDialog.PIN))
+								throw new InvalidOperationException(GlobalVars.GetStr("NoPINEnteredError"));
+
+							command = $"bitlocker addtpm+pin+startup \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.SelectedRemovableDrive.MountPoint}\" \"{customDialog.PIN}\"";
+
+							break;
+						}
+					case KeyProtectorType.ExternalKey:
+						{
+							if (customDialog.SelectedRemovableDrive is null)
+								throw new InvalidOperationException(GlobalVars.GetStr("NoRemovableDriveSelectedError"));
+
+							command = $"bitlocker addstartupkey \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.SelectedRemovableDrive.MountPoint}\"";
+
+							break;
+						}
+					case KeyProtectorType.AutoUnlock:
+						{
+							command = $"bitlocker enableautounlock \"{SelectedBitLockerVolume.MountPoint}\"";
+
+							break;
+						}
+					case KeyProtectorType.Password:
+						{
+							if (customDialog.Password is null)
+								throw new InvalidOperationException(GlobalVars.GetStr("NoPasswordProvidedError"));
+
+							command = $"bitlocker addpass \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.Password}\"";
+
+							break;
+						}
+					case KeyProtectorType.RecoveryPassword:
+						{
+							if (customDialog.RecoveryPassword is null)
+								command = $"bitlocker addrecovery \"{SelectedBitLockerVolume.MountPoint}\" -";
+							else
+								command = $"bitlocker addrecovery \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.RecoveryPassword}\"";
+
+							break;
+						}
+					case KeyProtectorType.Unknown:
+						return;
+					case KeyProtectorType.PublicKey:
+						return;
+					case KeyProtectorType.TpmNetworkKey:
+						return;
+					case KeyProtectorType.AdAccountOrGroup:
+						return;
+					default:
+						return;
+				}
+
+				await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
+
+				// Refresh the volume list to reflect changes.
+				await GetVolumes();
 
 				// Sometimes the content dialog lingers on or re-appears so making sure it hides at the end
 				customDialog.Hide();
+
+				// Mark whatever message the ComManager sent as success. At this point no error was thrown.
+				MainInfoBar.Severity = InfoBarSeverity.Success;
 			}
 			else
 			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+
 				return;
 			}
 		}
@@ -650,5 +846,346 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 		}
 	}
 
+	/// <summary>
+	/// Encrypts the selected volume.
+	/// </summary>
+	internal async void EncryptVolume()
+	{
+		try
+		{
+			if (SelectedBitLockerVolume is null)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumeSelected"));
+				return;
+			}
+
+			BitLockerVolume OSDrive = AllBitLockerVolumes.First(x => x.VolumeType is VolumeType.OperationSystem);
+
+			if (SelectedBitLockerVolume.VolumeType is VolumeType.FixedDisk &&
+				OSDrive.ConversionStatus is not ConversionStatus.FullyEncrypted)
+			{
+				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("OSDriveNotEncryptedForFixedDriveEncryptionError"), OSDrive.ConversionStatus, OSDrive.EncryptionPercentage));
+			}
+
+			BitLockerUiEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			// Instantiate the Content Dialog
+			using BitLockerEncryptDriveDialog customDialog = new(SelectedBitLockerVolume, AllBitLockerVolumes);
+
+			// Show the dialog and await its result
+			ContentDialogResult result = await customDialog.ShowAsync();
+
+			// Ensure primary button was selected
+			if (result is ContentDialogResult.Primary)
+			{
+				// Apply BitLocker policies first.
+				await ApplyAllBitLockerSecurityMeasuresAsync();
+
+				string command = string.Empty;
+
+				string FreePlusUsedSpaceEncryption = customDialog.FreePlusUsedSpaceEncryption ? "true" : "false";
+				string AllowDowngradeOSDriveEncryptionLevel = customDialog.AllowDowngradeOSDriveEncryptionLevel ? "true" : "false";
+
+				switch (SelectedBitLockerVolume.VolumeType)
+				{
+					case VolumeType.OperationSystem:
+						{
+							if (customDialog.IsNormalOSDriveEncryptionLevelSelected)
+							{
+								if (string.IsNullOrWhiteSpace(customDialog.PIN))
+								{
+									throw new InvalidOperationException(GlobalVars.GetStr("NoPINEnteredError"));
+								}
+
+								command = $"bitlocker enableos \"{SelectedBitLockerVolume.MountPoint}\" normal \"{customDialog.PIN}\" - \"{FreePlusUsedSpaceEncryption}\" \"{AllowDowngradeOSDriveEncryptionLevel}\"";
+							}
+							else if (customDialog.IsEnhancedOSDriveEncryptionLevelSelected)
+							{
+								if (string.IsNullOrWhiteSpace(customDialog.PIN))
+								{
+									throw new InvalidOperationException(GlobalVars.GetStr("NoPINEnteredError"));
+								}
+
+								if (customDialog.SelectedRemovableDrive is null)
+								{
+									throw new InvalidOperationException(GlobalVars.GetStr("NoRemovableDriveSelectedError"));
+								}
+
+								command = $"bitlocker enableos \"{SelectedBitLockerVolume.MountPoint}\" enhanced \"{customDialog.PIN}\" \"{customDialog.SelectedRemovableDrive.MountPoint}\" \"{FreePlusUsedSpaceEncryption}\" \"{AllowDowngradeOSDriveEncryptionLevel}\"";
+							}
+
+							break;
+						}
+					case VolumeType.FixedDisk:
+						{
+							command = $"bitlocker enablefixed \"{SelectedBitLockerVolume.MountPoint}\" \"{FreePlusUsedSpaceEncryption}\"";
+
+							break;
+						}
+					case VolumeType.Removable:
+						{
+							if (string.IsNullOrWhiteSpace(customDialog.Password))
+							{
+								throw new InvalidOperationException(GlobalVars.GetStr("NoPasswordProvidedError"));
+							}
+
+							command = $"bitlocker enableremovable \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.Password}\" \"{FreePlusUsedSpaceEncryption}\"";
+
+							break;
+						}
+
+					default:
+						break;
+				}
+
+				await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
+
+				// Refresh the volume list to reflect changes.
+				await GetVolumes();
+
+				// Mark whatever message the ComManager sent as success. At this point no error was thrown.
+				MainInfoBar.Severity = InfoBarSeverity.Success;
+			}
+			else
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+
+				return;
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			BitLockerUiEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Decrypts the selected volume.
+	/// </summary>
+	internal async void DecryptVolume()
+	{
+		try
+		{
+			if (SelectedBitLockerVolume is null)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumeSelected"));
+				return;
+			}
+
+			BitLockerUiEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+			{
+				Title = string.Format(GlobalVars.GetStr("BitLockerDecryptingSelectedVolumeTitle"), SelectedBitLockerVolume.MountPoint),
+				Content = GlobalVars.GetStr("BitLockerDecryptingSelectedVolumeBody"),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = GlobalVars.GetStr("DecryptMenuFlyoutItem/Text"),
+				DefaultButton = ContentDialogButton.Close,
+				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+			};
+
+			// Show the dialog and wait for user response
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			if (result is not ContentDialogResult.Primary)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+
+				return;
+			}
+
+			string command = $"bitlocker disable \"{SelectedBitLockerVolume.MountPoint}\"";
+
+			await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
+
+			// Refresh the volume list to reflect changes.
+			await GetVolumes();
+
+			// Mark whatever message the ComManager sent as success. At this point no error was thrown.
+			MainInfoBar.Severity = InfoBarSeverity.Success;
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			BitLockerUiEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Suspends the selected volume's encryption.
+	/// </summary>
+	internal async void SuspendVolume()
+	{
+		try
+		{
+			if (SelectedBitLockerVolume is null)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumeSelected"));
+				return;
+			}
+
+			BitLockerUiEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			// Instantiate the Content Dialog
+			using BitLockerSuspend customDialog = new();
+
+			// Show the dialog and await its result
+			ContentDialogResult result = await customDialog.ShowAsync();
+
+			// Ensure primary button was selected
+			if (result is ContentDialogResult.Primary)
+			{
+				string command = $"bitlocker suspend \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.RestartCount}\"";
+
+				await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
+
+				// Refresh the volume list to reflect changes.
+				await GetVolumes();
+
+				// Mark whatever message the ComManager sent as success. At this point no error was thrown.
+				MainInfoBar.Severity = InfoBarSeverity.Success;
+			}
+			else
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+
+				return;
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			BitLockerUiEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Resumes the selected volume's encryption.
+	/// </summary>
+	internal async void ResumeVolume()
+	{
+		try
+		{
+			if (SelectedBitLockerVolume is null)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumeSelected"));
+				return;
+			}
+
+			BitLockerUiEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+			{
+				Title = string.Format(GlobalVars.GetStr("BitLockerResumeSelectedVolumeTitle"), SelectedBitLockerVolume.MountPoint),
+				Content = GlobalVars.GetStr("BitLockerResumeSelectedVolumeBody"),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = GlobalVars.GetStr("ResumeMenuFlyoutItem/Text"),
+				DefaultButton = ContentDialogButton.Close,
+				Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
+				FlowDirection = Enum.Parse<FlowDirection>(AppSettings.ApplicationGlobalFlowDirection)
+			};
+
+			// Show the dialog and wait for user response
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			if (result is not ContentDialogResult.Primary)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+
+				return;
+			}
+
+			string command = $"bitlocker enablekps \"{SelectedBitLockerVolume.MountPoint}\"";
+
+			await Task.Run(() => ProcessStarter.RunCommandInRealTime(MainInfoBar, GlobalVars.ComManagerProcessPath, command));
+
+			// Refresh the volume list to reflect changes.
+			await GetVolumes();
+
+			// Mark whatever message the ComManager sent as success. At this point no error was thrown.
+			MainInfoBar.Severity = InfoBarSeverity.Success;
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			BitLockerUiEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Exports all loaded BitLocker volume data (including nested Key Protectors)
+	/// to a user-selected JSON file,
+	/// </summary>
+	internal async void ExportBitLockerData()
+	{
+		try
+		{
+			if (AllBitLockerVolumes.Count == 0)
+			{
+				// No data to export
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoBitLockerVolumesDetected"));
+				return;
+			}
+
+			BitLockerUiEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			// Show save dialog
+			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
+				"BitLocker Volumes_Backup|*.json",
+				"BitLocker Volumes_Backup.json");
+
+			if (saveLocation is null)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
+				return;
+			}
+
+			// Snapshot the data to avoid collection mutation during async work
+			BitLockerVolume[] volumes = AllBitLockerVolumes.ToArray();
+
+			await Task.Run(() =>
+			{
+				string json = JsonSerializer.Serialize(volumes, BitLockerJsonContext.Default.BitLockerVolumeArray);
+
+				File.WriteAllText(saveLocation, json, System.Text.Encoding.UTF8);
+			});
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("BitLockerSuccessExportMsg"), volumes.Length, saveLocation));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			BitLockerUiEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
 	#endregion
+
 }

@@ -30,14 +30,15 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace HardenSystemSecurity.CustomUIElements;
 
-internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImplant
+internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INPCImplant
 {
+
 	private AppSettings.Main AppSettings => App.Settings;
 
 	/// <summary>
 	/// Volume selected to add a key protector to.
 	/// </summary>
-	private readonly BitLockerVolume Volume;
+	internal readonly BitLockerVolume Volume;
 
 	/// <summary>
 	/// PIN entered by user in textboxes.
@@ -49,14 +50,7 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 	/// </summary>
 	internal string? Password { get; private set => this.SP(ref field, value); }
 
-	/// <summary>
-	/// Recovery Password entered by user in textboxes.
-	/// </summary>
-	internal string? RecoveryPassword { get; private set => this.SP(ref field, value); }
-
-	internal KeyProtectorType SelectedKeyProtectorType { get; private set; }
-
-	internal AddKeyProtectorDialog(BitLockerVolume volume, List<BitLockerVolume> volumesList)
+	internal BitLockerEncryptDriveDialog(BitLockerVolume volume, List<BitLockerVolume> volumesList)
 	{
 		InitializeComponent();
 
@@ -67,20 +61,34 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 
 		SelectedRemovableDrive = RemovableDrives.FirstOrDefault();
 
-		if (volume.VolumeType is VolumeType.OperationSystem)
+		switch (volume.VolumeType)
 		{
-			// Only enable OS-Drive-Only KPs if the selected volume is the OS-Drive
-			OSOnlyKeyProtectorsAreEnabled = true;
-			NON_OSOnlyKeyProtectorsAreEnabled = false;
+			case VolumeType.OperationSystem:
+				{
+					SelectedKeyProtectorTypeIndex = 0;
+					IsOSDriveSectionEnabled = true;
 
-			SelectedKeyProtectorTypeIndex = 2;
-		}
-		else
-		{
-			OSOnlyKeyProtectorsAreEnabled = false;
-			NON_OSOnlyKeyProtectorsAreEnabled = true;
+					break;
+				}
 
-			SelectedKeyProtectorTypeIndex = 5;
+			case VolumeType.FixedDisk:
+				{
+					SelectedKeyProtectorTypeIndex = 1;
+					IsFixedDriveSectionEnabled = true;
+
+					break;
+				}
+
+			case VolumeType.Removable:
+				{
+					SelectedKeyProtectorTypeIndex = 2;
+					IsRemovableDriveSectionEnabled = true;
+
+					break;
+				}
+
+			default:
+				break;
 		}
 	}
 
@@ -104,17 +112,18 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 	/// </summary>
 	private bool ElementsAreEnabled { get; set => this.SP(ref field, value); } = true;
 
-	/// <summary>
-	/// Whether Key Protectors that are only usable for the Operation System Volume are enabled.
-	/// </summary>
-	private bool OSOnlyKeyProtectorsAreEnabled { get; set => this.SP(ref field, value); } = true;
+	private bool IsOSDriveSectionEnabled { get; set => this.SP(ref field, value); }
+	private bool IsFixedDriveSectionEnabled { get; set => this.SP(ref field, value); }
+	private bool IsRemovableDriveSectionEnabled { get; set => this.SP(ref field, value); }
 
-	/// <summary>
-	/// Whether Key Protectors that are only usable for Non-OS Volumes are enabled.
-	/// </summary>
-	private bool NON_OSOnlyKeyProtectorsAreEnabled { get; set => this.SP(ref field, value); } = true;
+	internal bool IsNormalOSDriveEncryptionLevelSelected { get; set => this.SP(ref field, value); } = true;
 
-	/// <summary>
+	internal bool IsEnhancedOSDriveEncryptionLevelSelected { get; set => this.SP(ref field, value); }
+
+	internal bool FreePlusUsedSpaceEncryption { get; set => this.SP(ref field, value); } = true;
+
+	internal bool AllowDowngradeOSDriveEncryptionLevel { get; set => this.SP(ref field, value); }
+
 	/// Event handler for the refresh button of removable drives.
 	/// </summary>
 	/// <exception cref="InvalidOperationException"></exception>
@@ -167,22 +176,8 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 	/// <param name="args"></param>
 	private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 	{
-		// Resolve the selected key protector type when primacy button is selected.
-		SelectedKeyProtectorType = SelectedKeyProtectorTypeIndex switch
-		{
-			0 => KeyProtectorType.Tpm,
-			1 => KeyProtectorType.TpmPin,
-			2 => KeyProtectorType.TpmStartupKey,
-			3 => KeyProtectorType.TpmPinStartupKey,
-			4 => KeyProtectorType.ExternalKey,
-			5 => KeyProtectorType.AutoUnlock,
-			6 => KeyProtectorType.Password,
-			7 => KeyProtectorType.RecoveryPassword,
-			_ => throw new InvalidOperationException($"{SelectedKeyProtectorTypeIndex} is not a valid key protector to be added")
-		};
 
 	}
-
 
 	#region IPropertyChangeHost Implementation
 	public event PropertyChangedEventHandler? PropertyChanged;

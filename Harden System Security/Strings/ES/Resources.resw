@@ -3286,4 +3286,259 @@ Huella Digital: {3}</value>
 <data name="NoBitLockerVolumeSelected" xml:space="preserve">
   <value>No se seleccionó ningún volumen BitLocker.</value>
 </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Desbloqueo automático</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Agregar un protector de clave de desbloqueo automático.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Agregar un protector de clave de desbloqueo automático.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Agregar un protector de clave de contraseña.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Agregar un protector de clave de contraseña.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Contraseña de recuperación</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Agregar un protector de clave de contraseña de recuperación.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Agregar un protector de clave de contraseña de recuperación.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>Desbloqueo automático</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>Habilita el desbloqueo automático de un volumen que no es la unidad del sistema operativo y está protegido con el cifrado BitLocker.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>BitLocker puede configurarse para desbloquear automáticamente volúmenes de datos que no alojan el sistema operativo. Después de que el usuario desbloquea la unidad del sistema operativo, BitLocker usa credenciales cifradas almacenadas en el registro junto con los metadatos del volumen para desbloquear automáticamente cualquier volumen de datos configurado para desbloqueo automático.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>El volumen BitLocker usará una contraseña para proteger los datos.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>Contraseña de recuperación</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>Es opcional especificar la contraseña. Si no la especifica, se generará automáticamente y se asignará al volumen seleccionado. Si decide introducirla manualmente, debe tener 48 caracteres. La contraseña se usa como protector de la clave de cifrado del volumen.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>Cifrado</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cifre, descifre o realice otras acciones relacionadas en el volumen seleccionado.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cifre, descifre o realice otras acciones relacionadas en el volumen seleccionado.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Cifrar</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cifrar el volumen seleccionado.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cifrar el volumen seleccionado.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Descifrar</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Descifrar el volumen seleccionado.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Descifrar el volumen seleccionado.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Suspender cifrado</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Suspende el cifrado BitLocker permitiendo a los usuarios acceder a datos en un volumen protegido con BitLocker. Este proceso hace que la clave de cifrado esté disponible en forma no protegida.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Suspende el cifrado BitLocker permitiendo a los usuarios acceder a datos en un volumen protegido con BitLocker. Este proceso hace que la clave de cifrado esté disponible en forma no protegida.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Reanudar cifrado</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restaura el cifrado en un volumen que usa BitLocker y cuyo cifrado había sido suspendido.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restaura el cifrado en un volumen que usa BitLocker y cuyo cifrado había sido suspendido.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>Habilitar cifrado BitLocker</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Habilitar</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>Habilitar cifrado BitLocker para el volumen seleccionado.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Unidad del sistema operativo</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Habilitar cifrado BitLocker para la unidad del sistema operativo.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Habilitar cifrado BitLocker para la unidad del sistema operativo.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Unidad fija</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Habilitar cifrado BitLocker para la unidad fija.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Habilitar cifrado BitLocker para la unidad fija.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Unidad extraíble</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Habilitar cifrado BitLocker para la unidad extraíble.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Habilitar cifrado BitLocker para la unidad extraíble.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Cifrado de unidad del sistema operativo</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Cifre la unidad del sistema operativo con BitLocker.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>Nivel de cifrado</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione uno de los niveles de cifrado para la unidad del sistema operativo. El Normal usará protectores de clave TPM y PIN. El Mejorado usará TPM, PIN y un protector de clave de inicio en una unidad USB, proporcionando autenticación multifactor sólida.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione uno de los niveles de cifrado para la unidad del sistema operativo. El Normal usará protectores de clave TPM y PIN. El Mejorado usará TPM, PIN y un protector de clave de inicio en una unidad USB, proporcionando autenticación multifactor sólida.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>Mejorado</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>Cobertura de cifrado</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>Espacio libre y usado</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>Solo espacio usado</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seleccione la cobertura de cifrado de la unidad. "Espacio libre y usado" cifrará todos los datos; "Solo espacio usado" cifrará únicamente el espacio actualmente en uso reduciendo el tiempo.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Seleccione la cobertura de cifrado de la unidad. "Espacio libre y usado" cifrará todos los datos; "Solo espacio usado" cifrará únicamente el espacio actualmente en uso reduciendo el tiempo.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>Comportamiento de degradación</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>Permitir degradación</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>Denegar degradación</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Si se permite la degradación y la unidad del sistema ya está cifrada con nivel Mejorado y elige Normal, el nivel se degradará. Si se deniega, la operación no se completará y mostrará un error evitando la degradación.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Si se permite la degradación y la unidad del sistema ya está cifrada con nivel Mejorado y elige Normal, el nivel se degradará. Si se deniega, la operación no se completará y mostrará un error evitando la degradación.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Cifrado de unidad fija</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Cifre la unidad fija seleccionada. Tendrá una contraseña de recuperación de 48 caracteres y se desbloqueará automáticamente mediante la unidad del sistema operativo ya cifrada.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Cifrado de unidad extraíble</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Cifre la unidad extraíble seleccionada. Tendrá una contraseña de recuperación de 48 caracteres y la contraseña que proporcione en el cuadro.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>Suspender cifrado BitLocker</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Suspender</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Suspender el cifrado BitLocker del volumen seleccionado.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>Suspender BitLocker permite acceso a datos cifrados exponiendo la clave de cifrado en estado no protegido. No descifra los datos existentes; solo hace disponible la clave necesaria. Los datos nuevos siguen cifrados. Mientras está suspendido no se aplican verificaciones de integridad al inicio. Se utiliza para actualizaciones de firmware o mantenimiento sin activar la recuperación.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>Aquí defina cuántos reinicios se permiten antes de finalizar la suspensión. Valor 1 significa reanudar protección tras el próximo reinicio. Puede reanudar manualmente en cualquier momento con el botón "Reanudar".</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>Todas las medidas de seguridad de la categoría BitLocker se aplicarán antes de iniciar el proceso de cifrado.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>Descifrando BitLocker para la unidad {0}</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>Se eliminarán todos los protectores de clave de la unidad y comenzará el descifrado del contenido.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>La operación fue cancelada.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>Reanudar cifrado BitLocker para la unidad {0}</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>Restaurar el cifrado de la unidad o volumen que se suspendió anteriormente.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>No se ingresó PIN de inicio. Proporcione uno e intente de nuevo.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>No se seleccionó ninguna unidad extraíble. Seleccione una e intente de nuevo.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>No se proporcionó contraseña. Proporcione una e intente de nuevo.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>La unidad del sistema operativo debe estar totalmente cifrada antes de cifrar unidades fijas, pero actualmente está {0} con {1} por ciento de cifrado.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>Agregando {0} a {1}</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>{0} volumen(es) BitLocker exportados correctamente a: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>Esto puede impedir el uso remoto de RDP mediante dirección IP, lo cual es inseguro porque requiere puertos públicos abiertos y usa NTLM. Use Quick Assist o Azure Bastion para VM de Azure como alternativas más seguras. El RDP local (por ejemplo sesión mejorada de Hyper-V) no se ve afectado.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>Esta directiva impedirá usar la función "Forgot my PIN" en la pantalla de bloqueo o de inicio de sesión. Si olvida el PIN no podrá recuperarlo.</value>
+  </data>
 </root>

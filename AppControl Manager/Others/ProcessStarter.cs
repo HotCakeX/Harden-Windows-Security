@@ -81,7 +81,7 @@ internal static class ProcessStarter
 	/// <param name="arguments">Optional arguments.</param>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException">Thrown immediately upon receiving any Error line.</exception>
-	internal static void RunCommandInRealTime(string command, string? arguments = null)
+	internal static void RunCommandInRealTime(InfoBarSettings infoBar, string command, string? arguments = null)
 	{
 		ProcessStartInfo processInfo = new()
 		{
@@ -114,7 +114,7 @@ internal static class ProcessStarter
 				}
 
 				// Real-time logging of each stdout line
-				Logger.Write(line);
+				infoBar.WriteInfo(line);
 			}
 		});
 

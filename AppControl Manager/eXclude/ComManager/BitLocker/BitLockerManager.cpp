@@ -46,6 +46,13 @@ namespace BitLocker {
 		return true;
 	}
 
+	// Overload to accept HRESULT directly.
+	// We cast through DWORD to preserve the original bit pattern (e.g. 0x8000001D) before formatting.
+	wstring FormatReturnCode(HRESULT hr)
+	{
+		return FormatReturnCode(static_cast<unsigned long>(static_cast<DWORD>(hr)));
+	}
+
 	// Find instance path (__PATH) for a volume by DriveLetter (case-insensitive)
 	// Gives us the volume information acquired from the Win32_EncryptableVolume CIM Instance
 	[[nodiscard]] bool FindVolumeInstancePath(IWbemServices* pSvc, const wchar_t* driveLetter, wstring& outPath)
@@ -205,16 +212,48 @@ namespace BitLocker {
 		return SUCCEEDED(hr);
 	}
 
-	// Helper: set UINT32 param
+	// Performs a first Put using VT_UI4 (canonical for CIM uint32).
+	// If that fails, retries using VT_I4. If the fallback succeeds, logs the fallback usage.
+	// Returns false only if both attempts fail.
 	bool SetParamUint32(IWbemClassObject* inParams, const wchar_t* name, unsigned long val)
 	{
-		if (!inParams) return false;
+		if (!inParams || !name)
+			return false;
+
+		// First attempt: VT_UI4 (unsigned 32-bit)
 		VARIANT v; VariantInit(&v);
 		v.vt = VT_UI4;
 		v.ulVal = val;
-		HRESULT hr = inParams->Put(_bstr_t(name), 0, &v, 0);
+		HRESULT hrUI4 = inParams->Put(_bstr_t(name), 0, &v, 0);
 		VariantClear(&v);
-		return SUCCEEDED(hr);
+		if (SUCCEEDED(hrUI4))
+		{
+			return true;
+		}
+
+		// Fallback attempt: VT_I4 (signed 32-bit) — some provider builds accept only this, such as the PrepareVolumeEx method.
+		VARIANT v2; VariantInit(&v2);
+		v2.vt = VT_I4;
+		v2.lVal = static_cast<LONG>(val);
+		HRESULT hrI4 = inParams->Put(_bstr_t(name), 0, &v2, 0);
+		VariantClear(&v2);
+
+		if (SUCCEEDED(hrI4))
+		{
+			wcout << L"[SetParamUint32] Primary VT_UI4 Put failed (hr=0x"
+				<< hex << uppercase << static_cast<unsigned long>(hrUI4)
+				<< dec << L") but fallback VT_I4 succeeded for parameter '"
+				<< name << L"' with value " << val << L"." << endl;
+			return true;
+		}
+
+		// Both attempts failed.
+		wcerr << L"[SetParamUint32] Failed to set UINT32 parameter '" << name
+			<< L"' value " << val
+			<< L" (VT_UI4 hr=0x" << hex << uppercase << static_cast<unsigned long>(hrUI4)
+			<< L", VT_I4 hr=0x" << static_cast<unsigned long>(hrI4)
+			<< dec << L")." << endl;
+		return false;
 	}
 
 	// Helper: read VolumeKeyProtectorID/Id from output params
@@ -501,6 +540,17 @@ namespace BitLocker {
 	[[nodiscard]] bool AddTpmProtector(const wchar_t* driveLetter)
 	{
 		ClearLastErrorMsg();
+
+		// Perform TPM entropy readiness check
+		if (!IsSystemEntropyReady())
+		{
+			wstringstream ss;
+			ss << L"System entropy (TPM readiness) check failed " << FormatReturnCode(TPM_E_DEACTIVATED)
+				<< L" (TPM not enabled/activated in this environment).";
+			LogError(ss.str());
+			return false;
+		}
+
 		WmiConnection conn;
 		wstring instancePath;
 		if (!GetInstancePath(driveLetter, instancePath, conn)) return false;
@@ -552,6 +602,16 @@ namespace BitLocker {
 		if (IsNullOrWhiteSpace(pin))
 		{
 			LogError(L"BitLocker: PIN cannot be null or empty.");
+			return false;
+		}
+
+		// Perform TPM entropy readiness check
+		if (!IsSystemEntropyReady())
+		{
+			wstringstream ss;
+			ss << L"System entropy (TPM readiness) check failed " << FormatReturnCode(TPM_E_DEACTIVATED)
+				<< L" (TPM not enabled/activated in this environment).";
+			LogError(ss.str());
 			return false;
 		}
 
@@ -607,6 +667,16 @@ namespace BitLocker {
 		if (IsNullOrWhiteSpace(startupKeyPath))
 		{
 			LogError(L"BitLocker: Startup Key Path cannot be null or empty.");
+			return false;
+		}
+
+		// Perform TPM entropy readiness check
+		if (!IsSystemEntropyReady())
+		{
+			wstringstream ss;
+			ss << L"System entropy (TPM readiness) check failed " << FormatReturnCode(TPM_E_DEACTIVATED)
+				<< L" (TPM not enabled/activated in this environment).";
+			LogError(ss.str());
 			return false;
 		}
 
@@ -719,6 +789,16 @@ namespace BitLocker {
 		if (IsNullOrWhiteSpace(pin) || IsNullOrWhiteSpace(startupKeyPath))
 		{
 			LogError(L"BitLocker: PIN or Startup Key Path cannot be null or empty.");
+			return false;
+		}
+
+		// Perform TPM entropy readiness check
+		if (!IsSystemEntropyReady())
+		{
+			wstringstream ss;
+			ss << L"System entropy (TPM readiness) check failed " << FormatReturnCode(TPM_E_DEACTIVATED)
+				<< L" (TPM not enabled/activated in this environment).";
+			LogError(ss.str());
 			return false;
 		}
 
@@ -1826,5 +1906,224 @@ namespace BitLocker {
 		wstringstream ss;
 		ss << L"(ReturnValue=" << code << L", 0x" << hex << uppercase << code << L")";
 		return ss.str();
+	}
+
+
+	// Executes a Win32_Tpm boolean status method (e.g., "IsEnabled") and extracts
+	// the boolean output property with the same name.
+	// Returns true only if the method invocation succeeded (ReturnValue == 0)
+	// and the output property was present and VT_BOOL.
+	static bool ExecTpmBool(
+		IWbemServices* svc,
+		const wchar_t* instancePath,
+		const wchar_t* methodName,
+		bool& outVal)
+	{
+		outVal = false;
+		if (!svc || !instancePath || !methodName)
+			return false;
+
+		IWbemClassObject* pOut = nullptr;
+		HRESULT hr = svc->ExecMethod(
+			_bstr_t(instancePath),
+			_bstr_t(methodName),
+			0, nullptr, nullptr, &pOut, nullptr);
+		if (FAILED(hr) || !pOut)
+			return false;
+
+		unsigned long rv = 1;
+		ReadULong(pOut, L"ReturnValue", rv);
+		if (rv != 0)
+		{
+			pOut->Release();
+			return false;
+		}
+
+		VARIANT v; VariantInit(&v);
+		bool ok = false;
+		if (SUCCEEDED(pOut->Get(_bstr_t(methodName), 0, &v, nullptr, nullptr)) &&
+			v.vt == VT_BOOL)
+		{
+			outVal = (v.boolVal == VARIANT_TRUE);
+			ok = true;
+		}
+		VariantClear(&v);
+		pOut->Release();
+		return ok;
+	}
+
+	// Success only if all four TPM readiness booleans are TRUE and their method calls succeeded.
+	bool IsTpmReady(bool* isEnabled, bool* isOwned, bool* isActivated, bool* isSrkAuthCompatible)
+	{
+		if (isEnabled) *isEnabled = false;
+		if (isOwned) *isOwned = false;
+		if (isActivated) *isActivated = false;
+		if (isSrkAuthCompatible) *isSrkAuthCompatible = false;
+
+		IWbemLocator* pLoc = nullptr;
+		IWbemServices* pSvc = nullptr;
+		bool didInitCOM = false;
+		if (!ConnectToWmiNamespace(TpmNamespace, &pLoc, &pSvc, didInitCOM) || !pSvc)
+		{
+			if (pLoc) pLoc->Release();
+			if (pSvc) pSvc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+
+		IEnumWbemClassObject* pEnum = nullptr;
+		HRESULT hr = pSvc->ExecQuery(
+			_bstr_t(L"WQL"),
+			_bstr_t(L"SELECT __PATH FROM Win32_Tpm"),
+			WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+			nullptr,
+			&pEnum);
+		if (FAILED(hr) || !pEnum)
+		{
+			if (pEnum) pEnum->Release();
+			pSvc->Release();
+			pLoc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+
+		IWbemClassObject* pObj = nullptr;
+		ULONG uRet = 0;
+		hr = pEnum->Next(WBEM_INFINITE, 1, &pObj, &uRet);
+		if (hr != S_OK || uRet == 0 || !pObj)
+		{
+			if (pObj) pObj->Release();
+			pEnum->Release();
+			pSvc->Release();
+			pLoc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+
+		wstring tpmPath;
+		VARIANT vPath; VariantInit(&vPath);
+		if (SUCCEEDED(pObj->Get(_bstr_t(L"__PATH"), 0, &vPath, nullptr, nullptr)) &&
+			vPath.vt == VT_BSTR && vPath.bstrVal)
+		{
+			tpmPath.assign(vPath.bstrVal);
+		}
+		VariantClear(&vPath);
+		pObj->Release();
+		pEnum->Release();
+
+		if (tpmPath.empty())
+		{
+			pSvc->Release();
+			pLoc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+
+		bool enabled = false, owned = false, activated = false, srk = false;
+		bool okEnabled = ExecTpmBool(pSvc, tpmPath.c_str(), L"IsEnabled", enabled);
+		bool okOwned = ExecTpmBool(pSvc, tpmPath.c_str(), L"IsOwned", owned);
+		bool okActivated = ExecTpmBool(pSvc, tpmPath.c_str(), L"IsActivated", activated);
+		bool okSrk = ExecTpmBool(pSvc, tpmPath.c_str(), L"IsSrkAuthCompatible", srk);
+
+		pSvc->Release();
+		pLoc->Release();
+		if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+
+		if (okEnabled && okOwned && okActivated && okSrk &&
+			enabled && owned && activated && srk)
+		{
+			if (isEnabled) *isEnabled = enabled;
+			if (isOwned) *isOwned = owned;
+			if (isActivated) *isActivated = activated;
+			if (isSrkAuthCompatible) *isSrkAuthCompatible = srk;
+			return true;
+		}
+		return false;
+	}
+
+	// Not WinPE -> true.
+	// WinPE -> require IsEnabled && IsActivated (only).
+	bool IsSystemEntropyReady()
+	{
+		HKEY hKey;
+		LSTATUS ls = RegOpenKeyExW(
+			HKEY_LOCAL_MACHINE,
+			L"SYSTEM\\CurrentControlSet\\Control\\MiniNT",
+			0, KEY_READ, &hKey);
+
+		if (ls != ERROR_SUCCESS)
+		{
+			// Not WinPE
+			return true;
+		}
+		RegCloseKey(hKey); // In WinPE
+
+		IWbemLocator* pLoc = nullptr;
+		IWbemServices* pSvc = nullptr;
+		bool didInitCOM = false;
+		if (!ConnectToWmiNamespace(TpmNamespace, &pLoc, &pSvc, didInitCOM) || !pSvc)
+		{
+			if (pLoc) pLoc->Release();
+			if (pSvc) pSvc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+
+		IEnumWbemClassObject* pEnum = nullptr;
+		HRESULT hr = pSvc->ExecQuery(
+			_bstr_t(L"WQL"),
+			_bstr_t(L"SELECT __PATH FROM Win32_Tpm"),
+			WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+			nullptr,
+			&pEnum);
+		if (FAILED(hr) || !pEnum)
+		{
+			if (pEnum) pEnum->Release();
+			pSvc->Release();
+			pLoc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+
+		IWbemClassObject* pObj = nullptr;
+		ULONG uRet = 0;
+		hr = pEnum->Next(WBEM_INFINITE, 1, &pObj, &uRet);
+		if (hr != S_OK || uRet == 0 || !pObj)
+		{
+			if (pObj) pObj->Release();
+			pEnum->Release();
+			pSvc->Release();
+			pLoc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+
+		wstring tpmPath;
+		VARIANT vPath; VariantInit(&vPath);
+		if (SUCCEEDED(pObj->Get(_bstr_t(L"__PATH"), 0, &vPath, nullptr, nullptr)) &&
+			vPath.vt == VT_BSTR && vPath.bstrVal)
+		{
+			tpmPath.assign(vPath.bstrVal);
+		}
+		VariantClear(&vPath);
+		pObj->Release();
+		pEnum->Release();
+
+		bool isEnabled = false;
+		bool isActivated = false;
+		bool okEnabled = false;
+		bool okActivated = false;
+
+		if (!tpmPath.empty())
+		{
+			okEnabled = ExecTpmBool(pSvc, tpmPath.c_str(), L"IsEnabled", isEnabled);
+			okActivated = ExecTpmBool(pSvc, tpmPath.c_str(), L"IsActivated", isActivated);
+		}
+
+		pSvc->Release();
+		pLoc->Release();
+		if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+
+		return okEnabled && okActivated && isEnabled && isActivated;
 	}
 }

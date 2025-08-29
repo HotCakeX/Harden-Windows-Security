@@ -15,23 +15,26 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using Microsoft.UI.Xaml;
+using System.ComponentModel;
+using AppControlManager.CustomUIElements;
+using AppControlManager.ViewModels;
 
-namespace HardenSystemSecurity.Protect;
+namespace HardenSystemSecurity.CustomUIElements;
 
-internal sealed class SubCategoryDefinition(
-	SubCategories subCategory,
-	string description,
-	string? tip = null)
+internal sealed partial class BitLockerSuspend : ContentDialogV2, INPCImplant
 {
-	internal SubCategories SubCategory => subCategory;
-	internal string Description => description;
-	internal string? Tip => tip;
+	private AppSettings.Main AppSettings => App.Settings;
 
-	/// <summary>
-	/// Used by XAML Compiled Binding.
-	/// </summary>
-	/// <param name="value"></param>
-	/// <returns></returns>
-	internal static Visibility HasTip(string? value) => string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible;
+	internal BitLockerSuspend()
+	{
+		InitializeComponent();
+	}
+
+	internal double RestartCount { get; private set => this.SP(ref field, value); } = 1;
+
+	#region IPropertyChangeHost Implementation
+	public event PropertyChangedEventHandler? PropertyChanged;
+	public void RaisePropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+	#endregion
+
 }

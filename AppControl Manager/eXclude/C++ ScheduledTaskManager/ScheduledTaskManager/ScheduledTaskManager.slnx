@@ -1,7 +1,0 @@
-<Solution>
-  <Configurations>
-    <Platform Name="ARM64" />
-    <Platform Name="x64" />
-  </Configurations>
-  <Project Path="ScheduledTaskManager.vcxproj" Id="f3d73bba-9376-4a4e-bb80-933c3487cab0" />
-</Solution>

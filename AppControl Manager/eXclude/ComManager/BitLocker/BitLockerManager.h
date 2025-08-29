@@ -46,6 +46,7 @@ namespace BitLocker {
 	bool SetParamBstr(IWbemClassObject* inParams, const wchar_t* name, const wchar_t* value);
 	IWbemClassObject* ExecMethodSimple(IWbemServices* svc, const wchar_t* instancePath, const wchar_t* method, IWbemClassObject* inParams);
 	wstring FormatReturnCode(unsigned long code);
+	wstring FormatReturnCode(HRESULT hr);
 	void LogError(const wstring& msg);
 	bool IsNullOrWhiteSpace(const wchar_t* s);
 	bool HandleReturnValue(IWbemClassObject* pOutParams, const wstring& successMsg, const wstring& contextMsg = L"");
@@ -214,5 +215,21 @@ namespace BitLocker {
 
 	// print list of volumes as JSON array
 	[[nodiscard]] bool PrintVolumeListJson(const vector<VolumeInfo>& list);
+
+
+	// TPM WMI namespace
+	inline constexpr const wchar_t* TpmNamespace = L"root\\CIMV2\\Security\\MicrosoftTpm";
+
+	// Performs the TPM readiness test
+	// Returns true only if Win32_Tpm reports IsEnabled, IsOwned, IsActivated, and IsSrkAuthCompatible are all TRUE.
+	// Optional out parameters can be nullptr.
+	[[nodiscard]] bool IsTpmReady(bool* isEnabled = nullptr,
+		bool* isOwned = nullptr,
+		bool* isActivated = nullptr,
+		bool* isSrkAuthCompatible = nullptr);
+
+	// If not WinPE (MiniNT key absent) => true.
+	// If WinPE => requires TPM IsEnabled && IsActivated.
+	[[nodiscard]] bool IsSystemEntropyReady();
 
 }

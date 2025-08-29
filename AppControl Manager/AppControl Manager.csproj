@@ -278,9 +278,6 @@
         <Content Include="CppInterop\ComManager.exe">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="CppInterop\ScheduledTaskManager.exe">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <Content Include="Resources\Allow All Policy.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -187,7 +188,8 @@ internal enum KeyProtectorType : uint
 	PublicKey = 7,
 	Password = 8,
 	TpmNetworkKey = 9,
-	AdAccountOrGroup = 10
+	AdAccountOrGroup = 10,
+	AutoUnlock = 11 // Added by me, not available in the official headers.
 }
 
 // https://learn.microsoft.com/en-us/windows/win32/secprov/getencryptionmethod-win32-encryptablevolume
@@ -281,7 +283,21 @@ internal enum ReFSDedupMode : uint
 /// </summary>
 [JsonSourceGenerationOptions(
 	PropertyNameCaseInsensitive = true,
-	WriteIndented = true)]
+
+	// Enums values will be written as string instead of numbers during serialization.
+	// For Deserialization, both strings and numbers are supported for parsing enum values.
+	Converters = new Type[] {
+		typeof(JsonStringEnumConverter<KeyProtectorType>),
+		typeof(JsonStringEnumConverter<EncryptionMethod>),
+		typeof(JsonStringEnumConverter<ProtectionStatus>),
+		typeof(JsonStringEnumConverter<LockStatus>),
+		typeof(JsonStringEnumConverter<ConversionStatus>),
+		typeof(JsonStringEnumConverter<WipingStatus>),
+		typeof(JsonStringEnumConverter<VolumeType>),
+		typeof(JsonStringEnumConverter<FileSystemType>),
+		typeof(JsonStringEnumConverter<ReFSDedupMode>) },
+
+WriteIndented = true)]
 [JsonSerializable(typeof(BitLockerVolume[]))]
 internal sealed partial class BitLockerJsonContext : JsonSerializerContext
 {

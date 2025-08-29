@@ -3286,4 +3286,259 @@
 <data name="NoBitLockerVolumeSelected" xml:space="preserve">
   <value>ഒരു BitLocker വാള്യവും തിരഞ്ഞെടുത്തിട്ടില്ല.</value>
 </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>ഓട്ടോ അൺലോക്ക്</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു ഓട്ടോ അൺലോക്ക് കീ പ്രൊട്ടക്റ്റർ ചേർക്കുക.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു ഓട്ടോ അൺലോക്ക് കീ പ്രൊട്ടക്റ്റർ ചേർക്കുക.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>പാസ്‌വേഡ്</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു പാസ്‌വേഡ് കീ പ്രൊട്ടക്റ്റർ ചേർക്കുക.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു പാസ്‌വേഡ് കീ പ്രൊട്ടക്റ്റർ ചേർക്കുക.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>റിക്കവറി പാസ്‌വേഡ്</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു റിക്കവറി പാസ്‌വേഡ് കീ പ്രൊട്ടക്റ്റർ ചേർക്കുക.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു റിക്കവറി പാസ്‌വേഡ് കീ പ്രൊട്ടക്റ്റർ ചേർക്കുക.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>ഓട്ടോ അൺലോക്ക്</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker ഡിസ്ക് എൻക്രിപ്ഷൻ സംരക്ഷിച്ചിരിക്കുന്ന, ഓപ്പറേറ്റിംഗ് സിസ്റ്റം ഡ്രൈവ് അല്ലാത്ത ഒരു വോള്യത്തിനായി ഓട്ടോമാറ്റിക് അൺലോക്ക് പ്രാപ്തമാക്കുന്നു.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റം ഹോസ്റ്റ് ചെയ്യാത്ത ഡാറ്റ വോള്യങ്ങൾ സ്വമേധയാ അൺലോക്ക് ചെയ്യാൻ BitLocker കോൺഫിഗർ ചെയ്യാം. ഉപയോക്താവ് OS ഡ്രൈവ് അൺലോക്ക് ചെയ്തതിനു ശേഷം, രജിസ്ട്രിയിൽ സൂക്ഷിച്ചിരിക്കുന്ന എൻക്രിപ്റ്റ് ചെയ്ത ക്രെഡൻഷ്യലുകളും വോള്യം മെറ്റാഡാറ്റയും ചേർത്ത്, ഓട്ടോ അൺലോക്കിനായി സെറ്റ് ചെയ്തിരിക്കുന്ന ഡാറ്റ വോള്യങ്ങൾ BitLocker സ്വമേധയാ അൺലോക്ക് ചെയ്യും.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>പാസ്‌വേഡ്</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker വോള്യം ഡാറ്റ സംരക്ഷിക്കാൻ ഒരു പാസ്‌വേഡ് ഉപയോഗിക്കും.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>റിക്കവറി പാസ്‌വേഡ്</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>പാസ്‌വേഡ് നിർദ്ദേശിക്കൽ ഐച്ഛികമാണ്. നിങ്ങൾ ഇത് നൽകുന്നില്ലെങ്കിൽ, അത് സ്വയമേവ സൃഷ്ടിച്ച് തിരഞ്ഞെടുത്ത വോള്യത്തിനു നിയോഗിക്കും. നിങ്ങൾ മാനുവലായി നൽകാൻ തീരുമാനിച്ചാൽ അത് 48 പ്രതീകങ്ങൾ വേണം. ഈ പാസ്‌വേഡ് വോള്യം എൻക്രിപ്ഷൻ കീയ്ക്ക് ഒരു സംരക്ഷകനായി പ്രവർത്തിക്കുന്നു.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വോള്യത്തിൽ എൻക്രിപ്റ്റ്, ഡിക്രിപ്റ്റ് അല്ലെങ്കിൽ മറ്റ് ബന്ധപ്പെട്ട പ്രവർത്തനങ്ങൾ നിർവഹിക്കുക.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വോള്യത്തിൽ എൻക്രിപ്റ്റ്, ഡിക്രിപ്റ്റ് അല്ലെങ്കിൽ മറ്റ് ബന്ധപ്പെട്ട പ്രവർത്തനങ്ങൾ നിർവഹിക്കുക.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എൻക്രിപ്റ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വോള്യം എൻക്രിപ്റ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വോള്യം എൻക്രിപ്റ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഡിക്രിപ്റ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വോള്യം ഡിക്രിപ്റ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വോള്യം ഡിക്രിപ്റ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ താൽക്കാലികമായി നിർത്തുക</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>BitLocker എൻക്രിപ്ഷൻ താൽക്കാലികമായി നിർത്തുന്നു, BitLocker സംരക്ഷിച്ചിരിക്കുന്ന വോള്യത്തിലെ ഡാറ്റയിൽ പ്രവേശനം നൽകുന്നു. ഈ പ്രക്രിയ എൻക്രിപ്ഷൻ കീയെ സംരക്ഷണമില്ലാതെ ലഭ്യമാക്കുന്നു.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>BitLocker എൻക്രിപ്ഷൻ താൽക്കാലികമായി നിർത്തുന്നു, BitLocker സംരക്ഷിച്ചിരിക്കുന്ന വോള്യത്തിലെ ഡാറ്റയിൽ പ്രവേശനം നൽകുന്നു. ഈ പ്രക്രിയ എൻക്രിപ്ഷൻ കീയെ സംരക്ഷണമില്ലാതെ ലഭ്യമാക്കുന്നു.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ വീണ്ടും ആരംഭിക്കുക</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മുൻപ് താൽക്കാലികമായി നിർത്തിയ BitLocker ഉപയോഗിക്കുന്ന വോള്യത്തിൽ എൻക്രിപ്ഷൻ പുനഃസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>മുൻപ് താൽക്കാലികമായി നിർത്തിയ BitLocker ഉപയോഗിക്കുന്ന വോള്യത്തിൽ എൻക്രിപ്ഷൻ പുനഃസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>BitLocker എൻക്രിപ്ഷൻ പ്രാപ്തമാക്കുക</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>പ്രാപ്തമാക്കുക</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>റദ്ദാക്കുക</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വോള്യത്തിനായി BitLocker എൻക്രിപ്ഷൻ പ്രാപ്തമാക്കുക.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>OS ഡ്രൈവ്</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>OS ഡ്രൈവിനായി BitLocker എൻക്രിപ്ഷൻ പ്രാപ്തമാക്കുക.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>OS ഡ്രൈവിനായി BitLocker എൻക്രിപ്ഷൻ പ്രാപ്തമാക്കുക.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>സ്ഥിര ഡ്രൈവ്</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സ്ഥിര ഡ്രൈവിനായി BitLocker എൻക്രിപ്ഷൻ പ്രാപ്തമാക്കുക.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സ്ഥിര ഡ്രൈവിനായി BitLocker എൻക്രിപ്ഷൻ പ്രാപ്തമാക്കുക.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>നീക്കം ചെയ്യാവുന്ന ഡ്രൈവ്</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നീക്കം ചെയ്യാവുന്ന ഡ്രൈവിനായി BitLocker എൻക്രിപ്ഷൻ പ്രാപ്തമാക്കുക.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നീക്കം ചെയ്യാവുന്ന ഡ്രൈവിനായി BitLocker എൻക്രിപ്ഷൻ പ്രാപ്തമാക്കുക.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റം ഡ്രൈവ് എൻക്രിപ്ഷൻ</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റം ഡ്രൈവ് BitLocker ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ നില</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>OS ഡ്രൈവിനുള്ള എൻക്രിപ്ഷൻ നിലകളിൽ ഒന്നിനെ തിരഞ്ഞെടുക്കുക. സാധാരണ നില TPM, PIN കീ പ്രൊട്ടക്റ്റർമാരെ ഉപയോഗിക്കും. മെച്ചപ്പെടുത്തിയ നില TPM, PIN കൂടാതെ USB ഡ്രൈവിലെ സ്റ്റാർട്ടപ്പ് കീ പ്രൊട്ടക്റ്ററും ഉപയോഗിച്ച് ശക്തമായ മൾട്ടിഫാക്ടർ ഓത്‌തെന്റിക്കേഷൻ നൽകും.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>OS ഡ്രൈവിനുള്ള എൻക്രിപ്ഷൻ നിലകളിൽ ഒന്നിനെ തിരഞ്ഞെടുക്കുക. സാധാരണ നില TPM, PIN കീ പ്രൊട്ടക്റ്റർമാരെ ഉപയോഗിക്കും. മെച്ചപ്പെടുത്തിയ നില TPM, PIN കൂടാതെ USB ഡ്രൈവിലെ സ്റ്റാർട്ടപ്പ് കീ പ്രൊട്ടക്റ്ററും ഉപയോഗിച്ച് ശക്തമായ മൾട്ടിഫാക്ടർ ഓത്‌തെന്റിക്കേഷൻ നൽകും.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>സാധാരണ</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>മെച്ചപ്പെടുത്തിയ</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ വിസ്തൃതി</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>സ്വതന്ത്രവും ഉപയോഗത്തിലുള്ളതും</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>ഉപയോഗത്തിലുള്ളത് മാത്രം</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡ്രൈവിന്റെ എൻക്രിപ്ഷൻ വിസ്തൃതി തിരഞ്ഞെടുക്കുക. "സ്വതന്ത്രവും ഉപയോഗത്തിലുള്ളതും" ഡ്രൈവിലെ എല്ലാ ഡാറ്റയും എൻക്രിപ്റ്റ് ചെയ്യും, "ഉപയോഗത്തിലുള്ളത് മാത്രം" ഇപ്പോൾ ഉപയോഗത്തിലുള്ള ഭാഗം മാത്രം എൻക്രിപ്റ്റ് ചെയ്യുന്നതിനാൽ കുറച്ച് സമയം മതിയാകും.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡ്രൈവിന്റെ എൻക്രിപ്ഷൻ വിസ്തൃതി തിരഞ്ഞെടുക്കുക. "സ്വതന്ത്രവും ഉപയോഗത്തിലുള്ളതും" ഡ്രൈവിലെ എല്ലാ ഡാറ്റയും എൻക്രിപ്റ്റ് ചെയ്യും, "ഉപയോഗത്തിലുള്ളത് മാത്രം" ഇപ്പോൾ ഉപയോഗത്തിലുള്ള ഭാഗം മാത്രം എൻക്രിപ്റ്റ് ചെയ്യുന്നതിനാൽ കുറച്ച് സമയം മതിയാകും.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>ഡൗൺഗ്രേഡ് പെരുമാറ്റം</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>ഡൗൺഗ്രേഡ് അനുവദിക്കുക</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>ഡൗൺഗ്രേഡ് നിരസിക്കുക</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡൗൺഗ്രേഡ് അനുവദനീയമാണെങ്കിൽ, OS ഡ്രൈവ് ഇതിനകം മെച്ചപ്പെടുത്തിയ നിലയിൽ എൻക്രിപ്റ്റ് ചെയ്തതും നിങ്ങൾ സാധാരണ നില തിരഞ്ഞെടുക്കുന്നതുമായിരിക്കുമ്പോൾ നില കുറയും. എന്നാൽ ഡൗൺഗ്രേഡ് നിരസിച്ചാൽ പ്രവർത്തനം പൂർത്തിയാകില്ല, പിശക് കാണിക്കും, അതുവഴി OS ഡ്രൈവിന്റെ എൻക്രിപ്ഷൻ നില കുറയുന്നത് തടയും.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡൗൺഗ്രേഡ് അനുവദനീയമാണെങ്കിൽ, OS ഡ്രൈവ് ഇതിനകം മെച്ചപ്പെടുത്തിയ നിലയിൽ എൻക്രിപ്റ്റ് ചെയ്തതും നിങ്ങൾ സാധാരണ നില തിരഞ്ഞെടുക്കുന്നതുമായിരിക്കുമ്പോൾ നില കുറയും. എന്നാൽ ഡൗൺഗ്രേഡ് നിരസിച്ചാൽ പ്രവർത്തനം പൂർത്തിയാകില്ല, പിശക് കാണിക്കും, അതുവഴി OS ഡ്രൈവിന്റെ എൻക്രിപ്ഷൻ നില കുറയുന്നത് തടയും.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>സ്ഥിര ഡ്രൈവ് എൻക്രിപ്ഷൻ</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത സ്ഥിര ഡ്രൈവ് എൻക്രിപ്റ്റ് ചെയ്യുക. ഇതിന് 48-പ്രതീക റിക്കവറി പാസ്‌വേഡ് ഉണ്ടാകും, കൂടാതെ ഇതിനകം എൻക്രിപ്റ്റ് ചെയ്തിരിക്കുന്ന ഓപ്പറേറ്റിംഗ് സിസ്റ്റം ഡ്രൈവ് വഴി ഓട്ടോമാറ്റിക്കായി അൺലോക്കും.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>നീക്കം ചെയ്യാവുന്ന ഡ്രൈവ് എൻക്രിപ്ഷൻ</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത നീക്കം ചെയ്യാവുന്ന ഡ്രൈവ് എൻക്രിപ്റ്റ് ചെയ്യുക. ഇതിന് 48-പ്രതീക റിക്കവറി പാസ്‌വേഡ് കൂടാതെ നിങ്ങൾ ബോക്‌സിൽ നൽകുന്ന പാസ്‌വേഡ് ഉണ്ടാകും.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>BitLocker എൻക്രിപ്ഷൻ താൽക്കാലികമായി നിർത്തുക</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>താൽക്കാലികമായി നിർത്തുക</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>റദ്ദാക്കുക</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത വോള്യത്തിന്റെ BitLocker എൻക്രിപ്ഷൻ താൽക്കാലികമായി നിർത്തുക.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>BitLocker താൽക്കാലികമായി നിർത്തുന്നതിലൂടെ സംരക്ഷിത വോള്യത്തിലെ എൻക്രിപ്റ്റ് ചെയ്ത ഡാറ്റയിലേക്ക് പ്രവേശനം ലഭിക്കുന്നു, കാരണം എൻക്രിപ്ഷൻ കീ സംരക്ഷണമില്ലാത്ത അവസ്ഥയിൽ ലഭ്യമാക്കപ്പെടുന്നു. നിർത്തൽ നിലവിലുള്ള ഡാറ്റ ഡിക്രിപ്റ്റ് ചെയ്യുന്നില്ല എന്നത് പ്രധാനമാണ്. അത് ചെയ്യുന്നത് ഡിക്രിപ്ഷനു വേണ്ടുന്ന കീ തുറന്ന നിലയിൽ ലഭ്യമാക്കുന്നതാണ്. ഈ കാലയളവിൽ എഴുതുന്ന പുതിയ ഡാറ്റ എൻക്രിപ്റ്റ് ചെയ്തതായിരിക്കും. BitLocker നിർത്തിയിരിക്കുമ്പോളം സ്റ്റാർട്ടപ്പിൽ സിസ്റ്റം അഖണ്ഡത പരിശോധനകൾ നിർബന്ധിതമല്ല. ഫർമ്മ്വെയർ അപ്ഡേറ്റ് അല്ലെങ്കിൽ സിസ്റ്റം മേൻറനൻസ് റിക്കവറി ട്രിഗർ ചെയ്യാതെ നടത്താൻ സാധാരണ ഇത് ഉപയോഗിക്കുന്നു.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>BitLocker താൽക്കാലിക നിർത്തൽ അവസാനിക്കുന്നതിന് മുമ്പ് കമ്പ്യൂട്ടർ എത്ര പ്രാവശ്യം റീസ്റ്റാർട്ട് ചെയ്യാമെന്ന് ഇവിടെ നിർണ്ണയിക്കാം. മൂല്യം 1 ആണെങ്കിൽ അടുത്ത റീസ്റ്റാർട്ടിന് ശേഷം BitLocker സംരക്ഷണം ഉടൻ പുനരാരംഭിക്കും. "വീണ്ടും ആരംഭിക്കുക" ബട്ടൺ ഉപയോഗിച്ച് നിങ്ങൾക്ക് ഏത് സമയത്തും സംരക്ഷണം കൈയേറി പുനരാരംഭിക്കാം.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>എൻക്രിപ്ഷൻ പ്രക്രിയ ആരംഭിക്കുന്നതിന് മുമ്പ് BitLocker വിഭാഗത്തിലെ എല്ലാ സുരക്ഷാമാർഗങ്ങളും സിസ്റ്റത്തിൽ പ്രയോഗിക്കപ്പെടും.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>ഡ്രൈവ് {0} ന് BitLocker എൻക്രിപ്ഷൻ ഡിക്രിപ്റ്റ് ചെയ്യുന്നു</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>ഡ്രൈവിലെ എല്ലാ കീ പ്രൊട്ടക്റ്റർമാരും നീക്കം ചെയ്യപ്പെടും, ഉള്ളടക്കത്തിന്റെ ഡിക്രിപ്ഷൻ ആരംഭിക്കും.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>പ്രവർത്തനം റദ്ദാക്കി.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>ഡ്രൈവ് {0} ന് BitLocker എൻക്രിപ്ഷൻ വീണ്ടും ആരംഭിക്കുക</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>മുൻപ് താൽക്കാലികമായി നിർത്തിയിരുന്ന ഡ്രൈവ് അല്ലെങ്കിൽ വോള്യത്തിന്റെ എൻക്രിപ്ഷൻ പുനഃസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>സ്റ്റാർട്ടപ്പിനായി PIN നൽകപ്പെട്ടിട്ടില്ല. ദയവായി ഒന്ന് നൽകിചെയ്ത് വീണ്ടും ശ്രമിക്കുക.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>ഒരു നീക്കം ചെയ്യാവുന്ന ഡ്രൈവും തിരഞ്ഞെടുത്തിട്ടില്ല. ദയവായി ഒന്ന് തിരഞ്ഞെടുക്കി വീണ്ടും ശ്രമിക്കുക.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>ഒരു പാസ്‌വേഡും നൽകിയിട്ടില്ല. ദയവായി ഒന്ന് നൽകി വീണ്ടും ശ്രമിക്കുക.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>സ്ഥിര ഡ്രൈവുകൾ എൻക്രിപ്റ്റ് ചെയ്യുന്നതിന് മുമ്പ് OS ഡ്രൈവ് പൂർണ്ണമായും എൻക്രിപ്റ്റ് ചെയ്തിരിക്കണം, പക്ഷേ നിലവിൽ അതിന്റെ സ്ഥിതി {0} ആണ്, എൻക്രിപ്ഷൻ ശതമാനം {1} ആണ്.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>{0} നെ {1} ലേക്ക് ചേർക്കുന്നു</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>{0} BitLocker വോള്യം(സ്) വിജയകരമായി എക്സ്പോർട്ട് ചെയ്തു: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>ഇത് നിങ്ങൾക്ക് IP വിലാസം വഴി ദൂരെയிருந்து RDP (Remote Desktop) ഉപയോഗിക്കുന്നത് തടയാം, കാരണം അത് പൊതു തുറന്ന പോർട്ടുകൾ ആവശ്യപ്പെടുകയും NTLM ഉപയോഗിക്കുകയും ചെയ്യുന്നതിനാൽ ഇത് സുരക്ഷിതമല്ല. കൂടുതൽ സുരക്ഷിതമായ ഓപ്ഷനുകൾ ആയി നിങ്ങൾക്ക് Quick Assist അല്ലെങ്കിൽ Azure VM-കൾക്കായി Azure Bastion ഉപയോഗിക്കാം. Hyper-V എൻഹാൻസ്ഡ് സെഷൻ പോലുള്ള ലോക്കൽ RDP ബാധിക്കപ്പെടുന്നില്ല.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>ഈ നയം ലോക്ക് സ്ക്രീൻ അല്ലെങ്കിൽ ലോഗിൻ സ്ക്രീനിലെ "Forgot my PIN" സവിശേഷത ഉപയോഗിക്കുന്നത് നിങ്ങളെ തടയും. നിങ്ങൾ PIN മറന്നാൽ അത് വീണ്ടെടുക്കാൻ സാധിക്കില്ല.</value>
+  </data>
 </root>

@@ -3286,4 +3286,259 @@
 <data name="NoBitLockerVolumeSelected" xml:space="preserve">
   <value>कोई BitLocker वॉल्यूम चयनित नहीं है.</value>
 </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>स्वचालित अनलॉक</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक स्वचालित अनलॉक कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक स्वचालित अनलॉक कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>पासवर्ड</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक पासवर्ड कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक पासवर्ड कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>रिकवरी पासवर्ड</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक रिकवरी पासवर्ड कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक रिकवरी पासवर्ड कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>स्वचालित अनलॉक</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker डिस्क एन्क्रिप्शन द्वारा संरक्षित किसी गैर ऑपरेटिंग सिस्टम वॉल्यूम के लिए स्वचालित अनलॉक सक्षम करता है.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>BitLocker को इस प्रकार कॉन्फ़िगर किया जा सकता है कि वह उन डेटा वॉल्यूमों को स्वचालित रूप से अनलॉक करे जो ऑपरेटिंग सिस्टम को होस्ट नहीं करते. जब कोई उपयोगकर्ता OS ड्राइव अनलॉक करता है, तो BitLocker रजिस्ट्री में संग्रहीत एन्क्रिप्टेड क्रेडेंशियल्स तथा वॉल्यूम मेटाडेटा का उपयोग करके किसी भी डेटा वॉल्यूम को स्वचालित रूप से अनलॉक कर देता है जिसे स्वचालित अनलॉक के लिए सेट किया गया है.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>पासवर्ड</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker वॉल्यूम डेटा को सुरक्षित करने के लिए पासवर्ड का उपयोग करेगा.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>रिकवरी पासवर्ड</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>पासवर्ड निर्दिष्ट करना वैकल्पिक है. यदि आप यह पासवर्ड निर्दिष्ट नहीं करते, तो आपके लिए स्वतः उत्पन्न किया जाएगा और चयनित वॉल्यूम को असाइन किया जाएगा. यदि आप पासवर्ड मैन्युअल रूप से दर्ज करने का निर्णय लेते हैं तो यह 48 अक्षरों का होना चाहिए. यह पासवर्ड वॉल्यूम एन्क्रिप्शन कुंजी के लिए संरक्षक के रूप में उपयोग होता है.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>एन्क्रिप्शन</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित वॉल्यूम पर एन्क्रिप्ट, डिक्रिप्ट या अन्य संबंधित कार्य करें.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित वॉल्यूम पर एन्क्रिप्ट, डिक्रिप्ट या अन्य संबंधित कार्य करें.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>एन्क्रिप्ट</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित वॉल्यूम को एन्क्रिप्ट करें.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित वॉल्यूम को एन्क्रिप्ट करें.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>डिक्रिप्ट</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित वॉल्यूम को डिक्रिप्ट करें.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित वॉल्यूम को डिक्रिप्ट करें.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>एन्क्रिप्शन निलंबित करें</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>BitLocker एन्क्रिप्शन को निलंबित करता है, जिससे BitLocker से संरक्षित वॉल्यूम पर डेटा का उपयोग संभव होता है. यह प्रक्रिया एन्क्रिप्शन कुंजी को असुरक्षित रूप में सुलभ बनाती है.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>BitLocker एन्क्रिप्शन को निलंबित करता है, जिससे BitLocker से संरक्षित वॉल्यूम पर डेटा का उपयोग संभव होता है. यह प्रक्रिया एन्क्रिप्शन कुंजी को असुरक्षित रूप में सुलभ बनाती है.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>एन्क्रिप्शन पुनः प्रारंभ करें</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>उस वॉल्यूम पर एन्क्रिप्शन पुनर्स्थापित करें जो BitLocker का उपयोग करता है और जिसे पहले निलंबित किया गया था.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>उस वॉल्यूम पर एन्क्रिप्शन पुनर्स्थापित करें जो BitLocker का उपयोग करता है और जिसे पहले निलंबित किया गया था.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>BitLocker एन्क्रिप्शन सक्षम करें</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>सक्षम करें</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>रद्द करें</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>चयनित वॉल्यूम के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>OS ड्राइव</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>OS ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>OS ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>फिक्स्ड ड्राइव</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फिक्स्ड ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>फिक्स्ड ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>रिमूवेबल ड्राइव</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>रिमूवेबल ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>रिमूवेबल ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम ड्राइव एन्क्रिप्शन</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम ड्राइव को BitLocker से एन्क्रिप्ट करें.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>एन्क्रिप्शन स्तर</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>OS ड्राइव के लिए एन्क्रिप्शन स्तरों में से एक चुनें. सामान्य स्तर TPM और PIN कुंजी संरक्षक का उपयोग करेगा. उन्नत स्तर TPM, PIN तथा USB ड्राइव पर स्टार्टअप कुंजी संरक्षक का उपयोग करेगा, जिससे मजबूत मल्टीफैक्टर प्रमाणीकरण मिलता है.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>OS ड्राइव के लिए एन्क्रिप्शन स्तरों में से एक चुनें. सामान्य स्तर TPM और PIN कुंजी संरक्षक का उपयोग करेगा. उन्नत स्तर TPM, PIN तथा USB ड्राइव पर स्टार्टअप कुंजी संरक्षक का उपयोग करेगा, जिससे मजबूत मल्टीफैक्टर प्रमाणीकरण मिलता है.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>सामान्य</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>उन्नत</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>एन्क्रिप्शन कवरेज</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>फ्री और उपयोग में स्पेस</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>केवल उपयोग में स्पेस</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ड्राइव के एन्क्रिप्शन कवरेज का चयन करें. "फ्री और उपयोग में स्पेस" ड्राइव पर सभी डेटा को एन्क्रिप्ट करेगा, जबकि "केवल उपयोग में स्पेस" केवल वर्तमान में उपयोग हो रहे स्पेस को एन्क्रिप्ट करेगा जिससे समय कम लगेगा.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ड्राइव के एन्क्रिप्शन कवरेज का चयन करें. "फ्री और उपयोग में स्पेस" ड्राइव पर सभी डेटा को एन्क्रिप्ट करेगा, जबकि "केवल उपयोग में स्पेस" केवल वर्तमान में उपयोग हो रहे स्पेस को एन्क्रिप्ट करेगा जिससे समय कम लगेगा.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>डाउनग्रेड व्यवहार</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>डाउनग्रेड की अनुमति दें</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>डाउनग्रेड अस्वीकार करें</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>यदि डाउनग्रेड की अनुमति है, और ऑपरेटिंग सिस्टम ड्राइव पहले से उन्नत स्तर पर एन्क्रिप्टेड है तथा आप सामान्य स्तर चुनते हैं, तो स्तर घटा दिया जाएगा. यदि डाउनग्रेड अस्वीकृत है, तो संचालन पूर्ण नहीं होगा और त्रुटि दिखेगी, जिससे OS ड्राइव के एन्क्रिप्शन स्तर का डाउनग्रेड रोका जाएगा.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>यदि डाउनग्रेड की अनुमति है, और ऑपरेटिंग सिस्टम ड्राइव पहले से उन्नत स्तर पर एन्क्रिप्टेड है तथा आप सामान्य स्तर चुनते हैं, तो स्तर घटा दिया जाएगा. यदि डाउनग्रेड अस्वीकृत है, तो संचालन पूर्ण नहीं होगा और त्रुटि दिखेगी, जिससे OS ड्राइव के एन्क्रिप्शन स्तर का डाउनग्रेड रोका जाएगा.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>फिक्स्ड ड्राइव एन्क्रिप्शन</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>चयनित फिक्स्ड ड्राइव को एन्क्रिप्ट करें. इसमें 48-अक्षरों का रिकवरी पासवर्ड होगा और यह पहले से एन्क्रिप्टेड ऑपरेटिंग सिस्टम ड्राइव के माध्यम से स्वतः अनलॉक होगा.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>रिमूवेबल ड्राइव एन्क्रिप्शन</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>चयनित रिमूवेबल ड्राइव को एन्क्रिप्ट करें. इसमें 48-अक्षरों का रिकवरी पासवर्ड और वह पासवर्ड होगा जो आप बॉक्स में प्रदान करते हैं.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>BitLocker एन्क्रिप्शन निलंबित करें</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>निलंबित करें</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>रद्द करें</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>चयनित वॉल्यूम का BitLocker एन्क्रिप्शन निलंबित करें.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>BitLocker को निलंबित करने से एक संरक्षित वॉल्यूम पर एन्क्रिप्टेड डेटा तक पहुँच मिलती है क्योंकि एन्क्रिप्शन कुंजी को असुरक्षित स्थिति में उजागर किया जाता है. यह महत्वपूर्ण है कि निलंबन मौजूदा डेटा को डिक्रिप्ट नहीं करता. यह केवल डिक्रिप्शन हेतु आवश्यक कुंजी को खुला उपलब्ध कराता है. इस अवधि के दौरान लिखे गए नए डेटा एन्क्रिप्टेड ही रहते हैं. जब BitLocker निलंबित होता है, स्टार्टअप पर सिस्टम अखंडता जाँचें लागू नहीं होतीं. यह क्षमता आम तौर पर फर्मवेयर अपग्रेड या सिस्टम मेंटेनेंस को रिकवरी ट्रिगर किए बिना सक्षम करने के लिए उपयोग की जाती है.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>यहाँ आप निर्दिष्ट कर सकते हैं कि BitLocker निलंबन समाप्त होने से पहले कंप्यूटर कितनी बार पुनरारंभ हो सकता है. मान 1 का अर्थ है कि अगली पुनरारंभ के तुरंत बाद BitLocker सुरक्षा फिर से शुरू हो जाएगी. आप किसी भी समय "पुनः प्रारंभ करें" बटन के माध्यम से सुरक्षा फिर से शुरू कर सकते हैं.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>एन्क्रिप्शन प्रक्रिया आरंभ करने से पहले BitLocker श्रेणी के अंतर्गत सभी सुरक्षा उपाय सिस्टम पर लागू किए जाएंगे.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>ड्राइव {0} के लिए BitLocker एन्क्रिप्शन डिक्रिप्ट किया जा रहा है</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>ड्राइव के सभी कुंजी संरक्षक हटाए जाएंगे और सामग्री का डिक्रिप्शन प्रारंभ होगा.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>संचालन रद्द कर दिया गया.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>ड्राइव {0} के लिए BitLocker एन्क्रिप्शन पुनः प्रारंभ करें</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>पूर्व में निलंबित ड्राइव या वॉल्यूम के एन्क्रिप्शन को पुनर्स्थापित करें.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>स्टार्टअप के लिए कोई PIN दर्ज नहीं किया गया. कृपया एक प्रदान करें और पुनः प्रयास करें.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>कोई रिमूवेबल ड्राइव चयनित नहीं हुआ. कृपया एक चुनें और पुनः प्रयास करें.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>कोई पासवर्ड प्रदान नहीं किया गया. कृपया एक प्रदान करें और पुनः प्रयास करें.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>फिक्स्ड ड्राइव को एन्क्रिप्ट करने से पहले ऑपरेटिंग सिस्टम ड्राइव को पूर्णतः एन्क्रिप्ट किया जाना चाहिए, लेकिन वर्तमान में इसकी स्थिति {0} है और एन्क्रिप्शन प्रतिशत {1} है.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>{0} को {1} में जोड़ा जा रहा है</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>{0} BitLocker वॉल्यूम(स) सफलतापूर्वक निर्यात किए गए: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>यह आपको IP पते के माध्यम से दूरस्थ रूप से RDP (Remote Desktop) उपयोग करने से रोक सकता है, जो असुरक्षित है क्योंकि यह सार्वजनिक रूप से खुले पोर्ट की आवश्यकता करता है और NTLM का उपयोग करता है. आप Quick Assist या Azure VM के लिए Azure Bastion का उपयोग सुरक्षित विकल्पों के रूप में कर सकते हैं. Hyper-V एन्हांस्ड सत्र जैसे स्थानीय RDP पर इसका प्रभाव नहीं पड़ता.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>यह नीति आपको लॉक स्क्रीन या लॉगऑन स्क्रीन पर "Forgot my PIN" फीचर का उपयोग करने से रोकेगी. यदि आप अपना PIN भूल जाते हैं, तो आप उसे पुनर्प्राप्त नहीं कर पाएंगे.</value>
+  </data>
 </root>

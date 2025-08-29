@@ -453,7 +453,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.WindowsNetworking_BlockNTLM,
-							description: GlobalVars.GetStr("ProtectSubCategory_BlockNTLM"))
+							description: GlobalVars.GetStr("ProtectSubCategory_BlockNTLM"),
+							tip: GlobalVars.GetStr("WindowsNetworking_BlockNTLMTIP"))
 							]
 						));
 
@@ -573,7 +574,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.LockScreen_NoLastSignedIn,
-							description: GlobalVars.GetStr("ProtectSubCategory_NoLastSignedIn")),
+							description: GlobalVars.GetStr("ProtectSubCategory_NoLastSignedIn"),
+							tip: GlobalVars.GetStr("UAC_NoFastUserSwitchingTIP")),
 
 							new SubCategoryDefinition(
 							subCategory:SubCategories.LockScreen_RequireCTRLAltDel,
@@ -590,7 +592,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.UAC_NoFastUserSwitching,
-							description: GlobalVars.GetStr("ProtectSubCategory_NoFastUserSwitching")),
+							description: GlobalVars.GetStr("ProtectSubCategory_NoFastUserSwitching"),
+							tip: GlobalVars.GetStr("UAC_NoFastUserSwitchingTIP")),
 
 							new SubCategoryDefinition(
 							subCategory:SubCategories.UAC_OnlyElevateSigned,
@@ -680,36 +683,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						logo: CategoryImages[(int)Categories.EdgeBrowserConfigurations],
 						subCategories: []
 						));
-
-					/*
-
-					// 16
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.CertificateChecking,
-						title: GlobalVars.GetStr("ProtectCategory_CertificateCheck"),
-						subTitle: GlobalVars.GetStr("ProtectCategory_Description_CertificateCheck"),
-						logo: CategoryImages[(int)Categories.CertificateChecking],
-						subCategories: []
-						));
-
-					*/
-
-					/*
-
-					// 17
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.CountryIPBlocking,
-						title: GlobalVars.GetStr("ProtectCategory_CountryIPBlock"),
-						subTitle: GlobalVars.GetStr("ProtectCategory_Description_CountryIPBlock"),
-						logo: CategoryImages[(int)Categories.CountryIPBlocking],
-						subCategories: [
-							new SubCategoryDefinition(
-							subCategory:SubCategories.CountryIPBlocking_BlockOFACSanctionedCountries,
-							description: GlobalVars.GetStr("ProtectSubCategory_BlockOFACSanctionedCountries"))
-							]
-						));
-
-					*/
 
 					// 18
 					output.Add(new ProtectionCategoryListViewItem(

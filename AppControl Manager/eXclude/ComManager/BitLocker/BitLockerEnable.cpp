@@ -132,12 +132,13 @@ namespace BitLocker {
 	}
 
 	// PrepareVolume invocation + ReturnValue evaluation (special-case FVE_E_NOT_DECRYPTED 2150694969)
-	static bool PrepareVolume(IWbemServices* svc, const wstring& instancePath)
+	static bool PrepareVolume(IWbemServices* svc, const wstring& instancePath, bool usedSpaceOnly)
 	{
 		unsigned long rv = 0;
-		return InvokeVolumeMethod(svc, instancePath, L"PrepareVolume",
+		const unsigned long initializationFlags = usedSpaceOnly ? 256u : 0u; // 256 = FVE_PROVISIONING_MODIFIER_USED_SPACE
+		return InvokeVolumeMethod(svc, instancePath, L"PrepareVolumeEx",
 			{
-				{L"ForceEncryptionType", 0} // hardware/software selection not forced
+				{L"InitializationFlags", initializationFlags}
 			},
 			{
 				{L"DiscoveryVolumeType", L"<default>"}
@@ -304,6 +305,19 @@ namespace BitLocker {
 		// Perform full initial enablement
 		else if (vol.conversionStatus == ConversionStatus::FullyDecrypted)
 		{
+
+			// If not in WinPE (MiniNT key absent) it returns true.
+			// If in WinPE, requires TPM IsEnabled && IsActivated.
+			if (!IsSystemEntropyReady())
+			{
+				wstringstream ss;
+				ss << L"System entropy (TPM readiness) check failed " << FormatReturnCode(TPM_E_DEACTIVATED)
+					<< L" (TPM not enabled/activated in this environment).";
+				wcerr << ss.str() << endl;
+				SetLastErrorMsg(ss.str());
+				return false;
+			}
+
 			WmiConnection conn;
 			if (!conn.ok)
 			{
@@ -318,7 +332,7 @@ namespace BitLocker {
 			}
 
 			// PrepareVolume (idempotent; treat FVE_E_NOT_DECRYPTED as already-prepared)
-			if (!PrepareVolume(conn.pSvc, instancePath))
+			if (!PrepareVolume(conn.pSvc, instancePath, !freePlusUsedSpace))
 				return false;
 
 			// Add TPM-based + Recovery protectors depending on selected security level
@@ -518,7 +532,7 @@ namespace BitLocker {
 			}
 
 			// PrepareVolume
-			if (!PrepareVolume(conn.pSvc, instancePath))
+			if (!PrepareVolume(conn.pSvc, instancePath, !freePlusUsedSpace))
 				return false;
 
 			// Add Recovery + ExternalKey (AutoUnlock) before encryption
@@ -602,7 +616,7 @@ namespace BitLocker {
 		}
 
 		// PrepareVolume
-		if (!PrepareVolume(conn.pSvc, instancePath))
+		if (!PrepareVolume(conn.pSvc, instancePath, !freePlusUsedSpace))
 			return false;
 
 		// Add password protector + recovery password prior to encryption

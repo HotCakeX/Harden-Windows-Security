@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
-        <TargetFramework>net10.0-windows10.0.22000.0</TargetFramework>
+        <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
         <Version>$(FileVersion)</Version>
         <FileVersion>1.0.0.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
@@ -21,6 +20,7 @@
         <Copyright>Violet Hansen</Copyright>
         <Description>Partner Center</Description>
         <DebugType>none</DebugType>
+        <PackageTags>Partner Center, Microsoft</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

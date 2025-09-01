@@ -1,3 +1,13 @@
-* Updated dependencies to the latest versions.
+* On the Protect page, all subcategories are now deselected by default. Each option must be explicitly checked to be included, eliminating the risk of accidental enabling.
 
-* Added a new section to the BitLocker page called "Management". It allows you to view all of the details of each volume and see if any of them is BitLocker encrypted. You can also view key protectors of the unlocked drives and back them up for safe keeping. There is also an option to delete any existing key protector. This section is going to get more features in the next update.
+* The Protect page now displays color-coded advisories for subcategories that have a greater impact on the system. These prominent warnings help users make informed choices; the same guidance is available in the project's documentation on GitHub.
+
+* The elevation request dialog has been updated to respect the app’s layout flow (left-to-right or right-to-left), matching the direction selected in the app settings.
+
+* You can now enable BitLocker encryption for the Operating System (OS) drive, fixed drives, and removable drives via a guided, safety-first workflow. All messages and UI elements related to BitLocker are localized for the languages supported by the app. BitLocker management is implemented in the low-level ComManager component of Harden System Security.
+
+* A step-by-step workflow allows you to add and modify a variety of key protectors for BitLocker-protected volumes, making key management straightforward and auditable.
+
+* Need to update firmware or perform maintenance? Use the Suspend feature to temporarily suspend BitLocker protection on the OS drive. You may optionally specify the number of restarts after which protection will be automatically resumed.
+
+More on GitHub: https://github.com/HotCakeX/Harden-Windows-Security/releases

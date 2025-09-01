@@ -3541,4 +3541,37 @@
   <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
     <value>यह नीति आपको लॉक स्क्रीन या लॉगऑन स्क्रीन पर "Forgot my PIN" फीचर का उपयोग करने से रोकेगी. यदि आप अपना PIN भूल जाते हैं, तो आप उसे पुनर्प्राप्त नहीं कर पाएंगे.</value>
   </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>एक हटाने योग्य ड्राइव चुनें</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>ताज़ा करें</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ताज़ा करें</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ताज़ा करें</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>पासवर्ड दर्ज करें</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>PIN दर्ज करें</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>रिकवरी पासवर्ड दर्ज करें</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>कुल प्रमाणपत्र</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>प्रमाणपत्र हटाएँ</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित प्रमाणपत्र हटाएँ</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित प्रमाणपत्र हटाएँ</value>
+  </data>
 </root>

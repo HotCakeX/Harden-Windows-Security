@@ -3541,4 +3541,37 @@
   <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
     <value>Αυτή η πολιτική εμποδίζει τη χρήση της λειτουργίας "Forgot my PIN" στην οθόνη κλειδώματος ή σύνδεσης. Αν ξεχάσετε το PIN δεν θα μπορέσετε να το ανακτήσετε.</value>
   </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>Επιλέξτε αφαιρούμενη μονάδα δίσκου</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>Ανανέωση</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανανέωση</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανανέωση</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>Εισαγάγετε κωδικό πρόσβασης</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>Εισαγάγετε PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>Εισαγάγετε κωδικό ανάκτησης</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Σύνολο πιστοποιητικών</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Διαγραφή πιστοποιητικού</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγραφή του επιλεγμένου πιστοποιητικού</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγραφή επιλεγμένου πιστοποιητικού</value>
+  </data>
 </root>

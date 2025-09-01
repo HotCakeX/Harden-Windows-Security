@@ -3541,4 +3541,37 @@ Thumbprint: {3}</value>
   <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
     <value>This policy will prevent you from using "Forgot my PIN" feature in lock screen or logon screen. If you forget your PIN, you won't be able to recover it.</value>
   </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>Select a Removable Drive</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>Enter a Password</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>Enter a PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>Enter a Recovery Password</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Total Certificates</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Delete Certificate</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Delete the selected Certificate</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Delete selected Certificate</value>
+  </data>
 </root>

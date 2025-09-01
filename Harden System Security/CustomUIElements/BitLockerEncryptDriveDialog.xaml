@@ -86,10 +86,10 @@
                                 Padding="12"
                                 CornerRadius="6">
                             <StackPanel Spacing="6">
-                                <TextBlock Text="Enter a PIN"/>
-                                <TextBox Text="{x:Bind PIN, Mode=TwoWay}"
-                                         IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
-                                         PlaceholderText="Required length is determined by the policies."/>
+                                <TextBlock x:Uid="EnterAPinText"/>
+                                <PasswordBox Password="{x:Bind PIN, Mode=TwoWay}"
+                                             PasswordChar="#"
+                                             IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
                             </StackPanel>
                         </Border>
 
@@ -98,13 +98,13 @@
                                 Visibility="{x:Bind IsEnhancedOSDriveEncryptionLevelSelected, Mode=OneWay}"
                                 CornerRadius="6">
                             <StackPanel Spacing="6">
-                                <TextBlock Text="Select a Removable Drive"/>
+                                <TextBlock x:Uid="SelectARemovableDriveText"/>
 
                                 <controls:WrapPanel Orientation="Horizontal"
                                                     HorizontalSpacing="10"
                                                     VerticalSpacing="10">
 
-                                    <Button Content="Refresh"
+                                    <Button x:Uid="RefreshButton"
                                             IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
                                             Click="{x:Bind RefreshRemovableDrives}">
                                         <Button.ContentTemplate>
@@ -170,9 +170,10 @@
                                 Padding="12"
                                 CornerRadius="6">
                             <StackPanel Spacing="6">
-                                <TextBlock Text="Enter a Password"/>
-                                <TextBox Text="{x:Bind Password, Mode=TwoWay}"
-                                         IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                                <TextBlock x:Uid="EnterAPasswordText"/>
+                                <PasswordBox Password="{x:Bind Password, Mode=TwoWay}"
+                                             PasswordChar="#"
+                                             IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
                             </StackPanel>
                         </Border>
 

@@ -3541,4 +3541,37 @@ Huella Digital: {3}</value>
   <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
     <value>Esta directiva impedirá usar la función "Forgot my PIN" en la pantalla de bloqueo o de inicio de sesión. Si olvida el PIN no podrá recuperarlo.</value>
   </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>Seleccione una unidad extraíble</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>Actualizar</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actualizar</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Actualizar</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>Escriba una contraseña</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>Escriba un PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>Escriba una contraseña de recuperación</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Total de certificados</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Eliminar certificado</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Eliminar el certificado seleccionado</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Eliminar certificado seleccionado</value>
+  </data>
 </root>

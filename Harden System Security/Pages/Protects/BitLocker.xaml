@@ -162,6 +162,7 @@
                                 </Button>
 
                                 <Button x:Uid="ExportToJsonButton"
+                                        x:Name="ExportToJsonButton"
                                         VerticalAlignment="Center"
                                         IsEnabled="{x:Bind ViewModel.BitLockerUiEnabled, Mode=OneWay}"
                                         Click="{x:Bind ViewModel.ExportBitLockerData}">
@@ -587,4 +588,3 @@
         </TabView>
     </Grid>
 </Page>
-    

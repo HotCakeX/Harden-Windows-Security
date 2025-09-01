@@ -3541,4 +3541,37 @@
   <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
     <value>מדיניות זו תמנע ממך שימוש בתכונת "שכחתי את ה-PIN שלי" במסך הנעילה או במסך הכניסה. אם תשכח את ה-PIN, לא תוכל לשחזר אותו.</value>
   </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>בחר כונן ניתן להסרה</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>רענן</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>רענן</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>רענן</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>הזן סיסמה</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>הזן קוד PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>הזן סיסמת שחזור</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>סה״כ תעודות</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>מחק תעודה</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את התעודה שנבחרה</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מחק את התעודה שנבחרה</value>
+  </data>
 </root>

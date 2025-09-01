@@ -3541,4 +3541,37 @@
   <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
     <value>ഈ നയം ലോക്ക് സ്ക്രീൻ അല്ലെങ്കിൽ ലോഗിൻ സ്ക്രീനിലെ "Forgot my PIN" സവിശേഷത ഉപയോഗിക്കുന്നത് നിങ്ങളെ തടയും. നിങ്ങൾ PIN മറന്നാൽ അത് വീണ്ടെടുക്കാൻ സാധിക്കില്ല.</value>
   </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>ഒരു നീക്കാവുന്ന ഡ്രൈവ് തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>പുതുക്കുക</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പുതുക്കുക</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പുതുക്കുക</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>പാസ്‌വേഡ് നൽകുക</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>പിൻ നൽകുക</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>റിക്കവറി പാസ്‌വേഡ് നൽകുക</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>ആകെ സർട്ടിഫിക്കറ്റുകൾ</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റ് ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത സർട്ടിഫിക്കറ്റ് ഇല്ലാതാക്കുക</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത സർട്ടിഫിക്കറ്റ് ഇല്ലാതാക്കുക</value>
+  </data>
 </root>

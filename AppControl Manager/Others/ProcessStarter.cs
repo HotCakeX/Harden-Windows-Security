@@ -165,6 +165,7 @@ internal static class ProcessStarter
 					// If anything goes wrong determining exit code, we retain the default -1.
 				}
 
+#if DEBUG
 				throw new InvalidOperationException(
 					string.Format(
 						GlobalVars.GetStr("CommandFailedWithExitCodeErrorMessage"),
@@ -174,6 +175,19 @@ internal static class ProcessStarter
 						line
 					)
 				);
+#else
+				// In release builds, omit command and arguments from error message for security.
+				throw new InvalidOperationException(
+					string.Format(
+						GlobalVars.GetStr("CommandFailedWithExitCodeErrorMessage"),
+						string.Empty,
+						string.Empty,
+						exitCode,
+						line
+					)
+				);
+
+#endif
 			}
 		});
 
@@ -186,6 +200,7 @@ internal static class ProcessStarter
 		// throw if process exited with a non-zero exit code even if nothing was written to stderr.
 		if (process.ExitCode != 0)
 		{
+#if DEBUG
 			throw new InvalidOperationException(
 				string.Format(
 					GlobalVars.GetStr("CommandFailedWithExitCodeErrorMessage"),
@@ -195,6 +210,19 @@ internal static class ProcessStarter
 					string.Empty
 				)
 			);
+#else
+			// In release builds, omit command and arguments from error message for security.
+			throw new InvalidOperationException(
+							string.Format(
+								GlobalVars.GetStr("CommandFailedWithExitCodeErrorMessage"),
+								string.Empty,
+								string.Empty,
+								process.ExitCode,
+								string.Empty
+							)
+						);
+
+#endif
 		}
 	}
 }

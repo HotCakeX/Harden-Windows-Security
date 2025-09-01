@@ -832,6 +832,9 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 
 				// Mark whatever message the ComManager sent as success. At this point no error was thrown.
 				MainInfoBar.Severity = InfoBarSeverity.Success;
+
+				// Roll the animation to remind user to backup
+				TriggerExportJsonButtonHighlight();
 			}
 			else
 			{
@@ -946,6 +949,9 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 
 				// Mark whatever message the ComManager sent as success. At this point no error was thrown.
 				MainInfoBar.Severity = InfoBarSeverity.Success;
+
+				// Roll the animation to remind user to backup
+				TriggerExportJsonButtonHighlight();
 			}
 			else
 			{
@@ -1184,6 +1190,15 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 			BitLockerUiEnabled = true;
 			MainInfoBarIsClosable = true;
 		}
+	}
+
+	// Event raised so the Page can animate the Export -> JSON button.
+	internal event Action? ExportJsonButtonHighlightRequested;
+
+	private void TriggerExportJsonButtonHighlight()
+	{
+		Action? handler = ExportJsonButtonHighlightRequested;
+		handler?.Invoke();
 	}
 
 	#endregion

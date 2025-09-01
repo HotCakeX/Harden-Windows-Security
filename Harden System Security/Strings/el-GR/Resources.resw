@@ -3286,4 +3286,292 @@
 <data name="NoBitLockerVolumeSelected" xml:space="preserve">
   <value>Δεν έχει επιλεγεί τόμος BitLocker.</value>
 </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Αυτόματο Ξεκλείδωμα</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού αυτόματου ξεκλειδώματος.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού αυτόματου ξεκλειδώματος.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Κωδικός πρόσβασης</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κωδικού πρόσβασης.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κωδικού πρόσβασης.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Κωδικός ανάκτησης</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κωδικού ανάκτησης.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κωδικού ανάκτησης.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>Αυτόματο Ξεκλείδωμα</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>Ενεργοποιεί αυτόματο ξεκλείδωμα για τόμο που δεν είναι ο δίσκος λειτουργικού συστήματος και προστατεύεται με κρυπτογράφηση BitLocker.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>Το BitLocker μπορεί να ρυθμιστεί ώστε να ξεκλειδώνει αυτόματα τόμους δεδομένων που δεν φιλοξενούν το λειτουργικό σύστημα. Αφού ο χρήστης ξεκλειδώσει τον τόμο του λειτουργικού συστήματος, το BitLocker χρησιμοποιεί κρυπτογραφημένα διαπιστευτήρια αποθηκευμένα στο μητρώο μαζί με μεταδεδομένα τόμου για να ξεκλειδώσει αυτόματα κάθε τόμο δεδομένων που έχει οριστεί για αυτόματο ξεκλείδωμα.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>Κωδικός πρόσβασης</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>Ο τόμος BitLocker θα χρησιμοποιεί κωδικό πρόσβασης για την προστασία των δεδομένων.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>Κωδικός ανάκτησης</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>Ο καθορισμός κωδικού πρόσβασης είναι προαιρετικός. Αν δεν τον καθορίσετε, θα δημιουργηθεί αυτόματα και θα εκχωρηθεί στον επιλεγμένο τόμο. Αν αποφασίσετε να τον εισαγάγετε χειροκίνητα, πρέπει να έχει 48 χαρακτήρες. Ο κωδικός χρησιμοποιείται ως προστασία για το κλειδί κρυπτογράφησης του τόμου.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>Κρυπτογράφηση</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κρυπτογραφήστε, αποκρυπτογραφήστε ή εκτελέστε άλλες σχετικές ενέργειες στον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κρυπτογραφήστε, αποκρυπτογραφήστε ή εκτελέστε άλλες σχετικές ενέργειες στον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Κρυπτογράφηση</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κρυπτογραφήστε τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κρυπτογραφήστε τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αποκρυπτογράφηση</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποκρυπτογραφήστε τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποκρυπτογραφήστε τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Παύση κρυπτογράφησης</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Θέτει σε παύση την κρυπτογράφηση BitLocker επιτρέποντας πρόσβαση σε δεδομένα σε τόμο που προστατεύεται με BitLocker. Η διαδικασία καθιστά το κλειδί κρυπτογράφησης προσβάσιμο σε μη προστατευμένη μορφή.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Θέτει σε παύση την κρυπτογράφηση BitLocker επιτρέποντας πρόσβαση σε δεδομένα σε τόμο που προστατεύεται με BitLocker. Η διαδικασία καθιστά το κλειδί κρυπτογράφησης προσβάσιμο σε μη προστατευμένη μορφή.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Συνέχιση κρυπτογράφησης</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαναφορά κρυπτογράφησης σε τόμο που χρησιμοποιεί BitLocker και είχε τεθεί προηγουμένως σε παύση.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επαναφορά κρυπτογράφησης σε τόμο που χρησιμοποιεί BitLocker και είχε τεθεί προηγουμένως σε παύση.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Ενεργοποίηση</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Ακύρωση</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Μονάδα δίσκου λειτουργικού συστήματος</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τη μονάδα δίσκου λειτουργικού συστήματος.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τη μονάδα δίσκου λειτουργικού συστήματος.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Σταθερός δίσκος</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τον σταθερό δίσκο.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τον σταθερό δίσκο.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Αφαιρούμενος δίσκος</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τον αφαιρούμενο δίσκο.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τον αφαιρούμενο δίσκο.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Κρυπτογράφηση μονάδας δίσκου λειτουργικού συστήματος</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Κρυπτογραφήστε τη μονάδα δίσκου λειτουργικού συστήματος με το BitLocker.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>Επίπεδο κρυπτογράφησης</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε ένα από τα επίπεδα κρυπτογράφησης για τη μονάδα λειτουργικού συστήματος. Το Κανονικό θα χρησιμοποιεί προστασίες κλειδιού TPM και PIN. Το Ενισχυμένο θα χρησιμοποιεί TPM, PIN και προστασία κλειδιού εκκίνησης σε μονάδα USB, παρέχοντας ισχυρό πολυπαραγοντικό έλεγχο ταυτότητας.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε ένα από τα επίπεδα κρυπτογράφησης για τη μονάδα λειτουργικού συστήματος. Το Κανονικό θα χρησιμοποιεί προστασίες κλειδιού TPM και PIN. Το Ενισχυμένο θα χρησιμοποιεί TPM, PIN και προστασία κλειδιού εκκίνησης σε μονάδα USB, παρέχοντας ισχυρό πολυπαραγοντικό έλεγχο ταυτότητας.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>Κανονικό</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>Ενισχυμένο</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>Κάλυψη κρυπτογράφησης</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>Ελεύθερος και χρησιμοποιούμενος χώρος</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>Μόνο χρησιμοποιούμενος χώρος</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε την κάλυψη κρυπτογράφησης του δίσκου. Ο "Ελεύθερος και χρησιμοποιούμενος χώρος" θα κρυπτογραφήσει όλα τα δεδομένα, ενώ ο "Μόνο χρησιμοποιούμενος χώρος" θα κρυπτογραφήσει μόνο τον τρέχοντα χρησιμοποιούμενο χώρο εξοικονομώντας χρόνο.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε την κάλυψη κρυπτογράφησης του δίσκου. Ο "Ελεύθερος και χρησιμοποιούμενος χώρος" θα κρυπτογραφήσει όλα τα δεδομένα, ενώ ο "Μόνο χρησιμοποιούμενος χώρος" θα κρυπτογραφήσει μόνο τον τρέχοντα χρησιμοποιούμενο χώρο εξοικονομώντας χρόνο.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>Συμπεριφορά υποβάθμισης</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>Να επιτρέπεται η υποβάθμιση</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>Άρνηση υποβάθμισης</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αν επιτρέπεται η υποβάθμιση και η μονάδα λειτουργικού είναι ήδη κρυπτογραφημένη σε Ενισχυμένο επίπεδο κι εσείς επιλέξετε Κανονικό, θα γίνει υποβάθμιση. Αν δεν επιτρέπεται, η λειτουργία δεν θα ολοκληρωθεί και θα εμφανιστεί σφάλμα αποτρέποντας την υποβάθμιση του επιπέδου κρυπτογράφησης.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αν επιτρέπεται η υποβάθμιση και η μονάδα λειτουργικού είναι ήδη κρυπτογραφημένη σε Ενισχυμένο επίπεδο κι εσείς επιλέξετε Κανονικό, θα γίνει υποβάθμιση. Αν δεν επιτρέπεται, η λειτουργία δεν θα ολοκληρωθεί και θα εμφανιστεί σφάλμα αποτρέποντας την υποβάθμιση του επιπέδου κρυπτογράφησης.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Κρυπτογράφηση σταθερού δίσκου</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Κρυπτογραφήστε τον επιλεγμένο σταθερό δίσκο. Θα διαθέτει κωδικό ανάκτησης 48 χαρακτήρων και θα ξεκλειδώνει αυτόματα μέσω της ήδη κρυπτογραφημένης μονάδας λειτουργικού συστήματος.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Κρυπτογράφηση αφαιρούμενου δίσκου</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Κρυπτογραφήστε τον επιλεγμένο αφαιρούμενο δίσκο. Θα διαθέτει κωδικό ανάκτησης 48 χαρακτήρων και τον κωδικό πρόσβασης που παρέχετε στο πεδίο.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>Παύση κρυπτογράφησης BitLocker</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Παύση</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Ακύρωση</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Θέστε σε παύση την κρυπτογράφηση BitLocker του επιλεγμένου τόμου.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>Η παύση του BitLocker επιτρέπει πρόσβαση σε κρυπτογραφημένα δεδομένα εκθέτοντας το κλειδί κρυπτογράφησης σε μη προστατευμένη κατάσταση. Η παύση δεν αποκρυπτογραφεί τα υπάρχοντα δεδομένα· απλώς καθιστά διαθέσιμο το κλειδί. Νέα δεδομένα που γράφονται παραμένουν κρυπτογραφημένα. Όσο είναι σε παύση δεν εφαρμόζονται έλεγχοι ακεραιότητας κατά την εκκίνηση. Χρησιμοποιείται συνήθως για αναβαθμίσεις υλικολογισμικού ή συντήρηση χωρίς ενεργοποίηση ανάκτησης.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>Ορίστε πόσες επανεκκινήσεις επιτρέπονται πριν λήξει η παύση. Τιμή 1 σημαίνει επανέναρξη προστασίας μετά την επόμενη επανεκκίνηση. Μπορείτε να την επαναλάβετε χειροκίνητα οποτεδήποτε μέσω του κουμπιού "Συνέχιση".</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>Όλα τα μέτρα ασφαλείας της κατηγορίας BitLocker θα εφαρμοστούν πριν την έναρξη της διαδικασίας κρυπτογράφησης.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>Αποκρυπτογράφηση BitLocker για τον δίσκο {0}</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>Όλες οι προστασίες κλειδιού του δίσκου θα αφαιρεθούν και θα ξεκινήσει η αποκρυπτογράφηση του περιεχομένου.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>Η λειτουργία ακυρώθηκε.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>Συνέχιση κρυπτογράφησης BitLocker για τον δίσκο {0}</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>Επαναφορά κρυπτογράφησης του δίσκου ή τόμου που είχε τεθεί σε παύση.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>Δεν εισήχθη PIN εκκίνησης. Παρακαλώ δώστε ένα και δοκιμάστε ξανά.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>Δεν επιλέχθηκε αφαιρούμενος δίσκος. Επιλέξτε έναν και δοκιμάστε ξανά.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>Δεν παρέχεται κωδικός πρόσβασης. Παρακαλώ δώστε έναν και δοκιμάστε ξανά.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>Η μονάδα λειτουργικού πρέπει να είναι πλήρως κρυπτογραφημένη πριν κρυπτογραφήσετε σταθερούς δίσκους, αλλά βρίσκεται {0} με ποσοστό κρυπτογράφησης {1}.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>Προσθήκη {0} στο {1}</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>Επιτυχής εξαγωγή {0} τόμων BitLocker σε: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>Αυτό μπορεί να αποτρέψει απομακρυσμένη χρήση RDP μέσω διεύθυνσης IP, κάτι μη ασφαλές λόγω ανοιχτών δημόσιων θυρών και χρήσης NTLM. Χρησιμοποιήστε Quick Assist ή Azure Bastion για VM στο Azure ως ασφαλέστερες εναλλακτικές. Το τοπικό RDP (π.χ. ενισχυμένη συνεδρία Hyper-V) δεν επηρεάζεται.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>Αυτή η πολιτική εμποδίζει τη χρήση της λειτουργίας "Forgot my PIN" στην οθόνη κλειδώματος ή σύνδεσης. Αν ξεχάσετε το PIN δεν θα μπορέσετε να το ανακτήσετε.</value>
+  </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>Επιλέξτε αφαιρούμενη μονάδα δίσκου</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>Ανανέωση</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανανέωση</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανανέωση</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>Εισαγάγετε κωδικό πρόσβασης</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>Εισαγάγετε PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>Εισαγάγετε κωδικό ανάκτησης</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Σύνολο πιστοποιητικών</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Διαγραφή πιστοποιητικού</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγραφή του επιλεγμένου πιστοποιητικού</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγραφή επιλεγμένου πιστοποιητικού</value>
+  </data>
 </root>

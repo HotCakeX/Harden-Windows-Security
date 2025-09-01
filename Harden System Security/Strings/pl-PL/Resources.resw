@@ -3286,4 +3286,292 @@ Odcisk Palca: {3}</value>
 <data name="NoBitLockerVolumeSelected" xml:space="preserve">
   <value>Nie wybrano woluminu BitLocker.</value>
 </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Automatyczne odblokowanie</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj element ochrony klucza automatycznego odblokowania.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj element ochrony klucza automatycznego odblokowania.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Hasło</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj element ochrony klucza hasła.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj element ochrony klucza hasła.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Hasło odzyskiwania</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj element ochrony klucza hasła odzyskiwania.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj element ochrony klucza hasła odzyskiwania.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>Automatyczne odblokowanie</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>Umożliwia automatyczne odblokowywanie woluminu niebędącego dyskiem systemu operacyjnego, chronionego przez szyfrowanie dysku BitLocker.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>BitLocker można skonfigurować tak, aby automatycznie odblokowywał woluminy danych, które nie zawierają systemu operacyjnego. Po odblokowaniu przez użytkownika dysku systemowego BitLocker używa zaszyfrowanych poświadczeń przechowywanych w rejestrze wraz z metadanymi woluminu, aby automatycznie odblokować wszystkie woluminy danych ustawione na automatyczne odblokowanie.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>Hasło</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>Wolumin BitLocker będzie używał hasła do ochrony danych.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>Hasło odzyskiwania</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>Podanie hasła jest opcjonalne. Jeśli go nie podasz, zostanie automatycznie wygenerowane i przypisane do wybranego woluminu. Jeśli zdecydujesz się wprowadzić hasło ręcznie, musi mieć 48 znaków. Hasło służy jako ochrona klucza szyfrowania woluminu.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>Szyfrowanie</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Szyfruj, odszyfruj lub wykonaj inne powiązane działania na wybranym woluminie.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Szyfruj, odszyfruj lub wykonaj inne powiązane działania na wybranym woluminie.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Szyfruj</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zaszyfruj wybrany wolumin.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zaszyfruj wybrany wolumin.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Odszyfruj</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odszyfruj wybrany wolumin.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Odszyfruj wybrany wolumin.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Wstrzymaj szyfrowanie</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wstrzymuje szyfrowanie BitLocker, umożliwiając użytkownikom dostęp do danych na woluminie chronionym przez BitLocker. Proces ten udostępnia klucz szyfrowania w niechronionej formie.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wstrzymuje szyfrowanie BitLocker, umożliwiając użytkownikom dostęp do danych na woluminie chronionym przez BitLocker. Proces ten udostępnia klucz szyfrowania w niechronionej formie.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Wznów szyfrowanie</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przywraca szyfrowanie na woluminie korzystającym z BitLocker, którego szyfrowanie było wcześniej wstrzymane.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przywraca szyfrowanie na woluminie korzystającym z BitLocker, którego szyfrowanie było wcześniej wstrzymane.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Włącz</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla wybranego woluminu.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Dysk systemu operacyjnego</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku systemu operacyjnego.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku systemu operacyjnego.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Dysk stały</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku stałego.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku stałego.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Dysk wymienny</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku wymiennego.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku wymiennego.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Szyfrowanie dysku systemu operacyjnego</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Zaszyfruj dysk systemu operacyjnego przy użyciu BitLocker.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>Poziom szyfrowania</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz jeden z poziomów szyfrowania dla dysku systemowego. Poziom standardowy użyje zabezpieczeń klucza TPM i PIN. Poziom zaawansowany użyje TPM, PIN oraz klucza startowego na dysku USB, zapewniając silne uwierzytelnianie wieloskładnikowe.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz jeden z poziomów szyfrowania dla dysku systemowego. Poziom standardowy użyje zabezpieczeń klucza TPM i PIN. Poziom zaawansowany użyje TPM, PIN oraz klucza startowego na dysku USB, zapewniając silne uwierzytelnianie wieloskładnikowe.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>Standardowy</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>Zaawansowany</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>Zakres szyfrowania</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>Wolna i używana przestrzeń</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>Tylko używana przestrzeń</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz zakres szyfrowania dysku. "Wolna i używana przestrzeń" zaszyfruje wszystkie dane na dysku, natomiast "Tylko używana przestrzeń" zaszyfruje jedynie aktualnie używaną część, co skróci czas operacji.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz zakres szyfrowania dysku. "Wolna i używana przestrzeń" zaszyfruje wszystkie dane na dysku, natomiast "Tylko używana przestrzeń" zaszyfruje jedynie aktualnie używaną część, co skróci czas operacji.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>Zachowanie przy obniżaniu poziomu</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>Zezwól na obniżenie</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>Zabroń obniżenia</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Jeżeli obniżenie jest dozwolone, a dysk systemu operacyjnego jest już zaszyfrowany poziomem zaawansowanym i wybierzesz poziom standardowy, poziom zostanie obniżony. Jeśli obniżenie jest zabronione, operacja nie zostanie ukończona i pojawi się błąd, zapobiegając obniżeniu poziomu szyfrowania dysku systemowego.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Jeżeli obniżenie jest dozwolone, a dysk systemu operacyjnego jest już zaszyfrowany poziomem zaawansowanym i wybierzesz poziom standardowy, poziom zostanie obniżony. Jeśli obniżenie jest zabronione, operacja nie zostanie ukończona i pojawi się błąd, zapobiegając obniżeniu poziomu szyfrowania dysku systemowego.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Szyfrowanie dysku stałego</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Zaszyfruj wybrany dysk stały. Otrzyma 48-znakowe hasło odzyskiwania i będzie automatycznie odblokowywany przez już zaszyfrowany dysk systemu operacyjnego.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Szyfrowanie dysku wymiennego</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Zaszyfruj wybrany dysk wymienny. Otrzyma 48-znakowe hasło odzyskiwania oraz hasło, które podasz w polu.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>Wstrzymaj szyfrowanie BitLocker</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Wstrzymaj</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Wstrzymaj szyfrowanie BitLocker wybranego woluminu.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>Wstrzymanie BitLocker umożliwia dostęp do zaszyfrowanych danych na chronionym woluminie poprzez udostępnienie klucza szyfrowania w stanie niechronionym. Wstrzymanie nie odszyfrowuje istniejących danych na woluminie, a jedynie udostępnia klucz potrzebny do odszyfrowania. Nowe dane zapisywane na dysk pozostają zaszyfrowane. Podczas wstrzymania szyfrowania kontrola integralności systemu przy uruchomieniu nie jest egzekwowana. Funkcja ta służy zwykle do ułatwienia aktualizacji firmware lub prac serwisowych bez wywoływania trybu odzyskiwania.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>Tutaj możesz określić, ile razy komputer może zostać ponownie uruchomiony przed zakończeniem wstrzymania BitLocker. Wartość 1 oznacza, że ochrona BitLocker zostanie wznowiona natychmiast po następnym restarcie. Możesz wznowić ochronę ręcznie w dowolnym momencie za pomocą przycisku "Wznów".</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>Wszystkie środki bezpieczeństwa w kategorii BitLocker zostaną zastosowane do systemu przed rozpoczęciem procesu szyfrowania.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>Odszyfrowywanie BitLocker dla dysku {0}</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>Wszystkie zabezpieczenia klucza dysku zostaną usunięte i rozpocznie się odszyfrowywanie zawartości.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>Operacja została anulowana.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>Wznów szyfrowanie BitLocker dla dysku {0}</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>Przywróć szyfrowanie dysku lub woluminu, którego szyfrowanie było wcześniej wstrzymane.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>Nie wprowadzono kodu PIN dla uruchamiania. Podaj go i spróbuj ponownie.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>Nie wybrano dysku wymiennego. Wybierz dysk i spróbuj ponownie.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>Nie podano hasła. Podaj hasło i spróbuj ponownie.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>Dysk systemu operacyjnego musi być najpierw w pełni zaszyfrowany zanim zaszyfrujesz dyski stałe, lecz obecnie jego stan to {0} przy {1} procentach szyfrowania.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>Dodawanie {0} do {1}</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>Pomyślnie wyeksportowano {0} wolumin(y) BitLocker do: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>Może to uniemożliwić korzystanie z RDP (Pulpit zdalny) zdalnie poprzez adres IP, co jest niebezpieczne, ponieważ wymaga publicznie otwartych portów i używa NTLM. Możesz użyć Quick Assist lub Azure Bastion dla maszyn wirtualnych Azure jako bezpieczniejszych alternatyw. Lokalny RDP, np. dla rozszerzonej sesji Hyper-V, nie jest objęty.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>Ta zasada uniemożliwi korzystanie z funkcji "Forgot my PIN" na ekranie blokady lub logowania. Jeśli zapomnisz kodu PIN, nie będzie można go odzyskać.</value>
+  </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>Wybierz dysk wymienny</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>Wprowadź hasło</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>Wprowadź kod PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>Wprowadź hasło odzyskiwania</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Łączna liczba certyfikatów</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Usuń certyfikat</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wybrany certyfikat</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń wybrany certyfikat</value>
+  </data>
 </root>

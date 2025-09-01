@@ -1284,6 +1284,7 @@ fn validate_xuid_usage(
             "ToolTipService.ToolTip",
             "OffContent",
             "OnContent",
+            "Header"
         ],
     );
     allowed.insert(
@@ -1396,7 +1397,9 @@ fn validate_xuid_usage(
     allowed.insert(
         "RadioButtons",
         vec![
-            "Header"
+            "Header",
+            "ToolTipService.ToolTip",
+            "AutomationProperties.HelpText"
         ],
     );
     allowed.insert(

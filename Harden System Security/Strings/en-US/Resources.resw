@@ -3286,4 +3286,292 @@ Thumbprint: {3}</value>
 <data name="NoBitLockerVolumeSelected" xml:space="preserve">
   <value>No BitLocker volume is selected.</value>
 </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Auto Unlock</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add an Auto Unlock Key Protector.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add an Auto Unlock Key Protector.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add a Password Key Protector.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add a Password Key Protector.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Recovery Password</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add a Recovery Password Key Protector.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add a Recovery Password Key Protector.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>Auto Unlock</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>Enables automatic unlocking for a Non-operation system volume protected by BitLocker Disk Encryption.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>BitLocker can be configured to automatically unlock data volumes that don't host the operating system. After a user unlocks the OS volume, BitLocker uses encrypted credentials stored in the registry together with volume metadata to automatically unlock any data volumes that are set for automatic unlocking.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker volume will use a Password to protect the data.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>Recovery Password</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>Specifying the password is optional. If you do not specify this password, one will be automatically generated for you and assigned to the selected volume. If you do decide to enter the password manually, it must be 48 characters. The password is used as a protector for the volume encryption key.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>Encryption</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Encrypt, Decrypt or perform other related actions on the selected volume.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Encrypt, Decrypt or perform other related actions on the selected volume.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Encrypt</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Encrypt the selected volume.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Encrypt the selected volume.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Decrypt</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Decrypt the selected volume.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Decrypt the selected volume.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Suspend Encryption</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Suspends BitLocker encryption, enabling users to access data on a volume protected by BitLocker Drive Encryption. This process makes the encryption key accessible in an unprotected form.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Suspends BitLocker encryption, enabling users to access data on a volume protected by BitLocker Drive Encryption. This process makes the encryption key accessible in an unprotected form.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Resume Encryption</value>
+  </data>
+    <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restores encryption on a volume that uses BitLocker Drive Encryption whose encryption was previously suspended.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restores encryption on a volume that uses BitLocker Drive Encryption whose encryption was previously suspended.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>Enable BitLocker Encryption</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>Enable BitLocker encryption for the selected volume.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>OS Drive</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enable BitLocker encryption for the OS Drive.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enable BitLocker encryption for the OS Drive.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Fixed Drive</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enable BitLocker encryption for the Fixed Drive.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enable BitLocker encryption for the Fixed Drive.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Removable Drive</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enable BitLocker encryption for the Removable Drive.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enable BitLocker encryption for the Removable Drive.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Operation System Drive Encryption</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Encrypt the Operation System Drive with BitLocker.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>Encryption Level</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select one of the encryption levels for the OS Drive. Normal will use TPM and PIN key protectors. Enhanced will use TPM and PIN and Startup Key Protector on a USB drive, providing strong multifactor authentication.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select one of the encryption levels for the OS Drive. Normal will use TPM and PIN key protectors. Enhanced will use TPM and PIN and Startup Key Protector on a USB drive, providing strong multifactor authentication.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>Enhanced</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>Encryption Coverage</value>
+  </data>
+    <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>Free and Used Space</value>
+  </data>
+    <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>Used Space Only</value>
+  </data>
+    <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select the encryption coverage of the Drive. Free and Used Space will encrypt all data on the drive, while Used Space Only will only encrypt the space currently in use which will take less time to complete.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select the encryption coverage of the Drive. Free and Used Space will encrypt all data on the drive, while Used Space Only will only encrypt the space currently in use which will take less time to complete.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>Downgrade Behavior</value>
+  </data>
+    <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>Allow Downgrade</value>
+  </data>
+    <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>Deny Downgrade</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>If downgrade is allowed, the operation system is already encrypted with Enhanced level, and you selected Normal level for encryption, it will downgrade the encryption level. However, if downgrade is denied, the operation will not complete and there will be an error, preventing downgrade of the operation system drive's encryption level.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>If downgrade is allowed, the operation system is already encrypted with Enhanced level, and you selected Normal level for encryption, it will downgrade the encryption level. However, if downgrade is denied, the operation will not complete and there will be an error, preventing downgrade of the operation system drive's encryption level.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Fixed Drive Encryption</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Encrypt the selected Fixed Drive. It will have a 48-characters Recovery Password and will be auto-unlocked via the already-encrypted Operation System Drive.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Removable Drive Encryption</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Encrypt the selected Removable Drive. It will have a 48-characters Recovery Password and the Password that you provide in the box.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>Suspend BitLocker Encryption</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Suspend</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Suspend the BitLocker encryption of the selected volume.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>Suspending BitLocker allows access to encrypted data on a protected volume by exposing the encryption key in an unprotected state. It is important to note that suspension does not decrypt the existing data on the volume. Instead, it simply makes the key required for decryption openly available. Any new data written to the disk during this period remains encrypted. While BitLocker is suspended, system integrity checks are not enforced at startup. This capability is typically used to facilitate firmware upgrades or system maintenance without triggering recovery.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>Here you can define how many times the computer can restart before BitLocker suspension ends. A value of 1 means BitLocker protection will resume immediately after the next restart. You can resume the protection manually at any time via the Resume button.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>The Security Measures in the BitLocker category will all be applied to the system prior to initiating the encryption process.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>Decrypting BitLocker encryption for the drive {0}</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>All of the key protectors of the drive will be removed and the decryption of the content will begin.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>The operation was cancelled.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>Resume BitLocker encryption for the drive {0}</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>Restore the encryption of the drive or volume that was previously suspended.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>No PIN was entered for Startup. Please provide one and try again.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>No removable drive was selected. Please select one and try again.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>No password was provided. Please provide one and try again.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>The Operation System drive must be fully Encrypted first before you can encrypt the fixed drives, but it's currently {0} at {1} encryption percentage.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>Adding {0} to the {1}</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>Successfully exported {0} BitLocker volume(s) to: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>This can prevent you from using RDP (Remote Desktop) remotely via IP address which is insecure as it needs public exposed ports and uses NTLM. You can use Quick Assist or Bastion for Azure VMs which are more secure alternatives. Local RDP such as for Hyper-V enhanced session is not affected.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>This policy will prevent you from using "Forgot my PIN" feature in lock screen or logon screen. If you forget your PIN, you won't be able to recover it.</value>
+  </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>Select a Removable Drive</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>Enter a Password</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>Enter a PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>Enter a Recovery Password</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Total Certificates</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Delete Certificate</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Delete the selected Certificate</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Delete selected Certificate</value>
+  </data>
 </root>

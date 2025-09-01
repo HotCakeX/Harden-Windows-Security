@@ -81,7 +81,7 @@
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
         <ErrorReport>send</ErrorReport>
-        <FileVersion>1.0.8.0</FileVersion>
+        <FileVersion>1.0.9.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <NeutralLanguage>en-US</NeutralLanguage>
         <StartupObject>HardenSystemSecurity.Program</StartupObject>
@@ -446,9 +446,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="CppInterop\ScheduledTaskManager.exe">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <Content Include="CppInterop\ComManager.exe">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

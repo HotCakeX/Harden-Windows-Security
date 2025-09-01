@@ -84,10 +84,20 @@
                                   Margin="12,6,0,6">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="Protect:SubCategoryDefinition">
-                                <CheckBox Content="{x:Bind Description}"
-                                          IsChecked="True"
+                                <StackPanel Orientation="Vertical" Spacing="4" Margin="6">
+                                    <!--By default the sub-categories are not checked/selected-->
+                                    <CheckBox Content="{x:Bind Description}"                                          
+                                          IsChecked="False"
                                           ToolTipService.ToolTip="{x:Bind Description}"
                                           AutomationProperties.HelpText="{x:Bind Description}" />
+
+                                    <TextBlock Text="{x:Bind Tip}"
+                                               ToolTipService.ToolTip="{x:Bind Tip}"
+                                               Visibility="{x:Bind Protect:SubCategoryDefinition.HasTip(Tip)}"
+                                               AutomationProperties.HelpText="{x:Bind Tip}"
+                                               Style="{StaticResource CaptionTextBlockStyle}"
+                                               Foreground="{ThemeResource SystemFillColorCautionBrush}"/>
+                                </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

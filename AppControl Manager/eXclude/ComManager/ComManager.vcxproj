@@ -33,7 +33,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <TargetName>ComManager-ARM64</TargetName>
+    <TargetName>ComManager</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -41,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <TargetName>ComManager-x64</TargetName>
+    <TargetName>ComManager</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -92,12 +92,14 @@
       <EnableEnhancedInstructionSet>CPUExtensionRequirementsARMv81</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <GuardEHContMetadata>true</GuardEHContMetadata>
+      <StringPooling>true</StringPooling>
+      <AdditionalOptions>/Gw %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding Condition="'$(UseDynamicDebugging)' != 'true'">true</EnableCOMDATFolding>
       <OptimizeReferences Condition="'$(UseDynamicDebugging)' != 'true'">true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <DependentLoadFlags>0x800</DependentLoadFlags>
@@ -134,12 +136,14 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <GuardEHContMetadata>true</GuardEHContMetadata>
+      <StringPooling>true</StringPooling>
+      <AdditionalOptions>/Gw %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding Condition="'$(UseDynamicDebugging)' != 'true'">true</EnableCOMDATFolding>
       <OptimizeReferences Condition="'$(UseDynamicDebugging)' != 'true'">true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <CETCompat>true</CETCompat>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
@@ -153,10 +157,12 @@
     <ClCompile Include="BitLocker/BitLockerEnableKeyProtectors.cpp" />
     <ClCompile Include="BitLocker/BitLockerManager.cpp" />
     <ClCompile Include="BitLocker/BitLockerRemoveKeyProtector.cpp" />
+    <ClCompile Include="BitLocker\BitLockerSuspend.cpp" />
     <ClCompile Include="ComHelpers.cpp" />
     <ClCompile Include="ComManager.cpp" />
     <ClCompile Include="Firewall/FirewallManager.cpp" />
     <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="ScheduledTasks\ScheduledTasks.cpp" />
     <ClCompile Include="StringUtilities.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -166,9 +172,11 @@
     <ClInclude Include="BitLocker/BitLockerEnableKeyProtectors.h" />
     <ClInclude Include="BitLocker/BitLockerManager.h" />
     <ClInclude Include="BitLocker/BitLockerRemoveKeyProtector.h" />
+    <ClInclude Include="BitLocker\BitLockerSuspend.h" />
     <ClInclude Include="ComHelpers.h" />
     <ClInclude Include="Firewall/FirewallManager.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="ScheduledTasks\ScheduledTasks.h" />
     <ClInclude Include="StringUtilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -420,16 +420,6 @@ function Build_HSS {
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for ARM64. Exit Code: $LASTEXITCODE") }
 
-    ### ScheduledTaskManager
-
-    . $MSBuildPath '..\AppControl Manager\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ScheduledTaskManager solution for X64. Exit Code: $LASTEXITCODE") }
-
-    . $MSBuildPath '..\AppControl Manager\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ScheduledTaskManager solution for ARM64. Exit Code: $LASTEXITCODE") }
-
     #region --- RUST projects ---
 
     # Uncomment this once stable toolchain supports ehcont security feature, till then we use nightly only
@@ -543,9 +533,8 @@ function Build_HSS {
     # https://learn.microsoft.com/visualstudio/msbuild/common-msbuild-project-properties
 
     # Copy the X64 components to the directory before the build starts
-    Copy-Item -Path '..\AppControl Manager\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
 
-    Copy-Item -Path '..\AppControl Manager\eXclude\ComManager\x64\Release\ComManager-x64.exe' -Destination '.\CppInterop\ComManager.exe' -Force
+    Copy-Item -Path '..\AppControl Manager\eXclude\ComManager\x64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
     Copy-Item -Path '..\AppControl Manager\eXclude\DISMService\OutputX64\DISMService.exe' -Destination '.\DISMService.exe' -Force
 
@@ -560,9 +549,8 @@ function Build_HSS {
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging x64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 
     # Copy the ARM64 components to the directory before the build starts
-    Copy-Item -Path '..\AppControl Manager\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
 
-    Copy-Item -Path '..\AppControl Manager\eXclude\ComManager\ARM64\Release\ComManager-ARM64.exe' -Destination '.\CppInterop\ComManager.exe' -Force
+    Copy-Item -Path '..\AppControl Manager\eXclude\ComManager\ARM64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
     Copy-Item -Path '..\AppControl Manager\eXclude\DISMService\OutputARM64\DISMService.exe' -Destination '.\DISMService.exe' -Force
 

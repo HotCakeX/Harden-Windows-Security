@@ -282,7 +282,7 @@
                 </Button>
 
                 <TextBox Text="{x:Bind ViewModel.TotalCertificatesCount, Mode=OneWay}"
-                         PlaceholderText="Total Certificates"
+                         x:Uid="TotalCertsPlaceHolder"
                          IsReadOnly="True"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center"/>
@@ -342,7 +342,7 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem Text="Copy Row" Click="{x:Bind VMRef.CopySelectedCertificates_Click}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMRef.CopySelectedCertificates_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMRef.CopySelectedCertificates_Click}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
@@ -353,7 +353,7 @@
 
                                 <MenuFlyoutSeparator />
 
-                                <MenuFlyoutItem Text="Delete Certificate" Click="{x:Bind VMRef.DeleteSelectedCertificate_Click}">
+                                <MenuFlyoutItem x:Uid="DeleteCertMenuFlyoutItem" Click="{x:Bind VMRef.DeleteSelectedCertificate_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="Delete" Invoked="{x:Bind VMRef.DeleteSelectedCertificate_Click}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
@@ -364,7 +364,7 @@
 
                                 <MenuFlyoutSeparator />
 
-                                <MenuFlyoutSubItem Text="Copy Individual Items">
+                                <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
                                     <MenuFlyoutSubItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
                                     </MenuFlyoutSubItem.Icon>

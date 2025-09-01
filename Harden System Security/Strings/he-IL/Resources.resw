@@ -3286,4 +3286,292 @@
 <data name="NoBitLockerVolumeSelected" xml:space="preserve">
   <value>לא נבחר כרך BitLocker.</value>
 </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>פתיחה אוטומטית</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף מגן מפתח לפתיחה אוטומטית.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף מגן מפתח לפתיחה אוטומטית.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>סיסמה</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף מגן מפתח לסיסמה.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף מגן מפתח לסיסמה.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>סיסמת שחזור</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף מגן מפתח לסיסמת שחזור.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף מגן מפתח לסיסמת שחזור.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>פתיחה אוטומטית</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>מאפשר פתיחה אוטומטית עבור אמצעי אחסון שאיננו כונן מערכת ההפעלה ומוגן באמצעות הצפנת הדיסק BitLocker.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>ניתן להגדיר את BitLocker לפתוח אוטומטית אמצעי אחסון של נתונים שאינם מאחסנים את מערכת ההפעלה. לאחר שמשתמש פותח את כונן מערכת ההפעלה, BitLocker משתמש באישורים מוצפנים המאוחסנים ברישום יחד עם נתוני המטא של אמצעי האחסון כדי לפתוח אוטומטית כל אמצעי אחסון של נתונים שהוגדר לפתיחה אוטומטית.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>סיסמה</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>אמצעי האחסון של BitLocker ישתמש בסיסמה להגנת הנתונים.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>סיסמת שחזור</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>ציון הסיסמה הוא רשות. אם לא תציין סיסמה זו, תיווצר סיסמה אוטומטית עבורך ותוקצה לאמצעי האחסון הנבחר. אם תבחר להזין את הסיסמה ידנית, עליה להיות בת 48 תווים. הסיסמה משמשת כמגן למפתח ההצפנה של האמצעי.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>הצפנה</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצפן, פענח או בצע פעולות נוספות הקשורות לאמצעי האחסון שנבחר.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצפן, פענח או בצע פעולות נוספות הקשורות לאמצעי האחסון שנבחר.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>הצפן</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצפן את אמצעי האחסון שנבחר.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצפן את אמצעי האחסון שנבחר.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>פענח</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פענח את אמצעי האחסון שנבחר.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פענח את אמצעי האחסון שנבחר.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>השהה הצפנה</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>משהה את הצפנת BitLocker ומאפשר למשתמשים לגשת לנתונים על אמצעי אחסון המוגן בהצפנת BitLocker. תהליך זה הופך את מפתח ההצפנה לנגיש בצורתו הלא מוגנת.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>משהה את הצפנת BitLocker ומאפשר למשתמשים לגשת לנתונים על אמצעי אחסון המוגן בהצפנת BitLocker. תהליך זה הופך את מפתח ההצפנה לנגיש בצורתו הלא מוגנת.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>המשך הצפנה</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>משחזר את ההצפנה באמצעי אחסון המשתמש בהצפנת BitLocker אשר הושהתה קודם לכן.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>משחזר את ההצפנה באמצעי אחסון המשתמש בהצפנת BitLocker אשר הושהתה קודם לכן.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>הפעל הצפנת BitLocker</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>הפעל</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>בטל</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>הפעל הצפנת BitLocker עבור אמצעי האחסון שנבחר.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>כונן מערכת ההפעלה</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעל הצפנת BitLocker עבור כונן מערכת ההפעלה.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפעל הצפנת BitLocker עבור כונן מערכת ההפעלה.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>כונן קבוע</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעל הצפנת BitLocker עבור הכונן הקבוע.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפעל הצפנת BitLocker עבור הכונן הקבוע.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>כונן נשלף</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעל הצפנת BitLocker עבור הכונן הנשלף.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפעל הצפנת BitLocker עבור הכונן הנשלף.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>הצפנת כונן מערכת ההפעלה</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>הצפן את כונן מערכת ההפעלה באמצעות BitLocker.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>רמת הצפנה</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר אחת מרמות ההצפנה עבור כונן מערכת ההפעלה. רמה רגילה תשתמש במגני מפתח TPM ו-PIN. רמה משופרת תשתמש ב-TPM, ב-PIN ובמגן מפתח אתחול על כונן USB, ובכך מספקת אימות רב-גורמי חזק.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר אחת מרמות ההצפנה עבור כונן מערכת ההפעלה. רמה רגילה תשתמש במגני מפתח TPM ו-PIN. רמה משופרת תשתמש ב-TPM, ב-PIN ובמגן מפתח אתחול על כונן USB, ובכך מספקת אימות רב-גורמי חזק.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>רגיל</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>משופר</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>כיסוי ההצפנה</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>שטח פנוי ושטח בשימוש</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>שטח בשימוש בלבד</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את כיסוי ההצפנה של הכונן. "שטח פנוי ושטח בשימוש" יצפין את כל הנתונים בכונן, בעוד "שטח בשימוש בלבד" יצפין רק את השטח שבשימוש כעת, מה שייקח פחות זמן להשלמה.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר את כיסוי ההצפנה של הכונן. "שטח פנוי ושטח בשימוש" יצפין את כל הנתונים בכונן, בעוד "שטח בשימוש בלבד" יצפין רק את השטח שבשימוש כעת, מה שייקח פחות זמן להשלמה.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>התנהגות הורדת רמה</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>אפשר הורדת רמה</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>מנע הורדת רמה</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אם הורדת רמה מותרת, וכונן מערכת ההפעלה כבר מוצפן ברמה משופרת ובחרת רמה רגילה להצפנה, תתבצע הורדת הרמה. אולם אם הורדת רמה נאסרה, הפעולה לא תושלם ותוצג שגיאה, ובכך תימנע הורדת רמת ההצפנה של כונן מערכת ההפעלה.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אם הורדת רמה מותרת, וכונן מערכת ההפעלה כבר מוצפן ברמה משופרת ובחרת רמה רגילה להצפנה, תתבצע הורדת הרמה. אולם אם הורדת רמה נאסרה, הפעולה לא תושלם ותוצג שגיאה, ובכך תימנע הורדת רמת ההצפנה של כונן מערכת ההפעלה.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>הצפנת כונן קבוע</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>הצפן את הכונן הקבוע שנבחר. תהיה לו סיסמת שחזור בת 48 תווים והוא ייפתח אוטומטית דרך כונן מערכת ההפעלה שכבר מוצפן.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>הצפנת כונן נשלף</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>הצפן את הכונן הנשלף שנבחר. תהיה לו סיסמת שחזור בת 48 תווים וכן הסיסמה שתספק בתיבה.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>השהה הצפנת BitLocker</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>השהה</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>בטל</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>השהה את הצפנת BitLocker של אמצעי האחסון שנבחר.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>השהיית BitLocker מאפשרת גישה לנתונים מוצפנים באמצעי אחסון מוגן על ידי חשיפת מפתח ההצפנה במצב לא מוגן. חשוב לציין שהשהיה אינה מפענחת את הנתונים הקיימים באמצעי. היא רק הופכת את המפתח הנדרש לפענוח לזמין בגלוי. כל נתון חדש הנכתב לדיסק בתקופה זו נשאר מוצפן. בזמן שההצפנה מושהית, בדיקות תקינות המערכת אינן נאכפות בעלייה. יכולת זו משמשת בדרך כלל כדי לאפשר שדרוגי קושחה או תחזוקת מערכת בלי להפעיל מצב שחזור.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>כאן ניתן להגדיר כמה פעמים המחשב יכול להפעיל את עצמו מחדש לפני שסיום השהיית BitLocker. ערך 1 פירושו שהגנת BitLocker תחודש מיד לאחר האתחול הבא. ניתן לחדש את ההגנה ידנית בכל עת דרך לחצן "המשך".</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>כל אמצעי האבטחה בקטגוריית BitLocker יחולו על המערכת לפני תחילת תהליך ההצפנה.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>מפענח הצפנת BitLocker עבור הכונן {0}</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>כל מגני המפתח של הכונן יוסרו ותהליך פענוח התוכן יחל.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>הפעולה בוטלה.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>המשך הצפנת BitLocker עבור הכונן {0}</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>שחזר את ההצפנה של הכונן או אמצעי האחסון שההצפנה שלו הושהתה קודם לכן.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>לא הוזן PIN לאתחול. נא להזין אחד ולנסות שוב.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>לא נבחר כונן נשלף. נא לבחור אחד ולנסות שוב.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>לא סופקה סיסמה. נא לספק אחת ולנסות שוב.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>כונן מערכת ההפעלה חייב להיות מוצפן במלואו לפני שניתן להצפין את הכוננים הקבועים, אך כעת מצבו {0} עם אחוז הצפנה של {1}.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>מוסיף {0} אל {1}</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>יוצאו בהצלחה {0} אמצעי אחסון של BitLocker אל: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>דבר זה יכול למנוע ממך שימוש ב-RDP (שולחן עבודה מרוחק) מרחוק דרך כתובת IP, שהוא בלתי מאובטח כיוון שהוא דורש פתיחת פורטים ציבוריים ומשתמש ב-NTLM. ניתן להשתמש ב-Quick Assist או ב-Azure Bastion עבור מכונות וירטואליות ב-Azure כחלופות מאובטחות יותר. RDP מקומי כגון הפעלת מושב משופר ב-Hyper-V אינו מושפע.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>מדיניות זו תמנע ממך שימוש בתכונת "שכחתי את ה-PIN שלי" במסך הנעילה או במסך הכניסה. אם תשכח את ה-PIN, לא תוכל לשחזר אותו.</value>
+  </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>בחר כונן ניתן להסרה</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>רענן</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>רענן</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>רענן</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>הזן סיסמה</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>הזן קוד PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>הזן סיסמת שחזור</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>סה״כ תעודות</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>מחק תעודה</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את התעודה שנבחרה</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מחק את התעודה שנבחרה</value>
+  </data>
 </root>

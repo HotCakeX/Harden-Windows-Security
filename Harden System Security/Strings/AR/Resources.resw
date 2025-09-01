@@ -3286,4 +3286,292 @@
 <data name="NoBitLockerVolumeSelected" xml:space="preserve">
   <value>لم يتم تحديد وحدة تخزين BitLocker.</value>
 </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>فتح تلقائي</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة مُعين مفتاح للفتح التلقائي.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة مُعين مفتاح للفتح التلقائي.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>كلمة مرور</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة مُعين مفتاح لكلمة مرور.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة مُعين مفتاح لكلمة مرور.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>كلمة مرور استرداد</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة مُعين مفتاح لكلمة مرور الاسترداد.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة مُعين مفتاح لكلمة مرور الاسترداد.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>فتح تلقائي</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>يُمكّن الفتح التلقائي لوحدة تخزين ليست قرص نظام التشغيل ومحمية بتشفير القرص BitLocker.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>يمكن تكوين BitLocker لفتح وحدات تخزين البيانات التي لا تستضيف نظام التشغيل تلقائيًا. بعد أن يفتح المستخدم قرص نظام التشغيل، يستخدم BitLocker بيانات اعتماد مشفرة مخزّنة في السجل مع بيانات وصف وحدة التخزين ليفتح تلقائيًا أي وحدات تخزين بيانات تم ضبطها على الفتح التلقائي.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>كلمة مرور</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>ستستخدم وحدة تخزين BitLocker كلمة مرور لحماية البيانات.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>كلمة مرور استرداد</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>تحديد كلمة المرور اختياري. إذا لم تحدد هذه الكلمة، فسيتم إنشاؤها تلقائيًا لك وتعيينها لوحدة التخزين المحددة. إذا قررت إدخال الكلمة يدويًا فيجب أن تكون من 48 حرفًا. تُستخدم الكلمة كحماية لمفتاح تشفير الوحدة.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>تشفير</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تشفير أو فك تشفير أو تنفيذ إجراءات أخرى ذات صلة على وحدة التخزين المحددة.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تشفير أو فك تشفير أو تنفيذ إجراءات أخرى ذات صلة على وحدة التخزين المحددة.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تشفير</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تشفير وحدة التخزين المحددة.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تشفير وحدة التخزين المحددة.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>فك تشفير</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فك تشفير وحدة التخزين المحددة.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فك تشفير وحدة التخزين المحددة.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>إيقاف التشفير مؤقتًا</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إيقاف تشفير BitLocker مؤقتًا لتمكين المستخدمين من الوصول إلى البيانات على وحدة تخزين محمية بتشفير BitLocker. يجعل هذا الإجراء مفتاح التشفير متاحًا في صورة غير محمية.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إيقاف تشفير BitLocker مؤقتًا لتمكين المستخدمين من الوصول إلى البيانات على وحدة تخزين محمية بتشفير BitLocker. يجعل هذا الإجراء مفتاح التشفير متاحًا في صورة غير محمية.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>استئناف التشفير</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعادة التشفير لوحدة تخزين تستخدم BitLocker وكان تم إيقاف تشفيرها مؤقتًا سابقًا.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعادة التشفير لوحدة تخزين تستخدم BitLocker وكان تم إيقاف تشفيرها مؤقتًا سابقًا.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>تمكين تشفير BitLocker</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>تمكين</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>تمكين تشفير BitLocker لوحدة التخزين المحددة.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>قرص نظام التشغيل</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تمكين تشفير BitLocker لقرص نظام التشغيل.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تمكين تشفير BitLocker لقرص نظام التشغيل.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>قرص ثابت</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تمكين تشفير BitLocker للقرص الثابت.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تمكين تشفير BitLocker للقرص الثابت.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>قرص قابل للإزالة</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تمكين تشفير BitLocker للقرص القابل للإزالة.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تمكين تشفير BitLocker للقرص القابل للإزالة.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>تشفير قرص نظام التشغيل</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>تشفير قرص نظام التشغيل باستخدام BitLocker.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>مستوى التشفير</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر أحد مستويات التشفير لقرص نظام التشغيل. المستوى العادي سيستخدم حماية مفاتيح TPM و PIN. المستوى المعزز سيستخدم TPM و PIN ومُعين مفتاح بدء تشغيل على محرك USB لتوفير مصادقة متعددة العوامل قوية.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر أحد مستويات التشفير لقرص نظام التشغيل. المستوى العادي سيستخدم حماية مفاتيح TPM و PIN. المستوى المعزز سيستخدم TPM و PIN ومُعين مفتاح بدء تشغيل على محرك USB لتوفير مصادقة متعددة العوامل قوية.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>عادي</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>معزز</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>نطاق التشفير</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>المساحة الحرة والمستخدمة</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>المساحة المستخدمة فقط</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدد نطاق التشفير للقرص. "المساحة الحرة والمستخدمة" سيشفر كل البيانات على القرص، بينما "المساحة المستخدمة فقط" سيشفر المساحة المستخدمة حاليًا مما يستغرق وقتًا أقل للإكمال.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حدد نطاق التشفير للقرص. "المساحة الحرة والمستخدمة" سيشفر كل البيانات على القرص، بينما "المساحة المستخدمة فقط" سيشفر المساحة المستخدمة حاليًا مما يستغرق وقتًا أقل للإكمال.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>سلوك خفض المستوى</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>السماح بخفض المستوى</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>منع خفض المستوى</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إذا كان خفض المستوى مسموحًا، وكان قرص نظام التشغيل مشفرًا بالفعل بالمستوى المعزز واخترت المستوى العادي للتشفير، فسيتم خفض المستوى. أما إذا كان الخفض مرفوضًا فلن تُستكمل العملية وستظهر رسالة خطأ مانعةً خفض مستوى تشفير قرص نظام التشغيل.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إذا كان خفض المستوى مسموحًا، وكان قرص نظام التشغيل مشفرًا بالفعل بالمستوى المعزز واخترت المستوى العادي للتشفير، فسيتم خفض المستوى. أما إذا كان الخفض مرفوضًا فلن تُستكمل العملية وستظهر رسالة خطأ مانعةً خفض مستوى تشفير قرص نظام التشغيل.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>تشفير قرص ثابت</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>تشفير القرص الثابت المحدد. ستكون له كلمة مرور استرداد مكونة من 48 حرفًا وسيفتح تلقائيًا عبر قرص نظام التشغيل المشفر مسبقًا.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>تشفير قرص قابل للإزالة</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>تشفير القرص القابل للإزالة المحدد. ستكون له كلمة مرور استرداد من 48 حرفًا إضافةً إلى كلمة المرور التي توفرها في الحقل.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>إيقاف تشفير BitLocker مؤقتًا</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>إيقاف مؤقت</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>إيقاف تشفير BitLocker للوحدة المحددة مؤقتًا.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>يتيح إيقاف BitLocker مؤقتًا الوصول إلى البيانات المشفرة على وحدة محمية عبر إظهار مفتاح التشفير في حالة غير محمية. من المهم ملاحظة أن الإيقاف المؤقت لا يفك تشفير البيانات الموجودة. بل يجعل المفتاح المطلوب للفك متاحًا بشكل صريح. أي بيانات جديدة تُكتب إلى القرص أثناء هذه الفترة تظل مشفرة. أثناء الإيقاف المؤقت لا تُفرض فحوص سلامة النظام عند بدء التشغيل. تُستخدم هذه الإمكانية عادةً لتسهيل ترقيات البرامج الثابتة أو صيانة النظام دون تشغيل الاسترداد.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>يمكنك هنا تحديد عدد مرات إعادة تشغيل الكمبيوتر قبل انتهاء إيقاف BitLocker مؤقتًا. القيمة 1 تعني أن حماية BitLocker ستُستأنف مباشرة بعد إعادة التشغيل التالية. يمكنك استئناف الحماية يدويًا في أي وقت عبر زر "استئناف".</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>سيتم تطبيق كل تدابير الأمان في فئة BitLocker على النظام قبل بدء عملية التشفير.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>جارٍ فك تشفير BitLocker للقرص {0}</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>ستتم إزالة جميع مُعينات المفاتيح للقرص وسيبدأ فك تشفير المحتوى.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>تم إلغاء العملية.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>استئناف تشفير BitLocker للقرص {0}</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>استعادة تشفير القرص أو وحدة التخزين التي تم إيقافها مؤقتًا سابقًا.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>لم يتم إدخال PIN لبدء التشغيل. يرجى إدخاله والمحاولة مرة أخرى.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>لم يتم تحديد قرص قابل للإزالة. يرجى اختيار واحد والمحاولة مجددًا.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>لم يتم تقديم كلمة مرور. يرجى تقديم واحدة والمحاولة مرة أخرى.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>يجب تشفير قرص نظام التشغيل بالكامل أولًا قبل أن تتمكن من تشفير الأقراص الثابتة، لكنه حاليًا في حالة {0} بنسبة تشفير {1}.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>إضافة {0} إلى {1}</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>تم تصدير {0} من وحدات تخزين BitLocker بنجاح إلى: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>قد يمنعك هذا من استخدام RDP (سطح المكتب البعيد) عن بُعد عبر عنوان IP، وهو غير آمن لأنه يتطلب فتح منافذ معرّضة للعامة ويستخدم NTLM. يمكنك استخدام Quick Assist أو Azure Bastion للأجهزة الافتراضية في Azure كبدائل أكثر أمانًا. الجلسات المحلية عبر RDP مثل جلسة محسّنة في Hyper-V غير متأثرة.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>ستمنعك هذه السياسة من استخدام ميزة "Forgot my PIN" في شاشة القفل أو تسجيل الدخول. إذا نسيت رقم PIN فلن تتمكن من استعادته.</value>
+  </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>حدد محرك أقراص قابل للإزالة</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>أدخل كلمة مرور</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>أدخل رقم PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>أدخل كلمة مرور الاسترداد</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>إجمالي الشهادات</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>حذف الشهادة</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حذف الشهادة المحددة</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حذف الشهادة المحددة</value>
+  </data>
 </root>

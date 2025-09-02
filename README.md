@@ -49,7 +49,7 @@
 <br>
 
 > [!NOTE]\
-> This repository only uses the features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, using well-documented, supported, recommended and official methods. Continue reading for comprehensive info.
+> This repository only uses the features that have already been implemented by Microsoft in Windows OS to fine-tune it towards the highest security and locked-down state, without relying on any 3rd party component or dependency, using well-documented, supported, recommended and official methods. Continue reading for comprehensive info.
 
 <br>
 

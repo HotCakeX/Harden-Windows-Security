@@ -1,22 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!--
-    Setting it to disable so that code clean up will properly remove unused usings.
-    With this enabled, VS would take into account the global usings and would remove required usings from .cs files during Code Cleanup task,
-    which would lead to errors in VS Code when running the code via Add-Type in PowerShell.
-    -->
-
     <ImplicitUsings>disable</ImplicitUsings>
-    <!-- Reference to the manifest file -->
     <ApplicationManifest>app.manifest</ApplicationManifest>
-
-    <!-- https://learn.microsoft.com/en-us/dotnet/core/tools/sdk-errors/netsdk1100 -->
-    <!-- To satisfy the Dependency Graph action on GitHub -->
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-
-    <!-- This would activate all analyzers -->
-    <!-- <AnalysisMode>All</AnalysisMode>  -->
-
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
     <RootNamespace>HardenWindowsSecurity</RootNamespace>
@@ -41,10 +27,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Version>$(FileVersion)</Version>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
-
-    <!-- When compiling into executable can be set to true, otherwise unnecessarily increases debug/build process -->
     <SelfContained>false</SelfContained>
-
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

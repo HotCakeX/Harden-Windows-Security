@@ -51,8 +51,6 @@
 
 ✅ For the Microsoft Defender category where the module used to add all git executables to the ASLR exclusions list because some of them were incompatible and wouldn't allow Git or GitHub desktop to work when the mitigation was on, this no longer happens like this. The new app is capable of identifying which files are incompatible with the Mandatory ASLR exploit mitigation and only adds those to the exclusion list.
 
-✅ A new Group Policy Editor page full of new features and capabilities such as loading POL files, viewing all of the applied policies on the system and generating a comprehensive security report of the system.
-
 ➡️➡️ https://apps.microsoft.com/detail/9P7GGFL7DX57 ⬅️⬅️
 ➡️➡️ https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security ⬅️⬅️
 

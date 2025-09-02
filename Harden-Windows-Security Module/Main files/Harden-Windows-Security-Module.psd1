@@ -1,71 +1,60 @@
 @{
-  # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_module_manifests
-
   RootModule           = 'Harden-Windows-Security-Module.psm1'
-  ModuleVersion        = '0.7.5.1'
+  ModuleVersion        = '0.7.6'
   CompatiblePSEditions = @('Core')
   GUID                 = 'afae7a0a-5eff-4a4d-9139-e1702b7ac426'
   Author               = 'Violet Hansen'
   CompanyName          = 'SpyNetGirl'
   Copyright            = '(c) Violet Hansen. All rights reserved.'
-  HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module'
+  HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security'
   PowerShellVersion    = '7.5.0'
   RequiredAssemblies   = @()
   NestedModules        = @('Core\Confirm-SystemCompliance.psm1', 'Core\Protect-WindowsSecurity.psm1', 'Core\Unprotect-WindowsSecurity.psm1')
-  FunctionsToExport    = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity', 'Unprotect-WindowsSecurity', 'Update-HardenWindowsSecurity', 'LoadHardenWindowsSecurityNecessaryDLLsInternal', 'ReRunTheModuleAgain')
+  FunctionsToExport    = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity', 'Unprotect-WindowsSecurity', 'LoadHardenWindowsSecurityNecessaryDLLsInternal', 'ReRunTheModuleAgain')
   CmdletsToExport      = @()
   VariablesToExport    = '*'
   AliasesToExport      = @()
   Description          = @'
 
-Harden Windows Safely, Securely, only with Official Microsoft methods - 🦄 Intune - 🧩 Group Policy - 🛡️ Local - ☁️ Cloud (All scenarios supported 💯)
+🔔 THIS MODULE IS DEPRECATED.
+💗 Please use the new Harden System Security app, available on Microsoft Store, that has 100% of the features of the module, plus so much more. It's open source as well.
+➡️ https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security
 
-⭕ This module provides 3 main features: Hardening, Auditing/checking the system compliance, and undoing the Hardening
+💞 Microsoft Store link:
+➡️ https://apps.microsoft.com/detail/9P7GGFL7DX57
 
-⭕ Please read the GitHub's readme before running this module: https://github.com/HotCakeX/Harden-Windows-Security
+💜 GitHub post regarding the transition from module to app: https://github.com/HotCakeX/Harden-Windows-Security/discussions/778
 
-💜 GUI (Graphical User Interface) is Available! Run (Protect-WindowsSecurity -GUI) to use the GUI instead of the CLI experience.
+💚 Harden System Security app's First release: https://github.com/HotCakeX/Harden-Windows-Security/releases/tag/HardenSystemSecurity-v.1.0.1.0
 
-💠 Features of this module:
+❤️‍🔥 Additional Distinguished Features of the Harden System Security Application:
 
-  ✅ Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
-  ✅ Everything is in clear text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
-  ✅ No Windows functionality is removed/disabled against Microsoft's recommendations.
-  ✅ The module primarily uses Group policies, the Microsoft recommended way of configuring Windows. It also uses PowerShell cmdlets where Group Policies aren't available, and finally uses a few registry keys to configure security measures that can neither be configured using Group Policies nor PowerShell cmdlets. This is why the module doesn't break anything or cause unwanted behavior.
-  ✅ When a hardening measure is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from the module in order to prevent any problems and because it won't be necessary anymore.
-  ✅ The module can be run infinite number of times, it's made in a way that it won't make any duplicate changes.
-  ✅ The module prompts for confirmation before running each hardening category.
-  ✅ Applying these hardening measures makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features)
+✅ Minimal Memory Footprint: The application is engineered for lightweight efficiency, ensuring negligible system resource consumption. Architecturally, no application pages maintain navigation cache, strictly adhering to the MVVM pattern.
 
-💠 Hardening Categories from top to bottom: (⬇️Detailed info about each of them at my Github⬇️)
+✅ Native Performance: Compiled ahead-of-time for instantaneous launch responsiveness. This approach shifts computational workload to compile-time rather than runtime (user's system), delivering an exceptionally responsive user experience.
 
-⏹ Commands that require Administrator Privileges
-  ✅ Microsoft Security Baselines
-  ✅ Microsoft 365 Apps Security Baselines
-  ✅ Microsoft Defender
-  ✅ Attack surface reduction rules
-  ✅ Bitlocker Settings
-  ✅ TLS Security
-  ✅ Lock Screen
-  ✅ UAC (User Account Control)
-  ✅ Windows Firewall
-  ✅ Optional Windows Features
-  ✅ Windows Networking
-  ✅ Miscellaneous Configurations
-  ✅ Windows Update Configurations
-  ✅ Edge Browser Configurations
-  ✅ Certificate Checking Commands
-  ✅ Country IP Blocking
-  ✅ Downloads Defense Measures
-⏹ Commands that don't require Administrator Privileges
-  ✅ Non-Admin Commands that only affect the current user and do not make machine-wide changes.
+✅ Static Code Implementation: The application avoids dynamic code generation, enhancing security posture and reducing vulnerability exposure. This design ensures compatibility with advanced OS-level exploit mitigations including Control Flow Guard (CFG).
 
+✅ Methodical Architecture: The application employs systematic, modular design principles, facilitating seamless extensibility and maintainability. Future security measures can be integrated while preserving established patterns and design philosophies.
 
-💎 This module has hybrid mode of operation. It can run Interactively and non-interactively (Silent/unattended mode). More info in the document: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
+✅ Modern User Interface: Utilizing cutting-edge WinUI 3 components, the application delivers a contemporary, responsive, accessible, and intuitive interface. Full touch input compatibility is comprehensively supported.
 
-🏴 If you have any questions, requests, suggestions etc. about this module, please open a new Discussion or Issue on GitHub
+✅ Internationalization Support: The application accommodates localization, enabling users to operate in their preferred language. Currently available in English, Hebrew, Greek, Hindi, Malayalam, Polish, Spanish, and Arabic.
 
-🟡 The module generates a nice output on the screen as well as giving users an option to export the results in a CSV file.
+✅ Open Source Transparency: The application maintains open source availability, permitting code inspection, community contributions, and ensuring complete functional transparency.
+
+✅ Native API Preference and Low-Level Programming: The application prioritizes native APIs and low-level programming methodologies, optimizing performance and security. This approach enables exploitation of latest Windows capabilities without third-party component dependencies.
+
+✅ High-Performance Language Utilization: The application is primarily developed in C#, strategically incorporating C++ and Rust components for specialized tasks. Performance optimization and security enhancement constitute the primary objectives of this design strategy.
+
+✅ Complete Reversibility: Every modification applied to your system through the new Harden System Security application can be undone with precision. The application provides surgical accuracy in applying, verifying, and removing security measures. Individual security measures can be targeted for verification, application, or removal without affecting other security measures.
+
+✅ For the Microsoft Defender category where the module used to add all git executables to the ASLR exclusions list because some of them were incompatible and wouldn't allow Git or GitHub desktop to work when the mitigation was on, this no longer happens like this. The new app is capable of identifying which files are incompatible with the Mandatory ASLR exploit mitigation and only adds those to the exclusion list.
+
+✅ A new Group Policy Editor page full of new features and capabilities such as loading POL files, viewing all of the applied policies on the system and generating a comprehensive security report of the system.
+
+➡️➡️ https://apps.microsoft.com/detail/9P7GGFL7DX57 ⬅️⬅️
+➡️➡️ https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security ⬅️⬅️
 
 '@
 
@@ -74,15 +63,8 @@ Harden Windows Safely, Securely, only with Official Microsoft methods - 🦄 Int
       Tags         = @('Harden-Windows-Security', 'Harden', 'Windows', 'Security', 'Compliance', 'Validation', 'Baseline', 'Security-Score', 'Benchmark', 'Group-Policy')
       LicenseUri   = 'https://github.com/HotCakeX/.github/blob/main/LICENSE'
       ProjectUri   = 'https://github.com/HotCakeX/Harden-Windows-Security'
-      IconUri      = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/Harden-Windows-Security%20Module/ICON-FULLSIZE.png'
-      ReleaseNotes = @'
-
-Complete detailed release notes available on GitHub releases: https://github.com/HotCakeX/Harden-Windows-Security/releases/
-
-'@
-
-      # Prerelease string of this module
-      # Prerelease   = 'RC2'
+      IconUri      = 'https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Harden%20System%20Security%20Icons/ICON-FULLSIZE.png'
+      ReleaseNotes = 'https://github.com/HotCakeX/Harden-Windows-Security/releases'
     }
   }
 }

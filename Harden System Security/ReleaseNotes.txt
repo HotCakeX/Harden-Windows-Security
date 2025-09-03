@@ -1,13 +1,13 @@
-* On the Protect page, all subcategories are now deselected by default. Each option must be explicitly checked to be included, eliminating the risk of accidental enabling.
+🛼 The following features have been ported from the Harden Windows Security module to the new app.
 
-* The Protect page now displays color-coded advisories for subcategories that have a greater impact on the system. These prominent warnings help users make informed choices; the same guidance is available in the project's documentation on GitHub.
+✅ Added Secure SSH MACs security measure to the Miscellaneous Category.
 
-* The elevation request dialog has been updated to respect the app’s layout flow (left-to-right or right-to-left), matching the direction selected in the app settings.
+✅ Added Custom Event Viewer views to the Miscellaneous Category.
 
-* You can now enable BitLocker encryption for the Operating System (OS) drive, fixed drives, and removable drives via a guided, safety-first workflow. All messages and UI elements related to BitLocker are localized for the languages supported by the app. BitLocker management is implemented in the low-level ComManager component of Harden System Security.
+✅ Added Auditing and tracking Lock Screen Locks and Unlocks to the Miscellaneous Category.
 
-* A step-by-step workflow allows you to add and modify a variety of key protectors for BitLocker-protected volumes, making key management straightforward and auditable.
+💈Other Changes
 
-* Need to update firmware or perform maintenance? Use the Suspend feature to temporarily suspend BitLocker protection on the OS drive. You may optionally specify the number of restarts after which protection will be automatically resumed.
+☑️ Removed Manifest V2 enforcement policy from the Edge Category.
 
-More on GitHub: https://github.com/HotCakeX/Harden-Windows-Security/releases
+☑️ Fixed an issue within ComManager component that was preventing some WMI calls from completing successfully.

@@ -3574,4 +3574,55 @@
   <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>حذف الشهادة المحددة</value>
   </data>
+   <data name="CheckingSSHClientUserConfiguration" xml:space="preserve">
+  <value>التحقق من تهيئة مستخدم عميل SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingSSHClientConfigurationCheck" xml:space="preserve">
+  <value>لم يتم العثور على دليل المستخدم في {0} لأن اسم المستخدم {1} غير صالح، سيتم تجاوز فحص تهيئة عميل SSH.</value>
+</data>
+<data name="SSHClientConfigFileCreatedBecauseDidNotExist" xml:space="preserve">
+  <value>تم إنشاء ملف تهيئة عميل SSH بالمحتوى: {0} لأنه لم يكن موجودًا.</value>
+</data>
+<data name="ExistingMACsConfigurationFoundAndReplaced" xml:space="preserve">
+  <value>تم العثور على تهيئة 'MACs' الحالية واستبدالها.</value>
+</data>
+<data name="MACsConfigurationNotFoundAddedNew" xml:space="preserve">
+  <value>لم يتم العثور على تهيئة MACs، تمت إضافة تهيئة جديدة.</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientUserConfiguration" xml:space="preserve">
+  <value>التحقق من MACs الآمنة في تهيئة مستخدم عميل SSH</value>
+</data>
+<data name="ExistingMACsFoundInUserDirectoryMatchesSecure" xml:space="preserve">
+  <value>تم العثور على تهيئة MACs في دليل المستخدم وتطابق التهيئات الآمنة.</value>
+</data>
+<data name="MACsConfigurationInUserDirectoryIsDifferent" xml:space="preserve">
+  <value>تهيئة MACs في دليل المستخدم مختلفة: {0}</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientSystemWideConfiguration" xml:space="preserve">
+  <value>التحقق من MACs الآمنة في التهيئة على مستوى النظام لعميل SSH</value>
+</data>
+<data name="ExistingMACsFoundInSystemWideConfigurationMatchesSecure" xml:space="preserve">
+  <value>تم العثور على تهيئة MACs في التهيئة على مستوى النظام وتطابق التهيئات الآمنة.</value>
+</data>
+<data name="MACsConfigurationInSystemWideConfigurationIsDifferent" xml:space="preserve">
+  <value>تهيئة MACs في التهيئة على مستوى النظام مختلفة: {0}</value>
+</data>
+<data name="NoSecureMACsFoundInUserAndSystemWideConfigurations" xml:space="preserve">
+  <value>لم يتم العثور على تهيئة MACs آمنة في كلٍ من تهيئة المستخدم والتهيئة على مستوى النظام.</value>
+</data>
+<data name="AttemptingToRemoveMACsFromSSHClientUserConfiguration" xml:space="preserve">
+  <value>محاولة إزالة تهيئة MACs من تهيئة مستخدم عميل SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingRemoval" xml:space="preserve">
+  <value>لم يتم العثور على دليل المستخدم في {0} لأن اسم المستخدم {1} غير صالح، يتم تجاوز الإزالة.</value>
+</data>
+<data name="SSHClientConfigurationFileNotFoundNothingToRemove" xml:space="preserve">
+  <value>لم يتم العثور على ملف تهيئة عميل SSH؛ لا يوجد ما يُزال.</value>
+</data>
+<data name="RemovedMACsFromSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>تمت إزالة تهيئة MACs من ملف تهيئة مستخدم عميل SSH.</value>
+</data>
+<data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>لم يتم العثور على تهيئة MACs لإزالتها في ملف تهيئة مستخدم عميل SSH.</value>
+</data>
 </root>

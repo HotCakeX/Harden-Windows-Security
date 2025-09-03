@@ -41,22 +41,22 @@ namespace BitLocker {
 		// Already fully decrypted
 		if (vol.conversionStatus == ConversionStatus::FullyDecrypted)
 		{
-			wcout << L"The drive " << driveLetter << L" is already decrypted" << endl;
+			LogOut(L"The drive ", driveLetter, L" is already decrypted");
 			return true; // Not an error
 		}
 
 		// Decryption already in progress
 		if (vol.conversionStatus == ConversionStatus::DecryptionInProgress)
 		{
-			wcout << L"The drive " << driveLetter << L" is being decrypted, please wait." << endl;
+			LogOut(L"The drive ", driveLetter, L" is being decrypted, please wait.");
 			return true; // Not an error
 		}
 
 		// If OS drive: check for stored auto-unlock keys (IsAutoUnlockKeyStored)
 		if (vol.volumeType == VolumeType::OperationSystem)
 		{
-			wcout << L"Operation system drive detected during BitLocker disablement" << endl;
-			wcout << L"Checking whether the Operation System drive has auto-unlock keys that belong to other data drives." << endl;
+			LogOut(L"Operation system drive detected during BitLocker disablement");
+			LogOut(L"Checking whether the Operation System drive has auto-unlock keys that belong to other data drives.");
 
 			WmiConnection conn;
 			if (!conn.ok)
@@ -87,12 +87,12 @@ namespace BitLocker {
 				wstringstream ss;
 				ss << L"IsAutoUnlockKeyStored failed " << FormatReturnCode(rv);
 				SetLastErrorMsg(ss.str());
-				wcerr << ss.str() << endl;
+				LogErr(ss.str().c_str());
 				pOut->Release();
 				return false;
 			}
 
-			wcout << L"Successfully checked the OS Drive for any stored auto-unlock keys." << endl;
+			LogOut(L"Successfully checked the OS Drive for any stored auto-unlock keys.");
 
 			// Evaluate IsAutoUnlockKeyStored property
 			bool stored = false;
@@ -111,7 +111,7 @@ namespace BitLocker {
 				wstringstream ss;
 				ss << L"Auto-unlock keys for other data drives are stored on the OS drive. Decryption cannot proceed "
 					<< FormatReturnCode(BL_ERROR_AUTO_UNLOCK_KEYS_PRESENT);
-				wcerr << ss.str() << endl;
+				LogErr(ss.str().c_str());
 				SetLastErrorMsg(ss.str());
 				return false;
 			}
@@ -153,14 +153,14 @@ namespace BitLocker {
 
 		if (decryptRv == 0)
 		{
-			wcout << L"Successfully started decrypting the drive " << driveLetter << endl;
+			LogOut(L"Successfully started decrypting the drive ", driveLetter);
 			return true;
 		}
 		else
 		{
 			wstringstream ss;
 			ss << L"Decrypt failed " << FormatReturnCode(decryptRv);
-			wcerr << ss.str() << endl;
+			LogErr(ss.str().c_str());
 			SetLastErrorMsg(ss.str());
 			return false;
 		}

@@ -811,9 +811,6 @@
 <data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
     <value>ביטול TLS_RSA_WITH_AES_256_GCM_SHA384 - (ללא PFS)</value>
 </data>
-<data name="ExtensionManifestV2AvailabilityEdge-Edge" xml:space="preserve">
-    <value>אף פעם לא לבטל תמיכה בהרחבות Manifest V2</value>
-</data>
 <data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
     <value>אף פעם לא לאפשר לאתרים לבקש גישה להתקני USB מקומיים מחוברים</value>
 </data>
@@ -942,5 +939,14 @@
 </data>
 <data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
     <value>השבת שרת TLS גרסה 1.1 - חלק 2</value>
+</data>
+<data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>צור תצוגות מותאמות אישית במציג האירועים של Windows לגישה קלה לאירועי אבטחה חשובים.</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>הגדר את תצורת לקוח ה-SSH לשימוש ב-MAC מאובטחים (Message Authentication Codes).</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>הפעל ביקורת ומעקב אחר פעולות נעילה ופתיחה של מסך הנעילה.</value>
 </data>
 </root>

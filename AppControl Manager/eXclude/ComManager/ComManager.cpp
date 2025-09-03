@@ -16,8 +16,6 @@
 
 // Bringing the std namespace into scope to avoid prefixing with std::
 // std (aka Standard Library is C++ equivalent of System; namespace in C#)
-// wcout is used for normal output(typically goes to stdout)
-// wcerr is used for error output (goes to stderr).
 using namespace std;
 
 using namespace BitLocker;
@@ -155,9 +153,9 @@ int wmain(int argc, wchar_t* argv[])
 		{
 			const wchar_t* err = GetLastErrorMessage();
 			if (err && *err)
-				wcerr << L"Failed to retrieve WMI data. Error: " << err << endl;
+				LogErr(L"Failed to retrieve WMI data. Error: ", err);
 			else
-				wcerr << L"Failed to retrieve WMI data." << endl;
+				LogErr(L"Failed to retrieve WMI data.");
 			return 1;
 		}
 		return 0;
@@ -202,14 +200,14 @@ int wmain(int argc, wchar_t* argv[])
 
 		if (!result)
 		{
-			wcerr << L"Failed to manage firewall rules. Error: " << GetLastErrorMessage() << endl;
+			LogErr(L"Failed to manage firewall rules. Error: ", GetLastErrorMessage());
 			return 1;
 		}
 
 		if (toAdd)
-			wcout << L"Successfully created firewall rules for: " << displayName << endl;
+			LogOut(L"Successfully created firewall rules for: ", displayName);
 		else
-			wcout << L"Successfully removed firewall rules for: " << displayName << endl;
+			LogOut(L"Successfully removed firewall rules for: ", displayName);
 
 		return 0;
 	}
@@ -287,7 +285,7 @@ int wmain(int argc, wchar_t* argv[])
 				encType = OSEncryptionType::Enhanced;
 			else
 			{
-				wcerr << L"Encryption type must be normal or enhanced." << endl;
+				LogErr(L"Encryption type must be normal or enhanced.");
 				return 2;
 			}
 
@@ -328,10 +326,10 @@ int wmain(int argc, wchar_t* argv[])
 			ok = GetVolumeInfo(argv[3], vi) && PrintVolumeInfoJson(vi);
 			if (!ok)
 			{
-				wcerr << L"Failed to retrieve volume info. Error: " << GetLastErrorMessage() << endl;
+				LogErr(L"Failed to retrieve volume info. Error: ", GetLastErrorMessage());
 				return 1;
 			}
-			wcout << endl;
+			LogOut(L"");
 			return 0;
 		}
 		else if (IsEq(action.c_str(), L"list"))
@@ -358,11 +356,11 @@ int wmain(int argc, wchar_t* argv[])
 			vector<VolumeInfo> vols;
 			if (!ListAllVolumes(vols, onlyNonOS, onlyRemovable))
 			{
-				wcerr << L"Failed to enumerate volumes. Error: " << GetLastErrorMessage() << endl;
+				LogErr(L"Failed to enumerate volumes. Error: ", GetLastErrorMessage());
 				return 1;
 			}
 			(void)PrintVolumeListJson(vols);
-			wcout << endl;
+			LogOut(L"");
 			return 0;
 		}
 		else if (IsEq(action.c_str(), L"removekp"))
@@ -411,7 +409,7 @@ int wmain(int argc, wchar_t* argv[])
 				rebootCount = _wtoi(rc);
 				if (rebootCount < 0 || rebootCount > 15)
 				{
-					wcerr << L"RebootCount must be between 0 and 15, or '-' for default." << endl;
+					LogErr(L"RebootCount must be between 0 and 15, or '-' for default.");
 					return 2;
 				}
 			}
@@ -425,12 +423,12 @@ int wmain(int argc, wchar_t* argv[])
 
 		if (ok)
 		{
-			wcout << L"BitLocker operation completed successfully." << endl;
+			LogOut(L"BitLocker operation completed successfully.");
 			return 0;
 		}
 		else
 		{
-			wcerr << L"BitLocker operation failed. Error: " << GetLastErrorMessage() << endl;
+			LogErr(L"BitLocker operation failed. Error: ", GetLastErrorMessage());
 			return 1;
 		}
 	}
@@ -554,12 +552,12 @@ int wmain(int argc, wchar_t* argv[])
 
 		if (isSuccessful)
 		{
-			wcout << L"Preference was set successfully via command line." << endl;
+			LogOut(L"Preference was set successfully via command line.");
 			return 0;
 		}
 		else
 		{
-			wcerr << L"Failed to set preference via command line." << endl;
+			LogErr(L"Failed to set preference via command line.");
 			return 1;
 		}
 	}

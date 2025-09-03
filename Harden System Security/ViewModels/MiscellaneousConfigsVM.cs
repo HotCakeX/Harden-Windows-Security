@@ -15,12 +15,15 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
+using HardenSystemSecurity.SecurityPolicy;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -136,7 +139,152 @@ internal sealed partial class MiscellaneousConfigsVM : ViewModelBase, IMUnitList
 	/// <returns>List of all MUnits for this ViewModel</returns>
 	public List<MUnit> CreateAllMUnits()
 	{
-		return MUnit.CreateMUnitsFromPolicies(Categories.MiscellaneousConfigurations);
+		List<MUnit> units = CreateUnits();
+
+		units.AddRange(MUnit.CreateMUnitsFromPolicies(Categories.MiscellaneousConfigurations));
+
+		return units;
+	}
+
+
+	/// <summary>
+	/// Create <see cref="MUnit"/> that is not for Group Policies.
+	/// </summary>
+	internal List<MUnit> CreateUnits()
+	{
+		List<MUnit> output = [];
+
+		{
+			string OldCustomEventViewsPath = Path.Combine(GlobalVars.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script");
+			string NewCustomEventViewsPath = Path.Combine(GlobalVars.SystemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "HardenSystemSecurity");
+			string SourceDirectory = Path.Combine(AppContext.BaseDirectory, "Resources", "EventViewerCustomViews");
+
+			// Create custom event viewer views
+			output.Add(new(
+				category: Categories.MiscellaneousConfigurations,
+				name: GlobalVars.GetSecurityStr("CreateCustomEventViewerViews-Miscellaneous"),
+
+				applyStrategy: new DefaultApply(() =>
+				{
+					// Delete the old directory that belongs to the deprecated module
+					if (Directory.Exists(OldCustomEventViewsPath))
+					{
+						Directory.Delete(OldCustomEventViewsPath, true);
+					}
+
+					// Create the new directory if it doesn't exist
+					if (!Directory.Exists(NewCustomEventViewsPath))
+					{
+						_ = Directory.CreateDirectory(NewCustomEventViewsPath);
+					}
+
+					foreach (string file in Directory.GetFiles(SourceDirectory))
+					{
+						File.Copy(file, Path.Combine(NewCustomEventViewsPath, Path.GetFileName(file)), true);
+					}
+				}),
+
+				verifyStrategy: new DefaultVerify(() =>
+				{
+					if (!Directory.Exists(NewCustomEventViewsPath))
+					{
+						return false;
+					}
+
+					string[] sourceFiles = Directory.GetFiles(SourceDirectory);
+
+					foreach (string sourceFile in sourceFiles)
+					{
+						string destinationFile = Path.Combine(NewCustomEventViewsPath, Path.GetFileName(sourceFile));
+						if (!File.Exists(destinationFile))
+						{
+							return false;
+						}
+					}
+
+					return true;
+				}),
+
+				removeStrategy: new DefaultRemove(() =>
+				{
+					if (Directory.Exists(NewCustomEventViewsPath))
+					{
+						Directory.Delete(NewCustomEventViewsPath, true);
+					}
+				})
+			));
+		}
+
+		// Secure SSH Client MACs
+		output.Add(new(
+				category: Categories.MiscellaneousConfigurations,
+				name: GlobalVars.GetSecurityStr("SecureSSHMACs-Miscellaneous"),
+				applyStrategy: new DefaultApply(SSHConfigurations.SecureMACs),
+				verifyStrategy: new DefaultVerify(SSHConfigurations.TestSecureMACs),
+				removeStrategy: new DefaultRemove(SSHConfigurations.RemoveSecureMACs),
+				url: @"https://learn.microsoft.com/windows-server/administration/OpenSSH/openssh-server-configuration#openssh-configuration-files"
+			));
+
+		{
+			Guid subcategoryGuid = new("0CCE921C-69AE-11D9-BED3-505054503030");
+
+			// Makes sure auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category is enabled
+			// For tracking Lock screen unlocks and locks
+			output.Add(new(
+				category: Categories.MiscellaneousConfigurations,
+				name: GlobalVars.GetSecurityStr("EnableOtherLogonLogOffAudit-Miscellaneous"),
+
+				applyStrategy: new DefaultApply(() =>
+				{
+					AuditPrivilegeHelper.EnsurePrivileges();
+
+					AUDIT_POLICY_INFORMATION policy = new()
+					{
+						AuditSubCategoryGuid = subcategoryGuid,
+						AuditCategoryGuid = AuditPolicyManager.GetCategoryGuidForSubcategory(subcategoryGuid),
+						AuditingInformation = (uint)(AuditBitFlags.POLICY_AUDIT_EVENT_SUCCESS | AuditBitFlags.POLICY_AUDIT_EVENT_FAILURE) // 3
+					};
+
+					AUDIT_POLICY_INFORMATION[] policies = [policy];
+					AuditPolicyManager.SetAuditPolicies(policies);
+				}),
+
+				verifyStrategy: new DefaultVerify(() =>
+				{
+					AuditPrivilegeHelper.EnsurePrivileges();
+
+					Dictionary<Guid, uint> current = AuditPolicyManager.GetSpecificAuditPolicies(
+						[subcategoryGuid]);
+
+					uint expected = (uint)(AuditBitFlags.POLICY_AUDIT_EVENT_SUCCESS | AuditBitFlags.POLICY_AUDIT_EVENT_FAILURE); // 3
+
+					if (current.TryGetValue(subcategoryGuid, out uint value))
+					{
+						return value == expected;
+					}
+
+					return false;
+				}),
+
+				// set the subcategory to No Auditing (0)
+				removeStrategy: new DefaultRemove(() =>
+				{
+					AuditPrivilegeHelper.EnsurePrivileges();
+
+					AUDIT_POLICY_INFORMATION policy = new()
+					{
+						AuditSubCategoryGuid = subcategoryGuid,
+						AuditCategoryGuid = AuditPolicyManager.GetCategoryGuidForSubcategory(subcategoryGuid),
+						AuditingInformation = 0 // No Auditing
+					};
+
+					AUDIT_POLICY_INFORMATION[] policies = [policy];
+					AuditPolicyManager.SetAuditPolicies(policies);
+				})
+			));
+		}
+
+		return output;
 	}
 
 }

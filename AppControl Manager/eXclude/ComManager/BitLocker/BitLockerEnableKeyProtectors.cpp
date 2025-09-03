@@ -93,9 +93,7 @@ namespace BitLocker {
 		bool success = false;
 		if (rv == 0)
 		{
-			wstringstream ss;
-			ss << L"Successfully enabled the key protectors of the drive " << driveLetter << L".";
-			wcout << ss.str() << endl;
+			LogOut(L"Successfully enabled the key protectors of the drive ", driveLetter, L".");
 			success = true;
 		}
 		else
@@ -103,7 +101,7 @@ namespace BitLocker {
 			wstringstream ss;
 			ss << L"EnableKeyProtectors failed " << FormatReturnCode(rv);
 			SetLastErrorMsg(ss.str());
-			wcerr << ss.str() << endl;
+			LogErr(ss.str().c_str());
 			success = false;
 		}
 

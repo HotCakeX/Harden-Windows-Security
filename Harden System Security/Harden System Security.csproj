@@ -81,7 +81,7 @@
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
         <ErrorReport>send</ErrorReport>
-        <FileVersion>1.0.9.0</FileVersion>
+        <FileVersion>1.0.10.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <NeutralLanguage>en-US</NeutralLanguage>
         <StartupObject>HardenSystemSecurity.Program</StartupObject>
@@ -443,6 +443,19 @@
         <Compile Remove="Animated Icon Sources\**" />
         <Content Remove="Animated Icon Sources\**" />
         <None Remove="Animated Icon Sources\**" />
+
+        <None Remove="Resources\EventViewerCustomViews\Attack Surface Reduction rule events.xml" />
+        <None Remove="Resources\EventViewerCustomViews\Controlled Folder Access events.xml" />
+        <None Remove="Resources\EventViewerCustomViews\Exploit Protection Events.xml" />
+        <None Remove="Resources\EventViewerCustomViews\Failed Lock screen login attempts using PIN.xml" />
+        <None Remove="Resources\EventViewerCustomViews\LockScreen Unlocks and Locks.xml" />
+        <None Remove="Resources\EventViewerCustomViews\Microsoft-Windows-AppLocker And MSI and Script.xml" />
+        <None Remove="Resources\EventViewerCustomViews\Microsoft-Windows-CodeIntegrity Operational.xml" />
+        <None Remove="Resources\EventViewerCustomViews\Network Protection Events.xml" />
+        <None Remove="Resources\EventViewerCustomViews\Restarts.xml" />
+        <None Remove="Resources\EventViewerCustomViews\Sudden Shut down events.xml" />
+        <None Remove="Resources\EventViewerCustomViews\USB storage Connects &amp; Disconnects.xml" />
+  
     </ItemGroup>
 
     <ItemGroup>
@@ -469,6 +482,39 @@
         </Content>
         <Content Include="Resources\EdgeBrowserConfigurations.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\EventViewerCustomViews\Attack Surface Reduction rule events.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\EventViewerCustomViews\Controlled Folder Access events.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\EventViewerCustomViews\Exploit Protection Events.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\EventViewerCustomViews\Failed Lock screen login attempts using PIN.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\EventViewerCustomViews\LockScreen Unlocks and Locks.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\EventViewerCustomViews\Microsoft-Windows-AppLocker And MSI and Script.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\EventViewerCustomViews\Microsoft-Windows-CodeIntegrity Operational.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\EventViewerCustomViews\Network Protection Events.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\EventViewerCustomViews\Restarts.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\EventViewerCustomViews\Sudden Shut down events.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\EventViewerCustomViews\USB storage Connects &amp; Disconnects.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Resources\LockScreen.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>

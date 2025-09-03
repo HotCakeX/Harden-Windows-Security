@@ -3574,4 +3574,55 @@
   <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Διαγραφή επιλεγμένου πιστοποιητικού</value>
   </data>
+   <data name="CheckingSSHClientUserConfiguration" xml:space="preserve">
+  <value>Έλεγχος ρύθμισης χρήστη πελάτη SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingSSHClientConfigurationCheck" xml:space="preserve">
+  <value>Ο κατάλογος χρήστη δεν βρέθηκε στο {0} επειδή το όνομα χρήστη {1} δεν ήταν έγκυρο, παράκαμψη ελέγχου ρύθμισης πελάτη SSH.</value>
+</data>
+<data name="SSHClientConfigFileCreatedBecauseDidNotExist" xml:space="preserve">
+  <value>Δημιουργήθηκε αρχείο ρύθμισης πελάτη SSH με περιεχόμενο: {0} επειδή δεν υπήρχε.</value>
+</data>
+<data name="ExistingMACsConfigurationFoundAndReplaced" xml:space="preserve">
+  <value>Βρέθηκε και αντικαταστάθηκε υπάρχουσα ρύθμιση 'MACs'.</value>
+</data>
+<data name="MACsConfigurationNotFoundAddedNew" xml:space="preserve">
+  <value>Η ρύθμιση MACs δεν βρέθηκε, προστέθηκε νέα ρύθμιση.</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientUserConfiguration" xml:space="preserve">
+  <value>Έλεγχος για ασφαλή MACs στη ρύθμιση χρήστη του πελάτη SSH</value>
+</data>
+<data name="ExistingMACsFoundInUserDirectoryMatchesSecure" xml:space="preserve">
+  <value>Βρέθηκε ρύθμιση MACs στον κατάλογο χρήστη και αντιστοιχεί στις ασφαλείς ρυθμίσεις.</value>
+</data>
+<data name="MACsConfigurationInUserDirectoryIsDifferent" xml:space="preserve">
+  <value>Η ρύθμιση MACs στον κατάλογο χρήστη είναι διαφορετική: {0}</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientSystemWideConfiguration" xml:space="preserve">
+  <value>Έλεγχος για ασφαλή MACs στη ρύθμιση πελάτη SSH σε επίπεδο συστήματος</value>
+</data>
+<data name="ExistingMACsFoundInSystemWideConfigurationMatchesSecure" xml:space="preserve">
+  <value>Βρέθηκε ρύθμιση MACs στη ρύθμιση σε επίπεδο συστήματος και αντιστοιχεί στις ασφαλείς ρυθμίσεις.</value>
+</data>
+<data name="MACsConfigurationInSystemWideConfigurationIsDifferent" xml:space="preserve">
+  <value>Η ρύθμιση MACs στη ρύθμιση σε επίπεδο συστήματος είναι διαφορετική: {0}</value>
+</data>
+<data name="NoSecureMACsFoundInUserAndSystemWideConfigurations" xml:space="preserve">
+  <value>Δεν βρέθηκε ασφαλής ρύθμιση MACs ούτε στη ρύθμιση χρήστη ούτε στη ρύθμιση σε επίπεδο συστήματος.</value>
+</data>
+<data name="AttemptingToRemoveMACsFromSSHClientUserConfiguration" xml:space="preserve">
+  <value>Προσπάθεια αφαίρεσης ρύθμισης MACs από τη ρύθμιση χρήστη του πελάτη SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingRemoval" xml:space="preserve">
+  <value>Ο κατάλογος χρήστη δεν βρέθηκε στο {0} επειδή το όνομα χρήστη {1} δεν ήταν έγκυρο, παράκαμψη της αφαίρεσης.</value>
+</data>
+<data name="SSHClientConfigurationFileNotFoundNothingToRemove" xml:space="preserve">
+  <value>Δεν βρέθηκε αρχείο ρύθμισης πελάτη SSH; τίποτα προς αφαίρεση.</value>
+</data>
+<data name="RemovedMACsFromSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>Η ρύθμιση MACs αφαιρέθηκε από το αρχείο ρύθμισης χρήστη του πελάτη SSH.</value>
+</data>
+<data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>Δεν βρέθηκε ρύθμιση MACs προς αφαίρεση στο αρχείο ρύθμισης χρήστη του πελάτη SSH.</value>
+</data>
 </root>

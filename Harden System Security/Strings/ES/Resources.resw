@@ -3574,4 +3574,55 @@ Huella Digital: {3}</value>
   <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Eliminar certificado seleccionado</value>
   </data>
+   <data name="CheckingSSHClientUserConfiguration" xml:space="preserve">
+  <value>Comprobando la configuración de usuario del cliente SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingSSHClientConfigurationCheck" xml:space="preserve">
+  <value>Directorio de usuario no encontrado en {0} porque el nombre de usuario {1} no era válido, omitiendo la comprobación de la configuración del cliente SSH.</value>
+</data>
+<data name="SSHClientConfigFileCreatedBecauseDidNotExist" xml:space="preserve">
+  <value>Archivo de configuración del cliente SSH creado con el contenido: {0} porque no existía.</value>
+</data>
+<data name="ExistingMACsConfigurationFoundAndReplaced" xml:space="preserve">
+  <value>Configuración existente de 'MACs' encontrada y reemplazada.</value>
+</data>
+<data name="MACsConfigurationNotFoundAddedNew" xml:space="preserve">
+  <value>No se encontró la configuración de MACs, se agregó una nueva configuración.</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientUserConfiguration" xml:space="preserve">
+  <value>Comprobando MACs seguros en la configuración de usuario del cliente SSH</value>
+</data>
+<data name="ExistingMACsFoundInUserDirectoryMatchesSecure" xml:space="preserve">
+  <value>Configuración de MACs encontrada en el directorio de usuario y coincide con las configuraciones seguras.</value>
+</data>
+<data name="MACsConfigurationInUserDirectoryIsDifferent" xml:space="preserve">
+  <value>La configuración de MACs en el directorio de usuario es diferente: {0}</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientSystemWideConfiguration" xml:space="preserve">
+  <value>Comprobando MACs seguros en la configuración a nivel de sistema del cliente SSH</value>
+</data>
+<data name="ExistingMACsFoundInSystemWideConfigurationMatchesSecure" xml:space="preserve">
+  <value>Configuración de MACs encontrada en la configuración a nivel de sistema y coincide con las configuraciones seguras.</value>
+</data>
+<data name="MACsConfigurationInSystemWideConfigurationIsDifferent" xml:space="preserve">
+  <value>La configuración de MACs en la configuración a nivel de sistema es diferente: {0}</value>
+</data>
+<data name="NoSecureMACsFoundInUserAndSystemWideConfigurations" xml:space="preserve">
+  <value>No se encontró configuración segura de MACs en las configuraciones de usuario ni en las de nivel de sistema.</value>
+</data>
+<data name="AttemptingToRemoveMACsFromSSHClientUserConfiguration" xml:space="preserve">
+  <value>Intentando eliminar la configuración de MACs de la configuración de usuario del cliente SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingRemoval" xml:space="preserve">
+  <value>Directorio de usuario no encontrado en {0} porque el nombre de usuario {1} no era válido, omitiendo la eliminación.</value>
+</data>
+<data name="SSHClientConfigurationFileNotFoundNothingToRemove" xml:space="preserve">
+  <value>Archivo de configuración del cliente SSH no encontrado; nada que eliminar.</value>
+</data>
+<data name="RemovedMACsFromSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>Configuración de MACs eliminada del archivo de configuración de usuario del cliente SSH.</value>
+</data>
+<data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>No se encontró configuración de MACs para eliminar en el archivo de configuración de usuario del cliente SSH.</value>
+</data>
 </root>

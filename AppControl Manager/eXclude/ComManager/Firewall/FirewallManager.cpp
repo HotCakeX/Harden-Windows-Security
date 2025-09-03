@@ -98,7 +98,7 @@ namespace Firewall {
 		{
 			// Non-fatal; keep going. Log for diagnostics but do not overwrite last error on success.
 			DWORD err = ::GetLastError();
-			wcerr << L"WinHttpSetTimeouts warning: " << makeWin32ErrorMessage(L"WinHttpSetTimeouts", err) << endl;
+			LogErr(L"WinHttpSetTimeouts warning: ", makeWin32ErrorMessage(L"WinHttpSetTimeouts", err));
 		}
 
 		// Connect to the target server
@@ -148,8 +148,8 @@ namespace Firewall {
 			{
 				// Non-fatal; keep going. Log for diagnostics but do not overwrite last error on success.
 				DWORD err = ::GetLastError();
-				wcerr << L"WinHttpSetOption(WINHTTP_OPTION_DECOMPRESSION) warning: "
-					<< makeWin32ErrorMessage(L"WinHttpSetOption(WINHTTP_OPTION_DECOMPRESSION)", err) << endl;
+				LogErr(L"WinHttpSetOption(WINHTTP_OPTION_DECOMPRESSION) warning: ",
+					makeWin32ErrorMessage(L"WinHttpSetOption(WINHTTP_OPTION_DECOMPRESSION)", err));
 			}
 			else
 			{

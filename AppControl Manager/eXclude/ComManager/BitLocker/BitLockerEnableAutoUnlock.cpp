@@ -88,14 +88,14 @@ namespace BitLocker {
 
 		if (rv == 0)
 		{
-			wcout << L"Successfully queried the Auto-unlock status of the drive " << driveLetter << L"." << endl;
+			LogOut(L"Successfully queried the Auto-unlock status of the drive ", driveLetter, L".");
 		}
 		else
 		{
 			wstringstream ss;
 			ss << L"IsAutoUnlockEnabled failed " << FormatReturnCode(rv);
 			SetLastErrorMsg(ss.str());
-			wcerr << ss.str() << endl;
+			LogErr(ss.str().c_str());
 			pIsOut->Release();
 			pSvc->Release();
 			pLoc->Release();
@@ -117,7 +117,7 @@ namespace BitLocker {
 
 		if (alreadyEnabled)
 		{
-			wcout << L"Auto-unlock is already enabled on the drive " << driveLetter << L"." << endl;
+			LogOut(L"Auto-unlock is already enabled on the drive ", driveLetter, L".");
 			// Cleanup
 			pSvc->Release();
 			pLoc->Release();
@@ -125,7 +125,7 @@ namespace BitLocker {
 			return true;
 		}
 
-		wcout << L"Auto-unlock is not enabled on the drive " << driveLetter << L", enabling it now." << endl;
+		LogOut(L"Auto-unlock is not enabled on the drive ", driveLetter, L", enabling it now.");
 
 		// 2. Add ExternalKey key protector (ProtectKeyWithExternalKey).
 		IWbemClassObject* pExtIn = SpawnInParams(pSvc, L"ProtectKeyWithExternalKey");
@@ -186,7 +186,7 @@ namespace BitLocker {
 			wstringstream ss;
 			ss << L"ProtectKeyWithExternalKey failed " << FormatReturnCode(pkRv);
 			SetLastErrorMsg(ss.str());
-			wcerr << ss.str() << endl;
+			LogErr(ss.str().c_str());
 			pExtOut->Release();
 			pSvc->Release();
 			pLoc->Release();
@@ -194,7 +194,7 @@ namespace BitLocker {
 			return false;
 		}
 
-		wcout << L"The ExternalKey key protector was successfully added." << endl;
+		LogOut(L"The ExternalKey key protector was successfully added.");
 
 		// Retrieve VolumeKeyProtectorID from output for next step.
 		wstring protectorId;
@@ -276,12 +276,12 @@ namespace BitLocker {
 			wstringstream ss;
 			ss << L"EnableAutoUnlock failed " << FormatReturnCode(eaRv);
 			SetLastErrorMsg(ss.str());
-			wcerr << ss.str() << endl;
+			LogErr(ss.str().c_str());
 
 			pEnableOut->Release();
 
 			// Remove the external key protector added earlier (best-effort; ignore result).
-			wcerr << L"Error enabling Auto-Unlock; removing previously added ExternalKey key protector." << endl;
+			LogErr(L"Error enabling Auto-Unlock; removing previously added ExternalKey key protector.");
 			const bool removed = RemoveKeyProtector(driveLetter, protectorId.c_str(), false);
 			(void)removed;
 
@@ -293,7 +293,7 @@ namespace BitLocker {
 
 		pEnableOut->Release();
 
-		wcout << L"Auto-Unlock has been successfully enabled for the drive: " << driveLetter << endl;
+		LogOut(L"Auto-Unlock has been successfully enabled for the drive: ", driveLetter);
 
 		// Cleanup COM objects.
 		pSvc->Release();

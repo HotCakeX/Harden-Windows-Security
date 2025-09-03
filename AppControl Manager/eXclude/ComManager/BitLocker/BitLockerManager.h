@@ -29,8 +29,6 @@ namespace BitLocker {
 	};
 
 	// Each function returns true on success and false on failure.
-	// On failure, g_lastErrorMsg is set and an error description is written to wcerr.
-	// Informational/success messages are written to wcout.
 	//
 	// Drive letters must be in the form L"C:" (no trailing backslash).
 	[[nodiscard]] bool AddPasswordProtector(const wchar_t* driveLetter, const wchar_t* passPhrase);

@@ -48,19 +48,19 @@ namespace BitLocker {
 
 		if (!targetKP)
 		{
-			wcout << L"Key protector with the ID " << keyProtectorId
-				<< L" not found on the volume " << driveLetter << L"." << endl;
+			LogOut(L"Key protector with the ID ", keyProtectorId,
+				L" not found on the volume ", driveLetter, L".");
 			return true;
 		}
 
 		if (targetKP->type == KeyProtectorType::TpmNetworkKey)
 		{
-			wcout << L"The detected Key Protector type is TpmNetworkKey; it must be disabled and removed via group policies." << endl;
+			LogOut(L"The detected Key Protector type is TpmNetworkKey; it must be disabled and removed via group policies.");
 			return true;
 		}
 		if (targetKP->type == KeyProtectorType::PublicKey)
 		{
-			wcout << L"Removal of PublicKey type key protector not supported yet." << endl;
+			LogOut(L"Removal of PublicKey type key protector not supported yet.");
 			return true;
 		}
 
@@ -136,7 +136,7 @@ namespace BitLocker {
 		// Handle special case: key protectors must be disabled first.
 		if (delCode == FVE_E_KEY_REQUIRED)
 		{
-			wcout << L"The key protectors need to be disabled first, disabling now." << endl;
+			LogOut(L"The key protectors need to be disabled first, disabling now.");
 
 			// DisableKeyProtectors has no input parameters.
 			IWbemClassObject* pDisableOut = ExecMethodSimple(pSvc, instancePath.c_str(), L"DisableKeyProtectors", nullptr);
@@ -154,7 +154,7 @@ namespace BitLocker {
 
 			if (disableCode == 0)
 			{
-				wcout << L"Successfully disabled the key protectors, attempting the deletion again." << endl;
+				LogOut(L"Successfully disabled the key protectors, attempting the deletion again.");
 				// Retry deletion
 				if (!attemptDelete(delCode))
 				{
@@ -167,7 +167,7 @@ namespace BitLocker {
 			}
 			else
 			{
-				wcerr << L"Failed to disable key protectors " << FormatReturnCode(disableCode) << endl;
+				LogErr(L"Failed to disable key protectors ", FormatReturnCode(disableCode));
 				SetLastErrorMsg(L"Failed to disable key protectors before deletion.");
 				pSvc->Release();
 				pLoc->Release();
@@ -180,17 +180,17 @@ namespace BitLocker {
 		bool overallSuccess = false;
 		if (delCode == 0)
 		{
-			wcout << L"Successfully deleted the key protector." << endl;
+			LogOut(L"Successfully deleted the key protector.");
 			overallSuccess = true;
 		}
 		else if (noErrorIfBound && delCode == FVE_E_VOLUME_BOUND_ALREADY)
 		{
-			wcout << L"The key protector is bound to the volume and used to keep the drive unlocked, skipping the deletion." << endl;
+			LogOut(L"The key protector is bound to the volume and used to keep the drive unlocked, skipping the deletion.");
 			overallSuccess = true;
 		}
 		else
 		{
-			wcerr << L"Failed to delete key protector " << FormatReturnCode(delCode) << endl;
+			LogErr(L"Failed to delete key protector ", FormatReturnCode(delCode));
 			SetLastErrorMsg(wstring(L"DeleteKeyProtector failed ") + FormatReturnCode(delCode));
 			overallSuccess = false;
 		}

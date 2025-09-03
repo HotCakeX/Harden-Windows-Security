@@ -425,7 +425,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 										// Wrap them with double quotes and separate them with a space
 										string asrRulesToRemoveFinal = string.Join(" ", asrRulesToRemove.Select(item => $"\"{item}\""));
 
-										_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $@"stringarray ROOT\Microsoft\Windows\Defender MSFT_MpPreference remove AttackSurfaceReductionOnlyExclusions {asrRulesToRemoveFinal}");
+										_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $@"wmi stringarray ROOT\Microsoft\Windows\Defender MSFT_MpPreference remove AttackSurfaceReductionOnlyExclusions {asrRulesToRemoveFinal}");
 									}
 								}
 							}
@@ -496,7 +496,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 							string path2 = Path.Combine(AppControlInstallFolder, "AppControlManager.dll");
 
 							// Adding the extra executables included in the package so they will be allowed to run as well
-							_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{path1}\" \"{path2}\" \"{GlobalVars.ComManagerProcessPath}\" ");
+							_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{path1}\" \"{path2}\" \"{GlobalVars.ComManagerProcessPath}\" ");
 						}
 						catch (Exception ex)
 						{

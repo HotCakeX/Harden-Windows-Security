@@ -3574,4 +3574,55 @@ Thumbprint: {3}</value>
   <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Delete selected Certificate</value>
   </data>
+  <data name="CheckingSSHClientUserConfiguration" xml:space="preserve">
+  <value>Checking for SSH client user configuration</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingSSHClientConfigurationCheck" xml:space="preserve">
+  <value>User directory not found at {0} because the username {1} was not valid, skipping SSH client configuration check.</value>
+</data>
+<data name="SSHClientConfigFileCreatedBecauseDidNotExist" xml:space="preserve">
+  <value>SSH client configuration file created with content: {0} because it didn't exist.</value>
+</data>
+<data name="ExistingMACsConfigurationFoundAndReplaced" xml:space="preserve">
+  <value>Existing 'MACs' configuration found and replaced.</value>
+</data>
+<data name="MACsConfigurationNotFoundAddedNew" xml:space="preserve">
+  <value>MACs configuration not found, added new configuration.</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientUserConfiguration" xml:space="preserve">
+  <value>Checking for secure MACs in SSH client user configuration</value>
+</data>
+<data name="ExistingMACsFoundInUserDirectoryMatchesSecure" xml:space="preserve">
+  <value>Existing MACs configuration found in the user directory and matches the secure configurations.</value>
+</data>
+<data name="MACsConfigurationInUserDirectoryIsDifferent" xml:space="preserve">
+  <value>MACs configuration in the user directory is different: {0}</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientSystemWideConfiguration" xml:space="preserve">
+  <value>Checking for secure MACs in SSH client system-wide configuration</value>
+</data>
+<data name="ExistingMACsFoundInSystemWideConfigurationMatchesSecure" xml:space="preserve">
+  <value>Existing MACs configuration found in the system-wide configuration and matches the secure configurations.</value>
+</data>
+<data name="MACsConfigurationInSystemWideConfigurationIsDifferent" xml:space="preserve">
+  <value>MACs configuration in the system-wide configuration is different: {0}</value>
+</data>
+<data name="NoSecureMACsFoundInUserAndSystemWideConfigurations" xml:space="preserve">
+  <value>No secure MACs configuration found in both user and system-wide configurations.</value>
+</data>
+<data name="AttemptingToRemoveMACsFromSSHClientUserConfiguration" xml:space="preserve">
+  <value>Attempting to remove MACs configuration from SSH client user configuration</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingRemoval" xml:space="preserve">
+  <value>User directory not found at {0} because the username {1} was not valid, skipping removal.</value>
+</data>
+<data name="SSHClientConfigurationFileNotFoundNothingToRemove" xml:space="preserve">
+  <value>SSH client configuration file not found; nothing to remove.</value>
+</data>
+<data name="RemovedMACsFromSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>Removed MACs configuration from SSH client user configuration file.</value>
+</data>
+<data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>No MACs configuration found to remove in SSH client user configuration file.</value>
+</data>
 </root>

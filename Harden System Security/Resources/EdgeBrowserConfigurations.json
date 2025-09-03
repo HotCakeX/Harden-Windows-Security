@@ -210,22 +210,6 @@
     {
         "Source": 1,
         "KeyName": "SOFTWARE\\Policies\\Microsoft\\Edge",
-        "ValueName": "ExtensionManifestV2Availability",
-        "Type": 4,
-        "Size": 0,
-        "Data": "",
-        "RegValue": "2",
-        "Hive": 0,
-        "PolicyAction": 0,
-        "FriendlyName": "ExtensionManifestV2AvailabilityEdge-Edge",
-        "URL": "https://learn.microsoft.com/deployedge/configure-edge-with-mdm",
-        "Category": 14,
-        "SubCategory": null,
-        "DefaultRegValue": null
-    },
-    {
-        "Source": 1,
-        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Edge",
         "ValueName": "DefaultWebUsbGuardSetting",
         "Type": 4,
         "Size": 0,

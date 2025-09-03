@@ -31,7 +31,7 @@ namespace BitLocker {
 	// Helper: write error message
 	void LogError(const wstring& msg)
 	{
-		wcerr << msg << endl;
+		LogErr(msg.c_str());
 		SetLastErrorMsg(msg);
 	}
 
@@ -147,7 +147,8 @@ namespace BitLocker {
 		if (code == 0)
 		{
 			if (!successMsg.empty())
-				wcout << successMsg << endl;
+				LogOut(successMsg.c_str());
+
 			return true;
 		}
 		wstringstream ss;
@@ -240,19 +241,21 @@ namespace BitLocker {
 
 		if (SUCCEEDED(hrI4))
 		{
-			wcout << L"[SetParamUint32] Primary VT_UI4 Put failed (hr=0x"
+			wstringstream ss;
+			ss << L"[SetParamUint32] Primary VT_UI4 Put failed (hr=0x"
 				<< hex << uppercase << static_cast<unsigned long>(hrUI4)
 				<< dec << L") but fallback VT_I4 succeeded for parameter '"
-				<< name << L"' with value " << val << L"." << endl;
+				<< name << L"' with value " << val << L".";
+			LogOut(ss.str().c_str());
 			return true;
 		}
 
 		// Both attempts failed.
-		wcerr << L"[SetParamUint32] Failed to set UINT32 parameter '" << name
-			<< L"' value " << val
-			<< L" (VT_UI4 hr=0x" << hex << uppercase << static_cast<unsigned long>(hrUI4)
-			<< L", VT_I4 hr=0x" << static_cast<unsigned long>(hrI4)
-			<< dec << L")." << endl;
+		LogErr(L"[SetParamUint32] Failed to set UINT32 parameter '", name,
+			L"' value ", val,
+			L" (VT_UI4 hr=0x", hex, uppercase, static_cast<unsigned long>(hrUI4),
+			L", VT_I4 hr=0x", static_cast<unsigned long>(hrI4),
+			dec, L").");
 		return false;
 	}
 
@@ -402,7 +405,7 @@ namespace BitLocker {
 			// No key protectors of that type
 			wstringstream ss;
 			ss << L"No key protector of type " << keyProtectorType << L" found.";
-			wcout << ss.str() << endl;
+			LogOut(ss.str());
 		}
 
 		VariantClear(&vArr);
@@ -1788,25 +1791,26 @@ namespace BitLocker {
 
 	bool PrintVolumeInfoJson(const VolumeInfo& info)
 	{
-		wcout << L"{";
-		auto printKVP = [](const wchar_t* key, const wstring& val, bool& first)
+		wstringstream jsonOut;
+		jsonOut << L"{";
+		auto printKVP = [&](const wchar_t* key, const wstring& val, bool& first)
 			{
-				if (!first) wcout << L",";
+				if (!first) jsonOut << L",";
 				first = false;
 				wstring esc = Utf8ToWide(escapeJSON(WideToUtf8(val.c_str())));
-				wcout << L"\"" << key << L"\":\"" << esc << L"\"";
+				jsonOut << L"\"" << key << L"\":\"" << esc << L"\"";
 			};
-		auto printKVPNum = [](const wchar_t* key, unsigned long val, bool& first)
+		auto printKVPNum = [&](const wchar_t* key, unsigned long val, bool& first)
 			{
-				if (!first) wcout << L",";
+				if (!first) jsonOut << L",";
 				first = false;
-				wcout << L"\"" << key << L"\":" << val;
+				jsonOut << L"\"" << key << L"\":" << val;
 			};
-		auto printKVPBool = [](const wchar_t* key, bool val, bool& first)
+		auto printKVPBool = [&](const wchar_t* key, bool val, bool& first)
 			{
-				if (!first) wcout << L",";
+				if (!first) jsonOut << L",";
 				first = false;
-				wcout << L"\"" << key << L"\":" << (val ? L"true" : L"false");
+				jsonOut << L"\"" << key << L"\":" << (val ? L"true" : L"false");
 			};
 
 		bool first = true;
@@ -1819,55 +1823,46 @@ namespace BitLocker {
 		printKVPNum(L"ConversionStatus", static_cast<unsigned long>(info.conversionStatus), first);
 		printKVPNum(L"WipingStatus", static_cast<unsigned long>(info.wipingStatus), first);
 		printKVPNum(L"EncryptionMethod", static_cast<unsigned long>(info.encryptionMethod), first);
-
-		// Emit EncryptionMethodFlags as a quoted string.
 		printKVP(L"EncryptionMethodFlags", info.encryptionMethodFlags, first);
-
-		// Percentages + metadata version
 		printKVP(L"EncryptionPercentage", info.encryptionPercentage, first);
 		printKVP(L"WipePercentage", info.wipePercentage, first);
 		printKVPNum(L"MetadataVersion", info.metadataVersion, first);
-
-		// Concrete booleans (no null) for AutoUnlockEnabled / AutoUnlockKeyStored.
 		printKVPBool(L"AutoUnlockEnabled", info.autoUnlockEnabled, first);
 		printKVPBool(L"AutoUnlockKeyStored", info.autoUnlockKeyStored, first);
-
-		// Storage-related
 		printKVP(L"CapacityGB", info.capacityGB, first);
 		printKVPNum(L"FileSystemType", static_cast<unsigned long>(info.fileSystemType), first);
 		printKVP(L"FriendlyName", info.friendlyName, first);
 		printKVP(L"AllocationUnitSize", info.allocationUnitSize, first);
 		printKVPNum(L"ReFSDedupMode", static_cast<unsigned long>(info.reFSDedupMode), first);
 
-		// KeyProtectors array
-		if (!first) wcout << L",";
+		if (!first) jsonOut << L",";
 		first = false;
-		wcout << L"\"KeyProtectors\":[";
+		jsonOut << L"\"KeyProtectors\":[";
 		for (size_t i = 0; i < info.keyProtectors.size(); ++i)
 		{
 			const auto& kp = info.keyProtectors[i];
-			if (i != 0) wcout << L",";
+			if (i != 0) jsonOut << L",";
 
-			wcout << L"{";
+			jsonOut << L"{";
 			bool firstKP = true;
 			auto kvpKPStr = [&](const wchar_t* k, const wstring& v)
 				{
-					if (!firstKP) wcout << L",";
+					if (!firstKP) jsonOut << L",";
 					firstKP = false;
 					wstring esc = Utf8ToWide(escapeJSON(WideToUtf8(v.c_str())));
-					wcout << L"\"" << k << L"\":\"" << esc << L"\"";
+					jsonOut << L"\"" << k << L"\":\"" << esc << L"\"";
 				};
 			auto kvpKPNum = [&](const wchar_t* k, unsigned long v)
 				{
-					if (!firstKP) wcout << L",";
+					if (!firstKP) jsonOut << L",";
 					firstKP = false;
-					wcout << L"\"" << k << L"\":" << v;
+					jsonOut << L"\"" << k << L"\":" << v;
 				};
 			auto kvpKPBool = [&](const wchar_t* k, bool v)
 				{
-					if (!firstKP) wcout << L",";
+					if (!firstKP) jsonOut << L",";
 					firstKP = false;
-					wcout << L"\"" << k << L"\":" << (v ? L"true" : L"false");
+					jsonOut << L"\"" << k << L"\":" << (v ? L"true" : L"false");
 				};
 
 			kvpKPNum(L"Type", static_cast<unsigned long>(kp.type));
@@ -1878,25 +1873,25 @@ namespace BitLocker {
 			kvpKPStr(L"KeyCertificateType", kp.keyCertificateType);
 			kvpKPStr(L"Thumbprint", kp.thumbprint);
 
-			wcout << L"}";
+			jsonOut << L"}";
 		}
-		wcout << L"]";
-
-		wcout << L"}";
+		jsonOut << L"]";
+		jsonOut << L"}";
+		LogOut(jsonOut.str().c_str());
 		return true;
 	}
 
 	bool PrintVolumeListJson(const vector<VolumeInfo>& list)
 	{
 		// Begin JSON array for the list of volumes.
-		wcout << L"[";
+		LogOut(L"[");
 		for (size_t i = 0; i < list.size(); ++i)
 		{
 			// Emit comma before every element except the first for valid JSON.
-			if (i != 0) wcout << L",";
+			if (i != 0) LogOut(L",");
 			(void)PrintVolumeInfoJson(list[i]); // Reuse single-volume serializer.
 		}
-		wcout << L"]";
+		LogOut(L"]");
 		return true;
 	}
 

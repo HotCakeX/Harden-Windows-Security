@@ -811,9 +811,6 @@
 <data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
     <value>TLS_RSA_WITH_AES_256_GCM_SHA384 अक्षम करें - (PFS के बिना)</value>
 </data>
-<data name="ExtensionManifestV2AvailabilityEdge-Edge" xml:space="preserve">
-    <value>Manifest V2 एक्सटेंशन के लिए समर्थन कभी अक्षम न करें</value>
-</data>
 <data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
     <value>साइटों को स्थानीय कनेक्टेड USB डिवाइसों तक पहुंच का अनुरोध करने की कभी अनुमति न दें</value>
 </data>
@@ -942,5 +939,14 @@
 </data>
 <data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
     <value>TLS v1.1 सर्वर अक्षम करें - भाग 2</value>
+</data>
+<data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>महत्वपूर्ण सुरक्षा इवेंट्स तक आसान पहुँच के लिए Windows Event Viewer में कस्टम दृश्य बनाएँ.</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>SSH क्लाइंट की कॉन्फ़िगरेशन को सुरक्षित MACs (Message Authentication Codes) उपयोग करने के लिए कॉन्फ़िगर करें.</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>Lock Screen को लॉक और अनलॉक करने की ऑडिटिंग तथा ट्रैकिंग सक्षम करें.</value>
 </data>
 </root>

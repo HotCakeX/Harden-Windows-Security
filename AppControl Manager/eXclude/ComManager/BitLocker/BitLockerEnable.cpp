@@ -119,7 +119,7 @@ namespace BitLocker {
 			(find(allowedExtraSuccessCodes.begin(), allowedExtraSuccessCodes.end(), outCode) != allowedExtraSuccessCodes.end()))
 		{
 			if (!successMsg.empty())
-				wcout << successMsg << endl;
+				LogOut(successMsg.c_str());
 			return true;
 		}
 
@@ -127,7 +127,7 @@ namespace BitLocker {
 		wstringstream ss;
 		ss << methodName << L" failed " << FormatReturnCode(outCode);
 		SetLastErrorMsg(ss.str());
-		wcerr << ss.str() << endl;
+		LogErr(ss.str().c_str());
 		return false;
 	}
 
@@ -199,19 +199,17 @@ namespace BitLocker {
 		// Validate encryption method & key protectors
 		if (vol.conversionStatus == ConversionStatus::FullyEncrypted)
 		{
-			wcout << L"The OS drive is fully encrypted, will check if it conforms to the selected "
-				<< ToString(type) << L" level." << endl;
+			LogOut(L"The OS drive is fully encrypted, will check if it conforms to the selected ", ToString(type), L" level.");
 
 			if (vol.encryptionMethod != EncryptionMethod::XTS_AES_256)
 			{
-				wcout << L"The OS drive is encrypted but with "
-					<< ToString(vol.encryptionMethod)
-					<< L" instead of the more secure XTS_AES_256. This is an informational notice." << endl;
+				LogOut(L"The OS drive is encrypted but with ", ToString(vol.encryptionMethod),
+					L" instead of the more secure XTS_AES_256. This is an informational notice.");
 			}
 
 			if (vol.keyProtectors.empty())
 			{
-				wcerr << L"The OS drive is encrypted but it has no key protectors" << endl;
+				LogErr(L"The OS drive is encrypted but it has no key protectors");
 				SetLastErrorMsg(L"OS drive has no key protectors.");
 				return false;
 			}
@@ -232,29 +230,29 @@ namespace BitLocker {
 			{
 				if (hasRecovery && hasTpmPin)
 				{
-					wcout << L"The OS Drive is already fully encrypted with Normal Security level." << endl;
+					LogOut(L"The OS Drive is already fully encrypted with Normal Security level.");
 					return true;
 				}
 
 				// Add RecoveryPassword if missing
 				if (!hasRecovery)
 				{
-					wcout << L"OS drive is encrypted, selected encryption is Normal but there is no RecoveryPassword key protector, adding it now." << endl;
+					LogOut(L"OS drive is encrypted, selected encryption is Normal but there is no RecoveryPassword key protector, adding it now.");
 					if (!AddRecoveryPassword(driveLetter, nullptr)) return false;
 				}
 
 				// Detect Enhanced (TpmPinStartupKey) when Normal requested; conditionally downgrade
 				if (hasTpmPinStartupKey)
 				{
-					wcout << L"For OS Drive encryption, Normal level was selected by the user but Enhanced level already detected." << endl;
+					LogOut(L"For OS Drive encryption, Normal level was selected by the user but Enhanced level already detected.");
 					if (!allowDowngradeEnhancedToNormal)
 					{
-						wcout << L"Skipping changing Enhanced to Normal encryption level for the OS Drive." << endl;
+						LogOut(L"Skipping changing Enhanced to Normal encryption level for the OS Drive.");
 						return true;
 					}
 					else
 					{
-						wcout << L"Downgrading Enhanced to Normal encryption level for the OS Drive." << endl;
+						LogOut(L"Downgrading Enhanced to Normal encryption level for the OS Drive.");
 					}
 				}
 
@@ -263,11 +261,11 @@ namespace BitLocker {
 				{
 					if (!pin || *pin == L'\0')
 					{
-						wcerr << L"No PIN was specified for the NormalSecurity Level, exiting" << endl;
+						LogErr(L"No PIN was specified for the NormalSecurity Level, exiting");
 						SetLastErrorMsg(L"PIN missing for Normal level.");
 						return false;
 					}
-					wcout << L"OS drive is encrypted, selected encryption is Normal but there is no TpmPin key protector, adding it now." << endl;
+					LogOut(L"OS drive is encrypted, selected encryption is Normal but there is no TpmPin key protector, adding it now.");
 					if (!AddTpmAndPinProtector(driveLetter, pin)) return false;
 				}
 			}
@@ -276,14 +274,14 @@ namespace BitLocker {
 				// Enhanced security path
 				if (hasRecovery && hasTpmPinStartupKey)
 				{
-					wcout << L"The OS Drive is already fully encrypted with Enhanced Security level." << endl;
+					LogOut(L"The OS Drive is already fully encrypted with Enhanced Security level.");
 					return true;
 				}
 
 				// Add RecoveryPassword if missing
 				if (!hasRecovery)
 				{
-					wcout << L"OS drive is encrypted, selected encryption is Enhanced but there is no RecoveryPassword key protector, adding it now." << endl;
+					LogOut(L"OS drive is encrypted, selected encryption is Enhanced but there is no RecoveryPassword key protector, adding it now.");
 					if (!AddRecoveryPassword(driveLetter, nullptr)) return false;
 				}
 
@@ -292,11 +290,11 @@ namespace BitLocker {
 				{
 					if (!pin || *pin == L'\0' || !startupKeyPath || *startupKeyPath == L'\0')
 					{
-						wcerr << L"No PIN or Startup Key was specified for the Enhanced Security Level, exiting" << endl;
+						LogErr(L"No PIN or Startup Key was specified for the Enhanced Security Level, exiting");
 						SetLastErrorMsg(L"PIN or StartupKey missing for Enhanced level.");
 						return false;
 					}
-					wcout << L"OS drive is encrypted, selected encryption is Enhanced but there is no TpmPinStartupKey key protector, adding it now." << endl;
+					LogOut(L"OS drive is encrypted, selected encryption is Enhanced but there is no TpmPinStartupKey key protector, adding it now.");
 					if (!AddTpmAndPinAndStartupKeyProtector(driveLetter, startupKeyPath, pin)) return false;
 				}
 			}
@@ -313,7 +311,7 @@ namespace BitLocker {
 				wstringstream ss;
 				ss << L"System entropy (TPM readiness) check failed " << FormatReturnCode(TPM_E_DEACTIVATED)
 					<< L" (TPM not enabled/activated in this environment).";
-				wcerr << ss.str() << endl;
+				LogErr(ss.str().c_str());
 				SetLastErrorMsg(ss.str());
 				return false;
 			}
@@ -340,7 +338,7 @@ namespace BitLocker {
 			{
 				if (!pin || *pin == L'\0')
 				{
-					wcerr << L"No PIN was specified for the NormalSecurity Level, exiting" << endl;
+					LogErr(L"No PIN was specified for the NormalSecurity Level, exiting");
 					SetLastErrorMsg(L"PIN missing for Normal level.");
 					return false;
 				}
@@ -351,7 +349,7 @@ namespace BitLocker {
 			{
 				if (!pin || *pin == L'\0' || !startupKeyPath || *startupKeyPath == L'\0')
 				{
-					wcerr << L"No PIN or Startup Key was specified for the Enhanced Security Level, exiting" << endl;
+					LogErr(L"No PIN or Startup Key was specified for the Enhanced Security Level, exiting");
 					SetLastErrorMsg(L"PIN or StartupKey missing for Enhanced level.");
 					return false;
 				}
@@ -376,9 +374,10 @@ namespace BitLocker {
 		}
 		else
 		{
-			wcerr << L"For full disk encryption, the drive's conversion status must be FullyDecrypted, "
-				<< L"and for security level change it must be FullyEncrypted, but it is "
-				<< ToString(vol.conversionStatus) << L" at the moment." << endl;
+			LogErr(L"For full disk encryption, the drive's conversion status must be FullyDecrypted, "
+				"The OS drive is fully encrypted, will check if it conforms to the selected ",
+				ToString(vol.conversionStatus),
+				L" at the moment.");
 			SetLastErrorMsg(L"Incompatible OS drive conversion status.");
 			return false;
 		}
@@ -418,7 +417,7 @@ namespace BitLocker {
 		}
 		if (!osProtected)
 		{
-			wcerr << L"Operation System drive must be encrypted first before encrypting Non-OS drives." << endl;
+			LogErr(L"Operation System drive must be encrypted first before encrypting Non-OS drives.");
 			SetLastErrorMsg(L"OS drive not protected.");
 			return false;
 		}
@@ -431,20 +430,20 @@ namespace BitLocker {
 		// Already fully encrypted -> check required key protectors
 		if (vol.conversionStatus == ConversionStatus::FullyEncrypted)
 		{
-			wcout << L"The drive " << driveLetter << L" is fully encrypted, will check its key protectors." << endl;
+			LogOut(L"The drive ", driveLetter, L" is fully encrypted, will check its key protectors.");
 
 			// Encryption method (warn if not XTS_AES_256)
 			if (vol.encryptionMethod != EncryptionMethod::XTS_AES_256)
 			{
-				wcout << L"The drive " << driveLetter << L" is encrypted but with "
-					<< ToString(vol.encryptionMethod)
-					<< L" instead of the more secure XTS_AES_256. This is an informational notice." << endl;
+				LogOut(L"The drive ", driveLetter, L" is encrypted but with ",
+					ToString(vol.encryptionMethod),
+					L" instead of the more secure XTS_AES_256. This is an informational notice.");
 			}
 
 			// Error if no key protectors present
 			if (vol.keyProtectors.empty())
 			{
-				wcerr << L"The drive " << driveLetter << L" is encrypted but it has no key protectors" << endl;
+				LogErr(L"The drive ", driveLetter, L" is encrypted but it has no key protectors");
 				SetLastErrorMsg(L"Drive has no key protectors.");
 				return false;
 			}
@@ -466,9 +465,9 @@ namespace BitLocker {
 				{
 					if (kp.type == KeyProtectorType::ExternalKey && !kp.id.empty())
 					{
-						wcout << L"Removing ExternalKey key protector with the ID " << kp.id
-							<< L" for the drive " << driveLetter
-							<< L". Will set a new one bound to the OS drive in the next step." << endl;
+						LogOut(L"Removing ExternalKey key protector with the ID ", kp.id.c_str(),
+							L" for the drive ", driveLetter,
+							L". Will set a new one bound to the OS drive in the next step.");
 						(void)RemoveKeyProtector(driveLetter, kp.id.c_str(), true);
 					}
 				}
@@ -487,30 +486,30 @@ namespace BitLocker {
 				// If all ExternalKeys removed (none bound), add a new auto-unlock protector
 				if (!hasExternal)
 				{
-					wcout << L"Adding a new ExternalKey key protector for Auto-unlock to the drive " << driveLetter << L"." << endl;
+					LogOut(L"Adding a new ExternalKey key protector for Auto-unlock to the drive ", driveLetter, L".");
 					if (!EnableAutoUnlock(driveLetter)) return false;
 				}
 				// Informational: multiple recovery passwords present
 				if (recoveryCount > 1)
 				{
-					wcout << L"drive " << driveLetter << L" has " << recoveryCount
-						<< L" recovery password key protectors. Usually only one is enough." << endl;
+					LogOut(L"drive ", driveLetter, L" has ", recoveryCount,
+						L" recovery password key protectors. Usually only one is enough.");
 				}
-				wcout << L"The drive " << driveLetter << L" is fully encrypted with all the required key protectors." << endl;
+				LogOut(L"The drive ", driveLetter, L" is fully encrypted with all the required key protectors.");
 				return true;
 			}
 
 			// Add missing RecoveryPassword
 			if (!hasRecovery)
 			{
-				wcout << L"Drive " << driveLetter << L" is encrypted, but there is no RecoveryPassword key protector, adding it now." << endl;
+				LogOut(L"Drive ", driveLetter, L" is encrypted, but there is no RecoveryPassword key protector, adding it now.");
 				if (!AddRecoveryPassword(driveLetter, nullptr)) return false;
 			}
 
 			// Add Missing ExternalKey (AutoUnlock) protector
 			if (!hasExternal)
 			{
-				wcout << L"Drive " << driveLetter << L" is encrypted, but there is no ExternalKey key protector for Auto-unlock, adding it now." << endl;
+				LogOut(L"Drive ", driveLetter, L" is encrypted, but there is no ExternalKey key protector for Auto-unlock, adding it now.");
 				if (!EnableAutoUnlock(driveLetter)) return false;
 			}
 			return true;
@@ -554,8 +553,8 @@ namespace BitLocker {
 		// Unsupported intermediate conversion states
 		else
 		{
-			wcerr << L"For full disk encryption, the drive's conversion status must be FullyDecrypted, and for key protector check it must be FullyEncrypted, but it is "
-				<< ToString(vol.conversionStatus) << L" at the moment." << endl;
+			LogErr(L"For full disk encryption, the drive's conversion status must be FullyDecrypted, and for key protector check it must be FullyEncrypted, but it is ",
+				ToString(vol.conversionStatus), L" at the moment.");
 			SetLastErrorMsg(L"Incompatible drive conversion status.");
 			return false;
 		}
@@ -583,7 +582,7 @@ namespace BitLocker {
 		if (!password || *password == L'\0')
 		{
 			SetLastErrorMsg(L"No password supplied for removable drive encryption.");
-			wcerr << L"No Password was specified for the Removable Drive Encryption, exiting" << endl;
+			LogErr(L"No Password was specified for the Removable Drive Encryption, exiting");
 			return false;
 		}
 
@@ -595,8 +594,8 @@ namespace BitLocker {
 		// Must be FullyDecrypted to proceed
 		if (vol.conversionStatus != ConversionStatus::FullyDecrypted)
 		{
-			wcerr << L"In order to encrypt a volume with this method, its Conversion Status must be FullyDecrypted, but it is "
-				<< ToString(vol.conversionStatus) << L" at the moment." << endl;
+			LogErr(L"In order to encrypt a volume with this method, its Conversion Status must be FullyDecrypted, but it is ",
+				ToString(vol.conversionStatus), L" at the moment.");
 			SetLastErrorMsg(L"Removable drive not FullyDecrypted.");
 			return false;
 		}

@@ -228,7 +228,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			applyStrategy: new DefaultApply(() =>
 			{
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set DisableRestorePoint false");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set DisableRestorePoint false");
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
@@ -245,7 +245,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			removeStrategy: new DefaultRemove(() =>
 			{
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set DisableRestorePoint true");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set DisableRestorePoint true");
 			})
 			));
 
@@ -256,7 +256,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			applyStrategy: new DefaultApply(() =>
 			{
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AllowSwitchToAsyncInspection true");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AllowSwitchToAsyncInspection true");
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
@@ -273,7 +273,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			removeStrategy: new DefaultRemove(() =>
 			{
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AllowSwitchToAsyncInspection false");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AllowSwitchToAsyncInspection false");
 			})
 			));
 
@@ -284,7 +284,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			applyStrategy: new DefaultApply(() =>
 			{
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EnableConvertWarnToBlock true");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EnableConvertWarnToBlock true");
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
@@ -301,7 +301,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			removeStrategy: new DefaultRemove(() =>
 			{
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EnableConvertWarnToBlock false");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EnableConvertWarnToBlock false");
 			})
 			));
 
@@ -312,7 +312,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			applyStrategy: new DefaultApply(() =>
 			{
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set BruteForceProtectionLocalNetworkBlocking true");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set BruteForceProtectionLocalNetworkBlocking true");
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
@@ -329,7 +329,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			removeStrategy: new DefaultRemove(() =>
 			{
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set BruteForceProtectionLocalNetworkBlocking false");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set BruteForceProtectionLocalNetworkBlocking false");
 			})
 			));
 
@@ -347,7 +347,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 					// Wrap them with double quotes and separate them with a space
 					string oneDriveDirsFinal = string.Join(" ", oneDriveDirs.Select(item => $"\"{item}\""));
 
-					_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Add ControlledFolderAccessProtectedFolders {oneDriveDirsFinal}");
+					_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Add ControlledFolderAccessProtectedFolders {oneDriveDirsFinal}");
 				}
 			})
 			));
@@ -492,8 +492,8 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			applyStrategy: new DefaultApply(() =>
 			{
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EngineUpdatesChannel 2");
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set PlatformUpdatesChannel 2");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EngineUpdatesChannel 2");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set PlatformUpdatesChannel 2");
 			}),
 
 			verifyStrategy: new DefaultVerify(() =>
@@ -510,8 +510,8 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 			removeStrategy: new DefaultRemove(() =>
 			{
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EngineUpdatesChannel 0");
-				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set PlatformUpdatesChannel 0");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EngineUpdatesChannel 0");
+				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set PlatformUpdatesChannel 0");
 			}),
 
 			subCategory: SubCategories.MSDefender_BetaUpdateChannelsForDefender

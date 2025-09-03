@@ -65,8 +65,7 @@ template <typename T>
 		if (FAILED(hres))
 		{
 			// Output the error details for COM initialization failure.
-			wcerr << L"Failed to initialize COM library. Error code = 0x"
-				<< hex << hres << L" - " << _com_error(hres).ErrorMessage() << endl;
+			LogErr(L"Failed to initialize COM library. Error code = 0x", hex, hres, L" - ", _com_error(hres).ErrorMessage());
 			SetLastErrorMsg(wstring(L"Failed to initialize COM library. Error code = 0x") + to_wstring(hres));
 			return false;
 		}
@@ -92,8 +91,7 @@ template <typename T>
 		if (FAILED(hres))
 		{
 			// Log error details for security initialization failure.
-			wcerr << L"Failed to initialize security. Error code = 0x"
-				<< hex << hres << L" - " << _com_error(hres).ErrorMessage() << endl;
+			LogErr(L"Failed to initialize security. Error code = 0x", hex, hres, L" - ", _com_error(hres).ErrorMessage());
 			SetLastErrorMsg(wstring(L"Failed to initialize security. Error code = 0x") + to_wstring(hres));
 			if (didInitCOM) CoUninitialize();
 			return false;
@@ -113,8 +111,7 @@ template <typename T>
 	if (FAILED(hres))
 	{
 		// Log the error if creating the IWbemLocator instance fails.
-		wcerr << L"Failed to create IWbemLocator object. Error code = 0x"
-			<< hex << hres << L" - " << _com_error(hres).ErrorMessage() << endl;
+		LogErr(L"Failed to create IWbemLocator object. Error code = 0x", hex, hres, L" - ", _com_error(hres).ErrorMessage());
 		SetLastErrorMsg(wstring(L"Failed to create IWbemLocator object. Error code = 0x") + to_wstring(hres));
 		if (!g_skipCOMInit && didInitCOM)
 			CoUninitialize();
@@ -137,8 +134,7 @@ template <typename T>
 	if (FAILED(hres))
 	{
 		// Log the error details if connection to the WMI namespace fails.
-		wcerr << L"Could not connect to " << wmiNamespace << L" namespace. Error code = 0x"
-			<< hex << hres << L" - " << _com_error(hres).ErrorMessage() << endl;
+		LogErr(L"Could not connect to ", wmiNamespace, L" namespace. Error code = 0x", hex, hres, L" - ", _com_error(hres).ErrorMessage());
 		SetLastErrorMsg(wstring(L"Could not connect to ") + wmiNamespace + L" namespace. Error code = 0x" + to_wstring(hres));
 		pLoc->Release();
 		if (!g_skipCOMInit && didInitCOM)
@@ -160,8 +156,7 @@ template <typename T>
 	if (FAILED(hres))
 	{
 		// Log error if setting the proxy's security fails.
-		wcerr << L"Could not set proxy blanket. Error code = 0x"
-			<< hex << hres << L" - " << _com_error(hres).ErrorMessage() << endl;
+		LogErr(L"Could not set proxy blanket. Error code = 0x", hex, hres, L" - ", _com_error(hres).ErrorMessage());
 		SetLastErrorMsg(wstring(L"Could not set proxy blanket. Error code = 0x") + to_wstring(hres));
 		pSvc->Release();
 		pLoc->Release();
@@ -179,8 +174,7 @@ template <typename T>
 	if (FAILED(hres))
 	{
 		// Log error if retrieving the class object fails.
-		wcerr << L"Failed to get " << wmiClassName << L" object. Error code = 0x"
-			<< hex << hres << L" - " << _com_error(hres).ErrorMessage() << endl;
+		LogErr(L"Failed to get ", wmiClassName, L" object. Error code = 0x", hex, hres, L" - ", _com_error(hres).ErrorMessage());
 		SetLastErrorMsg(wstring(L"Failed to get ") + wmiClassName + L" object. Error code = 0x" + to_wstring(hres));
 		SysFreeString(className);
 		pSvc->Release();
@@ -199,9 +193,9 @@ template <typename T>
 	if (FAILED(hres))
 	{
 		// Log error if method definition retrieval fails.
-		wcerr << L"Failed to get method definition for " << customMethodName
-			<< L". Error code = 0x" << hex << hres
-			<< L" - " << _com_error(hres).ErrorMessage() << endl;
+		LogErr(L"Failed to get method definition for ", customMethodName,
+			L". Error code = 0x", hex, hres,
+			L" - ", _com_error(hres).ErrorMessage());
 		SetLastErrorMsg(wstring(L"Failed to get method definition for ") + customMethodName + L". Error code = 0x" + to_wstring(hres));
 		SysFreeString(methodName);
 		SysFreeString(className);
@@ -222,8 +216,7 @@ template <typename T>
 	if (FAILED(hres))
 	{
 		// Log error if spawning the method parameters instance fails.
-		wcerr << L"Failed to spawn instance for method parameters. Error code = 0x"
-			<< hex << hres << L" - " << _com_error(hres).ErrorMessage() << endl;
+		LogErr(L"Failed to spawn instance for method parameters. Error code = 0x", hex, hres, L" - ", _com_error(hres).ErrorMessage());
 		SetLastErrorMsg(wstring(L"Failed to spawn instance for method parameters. Error code = 0x") + to_wstring(hres));
 		SysFreeString(methodName);
 		SysFreeString(className);
@@ -264,7 +257,7 @@ template <typename T>
 		if (varParam.bstrVal == nullptr)
 		{
 			// Clean up and fail fast on allocation failure.
-			wcerr << L"Failed to allocate BSTR for string parameter." << endl;
+			LogErr(L"Failed to allocate BSTR for string parameter.");
 			SetLastErrorMsg(L"Failed to allocate BSTR for string parameter.");
 			pInParams->Release();
 			SysFreeString(methodName);
@@ -291,7 +284,7 @@ template <typename T>
 		if (FAILED(hrSa) || psa == nullptr)
 		{
 			// Log error if SAFEARRAY creation fails.
-			wcerr << L"Failed to create SAFEARRAY for string array." << endl;
+			LogErr(L"Failed to create SAFEARRAY for string array.");
 			SetLastErrorMsg(L"Failed to create SAFEARRAY for string array.");
 			VariantClear(&varParam);
 			pInParams->Release();
@@ -326,7 +319,7 @@ template <typename T>
 		if (psa == nullptr)
 		{
 			// Log error if the SAFEARRAY creation for int array fails.
-			wcerr << L"Failed to create SAFEARRAY for int array." << endl;
+			LogErr(L"Failed to create SAFEARRAY for int array.");
 			SetLastErrorMsg(L"Failed to create SAFEARRAY for int array.");
 			VariantClear(&varParam);
 			pInParams->Release();
@@ -348,8 +341,7 @@ template <typename T>
 			if (FAILED(hres))
 			{
 				// Log error if putting an integer element in the SAFEARRAY fails.
-				wcerr << L"Failed to put element in SAFEARRAY for int array. Error code = 0x"
-					<< hex << hres << L" - " << _com_error(hres).ErrorMessage() << endl;
+				LogErr(L"Failed to put element in SAFEARRAY for int array. Error code = 0x", hex, hres, L" - ", _com_error(hres).ErrorMessage());
 				SetLastErrorMsg(wstring(L"Failed to put element in SAFEARRAY for int array. Error code = 0x") + to_wstring(hres));
 				SafeArrayDestroy(psa);
 				VariantClear(&varParam);
@@ -374,9 +366,9 @@ template <typename T>
 	if (FAILED(hres))
 	{
 		// Log error if setting the input parameter fails.
-		wcerr << L"Failed to set parameter " << preferenceName
-			<< L". Error code = 0x" << hex << hres
-			<< L" - " << _com_error(hres).ErrorMessage() << endl;
+		LogErr(L"Failed to set parameter ", preferenceName,
+			L". Error code = 0x", hex, hres,
+			L" - ", _com_error(hres).ErrorMessage());
 		SetLastErrorMsg(wstring(L"Failed to set parameter ") + preferenceName + L". Error code = 0x" + to_wstring(hres));
 		VariantClear(&varParam);
 		pInParams->Release();
@@ -393,18 +385,18 @@ template <typename T>
 
 	// Log the value being set based on the type.
 	if constexpr (is_same<T, bool>::value)
-		wcout << L"Setting " << preferenceName << L" to: " << varParam.boolVal << endl;
+		LogOut(L"Setting ", preferenceName, L" to: ", varParam.boolVal);
 	else if constexpr (is_same<T, int>::value)
-		wcout << L"Setting " << preferenceName << L" to: " << varParam.lVal << endl;
+		LogOut(L"Setting ", preferenceName, L" to: ", varParam.lVal);
 	else if constexpr (is_convertible<T, wstring>::value &&
 		!is_same<T, vector<wstring>>::value)
-		wcout << L"Setting " << preferenceName << L" to: " << varParam.bstrVal << endl;
+		LogOut(L"Setting ", preferenceName, L" to: ", varParam.bstrVal);
 	else if constexpr (is_same<T, vector<wstring>>::value)
-		wcout << L"Setting " << preferenceName << L" to a string array of size: "
-		<< preferenceValue.size() << endl;
+		LogOut(L"Setting ", preferenceName, L" to a string array of size: ",
+			preferenceValue.size());
 	else if constexpr (is_same<T, vector<int>>::value)
-		wcout << L"Setting " << preferenceName << L" to an int array of size: "
-		<< preferenceValue.size() << endl;
+		LogOut(L"Setting ", preferenceName, L" to an int array of size: ",
+			preferenceValue.size());
 
 	// Clear the VARIANT now that it has been bound.
 	VariantClear(&varParam);
@@ -416,9 +408,9 @@ template <typename T>
 	if (FAILED(hres))
 	{
 		// Log error if method execution fails.
-		wcerr << L"ExecMethod for " << customMethodName
-			<< L" failed. Error code = 0x" << hex << hres
-			<< L" - " << _com_error(hres).ErrorMessage() << endl;
+		LogErr(L"ExecMethod for ", customMethodName,
+			L" failed. Error code = 0x", hex, hres,
+			L" - ", _com_error(hres).ErrorMessage());
 		SetLastErrorMsg(wstring(L"ExecMethod for ") + customMethodName + L" failed. Error code = 0x" + to_wstring(hres));
 		pInParams->Release();
 		SysFreeString(methodName);
@@ -444,16 +436,16 @@ template <typename T>
 		if (SUCCEEDED(hres))
 		{
 			// Log the integer return value.
-			wcout << L"Method " << customMethodName
-				<< L" returned: " << varRet.intVal << endl;
+			LogOut(L"Method ", customMethodName,
+				L" returned: ", varRet.intVal);
 		}
 		else
 		{
 			// Log that the method executed but no return value was provided.
-			wcout << L"Method " << customMethodName
-				<< L" executed, but no return value provided. Error code = 0x"
-				<< hex << hres
-				<< L" - " << _com_error(hres).ErrorMessage() << endl;
+			LogOut(L"Method ", customMethodName,
+				L" executed, but no return value provided. Error code = 0x",
+				hex, hres,
+				L" - ", _com_error(hres).ErrorMessage());
 		}
 		// Clear the VARIANT holding the return value.
 		VariantClear(&varRet);
@@ -463,8 +455,8 @@ template <typename T>
 	else
 	{
 		// Log that the method executed successfully without output parameters.
-		wcout << L"Method " << customMethodName
-			<< L" executed successfully, but no return parameters were provided." << endl;
+		LogOut(L"Method ", customMethodName,
+			L" executed successfully, but no return parameters were provided.");
 	}
 
 	// Cleanup: Release the method input parameters.

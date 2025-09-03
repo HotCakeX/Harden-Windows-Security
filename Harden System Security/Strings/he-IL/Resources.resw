@@ -3574,4 +3574,55 @@
   <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>מחק את התעודה שנבחרה</value>
   </data>
+   <data name="CheckingSSHClientUserConfiguration" xml:space="preserve">
+  <value>בדיקה של תצורת המשתמש של לקוח SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingSSHClientConfigurationCheck" xml:space="preserve">
+  <value>ספריית המשתמש לא נמצאה ב-{0} משום שהשם {1} אינו חוקי, דילוג על בדיקת תצורת לקוח SSH.</value>
+</data>
+<data name="SSHClientConfigFileCreatedBecauseDidNotExist" xml:space="preserve">
+  <value>קובץ תצורת לקוח SSH נוצר עם התוכן: {0} משום שלא היה קיים.</value>
+</data>
+<data name="ExistingMACsConfigurationFoundAndReplaced" xml:space="preserve">
+  <value>נמצאה תצורת 'MACs' קיימת והוחלפה.</value>
+</data>
+<data name="MACsConfigurationNotFoundAddedNew" xml:space="preserve">
+  <value>תצורת MACs לא נמצאה, נוספה תצורה חדשה.</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientUserConfiguration" xml:space="preserve">
+  <value>בדיקה של MACs מאובטחים בתצורת המשתמש של לקוח SSH</value>
+</data>
+<data name="ExistingMACsFoundInUserDirectoryMatchesSecure" xml:space="preserve">
+  <value>נמצאה תצורת MACs בספריית המשתמש והיא תואמת את התצורות המאובטחות.</value>
+</data>
+<data name="MACsConfigurationInUserDirectoryIsDifferent" xml:space="preserve">
+  <value>תצורת MACs בספריית המשתמש שונה: {0}</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientSystemWideConfiguration" xml:space="preserve">
+  <value>בדיקה של MACs מאובטחים בתצורת לקוח SSH ברמת המערכת</value>
+</data>
+<data name="ExistingMACsFoundInSystemWideConfigurationMatchesSecure" xml:space="preserve">
+  <value>נמצאה תצורת MACs בתצורה ברמת המערכת והיא תואמת את התצורות המאובטחות.</value>
+</data>
+<data name="MACsConfigurationInSystemWideConfigurationIsDifferent" xml:space="preserve">
+  <value>תצורת MACs בתצורה ברמת המערכת שונה: {0}</value>
+</data>
+<data name="NoSecureMACsFoundInUserAndSystemWideConfigurations" xml:space="preserve">
+  <value>לא נמצאה תצורת MACs מאובטחת לא בתצורת המשתמש ולא בתצורה ברמת המערכת.</value>
+</data>
+<data name="AttemptingToRemoveMACsFromSSHClientUserConfiguration" xml:space="preserve">
+  <value>מנסה להסיר תצורת MACs מתצורת המשתמש של לקוח SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingRemoval" xml:space="preserve">
+  <value>ספריית המשתמש לא נמצאה ב-{0} משום שהשם {1} אינו חוקי, דילוג על ההסרה.</value>
+</data>
+<data name="SSHClientConfigurationFileNotFoundNothingToRemove" xml:space="preserve">
+  <value>קובץ תצורת לקוח SSH לא נמצא; אין מה להסיר.</value>
+</data>
+<data name="RemovedMACsFromSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>תצורת MACs הוסרה מקובץ תצורת המשתמש של לקוח SSH.</value>
+</data>
+<data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>לא נמצאה תצורת MACs להסרה בקובץ תצורת המשתמש של לקוח SSH.</value>
+</data>
 </root>

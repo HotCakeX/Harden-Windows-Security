@@ -591,27 +591,28 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								string XMLPolicyPath;
 
 								// Instantiate the Content Dialog
-								using SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!);
-
-								// Show the dialog and await its result
-								ContentDialogResult result = await customDialog.ShowAsync();
-
-								// Ensure primary button was selected
-								if (result is ContentDialogResult.Primary)
+								using (SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!))
 								{
-									SignToolPath = customDialog.SignToolPath!;
-									CertPath = customDialog.CertificatePath!;
-									CertCN = customDialog.CertificateCommonName!;
-									XMLPolicyPath = customDialog.XMLPolicyPath!;
 
-									// Sometimes the content dialog lingers on or re-appears so making sure it hides
-									customDialog.Hide();
-								}
-								else
-								{
-									return;
-								}
+									// Show the dialog and await its result
+									ContentDialogResult result = await customDialog.ShowAsync();
 
+									// Ensure primary button was selected
+									if (result is ContentDialogResult.Primary)
+									{
+										SignToolPath = customDialog.SignToolPath!;
+										CertPath = customDialog.CertificatePath!;
+										CertCN = customDialog.CertificateCommonName!;
+										XMLPolicyPath = customDialog.XMLPolicyPath!;
+
+										// Sometimes the content dialog lingers on or re-appears so making sure it hides
+										customDialog.Hide();
+									}
+									else
+									{
+										return;
+									}
+								}
 								#endregion
 
 								// Add the unsigned policy rule option to the policy

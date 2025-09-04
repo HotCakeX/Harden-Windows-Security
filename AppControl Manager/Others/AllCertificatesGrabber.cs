@@ -19,9 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.Pkcs;
-using System.Security.Cryptography.X509Certificates;
-
-#pragma warning disable CA2000
 
 namespace AppControlManager.Others;
 
@@ -30,7 +27,6 @@ namespace AppControlManager.Others;
 /// </summary>
 internal static class AllCertificatesGrabber
 {
-
 	// Constants related to WinTrust
 	private const uint StateActionVerify = 1;
 	private const uint StateActionClose = 2;
@@ -174,7 +170,6 @@ internal static class AllCertificatesGrabber
 		}
 	}
 
-
 	// This is the main method used to retrieve all signers for a given file
 	internal static List<AllFileSigners> GetAllFileSigners(string FilePath)
 	{
@@ -278,14 +273,12 @@ internal static class AllCertificatesGrabber
 							SignedCms signerCertificate = new();
 							signerCertificate.Decode(numArray);
 
-							// Initialize X509Chain object based on signer's certificate chain context
-							X509Chain certificateChain;
-
 							// Check if csSigners is less than or equal to 0
+							// Decide how to construct AllFileSigners based on availability of signer chain context
 							if (providerData.csSigners <= 0U)
 							{
-								// If csSigners is 0 or negative, create a new X509Chain without parameters
-								certificateChain = new X509Chain();
+								// No signer chain context available; create object with empty chain (internally allocates new X509Chain())
+								AllFileSigners.Add(new AllFileSigners(signerCertificate, IntPtr.Zero));
 							}
 							else
 							{
@@ -293,12 +286,9 @@ internal static class AllCertificatesGrabber
 								// Using the generic overload to marshal the structure for better performance and type safety
 								CryptProviderSigner signer = Marshal.PtrToStructure<CryptProviderSigner>(providerData.pasSigners);
 
-								// Initialize X509Chain with the pChainContext from the signer structure
-								certificateChain = new X509Chain(signer.pChainContext);
+								// Create AllFileSigners with the native chain context pointer
+								AllFileSigners.Add(new AllFileSigners(signerCertificate, signer.pChainContext));
 							}
-
-							// Add signer's certificate and certificate chain to AllFileSigners list
-							AllFileSigners.Add(new AllFileSigners(signerCertificate, certificateChain));
 						}
 					}
 				}

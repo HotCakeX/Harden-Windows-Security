@@ -5734,4 +5734,46 @@
   <data name="CopySelectedButton.Content" xml:space="preserve">
     <value>نسخ المحدد</value>
   </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Description" xml:space="preserve">
+    <value>غيّر حجم الأعمدة تلقائياً أثناء التمرير ليتناسب مع المحتوى المرئي. ستتمدّد الأعمدة وتنكمش ديناميكياً. ينطبق هذا فقط على طرق عرض القوائم التي تدعم هذه الميزة. إذا كان هذا الخيار مفعّلاً وكانت البيانات محمّلة بالفعل في طريقة عرض قائمة، فعند إيقافه والعودة إلى الصفحة التي تحتوي على طريقة عرض القائمة سيتم إجراء حساب عرض لمرة واحدة لجميع البيانات.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Header" xml:space="preserve">
+    <value>تغيير حجم رؤوس الأعمدة تلقائياً في طرق عرض القوائم</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>غيّر حجم الأعمدة تلقائياً أثناء التمرير ليتناسب مع المحتوى المرئي. ستتمدّد الأعمدة وتنكمش ديناميكياً. ينطبق هذا فقط على طرق عرض القوائم التي تدعم هذه الميزة. إذا كان هذا الخيار مفعّلاً وكانت البيانات محمّلة بالفعل في طريقة عرض قائمة، فعند إيقافه والعودة إلى الصفحة التي تحتوي على طريقة عرض القائمة سيتم إجراء حساب عرض لمرة واحدة لجميع البيانات.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>غيّر حجم الأعمدة تلقائياً أثناء التمرير ليتناسب مع المحتوى المرئي. ستتمدّد الأعمدة وتنكمش ديناميكياً. ينطبق هذا فقط على طرق عرض القوائم التي تدعم هذه الميزة. إذا كان هذا الخيار مفعّلاً وكانت البيانات محمّلة بالفعل في طريقة عرض قائمة، فعند إيقافه والعودة إلى الصفحة التي تحتوي على طريقة عرض القائمة سيتم إجراء حساب عرض لمرة واحدة لجميع البيانات.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>اختر عائلة خط للبيانات المعروضة في طرق عرض القوائم داخل التطبيق. استناداً إلى الخط الذي تنتقل إليه وإذا كانت البيانات محمّلة مسبقاً في طرق عرض القوائم، فقد يتطلّب عرضها إعادة ضبط. فعّل ميزة تغيير حجم الأعمدة تلقائياً عند الحاجة.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>عائلة الخط لطرق عرض القوائم</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر عائلة خط للبيانات المعروضة في طرق عرض القوائم داخل التطبيق. استناداً إلى الخط الذي تنتقل إليه وإذا كانت البيانات محمّلة مسبقاً في طرق عرض القوائم، فقد يتطلّب عرضها إعادة ضبط. فعّل ميزة تغيير حجم الأعمدة تلقائياً عند الحاجة.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر عائلة خط للبيانات المعروضة في طرق عرض القوائم داخل التطبيق. استناداً إلى الخط الذي تنتقل إليه وإذا كانت البيانات محمّلة مسبقاً في طرق عرض القوائم، فقد يتطلّب عرضها إعادة ضبط. فعّل ميزة تغيير حجم الأعمدة تلقائياً عند الحاجة.</value>
+  </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>الإجمالي: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر</value>
+  </data>
+    <data name="LoadedText.Text" xml:space="preserve">
+    <value>المحمّلة: </value>
+  </data>
+  <data name="LoadedText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر المُحمّلة حالياً في العرض</value>
+  </data>
+  <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر المُحمّلة حالياً في العرض</value>
+  </data>
 </root>

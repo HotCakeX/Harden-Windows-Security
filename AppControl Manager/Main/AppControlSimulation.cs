@@ -188,32 +188,27 @@ internal static class AppControlSimulation
 		#endregion
 
 
-		// Create a timer to update the progress ring every 2 seconds.
-		Timer? progressTimer = null;
-
-		if (progressReporter is not null)
-		{
-			progressTimer = new(state =>
-			{
-				// Read the current value in a thread-safe manner.
-				int current = Volatile.Read(ref processedFilesCount);
-
-				// Calculate the percentage complete
-				int currentPercentage = (int)(current / AllFilesCount * 100);
-
-				// Cap the percentage at 100
-				int percentageToUse = Math.Min(currentPercentage, 100);
-
-				progressReporter.Report(percentageToUse);
-
-				// Update the taskbar progress
-				Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
-
-			}, null, 0, 2000);
-		}
-
 		try
 		{
+			// Create a timer to update the progress ring every 2 seconds.
+			using Timer? progressTimer = progressReporter is not null ? new Timer(state =>
+				{
+					// Read the current value in a thread-safe manner.
+					int current = Volatile.Read(ref processedFilesCount);
+
+					// Calculate the percentage complete
+					int currentPercentage = (int)(current / AllFilesCount * 100);
+
+					// Cap the percentage at 100
+					int percentageToUse = Math.Min(currentPercentage, 100);
+
+					progressReporter.Report(percentageToUse);
+
+					// Update the taskbar progress
+					Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
+
+				}, null, 0, 2000) : null;
+
 			Taskbar.Badge.SetBadgeAsActive();
 
 			// split the file paths by ThreadsCount which by default is 2 and minimum 1
@@ -359,9 +354,10 @@ internal static class AppControlSimulation
 						// If the file's hash does not exist in the supplied XML file, then check its signature
 						else
 						{
+							List<AllFileSigners> FileSignatureResults = [];
 							try
 							{
-								List<AllFileSigners> FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathObj.FullName);
+								FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathObj.FullName);
 
 								// If there is no result then check if the file is allowed by a security catalog
 								if (FileSignatureResults.Count == 0)
@@ -402,6 +398,9 @@ internal static class AppControlSimulation
 												CertificateHelper.GetTBSCertificate(CatalogSignerDits.Chain.ChainElements[0].Certificate),
 												CurrentFilePathObj.FullName
 											));
+
+										// Disposing catalog signer after extracting all needed info to free native chain resources.
+										CatalogSignerDits.Dispose();
 
 										// Move to the next file
 										continue;
@@ -504,6 +503,14 @@ internal static class AppControlSimulation
 								// Move to the next file
 								continue;
 							}
+							finally
+							{
+								// Disposing all AllFileSigners instances to free X509Chain native resources.
+								foreach (AllFileSigners signer in FileSignatureResults)
+								{
+									signer.Dispose();
+								}
+							}
 						}
 					}
 				}));
@@ -518,9 +525,7 @@ internal static class AppControlSimulation
 
 		}
 		finally
-		{   // Dispose of the timer
-			progressTimer?.Dispose();
-
+		{
 			// Clear the taskbar progress
 			Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, 0, 0);
 			Taskbar.Badge.ClearBadge();

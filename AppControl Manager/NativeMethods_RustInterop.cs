@@ -30,53 +30,53 @@ internal unsafe static partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial IntPtr show_file_picker(
-		[MarshalAs(UnmanagedType.LPUTF8Str)] string filter,
-		[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
-		out int lastError);
+			[MarshalAs(UnmanagedType.LPUTF8Str)] string filter,
+			[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
+			out int lastError);
 
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial FileDialogHelper.StringArray show_files_picker(
-		[MarshalAs(UnmanagedType.LPUTF8Str)] string filter,
-		[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
-		out int lastError);
+			[MarshalAs(UnmanagedType.LPUTF8Str)] string filter,
+			[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
+			out int lastError);
 
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial IntPtr show_folder_picker(
-		[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
-		out int lastError);
+			[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
+			out int lastError);
 
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial FileDialogHelper.StringArray show_folders_picker(
-		[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
-		out int lastError);
+			[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
+			out int lastError);
 
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial void free_string(IntPtr s);
 
@@ -85,7 +85,7 @@ internal unsafe static partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial void free_string_array(FileDialogHelper.StringArray arr);
 
@@ -94,25 +94,25 @@ internal unsafe static partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial int relaunch_app_elevated(
-		[MarshalAs(UnmanagedType.LPWStr)] string aumid,
-		[MarshalAs(UnmanagedType.LPWStr)] string? arguments,
-		uint* processId);
+			[MarshalAs(UnmanagedType.LPWStr)] string aumid,
+			[MarshalAs(UnmanagedType.LPWStr)] string? arguments,
+			uint* processId);
 
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial int update_taskbar_progress(
-		IntPtr hwnd,
-		ulong completed,
-		ulong total,
-		out int lastError);
+			IntPtr hwnd,
+			ulong completed,
+			ulong total,
+			out int lastError);
 
 
 #if DEBUG

@@ -361,7 +361,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		return ContainsOperationCanceledExceptionRecursive(exception, visited);
 	}
 
-
 #if APP_CONTROL_MANAGER
 	/// <summary>
 	/// Opens the directory where a file is located in File Explorer.
@@ -370,8 +369,14 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	internal static void OpenInFileExplorer(ListViewHelper.ListViewsRegistry ListViewKey)
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewKey);
-		if (lv is null) return;
+		OpenInFileExplorerCore(lv);
+	}
 
+	internal static void OpenInFileExplorer(ListView? lv) => OpenInFileExplorerCore(lv);
+
+	private static void OpenInFileExplorerCore(ListView? lv)
+	{
+		if (lv is null) return;
 		string? fileToOpen = null;
 
 		FileIdentity? attempt1 = lv.SelectedItem as FileIdentity;

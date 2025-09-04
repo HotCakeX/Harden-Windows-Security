@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AppControlManager.IncrementalCollection;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.Others;
@@ -34,8 +35,14 @@ using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
-internal sealed partial class CreateDenyPolicyVM : ViewModelBase
+internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 {
+	public void Dispose()
+	{
+		// Dispose the controller
+		LVController.Dispose();
+	}
+
 	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
 
 	internal CreateDenyPolicyVM()
@@ -72,11 +79,96 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 
 		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));
 
-		// To adjust the initial width of the columns, giving them nice paddings.
-		CalculateColumnWidths();
+		LVController = new(
+			registryKey: ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults,
+			applyWidthCallback: (int index, double width) =>
+			{
+				switch (index)
+				{
+					case 0: ColumnWidth1 = new GridLength(width); break;
+					case 1: ColumnWidth2 = new GridLength(width); break;
+					case 2: ColumnWidth3 = new GridLength(width); break;
+					case 3: ColumnWidth4 = new GridLength(width); break;
+					case 4: ColumnWidth5 = new GridLength(width); break;
+					case 5: ColumnWidth6 = new GridLength(width); break;
+					case 6: ColumnWidth7 = new GridLength(width); break;
+					case 7: ColumnWidth8 = new GridLength(width); break;
+					case 8: ColumnWidth9 = new GridLength(width); break;
+					case 9: ColumnWidth10 = new GridLength(width); break;
+					case 10: ColumnWidth11 = new GridLength(width); break;
+					case 11: ColumnWidth12 = new GridLength(width); break;
+					case 12: ColumnWidth13 = new GridLength(width); break;
+					case 13: ColumnWidth14 = new GridLength(width); break;
+					case 14: ColumnWidth15 = new GridLength(width); break;
+					case 15: ColumnWidth16 = new GridLength(width); break;
+					case 16: ColumnWidth17 = new GridLength(width); break;
+					case 17: ColumnWidth18 = new GridLength(width); break;
+					default: break;
+				}
+			},
+			// Current widths provider handed to controller for delta comparison & anchoring.
+			getCurrentWidthsCallback: () => new double[]
+			{
+				ColumnWidth1.Value,  ColumnWidth2.Value,  ColumnWidth3.Value,  ColumnWidth4.Value,  ColumnWidth5.Value,
+				ColumnWidth6.Value,  ColumnWidth7.Value,  ColumnWidth8.Value,  ColumnWidth9.Value,  ColumnWidth10.Value,
+				ColumnWidth11.Value, ColumnWidth12.Value, ColumnWidth13.Value, ColumnWidth14.Value, ColumnWidth15.Value,
+				ColumnWidth16.Value, ColumnWidth17.Value, ColumnWidth18.Value
+			},
+			headerResourceKeys: headerResourceKeys,
+			columnPropertyKeys: propertyKeys
+		);
+
+		// Run header-only pass once during VM construction so headers are sized before any data loads.
+		LVController.InitializeHeaderOnlyColumnWidths();
 	}
 
 	#region Files and Folders scan
+
+	internal readonly ListViewIncrementalController LVController;
+
+	private static readonly string[] headerResourceKeys =
+	[
+		"FileNameHeader/Text",
+		"SignatureStatusHeader/Text",
+		"OriginalFileNameHeader/Text",
+		"InternalNameHeader/Text",
+		"FileDescriptionHeader/Text",
+		"ProductNameHeader/Text",
+		"FileVersionHeader/Text",
+		"PackageFamilyNameHeader/Text",
+		"SHA256HashHeader/Text",
+		"SHA1HashHeader/Text",
+		"SigningScenarioHeader/Text",
+		"FilePathHeader/Text",
+		"SHA1PageHashHeader/Text",
+		"SHA256PageHashHeader/Text",
+		"HasWHQLSignerHeader/Text",
+		"FilePublishersHeader/Text",
+		"IsECCSignedHeader/Text",
+		"OpusDataHeader/Text"
+	];
+
+	private static readonly string[] propertyKeys =
+	[
+		"FileName",
+		"SignatureStatus",
+		"OriginalFileName",
+		"InternalName",
+		"FileDescription",
+		"ProductName",
+		"FileVersion",
+		"PackageFamilyName",
+		"SHA256Hash",
+		"SHA1Hash",
+		"SISigningScenario",
+		"FilePath",
+		"SHA1PageHash",
+		"SHA256PageHash",
+		"HasWHQLSigner",
+		"FilePublishersToDisplay",
+		"IsECCSigned",
+		"Opus"
+	];
 
 	/// <summary>
 	/// Whether the UI elements for Files and Folders section are enabled or disabled.
@@ -95,18 +187,11 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	// A Progress<double> so Report() callbacks run on the UI thread
 	internal IProgress<double> FilesAndFoldersProgressRingValueProgress;
 
-	// Used to store the scan results and as the source for the results ListViews
-	internal ObservableCollection<FileIdentity> FilesAndFoldersScanResults { get; set => SP(ref field, value); } = [];
-
-	internal readonly List<FileIdentity> filesAndFoldersScanResultsList = [];
-
 	internal Visibility FilesAndFoldersBrowseForFilesSettingsCardVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
 	internal ListViewHelper.SortState SortStateFilesAndFolders { get; set; } = new();
 
 	internal Visibility FilesAndFoldersInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
-	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = GlobalVars.GetStr("TotalFiles") + ": 0";
 
 	/// <summary>
 	/// Selected File Paths
@@ -159,9 +244,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	internal string? FilesAndFoldersInfoBarTitle { get; set => SP(ref field, value); }
 	internal InfoBarSeverity FilesAndFoldersInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 
-	#region LISTVIEW IMPLEMENTATIONS
-
-	// Properties to hold each columns' width.
+	// Column width dependency properties
 	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
 	internal GridLength ColumnWidth2 { get; set => SP(ref field, value); }
 	internal GridLength ColumnWidth3 { get; set => SP(ref field, value); }
@@ -181,93 +264,29 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	internal GridLength ColumnWidth17 { get; set => SP(ref field, value); }
 	internal GridLength ColumnWidth18 { get; set => SP(ref field, value); }
 
-	/// <summary>
-	/// Calculates the maximum required width for each column (including header text)
-	/// and assigns the value (with a little extra padding) to the corresponding property.
-	/// It should always run once ALL the data have been added to the ObservableCollection that is the ItemsSource of the ListView
-	/// And only after this method, the ItemsSource must be assigned to the ListView.
-	/// </summary>
-	internal void CalculateColumnWidths()
+	internal void FileAndFoldersHeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-
-		// Measure header text widths first.
-		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileNameHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SignatureStatusHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("OriginalFileNameHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("InternalNameHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileDescriptionHeader/Text"));
-		double maxWidth6 = ListViewHelper.MeasureText(GlobalVars.GetStr("ProductNameHeader/Text"));
-		double maxWidth7 = ListViewHelper.MeasureText(GlobalVars.GetStr("FileVersionHeader/Text"));
-		double maxWidth8 = ListViewHelper.MeasureText(GlobalVars.GetStr("PackageFamilyNameHeader/Text"));
-		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256HashHeader/Text"));
-		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1HashHeader/Text"));
-		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.GetStr("SigningScenarioHeader/Text"));
-		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePathHeader/Text"));
-		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA1PageHashHeader/Text"));
-		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.GetStr("SHA256PageHashHeader/Text"));
-		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.GetStr("HasWHQLSignerHeader/Text"));
-		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.GetStr("FilePublishersHeader/Text"));
-		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.GetStr("IsECCSignedHeader/Text"));
-		double maxWidth18 = ListViewHelper.MeasureText(GlobalVars.GetStr("OpusDataHeader/Text"));
-
-		// Iterate over all items to determine the widest string for each column.
-		foreach (FileIdentity item in FilesAndFoldersScanResults)
-		{
-			maxWidth1 = ListViewHelper.MeasureText(item.FileName, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.SignatureStatus.ToString(), maxWidth2);
-			maxWidth3 = ListViewHelper.MeasureText(item.OriginalFileName, maxWidth3);
-			maxWidth4 = ListViewHelper.MeasureText(item.InternalName, maxWidth4);
-			maxWidth5 = ListViewHelper.MeasureText(item.FileDescription, maxWidth5);
-			maxWidth6 = ListViewHelper.MeasureText(item.ProductName, maxWidth6);
-			maxWidth7 = ListViewHelper.MeasureText(item.FileVersion?.ToString(), maxWidth7);
-			maxWidth8 = ListViewHelper.MeasureText(item.PackageFamilyName, maxWidth8);
-			maxWidth9 = ListViewHelper.MeasureText(item.SHA256Hash, maxWidth9);
-			maxWidth10 = ListViewHelper.MeasureText(item.SHA1Hash, maxWidth10);
-			maxWidth11 = ListViewHelper.MeasureText(item.SISigningScenario.ToString(), maxWidth11);
-			maxWidth12 = ListViewHelper.MeasureText(item.FilePath, maxWidth12);
-			maxWidth13 = ListViewHelper.MeasureText(item.SHA1PageHash, maxWidth13);
-			maxWidth14 = ListViewHelper.MeasureText(item.SHA256PageHash, maxWidth14);
-			maxWidth15 = ListViewHelper.MeasureText(item.HasWHQLSigner.ToString(), maxWidth15);
-			maxWidth16 = ListViewHelper.MeasureText(item.FilePublishersToDisplay, maxWidth16);
-			maxWidth17 = ListViewHelper.MeasureText(item.IsECCSigned.ToString(), maxWidth17);
-			maxWidth18 = ListViewHelper.MeasureText(item.Opus, maxWidth18);
-		}
-
-		// Set the column width properties.
-		ColumnWidth1 = new GridLength(maxWidth1);
-		ColumnWidth2 = new GridLength(maxWidth2);
-		ColumnWidth3 = new GridLength(maxWidth3);
-		ColumnWidth4 = new GridLength(maxWidth4);
-		ColumnWidth5 = new GridLength(maxWidth5);
-		ColumnWidth6 = new GridLength(maxWidth6);
-		ColumnWidth7 = new GridLength(maxWidth7);
-		ColumnWidth8 = new GridLength(maxWidth8);
-		ColumnWidth9 = new GridLength(maxWidth9);
-		ColumnWidth10 = new GridLength(maxWidth10);
-		ColumnWidth11 = new GridLength(maxWidth11);
-		ColumnWidth12 = new GridLength(maxWidth12);
-		ColumnWidth13 = new GridLength(maxWidth13);
-		ColumnWidth14 = new GridLength(maxWidth14);
-		ColumnWidth15 = new GridLength(maxWidth15);
-		ColumnWidth16 = new GridLength(maxWidth16);
-		ColumnWidth17 = new GridLength(maxWidth17);
-		ColumnWidth18 = new GridLength(maxWidth18);
+		string key = (string)((Button)sender).Tag;
+		LVController.SortByHeader(key, FilesAndFoldersScanResultsSearchTextBox);
 	}
 
-	#endregion
+	internal void CopyToClipboard_Click(object sender, RoutedEventArgs e)
+	{
+		string key = (string)((MenuFlyoutItem)sender).Tag;
+		LVController.CopySingleCell(key);
+	}
 
 	/// <summary>
-	/// Updates the total logs count displayed on the UI
+	/// Search box for the Files and Folders scan results.
 	/// </summary>
-	internal void UpdateTotalFiles(bool? Zero = null)
+	internal string? FilesAndFoldersScanResultsSearchTextBox
 	{
-		if (Zero == true)
+		get; set
 		{
-			TotalCountOfTheFilesTextBox = GlobalVars.GetStr("TotalFiles") + ": 0";
-		}
-		else
-		{
-			TotalCountOfTheFilesTextBox = GlobalVars.GetStr("TotalFiles") + ": " + FilesAndFoldersScanResults.Count;
+			if (SPT(ref field, value))
+			{
+				LVController.ApplySearch(value);
+			}
 		}
 	}
 
@@ -348,7 +367,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 					// Make sure there are AppControl compatible files
 					if (DetectedFilesInSelectedDirectories.Item2 is 0)
 					{
-						_ = Dispatcher.TryEnqueue(() =>
+						await Dispatcher.EnqueueAsync(() =>
 						{
 							errorsOccurred = true;
 							FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("NoCompatibleFilesDetected"),
@@ -374,20 +393,35 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 						(fi, vm) => fi.ParentViewModelCreateDenyPolicyVM = vm,
 						FilesAndFoldersCancellableButton.Cts?.Token);
 
-					filesAndFoldersScanResultsList.Clear();
+					LVController.FullSource.Clear();
 
-					filesAndFoldersScanResultsList.AddRange(LocalFilesResults);
+					LVController.FullSource.AddRange(LocalFilesResults);
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
-						// Add the results of the directories scans to the ListView
-						FilesAndFoldersScanResults = new(LocalFilesResults);
+						GenericIncrementalCollection<FileIdentityIncrementalSource, FileIdentity> incrementalCollection =
+							new(new FileIdentityIncrementalSource(LVController.FullSource));
 
-						CalculateColumnWidths();
+						// Replaces the ItemsSource for the results ListView with the incremental collection.						
+						LVController.UpdateCollection(incrementalCollection);
 
-						UpdateTotalFiles();
+						// Kicks off the initial page load for the incremental collection. Intentionally discard the returned Task because:
+						// - The first page begins populating asynchronously.
+						// - Width recalculation below is safe: the controller will size to headers immediately,
+						//   and will re-debounce/recompute widths again as items realize (via ContainerContentChanging/scroll hooks).
+						_ = incrementalCollection.RefreshDataAsync();
+
+						// Recompute visible column widths right away (headers + any realized rows).
+						// This ensures the header grid columns get an immediate, sane size before/while the first page appears.
+						// Subsequent realization/scroll events will trigger debounced recalcs for smooth adjustments.
+						LVController.RecalculateVisibleColumnWidths();
+
+						// Update the Total files UI text to reflect the current count in the bound collection.
+						// (At this point it reflects whatever portion has been loaded into the incremental collection;
+						// the controller and collection will continue to raise updates as more pages load.)
+						LVController.UpdateTotalFiles();
 					});
 
 					_ = Dispatcher.TryEnqueue(() =>
@@ -559,74 +593,13 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FilesAndFoldersDenyPolicyPath);
 
 	/// <summary>
-	/// De-selects all of the displayed rows on the ListView
-	/// </summary>
-	internal void DeSelectAll_Click()
-	{
-		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults);
-		if (lv is null) return;
-		lv.SelectedItems.Clear(); // Deselect all rows by clearing SelectedItems
-	}
-
-	/// <summary>
-	/// Selects all of the displayed rows on the ListView
-	/// </summary>
-	internal void SelectAll_Click()
-	{
-		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults);
-		if (lv is null) return;
-
-		ListViewHelper.SelectAll(lv, FilesAndFoldersScanResults);
-	}
-
-	/// <summary>
-	/// Event handler for the Clear Data button
-	/// </summary>
-	internal void ClearDataButton_Click()
-	{
-		FilesAndFoldersScanResults.Clear();
-		filesAndFoldersScanResultsList.Clear();
-		UpdateTotalFiles(true);
-		CalculateColumnWidths();
-	}
-
-	/// <summary>
-	/// Search box for the Files and Folders scan results.
-	/// </summary>
-	internal string? FilesAndFoldersScanResultsSearchTextBox
-	{
-		get; set
-		{
-			if (SPT(ref field, value))
-			{
-				ApplyFilters();
-			}
-		}
-	}
-
-	/// <summary>
-	/// Applies the date and search filters to the data grid
-	/// </summary>
-	private void ApplyFilters()
-	{
-		ListViewHelper.ApplyFilters(
-			allFileIdentities: filesAndFoldersScanResultsList.AsEnumerable(),
-			filteredCollection: FilesAndFoldersScanResults,
-			searchText: FilesAndFoldersScanResultsSearchTextBox,
-			selectedDate: null,
-			regKey: ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults
-		);
-		UpdateTotalFiles();
-	}
-
-	/// <summary>
 	/// Exports data to JSON.
 	/// </summary>
 	internal async void ExportFilesAndFoldersToJsonButton_Click()
 	{
 		try
 		{
-			await FileIdentity.ExportToJson(FilesAndFoldersScanResults, FilesAndFoldersInfoBar);
+			await FileIdentity.ExportToJson(LVController.FullSource, FilesAndFoldersInfoBar);
 		}
 		catch (Exception ex)
 		{
@@ -667,6 +640,10 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 	/// Items Source of the ListView that displays the list of the installed packaged apps.
 	/// </summary>
 	internal ObservableCollection<GroupInfoListForPackagedAppView> PFNBasedAppsListItemsSource { get; set => SP(ref field, value); } = [];
+
+	// Used to store the original Apps collection so when we filter the results and then remove the filters,
+	// We can still have access to the original collection of apps
+	private List<GroupInfoListForPackagedAppView> PFNBasedAppsFullList = [];
 
 	private List<object> PFNBasedAppsListItemsSourceSelectedItems = [];
 
@@ -771,29 +748,20 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		PFNBasedAppsListItemsSourceSelectedItems = new(lv.SelectedItems);
 	}
 
-
-	// Used to store the original Apps collection so when we filter the results and then remove the filters,
-	// We can still have access to the original collection of apps
-	private ObservableCollection<GroupInfoListForPackagedAppView>? _originalContacts;
-
-
 	/// <summary>
 	/// Event handler for when the search box of apps list changes
 	/// </summary>
 	private void PFNAppFilteringTextBox_TextChanged()
 	{
-		// Store the original collection if it hasn't been saved yet
-		_originalContacts ??= PFNBasedAppsListItemsSource;
-
 		if (string.IsNullOrWhiteSpace(PFNBasedSearchKeywordForAppsList))
 		{
 			// If the filter is cleared, restore the original collection
-			PFNBasedAppsListItemsSource = _originalContacts;
+			PFNBasedAppsListItemsSource = new(PFNBasedAppsFullList);
 			return;
 		}
 
 		// Filter the original collection
-		List<GroupInfoListForPackagedAppView> filtered = _originalContacts
+		List<GroupInfoListForPackagedAppView> filtered = PFNBasedAppsFullList
 			.Select(group => new GroupInfoListForPackagedAppView(
 				items: group.Where(app => app.DisplayName.Contains(PFNBasedSearchKeywordForAppsList, StringComparison.OrdinalIgnoreCase)),
 				key: group.Key)).Where(group => group.Any()).ToList();
@@ -813,7 +781,12 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 			try
 			{
 				PFNElementsAreEnabled = false;
+
+				// Get the data first and store in ObservableCollection
 				PFNBasedAppsListItemsSource = await GetAppsList.GetContactsGroupedAsync(this);
+
+				// Store the same data on the FullList used for searching
+				PFNBasedAppsFullList = new(PFNBasedAppsListItemsSource);
 			}
 			finally
 			{
@@ -853,7 +826,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"), GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
+				PFNInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"), GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}
@@ -1184,7 +1157,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase
 		{
 			if (PolicyFileToMergeWith is null)
 			{
-				FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"), GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
+				CustomFilePathRulesInfoBar.WriteWarning(GlobalVars.GetStr("SelectPolicyToAddRulesToSubtitle"), GlobalVars.GetStr("SelectPolicyToAddRulesToTitle"));
 				return;
 			}
 		}

@@ -54,7 +54,7 @@
         <AssemblyName>AppControlManager</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>2.0.38.0</FileVersion>
+        <FileVersion>2.0.39.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
         <StartupObject>AppControlManager.Program</StartupObject>
@@ -78,6 +78,7 @@
 
         <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
         <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
+        <Configurations>Debug;Release</Configurations>
 
     </PropertyGroup>
 
@@ -107,6 +108,13 @@
         <NuGetAudit>false</NuGetAudit>
 
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+        <!--
+             https://learn.microsoft.com/visualstudio/code-quality/disable-code-analysis
+             This project utilizes extensive and comprehensive analyzers that can take a lot of time to complete.
+             So we disable them for debug/design time and only run them during release configuration.
+        -->
+        <RunAnalyzers>false</RunAnalyzers>
 
     </PropertyGroup>
 

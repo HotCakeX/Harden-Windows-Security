@@ -48,6 +48,8 @@
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="White"/>
                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
                     <Setter Property="FontWeight" Value="Bold"/>
                     <Setter Property="Padding" Value="5"/>
                 </Style.Setters>

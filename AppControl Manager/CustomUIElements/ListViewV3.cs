@@ -92,6 +92,10 @@ internal sealed partial class ListViewV3 : ListView
 
 	private void OnUnloaded(object? sender, RoutedEventArgs e)
 	{
+		// Ensure the outer ScrollView is re-enabled even if the pointer is inside during unload (mouse hover path).
+		// Without this, the parent could remain stuck in Disabled mode after navigation.
+		_ = (_parentScrollView?.VerticalScrollMode = ScrollingScrollMode.Enabled);
+
 		ListViewHelper.Unregister(RegistryKey, this);
 	}
 

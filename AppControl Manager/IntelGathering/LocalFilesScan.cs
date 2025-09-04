@@ -347,6 +347,14 @@ internal static class LocalFilesScan
 								}
 							}
 
+							// Disposing all AllFileSigners instances now that we have extracted
+							// every piece of information. This prevents X509Chain native resource accumulation.
+							// As of this moment, .NET doesn't warn us about doing this even with all analyzers enabled.
+							foreach (AllFileSigners signer in FileSignatureResults)
+							{
+								signer.Dispose();
+							}
+
 							// Assign the extra parameter to the appropriate property using the delegate for ViewModel instance.
 							assignVMRef(currentFileIdentity, VMRef);
 

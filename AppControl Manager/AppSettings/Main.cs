@@ -70,6 +70,8 @@ internal sealed partial class Main : ViewModelBase
 		ScreenShield = ReadValue(nameof(ScreenShield), ScreenShield);
 		PublishUserActivityInTheOS = ReadValue(nameof(PublishUserActivityInTheOS), PublishUserActivityInTheOS);
 		LinkPreviewsForSecurityMeasure = ReadValue(nameof(LinkPreviewsForSecurityMeasure), LinkPreviewsForSecurityMeasure);
+		AutoResizeListViewColumns = ReadValue(nameof(AutoResizeListViewColumns), AutoResizeListViewColumns);
+		ListViewFontFamily = ReadValue(nameof(ListViewFontFamily), ListViewFontFamily);
 	}
 
 	/// <summary>
@@ -481,4 +483,34 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = true;
+
+	/// <summary>
+	/// Whether ListViews that implement Incremental Collections also use auto column resizing feature.
+	/// </summary>
+	internal bool AutoResizeListViewColumns
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(AutoResizeListViewColumns), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// The selected Font Family for List View items.
+	/// </summary>
+	internal string ListViewFontFamily
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(ListViewFontFamily), field);
+			}
+		}
+	} = "Segoe UI"; // https://github.com/MicrosoftDocs/winapps-winrt-api/blob/docs//microsoft.ui.xaml.media/fontfamily_xamlautofontfamily.md
 }

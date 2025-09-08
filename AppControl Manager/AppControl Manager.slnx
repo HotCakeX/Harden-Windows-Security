@@ -1,5 +1,7 @@
 <Solution>
   <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
     <Platform Name="arm64" />
     <Platform Name="x64" />
   </Configurations>

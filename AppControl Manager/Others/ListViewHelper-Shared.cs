@@ -95,6 +95,8 @@ internal static partial class ListViewHelper
 	internal static void Register(ListViewsRegistry key, ListView listView, ScrollViewer viewer)
 	{
 		// Logger.Write("Registering ListView in the cache");
+
+		// Update caches to point to the new instance
 		ListViewsCache[key] = listView;
 		ListViewsScrollViewerCache[key] = viewer;
 	}
@@ -108,13 +110,15 @@ internal static partial class ListViewHelper
 		// Always remove the exact instance from the tracking map.
 		_ = ObjRemovalTracking.Remove(instance);
 
-		// Only clear the caches if they still point to this specific instance.
-		// The goal is to be race-safe so we compare references always to avoid accidentally removing tracking for a page that was quickly loaded and registered its ListView.
+		// Only clear caches if they still point to this specific instance.
 		if (ListViewsCache.TryGetValue(key, out ListView? current) && ReferenceEquals(current, instance))
 		{
+			// Remove caches for this registry since they still reference the instance being unloaded.
 			_ = ListViewsCache.Remove(key);
 			_ = ListViewsScrollViewerCache.Remove(key);
 		}
+		// If the cached instance does not match the one being unregistered, there is an active newer instance.
+		// Do Not remove anything in that case; they belong to the active instance.
 	}
 
 	/// <summary>
@@ -167,7 +171,7 @@ internal static partial class ListViewHelper
 		FontWeight = FontWeights.Bold,
 		Margin = new Thickness(10, 0, 2, 0),
 		TextWrapping = TextWrapping.NoWrap,
-		Padding = new Thickness(5),
+		Padding = new Thickness(5)
 	};
 
 	/// <summary>
@@ -176,6 +180,7 @@ internal static partial class ListViewHelper
 	/// </summary>
 	internal static double MeasureText(string? text)
 	{
+		tb.FontFamily = new(App.Settings.ListViewFontFamily); // Ensure the width is calculated correctly based on the selected font for List Views so the size of the text is accurate.
 		tb.Text = text;
 		tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 		return tb.DesiredSize.Width + InitValueAdded;
@@ -189,6 +194,7 @@ internal static partial class ListViewHelper
 	/// <returns></returns>
 	internal static double MeasureText(string? text, double maxWidth)
 	{
+		tb.FontFamily = new(App.Settings.ListViewFontFamily); // Ensure the width is calculated correctly based on the selected font for List Views so the size of the text is accurate.
 		tb.Text = text;
 		tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 		return tb.DesiredSize.Width > maxWidth ? tb.DesiredSize.Width : maxWidth;
@@ -297,7 +303,7 @@ internal static partial class ListViewHelper
 
 		// Re-populate the ObservableCollection
 		observableCollection.Clear();
-		foreach (var item in sortedData)
+		foreach (TElement item in sortedData)
 		{
 			observableCollection.Add(item);
 		}
@@ -305,7 +311,7 @@ internal static partial class ListViewHelper
 		// Restore horizontal scroll position
 		if (Sv != null && savedHorizontal.HasValue)
 		{
-			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: true);
 		}
 	}
 

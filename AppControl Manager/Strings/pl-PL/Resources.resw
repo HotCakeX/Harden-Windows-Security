@@ -5734,4 +5734,46 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="CopySelectedButton.Content" xml:space="preserve">
     <value>Kopiuj wybrane</value>
   </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Description" xml:space="preserve">
+    <value>Automatycznie zmieniaj szerokość kolumn podczas przewijania, aby dopasować je do widocznej zawartości. Kolumny będą dynamicznie się rozszerzać i kurczyć. Dotyczy tylko widoków list, które obsługują tę funkcję. Jeśli ta opcja jest włączona i dane zostały już załadowane w widoku listy, po jej wyłączeniu i powrocie do strony z widokiem listy zostanie przeprowadzone jednorazowe obliczenie szerokości dla wszystkich danych.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Header" xml:space="preserve">
+    <value>Automatyczna zmiana rozmiaru nagłówków kolumn w widokach listy</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Automatycznie zmieniaj szerokość kolumn podczas przewijania, aby dopasować je do widocznej zawartości. Kolumny będą dynamicznie się rozszerzać i kurczyć. Dotyczy tylko widoków list, które obsługują tę funkcję. Jeśli ta opcja jest włączona i dane zostały już załadowane w widoku listy, po jej wyłączeniu i powrocie do strony z widokiem listy zostanie przeprowadzone jednorazowe obliczenie szerokości dla wszystkich danych.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Automatycznie zmieniaj szerokość kolumn podczas przewijania, aby dopasować je do widocznej zawartości. Kolumny będą dynamicznie się rozszerzać i kurczyć. Dotyczy tylko widoków list, które obsługują tę funkcję. Jeśli ta opcja jest włączona i dane zostały już załadowane w widoku listy, po jej wyłączeniu i powrocie do strony z widokiem listy zostanie przeprowadzone jednorazowe obliczenie szerokości dla wszystkich danych.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>Wybierz rodzinę czcionek dla danych wyświetlanych w widokach listy w aplikacji. W zależności od czcionki, na którą się przełączysz, oraz jeśli dane są już załadowane w widokach listy, ich szerokość może wymagać ponownej regulacji. W razie potrzeby włącz funkcję automatycznej zmiany rozmiaru kolumn.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>Rodzina czcionek dla widoków listy</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz rodzinę czcionek dla danych wyświetlanych w widokach listy w aplikacji. W zależności od czcionki, na którą się przełączysz, oraz jeśli dane są już załadowane w widokach listy, ich szerokość może wymagać ponownej regulacji. W razie potrzeby włącz funkcję automatycznej zmiany rozmiaru kolumn.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz rodzinę czcionek dla danych wyświetlanych w widokach listy w aplikacji. W zależności od czcionki, na którą się przełączysz, oraz jeśli dane są już załadowane w widokach listy, ich szerokość może wymagać ponownej regulacji. W razie potrzeby włącz funkcję automatycznej zmiany rozmiaru kolumn.</value>
+  </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>Razem: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Łączna liczba elementów</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Łączna liczba elementów</value>
+  </data>
+    <data name="LoadedText.Text" xml:space="preserve">
+    <value>Załadowano: </value>
+  </data>
+  <data name="LoadedText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Łączna liczba elementów aktualnie załadowanych w widoku</value>
+  </data>
+  <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Łączna liczba elementów aktualnie załadowanych w widoku</value>
+  </data>
 </root>

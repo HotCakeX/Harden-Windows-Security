@@ -5734,4 +5734,46 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CopySelectedButton.Content" xml:space="preserve">
     <value>Copiar seleccionados</value>
   </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Description" xml:space="preserve">
+    <value>Redimensiona automáticamente las columnas al desplazarte para ajustar el contenido visible. Las columnas se expandirán y contraerán de forma dinámica. Solo aplica a las Vistas de Lista que admiten esta función. Si esta opción está habilitada y ya hay datos cargados en una Vista de Lista, después de deshabilitarla y regresar a la página con la Vista de Lista, se realizará un cálculo único del ancho para todos los datos.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Header" xml:space="preserve">
+    <value>Redimensionar automáticamente los encabezados de columna en las Vistas de Lista</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Redimensiona automáticamente las columnas al desplazarte para ajustar el contenido visible. Las columnas se expandirán y contraerán de forma dinámica. Solo aplica a las Vistas de Lista que admiten esta función. Si esta opción está habilitada y ya hay datos cargados en una Vista de Lista, después de deshabilitarla y regresar a la página con la Vista de Lista, se realizará un cálculo único del ancho para todos los datos.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Redimensiona automáticamente las columnas al desplazarte para ajustar el contenido visible. Las columnas se expandirán y contraerán de forma dinámica. Solo aplica a las Vistas de Lista que admiten esta función. Si esta opción está habilitada y ya hay datos cargados en una Vista de Lista, después de deshabilitarla y regresar a la página con la Vista de Lista, se realizará un cálculo único del ancho para todos los datos.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>Elige una familia de fuentes para los datos mostrados en las Vistas de Lista de la aplicación. Según la fuente a la que cambies y si ya hay datos cargados en las vistas de lista, su ancho podría requerir un reajuste. Activa la función de redimensionamiento automático de columnas si es necesario.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>Familia de fuentes de las Vistas de Lista</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elige una familia de fuentes para los datos mostrados en las Vistas de Lista de la aplicación. Según la fuente a la que cambies y si ya hay datos cargados en las vistas de lista, su ancho podría requerir un reajuste. Activa la función de redimensionamiento automático de columnas si es necesario.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elige una familia de fuentes para los datos mostrados en las Vistas de Lista de la aplicación. Según la fuente a la que cambies y si ya hay datos cargados en las vistas de lista, su ancho podría requerir un reajuste. Activa la función de redimensionamiento automático de columnas si es necesario.</value>
+  </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>Total: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El número total de elementos</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El número total de elementos</value>
+  </data>
+    <data name="LoadedText.Text" xml:space="preserve">
+    <value>Cargados: </value>
+  </data>
+  <data name="LoadedText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El número total de elementos que están actualmente cargados en la vista</value>
+  </data>
+  <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El número total de elementos que están actualmente cargados en la vista</value>
+  </data>
 </root>

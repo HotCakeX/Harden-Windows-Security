@@ -447,130 +447,143 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			{
 				await Task.Run(() =>
 				{
-					// Get all of the file's certificates
-					List<AllFileSigners> signerDetails = AllCertificatesGrabber.GetAllFileSigners(selectedFile);
-
-					// If the file has no signers and the user wants to include security catalogs
-					if (signerDetails.Count is 0 && IncludeSecurityCatalogsToggleSwitch)
+					List<AllFileSigners> signerDetails = [];
+					try
 					{
-						// Get the security catalog data to include in the scan
-						ConcurrentDictionary<string, string> AllSecurityCatalogHashes = CatRootScanner.Scan(null, 5);
+						// Get all of the file's certificates
+						signerDetails = AllCertificatesGrabber.GetAllFileSigners(selectedFile);
 
-						// Grab the file's Code Integrity hashes
-						CodeIntegrityHashes fileHashes = CiFileHash.GetCiFileHashes(selectedFile);
-
-						if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHa1Authenticode!, out string? CurrentFilePathHashSHA1CatResult))
+						// If the file has no signers and the user wants to include security catalogs
+						if (signerDetails.Count is 0 && IncludeSecurityCatalogsToggleSwitch)
 						{
-							try
+							// Get the security catalog data to include in the scan
+							ConcurrentDictionary<string, string> AllSecurityCatalogHashes = CatRootScanner.Scan(null, 5);
+
+							// Grab the file's Code Integrity hashes
+							CodeIntegrityHashes fileHashes = CiFileHash.GetCiFileHashes(selectedFile);
+
+							if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHa1Authenticode!, out string? CurrentFilePathHashSHA1CatResult))
 							{
-								signerDetails = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA1CatResult);
+								try
+								{
+									signerDetails = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA1CatResult);
+								}
+								catch (HashMismatchInCertificateException)
+								{
+									Logger.Write(
+										string.Format(
+											GlobalVars.GetStr("FileHasHashMismatchMessage"),
+											selectedFile
+										)
+									);
+								}
 							}
-							catch (HashMismatchInCertificateException)
+							else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHA256Authenticode!, out string? CurrentFilePathHashSHA256CatResult))
 							{
-								Logger.Write(
-									string.Format(
-										GlobalVars.GetStr("FileHasHashMismatchMessage"),
-										selectedFile
-									)
-								);
+								try
+								{
+									signerDetails = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA256CatResult);
+								}
+								catch (HashMismatchInCertificateException)
+								{
+									Logger.Write(
+										string.Format(
+											GlobalVars.GetStr("FileHasHashMismatchMessage"),
+											selectedFile
+										)
+									);
+								}
 							}
 						}
-						else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHA256Authenticode!, out string? CurrentFilePathHashSHA256CatResult))
+
+						// Get full chains of all of the file's certificates
+						List<ChainPackage> result = GetCertificateDetails.Get(signerDetails);
+
+						// Start the counter with 1 instead of 0 for better display
+						int i = 1;
+
+						// Loop over every signer of the file
+						foreach (ChainPackage signer in result)
 						{
-							try
-							{
-								signerDetails = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA256CatResult);
-							}
-							catch (HashMismatchInCertificateException)
-							{
-								Logger.Write(
-									string.Format(
-										GlobalVars.GetStr("FileHasHashMismatchMessage"),
-										selectedFile
-									)
-								);
-							}
-						}
-					}
-
-					// Get full chains of all of the file's certificates
-					List<ChainPackage> result = GetCertificateDetails.Get(signerDetails);
-
-					// Start the counter with 1 instead of 0 for better display
-					int i = 1;
-
-					// Loop over every signer of the file
-					foreach (ChainPackage signer in result)
-					{
-						// If the signer has Leaf certificate
-						if (signer.LeafCertificate is not null)
-						{
-							output.Add(new FileCertificateInfoCol
-							{
-								SignerNumber = i,
-								Type = CertificateType.Leaf,
-								SubjectCN = signer.LeafCertificate.SubjectCN,
-								IssuerCN = signer.LeafCertificate.IssuerCN,
-								NotBefore = signer.LeafCertificate.NotBefore,
-								NotAfter = signer.LeafCertificate.NotAfter,
-								HashingAlgorithm = signer.LeafCertificate.Certificate.SignatureAlgorithm.FriendlyName,
-								SerialNumber = signer.LeafCertificate.Certificate.SerialNumber,
-								Thumbprint = signer.LeafCertificate.Certificate.Thumbprint,
-								TBSHash = signer.LeafCertificate.TBSValue,
-								OIDs = string.Join(", ", signer.LeafCertificate.Certificate.Extensions
-									.Select(ext =>
-										ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-									.Where(oid => !string.IsNullOrWhiteSpace(oid)))
-							});
-						}
-
-						// If the signer has any Intermediate Certificates
-						if (signer.IntermediateCertificates is not null)
-						{
-							// Loop over Intermediate certificates of the file
-							foreach (ChainElement intermediate in signer.IntermediateCertificates)
+							// If the signer has Leaf certificate
+							if (signer.LeafCertificate is not null)
 							{
 								output.Add(new FileCertificateInfoCol
 								{
 									SignerNumber = i,
-									Type = CertificateType.Intermediate,
-									SubjectCN = intermediate.SubjectCN,
-									IssuerCN = intermediate.IssuerCN,
-									NotBefore = intermediate.NotBefore,
-									NotAfter = intermediate.NotAfter,
-									HashingAlgorithm = intermediate.Certificate.SignatureAlgorithm.FriendlyName,
-									SerialNumber = intermediate.Certificate.SerialNumber,
-									Thumbprint = intermediate.Certificate.Thumbprint,
-									TBSHash = intermediate.TBSValue,
-									OIDs = string.Join(", ", intermediate.Certificate.Extensions
+									Type = CertificateType.Leaf,
+									SubjectCN = signer.LeafCertificate.SubjectCN,
+									IssuerCN = signer.LeafCertificate.IssuerCN,
+									NotBefore = signer.LeafCertificate.NotBefore,
+									NotAfter = signer.LeafCertificate.NotAfter,
+									HashingAlgorithm = signer.LeafCertificate.Certificate.SignatureAlgorithm.FriendlyName,
+									SerialNumber = signer.LeafCertificate.Certificate.SerialNumber,
+									Thumbprint = signer.LeafCertificate.Certificate.Thumbprint,
+									TBSHash = signer.LeafCertificate.TBSValue,
+									OIDs = string.Join(", ", signer.LeafCertificate.Certificate.Extensions
 										.Select(ext =>
 											ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
 										.Where(oid => !string.IsNullOrWhiteSpace(oid)))
 								});
 							}
+
+							// If the signer has any Intermediate Certificates
+							if (signer.IntermediateCertificates is not null)
+							{
+								// Loop over Intermediate certificates of the file
+								foreach (ChainElement intermediate in signer.IntermediateCertificates)
+								{
+									output.Add(new FileCertificateInfoCol
+									{
+										SignerNumber = i,
+										Type = CertificateType.Intermediate,
+										SubjectCN = intermediate.SubjectCN,
+										IssuerCN = intermediate.IssuerCN,
+										NotBefore = intermediate.NotBefore,
+										NotAfter = intermediate.NotAfter,
+										HashingAlgorithm = intermediate.Certificate.SignatureAlgorithm.FriendlyName,
+										SerialNumber = intermediate.Certificate.SerialNumber,
+										Thumbprint = intermediate.Certificate.Thumbprint,
+										TBSHash = intermediate.TBSValue,
+										OIDs = string.Join(", ", intermediate.Certificate.Extensions
+											.Select(ext =>
+												ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
+											.Where(oid => !string.IsNullOrWhiteSpace(oid)))
+									});
+								}
+							}
+
+							// Add the root certificate
+							output.Add(new FileCertificateInfoCol
+							{
+								SignerNumber = i,
+								Type = CertificateType.Root,
+								SubjectCN = signer.RootCertificate.SubjectCN,
+								IssuerCN = signer.RootCertificate.SubjectCN, // Issuer is itself for Root certificate type
+								NotBefore = signer.RootCertificate.NotBefore,
+								NotAfter = signer.RootCertificate.NotAfter,
+								HashingAlgorithm = signer.RootCertificate.Certificate.SignatureAlgorithm.FriendlyName,
+								SerialNumber = signer.RootCertificate.Certificate.SerialNumber,
+								Thumbprint = signer.RootCertificate.Certificate.Thumbprint,
+								TBSHash = signer.RootCertificate.TBSValue,
+								OIDs = string.Join(", ", signer.RootCertificate.Certificate.Extensions
+									.Select(ext =>
+										ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
+									.Where(oid => !string.IsNullOrWhiteSpace(oid)))
+							});
+
+							// Increase the counter
+							i++;
 						}
-
-						// Add the root certificate
-						output.Add(new FileCertificateInfoCol
+					}
+					finally
+					{
+						// Disposing AllFileSigners to release X509Chain native resources
+						// after extracting all needed certificate/chain information.
+						foreach (AllFileSigners signer in signerDetails)
 						{
-							SignerNumber = i,
-							Type = CertificateType.Root,
-							SubjectCN = signer.RootCertificate.SubjectCN,
-							IssuerCN = signer.RootCertificate.SubjectCN, // Issuer is itself for Root certificate type
-							NotBefore = signer.RootCertificate.NotBefore,
-							NotAfter = signer.RootCertificate.NotAfter,
-							HashingAlgorithm = signer.RootCertificate.Certificate.SignatureAlgorithm.FriendlyName,
-							SerialNumber = signer.RootCertificate.Certificate.SerialNumber,
-							Thumbprint = signer.RootCertificate.Certificate.Thumbprint,
-							TBSHash = signer.RootCertificate.TBSValue,
-							OIDs = string.Join(", ", signer.RootCertificate.Certificate.Extensions
-								.Select(ext =>
-									ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-								.Where(oid => !string.IsNullOrWhiteSpace(oid)))
-						});
-
-						// Increase the counter
-						i++;
+							signer.Dispose();
+						}
 					}
 				});
 			}

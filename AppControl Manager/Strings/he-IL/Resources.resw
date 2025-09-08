@@ -5735,4 +5735,46 @@
   <data name="CopySelectedButton.Content" xml:space="preserve">
     <value>העתק נבחרים</value>
   </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Description" xml:space="preserve">
+    <value>התאם את רוחב העמודות באופן אוטומטי בזמן הגלילה כך שיתאים לתוכן הגלוי. העמודות יתרחבו ויצטמצמו באופן דינמי. חל רק על תצוגות רשימה התומכות בתכונה זו. אם אפשרות זו מופעלת וכבר נטענו נתונים בתצוגת רשימה, לאחר ביטולה וחזרה לדף עם תצוגת הרשימה תתבצע פעולת חישוב רוחב חד-פעמית לכלל הנתונים.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Header" xml:space="preserve">
+    <value>שינוי גודל אוטומטי של כותרות העמודות בתצוגות רשימה</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם את רוחב העמודות באופן אוטומטי בזמן הגלילה כך שיתאים לתוכן הגלוי. העמודות יתרחבו ויצטמצמו באופן דינמי. חל רק על תצוגות רשימה התומכות בתכונה זו. אם אפשרות זו מופעלת וכבר נטענו נתונים בתצוגת רשימה, לאחר ביטולה וחזרה לדף עם תצוגת הרשימה תתבצע פעולת חישוב רוחב חד-פעמית לכלל הנתונים.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאם את רוחב העמודות באופן אוטומטי בזמן הגלילה כך שיתאים לתוכן הגלוי. העמודות יתרחבו ויצטמצמו באופן דינמי. חל רק על תצוגות רשימה התומכות בתכונה זו. אם אפשרות זו מופעלת וכבר נטענו נתונים בתצוגת רשימה, לאחר ביטולה וחזרה לדף עם תצוגת הרשימה תתבצע פעולת חישוב רוחב חד-פעמית לכלל הנתונים.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>בחר משפחת גופן עבור הנתונים המוצגים בתצוגות רשימה ביישום. בהתאם לגופן שאליו תעבור ואם נתונים כבר נטענו בתצוגות הרשימה, ייתכן שרוחב העמודות יצריך התאמה מחדש. במידת הצורך, הפעל את תכונת שינוי הגודל האוטומטי של העמודות.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>משפחת גופן לתצוגות רשימה</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר משפחת גופן עבור הנתונים המוצגים בתצוגות רשימה ביישום. בהתאם לגופן שאליו תעבור ואם נתונים כבר נטענו בתצוגות הרשימה, ייתכן שרוחב העמודות יצריך התאמה מחדש. במידת הצורך, הפעל את תכונת שינוי הגודל האוטומטי של העמודות.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר משפחת גופן עבור הנתונים המוצגים בתצוגות רשימה ביישום. בהתאם לגופן שאליו תעבור ואם נתונים כבר נטענו בתצוגות הרשימה, ייתכן שרוחב העמודות יצריך התאמה מחדש. במידת הצורך, הפעל את תכונת שינוי הגודל האוטומטי של העמודות.</value>
+  </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>סך הכול: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מספר הפריטים הכולל</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מספר הפריטים הכולל</value>
+  </data>
+    <data name="LoadedText.Text" xml:space="preserve">
+    <value>טעונים: </value>
+  </data>
+  <data name="LoadedText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מספר הפריטים הכולל הטעונים כעת בתצוגה</value>
+  </data>
+  <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מספר הפריטים הכולל הטעונים כעת בתצוגה</value>
+  </data>
 </root>

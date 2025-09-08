@@ -5734,4 +5734,46 @@
   <data name="CopySelectedButton.Content" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്തത് പകർത്തുക</value>
   </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Description" xml:space="preserve">
+    <value>സ്ക്രോൾ ചെയ്യുമ്പോൾ ദൃശ്യമുള്ള ഉള്ളടക്കത്തിന് ഒത്തുതീരുമെന്നവിധം സ്തംഭങ്ങളുടെ വീതി സ്വയമേവ ക്രമീകരിക്കുക. സ്തംഭങ്ങൾ ഡൈനാമിക്കായി വികസിക്കുകയും ചുരുങ്ങുകയും ചെയ്യും. ഈ സവിശേഷത പിന്തുണയ്ക്കുന്ന ലിസ്റ്റ് വ്യൂകൾക്കു മാത്രമേ ഇത് ബാധകമായിരിക്കൂ. ഈ ഓപ്ഷൻ സജീവമാണെന്നും ഒരു ലിസ്റ്റ് വ്യൂയിൽ ഇതിനകം ഡാറ്റ ലോഡുചെയ്തിട്ടുണ്ടെന്നും ആയാൽ, അതിനെ അപ്രാപ്തമാക്കി ലിസ്റ്റ് വ്യൂയുള്ള പേജിലേക്ക് മടങ്ങിയതിന് ശേഷം എല്ലാ ഡാറ്റയ്ക്കും ഒരിക്കൽ മാത്രം വീതി കണക്കാക്കൽ നടത്തപ്പെടും.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Header" xml:space="preserve">
+    <value>ലിസ്റ്റ് വ്യൂകളിൽ സ്തംഭ തലക്കെട്ടുകളുടെ സ്വയമേവ വലിപ്പമാറ്റം</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സ്ക്രോൾ ചെയ്യുമ്പോൾ ദൃശ്യമുള്ള ഉള്ളടക്കത്തിന് ഒത്തുതീരുമെന്നവിധം സ്തംഭങ്ങളുടെ വീതി സ്വയമേവ ക്രമീകരിക്കുക. സ്തംഭങ്ങൾ ഡൈനാമിക്കായി വികസിക്കുകയും ചുരുങ്ങുകയും ചെയ്യും. ഈ സവിശേഷത പിന്തുണയ്ക്കുന്ന ലിസ്റ്റ് വ്യൂകൾക്കു മാത്രമേ ഇത് ബാധകമായിരിക്കൂ. ഈ ഓപ്ഷൻ സജീവമാണെന്നും ഒരു ലിസ്റ്റ് വ്യൂയിൽ ഇതിനകം ഡാറ്റ ലോഡുചെയ്തിട്ടുണ്ടെന്നും ആയാൽ, അതിനെ അപ്രാപ്തമാക്കി ലിസ്റ്റ് വ്യൂയുള്ള പേജിലേക്ക് മടങ്ങിയതിന് ശേഷം എല്ലാ ഡാറ്റയ്ക്കും ഒരിക്കൽ മാത്രം വീതി കണക്കാക്കൽ നടത്തപ്പെടും.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സ്ക്രോൾ ചെയ്യുമ്പോൾ ദൃശ്യമുള്ള ഉള്ളടക്കത്തിന് ഒത്തുതീരുമെന്നവിധം സ്തംഭങ്ങളുടെ വീതി സ്വയമേവ ക്രമീകരിക്കുക. സ്തംഭങ്ങൾ ഡൈനാമിക്കായി വികസിക്കുകയും ചുരുങ്ങുകയും ചെയ്യും. ഈ സവിശേഷത പിന്തുണയ്ക്കുന്ന ലിസ്റ്റ് വ്യൂകൾക്കു മാത്രമേ ഇത് ബാധകമായിരിക്കൂ. ഈ ഓപ്ഷൻ സജീവമാണെന്നും ഒരു ലിസ്റ്റ് വ്യൂയിൽ ഇതിനകം ഡാറ്റ ലോഡുചെയ്തിട്ടുണ്ടെന്നും ആയാൽ, അതിനെ അപ്രാപ്തമാക്കി ലിസ്റ്റ് വ്യൂയുള്ള പേജിലേക്ക് മടങ്ങിയതിന് ശേഷം എല്ലാ ഡാറ്റയ്ക്കും ഒരിക്കൽ മാത്രം വീതി കണക്കാക്കൽ നടത്തപ്പെടും.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>ആപ്പിലെ ലിസ്റ്റ് വ്യൂകളിൽ പ്രദർശിപ്പിക്കുന്ന ഡാറ്റയ്ക്കായി ഒരു ഫോണ്ട് കുടുംബം തിരഞ്ഞെടുക്കുക. നിങ്ങൾ മാറുന്ന ഫോണ്ടിനെയും ലിസ്റ്റ് വ്യൂകളിൽ ഡാറ്റ ഇതിനകം ലോഡുചെയ്തിട്ടുണ്ടോയെന്നും ആശ്രയിച്ച്, അവയുടെ വീതി വീണ്ടും ക്രമീകരണം ആവശ്യമാകാം. ആവശ്യമെങ്കിൽ കോളങ്ങളുടെ സ്വയമേവ വലിപ്പമാറ്റ സവിശേഷത പ്രവർത്തനക്ഷമമാക്കുക.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>ലിസ്റ്റ് വ്യൂകളുടെ ഫോണ്ട് കുടുംബം</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പിലെ ലിസ്റ്റ് വ്യൂകളിൽ പ്രദർശിപ്പിക്കുന്ന ഡാറ്റയ്ക്കായി ഒരു ഫോണ്ട് കുടുംബം തിരഞ്ഞെടുക്കുക. നിങ്ങൾ മാറുന്ന ഫോണ്ടിനെയും ലിസ്റ്റ് വ്യൂകളിൽ ഡാറ്റ ഇതിനകം ലോഡുചെയ്തിട്ടുണ്ടോയെന്നും ആശ്രയിച്ച്, അവയുടെ വീതി വീണ്ടും ക്രമീകരണം ആവശ്യമാകാം. ആവശ്യമെങ്കിൽ കോളങ്ങളുടെ സ്വയമേവ വലിപ്പമാറ്റ സവിശേഷത പ്രവർത്തനക്ഷമമാക്കുക.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പിലെ ലിസ്റ്റ് വ്യൂകളിൽ പ്രദർശിപ്പിക്കുന്ന ഡാറ്റയ്ക്കായി ഒരു ഫോണ്ട് കുടുംബം തിരഞ്ഞെടുക്കുക. നിങ്ങൾ മാറുന്ന ഫോണ്ടിനെയും ലിസ്റ്റ് വ്യൂകളിൽ ഡാറ്റ ഇതിനകം ലോഡുചെയ്തിട്ടുണ്ടോയെന്നും ആശ്രയിച്ച്, അവയുടെ വീതി വീണ്ടും ക്രമീകരണം ആവശ്യമാകാം. ആവശ്യമെങ്കിൽ കോളങ്ങളുടെ സ്വയമേവ വലിപ്പമാറ്റ സവിശേഷത പ്രവർത്തനക്ഷമമാക്കുക.</value>
+  </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>മൊത്തം: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇനങ്ങളുടെ മൊത്തം എണ്ണം</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇനങ്ങളുടെ മൊത്തം എണ്ണം</value>
+  </data>
+    <data name="LoadedText.Text" xml:space="preserve">
+    <value>ലോഡുചെയ്തത്: </value>
+  </data>
+  <data name="LoadedText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിൽ വ്യൂയിൽ ലോഡുചെയ്തിരിക്കുന്ന ഇനങ്ങളുടെ മൊത്തം എണ്ണം</value>
+  </data>
+  <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിലവിൽ വ്യൂയിൽ ലോഡുചെയ്തിരിക്കുന്ന ഇനങ്ങളുടെ മൊത്തം എണ്ണം</value>
+  </data>
 </root>

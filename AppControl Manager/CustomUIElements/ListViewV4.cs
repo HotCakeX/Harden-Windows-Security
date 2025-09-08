@@ -17,45 +17,25 @@
 
 using System;
 using AppControlManager.Others;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.CustomUIElements;
 
-internal sealed partial class ListViewV2 : ListView
+// Use by Incremental Collections. Doesn't use "RegistryKey" Dependency Property but that RegistryKey enum value is used for other things.
+internal sealed partial class ListViewV4 : ListView
 {
 	// A counter to prevent SelectionChanged event from firing twice when right-clicking on an unselected row (when on internal programmatic selects)
 	private int _skipSelectionChangedCount;
 
 	/// <summary>
-	/// When set in XAML, this key will be used for to register/unregister the ScrollViewer inside of the ListView and the ListView itself.
-	/// </summary>
-	public ListViewHelper.ListViewsRegistry RegistryKey
-	{
-		get => (ListViewHelper.ListViewsRegistry)GetValue(RegistryKeyProperty);
-		set => SetValue(RegistryKeyProperty, value);
-	}
-
-	/// <summary>
-	/// A DP added to the ListView which is a type Enum, used to register it in the caches.
-	/// This property is exposed and is available in the XAML just like other native properties of the ListView.
-	/// </summary>
-	internal static readonly DependencyProperty RegistryKeyProperty =
-		DependencyProperty.Register(
-			name: nameof(RegistryKey),
-			propertyType: typeof(ListViewHelper.ListViewsRegistry),
-			ownerType: typeof(ListViewV2),
-			typeMetadata: new PropertyMetadata(null));
-
-	/// <summary>
 	/// The SelectionChanged and ContainerContentChanging events can still be subscribed to from the code behind of any page that utilizes this ListView.
 	/// </summary>
-	internal ListViewV2()
+	internal ListViewV4()
 	{
 		// Wire our handlers
 		SelectionChanged += OnListViewV2SelectionChanged;
-		ContainerContentChanging += OnListViewV2ContainerContentChanging;
+		ContainerContentChanging += OnListViewContainerContentChanging;
 
 		// Apply default ScrollViewer settings for the dependency properties
 		ScrollViewer.SetHorizontalScrollMode(this, ScrollMode.Enabled);
@@ -65,10 +45,6 @@ internal sealed partial class ListViewV2 : ListView
 
 		// Set a default style of the ListView
 		this.ShowsScrollingPlaceholders = true;
-
-		// Subscribe to life cycle events of the ListView
-		Loaded += OnLoaded;
-		Unloaded += OnUnloaded;
 	}
 
 	private async void OnListViewV2SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -109,7 +85,7 @@ internal sealed partial class ListViewV2 : ListView
 
 	// When right-clicking on an unselected row, first it becomes selected and then the context menu will be shown for the selected row
 	// This is a much more expected behavior. Without this, the right-click would be meaningless on the ListView unless user left-clicks on the row first
-	private void OnListViewV2ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+	private void OnListViewContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
 	{
 		// When the container is being recycled, detach the handler.
 		if (args.InRecycleQueue)
@@ -147,29 +123,19 @@ internal sealed partial class ListViewV2 : ListView
 	}
 
 	/// <summary>
-	/// Loaded event of the ListView. Every time the ListView becomes visible, such as by navigating to the page containing it, this event will be fired.
+	/// Suppresses the SelectionChanged handler from performing smooth centering
+	/// for the next 'count' SelectionChanged events (used to avoid unintended
+	/// scroll jumps during programmatic operations like sorting).
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void OnLoaded(object? sender, RoutedEventArgs e)
+	/// <param name="count">How many upcoming SelectionChanged events to skip; minimum is 1.</param>
+	internal void SuppressSelectionChanged(int count = 1)
 	{
-		// Delay execution until the visual tree is ready
-		_ = this.DispatcherQueue.TryEnqueue(() =>
+		if (count < 1)
 		{
-			ScrollViewer? sv = this.FindScrollViewer();
-			if (sv != null)
-				ListViewHelper.Register(RegistryKey, this, sv);
-		});
-	}
+			count = 1;
+		}
 
-	/// <summary>
-	/// Whenever we navigate away from a page that contains the ListView, this even will be fired.
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void OnUnloaded(object? sender, RoutedEventArgs e)
-	{
-		ListViewHelper.Unregister(RegistryKey, this);
+		// Reusing the existing counter leveraged by right-click selection logic.
+		_skipSelectionChangedCount = count;
 	}
-
 }

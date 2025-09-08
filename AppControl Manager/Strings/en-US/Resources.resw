@@ -5734,4 +5734,46 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CopySelectedButton.Content" xml:space="preserve">
     <value>Copy Selected</value>
   </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Description" xml:space="preserve">
+    <value>Automatically resize the columns as you scroll to fit the visible content. The columns will expand and contract dynamically. Only applies to the List Views that support this feature. If this option is enabled and data is already loaded in a List View, after disabling it and returning to the page with the List View, it will perform a one-time width calculation of all of the data.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Header" xml:space="preserve">
+    <value>Auto Resize Column Headers In List Views</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Automatically resize the columns as you scroll to fit the visible content. The columns will expand and contract dynamically. Only applies to the List Views that support this feature. If this option is enabled and data is already loaded in a List View, after disabling it and returning to the page with the List View, it will perform a one-time width calculation of all of the data.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Automatically resize the columns as you scroll to fit the visible content. The columns will expand and contract dynamically. Only applies to the List Views that support this feature. If this option is enabled and data is already loaded in a List View, after disabling it and returning to the page with the List View, it will perform a one-time width calculation of all of the data.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>Pick a font family for the data displayed in List Views in the app. Depending on the font you switch to and if data is already loaded in list views, their width might need re-adjustment. Enable the auto column resizing feature if needed.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>List Views Font Family</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pick a font family for the data displayed in List Views in the app. Depending on the font you switch to and if data is already loaded in list views, their width might need re-adjustment. Enable the auto column resizing feature if needed.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pick a font family for the data displayed in List Views in the app. Depending on the font you switch to and if data is already loaded in list views, their width might need re-adjustment. Enable the auto column resizing feature if needed.</value>
+  </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>Total: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The total number of items</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The total number of items</value>
+  </data>
+    <data name="LoadedText.Text" xml:space="preserve">
+    <value>Loaded: </value>
+  </data>
+  <data name="LoadedText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The total number of items that are currently loaded in the view</value>
+  </data>
+  <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The total number of items that are currently loaded in the view</value>
+  </data>
 </root>

@@ -28,7 +28,7 @@
 
             <TextBlock x:Uid="ViewFileCertificatesPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/View-File-Certificates" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/View-File-Certificates" />
         </controls:WrapPanel>
 
         <customUI:InfoBarV2 Grid.Row="1"
@@ -52,7 +52,16 @@
 
                 <Button x:Uid="FileBrowseButton"
                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.BrowseForFilesSettingsCard_Click}"  />
+                        Click="{x:Bind ViewModel.BrowseForFilesSettingsCard_Click}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
             </customUI:SettingsCardV2>
 

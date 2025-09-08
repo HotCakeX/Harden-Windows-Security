@@ -205,16 +205,7 @@
     <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>השתמש בסרגל הצד לתכונות נוספות.</value>
   </data>
-    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
-    <value>מדריך סרגל צד</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>למדריך שימוש בסרגל הצד אנא בקר בעמוד הויקי ב-GitHub על ידי לחיצה/נגיעה כאן.</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>למדריך שימוש בסרגל הצד אנא בקר בעמוד הויקי ב-GitHub על ידי לחיצה/נגיעה כאן.</value>
-  </data>
-    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>תמיכה - שאל שאלות</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
@@ -740,17 +731,9 @@
     <comment>Protection Category Title</comment>
     <value>בדיקת אישורים</value>
   </data>
-  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>בדוק את האישורים המותקנים וחשף כל אחד מהם שלא שייך למערכת ההפעלה עצמה.</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>חסימת IP לפי מדינה</value>
-  </data>
-  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>חסום את טווחי כתובות ה-IP של מדינות מסוימות ברשימת הסנקציות של ארה"ב לתמיכה בטרור.</value>
   </data>
   <data name="ProtectCategory_NonAdmin" xml:space="preserve">
     <comment>Protection Category Title</comment>
@@ -803,10 +786,6 @@
   <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>הפעל תמיכה בנתיבי קבצים ארוכים.</value>
-  </data>
-  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
-    <comment>Protection Sub-Category</comment>
-    <value>חסום טווחי IP של מדינות ברשימת הסנקציות של OFAC.</value>
   </data>
   <data name="ASRNavItem.Content" xml:space="preserve">
     <value>צמצום משטח התקפה</value>
@@ -2343,10 +2322,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>סטטוס</value>
   </data>
-  <data name="CurrentValueHeader.Text" xml:space="preserve">
+  <data name="CurrentValueHeaderText" xml:space="preserve">
     <value>ערך נוכחי</value>
   </data>
-  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+  <data name="ExpectedValueHeaderText" xml:space="preserve">
     <value>ערך צפוי</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -3625,4 +3604,16 @@
 <data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
   <value>לא נמצאה תצורת MACs להסרה בקובץ תצורת המשתמש של לקוח SSH.</value>
 </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>סך הכול: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מספר הפריטים הכולל</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מספר הפריטים הכולל</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>נבחר</value>
+  </data>
 </root>

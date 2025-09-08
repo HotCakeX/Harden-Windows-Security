@@ -76,7 +76,7 @@ internal static class WindowDisplayAffinity
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 }

@@ -220,7 +220,7 @@ internal static class GetAppsList
 		catch (Exception ex)
 		{
 #if DEBUG
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 #endif
 #if !DEBUG
 			_ = ex;
@@ -294,7 +294,7 @@ internal static class GetAppsList
 					{
 						Logger.Write(GlobalVars.GetStr("AppDetailsErrorMessageGeneric"));
 					}
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 				}
 			}
 

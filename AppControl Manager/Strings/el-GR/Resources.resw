@@ -574,15 +574,6 @@
   <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
     <value>Προβολή των φακέλων που επιλέξατε.</value>
   </data>
-  <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
-    <value>Συνολικά αρχεία καταγραφής: 0</value>
-  </data>
-  <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ο συνολικός αριθμός των αρχείων καταγραφής</value>
-  </data>
-  <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ο συνολικός αριθμός των αρχείων καταγραφής</value>
-  </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>Ανανέωση των Αρχείων Καταγραφής</value>
   </data>
@@ -1158,9 +1149,6 @@
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Επιτυχής δημιουργία της πολιτικής Απαγόρευσης</value>
-  </data>
-  <data name="NumberOfPolicies" xml:space="preserve">
-    <value>Αριθμός Πολιτικών: </value>
   </data>
   <data name="WarningTitle" xml:space="preserve">
     <value>ΠΡΟΕΙΔΟΠΟΙΗΣΗ</value>
@@ -2869,12 +2857,6 @@
   <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αυτή η δυνατότητα σας επιτρέπει να ανταλλάξετε απρόσκοπτα οποιαδήποτε από τις εφαρμόσιμες αναπτυγμένες μη συστημικές βασικές πολιτικές με μια άλλη πολιτική από τη λίστα.</value>
   </data>
-  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ο αριθμός όλων των εμφανιζόμενων πολιτικών</value>
-  </data>
-  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ο αριθμός όλων των εμφανιζόμενων πολιτικών</value>
-  </data>
   <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
     <value>Αφαίρεση Πολιτικής</value>
   </data>
@@ -3580,9 +3562,6 @@
   <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
     <value>Παρουσιάστηκε σφάλμα κατά την ανάλυση του αριθμού επιλογής κανόνα {0} στην τιμή συμβολοσειράς του: {1}</value>
   </data>
-  <data name="NumberOfPoliciesMessage" xml:space="preserve">
-    <value>Αριθμός πολιτικών: {0}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>Το ID αντικειμένου πολιτικής Intune ήταν null για την επιλεγμένη πολιτική προς διαγραφή</value>
   </data>
@@ -4281,9 +4260,6 @@
   </data>
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>Η πολιτική Άρνησης κανόνα μοτίβου διαδρομής αρχείου δημιουργήθηκε επιτυχώς.</value>
-  </data>
-    <data name="TotalFiles" xml:space="preserve">
-    <value>Συνολικά Αρχεία</value>
   </data>
   <data name="AllDataClearedMsg" xml:space="preserve">
     <value>Όλα τα δεδομένα εκκαθαρίστηκαν επιτυχώς.</value>
@@ -5775,5 +5751,32 @@
   </data>
   <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ο συνολικός αριθμός στοιχείων που είναι αυτή τη στιγμή φορτωμένα στην προβολή</value>
+  </data>
+   <data name="RetrieveTheLogsButton.Content" xml:space="preserve">
+    <value>Ανάκτηση αρχείων καταγραφής</value>
+  </data>
+  <data name="RetrieveTheLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανακτήστε τα αρχεία καταγραφής υποβάλλοντας ένα ερώτημα Advanced Hunting στο MDE</value>
+  </data>
+  <data name="RetrieveTheLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανακτήστε τα αρχεία καταγραφής υποβάλλοντας ένα ερώτημα Advanced Hunting στο MDE</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.Content" xml:space="preserve">
+    <value>Παραδείγματα ερωτημάτων</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μπορείτε να αντιγράψετε τα παρακάτω ερωτήματα και να τα χρησιμοποιήσετε στην πύλη MDE Advanced Hunting για να δημιουργήσετε τυπικά αρχεία καταγραφής συμβατά με το AppControl Manager, ή μπορείτε να χρησιμοποιήσετε τις ενσωματωμένες δυνατότητες της εφαρμογής για να ανακτήσετε αυτόματα τα αρχεία καταγραφής και να τα επεξεργαστείτε.</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μπορείτε να αντιγράψετε τα παρακάτω ερωτήματα και να τα χρησιμοποιήσετε στην πύλη MDE Advanced Hunting για να δημιουργήσετε τυπικά αρχεία καταγραφής συμβατά με το AppControl Manager, ή μπορείτε να χρησιμοποιήσετε τις ενσωματωμένες δυνατότητες της εφαρμογής για να ανακτήσετε αυτόματα τα αρχεία καταγραφής και να τα επεξεργαστείτε.</value>
+  </data>
+  <data name="DragAndDropHint.Text" xml:space="preserve">
+     <value>ή σύρετε και αποθέστε αρχεία εδώ</value>
+  </data>
+    <data name="DragAndDropHintGetHashesCaption" xml:space="preserve">
+     <value>Αποθέστε αρχείο για ανάκτηση τιμών κατακερματισμού</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>Επιλεγμένο</value>
   </data>
 </root>

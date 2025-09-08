@@ -34,6 +34,14 @@
                 <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
                     <DropDownButton x:Uid="ExtraActionsDropDownButton">
+                        <DropDownButton.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE712;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DropDownButton.ContentTemplate>
                         <DropDownButton.Flyout>
 
                             <MenuFlyout Placement="Bottom">
@@ -61,11 +69,22 @@
                         </DropDownButton.Flyout>
                     </DropDownButton>
 
-                    <TextBox x:Uid="TotalLogsTextBlock"
-                Text="{x:Bind ViewModel.TotalCountOfTheFilesStrictKernelModeTextBox, Mode=OneWay}"
-                IsReadOnly="True"
-                VerticalAlignment="Center"
-                VerticalContentAlignment="Center"/>
+                    <!-- Total chip -->
+                    <Border CornerRadius="8"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Padding="10,6"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            <TextBlock VerticalAlignment="Center">
+                                <Run x:Uid="TotalText" />
+                                <Run Text="{x:Bind ViewModel.StrictKernelModeScanResults.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
 
                     <TextBox Width="300"
                          x:Uid="SearchBoxTextBox"
@@ -347,22 +366,22 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind FileName}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
                         <TextBlock Text="{x:Bind SignatureStatus}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                        <TextBlock Text="{x:Bind OriginalFileName}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                        <TextBlock Text="{x:Bind InternalName}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                        <TextBlock Text="{x:Bind FileDescription}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                        <TextBlock Text="{x:Bind ProductName}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
-                        <TextBlock Text="{x:Bind FileVersion}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
-                        <TextBlock Text="{x:Bind PackageFamilyName}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
-                        <TextBlock Text="{x:Bind SHA256Hash}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
-                        <TextBlock Text="{x:Bind SHA1Hash}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
-                        <TextBlock Text="{x:Bind SISigningScenario}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
-                        <TextBlock Text="{x:Bind FilePath}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
-                        <TextBlock Text="{x:Bind SHA1PageHash}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
-                        <TextBlock Text="{x:Bind SHA256PageHash}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
-                        <TextBlock Text="{x:Bind HasWHQLSigner}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
-                        <TextBlock Text="{x:Bind FilePublishersToDisplay}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="15"/>
-                        <TextBlock Text="{x:Bind IsECCSigned}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="16"/>
-                        <TextBlock Text="{x:Bind Opus}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="17"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind OriginalFileName}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind InternalName}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind FileDescription}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind ProductName}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind FileVersion}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind PackageFamilyName}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA256Hash}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA1Hash}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind SISigningScenario}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind FilePath}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA1PageHash}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA256PageHash}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind HasWHQLSigner}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind FilePublishersToDisplay}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="15"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind IsECCSigned}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="16"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind Opus}" FontFamily="{x:Bind ParentViewModelCreateSupplementalPolicyVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="17"/>
                     </Grid>
                 </DataTemplate>
             </customUI:ListViewV2.ItemTemplate>

@@ -306,7 +306,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// </summary>
 	internal MainWindowVM()
 	{
-
 		RebuildBreadcrumbMappings();
 		RebuildNavigationPageToItemContentMapForSearch();
 
@@ -441,23 +440,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 	#endregion
 
-
-	/// <summary>
-	/// Event handler triggered when the UpdateAvailable event is raised, indicating an update is available.
-	/// Updates InfoBadgeOpacity to show the InfoBadge in the UI if an update is available.
-	/// </summary>
-	/// <param name="sender">Sender of the event, in this case, AppUpdate class.</param>
-	/// <param name="e">Boolean indicating whether an update is available.</param>
-	private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
-	{
-		// Marshal back to the UI thread using the dispatcher to safely update UI-bound properties
-		_ = Dispatcher.TryEnqueue(() =>
-		{
-			// Set InfoBadgeOpacity based on update availability: 1 to show, 0 to hide
-			InfoBadgeOpacity = e.IsUpdateAvailable ? 1 : 0;
-		});
-	}
-
 	/// <summary>
 	/// Event handler for the sidebar toggle button for auto assignment
 	/// </summary>
@@ -466,7 +448,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		// Save the status in app settings
 		App.Settings.AutomaticAssignmentSidebar = AutomaticAssignmentSidebarToggleSwitchToggledState;
 	}
-
 
 	/// <summary>
 	/// Event handler for sidebar settings cards for auto assignment

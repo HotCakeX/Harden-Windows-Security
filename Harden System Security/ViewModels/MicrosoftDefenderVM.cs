@@ -615,7 +615,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				return false;
 			}
 		}
@@ -636,7 +636,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				return false;
 			}
 		}

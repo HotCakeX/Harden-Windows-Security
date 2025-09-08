@@ -45,42 +45,12 @@ internal sealed partial class ListViewIncrementalController(
 	/// <summary>
 	/// Used as the source for the ListView's displayed data.
 	/// </summary>
-	internal GenericIncrementalCollection<FileIdentityIncrementalSource, FileIdentity>? ObservableSource
-	{
-		get; set
-		{
-			if (SP(ref field, value))
-			{
-				UpdateTotalFiles();
-			}
-		}
-	}
+	internal GenericIncrementalCollection<FileIdentityIncrementalSource, FileIdentity>? ObservableSource;
 
 	/// <summary>
 	/// Backing full source for the data.
 	/// </summary>
 	internal readonly List<FileIdentity> FullSource = [];
-
-	/// <summary>
-	/// Number of items currently materialized in the bound collection (what the user sees).
-	/// </summary>
-	internal int ObservableSourceCount { get => field; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Total number of items available in the full logical dataset.
-	/// </summary>
-	internal int FullSourceCount { get => field; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Updates the total counts displayed on the UI.
-	/// </summary>
-	internal void UpdateTotalFiles()
-	{
-		if (ObservableSource is null) return;
-
-		ObservableSourceCount = ObservableSource.Count;
-		FullSourceCount = FullSource.Count;
-	}
 
 	/// <summary>
 	/// De-selects all of the displayed rows on the ListView
@@ -112,9 +82,6 @@ internal sealed partial class ListViewIncrementalController(
 
 		// Clear the backing full source list as well
 		FullSource.Clear();
-
-		// Force the "Total files" UI to zero
-		UpdateTotalFiles();
 
 		// Recompute column widths (header-only now)
 		RecalculateVisibleColumnWidths();
@@ -209,10 +176,6 @@ internal sealed partial class ListViewIncrementalController(
 		{
 			ApplySearch(_lastSearchTerm);
 		}
-		else
-		{
-			UpdateTotalFiles();
-		}
 
 		// Force widths re-evaluation (headers only or newly realized rows) after collection swap.
 		RecalculateVisibleColumnWidths();
@@ -299,8 +262,6 @@ internal sealed partial class ListViewIncrementalController(
 			if (clamped > ScrollViewerRef.ScrollableWidth) clamped = ScrollViewerRef.ScrollableWidth;
 			_ = ScrollViewerRef.ChangeView(clamped, null, null, true);
 		}
-
-		UpdateTotalFiles();
 	}
 
 	/// Sort by header Tag key (FileIdentity mapping key). Preserves horizontal position. Honors search results.
@@ -493,7 +454,6 @@ internal sealed partial class ListViewIncrementalController(
 			{
 				ScheduleWidthRecalc();
 			}
-			UpdateTotalFiles();
 		}
 	}
 
@@ -597,7 +557,7 @@ internal sealed partial class ListViewIncrementalController(
 						string? cell = raw?.ToString();
 
 						double currentBaseline = headerWidths[c];
-						double measured = ListViewHelper.MeasureText(cell, currentBaseline);
+						double measured = ListViewHelper.MeasureTextEx(cell);
 
 						// Only expand above the current computed baseline for this pass.
 						// Shrinking happens naturally because each pass starts from the header baseline, not previous column width.
@@ -716,7 +676,7 @@ internal sealed partial class ListViewIncrementalController(
 					object? raw = mapping.Getter(fi);
 					string? cell = raw?.ToString();
 					double current = maxWidths[c];
-					double measured = ListViewHelper.MeasureText(cell, current);
+					double measured = ListViewHelper.MeasureTextEx(cell);
 					if (measured > current)
 					{
 						maxWidths[c] = measured;

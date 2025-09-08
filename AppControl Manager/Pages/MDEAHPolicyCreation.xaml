@@ -33,7 +33,7 @@
 
             <TextBlock x:Uid="MDEAHPolicyCreationPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting" />
 
         </controls:WrapPanel>
 
@@ -78,12 +78,22 @@
                 <SelectorBarItem Tag="Create" x:Uid="CreateTextBlock"/>
             </SelectorBar>
 
-            <TextBox x:Uid="TotalLogsTextBlock"
-                     Text="{x:Bind ViewModel.TotalCountOfTheFilesTextBox, Mode=OneWay}"
-                     IsReadOnly="True"
-                     HorizontalAlignment="Right"
-                     VerticalAlignment="Center"
-                     VerticalContentAlignment="Center"/>
+            <!-- Total chip -->
+            <Border CornerRadius="8"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    Padding="10,6"
+                    BorderThickness="1"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                    <TextBlock VerticalAlignment="Center">
+                        <Run x:Uid="TotalText" />
+                        <Run Text="{x:Bind ViewModel.FileIdentities.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                    </TextBlock>
+                </StackPanel>
+            </Border>
 
             <TextBox x:Uid="SearchBoxTextBox"
                      Text="{x:Bind ViewModel.SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -96,9 +106,9 @@
 
         </controls:WrapPanel>
 
-        <Expander Grid.Row="3" HorizontalAlignment="Stretch" Margin="0,10,0,10" Padding="8">
+        <Expander Grid.Row="3" HorizontalAlignment="Stretch" Margin="0,10,0,10">
             <Expander.Header>
-                <Grid>
+                <Grid Padding="8">
 
                     <Border Visibility="{x:Bind ViewModel.IsLocalSelected, Mode=OneWay}">
 
@@ -119,6 +129,7 @@
                             </Button>
 
                             <customUI:ButtonV2 x:Uid="BrowseForMDELogsButton"
+                                               ObservedData="{x:Bind ViewModel.MDEAdvancedHuntingLogs, Mode=OneWay}"
                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                    Click="{x:Bind ViewModel.BrowseForLogs_Click}">
 
@@ -333,11 +344,11 @@
 
 
                                                         <ComboBox
-                                                ItemsSource="{x:Bind ViewModel.AuthCompanionCLS.AuthenticationContextComboBoxSource}"
-                                                Margin="0,5,0,0"
-                                                HorizontalAlignment="Center"
-                                                x:Uid="AuthenticationContextComboBox"
-                                                SelectedItem="{x:Bind ViewModel.AuthCompanionCLS.AuthenticationContextComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                                            ItemsSource="{x:Bind ViewModel.AuthCompanionCLS.AuthenticationContextComboBoxSource}"
+                                                            Margin="0,5,0,0"
+                                                            HorizontalAlignment="Center"
+                                                            x:Uid="AuthenticationContextComboBox"
+                                                            SelectedItem="{x:Bind ViewModel.AuthCompanionCLS.AuthenticationContextComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                                             <!-- To center the header text -->
                                                             <ComboBox.HeaderTemplate>
                                                                 <DataTemplate>
@@ -355,8 +366,8 @@
                                                 <controls:Case Value="SignedIn">
 
                                                     <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                                 animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                                 Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="5" Padding="3">
+                                                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                                                Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="5" Padding="3">
 
                                                         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Top">
 
@@ -393,15 +404,15 @@
                                                         <!-- Shimmer -->
 
                                                         <StackPanel Margin="0,10,0,0"
-                                                    Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}"
-                                                    Width="450"
-                                                    Height="255"
-                                                    Padding="16"
-                                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                    BorderThickness="1"
-                                                    CornerRadius="4"
-                                                    Spacing="12">
+                                                                    Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}"
+                                                                    Width="450"
+                                                                    Height="255"
+                                                                    Padding="16"
+                                                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                                    BorderThickness="1"
+                                                                    CornerRadius="4"
+                                                                    Spacing="12">
 
                                                             <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
                                                                 <labs:Shimmer Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
@@ -472,8 +483,16 @@
 
 
                             <Button Content="Device Name"
-                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                        ToolTipService.ToolTip="Enter a device name to filter the incoming logs">
+                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                    ToolTipService.ToolTip="Enter a device name to filter the incoming logs">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE975;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
                                 <Button.Flyout>
                                     <Flyout>
                                         <Flyout.FlyoutPresenterStyle>
@@ -485,26 +504,40 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="3" VerticalSpacing="8">
                                             <TextBox Width="300"
-                                         Header="Optional: Choose a device name to filter the logs before retrieval"
-                                         PlaceholderText="Device Name..."
-                                         Text="{x:Bind ViewModel.DeviceNameTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    Header="Optional: Choose a device name to filter the logs before retrieval"
+                                                    PlaceholderText="Device Name..."
+                                                    Text="{x:Bind ViewModel.DeviceNameTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                         </controls:WrapPanel>
                                     </Flyout>
                                 </Button.Flyout>
                             </Button>
 
+                            <Button x:Uid="RetrieveTheLogsButton"
+                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.RetrieveTheLogsButton_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
 
-                            <Button Content="Retrieve The Logs"
-                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.RetrieveTheLogsButton_Click}"
-                        ToolTipService.ToolTip="Retrieve the logs by submitting an Advanced Hunting query to MDE"/>
-
-                            <Button Content="Query Examples" ToolTipService.ToolTip="You can copy the following queries and use them in the MDE Advanced Hunting portal to generate standard logs that are compatible with the AppControl Manager, or you can use the built-in functionality of the application to automatically retrieve the logs and process them">
+                            <Button x:Uid="MDEAHQueryExamplesButton">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE82D;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
                                 <Button.Flyout>
                                     <Flyout>
-
                                         <ListView ItemsSource="{x:Bind ViewModel.AdvancedHuntingQueries}"
-                                    SelectionMode="None">
+                                                  SelectionMode="None">
                                             <ListView.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Orientation="Vertical" Width="300"/>
@@ -534,8 +567,8 @@
 
                                                         <!-- Query Text -->
                                                         <TextBox Text="{x:Bind Query}" IsReadOnly="True" TextWrapping="Wrap"
-                                            HorizontalAlignment="Center"
-                                            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+                                                                 HorizontalAlignment="Center"
+                                                                 Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
 
                                                     </StackPanel>
                                                 </DataTemplate>
@@ -556,7 +589,7 @@
 
 
                             <SplitButton IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                             ToolTipService.ToolTip="Create the supplemental policy based on the MDE Advanced Hunting logs"
+                                         ToolTipService.ToolTip="Create the supplemental policy based on the MDE Advanced Hunting logs"
                              Click="{x:Bind ViewModel.CreatePolicyButton_Click}">
 
                                 <SplitButton.Content>
@@ -586,9 +619,9 @@
 
 
                                         <StackPanel
-                                VerticalAlignment="Top"
-                                Orientation="Vertical"
-                                Spacing="8">
+                                                VerticalAlignment="Top"
+                                                Orientation="Vertical"
+                                                Spacing="8">
                                             <controls:Segmented x:Name="segmentedControl"
                                                     HorizontalAlignment="Stretch"
                                                     SelectedIndex="{x:Bind ViewModel.SelectedCreationMethod, Mode=TwoWay}">
@@ -675,6 +708,14 @@
 
                             <DropDownButton x:Uid="ExtraActionsDropDownButton"
                                 IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
+                                <DropDownButton.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE712;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DropDownButton.ContentTemplate>
                                 <DropDownButton.Flyout>
 
                                     <MenuFlyout Placement="Bottom">
@@ -712,7 +753,15 @@
                             </DropDownButton>
 
                             <Button x:Uid="PolicyNameColumnHeaderBtn"
-                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
+                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE932;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
                                 <Button.Flyout>
                                     <Flyout>
                                         <Flyout.FlyoutPresenterStyle>
@@ -747,7 +796,16 @@
                             </ComboBox>
 
                             <ToggleButton IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"
-                              x:Uid="OnlyIncludeSelectedItemsToggleButton" />
+                                          x:Uid="OnlyIncludeSelectedItemsToggleButton">
+                                <ToggleButton.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xEA98;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ToggleButton.ContentTemplate>
+                            </ToggleButton>
 
                         </controls:WrapPanel>
 
@@ -835,24 +893,24 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Header Buttons -->
-                        <Button x:Uid="FileNameColumnHeaderBtn" Tag="FileName" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="TimeCreatedColumnHeaderBtn" Tag="TimeCreated" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="SignatureStatusColumnHeaderBtn" Tag="SignatureStatus" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="ActionColumnHeaderBtn" Tag="Action" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="OriginalFileNameColumnHeaderBtn" Tag="OriginalFileName" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="InternalNameColumnHeaderBtn" Tag="InternalName" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="FileDescriptionColumnHeaderBtn" Tag="FileDescription" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="FileVersionColumnHeaderBtn" Tag="FileVersion" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="SHA256HashColumnHeaderBtn" Tag="SHA256Hash" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="SHA1HashColumnHeaderBtn" Tag="SHA1Hash" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="SHA256FlatHashColumnHeaderBtn" Tag="SHA256FlatHash" Grid.Column="10" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="SHA1FlatHashColumnHeaderBtn" Tag="SHA1FlatHash" Grid.Column="11" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="SigningScenarioColumnHeaderBtn" Tag="SISigningScenario" Grid.Column="12" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="FilePathColumnHeaderBtn" Tag="FilePath" Grid.Column="13" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="ComputerNameColumnHeaderBtn" Tag="ComputerName" Grid.Column="14" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="PolicyGUIDColumnHeaderBtn" Tag="PolicyGUID" Grid.Column="15" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="PolicyNameColumnHeaderBtn" Tag="PolicyName" Grid.Column="16" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
-                        <Button x:Uid="FilePublishersColumnHeaderBtn" Tag="FilePublishersToDisplay" Grid.Column="17" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="FileNameColumnHeaderBtn" Tag="FileName" Grid.Column="0" Margin="10,0,0,0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="TimeCreatedColumnHeaderBtn" Tag="TimeCreated" Grid.Column="1" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SignatureStatusColumnHeaderBtn" Tag="SignatureStatus" Grid.Column="2" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="ActionColumnHeaderBtn" Tag="Action" Grid.Column="3" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="OriginalFileNameColumnHeaderBtn" Tag="OriginalFileName" Grid.Column="4" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="InternalNameColumnHeaderBtn" Tag="InternalName" Grid.Column="5" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="FileDescriptionColumnHeaderBtn" Tag="FileDescription" Grid.Column="6" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="FileVersionColumnHeaderBtn" Tag="FileVersion" Grid.Column="7" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SHA256HashColumnHeaderBtn" Tag="SHA256Hash" Grid.Column="8" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SHA1HashColumnHeaderBtn" Tag="SHA1Hash" Grid.Column="9" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SHA256FlatHashColumnHeaderBtn" Tag="SHA256FlatHash" Grid.Column="10" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SHA1FlatHashColumnHeaderBtn" Tag="SHA1FlatHash" Grid.Column="11" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="SigningScenarioColumnHeaderBtn" Tag="SISigningScenario" Grid.Column="12" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="FilePathColumnHeaderBtn" Tag="FilePath" Grid.Column="13" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="ComputerNameColumnHeaderBtn" Tag="ComputerName" Grid.Column="14" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="PolicyGUIDColumnHeaderBtn" Tag="PolicyGUID" Grid.Column="15" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="PolicyNameColumnHeaderBtn" Tag="PolicyName" Grid.Column="16" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="FilePublishersColumnHeaderBtn" Tag="FilePublishersToDisplay" Grid.Column="17" Margin="0" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
 
                         <!-- GridSplitters between columns -->
                         <controls:GridSplitter Grid.Column="1" />
@@ -1041,24 +1099,24 @@
                             <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth17, Mode=TwoWay}" />
                             <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth18, Mode=TwoWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind FileName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                        <TextBlock Text="{x:Bind TimeCreated}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                        <TextBlock Text="{x:Bind SignatureStatus}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                        <TextBlock Text="{x:Bind Action}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                        <TextBlock Text="{x:Bind OriginalFileName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                        <TextBlock Text="{x:Bind InternalName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
-                        <TextBlock Text="{x:Bind FileDescription}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
-                        <TextBlock Text="{x:Bind FileVersion}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
-                        <TextBlock Text="{x:Bind SHA256Hash}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
-                        <TextBlock Text="{x:Bind SHA1Hash}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
-                        <TextBlock Text="{x:Bind SHA256FlatHash}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
-                        <TextBlock Text="{x:Bind SHA1FlatHash}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
-                        <TextBlock Text="{x:Bind SISigningScenario}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
-                        <TextBlock Text="{x:Bind FilePath}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
-                        <TextBlock Text="{x:Bind ComputerName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
-                        <TextBlock Text="{x:Bind PolicyGUID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="15"/>
-                        <TextBlock Text="{x:Bind PolicyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="16"/>
-                        <TextBlock Text="{x:Bind FilePublishersToDisplay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="17"/>
+                        <TextBlock Text="{x:Bind FileName}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                        <TextBlock Text="{x:Bind TimeCreated}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind SignatureStatus}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind Action}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind OriginalFileName}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind InternalName}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind FileDescription}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind FileVersion}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA256Hash}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA1Hash}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA256FlatHash}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA1FlatHash}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind SISigningScenario}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind FilePath}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind ComputerName}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind PolicyGUID}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="15"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind PolicyName}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="16"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind FilePublishersToDisplay}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="17"/>
                     </Grid>
                 </DataTemplate>
             </customUI:ListViewV2.ItemTemplate>

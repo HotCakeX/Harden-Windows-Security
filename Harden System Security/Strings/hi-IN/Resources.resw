@@ -205,16 +205,7 @@
     <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>अतिरिक्त सुविधाओं के लिए साइडबार का उपयोग करें।</value>
   </data>
-    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
-    <value>साइडबार गाइड</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>साइडबार का उपयोग करने के लिए गाइड के लिए, कृपया यहाँ क्लिक/टैप करके GitHub wiki पेज पर जाएं।</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>साइडबार का उपयोग करने के लिए गाइड के लिए, कृपया यहाँ क्लिक/टैप करके GitHub wiki पेज पर जाएं।</value>
-  </data>
-    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>सहायता - प्रश्न पूछें</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
@@ -740,17 +731,9 @@
     <comment>Protection Category Title</comment>
     <value>प्रमाणपत्र जांच</value>
   </data>
-  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>इंस्टॉल किए गए प्रमाणपत्रों की जांच करें और उन सभी का पता लगाएं जो ऑपरेटिंग सिस्टम के अंतर्गत नहीं आते।</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>देश द्वारा IP अवरोधन</value>
-  </data>
-  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>आतंकवाद समर्थन के लिए अमेरिकी प्रतिबंध सूची में शामिल विशिष्ट देशों की IP पता श्रेणियों को अवरुद्ध करें।</value>
   </data>
   <data name="ProtectCategory_NonAdmin" xml:space="preserve">
     <comment>Protection Category Title</comment>
@@ -803,10 +786,6 @@
   <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>लंबे फ़ाइल पथ समर्थन सक्षम करें।</value>
-  </data>
-  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
-    <comment>Protection Sub-Category</comment>
-    <value>OFAC प्रतिबंध सूची में शामिल देशों की IP श्रेणियों को अवरुद्ध करें।</value>
   </data>
   <data name="ASRNavItem.Content" xml:space="preserve">
     <value>हमला सतह कमी</value>
@@ -2343,10 +2322,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>स्थिति</value>
   </data>
-  <data name="CurrentValueHeader.Text" xml:space="preserve">
+  <data name="CurrentValueHeaderText" xml:space="preserve">
     <value>वर्तमान मान</value>
   </data>
-  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+  <data name="ExpectedValueHeaderText" xml:space="preserve">
     <value>अपेक्षित मान</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -3625,4 +3604,16 @@
 <data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
   <value>SSH क्लाइंट उपयोगकर्ता कॉन्फ़िगरेशन फ़ाइल में हटाने के लिए MACs कॉन्फ़िगरेशन नहीं मिला.</value>
 </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>कुल: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आइटमों की कुल संख्या</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>आइटमों की कुल संख्या</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>चयनित</value>
+  </data>
 </root>

@@ -30,7 +30,7 @@
 
             <TextBlock x:Uid="CertificateCheckingPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Certificate-Checking" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Certificate-Checking" />
 
         </controls:WrapPanel>
 

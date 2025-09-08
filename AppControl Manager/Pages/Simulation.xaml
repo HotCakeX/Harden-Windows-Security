@@ -28,7 +28,7 @@
 
             <TextBlock x:Uid="SimulationPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Simulation" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Simulation" />
 
         </controls:WrapPanel>
 
@@ -38,178 +38,186 @@
                  Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                  IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-        <Border
-            Grid.Row="2"
-            Margin="0,10,0,10"
-            Style="{StaticResource GridCardStyle}" Padding="8">
+        <Expander HorizontalAlignment="Stretch"
+                  Grid.Row="2"
+                  Margin="0,10,0,10">
+            <Expander.Header>
 
-            <controls:WrapPanel Orientation="Horizontal"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                HorizontalSpacing="10"
-                                VerticalSpacing="10">
+                <controls:WrapPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    HorizontalSpacing="10"
+                                    Padding="8"
+                                    VerticalSpacing="10">
 
-                <!-- Begin Simulation Button -->
-                <Button x:Uid="BeginSimulation"
+                    <!-- Begin Simulation Button -->
+                    <Button x:Uid="BeginSimulation"
                         Style="{StaticResource AccentButtonStyle}"
                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                         Click="{x:Bind ViewModel.BeginSimulationButton_Click}">
-                    <StackPanel Orientation="Horizontal">
-                        <SymbolIcon Symbol="Play" />
-                        <TextBlock x:Uid="BeginSimulationTextBlock" Margin="5,0,0,0"/>
-                    </StackPanel>
-                </Button>
+                        <StackPanel Orientation="Horizontal">
+                            <SymbolIcon Symbol="Play" />
+                            <TextBlock x:Uid="BeginSimulationTextBlock" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </Button>
 
-                <!-- Select XML File Button -->
-                <customUI:ButtonV2 Click="{x:Bind ViewModel.SelectXmlFileButton_Click}"
+                    <!-- Select XML File Button -->
+                    <customUI:ButtonV2 Click="{x:Bind ViewModel.SelectXmlFileButton_Click}"
+                                    ObservedData="{x:Bind ViewModel.XmlFilePath, Mode=OneWay}"
                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                    ToolTipService.ToolTip="Browse for the App Control policy XML file">
 
-                    <customUI:ButtonV2.Flyout>
-                        <Flyout>
+                        <customUI:ButtonV2.Flyout>
+                            <Flyout>
 
-                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectXmlFileButton_Flyout_Clear_Click}" />
+                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectXmlFileButton_Flyout_Clear_Click}" />
 
-                                <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
+                                    <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
-                                <TextBox Text="{x:Bind ViewModel.XmlFilePath, Mode=OneWay}"
-                                         TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                         MinWidth="400" IsReadOnly="True" />
+                                    <TextBox Text="{x:Bind ViewModel.XmlFilePath, Mode=OneWay}"
+                                             TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                             MinWidth="400" IsReadOnly="True" />
 
-                            </controls:WrapPanel>
+                                </controls:WrapPanel>
 
-                        </Flyout>
-                    </customUI:ButtonV2.Flyout>
+                            </Flyout>
+                        </customUI:ButtonV2.Flyout>
 
-                    <customUI:ButtonV2.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xEC50;" />
-                            <TextBlock x:Uid="SelectXMLFileTextBlock" Margin="5,0,0,0"/>
-                        </StackPanel>
-                    </customUI:ButtonV2.Content>
-                </customUI:ButtonV2>
+                        <customUI:ButtonV2.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xEC50;" />
+                                <TextBlock x:Uid="SelectXMLFileTextBlock" Margin="5,0,0,0"/>
+                            </StackPanel>
+                        </customUI:ButtonV2.Content>
+                    </customUI:ButtonV2>
 
-                <!-- Select Files Button -->
-                <customUI:ButtonV2 Click="{x:Bind ViewModel.SelectFilesButton_Click}"
-                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                   ToolTipService.ToolTip="Browse for files to include in the simulation">
+                    <!-- Select Files Button -->
+                    <customUI:ButtonV2 Click="{x:Bind ViewModel.SelectFilesButton_Click}"
+                                       IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                       ObservedData="{x:Bind ViewModel.FilePaths.Count, Mode=OneWay}"
+                                       ToolTipService.ToolTip="Browse for files to include in the simulation">
 
-                    <customUI:ButtonV2.Flyout>
-                        <Flyout>
+                        <customUI:ButtonV2.Flyout>
+                            <Flyout>
 
-                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectFilesButton_Flyout_Clear_Click}" />
+                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectFilesButton_Flyout_Clear_Click}" />
 
-                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+                                    <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.FilePaths, Mode=OneWay}" />
+                                    <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.FilePaths, Mode=OneWay}" />
 
-                            </controls:WrapPanel>
+                                </controls:WrapPanel>
 
-                        </Flyout>
-                    </customUI:ButtonV2.Flyout>
+                            </Flyout>
+                        </customUI:ButtonV2.Flyout>
 
-                    <customUI:ButtonV2.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xEC50;" />
-                            <TextBlock x:Uid="SelectFilesTextBlock" Margin="5,0,0,0"/>
-                        </StackPanel>
-                    </customUI:ButtonV2.Content>
-                </customUI:ButtonV2>
+                        <customUI:ButtonV2.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xEC50;" />
+                                <TextBlock x:Uid="SelectFilesTextBlock" Margin="5,0,0,0"/>
+                            </StackPanel>
+                        </customUI:ButtonV2.Content>
+                    </customUI:ButtonV2>
 
-                <!-- Select Folders Button -->
-                <customUI:ButtonV2 Click="{x:Bind ViewModel.SelectFoldersButton_Click}"
-                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                   ToolTipService.ToolTip="Browse for a folder to include in the simulation">
+                    <!-- Select Folders Button -->
+                    <customUI:ButtonV2 Click="{x:Bind ViewModel.SelectFoldersButton_Click}"
+                                       IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                       ObservedData="{x:Bind ViewModel.FolderPaths.Count, Mode=OneWay}"
+                                       ToolTipService.ToolTip="Browse for a folder to include in the simulation">
 
-                    <customUI:ButtonV2.Flyout>
-                        <Flyout>
+                        <customUI:ButtonV2.Flyout>
+                            <Flyout>
 
-                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectFoldersButton_Flyout_Clear_Click}" />
+                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.SelectFoldersButton_Flyout_Clear_Click}" />
 
-                                <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
+                                    <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
 
-                                <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.FolderPaths, Mode=OneWay}" />
+                                    <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.FolderPaths, Mode=OneWay}" />
 
-                            </controls:WrapPanel>
+                                </controls:WrapPanel>
 
-                        </Flyout>
-                    </customUI:ButtonV2.Flyout>
+                            </Flyout>
+                        </customUI:ButtonV2.Flyout>
 
-                    <customUI:ButtonV2.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xED25;" />
-                            <TextBlock x:Uid="SelectFoldersTextBlock" Margin="5,0,0,0"/>
-                        </StackPanel>
-                    </customUI:ButtonV2.Content>
-                </customUI:ButtonV2>
+                        <customUI:ButtonV2.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xED25;" />
+                                <TextBlock x:Uid="SelectFoldersTextBlock" Margin="5,0,0,0"/>
+                            </StackPanel>
+                        </customUI:ButtonV2.Content>
+                    </customUI:ButtonV2>
 
-                <DropDownButton Content="Options"
+                    <DropDownButton Content="Options"
                                 IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                 ToolTipService.ToolTip="Multiple Extra Options">
-                    <DropDownButton.Flyout>
+                        <DropDownButton.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE712;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DropDownButton.ContentTemplate>
+                        <DropDownButton.Flyout>
 
-                        <MenuFlyout Placement="Bottom">
+                            <MenuFlyout Placement="Bottom">
 
-                            <!-- Cat Root Paths Button -->
-                            <MenuFlyoutItem Text="Cat Root Paths"
-                                            Click="{x:Bind ViewModel.CatRootPathsButton_Click}"
-                                            ToolTipService.ToolTip="Provide path(s) to directories where security catalog .cat files are located. If not provided, the default path is C:\Windows\System32\CatRoot">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xED25;"/>
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                <!-- Cat Root Paths Button -->
+                                <MenuFlyoutItem Text="Cat Root Paths"
+                                                Click="{x:Bind ViewModel.CatRootPathsButton_Click}"
+                                                ToolTipService.ToolTip="Provide path(s) to directories where security catalog .cat files are located. If not provided, the default path is C:\Windows\System32\CatRoot">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xED25;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                            <MenuFlyoutSeparator/>
+                                <MenuFlyoutSeparator/>
 
-                            <!-- Toggle Button for No Cat Root Scanning -->
-                            <ToggleMenuFlyoutItem IsChecked="{x:Bind ViewModel.NoCatRootScanning, Mode=TwoWay}"
+                                <!-- Toggle Button for No Cat Root Scanning -->
+                                <ToggleMenuFlyoutItem IsChecked="{x:Bind ViewModel.NoCatRootScanning, Mode=TwoWay}"
                                                   Text="No Cat Root Scanning"
                                                   ToolTipService.ToolTip="Will not scan the security catalogs on the system">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xEB95;" />
-                                </MenuFlyoutItem.Icon>
-                            </ToggleMenuFlyoutItem>
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xEB95;" />
+                                    </MenuFlyoutItem.Icon>
+                                </ToggleMenuFlyoutItem>
 
-                            <MenuFlyoutSeparator/>
+                                <MenuFlyoutSeparator/>
 
-                            <!-- Button for CSV Output -->
-                            <MenuFlyoutItem Click="{x:Bind ViewModel.ExportToCsv}"
-                                            Text="Save output to CSV"
-                                            ToolTipService.ToolTip="Exports the output to a CSV file in the AppControlManager directory in the Program Files directory.">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE9F9;" />
-                                </MenuFlyoutItem.Icon>
+                                <!-- Clear Data Button -->
+                                <MenuFlyoutItem Click="{x:Bind ViewModel.ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
+                                    <MenuFlyoutItem.Icon>
+                                        <SymbolIcon Symbol="Delete" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                            </MenuFlyoutItem>
+                            </MenuFlyout>
 
-                            <MenuFlyoutSeparator/>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
 
-                            <!-- Clear Data Button -->
-                            <MenuFlyoutItem Click="{x:Bind ViewModel.ClearDataButton_Click}" x:Uid="ClearDataMenuFlyoutItem">
-                                <MenuFlyoutItem.Icon>
-                                    <SymbolIcon Symbol="Delete" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-
-                        </MenuFlyout>
-
-                    </DropDownButton.Flyout>
-                </DropDownButton>
-
-                <!-- Scalability Button with RadialGauge Flyout -->
-                <Button Content="{x:Bind ViewModel.ScalabilityButtonContent, Mode=OneWay}"
+                    <!-- Scalability Button with RadialGauge Flyout -->
+                    <Button Content="{x:Bind ViewModel.ScalabilityButtonContent, Mode=OneWay}"
                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                         x:Uid="ScalabilityButton">
-                    <Button.Flyout>
-                        <Flyout>
-                            <StackPanel>
-                                <customUI:ColorRadialGaugeV2
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE9CA;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel>
+                                    <customUI:ColorRadialGaugeV2
                                       StepSize="1"
                                       IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                       TickSpacing="2"
@@ -225,38 +233,69 @@
                                       Minimum="2"
                                       Value="{x:Bind ViewModel.ScalabilityRadialGaugeValue, Mode=TwoWay}"
                                       ValueStringFormat="N0"/>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+
+                    <ProgressRing IsIndeterminate="False"
+                                  Background="LightGray"
+                                  Value="{x:Bind ViewModel.ProgressRingValue, Mode=OneWay}"
+                                  ToolTipService.ToolTip="The Simulation progress" />
+
+                    <!-- Total chip -->
+                    <Border CornerRadius="8"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Padding="10,6"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            <TextBlock VerticalAlignment="Center">
+                                <Run x:Uid="TotalText" />
+                                <Run Text="{x:Bind ViewModel.SimulationOutputs.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBox PlaceholderText="Search in the data..."
+                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                             Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}"
+                             VerticalAlignment="Center"
+                             VerticalContentAlignment="Center"
+                             ToolTipService.ToolTip="Search the data" />
+
+                </controls:WrapPanel>
+
+            </Expander.Header>
+
+            <Expander.Content>
+
+                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+
+                    <Button Click="{x:Bind ViewModel.ExportToJsonButton_Click}"
+                            x:Uid="ExportToJSONButton">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <FontIcon Glyph="&#xE96A;" />
+                                <TextBlock x:Uid="ExportToJSONButtonText" />
                             </StackPanel>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
+                        </Button.Content>
+                    </Button>
 
-                <ProgressRing IsIndeterminate="False"
-                              Background="LightGray"
-                              Value="{x:Bind ViewModel.ProgressRingValue, Mode=OneWay}"
-                              ToolTipService.ToolTip="The Simulation progress" />
+                </controls:WrapPanel>
 
-                <TextBox PlaceholderText="Total count"
-                         Text="{x:Bind ViewModel.TotalCountOfTheFilesTextBox, Mode=OneWay}"
-                         IsReadOnly="True"
-                         VerticalAlignment="Center"
-                         VerticalContentAlignment="Center" ToolTipService.ToolTip="The total number of the files that participated in the last Simulation job"/>
-
-                <TextBox PlaceholderText="Search in the data..."
-                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                         Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         TextChanged="{x:Bind ViewModel.SearchBox_TextChanged}"
-                         VerticalAlignment="Center"
-                         VerticalContentAlignment="Center"
-                         ToolTipService.ToolTip="Search the data, not all fields are included. To perform search in all fields such as hashes, export the results to CSV and then use VS Code." />
-
-            </controls:WrapPanel>
-        </Border>
+            </Expander.Content>
+        </Expander>
 
 
         <customUI:ListViewV2 RegistryKey="Simulation"
-          ItemsSource="{x:Bind ViewModel.SimulationOutputs, Mode=OneWay}"
-          Grid.Row="3"
-          SelectionMode="Extended">
+                             ItemsSource="{x:Bind ViewModel.SimulationOutputs, Mode=OneWay}"
+                             Grid.Row="3"
+                             SelectionMode="Extended">
 
             <customUI:ListViewV2.Header>
 
@@ -460,18 +499,18 @@
                         <TextBlock Text="{x:Bind Path}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
                         <TextBlock Text="{x:Bind Source}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
                         <TextBlock Text="{x:Bind IsAuthorized}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                        <TextBlock Text="{x:Bind MatchCriteria}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                        <TextBlock Text="{x:Bind SpecificFileNameLevelMatchCriteria}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                        <TextBlock Text="{x:Bind SignerID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
-                        <TextBlock Text="{x:Bind SignerName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
-                        <TextBlock Text="{x:Bind SignerCertRoot}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
-                        <TextBlock Text="{x:Bind SignerCertPublisher}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
-                        <TextBlock Text="{x:Bind SignerScope}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
-                        <TextBlock Text="{x:Bind CertSubjectCN}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
-                        <TextBlock Text="{x:Bind CertIssuerCN}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
-                        <TextBlock Text="{x:Bind CertNotAfter}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
-                        <TextBlock Text="{x:Bind CertTBSValue}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
-                        <TextBlock Text="{x:Bind FilePath}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind MatchCriteria}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind SpecificFileNameLevelMatchCriteria}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind SignerID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind SignerName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind SignerCertRoot}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind SignerCertPublisher}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind SignerScope}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind CertSubjectCN}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind CertIssuerCN}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind CertNotAfter}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind CertTBSValue}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind FilePath}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
                     </Grid>
                 </DataTemplate>
             </customUI:ListViewV2.ItemTemplate>

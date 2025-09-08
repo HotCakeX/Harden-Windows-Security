@@ -307,7 +307,7 @@
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                        <FontIcon Glyph="&#xE8E5;" Margin="0,0,8,0" />
+                                                        <FontIcon Glyph="&#xEC50;" Margin="0,0,8,0" />
                                                         <TextBlock x:Name="BrowseTextBlock" x:Uid="BrowseTextBlock"/>
                                                     </StackPanel>
                                                 </StackPanel>

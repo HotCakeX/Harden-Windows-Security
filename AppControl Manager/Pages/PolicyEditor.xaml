@@ -32,7 +32,7 @@
 
             <TextBlock x:Uid="PolicyEditorPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/PolicyEditor" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/PolicyEditor" />
 
         </controls:WrapPanel>
 
@@ -55,6 +55,7 @@
                 <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                                    Click="{x:Bind ViewModel.BrowseForPolicyButton_Click}"
                                    VerticalAlignment="Center"
+                                   ObservedData="{x:Bind ViewModel.SelectedPolicyFile, Mode=OneWay}"
                                    HorizontalAlignment="Center"
                                    ToolTipService.ToolTip="Browse for an App Control XML policy file">
 

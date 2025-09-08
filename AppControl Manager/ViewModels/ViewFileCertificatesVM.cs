@@ -324,22 +324,22 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 				foreach (X509Certificate2 signer in certificateArray)
 				{
 					output.Add(new FileCertificateInfoCol
-					{
-						SignerNumber = i,
-						Type = CertificateType.Leaf,
-						SubjectCN = CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
-						IssuerCN = CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
-						NotBefore = signer.NotBefore,
-						NotAfter = signer.NotAfter,
-						HashingAlgorithm = signer.SignatureAlgorithm.FriendlyName,
-						SerialNumber = signer.SerialNumber,
-						Thumbprint = signer.Thumbprint,
-						TBSHash = CertificateHelper.GetTBSCertificate(signer),
-						OIDs = string.Join(", ", signer.Extensions
+					(
+						signerNumber: i,
+						type: CertificateType.Leaf,
+						subjectCN: CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
+						issuerCN: CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
+						notBefore: signer.NotBefore,
+						notAfter: signer.NotAfter,
+						hashingAlgorithm: signer.SignatureAlgorithm.FriendlyName,
+						serialNumber: signer.SerialNumber,
+						thumbprint: signer.Thumbprint,
+						tBSHash: CertificateHelper.GetTBSCertificate(signer),
+						oIDs: string.Join(", ", signer.Extensions
 								.Select(ext =>
 									ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
 								.Where(oid => !string.IsNullOrWhiteSpace(oid)))
-					});
+					));
 
 					i++;
 				}
@@ -374,22 +374,22 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 				// Add the certificate as leaf certificate
 				output.Add(new FileCertificateInfoCol
-				{
-					SignerNumber = 1,
-					Type = CertificateType.Leaf,
-					SubjectCN = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
-					IssuerCN = CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
-					NotBefore = CertObject.NotBefore,
-					NotAfter = CertObject.NotAfter,
-					HashingAlgorithm = CertObject.SignatureAlgorithm.FriendlyName,
-					SerialNumber = CertObject.SerialNumber,
-					Thumbprint = CertObject.Thumbprint,
-					TBSHash = CertificateHelper.GetTBSCertificate(CertObject),
-					OIDs = string.Join(", ", CertObject.Extensions
+				(
+					signerNumber: 1,
+					type: CertificateType.Leaf,
+					subjectCN: CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
+					issuerCN: CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
+					notBefore: CertObject.NotBefore,
+					notAfter: CertObject.NotAfter,
+					hashingAlgorithm: CertObject.SignatureAlgorithm.FriendlyName,
+					serialNumber: CertObject.SerialNumber,
+					thumbprint: CertObject.Thumbprint,
+					tBSHash: CertificateHelper.GetTBSCertificate(CertObject),
+					oIDs: string.Join(", ", CertObject.Extensions
 							.Select(ext =>
 								ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
 							.Where(oid => !string.IsNullOrWhiteSpace(oid)))
-				});
+				));
 
 			});
 
@@ -509,22 +509,22 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 							if (signer.LeafCertificate is not null)
 							{
 								output.Add(new FileCertificateInfoCol
-								{
-									SignerNumber = i,
-									Type = CertificateType.Leaf,
-									SubjectCN = signer.LeafCertificate.SubjectCN,
-									IssuerCN = signer.LeafCertificate.IssuerCN,
-									NotBefore = signer.LeafCertificate.NotBefore,
-									NotAfter = signer.LeafCertificate.NotAfter,
-									HashingAlgorithm = signer.LeafCertificate.Certificate.SignatureAlgorithm.FriendlyName,
-									SerialNumber = signer.LeafCertificate.Certificate.SerialNumber,
-									Thumbprint = signer.LeafCertificate.Certificate.Thumbprint,
-									TBSHash = signer.LeafCertificate.TBSValue,
-									OIDs = string.Join(", ", signer.LeafCertificate.Certificate.Extensions
+								(
+									signerNumber: i,
+									type: CertificateType.Leaf,
+									subjectCN: signer.LeafCertificate.SubjectCN,
+									issuerCN: signer.LeafCertificate.IssuerCN,
+									notBefore: signer.LeafCertificate.NotBefore,
+									notAfter: signer.LeafCertificate.NotAfter,
+									hashingAlgorithm: signer.LeafCertificate.Certificate.SignatureAlgorithm.FriendlyName,
+									serialNumber: signer.LeafCertificate.Certificate.SerialNumber,
+									thumbprint: signer.LeafCertificate.Certificate.Thumbprint,
+									tBSHash: signer.LeafCertificate.TBSValue,
+									oIDs: string.Join(", ", signer.LeafCertificate.Certificate.Extensions
 										.Select(ext =>
 											ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
 										.Where(oid => !string.IsNullOrWhiteSpace(oid)))
-								});
+								));
 							}
 
 							// If the signer has any Intermediate Certificates
@@ -534,43 +534,43 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 								foreach (ChainElement intermediate in signer.IntermediateCertificates)
 								{
 									output.Add(new FileCertificateInfoCol
-									{
-										SignerNumber = i,
-										Type = CertificateType.Intermediate,
-										SubjectCN = intermediate.SubjectCN,
-										IssuerCN = intermediate.IssuerCN,
-										NotBefore = intermediate.NotBefore,
-										NotAfter = intermediate.NotAfter,
-										HashingAlgorithm = intermediate.Certificate.SignatureAlgorithm.FriendlyName,
-										SerialNumber = intermediate.Certificate.SerialNumber,
-										Thumbprint = intermediate.Certificate.Thumbprint,
-										TBSHash = intermediate.TBSValue,
-										OIDs = string.Join(", ", intermediate.Certificate.Extensions
+									(
+										signerNumber: i,
+										type: CertificateType.Intermediate,
+										subjectCN: intermediate.SubjectCN,
+										issuerCN: intermediate.IssuerCN,
+										notBefore: intermediate.NotBefore,
+										notAfter: intermediate.NotAfter,
+										hashingAlgorithm: intermediate.Certificate.SignatureAlgorithm.FriendlyName,
+										serialNumber: intermediate.Certificate.SerialNumber,
+										thumbprint: intermediate.Certificate.Thumbprint,
+										tBSHash: intermediate.TBSValue,
+										oIDs: string.Join(", ", intermediate.Certificate.Extensions
 											.Select(ext =>
 												ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
 											.Where(oid => !string.IsNullOrWhiteSpace(oid)))
-									});
+									));
 								}
 							}
 
 							// Add the root certificate
 							output.Add(new FileCertificateInfoCol
-							{
-								SignerNumber = i,
-								Type = CertificateType.Root,
-								SubjectCN = signer.RootCertificate.SubjectCN,
-								IssuerCN = signer.RootCertificate.SubjectCN, // Issuer is itself for Root certificate type
-								NotBefore = signer.RootCertificate.NotBefore,
-								NotAfter = signer.RootCertificate.NotAfter,
-								HashingAlgorithm = signer.RootCertificate.Certificate.SignatureAlgorithm.FriendlyName,
-								SerialNumber = signer.RootCertificate.Certificate.SerialNumber,
-								Thumbprint = signer.RootCertificate.Certificate.Thumbprint,
-								TBSHash = signer.RootCertificate.TBSValue,
-								OIDs = string.Join(", ", signer.RootCertificate.Certificate.Extensions
+							(
+								signerNumber: i,
+								type: CertificateType.Root,
+								subjectCN: signer.RootCertificate.SubjectCN,
+								issuerCN: signer.RootCertificate.SubjectCN, // Issuer is itself for Root certificate type
+								notBefore: signer.RootCertificate.NotBefore,
+								notAfter: signer.RootCertificate.NotAfter,
+								hashingAlgorithm: signer.RootCertificate.Certificate.SignatureAlgorithm.FriendlyName,
+								serialNumber: signer.RootCertificate.Certificate.SerialNumber,
+								thumbprint: signer.RootCertificate.Certificate.Thumbprint,
+								tBSHash: signer.RootCertificate.TBSValue,
+								oIDs: string.Join(", ", signer.RootCertificate.Certificate.Extensions
 									.Select(ext =>
 										ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
 									.Where(oid => !string.IsNullOrWhiteSpace(oid)))
-							});
+							));
 
 							// Increase the counter
 							i++;

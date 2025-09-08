@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
 #include <mutex>
-#include <sstream>     
-#include <iostream>    
-#include <utility>     
-#include "StringUtilities.h" 
+#include <sstream>
+#include <iostream>
+#include <utility>
+#include "StringUtilities.h"
 
 // Global variable and mutex for storing the last error message.
 extern std::wstring g_lastErrorMsg;

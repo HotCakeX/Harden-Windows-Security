@@ -26,7 +26,7 @@
 
                 <TextBlock x:Uid="BuildNewCertificatePageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate" />
+                <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate" />
 
             </controls:WrapPanel>
 

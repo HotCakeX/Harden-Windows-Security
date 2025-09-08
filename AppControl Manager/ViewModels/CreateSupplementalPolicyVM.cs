@@ -311,10 +311,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// </summary>
 	internal string? _FilesAndFoldersSupplementalPolicyPath;
 
-	internal string TotalCountOfTheFilesTextBox
-	{
-		get; set => SP(ref field, value);
-	} = GlobalVars.GetStr("TotalFiles") + ": 0";
 
 	/// <summary>
 	/// Button to clear the list of selected file paths
@@ -330,21 +326,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	internal void FilesAndFoldersBrowseForFoldersButton_Flyout_Clear_Click()
 	{
 		filesAndFoldersFolderPaths.Clear();
-	}
-
-	/// <summary>
-	/// Updates the total logs count displayed on the UI
-	/// </summary>
-	internal void UpdateTotalFilesFilesAndFolders(bool? Zero = null)
-	{
-		if (Zero == true)
-		{
-			TotalCountOfTheFilesTextBox = GlobalVars.GetStr("TotalFiles") + ": 0";
-		}
-		else
-		{
-			TotalCountOfTheFilesTextBox = GlobalVars.GetStr("TotalFiles") + ": " + FilesAndFoldersScanResults.Count;
-		}
 	}
 
 	/// <summary>
@@ -533,8 +514,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 						FilesAndFoldersScanResults = new(LocalFilesResults);
 
 						CalculateColumnWidths();
-
-						UpdateTotalFilesFilesAndFolders();
 					});
 
 					_ = Dispatcher.TryEnqueue(() =>
@@ -707,9 +686,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	{
 		FilesAndFoldersScanResults.Clear();
 		filesAndFoldersScanResultsList.Clear();
-
-		UpdateTotalFilesFilesAndFolders(true);
-
 		CalculateColumnWidths();
 	}
 
@@ -739,7 +715,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			selectedDate: null,
 			regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_FilesAndFolders_ScanResults
 		);
-		UpdateTotalFilesFilesAndFolders();
 	}
 
 	internal void _OpenInFileExplorerFilesAndFolders() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.SupplementalPolicy_FilesAndFolders_ScanResults);
@@ -1362,8 +1337,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 
 	internal Visibility StrictKernelModeInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal string TotalCountOfTheFilesStrictKernelModeTextBox { get; set => SP(ref field, value); } = GlobalVars.GetStr("TotalFiles") + ": 0";
-
 	internal bool StrictKernelModeInfoBarIsOpen { get; set => SP(ref field, value); }
 	internal bool StrictKernelModeInfoBarIsClosable { get; set => SP(ref field, value); }
 	internal string? StrictKernelModeInfoBarMessage { get; set => SP(ref field, value); }
@@ -1421,15 +1394,9 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the clear button for the text box of selected Base policy path
 	/// </summary>
-	internal void StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click()
-	{
-		StrictKernelModeBasePolicyPath = null;
-	}
+	internal void StrictKernelModeBrowseForBasePolicyButton_Flyout_Clear_Click() => StrictKernelModeBasePolicyPath = null;
 
-	internal void StrictKernelModeScanSinceLastRebootButton_Click()
-	{
-		StrictKernelModePerformScans(true);
-	}
+	internal void StrictKernelModeScanSinceLastRebootButton_Click() => StrictKernelModePerformScans(true);
 
 	internal async void StrictKernelModePerformScans(bool OnlyAfterReboot)
 	{
@@ -1492,8 +1459,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			}
 
 			CalculateColumnWidthsStrictKernelMode();
-
-			UpdateTotalFilesStrictKernelMode();
 		}
 		catch (Exception ex)
 		{
@@ -1740,8 +1705,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			StrictKernelModeScanResults = new(LocalFilesResults);
 
 			CalculateColumnWidthsStrictKernelMode();
-
-			UpdateTotalFilesStrictKernelMode();
 		}
 
 		catch (Exception ex)
@@ -1770,21 +1733,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	internal async void OpenInDefaultFileHandler_StrictKernelMode() => await OpenInDefaultFileHandler(_StrictKernelModeSupplementalPolicyPath);
 
 	/// <summary>
-	/// Updates the total logs count displayed on the UI
-	/// </summary>
-	internal void UpdateTotalFilesStrictKernelMode(bool? Zero = null)
-	{
-		if (Zero == true)
-		{
-			TotalCountOfTheFilesStrictKernelModeTextBox = GlobalVars.GetStr("TotalFiles") + ": 0";
-		}
-		else
-		{
-			TotalCountOfTheFilesStrictKernelModeTextBox = GlobalVars.GetStr("TotalFiles") + ": " + StrictKernelModeScanResults.Count;
-		}
-	}
-
-	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
 	/// </summary>
 	internal void StrictKernel_ListViewFlyoutMenuCopy_Click()
@@ -1806,9 +1754,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	{
 		StrictKernelModeScanResults.Clear();
 		StrictKernelModeScanResultsList.Clear();
-
-		UpdateTotalFilesStrictKernelMode(true);
-
 		CalculateColumnWidthsStrictKernelMode();
 	}
 
@@ -1857,8 +1802,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		selectedDate: null,
 		regKey: ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults
 		);
-
-		UpdateTotalFilesStrictKernelMode();
 	}
 
 	/// <summary>
@@ -1878,8 +1821,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 			_ = StrictKernelModeScanResults.Remove(item);
 			_ = StrictKernelModeScanResultsList.Remove(item);
 		}
-
-		UpdateTotalFilesStrictKernelMode();
 	}
 
 	internal void _OpenInFileExplorerStrictKernelMode() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults);
@@ -2111,10 +2052,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 		}
 	}
 
-	internal void PFNBasePolicyClearButton_Click()
-	{
-		PFNBasePolicyPath = null;
-	}
+	internal void PFNBasePolicyClearButton_Click() => PFNBasePolicyPath = null;
 
 	/// <summary>
 	/// Main button's event handler - Create Supplemental policy based on PFNs
@@ -2705,10 +2643,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase
 	/// <summary>
 	/// Clears the PolicyFileToMergeWith
 	/// </summary>
-	internal void ClearPolicyFileToMergeWith()
-	{
-		PolicyFileToMergeWith = null;
-	}
+	internal void ClearPolicyFileToMergeWith() => PolicyFileToMergeWith = null;
 
 	internal void PolicyFileToMergeWithButton_Click()
 	{

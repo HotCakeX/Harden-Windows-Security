@@ -28,7 +28,7 @@
 
             <TextBlock x:Uid="WindowsFirewallPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall" />
 
         </controls:WrapPanel>
 

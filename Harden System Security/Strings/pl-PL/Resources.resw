@@ -205,16 +205,7 @@
     <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>Użyj paska bocznego dla dodatkowych funkcji.</value>
   </data>
-    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
-    <value>Przewodnik po pasku bocznym</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Aby uzyskać przewodnik o tym, jak używać paska bocznego, kliknij/dotknij tutaj, aby przejść do strony GitHub wiki.</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Aby uzyskać przewodnik o tym, jak używać paska bocznego, kliknij/dotknij tutaj, aby przejść do strony GitHub wiki.</value>
-  </data>
-    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>Pomoc - zadaj pytania</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
@@ -740,17 +731,9 @@
     <comment>Protection Category Title</comment>
     <value>Sprawdzanie certyfikatów</value>
   </data>
-  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>Sprawdź zainstalowane certyfikaty i znajdź wszystkie, które nie mieszczą się w systemie operacyjnym.</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>Blokowanie IP według kraju</value>
-  </data>
-  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>Blokuj zakresy adresów IP określonych krajów znajdujących się na liście sankcji USA za wspieranie terroryzmu.</value>
   </data>
   <data name="ProtectCategory_NonAdmin" xml:space="preserve">
     <comment>Protection Category Title</comment>
@@ -803,10 +786,6 @@
   <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>Włącz obsługę długich ścieżek plików.</value>
-  </data>
-  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
-    <comment>Protection Sub-Category</comment>
-    <value>Blokuj zakresy IP krajów z listy sankcji OFAC.</value>
   </data>
   <data name="ASRNavItem.Content" xml:space="preserve">
     <value>Redukcja powierzchni ataku</value>
@@ -2343,10 +2322,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>Status</value>
   </data>
-  <data name="CurrentValueHeader.Text" xml:space="preserve">
+  <data name="CurrentValueHeaderText" xml:space="preserve">
     <value>Bieżąca wartość</value>
   </data>
-  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+  <data name="ExpectedValueHeaderText" xml:space="preserve">
     <value>Oczekiwana wartość</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -3625,4 +3604,16 @@ Odcisk Palca: {3}</value>
 <data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
   <value>Nie znaleziono konfiguracji MACs do usunięcia w pliku konfiguracji użytkownika klienta SSH.</value>
 </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>Razem: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Łączna liczba elementów</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Łączna liczba elementów</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>Wybrano</value>
+  </data>
 </root>

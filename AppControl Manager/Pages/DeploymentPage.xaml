@@ -31,7 +31,7 @@
 
                 <TextBlock x:Uid="DeploymentPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy" />
+                <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy" />
 
             </controls:WrapPanel>
 
@@ -429,6 +429,7 @@
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
                         <customUI:ButtonV2 x:Name="BrowseForXMLPolicyFilesButton"
+                                           ObservedData="{x:Bind ViewModel.XMLFiles.Count, Mode=OneWay}"
                                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                            Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Click}">
                             <customUI:ButtonV2.Content>
@@ -499,6 +500,7 @@
 
                         <customUI:ButtonV2 x:Name="BrowseForSignedXMLPolicyFilesButton"
                                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                           ObservedData="{x:Bind ViewModel.SignedXMLFiles.Count, Mode=OneWay}"
                                            Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Click}">
                             <customUI:ButtonV2.Content>
                                 <controls:WrapPanel Orientation="Horizontal">
@@ -580,6 +582,7 @@
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
                         <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                                           ObservedData="{x:Bind ViewModel.CIPFiles.Count, Mode=OneWay}"
                                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                            Click="{x:Bind ViewModel.BrowseForCIPBinaryFilesButton_Click}">
 
@@ -636,6 +639,7 @@
                     <controls:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
                         <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                                           ObservedData="{x:Bind ViewModel.XMLFilesToConvertToCIP.Count, Mode=OneWay}"
                                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                            Click="{x:Bind ViewModel.BrowseForXMLPolicesButton_Click}">
 

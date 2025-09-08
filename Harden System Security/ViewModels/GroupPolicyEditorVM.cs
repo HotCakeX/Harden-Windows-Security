@@ -133,11 +133,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Total number of policies loaded.
-	/// </summary>
-	internal string TotalPolicies { get; set => SP(ref field, value); } = "0";
-
-	/// <summary>
 	/// Collection of all policies bound to the ListView.
 	/// </summary>
 	internal ObservableCollection<RegistryPolicyEntry> Policies = [];
@@ -192,8 +187,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		{
 			Policies.Add(item);
 		}
-
-		TotalPolicies = Policies.Count.ToString();
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{
@@ -340,7 +333,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			}
 
 			// Update UI
-			TotalPolicies = Policies.Count.ToString();
 			CalculateColumnWidths();
 
 			MainInfoBar.WriteSuccess($"Successfully deleted {policiesToDelete.Count} policies from the POL file.");
@@ -472,7 +464,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			});
 
 			CalculateColumnWidths();
-			TotalPolicies = Policies.Count.ToString();
 			MainInfoBar.WriteSuccess(GlobalVars.GetStr("GroupPolicyDataLoadedSuccess"));
 		}
 		catch (Exception ex)
@@ -527,9 +518,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	{
 		Policies.Clear();
 		AllPolicies.Clear();
-
-		TotalPolicies = "0";
-
 		CalculateColumnWidths();
 	}
 

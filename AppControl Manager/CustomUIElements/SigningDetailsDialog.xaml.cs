@@ -178,7 +178,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 		catch (Exception ex)
 		{
 			ShowTeachingTip(ex.Message);
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -412,7 +412,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 		catch (Exception ex)
 		{
 			ShowTeachingTip(ex.Message);
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 		finally
 		{

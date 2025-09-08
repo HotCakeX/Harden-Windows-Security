@@ -161,7 +161,7 @@ internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INP
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 		finally
 		{

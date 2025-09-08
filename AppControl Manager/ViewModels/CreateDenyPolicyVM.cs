@@ -404,7 +404,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 						GenericIncrementalCollection<FileIdentityIncrementalSource, FileIdentity> incrementalCollection =
 							new(new FileIdentityIncrementalSource(LVController.FullSource));
 
-						// Replaces the ItemsSource for the results ListView with the incremental collection.						
+						// Replaces the ItemsSource for the results ListView with the incremental collection.
 						LVController.UpdateCollection(incrementalCollection);
 
 						// Kicks off the initial page load for the incremental collection. Intentionally discard the returned Task because:
@@ -417,11 +417,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 						// This ensures the header grid columns get an immediate, sane size before/while the first page appears.
 						// Subsequent realization/scroll events will trigger debounced recalcs for smooth adjustments.
 						LVController.RecalculateVisibleColumnWidths();
-
-						// Update the Total files UI text to reflect the current count in the bound collection.
-						// (At this point it reflects whatever portion has been loaded into the incremental collection;
-						// the controller and collection will continue to raise updates as more pages load.)
-						LVController.UpdateTotalFiles();
 					});
 
 					_ = Dispatcher.TryEnqueue(() =>

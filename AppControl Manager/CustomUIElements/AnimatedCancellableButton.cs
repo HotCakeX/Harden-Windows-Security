@@ -74,15 +74,6 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 	private bool _inColorTransition;
 	private const double SHADOW_OPACITY = 0.85;
 
-	private static readonly AttachedCardShadow TransparentShadow = new()
-	{
-		Color = TransparentColor,
-		Offset = ZeroOffsetString,
-		BlurRadius = 0.0,
-		Opacity = 0.0,
-		CornerRadius = 0.0
-	};
-
 	private static readonly Color[] _shadowColors = [
 		Color.FromArgb(255, 255, 192, 203), // Pink
 		Color.FromArgb(255, 255, 20, 147),  // Hot Pink
@@ -712,12 +703,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 
 			if (_hasShadowApplied)
 			{
-				try
-				{
-					Effects.SetShadow(this, TransparentShadow);
-				}
-				catch (Exception)
-				{ }
+				ClearValue(Effects.ShadowProperty);
 				_hasShadowApplied = false;
 			}
 
@@ -1234,12 +1220,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 
 			if (_hasShadowApplied)
 			{
-				try
-				{
-					Effects.SetShadow(this, TransparentShadow);
-				}
-				catch (Exception)
-				{ }
+				ClearValue(Effects.ShadowProperty);
 				_hasShadowApplied = false;
 			}
 

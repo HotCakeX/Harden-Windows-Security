@@ -21,6 +21,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
@@ -171,8 +172,21 @@ internal static partial class ListViewHelper
 		FontWeight = FontWeights.Bold,
 		Margin = new Thickness(10, 0, 2, 0),
 		TextWrapping = TextWrapping.NoWrap,
-		Padding = new Thickness(5)
+		Padding = new Thickness(5),
+		FontFamily = new("Segoe UI") // Set as the same value as the one in the App Setting's default property value.
 	};
+
+	/// <summary>
+	/// Called when the user changes the font for ListViews in the Settings page.
+	/// </summary>
+	/// <param name="fontFamily"></param>
+	internal static void UpdateFontFamily(string fontFamily)
+	{
+		// Ensure the width is calculated correctly based on the selected font for List Views so the size of the text is accurate.
+		tb.FontFamily = new FontFamily(fontFamily);
+	}
+
+	private static readonly Size SizeForMeasurement = new(double.PositiveInfinity, double.PositiveInfinity);
 
 	/// <summary>
 	/// Measures the text width (in pixels) required to display the given text.
@@ -180,10 +194,22 @@ internal static partial class ListViewHelper
 	/// </summary>
 	internal static double MeasureText(string? text)
 	{
-		tb.FontFamily = new(App.Settings.ListViewFontFamily); // Ensure the width is calculated correctly based on the selected font for List Views so the size of the text is accurate.
 		tb.Text = text;
-		tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+		tb.Measure(SizeForMeasurement);
 		return tb.DesiredSize.Width + InitValueAdded;
+	}
+
+	/// <summary>
+	/// Used by Incremental Collections to measure column cell widths without adding the InitValueAdded padding.
+	/// </summary>
+	/// <param name="text"></param>
+	/// <returns></returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static double MeasureTextEx(string? text)
+	{
+		tb.Text = text;
+		tb.Measure(SizeForMeasurement);
+		return tb.DesiredSize.Width;
 	}
 
 	/// <summary>
@@ -194,9 +220,8 @@ internal static partial class ListViewHelper
 	/// <returns></returns>
 	internal static double MeasureText(string? text, double maxWidth)
 	{
-		tb.FontFamily = new(App.Settings.ListViewFontFamily); // Ensure the width is calculated correctly based on the selected font for List Views so the size of the text is accurate.
 		tb.Text = text;
-		tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+		tb.Measure(SizeForMeasurement);
 		return tb.DesiredSize.Width > maxWidth ? tb.DesiredSize.Width : maxWidth;
 	}
 
@@ -223,7 +248,6 @@ internal static partial class ListViewHelper
 			lw.SelectedItems.Add(item);
 		}
 	}
-
 
 	/// <summary>
 	/// Used to store sorting states of columns in ListViews
@@ -314,7 +338,6 @@ internal static partial class ListViewHelper
 			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: true);
 		}
 	}
-
 
 	/// <summary>
 	/// Formats one or more items of type TElement into a string using the supplied property mappings.
@@ -452,7 +475,8 @@ internal static partial class ListViewHelper
 		index = (index < 0) ? (index + listViewBase.Items.Count) : index;
 
 		bool isVirtualizing = default;
-		double previousXOffset = default, previousYOffset = default;
+		double previousXOffset = default;
+		double previousYOffset = default;
 
 		ScrollViewer? scrollViewer = listViewBase.FindDescendant<ScrollViewer>();
 		SelectorItem? selectorItem = listViewBase.ContainerFromIndex(index) as SelectorItem;
@@ -512,7 +536,8 @@ internal static partial class ListViewHelper
 		double maxXPosition = position.X;
 		double maxYPosition = position.Y;
 
-		double finalXPosition, finalYPosition;
+		double finalXPosition;
+		double finalYPosition;
 
 		// If the Item is in view and scrollIfVisible is false then we don't need to scroll
 		if (!scrollIfVisible && (previousXOffset <= maxXPosition && previousXOffset >= minXPosition) && (previousYOffset <= maxYPosition && previousYOffset >= minYPosition))
@@ -588,7 +613,6 @@ internal static partial class ListViewHelper
 		}
 	}
 
-
 	/// <summary>
 	/// Property mappings for PackagedAppView used for clipboard operations
 	/// </summary>
@@ -606,5 +630,4 @@ internal static partial class ListViewHelper
 			["InstallLocation"] = (GlobalVars.GetStr("PFNInstallLocation/Text"), app => app.InstallLocation),
 			["FullName"] = (GlobalVars.GetStr("PFNFullNameLabel/Text"), app => app.FullName)
 		}.ToFrozenDictionary();
-
 }

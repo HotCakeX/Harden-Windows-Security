@@ -574,15 +574,6 @@
   <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
     <value>Wyświetl wybrane foldery.</value>
   </data>
-  <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
-    <value>Całkowita liczba dzienników: 0</value>
-  </data>
-  <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Całkowita liczba dzienników</value>
-  </data>
-  <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Całkowita liczba dzienników</value>
-  </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>Odśwież dzienniki</value>
   </data>
@@ -1158,9 +1149,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Pomyślnie utworzono zasady odmowy</value>
-  </data>
-  <data name="NumberOfPolicies" xml:space="preserve">
-    <value>Liczba zasad: </value>
   </data>
   <data name="WarningTitle" xml:space="preserve">
     <value>OSTRZEŻENIE</value>
@@ -2869,12 +2857,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ta funkcja umożliwia płynną zamianę dowolnych obowiązujących wdrożonych niesystemowych zasad podstawowych na inne zasady z listy.</value>
   </data>
-  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Liczba wszystkich wyświetlanych zasad</value>
-  </data>
-  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Liczba wszystkich wyświetlanych zasad</value>
-  </data>
   <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
     <value>Usuń zasady</value>
   </data>
@@ -3580,9 +3562,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
     <value>Wystąpił błąd podczas analizowania numeru opcji reguły {0} na jego wartość ciągu: {1}</value>
   </data>
-  <data name="NumberOfPoliciesMessage" xml:space="preserve">
-    <value>Liczba zasad: {0}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>Identyfikator obiektu zasad Intune był pusty dla wybranych zasad do usunięcia</value>
   </data>
@@ -4281,9 +4260,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>Pomyślnie utworzono zasady odmowy reguły ścieżki pliku opartej na wzorcu.</value>
-  </data>
-    <data name="TotalFiles" xml:space="preserve">
-    <value>Suma plików</value>
   </data>
   <data name="AllDataClearedMsg" xml:space="preserve">
     <value>Wszystkie dane zostały pomyślnie wyczyszczone.</value>
@@ -5775,5 +5751,32 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
     <value>Łączna liczba elementów aktualnie załadowanych w widoku</value>
+  </data>
+   <data name="RetrieveTheLogsButton.Content" xml:space="preserve">
+    <value>Pobierz dzienniki</value>
+  </data>
+  <data name="RetrieveTheLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobierz dzienniki, wysyłając zapytanie Advanced Hunting do MDE</value>
+  </data>
+  <data name="RetrieveTheLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobierz dzienniki, wysyłając zapytanie Advanced Hunting do MDE</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.Content" xml:space="preserve">
+    <value>Przykłady zapytań</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Możesz skopiować poniższe zapytania i użyć ich w portalu MDE Advanced Hunting, aby wygenerować standardowe dzienniki zgodne z AppControl Manager, lub możesz użyć wbudowanej funkcjonalności aplikacji, aby automatycznie pobrać i przetworzyć dzienniki.</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Możesz skopiować poniższe zapytania i użyć ich w portalu MDE Advanced Hunting, aby wygenerować standardowe dzienniki zgodne z AppControl Manager, lub możesz użyć wbudowanej funkcjonalności aplikacji, aby automatycznie pobrać i przetworzyć dzienniki.</value>
+  </data>
+  <data name="DragAndDropHint.Text" xml:space="preserve">
+     <value>lub przeciągnij i upuść pliki tutaj</value>
+  </data>
+    <data name="DragAndDropHintGetHashesCaption" xml:space="preserve">
+     <value>Upuść plik, aby pobrać wartości skrótów</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>Wybrano</value>
   </data>
 </root>

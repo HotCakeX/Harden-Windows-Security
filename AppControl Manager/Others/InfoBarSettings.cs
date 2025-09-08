@@ -97,7 +97,7 @@ internal sealed class InfoBarSettings(
 		IsOpen = true;
 		Message = Msg is not null ? Msg + ex.Message : ex.Message;
 		Title = title ?? GlobalVars.GetStr("ErrorTitle");
-		Logger.Write(ErrorWriter.FormatException(ex));
+		Logger.Write(ex);
 		Severity = InfoBarSeverity.Error;
 		IsClosable = true;
 	}

@@ -1289,3 +1289,12 @@ dotnet_diagnostic.IL4000.severity = error
 
 # IL3000: Avoid accessing Assembly file path when publishing as a single file
 dotnet_diagnostic.IL3000.severity = error
+
+# All Code quality rule configuration options: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/code-quality-rule-options
+dotnet_code_quality.dispose_analysis_kind = AllPaths
+dotnet_code_quality.CA2000.interprocedural_analysis_kind = ContextSensitive
+dotnet_code_quality.CA2213.interprocedural_analysis_kind = ContextSensitive
+dotnet_code_quality.CA2000.points_to_analysis_kind = Complete
+dotnet_code_quality.CA2213.points_to_analysis_kind = Complete
+# dotnet_code_quality.copy_analysis = true
+# dotnet_code_quality.try_determine_additional_string_formatting_methods_automatically = true

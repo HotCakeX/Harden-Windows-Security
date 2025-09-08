@@ -53,7 +53,7 @@ internal unsafe static class Relaunch
 			Exception? ex = Marshal.GetExceptionForHR(hr);
 			if (ex != null)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 			}
 
 			throw new InvalidOperationException(

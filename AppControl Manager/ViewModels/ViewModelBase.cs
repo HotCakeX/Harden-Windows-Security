@@ -428,7 +428,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 

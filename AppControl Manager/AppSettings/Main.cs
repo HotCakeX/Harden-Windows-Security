@@ -510,6 +510,7 @@ internal sealed partial class Main : ViewModelBase
 			if (SP(ref field, value))
 			{
 				SaveValue(nameof(ListViewFontFamily), field);
+				ListViewHelper.UpdateFontFamily(value); // Update the font family used for list view text measurements.
 			}
 		}
 	} = "Segoe UI"; // https://github.com/MicrosoftDocs/winapps-winrt-api/blob/docs//microsoft.ui.xaml.media/fontfamily_xamlautofontfamily.md

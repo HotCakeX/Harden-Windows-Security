@@ -36,7 +36,7 @@
 
         <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
             <TextBlock x:Uid="BitLockerPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/BitLocker" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/BitLocker" />
         </controls:WrapPanel>
 
         <customUI:InfoBarV2 Grid.Row="1"

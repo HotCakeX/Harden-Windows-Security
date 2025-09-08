@@ -79,7 +79,7 @@ internal sealed partial class ListViewV4 : ListView
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 

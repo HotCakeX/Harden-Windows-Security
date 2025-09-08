@@ -135,9 +135,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 	internal string? PolicyToAddLogsTo { get; set => SP(ref field, value); }
 	internal string? BasePolicyXMLFile { get; set => SP(ref field, value); }
 
-	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = GlobalVars.GetStr("TotalLogsTextBlock/PlaceholderText");
-
-
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
@@ -185,7 +182,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 		}
 	}
 
-
 	internal bool ScanLogsProgressRingIsActive { get; set => SP(ref field, value); }
 	internal Visibility ScanLogsProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -218,7 +214,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 			}
 		}
 	} = 1;
-
 
 	internal string? DeviceNameTextBox { get; set => SPT(ref field, value); }
 
@@ -388,10 +383,7 @@ DeviceEvents
 		}
 	}
 
-	internal void BrowseForLogs_Flyout_Clear_Click()
-	{
-		MDEAdvancedHuntingLogs = null;
-	}
+	internal void BrowseForLogs_Flyout_Clear_Click() => MDEAdvancedHuntingLogs = null;
 
 	/// <summary>
 	/// Event handler for the select Code Integrity EVTX file path button
@@ -456,37 +448,18 @@ DeviceEvents
 	}
 
 	/// <summary>
-	/// Updates the total logs count displayed on the UI
-	/// </summary>
-	internal void UpdateTotalLogs(bool? Zero = null)
-	{
-		if (Zero == true)
-		{
-			TotalCountOfTheFilesTextBox = GlobalVars.GetStr("TotalLogsTextBlock/PlaceholderText");
-		}
-		else
-		{
-			TotalCountOfTheFilesTextBox = string.Format(GlobalVars.GetStr("TotalLogsCountMessage"), FileIdentities.Count);
-		}
-	}
-
-	/// <summary>
 	/// Event handler for the Clear Data button
 	/// </summary>
 	internal void ClearDataButton_Click()
 	{
 		FileIdentities.Clear();
 		AllFileIdentities.Clear();
-
-		UpdateTotalLogs(true);
 	}
 
 	/// <summary>
 	/// Applies the date, search, and property filters to the data in the ListView.
 	/// </summary>
-	private void ApplyFilters()
-	{
-		ListViewHelper.ApplyFilters(
+	private void ApplyFilters() => ListViewHelper.ApplyFilters(
 			allFileIdentities: AllFileIdentities.AsEnumerable(),
 			filteredCollection: FileIdentities,
 			searchText: SearchBoxText,
@@ -495,9 +468,6 @@ DeviceEvents
 			selectedPropertyFilter: SelectedPropertyFilter,
 			propertyFilterValue: PropertyFilterValue
 		);
-		UpdateTotalLogs();
-	}
-
 
 	/// <summary>
 	/// Selects all of the displayed rows on the ListView
@@ -538,8 +508,6 @@ DeviceEvents
 			_ = FileIdentities.Remove(item);
 			_ = AllFileIdentities.Remove(item); // Removing it from the other list so that when user deletes data when search filtering is applied, after removing the search, the deleted data won't be restored
 		}
-
-		UpdateTotalLogs();
 	}
 
 	/// <summary>
@@ -564,8 +532,6 @@ DeviceEvents
 			// Clear the FileIdentities before getting and showing the new ones
 			FileIdentities.Clear();
 			AllFileIdentities.Clear();
-
-			UpdateTotalLogs(true);
 
 			// To store the output of the MDE Advanced Hunting logs scan
 			HashSet<FileIdentity> Output = [];
@@ -605,8 +571,6 @@ DeviceEvents
 				item.ParentViewModelMDEAHPolicyCreationVM = this;
 				FileIdentities.Add(item);
 			}
-
-			UpdateTotalLogs();
 
 			CalculateColumnWidths();
 		}
@@ -968,8 +932,6 @@ DeviceEvents
 					item.ParentViewModelMDEAHPolicyCreationVM = this;
 					FileIdentities.Add(item);
 				}
-
-				UpdateTotalLogs();
 
 				CalculateColumnWidths();
 			}

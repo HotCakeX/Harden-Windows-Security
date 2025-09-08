@@ -574,15 +574,6 @@
   <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
     <value>הצג את התיקיות שבחרת.</value>
   </data>
-  <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
-    <value>סך כל היומנים: 0</value>
-  </data>
-  <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>המספר הכולל של היומנים</value>
-  </data>
-  <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>המספר הכולל של היומנים</value>
-  </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>רענן את היומנים</value>
   </data>
@@ -1158,9 +1149,6 @@
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>יצרתי בהצלחה את מדיניות הדחייה</value>
-  </data>
-  <data name="NumberOfPolicies" xml:space="preserve">
-    <value>מספר המדיניות: </value>
   </data>
   <data name="WarningTitle" xml:space="preserve">
     <value>אזהרה</value>
@@ -2869,12 +2857,6 @@
   <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>תכונה זו מאפשרת החלפה חלקה של כל מדיניות בסיסית שאינה מערכתית שהופעלה, במדיניות אחרת מתוך הרשימה.</value>
   </data>
-  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מספר כל המדיניות המוצגות.</value>
-  </data>
-  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מספר כל המדיניות המוצגות.</value>
-  </data>
   <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
     <value>הסר מדיניות</value>
   </data>
@@ -3584,9 +3566,6 @@
   <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
     <value>אירעה שגיאה בניתוח מספר אפשרות הכלל {0} לערך המחרוזת שלו: {1}</value>
   </data>
-  <data name="NumberOfPoliciesMessage" xml:space="preserve">
-    <value>מספר המדיניות: {0}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>מזהה האובייקט של מדיניות Intune היה null עבור המדיניות הנבחרת למחיקה</value>
   </data>
@@ -4283,9 +4262,6 @@
 <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>נוצרה בהצלחה מדיניות Pattern-based File Path rule Deny.</value>
 </data>
-  <data name="TotalFiles" xml:space="preserve">
-    <value>סך הכל קבצים</value>
-  </data>
   <data name="AllDataClearedMsg" xml:space="preserve">
     <value>כל הנתונים נוקו בהצלחה.</value>
   </data>
@@ -5776,5 +5752,32 @@
   </data>
   <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
     <value>מספר הפריטים הכולל הטעונים כעת בתצוגה</value>
+  </data>
+    <data name="RetrieveTheLogsButton.Content" xml:space="preserve">
+    <value>אחזר את היומנים</value>
+  </data>
+  <data name="RetrieveTheLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את היומנים באמצעות שליחת שאילתת Advanced Hunting ל-MDE</value>
+  </data>
+  <data name="RetrieveTheLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את היומנים באמצעות שליחת שאילתת Advanced Hunting ל-MDE</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.Content" xml:space="preserve">
+    <value>דוגמאות לשאילתות</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>באפשרותך להעתיק את השאילתות הבאות ולהשתמש בהן בפורטל Advanced Hunting של MDE כדי להפיק יומנים סטנדרטיים התואמים ל-AppControl Manager, או להשתמש ביכולות המובנות של היישום כדי לאחזר את היומנים ולעבד אותם באופן אוטומטי.</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>באפשרותך להעתיק את השאילתות הבאות ולהשתמש בהן בפורטל Advanced Hunting של MDE כדי להפיק יומנים סטנדרטיים התואמים ל-AppControl Manager, או להשתמש ביכולות המובנות של היישום כדי לאחזר את היומנים ולעבד אותם באופן אוטומטי.</value>
+  </data>
+  <data name="DragAndDropHint.Text" xml:space="preserve">
+     <value>או גרור ושחרר קבצים לכאן</value>
+  </data>
+    <data name="DragAndDropHintGetHashesCaption" xml:space="preserve">
+     <value>שחרר קובץ כדי לאחזר ערכי גיבוב</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>נבחר</value>
   </data>
 </root>

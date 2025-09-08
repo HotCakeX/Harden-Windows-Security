@@ -180,7 +180,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -214,7 +214,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 					return new EmptyFileDataProvider();
 				}
 			});
@@ -265,7 +265,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 				{
 					if (currentOperationId == _displayOperationId)
 					{
-						Logger.Write(ErrorWriter.FormatException(ex));
+						Logger.Write(ex);
 
 						await LogCollection.ClearAllData();
 					}
@@ -333,7 +333,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -364,7 +364,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -447,7 +447,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 

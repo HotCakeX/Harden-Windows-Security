@@ -574,15 +574,6 @@
   <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
     <value>Ver las carpetas que seleccionó.</value>
   </data>
-  <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
-    <value>Registros totales: 0</value>
-  </data>
-  <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El número total de los registros</value>
-  </data>
-  <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El número total de los registros</value>
-  </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>Actualizar Los Registros</value>
   </data>
@@ -1158,9 +1149,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Se creó correctamente la directiva de Denegación</value>
-  </data>
-  <data name="NumberOfPolicies" xml:space="preserve">
-    <value>Número de Directivas: </value>
   </data>
   <data name="WarningTitle" xml:space="preserve">
     <value>ADVERTENCIA</value>
@@ -2869,12 +2857,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Esta función le permite intercambiar sin problemas cualquiera de las directivas base no pertenecientes al sistema implementadas aplicables con otra directiva de la lista.</value>
   </data>
-  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El recuento de todas las directivas mostradas</value>
-  </data>
-  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El recuento de todas las directivas mostradas</value>
-  </data>
   <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
     <value>Eliminar Directiva</value>
   </data>
@@ -3580,9 +3562,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
     <value>Hubo un error al analizar el número de opción de regla {0} a su valor de cadena: {1}</value>
   </data>
-  <data name="NumberOfPoliciesMessage" xml:space="preserve">
-    <value>Número de directivas: {0}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>El ID del objeto de la directiva de Intune era nulo para la directiva seleccionada que se va a eliminar</value>
   </data>
@@ -4281,9 +4260,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>Se creó correctamente la directiva de Denegación de regla de Ruta de Archivo Basada en Patrón.</value>
-  </data>
-    <data name="TotalFiles" xml:space="preserve">
-    <value>Archivos Totales</value>
   </data>
   <data name="AllDataClearedMsg" xml:space="preserve">
     <value>Todos los datos se han borrado correctamente.</value>
@@ -5775,5 +5751,32 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
     <value>El número total de elementos que están actualmente cargados en la vista</value>
+  </data>
+   <data name="RetrieveTheLogsButton.Content" xml:space="preserve">
+    <value>Obtener los registros</value>
+  </data>
+  <data name="RetrieveTheLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Obtén los registros enviando una consulta de Advanced Hunting a MDE</value>
+  </data>
+  <data name="RetrieveTheLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Obtén los registros enviando una consulta de Advanced Hunting a MDE</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.Content" xml:space="preserve">
+    <value>Ejemplos de consultas</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Puedes copiar las siguientes consultas y usarlas en el portal de MDE Advanced Hunting para generar registros estándar compatibles con AppControl Manager, o puedes usar la funcionalidad integrada de la aplicación para recuperar automáticamente los registros y procesarlos.</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Puedes copiar las siguientes consultas y usarlas en el portal de MDE Advanced Hunting para generar registros estándar compatibles con AppControl Manager, o puedes usar la funcionalidad integrada de la aplicación para recuperar automáticamente los registros y procesarlos.</value>
+  </data>
+  <data name="DragAndDropHint.Text" xml:space="preserve">
+     <value>o arrastra y suelta archivos aquí</value>
+  </data>
+    <data name="DragAndDropHintGetHashesCaption" xml:space="preserve">
+     <value>Suelta un archivo para obtener valores de hash</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>Seleccionado</value>
   </data>
 </root>

@@ -205,16 +205,7 @@
     <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>അധിക ഫീച്ചറുകൾക്കായി സൈഡ്ബാർ ഉപയോഗിക്കുക.</value>
   </data>
-    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
-    <value>സൈഡ്ബാർ ഗൈഡ്</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>സൈഡ്ബാർ എങ്ങനെ ഉപയോഗിക്കാം എന്നതിനുള്ള ഗൈഡിനായി, ദയവായി ഇവിടെ ക്ലിക്ക്/ടാപ്പ് ചെയ്ത് GitHub wiki പേജിലേക്ക് പോകുക.</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>സൈഡ്ബാർ എങ്ങനെ ഉപയോഗിക്കാം എന്നതിനുള്ള ഗൈഡിനായി, ദയവായി ഇവിടെ ക്ലിക്ക്/ടാപ്പ് ചെയ്ത് GitHub wiki പേജിലേക്ക് പോകുക.</value>
-  </data>
-    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>സഹായം - ചോദ്യങ്ങൾ ചോദിക്കുക</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
@@ -740,17 +731,9 @@
     <comment>Protection Category Title</comment>
     <value>സർട്ടിഫിക്കറ്റ് പരിശോധന</value>
   </data>
-  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>ഇൻസ്റ്റാൾ ചെയ്ത സർട്ടിഫിക്കറ്റുകൾ പരിശോധിക്കുകയും ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിനുള്ളിൽ ഉൾപ്പെടാത്ത എന്തും കണ്ടെത്തുകയും ചെയ്യുക.</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>രാജ്യം അനുസരിച്ച് IP ബ്ലോക്കിംഗ്</value>
-  </data>
-  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>ഭീകരവാദ പിന്തുണയ്ക്കുള്ള യുഎസ് ഉപരോധ പട്ടികയിലുള്ള നിർദ്ദിഷ്ട രാജ്യങ്ങളുടെ IP വിലാസ ശ്രേണികൾ ബ്ലോക്ക് ചെയ്യുക.</value>
   </data>
   <data name="ProtectCategory_NonAdmin" xml:space="preserve">
     <comment>Protection Category Title</comment>
@@ -803,10 +786,6 @@
   <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>ലോംഗ് ഫയൽ പാത്ത് സപ്പോർട്ട് പ്രാപ്തമാക്കുക.</value>
-  </data>
-  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
-    <comment>Protection Sub-Category</comment>
-    <value>OFAC ഉപരോധ പട്ടികയിലുള്ള രാജ്യങ്ങളുടെ IP ശ്രേണികൾ ബ്ലോക്ക് ചെയ്യുക.</value>
   </data>
   <data name="ASRNavItem.Content" xml:space="preserve">
     <value>ആക്രമണ പ്രതലം കുറയ്ക്കൽ</value>
@@ -2343,10 +2322,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>അവസ്ഥ</value>
   </data>
-  <data name="CurrentValueHeader.Text" xml:space="preserve">
+  <data name="CurrentValueHeaderText" xml:space="preserve">
     <value>നിലവിലെ മൂല്യം</value>
   </data>
-  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+  <data name="ExpectedValueHeaderText" xml:space="preserve">
     <value>പ്രതീക്ഷിത മൂല്യം</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -3625,4 +3604,16 @@
 <data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
   <value>SSH ക്ലയന്റ് ഉപയോക്തൃ കോൺഫിഗറേഷൻ ഫയലിൽ നീക്കം ചെയ്യാൻ MACs കോൺഫിഗറേഷൻ കണ്ടെത്തിയില്ല.</value>
 </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>മൊത്തം: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇനങ്ങളുടെ മൊത്തം എണ്ണം</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇനങ്ങളുടെ മൊത്തം എണ്ണം</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>തിരഞ്ഞെടുത്തത്</value>
+  </data>
 </root>

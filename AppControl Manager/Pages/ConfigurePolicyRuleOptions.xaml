@@ -26,7 +26,7 @@
 
                 <TextBlock x:Uid="ConfigurePolicyRuleOptionsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options" />
+                <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options" />
 
             </controls:WrapPanel>
 
@@ -40,6 +40,7 @@
             <customUI:ButtonV2 Grid.Row="2"
                                Margin="0,0,0,20"
                                x:Name="PickPolicyFileButton"
+                               ObservedData="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                Click="{x:Bind ViewModel.PickPolicyFileButton_Click}"
                                HorizontalAlignment="Center"
@@ -102,7 +103,16 @@
 
                         <Button x:Uid="RefreshRuleOptionsStateButton"
                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.RefreshRuleOptionsState_Click}"/>
+                                Click="{x:Bind ViewModel.RefreshRuleOptionsState_Click}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
 
                     </controls:WrapPanel>
 

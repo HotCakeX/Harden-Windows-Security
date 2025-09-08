@@ -736,7 +736,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -751,7 +751,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -766,7 +766,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 

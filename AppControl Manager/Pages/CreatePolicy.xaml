@@ -24,7 +24,7 @@
 
                 <TextBlock x:Uid="CreatePolicyPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}"/>
 
-                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy" />
+                <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy" />
 
             </controls:WrapPanel>
 

@@ -1,5 +1,8 @@
-* Updated dependencies to the latest versions.
+✅ Improved memory and resource management throughout the app.
 
-* The texts displayed in the Info Bars throughout the app are now selectable.
+✅ Enabled extensive analyzers that run during compilation and are able to detect potential issues with broader visibility and accuracy. They increase compilation time (aka building) of the app package, but are worth it.
 
-* Improved the Logs page by making it easier to copy any number of logs to the clipboard via the new button.
+✅ Created Incremental Collections for List Views to help with large data sets.
+
+✅ There are a lot more change logs that simply can't be written here due to size limit. Please visit GitHub Repository's Release section for the full release notes: https://github.com/HotCakeX/Harden-Windows-Security/releases
+

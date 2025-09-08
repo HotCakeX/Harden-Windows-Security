@@ -710,11 +710,11 @@ where
 // To check if an HRESULT indicates user cancellation
 fn is_user_cancelled(hresult: i32) -> bool {
     match hresult {
-        // HRESULT_FROM_WIN32(ERROR_CANCELLED) = 0x800704C7
+        // HRESULT_FROM_THREAD(ERROR_CANCELLED) = 0x800704C7
         x if x == 0x800704C7u32 as i32 => true, // This is what's actually thrown on the C# side.
         // E_ABORT = 0x80004004
         // x if x == 0x80004004u32 as i32 => true,
-        // HRESULT_FROM_WIN32(ERROR_OPERATION_ABORTED) = 0x800703E3
+        // HRESULT_FROM_THREAD(ERROR_OPERATION_ABORTED) = 0x800703E3
         // x if x == 0x800703E3u32 as i32 => true,
         _ => false,
     }
@@ -810,7 +810,7 @@ fn show_file_picker_internal(
                 *last_error = 0x80070057u32 as i32; // E_INVALIDARG
                 CoTaskMemFree(Some(path_pwstr.0 as *mut _));
                 CoUninitialize();
-                return Err(Error::from_win32());
+                return Err(Error::from_thread());
             }
         };
 
@@ -924,7 +924,7 @@ fn show_save_file_dialog_internal(
                 *last_error = 0x80070057u32 as i32; // E_INVALIDARG
                 CoTaskMemFree(Some(path_pwstr.0 as *mut _));
                 CoUninitialize();
-                return Err(Error::from_win32());
+                return Err(Error::from_thread());
             }
         };
 
@@ -1062,7 +1062,7 @@ fn show_files_picker_internal(
                     *last_error = 0x80070057u32 as i32; // E_INVALIDARG
                     CoTaskMemFree(Some(path_pwstr.0 as *mut _));
                     CoUninitialize();
-                    return Err(Error::from_win32());
+                    return Err(Error::from_thread());
                 }
             };
 
@@ -1163,7 +1163,7 @@ fn show_folder_picker_internal(initial_dir: &str, last_error: &mut i32) -> Resul
                 *last_error = 0x80070057u32 as i32; // E_INVALIDARG
                 CoTaskMemFree(Some(path_pwstr.0 as *mut _));
                 CoUninitialize();
-                return Err(Error::from_win32());
+                return Err(Error::from_thread());
             }
         };
 
@@ -1282,7 +1282,7 @@ fn show_folders_picker_internal(initial_dir: &str, last_error: &mut i32) -> Resu
                     *last_error = 0x80070057u32 as i32; // E_INVALIDARG
                     CoTaskMemFree(Some(path_pwstr.0 as *mut _));
                     CoUninitialize();
-                    return Err(Error::from_win32());
+                    return Err(Error::from_thread());
                 }
             };
 
@@ -1762,7 +1762,7 @@ impl GpuDetectorInternal {
             // Initialize COM
             let hr: HRESULT = CoInitializeEx(None, COINIT_APARTMENTTHREADED);
             if hr.is_err() && hr != HRESULT(-2147417850) {
-                return Err(Error::from_win32());
+                return Err(Error::from_thread());
             }
 
             let _com_guard: ComGuardGpu = ComGuardGpu {};

@@ -74,7 +74,10 @@
 
         <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        <AppxBundle>Always</AppxBundle>
+        
+        <!-- We create the bundle ourselves -->
+        <AppxBundle>Never</AppxBundle>
+
         <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <AssemblyName>HardenSystemSecurity</AssemblyName>
@@ -249,7 +252,10 @@
         <NuGetAuditLevel>low</NuGetAuditLevel>
         <GenerateDocumentationFile>false</GenerateDocumentationFile>
         <DocumentationFile>HardenSystemSecurityAPIDocumentation.xml</DocumentationFile>
-        <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+
+        <!-- Don't need this -->
+        <GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
+
         <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 
         <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#analysismodecategory -->
@@ -414,7 +420,6 @@
 
     <PropertyGroup>
         <DefineConstants>$(DefineConstants);HARDEN_SYSTEM_SECURITY</DefineConstants>
-        <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     </PropertyGroup>
 
     <ItemGroup>

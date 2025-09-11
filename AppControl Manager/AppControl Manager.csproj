@@ -48,7 +48,10 @@
 
         <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        <AppxBundle>Always</AppxBundle>
+        
+        <!-- We create the bundle ourselves -->
+        <AppxBundle>Never</AppxBundle>
+
         <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <AssemblyName>AppControlManager</AssemblyName>
@@ -164,7 +167,8 @@
 
         <PackageReadmeFile>AppControl Manager.md</PackageReadmeFile>
 
-        <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+        <!-- Don't need this -->
+        <GenerateTemporaryStoreCertificate>False</GenerateTemporaryStoreCertificate>
 
         <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 

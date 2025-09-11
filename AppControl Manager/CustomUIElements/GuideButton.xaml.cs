@@ -21,7 +21,7 @@ internal sealed partial class GuideButton : UserControl
 		DependencyProperty.Register(
 			nameof(NavigateUri),
 			typeof(Uri),
-			typeof(HyperlinkButton),
+			typeof(GuideButton),
 			new PropertyMetadata(null)
 		);
 }

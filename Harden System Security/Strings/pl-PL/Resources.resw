@@ -2246,7 +2246,7 @@
   <data name="INFToJSONConversionSectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wybierz jeden lub więcej plików INF bezpieczeństwa do konwersji na format JSON</value>
   </data>
-    <data name="SelectedText.Text" xml:space="preserve">
+    <data name="SelectedItemText.Text" xml:space="preserve">
     <value>Wybrane: </value>
   </data>
   <data name="StatusAppliedText" xml:space="preserve">

@@ -553,7 +553,7 @@
                                FontWeight="SemiBold"
                                Foreground="WhiteSmoke"
                                VerticalAlignment="Center">
-                        <Run x:Uid="SelectedText" />
+                        <Run x:Uid="SelectedItemText" />
                         <Run Text="{x:Bind SelectedItemsCount, Mode=OneWay}"/>
                     </TextBlock>
                 </Border>

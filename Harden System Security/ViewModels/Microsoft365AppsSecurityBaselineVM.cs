@@ -143,8 +143,8 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
 		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SourceHeader/Text"));
 		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("StatusHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("CurrentValueHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("ExpectedValueHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("CurrentValueHeaderText"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("ExpectedValueHeaderText"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (VerificationResult item in VerificationResults)

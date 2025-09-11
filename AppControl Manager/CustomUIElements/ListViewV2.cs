@@ -103,7 +103,7 @@ internal sealed partial class ListViewV2 : ListView
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 

@@ -217,7 +217,7 @@ public partial class App : Application
 	private async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
 	{
 		// Log the unobserved task exception details.
-		Logger.Write(ErrorWriter.FormatException(e.Exception));
+		Logger.Write(e.Exception);
 
 		// Mark the exception as observed to prevent the process from terminating.
 		e.SetObserved();
@@ -242,7 +242,7 @@ public partial class App : Application
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 			}
 		});
 		*/
@@ -380,7 +380,7 @@ public partial class App : Application
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 
 		// If the current session is not elevated and user configured the app to ask for elevation on startup
@@ -411,12 +411,12 @@ public partial class App : Application
 			}
 			catch (System.ComponentModel.Win32Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				Logger.Write($"Win32Exception.NativeErrorCode: {ex.NativeErrorCode}");
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 			}
 			finally
 			{
@@ -532,7 +532,7 @@ public partial class App : Application
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 
 				// Continue doing the normal navigation if there was a problem
 				InitialNav();
@@ -554,7 +554,7 @@ public partial class App : Application
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 
 				// Continue doing the normal navigation if there was a problem
 				InitialNav();
@@ -607,7 +607,7 @@ public partial class App : Application
 	/// </summary>
 	private async void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
 	{
-		Logger.Write(ErrorWriter.FormatException(e.Exception));
+		Logger.Write(e.Exception);
 
 		// Prevent the app from crashing
 		// With this set to false, the same error would keep writing to the log file forever. The exception keeps bubbling up since it's unhandled.
@@ -621,7 +621,7 @@ public partial class App : Application
 	{
 		Exception ex = (Exception)e.ExceptionObject;
 
-		Logger.Write(ErrorWriter.FormatException(ex));
+		Logger.Write(ex);
 
 		// Show error dialog to the user
 		await ShowErrorDialogAsync(ex);

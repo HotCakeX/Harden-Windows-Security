@@ -766,7 +766,7 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -781,7 +781,7 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 }

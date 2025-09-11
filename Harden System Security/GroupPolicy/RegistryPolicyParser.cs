@@ -528,7 +528,7 @@ internal static class RegistryPolicyParser
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				throw;
 			}
 		}
@@ -601,7 +601,7 @@ internal static class RegistryPolicyParser
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 
 			// Mark all policies as unverified on error
 			foreach (RegistryPolicyEntry policy in policies)
@@ -636,7 +636,7 @@ internal static class RegistryPolicyParser
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				throw;
 			}
 		}

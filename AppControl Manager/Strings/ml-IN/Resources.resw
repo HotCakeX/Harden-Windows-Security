@@ -574,15 +574,6 @@
   <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
     <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത ഫോൾഡറുകൾ കാണുക.</value>
   </data>
-  <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
-    <value>ആകെ ലോഗുകൾ: 0</value>
-  </data>
-  <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ലോഗുകളുടെ ആകെ എണ്ണം</value>
-  </data>
-  <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ലോഗുകളുടെ ആകെ എണ്ണം</value>
-  </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>ലോഗുകൾ പുതുക്കുക</value>
   </data>
@@ -1158,9 +1149,6 @@
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>നിഷേധിക്കൽ നയം വിജയകരമായി സൃഷ്ടിച്ചു</value>
-  </data>
-  <data name="NumberOfPolicies" xml:space="preserve">
-    <value>നയങ്ങളുടെ എണ്ണം: </value>
   </data>
   <data name="WarningTitle" xml:space="preserve">
     <value>മുന്നറിയിപ്പ്</value>
@@ -2869,12 +2857,6 @@
   <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>ബാധകമായ ഏതെങ്കിലും വിന്യസിച്ച നോൺ-സിസ്റ്റം അടിസ്ഥാന നയങ്ങളെ ലിസ്റ്റിൽ നിന്നുള്ള മറ്റൊരു നയവുമായി തടസ്സമില്ലാതെ മാറ്റാൻ ഈ സവിശേഷത നിങ്ങളെ അനുവദിക്കുന്നു.</value>
   </data>
-  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>പ്രദർശിപ്പിച്ചിരിക്കുന്ന എല്ലാ നയങ്ങളുടെയും എണ്ണം</value>
-  </data>
-  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>പ്രദർശിപ്പിച്ചിരിക്കുന്ന എല്ലാ നയങ്ങളുടെയും എണ്ണം</value>
-  </data>
   <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
     <value>നയം നീക്കം ചെയ്യുക</value>
   </data>
@@ -3580,9 +3562,6 @@
   <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
     <value>{0} റൂൾ ഓപ്ഷൻ നമ്പർ അതിന്റെ സ്ട്രിംഗ് മൂല്യത്തിലേക്ക് പാഴ്‌സ് ചെയ്യുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു: {1}</value>
   </data>
-  <data name="NumberOfPoliciesMessage" xml:space="preserve">
-    <value>നയങ്ങളുടെ എണ്ണം: {0}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>ഇല്ലാതാക്കേണ്ട തിരഞ്ഞെടുത്ത നയത്തിനായുള്ള Intune നയ ഒബ്ജക്റ്റ് ഐഡി ശൂന്യമായിരുന്നു</value>
   </data>
@@ -4281,9 +4260,6 @@
   </data>
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>പാറ്റേൺ-അധിഷ്ഠിത ഫയൽ പാത്ത് റൂൾ നിഷേധിക്കൽ നയം വിജയകരമായി സൃഷ്ടിച്ചു.</value>
-  </data>
-    <data name="TotalFiles" xml:space="preserve">
-    <value>ആകെ ഫയലുകൾ</value>
   </data>
   <data name="AllDataClearedMsg" xml:space="preserve">
     <value>എല്ലാ ഡാറ്റയും വിജയകരമായി ക്ലിയർ ചെയ്തു.</value>
@@ -5775,5 +5751,32 @@
   </data>
   <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
     <value>നിലവിൽ വ്യൂയിൽ ലോഡുചെയ്തിരിക്കുന്ന ഇനങ്ങളുടെ മൊത്തം എണ്ണം</value>
+  </data>
+   <data name="RetrieveTheLogsButton.Content" xml:space="preserve">
+    <value>ലോഗുകൾ വീണ്ടെടുക്കുക</value>
+  </data>
+  <data name="RetrieveTheLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Advanced Hunting ക്വറി MDE-ലേക്ക് സമർപ്പിച്ച് ലോഗുകൾ വീണ്ടെടുക്കുക</value>
+  </data>
+  <data name="RetrieveTheLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Advanced Hunting ക്വറി MDE-ലേക്ക് സമർപ്പിച്ച് ലോഗുകൾ വീണ്ടെടുക്കുക</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.Content" xml:space="preserve">
+    <value>ക്വറി ഉദാഹരണങ്ങൾ</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>താഴെ നൽകിയിരിക്കുന്ന ക്വറികൾ പകർത്തി MDE Advanced Hunting പോർട്ടലിൽ ഉപയോഗിച്ച് AppControl Manager-നുമായി അനുയോജ്യമായ സ്റ്റാൻഡേർഡ് ലോഗുകൾ സൃഷ്ടിക്കാം, അല്ലെങ്കിൽ ആപ്ലിക്കേഷന്റെ ഉൾനിർമ്മിത കഴിവുകൾ ഉപയോഗിച്ച് ലോഗുകൾ സ്വയമേവ വീണ്ടെടുത്ത് പ്രോസസ്സ് ചെയ്യാം.</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>താഴെ നൽകിയിരിക്കുന്ന ക്വറികൾ പകർത്തി MDE Advanced Hunting പോർട്ടലിൽ ഉപയോഗിച്ച് AppControl Manager-നുമായി അനുയോജ്യമായ സ്റ്റാൻഡേർഡ് ലോഗുകൾ സൃഷ്ടിക്കാം, അല്ലെങ്കിൽ ആപ്ലിക്കേഷന്റെ ഉൾനിർമ്മിത കഴിവുകൾ ഉപയോഗിച്ച് ലോഗുകൾ സ്വയമേവ വീണ്ടെടുത്ത് പ്രോസസ്സ് ചെയ്യാം.</value>
+  </data>
+  <data name="DragAndDropHint.Text" xml:space="preserve">
+     <value>അല്ലെങ്കിൽ ഫയലുകൾ ഇവിടെ വലിച്ചിട്ട് ഇടുക</value>
+  </data>
+    <data name="DragAndDropHintGetHashesCaption" xml:space="preserve">
+     <value>ഹാഷ് മൂല്യങ്ങൾ വീണ്ടെടുക്കാൻ ഫയൽ ഇടുക</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>തിരഞ്ഞെടുത്തത്</value>
   </data>
 </root>

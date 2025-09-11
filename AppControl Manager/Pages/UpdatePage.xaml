@@ -26,7 +26,7 @@
 
                 <TextBlock x:Uid="UpdatePageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-                <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Update" />
+                <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Update" />
 
             </controls:WrapPanel>
 
@@ -81,18 +81,30 @@
                                 x:Uid="UpdatePageCheckForUpdateButton"
                                 Style="{StaticResource AccentButtonStyle}"
                                 Click="{x:Bind ViewModel.CheckForUpdateButton_Click}"
-                                Margin="0,0,15,0"/>
+                                Margin="0,0,15,0">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xEDE4;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
 
                     </controls:WrapPanel>
 
                 </controls:SettingsCard>
 
-                <customUI:SettingsCardV2 x:Uid="AutoUpdateCheckSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}">
+                <customUI:SettingsCardV2 x:Uid="AutoUpdateCheckSettingsCard"
+                                         HeaderIcon="{ui:FontIcon Glyph=&#xE774;}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.AutoCheckForUpdateAtStartup, Mode=TwoWay}"
                                   x:Uid="ToggleSwitchGeneral"/>
                 </customUI:SettingsCardV2>
 
-                <customUI:SettingsCardV2 x:Uid="HardenedUpdateProcedureSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xF552;}" Visibility="{x:Bind ViewModel.HardenedProcedureSectionVisibility, Mode=OneWay}">
+                <customUI:SettingsCardV2 x:Uid="HardenedUpdateProcedureSettingsCard"
+                                         HeaderIcon="{ui:FontIcon Glyph=&#xF552;}"
+                                         Visibility="{x:Bind ViewModel.HardenedProcedureSectionVisibility, Mode=OneWay}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.UseHardenedInstallationProcess, Mode=TwoWay}"
                                   x:Uid="ToggleSwitchGeneral"/>
                 </customUI:SettingsCardV2>
@@ -100,6 +112,7 @@
                 <controls:SettingsCard
                     Click="{x:Bind ViewModel.LaunchRating}"
                     Visibility="{x:Bind ViewModel.RatingsSectionVisibility, Mode=OneWay}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xEC24;}"
                     x:Uid="RateAndReviewSettingsCard"
                     IsClickEnabled="True"
                     ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"

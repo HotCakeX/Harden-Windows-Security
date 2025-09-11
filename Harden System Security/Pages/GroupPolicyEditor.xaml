@@ -32,7 +32,7 @@
 
             <TextBlock x:Uid="GroupPolicyEditorPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy-Editor" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy-Editor" />
 
         </controls:WrapPanel>
 
@@ -157,11 +157,22 @@
                     </Button.ContentTemplate>
                 </Button>
 
-                <TextBox x:Uid="TotalPoliciesTextBlock"
-                         Text="{x:Bind ViewModel.TotalPolicies, Mode=OneWay}"
-                         IsReadOnly="True"
-                         VerticalAlignment="Center"
-                         VerticalContentAlignment="Center"/>
+                <!-- Total chip -->
+                <Border CornerRadius="8"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Padding="10,6"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock VerticalAlignment="Center">
+                                <Run x:Uid="TotalText" />
+                                <Run Text="{x:Bind ViewModel.Policies.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
 
                 <TextBox Width="300"
                          IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"

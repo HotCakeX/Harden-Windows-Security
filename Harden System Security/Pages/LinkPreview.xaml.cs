@@ -107,7 +107,7 @@ internal sealed partial class LinkPreview : Page, INotifyPropertyChanged
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 }

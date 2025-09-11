@@ -32,7 +32,7 @@
 
             <TextBlock x:Uid="MicrosoftSecurityBaselinePageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines" />
 
         </controls:WrapPanel>
 

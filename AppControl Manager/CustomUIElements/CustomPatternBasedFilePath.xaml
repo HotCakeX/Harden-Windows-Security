@@ -39,7 +39,7 @@
 
             <TextBlock IsTextSelectionEnabled="True" TextWrapping="Wrap" VerticalAlignment="Top" x:Uid="CustomPatternBasedFilePathsDialogTopTextBlock" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#using-wildcards-in-app-control-filepath-rules" />
+            <customUI:GuideButton NavigateUri="https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#using-wildcards-in-app-control-filepath-rules" />
 
         </controls:WrapPanel>
 

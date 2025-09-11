@@ -377,6 +377,12 @@ internal sealed class FileIdentity
 	}
 }
 
+/// <summary>
+/// JSON source generated context for <see cref="IntelGathering.FileIdentity"/> type.
+/// </summary>
+[JsonSourceGenerationOptions(
+	WriteIndented = true
+)]
 [JsonSerializable(typeof(FileIdentity))]
 [JsonSerializable(typeof(FileIdentity[]))]
 [JsonSerializable(typeof(List<FileIdentity>))]

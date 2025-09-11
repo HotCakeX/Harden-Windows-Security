@@ -1347,7 +1347,11 @@ fn validate_xuid_usage(
             "Label",
         ],
     );
-    allowed.insert("Run", vec!["Text"]);
+    allowed.insert("Run", vec![
+        "Text",
+        "AutomationProperties.HelpText",
+        "ToolTipService.ToolTip",
+        ]);
     allowed.insert(
         "NavigationViewItem",
         vec![

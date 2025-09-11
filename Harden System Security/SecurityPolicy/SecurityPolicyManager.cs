@@ -144,7 +144,7 @@ Revision=1
 				}
 				catch (Exception dirDelEx)
 				{
-					Logger.Write(ErrorWriter.FormatException(dirDelEx));
+					Logger.Write(dirDelEx);
 				}
 			}
 		}

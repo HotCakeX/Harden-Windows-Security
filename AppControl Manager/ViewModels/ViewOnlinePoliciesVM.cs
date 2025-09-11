@@ -94,8 +94,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 
 	internal int ListViewSelectedIndex { get; set => SP(ref field, value); }
 
-	internal string PoliciesCountTextBox { get; set => SP(ref field, value); } = "Number of Policies: 0";
-
 	internal string? SearchBoxTextBox { get; set => SPT(ref field, value); }
 
 	internal bool RemovePolicyButtonState { get; set => SP(ref field, value); }
@@ -285,11 +283,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 		}
 		finally
 		{
-			// Update the policies count text
-			PoliciesCountTextBox = string.Format(
-				GlobalVars.GetStr("NumberOfPoliciesMessage"),
-				AllPolicies.Count);
-
 			ManageButtonsStates(true);
 		}
 	}
@@ -378,9 +371,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 				AllPolicies.Add(item);
 			}
 
-			// Update the policies count text
-			PoliciesCountTextBox = GlobalVars.GetStr("NumberOfPolicies") + AllPolicies.Count;
-
 			if (Sv != null && savedHorizontal.HasValue)
 			{
 				// restore horizontal scroll position
@@ -424,10 +414,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 			// Remove the policy from the Lists after removal from Intune
 			_ = AllPolicies.Remove(ListViewSelectedPolicy);
 			_ = AllPoliciesOutput.Remove(ListViewSelectedPolicy);
-
-			// Update the policies count text
-			PoliciesCountTextBox =
-				GlobalVars.GetStr("NumberOfPolicies") + AllPolicies.Count;
 		}
 		catch (Exception ex)
 		{

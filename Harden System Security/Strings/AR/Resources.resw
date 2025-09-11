@@ -205,16 +205,7 @@
     <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>استخدم الشريط الجانبي للميزات الإضافية.</value>
   </data>
-    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
-    <value>دليل الشريط الجانبي</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>للحصول على دليل استخدام الشريط الجانبي يرجى زيارة صفحة الويكي في GitHub بالنقر/الضغط هنا.</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>للحصول على دليل استخدام الشريط الجانبي يرجى زيارة صفحة الويكي في GitHub بالنقر/الضغط هنا.</value>
-  </data>
-    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>الدعم - طرح الأسئلة</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
@@ -740,17 +731,9 @@
     <comment>Protection Category Title</comment>
     <value>فحص الشهادات</value>
   </data>
-  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>فحص الشهادات المثبتة والكشف عن أي منها لا ينتمي إلى نظام التشغيل نفسه.</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>حظر IP حسب البلد</value>
-  </data>
-  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>حظر نطاقات عناوين IP لبلدان معينة في قائمة العقوبات الأمريكية لدعم الإرهاب.</value>
   </data>
   <data name="ProtectCategory_NonAdmin" xml:space="preserve">
     <comment>Protection Category Title</comment>
@@ -803,10 +786,6 @@
   <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>تمكين دعم المسارات الطويلة للملفات.</value>
-  </data>
-  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
-    <comment>Protection Sub-Category</comment>
-    <value>حظر نطاقات IP للبلدان في قائمة عقوبات OFAC.</value>
   </data>
   <data name="ASRNavItem.Content" xml:space="preserve">
     <value>تقليل سطح الهجوم</value>
@@ -2343,10 +2322,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>الحالة</value>
   </data>
-  <data name="CurrentValueHeader.Text" xml:space="preserve">
+  <data name="CurrentValueHeaderText" xml:space="preserve">
     <value>القيمة الحالية</value>
   </data>
-  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+  <data name="ExpectedValueHeaderText" xml:space="preserve">
     <value>القيمة المتوقعة</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -3625,4 +3604,16 @@
 <data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
   <value>لم يتم العثور على تهيئة MACs لإزالتها في ملف تهيئة مستخدم عميل SSH.</value>
 </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>الإجمالي: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>محدد</value>
+  </data>
 </root>

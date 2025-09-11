@@ -42,11 +42,11 @@
         <controls:WrapPanel Orientation="Vertical" Grid.Row="0" Margin="0,0,0,2" HorizontalSpacing="5" VerticalSpacing="10">
 
             <TextBlock x:Uid="BitLockerEncryptDriveContentDialogSubtitle"
-                   TextWrapping="Wrap"                
+                   TextWrapping="Wrap"
                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
             <TextBlock x:Uid="BitLockerEncryptDriveContentDialogSubtitleSecond"
-                       TextWrapping="Wrap"                
+                       TextWrapping="Wrap"
                        Foreground="{ThemeResource SystemFillColorCautionBrush}"/>
 
         </controls:WrapPanel>

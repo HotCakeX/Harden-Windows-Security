@@ -152,7 +152,7 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 		finally
 		{

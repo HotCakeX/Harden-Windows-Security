@@ -675,7 +675,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 				}
 			}
 		}

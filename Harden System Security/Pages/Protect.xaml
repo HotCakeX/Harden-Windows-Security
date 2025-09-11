@@ -86,7 +86,7 @@
                             <DataTemplate x:DataType="Protect:SubCategoryDefinition">
                                 <StackPanel Orientation="Vertical" Spacing="4" Margin="6">
                                     <!--By default the sub-categories are not checked/selected-->
-                                    <CheckBox Content="{x:Bind Description}"                                          
+                                    <CheckBox Content="{x:Bind Description}"
                                           IsChecked="False"
                                           ToolTipService.ToolTip="{x:Bind Description}"
                                           AutomationProperties.HelpText="{x:Bind Description}" />
@@ -110,7 +110,7 @@
 
             <TextBlock x:Uid="ProtectPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect" />
 
         </controls:WrapPanel>
 

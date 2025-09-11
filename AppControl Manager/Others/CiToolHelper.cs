@@ -70,7 +70,7 @@ internal static class CiToolHelper
 		{
 			// Handle errors by printing an error message and returning a default version of 0.0.0.0
 			Logger.Write(GlobalVars.GetStr("ErrorConvertingNumberToVersionMessage"));
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 
 			return new Version(0, 0, 0, 0);
 		}

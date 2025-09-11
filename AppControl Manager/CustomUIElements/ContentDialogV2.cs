@@ -111,7 +111,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Ensure basic initialization even if something fails
 			try
 			{
@@ -121,7 +121,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception innerEx)
 			{
-				Logger.Write(ErrorWriter.FormatException(innerEx));
+				Logger.Write(innerEx);
 				// Constructor must never throw - continue with default state
 			}
 		}
@@ -141,7 +141,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return ElementTheme.Default;
 		}
 	}
@@ -156,14 +156,14 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			try
 			{
 				base.OnApplyTemplate();
 			}
 			catch (Exception innerEx)
 			{
-				Logger.Write(ErrorWriter.FormatException(innerEx));
+				Logger.Write(innerEx);
 				// OnApplyTemplate must never throw - continue with default state
 			}
 		}
@@ -217,7 +217,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Shadow disabling failure should not prevent dialog from working
 		}
 	}
@@ -255,14 +255,14 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 					// Continue with next child - one child failing should not stop others
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Recursive shadow removal failure should not prevent dialog from working
 		}
 	}
@@ -295,14 +295,14 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception asyncEx)
 				{
-					Logger.Write(ErrorWriter.FormatException(asyncEx));
+					Logger.Write(asyncEx);
 					// Async operation failure should not prevent dialog from working
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Event handler must never throw - dialog should still be usable
 		}
 	}
@@ -348,14 +348,14 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception asyncEx)
 				{
-					Logger.Write(ErrorWriter.FormatException(asyncEx));
+					Logger.Write(asyncEx);
 					// Async operation failure should not prevent dialog from working
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Event handler must never throw - dialog should still be usable
 		}
 	}
@@ -372,7 +372,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Event handler must never throw - dialog should still close properly
 		}
 	}
@@ -386,7 +386,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Continue with other cleanups even if one fails
 		}
 
@@ -396,7 +396,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Continue with other cleanups even if one fails
 		}
 
@@ -406,7 +406,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Individual cleanup failure should not prevent other cleanups
 		}
 	}
@@ -464,7 +464,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Shadow disabling failure should not prevent dialog from working
 		}
 	}
@@ -478,7 +478,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Return a new instance as fallback
 			try
 			{
@@ -493,7 +493,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception innerEx)
 			{
-				Logger.Write(ErrorWriter.FormatException(innerEx));
+				Logger.Write(innerEx);
 				// Return basic shadow as final fallback - must never throw
 				try
 				{
@@ -501,7 +501,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception finalEx)
 				{
-					Logger.Write(ErrorWriter.FormatException(finalEx));
+					Logger.Write(finalEx);
 					// If we can't create any shadow, return null - handled by caller
 					return null!;
 				}
@@ -525,7 +525,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Return minimal border as fallback
 			try
 			{
@@ -538,7 +538,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception innerEx)
 			{
-				Logger.Write(ErrorWriter.FormatException(innerEx));
+				Logger.Write(innerEx);
 				// Return basic border as final fallback - must never throw
 				try
 				{
@@ -546,7 +546,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception finalEx)
 				{
-					Logger.Write(ErrorWriter.FormatException(finalEx));
+					Logger.Write(finalEx);
 					// If we can't create any border, return null - handled by caller
 					return null!;
 				}
@@ -572,7 +572,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Return minimal border as fallback
 			try
 			{
@@ -588,7 +588,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception innerEx)
 			{
-				Logger.Write(ErrorWriter.FormatException(innerEx));
+				Logger.Write(innerEx);
 				// Return basic border with just background as final fallback
 				try
 				{
@@ -601,7 +601,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception finalEx)
 				{
-					Logger.Write(ErrorWriter.FormatException(finalEx));
+					Logger.Write(finalEx);
 					// Return basic border as absolute final fallback - must never throw
 					try
 					{
@@ -609,7 +609,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 					}
 					catch (Exception absoluteFinalEx)
 					{
-						Logger.Write(ErrorWriter.FormatException(absoluteFinalEx));
+						Logger.Write(absoluteFinalEx);
 						// If we can't create any border, return null - handled by caller
 						return null!;
 					}
@@ -627,7 +627,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Return basic border as fallback - must never throw
 			try
 			{
@@ -642,7 +642,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception innerEx)
 			{
-				Logger.Write(ErrorWriter.FormatException(innerEx));
+				Logger.Write(innerEx);
 				// Return minimal border as final fallback
 				try
 				{
@@ -650,7 +650,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception finalEx)
 				{
-					Logger.Write(ErrorWriter.FormatException(finalEx));
+					Logger.Write(finalEx);
 					// If we can't create any border, return null - handled by caller
 					return null!;
 				}
@@ -667,7 +667,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Continue with other properties even if one fails
 		}
 
@@ -677,7 +677,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Continue with other properties even if one fails
 		}
 
@@ -687,7 +687,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Continue with other properties even if one fails
 		}
 
@@ -701,7 +701,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Shadow clearing failure should not prevent other property clearing
 		}
 	}
@@ -730,7 +730,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return false;
 		}
 	}
@@ -750,7 +750,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other properties even if one fails
 			}
 
@@ -760,7 +760,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other properties even if one fails
 			}
 
@@ -770,7 +770,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other properties even if one fails
 			}
 
@@ -787,7 +787,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Content transfer failure should not prevent grid setup
 			}
 
@@ -798,7 +798,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				return false;
 			}
 
@@ -806,7 +806,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return false;
 		}
 	}
@@ -834,7 +834,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with default values if property access fails
 			}
 
@@ -845,7 +845,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other properties even if one fails
 			}
 
@@ -855,7 +855,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other properties even if one fails
 			}
 
@@ -865,7 +865,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other properties even if one fails
 			}
 
@@ -875,7 +875,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other operations even if one fails
 			}
 
@@ -886,7 +886,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other operations even if one fails
 			}
 
@@ -903,7 +903,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 
 			}
 
@@ -914,7 +914,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				return false;
 			}
 
@@ -922,7 +922,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return false;
 		}
 	}
@@ -942,7 +942,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other operations even if one fails
 			}
 
@@ -956,7 +956,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 
 			}
 
@@ -967,7 +967,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				return false;
 			}
 
@@ -975,7 +975,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return false;
 		}
 	}
@@ -995,7 +995,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other operations even if one fails
 			}
 
@@ -1009,7 +1009,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 
 			}
 
@@ -1020,7 +1020,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				return false;
 			}
 
@@ -1028,7 +1028,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return false;
 		}
 	}
@@ -1048,7 +1048,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other operations even if one fails
 			}
 
@@ -1062,7 +1062,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 
 			}
 
@@ -1073,7 +1073,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				return false;
 			}
 
@@ -1081,7 +1081,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return false;
 		}
 	}
@@ -1101,7 +1101,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with other operations even if one fails
 			}
 
@@ -1115,7 +1115,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 
 			}
 
@@ -1126,7 +1126,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				return false;
 			}
 
@@ -1134,7 +1134,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return false;
 		}
 	}
@@ -1159,7 +1159,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with empty array if children access fails
 			}
 
@@ -1170,7 +1170,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue even if clearing fails
 			}
 
@@ -1184,7 +1184,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 					// Continue with next child even if one fails
 				}
 			}
@@ -1196,7 +1196,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with background clearing even if content setting fails
 			}
 
@@ -1207,7 +1207,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with grid addition even if background clearing fails
 			}
 
@@ -1218,7 +1218,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				return false;
 			}
 
@@ -1226,7 +1226,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return false;
 		}
 	}
@@ -1251,7 +1251,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with empty array if children access fails
 			}
 
@@ -1262,7 +1262,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue even if clearing fails
 			}
 
@@ -1276,7 +1276,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 					// Continue with next child even if one fails
 				}
 			}
@@ -1288,7 +1288,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with background clearing even if content setting fails
 			}
 
@@ -1299,7 +1299,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with panel addition even if background clearing fails
 			}
 
@@ -1310,7 +1310,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				return false;
 			}
 
@@ -1318,7 +1318,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return false;
 		}
 	}
@@ -1340,7 +1340,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				// Continue with null background element - will be handled below
 			}
 
@@ -1380,7 +1380,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 							}
 							catch (Exception shadowEx)
 							{
-								Logger.Write(ErrorWriter.FormatException(shadowEx));
+								Logger.Write(shadowEx);
 								// Continue without shadow effect if shadow application fails
 							}
 
@@ -1392,7 +1392,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 							}
 							catch (Exception layeringEx)
 							{
-								Logger.Write(ErrorWriter.FormatException(layeringEx));
+								Logger.Write(layeringEx);
 								// Skip parent handling if layering fails
 								break;
 							}
@@ -1414,7 +1414,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 							}
 							catch (Exception parentEx)
 							{
-								Logger.Write(ErrorWriter.FormatException(parentEx));
+								Logger.Write(parentEx);
 								// Try generic handling as fallback
 								try
 								{
@@ -1422,7 +1422,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 								}
 								catch (Exception genericEx)
 								{
-									Logger.Write(ErrorWriter.FormatException(genericEx));
+									Logger.Write(genericEx);
 									handlingSuccessful = false;
 								}
 							}
@@ -1434,7 +1434,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 						}
 						catch (Exception ex)
 						{
-							Logger.Write(ErrorWriter.FormatException(ex));
+							Logger.Write(ex);
 							// Border case handling failed - continue to other cases or fallback
 						}
 						break;
@@ -1474,7 +1474,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 							}
 							catch (Exception shadowEx)
 							{
-								Logger.Write(ErrorWriter.FormatException(shadowEx));
+								Logger.Write(shadowEx);
 								// Continue without shadow effect if shadow application fails
 							}
 
@@ -1486,7 +1486,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 							}
 							catch (Exception layeringEx)
 							{
-								Logger.Write(ErrorWriter.FormatException(layeringEx));
+								Logger.Write(layeringEx);
 								// Skip grid handling if layering fails
 								break;
 							}
@@ -1501,7 +1501,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 						}
 						catch (Exception ex)
 						{
-							Logger.Write(ErrorWriter.FormatException(ex));
+							Logger.Write(ex);
 							// Grid case handling failed - continue to other cases or fallback
 						}
 						break;
@@ -1541,7 +1541,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 							}
 							catch (Exception shadowEx)
 							{
-								Logger.Write(ErrorWriter.FormatException(shadowEx));
+								Logger.Write(shadowEx);
 								// Continue without shadow effect if shadow application fails
 							}
 
@@ -1553,7 +1553,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 							}
 							catch (Exception layeringEx)
 							{
-								Logger.Write(ErrorWriter.FormatException(layeringEx));
+								Logger.Write(layeringEx);
 								// Skip panel handling if layering fails
 								break;
 							}
@@ -1568,7 +1568,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 						}
 						catch (Exception ex)
 						{
-							Logger.Write(ErrorWriter.FormatException(ex));
+							Logger.Write(ex);
 							// Panel case handling failed - continue to fallback
 						}
 						break;
@@ -1585,7 +1585,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		catch (Exception ex)
 		{
 			// Shadow application completely failed - dialog should still work without custom shadow
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Try simple fallback shadow application
 			try
 			{
@@ -1598,7 +1598,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception fallbackEx)
 			{
-				Logger.Write(ErrorWriter.FormatException(fallbackEx));
+				Logger.Write(fallbackEx);
 				// Even fallback failed - dialog works without shadow
 			}
 		}
@@ -1633,7 +1633,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 					// Continue with next child even if one fails
 				}
 			}
@@ -1642,7 +1642,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return null;
 		}
 	}
@@ -1676,7 +1676,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 					// Continue with next child even if one fails
 				}
 			}
@@ -1685,7 +1685,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			return null;
 		}
 	}
@@ -1711,7 +1711,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			// Return a completed task with a default result to prevent crashes - dialog must always show
 			try
 			{
@@ -1719,7 +1719,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 			catch (Exception innerEx)
 			{
-				Logger.Write(ErrorWriter.FormatException(innerEx));
+				Logger.Write(innerEx);
 				// Try alternative approach for creating async result
 				try
 				{
@@ -1729,7 +1729,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception finalEx)
 				{
-					Logger.Write(ErrorWriter.FormatException(finalEx));
+					Logger.Write(finalEx);
 					// Last resort - try base implementation one more time without setting CurrentlyOpenContentDialog
 					try
 					{
@@ -1737,7 +1737,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 					}
 					catch (Exception absoluteFinalEx)
 					{
-						Logger.Write(ErrorWriter.FormatException(absoluteFinalEx));
+						Logger.Write(absoluteFinalEx);
 						// Create a minimal async operation that completes immediately
 						TaskCompletionSource<ContentDialogResult> finalTaskSource = new();
 						finalTaskSource.SetResult(ContentDialogResult.None);
@@ -1756,7 +1756,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 
 		try
@@ -1765,7 +1765,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -1782,7 +1782,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 				}
 
 				try
@@ -1792,7 +1792,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 				}
 
 				try
@@ -1801,7 +1801,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 				}
 
 				try
@@ -1810,7 +1810,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 				}
 
 				_disposed = true;
@@ -1818,14 +1818,14 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 			try
 			{
 				_disposed = true;
 			}
 			catch (Exception innerEx)
 			{
-				Logger.Write(ErrorWriter.FormatException(innerEx));
+				Logger.Write(innerEx);
 			}
 		}
 	}
@@ -1838,7 +1838,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 }

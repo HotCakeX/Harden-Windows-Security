@@ -84,11 +84,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 	internal bool IncludeAppControlManagerSupplementalPoliciesCheckboxState { get; set => SP(ref field, value); }
 
-	internal string PoliciesCountTextBox
-	{
-		get; set => SP(ref field, value);
-	} = "Number of Policies: 0";
-
 	internal string? SearchBoxTextBox { get; set => SPT(ref field, value); }
 
 	internal bool RemovePolicyButtonState { get; set => SP(ref field, value); }
@@ -233,9 +228,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				// Add the retrieved policies to the ObservableCollection
 				AllPolicies.Add(policy);
 			}
-
-			// Update the UI once the task completes
-			PoliciesCountTextBox = GlobalVars.GetStr("NumberOfPolicies") + policies.Count;
 
 			CalculateColumnWidths();
 		}
@@ -787,9 +779,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			{
 				AllPolicies.Add(item);
 			}
-
-			// Update the policies count text
-			PoliciesCountTextBox = GlobalVars.GetStr("NumberOfPolicies") + AllPolicies.Count;
 
 			if (Sv != null && savedHorizontal.HasValue)
 			{

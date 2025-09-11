@@ -194,9 +194,39 @@
                 </controls:SettingsExpander>
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
-                    <HyperlinkButton x:Uid="SendFeedbackHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
-                    <HyperlinkButton x:Uid="Icons8WebsiteHyperLinkButton" NavigateUri="https://icons8.com" />
-                    <HyperlinkButton x:Uid="SourceCodeHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security" />
+                    <HyperlinkButton x:Uid="SendFeedbackHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose">
+                        <HyperlinkButton.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xED15;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </HyperlinkButton.ContentTemplate>
+                    </HyperlinkButton>
+
+                    <HyperlinkButton x:Uid="Icons8WebsiteHyperLinkButton" NavigateUri="https://icons8.com">
+                        <HyperlinkButton.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xED58;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </HyperlinkButton.ContentTemplate>
+                    </HyperlinkButton>
+
+                    <HyperlinkButton x:Uid="SourceCodeHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security">
+                        <HyperlinkButton.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE943;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </HyperlinkButton.ContentTemplate>
+                    </HyperlinkButton>
+
                 </controls:WrapPanel>
 
             </StackPanel>

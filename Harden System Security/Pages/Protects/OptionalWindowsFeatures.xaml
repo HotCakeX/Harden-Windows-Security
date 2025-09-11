@@ -161,7 +161,7 @@
 
             <TextBlock x:Uid="OptionalWindowsFeaturesPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features" />
 
         </controls:WrapPanel>
 

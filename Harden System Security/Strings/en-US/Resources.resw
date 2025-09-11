@@ -205,16 +205,7 @@
     <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>Use the Sidebar for additional features.</value>
   </data>
-    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
-    <value>Sidebar Guide</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>For Sidebar usage guide please visit the GitHub wiki page by clicking/tapping here.</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>For Sidebar usage guide please visit the GitHub wiki page by clicking/tapping here.</value>
-  </data>
-    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>Support - Ask Questions</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
@@ -740,17 +731,9 @@
     <comment>Protection Category Title</comment>
     <value>Certificate Checking</value>
   </data>
-  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>Check the installed certificates and reveal any of them that don't belong to the OS itself.</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>Country IP Blocking</value>
-  </data>
-  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>Block the IP address ranges of certain countries in the list of U.S sanctions for supporting terrorism.</value>
   </data>
   <data name="ProtectCategory_NonAdmin" xml:space="preserve">
     <comment>Protection Category Title</comment>
@@ -803,10 +786,6 @@
   <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>Enable support for long file paths.</value>
-  </data>
-  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
-    <comment>Protection Sub-Category</comment>
-    <value>Block IP ranges of countries in the OFAC sanction List.</value>
   </data>
   <data name="ASRNavItem.Content" xml:space="preserve">
     <value>Attack Surface Reduction</value>
@@ -2343,10 +2322,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>Status</value>
   </data>
-  <data name="CurrentValueHeader.Text" xml:space="preserve">
+  <data name="CurrentValueHeaderText" xml:space="preserve">
     <value>Current Value</value>
   </data>
-  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+  <data name="ExpectedValueHeaderText" xml:space="preserve">
     <value>Expected Value</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -3625,4 +3604,16 @@ Thumbprint: {3}</value>
 <data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
   <value>No MACs configuration found to remove in SSH client user configuration file.</value>
 </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>Total: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The total number of items</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The total number of items</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>Selected</value>
+  </data>
 </root>

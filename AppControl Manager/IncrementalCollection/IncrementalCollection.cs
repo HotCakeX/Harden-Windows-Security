@@ -329,7 +329,7 @@ internal sealed partial class IncrementalCollection<T>(
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 				}
 			});
 
@@ -820,7 +820,7 @@ internal sealed partial class StreamBasedFileDataProvider : IFileDataProvider
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 

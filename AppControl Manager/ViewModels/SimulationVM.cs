@@ -23,7 +23,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
@@ -78,11 +78,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// For selected Cat Root paths
 	/// </summary>
 	internal List<string> CatRootPaths = [];
-
-	/// <summary>
-	/// The total count of the Simulation results.
-	/// </summary>
-	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = "0";
 
 	/// <summary>
 	/// The text entered in the Text box for search.
@@ -348,85 +343,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 	#endregion
 
 	/// <summary>
-	/// Exports the list of SimulationOutput objects to a CSV file.
-	/// </summary>
-	internal async void ExportToCsv()
-	{
-
-		if (AllSimulationOutputs.Count is 0)
-		{
-			Logger.Write(GlobalVars.GetStr("NoSimulationOutputToExport"));
-			return;
-		}
-
-		await Task.Run(() =>
-		{
-
-			string outputFilePath = Path.Combine(GlobalVars.UserConfigDir, @$"AppControl Simulation output {DateTime.Now:yyyy-MM-dd HH-mm-ss}.csv");
-
-			// Use a StringBuilder to gather CSV content.
-			StringBuilder csvBuilder = new();
-
-			_ = csvBuilder.AppendLine("\"Path\",\"Source\",\"IsAuthorized\",\"SignerID\",\"SignerName\",\"SignerCertRoot\","
-				+ "\"SignerCertPublisher\",\"SignerScope\",\"SignerFileAttributeIDs\",\"MatchCriteria\","
-				+ "\"SpecificFileNameLevelMatchCriteria\",\"CertSubjectCN\",\"CertIssuerCN\",\"CertNotAfter\","
-				+ "\"CertTBSValue\",\"FilePath\"");
-
-			foreach (SimulationOutput record in AllSimulationOutputs)
-			{
-				// Retrieve all properties. If a property is null, use an empty string.
-				// Use a helper method to properly wrap and escape the values.
-				List<string> values =
-				[
-					WrapValue(record.Path),
-					WrapValue(record.Source),
-					WrapValue(record.IsAuthorized.ToString()),
-					WrapValue(record.SignerID),
-					WrapValue(record.SignerName),
-					WrapValue(record.SignerCertRoot),
-					WrapValue(record.SignerCertPublisher),
-					WrapValue(record.SignerScope),
-                    // For the list, join the items using a comma separator.
-                    WrapValue(record.SignerFileAttributeIDs is not null
-						? string.Join(",", record.SignerFileAttributeIDs)
-						: string.Empty),
-					WrapValue(record.MatchCriteria),
-					WrapValue(record.SpecificFileNameLevelMatchCriteria),
-					WrapValue(record.CertSubjectCN),
-					WrapValue(record.CertIssuerCN),
-					WrapValue(record.CertNotAfter),
-					WrapValue(record.CertTBSValue),
-					WrapValue(record.FilePath)
-				];
-
-				// Join the values with comma and add the row to our CSV builder.
-				_ = csvBuilder.AppendLine(string.Join(",", values));
-			}
-
-			// Write the CSV content to file
-			File.WriteAllText(outputFilePath, csvBuilder.ToString());
-
-		});
-	}
-
-	/// <summary>
-	/// Wraps a value in double quotes, replacing nulls with empty strings and escaping inner quotes.
-	/// </summary>
-	/// <param name="value">The value to wrap.</param>
-	/// <returns>A string with the value wrapped in double quotes.</returns>
-	private static string WrapValue(string? value)
-	{
-		// If the value is null, use empty string.
-		string safeValue = value ?? string.Empty;
-
-		// Escape any double quotes within the value by doubling them.
-		safeValue = safeValue.Replace("\"", "\"\"");
-
-		// Wrap the value in double quotes.
-		return $"\"{safeValue}\"";
-	}
-
-	/// <summary>
 	/// Event handler for the Begin Simulation button
 	/// </summary>
 	internal async void BeginSimulationButton_Click()
@@ -464,9 +380,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 			// Clear the current ObservableCollection and backup the full data set
 			SimulationOutputs.Clear();
 			AllSimulationOutputs.Clear();
-
-			// Update the TextBox with the total count of files
-			TotalCountOfTheFilesTextBox = result.Count.ToString(CultureInfo.InvariantCulture);
 
 			AllSimulationOutputs.AddRange(result.Values);
 
@@ -571,9 +484,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 		// Clear the full data
 		AllSimulationOutputs.Clear();
 
-		// set the total count to 0 after clearing all the data
-		TotalCountOfTheFilesTextBox = "0";
-
 		CalculateColumnWidths();
 	}
 
@@ -582,5 +492,55 @@ internal sealed partial class SimulationVM : ViewModelBase
 	internal void SelectFilesButton_Flyout_Clear_Click() => FilePaths.Clear();
 
 	internal void SelectFoldersButton_Flyout_Clear_Click() => FolderPaths.Clear();
+
+	#region Export
+
+	/// <summary>
+	/// Exports all of the Simulation results to JSON.
+	/// </summary>
+	internal async void ExportToJsonButton_Click()
+	{
+		if (AllSimulationOutputs.Count is 0)
+		{
+			MainInfoBar.WriteWarning(GlobalVars.GetStr("NoSimulationOutputToExport"));
+			return;
+		}
+
+		try
+		{
+			DateTime now = DateTime.Now;
+			string formattedDateTime = now.ToString("yyyy-MM-dd_HH-mm-ss");
+			string fileName = $"AppControlManager_Simulation_Export_{formattedDateTime}.json";
+
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, fileName);
+
+			if (savePath is null)
+				return;
+
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("ExportingToJSONMsg"));
+
+			List<SimulationOutput> dataToExport = [];
+
+			await Task.Run(() =>
+			{
+				dataToExport = AllSimulationOutputs.ToList();
+
+				string jsonString = JsonSerializer.Serialize(
+					dataToExport,
+					SimulationOutputJsonContext.Default.ListSimulationOutput);
+
+				File.WriteAllText(savePath, jsonString);
+			});
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedDataToJSON"), dataToExport.Count, savePath));
+
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	#endregion
 
 }

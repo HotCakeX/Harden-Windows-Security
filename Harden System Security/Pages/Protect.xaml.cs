@@ -45,7 +45,7 @@ internal sealed partial class Protect : Page
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 	private async void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
@@ -56,7 +56,7 @@ internal sealed partial class Protect : Page
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 }

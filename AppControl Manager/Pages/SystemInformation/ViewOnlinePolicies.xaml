@@ -372,7 +372,22 @@
                     </Button.Content>
                 </Button>
 
-                <TextBlock Text="{x:Bind ViewModel.PoliciesCountTextBox, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="The count of all of the displayed policies"/>
+                <!-- Total chip -->
+                <Border CornerRadius="8"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Padding="10,6"
+                        BorderThickness="1"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock VerticalAlignment="Center">
+                            <Run x:Uid="TotalText" />
+                            <Run Text="{x:Bind ViewModel.AllPolicies.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
 
                 <Button IsEnabled="{x:Bind ViewModel.RemovePolicyButtonState, Mode=OneWay}" Click="{x:Bind ViewModel.RemovePolicy_Click}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTipService.ToolTip="Remove any non-system policy from the system">
                     <Button.Content>

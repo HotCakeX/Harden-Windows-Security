@@ -124,11 +124,6 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Total number of policies loaded.
-	/// </summary>
-	internal string TotalPolicies { get; set => SP(ref field, value); } = "0";
-
-	/// <summary>
 	/// Collection of all audit policies bound to the ListView.
 	/// </summary>
 	internal ObservableCollection<AuditPolicyInfo> AuditPolicies = [];
@@ -174,8 +169,6 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		{
 			AuditPolicies.Add(item);
 		}
-
-		TotalPolicies = AuditPolicies.Count.ToString();
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{
@@ -489,7 +482,6 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 			AllAuditPolicies.AddRange(allAuditPolicies);
 
 			CalculateColumnWidths();
-			TotalPolicies = AuditPolicies.Count.ToString();
 			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("AuditPoliciesLoadedSuccess"), AuditPolicies.Count));
 		}
 		catch (Exception ex)
@@ -510,9 +502,6 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 	{
 		AuditPolicies.Clear();
 		AllAuditPolicies.Clear();
-
-		TotalPolicies = "0";
-
 		CalculateColumnWidths();
 	}
 }

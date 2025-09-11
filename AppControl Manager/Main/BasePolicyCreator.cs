@@ -261,7 +261,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		{
 			Logger.Write(GlobalVars.GetStr("ErrorRetrievingAdditionalDriverBlockRulesInfoMessage"));
 
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 
 			// Return null in case of an error
 			return null;

@@ -151,7 +151,7 @@ internal static class AppUpdate
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 			}
 		});
 	}

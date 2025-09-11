@@ -79,8 +79,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
 
-	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = GlobalVars.GetStr("TotalLogsTextBlock/PlaceholderText");
-
 	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = DefaultScanLevel;
 
 	/// <summary>
@@ -269,35 +267,13 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// <summary>
 	/// Applies the date and search filters to the data grid
 	/// </summary>
-	private void ApplyFilters()
-	{
-		ListViewHelper.ApplyFilters(
+	private void ApplyFilters() => ListViewHelper.ApplyFilters(
 		allFileIdentities: AllFileIdentities.AsEnumerable(),
 		filteredCollection: FileIdentities,
 		searchText: SearchBoxText,
 		selectedDate: DatePickerDate,
 		regKey: ListViewHelper.ListViewsRegistry.Event_Logs
 		);
-		UpdateTotalLogs();
-	}
-
-
-	/// <summary>
-	/// Updates the total logs count displayed on the UI
-	/// </summary>
-	internal void UpdateTotalLogs(bool? Zero = null)
-	{
-		if (Zero == true)
-		{
-			TotalCountOfTheFilesTextBox = GlobalVars.GetStr("TotalLogsTextBlock/PlaceholderText");
-		}
-		else
-		{
-			TotalCountOfTheFilesTextBox = string.Format(
-				GlobalVars.GetStr("TotalLogsCountMessage"), FileIdentities.Count);
-		}
-	}
-
 
 	/// <summary>
 	/// Clears the selected AppLocker EVTX file paths
@@ -315,9 +291,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		FileIdentities.Clear();
 		AllFileIdentities.Clear();
-
-		UpdateTotalLogs(true);
-
 		CalculateColumnWidths();
 	}
 
@@ -360,10 +333,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			_ = FileIdentities.Remove(item);
 			_ = AllFileIdentities.Remove(item); // Removing it from the other list so that when user deletes data when search filtering is applied, after removing the search, the deleted data won't be restored
 		}
-
-		UpdateTotalLogs();
 	}
-
 
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
@@ -506,8 +476,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			ScanLogsProgressRingIsActive = true;
 			ScanLogsProgressRingVisibility = Visibility.Visible;
 
-			UpdateTotalLogs(true);
-
 			// Grab the App Control Logs
 			HashSet<FileIdentity> Output = await GetEventLogsData.GetAppControlEvents(
 				CodeIntegrityEvtxFilePath: CodeIntegrityEVTX,
@@ -523,8 +491,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				item.ParentViewModelEventLogsPolicyCreationVM = this;
 				FileIdentities.Add(item);
 			}
-
-			UpdateTotalLogs();
 
 			CalculateColumnWidths();
 		}

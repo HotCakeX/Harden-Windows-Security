@@ -54,8 +54,14 @@ internal sealed partial class SettingsVM : ViewModelBase
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
 
-		// Populate the ComboBox's ItemsSource collection
+		// Populate the ComboBoxes' ItemsSource collections
 		LoadLanguages();
+
+#if APP_CONTROL_MANAGER
+		FontFamilies = Microsoft.Graphics.Canvas.Text.CanvasTextFormat.GetSystemFontFamilies().ToList();
+		FontFamilies.Sort(); // Sort alphabetically
+#endif
+
 	}
 
 	private void LoadLanguages()
@@ -164,7 +170,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	/// <summary>
 	/// Language Selection ComboBox ItemsSource
 	/// </summary>
-	internal ObservableCollection<LanguageOption> LanguageOptions = [];
+	internal readonly List<LanguageOption> LanguageOptions = [];
 
 	private static readonly Dictionary<string, int> AppThemes = new(StringComparer.OrdinalIgnoreCase)
 	{
@@ -256,6 +262,11 @@ internal sealed partial class SettingsVM : ViewModelBase
 	}
 
 #if APP_CONTROL_MANAGER
+
+	/// <summary>
+	/// The list of all Font Families for the ComboBox ItemsSource.
+	/// </summary>
+	internal readonly List<string> FontFamilies = [];
 
 	/// <summary>
 	/// Opens a file picker for Code Integrity Schema path.

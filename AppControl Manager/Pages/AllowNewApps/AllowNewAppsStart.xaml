@@ -23,19 +23,27 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-
             <controls:WrapPanel Grid.Row="0" VerticalSpacing="15" HorizontalSpacing="15" Orientation="Horizontal" Margin="6,10,6,5">
 
                 <TextBlock x:Uid="AllowNewAppsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-                <HyperlinkButton Margin="0,-8,0,8" x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
+                <customUI:GuideButton Margin="0,-8,0,8" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
 
                 <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,-6,0,10">
                     <Button
                         Click="{x:Bind ViewModel.ResetStepsButton_Click}"
                         Style="{StaticResource AccentButtonStyle}"
                         IsEnabled="{x:Bind ViewModel.ResetStepsButtonIsEnabled, Mode=OneWay}"
-                        x:Uid="ResetStepsButton" />
+                        x:Uid="ResetStepsButton">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE8EE;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
                     <ProgressRing IsActive="{x:Bind ViewModel.ResetProgressRingIsActive, Mode=OneWay}"/>
                 </StackPanel>
 
@@ -76,6 +84,7 @@
                                            IsEnabled="{x:Bind ViewModel.BrowseForXMLPolicyButtonIsEnabled, Mode=OneWay}"
                                            Click="{x:Bind ViewModel.BrowseForXMLPolicyButton_Click}"
                                            Margin="0,27,0,0"
+                                           ObservedData="{x:Bind ViewModel.selectedXMLFilePath, Mode=OneWay}"
                                            ToolTipService.ToolTip="Click/Tap to choose a Base policy XML file from your device.">
 
                             <customUI:ButtonV2.Flyout>
@@ -125,7 +134,16 @@
                                 Click="{x:Bind ViewModel.GoToStep2Button_Click}"
                                 Margin="0,27,0,0"
                                 x:Uid="GoToStep2AllowNewAppsButton"
-                                Style="{StaticResource AccentButtonStyle}"/>
+                                Style="{StaticResource AccentButtonStyle}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE893;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
 
                     </controls:WrapPanel>
 
@@ -174,7 +192,17 @@
 
                         <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.BrowseForFoldersButtonIsEnabled, Mode=OneWay}"
                                            Click="{x:Bind ViewModel.BrowseForFoldersButton_Click}"
+                                           ObservedData="{x:Bind ViewModel.selectedDirectoriesToScan.Count, Mode=OneWay}"
                                            x:Uid="BrowseForFoldersAllowNewAppsButton">
+
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
 
                             <customUI:ButtonV2.Flyout>
                                 <Flyout>
@@ -197,7 +225,16 @@
                         <Button Click="{x:Bind ViewModel.GoToStep3Button_Click}"
                                 IsEnabled="{x:Bind ViewModel.GoToStep3ButtonIsEnabled, Mode=OneWay}"
                                 x:Uid="GoToStep3AllowNewAppsButton"
-                                Style="{StaticResource AccentButtonStyle}"/>
+                                Style="{StaticResource AccentButtonStyle}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE893;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
 
                     </controls:WrapPanel>
 
@@ -259,7 +296,16 @@
                             Click="{x:Bind ViewModel.CreatePolicyButton_Click}"
                             IsEnabled="{x:Bind ViewModel.CreatePolicyButtonIsEnabled, Mode=OneWay}"
                             x:Uid="AllowNewAppsCreatePolicyButton"
-                            Style="{StaticResource AccentButtonStyle}"/>
+                            Style="{StaticResource AccentButtonStyle}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xEC5B;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
                     </controls:WrapPanel>
 
                     <customUI:InfoBarV2 Severity="{x:Bind ViewModel.Step3InfoBar_Severity, Mode=OneWay}"

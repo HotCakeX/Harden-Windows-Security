@@ -153,6 +153,22 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		SidebarPaneIsOpen = !SidebarPaneIsOpen;
 	}
 
+	/// <summary>
+	/// Event handler triggered when the UpdateAvailable event is raised, indicating an update is available.
+	/// Updates InfoBadgeOpacity to show the InfoBadge in the UI if an update is available.
+	/// </summary>
+	/// <param name="sender">Sender of the event, in this case, AppUpdate class.</param>
+	/// <param name="e">Boolean indicating whether an update is available.</param>
+	private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
+	{
+		// Marshal back to the UI thread using the dispatcher to safely update UI-bound properties
+		_ = Dispatcher.TryEnqueue(() =>
+		{
+			// Set InfoBadgeOpacity based on update availability: 1 to show, 0 to hide
+			InfoBadgeOpacity = e.IsUpdateAvailable ? 1 : 0;
+		});
+	}
+
 #if APP_CONTROL_MANAGER
 	/// <summary>
 	/// Event handler for the Sidebar button to open the user config directory

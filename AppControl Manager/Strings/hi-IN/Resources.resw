@@ -574,15 +574,6 @@
   <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
     <value>आपके द्वारा चयनित फ़ोल्डर देखें।</value>
   </data>
-  <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
-    <value>कुल लॉग्स: 0</value>
-  </data>
-  <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>लॉग्स की कुल संख्या</value>
-  </data>
-  <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>लॉग्स की कुल संख्या</value>
-  </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>लॉग्स ताज़ा करें</value>
   </data>
@@ -1158,9 +1149,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>निषेध नीति सफलतापूर्वक बनाई गई</value>
-  </data>
-  <data name="NumberOfPolicies" xml:space="preserve">
-    <value>नीतियों की संख्या: </value>
   </data>
   <data name="WarningTitle" xml:space="preserve">
     <value>चेतावनी</value>
@@ -2869,12 +2857,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>इस सुविधा से आप लागू गैर-सिस्टम मूल नीतियों को सूची से किसी अन्य नीति के साथ सहजता से बदल सकते हैं।</value>
   </data>
-  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>दिखाई गई सभी नीतियों की संख्या</value>
-  </data>
-  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>दिखाई गई सभी नीतियों की संख्या</value>
-  </data>
   <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
     <value>नीति हटाएं</value>
   </data>
@@ -3580,9 +3562,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
     <value>{0} नियम विकल्प संख्या को स्ट्रिंग मान में पार्स करते समय त्रुटि: {1}</value>
   </data>
-  <data name="NumberOfPoliciesMessage" xml:space="preserve">
-    <value>नीतियों की संख्या: {0}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>चयनित नीति को हटाने के लिए Intune नीति ऑब्जेक्ट ID null था</value>
   </data>
@@ -4281,9 +4260,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>पैटर्न-आधारित फ़ाइल पथ नियम Deny नीति सफलतापूर्वक बनाई गई।</value>
-  </data>
-    <data name="TotalFiles" xml:space="preserve">
-    <value>कुल फ़ाइलें</value>
   </data>
   <data name="AllDataClearedMsg" xml:space="preserve">
     <value>सारा डेटा सफलतापूर्वक साफ़ कर दिया गया है।</value>
@@ -5775,5 +5751,32 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
     <value>वर्तमान में दृश्य में लोड किए गए आइटमों की कुल संख्या</value>
+  </data>
+   <data name="RetrieveTheLogsButton.Content" xml:space="preserve">
+    <value>लॉग्स प्राप्त करें</value>
+  </data>
+  <data name="RetrieveTheLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Advanced Hunting क्वेरी सबमिट करके MDE से लॉग्स प्राप्त करें</value>
+  </data>
+  <data name="RetrieveTheLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Advanced Hunting क्वेरी सबमिट करके MDE से लॉग्स प्राप्त करें</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.Content" xml:space="preserve">
+    <value>क्वेरी उदाहरण</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आप निम्नलिखित क्वेरियों को कॉपी करके MDE Advanced Hunting पोर्टल में उपयोग कर सकते हैं, ताकि AppControl Manager के साथ संगत मानक लॉग उत्पन्न हों, या आप एप्लिकेशन की अंतर्निहित कार्यक्षमता का उपयोग करके लॉग्स को स्वतः प्राप्त कर उन्हें प्रोसेस कर सकते हैं.</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>आप निम्नलिखित क्वेरियों को कॉपी करके MDE Advanced Hunting पोर्टल में उपयोग कर सकते हैं, ताकि AppControl Manager के साथ संगत मानक लॉग उत्पन्न हों, या आप एप्लिकेशन की अंतर्निहित कार्यक्षमता का उपयोग करके लॉग्स को स्वतः प्राप्त कर उन्हें प्रोसेस कर सकते हैं.</value>
+  </data>
+  <data name="DragAndDropHint.Text" xml:space="preserve">
+     <value>या फ़ाइलों को यहां खींचकर छोड़ें</value>
+  </data>
+    <data name="DragAndDropHintGetHashesCaption" xml:space="preserve">
+     <value>हैश मान प्राप्त करने के लिए फ़ाइल छोड़ें</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>चयनित</value>
   </data>
 </root>

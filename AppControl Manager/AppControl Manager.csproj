@@ -54,7 +54,7 @@
         <AssemblyName>AppControlManager</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>2.0.39.0</FileVersion>
+        <FileVersion>2.0.40.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
         <StartupObject>AppControlManager.Program</StartupObject>
@@ -104,9 +104,7 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 
         <EnableXAMLDiagnostics>true</EnableXAMLDiagnostics>
-
         <NuGetAudit>false</NuGetAudit>
-
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 
         <!--
@@ -253,9 +251,9 @@
         <PackageReference Include="Microsoft.Identity.Client" Version="4.76.0" />
         <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.76.0" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.250720.1" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0-preview.7.25380.108" />
-        <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0-preview.7.25380.108" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250907003" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0-rc.1.25451.107" />
+        <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0-rc.1.25451.107" />
         <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
@@ -263,12 +261,24 @@
         <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
         <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.14.0" />
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3405.78" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4948" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
-        <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.7.25380.108" />
-        <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-preview.7.25380.108" />
+        <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
+        <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.4" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="1.8.37" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="1.8.250831001" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="1.8.25090401" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.250906002" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.8.250906004" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.250907003" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="1.8.250904007" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.250906003" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.20250829.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 
     </ItemGroup>
 

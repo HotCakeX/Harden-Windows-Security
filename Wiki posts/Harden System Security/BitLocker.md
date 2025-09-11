@@ -95,7 +95,7 @@ After enabling BitLocker for a drive or adding a new Key Protector, the Export b
 
 ![ExportButtonLightup](https://github.com/user-attachments/assets/54fb97bb-51fb-4dcd-a1a8-7527c41dc2ff)
 
-> [!TIP]  
+> [!TIP]
 > Because BitLocker operations can be consequential, every action requires explicit confirmation before proceeding. Additionally, the preselected (focused) button in each confirmation dialog is **Cancel** to further reduce the chance of accidental acceptance.
 
 <br>

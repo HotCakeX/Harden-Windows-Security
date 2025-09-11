@@ -1,8 +1,17 @@
-✅ Improved memory and resource management throughout the app.
+✅ Updated the dependencies to the latest versions, including major ones such as .NET SDK and Windows App SDK.
 
-✅ Enabled extensive analyzers that run during compilation and are able to detect potential issues with broader visibility and accuracy. They increase compilation time (aka building) of the app package, but are worth it.
+✅ Improved scrolling performance in list views with large data sets by utilizing phased loads based on the importance of each column's data type.
 
-✅ Created Incremental Collections for List Views to help with large data sets.
+✅ Added icons to many buttons and other areas that didn't have one, helping with discoverability and usability.
 
-✅ There are a lot more change logs that simply can't be written here due to size limit. Please visit GitHub Repository's Release section for the full release notes: https://github.com/HotCakeX/Harden-Windows-Security/releases
+✅ The Font Families list in the Settings page is now sorted alphabetically, making it easier to find the font name you're looking for.
 
+✅ Improved localization.
+
+✅ The Get Code Integrity Hashes page now supports dragging files onto it and dropping them there to calculate their hashes. (Available only when the app running unelevated)
+
+✅ In the Simulation page, replaced the "Save output to CSV" option with "Export to JSON". JSON is a more structured format and exporting to JSON is a lot faster due to source generated serializers. This also aligns with other export options in the app because they all use JSON as the output format.
+
+✅ Whenever you select an item by browsing for it, the button responsible for it will have a distinct shadow around it and its text will be changed to "Selected" (localized), indicating that you've selected that item. Completes this feature request. As a reminder, you can always review the items you've selected and clear your selections by right-clicking or tap + holding on the button.
+
+✅ For more, please visit the GitHub releases section.

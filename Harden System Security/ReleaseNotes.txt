@@ -1,13 +1,9 @@
-🛼 The following features have been ported from the Harden Windows Security module to the new app.
+✅ Updated the dependencies to the latest versions, including major ones such as .NET SDK and Windows App SDK.
 
-✅ Added Secure SSH MACs security measure to the Miscellaneous Category.
+✅ Added icons to more areas that didn't have one, helping with discoverability and usability.
 
-✅ Added Custom Event Viewer views to the Miscellaneous Category.
+✅ Activated additional thorough analyzers for the Harden System Security app, enabling early detection of more possible issues during compilation.
 
-✅ Added Auditing and tracking Lock Screen Locks and Unlocks to the Miscellaneous Category.
+✅ Aligned the update availability experience in the Harden System Security app with the one in AppControl Manager. Now, when an update is available, you'll see a small icon on the lower left corner on the Update page's icon, informing you that there is a new version available. As a reminder, you can turn off auto-update check in the Update page by simply toggling a button.
 
-💈Other Changes
-
-☑️ Removed Manifest V2 enforcement policy from the Edge Category.
-
-☑️ Fixed an issue within ComManager component that was preventing some WMI calls from completing successfully.
+✅ Improved the design of UI elements that show the total count of items in each list view. They now have a more sophisticated and consistent design across the entire app and show the count of the data instantly without any delay, so if there was even a few milliseconds delay before, it's not there anymore.

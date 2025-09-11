@@ -169,9 +169,18 @@
 
     <!-- Only for Debug -->
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		
         <EnableXAMLDiagnostics>true</EnableXAMLDiagnostics>
         <NuGetAudit>false</NuGetAudit>
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+	    <!--
+            https://learn.microsoft.com/visualstudio/code-quality/disable-code-analysis
+            This project utilizes extensive and comprehensive analyzers that can take a lot of time to complete.
+            So we disable them for debug/design time and only run them during release configuration.
+        -->
+        <RunAnalyzers>false</RunAnalyzers>
+		
     </PropertyGroup>
 
     <!-- Only for Release -->

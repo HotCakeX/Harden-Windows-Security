@@ -139,12 +139,6 @@ internal sealed class SimulationOutput(
 	/// </summary>
 	[JsonInclude]
 	internal string? FilePath => filePath;
-
-	/// <summary>
-	/// Reference for the ViewModel's class
-	/// </summary>
-	[JsonIgnore]
-	internal SimulationVM? ParentViewModelSimulationVM { get; set; }
 }
 
 /// <summary>

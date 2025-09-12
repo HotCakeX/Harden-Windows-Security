@@ -45,7 +45,7 @@
                 Message="You can configure the following details in the app settings once, eliminating the need to enter them repeatedly"
                 Severity="Informational">
                 <InfoBar.ActionButton>
-                    <Button x:Uid="GoToSettingsButton" Click="OpenAppSettingsButton_Click" />
+                    <Button x:Uid="GoToSettingsButton" Click="{x:Bind OpenAppSettingsButton_Click}" />
                 </InfoBar.ActionButton>
             </InfoBar>
 
@@ -77,11 +77,11 @@
                     <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10">
 
                         <AutoSuggestBox x:Name="CertificateCommonNameAutoSuggestBox"
-                           MaxWidth="700"
-                            QueryIcon="Find"
-                            GotFocus="CertificateCommonNameAutoSuggestBox_GotFocus"
-                            TextChanged="CertificateCNAutoSuggestBox_TextChanged"
-                            PlaceholderText="Find Certificate Common Names"/>
+                                        MaxWidth="700"
+                                        QueryIcon="Find"
+                                        GotFocus="{x:Bind CertificateCommonNameAutoSuggestBox_GotFocus}"
+                                        TextChanged="{x:Bind CertificateCNAutoSuggestBox_TextChanged}"
+                                        PlaceholderText="Find Certificate Common Names"/>
 
                     </controls:WrapPanel>
 
@@ -108,9 +108,11 @@
 
             <controls:WrapPanel Grid.Row="3" Orientation="Vertical" HorizontalSpacing="10" VerticalSpacing="10" Margin="10,15,10,0" HorizontalAlignment="Center">
 
-                <Button HorizontalAlignment="Center" ToolTipService.ToolTip="Verify the settings before submitting them"
-                    Click="{x:Bind VerifyButton_Click}"
-                    x:Name="VerifyButton">
+                <Button HorizontalAlignment="Center"
+                        ToolTipService.ToolTip="Verify the settings before submitting them"
+                        Click="{x:Bind VerifyButton_Click}"
+                        Loaded="{x:Bind VerifyButton_Loaded}"
+                        x:Name="VerifyButton">
 
                     <Button.Content>
                         <StackPanel Orientation="Horizontal" Padding="10,5,10,5">

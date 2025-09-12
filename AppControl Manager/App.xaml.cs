@@ -668,6 +668,9 @@ public partial class App : Application
 			}
 		}
 
+		// Dispose of disposable ViewModels on App exist
+		ViewModelProvider.DisposeCreatedViewModels();
+
 		// Release the Mutex
 		_mutex?.Dispose();
 	}

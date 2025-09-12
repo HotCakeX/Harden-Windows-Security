@@ -35,7 +35,7 @@ namespace AppControlManager.Main;
 internal static partial class BasePolicyCreator
 {
 
-	private static MainWindowVM ViewModel { get; } = ViewModelProvider.MainWindowVM;
+	private static MainWindowVM ViewModel => ViewModelProvider.MainWindowVM;
 
 	/// <summary>
 	/// Creates scheduled task that keeps the Microsoft recommended driver block rules up to date on the system

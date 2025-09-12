@@ -35,9 +35,9 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager
 
 	internal DeploymentPage()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = this;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = this;
 	}
 
 	#region Augmentation Interface

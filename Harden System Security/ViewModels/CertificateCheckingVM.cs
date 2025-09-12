@@ -523,7 +523,6 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 					foreach (NonStlRootCert cert in nonStlRootCerts)
 					{
-						cert.VMRef = this; // Add reference to this VM so we can access it in the XAML
 						AllNonStlCertificates.Add(cert);
 						NonStlCertificates.Add(cert);
 					}
@@ -591,7 +590,6 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 				{
 					foreach (NonStlRootCert cert in allCertificates)
 					{
-						cert.VMRef = this; // Add reference to this VM so we can access it in the XAML
 						AllNonStlCertificates.Add(cert);
 						NonStlCertificates.Add(cert);
 					}

@@ -22,7 +22,7 @@ namespace AppControlManager.AppSettings;
 // Custom EventArgs class for navigation view location changes
 internal sealed class NavigationViewLocationChangedEventArgs(string newLocation) : EventArgs
 {
-	internal string NewLocation { get; } = newLocation;
+	internal string NewLocation => newLocation;
 }
 
 internal static class NavigationViewLocationManager

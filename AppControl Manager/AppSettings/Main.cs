@@ -17,6 +17,7 @@
 
 using System;
 using System.Threading;
+using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
@@ -72,6 +73,7 @@ internal sealed partial class Main : ViewModelBase
 		LinkPreviewsForSecurityMeasure = ReadValue(nameof(LinkPreviewsForSecurityMeasure), LinkPreviewsForSecurityMeasure);
 		AutoResizeListViewColumns = ReadValue(nameof(AutoResizeListViewColumns), AutoResizeListViewColumns);
 		ListViewFontFamily = ReadValue(nameof(ListViewFontFamily), ListViewFontFamily);
+		SelectedSignInMethodForMSGraph = ReadValue(nameof(SelectedSignInMethodForMSGraph), SelectedSignInMethodForMSGraph);
 	}
 
 	/// <summary>
@@ -514,4 +516,20 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = "Segoe UI"; // https://github.com/MicrosoftDocs/winapps-winrt-api/blob/docs//microsoft.ui.xaml.media/fontfamily_xamlautofontfamily.md
+
+
+	/// <summary>
+	/// The selected sign-in method for Microsoft Graph authentication in ComboBox.
+	/// </summary>
+	internal int SelectedSignInMethodForMSGraph
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(SelectedSignInMethodForMSGraph), field);
+			}
+		}
+	} = (int)SignInMethods.WebBrowser;
 }

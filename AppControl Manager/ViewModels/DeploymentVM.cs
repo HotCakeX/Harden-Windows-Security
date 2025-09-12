@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
+using AppControlManager.Pages;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
@@ -33,10 +34,8 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
-internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
+internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDisposable
 {
-	internal ViewModelForMSGraph ViewModelMSGraph { get; } = ViewModelProvider.ViewModelForMSGraph;
-
 	internal DeploymentVM()
 	{
 		MainInfoBar = new InfoBarSettings(
@@ -51,8 +50,6 @@ internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value), AuthenticationContext.Intune);
-
-		ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
 
 		if (GlobalVars.IsOlderThan24H2)
 		{
@@ -77,17 +74,12 @@ internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
 
 	internal string LocalOnlineStatusText { get; set => SP(ref field, value); } = GlobalVars.GetStr("LocalDeploymentActive");
 
-	/// <summary>
-	/// Bound to the UI ListView and holds the Intune group Names/IDs
-	/// </summary>
-	internal readonly ObservableCollection<IntuneGroupItemListView> GroupNamesCollection = [];
-
 	internal readonly UniqueStringObservableCollection XMLFiles = [];
 	internal readonly UniqueStringObservableCollection SignedXMLFiles = [];
 	internal readonly UniqueStringObservableCollection CIPFiles = [];
 	internal readonly UniqueStringObservableCollection XMLFilesToConvertToCIP = [];
 
-	internal readonly AuthenticationCompanion AuthCompanionCLS;
+	public AuthenticationCompanion AuthCompanionCLS { get; private set; }
 
 	internal bool DeploySignedXMLButtonIsEnabled { get; set => SP(ref field, value); }
 
@@ -99,7 +91,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Determines whether the UI elements are enabled or disabled.
 	/// </summary>
-	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
+	public bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
 	/// Determines whether the online features related to Online are enabled or disabled.
@@ -123,6 +115,17 @@ internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
 	}
 
 	/// <summary>
+	/// The groups to assign the policy to.
+	/// They are selected in the IntuneDeploymentDetails page and stored here for usage.
+	/// </summary>
+	internal static readonly List<IntuneGroupItemListView> SelectedIntuneGroups = [];
+
+	/// <summary>
+	/// Used to display the number of selected groups in the UI.
+	/// </summary>
+	internal int SelectedIntuneGroupsCount => SelectedIntuneGroups.Count;
+
+	/// <summary>
 	/// Controls the visibility of the Main progress bar.
 	/// </summary>
 	internal Visibility MainProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
@@ -130,10 +133,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Event handler to clear the list of XML files that are only converted to CIP files
 	/// </summary>
-	internal void BrowseForXMLPolicesButton_Flyout_Clear_Click()
-	{
-		XMLFilesToConvertToCIP.Clear();
-	}
+	internal void BrowseForXMLPolicesButton_Flyout_Clear_Click() => XMLFilesToConvertToCIP.Clear();
 
 	/// <summary>
 	/// Event handler for browse button - Unsigned XML files
@@ -227,14 +227,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
 		DeployToIntune = on;
 		AreOnlineFeaturesEnabled = on;
 		LocalOnlineStatusText = on ? GlobalVars.GetStr("CloudDeploymentActive") : GlobalVars.GetStr("LocalDeploymentActive");
-
-		// If online features are turned off, clear the list of Intune groups
-		if (!on)
-		{
-			GroupNamesCollection.Clear();
-		}
 	}
-
 
 	/// <summary>
 	/// Deploy unsigned XML files button
@@ -347,27 +340,15 @@ internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
 	/// <returns>This method does not return a value.</returns>
 	private async Task DeployToIntunePrivate(string file, string policyID, string? xmlFile = null)
 	{
-		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Deployment_IntuneGroupsListView);
+
+		if (AuthCompanionCLS.CurrentActiveAccount is null)
+		{
+			MainInfoBar.WriteWarning(GlobalVars.GetStr("SignInAuthenticationRequiredMsg"));
+			return;
+		}
 
 		try
 		{
-			// ID(s) of the groups to assign the policy to
-			List<string> groupIDs = [];
-
-			if (lv is not null)
-			{
-				await Dispatcher.EnqueueAsync(() =>
-				{
-					foreach (var item in lv.SelectedItems)
-					{
-						// Get the group name
-						IntuneGroupItemListView _item = (IntuneGroupItemListView)item;
-
-						groupIDs.Add(_item.GroupID);
-					}
-				});
-			}
-
 			// Name of the policy that will be uploaded
 			string? policyName = null;
 
@@ -403,7 +384,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
 
 			});
 
-			await MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, groupIDs, policyName, policyID, descriptionText);
+			await MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, SelectedIntuneGroups.Select(x => x.GroupID).ToList(), policyName, policyID, descriptionText);
 		}
 		catch (Exception ex)
 		{
@@ -627,37 +608,16 @@ internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
 		}
 	}
 
-
 	/// <summary>
-	/// Handles the click event for the Refresh Intune Groups button. It fetches groups from Microsoft Graph and updates
-	/// the ListView with group names.
+	/// Event handler for the Select Groups button.
 	/// </summary>
-	internal async void RefreshIntuneGroupsButton_Click()
+	internal void SelectGroups_Click()
 	{
-		try
-		{
-			AreOnlineFeaturesEnabled = false;
+		// Assign the current signed in account to the viewmodel to make it available for usage.
+		IntuneDeploymentDetailsVM.TargetAccount = AuthCompanionCLS.CurrentActiveAccount;
 
-			Dictionary<string, string> groups = await MicrosoftGraph.Main.FetchGroups(AuthCompanionCLS.CurrentActiveAccount);
-
-			GroupNamesCollection.Clear();
-
-			// Update the ListView with group names
-			foreach (KeyValuePair<string, string> item in groups)
-			{
-				GroupNamesCollection.Add(new IntuneGroupItemListView(item.Key, item.Value));
-			}
-		}
-		catch (Exception ex)
-		{
-			MainInfoBar.WriteError(ex);
-		}
-		finally
-		{
-			AreOnlineFeaturesEnabled = true;
-		}
+		ViewModelProvider.NavigationService.Navigate(typeof(IntuneDeploymentDetails), null);
 	}
-
 
 	/// <summary>
 	/// Handles the click event for converting XML files to CIP format.
@@ -726,14 +686,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IDisposable
 
 	public void Dispose()
 	{
-		try
-		{
-			// Unsubscribe from the collection changed event to prevent memory leaks
-			ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged -= AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
-		}
-		catch { }
-
 		// Dispose the AuthenticationCompanion which implements IDisposable
-		AuthCompanionCLS?.Dispose();
+		AuthCompanionCLS.Dispose();
 	}
 }

@@ -17,6 +17,7 @@
 
 using System;
 using System.Threading;
+using AppControlManager.Others;
 using HardenSystemSecurity.WindowComponents;
 using Windows.Storage;
 
@@ -157,4 +158,17 @@ internal static class ViewModelProvider
 	internal static Microsoft365AppsSecurityBaselineVM Microsoft365AppsSecurityBaselineVM => _microsoft365AppsSecurityBaselineVM.Value;
 	internal static MicrosoftBaseLinesOverridesVM MicrosoftBaseLinesOverridesVM => _microsoftBaseLinesOverridesVM.Value;
 	internal static AuditPoliciesVM AuditPoliciesVM => _auditPoliciesVM.Value;
+
+
+	/// <summary>
+	/// Disposes only those instances that were actually created during the app lifetime and implement <see cref="IDisposable"/>
+	/// </summary>
+	internal static void DisposeCreatedViewModels()
+	{
+		try
+		{
+			if (_logsVM.IsValueCreated) _logsVM.Value.Dispose();
+		}
+		catch { }
+	}
 }

@@ -26,7 +26,7 @@
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
-                    <ProgressRing x:Name="SelectLogsProgressRing" Visibility="Collapsed" IsActive="False" />
+                    <ProgressRing Visibility="Collapsed" IsActive="False" />
 
                     <DropDownButton x:Uid="ExtraActionsDropDownButton">
                         <DropDownButton.ContentTemplate>
@@ -172,30 +172,30 @@
 
             <!-- DataTemplate for ListView items -->
             <customUI:ListViewV2.ItemTemplate>
-                <DataTemplate x:DataType="intelgathering:FileIdentity">
+                <DataTemplate x:DataType="intelgathering:FileIdentity" xmlns:VMs="using:AppControlManager.ViewModels">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem x:Uid="OpenInFileExplorer" Click="{x:Bind ParentViewModelAllowNewApps._OpenInFileExplorer_LocalFiles}">
+                                <MenuFlyoutItem x:Uid="OpenInFileExplorer" Click="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM._OpenInFileExplorer_LocalFiles}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="O" Modifiers="Control" Invoked="{x:Bind ParentViewModelAllowNewApps._OpenInFileExplorerShortCut_LocalFiles}"/>
+                                        <KeyboardAccelerator Key="O" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM._OpenInFileExplorerShortCut_LocalFiles}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xEC50;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind ParentViewModelAllowNewApps.ListViewFlyoutMenuDelete_Click_LocalFiles}">
+                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ListViewFlyoutMenuDelete_Click_LocalFiles}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE74D;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModelAllowNewApps.ListViewFlyoutMenuCopy_Click_LocalFiles}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ListViewFlyoutMenuCopy_Click_LocalFiles}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModelAllowNewApps.CtrlC_Invoked_LocalFiles}"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.CtrlC_Invoked_LocalFiles}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
@@ -324,43 +324,43 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles6, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles7, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles8, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles9, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles10, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles11, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles12, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles13, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles14, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles15, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles16, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles17, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelAllowNewApps.ColumnWidthLocalFiles18, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles11, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles12, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles13, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles14, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles15, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles16, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles17, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.ColumnWidthLocalFiles18, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind FileName}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                        <TextBlock Text="{x:Bind SignatureStatus}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                        <TextBlock x:Phase="1" Text="{x:Bind OriginalFileName}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                        <TextBlock x:Phase="1" Text="{x:Bind InternalName}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                        <TextBlock x:Phase="1" Text="{x:Bind FileDescription}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                        <TextBlock x:Phase="1" Text="{x:Bind ProductName}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
-                        <TextBlock x:Phase="2" Text="{x:Bind FileVersion}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
-                        <TextBlock x:Phase="3" Text="{x:Bind PackageFamilyName}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
-                        <TextBlock x:Phase="4" Text="{x:Bind SHA256Hash}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
-                        <TextBlock x:Phase="4" Text="{x:Bind SHA1Hash}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
-                        <TextBlock x:Phase="3" Text="{x:Bind SISigningScenario}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
-                        <TextBlock x:Phase="3" Text="{x:Bind FilePath}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
-                        <TextBlock x:Phase="4" Text="{x:Bind SHA1PageHash}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
-                        <TextBlock x:Phase="4" Text="{x:Bind SHA256PageHash}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
-                        <TextBlock x:Phase="2" Text="{x:Bind HasWHQLSigner}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
-                        <TextBlock x:Phase="3" Text="{x:Bind FilePublishersToDisplay}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="15"/>
-                        <TextBlock x:Phase="2" Text="{x:Bind IsECCSigned}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="16"/>
-                        <TextBlock x:Phase="2" Text="{x:Bind Opus}" FontFamily="{x:Bind ParentViewModelAllowNewApps.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="17"/>
+                        <TextBlock Text="{x:Bind FileName}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                        <TextBlock Text="{x:Bind SignatureStatus}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind OriginalFileName}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind InternalName}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind FileDescription}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind ProductName}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind FileVersion}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind PackageFamilyName}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA256Hash}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA1Hash}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind SISigningScenario}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind FilePath}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA1PageHash}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA256PageHash}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind HasWHQLSigner}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind FilePublishersToDisplay}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="15"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind IsECCSigned}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="16"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind Opus}" FontFamily="{x:Bind VMs:ViewModelProvider.AllowNewAppsVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="17"/>
                     </Grid>
                 </DataTemplate>
             </customUI:ListViewV2.ItemTemplate>

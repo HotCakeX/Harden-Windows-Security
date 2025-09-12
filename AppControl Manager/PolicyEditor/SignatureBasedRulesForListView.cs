@@ -31,7 +31,6 @@ namespace AppControlManager.PolicyEditor;
 /// <param name="id">Contains a unique identifier for the signature-based rule.</param>
 /// <param name="sourceType">Defines the type of source for the signature-based rule.</param>
 /// <param name="source">Stores the actual source object related to the rule.</param>
-/// <param name="parentViewModel">References the parent view model for accessing variables in the Policy Editor.</param>
 internal sealed class SignatureBasedRulesForListView(
 	string? certRoot,
 	string? certEKU,
@@ -41,8 +40,7 @@ internal sealed class SignatureBasedRulesForListView(
 	string? name,
 	string? id,
 	SignatureBasedRuleType sourceType,
-	object source,
-	PolicyEditorVM parentViewModel
+	object source
 	)
 {
 	internal string? CertRoot => certRoot;
@@ -54,8 +52,4 @@ internal sealed class SignatureBasedRulesForListView(
 	internal string? Id => id;
 	internal SignatureBasedRuleType SourceType => sourceType;
 	internal object Source => source;
-
-	// A property for the parent view model of the Policy Editor page to store a reference to it
-	// so we can access the variables in the View Model class via compiled binding in XAML.
-	internal PolicyEditorVM ParentViewModel => parentViewModel;
 }

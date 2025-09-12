@@ -630,4 +630,55 @@ internal static partial class ListViewHelper
 			["InstallLocation"] = (GlobalVars.GetStr("PFNInstallLocation/Text"), app => app.InstallLocation),
 			["FullName"] = (GlobalVars.GetStr("PFNFullNameLabel/Text"), app => app.FullName)
 		}.ToFrozenDictionary();
+
+
+	#region Header Resource And Property Keys For Incremental Collections Controllers
+
+	// FilesAndFolders sections of the Supplemental And Deny policy creations use the same exact columns/properties.
+	internal static readonly string[] SupplementalAndDenyPolicyCreationHeaderResourceKeys =
+	[
+		"FileNameHeader/Text",
+		"SignatureStatusHeader/Text",
+		"OriginalFileNameHeader/Text",
+		"InternalNameHeader/Text",
+		"FileDescriptionHeader/Text",
+		"ProductNameHeader/Text",
+		"FileVersionHeader/Text",
+		"PackageFamilyNameHeader/Text",
+		"SHA256HashHeader/Text",
+		"SHA1HashHeader/Text",
+		"SigningScenarioHeader/Text",
+		"FilePathHeader/Text",
+		"SHA1PageHashHeader/Text",
+		"SHA256PageHashHeader/Text",
+		"HasWHQLSignerHeader/Text",
+		"FilePublishersHeader/Text",
+		"IsECCSignedHeader/Text",
+		"OpusDataHeader/Text"
+	];
+
+	internal static readonly string[] SupplementalAndDenyPolicyCreationPropertyKeys =
+	[
+		"FileName",
+		"SignatureStatus",
+		"OriginalFileName",
+		"InternalName",
+		"FileDescription",
+		"ProductName",
+		"FileVersion",
+		"PackageFamilyName",
+		"SHA256Hash",
+		"SHA1Hash",
+		"SISigningScenario",
+		"FilePath",
+		"SHA1PageHash",
+		"SHA256PageHash",
+		"HasWHQLSigner",
+		"FilePublishersToDisplay",
+		"IsECCSigned",
+		"Opus"
+	];
+
+	#endregion
+
 }

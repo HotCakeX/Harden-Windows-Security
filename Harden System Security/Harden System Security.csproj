@@ -74,7 +74,7 @@
 
         <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
         <GenerateTestArtifacts>True</GenerateTestArtifacts>
-        
+
         <!-- We create the bundle ourselves -->
         <AppxBundle>Never</AppxBundle>
 
@@ -172,7 +172,7 @@
 
     <!-- Only for Debug -->
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-		
+
         <EnableXAMLDiagnostics>true</EnableXAMLDiagnostics>
         <NuGetAudit>false</NuGetAudit>
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
@@ -183,7 +183,7 @@
             So we disable them for debug/design time and only run them during release configuration.
         -->
         <RunAnalyzers>false</RunAnalyzers>
-		
+
     </PropertyGroup>
 
     <!-- Only for Release -->

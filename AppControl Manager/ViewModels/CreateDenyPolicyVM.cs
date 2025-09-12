@@ -81,7 +81,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 		LVController = new(
 			registryKey: ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults,
-			applyWidthCallback: (int index, double width) =>
+			applyWidthCallback: (index, width) =>
 			{
 				switch (index)
 				{
@@ -114,8 +114,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				ColumnWidth11.Value, ColumnWidth12.Value, ColumnWidth13.Value, ColumnWidth14.Value, ColumnWidth15.Value,
 				ColumnWidth16.Value, ColumnWidth17.Value, ColumnWidth18.Value
 			},
-			headerResourceKeys: headerResourceKeys,
-			columnPropertyKeys: propertyKeys
+			headerResourceKeys: ListViewHelper.SupplementalAndDenyPolicyCreationHeaderResourceKeys,
+			columnPropertyKeys: ListViewHelper.SupplementalAndDenyPolicyCreationPropertyKeys
 		);
 
 		// Run header-only pass once during VM construction so headers are sized before any data loads.
@@ -125,50 +125,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	#region Files and Folders scan
 
 	internal readonly ListViewIncrementalController LVController;
-
-	private static readonly string[] headerResourceKeys =
-	[
-		"FileNameHeader/Text",
-		"SignatureStatusHeader/Text",
-		"OriginalFileNameHeader/Text",
-		"InternalNameHeader/Text",
-		"FileDescriptionHeader/Text",
-		"ProductNameHeader/Text",
-		"FileVersionHeader/Text",
-		"PackageFamilyNameHeader/Text",
-		"SHA256HashHeader/Text",
-		"SHA1HashHeader/Text",
-		"SigningScenarioHeader/Text",
-		"FilePathHeader/Text",
-		"SHA1PageHashHeader/Text",
-		"SHA256PageHashHeader/Text",
-		"HasWHQLSignerHeader/Text",
-		"FilePublishersHeader/Text",
-		"IsECCSignedHeader/Text",
-		"OpusDataHeader/Text"
-	];
-
-	private static readonly string[] propertyKeys =
-	[
-		"FileName",
-		"SignatureStatus",
-		"OriginalFileName",
-		"InternalName",
-		"FileDescription",
-		"ProductName",
-		"FileVersion",
-		"PackageFamilyName",
-		"SHA256Hash",
-		"SHA1Hash",
-		"SISigningScenario",
-		"FilePath",
-		"SHA1PageHash",
-		"SHA256PageHash",
-		"HasWHQLSigner",
-		"FilePublishersToDisplay",
-		"IsECCSigned",
-		"Opus"
-	];
 
 	/// <summary>
 	/// Whether the UI elements for Files and Folders section are enabled or disabled.
@@ -268,12 +224,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	{
 		string key = (string)((Button)sender).Tag;
 		LVController.SortByHeader(key, FilesAndFoldersScanResultsSearchTextBox);
-	}
-
-	internal void CopyToClipboard_Click(object sender, RoutedEventArgs e)
-	{
-		string key = (string)((MenuFlyoutItem)sender).Tag;
-		LVController.CopySingleCell(key);
 	}
 
 	/// <summary>
@@ -384,13 +334,10 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					// Scan all of the detected files from the user selected directories
-					// Add the reference to the ViewModel class to the item so we can use it for navigation from the XAML
 					LocalFilesResults = LocalFilesScan.Scan(
 						DetectedFilesInSelectedDirectories,
 						(ushort)FilesAndFoldersProgressRingValue,
 						FilesAndFoldersProgressRingValueProgress,
-						this,
-						(fi, vm) => fi.ParentViewModelCreateDenyPolicyVM = vm,
 						FilesAndFoldersCancellableButton.Cts?.Token);
 
 					LVController.FullSource.Clear();
@@ -417,6 +364,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 						// This ensures the header grid columns get an immediate, sane size before/while the first page appears.
 						// Subsequent realization/scroll events will trigger debounced recalcs for smooth adjustments.
 						LVController.RecalculateVisibleColumnWidths();
+
+						LVController.NotifyFullSourceChanged();
 					});
 
 					_ = Dispatcher.TryEnqueue(() =>

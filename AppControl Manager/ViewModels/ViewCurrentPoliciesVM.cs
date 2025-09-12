@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -216,15 +217,12 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				policies = await Task.Run(() => CiToolHelper.GetPolicies(ShouldIncludeSystem, ShouldIncludeBase, ShouldIncludeSupplemental).Where(x => !string.Equals(x.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase)).ToList());
 			}
 
+			// Add all the retrieved policies to the list in class instance
+			AllPoliciesOutput.AddRange(policies);
+
 			// Store all of the policies in the ObservableCollection
 			foreach (CiPolicyInfo policy in policies)
 			{
-				// Attach the current instance of the ViewModel class to the object so we can use it in the XAML via compiled binding to find this ViewModel in the ItemTemplate of the ListView
-				policy.ParentViewModel = this;
-
-				// Add the retrieved policies to the list in class instance
-				AllPoliciesOutput.Add(policy);
-
 				// Add the retrieved policies to the ObservableCollection
 				AllPolicies.Add(policy);
 			}

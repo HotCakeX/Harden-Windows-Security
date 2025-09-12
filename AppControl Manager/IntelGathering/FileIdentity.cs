@@ -158,19 +158,6 @@ internal sealed class FileIdentity
 		.Where(signerInfo => !string.IsNullOrEmpty(signerInfo.OPUSInfo))
 		.Select(signerInfo => signerInfo.OPUSInfo));
 
-	// Properties for the parent view model of every page that hosts ListViews for FileIdentity.
-	// They store references to the view model classes so we can access them via compiled binding in XAML.
-	[JsonIgnore]
-	internal AllowNewAppsVM? ParentViewModelAllowNewApps { get; set; }
-	[JsonIgnore]
-	internal CreateDenyPolicyVM? ParentViewModelCreateDenyPolicyVM { get; set; }
-	[JsonIgnore]
-	internal CreateSupplementalPolicyVM? ParentViewModelCreateSupplementalPolicyVM { get; set; }
-	[JsonIgnore]
-	internal EventLogsPolicyCreationVM? ParentViewModelEventLogsPolicyCreationVM { get; set; }
-	[JsonIgnore]
-	internal MDEAHPolicyCreationVM? ParentViewModelMDEAHPolicyCreationVM { get; set; }
-
 	/// <summary>
 	/// Determines whether the specified object is equal to the current object.
 	/// Two <see cref="FileIdentity"/> instances are considered equal if each non-null property (excluding the parent view models and computed properties)
@@ -384,9 +371,7 @@ internal sealed class FileIdentity
 	WriteIndented = true
 )]
 [JsonSerializable(typeof(FileIdentity))]
-[JsonSerializable(typeof(FileIdentity[]))]
 [JsonSerializable(typeof(List<FileIdentity>))]
-[JsonSerializable(typeof(ObservableCollection<FileIdentity>))]
 internal sealed partial class FileIdentityJsonSerializationContext : JsonSerializerContext
 {
 }

@@ -1290,11 +1290,29 @@ dotnet_diagnostic.IL4000.severity = error
 # IL3000: Avoid accessing Assembly file path when publishing as a single file
 dotnet_diagnostic.IL3000.severity = error
 
+# CA1516: Use cross-platform intrinsics
+dotnet_diagnostic.CA1516.severity = error
+
+# CA1873: Avoid potentially expensive logging
+dotnet_diagnostic.CA1873.severity = error
+
+# CsWinRT1032: Collection expression not safe for WinRT
+dotnet_diagnostic.CsWinRT1032.severity = error
+
+# CsWinRT1034: Casts to WinRT runtime class types are not trim-safe
+dotnet_diagnostic.CsWinRT1034.severity = error
+
+# CsWinRT1035: Casts to WinRT 'IReference`1<T>' unboxed values are not trim-safe
+dotnet_diagnostic.CsWinRT1035.severity = error
+
+# CsWinRT1033: Cast to [ComImport] type not supported
+dotnet_diagnostic.CsWinRT1033.severity = error
+
 # All Code quality rule configuration options: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/code-quality-rule-options
-dotnet_code_quality.dispose_analysis_kind = AllPaths
-dotnet_code_quality.CA2000.interprocedural_analysis_kind = ContextSensitive
-dotnet_code_quality.CA2213.interprocedural_analysis_kind = ContextSensitive
-dotnet_code_quality.CA2000.points_to_analysis_kind = Complete
-dotnet_code_quality.CA2213.points_to_analysis_kind = Complete
+# dotnet_code_quality.dispose_analysis_kind = AllPaths
+# dotnet_code_quality.CA2000.interprocedural_analysis_kind = ContextSensitive
+# dotnet_code_quality.CA2213.interprocedural_analysis_kind = ContextSensitive
+# dotnet_code_quality.CA2000.points_to_analysis_kind = Complete
+# dotnet_code_quality.CA2213.points_to_analysis_kind = Complete
 # dotnet_code_quality.copy_analysis = true
 # dotnet_code_quality.try_determine_additional_string_formatting_methods_automatically = true

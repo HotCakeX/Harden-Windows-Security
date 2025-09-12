@@ -27,8 +27,8 @@ internal sealed partial class GetSecurePolicySettings : Page
 
 	internal GetSecurePolicySettings()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 }

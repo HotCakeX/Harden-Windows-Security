@@ -487,8 +487,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 			foreach (FileIdentity item in Output)
 			{
-				// Add a reference to the ViewModel class to each item so we can use it for navigation in the XAML
-				item.ParentViewModelEventLogsPolicyCreationVM = this;
 				FileIdentities.Add(item);
 			}
 

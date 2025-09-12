@@ -96,7 +96,7 @@ internal sealed partial class ButtonV2 : Button
 	/// If a Flyout is attached to this Button and it isn't open, shows it.
 	/// Returns true if there was a Flyout to show, false otherwise.
 	/// </summary>
-	private bool TryShowFlyout()
+	internal bool TryShowFlyout()
 	{
 		if (Flyout is Flyout flyout && !flyout.IsOpen)
 		{

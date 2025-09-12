@@ -34,11 +34,10 @@ using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
-internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
+internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthHost, IDisposable
 {
 
 	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
-	internal ViewModelForMSGraph ViewModelMSGraph { get; } = ViewModelProvider.ViewModelForMSGraph;
 
 	internal MDEAHPolicyCreationVM()
 	{
@@ -54,8 +53,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value), AuthenticationContext.MDEAdvancedHunting);
-
-		ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
 
 		// To adjust the initial width of the columns, giving them nice paddings.
 		CalculateColumnWidths();
@@ -108,7 +105,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 		AreElementsEnabled = on;
 	}
 
-	internal readonly AuthenticationCompanion AuthCompanionCLS;
+	public AuthenticationCompanion AuthCompanionCLS { get; private set; }
 
 	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
@@ -145,7 +142,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Determines whether the UI elements are enabled or disabled.
 	/// </summary>
-	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
+	public bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
 	/// Used to set default selected item for the SelectorBar and also maintain selected item between page navigations since we turned off cache.
@@ -566,9 +563,6 @@ DeviceEvents
 			// Store all of the data in the ObservableCollection
 			foreach (FileIdentity item in Output)
 			{
-				// Add a reference to the ViewModel class instance to every item
-				// so we can use it for navigation in the XAML
-				item.ParentViewModelMDEAHPolicyCreationVM = this;
 				FileIdentities.Add(item);
 			}
 
@@ -929,7 +923,6 @@ DeviceEvents
 				// Store all of the data in the ObservableCollection
 				foreach (FileIdentity item in Output)
 				{
-					item.ParentViewModelMDEAHPolicyCreationVM = this;
 					FileIdentities.Add(item);
 				}
 
@@ -999,15 +992,8 @@ DeviceEvents
 
 	public void Dispose()
 	{
-		try
-		{
-			// Unsubscribe from the collection changed event to prevent memory leaks
-			ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged -= AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
-		}
-		catch { }
-
 		// Dispose the AuthenticationCompanion which implements IDisposable
-		AuthCompanionCLS?.Dispose();
+		AuthCompanionCLS.Dispose();
 	}
 
 	/// <summary>

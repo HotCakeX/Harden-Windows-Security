@@ -67,7 +67,7 @@ internal static class AppControlSimulation
 	/// <param name="filePaths"></param>
 	/// <param name="folderPaths"></param>
 	/// <param name="xmlFilePath"></param>
-	/// <param name="noCatalogScanning"></param>
+	/// <param name="scanSecurityCatalogs"></param>
 	/// <param name="catRootPath"></param>
 	/// <param name="threadsCount"> The number of concurrent threads used to run the simulation </param>
 	/// <param name="progressReporter"></param>
@@ -79,7 +79,7 @@ internal static class AppControlSimulation
 		IReadOnlyCollection<string>? filePaths,
 		IReadOnlyCollection<string>? folderPaths,
 		string xmlFilePath,
-		bool noCatalogScanning,
+		bool scanSecurityCatalogs,
 		List<string>? catRootPath,
 		ushort threadsCount = 2,
 		IProgress<double>? progressReporter = null)
@@ -114,7 +114,7 @@ internal static class AppControlSimulation
 		// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
 		ConcurrentDictionary<string, string> AllSecurityCatalogHashes = [];
 
-		if (!noCatalogScanning)
+		if (scanSecurityCatalogs)
 		{
 			// Get the security catalog data to include in the scan
 			AllSecurityCatalogHashes = CatRootScanner.Scan(catRootPath, threadsCount);
@@ -364,7 +364,7 @@ internal static class AppControlSimulation
 								{
 									string? MatchedHashResult = null;
 
-									if (!noCatalogScanning)
+									if (scanSecurityCatalogs)
 									{
 										_ = AllSecurityCatalogHashes.TryGetValue(CurrentFilePathHashSHA1, out string? CurrentFilePathHashSHA1CatResult);
 										_ = AllSecurityCatalogHashes.TryGetValue(CurrentFilePathHashSHA256, out string? CurrentFilePathHashSHA256CatResult);
@@ -372,7 +372,7 @@ internal static class AppControlSimulation
 										MatchedHashResult = CurrentFilePathHashSHA1CatResult ?? CurrentFilePathHashSHA256CatResult;
 									}
 
-									if (!noCatalogScanning && MatchedHashResult is not null)
+									if (scanSecurityCatalogs && MatchedHashResult is not null)
 									{
 										AllFileSigners CatalogSignerDits = AllCertificatesGrabber.GetAllFileSigners(MatchedHashResult).First();
 

@@ -171,15 +171,15 @@
 
             <!-- DataTemplate for ListView items -->
             <customUI:ListViewV2.ItemTemplate>
-                <DataTemplate x:DataType="audit:AuditPolicyInfo">
+                <DataTemplate x:DataType="audit:AuditPolicyInfo" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMRef.CopySelectedPolicies_Click}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.CopySelectedPolicies_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMRef.CopySelectedPolicies_Click}"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.CopySelectedPolicies_Click}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
@@ -193,31 +193,31 @@
 
                                     <MenuFlyoutSubItem.Items>
 
-                                        <MenuFlyoutItem x:Uid="CategoryHeader" Tag="CategoryName" Click="{x:Bind VMRef.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="CategoryHeader" Tag="CategoryName" Click="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SubCategoryHeader" Tag="SubcategoryName" Click="{x:Bind VMRef.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="SubCategoryHeader" Tag="SubcategoryName" Click="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="AuditSettingHeader" Tag="AuditSettingDescription" Click="{x:Bind VMRef.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="AuditSettingHeader" Tag="AuditSettingDescription" Click="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="CategoryGUIDHeader" Tag="CategoryGuid" Click="{x:Bind VMRef.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="CategoryGUIDHeader" Tag="CategoryGuid" Click="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SubcategoryGUIDHeader" Tag="SubcategoryGuid" Click="{x:Bind VMRef.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="SubcategoryGUIDHeader" Tag="SubcategoryGuid" Click="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
@@ -231,11 +231,11 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind VMRef.ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMRef.ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMRef.ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMRef.ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMRef.ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.ColumnWidth5, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Text="{x:Bind CategoryName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
@@ -258,7 +258,7 @@
                                     Padding="0"
                                     VerticalAlignment="Center"
                                     Visibility="{x:Bind HasPendingChanges, Mode=OneWay}"
-                                    Click="{x:Bind VMRef.ApplyIndividualChange_Click}"
+                                    Click="{x:Bind VMs:ViewModelProvider.AuditPoliciesVM.ApplyIndividualChange_Click}"
                                     Tag="{x:Bind}"
                                     BorderThickness="1"
                                     BorderBrush="{ThemeResource AccentButtonBorderBrush}"

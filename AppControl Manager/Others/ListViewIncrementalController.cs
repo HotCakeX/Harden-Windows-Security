@@ -53,6 +53,16 @@ internal sealed partial class ListViewIncrementalController(
 	internal readonly List<FileIdentity> FullSource = [];
 
 	/// <summary>
+	/// Count of the <see cref="FullSource"/> bound to the UI.
+	/// </summary>
+	internal int FullSourceCount => FullSource.Count;
+
+	/// <summary>
+	/// Raise PropertyChanged so x:Bind updates the Total chip.
+	/// </summary>
+	internal void NotifyFullSourceChanged() => OnPropertyChanged(nameof(FullSourceCount));
+
+	/// <summary>
 	/// De-selects all of the displayed rows on the ListView
 	/// </summary>
 	internal void DeSelectAll_Click()
@@ -82,6 +92,8 @@ internal sealed partial class ListViewIncrementalController(
 
 		// Clear the backing full source list as well
 		FullSource.Clear();
+
+		NotifyFullSourceChanged();
 
 		// Recompute column widths (header-only now)
 		RecalculateVisibleColumnWidths();
@@ -279,7 +291,7 @@ internal sealed partial class ListViewIncrementalController(
 		if (ListViewRef is not null)
 			// Suppress smooth centering that is triggered by SelectionChanged during reorder (filtered sort only).
 			// Using 2 to be robust in case selection changes twice due to container recycling/realization.
-			((CustomUIElements.ListViewV4)ListViewRef).SuppressSelectionChanged(2);
+			((CustomUIElements.ListViewV2)ListViewRef).SuppressSelectionChanged(2);
 
 		// Sort via incremental-aware path (keeps full source sorted; reorders filtered subset in-place).
 		if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
@@ -896,4 +908,10 @@ internal sealed partial class ListViewIncrementalController(
 	}
 
 	#endregion
+
+	internal void CopyToClipboard_Click(object sender, RoutedEventArgs e)
+	{
+		string key = (string)((MenuFlyoutItem)sender).Tag;
+		CopySingleCell(key);
+	}
 }

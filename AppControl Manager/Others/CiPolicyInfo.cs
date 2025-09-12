@@ -130,19 +130,6 @@ internal sealed class CiPolicyInfo(
 	internal string? IntunePolicyObjectID { get; set; }
 
 	/// <summary>
-	/// A reference to the parent view model for accessing compiled binding in XAML.
-	/// </summary>
-	[JsonIgnore]
-	internal ViewCurrentPoliciesVM? ParentViewModel { get; set; }
-
-	/// <summary>
-	/// A reference to the parent view model for accessing compiled binding in XAML.
-	/// For Online policies.
-	/// </summary>
-	[JsonIgnore]
-	internal ViewOnlinePoliciesVM? OnlineParentViewModel { get; set; }
-
-	/// <summary>
 	/// Serializes the given <see cref="CiPolicyInfo"/> instance to a JSON string using source-generated JSON.
 	/// </summary>
 	/// <param name="policy">The policy instance to serialize.</param>

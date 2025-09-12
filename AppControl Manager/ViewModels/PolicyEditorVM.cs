@@ -542,8 +542,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: allowRule.AllowElement.FilePath,
 						type: null,
 						sourceType: PolicyEditor.FileBasedRuleType.Allow,
-						source: allowRule,
-						parentViewModel: this
+						source: allowRule
 					);
 
 					FileRulesCollection.Add(temp1);
@@ -574,8 +573,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: denyRule.DenyElement.FilePath,
 						type: null,
 						sourceType: PolicyEditor.FileBasedRuleType.Deny,
-						source: denyRule,
-						parentViewModel: this
+						source: denyRule
 					);
 
 					FileRulesCollection.Add(temp2);
@@ -606,8 +604,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: fileRule.FileRuleElement.FilePath,
 						type: fileRule.FileRuleElement.Type.ToString(),
 						sourceType: PolicyEditor.FileBasedRuleType.FileRule,
-						source: fileRule,
-						parentViewModel: this
+						source: fileRule
 					);
 
 					FileRulesCollection.Add(temp3);
@@ -643,8 +640,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: item.FilePath,
 						type: null,
 						sourceType: PolicyEditor.FileBasedRuleType.CompoundPublisher,
-						source: item,
-						parentViewModel: this
+						source: item
 					);
 
 					FileRulesCollection.Add(temp4);
@@ -697,8 +693,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							name: sig.SignerElement.Name,
 							id: sig.SignerElement.ID,
 							sourceType: PolicyEditor.SignatureBasedRuleType.Signer,
-							source: sig,
-							parentViewModel: this
+							source: sig
 						);
 
 						SignatureRulesCollection.Add(temp6);
@@ -722,8 +717,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							name: sig.SignerElement.Name,
 							id: sig.SignerElement.ID,
 							sourceType: PolicyEditor.SignatureBasedRuleType.WHQLPublisher,
-							source: sig,
-							parentViewModel: this
+							source: sig
 						);
 
 						SignatureRulesCollection.Add(temp7);
@@ -747,8 +741,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							name: sig.SignerElement.Name,
 							id: sig.SignerElement.ID,
 							sourceType: PolicyEditor.SignatureBasedRuleType.UpdatePolicySigner,
-							source: sig,
-							parentViewModel: this
+							source: sig
 						);
 
 						SignatureRulesCollection.Add(temp8);
@@ -772,8 +765,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							name: sig.SignerElement.Name,
 							id: sig.SignerElement.ID,
 							sourceType: PolicyEditor.SignatureBasedRuleType.SupplementalPolicySigner,
-							source: sig,
-							parentViewModel: this
+							source: sig
 						));
 					}
 

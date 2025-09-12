@@ -34,8 +34,8 @@ internal sealed partial class CodeIntegrityInfo : Page
 	/// </summary>
 	internal CodeIntegrityInfo()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 }

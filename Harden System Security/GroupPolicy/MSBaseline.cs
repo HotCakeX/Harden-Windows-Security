@@ -93,12 +93,6 @@ internal sealed class VerificationResult(
 	[JsonPropertyName("Expected Value")]
 	internal string ExpectedValue => expectedValue;
 
-	[JsonIgnore]
-	internal MicrosoftSecurityBaselineVM? MicrosoftSecurityBaselineVMRef { get; set; }
-
-	[JsonIgnore]
-	internal Microsoft365AppsSecurityBaselineVM? Microsoft365AppsSecurityBaselineVMRef { get; set; }
-
 	/// <summary>
 	/// Property for StatusIndicator binding
 	/// </summary>
@@ -275,13 +269,6 @@ internal static class MSBaseline
 			{
 				List<VerificationResult> results = await VerifySecurityBaselinePolicies(extractedFiles, baselineRootPath, cancellationToken);
 				Logger.Write($"{baselineRootPath} {actionText} completed successfully");
-
-				// Adding references for ListView usage
-				foreach (VerificationResult item in results)
-				{
-					item.MicrosoftSecurityBaselineVMRef = microsoftSecurityBaselineVMRef;
-					item.Microsoft365AppsSecurityBaselineVMRef = microsoft365AppsSecurityBaselineVMRef;
-				}
 
 				return results;
 			}

@@ -22,7 +22,7 @@ namespace AppControlManager.AppSettings;
 // Custom EventArgs class for app theme changes
 internal sealed class AppThemeChangedEventArgs(string? newTheme) : EventArgs
 {
-	internal string? NewTheme { get; } = newTheme;
+	internal string? NewTheme => newTheme;
 }
 
 internal static class AppThemeManager

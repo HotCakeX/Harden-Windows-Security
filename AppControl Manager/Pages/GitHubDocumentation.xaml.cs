@@ -42,10 +42,10 @@ internal sealed partial class GitHubDocumentation : Page
 	/// </summary>
 	internal GitHubDocumentation()
 	{
-		this.InitializeComponent();
+		InitializeComponent();
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		NavigationCacheMode = NavigationCacheMode.Enabled;
 	}
 
 	/// <summary>

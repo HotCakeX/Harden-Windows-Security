@@ -31,7 +31,7 @@ internal static class Arbitrator
 {
 
 	// An array of SpecificFileNames
-	private static readonly List<string> specificFileNames = ["OriginalFileName", "InternalName", "ProductName", "Version", "FileDescription"];
+	private static readonly string[] specificFileNames = ["OriginalFileName", "InternalName", "ProductName", "Version", "FileDescription"];
 
 	/// <summary>
 	/// The method that compares the signer information from the App Control policy XML file with the certificate details of the signed file
@@ -202,8 +202,10 @@ internal static class Arbitrator
 										foreach (Dictionary<string, string> FileAttrib in CandidateFileAttrib)
 										{
 											// Loop over each SpecificFileName
-											foreach (string keyItem in specificFileNames)
+											for (int i = 0; i < specificFileNames.Length; i++)
 											{
+												string keyItem = specificFileNames[i];
+
 												if (ExtendedFileInfoDict.TryGetValue(keyItem, out string? FileInfoProperty) &&
 												 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
 												 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
@@ -439,8 +441,10 @@ internal static class Arbitrator
 									foreach (Dictionary<string, string> FileAttrib in CandidateFileAttrib)
 									{
 										// Loop over each SpecificFileName
-										foreach (string keyItem in specificFileNames)
+										for (int i = 0; i < specificFileNames.Length; i++)
 										{
+											string keyItem = specificFileNames[i];
+
 											if (ExtendedFileInfoDict.TryGetValue(keyItem, out string? FileInfoProperty) &&
 											 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
 											 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))
@@ -671,8 +675,10 @@ internal static class Arbitrator
 							foreach (Dictionary<string, string> FileAttrib in CandidateFileAttrib)
 							{
 								// Loop over each SpecificFileName
-								foreach (string keyItem in specificFileNames)
+								for (int i = 0; i < specificFileNames.Length; i++)
 								{
+									string keyItem = specificFileNames[i];
+
 									if (ExtendedFileInfoDict.TryGetValue(keyItem, out string? FileInfoProperty) &&
 									 FileAttrib.TryGetValue(keyItem, out string? FileAttribProperty) &&
 									 string.Equals(FileInfoProperty, FileAttribProperty, StringComparison.OrdinalIgnoreCase))

@@ -35,8 +35,8 @@ internal sealed partial class Settings : Page
 
 	internal Settings()
 	{
-		this.InitializeComponent();
-		this.DataContext = this;
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
+		InitializeComponent();
+		DataContext = this;
+		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 }

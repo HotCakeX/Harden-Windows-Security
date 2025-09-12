@@ -651,15 +651,15 @@
 
                 <!-- DataTemplate for ListView items -->
                 <customUI:ListViewV2.ItemTemplate>
-                    <DataTemplate x:DataType="GP:RegistryPolicyEntry">
+                    <DataTemplate x:DataType="GP:RegistryPolicyEntry" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
                         <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                         <Grid Background="Transparent">
                             <Grid.ContextFlyout>
                                 <MenuFlyout>
 
-                                    <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind ParentVM.DeleteSelectedPolicies_Click}">
+                                    <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.DeleteSelectedPolicies_Click}">
                                         <MenuFlyoutItem.KeyboardAccelerators>
-                                            <KeyboardAccelerator Key="Delete" Invoked="{x:Bind ParentVM.DeleteSelectedPolicies_Click}"/>
+                                            <KeyboardAccelerator Key="Delete" Invoked="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.DeleteSelectedPolicies_Click}"/>
                                         </MenuFlyoutItem.KeyboardAccelerators>
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE74D;" />
@@ -668,9 +668,9 @@
 
                                     <MenuFlyoutSeparator />
 
-                                    <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentVM.CopySelectedPolicies_Click}">
+                                    <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.CopySelectedPolicies_Click}">
                                         <MenuFlyoutItem.KeyboardAccelerators>
-                                            <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentVM.CopySelectedPolicies_Click}"/>
+                                            <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.CopySelectedPolicies_Click}"/>
                                         </MenuFlyoutItem.KeyboardAccelerators>
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8C8;" />
@@ -684,49 +684,49 @@
 
                                         <MenuFlyoutSubItem.Items>
 
-                                            <MenuFlyoutItem x:Uid="KeynameHeader" Tag="KeyName" Click="{x:Bind ParentVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem x:Uid="KeynameHeader" Tag="KeyName" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.CopyPolicyProperty_Click}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8C8;" />
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
 
-                                            <MenuFlyoutItem x:Uid="ValueNameHeader" Tag="ValueName" Click="{x:Bind ParentVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem x:Uid="ValueNameHeader" Tag="ValueName" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.CopyPolicyProperty_Click}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8C8;" />
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
 
-                                            <MenuFlyoutItem x:Uid="ValueHeader" Tag="Value" Click="{x:Bind ParentVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem x:Uid="ValueHeader" Tag="Value" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.CopyPolicyProperty_Click}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8C8;" />
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
 
-                                            <MenuFlyoutItem x:Uid="CategoryHeader" Tag="Category" Click="{x:Bind ParentVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem x:Uid="CategoryHeader" Tag="Category" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.CopyPolicyProperty_Click}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8C8;" />
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
 
-                                            <MenuFlyoutItem x:Uid="SubCategoryHeader" Tag="SubCategory" Click="{x:Bind ParentVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem x:Uid="SubCategoryHeader" Tag="SubCategory" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.CopyPolicyProperty_Click}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8C8;" />
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
 
-                                            <MenuFlyoutItem x:Uid="PolicyActionHeader" Tag="PolicyAction" Click="{x:Bind ParentVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem x:Uid="PolicyActionHeader" Tag="PolicyAction" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.CopyPolicyProperty_Click}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8C8;" />
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
 
-                                            <MenuFlyoutItem x:Uid="FriendlyNameHeader" Tag="FriendlyName" Click="{x:Bind ParentVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem x:Uid="FriendlyNameHeader" Tag="FriendlyName" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.CopyPolicyProperty_Click}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8C8;" />
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
 
-                                            <MenuFlyoutItem x:Uid="SizeHeader" Tag="Size" Click="{x:Bind ParentVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem x:Uid="SizeHeader" Tag="Size" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.CopyPolicyProperty_Click}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8C8;" />
                                                 </MenuFlyoutItem.Icon>
@@ -740,14 +740,14 @@
                             </Grid.ContextFlyout>
 
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="{x:Bind ParentVM.ColumnWidth1, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ParentVM.ColumnWidth2, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ParentVM.ColumnWidth3, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ParentVM.ColumnWidth4, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ParentVM.ColumnWidth5, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ParentVM.ColumnWidth6, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ParentVM.ColumnWidth7, Mode=OneWay}" />
-                                <ColumnDefinition Width="{x:Bind ParentVM.ColumnWidth8, Mode=OneWay}" />
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.ColumnWidth1, Mode=OneWay}" />
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.ColumnWidth2, Mode=OneWay}" />
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.ColumnWidth3, Mode=OneWay}" />
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.ColumnWidth4, Mode=OneWay}" />
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.ColumnWidth5, Mode=OneWay}" />
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.ColumnWidth6, Mode=OneWay}" />
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.ColumnWidth7, Mode=OneWay}" />
+                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.ColumnWidth8, Mode=OneWay}" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{x:Bind KeyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
                             <TextBlock Text="{x:Bind ValueName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>

@@ -27,8 +27,8 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 
 	internal CreateDenyPolicyFilesAndFoldersScanResults()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 }

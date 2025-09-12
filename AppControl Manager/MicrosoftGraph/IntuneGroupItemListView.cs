@@ -15,15 +15,53 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
+using AppControlManager.IntelGathering;
+
 namespace AppControlManager.MicrosoftGraph;
 
 /// <summary>
 /// Used to store Intune group Names/ID and is served as a DataType for ListViews that show them
 /// </summary>
-/// <param name="groupName"></param>
-/// <param name="groupID"></param>
-internal readonly struct IntuneGroupItemListView(string groupName, string groupID)
+internal sealed class IntuneGroupItemListView(
+	string groupName,
+	string groupID,
+	string? description,
+	string? securityIdentifier,
+	DateTime createdDateTime)
 {
+	[JsonInclude]
+	[JsonPropertyName("Name")]
 	internal string GroupName => groupName;
+
+	[JsonInclude]
+	[JsonPropertyName("ID")]
 	internal string GroupID => groupID;
+
+	[JsonInclude]
+	[JsonPropertyName("Description")]
+	internal string? Description => description;
+
+	[JsonInclude]
+	[JsonPropertyName("Security Identifier")]
+	internal string? SecurityIdentifier => securityIdentifier;
+
+	[JsonInclude]
+	[JsonPropertyName("creation Date")]
+	internal DateTime CreatedDateTime => createdDateTime;
+}
+
+/// <summary>
+/// JSON source generated context for <see cref="IntuneGroupItemListView"/> type.
+/// </summary>
+[JsonSourceGenerationOptions(
+	WriteIndented = true
+)]
+[JsonSerializable(typeof(IntuneGroupItemListView))]
+[JsonSerializable(typeof(List<IntuneGroupItemListView>))]
+internal sealed partial class IntuneGroupItemListViewJsonSerializationContext : JsonSerializerContext
+{
 }

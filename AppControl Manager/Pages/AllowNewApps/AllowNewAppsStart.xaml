@@ -178,11 +178,10 @@
                             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
                                        x:Uid="Step2TextBlock"
                                        Foreground="{ThemeResource SystemAccentColor}" />
-                            <ProgressRing
-                                Value="{x:Bind ViewModel.Step2ProgressRingValue,Mode=OneWay}"
-                                IsActive="{x:Bind ViewModel.Step2ProgressRingIsActive, Mode=OneWay}"
-                                IsIndeterminate="{x:Bind ViewModel.Step2ProgressRingIsIndeterminate, Mode=OneWay}"
-                                Margin="0,0,15,0"/>
+                            <ProgressRing Value="{x:Bind ViewModel.Step2ProgressRingValue,Mode=OneWay}"
+                                          IsActive="{x:Bind ViewModel.Step2ProgressRingIsActive, Mode=OneWay}"
+                                          IsIndeterminate="{x:Bind ViewModel.Step2ProgressRingIsIndeterminate, Mode=OneWay}"
+                                          Margin="0,0,15,0"/>
                         </controls:WrapPanel>
 
                         <TextBlock x:Uid="AllowNewAppsStep2Text" TextWrapping="WrapWholeWords" />

@@ -244,8 +244,6 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 	internal readonly ObservableCollection<BitLockerVolume> BitLockerVolumes = [];
 	private readonly List<BitLockerVolume> AllBitLockerVolumes = [];
 
-	internal string BitLockerTotalCount { get; private set => SP(ref field, value); } = "0";
-
 	internal bool BitLockerUiEnabled
 	{
 		get; set
@@ -426,26 +424,12 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 
 		foreach (BitLockerVolume v in volumes)
 		{
-			// assign VMRef to volume
-			v.VMRef = this;
-
-			// propagate VMRef to each KeyProtector so DataTemplates can call VM methods
-			if (v.KeyProtectors is not null && v.KeyProtectors.Count > 0)
-			{
-				for (int i = 0; i < v.KeyProtectors.Count; i++)
-				{
-					KeyProtector kp = v.KeyProtectors[i];
-					kp.VMRef = this;
-				}
-			}
-
 			BitLockerVolumes.Add(v);
 		}
 
 		AllBitLockerVolumes.Clear();
 		AllBitLockerVolumes.AddRange(volumes);
 
-		BitLockerTotalCount = BitLockerVolumes.Count.ToString();
 		ComputeColumnWidths();
 	}
 
@@ -456,7 +440,6 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 	{
 		AllBitLockerVolumes.Clear();
 		BitLockerVolumes.Clear();
-		BitLockerTotalCount = "0";
 		BitLockerSearchText = null;
 		SelectedBitLockerVolume = null;
 		IsBitLockerDetailsPaneOpen = false;
@@ -586,8 +569,6 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 		{
 			BitLockerVolumes.Add(item);
 		}
-
-		BitLockerTotalCount = BitLockerVolumes.Count.ToString();
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{

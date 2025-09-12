@@ -32,9 +32,9 @@ internal sealed partial class CreateDenyPolicy : Page
 
 	internal CreateDenyPolicy()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 
 	// Since using behaviors in XAML is not Native AOT compatible, we use event handlers.

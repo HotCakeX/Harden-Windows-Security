@@ -1,17 +1,13 @@
-✅ Updated the dependencies to the latest versions, including major ones such as .NET SDK and Windows App SDK.
+🐉 Enhanced the Intune cloud deployment workflow with a dedicated page that lets you enumerate all Microsoft 365 and Intune groups in your tenant and select which group(s) to assign to the App Control policy you are deploying. The page includes search, sorting, and filtering capabilities to help you pinpoint target groups, and you can export the results to JSON for offline analysis.
 
-✅ Improved scrolling performance in list views with large data sets by utilizing phased loads based on the importance of each column's data type.
+🍭 You can now add or remove groups in your tenant's Entra directly from the app, no need to visit the Entra portal. This functionality is available on the newly added Entra group assignment and management page.
 
-✅ Added icons to many buttons and other areas that didn't have one, helping with discoverability and usability.
+💪 Improved resilience of Microsoft Graph connections to better handle transient network issues and unstable connections.
 
-✅ The Font Families list in the Settings page is now sorted alphabetically, making it easier to find the font name you're looking for.
+📏 Implemented more aggressive memory cleanup when the app window closes, enabling faster and more predictable reclamation of used memory.
 
-✅ Improved localization.
+🍬 Refined the styling and behavior of content dialogs across the app. Resizing no longer produces a semi-transparent shadow artifact.
 
-✅ The Get Code Integrity Hashes page now supports dragging files onto it and dropping them there to calculate their hashes. (Available only when the app running unelevated)
+🍫 Implemented a token refresh mechanism for Microsoft Graph. Sign in once and continue using AppControl Manager for extended periods without re-authentication. Silent refresh events are logged for auditing; for privacy and security only the account name/email associated with the refreshed token is recorded. Automatic refresh is initiated when a token has less than 10 minutes remaining before expiration.
 
-✅ In the Simulation page, replaced the "Save output to CSV" option with "Export to JSON". JSON is a more structured format and exporting to JSON is a lot faster due to source generated serializers. This also aligns with other export options in the app because they all use JSON as the output format.
-
-✅ Whenever you select an item by browsing for it, the button responsible for it will have a distinct shadow around it and its text will be changed to "Selected" (localized), indicating that you've selected that item. Completes this feature request. As a reminder, you can always review the items you've selected and clear your selections by right-clicking or tap + holding on the button.
-
-✅ For more, please visit the GitHub releases section.
+💎 Please visit The GitHub's release section for more.

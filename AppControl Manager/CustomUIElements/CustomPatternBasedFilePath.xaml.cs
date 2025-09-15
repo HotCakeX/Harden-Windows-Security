@@ -69,13 +69,13 @@ internal sealed partial class CustomPatternBasedFilePath : ContentDialog
 	{
 		PopulateFilePathPatternExamplesCollection();
 
-		this.InitializeComponent();
+		InitializeComponent();
 
 		XamlRoot = App.MainWindow?.Content.XamlRoot;
 
 		CustomPatternBasedFilePathListView.ItemsSource = FilePathPatternExamplesCollection;
 
-		this.RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default);
+		RequestedTheme = string.Equals(AppSettings.AppTheme, "Light", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Light : (string.Equals(AppSettings.AppTheme, "Dark", StringComparison.OrdinalIgnoreCase) ? ElementTheme.Dark : ElementTheme.Default);
 	}
 }
 

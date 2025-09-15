@@ -652,15 +652,6 @@
   <data name="BrowseForBasePolicyTextBlock.Text" xml:space="preserve">
     <value>ഒരു അടിസ്ഥാന നയ ഫയലിനായി ബ്രൗസ് ചെയ്യുക</value>
   </data>
-  <data name="BrowseForPolicyTextBlock.Text" xml:space="preserve">
-    <value>ഒരു നയ XML ഫയലിനായി ബ്രൗസ് ചെയ്യുക</value>
-  </data>
-  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>നിങ്ങളുടെ ഉപകരണത്തിൽ നിന്ന് ഒരു XML നയ ഫയൽ തിരഞ്ഞെടുക്കാൻ ക്ലിക്ക്/ടാപ്പ് ചെയ്യുക</value>
-  </data>
-  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>നിങ്ങളുടെ ഉപകരണത്തിൽ നിന്ന് ഒരു XML നയ ഫയൽ തിരഞ്ഞെടുക്കാൻ ക്ലിക്ക്/ടാപ്പ് ചെയ്യുക</value>
-  </data>
   <data name="ScanLevelComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>ഫയലുകൾ/ലോഗുകൾ സ്കാൻ ചെയ്യുന്നതിനായുള്ള ഒരു തലം തിരഞ്ഞെടുക്കുക</value>
   </data>
@@ -816,24 +807,6 @@
   </data>
   <data name="ViewSelectedXMLFileTextBlock.Text" xml:space="preserve">
     <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത XML ഫയൽ(കൾ) കാണുക.</value>
-  </data>
-  <data name="SelectXMLFileTextBlock.Text" xml:space="preserve">
-    <value>XML ഫയൽ തിരഞ്ഞെടുക്കുക</value>
-  </data>
-  <data name="SelectFilesTextBlock.Text" xml:space="preserve">
-    <value>ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
-  </data>
-  <data name="SelectFoldersTextBlock.Text" xml:space="preserve">
-    <value>ഫോൾഡറുകൾ തിരഞ്ഞെടുക്കുക</value>
-  </data>
-  <data name="ScanLogsTextBlock.Text" xml:space="preserve">
-    <value>ലോഗുകൾ സ്കാൻ ചെയ്യുക</value>
-  </data>
-  <data name="ScanLogsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>സിസ്റ്റത്തിലോ തിരഞ്ഞെടുത്ത EVTX ഫയലുകളിലോ കോഡ് ഇന്റഗ്രിറ്റി/ആപ്പ്ലോക്കർ ലോഗുകൾക്കായി സ്കാൻ ചെയ്യുക</value>
-  </data>
-  <data name="ScanLogsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>സിസ്റ്റത്തിലോ തിരഞ്ഞെടുത്ത EVTX ഫയലുകളിലോ കോഡ് ഇന്റഗ്രിറ്റി/ആപ്പ്ലോക്കർ ലോഗുകൾക്കായി സ്കാൻ ചെയ്യുക</value>
   </data>
   <data name="RuleOption_EnabledUMCI" xml:space="preserve">
     <value>ആപ്പ് കൺട്രോൾ നയങ്ങൾ കേർണൽ-മോഡ്, യൂസർ-മോഡ് ബൈനറികളെ നിയന്ത്രിക്കുന്നു. ഡിഫോൾട്ടായി, കേർണൽ-മോഡ് ബൈനറികൾ മാത്രമേ നിയന്ത്രിക്കപ്പെടുന്നുള്ളൂ. ഈ റൂൾ ഓപ്ഷൻ പ്രവർത്തനക്ഷമമാക്കുന്നത് യൂസർ മോഡ് എക്സിക്യൂട്ടബിളുകളും സ്ക്രിപ്റ്റുകളും സാധൂകരിക്കുന്നു.</value>
@@ -3937,12 +3910,6 @@
   <data name="KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">
     <value>SignedPolicyStage1RemovalTimes-ലേക്ക് കീ-മൂല്യ ജോഡി ചേർത്തു: {0} = {1}</value>
   </data>
-  <data name="AuthResultImmutableErrorMessage" xml:space="preserve">
-    <value>AuthResult മാറ്റമില്ലാത്തതാണ്, സമാരംഭിച്ചതിന് ശേഷം സജ്ജമാക്കാൻ പാടില്ല.</value>
-  </data>
-  <data name="AccountImmutableErrorMessage" xml:space="preserve">
-    <value>അക്കൗണ്ട് മാറ്റമില്ലാത്തതാണ്, സമാരംഭിച്ചതിന് ശേഷം സജ്ജമാക്കാൻ പാടില്ല.</value>
-  </data>
   <data name="SignInProcessCancelledMessage" xml:space="preserve">
     <value>സൈൻ ഇൻ പ്രക്രിയ റദ്ദാക്കി</value>
   </data>
@@ -4641,12 +4608,6 @@
 </data>
 <data name="PackageVersionHeader.Text" xml:space="preserve">
     <value>പാക്കേജ് പതിപ്പ്</value>
-</data>
-<data name="LoadPolicy.Text" xml:space="preserve">
-    <value>പോളിസി ലോഡ് ചെയ്യുക</value>
-</data>
-<data name="BrowseForPolicy.Text" xml:space="preserve">
-    <value>പോളിസി തിരയുക</value>
 </data>
 <data name="SaveTheChanged.Text" xml:space="preserve">
     <value>മാറ്റങ്ങൾ സംരക്ഷിക്കുക</value>
@@ -5778,5 +5739,231 @@
   </data>
   <data name="SelectedText" xml:space="preserve">
      <value>തിരഞ്ഞെടുത്തത്</value>
+  </data>
+  <!-- For Intune Groups ListView - Headers -->
+  <data name="GroupNameHeader.Text" xml:space="preserve">
+    <value>പേര്</value>
+  </data>
+  <data name="GroupIDHeader.Text" xml:space="preserve">
+    <value>ഐഡി</value>
+  </data>
+    <data name="GroupDescriptionHeader.Text" xml:space="preserve">
+    <value>വിവരണം</value>
+  </data>
+    <data name="GroupSecurityIdentifierHeader.Text" xml:space="preserve">
+    <value>സുരക്ഷാ ഐഡന്റിഫയർ</value>
+  </data>
+    <data name="GroupCreatedDateTimeHeader.Text" xml:space="preserve">
+    <value>സൃഷ്ടിച്ച സമയം</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Headers -->
+  <!-- For Intune Groups ListView - Buttons -->
+  <data name="GroupNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>പേര്</value>
+  </data>
+  <data name="GroupIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ഐഡി</value>
+  </data>
+    <data name="GroupDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>വിവരണം</value>
+  </data>
+    <data name="GroupSecurityIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>സുരക്ഷാ ഐഡന്റിഫയർ</value>
+  </data>
+    <data name="GroupCreatedDateTimeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>സൃഷ്ടിച്ച സമയം</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Buttons -->
+  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <value>Intune നയം വിന്യസിക്കൽ വിശദാംശങ്ങൾ</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Intune നയം വിന്യസിക്കൽ വിവരങ്ങൾ വ്യക്തമാക്കുക</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Intune നയം വിന്യസിക്കൽ വിവരങ്ങൾ വ്യക്തമാക്കുക</value>
+  </data>
+  <data name="CreateGroupButton.Content" xml:space="preserve">
+    <value>പുതിയ ഗ്രൂപ്പ് സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="CreateGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Entra IDയിൽ പുതിയ ഗ്രൂപ്പ് സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="CreateGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Entra IDയിൽ പുതിയ ഗ്രൂപ്പ് സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="GroupDisplayNameEmptyError" xml:space="preserve">
+    <value>ഗ്രൂപ്പിന്റെ ഡിസ്പ്ലേ പേര് null ആകാനോ ഒഴിഞ്ഞതാകാനോ പാടില്ല.</value>
+  </data>
+  <data name="SuccessfullyCreatedGroupMessage" xml:space="preserve">
+    <value>ഡിസ്പ്ലേ പേര്: {0}, വിവരണം: {1}, ID: {2}, സുരക്ഷാ ഐഡന്റിഫയർ: {3}, സമയം: {4} എന്നിവയോടെ ഗ്രൂപ്പ് വിജയകരമായി സൃഷ്ടിച്ചു</value>
+  </data>
+  <data name="FailedCreatingGroupError" xml:space="preserve">
+    <value>സ്ഥിതി കോഡ്: {0} കൂടിയും ഉള്ളടക്കം: {1} കൂടിയും ഗ്രൂപ്പ് സൃഷ്ടിക്കൽ പരാജയപ്പെട്ടു</value>
+  </data>
+<data name="DeleteGroupButton.Content" xml:space="preserve">
+  <value>ഗ്രൂപ്പ് ഇല്ലാതാക്കുക</value>
+</data>
+  <data name="DeleteGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ Entra IDയിൽ നിന്നുള്ള തിരഞ്ഞെടുക്കപ്പെട്ട ഗ്രൂപ്പുകൾ ഇല്ലാതാക്കുക.</value>
+  </data>
+  <data name="DeleteGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങളുടെ Entra IDയിൽ നിന്നുള്ള തിരഞ്ഞെടുക്കപ്പെട്ട ഗ്രൂപ്പുകൾ ഇല്ലാതാക്കുക.</value>
+  </data>
+<data name="DeleteGroupDialogTitle" xml:space="preserve">
+  <value>ഗ്രൂപ്പ് ഇല്ലാതാക്കൽ സ്ഥിരീകരിക്കുക</value>
+</data>
+<data name="Delete" xml:space="preserve">
+  <value>ഇല്ലാതാക്കുക</value>
+</data>
+<data name="DeleteGroupDialogIntroSingle" xml:space="preserve">
+  <value>'{0}' ഗ്രൂപ്പ് ഇല്ലാതാക്കണോ ?</value>
+</data>
+<data name="DeleteGroupDialogIntroMultiple" xml:space="preserve">
+  <value>{0} തിരഞ്ഞെടുക്കപ്പെട്ട ഗ്രൂപ്പുകൾ ഇല്ലാതാക്കണോ ?</value>
+</data>
+<data name="DeleteGroupDialogWarning" xml:space="preserve">
+  <value>ഈ നടപടി തിരിച്ചെടുക്കാനാവില്ല. തിരഞ്ഞെടുക്കപ്പെട്ട ഗ്രൂപ്പുകൾ നിങ്ങളുടെ ടേനന്റിൽ നിന്ന് സ്ഥിരമായി ഇല്ലാതാക്കും.</value>
+</data>
+<data name="SuccessfullyDeletedGroupMessage" xml:space="preserve">
+  <value>{0} ഗ്രൂപ്പ് ഇല്ലാതാക്കി (ID: {1}).</value>
+</data>
+<data name="DeleteGroupDeletionErrorLogTemplate" xml:space="preserve">
+  <value>{0} ഗ്രൂപ്പ് ഇല്ലാതാക്കൽ പരാജയപ്പെട്ടു: {1}</value>
+</data>
+<data name="ProvideNewGroupDetails" xml:space="preserve">
+  <value>പുതിയ ഗ്രൂപ്പിനുള്ള വിശദാംശങ്ങൾ നൽകുക.</value>
+</data>
+<data name="GroupType" xml:space="preserve">
+  <value>ഗ്രൂപ്പ് തരം:</value>
+</data>
+<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+  <value>നിങ്ങളുടെ ടേനന്റിലെ Entra ഗ്രൂപ്പുകൾ നിയന്ത്രിച്ച് നയം വിന്യസിക്കേണ്ട ഗ്രൂപ്പുകൾ തിരഞ്ഞെടുക്കുക.</value>
+</data>
+<data name="SelectedGroups.Text" xml:space="preserve">
+  <value>തിരഞ്ഞെടുത്ത ഗ്രൂപ്പുകൾ:</value>
+</data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>50 ഡമ്മി ഗ്രൂപ്പുകൾ സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പരിശോധനയ്ക്കായി നിങ്ങളുടെ ടേനന്റിലെ Entraയിൽ യാദൃശ്ചിക വിശദാംശങ്ങളോടെ 50 ഡമ്മി ഗ്രൂപ്പുകൾ സൃഷ്ടിക്കുക.</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പരിശോധനയ്ക്കായി നിങ്ങളുടെ ടേനന്റിലെ Entraയിൽ യാദൃശ്ചിക വിശദാംശങ്ങളോടെ 50 ഡമ്മി ഗ്രൂപ്പുകൾ സൃഷ്ടിക്കുക.</value>
+  </data>
+  <data name="ConfirmationTextForDummyGroupsCreation" xml:space="preserve">
+    <value>നിങ്ങളുടെ ടേനന്റിലെ Entraയിൽ പരിശോധനയ്ക്കായി യാദൃശ്ചിക വിശദാംശങ്ങളോടെ 50 ഡമ്മി ഗ്രൂപ്പുകൾ സൃഷ്ടിക്കാൻ നിങ്ങൾക്ക് തീർച്ചയായും ആഗ്രഹമുണ്ടോ?</value>
+  </data>
+  <data name="SignInAuthenticationRequiredMsg" xml:space="preserve">
+    <value>പ്രാമാണീകരണം ആവശ്യമാണ്. ദയവായി ആദ്യം നിങ്ങളുടെ Microsoft ടേനന്റിൽ സൈൻ ഇൻ ചെയ്യുക.</value>
+  </data>
+  <data name="SuccessfullyRefreshedMSGraphTokenMsg" xml:space="preserve">
+    <value>അക്കൗണ്ട്: {0} നുവേണ്ടി Microsoft Graph ടോക്കൺ വിജയകരമായി പുതുക്കി</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.Content" xml:space="preserve">
+    <value>നയം ഫയൽ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>App Control നയം ഫയൽ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>App Control നയം ഫയൽ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.Content" xml:space="preserve">
+    <value>ഫയലുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിമുലേഷനിൽ ഉൾപ്പെടുത്താൻ ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിമുലേഷനിൽ ഉൾപ്പെടുത്താൻ ഫയലുകൾ ബ്രൗസ് ചെയ്യുക.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.Content" xml:space="preserve">
+    <value>ഫോൾഡറുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിമുലേഷനിൽ ഉൾപ്പെടുത്താൻ ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക. App Control പിന്തുണക്കുന്ന ഫയലുകൾക്കായി ഫോൾഡറുകൾ ആവർത്തിച്ച് സ്കാൻ ചെയ്യും.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിമുലേഷനിൽ ഉൾപ്പെടുത്താൻ ഫോൾഡറുകൾ ബ്രൗസ് ചെയ്യുക. App Control പിന്തുണക്കുന്ന ഫയലുകൾക്കായി ഫോൾഡറുകൾ ആവർത്തിച്ച് സ്കാൻ ചെയ്യും.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>സുരക്ഷാ കാറ്റലോഗുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സുരക്ഷാ കാറ്റലോഗ് (.cat) ഫയലുകൾ സ്ഥിതിചെയ്യുന്ന ഡയറക്റ്ററികളിലേക്കുള്ള പാത്തുകൾ നൽകുക. നൽകാത്ത പക്ഷം ഡീഫോൾട്ട് പാത്ത് 'C:\Windows\System32\CatRoot' ഉപയോഗിക്കും.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സുരക്ഷാ കാറ്റലോഗ് (.cat) ഫയലുകൾ സ്ഥിതിചെയ്യുന്ന ഡയറക്റ്ററികളിലേക്കുള്ള പാത്തുകൾ നൽകുക. നൽകാത്ത പക്ഷം ഡീഫോൾട്ട് പാത്ത് 'C:\Windows\System32\CatRoot' ഉപയോഗിക്കും.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>സുരക്ഷാ കാറ്റലോഗുകൾ സ്കാൻ ചെയ്യുക</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ സുരക്ഷാ കാറ്റലോഗുകൾ സ്കാൻ ചെയ്യണോ ഇല്ലയോ എന്നത്.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ സുരക്ഷാ കാറ്റലോഗുകൾ സ്കാൻ ചെയ്യണോ ഇല്ലയോ എന്നത്.</value>
+  </data>
+  <data name="LoadPolicyButton.Content" xml:space="preserve">
+    <value>നയം ലോഡ് ചെയ്യുക</value>
+  </data>
+  <data name="LoadPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത App Control നയത്തെ ഉപയോക്തൃ ഇന്റർഫേസിലേക്ക് ലോഡ് ചെയ്യുക.</value>
+  </data>
+  <data name="LoadPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത App Control നയത്തെ ഉപയോക്തൃ ഇന്റർഫേസിലേക്ക് ലോഡ് ചെയ്യുക.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.Content" xml:space="preserve">
+    <value>Advanced Hunting ഡാറ്റ സ്കാൻ ചെയ്യുക</value>
+  </data>
+  <data name="ScanMDEAHDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>MDE Advanced Hunting ലോഗുകൾ തിരഞ്ഞെടുക്കുന്നതിനുശേഷം അവ സ്കാൻ ചെയ്ത് താഴെയുള്ള ലിസ്റ്റ് വ്യൂവിൽ ഫലങ്ങൾ കാണിക്കാൻ ഈ ബട്ടൺ ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>MDE Advanced Hunting ലോഗുകൾ തിരഞ്ഞെടുക്കുന്നതിനുശേഷം അവ സ്കാൻ ചെയ്ത് താഴെയുള്ള ലിസ്റ്റ് വ്യൂവിൽ ഫലങ്ങൾ കാണിക്കാൻ ഈ ബട്ടൺ ഉപയോഗിക്കാം.</value>
+  </data>
+    <data name="ScanEventLogsButton.Content" xml:space="preserve">
+    <value>ഇവന്റ് ലോഗുകൾ സ്കാൻ ചെയ്യുക</value>
+  </data>
+  <data name="ScanEventLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Code Integrity/AppLocker ലോഗുകൾക്കായി സിസ്റ്റമോ തിരഞ്ഞെടുക്കപ്പെട്ട EVTX ഫയലുകളോ സ്കാൻ ചെയ്യുക.</value>
+  </data>
+  <data name="ScanEventLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Code Integrity/AppLocker ലോഗുകൾക്കായി സിസ്റ്റമോ തിരഞ്ഞെടുക്കപ്പെട്ട EVTX ഫയലുകളോ സ്കാൻ ചെയ്യുക.</value>
+  </data>
+  <data name="DeviceNameButton.Content" xml:space="preserve">
+    <value>ഡിവൈസ് പേര്</value>
+  </data>
+  <data name="DeviceNameButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇൻകമിംഗ് Advanced Hunting ഡാറ്റ ഫിൽട്ടർ ചെയ്യാൻ ഡിവൈസ് പേര് നൽകുക.</value>
+  </data>
+  <data name="DeviceNameButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇൻകമിംഗ് Advanced Hunting ഡാറ്റ ഫിൽട്ടർ ചെയ്യാൻ ഡിവൈസ് പേര് നൽകുക.</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.Header" xml:space="preserve">
+    <value>ഐച്ഛികം: വീണ്ടെടുക്കുന്നതിന് മുൻപ് ലോഗുകൾ ഫിൽട്ടർ ചെയ്യാൻ ഒരു ഡിവൈസ് നാമം തിരഞ്ഞെടുക്കുക</value>
+  </data>
+      <data name="DeviceNameHeaderTextBlock.PlaceholderText" xml:space="preserve">
+    <value>ഡിവൈസ് പേര്...</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഐച്ഛികം: വീണ്ടെടുക്കുന്നതിന് മുൻപ് ലോഗുകൾ ഫിൽട്ടർ ചെയ്യാൻ ഒരു ഡിവൈസ് നാമം തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="ResetFiltersButton.Content" xml:space="preserve">
+    <value>ഫിൽട്ടറുകൾ പുനഃസജ്ജമാക്കുക</value>
+  </data>
+  <data name="ResetFiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പ്രോപ്പർട്ടി, പ്രോപ്പർട്ടി തിരയൽ, തീയതി ഫിൽട്ടറുകൾ റിസെറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="ResetFiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പ്രോപ്പർട്ടി, പ്രോപ്പർട്ടി തിരയൽ, തീയതി ഫിൽട്ടറുകൾ റിസെറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിങ്ങളുടെ ഉപകരണത്തിൽ നിന്ന് ഒരു XML നയ ഫയൽ തിരഞ്ഞെടുക്കാൻ ക്ലിക്ക്/ടാപ്പ് ചെയ്യുക</value>
+  </data>
+  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>നിങ്ങളുടെ ഉപകരണത്തിൽ നിന്ന് ഒരു XML നയ ഫയൽ തിരഞ്ഞെടുക്കാൻ ക്ലിക്ക്/ടാപ്പ് ചെയ്യുക</value>
   </data>
 </root>

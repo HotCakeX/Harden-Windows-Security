@@ -178,11 +178,6 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Total number of verification results loaded.
-	/// </summary>
-	internal string TotalResults { get; set => SP(ref field, value); } = "0";
-
-	/// <summary>
 	/// Collection of all verification results bound to the ListView.
 	/// </summary>
 	internal ObservableCollection<VerificationResult> VerificationResults = [];
@@ -227,8 +222,6 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		{
 			VerificationResults.Add(item);
 		}
-
-		TotalResults = VerificationResults.Count.ToString();
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{
@@ -408,7 +401,6 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 			}
 
 			CalculateColumnWidths();
-			TotalResults = VerificationResults.Count.ToString();
 
 			int compliantCount = results.Count(r => r.IsCompliant);
 			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("VerificationCompletedCompliantPolicies"), compliantCount, results.Count));
@@ -440,9 +432,6 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	{
 		VerificationResults.Clear();
 		AllVerificationResults.Clear();
-
-		TotalResults = "0";
-
 		CalculateColumnWidths();
 	}
 

@@ -30,20 +30,22 @@
             </controls:WrapPanel>
 
             <customUI:InfoBarV2 Grid.Row="1"
-                 Margin="15"
-                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
+                                Margin="15"
+                                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
 
             <StackPanel HorizontalAlignment="Stretch"
-                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2">
+                        Spacing="{StaticResource SettingsCardSpacing}"
+                        Grid.Row="2">
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
-                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="UserConfigurations" />
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
+                           x:Uid="UserConfigurations" />
 
                 <controls:SettingsExpander x:Uid="UserConfigsSettingsExpander"
                                            IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}"
@@ -69,7 +71,11 @@
 
                                 <!-- Signed Policy Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox x:Uid="SignedPolicyPathTextBox" Text="{x:Bind ViewModel.SignedPolicyPathTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox x:Uid="SignedPolicyPathTextBox"
+                                             Text="{x:Bind ViewModel.SignedPolicyPathTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             MinWidth="300"
+                                             Margin="0,0,10,0"
+                                             VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" x:Uid="SaveAppBarButton" Click="{x:Bind ViewModel.EditButton_SignedPolicyPath_Click}"/>
                                         <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="{x:Bind ViewModel.ClearButton_SignedPolicyPath_Click}"/>

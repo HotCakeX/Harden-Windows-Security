@@ -44,9 +44,9 @@
                             IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
                             />
 
-        <Border
-            Grid.Row="2"
-            Style="{StaticResource GridCardStyle}" Padding="8">
+        <Border Grid.Row="2"
+                Style="{StaticResource GridCardStyle}"
+                Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
@@ -57,7 +57,20 @@
                                    VerticalAlignment="Center"
                                    ObservedData="{x:Bind ViewModel.SelectedPolicyFile, Mode=OneWay}"
                                    HorizontalAlignment="Center"
-                                   ToolTipService.ToolTip="Browse for an App Control XML policy file">
+                                   x:Uid="SelectAppControlPolicyFileButton">
+
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                    <AnimatedIcon.Source>
+                                        <animatedvisuals:CurlyArrow/>
+                                    </AnimatedIcon.Source>
+                                </AnimatedIcon>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
 
                     <customUI:ButtonV2.Flyout>
                         <Flyout>
@@ -69,42 +82,35 @@
                                 <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
                                 <TextBox Text="{x:Bind ViewModel.SelectedPolicyFile, Mode=OneWay}"
-                                    TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                    MinWidth="400" IsReadOnly="True" />
+                                         TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                         MinWidth="400" IsReadOnly="True" />
 
                             </controls:WrapPanel>
 
                         </Flyout>
                     </customUI:ButtonV2.Flyout>
 
-                    <customUI:ButtonV2.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
-                                <AnimatedIcon.Source>
-                                    <animatedvisuals:CurlyArrow/>
-                                </AnimatedIcon.Source>
-                            </AnimatedIcon>
-                            <TextBlock x:Uid="BrowseForPolicy" Margin="5,0,0,0" />
-                        </StackPanel>
-                    </customUI:ButtonV2.Content>
-
                 </customUI:ButtonV2>
 
                 <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
-                        ToolTipService.ToolTip="Load the selected App Control policy to the user interface"
+                        x:Uid="LoadPolicyButton"
                         Click="{x:Bind ViewModel.ProcessData}">
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
-                                <AnimatedIcon.Source>
-                                    <animatedvisuals:Dotsload/>
-                                </AnimatedIcon.Source>
-                            </AnimatedIcon>
-                            <TextBlock x:Uid="LoadPolicy" Margin="5,0,0,0" />
-                        </StackPanel>
-                    </Button.Content>
+
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                    <AnimatedIcon.Source>
+                                        <animatedvisuals:Dotsload/>
+                                    </AnimatedIcon.Source>
+                                </AnimatedIcon>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+
                 </Button>
 
                 <Button VerticalAlignment="Center"
@@ -135,7 +141,6 @@
                               Toggled="{x:Bind ViewModel.ChangeTextSelectionsState}"
                               x:Uid="TextSelectionStateToggleSwitch"
                               IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"/>
-
 
                 <Button IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
                         VerticalAlignment="Center"
@@ -272,20 +277,20 @@
                                         </Grid.ColumnDefinitions>
 
                                         <!-- Header TextBlocks -->
-                                        <TextBlock x:Uid="IDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock x:Uid="FriendlyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Hash" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock x:Uid="FileNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock x:Uid="InternalNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock x:Uid="FileDescriptionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock x:Uid="ProductNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock x:Uid="FilePathHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock x:Uid="MinimumFileVersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock x:Uid="MaximumFileVersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock x:Uid="PackageFamilyNameHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock x:Uid="PackageVersionHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="App IDs" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Type" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="IDHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="FriendlyNameHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock Text="Hash" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="FileNameHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="InternalNameHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="FileDescriptionHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="ProductNameHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="FilePathHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="7" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="MinimumFileVersionHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="8" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="MaximumFileVersionHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="9" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="PackageFamilyNameHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="10" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="PackageVersionHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="11" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock Text="App IDs" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="12" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock Text="Type" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="13" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
 
                                         <!-- GridSplitters between columns -->
                                         <controls:GridSplitter Grid.Column="1" />
@@ -307,14 +312,14 @@
 
                             <!-- DataTemplate for ListView items -->
                             <customUI:ListViewV2.ItemTemplate>
-                                <DataTemplate x:DataType="PolicyEditor:FileBasedRulesForListView">
+                                <DataTemplate x:DataType="PolicyEditor:FileBasedRulesForListView" xmlns:VMs="using:AppControlManager.ViewModels">
                                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                                     <Grid Background="Transparent">
 
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
 
-                                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind ParentViewModel.FileBasedRulesListView_DeleteItems}">
+                                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedRulesListView_DeleteItems}">
                                                     <MenuFlyoutItem.Icon>
                                                         <FontIcon Glyph="&#xE74D;" />
                                                     </MenuFlyoutItem.Icon>
@@ -324,38 +329,35 @@
                                         </Grid.ContextFlyout>
 
                                         <Grid.ColumnDefinitions>
-                                            <!-- Accessing the ColumnWidth variables in the ViewModel class through the reference
-                                                that we include in every instance of the class that the "x:DataType" uses.
-                                                This enables us to use compiled binding instead of "Binding". -->
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth1, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth2, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth3, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth4, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth5, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth6, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth7, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth8, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth9, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth10, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth11, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth12, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth13, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.FileBasedColumnWidth14, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth1, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth2, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth3, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth4, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth5, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth6, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth7, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth8, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth9, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth10, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth11, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth12, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth13, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.FileBasedColumnWidth14, Mode=OneWay}" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Id}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FriendlyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Hash}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FileName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind InternalName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FileDescription}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind ProductName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind FilePath}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind MinimumFileVersion}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind MaximumFileVersion}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind PackageFamilyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind PackageVersion}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind AppIDs}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Type}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind Id}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind FriendlyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind Hash}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind FileName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind InternalName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind FileDescription}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind ProductName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind FilePath}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind MinimumFileVersion}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind MaximumFileVersion}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind PackageFamilyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind PackageVersion}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind AppIDs}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind Type}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
                                     </Grid>
                                 </DataTemplate>
                             </customUI:ListViewV2.ItemTemplate>
@@ -381,12 +383,12 @@
                         </win:Grid.ChildrenTransitions>
 
                         <customUI:ListViewV2 RegistryKey="PolicyEditor_SignatureBasedRules"
-                     SelectionMode="Extended"
-                     AllowDrop="{x:Bind ViewModel.IsNotElevated}"
-                     CanDragItems="{x:Bind ViewModel.IsNotElevated}"
-                     CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
-                     IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-                     ItemsSource="{x:Bind ViewModel.SignatureRulesCollection, Mode=OneWay}">
+                                             SelectionMode="Extended"
+                                             AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+                                             CanDragItems="{x:Bind ViewModel.IsNotElevated}"
+                                             CanReorderItems="{x:Bind ViewModel.IsNotElevated}"
+                                             IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                                             ItemsSource="{x:Bind ViewModel.SignatureRulesCollection, Mode=OneWay}">
 
                             <customUI:ListViewV2.Header>
 
@@ -407,13 +409,13 @@
                                         </Grid.ColumnDefinitions>
 
                                         <!-- Header TextBlocks -->
-                                        <TextBlock x:Uid="IDHeader" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Name" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Cert Root" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Cert Publisher" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Cert OEM ID" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Cert EKU" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
-                                        <TextBlock Text="Cert Issuer" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock x:Uid="IDHeader" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="0" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock Text="Name" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="1" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock Text="Cert Root" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="2" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock Text="Cert Publisher" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="3" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock Text="Cert OEM ID" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="4" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock Text="Cert EKU" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="5" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
+                                        <TextBlock Text="Cert Issuer" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Foreground="LightGray" HorizontalAlignment="Stretch" Grid.Column="6" FontWeight="Bold" Margin="10,0,2,0" Padding="5"/>
 
                                         <!-- GridSplitters between columns -->
                                         <controls:GridSplitter Grid.Column="1" />
@@ -428,14 +430,14 @@
 
                             <!-- DataTemplate for ListView items -->
                             <customUI:ListViewV2.ItemTemplate>
-                                <DataTemplate x:DataType="PolicyEditor:SignatureBasedRulesForListView">
+                                <DataTemplate x:DataType="PolicyEditor:SignatureBasedRulesForListView" xmlns:VMs="using:AppControlManager.ViewModels">
                                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                                     <Grid Background="Transparent">
 
                                         <Grid.ContextFlyout>
                                             <MenuFlyout>
 
-                                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind ParentViewModel.SignatureBasedRulesListView_DeleteItems}">
+                                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.SignatureBasedRulesListView_DeleteItems}">
                                                     <MenuFlyoutItem.Icon>
                                                         <FontIcon Glyph="&#xE74D;" />
                                                     </MenuFlyoutItem.Icon>
@@ -445,24 +447,21 @@
                                         </Grid.ContextFlyout>
 
                                         <Grid.ColumnDefinitions>
-                                            <!-- Accessing the ColumnWidth variables in the ViewModel class through the reference
-                                        that we include in every instance of the class that the "x:DataType" uses.
-                                        This enables us to use compiled binding instead of "Binding". -->
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.SignatureBasedColumnWidth1, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.SignatureBasedColumnWidth2, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.SignatureBasedColumnWidth3, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.SignatureBasedColumnWidth4, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.SignatureBasedColumnWidth5, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.SignatureBasedColumnWidth6, Mode=OneWay}" />
-                                            <ColumnDefinition Width="{x:Bind ParentViewModel.SignatureBasedColumnWidth7, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.SignatureBasedColumnWidth1, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.SignatureBasedColumnWidth2, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.SignatureBasedColumnWidth3, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.SignatureBasedColumnWidth4, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.SignatureBasedColumnWidth5, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.SignatureBasedColumnWidth6, Mode=OneWay}" />
+                                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.SignatureBasedColumnWidth7, Mode=OneWay}" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Id}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertRoot}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertPublisher}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertOemID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertificateEKU}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
-                                        <TextBlock IsTextSelectionEnabled="{x:Bind ParentViewModel.TextsAreSelectableToggleState, Mode=OneWay}" Text="{x:Bind CertIssuer}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind Id}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind CertRoot}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind CertPublisher}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind CertOemID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind CertificateEKU}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                                        <TextBlock IsTextSelectionEnabled="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TextsAreSelectableToggleState, Mode=OneWay}" FontFamily="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Text="{x:Bind CertIssuer}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
                                     </Grid>
                                 </DataTemplate>
                             </customUI:ListViewV2.ItemTemplate>
@@ -486,7 +485,9 @@
                             </Grid.RowDefinitions>
 
                             <StackPanel HorizontalAlignment="Stretch"
-                                    Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="0" Margin="0,40,0,0">
+                                        Spacing="{StaticResource SettingsCardSpacing}"
+                                        Grid.Row="0"
+                                        Margin="0,40,0,0">
 
                                 <win:StackPanel.ChildrenTransitions>
                                     <win:EntranceThemeTransition FromVerticalOffset="50" />
@@ -737,7 +738,7 @@
                                 </ListView.Header>
 
                                 <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="PolicyEditor:PolicySettings">
+                                    <DataTemplate x:DataType="PolicyEditor:PolicySettings" xmlns:VMs="using:AppControlManager.ViewModels">
                                         <Border Background="Transparent"
                                                 BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
                                                 BorderThickness="0,0,0,1"
@@ -789,7 +790,7 @@
                                                 <!-- Value Type ComboBox -->
                                                 <ComboBox Grid.Column="4"
                                                           SelectedIndex="{x:Bind Type, Mode=TwoWay}"
-                                                          ItemsSource="{x:Bind ParentViewModel.TypeOptions}"
+                                                          ItemsSource="{x:Bind VMs:ViewModelProvider.PolicyEditorVM.TypeOptions}"
                                                           Margin="0,0,8,0"
                                                           VerticalAlignment="Center"
                                                           HorizontalAlignment="Stretch" />

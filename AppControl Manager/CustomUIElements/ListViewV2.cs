@@ -131,7 +131,8 @@ internal sealed partial class ListViewV2 : ListView
 	// P.S: We skip the next two SelectionChanged events to avoid unintended smooth scrolling due to programmatic changes.
 	private void OnListViewV2ItemRightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
-		if (sender is not ListViewItem item)
+		// Don't proceed further if the sender is not a ListViewItem or if the ListView is in None or Single selection mode because then SelectedItems property is readonly and we get COM error if we attempt to clear it.
+		if (sender is not ListViewItem item || this.SelectionMode is ListViewSelectionMode.None or ListViewSelectionMode.Single)
 			return;
 
 		// If the item is already selected, do nothing so multi-selection is preserved.
@@ -170,6 +171,23 @@ internal sealed partial class ListViewV2 : ListView
 	private void OnUnloaded(object? sender, RoutedEventArgs e)
 	{
 		ListViewHelper.Unregister(RegistryKey, this);
+	}
+
+	/// <summary>
+	/// Suppresses the SelectionChanged handler from performing smooth centering
+	/// for the next 'count' SelectionChanged events (used to avoid unintended
+	/// scroll jumps during programmatic operations like sorting).
+	/// </summary>
+	/// <param name="count">How many upcoming SelectionChanged events to skip; minimum is 1.</param>
+	internal void SuppressSelectionChanged(int count = 1)
+	{
+		if (count < 1)
+		{
+			count = 1;
+		}
+
+		// Reusing the existing counter leveraged by right-click selection logic.
+		_skipSelectionChangedCount = count;
 	}
 
 }

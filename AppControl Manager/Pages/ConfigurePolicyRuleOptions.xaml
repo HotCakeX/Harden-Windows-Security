@@ -44,7 +44,23 @@
                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                Click="{x:Bind ViewModel.PickPolicyFileButton_Click}"
                                HorizontalAlignment="Center"
-                               x:Uid="PickPolicyFileButton">
+                               x:Uid="SelectAppControlPolicyFileButton">
+
+                <Button.ContentTemplate>
+                    <DataTemplate x:DataType="x:String" xmlns:VMs="using:AppControlManager.ViewModels">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <AnimatedIcon Visibility="{x:Bind VMs:ViewModelProvider.ConfigurePolicyRuleOptionsVM.BrowseForXMLPolicyButtonLightAnimatedIconVisibility, Mode=OneWay}"
+                                          Height="20"
+                                          Margin="0,0,5,0"
+                                          Width="20">
+                                <AnimatedIcon.Source>
+                                    <animatedvisuals:Light/>
+                                </AnimatedIcon.Source>
+                            </AnimatedIcon>
+                            <TextBlock Text="{x:Bind}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
 
                 <customUI:ButtonV2.Flyout>
                     <Flyout x:Name="PickPolicyFileButton_FlyOut">
@@ -56,27 +72,13 @@
                             <TextBlock x:Uid="ViewSelectedPolicyPathsTextBlock" TextWrapping="WrapWholeWords" />
 
                             <TextBox Text="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
-                             TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                             MinWidth="400" IsReadOnly="True" />
+                                     TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                     MinWidth="400" IsReadOnly="True" />
 
                         </controls:WrapPanel>
 
                     </Flyout>
                 </customUI:ButtonV2.Flyout>
-
-                <customUI:ButtonV2.Content>
-                    <controls:WrapPanel Orientation="Horizontal">
-
-                        <AnimatedIcon Visibility="{x:Bind ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
-                            <AnimatedIcon.Source>
-                                <animatedvisuals:Light/>
-                            </AnimatedIcon.Source>
-                        </AnimatedIcon>
-
-                        <TextBlock x:Uid="BrowseForPolicyTextBlock" />
-
-                    </controls:WrapPanel>
-                </customUI:ButtonV2.Content>
 
             </customUI:ButtonV2>
 

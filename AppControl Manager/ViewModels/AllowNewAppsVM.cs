@@ -1382,13 +1382,10 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 						});
 
 						// Scan all of the detected files from the user selected directories
-						// Add a reference to the ViewModel class to each item so we can navigate using it in the XAML ItemTemplate
 						IEnumerable<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(
 							DetectedFilesInSelectedDirectories,
 							2,
-							Step2ProgressRingProgress,
-							this,
-							(fi, vm) => fi.ParentViewModelAllowNewApps = vm);
+							Step2ProgressRingProgress);
 
 						// Add the results to the backing list
 						LocalFilesAllFileIdentities.Clear();
@@ -1446,8 +1443,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					// Add the event logs to the ObservableCollection
 					foreach (FileIdentity item in Output)
 					{
-						// Add a reference to the ViewModel class to each item so we can navigate using it in the XAML ItemTemplate
-						item.ParentViewModelAllowNewApps = this;
 						EventLogsFileIdentities.Add(item);
 					}
 

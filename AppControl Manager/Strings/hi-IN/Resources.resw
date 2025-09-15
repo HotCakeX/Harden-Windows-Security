@@ -652,15 +652,6 @@
   <data name="BrowseForBasePolicyTextBlock.Text" xml:space="preserve">
     <value>मूल नीति फ़ाइल ब्राउज़ करें</value>
   </data>
-  <data name="BrowseForPolicyTextBlock.Text" xml:space="preserve">
-    <value>नीति XML फ़ाइल ब्राउज़ करें</value>
-  </data>
-  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>अपने डिवाइस से XML नीति फ़ाइल चुनने के लिए क्लिक/टैप करें</value>
-  </data>
-  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>अपने डिवाइस से XML नीति फ़ाइल चुनने के लिए क्लिक/टैप करें</value>
-  </data>
   <data name="ScanLevelComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>जिसके आधार पर फ़ाइलों/लॉग्स को स्कैन किया जाएगा, उस स्तर का चयन करें</value>
   </data>
@@ -816,24 +807,6 @@
   </data>
   <data name="ViewSelectedXMLFileTextBlock.Text" xml:space="preserve">
     <value>आपके द्वारा चयनित XML फाइल(ें) देखें।</value>
-  </data>
-  <data name="SelectXMLFileTextBlock.Text" xml:space="preserve">
-    <value>XML फ़ाइल चुनें</value>
-  </data>
-  <data name="SelectFilesTextBlock.Text" xml:space="preserve">
-    <value>फ़ाइलें चुनें</value>
-  </data>
-  <data name="SelectFoldersTextBlock.Text" xml:space="preserve">
-    <value>फ़ोल्डर चुनें</value>
-  </data>
-  <data name="ScanLogsTextBlock.Text" xml:space="preserve">
-    <value>लॉग्स स्कैन करें</value>
-  </data>
-  <data name="ScanLogsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>कोड इंटीग्रिटी/AppLocker लॉग के लिए सिस्टम या चयनित EVTX फ़ाइलों को स्कैन करें</value>
-  </data>
-  <data name="ScanLogsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>कोड इंटीग्रिटी/AppLocker लॉग के लिए सिस्टम या चयनित EVTX फ़ाइलों को स्कैन करें</value>
   </data>
   <data name="RuleOption_EnabledUMCI" xml:space="preserve">
     <value>ऐप नियंत्रण नीतियाँ कर्नेल-मोड और यूज़र-मोड दोनों बाइनरीज़ को प्रतिबंधित करती हैं। डिफ़ॉल्ट रूप से केवल कर्नेल-मोड बाइनरी प्रतिबंधित होती हैं। इस नियम विकल्प को सक्षम करने से यूज़र-मोड निष्पादन योग्य और स्क्रिप्टों का सत्यापन होता है।</value>
@@ -3937,12 +3910,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">
     <value>SignedPolicyStage1RemovalTimes में कुंजी-मूल्य जोड़ी जोड़ी गई: {0} = {1}</value>
   </data>
-  <data name="AuthResultImmutableErrorMessage" xml:space="preserve">
-    <value>AuthResult अपरिवर्तनीय है और प्रारंभिकरण के बाद सेट नहीं किया जाना चाहिए।</value>
-  </data>
-  <data name="AccountImmutableErrorMessage" xml:space="preserve">
-    <value>Account अपरिवर्तनीय है और प्रारंभिकरण के बाद सेट नहीं किया जाना चाहिए।</value>
-  </data>
   <data name="SignInProcessCancelledMessage" xml:space="preserve">
     <value>साइन-इन प्रक्रिया रद्द की गई</value>
   </data>
@@ -4641,12 +4608,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="PackageVersionHeader.Text" xml:space="preserve">
     <value>पैकेज संस्करण</value>
-  </data>
-  <data name="LoadPolicy.Text" xml:space="preserve">
-    <value>लोड नीति</value>
-  </data>
-  <data name="BrowseForPolicy.Text" xml:space="preserve">
-    <value>नीति के लिए ब्राउज़ करें</value>
   </data>
   <data name="SaveTheChanged.Text" xml:space="preserve">
     <value>परिवर्तनों को सहेजें</value>
@@ -5778,5 +5739,231 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="SelectedText" xml:space="preserve">
      <value>चयनित</value>
+  </data>
+  <!-- For Intune Groups ListView - Headers -->
+  <data name="GroupNameHeader.Text" xml:space="preserve">
+    <value>नाम</value>
+  </data>
+  <data name="GroupIDHeader.Text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+    <data name="GroupDescriptionHeader.Text" xml:space="preserve">
+    <value>विवरण</value>
+  </data>
+    <data name="GroupSecurityIdentifierHeader.Text" xml:space="preserve">
+    <value>सुरक्षा पहचानकर्ता</value>
+  </data>
+    <data name="GroupCreatedDateTimeHeader.Text" xml:space="preserve">
+    <value>निर्माण समय</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Headers -->
+  <!-- For Intune Groups ListView - Buttons -->
+  <data name="GroupNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>नाम</value>
+  </data>
+  <data name="GroupIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ID</value>
+  </data>
+    <data name="GroupDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>विवरण</value>
+  </data>
+    <data name="GroupSecurityIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>सुरक्षा पहचानकर्ता</value>
+  </data>
+    <data name="GroupCreatedDateTimeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>निर्माण समय</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Buttons -->
+  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <value>Intune नीति परिनियोजन विवरण</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Intune नीति परिनियोजन का विवरण निर्दिष्ट करें</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Intune नीति परिनियोजन का विवरण निर्दिष्ट करें</value>
+  </data>
+  <data name="CreateGroupButton.Content" xml:space="preserve">
+    <value>नई समूह बनाएँ</value>
+  </data>
+  <data name="CreateGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Entra ID में नया समूह बनाएँ</value>
+  </data>
+  <data name="CreateGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Entra ID में नया समूह बनाएँ</value>
+  </data>
+  <data name="GroupDisplayNameEmptyError" xml:space="preserve">
+    <value>समूह का प्रदर्शन नाम null या खाली नहीं हो सकता.</value>
+  </data>
+  <data name="SuccessfullyCreatedGroupMessage" xml:space="preserve">
+    <value>प्रदर्शित नाम: {0} तथा विवरण: {1} तथा ID: {2} तथा सुरक्षा पहचानकर्ता: {3} पर: {4} वाला समूह सफलतापूर्वक बनाया गया</value>
+  </data>
+  <data name="FailedCreatingGroupError" xml:space="preserve">
+    <value>स्थिति कोड: {0} और सामग्री: {1} के साथ समूह बनाना विफल रहा</value>
+  </data>
+<data name="DeleteGroupButton.Content" xml:space="preserve">
+  <value>समूह हटाएँ</value>
+</data>
+  <data name="DeleteGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अपने Entra ID से चयनित समूहों को हटाएँ.</value>
+  </data>
+  <data name="DeleteGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अपने Entra ID से चयनित समूहों को हटाएँ.</value>
+  </data>
+<data name="DeleteGroupDialogTitle" xml:space="preserve">
+  <value>समूह हटाने की पुष्टि</value>
+</data>
+<data name="Delete" xml:space="preserve">
+  <value>हटाएँ</value>
+</data>
+<data name="DeleteGroupDialogIntroSingle" xml:space="preserve">
+  <value>समूह '{0}' हटाएँ ?</value>
+</data>
+<data name="DeleteGroupDialogIntroMultiple" xml:space="preserve">
+  <value>{0} चयनित समूह हटाएँ ?</value>
+</data>
+<data name="DeleteGroupDialogWarning" xml:space="preserve">
+  <value>यह क्रिया अपरिवर्तनीय है. चयनित समूह आपके टेनेंट से स्थायी रूप से हटा दिए जाएँगे.</value>
+</data>
+<data name="SuccessfullyDeletedGroupMessage" xml:space="preserve">
+  <value>समूह {0} (ID: {1}) हटाया गया.</value>
+</data>
+<data name="DeleteGroupDeletionErrorLogTemplate" xml:space="preserve">
+  <value>समूह {0} हटाने में विफल: {1}</value>
+</data>
+<data name="ProvideNewGroupDetails" xml:space="preserve">
+  <value>नए समूह के लिए विवरण प्रदान करें.</value>
+</data>
+<data name="GroupType" xml:space="preserve">
+  <value>समूह प्रकार:</value>
+</data>
+<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+  <value>अपने टेनेंट में Entra समूहों का प्रबंधन करें और वे समूह चुनें जिन पर आप नीति परिनियोजित करना चाहते हैं.</value>
+</data>
+<data name="SelectedGroups.Text" xml:space="preserve">
+  <value>चयनित समूह:</value>
+</data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>50 डमी समूह बनाएँ</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>परीक्षण उद्देश्यों के लिए आपके टेनेंट के Entra में यादृच्छिक विवरणों के साथ 50 डमी समूह बनाएँ.</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>परीक्षण उद्देश्यों के लिए आपके टेनेंट के Entra में यादृच्छिक विवरणों के साथ 50 डमी समूह बनाएँ.</value>
+  </data>
+  <data name="ConfirmationTextForDummyGroupsCreation" xml:space="preserve">
+    <value>क्या आप सुनिश्चित हैं कि आप अपने टेनेंट के Entra में परीक्षण के लिए यादृच्छिक विवरणों के साथ 50 डमी समूह बनाना चाहते हैं?</value>
+  </data>
+  <data name="SignInAuthenticationRequiredMsg" xml:space="preserve">
+    <value>प्रमाणीकरण आवश्यक है. कृपया पहले अपने Microsoft टेनेंट में साइन इन करें.</value>
+  </data>
+  <data name="SuccessfullyRefreshedMSGraphTokenMsg" xml:space="preserve">
+    <value>खाते के लिए Microsoft Graph टोकन सफलतापूर्वक रीफ़्रेश किया गया: {0}</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.Content" xml:space="preserve">
+    <value>नीति फ़ाइल चुनें</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>App Control नीति फ़ाइल ब्राउज़ करें.</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>App Control नीति फ़ाइल ब्राउज़ करें.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.Content" xml:space="preserve">
+    <value>फ़ाइलें चुनें</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिमुलेशन में शामिल करने के लिए फ़ाइलें ब्राउज़ करें.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिमुलेशन में शामिल करने के लिए फ़ाइलें ब्राउज़ करें.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.Content" xml:space="preserve">
+    <value>फ़ोल्डर चुनें</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिमुलेशन में शामिल करने के लिए फ़ोल्डर ब्राउज़ करें. App Control द्वारा समर्थित फ़ाइलों के लिए फ़ोल्डरों को पुनरावर्ती रूप से स्कैन किया जाएगा.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिमुलेशन में शामिल करने के लिए फ़ोल्डर ब्राउज़ करें. App Control द्वारा समर्थित फ़ाइलों के लिए फ़ोल्डरों को पुनरावर्ती रूप से स्कैन किया जाएगा.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सुरक्षा कैटलॉग चुनें</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वे पथ प्रदान करें जहाँ सुरक्षा कैटलॉग (.cat) फ़ाइलें स्थित हैं. यदि प्रदान नहीं किया गया तो डिफ़ॉल्ट पथ 'C:\Windows\System32\CatRoot' उपयोग किया जाएगा.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वे पथ प्रदान करें जहाँ सुरक्षा कैटलॉग (.cat) फ़ाइलें स्थित हैं. यदि प्रदान नहीं किया गया तो डिफ़ॉल्ट पथ 'C:\Windows\System32\CatRoot' उपयोग किया जाएगा.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सुरक्षा कैटलॉग स्कैन करें</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम पर सुरक्षा कैटलॉग स्कैन किए जाएँ या नहीं.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम पर सुरक्षा कैटलॉग स्कैन किए जाएँ या नहीं.</value>
+  </data>
+  <data name="LoadPolicyButton.Content" xml:space="preserve">
+    <value>नीति लोड करें</value>
+  </data>
+  <data name="LoadPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित App Control नीति को उपयोगकर्ता इंटरफ़ेस में लोड करें.</value>
+  </data>
+  <data name="LoadPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित App Control नीति को उपयोगकर्ता इंटरफ़ेस में लोड करें.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.Content" xml:space="preserve">
+    <value>Advanced Hunting डेटा स्कैन करें</value>
+  </data>
+  <data name="ScanMDEAHDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>MDE Advanced Hunting लॉग चयन करने के बाद आप उन्हें स्कैन करने और नीचे सूची दृश्य में परिणाम दिखाने के लिए इस बटन का उपयोग कर सकते हैं.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>MDE Advanced Hunting लॉग चयन करने के बाद आप उन्हें स्कैन करने और नीचे सूची दृश्य में परिणाम दिखाने के लिए इस बटन का उपयोग कर सकते हैं.</value>
+  </data>
+    <data name="ScanEventLogsButton.Content" xml:space="preserve">
+    <value>इवेंट लॉग स्कैन करें</value>
+  </data>
+  <data name="ScanEventLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम या चयनित EVTX फ़ाइलों को Code Integrity/AppLocker लॉग के लिए स्कैन करें.</value>
+  </data>
+  <data name="ScanEventLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम या चयनित EVTX फ़ाइलों को Code Integrity/AppLocker लॉग के लिए स्कैन करें.</value>
+  </data>
+  <data name="DeviceNameButton.Content" xml:space="preserve">
+    <value>डिवाइस नाम</value>
+  </data>
+  <data name="DeviceNameButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>इनकमिंग Advanced Hunting डेटा को फ़िल्टर करने के लिए डिवाइस नाम दर्ज करें.</value>
+  </data>
+  <data name="DeviceNameButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>इनकमिंग Advanced Hunting डेटा को फ़िल्टर करने के लिए डिवाइस नाम दर्ज करें.</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.Header" xml:space="preserve">
+    <value>वैकल्पिक: पुनर्प्राप्ति से पहले लॉग फ़िल्टर करने हेतु डिवाइस नाम चुनें</value>
+  </data>
+      <data name="DeviceNameHeaderTextBlock.PlaceholderText" xml:space="preserve">
+    <value>डिवाइस नाम...</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वैकल्पिक: पुनर्प्राप्ति से पहले लॉग फ़िल्टर करने हेतु डिवाइस नाम चुनें</value>
+  </data>
+  <data name="ResetFiltersButton.Content" xml:space="preserve">
+    <value>फ़िल्टर रीसेट करें</value>
+  </data>
+  <data name="ResetFiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>प्रॉपर्टी, प्रॉपर्टी खोज और दिनांक फ़िल्टर रीसेट करें</value>
+  </data>
+  <data name="ResetFiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>प्रॉपर्टी, प्रॉपर्टी खोज और दिनांक फ़िल्टर रीसेट करें</value>
+  </data>
+  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अपने डिवाइस से XML नीति फ़ाइल चुनने के लिए क्लिक/टैप करें</value>
+  </data>
+  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अपने डिवाइस से XML नीति फ़ाइल चुनने के लिए क्लिक/टैप करें</value>
   </data>
 </root>

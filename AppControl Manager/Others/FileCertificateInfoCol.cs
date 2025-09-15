@@ -49,6 +49,4 @@ internal sealed class FileCertificateInfoCol(
 	internal string? Thumbprint => thumbprint;
 	internal string? TBSHash => tBSHash;
 	internal string? OIDs => oIDs;
-
-	internal ViewFileCertificatesVM? ParentViewModel { get; set; }
 }

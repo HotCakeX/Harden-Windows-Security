@@ -36,9 +36,9 @@ internal sealed partial class StrictKernelPolicyScanResults : Page
 
 	internal StrictKernelPolicyScanResults()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 
 	/// <summary>

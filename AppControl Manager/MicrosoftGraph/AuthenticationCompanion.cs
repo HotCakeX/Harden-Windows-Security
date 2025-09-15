@@ -16,6 +16,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading;
 using AppControlManager.Others;
@@ -34,7 +35,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	private readonly InfoBarSettings _InfoBar;
 	private readonly AuthenticationContext _AuthContext;
 
-	private ViewModelForMSGraph ViewModelMSGraph { get; } = ViewModelProvider.ViewModelForMSGraph;
+	private ViewModelForMSGraph ViewModelMSGraph => ViewModelProvider.ViewModelForMSGraph;
 
 	/// <summary>
 	/// The constructor needs methods to run when the Active Account is updated
@@ -50,6 +51,8 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 
 		// Initializing the field using the provided authContext
 		AuthenticationContextComboBoxSelectedItem = _AuthContext;
+
+		ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthenticatedAccounts_CollectionChanged;
 
 		// Detect and set the Shimmer/ListView visibility when the class is instantiated in each ViewModel/Page
 		ShimmerListViewVisibilityConfig();
@@ -274,14 +277,30 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	}
 
 	/// <summary>
-	/// Sign In methods ComboBox source
+	/// All Sign-in methods supported by the app.
 	/// </summary>
-	internal readonly Array SignInMethodsComboBoxSource = Enum.GetValues<SignInMethods>();
+	private static readonly List<AuthenticationContextComboBox> _SignInMethodsComboBoxSource =
+	[
+		new AuthenticationContextComboBox(
+			name: "Web Account Manager (WAM)",
+			authContext: SignInMethods.WebAccountManager,
+			image: "ms-appx:///Assets/External/WAM.png"),
+
+		new AuthenticationContextComboBox(
+			name: "Web Browser",
+			authContext: SignInMethods.WebBrowser,
+			image: "ms-appx:///Assets/External/Browser.png")
+	];
 
 	/// <summary>
-	/// Bound to the ComboBox's SelectedItem property with the default value
+	/// Sign In methods ComboBox source.
 	/// </summary>
-	internal SignInMethods SignInMethodsComboBoxSelectedItem { get; set => SP(ref field, value); } = SignInMethods.WebAccountManager;
+	internal List<AuthenticationContextComboBox> SignInMethodsComboBoxSource => _SignInMethodsComboBoxSource;
+
+	/// <summary>
+	/// Bound to the ComboBox's SelectedItem property with the default value.
+	/// </summary>
+	internal AuthenticationContextComboBox SignInMethodsComboBoxSelectedItem { get; set => SP(ref field, value); } = _SignInMethodsComboBoxSource[1];
 
 	/// <summary>
 	/// Authentication context ComboBox source
@@ -310,7 +329,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 
 			(bool, AuthenticatedAccounts?) signInResult = await Main.SignIn(
 				AuthenticationContextComboBoxSelectedItem,
-				SignInMethodsComboBoxSelectedItem,
+				SignInMethodsComboBoxSelectedItem.AuthContext,
 				cancellationTokenSource.Token);
 
 			if (signInResult.Item1)
@@ -344,6 +363,13 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 
 	public void Dispose()
 	{
+		try
+		{
+			// Unsubscribe from the event to avoid leaks.
+			ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged -= AuthenticatedAccounts_CollectionChanged;
+		}
+		catch { }
+
 		CancelAndDisposeCts();
 	}
 }

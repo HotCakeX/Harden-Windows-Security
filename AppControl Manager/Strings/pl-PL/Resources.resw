@@ -652,15 +652,6 @@
   <data name="BrowseForBasePolicyTextBlock.Text" xml:space="preserve">
     <value>Przeglądaj w poszukiwaniu pliku zasad podstawowych</value>
   </data>
-  <data name="BrowseForPolicyTextBlock.Text" xml:space="preserve">
-    <value>Przeglądaj w poszukiwaniu pliku XML zasad</value>
-  </data>
-  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Kliknij/Dotknij, aby wybrać plik zasad XML z urządzenia</value>
-  </data>
-  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Kliknij/Dotknij, aby wybrać plik zasad XML z urządzenia</value>
-  </data>
   <data name="ScanLevelComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Wybierz poziom, na podstawie którego będą skanowane pliki/dzienniki</value>
   </data>
@@ -816,24 +807,6 @@
   </data>
   <data name="ViewSelectedXMLFileTextBlock.Text" xml:space="preserve">
     <value>Wyświetl wybrane pliki XML.</value>
-  </data>
-  <data name="SelectXMLFileTextBlock.Text" xml:space="preserve">
-    <value>Wybierz plik XML</value>
-  </data>
-  <data name="SelectFilesTextBlock.Text" xml:space="preserve">
-    <value>Wybierz pliki</value>
-  </data>
-  <data name="SelectFoldersTextBlock.Text" xml:space="preserve">
-    <value>Wybierz foldery</value>
-  </data>
-  <data name="ScanLogsTextBlock.Text" xml:space="preserve">
-    <value>Skanuj dzienniki</value>
-  </data>
-  <data name="ScanLogsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Skanuj system lub wybrane pliki EVTX w poszukiwaniu dzienników integralności kodu/AppLocker</value>
-  </data>
-  <data name="ScanLogsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Skanuj system lub wybrane pliki EVTX w poszukiwaniu dzienników integralności kodu/AppLocker</value>
   </data>
   <data name="RuleOption_EnabledUMCI" xml:space="preserve">
     <value>Zasady kontroli aplikacji ograniczają zarówno pliki binarne trybu jądra, jak i trybu użytkownika. Domyślnie ograniczone są tylko pliki binarne trybu jądra. Włączenie tej opcji reguły weryfikuje pliki wykonywalne i skrypty trybu użytkownika.</value>
@@ -3937,12 +3910,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">
     <value>Para klucz-wartość dodana do SignedPolicyStage1RemovalTimes: {0} = {1}</value>
   </data>
-  <data name="AuthResultImmutableErrorMessage" xml:space="preserve">
-    <value>AuthResult jest niezmienny i nie powinien być ustawiany po inicjalizacji.</value>
-  </data>
-  <data name="AccountImmutableErrorMessage" xml:space="preserve">
-    <value>Konto jest niezmienne i nie powinno być ustawiane po inicjalizacji.</value>
-  </data>
   <data name="SignInProcessCancelledMessage" xml:space="preserve">
     <value>Proces logowania został anulowany</value>
   </data>
@@ -4641,12 +4608,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="PackageVersionHeader.Text" xml:space="preserve">
     <value>Wersja pakietu</value>
-  </data>
-  <data name="LoadPolicy.Text" xml:space="preserve">
-    <value>Wczytaj zasadę</value>
-  </data>
-  <data name="BrowseForPolicy.Text" xml:space="preserve">
-    <value>Przeglądaj zasady</value>
   </data>
   <data name="SaveTheChanged.Text" xml:space="preserve">
     <value>Zapisz zmiany</value>
@@ -5778,5 +5739,231 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="SelectedText" xml:space="preserve">
      <value>Wybrano</value>
+  </data>
+  <!-- For Intune Groups ListView - Headers -->
+  <data name="GroupNameHeader.Text" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
+  <data name="GroupIDHeader.Text" xml:space="preserve">
+    <value>Identyfikator</value>
+  </data>
+    <data name="GroupDescriptionHeader.Text" xml:space="preserve">
+    <value>Opis</value>
+  </data>
+    <data name="GroupSecurityIdentifierHeader.Text" xml:space="preserve">
+    <value>Identyfikator zabezpieczeń</value>
+  </data>
+    <data name="GroupCreatedDateTimeHeader.Text" xml:space="preserve">
+    <value>Czas utworzenia</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Headers -->
+  <!-- For Intune Groups ListView - Buttons -->
+  <data name="GroupNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
+  <data name="GroupIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Identyfikator</value>
+  </data>
+    <data name="GroupDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Opis</value>
+  </data>
+    <data name="GroupSecurityIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Identyfikator zabezpieczeń</value>
+  </data>
+    <data name="GroupCreatedDateTimeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Czas utworzenia</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Buttons -->
+  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <value>Szczegóły wdrożenia zasady Intune</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Określ szczegóły wdrożenia zasady Intune</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Określ szczegóły wdrożenia zasady Intune</value>
+  </data>
+  <data name="CreateGroupButton.Content" xml:space="preserve">
+    <value>Utwórz nową grupę</value>
+  </data>
+  <data name="CreateGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz nową grupę w Microsoft Entra ID</value>
+  </data>
+  <data name="CreateGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utwórz nową grupę w Microsoft Entra ID</value>
+  </data>
+  <data name="GroupDisplayNameEmptyError" xml:space="preserve">
+    <value>Wyświetlana nazwa grupy nie może być null ani pusta.</value>
+  </data>
+  <data name="SuccessfullyCreatedGroupMessage" xml:space="preserve">
+    <value>Pomyślnie utworzono grupę z wyświetlaną nazwą: {0} oraz opisem: {1} i identyfikatorem: {2} oraz identyfikatorem zabezpieczeń: {3} o: {4}</value>
+  </data>
+  <data name="FailedCreatingGroupError" xml:space="preserve">
+    <value>Nie udało się utworzyć grupy z kodem stanu: {0} i zawartością: {1}</value>
+  </data>
+<data name="DeleteGroupButton.Content" xml:space="preserve">
+  <value>Usuń grupę</value>
+</data>
+  <data name="DeleteGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wybrane grupy z Twojego Entra ID.</value>
+  </data>
+  <data name="DeleteGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń wybrane grupy z Twojego Entra ID.</value>
+  </data>
+<data name="DeleteGroupDialogTitle" xml:space="preserve">
+  <value>Potwierdzenie usunięcia grupy</value>
+</data>
+<data name="Delete" xml:space="preserve">
+  <value>Usuń</value>
+</data>
+<data name="DeleteGroupDialogIntroSingle" xml:space="preserve">
+  <value>Usunąć grupę '{0}' ?</value>
+</data>
+<data name="DeleteGroupDialogIntroMultiple" xml:space="preserve">
+  <value>Usunąć {0} wybranych grup ?</value>
+</data>
+<data name="DeleteGroupDialogWarning" xml:space="preserve">
+  <value>Ta operacja jest nieodwracalna. Wybrane grupy zostaną trwale usunięte z Twojego dzierżawcy.</value>
+</data>
+<data name="SuccessfullyDeletedGroupMessage" xml:space="preserve">
+  <value>Usunięto grupę {0} (ID: {1}).</value>
+</data>
+<data name="DeleteGroupDeletionErrorLogTemplate" xml:space="preserve">
+  <value>Nie udało się usunąć grupy {0}: {1}</value>
+</data>
+<data name="ProvideNewGroupDetails" xml:space="preserve">
+  <value>Podaj szczegóły dla nowej grupy.</value>
+</data>
+<data name="GroupType" xml:space="preserve">
+  <value>Typ grupy:</value>
+</data>
+<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+  <value>Zarządzaj grupami Entra w swoim dzierżawcy i wybierz grupy, do których chcesz wdrożyć zasadę.</value>
+</data>
+<data name="SelectedGroups.Text" xml:space="preserve">
+  <value>Wybrane grupy:</value>
+</data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Utwórz 50 grup testowych</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz 50 grup testowych w Entra Twojego dzierżawcy z losowymi szczegółami do celów testowych.</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utwórz 50 grup testowych w Entra Twojego dzierżawcy z losowymi szczegółami do celów testowych.</value>
+  </data>
+  <data name="ConfirmationTextForDummyGroupsCreation" xml:space="preserve">
+    <value>Czy na pewno chcesz utworzyć 50 grup testowych w Entra Twojego dzierżawcy z losowymi szczegółami do celów testowych?</value>
+  </data>
+  <data name="SignInAuthenticationRequiredMsg" xml:space="preserve">
+    <value>Wymagane uwierzytelnienie. Zaloguj się najpierw do swojego dzierżawcy Microsoft.</value>
+  </data>
+  <data name="SuccessfullyRefreshedMSGraphTokenMsg" xml:space="preserve">
+    <value>Pomyślnie odświeżono token Microsoft Graph dla konta: {0}</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.Content" xml:space="preserve">
+    <value>Wybierz plik zasady</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyszukaj plik zasady App Control.</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyszukaj plik zasady App Control.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.Content" xml:space="preserve">
+    <value>Wybierz pliki</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyszukaj pliki do uwzględnienia w symulacji.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyszukaj pliki do uwzględnienia w symulacji.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.Content" xml:space="preserve">
+    <value>Wybierz foldery</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyszukaj foldery do uwzględnienia w symulacji. Foldery zostaną przeskanowane rekursywnie w poszukiwaniu plików obsługiwanych przez App Control.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyszukaj foldery do uwzględnienia w symulacji. Foldery zostaną przeskanowane rekursywnie w poszukiwaniu plików obsługiwanych przez App Control.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Wybierz katalogi zabezpieczeń</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Podaj ścieżki do katalogów, w których znajdują się pliki katalogów zabezpieczeń (.cat). Jeśli nie zostaną podane, zostanie użyta domyślna ścieżka 'C:\Windows\System32\CatRoot'.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Podaj ścieżki do katalogów, w których znajdują się pliki katalogów zabezpieczeń (.cat). Jeśli nie zostaną podane, zostanie użyta domyślna ścieżka 'C:\Windows\System32\CatRoot'.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Skanuj katalogi zabezpieczeń</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Określa, czy katalogi zabezpieczeń w systemie mają zostać przeskanowane.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Określa, czy katalogi zabezpieczeń w systemie mają zostać przeskanowane.</value>
+  </data>
+  <data name="LoadPolicyButton.Content" xml:space="preserve">
+    <value>Wczytaj zasadę</value>
+  </data>
+  <data name="LoadPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wczytaj wybraną zasadę App Control do interfejsu użytkownika.</value>
+  </data>
+  <data name="LoadPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wczytaj wybraną zasadę App Control do interfejsu użytkownika.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.Content" xml:space="preserve">
+    <value>Skanuj dane Advanced Hunting</value>
+  </data>
+  <data name="ScanMDEAHDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Po wybraniu dzienników MDE Advanced Hunting możesz użyć tego przycisku, aby je przeskanować i wyświetlić ich wyniki na poniższej liście.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Po wybraniu dzienników MDE Advanced Hunting możesz użyć tego przycisku, aby je przeskanować i wyświetlić ich wyniki na poniższej liście.</value>
+  </data>
+    <data name="ScanEventLogsButton.Content" xml:space="preserve">
+    <value>Skanuj dzienniki zdarzeń</value>
+  </data>
+  <data name="ScanEventLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przeskanuj system lub wybrane pliki EVTX w poszukiwaniu dzienników Code Integrity/AppLocker.</value>
+  </data>
+  <data name="ScanEventLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przeskanuj system lub wybrane pliki EVTX w poszukiwaniu dzienników Code Integrity/AppLocker.</value>
+  </data>
+  <data name="DeviceNameButton.Content" xml:space="preserve">
+    <value>Nazwa urządzenia</value>
+  </data>
+  <data name="DeviceNameButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wprowadź nazwę urządzenia, aby filtrować przychodzące dane Advanced Hunting.</value>
+  </data>
+  <data name="DeviceNameButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wprowadź nazwę urządzenia, aby filtrować przychodzące dane Advanced Hunting.</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.Header" xml:space="preserve">
+    <value>Opcjonalnie: Wybierz nazwę urządzenia, aby filtrować dzienniki przed pobraniem</value>
+  </data>
+      <data name="DeviceNameHeaderTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Nazwa urządzenia...</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opcjonalnie: Wybierz nazwę urządzenia, aby filtrować dzienniki przed pobraniem</value>
+  </data>
+  <data name="ResetFiltersButton.Content" xml:space="preserve">
+    <value>Resetuj filtry</value>
+  </data>
+  <data name="ResetFiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zresetuj filtry właściwości, wyszukiwania właściwości i daty</value>
+  </data>
+  <data name="ResetFiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zresetuj filtry właściwości, wyszukiwania właściwości i daty</value>
+  </data>
+    <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknij/Dotknij, aby wybrać plik zasad XML z urządzenia</value>
+  </data>
+  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kliknij/Dotknij, aby wybrać plik zasad XML z urządzenia</value>
   </data>
 </root>

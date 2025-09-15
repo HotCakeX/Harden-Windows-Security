@@ -33,5 +33,5 @@ internal sealed class AssignmentPayload(
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("target")]
-	internal Dictionary<string, object>? Target { get; } = target;
+	internal Dictionary<string, object>? Target => target;
 }

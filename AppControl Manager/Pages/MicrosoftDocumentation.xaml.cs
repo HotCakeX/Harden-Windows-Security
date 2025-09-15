@@ -36,10 +36,10 @@ internal sealed partial class MicrosoftDocumentation : Page
 	/// </summary>
 	internal MicrosoftDocumentation()
 	{
-		this.InitializeComponent();
+		InitializeComponent();
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		NavigationCacheMode = NavigationCacheMode.Enabled;
 	}
 
 	// Event handler for Back button

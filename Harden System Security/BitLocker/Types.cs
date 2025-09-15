@@ -61,9 +61,6 @@ internal sealed class KeyProtector(
 
 	[JsonInclude]
 	internal string Thumbprint => thumbprint;
-
-	[JsonIgnore]
-	internal ViewModels.BitLockerVM? VMRef;
 }
 
 /// <summary>
@@ -169,9 +166,6 @@ internal sealed class BitLockerVolume(
 
 	[JsonInclude]
 	internal List<KeyProtector> KeyProtectors => keyProtectors;
-
-	[JsonIgnore]
-	internal ViewModels.BitLockerVM? VMRef;
 }
 
 // Different types of the key protectors

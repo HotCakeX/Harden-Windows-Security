@@ -33,6 +33,7 @@ namespace AppControlManager.MicrosoftGraph;
 [JsonSerializable(typeof(DeviceConfigurationPolicy))]
 [JsonSerializable(typeof(DeviceConfigurationPoliciesResponse))]
 [JsonSerializable(typeof(Others.CiPolicyInfo))]
+[JsonSerializable(typeof(GroupCreatePayload))]
 [JsonSerializable(typeof(string[]))] // Used to deserialize MS Defender results
 internal sealed partial class MSGraphJsonContext : JsonSerializerContext
 {

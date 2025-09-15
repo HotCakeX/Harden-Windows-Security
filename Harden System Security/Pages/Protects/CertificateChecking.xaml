@@ -336,15 +336,15 @@
 
             <!-- DataTemplate for ListView items -->
             <customUI:ListViewV2.ItemTemplate>
-                <DataTemplate x:DataType="Vyre:NonStlRootCert">
+                <DataTemplate x:DataType="Vyre:NonStlRootCert" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMRef.CopySelectedCertificates_Click}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.CopySelectedCertificates_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMRef.CopySelectedCertificates_Click}"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.CopySelectedCertificates_Click}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
@@ -353,9 +353,9 @@
 
                                 <MenuFlyoutSeparator />
 
-                                <MenuFlyoutItem x:Uid="DeleteCertMenuFlyoutItem" Click="{x:Bind VMRef.DeleteSelectedCertificate_Click}">
+                                <MenuFlyoutItem x:Uid="DeleteCertMenuFlyoutItem" Click="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.DeleteSelectedCertificate_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="Delete" Invoked="{x:Bind VMRef.DeleteSelectedCertificate_Click}"/>
+                                        <KeyboardAccelerator Key="Delete" Invoked="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.DeleteSelectedCertificate_Click}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE74D;" />
@@ -371,43 +371,43 @@
 
                                     <MenuFlyoutSubItem.Items>
 
-                                        <MenuFlyoutItem x:Uid="StoreLocationHeader" Tag="StoreLocation" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="StoreLocationHeader" Tag="StoreLocation" Click="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.CopyCertificateProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="StoreNameHeader" Tag="StoreName" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="StoreNameHeader" Tag="StoreName" Click="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.CopyCertificateProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="SubjectHeader" Tag="Subject" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="SubjectHeader" Tag="Subject" Click="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.CopyCertificateProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IssuerHeader" Tag="Issuer" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="IssuerHeader" Tag="Issuer" Click="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.CopyCertificateProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="ThumbprintHeader" Tag="Thumbprint" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="ThumbprintHeader" Tag="Thumbprint" Click="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.CopyCertificateProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="RootSubjectHeader" Tag="RootSubject" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="RootSubjectHeader" Tag="RootSubject" Click="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.CopyCertificateProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="RootSha256Header" Tag="RootSha256" Click="{x:Bind VMRef.CopyCertificateProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="RootSha256Header" Tag="RootSha256" Click="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.CopyCertificateProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
@@ -421,13 +421,13 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind VMRef.StoreLocationColumnWidth, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMRef.StoreNameColumnWidth, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMRef.SubjectColumnWidth, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMRef.IssuerColumnWidth, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMRef.ThumbprintColumnWidth, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMRef.RootSubjectColumnWidth, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind VMRef.RootSha256ColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.StoreLocationColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.StoreNameColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.SubjectColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.IssuerColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.ThumbprintColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.RootSubjectColumnWidth, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.RootSha256ColumnWidth, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Text="{x:Bind StoreLocationString}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>

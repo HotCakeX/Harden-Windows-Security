@@ -163,10 +163,22 @@
                     </Button.Flyout>
                 </Button>
 
-                <TextBox Text="{x:Bind ViewModel.TotalResults, Mode=OneWay}"
-                         IsReadOnly="True"
-                         VerticalAlignment="Center"
-                         VerticalContentAlignment="Center"/>
+                <!-- Total chip -->
+                <Border CornerRadius="8"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Padding="10,6"
+                        BorderThickness="1"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock VerticalAlignment="Center">
+                            <Run x:Uid="TotalText" />
+                            <Run Text="{x:Bind ViewModel.VerificationResults.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
 
                 <TextBox Width="300"
                          IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
@@ -216,15 +228,15 @@
 
             <!-- DataTemplate for ListView items -->
             <customUI:ListViewV2.ItemTemplate>
-                <DataTemplate x:DataType="GroupPolicy:VerificationResult">
+                <DataTemplate x:DataType="GroupPolicy:VerificationResult" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind MicrosoftSecurityBaselineVMRef.ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind MicrosoftSecurityBaselineVMRef.ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind MicrosoftSecurityBaselineVMRef.ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind MicrosoftSecurityBaselineVMRef.ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind MicrosoftSecurityBaselineVMRef.ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth5, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind FriendlyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
                         <TextBlock Text="{x:Bind SourceDisplay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>

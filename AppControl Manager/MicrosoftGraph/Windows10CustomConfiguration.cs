@@ -36,33 +36,33 @@ internal sealed class Windows10CustomConfiguration(
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("@odata.type")]
-	internal string? ODataType { get; } = oDataType;
+	internal string? ODataType => oDataType;
 
 	/// <summary>
 	/// The display name of the custom configuration.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("displayName")]
-	internal string? DisplayName { get; } = displayName;
+	internal string? DisplayName => displayName;
 
 	/// <summary>
 	/// The description of the custom configuration.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("description")]
-	internal string? Description { get; } = description;
+	internal string? Description => description;
 
 	/// <summary>
 	/// The OMA settings associated with the configuration.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("omaSettings")]
-	internal List<OmaSettingBase64>? OmaSettings { get; } = omaSettings;
+	internal List<OmaSettingBase64>? OmaSettings => omaSettings;
 
 	/// <summary>
 	/// The platforms applicable to the configuration.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("platforms")]
-	internal List<string>? Platforms { get; } = platforms;
+	internal List<string>? Platforms => platforms;
 }

@@ -37,40 +37,40 @@ internal sealed class OmaSettingBase64(
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("@odata.type")]
-	internal string? ODataType { get; } = oDataType;
+	internal string? ODataType => oDataType;
 
 	/// <summary>
 	/// The display name of the setting.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("displayName")]
-	internal string? DisplayName { get; } = displayName;
+	internal string? DisplayName => displayName;
 
 	/// <summary>
 	/// The description of the setting.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("description")]
-	internal string? Description { get; } = description;
+	internal string? Description => description;
 
 	/// <summary>
 	/// The OMA URI for the setting.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("omaUri")]
-	internal string? OmaUri { get; } = omaUri;
+	internal string? OmaUri => omaUri;
 
 	/// <summary>
 	/// The file name associated with the setting.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("fileName")]
-	internal string? FileName { get; } = fileName;
+	internal string? FileName => fileName;
 
 	/// <summary>
 	/// The value of the setting.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("value")]
-	internal string? Value { get; } = value;
+	internal string? Value => value;
 }

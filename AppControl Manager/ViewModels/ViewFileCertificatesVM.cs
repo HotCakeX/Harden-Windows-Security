@@ -596,7 +596,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 			foreach (FileCertificateInfoCol item in output)
 			{
-				item.ParentViewModel = this;
 				FileCertificates.Add(item);
 			}
 

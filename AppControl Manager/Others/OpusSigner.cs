@@ -17,7 +17,7 @@
 
 namespace AppControlManager.Others;
 
-internal readonly struct OpusSigner(string tbsHash, string subjectCN)
+internal sealed class OpusSigner(string tbsHash, string subjectCN)
 {
 	internal string TBSHash => tbsHash;
 	internal string SubjectCN => subjectCN;

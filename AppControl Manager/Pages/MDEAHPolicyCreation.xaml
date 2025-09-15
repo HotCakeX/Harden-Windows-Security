@@ -44,7 +44,7 @@
                  IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}">
             <customUI:InfoBarV2.ActionButton>
                 <DropDownButton x:Uid="AdditionalActionsDropDownButton"
-                    Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}">
+                                Visibility="{x:Bind ViewModel.OpenInPolicyEditorInfoBarActionButtonVisibility, Mode=OneWay}">
                     <DropDownButton.Content>
                         <StackPanel Orientation="Horizontal" Spacing="5">
                             <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
@@ -116,16 +116,17 @@
 
                             <!-- Scan MDE Advanced Hunting button -->
                             <Button IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                        ToolTipService.ToolTip="Once you select MDE Advanced Hunting logs, you can use this button to scan them and display their results in the grid below"
-                        Style="{StaticResource AccentButtonStyle}"
-                        Click="{x:Bind ViewModel.ScanLogs_Click}" >
-                                <Button.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <FontIcon Glyph="&#xEE6F;" />
-                                        <TextBlock x:Uid="ScanLogsTextBlock" Margin="5,0,0,0" />
-
-                                    </StackPanel>
-                                </Button.Content>
+                                    x:Uid="ScanMDEAHDataButton"
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    Click="{x:Bind ViewModel.ScanLogs_Click}" >
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xEE6F;" />
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
                             </Button>
 
                             <customUI:ButtonV2 x:Uid="BrowseForMDELogsButton"
@@ -167,324 +168,10 @@
 
                         <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
-                            <Button BorderThickness="0.8" x:Uid="MicrosoftGraphButton">
+                            <customUI:GraphAuthPanel Host="{x:Bind ViewModel}" />
 
-                                <Button.Resources>
-                                    <!-- https://github.com/microsoft/microsoft-ui-xaml/blob/main/src/controls/dev/CommonStyles/Button_themeresources.xaml#L13-L16 -->
-                                    <ResourceDictionary>
-                                        <LinearGradientBrush x:Key="ButtonBorderBrush" StartPoint="0,0" EndPoint="1,0">
-                                            <GradientStop Color="HotPink" Offset="0.0"/>
-                                            <GradientStop Color="#D1C4E9" Offset="0.3"/>
-                                            <GradientStop Color="#BBDEFB" Offset="0.6"/>
-                                            <GradientStop Color="MediumPurple" Offset="1.0"/>
-                                        </LinearGradientBrush>
-
-                                        <LinearGradientBrush x:Key="ButtonBorderBrushPointerOver" StartPoint="0,0" EndPoint="1,0">
-                                            <GradientStop Color="HotPink" Offset="0.0"/>
-                                            <GradientStop Color="#D1C4E9" Offset="0.3"/>
-                                            <GradientStop Color="#BBDEFB" Offset="0.6"/>
-                                            <GradientStop Color="MediumPurple" Offset="1.0"/>
-                                        </LinearGradientBrush>
-
-                                        <LinearGradientBrush x:Key="ButtonBorderBrushPressed" StartPoint="0,0" EndPoint="1,0">
-                                            <GradientStop Color="HotPink" Offset="0.0"/>
-                                            <GradientStop Color="#D1C4E9" Offset="0.3"/>
-                                            <GradientStop Color="#BBDEFB" Offset="0.6"/>
-                                            <GradientStop Color="MediumPurple" Offset="1.0"/>
-                                        </LinearGradientBrush>
-                                    </ResourceDictionary>
-                                </Button.Resources>
-
-                                <Button.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
-                                            <AnimatedIcon.Source>
-                                                <animatedvisuals:MicrosoftCloud/>
-                                            </AnimatedIcon.Source>
-                                        </AnimatedIcon>
-                                        <TextBlock Text="Microsoft Graph" Margin="5,0,0,0" />
-                                    </StackPanel>
-                                </Button.Content>
-                                <Button.Flyout>
-                                    <Flyout Placement="Bottom">
-
-                                        <Flyout.FlyoutPresenterStyle>
-                                            <Style TargetType="FlyoutPresenter">
-
-                                                <Setter Property="Padding" Value="5,5,5,0"/>
-
-                                                <!-- Same corner radius as the one in PanelStyle  -->
-                                                <Setter Property="CornerRadius" Value="8" />
-
-                                                <!--
-                                        Important: the "resolution order" for widths (at least in winui) is minwidth, maxwidth, width
-                                        Width does not override MaxWidth
-                                        https://learn.microsoft.com/uwp/api/windows.ui.xaml.frameworkelement.maxwidth?view=winrt-26100#remarks
-                                        -->
-                                                <Setter Property="MaxWidth" Value="1234" />
-                                            </Style>
-                                        </Flyout.FlyoutPresenterStyle>
-
-                                        <StackPanel Width="500"
-                                    VerticalAlignment="Top"
-                                    Orientation="Vertical"
-                                    Spacing="8">
-
-                                            <controls:Segmented x:Name="segmentedControl1"
-                                                    SelectedIndex="0"
-                                                    HorizontalAlignment="Stretch">
-                                                <controls:SegmentedItem x:Uid="ActiveAccountSegmentedItem"
-                                                            Tag="Active">
-                                                    <controls:SegmentedItem.Icon>
-                                                        <IconSourceElement>
-                                                            <BitmapIconSource UriSource="/Assets/External/Bottle.png" ShowAsMonochrome="False" />
-                                                        </IconSourceElement>
-                                                    </controls:SegmentedItem.Icon>
-
-                                                </controls:SegmentedItem>
-
-                                                <controls:SegmentedItem x:Uid="SignInSegmentedItem"
-                                                            Tag="Authentication" >
-                                                    <controls:SegmentedItem.Icon>
-                                                        <IconSourceElement>
-                                                            <BitmapIconSource UriSource="/Assets/External/Authentication.png" ShowAsMonochrome="False" />
-                                                        </IconSourceElement>
-                                                    </controls:SegmentedItem.Icon>
-                                                </controls:SegmentedItem>
-
-                                                <controls:SegmentedItem x:Uid="SignedInAccountsSegmentedItem"
-                                                            Tag="SignedIn">
-                                                    <controls:SegmentedItem.Icon>
-                                                        <IconSourceElement>
-                                                            <BitmapIconSource UriSource="/Assets/External/Vault.png" ShowAsMonochrome="False" />
-                                                        </IconSourceElement>
-                                                    </controls:SegmentedItem.Icon>
-                                                </controls:SegmentedItem>
-                                            </controls:Segmented>
-
-                                            <controls:SwitchPresenter Value="{x:Bind ((controls:SegmentedItem)segmentedControl1.SelectedItem).Tag, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center">
-
-                                                <controls:Case Value="Active">
-                                                    <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                                Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Spacing="10" Padding="10">
-
-                                                        <controls:WrapPanel Orientation="Vertical" VerticalSpacing="5" HorizontalSpacing="10" HorizontalAlignment="Center">
-
-                                                            <TextBlock x:Uid="CurrentlyInUseAccountDetailsTextBlock"
-                                                           Margin="0,0,0,5"
-                                                           HorizontalAlignment="Center"/>
-
-                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountUsername" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountUsername, Mode=OneWay}" HorizontalAlignment="Center" Width="470"/>
-                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountTenantID" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountTenantID, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
-                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountAccountIdentifier" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountAccountIdentifier, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
-                                                            <TextBox IsReadOnly="True" x:Uid="CurrentActiveAccountPermissions" Text="{x:Bind ViewModel.AuthCompanionCLS.CurrentActiveAccountPermissions, Mode=OneWay}" Margin="0,8,0,0" HorizontalAlignment="Center" Width="470"/>
-
-                                                        </controls:WrapPanel>
-
-                                                    </StackPanel>
-
-                                                </controls:Case>
-
-                                                <controls:Case Value="Authentication">
-                                                    <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                                Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="10" Padding="10">
-
-                                                        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-
-                                                            <Button IsEnabled="{x:Bind ViewModel.AuthCompanionCLS.SignInButtonState, Mode=OneWay}"
-                                                        x:Uid="SignInButton" Click="{x:Bind ViewModel.AuthCompanionCLS.SignIn}">
-                                                                <Button.Content>
-                                                                    <StackPanel Orientation="Horizontal">
-                                                                        <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
-                                                                            <AnimatedIcon.Source>
-                                                                                <animatedvisuals:SignIn/>
-                                                                            </AnimatedIcon.Source>
-                                                                        </AnimatedIcon>
-                                                                        <TextBlock x:Uid="SignInTextBlock"
-                                                                       Margin="5,0,0,0" />
-                                                                    </StackPanel>
-                                                                </Button.Content>
-                                                            </Button>
-
-                                                            <Button IsEnabled="{x:Bind ViewModel.AuthCompanionCLS.SignOutButtonState, Mode=OneWay}"
-                                                        x:Uid="CancelSigningInButton" Click="{x:Bind ViewModel.AuthCompanionCLS.MSGraphCancelSignInButton_Click}">
-                                                                <Button.Content>
-                                                                    <StackPanel Orientation="Horizontal">
-                                                                        <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
-                                                                            <AnimatedIcon.Source>
-                                                                                <animatedvisuals:Cancel/>
-                                                                            </AnimatedIcon.Source>
-                                                                        </AnimatedIcon>
-                                                                        <TextBlock x:Uid="CancelSigningInTextBlock"
-                                                                       Margin="5,0,0,0" />
-                                                                    </StackPanel>
-                                                                </Button.Content>
-                                                            </Button>
-
-                                                        </StackPanel>
-
-                                                        <ComboBox
-                                                ItemsSource="{x:Bind ViewModel.AuthCompanionCLS.SignInMethodsComboBoxSource}"
-                                                Margin="0,5,0,0"
-                                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                                HorizontalAlignment="Center"
-                                                x:Uid="SignInMethodsComboBox"
-                                                SelectedItem="{x:Bind ViewModel.AuthCompanionCLS.SignInMethodsComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                                            <!-- To center the header text -->
-                                                            <ComboBox.HeaderTemplate>
-                                                                <DataTemplate>
-                                                                    <TextBlock Text="{Binding}"
-                                                            HorizontalAlignment="Center"
-                                                            TextAlignment="Center" />
-                                                                </DataTemplate>
-                                                            </ComboBox.HeaderTemplate>
-                                                        </ComboBox>
-
-
-                                                        <ComboBox
-                                                            ItemsSource="{x:Bind ViewModel.AuthCompanionCLS.AuthenticationContextComboBoxSource}"
-                                                            Margin="0,5,0,0"
-                                                            HorizontalAlignment="Center"
-                                                            x:Uid="AuthenticationContextComboBox"
-                                                            SelectedItem="{x:Bind ViewModel.AuthCompanionCLS.AuthenticationContextComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                                            <!-- To center the header text -->
-                                                            <ComboBox.HeaderTemplate>
-                                                                <DataTemplate>
-                                                                    <TextBlock Text="{Binding}"
-                                                            HorizontalAlignment="Center"
-                                                            TextAlignment="Center" />
-                                                                </DataTemplate>
-                                                            </ComboBox.HeaderTemplate>
-                                                        </ComboBox>
-
-                                                    </StackPanel>
-                                                </controls:Case>
-
-
-                                                <controls:Case Value="SignedIn">
-
-                                                    <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                                                Style="{StaticResource PanelStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Spacing="5" Padding="3">
-
-                                                        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Top">
-
-                                                            <Button HorizontalAlignment="Center" VerticalAlignment="Top" x:Uid="RemoveAccountButton" Click="{x:Bind ViewModel.AuthCompanionCLS.LogOutOfSelectedAccount}">
-                                                                <Button.Content>
-                                                                    <StackPanel Orientation="Horizontal">
-                                                                        <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
-                                                                            <AnimatedIcon.Source>
-                                                                                <animatedvisuals:Logout/>
-                                                                            </AnimatedIcon.Source>
-                                                                        </AnimatedIcon>
-                                                                        <TextBlock x:Uid="RemoveTextBlock" Margin="5,0,0,0" />
-                                                                    </StackPanel>
-                                                                </Button.Content>
-                                                            </Button>
-
-
-                                                            <Button HorizontalAlignment="Center" x:Uid="SetAccountAsActiveButton" VerticalAlignment="Top" Click="{x:Bind ViewModel.AuthCompanionCLS.SetActiveFromListView}">
-                                                                <Button.Content>
-                                                                    <StackPanel Orientation="Horizontal">
-                                                                        <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
-                                                                            <AnimatedIcon.Source>
-                                                                                <animatedvisuals:Select/>
-                                                                            </AnimatedIcon.Source>
-                                                                        </AnimatedIcon>
-                                                                        <TextBlock x:Uid="SetAsActiveTextBlock" Margin="5,0,0,0" />
-                                                                    </StackPanel>
-                                                                </Button.Content>
-                                                            </Button>
-
-                                                        </StackPanel>
-
-
-                                                        <!-- Shimmer -->
-
-                                                        <StackPanel Margin="0,10,0,0"
-                                                                    Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}"
-                                                                    Width="450"
-                                                                    Height="255"
-                                                                    Padding="16"
-                                                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                                    BorderThickness="1"
-                                                                    CornerRadius="4"
-                                                                    Spacing="12">
-
-                                                            <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                                                <labs:Shimmer Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
-                                                            </Grid>
-
-                                                            <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                                                <labs:Shimmer Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
-                                                            </Grid>
-
-                                                            <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                                                <labs:Shimmer Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
-                                                            </Grid>
-
-                                                            <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
-                                                                <labs:Shimmer Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
-                                                            </Grid>
-
-                                                        </StackPanel>
-
-
-                                                        <ListView HorizontalAlignment="Center"
-                                                    Visibility="{x:Bind ViewModel.AuthCompanionCLS.AuthenticatedAccountsListViewVisibility, Mode=OneWay}"
-                                                    x:Name="AuthenticatedAccountsListView"
-                                                    BorderThickness="0"
-                                                    CornerRadius="5"
-                                                    ItemsSource="{x:Bind ViewModel.ViewModelMSGraph.AuthenticatedAccounts, Mode=OneWay}"
-                                                    SelectedItem="{x:Bind ViewModel.AuthCompanionCLS.ListViewSelectedAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                    Height="300"
-                                                    SelectionMode="Single">
-                                                            <ListView.ItemTemplate>
-                                                                <DataTemplate x:DataType="MSGraph:AuthenticatedAccounts">
-                                                                    <Grid Padding="2,10,2,10">
-                                                                        <Grid.Resources>
-                                                                            <ResourceDictionary
-                                                     Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml"/>
-                                                                        </Grid.Resources>
-                                                                        <Grid.RowDefinitions>
-                                                                            <RowDefinition Height="*"/>
-                                                                            <RowDefinition Height="*"/>
-                                                                            <RowDefinition Height="*"/>
-                                                                            <RowDefinition Height="*"/>
-                                                                        </Grid.RowDefinitions>
-                                                                        <Grid.ColumnDefinitions>
-                                                                            <ColumnDefinition Width="*"/>
-                                                                        </Grid.ColumnDefinitions>
-
-                                                                        <TextBox IsReadOnly="True" Header="UserName" Text="{x:Bind Username}" Grid.Column="0" Grid.Row="0"/>
-                                                                        <TextBox IsReadOnly="True" Header="Tenant ID" Text="{x:Bind TenantID}" Margin="0,8,0,0" Grid.Column="0" Grid.Row="1"/>
-                                                                        <TextBox IsReadOnly="True" Header="Account Identifier" Text="{x:Bind AccountIdentifier}" Margin="0,8,0,0" Grid.Column="0" Grid.Row="2"/>
-                                                                        <TextBox IsReadOnly="True" Header="Permissions" Text="{x:Bind Permissions}" Margin="0,8,0,0" Grid.Column="0" Grid.Row="3"/>
-
-                                                                    </Grid>
-                                                                </DataTemplate>
-                                                            </ListView.ItemTemplate>
-
-                                                        </ListView>
-
-                                                    </StackPanel>
-
-                                                </controls:Case>
-                                            </controls:SwitchPresenter>
-
-                                        </StackPanel>
-
-                                    </Flyout>
-                                </Button.Flyout>
-                            </Button>
-
-
-                            <Button Content="Device Name"
-                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                    ToolTipService.ToolTip="Enter a device name to filter the incoming logs">
+                            <Button x:Uid="DeviceNameButton"
+                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
                                 <Button.ContentTemplate>
                                     <DataTemplate x:DataType="x:String">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
@@ -504,9 +191,8 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="3" VerticalSpacing="8">
                                             <TextBox Width="300"
-                                                    Header="Optional: Choose a device name to filter the logs before retrieval"
-                                                    PlaceholderText="Device Name..."
-                                                    Text="{x:Bind ViewModel.DeviceNameTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                     x:Uid="DeviceNameHeaderTextBlock"
+                                                     Text="{x:Bind ViewModel.DeviceNameTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                         </controls:WrapPanel>
                                     </Flyout>
                                 </Button.Flyout>
@@ -549,12 +235,12 @@
                                                     <StackPanel Margin="0,0,0,12" HorizontalAlignment="Center">
                                                         <!-- Title -->
                                                         <TextBlock
-                                                Text="{x:Bind QueryTitle}"
-                                                TextWrapping="WrapWholeWords"
-                                                FontWeight="Bold"
-                                                HorizontalAlignment="Center"
-                                                FontSize="16"
-                                                Margin="0,5,0,5"/>
+                                                            Text="{x:Bind QueryTitle}"
+                                                            TextWrapping="WrapWholeWords"
+                                                            FontWeight="Bold"
+                                                            HorizontalAlignment="Center"
+                                                            FontSize="16"
+                                                            Margin="0,5,0,5"/>
 
                                                         <!-- Copy Button -->
                                                         <!-- The button's content is a Grid containing two TextBlocks: one for the normal text and one for the copied state -->
@@ -609,14 +295,13 @@
                                                 <Setter Property="CornerRadius" Value="8" />
 
                                                 <!--
-                                  Important: the "resolution order" for widths (at least in winui) is minwidth, maxwidth, width
-                                  Width does not override MaxWidth
-                                  https://learn.microsoft.com/uwp/api/windows.ui.xaml.frameworkelement.maxwidth?view=winrt-26100#remarks
-                                  -->
+                                                Important: the "resolution order" for widths (at least in winui) is minwidth, maxwidth, width
+                                                Width does not override MaxWidth
+                                                https://learn.microsoft.com/uwp/api/windows.ui.xaml.frameworkelement.maxwidth?view=winrt-26100#remarks
+                                                -->
                                                 <Setter Property="MaxWidth" Value="1234" />
                                             </Style>
                                         </Flyout.FlyoutPresenterStyle>
-
 
                                         <StackPanel
                                                 VerticalAlignment="Top"
@@ -642,27 +327,26 @@
 
                                                 <controls:Case Value="AddToPolicy">
                                                     <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                            Style="{StaticResource PanelStyle}">
+                                                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                                                Style="{StaticResource PanelStyle}">
 
                                                         <TextBlock Margin="5"
-                                                       VerticalAlignment="Center"
-                                                       x:Uid="AddToPolicyDescription"
-                                                       Width="310"
-                                                       TextWrapping="WrapWholeWords"/>
+                                                                   VerticalAlignment="Center"
+                                                                   x:Uid="AddToPolicyDescription"
+                                                                   Width="310"
+                                                                   TextWrapping="WrapWholeWords"/>
 
                                                         <Button Margin="5"
-                                                    x:Uid="FileBrowseButton"
-                                                    Style="{StaticResource AccentButtonStyle}"
-                                                    Click="{x:Bind ViewModel.AddToPolicyButton_Click}" />
+                                                                x:Uid="FileBrowseButton"
+                                                                Style="{StaticResource AccentButtonStyle}"
+                                                                Click="{x:Bind ViewModel.AddToPolicyButton_Click}" />
 
                                                     </StackPanel>
                                                 </controls:Case>
                                                 <controls:Case Value="BasePolicyFile">
                                                     <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                            Style="{StaticResource PanelStyle}">
-
+                                                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                                                Style="{StaticResource PanelStyle}">
 
                                                         <TextBlock Margin="5"
                                                        VerticalAlignment="Center"
@@ -681,20 +365,20 @@
 
                                                 <controls:Case Value="BaseGUID">
                                                     <StackPanel animations:Implicit.HideAnimations="{StaticResource HideTransitions}"
-                                            animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
-                                            Style="{StaticResource PanelStyle}">
+                                                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                                                Style="{StaticResource PanelStyle}">
 
                                                         <TextBox x:Uid="BasePolicyGUIDDescription"
-                                                     Width="300"
-                                                     Margin="10"
-                                                     VerticalAlignment="Center"
-                                                     VerticalContentAlignment="Center"
-                                                     Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                 Width="300"
+                                                                 Margin="10"
+                                                                 VerticalAlignment="Center"
+                                                                 VerticalContentAlignment="Center"
+                                                                 Text="{x:Bind ViewModel.BasePolicyGUID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                                                         <Button Margin="5"
-                                                    x:Uid="SubmitButton"
-                                                    Style="{StaticResource AccentButtonStyle}"
-                                                    Click="{x:Bind ViewModel.BaseGUIDSubmitButton_Click}" />
+                                                                x:Uid="SubmitButton"
+                                                                Style="{StaticResource AccentButtonStyle}"
+                                                                Click="{x:Bind ViewModel.BaseGUIDSubmitButton_Click}" />
 
                                                     </StackPanel>
                                                 </controls:Case>
@@ -707,7 +391,7 @@
                             </SplitButton>
 
                             <DropDownButton x:Uid="ExtraActionsDropDownButton"
-                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
+                                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
                                 <DropDownButton.ContentTemplate>
                                     <DataTemplate x:DataType="x:String">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
@@ -773,18 +457,18 @@
 
                                         <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="3" VerticalSpacing="8">
                                             <TextBox Width="300"
-                                         Header="Optional: Choose a policy name"
-                                         Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                         PlaceholderText="Policy Name..."/>
+                                                     Header="Optional: Choose a policy name"
+                                                     Text="{x:Bind ViewModel.PolicyNameTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                     PlaceholderText="Policy Name..."/>
                                         </controls:WrapPanel>
                                     </Flyout>
                                 </Button.Flyout>
                             </Button>
 
                             <ComboBox SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
-                          SelectedIndex="0"
-                          ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}"
-                          x:Uid="ScanLevelComboBox">
+                                      SelectedIndex="0"
+                                      ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}"
+                                      x:Uid="ScanLevelComboBox">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
                                         <StackPanel Orientation="Horizontal" Spacing="5">
@@ -823,10 +507,10 @@
                     <TextBlock Text="Property Filter:" VerticalAlignment="Center" FontWeight="SemiBold"/>
 
                     <ComboBox ItemsSource="{x:Bind ViewModel.PropertyFilterItems, Mode=OneWay}"
-                          SelectedItem="{x:Bind ViewModel.SelectedPropertyFilter, Mode=TwoWay}"
-                          MinWidth="200"
-                          PlaceholderText="Select a property..."
-                          ToolTipService.ToolTip="Select a property to filter by"/>
+                              SelectedItem="{x:Bind ViewModel.SelectedPropertyFilter, Mode=TwoWay}"
+                              MinWidth="200"
+                              PlaceholderText="Select a property..."
+                              ToolTipService.ToolTip="Select a property to filter by"/>
 
                     <TextBox Text="{x:Bind ViewModel.PropertyFilterValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          MinWidth="200"
@@ -834,13 +518,15 @@
                          ToolTipService.ToolTip="Enter the value to filter the selected property by"/>
 
                     <Button Click="{x:Bind ViewModel.ClearPropertyFilter}"
-                        ToolTipService.ToolTip="Reset property, property search and date filters">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <FontIcon Glyph="&#xE711;" />
-                                <TextBlock Text="Reset Filters" />
-                            </StackPanel>
-                        </Button.Content>
+                            x:Uid="ResetFiltersButton">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE711;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
                     </Button>
 
                     <Button Click="{x:Bind ViewModel.ExportToJsonButton_Click}"
@@ -936,21 +622,21 @@
 
             <!-- DataTemplate for ListView items -->
             <customUI:ListViewV2.ItemTemplate>
-                <DataTemplate x:DataType="intelgathering:FileIdentity">
+                <DataTemplate x:DataType="intelgathering:FileIdentity" xmlns:VMs="using:AppControlManager.ViewModels">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ListViewFlyoutMenuDelete_Click}">
+                                <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ListViewFlyoutMenuDelete_Click}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE74D;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ListViewFlyoutMenuCopy_Click}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ListViewFlyoutMenuCopy_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModelMDEAHPolicyCreationVM.CtrlC_Invoked}"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.CtrlC_Invoked}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
@@ -1080,43 +766,43 @@
 
                         <Grid.ColumnDefinitions>
                             <!-- Changed to TwoWay binding to keep synchronized with header -->
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth1, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth2, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth3, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth4, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth5, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth6, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth7, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth8, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth9, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth10, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth11, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth12, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth13, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth14, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth15, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth16, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth17, Mode=TwoWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModelMDEAHPolicyCreationVM.ColumnWidth18, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth1, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth2, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth3, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth4, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth5, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth6, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth7, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth8, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth9, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth10, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth11, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth12, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth13, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth14, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth15, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth16, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth17, Mode=TwoWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ColumnWidth18, Mode=TwoWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind FileName}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                        <TextBlock Text="{x:Bind TimeCreated}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                        <TextBlock x:Phase="1" Text="{x:Bind SignatureStatus}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                        <TextBlock x:Phase="1" Text="{x:Bind Action}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                        <TextBlock x:Phase="1" Text="{x:Bind OriginalFileName}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                        <TextBlock x:Phase="2" Text="{x:Bind InternalName}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
-                        <TextBlock x:Phase="2" Text="{x:Bind FileDescription}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
-                        <TextBlock x:Phase="2" Text="{x:Bind FileVersion}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
-                        <TextBlock x:Phase="4" Text="{x:Bind SHA256Hash}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
-                        <TextBlock x:Phase="4" Text="{x:Bind SHA1Hash}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
-                        <TextBlock x:Phase="4" Text="{x:Bind SHA256FlatHash}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
-                        <TextBlock x:Phase="4" Text="{x:Bind SHA1FlatHash}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
-                        <TextBlock x:Phase="2" Text="{x:Bind SISigningScenario}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
-                        <TextBlock x:Phase="3" Text="{x:Bind FilePath}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
-                        <TextBlock x:Phase="3" Text="{x:Bind ComputerName}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
-                        <TextBlock x:Phase="4" Text="{x:Bind PolicyGUID}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="15"/>
-                        <TextBlock x:Phase="3" Text="{x:Bind PolicyName}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="16"/>
-                        <TextBlock x:Phase="3" Text="{x:Bind FilePublishersToDisplay}" FontFamily="{x:Bind ParentViewModelMDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="17"/>
+                        <TextBlock Text="{x:Bind FileName}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                        <TextBlock Text="{x:Bind TimeCreated}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind SignatureStatus}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind Action}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                        <TextBlock x:Phase="1" Text="{x:Bind OriginalFileName}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind InternalName}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind FileDescription}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind FileVersion}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA256Hash}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA1Hash}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA256FlatHash}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind SHA1FlatHash}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
+                        <TextBlock x:Phase="2" Text="{x:Bind SISigningScenario}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind FilePath}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="13"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind ComputerName}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="14"/>
+                        <TextBlock x:Phase="4" Text="{x:Bind PolicyGUID}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="15"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind PolicyName}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="16"/>
+                        <TextBlock x:Phase="3" Text="{x:Bind FilePublishersToDisplay}" FontFamily="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="17"/>
                     </Grid>
                 </DataTemplate>
             </customUI:ListViewV2.ItemTemplate>

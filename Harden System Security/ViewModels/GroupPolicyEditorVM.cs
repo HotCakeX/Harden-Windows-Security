@@ -431,8 +431,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					{
 						foreach (RegistryPolicyEntry item in policy)
 						{
-							// Assign the ParentVM instance to this class.
-							item.ParentVM = this;
 							Policies.Add(item);
 							AllPolicies.Add(item);
 						}
@@ -449,8 +447,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					{
 						foreach (RegistryPolicyEntry item in policy.Entries)
 						{
-							// Assign the ParentVM instance to this class.
-							item.ParentVM = this;
 							Policies.Add(item);
 							AllPolicies.Add(item);
 						}

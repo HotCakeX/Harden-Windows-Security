@@ -177,7 +177,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 			throw new Win32Exception(result, "Failed to arm registry change notification");
 	}
 
-	void IDisposable.Dispose()
+	public void Dispose()
 	{
 		_suppressRegistryCallback = true;
 		_ = _waitHandle?.Unregister(_notificationEvent);

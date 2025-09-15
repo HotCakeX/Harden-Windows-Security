@@ -57,7 +57,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 	internal SigningDetailsDialogForRemoval(List<string?> currentlyDeployedBasePolicyIDs, string idBeingRemoved)
 	{
-		this.InitializeComponent();
+		InitializeComponent();
 
 		// Populate the AutoSuggestBox with possible certificate common names available on the system
 		FetchLatestCertificateCNs();
@@ -78,13 +78,11 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		CertificatePath = currentUserConfigs.CertificatePath;
 		CertificateCommonName = currentUserConfigs.CertificateCommonName;
 		SignToolPath = currentUserConfigs.SignToolCustomPath;
-
-		// Set the focus on the Verify button when the Content Dialog opens
-		VerifyButton.Loaded += VerifyButton_Loaded;
 	}
 
 	/// <summary>
-	/// Event handler for when the Verify button is loaded
+	/// Event handler for when the Verify button is loaded.
+	/// Sets the focus on the Verify button when the Content Dialog opens.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>

@@ -124,7 +124,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// <summary>
 	/// Whether the Simulation should scan and take into account the security catalogs.
 	/// </summary>
-	internal bool NoCatRootScanning { get; set => SP(ref field, value); } = true;
+	internal bool ScanSecurityCatalogs { get; set => SP(ref field, value); } = true;
 
 	#region LISTVIEW IMPLEMENTATIONS
 
@@ -370,7 +370,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 					FilePaths.UniqueItems,
 					FolderPaths.UniqueItems,
 					XmlFilePath,
-					NoCatRootScanning,
+					ScanSecurityCatalogs,
 					CatRootPaths,
 					(ushort)ScalabilityRadialGaugeValue,
 					ProgressRingValueProgress
@@ -386,8 +386,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 			// Add to the ObservableCollection bound to the UI
 			foreach (KeyValuePair<string, SimulationOutput> entry in result)
 			{
-				// Add a reference to the ViewModel class so we can use it for navigation in the XAML
-				entry.Value.ParentViewModelSimulationVM = this;
 				SimulationOutputs.Add(entry.Value);
 			}
 

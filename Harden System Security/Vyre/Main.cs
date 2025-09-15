@@ -229,9 +229,6 @@ internal sealed class NonStlRootCert(
 	[JsonInclude]
 	[JsonPropertyName("Root Certificate SHA256 Hash")]
 	internal string RootSha256Hex => rootSha256Hex;
-
-	[JsonIgnore]
-	internal ViewModels.CertificateCheckingVM? VMRef;
 }
 
 /// <summary>

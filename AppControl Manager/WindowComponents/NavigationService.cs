@@ -205,7 +205,6 @@ internal sealed class NavigationService
 					Content = panel,
 					CloseButtonText = GlobalVars.GetStr("Cancel"),
 					SecondaryButtonText = GlobalVars.GetStr("AppElevationNoticeRelaunch"),
-					Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"],
 					FlowDirection = Enum.Parse<FlowDirection>(App.Settings.ApplicationGlobalFlowDirection),
 					DefaultButton = ContentDialogButton.Secondary
 				};

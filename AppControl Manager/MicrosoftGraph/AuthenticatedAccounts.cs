@@ -21,43 +21,24 @@ using Microsoft.Identity.Client;
 
 namespace AppControlManager.MicrosoftGraph;
 
-internal sealed class AuthenticatedAccounts : Main.IRestrictedAuthenticatedAccounts
+internal sealed class AuthenticatedAccounts(
+	string accountIdentifier,
+	string userName,
+	string tenantID,
+	string permissions,
+	AuthenticationContext authContext,
+	AuthenticationResult authResult,
+	IAccount account,
+	SignInMethods methodUsed)
 {
-	internal string AccountIdentifier { get; }
-	internal string Username { get; }
-	internal string TenantID { get; }
-	internal string Permissions { get; }
-	internal AuthenticationContext AuthContext { get; }
-
-	// Backing fields for the restricted properties.
-	private readonly AuthenticationResult _authResult;
-	private readonly IAccount _account;
-
-	// The following two properties are implemented explicitly so that they are only accessible within the Main class which uses the interface.
-	AuthenticationResult Main.IRestrictedAuthenticatedAccounts.AuthResult
-	{
-		get => _authResult;
-		set => throw new InvalidOperationException(
-			GlobalVars.GetStr("AuthResultImmutableErrorMessage"));
-	}
-	IAccount Main.IRestrictedAuthenticatedAccounts.Account
-	{
-		get => _account;
-		set => throw new InvalidOperationException(
-			GlobalVars.GetStr("AccountImmutableErrorMessage"));
-	}
-
-	internal AuthenticatedAccounts(string accountIdentifier, string userName, string tenantID, string permissions, AuthenticationContext authContext, AuthenticationResult authResult, IAccount account)
-	{
-		AccountIdentifier = accountIdentifier;
-		Username = userName;
-		TenantID = tenantID;
-		Permissions = permissions;
-		AuthContext = authContext;
-		_authResult = authResult;
-		_account = account;
-	}
-
+	internal string AccountIdentifier => accountIdentifier;
+	internal string Username => userName;
+	internal string TenantID => tenantID;
+	internal string Permissions => permissions;
+	internal AuthenticationContext AuthContext => authContext;
+	internal AuthenticationResult AuthResult { get; set; } = authResult;
+	internal IAccount Account => account;
+	internal SignInMethods MethodUsed => methodUsed;
 
 	public override bool Equals(object? obj)
 	{
@@ -74,7 +55,7 @@ internal sealed class AuthenticatedAccounts : Main.IRestrictedAuthenticatedAccou
 
 	public override int GetHashCode()
 	{
-		unchecked // Not strictly necessary, but good practice for future-proofing and consistency
+		unchecked
 		{
 			return HashCode.Combine(
 				StringComparer.OrdinalIgnoreCase.GetHashCode(AccountIdentifier),

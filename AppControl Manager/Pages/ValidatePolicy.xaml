@@ -52,10 +52,14 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <controls:SettingsCard x:Uid="ValidateAppControlPolicySettingsCard"
-                   IsClickEnabled="True"
-                   IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ValidateXML}" IsActionIconVisible="False">
+                                       IsClickEnabled="True"
+                                       IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                       Click="{x:Bind ViewModel.ValidateXML}"
+                                       IsActionIconVisible="False">
 
-                    <Button x:Uid="BrowseButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ValidateXML}">
+                    <Button x:Uid="BrowseButton"
+                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.ValidateXML}">
                         <Button.ContentTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <StackPanel Orientation="Horizontal" Spacing="8">

@@ -65,6 +65,9 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	private static readonly Thickness ShadowThickness = new(ShadowMargin, ShadowMargin, ShadowMargin, ShadowMargin);
 	private static readonly Thickness BorderThick = new(0.7);
 
+	private Border? _originalBackgroundBorder; // Keeps reference to the original background element
+	private bool _backgroundBorderSizeHooked;  // Ensures we hook only once
+
 	// Static cached shadow instance for performance
 	private static readonly AttachedCardShadow CachedShadow = new()
 	{
@@ -94,6 +97,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			XamlRoot = App.MainWindow?.Content.XamlRoot;
 			RequestedTheme = GetRequestedTheme();
 			CornerRadius = DialogCorner;
+			Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"];
 
 			// Immediately disable the default ContentDialog shadow by setting the Translation property
 			this.Translation = ZeroVector;
@@ -367,6 +371,12 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			// Reset shadow applied flag for potential reuse
 			_shadowApplied = false;
 
+			// Clear static reference to allow this dialog to be garbage collected
+			if (ReferenceEquals(App.CurrentlyOpenContentDialog, this))
+			{
+				App.CurrentlyOpenContentDialog = null;
+			}
+
 			// Clean up event handlers to prevent memory leaks
 			CleanupEventHandlers();
 		}
@@ -408,6 +418,19 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		{
 			Logger.Write(ex);
 			// Individual cleanup failure should not prevent other cleanups
+		}
+
+		try
+		{
+			if (_originalBackgroundBorder is not null && _backgroundBorderSizeHooked)
+			{
+				_originalBackgroundBorder.SizeChanged -= BackgroundBorder_SizeChanged;
+				_backgroundBorderSizeHooked = false;
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
 		}
 	}
 
@@ -1350,6 +1373,21 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 					{
 						try
 						{
+							// Keep original background border reference (only once)
+							if (!_backgroundBorderSizeHooked)
+							{
+								_originalBackgroundBorder = backgroundBorder;
+								try
+								{
+									_originalBackgroundBorder.SizeChanged += BackgroundBorder_SizeChanged;
+									_backgroundBorderSizeHooked = true;
+								}
+								catch (Exception hookEx)
+								{
+									Logger.Write(hookEx);
+								}
+							}
+
 							// Create a new Grid to wrap the existing content
 							_mainGrid = new Grid();
 
@@ -1748,6 +1786,40 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 	}
 
+	/// <summary>
+	/// Without this event handler, when the ContentDialog resizes either by us or due to content size inside of it changes,
+	/// It would get an ugly opaque shadow thingy around it.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	private void BackgroundBorder_SizeChanged(object sender, SizeChangedEventArgs e)
+	{
+		try
+		{
+			if (_disposed)
+			{
+				return;
+			}
+
+			// Re-suppress any reintroduced default shadow or background after internal content resize
+			DisableDefaultShadowImmediately();
+
+			// Reassert corner radius of custom container if WinUI re-templated anything
+			try
+			{
+				_ = (_dialogContainer?.CornerRadius = new CornerRadius(DialogCornerRadius));
+			}
+			catch (Exception exCorner)
+			{
+				Logger.Write(exCorner);
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
 	public void Dispose()
 	{
 		try
@@ -1785,6 +1857,12 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 					Logger.Write(ex);
 				}
 
+				// Clear static reference if still pointing to this instance
+				if (ReferenceEquals(App.CurrentlyOpenContentDialog, this))
+				{
+					App.CurrentlyOpenContentDialog = null;
+				}
+
 				try
 				{
 					// Clear visual tree references
@@ -1807,6 +1885,15 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				try
 				{
 					_mainGrid = null;
+				}
+				catch (Exception ex)
+				{
+					Logger.Write(ex);
+				}
+
+				try
+				{
+					_originalBackgroundBorder = null;
 				}
 				catch (Exception ex)
 				{

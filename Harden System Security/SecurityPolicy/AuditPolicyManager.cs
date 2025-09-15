@@ -125,12 +125,6 @@ internal sealed partial class AuditPolicyInfo(
 	internal string AuditSettingDescription => GetAuditSettingDescription(_currentAuditingInformation);
 
 	/// <summary>
-	/// Reference to the View Model that contains the List View that hosts this type.
-	/// </summary>
-	[JsonIgnore]
-	internal AuditPoliciesVM? VMRef;
-
-	/// <summary>
 	/// Gets or sets the selected index for the ComboBox binding (0-3)
 	/// </summary>
 	[JsonIgnore]

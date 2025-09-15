@@ -34,9 +34,9 @@ internal sealed partial class EventLogsPolicyCreation : Page
 
 	internal EventLogsPolicyCreation()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 
 	/// <summary>

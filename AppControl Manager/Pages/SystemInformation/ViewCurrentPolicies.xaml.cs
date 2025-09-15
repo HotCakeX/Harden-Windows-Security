@@ -31,8 +31,8 @@ internal sealed partial class ViewCurrentPolicies : Page
 
 	internal ViewCurrentPolicies()
 	{
-		this.InitializeComponent();
+		InitializeComponent();
 		DataContext = ViewModel; // Set the DataContext for x:Bind references in the header in XAML
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
+		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 }

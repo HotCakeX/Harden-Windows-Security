@@ -144,8 +144,14 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		breadCrumbMappingsV2[typeof(Pages.DeploymentPage)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("DeploymentNavItem/Content")],
-			pages: [typeof(Pages.DeploymentPage)]
+			titles: [GlobalVars.GetStr("DeploymentNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItem/Content")],
+			pages: [typeof(Pages.DeploymentPage), typeof(Pages.IntuneDeploymentDetails)]
+		);
+
+		breadCrumbMappingsV2[typeof(Pages.IntuneDeploymentDetails)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("DeploymentNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItem/Content")],
+			pages: [typeof(Pages.DeploymentPage), typeof(Pages.IntuneDeploymentDetails)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.EventLogsPolicyCreation)] = new PageTitleMap

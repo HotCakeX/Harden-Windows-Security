@@ -76,6 +76,24 @@ internal partial class SettingsCardV2 : SettingsCard
 				}
 				break;
 
+			case UserControl uc:
+				{
+					// Support for UserControls like GraphAuthPanel whose root Content is a Button.
+					if (uc.Content is Button innerButton && innerButton.IsEnabled)
+					{
+						FlyoutBase attached = FlyoutBase.GetAttachedFlyout(innerButton);
+						if (attached != null)
+						{
+							attached.ShowAt(innerButton);
+						}
+						else
+						{
+							InvokeButton(innerButton);
+						}
+					}
+					break;
+				}
+
 			// If it's a Panel such as StackPanel or WrapPanel, etc. Then get the first applicable element.
 			// The Panel class in WinUI is an abstract base class that all layout containers inherit from.
 			// The is keyword will check the type or whether the object inherits from the type.

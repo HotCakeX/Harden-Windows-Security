@@ -108,6 +108,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<IntuneDeploymentDetailsVM> _intuneDeploymentDetailsVM = new(() =>
 		new IntuneDeploymentDetailsVM(), false);
 
+	private static readonly Lazy<HomeVM> _homeVM = new(() =>
+		new HomeVM(), false);
+
 	// View Models with Dependencies \\
 	private static readonly Lazy<PolicyEditorVM> _policyEditorVM = new(() =>
 		new PolicyEditorVM(), false);
@@ -156,6 +159,7 @@ internal static class ViewModelProvider
 	internal static GetSecurePolicySettingsVM GetSecurePolicySettingsVM => _getSecurePolicySettingsVM.Value;
 	internal static LogsVM LogsVM => _logsVM.Value;
 	internal static IntuneDeploymentDetailsVM IntuneDeploymentDetailsVM => _intuneDeploymentDetailsVM.Value;
+	internal static HomeVM HomeVM => _homeVM.Value;
 
 
 	/// <summary>

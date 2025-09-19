@@ -3616,4 +3616,67 @@ Huella Digital: {3}</value>
     <data name="SelectedText" xml:space="preserve">
      <value>Seleccionado</value>
   </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>Personaliza el color del borde de la ventana de la aplicación. Puedes elegir un color de la paleta o seleccionar la opción arcoíris, que recorrerá de forma animada todos los colores disponibles.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>Color del borde de la ventana</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Personaliza el color del borde de la ventana de la aplicación. Puedes elegir un color de la paleta o seleccionar la opción arcoíris, que recorrerá de forma animada todos los colores disponibles.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Personaliza el color del borde de la ventana de la aplicación. Puedes elegir un color de la paleta o seleccionar la opción arcoíris, que recorrerá de forma animada todos los colores disponibles.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>Iniciar animación de arcoíris</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Inicia la animación de arcoíris alrededor del borde de la ventana de la aplicación.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Inicia la animación de arcoíris alrededor del borde de la ventana de la aplicación.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>Detener animación de arcoíris</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Detén la animación de arcoíris alrededor del borde de la ventana de la aplicación si está en ejecución.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Detén la animación de arcoíris alrededor del borde de la ventana de la aplicación si está en ejecución.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>Establecer color del borde</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Establece el color del borde de la ventana de la aplicación al color seleccionado.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Establece el color del borde de la ventana de la aplicación al color seleccionado.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>Restablecer color del borde</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restablece el color del borde de la ventana de la aplicación al color predeterminado.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restablece el color del borde de la ventana de la aplicación al color predeterminado.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>Inicio</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Página de inicio y pantalla de bienvenida</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Página de inicio y pantalla de bienvenida</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="EnableMDAVSandboxMode-MSDefender" xml:space="preserve">
+    <value>Ejecutar Microsoft Defender Antivirus en un entorno aislado para mejorar la protección contra la manipulación no autorizada.</value>
+  </data>
 </root>

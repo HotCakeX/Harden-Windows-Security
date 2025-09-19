@@ -1,13 +1,26 @@
-🐉 Enhanced the Intune cloud deployment workflow with a dedicated page that lets you enumerate all Microsoft 365 and Intune groups in your tenant and select which group(s) to assign to the App Control policy you are deploying. The page includes search, sorting, and filtering capabilities to help you pinpoint target groups, and you can export the results to JSON for offline analysis.
+✅ Window Appearance Customization
 
-🍭 You can now add or remove groups in your tenant's Entra directly from the app, no need to visit the Entra portal. This functionality is available on the newly added Entra group assignment and management page.
+Introduced a customization option in Settings to personalize the app window with colors selected from an integrated palette.
 
-💪 Improved resilience of Microsoft Graph connections to better handle transient network issues and unstable connections.
+Added an optional animated rainbow mode that smoothly cycles through the full color spectrum.
 
-📏 Implemented more aggressive memory cleanup when the app window closes, enabling faster and more predictable reclamation of used memory.
+Designed for high performance with an extremely minimal resource footprint.
 
-🍬 Refined the styling and behavior of content dialogs across the app. Resizing no longer produces a semi-transparent shadow artifact.
+✅ New Home Page
 
-🍫 Implemented a token refresh mechanism for Microsoft Graph. Sign in once and continue using AppControl Manager for extended periods without re-authentication. Silent refresh events are logged for auditing; for privacy and security only the account name/email associated with the refreshed token is recorded. Automatic refresh is initiated when a token has less than 10 minutes remaining before expiration.
+Debuted a new Home page that opens by default on app startup, engineered for speed and efficiency.
 
-💎 Please visit The GitHub's release section for more.
+Features refined visuals and purposeful animations that remain lightweight and responsive.
+
+Provides concise system HUDs at a glance:
+✔️ Current time
+✔️ Time zone
+✔️ Total RAM
+✔️ Total disk capacity
+✔️ System uptime
+✔️ App memory usage (total RAM used by the app)
+✔️ Internet speed (upload and download shown separately)
+✔️ Includes a modern spotlight section to quickly browse rotating news and content.
+✔️ Very subtle cyber web mesh background that periodically lights up at different coordinates.
+
+More enhancement will be applied to the Home page in future updates. Feel free to share your feedback on GitHub with me.

@@ -677,4 +677,93 @@ internal unsafe static partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
 
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmsetwindowattribute
+	[LibraryImport("dwmapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DwmSetWindowAttribute(IntPtr hwnd, int dwAttribute, ref uint pvAttribute, int cbAttribute);
+
+
+	// https://learn.microsoft.com/windows/win32/api/sysinfoapi/nf-sysinfoapi-getphysicallyinstalledsystemmemory
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GetPhysicallyInstalledSystemMemory(out ulong totalMemoryKilobytes);
+
+
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct PROCESS_MEMORY_COUNTERS_EX2
+	{
+		internal uint cb;
+		internal uint PageFaultCount;
+		internal nuint PeakWorkingSetSize;
+		internal nuint WorkingSetSize;
+		internal nuint QuotaPeakPagedPoolUsage;
+		internal nuint QuotaPagedPoolUsage;
+		internal nuint QuotaPeakNonPagedPoolUsage;
+		internal nuint QuotaNonPagedPoolUsage;
+		internal nuint PagefileUsage;
+		internal nuint PeakPagefileUsage;
+		internal nuint PrivateUsage;
+		internal nuint PrivateWorkingSetSize;
+		internal nuint SharedCommitUsage;
+		internal ulong PrivateCommitUsage;
+	}
+
+
+	[LibraryImport("kernel32.dll", EntryPoint = "K32GetProcessMemoryInfo", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool K32GetProcessMemoryInfo_Native(IntPtr hProcess, ref PROCESS_MEMORY_COUNTERS_EX2 counters, uint size);
+
+
+	[LibraryImport("kernel32.dll", EntryPoint = "GetCurrentProcess")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr GetCurrentProcess_Pseudo();
+
+
+	// Returns NO_ERROR (0) on success
+	[LibraryImport("Iphlpapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetBestInterface(uint dwDestAddr, out uint pdwBestIfIndex);
+
+	// Returns NO_ERROR (0) on success
+	[LibraryImport("Iphlpapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetIfEntry(ref MIB_IFROW pIfRow);
+
+	// MIB_IFROW: IPv4-era per-interface stats with 32-bit octet counters.
+	// Using unsafe fixed buffers to match native layout; only fields we need are read.
+	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	internal unsafe struct MIB_IFROW
+	{
+		// MAX_INTERFACE_NAME_LEN is 256 WCHARs
+		private fixed char wszName[256];
+
+		internal uint dwIndex;
+		internal uint dwType;
+		internal uint dwMtu;
+		internal uint dwSpeed;
+		internal uint dwPhysAddrLen;
+		private fixed byte bPhysAddr[8];
+		internal uint dwAdminStatus;
+		internal uint dwOperStatus;
+		internal uint dwLastChange;
+		internal uint dwInOctets;         // 32-bit byte counters (wrap at 4GB)
+		internal uint dwInUcastPkts;
+		internal uint dwInNUcastPkts;
+		internal uint dwInDiscards;
+		internal uint dwInErrors;
+		internal uint dwInUnknownProtos;
+		internal uint dwOutOctets;        // 32-bit byte counters (wrap at 4GB)
+		internal uint dwOutUcastPkts;
+		internal uint dwOutNUcastPkts;
+		internal uint dwOutDiscards;
+		internal uint dwOutErrors;
+		internal uint dwOutQLen;
+		internal uint dwDescrLen;
+		// MAXLEN_IFDESCR is 256 bytes
+		private fixed byte bDescr[256];
+	}
+
 }

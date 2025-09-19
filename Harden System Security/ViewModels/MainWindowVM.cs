@@ -43,7 +43,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.GitHubDocumentation),
 		typeof(Pages.GroupPolicyEditor),
 		typeof(Pages.Protects.NonAdmin),
-		typeof(Pages.FileReputation)
+		typeof(Pages.FileReputation),
+		typeof(AppControlManager.Pages.Home)
 		];
 
 
@@ -218,12 +219,17 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("AuditPoliciesNavItem/Content")],
 			pages: [typeof(Pages.AuditPolicies)]
 		);
+
+		breadCrumbMappingsV2[typeof(AppControlManager.Pages.Home)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("HomeNavItem/Content")],
+			pages: [typeof(AppControlManager.Pages.Home)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
 	// initially adding the default page that loads when the app is loaded to the collection
-	internal readonly ObservableCollection<Crumb> Breadcrumbs = App.IsElevated ? [new Crumb(GlobalVars.GetStr("ProtectNavigationViewItem/Content"), typeof(Pages.Protect))] :
-		[new Crumb(GlobalVars.GetStr("NonAdminCommandsNavItem/Content"), typeof(Pages.Protects.NonAdmin))];
+	internal readonly ObservableCollection<Crumb> Breadcrumbs = [new Crumb(GlobalVars.GetStr("HomeNavItem/Content"), typeof(AppControlManager.Pages.Home))];
 
 	/// <summary>
 	/// Dictionary of all the main pages in the app, used for the main navigation.
@@ -258,7 +264,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "MicrosoftSecurityBaseline", typeof(Pages.Protects.MicrosoftSecurityBaseline) },
 		{ "Microsoft365AppsSecurityBaseline", typeof(Pages.Protects.Microsoft365AppsSecurityBaseline) },
 		{ "MicrosoftBaseLinesOverrides", typeof(Pages.Protects.MicrosoftBaseLinesOverrides) },
-		{ "AuditPolicies", typeof(Pages.AuditPolicies) }
+		{ "AuditPolicies", typeof(Pages.AuditPolicies) },
+		{ "Home", typeof(AppControlManager.Pages.Home) }
 	};
 
 
@@ -300,6 +307,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content")] = typeof(Pages.Protects.Microsoft365AppsSecurityBaseline);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content")] = typeof(Pages.Protects.MicrosoftBaseLinesOverrides);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("AuditPoliciesNavItem/Content")] = typeof(Pages.AuditPolicies);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("HomeNavItem/Content")] = typeof(AppControlManager.Pages.Home);
 	}
 
 	/// <summary>
@@ -360,6 +368,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the Audit Policies item.
 	/// </summary>
 	internal IconElement? AuditPoliciesIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the Home navigation item.
+	/// </summary>
+	internal IconElement? HomeIcon { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -437,6 +450,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new ChocolateBar()
 					};
 
+					HomeIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -7, -7, -7),
+						Source = new Home()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -492,6 +511,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					HomeIcon = new FontIcon
+					{
+						Glyph = "\uE80F",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -505,6 +530,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					FileReputationIcon = new FontIcon { Glyph = "\uEA91" };
 					InstalledAppsManagementIcon = new FontIcon { Glyph = "\uE71D" };
 					AuditPoliciesIcon = new FontIcon { Glyph = "\uE9D5" };
+					HomeIcon = new FontIcon { Glyph = "\uE80F" };
 					break;
 				}
 		}

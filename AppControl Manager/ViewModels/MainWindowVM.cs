@@ -62,7 +62,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.MergePolicies),
 		typeof(Pages.Settings),
 		typeof(Pages.ConfigurePolicyRuleOptions),
-		typeof(Pages.ViewFileCertificates)
+		typeof(Pages.ViewFileCertificates),
+		typeof(Pages.Home)
 		];
 
 
@@ -231,12 +232,17 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("PolicyEditorNavItem/Content")],
 			pages: [typeof(Pages.PolicyEditor)]
 		);
+
+		breadCrumbMappingsV2[typeof(Pages.Home)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("HomeNavItem/Content")],
+			pages: [typeof(Pages.Home)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
 	// initially adding the default page that loads when the app is loaded to the collection
-	internal readonly ObservableCollection<Crumb> Breadcrumbs = App.IsElevated ? [new Crumb(GlobalVars.GetStr("CreatePolicyNavItem/Content"), typeof(Pages.CreatePolicy))] :
-		[new Crumb(GlobalVars.GetStr("PolicyEditorNavItem/Content"), typeof(Pages.PolicyEditor))];
+	internal readonly ObservableCollection<Crumb> Breadcrumbs = [new Crumb(GlobalVars.GetStr("HomeNavItem/Content"), typeof(Pages.Home))];
 
 	/// <summary>
 	/// Dictionary of all the main pages in the app, used for the main navigation.
@@ -265,7 +271,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "ValidatePolicies", typeof(Pages.ValidatePolicy) },
 		{ "ViewFileCertificates", typeof(Pages.ViewFileCertificates) },
 		{ "PolicyEditor", typeof(Pages.PolicyEditor) },
-		{ "Update", typeof(Pages.UpdatePage) }
+		{ "Update", typeof(Pages.UpdatePage) },
+		{ "Home", typeof(Pages.Home) }
 	};
 
 
@@ -305,6 +312,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("PolicyEditorNavItem/Content")] = typeof(Pages.PolicyEditor);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("UpdatePageCustomMSIXPath")] = typeof(Pages.UpdatePageCustomMSIXPath);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("HomeNavItem/Content")] = typeof(Pages.Home);
 	}
 
 	/// <summary>
@@ -443,6 +451,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the Update navigation item in the footer.
 	/// </summary>
 	internal IconElement? UpdateIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the Home navigation item.
+	/// </summary>
+	internal IconElement? HomeIcon { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -646,6 +659,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Honeymoon()
 					};
 
+					HomeIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -7, -7, -7),
+						Source = new Home()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -779,6 +798,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					HomeIcon = new FontIcon
+					{
+						Glyph = "\uE80F",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -805,6 +830,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					ValidatePoliciesIcon = new FontIcon { Glyph = "\uED5E" };
 					ViewFileCertificatesIcon = new FontIcon { Glyph = "\uEBD2" };
 					PolicyEditorIcon = new FontIcon { Glyph = "\uE70F" };
+					HomeIcon = new FontIcon { Glyph = "\uE80F" };
 					break;
 				}
 		}

@@ -178,6 +178,62 @@
                             </ComboBox>
                         </customUI:SettingsCardV2>
 
+                        <customUI:SettingsCardV2 x:Uid="AppWindowBorderColorSettingsCard"
+                                                 HeaderIcon="{ui:FontIcon Glyph=&#xEF3C;}">
+
+                            <StackPanel HorizontalAlignment="Center">
+                                <ComboBox x:Name="BorderTypeSelection"
+                                          Margin="0,0,0,8"
+                                          HorizontalAlignment="Center"
+                                          SelectedIndex="0">
+                                    <x:String>Rainbow</x:String>
+                                    <x:String>Custom Color</x:String>
+                                </ComboBox>
+
+                                <!-- SwitchPresenter binds to a value -->
+                                <controls:SwitchPresenter Value="{x:Bind BorderTypeSelection.SelectedItem, Mode=OneWay}">
+                                    <!--And then only dynamically displays the Case with the matching Value -->
+
+                                    <controls:Case Value="Rainbow">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+                                            <Button x:Uid="RainbowBorderAnimationStartButton" Click="{x:Bind ViewModel.StartRainbowAnimation}" />
+                                            <Button x:Uid="RainbowBorderAnimationStopButton" Click="{x:Bind ViewModel.StopRainbowAnimation}" />
+                                        </StackPanel>
+                                    </controls:Case>
+
+                                    <controls:Case Value="Custom Color">
+
+                                        <controls:WrapPanel Orientation="Vertical"
+                                                            HorizontalSpacing="10"
+                                                            VerticalSpacing="10">
+
+                                            <StackPanel Orientation="Horizontal"
+                                                        HorizontalAlignment="Center"
+                                                        Spacing="10">
+                                                <Button x:Uid="SetBorderColorButton" Click="{x:Bind ViewModel.StartCustomColorAnimation}" />
+                                                <Button x:Uid="ResetBorderColorButton" Click="{x:Bind ViewModel.StopCustomColorAnimation}" />
+
+                                            </StackPanel>
+
+                                            <ColorPicker ColorSpectrumShape="Ring"
+                                                         IsMoreButtonVisible="False"
+                                                         IsColorSliderVisible="False"
+                                                         IsColorChannelTextInputVisible="False"
+                                                         IsHexInputVisible="False"
+                                                         IsAlphaEnabled="False"
+                                                         ColorChanged="{x:Bind ViewModel.ColorPicker_ColorChanged}"
+                                                         IsAlphaSliderVisible="False"
+                                                         IsAlphaTextInputVisible="False" />
+
+                                        </controls:WrapPanel>
+
+                                    </controls:Case>
+                                </controls:SwitchPresenter>
+
+                            </StackPanel>
+
+                        </customUI:SettingsCardV2>
+
                     </controls:SettingsExpander.Items>
 
                 </controls:SettingsExpander>

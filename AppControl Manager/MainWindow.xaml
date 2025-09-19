@@ -203,6 +203,8 @@
             -->
 
             <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="HomeNavItem" x:Uid="HomeNavItem" Icon="{x:Bind ViewModel.HomeIcon, Mode=OneWay}" Tag="Home" />
+
                 <!-- Creation Group -->
                 <NavigationViewItemHeader x:Name="CreationNavigationViewItemHeader" x:Uid="CreationNavigationViewItemHeader" />
                 <NavigationViewItem x:Name="CreatePolicyNavItem" x:Uid="CreatePolicyNavItem" Icon="{x:Bind ViewModel.CreatePolicyIcon, Mode=OneWay}" Tag="CreatePolicy" />

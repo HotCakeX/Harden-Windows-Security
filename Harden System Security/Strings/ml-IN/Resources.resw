@@ -3616,4 +3616,67 @@
   <data name="SelectedText" xml:space="preserve">
      <value>തിരഞ്ഞെടുത്തത്</value>
   </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോയുടെ ബോർഡറിന്റെ നിറം ഇഷ്ടാനുസൃതമാക്കുക. നിങ്ങൾക്ക് പാലറ്റിൽ നിന്ന് ഒരു നിറം തിരഞ്ഞെടുക്കാനോ ലഭ്യമായ എല്ലാ നിറങ്ങളിലൂടെയും ആനിമേറ്റഡ് രീതിയിൽ സൈക്കിൾ ചെയ്യുന്ന റെയിൻബോ ഓപ്ഷൻ തെരഞ്ഞെടുക്കാനോ കഴിയും.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>വിൻഡോ ബോർഡർ നിറം</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോയുടെ ബോർഡറിന്റെ നിറം ഇഷ്ടാനുസൃതമാക്കുക. നിങ്ങൾക്ക് പാലറ്റിൽ നിന്ന് ഒരു നിറം തിരഞ്ഞെടുക്കാനോ ലഭ്യമായ എല്ലാ നിറങ്ങളിലൂടെയും ആനിമേറ്റഡ് രീതിയിൽ സൈക്കിൾ ചെയ്യുന്ന റെയിൻബോ ഓപ്ഷൻ തെരഞ്ഞെടുക്കാനോ കഴിയും.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോയുടെ ബോർഡറിന്റെ നിറം ഇഷ്ടാനുസൃതമാക്കുക. നിങ്ങൾക്ക് പാലറ്റിൽ നിന്ന് ഒരു നിറം തിരഞ്ഞെടുക്കാനോ ലഭ്യമായ എല്ലാ നിറങ്ങളിലൂടെയും ആനിമേറ്റഡ് രീതിയിൽ സൈക്കിൾ ചെയ്യുന്ന റെയിൻബോ ഓപ്ഷൻ തെരഞ്ഞെടുക്കാനോ കഴിയും.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>റെയിൻബോ അനിമേഷൻ ആരംഭിക്കുക</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോ ബോർഡറിന് ചുറ്റും റെയിൻബോ അനിമേഷൻ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പിന്റെ വിൻഡോ ബോർഡറിന് ചുറ്റും റെയിൻബോ അനിമേഷൻ ആരംഭിക്കുക.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>റെയിൻബോ അനിമേഷൻ നിർത്തുക</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഇത് പ്രവർത്തിച്ചുകൊണ്ടിരിക്കുകയാണെങ്കിൽ ആപ്പിന്റെ വിൻഡോ ബോർഡറിന് ചുറ്റുമുള്ള റെയിൻബോ അനിമേഷൻ നിർത്തുക.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഇത് പ്രവർത്തിച്ചുകൊണ്ടിരിക്കുകയാണെങ്കിൽ ആപ്പിന്റെ വിൻഡോ ബോർഡറിന് ചുറ്റുമുള്ള റെയിൻബോ അനിമേഷൻ നിർത്തുക.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>ബോർഡർ നിറം സജ്ജീകരിക്കുക</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് വിൻഡോയുടെ ബോർഡർ നിറം തിരഞ്ഞെടുക്കപ്പെട്ട നിറമായി സജ്ജീകരിക്കുക.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് വിൻഡോയുടെ ബോർഡർ നിറം തിരഞ്ഞെടുക്കപ്പെട്ട നിറമായി സജ്ജീകരിക്കുക.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>ബോർഡർ നിറം റീസെറ്റ് ചെയ്യുക</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് വിൻഡോയുടെ ബോർഡർ നിറം ഡീഫോൾട്ട് നിറത്തിലേക്ക് റീസെറ്റ് ചെയ്യുക.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് വിൻഡോയുടെ ബോർഡർ നിറം ഡീഫോൾട്ട് നിറത്തിലേക്ക് റീസെറ്റ് ചെയ്യുക.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>ഹോം</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഹോം പേജും സ്വാഗത സ്ക്രീനും</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഹോം പേജും സ്വാഗത സ്ക്രീനും</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="EnableMDAVSandboxMode-MSDefender" xml:space="preserve">
+    <value>Microsoft Defender Antivirus നെ ഒറ്റപ്പെട്ട പരിതസ്ഥിതിയിൽ പ്രവർത്തിപ്പിച്ച് അനധികൃത ഇടപെടലുകൾക്കെതിരെ മെച്ചപ്പെടുത്തിയ സംരക്ഷണം.</value>
+  </data>
 </root>

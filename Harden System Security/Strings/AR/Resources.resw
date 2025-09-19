@@ -3616,4 +3616,67 @@
   <data name="SelectedText" xml:space="preserve">
      <value>محدد</value>
   </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>خصص لون إطار نافذة التطبيق. يمكنك اختيار لون من لوحة الألوان أو تحديد خيار قوس قزح الذي يتنقل بشكل متحرك عبر جميع الألوان المتاحة.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>لون إطار النافذة</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>خصص لون إطار نافذة التطبيق. يمكنك اختيار لون من لوحة الألوان أو تحديد خيار قوس قزح الذي يتنقل بشكل متحرك عبر جميع الألوان المتاحة.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>خصص لون إطار نافذة التطبيق. يمكنك اختيار لون من لوحة الألوان أو تحديد خيار قوس قزح الذي يتنقل بشكل متحرك عبر جميع الألوان المتاحة.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>بدء حركة قوس قزح</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ابدأ حركة قوس قزح حول إطار نافذة التطبيق.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ابدأ حركة قوس قزح حول إطار نافذة التطبيق.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>إيقاف حركة قوس قزح</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أوقف حركة قوس قزح حول إطار نافذة التطبيق إذا كانت قيد التشغيل.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أوقف حركة قوس قزح حول إطار نافذة التطبيق إذا كانت قيد التشغيل.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>تعيين لون الإطار</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عيّن لون إطار نافذة التطبيق إلى اللون المحدد.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عيّن لون إطار نافذة التطبيق إلى اللون المحدد.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>إعادة تعيين لون الإطار</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أعد تعيين لون إطار نافذة التطبيق إلى اللون الافتراضي.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أعد تعيين لون إطار نافذة التطبيق إلى اللون الافتراضي.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>الرئيسية</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الصفحة الرئيسية وشاشة الترحيب</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>الصفحة الرئيسية وشاشة الترحيب</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="EnableMDAVSandboxMode-MSDefender" xml:space="preserve">
+    <value>تشغيل Microsoft Defender Antivirus في بيئة معزولة لتعزيز الحماية ضد محاولات العبث.</value>
+  </data>
 </root>

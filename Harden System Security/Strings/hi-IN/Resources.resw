@@ -3616,4 +3616,67 @@
   <data name="SelectedText" xml:space="preserve">
      <value>चयनित</value>
   </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>ऐप की विंडो की बॉर्डर का रंग अनुकूलित करें। आप पैलेट से कोई रंग चुन सकते हैं या रेनबो विकल्प चुन सकते हैं, जो एनीमेटेड तरीके से सभी उपलब्ध रंगों को क्रमवार दिखाएगा.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>विंडो बॉर्डर का रंग</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप की विंडो की बॉर्डर का रंग अनुकूलित करें। आप पैलेट से कोई रंग चुन सकते हैं या रेनबो विकल्प चुन सकते हैं, जो एनीमेटेड तरीके से सभी उपलब्ध रंगों को क्रमवार दिखाएगा.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप की विंडो की बॉर्डर का रंग अनुकूलित करें। आप पैलेट से कोई रंग चुन सकते हैं या रेनबो विकल्प चुन सकते हैं, जो एनीमेटेड तरीके से सभी उपलब्ध रंगों को क्रमवार दिखाएगा.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>रेनबो एनीमेशन शुरू करें</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप की विंडो की बॉर्डर के चारों ओर रेनबो एनीमेशन शुरू करें.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप की विंडो की बॉर्डर के चारों ओर रेनबो एनीमेशन शुरू करें.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>रेनबो एनीमेशन रोकें</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>यदि यह चल रहा हो तो ऐप की विंडो की बॉर्डर के चारों ओर रेनबो एनीमेशन रोकें.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>यदि यह चल रहा हो तो ऐप की विंडो की बॉर्डर के चारों ओर रेनबो एनीमेशन रोकें.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>बॉर्डर का रंग सेट करें</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप विंडो की बॉर्डर का रंग चयनित रंग पर सेट करें.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप विंडो की बॉर्डर का रंग चयनित रंग पर सेट करें.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>बॉर्डर रंग रीसेट करें</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप विंडो की बॉर्डर का रंग डिफ़ॉल्ट रंग पर रीसेट करें.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप विंडो की बॉर्डर का रंग डिफ़ॉल्ट रंग पर रीसेट करें.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>मुखपृष्ठ</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>मुखपृष्ठ और स्वागत स्क्रीन</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>मुखपृष्ठ और स्वागत स्क्रीन</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="EnableMDAVSandboxMode-MSDefender" xml:space="preserve">
+    <value>Microsoft Defender Antivirus को सैंडबॉक्स में चलाएँ ताकि अनधिकृत छेड़छाड़ के विरुद्ध उन्नत सुरक्षा मिल सके.</value>
+  </data>
 </root>

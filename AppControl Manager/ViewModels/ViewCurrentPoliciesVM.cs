@@ -606,7 +606,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								#endregion
 
 								// Add the unsigned policy rule option to the policy
-								CiRuleOptions.Set(filePath: XMLPolicyPath, rulesToAdd: [SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+								CiRuleOptions.Set(filePath: XMLPolicyPath, rulesToAdd: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 								// Making sure SupplementalPolicySigners do not exist in the XML policy
 								CiPolicyHandler.RemoveSupplementalSigners(XMLPolicyPath);
@@ -619,7 +619,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip.p7");
 
 								// Convert the XML file to CIP, overwriting the unsigned one
-								SiPolicy.Management.ConvertXMLToBinary(XMLPolicyPath, null, CIPFilePath);
+								Management.ConvertXMLToBinary(XMLPolicyPath, null, CIPFilePath);
 
 								// Sign the CIP
 								SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
@@ -630,7 +630,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								// Deploy the signed CIP file
 								CiToolHelper.UpdatePolicy(CIPFilePath);
 
-								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(XMLPolicyPath, null);
+								SiPolicy.SiPolicy policyObj = Management.Initialize(XMLPolicyPath, null);
 
 								// The time of first stage of the signed policy removal
 								// Since policy object has the full ID, in upper case with curly brackets,

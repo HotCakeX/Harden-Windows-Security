@@ -176,6 +176,8 @@
                         IsPaneToggleButtonVisible="False">
 
             <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="HomeNavItem" x:Uid="HomeNavItem" Icon="{x:Bind ViewModel.HomeIcon, Mode=OneWay}" Tag="Home" />
+
                 <!-- Protect Group -->
                 <NavigationViewItemHeader x:Name="ProtectNavigationViewItemHeader" x:Uid="ProtectNavigationViewItemHeader" />
 

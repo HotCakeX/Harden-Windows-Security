@@ -5966,4 +5966,64 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Kliknij/Dotknij, aby wybrać plik zasad XML z urządzenia</value>
   </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>Dostosuj kolor obramowania okna aplikacji. Możesz wybrać kolor z palety albo wybrać opcję tęczy, która będzie w sposób animowany przechodzić przez wszystkie dostępne kolory.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>Kolor obramowania okna</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj kolor obramowania okna aplikacji. Możesz wybrać kolor z palety albo wybrać opcję tęczy, która będzie w sposób animowany przechodzić przez wszystkie dostępne kolory.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj kolor obramowania okna aplikacji. Możesz wybrać kolor z palety albo wybrać opcję tęczy, która będzie w sposób animowany przechodzić przez wszystkie dostępne kolory.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>Uruchom animację tęczy</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Uruchom animację tęczy wokół obramowania okna aplikacji.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Uruchom animację tęczy wokół obramowania okna aplikacji.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>Zatrzymaj animację tęczy</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zatrzymaj animację tęczy wokół obramowania okna aplikacji, jeśli jest uruchomiona.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zatrzymaj animację tęczy wokół obramowania okna aplikacji, jeśli jest uruchomiona.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>Ustaw kolor obramowania</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ustaw kolor obramowania okna aplikacji na wybrany kolor.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ustaw kolor obramowania okna aplikacji na wybrany kolor.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>Resetuj kolor obramowania</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przywróć kolor obramowania okna aplikacji do koloru domyślnego.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przywróć kolor obramowania okna aplikacji do koloru domyślnego.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>Strona główna</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Strona główna i ekran powitalny</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Strona główna i ekran powitalny</value>
+    <comment>Main Navigation</comment>
+  </data>
 </root>

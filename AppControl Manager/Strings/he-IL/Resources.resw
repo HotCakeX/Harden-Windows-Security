@@ -5967,4 +5967,64 @@
   <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>לחץ/הקש כדי לבחור קובץ מדיניות XML מהמכשיר שלך</value>
   </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>התאם אישית את צבע מסגרת חלון היישום. באפשרותך לבחור צבע מהפלטה או לבחור באפשרות 'קשת' אשר תסבב באופן מונפש בין כל הצבעים הזמינים.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>צבע מסגרת החלון</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם אישית את צבע מסגרת חלון היישום. באפשרותך לבחור צבע מהפלטה או לבחור באפשרות 'קשת' אשר תסבב באופן מונפש בין כל הצבעים הזמינים.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאם אישית את צבע מסגרת חלון היישום. באפשרותך לבחור צבע מהפלטה או לבחור באפשרות 'קשת' אשר תסבב באופן מונפש בין כל הצבעים הזמינים.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>התחל אנימציית קשת</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל את אנימציית הקשת סביב מסגרת חלון היישום.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל את אנימציית הקשת סביב מסגרת חלון היישום.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>עצור אנימציית קשת</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עצור את אנימציית הקשת סביב מסגרת חלון היישום אם היא פועלת.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עצור את אנימציית הקשת סביב מסגרת חלון היישום אם היא פועלת.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>הגדר צבע המסגרת</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הגדר את צבע מסגרת חלון היישום לצבע שנבחר.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הגדר את צבע מסגרת חלון היישום לצבע שנבחר.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>אפס את צבע המסגרת</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אפס את צבע מסגרת חלון היישום לצבע ברירת המחדל.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אפס את צבע מסגרת חלון היישום לצבע ברירת המחדל.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>דף הבית</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>דף הבית ומסך ברוכים הבאים</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>דף הבית ומסך ברוכים הבאים</value>
+    <comment>Main Navigation</comment>
+  </data>
 </root>

@@ -517,7 +517,7 @@ jobs:
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 
               dotnet msbuild 'AppControl Manager.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
-             
+
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging x64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 
               if (!$X64ONLY) {
@@ -534,7 +534,7 @@ jobs:
                   if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ARM64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 
                   dotnet msbuild 'AppControl Manager.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-arm64 /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
-                
+
                   if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging ARM64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
               }
 

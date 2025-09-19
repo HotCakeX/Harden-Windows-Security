@@ -17,7 +17,6 @@
 
 using System;
 using System.Threading;
-using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
@@ -28,6 +27,7 @@ using AppControlManager.AppSettings;
 namespace HardenSystemSecurity.AppSettings;
 #endif
 #if APP_CONTROL_MANAGER
+using AppControlManager.MicrosoftGraph;
 namespace AppControlManager.AppSettings;
 #endif
 
@@ -73,7 +73,11 @@ internal sealed partial class Main : ViewModelBase
 		LinkPreviewsForSecurityMeasure = ReadValue(nameof(LinkPreviewsForSecurityMeasure), LinkPreviewsForSecurityMeasure);
 		AutoResizeListViewColumns = ReadValue(nameof(AutoResizeListViewColumns), AutoResizeListViewColumns);
 		ListViewFontFamily = ReadValue(nameof(ListViewFontFamily), ListViewFontFamily);
+#if APP_CONTROL_MANAGER
 		SelectedSignInMethodForMSGraph = ReadValue(nameof(SelectedSignInMethodForMSGraph), SelectedSignInMethodForMSGraph);
+#endif
+		IsAnimatedRainbowEnabled = ReadValue(nameof(IsAnimatedRainbowEnabled), IsAnimatedRainbowEnabled);
+		CustomAppWindowsBorder = ReadValue(nameof(CustomAppWindowsBorder), CustomAppWindowsBorder);
 	}
 
 	/// <summary>
@@ -517,7 +521,7 @@ internal sealed partial class Main : ViewModelBase
 		}
 	} = "Segoe UI"; // https://github.com/MicrosoftDocs/winapps-winrt-api/blob/docs//microsoft.ui.xaml.media/fontfamily_xamlautofontfamily.md
 
-
+#if APP_CONTROL_MANAGER
 	/// <summary>
 	/// The selected sign-in method for Microsoft Graph authentication in ComboBox.
 	/// </summary>
@@ -532,4 +536,35 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = (int)SignInMethods.WebBrowser;
+#endif
+
+	/// <summary>
+	/// Whether the app's window is using animated rainbow effect.
+	/// </summary>
+	internal bool IsAnimatedRainbowEnabled
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(IsAnimatedRainbowEnabled), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Custom color of the app's window.
+	/// </summary>
+	internal string CustomAppWindowsBorder
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(CustomAppWindowsBorder), field);
+			}
+		}
+	} = string.Empty;
 }

@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using AppControlManager.AppSettings;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml.Controls;
@@ -32,6 +31,7 @@ namespace HardenSystemSecurity.ViewModels;
 #endif
 
 #if APP_CONTROL_MANAGER
+using System.Collections.ObjectModel;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
 using AppControlManager.WindowComponents;
@@ -497,5 +497,23 @@ internal sealed partial class SettingsVM : ViewModelBase
 	#endregion
 
 #endif
+
+	#region App Border Color Customization
+	internal void StartRainbowAnimation() => CustomUIElements.AppWindowBorderCustomization.StartAnimatedFrame();
+	internal void StopRainbowAnimation() => CustomUIElements.AppWindowBorderCustomization.StopAnimatedFrame();
+	internal void ColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
+	{
+		R = args.NewColor.R;
+		G = args.NewColor.G;
+		B = args.NewColor.B;
+	}
+	private byte R;
+	private byte G;
+	private byte B;
+
+	internal void StartCustomColorAnimation() => CustomUIElements.AppWindowBorderCustomization.SetBorderColor(R, G, B);
+	internal void StopCustomColorAnimation() => CustomUIElements.AppWindowBorderCustomization.ResetBorderColor();
+
+	#endregion
 
 }

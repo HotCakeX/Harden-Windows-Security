@@ -84,7 +84,7 @@
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
         <ErrorReport>send</ErrorReport>
-        <FileVersion>1.0.11.0</FileVersion>
+        <FileVersion>1.0.12.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <NeutralLanguage>en-US</NeutralLanguage>
         <StartupObject>HardenSystemSecurity.Program</StartupObject>
@@ -281,6 +281,7 @@
         <Compile Include="..\AppControl Manager\Animated Icons\GitHub.cs" Link="Animated Icons\GitHub.cs" />
         <Compile Include="..\AppControl Manager\Animated Icons\Heart.cs" Link="Animated Icons\Heart.cs" />
         <Compile Include="..\AppControl Manager\Animated Icons\HeartPulse.cs" Link="Animated Icons\HeartPulse.cs" />
+        <Compile Include="..\AppControl Manager\Animated Icons\Home.cs" Link="Animated Icons\Home.cs" />
         <Compile Include="..\AppControl Manager\Animated Icons\Sidebar.cs" Link="Animated Icons\Sidebar.cs" />
         <Compile Include="..\AppControl Manager\Animated Icons\Timeline.cs" Link="Animated Icons\Timeline.cs" />
         <Compile Include="..\AppControl Manager\App.xaml.cs" Link="App.xaml.cs" />
@@ -298,6 +299,7 @@
         <Compile Include="..\AppControl Manager\CustomUIElements\SettingsCardV2.cs" Link="CustomUIElements\SettingsCardV2.cs" />
         <Compile Include="..\AppControl Manager\CustomUIElements\SettingsCardV3.cs" Link="CustomUIElements\SettingsCardV3.cs" />
         <Compile Include="..\AppControl Manager\CustomUIElements\StickyHeaderBehaviorV2.cs" Link="CustomUIElements\StickyHeaderBehaviorV2.cs" />
+        <Compile Include="..\AppControl Manager\CustomUIElements\AppWindowBorderCustomization.cs" Link="CustomUIElements\AppWindowBorderCustomization.cs" />
         <Compile Include="..\AppControl Manager\IncrementalCollection\GenericIncrementalCollection.cs" Link="IncrementalCollection\GenericIncrementalCollection.cs" />
         <Compile Include="..\AppControl Manager\IncrementalCollection\IncrementalCollection.cs" Link="IncrementalCollection\IncrementalCollection.cs" />
         <Compile Include="..\AppControl Manager\MainWindow.xaml.cs" Link="MainWindow.xaml.cs" />
@@ -324,12 +326,14 @@
         <Compile Include="..\AppControl Manager\Others\WindowDisplayAffinity.cs" Link="Others\WindowDisplayAffinity.cs" />
         <Compile Include="..\AppControl Manager\Others\AnimatedCancellableButtonInitializer.cs" Link="Others\AnimatedCancellableButtonInitializer.cs" />
         <Compile Include="..\AppControl Manager\Pages\GitHubDocumentation.xaml.cs" Link="Pages\GitHubDocumentation.xaml.cs" />
+        <Compile Include="..\AppControl Manager\Pages\Home.xaml.cs" Link="Pages\Home.xaml.cs" />
         <Compile Include="..\AppControl Manager\Pages\Logs.xaml.cs" Link="Pages\Logs.xaml.cs" />
         <Compile Include="..\AppControl Manager\Pages\Settings.xaml.cs" Link="Pages\Settings.xaml.cs" />
         <Compile Include="..\AppControl Manager\Pages\UpdatePage.xaml.cs" Link="Pages\UpdatePage.xaml.cs" />
         <Compile Include="..\AppControl Manager\Taskbar\Badge.cs" Link="Taskbar\Badge.cs" />
         <Compile Include="..\AppControl Manager\Taskbar\JumpListMgr.cs" Link="Taskbar\JumpListMgr.cs" />
         <Compile Include="..\AppControl Manager\Taskbar\TaskBarProgress.cs" Link="Taskbar\TaskBarProgress.cs" />
+        <Compile Include="..\AppControl Manager\ViewModels\HomeVM.cs" Link="ViewModels\HomeVM.cs" />
         <Compile Include="..\AppControl Manager\ViewModels\LogsVM.cs" Link="ViewModels\LogsVM.cs" />
         <Compile Include="..\AppControl Manager\ViewModels\MainWindowVM-Shared.cs" Link="ViewModels\MainWindowVM-Shared.cs" />
         <Compile Include="..\AppControl Manager\ViewModels\SettingsVM.cs" Link="ViewModels\SettingsVM.cs" />
@@ -344,6 +348,7 @@
         <Compile Include="..\AppControl Manager\Others\GetAppsList.cs" Link="Others\GetAppsList.cs" />
         <Compile Include="..\AppControl Manager\Others\ComJsonDeserializer.cs" Link="Others\ComJsonDeserializer.cs" />
         <Compile Include="..\AppControl Manager\Others\IExplicitDisposeOptIn.cs" Link="Others\IExplicitDisposeOptIn.cs" />
+        <Compile Include="..\AppControl Manager\Others\RGBHEX.cs" Link="Others\RGBHEX.cs" />
     </ItemGroup>
 
     <!-- Nuget packages

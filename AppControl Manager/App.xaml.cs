@@ -576,6 +576,18 @@ public partial class App : Application
 
 		#endregion
 
+		// If the user has enabled animated rainbow border for the app window, start it
+		if (Settings.IsAnimatedRainbowEnabled)
+		{
+			CustomUIElements.AppWindowBorderCustomization.StartAnimatedFrame();
+		}
+		// If the user has set a custom color for the app window border, apply it
+		else if (!string.IsNullOrEmpty(Settings.CustomAppWindowsBorder))
+		{
+			if (RGBHEX.ToRGB(Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
+				CustomUIElements.AppWindowBorderCustomization.SetBorderColor(r, g, b);
+		}
+
 		// Startup update check
 		AppUpdate.CheckAtStartup();
 	}
@@ -585,16 +597,7 @@ public partial class App : Application
 	/// <summary>
 	/// Perform initial navigation.
 	/// </summary>
-	private static void InitialNav()
-	{
-#if APP_CONTROL_MANAGER
-		// Navigate to the CreatePolicy page when the window is loaded and is Admin, else Policy Editor
-		ViewModelProvider.NavigationService.Navigate(IsElevated ? typeof(Pages.CreatePolicy) : typeof(Pages.PolicyEditor));
-#endif
-#if HARDEN_SYSTEM_SECURITY
-		ViewModelProvider.NavigationService.Navigate(IsElevated ? typeof(Pages.Protect) : typeof(Pages.Protects.NonAdmin));
-#endif
-	}
+	private static void InitialNav() => ViewModelProvider.NavigationService.Navigate(typeof(AppControlManager.Pages.Home));
 
 	/// <summary>
 	/// Exposes the main application window as a static property. It retrieves the window from the current application

@@ -368,7 +368,7 @@ dotnet_diagnostic.CA2265.severity = error
 dotnet_diagnostic.CA1507.severity = error
 
 # IDE0001: Simplify name
-dotnet_diagnostic.IDE0001.severity = error
+dotnet_diagnostic.IDE0001.severity = silent
 
 # SYSLIB1045: Convert to 'GeneratedRegexAttribute'.
 dotnet_diagnostic.SYSLIB1045.severity = error

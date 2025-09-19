@@ -3616,4 +3616,67 @@
     <data name="SelectedText" xml:space="preserve">
      <value>Επιλεγμένο</value>
   </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής. Μπορείτε να επιλέξετε ένα χρώμα από την παλέτα ή να επιλέξετε την επιλογή ουράνιου τόξου, η οποία θα κάνει κυκλική εναλλαγή με κινούμενη μετάβαση σε όλα τα διαθέσιμα χρώματα.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>Χρώμα Περιγράμματος Παραθύρου</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής. Μπορείτε να επιλέξετε ένα χρώμα από την παλέτα ή να επιλέξετε την επιλογή ουράνιου τόξου, η οποία θα κάνει κυκλική εναλλαγή με κινούμενη μετάβαση σε όλα τα διαθέσιμα χρώματα.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής. Μπορείτε να επιλέξετε ένα χρώμα από την παλέτα ή να επιλέξετε την επιλογή ουράνιου τόξου, η οποία θα κάνει κυκλική εναλλαγή με κινούμενη μετάβαση σε όλα τα διαθέσιμα χρώματα.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>Έναρξη κινούμενου ουράνιου τόξου</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ξεκινήστε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ξεκινήστε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>Διακοπή κινούμενου ουράνιου τόξου</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διακόψτε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής, αν εκτελείται.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διακόψτε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής, αν εκτελείται.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>Ορισμός χρώματος περιγράμματος</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ορίστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο επιλεγμένο χρώμα.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ορίστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο επιλεγμένο χρώμα.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>Επαναφορά χρώματος περιγράμματος</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαναφέρετε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο προεπιλεγμένο χρώμα.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επαναφέρετε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο προεπιλεγμένο χρώμα.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>Αρχική</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αρχική σελίδα και οθόνη καλωσορίσματος</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αρχική σελίδα και οθόνη καλωσορίσματος</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="EnableMDAVSandboxMode-MSDefender" xml:space="preserve">
+    <value>Εκτελέστε το Microsoft Defender Antivirus σε περιβάλλον απομόνωσης για ενισχυμένη προστασία από μη εξουσιοδοτημένη παρέμβαση.</value>
+  </data>
 </root>

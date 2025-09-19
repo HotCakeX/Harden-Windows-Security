@@ -424,6 +424,10 @@ internal sealed partial class MainWindow : Window
 			ViewModel.RebuildBreadcrumbMappings();
 			ViewModel.RebuildNavigationPageToItemContentMapForSearch();
 
+			HomeNavItem.Content = GlobalVars.GetStr("HomeNavItem/Content");
+			AutomationProperties.SetHelpText(HomeNavItem, GlobalVars.GetStr("HomeNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(HomeNavItem, GlobalVars.GetStr("HomeNavItem/ToolTipService/ToolTip"));
+
 #if HARDEN_SYSTEM_SECURITY
 
 			TitleBarSearchBox.PlaceholderText = GlobalVars.GetStr("MainSearchAutoSuggestBox/PlaceholderText");

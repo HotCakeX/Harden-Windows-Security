@@ -518,6 +518,34 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 			));
 
 
+		const string Name = "MP_FORCE_USE_SANDBOX";
+		const string Value = "1";
+
+		// Microsoft Defender Sandbox
+		temp.Add(new(
+				category: Categories.MicrosoftDefender,
+				name: GlobalVars.GetStr("EnableMDAVSandboxMode-MSDefender"),
+
+				applyStrategy: new DefaultApply(() =>
+				{
+					Environment.SetEnvironmentVariable(Name, Value, EnvironmentVariableTarget.Machine);
+				}),
+
+				verifyStrategy: new DefaultVerify(() =>
+				{
+					string? current = Environment.GetEnvironmentVariable(Name, EnvironmentVariableTarget.Machine);
+					return string.Equals(current, Value, StringComparison.OrdinalIgnoreCase);
+				}),
+
+				removeStrategy: new DefaultRemove(() =>
+				{
+					Environment.SetEnvironmentVariable(Name, null, EnvironmentVariableTarget.Machine);
+				}),
+
+				url: "https://learn.microsoft.com/defender-endpoint/sandbox-mdav"
+				));
+
+
 		return temp;
 	}
 

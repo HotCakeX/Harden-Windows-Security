@@ -3,10 +3,8 @@
     x:Class="AppControlManager.Pages.Home"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:local="using:AppControlManager.Pages"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
@@ -14,8 +12,12 @@
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     Loaded="{x:Bind OnInitialLoaded}"
     Unloaded="{x:Bind OnUnloadedDisposeResources}"
-    Background="Transparent"
-    mc:Ignorable="d">
+    Background="Transparent">
+
+    <Page.KeyboardAccelerators>
+        <KeyboardAccelerator Key="Left"  Invoked="{x:Bind OnLeftRightAcceleratorInvoked}"/>
+        <KeyboardAccelerator Key="Right" Invoked="{x:Bind OnLeftRightAcceleratorInvoked}"/>
+    </Page.KeyboardAccelerators>
 
     <Page.Resources>
 
@@ -24,11 +26,12 @@
             <ResourceDictionary.ThemeDictionaries>
                 <!-- For Light theme: reduce luminosity and lower tint opacity to avoid washed-out content -->
                 <!-- https://github.com/microsoft/microsoft-ui-xaml/blob/main/src/controls/dev/Materials/Acrylic/AcrylicBrush_themeresources.xaml -->
+                <!-- The fallback color helps keeping the text that appears on the background readable by making background dark when Acrylic can't be rendered in RDP sessions, Azure Bastion and such. -->
                 <ResourceDictionary x:Key="Light">
                     <AcrylicBrush x:Key="StagePanelBackgroundBrush"
                               TintColor="{StaticResource SystemChromeAltHighColor}"
                               TintOpacity="0.8"
-                              FallbackColor="{StaticResource SystemChromeMediumColor}"/>
+                              FallbackColor="#1E1E1E"/>
                 </ResourceDictionary>
 
                 <!-- For Dark theme: slightly stronger tint, still no luminosity lifting -->
@@ -36,7 +39,7 @@
                     <AcrylicBrush x:Key="StagePanelBackgroundBrush"
                               TintColor="{StaticResource SystemChromeAltHighColor}"
                               TintOpacity="0.8"
-                              FallbackColor="{StaticResource SystemChromeMediumColor}"/>
+                              FallbackColor="#1E1E1E"/>
                 </ResourceDictionary>
 
                 <!-- High Contrast: defer to system window color -->

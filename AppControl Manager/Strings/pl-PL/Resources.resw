@@ -6026,4 +6026,52 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Strona główna i ekran powitalny</value>
     <comment>Main Navigation</comment>
   </data>
+    <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
+     <value>Upuść plik, aby wyświetlić jego certyfikaty</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>Witaj i witamy</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>Dziękujemy za wybranie AppControl Manager. Jeśli chcesz przeczytać informacje o wydaniu dla najnowszej aktualizacji, znajdziesz je w sekcji Releases oficjalnego repozytorium na GitHubie. Tam możesz też zadawać pytania lub przesyłać opinie.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>Odwiedź sekcję Releases na GitHubie</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwiera w przeglądarce stronę repozytorium na GitHubie po kliknięciu przycisku.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwiera w przeglądarce stronę repozytorium na GitHubie po kliknięciu przycisku.</value>
+  </data>
+  <data name="UseHardenSystemSecurity.Text" xml:space="preserve">
+    <value>Użyj aplikacji Harden System Security</value>
+  </data>
+  <data name="UseHardenSystemSecurityDescription.Text" xml:space="preserve">
+    <value>Harden System Security to kolejna aplikacja, którą opracowałem, aby pomóc Ci łatwo wdrażać solidne i zaawansowane środki zabezpieczeń w systemie. Oferuje nowoczesny, intuicyjny interfejs, jest kształtowana przez opinie społeczności i jest aktywnie utrzymywana.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>Odwiedź stronę Microsoft Store</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwiera stronę Microsoft Store po kliknięciu przycisku.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwiera stronę Microsoft Store po kliknięciu przycisku.</value>
+  </data>
+  <data name="IntuneIntegrationHomePage.Text" xml:space="preserve">
+    <value>Bezproblemowa integracja z Microsoft Intune</value>
+  </data>
+  <data name="IntuneIntegrationHomePageDescription.Text" xml:space="preserve">
+    <value>Bezproblemowa integracja z Microsoft Intune na potrzeby zaawansowanego zarządzania bezpieczeństwem, w tym przeglądanie zdalnie wdrożonych zasad, wdrażanie nowych zasad lub usuwanie istniejących.</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.Content" xml:space="preserve">
+    <value>Przejdź do strony wdrożeń</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przejdź do strony wdrożeń</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przejdź do strony wdrożeń</value>
+  </data>
 </root>

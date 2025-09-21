@@ -3679,4 +3679,79 @@ Thumbprint: {3}</value>
   <data name="EnableMDAVSandboxMode-MSDefender" xml:space="preserve">
     <value>Run Microsoft Defender Antivirus in a sandbox for enhanced protection against tampering.</value>
   </data>
+  <data name="AnimatedApplyAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Apply all of the Security Measures in the page. Items that belong to sub-categories are not applied when using this button.</value>
+  </data>
+  <data name="AnimatedApplyAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Apply all of the Security Measures in the page. Items that belong to sub-categories are not applied when using this button.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove all of the Security Measures in the page.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Remove all of the Security Measures in the page.</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>Hello &amp; Welcome</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>Thanks for choosing the Harden System Security app. If you'd like to read the release notes for the latest update, you can find them on the official GitHub repository's release section. You can also ask questions or submit feedbacks in there.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>Visit GitHub Releases</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opens the GitHub repository's page in the browser after clicking the button.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opens the GitHub repository's page in the browser after clicking the button.</value>
+  </data>
+  <data name="UseAppControlManager.Text" xml:space="preserve">
+    <value>Use AppControl Manager</value>
+  </data>
+  <data name="UseAppControlManagerDescription.Text" xml:space="preserve">
+    <value>AppControl Manager is another application I've developed to help you easily manage Application Control and Code Integrity in the operating system. It features a modern, intuitive interface, is shaped by community feedback, and is actively maintained.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>Visit Microsoft Store Page</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opens the Microsoft Store page after clicking the button.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opens the Microsoft Store page after clicking the button.</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagement.Text" xml:space="preserve">
+    <value>Comprehensive Audit Policies Management</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagementDescription.Text" xml:space="preserve">
+    <value>View all system audit policies in a unified interface, with the ability to configure each one individually. Export your settings as a template for easy re-import on the same or another system.</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.Content" xml:space="preserve">
+    <value>Navigate to Audit Policies page</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Navigate to Audit Policies page</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Navigate to Audit Policies page</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasures" xml:space="preserve">
+    <value>Applying all security measures...</value>
+  </data>
+  <data name="RemovingAllSecurityMeasures" xml:space="preserve">
+    <value>Removing all security measures...</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasures" xml:space="preserve">
+    <value>Verifying all security measures...</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>Successfully applied all of the security measures.</value>
+  </data>
+  <data name="RemovingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>Successfully removed all of the security measures.</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>Successfully verified all of the security measures.</value>
+  </data>
 </root>

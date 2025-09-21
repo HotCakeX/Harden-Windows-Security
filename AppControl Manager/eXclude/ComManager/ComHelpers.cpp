@@ -806,3 +806,72 @@ extern "C" __declspec(dllexport) bool __stdcall GetAllWmiData(const wchar_t* wmi
 {
 	return GetAllWmiProperties(wmiNamespace, wmiClassName);
 }
+
+// Function to check if a given property exists on a WMI class in a namespace.
+// - Returns true if the property exists.
+// - Returns false if the property doesn't exist.
+// - Returns false and sets the last error message when namespace or class is invalid (or on other failures).
+[[nodiscard]] bool DoesWmiPropertyExist(const wchar_t* wmiNamespace, const wchar_t* wmiClassName, const wchar_t* propertyName)
+{
+	// Clear last error to differentiate "false due to not found" vs real errors.
+	ClearLastErrorMsg();
+
+	// Basic validation.
+	if (!wmiNamespace || !wmiClassName || !propertyName)
+	{
+		SetLastErrorMsg(L"Namespace, class name, and property name must not be null.");
+		return false;
+	}
+
+	// Reuse the common connection helper to handle COM/security and connect to the namespace.
+	IWbemLocator* pLoc = nullptr;
+	IWbemServices* pSvc = nullptr;
+	bool didInitCOM = false;
+	if (!ConnectToWmiNamespace(wmiNamespace, &pLoc, &pSvc, didInitCOM))
+	{
+		// Error is already set by ConnectToWmiNamespace.
+		return false;
+	}
+
+	// Get the class definition.
+	IWbemClassObject* pClass = nullptr;
+	HRESULT hr = pSvc->GetObject(_bstr_t(wmiClassName), 0, nullptr, &pClass, nullptr);
+	if (FAILED(hr) || !pClass)
+	{
+		SetLastErrorMsg(wstring(L"Failed to get ") + wmiClassName + L" object. Error code = 0x" + to_wstring(hr));
+		if (pSvc) pSvc->Release();
+		if (pLoc) pLoc->Release();
+		if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+		return false;
+	}
+
+	// Probe the property existence on the class object.
+	VARIANT vt{};
+	VariantInit(&vt);
+	CIMTYPE cim = 0;
+	LONG flavor = 0;
+	hr = pClass->Get(_bstr_t(propertyName), 0, &vt, &cim, &flavor);
+
+	// Cleanup.
+	VariantClear(&vt);
+	pClass->Release();
+	pSvc->Release();
+	pLoc->Release();
+	if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+
+	// Property missing: return false without setting an error.
+	if (hr == WBEM_E_NOT_FOUND)
+	{
+		return false;
+	}
+
+	// Treat other failure while probing property as error.
+	if (FAILED(hr))
+	{
+		SetLastErrorMsg(wstring(L"Failed to probe property '") + propertyName + L"' on class " + wmiClassName + L". Error code = 0x" + to_wstring(hr));
+		return false;
+	}
+
+	// Found the property.
+	return true;
+}

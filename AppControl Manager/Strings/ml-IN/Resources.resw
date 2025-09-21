@@ -6026,4 +6026,52 @@
     <value>ഹോം പേജും സ്വാഗത സ്ക്രീനും</value>
     <comment>Main Navigation</comment>
   </data>
+    <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
+     <value>അതിന്റെ സർട്ടിഫിക്കറ്റുകൾ കാണാൻ ഫയൽ ഡ്രോപ്പ് ചെയ്യുക</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>നമസ്കാരം, സ്വാഗതം</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>AppControl Manager ആപ്പ് തെരഞ്ഞെടുത്തതിന് നന്ദി. ഏറ്റവും പുതിയ അപ്ഡേറ്റിന്റെ റിലീസ് നോട്ടുകൾ വായിക്കാൻ ആഗ്രഹിക്കുന്നുവെങ്കിൽ, ഔദ്യോഗിക GitHub റീപ്പോസിറ്ററിയിലെ Releases വിഭാഗത്തിൽ അവ ലഭ്യമാണ്. അവിടെ നിങ്ങൾക്ക് ചോദ്യങ്ങൾ ചോദിക്കുകയോ ഫീഡ്ബാക്ക് സമർപ്പിക്കുകയോ ചെയ്യാം.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>GitHub Releases സന്ദർശിക്കുക</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ബട്ടൺ ക്ലിക് ചെയ്ത ശേഷം ബ്രൗസറിൽ GitHub റീപ്പോസിറ്ററിയുടെ പേജ് തുറക്കും.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ബട്ടൺ ക്ലിക് ചെയ്ത ശേഷം ബ്രൗസറിൽ GitHub റീപ്പോസിറ്ററിയുടെ പേജ് തുറക്കും.</value>
+  </data>
+  <data name="UseHardenSystemSecurity.Text" xml:space="preserve">
+    <value>Harden System Security ആപ്പ് ഉപയോഗിക്കുക</value>
+  </data>
+  <data name="UseHardenSystemSecurityDescription.Text" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ ശക്തവും മുന്നേറിയതുമായ സുരക്ഷാ നടപടികൾ എളുപ്പത്തിൽ പ്രയോഗിക്കാൻ നിങ്ങളെ സഹായിക്കാൻ ഞാൻ വികസിപ്പിച്ച മറ്റൊരു ആപ്പാണ് Harden System Security. ഇത് ആധുനികവും ബുദ്ധിഗ്രാഹ്യമുമായ ഇന്റർഫേസ് നൽകുന്നു, സമൂഹത്തിന്റെ പ്രതികരണത്തെ അടിസ്ഥാനമാക്കി രൂപകൽപ്പന ചെയ്തതും സജീവമായി പരിപാലിക്കുന്നതുമാണ്.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>Microsoft Store പേജ് സന്ദർശിക്കുക</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ബട്ടൺ ക്ലിക് ചെയ്ത ശേഷം Microsoft Store പേജ് തുറക്കും.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ബട്ടൺ ക്ലിക് ചെയ്ത ശേഷം Microsoft Store പേജ് തുറക്കും.</value>
+  </data>
+  <data name="IntuneIntegrationHomePage.Text" xml:space="preserve">
+    <value>Microsoft Intune യുമായി നിർവിഘ്നമായ സംയോജനം</value>
+  </data>
+  <data name="IntuneIntegrationHomePageDescription.Text" xml:space="preserve">
+    <value>ദൂരസ്ഥമായി വിന്യസിച്ച നയങ്ങൾ കാണുക, പുതിയ നയങ്ങൾ വിന്യസിക്കുക, അല്ലെങ്കിൽ നിലവിലുള്ളവ നീക്കം ചെയ്യുക പോലുള്ള മെച്ചപ്പെടുത്തിയ സുരക്ഷാ മാനേജ്മെന്റിനായി Microsoft Intune യുമായി നിർവിഘ്നമായ സംയോജനം.</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.Content" xml:space="preserve">
+    <value>വിന്യാസ പേജിലേക്ക് പോകുക</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>വിന്യാസ പേജിലേക്ക് പോകുക</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>വിന്യാസ പേജിലേക്ക് പോകുക</value>
+  </data>
 </root>

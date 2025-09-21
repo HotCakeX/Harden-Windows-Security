@@ -32,6 +32,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Windows.Foundation;
+using Windows.System;
 using Windows.UI;
 
 #pragma warning disable CA5394
@@ -1993,7 +1994,7 @@ internal sealed partial class Home : Page, IDisposable
 		float lateral1 = halfTop + (halfBottom - halfTop) * 0.40f;
 		lateral1 *= 1.0f + edgeFeather;
 
-		CanvasPathBuilder pb = new(ds.Device);
+		using CanvasPathBuilder pb = new(ds.Device);
 		pb.BeginFigure(cx - halfTop, topY);
 		pb.AddCubicBezier(new Vector2(cx - halfTop, y1),
 			new Vector2(cx - lateral1, y2),
@@ -2004,7 +2005,6 @@ internal sealed partial class Home : Page, IDisposable
 			new Vector2(cx + halfTop, topY));
 		pb.EndFigure(CanvasFigureLoop.Closed);
 		CanvasGeometry g = CanvasGeometry.CreatePath(pb);
-		pb.Dispose();
 		return g;
 	}
 
@@ -2294,6 +2294,22 @@ internal sealed partial class Home : Page, IDisposable
 	}
 
 	#endregion
+
+	// Invoked by the Page-level KeyboardAccelerators for Left/Right arrows to navigate the carousel.
+	private void OnLeftRightAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		if (sender.Key is VirtualKey.Left)
+		{
+			OnLeftNavClick(this, new RoutedEventArgs());
+			args.Handled = true;
+		}
+		else if (sender.Key is VirtualKey.Right)
+		{
+			OnRightNavClick(this, new RoutedEventArgs());
+			args.Handled = true;
+		}
+	}
+
 
 	// Disposal guard to ensure owned resources are released exactly once
 	private bool _disposed;

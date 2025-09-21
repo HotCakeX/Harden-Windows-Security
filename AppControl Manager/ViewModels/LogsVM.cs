@@ -253,13 +253,9 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 				{
 					Func<Task<IFileDataProvider>> dataProviderFactory = CreateDataProviderFactory(log.FullName);
 
-					// Final check before starting data load
-					if (currentOperationId == _displayOperationId)
-					{
-						// Update the data provider factory and reload data
-						LogCollection.UpdateDataProviderFactory(dataProviderFactory);
-						await LogCollection.LoadDataAsync();
-					}
+					// Update the data provider factory and reload data
+					LogCollection.UpdateDataProviderFactory(dataProviderFactory);
+					await LogCollection.LoadDataAsync();
 				}
 				catch (Exception ex)
 				{

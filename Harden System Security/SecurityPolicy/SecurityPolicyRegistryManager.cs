@@ -134,9 +134,12 @@ internal static class SecurityPolicyRegistryManager
 		{
 			try
 			{
-				// Find the corresponding registry value in the security policy
-				RegistryValue? registryValue = registryValues.FirstOrDefault(rv =>
-					string.Equals(rv.Name, policy.KeyName, StringComparison.OrdinalIgnoreCase));
+				// Build the INF-style full name: "MACHINE\<keyPath>\<valueName>" to match SecurityPolicyReader output
+				string expectedName = string.Concat(ParseRegistryPath(policy.KeyName), "\\", policy.ValueName);
+
+				// Find the corresponding registry value using the INF-style identifier
+				RegistryValue? registryValue = registryValues.FirstOrDefault(
+					rv => string.Equals(rv.Name, expectedName, StringComparison.OrdinalIgnoreCase));
 
 				bool isVerified = false;
 
@@ -147,7 +150,19 @@ internal static class SecurityPolicyRegistryManager
 				}
 
 				verificationResults[policy] = isVerified;
-				Logger.Write($"VERIFY: {policy.KeyName}\\{policy.ValueName} = {(isVerified ? "MATCH" : "MISMATCH")}");
+
+				if (isVerified)
+				{
+					// Match
+					Logger.Write($"VERIFY: {policy.KeyName}\\{policy.ValueName} = MATCH");
+				}
+				else
+				{
+					// Mismatch
+					string actualDisplay = registryValue?.Value ?? "<not found>";
+					string expectedDisplay = policy.RegValue ?? "<null>";
+					Logger.Write($"VERIFY: {policy.KeyName}\\{policy.ValueName} = MISMATCH (expected: {expectedDisplay}, actual: {actualDisplay})");
+				}
 			}
 			catch (Exception ex)
 			{
@@ -259,16 +274,28 @@ internal static class SecurityPolicyRegistryManager
 	/// <summary>
 	/// Compares multi-string security policy registry values.
 	/// </summary>
-	/// <param name="actualValue">Actual multi-string value (newline separated from security policy)</param>
-	/// <param name="expectedValue">Expected multi-string value (comma separated from JSON)</param>
+	/// <param name="actualValue">Actual multi-string value (newline separated from security policy in the System)</param>
+	/// <param name="expectedValue">Expected multi-string value (comma separated from JSON in the app resources)</param>
 	/// <returns>True if values match, false otherwise</returns>
 	private static bool CompareMultiStringSecurityPolicyValues(string actualValue, string expectedValue)
 	{
-		// Security policy multi-string values are newline separated
-		string[] actualArray = actualValue.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-		// Expected values are comma separated
-		string[] expectedArray = expectedValue.Split(',', StringSplitOptions.None);
+		// Normalize nulls
+		string actualNormalized = actualValue ?? string.Empty;
+		string expectedNormalized = expectedValue ?? string.Empty;
 
+		// Security policy multi-string values are newline separated; trim entries and drop empties
+		string[] actualArray = actualNormalized.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+		// Expected values are comma separated; if empty, treat as zero-length list
+		if (expectedNormalized.Length == 0)
+		{
+			return actualArray.Length == 0;
+		}
+
+		// Trim entries and drop empties to avoid whitespace-caused mismatches
+		string[] expectedArray = expectedNormalized.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+		// Compare length and sequence (case-insensitive); order-sensitive by design
 		return actualArray.Length == expectedArray.Length &&
 			   actualArray.SequenceEqual(expectedArray, StringComparer.OrdinalIgnoreCase);
 	}

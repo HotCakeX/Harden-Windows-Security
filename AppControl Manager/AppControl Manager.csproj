@@ -57,7 +57,7 @@
         <AssemblyName>AppControlManager</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>2.0.42.0</FileVersion>
+        <FileVersion>2.0.43.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
         <StartupObject>AppControlManager.Program</StartupObject>
@@ -260,7 +260,6 @@
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250907003" />
         <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0-rc.1.25451.107" />
         <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0-rc.1.25451.107" />
-        <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250402" />
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
         <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
@@ -269,7 +268,6 @@
         <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.14.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4948" />
-        <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
         <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
         <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.4" />

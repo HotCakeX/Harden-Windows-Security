@@ -73,10 +73,7 @@ internal sealed partial class GitHubDocumentation : Page
 	/// <summary>
 	/// Event handler for Reload button
 	/// </summary>
-	private void ReloadButton_Click()
-	{
-		GitHubDocumentationWebView2.Reload();
-	}
+	private void ReloadButton_Click() => GitHubDocumentationWebView2.Reload();
 
 	/// <summary>
 	/// Event handler for Home button

@@ -26,6 +26,7 @@ All examples assume the executable is named `ComManager.exe`.
 | `BitLocker` | Manage BitLocker |
 | `WMI` | Apply WMI preferences of typed values |
 | `SCHEDULEDTASKS` | Manage Scheduled Tasks |
+| `GetAvailability` | Check if a WMI class contains a given property (prints true/false) |
 
 Minimal invocation pattern:
 ```
@@ -335,4 +336,29 @@ ComManager.exe scheduledtasks --delete --name \"Task To Delete\" --folder \"\\My
 
 ```
 ComManager.exe scheduledtasks --deletefolder --folder \"\\MyFolder\\SubFolder\";
+```
+
+---
+
+## 6. GETAVAILABILITY
+
+Check if a WMI class contains a given property (outputs a boolean token).
+
+```
+ComManager.exe getavailability <namespace> <className> <propertyName>
+```
+
+Behavior:
+- Prints `true` to stdout if the property exists on the specified class definition.
+- Prints `false` to stdout if the property does not exist.
+- Treats invalid namespace or class as errors (see Exit Codes).
+
+Notes:
+- Primary command and arguments are case-insensitive.
+- All three arguments must be provided and must not be empty or whitespace-only; otherwise exit code `2` is returned.
+
+Examples:
+```
+ComManager.exe getavailability root\Microsoft\Windows\DeviceGuard Win32_DeviceGuard RequiredSecurityProperties
+ComManager.exe getavailability root\cimv2 Win32_OperatingSystem NonExistentProperty
 ```

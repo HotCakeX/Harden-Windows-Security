@@ -3679,4 +3679,79 @@
   <data name="EnableMDAVSandboxMode-MSDefender" xml:space="preserve">
     <value>Microsoft Defender Antivirus को सैंडबॉक्स में चलाएँ ताकि अनधिकृत छेड़छाड़ के विरुद्ध उन्नत सुरक्षा मिल सके.</value>
   </data>
+    <data name="AnimatedApplyAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पृष्ठ में सभी सुरक्षा उपाय लागू करें. उप-श्रेणियों से संबंधित आइटम इस बटन का उपयोग करने पर लागू नहीं किए जाते.</value>
+  </data>
+  <data name="AnimatedApplyAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>पृष्ठ में सभी सुरक्षा उपाय लागू करें. उप-श्रेणियों से संबंधित आइटम इस बटन का उपयोग करने पर लागू नहीं किए जाते.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पृष्ठ में सभी सुरक्षा उपाय हटाएं.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>पृष्ठ में सभी सुरक्षा उपाय हटाएं.</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>नमस्ते और स्वागत है</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>Harden System Security ऐप चुनने के लिए धन्यवाद. यदि आप नवीनतम अपडेट के लिए रिलीज़ नोट्स पढ़ना चाहते हैं, तो आप उन्हें आधिकारिक GitHub रिपॉज़िटरी के Releases सेक्शन में पा सकते हैं. आप वहाँ प्रश्न पूछ सकते हैं या फ़ीडबैक भी भेज सकते हैं.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>GitHub Releases पर जाएं</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>बटन पर क्लिक करने के बाद ब्राउज़र में GitHub रिपॉज़िटरी का पेज खुलता है.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>बटन पर क्लिक करने के बाद ब्राउज़र में GitHub रिपॉज़िटरी का पेज खुलता है.</value>
+  </data>
+  <data name="UseAppControlManager.Text" xml:space="preserve">
+    <value>AppControl Manager का उपयोग करें</value>
+  </data>
+  <data name="UseAppControlManagerDescription.Text" xml:space="preserve">
+    <value>AppControl Manager एक और एप्लिकेशन है जिसे मैंने ऑपरेटिंग सिस्टम में Application Control और Code Integrity को आसानी से प्रबंधित करने में आपकी सहायता के लिए विकसित किया है. इसमें आधुनिक, सहज इंटरफ़ेस है, जो समुदाय की प्रतिक्रिया से आकार लेता है, और सक्रिय रूप से मेंटेन किया जाता है.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>Microsoft Store पेज पर जाएं</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>बटन पर क्लिक करने के बाद Microsoft Store पेज खुलता है.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>बटन पर क्लिक करने के बाद Microsoft Store पेज खुलता है.</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagement.Text" xml:space="preserve">
+    <value>ऑडिट नीतियों का व्यापक प्रबंधन</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagementDescription.Text" xml:space="preserve">
+    <value>एकीकृत इंटरफ़ेस में सभी सिस्टम ऑडिट नीतियाँ देखें, और प्रत्येक को अलग-अलग कॉन्फ़िगर करने की क्षमता के साथ. अपनी सेटिंग्स को एक टेम्पलेट के रूप में निर्यात करें ताकि उसी या किसी अन्य सिस्टम पर आसानी से पुनः आयात कर सकें.</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.Content" xml:space="preserve">
+    <value>ऑडिट नीतियों के पेज पर जाएं</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऑडिट नीतियों के पेज पर जाएं</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऑडिट नीतियों के पेज पर जाएं</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasures" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय लागू किए जा रहे हैं...</value>
+  </data>
+  <data name="RemovingAllSecurityMeasures" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय हटाए जा रहे हैं...</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasures" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय सत्यापित किए जा रहे हैं...</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय सफलतापूर्वक लागू किए गए.</value>
+  </data>
+  <data name="RemovingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय सफलतापूर्वक हटाए गए.</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय सफलतापूर्वक सत्यापित किए गए.</value>
+  </data>
 </root>

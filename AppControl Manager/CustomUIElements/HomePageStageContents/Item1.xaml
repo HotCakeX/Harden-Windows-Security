@@ -3,33 +3,33 @@
     x:Class="AppControlManager.CustomUIElements.HomePageStageContents.Item1"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:AppControlManager.CustomUIElements.HomePageStageContents"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    xmlns:local="using:AppControlManager.CustomUIElements.HomePageStageContents">
 
-    <Grid Padding="0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <ScrollView>
 
-        <TextBlock Grid.Row="0"
-                   Text="Latest Update"
+        <Grid Padding="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                   x:Uid="HelloAndWelcome"
+                   TextWrapping="Wrap"
                    FontSize="20"
                    Margin="0,0,0,4"
                    Foreground="#FFFFD28C"/>
 
-        <TextBlock Grid.Row="1"
-                   Text="Read the latest update's release notes on the GitHub releases section to see what's new and what's changed."
+            <TextBlock Grid.Row="1"
+                   x:Uid="ThanksForChoosingTheApp"
                    FontSize="13"
                    TextWrapping="Wrap"
                    Foreground="#FFF0DCC8"
                    Margin="0,0,0,12"/>
 
-        <Button Grid.Row="2"
-                Content="Go to GitHub Releases"
+            <Button Grid.Row="2"
+                x:Uid="VisitGitHubReleasesButton"
                 HorizontalAlignment="Left"
                 FontSize="14"
                 Click="{x:Bind Button_Click}"
@@ -38,5 +38,8 @@
                 Foreground="White"
                 BorderThickness="0"
                 CornerRadius="6"/>
-    </Grid>
+        </Grid>
+
+    </ScrollView>
+
 </UserControl>

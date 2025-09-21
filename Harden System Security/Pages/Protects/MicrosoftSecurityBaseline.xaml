@@ -3,22 +3,15 @@
     x:Class="HardenSystemSecurity.Pages.Protects.MicrosoftSecurityBaseline"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HardenSystemSecurity.Pages.Protects"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:others="using:AppControlManager.Others"
-    xmlns:Protect="using:HardenSystemSecurity.Protect"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:viewModels="using:HardenSystemSecurity.ViewModels"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:GroupPolicy="using:HardenSystemSecurity.GroupPolicy"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-    mc:Ignorable="d">
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -198,10 +191,7 @@
 
             <customUI:ListViewV2.Header>
 
-                <Border CornerRadius="5" Background="Black">
-                    <interactivity:Interaction.Behaviors>
-                        <customUI:StickyHeaderBehaviorV2/>
-                    </interactivity:Interaction.Behaviors>
+                <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">                    
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=TwoWay}" MinWidth="50" />

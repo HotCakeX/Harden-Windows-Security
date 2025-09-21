@@ -30,6 +30,5 @@ internal sealed partial class GroupPolicyEditor : Page
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
-
 	}
 }

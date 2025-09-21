@@ -10,6 +10,7 @@
 [[nodiscard]] bool ConnectToWmiNamespace(const wchar_t* wmiNamespace, IWbemLocator** ppLoc, IWbemServices** ppSvc, bool& didInitCOM);
 [[nodiscard]] bool GetWmiValue(const wchar_t* wmiNamespace, const wchar_t* wmiClassName, const wchar_t* preferenceName);
 [[nodiscard]] bool GetAllWmiProperties(const wchar_t* wmiNamespace, const wchar_t* wmiClassName);
+[[nodiscard]] bool DoesWmiPropertyExist(const wchar_t* wmiNamespace, const wchar_t* wmiClassName, const wchar_t* propertyName);
 extern "C" __declspec(dllexport) bool __stdcall ManageWmiPreferenceInt(const wchar_t* wmiNamespace, const wchar_t* wmiClassName, const wchar_t* customMethodName, const wchar_t* preferenceName, int preferenceValue);
 extern "C" __declspec(dllexport) bool __stdcall ManageWmiPreferenceBool(const wchar_t* wmiNamespace, const wchar_t* wmiClassName, const wchar_t* customMethodName, const wchar_t* preferenceName, bool preferenceValue);
 extern "C" __declspec(dllexport) bool __stdcall ManageWmiPreferenceString(const wchar_t* wmiNamespace, const wchar_t* wmiClassName, const wchar_t* customMethodName, const wchar_t* preferenceName, const wchar_t* preferenceValue);

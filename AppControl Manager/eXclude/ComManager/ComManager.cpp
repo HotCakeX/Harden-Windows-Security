@@ -118,6 +118,47 @@ int wmain(int argc, wchar_t* argv[])
 		return rc;
 	}
 
+	// Primary: GetAvailability	
+	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"getavailability"))
+	{
+		// Must have exactly 5 arguments.
+		if (argc != 5)
+		{
+			return 2;
+		}
+
+		const wchar_t* wmiNamespace = argv[2];
+		const wchar_t* wmiClassName = argv[3];
+		const wchar_t* propertyName = argv[4];
+
+		// Validate non-empty (not just whitespace).
+		auto isBlank = [](const wchar_t* s) -> bool
+			{
+				if (!s || *s == L'\0') return true;
+				wstring tmp(s);
+				return tmp.find_first_not_of(L" \t\n\r") == wstring::npos;
+			};
+		if (isBlank(wmiNamespace) || isBlank(wmiClassName) || isBlank(propertyName))
+		{
+			return 2;
+		}
+
+		// Perform the existence check.
+		bool exists = DoesWmiPropertyExist(wmiNamespace, wmiClassName, propertyName);
+
+		// If an error was recorded, return failure (per requirement to error on invalid ns/class).
+		const wchar_t* err = GetLastErrorMessage();
+		if (!exists && err && *err)
+		{
+			LogErr(L"Failed to check property availability. Error: ", err);
+			return 1;
+		}
+
+		// Successful check: print boolean token (lowercase).
+		LogOut(exists ? L"true" : L"false");
+		return 0;
+	}
+
 	// Primary: GET
 	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"get"))
 	{

@@ -12,6 +12,11 @@
     Unloaded="{x:Bind OnUnloadedDisposeResources}"
     Background="Transparent">
 
+    <Page.KeyboardAccelerators>
+        <KeyboardAccelerator Key="Left"  Invoked="{x:Bind OnLeftRightAcceleratorInvoked}"/>
+        <KeyboardAccelerator Key="Right" Invoked="{x:Bind OnLeftRightAcceleratorInvoked}"/>
+    </Page.KeyboardAccelerators>
+
     <Page.Resources>
 
         <!-- Stage panel background that stays readable in both Light and Dark themes -->
@@ -185,7 +190,7 @@
                       FlowDirection="LeftToRight"
                       SizeChanged="{x:Bind OnViewportSizeChanged}"
                       PointerPressed="{x:Bind OnCarouselPointerPressed}"
-                      PointerReleased="{x:Bind OnCarouselPointerReleased}"
+                      PointerReleased="{x:Bind OnCarouselPointerReleased}"    
                       Margin="0,0,0,140"
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Stretch"

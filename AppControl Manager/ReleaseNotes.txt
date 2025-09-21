@@ -1,26 +1,9 @@
-✅ Window Appearance Customization
+✅ Removed 2 dependencies, "CommunityToolkit.WinUI.Behaviors" and "Microsoft.Xaml.Behaviors.WinUI.Managed". The result is reduced package size by ~150 KB for the app bundle and improved overall performance since the new codes are more targeted and optimized. This project always strives for leaner and more efficient codebases and less dependency usage.
 
-Introduced a customization option in Settings to personalize the app window with colors selected from an integrated palette.
+✅ Fixed a visual issue in Remote Desktop sessions on hosts without a GPU where the new home page's stage background displayed in a too bright color, making the text hard to read.
 
-Added an optional animated rainbow mode that smoothly cycles through the full color spectrum.
+✅ Updated and localized the Home page's content.
 
-Designed for high performance with an extremely minimal resource footprint.
+✅ You can now use the keyword left and right arrow keys to navigate the carousel in the Home page. As a reminder, you can also use touch gestures to navigate it.
 
-✅ New Home Page
-
-Debuted a new Home page that opens by default on app startup, engineered for speed and efficiency.
-
-Features refined visuals and purposeful animations that remain lightweight and responsive.
-
-Provides concise system HUDs at a glance:
-✔️ Current time
-✔️ Time zone
-✔️ Total RAM
-✔️ Total disk capacity
-✔️ System uptime
-✔️ App memory usage (total RAM used by the app)
-✔️ Internet speed (upload and download shown separately)
-✔️ Includes a modern spotlight section to quickly browse rotating news and content.
-✔️ Very subtle cyber web mesh background that periodically lights up at different coordinates.
-
-More enhancement will be applied to the Home page in future updates. Feel free to share your feedback on GitHub with me.
+✅ The View File Certificates page now supports drag and drop when the app is running unelevated. Simply drag and drop your files on the page to view their certificates.

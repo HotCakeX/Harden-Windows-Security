@@ -298,8 +298,11 @@
                                                Margin="0,0,0,8"/>
 
                                     <!-- Applied Status (checkable) -->
-                                    <CheckBox IsChecked="{x:Bind GetShowApplied(), Mode=TwoWay, BindBack=SetShowApplied}" VerticalAlignment="Center">
-                                        <Grid VerticalAlignment="Center">
+                                    <CheckBox IsChecked="{x:Bind GetShowApplied(), Mode=TwoWay, BindBack=SetShowApplied}"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch">
+                                        <Grid VerticalAlignment="Center" HorizontalAlignment="Stretch">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
@@ -313,10 +316,10 @@
                                                      VerticalAlignment="Center"/>
 
                                             <TextBlock Grid.Column="1"
-                                                       Text="Applied -"
+                                                       Text="Applied"
                                                        FontSize="14"
                                                        VerticalAlignment="Center"
-                                                       Margin="12,0,5,0"/>
+                                                       Margin="12,0,0,0"/>
 
                                             <TextBlock Grid.Column="2"
                                                        Text="{x:Bind ViewModel.AppliedItemsCount, Mode=OneWay}"
@@ -327,8 +330,11 @@
                                     </CheckBox>
 
                                     <!-- Not Applied Status (checkable) -->
-                                    <CheckBox IsChecked="{x:Bind GetShowNotApplied(), Mode=TwoWay, BindBack=SetShowNotApplied}" VerticalAlignment="Center">
-                                        <Grid VerticalAlignment="Center">
+                                    <CheckBox IsChecked="{x:Bind GetShowNotApplied(), Mode=TwoWay, BindBack=SetShowNotApplied}"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch">
+                                        <Grid VerticalAlignment="Center" HorizontalAlignment="Stretch">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
@@ -342,10 +348,10 @@
                                                      VerticalAlignment="Center"/>
 
                                             <TextBlock Grid.Column="1"
-                                                       Text="Not Applied -"
+                                                       Text="Not Applied"
                                                        FontSize="14"
                                                        VerticalAlignment="Center"
-                                                       Margin="12,0,5,0"/>
+                                                       Margin="12,0,0,0"/>
 
                                             <TextBlock Grid.Column="2"
                                                        Text="{x:Bind ViewModel.NotAppliedItemsCount, Mode=OneWay}"
@@ -356,8 +362,11 @@
                                     </CheckBox>
 
                                     <!-- Undetermined Status (N/A) (checkable) -->
-                                    <CheckBox IsChecked="{x:Bind GetShowUndetermined(), Mode=TwoWay, BindBack=SetShowUndetermined}" VerticalAlignment="Center">
-                                        <Grid VerticalAlignment="Center">
+                                    <CheckBox IsChecked="{x:Bind GetShowUndetermined(), Mode=TwoWay, BindBack=SetShowUndetermined}"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch">
+                                        <Grid VerticalAlignment="Center" HorizontalAlignment="Stretch">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
@@ -371,10 +380,10 @@
                                                      VerticalAlignment="Center"/>
 
                                             <TextBlock Grid.Column="1"
-                                                       Text="Undetermined (N/A) -"
+                                                       Text="Undetermined (N/A)"
                                                        FontSize="14"
                                                        VerticalAlignment="Center"
-                                                       Margin="12,0,5,0"/>
+                                                       Margin="12,0,0,0"/>
 
                                             <TextBlock Grid.Column="2"
                                                        Text="{x:Bind ViewModel.UndeterminedItemsCount, Mode=OneWay}"

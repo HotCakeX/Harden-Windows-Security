@@ -32,6 +32,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Windows.Foundation;
+using Windows.System;
 using Windows.UI;
 
 #pragma warning disable CA5394
@@ -2293,6 +2294,22 @@ internal sealed partial class Home : Page, IDisposable
 	}
 
 	#endregion
+
+	// Invoked by the Page-level KeyboardAccelerators for Left/Right arrows to navigate the carousel.
+	private void OnLeftRightAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		if (sender.Key is VirtualKey.Left)
+		{
+			OnLeftNavClick(this, new RoutedEventArgs());
+			args.Handled = true;
+		}
+		else if (sender.Key is VirtualKey.Right)
+		{
+			OnRightNavClick(this, new RoutedEventArgs());
+			args.Handled = true;
+		}
+	}
+
 
 	// Disposal guard to ensure owned resources are released exactly once
 	private bool _disposed;

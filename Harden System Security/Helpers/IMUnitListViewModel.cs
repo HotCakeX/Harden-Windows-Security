@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
@@ -128,7 +129,7 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 	List<MUnit> CreateAllMUnits();
 
 	/// <summary>
-	/// Static helper method to create UI values categories for ViewModels that implement IMUnitListViewModel.
+	/// Static helper method to create UI values categories for ViewModels that implement IMUnitListViewModel. It is only run once in ViewModel's ctor.
 	/// Used to create a collection of grouped items, create a query that groups an existing list, or returns a grouped collection from a database.
 	/// The output will be used as the ItemsSource for our CollectionViewSource that is defined in XAML.
 	/// </summary>
@@ -164,8 +165,9 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 
 				_ = App.AppDispatcher.TryEnqueue(() =>
 				{
-					viewModel.ListViewItemsSource = new(query);
+					// Set backing field first so the control sees populated data when ItemsSource changes
 					viewModel.ListViewItemsSourceBackingField = new(query);
+					viewModel.ListViewItemsSource = new(query);
 
 					// Update total items count
 					int totalCount = 0;
@@ -177,10 +179,33 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 					viewModel.FilteredItemsCount = totalCount;
 					viewModel.SelectedItemsCount = 0;
 
-					// Initialize status counts to 0 - they will be updated when status changes occur
-					viewModel.UndeterminedItemsCount = 0;
-					viewModel.AppliedItemsCount = 0;
-					viewModel.NotAppliedItemsCount = 0;
+					// Compute initial status counts from allResults.
+					int undetermined = 0;
+					int applied = 0;
+					int notApplied = 0;
+
+					foreach (MUnit m in allResults)
+					{
+						StatusState status = m.StatusState;
+						switch (status)
+						{
+							case StatusState.Undetermined:
+								undetermined++;
+								break;
+							case StatusState.Applied:
+								applied++;
+								break;
+							case StatusState.NotApplied:
+								notApplied++;
+								break;
+							default:
+								break;
+						}
+					}
+
+					viewModel.UndeterminedItemsCount = undetermined;
+					viewModel.AppliedItemsCount = applied;
+					viewModel.NotAppliedItemsCount = notApplied;
 				});
 			}
 			catch (Exception ex)

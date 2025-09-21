@@ -31,5 +31,5 @@ internal sealed class QueryPayload(
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("Query")]
-	internal string? Query { get; } = query;
+	internal string? Query => query;
 }

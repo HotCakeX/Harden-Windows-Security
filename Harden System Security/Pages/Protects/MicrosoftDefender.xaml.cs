@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class MicrosoftDefender : Page
 {
-	private MicrosoftDefenderVM ViewModel { get; } = ViewModelProvider.MicrosoftDefenderVM;
+	private MicrosoftDefenderVM ViewModel => ViewModelProvider.MicrosoftDefenderVM;
 
 	internal MicrosoftDefender()
 	{

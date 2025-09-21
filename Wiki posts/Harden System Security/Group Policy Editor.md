@@ -12,6 +12,8 @@ The Group Policy Editor page enables you to retrieve the effective policies on t
 
 Since the [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) can be set as the default handler of the `.POL` files, this page is also displayed when you double-click or tap on any `.POL` file in the File Explorer.
 
+You may remove any policy from a `.POL` file — whether a system `.POL` or one you opened in the app. All edits are correctly persisted back to the selected `.POL` file.
+
 ## Merge Multiple Group Policy Files Into One
 
 If you have multiple `.POL` Group Policy files, you can quickly and accurately merge them into a single `.POL` file. The result will not have any duplicate policies in it. Select one main `.POL` file and then select other `.POL` files you want to merged with the main one. If 2 or more items with the same `KeyName` and `ValueName` exist, the ones from the `other` files will take precedence and overwrite the ones in the main file. This way you can consolidate your group policies without losing any important settings. This logic closely follows other merging strategies used in tools such as `LGPO.exe`.

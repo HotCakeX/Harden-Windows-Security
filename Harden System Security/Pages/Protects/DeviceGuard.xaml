@@ -3,18 +3,10 @@
     x:Class="HardenSystemSecurity.Pages.Protects.DeviceGuard"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HardenSystemSecurity.Pages.Protects"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:protect="using:HardenSystemSecurity.Protect"
-    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-    mc:Ignorable="d">
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
 
@@ -28,7 +20,7 @@
 
             <TextBlock x:Uid="DeviceGuardPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard" />
 
         </controls:WrapPanel>
 
@@ -39,17 +31,8 @@
                     IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
         <customUI:MUnitListViewControl Grid.Row="2"
-                       ViewModel="{x:Bind ViewModel}"
-                       SearchKeyword="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                       ListViewItemsSource="{x:Bind ViewModel.ListViewItemsSource, Mode=OneWay}"
-                       ProgressBarVisibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
-                       ElementsAreEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                       TotalItemsCount="{x:Bind ViewModel.TotalItemsCount, Mode=OneWay}"
-                       FilteredItemsCount="{x:Bind ViewModel.FilteredItemsCount, Mode=OneWay}"
-                       SelectedItemsCount="{x:Bind ViewModel.SelectedItemsCount, Mode=OneWay}"
-                       UndeterminedItemsCount="{x:Bind ViewModel.UndeterminedItemsCount, Mode=OneWay}"
-                       AppliedItemsCount="{x:Bind ViewModel.AppliedItemsCount, Mode=OneWay}"
-                       NotAppliedItemsCount="{x:Bind ViewModel.NotAppliedItemsCount, Mode=OneWay}" />
+                       ViewModel="{x:Bind ViewModel}"                      
+                       ListViewItemsSource="{x:Bind ViewModel.ListViewItemsSource, Mode=OneWay}"/>
 
     </Grid>
 </Page>

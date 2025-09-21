@@ -811,9 +811,6 @@
 <data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
     <value>TLS_RSA_WITH_AES_256_GCM_SHA384 അപ്രാപ്തമാക്കുക - (PFS ഇല്ല)</value>
 </data>
-<data name="ExtensionManifestV2AvailabilityEdge-Edge" xml:space="preserve">
-    <value>Manifest V2 വിപുലീകരണങ്ങൾക്കുള്ള പിന്തുണ ഒരിക്കലും അപ്രാപ്തമാക്കരുത്</value>
-</data>
 <data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
     <value>പ്രാദേശിക കണക്‌റ്റ് ചെയ്ത USB ഉപകരണങ്ങളിലേക്കുള്ള ആക്‌സസ് അഭ്യർത്ഥിക്കാൻ സൈറ്റുകളെ ഒരിക്കലും അനുവദിക്കരുത്</value>
 </data>
@@ -942,5 +939,14 @@
 </data>
 <data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
     <value>TLS v1.1 സെർവർ നിർജ്ജീവമാക്കുക - ഭാഗം 2</value>
+</data>
+<data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>പ്രധാന സുരക്ഷാ ഇവന്റുകളിൽ എളുപ്പത്തിൽ പ്രവേശിക്കാൻ Windows Event Viewer-ിൽ ഇഷ്ടാനുസൃത കാഴ്‌ചകൾ സൃഷ്ടിക്കുക.</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>സുരക്ഷിത MACs (Message Authentication Codes) ഉപയോഗിക്കുന്നതിനായി SSH ക്ലയന്റിന്റെ ക്രമീകരണം കോൺഫിഗർ ചെയ്യുക.</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>Lock Screen ലോക്കുകളും അൺലോക്കുകളും ഓഡിറ്റും ട്രാക്കിംഗും സജീവമാക്കുക.</value>
 </data>
 </root>

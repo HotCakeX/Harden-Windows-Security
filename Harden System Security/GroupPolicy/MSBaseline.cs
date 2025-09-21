@@ -93,12 +93,6 @@ internal sealed class VerificationResult(
 	[JsonPropertyName("Expected Value")]
 	internal string ExpectedValue => expectedValue;
 
-	[JsonIgnore]
-	internal MicrosoftSecurityBaselineVM? MicrosoftSecurityBaselineVMRef { get; set; }
-
-	[JsonIgnore]
-	internal Microsoft365AppsSecurityBaselineVM? Microsoft365AppsSecurityBaselineVMRef { get; set; }
-
 	/// <summary>
 	/// Property for StatusIndicator binding
 	/// </summary>
@@ -275,13 +269,6 @@ internal static class MSBaseline
 			{
 				List<VerificationResult> results = await VerifySecurityBaselinePolicies(extractedFiles, baselineRootPath, cancellationToken);
 				Logger.Write($"{baselineRootPath} {actionText} completed successfully");
-
-				// Adding references for ListView usage
-				foreach (VerificationResult item in results)
-				{
-					item.MicrosoftSecurityBaselineVMRef = microsoftSecurityBaselineVMRef;
-					item.Microsoft365AppsSecurityBaselineVMRef = microsoft365AppsSecurityBaselineVMRef;
-				}
 
 				return results;
 			}
@@ -548,7 +535,7 @@ internal static class MSBaseline
 			// Find machine registry.pol files
 			FindPolicyFiles(extractedFiles, guidDir, "Machine", machinePolicyFiles);
 
-			// Find user registry.pol files  
+			// Find user registry.pol files
 			FindPolicyFiles(extractedFiles, guidDir, "User", userPolicyFiles);
 
 			// Find audit.csv files
@@ -1237,7 +1224,7 @@ internal static class MSBaseline
 			// Find machine registry.pol files
 			FindPolicyFiles(extractedFiles, guidDir, "Machine", machinePolicyFiles);
 
-			// Find user registry.pol files  
+			// Find user registry.pol files
 			FindPolicyFiles(extractedFiles, guidDir, "User", userPolicyFiles);
 
 			// Don't process audit CSV files or security INF files during removal.
@@ -1708,7 +1695,7 @@ internal static class MSBaseline
 	}
 
 	/// <summary>
-	/// Parses a single line from the [Privilege Rights] section.	
+	/// Parses a single line from the [Privilege Rights] section.
 	/// </summary>
 	/// <param name="line">Line to parse</param>
 	/// <param name="privilegeRights">Dictionary to store parsed values</param>

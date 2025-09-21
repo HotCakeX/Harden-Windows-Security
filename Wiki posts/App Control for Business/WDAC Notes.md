@@ -621,7 +621,7 @@ If a policy lacks that setting, the resulting Code Integrity event logs—for in
 
 * Only use Signer or Hash based rule types in signed policies, other levels do not provide the kind of high security protection that matches the signed nature of App Control policies.
 
-* Using Managed Installer or ISG policy rule options can reduce security and lead to over authorization, making them unsuitable for signed policy scenarios. 
+* Using Managed Installer or ISG policy rule options can reduce security and lead to over authorization, making them unsuitable for signed policy scenarios.
 
 * If using a FilePath rule level and the file path contains a UNC path, **ensure** [UNC hardening is enabled and secure](https://learn.microsoft.com/en-us/archive/blogs/leesteve/demystifying-the-unc-hardening-dilemma).
 

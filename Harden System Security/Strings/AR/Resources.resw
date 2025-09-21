@@ -205,16 +205,7 @@
     <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>استخدم الشريط الجانبي للميزات الإضافية.</value>
   </data>
-    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
-    <value>دليل الشريط الجانبي</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>للحصول على دليل استخدام الشريط الجانبي يرجى زيارة صفحة الويكي في GitHub بالنقر/الضغط هنا.</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>للحصول على دليل استخدام الشريط الجانبي يرجى زيارة صفحة الويكي في GitHub بالنقر/الضغط هنا.</value>
-  </data>
-    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>الدعم - طرح الأسئلة</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
@@ -604,13 +595,13 @@
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>اختر إحدى إعدادات الحماية المسبقة للتطبيق، وهي مجموعات تكوين محددة مسبقاً مصممة لمستويات أمان مختلفة.</value>
   </data>
-    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="BasicProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>أساسي</value>
   </data>
-    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="RecommendedProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>موصى به</value>
   </data>
-    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>شامل</value>
   </data>
   <data name="ProtectPageTitle.Text" xml:space="preserve">
@@ -740,17 +731,9 @@
     <comment>Protection Category Title</comment>
     <value>فحص الشهادات</value>
   </data>
-  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>فحص الشهادات المثبتة والكشف عن أي منها لا ينتمي إلى نظام التشغيل نفسه.</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>حظر IP حسب البلد</value>
-  </data>
-  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>حظر نطاقات عناوين IP لبلدان معينة في قائمة العقوبات الأمريكية لدعم الإرهاب.</value>
   </data>
   <data name="ProtectCategory_NonAdmin" xml:space="preserve">
     <comment>Protection Category Title</comment>
@@ -803,10 +786,6 @@
   <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>تمكين دعم المسارات الطويلة للملفات.</value>
-  </data>
-  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
-    <comment>Protection Sub-Category</comment>
-    <value>حظر نطاقات IP للبلدان في قائمة عقوبات OFAC.</value>
   </data>
   <data name="ASRNavItem.Content" xml:space="preserve">
     <value>تقليل سطح الهجوم</value>
@@ -1592,9 +1571,6 @@
   <data name="SecurityHardeningCompleted" xml:space="preserve">
     <value>اكتملت تقوية الأمان: {0} نجح، {1} فشل.</value>
   </data>
-  <data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
-    <value>خطأ أثناء عملية تقوية الأمان</value>
-  </data>
   <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
     <value>فشل في تهيئة خدمة DISM للتحقق.</value>
   </data>
@@ -1610,9 +1586,6 @@
   <data name="IncorrectItems" xml:space="preserve">
     <value>العناصر غير الصحيحة: {0}</value>
   </data>
-  <data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
-    <value>خطأ أثناء التحقق من تقوية الأمان</value>
-  </data>
   <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
     <value>فشل في تهيئة خدمة DISM لإزالة تقوية الأمان.</value>
   </data>
@@ -1627,9 +1600,6 @@
   </data>
   <data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
     <value>اكتملت إزالة تقوية الأمان: {0} نجح، {1} فشل.</value>
-  </data>
-  <data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
-    <value>خطأ أثناء عملية إزالة تقوية الأمان</value>
   </data>
   <data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
     <value>خطأ في التخلص من عميل خدمة DISM: {0}</value>
@@ -1976,12 +1946,6 @@
   <data name="SeceditFailedWithExitCode" xml:space="preserve">
     <value>فشل Secedit برمز خروج: {0}</value>
   </data>
-  <data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
-    <value>تحذير: لا يمكن حذف الملفات المؤقتة.</value>
-  </data>
-  <data name="SeceditMethodFailed" xml:space="preserve">
-    <value>فشلت طريقة Secedit.</value>
-  </data>
   <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
     <value>لم يتم العثور على إعدادات [System Access] في الملف المحدد</value>
   </data>
@@ -1990,9 +1954,6 @@
   </data>
   <data name="FileNotFoundPath" xml:space="preserve">
     <value>الملف غير موجود: {0}</value>
-  </data>
-  <data name="CreatedPolicyDirectory" xml:space="preserve">
-    <value>تم إنشاء دليل السياسة: {0}</value>
   </data>
   <data name="FileTooSmallForValidHeader" xml:space="preserve">
     <value>الملف صغير جداً لاحتواء رأس صالح</value>
@@ -2041,9 +2002,6 @@
   </data>
   <data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
     <value>تم تحميل ملف سياسة موجود مع {0} مدخل</value>
-  </data>
-  <data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
-    <value>ملف السياسة غير موجود، إنشاء ملف سياسة فارغ جديد</value>
   </data>
   <data name="ReplacedEntries" xml:space="preserve">
     <value>المدخلات المستبدلة: {0}</value>
@@ -2288,7 +2246,7 @@
   <data name="INFToJSONConversionSectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>اختر ملف INF أمان واحد أو أكثر للتحويل إلى تنسيق JSON</value>
   </data>
-    <data name="SelectedText.Text" xml:space="preserve">
+    <data name="SelectedItemText.Text" xml:space="preserve">
     <value>محدد: </value>
   </data>
   <data name="StatusAppliedText" xml:space="preserve">
@@ -2364,10 +2322,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>الحالة</value>
   </data>
-  <data name="CurrentValueHeader.Text" xml:space="preserve">
+  <data name="CurrentValueHeaderText" xml:space="preserve">
     <value>القيمة الحالية</value>
   </data>
-  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+  <data name="ExpectedValueHeaderText" xml:space="preserve">
     <value>القيمة المتوقعة</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -2588,5 +2546,1212 @@
   </data>
   <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
    <value>عرض وإدارة رابط تحميل خط الأساس.</value>
+  </data>
+   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>إضافة</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة قواعد جدار الحماية للعنصر المحدد.</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>إضافة قواعد جدار الحماية للعنصر المحدد.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>إزالة</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إزالة قواعد جدار الحماية للعنصر المحدد.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>إزالة قواعد جدار الحماية للعنصر المحدد.</value>
+  </data>
+  <data name="TargetedListsText.Text" xml:space="preserve">
+   <value>القوائم المستهدفة</value>
+  </data>
+  <data name="TargetedListsDescriptionText.Text" xml:space="preserve">
+   <value>قوائم مستهدفة مُجمَّعة مسبقاً ومحدثة يومياً تحتوي على نطاقات عناوين IP خاصة بدول محددة، مما يتيح التنفيذ المبسط لمتطلبات الامتثال وسياسات الأمان من خلال ضوابط الحجب الفعالة لجدار حماية ويندوز.</value>
+  </data>
+  <data name="IndividualCountryIPBlockingText.Text" xml:space="preserve">
+   <value>حجب IP لدولة فردية</value>
+  </data>
+  <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
+   <value>استخدم نطاقات عناوين IP للدول المحدثة يومياً لحجب دول محددة على نظامك عبر قواعد جدار حماية ويندوز.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
+    <value>اعرف المزيد</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انقر أو اضغط هنا لفتح صفحة ويب تحتوي على معلومات أكثر تفصيلاً.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>انقر أو اضغط هنا لفتح صفحة ويب تحتوي على معلومات أكثر تفصيلاً.</value>
+  </data>
+  <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
+   <value>البحث عن الدول...</value>
+  </data>
+  <!--Certificates ListView Headers Start-->
+  <data name="StoreLocationHeader.Text" xml:space="preserve">
+    <value>موقع المخزن</value>
+  </data>
+    <data name="StoreNameHeader.Text" xml:space="preserve">
+    <value>اسم المخزن</value>
+  </data>
+  <data name="SubjectHeader.Text" xml:space="preserve">
+    <value>الموضوع</value>
+  </data>
+  <data name="IssuerHeader.Text" xml:space="preserve">
+    <value>المُصدِر</value>
+  </data>
+  <data name="ThumbprintHeader.Text" xml:space="preserve">
+    <value>البصمة</value>
+  </data>
+    <data name="RootSubjectHeader.Text" xml:space="preserve">
+    <value>موضوع الجذر</value>
+  </data>
+  <data name="RootSha256Header.Text" xml:space="preserve">
+    <value>SHA256 الجذر</value>
+  </data>
+  <!--Certificates ListView Headers End-->
+  <!--Certificates ListView Headers Buttons Start-->
+  <data name="StoreLocationColumnHeaderBtn.Content" xml:space="preserve">
+    <value>موقع المخزن</value>
+  </data>
+    <data name="StoreNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>اسم المخزن</value>
+  </data>
+  <data name="SubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>الموضوع</value>
+  </data>
+  <data name="IssuerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>المُصدِر</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>البصمة</value>
+  </data>
+  <data name="RootSubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>موضوع الجذر</value>
+  </data>
+  <data name="RootSha256ColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA256 الجذر</value>
+  </data>
+  <!--Certificates ListView Headers Buttons End-->
+  <data name="StartAnalysisButton.Content" xml:space="preserve">
+    <value>بدء التحليل</value>
+  </data>
+  <data name="StartAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يقوم بتنزيل قائمة برنامج شهادات الجذر الموثوقة من مايكروسوفت ويجد جميع الشهادات في مخازن شهادات الجهاز المحلي والمستخدم الحالي التي لا تستند إلى أي شهادات في تلك القائمة الموثوقة. ستتمكن أيضاً من حذف الشهادات غير الموثوقة من نظامك.</value>
+  </data>
+  <data name="StartAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>يقوم بتنزيل قائمة برنامج شهادات الجذر الموثوقة من مايكروسوفت ويجد جميع الشهادات في مخازن شهادات الجهاز المحلي والمستخدم الحالي التي لا تستند إلى أي شهادات في تلك القائمة الموثوقة. ستتمكن أيضاً من حذف الشهادات غير الموثوقة من نظامك.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.Content" xml:space="preserve">
+    <value>الحصول على الشهادات المحلية</value>
+  </data>
+  <data name="GetLocalCertificatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يسترد جميع الشهادات المحلية من مخازن شهادات الجهاز المحلي والمستخدم الحالي، ويعرضها جميعاً في القائمة ويتيح لك ترتيبها والبحث خلالها ونسخ تفاصيلها أو حذفها.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>يسترد جميع الشهادات المحلية من مخازن شهادات الجهاز المحلي والمستخدم الحالي، ويعرضها جميعاً في القائمة ويتيح لك ترتيبها والبحث خلالها ونسخ تفاصيلها أو حذفها.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.Content" xml:space="preserve">
+    <value>تضمين منتهية الصلاحية</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تضمين الشهادات منتهية الصلاحية أو غير صالحة بعد في النتائج.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>تضمين الشهادات منتهية الصلاحية أو غير صالحة بعد في النتائج.</value>
+  </data>
+  <data name="SearchCertificatesTextBox.PlaceholderText" xml:space="preserve">
+   <value>البحث في الشهادات...</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.Text" xml:space="preserve">
+   <value>معلومات رأس قائمة ثقة الشهادات</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.ToolTipService.ToolTip" xml:space="preserve">
+    <value>معلومات رأس قائمة ثقة الشهادات</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.AutomationProperties.HelpText" xml:space="preserve">
+   <value>معلومات رأس قائمة ثقة الشهادات</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.Content" xml:space="preserve">
+    <value>معلومات رأس CTL</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يعرض معلومات تفصيلية حول ملفات قائمة الشهادات الموثوقة المنزلة من خادم مايكروسوفت.</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>يعرض معلومات تفصيلية حول ملفات قائمة الشهادات الموثوقة المنزلة من خادم مايكروسوفت.</value>
+  </data>
+  <data name="MainInfoBarDeleteCertificateSelectMessage" xml:space="preserve">
+  <value>يرجى تحديد شهادة للحذف.</value>
+</data>
+<data name="DeleteCertificateDialogTitle" xml:space="preserve">
+  <value>حذف الشهادة</value>
+</data>
+<data name="DeleteCertificateDialogContent" xml:space="preserve">
+  <value>هل أنت متأكد من أنك تريد حذف هذه الشهادة؟
+
+الموضوع: {0}
+المخزن: {1}\{2}
+البصمة: {3}</value>
+</data>
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
+  <value>حذف</value>
+</data>
+<data name="InvalidStoreLocationWarning" xml:space="preserve">
+  <value>موقع مخزن غير صالح: {0}</value>
+</data>
+<data name="CertificateNotFoundInStoreWarning" xml:space="preserve">
+  <value>الشهادة غير موجودة في المخزن.</value>
+</data>
+<data name="CertificateDeletedSuccessMessage" xml:space="preserve">
+  <value>تم حذف الشهادة بنجاح من {0}\{1}</value>
+</data>
+<data name="StartingCertificateAnalysisMessage" xml:space="preserve">
+  <value>بدء تحليل الشهادات...</value>
+</data>
+<data name="StlFileParsedMessage" xml:space="preserve">
+  <value>تم تحليل ملف STL لـ {0} موضوع في {1} مللي ثانية.</value>
+</data>
+<data name="CertificateAnalysisCompletedMessage" xml:space="preserve">
+  <value>اكتمل تحليل الشهادات. تم العثور على {0} شهادة لا ترتبط بجذور STL.</value>
+</data>
+<data name="RetrievingAllCertificatesMessage" xml:space="preserve">
+  <value>استرداد جميع الشهادات من مخازن الشهادات...</value>
+</data>
+<data name="RetrievedCertificatesMessage" xml:space="preserve">
+  <value>تم استرداد {0} شهادة في {1} مللي ثانية.</value>
+</data>
+<data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
+  <value>اكتمل استرداد الشهادات. تم العثور على {0} شهادة إجمالي.</value>
+</data>
+<data name="NoRootCertificate" xml:space="preserve">
+  <value>(لا يوجد جذر)</value>
+</data>
+<data name="NoCertificateHash" xml:space="preserve">
+  <value>(لا يوجد)</value>
+</data>
+<data name="EmptyValue" xml:space="preserve">
+  <value>فارغ</value>
+</data>
+<data name="InputFileIsNeitherCABNorSTLError" xml:space="preserve">
+  <value>الملف المدخل ليس ملف CAB صالح ولا ملف STL.</value>
+</data>
+<data name="CABFileContainsMoreThanOneFileError" xml:space="preserve">
+  <value>يحتوي ملف CAB على أكثر من ملف واحد. متوقع ملف STL واحد فقط.</value>
+</data>
+<data name="NoSTLFileFoundInCABError" xml:space="preserve">
+  <value>لم يتم العثور على ملف STL في أرشيف CAB.</value>
+</data>
+<data name="CABFileEmptyError" xml:space="preserve">
+  <value>ملف CAB فارغ أو لا يحتوي على ملفات قابلة للاستخراج.</value>
+</data>
+<data name="TooManyRedirectsError" xml:space="preserve">
+  <value>عمليات إعادة توجيه كثيرة جداً.</value>
+</data>
+<data name="RedirectResponseMissingLocationError" xml:space="preserve">
+  <value>استجابة إعادة التوجيه تفتقر إلى رأس الموقع.</value>
+</data>
+<data name="SignatureVerificationFailedError" xml:space="preserve">
+  <value>فشل التحقق من التوقيع لـ SignedCms.</value>
+</data>
+<data name="SignerCertificateNotPresentError" xml:space="preserve">
+  <value>شهادة الموقِّع غير موجودة في SignedCms.</value>
+</data>
+<data name="SigningChainRootMismatchError" xml:space="preserve">
+  <value>جذر سلسلة التوقيع لا يتطابق مع شهادة السلطة المرجعية المقدمة.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLError" xml:space="preserve">
+  <value>بيانات لاحقة غير متوقعة بعد تسلسل CTL من المستوى الأعلى.</value>
+</data>
+<data name="VersionIntegerOutOfRangeError" xml:space="preserve">
+  <value>قيمة رقم الإصدار خارج النطاق.</value>
+</data>
+<data name="MissingUsageSequenceError" xml:space="preserve">
+  <value>تسلسل الاستخدام مفقود.</value>
+</data>
+<data name="UnexpectedTrailingDataUsageSequenceError" xml:space="preserve">
+  <value>بيانات لاحقة غير متوقعة داخل تسلسل الاستخدام.</value>
+</data>
+<data name="MissingThisUpdateError" xml:space="preserve">
+  <value>thisUpdate مفقود.</value>
+</data>
+<data name="MissingAlgorithmIdentifierError" xml:space="preserve">
+  <value>معرف الخوارزمية مفقود.</value>
+</data>
+<data name="UnexpectedTrailingDataTrustedSubjectError" xml:space="preserve">
+  <value>بيانات لاحقة غير متوقعة داخل TrustedSubjectType.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLElementsError" xml:space="preserve">
+  <value>بيانات لاحقة غير متوقعة بعد عناصر CTL.</value>
+</data>
+<data name="SubjectMissingFriendlyNameError" xml:space="preserve">
+  <value>الموضوع يفتقر إلى الاسم الودود.</value>
+</data>
+<data name="UnexpectedTrailingDataEKUSequenceError" xml:space="preserve">
+  <value>بيانات لاحقة غير متوقعة بعد تسلسل EKU.</value>
+</data>
+<data name="InvalidFILETIMEError" xml:space="preserve">
+  <value>FILETIME غير صالح.</value>
+</data>
+<data name="BEGINCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>لم يتم العثور على علامة BEGIN CERTIFICATE في PEM.</value>
+</data>
+<data name="ENDCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>لم يتم العثور على علامة END CERTIFICATE في PEM.</value>
+</data>
+<data name="InvalidBase64ContentError" xml:space="preserve">
+  <value>محتوى base64 غير صالح في شهادة PEM.</value>
+</data>
+<data name="EmptyEntryNameSkippingMessage" xml:space="preserve">
+  <value>اسم الإدخال فارغ، يتم التخطي.</value>
+</data>
+<data name="LoadingCountriesDataMessage" xml:space="preserve">
+  <value>تحميل بيانات البلدان...</value>
+</data>
+<data name="CountriesLoadedSuccessMessage" xml:space="preserve">
+  <value>تم تحميل {0} بلد بنجاح</value>
+</data>
+<data name="CreatingRulesForMessage" xml:space="preserve">
+  <value>إنشاء قواعد لـ {0}</value>
+</data>
+<data name="RemovingRulesForMessage" xml:space="preserve">
+  <value>إزالة قواعد لـ {0}</value>
+</data>
+<data name="SuccessfullyAddedIPRangeMessage" xml:space="preserve">
+  <value>تمت إضافة نطاق IP المحدد للحجب بنجاح</value>
+</data>
+<data name="SuccessfullyRemovedIPRangeMessage" xml:space="preserve">
+  <value>تمت إزالة نطاق IP المحدد للحجب بنجاح</value>
+</data>
+<data name="PleaseSelectCountryWarning" xml:space="preserve">
+  <value>يرجى تحديد بلد من القائمة</value>
+</data>
+<data name="CreatingIPv4RulesMessage" xml:space="preserve">
+  <value>إنشاء قواعد IPv4 لـ {0}</value>
+</data>
+<data name="CreatingIPv6RulesMessage" xml:space="preserve">
+  <value>إنشاء قواعد IPv6 لـ {0}</value>
+</data>
+<data name="RemovingIPv4RulesMessage" xml:space="preserve">
+  <value>إزالة قواعد IPv4 لـ {0}</value>
+</data>
+<data name="RemovingIPv6RulesMessage" xml:space="preserve">
+  <value>إزالة قواعد IPv6 لـ {0}</value>
+</data>
+<data name="SuccessfullyAddedIPBlockingRulesMessage" xml:space="preserve">
+  <value>تمت إضافة قواعد حجب IP لـ {0} بنجاح</value>
+</data>
+<data name="SuccessfullyRemovedIPBlockingRulesMessage" xml:space="preserve">
+  <value>تمت إزالة قواعد حجب IP لـ {0} بنجاح</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>فشل في إنشاء GroupPolicyObject في STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>فشل في تهيئة COM في خيط STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>فشل في إنشاء GroupPolicyObject - تم إرجاع مؤشر فارغ من خيط STA</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>فشل في تهيئة COM. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>فشل في فتح GPO للجهاز المحلي. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>استثناء COM: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>فشل في تسجيل {0} CSE GUID {1:B}. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>فشل في تسجيل {0} CSE GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="DeleteRow.Text" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حذف العنصر (العناصر) المحدد حالياً.</value>
+  </data>
+  <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حذف العنصر (العناصر) المحدد حالياً.</value>
+  </data>
+      <data name="AuditPoliciesNavItem.Content" xml:space="preserve">
+    <value>سياسات التدقيق</value>
+  </data>
+    <data name="AuditPoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض وإدارة جميع سياسات التدقيق في النظام.</value>
+  </data>
+  <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عرض وإدارة جميع سياسات التدقيق في النظام.</value>
+  </data>
+    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <value>عرض وإدارة جميع سياسات التدقيق في النظام.</value>
+  </data>
+  <!--Audit Policies ListView Headers Start-->
+  <data name="AuditSettingHeader.Text" xml:space="preserve">
+    <value>إعداد التدقيق</value>
+  </data>
+  <data name="CategoryGUIDHeader.Text" xml:space="preserve">
+    <value>معرف الفئة GUID</value>
+  </data>
+    <data name="SubcategoryGUIDHeader.Text" xml:space="preserve">
+    <value>معرف الفئة الفرعية GUID</value>
+  </data>
+  <!--Audit Policies ListView Headers End-->
+  <!--Audit Policies ListView Headers Buttons Start-->
+  <data name="AuditSettingColumnHeaderBtn.Content" xml:space="preserve">
+    <value>إعداد التدقيق</value>
+  </data>
+  <data name="CategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>معرف الفئة GUID</value>
+  </data>
+  <data name="SubcategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>معرف الفئة الفرعية GUID</value>
+  </data>
+  <!--Audit Policies ListView Headers Buttons End-->
+  <data name="RetrieveAuditPoliciesButton.Content" xml:space="preserve">
+    <value>استرداد سياسات التدقيق</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يسترد جميع سياسات التدقيق من النظام.</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>يسترد جميع سياسات التدقيق من النظام.</value>
+  </data>
+  <data name="SearchAuditPoliciesPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>البحث في سياسات التدقيق...</value>
+  </data>
+  <data name="AuditPolicyAppliedSuccess" xml:space="preserve">
+    <value>تم تطبيق تغيير سياسة التدقيق لـ {0} إلى {1} بنجاح</value>
+  </data>
+  <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
+    <value>تم تحميل {0} سياسة تدقيق بنجاح.</value>
+  </data>
+  <data name="NoAuditPoliciesAvailable" xml:space="preserve">
+    <value>لا توجد سياسات مراجعة للتصدير. يرجى استرداد سياسات المراجعة أولاً.</value>
+  </data>
+  <data name="SuccessfullyExportedAuditPolicies" xml:space="preserve">
+    <value>تم تصدير {0} سياسات المراجعة بنجاح إلى {1}</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>يستورد سياسات المراجعة من ملف JSON ويطبقها على النظام. ستتمكن من اختيار ملف JSON للاستيراد.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يستورد سياسات المراجعة من ملف JSON ويطبقها على النظام. ستتمكن من اختيار ملف JSON للاستيراد.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.Content" xml:space="preserve">
+    <value>استيراد وتطبيق</value>
+  </data>
+  <data name="NoAuditPoliciesAvailableToImport" xml:space="preserve">
+    <value>لم يتم العثور على سياسات مراجعة صالحة في ملف JSON.</value>
+  </data>
+  <data name="NoAuditPoliciesApplicableInJSON" xml:space="preserve">
+    <value>لم يتم العثور على سياسات مراجعة قابلة للتطبيق في ملف JSON لهذا النظام.</value>
+  </data>
+  <data name="SuccessfullyImportedAuditPolicies" xml:space="preserve">
+    <value>تم استيراد {0} سياسات المراجعة بنجاح من {1}</value>
+  </data>
+  <data name="ApplyRecommendedConfigurations" xml:space="preserve">
+    <value>تطبيق التوصيات</value>
+  </data>
+  <data name="VerifyRecommendedConfigurations" xml:space="preserve">
+    <value>التحقق من التوصيات</value>
+  </data>
+  <data name="RemoveRecommendedConfigurations" xml:space="preserve">
+    <value>إزالة التوصيات</value>
+  </data>
+  <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نسخ العناصر المحددة إلى الحافظة.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نسخ العناصر المحددة إلى الحافظة.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>نسخ المحدد</value>
+  </data>
+  <data name="NoCertificatesAvailableForExport" xml:space="preserve">
+    <value>لا توجد شهادة للتصدير. يرجى استرداد الشهادات أولاً.</value>
+  </data>
+  <data name="SuccessfullyExportedCertificates" xml:space="preserve">
+    <value>تم تصدير {0} شهادات بنجاح إلى {1}</value>
+  </data>
+        <!--BitLocker Volumes ListView Headers Start-->
+  <data name="MountPointHeader.Text" xml:space="preserve">
+    <value>نقطة التحميل</value>
+  </data>
+  <data name="ProtectionStatusHeader.Text" xml:space="preserve">
+    <value>حالة الحماية</value>
+  </data>
+  <data name="ConversionStatusHeader.Text" xml:space="preserve">
+    <value>حالة التحويل</value>
+  </data>
+  <data name="EncryptionMethodHeader.Text" xml:space="preserve">
+    <value>أسلوب التشفير</value>
+  </data>
+    <data name="EncryptionPercentageHeader.Text" xml:space="preserve">
+    <value>نسبة التشفير</value>
+  </data>
+    <data name="WipePercentageHeader.Text" xml:space="preserve">
+    <value>نسبة المسح</value>
+  </data>
+    <data name="AutoUnlockEnabledHeader.Text" xml:space="preserve">
+    <value>تمكين الفتح التلقائي</value>
+  </data>
+    <data name="AutoUnlockKeyStoredHeader.Text" xml:space="preserve">
+    <value>تم تخزين مفتاح الفتح التلقائي</value>
+  </data>
+    <data name="VolumeTypeHeader.Text" xml:space="preserve">
+    <value>نوع وحدة التخزين</value>
+  </data>
+    <data name="CapacityGBHeader.Text" xml:space="preserve">
+    <value>السعة GB</value>
+  </data>
+    <data name="FileSystemTypeHeader.Text" xml:space="preserve">
+    <value>نوع نظام الملفات</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers End-->
+  <!--BitLocker Volumes ListView Headers Buttons Start-->
+<data name="MountPointColumnHeaderBtn.Content" xml:space="preserve">
+    <value>نقطة التحميل</value>
+  </data>
+  <data name="ProtectionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>حالة الحماية</value>
+  </data>
+  <data name="ConversionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>حالة التحويل</value>
+  </data>
+  <data name="EncryptionMethodColumnHeaderBtn.Content" xml:space="preserve">
+    <value>أسلوب التشفير</value>
+  </data>
+    <data name="EncryptionPercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>نسبة التشفير</value>
+  </data>
+    <data name="WipePercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>نسبة المسح</value>
+  </data>
+    <data name="AutoUnlockEnabledColumnHeaderBtn.Content" xml:space="preserve">
+    <value>تمكين الفتح التلقائي</value>
+  </data>
+    <data name="AutoUnlockKeyStoredColumnHeaderBtn.Content" xml:space="preserve">
+    <value>تم تخزين مفتاح الفتح التلقائي</value>
+  </data>
+    <data name="VolumeTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>نوع وحدة التخزين</value>
+  </data>
+    <data name="CapacityGBColumnHeaderBtn.Content" xml:space="preserve">
+    <value>السعة GB</value>
+  </data>
+    <data name="FileSystemTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>نوع نظام الملفات</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers Buttons End-->
+  <data name="RetrieveBitLockerVolumesButton.Content" xml:space="preserve">
+    <value>استرجاع وحدات تخزين BitLocker</value>
+  </data>
+    <data name="RetrieveBitLockerVolumesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يسترجع جميع الوحدات ومعلومات BitLocker ذات الصلة بكامل التفاصيل ويعرضها لك.</value>
+  </data>
+  <data name="RetrieveBitLockerVolumesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يسترجع جميع الوحدات ومعلومات BitLocker ذات الصلة بكامل التفاصيل ويعرضها لك.</value>
+  </data>
+  <data name="CloseButton.Content" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+    <data name="CloseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="CloseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="CopyButton.Content" xml:space="preserve">
+    <value>نسخ</value>
+  </data>
+    <data name="CopyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نسخ</value>
+  </data>
+  <data name="CopyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نسخ</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.Content" xml:space="preserve">
+    <value>حذف واقي المفتاح</value>
+  </data>
+    <data name="DeleteBLKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يحذف واقي المفتاح من وحدة التخزين المحددة.</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يحذف واقي المفتاح من وحدة التخزين المحددة.</value>
+  </data>
+  <data name="NoKeyProtectorsFoundMsg.Text" xml:space="preserve">
+    <value>لم يتم العثور على واقيات مفاتيح لهذه الوحدة.</value>
+  </data>
+  <data name="SelectVolumeFirstToSeeKeyProtectorsMsg.Text" xml:space="preserve">
+    <value>حدد وحدة تخزين أولاً لعرض واقيات المفاتيح الخاصة بها.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.Text" xml:space="preserve">
+    <value>واقيات المفاتيح لـ</value>
+  </data>
+  <data name="KeyProtectorsForMsg.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض جميع واقيات المفاتيح للوحدة المحددة.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عرض جميع واقيات المفاتيح للوحدة المحددة.</value>
+  </data>
+  <data name="RecoveryPassword.Text" xml:space="preserve">
+    <value>كلمة مرور الاسترداد</value>
+  </data>
+  <data name="CertificateType.Text" xml:space="preserve">
+    <value>نوع الشهادة</value>
+  </data>
+  <data name="FileName.Text" xml:space="preserve">
+    <value>اسم الملف</value>
+  </data>
+  <data name="AutoUnlock.Text" xml:space="preserve">
+    <value>فتح تلقائي</value>
+  </data>
+  <data name="Type.Text" xml:space="preserve">
+    <value>النوع</value>
+  </data>
+  <data name="Thumbprint.Text" xml:space="preserve">
+    <value>البصمة</value>
+  </data>
+  <data name="ID.Text" xml:space="preserve">
+    <value>المعرف</value>
+  </data>
+  <data name="BitLockerManagementTab.Header" xml:space="preserve">
+    <value>الإدارة</value>
+  </data>
+  <data name="BitLockerManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إدارة كل جانب من وحدات تخزين BitLocker مثل التشفير، فك التشفير، النسخ الاحتياطي والمزيد.</value>
+  </data>
+  <data name="BitLockerManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إدارة كل جانب من وحدات تخزين BitLocker مثل التشفير، فك التشفير، النسخ الاحتياطي والمزيد.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>تدابير الأمان</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إدارة تدابير الأمان المتعلقة بـ BitLocker.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إدارة تدابير الأمان المتعلقة بـ BitLocker.</value>
+  </data>
+  <data name="AddKeyProtectorButton.Content" xml:space="preserve">
+    <value>إضافة واقي مفتاح</value>
+  </data>
+  <data name="AddKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح جديد إلى وحدة التخزين المحددة. واقيات المفاتيح تتيح لك فتح الوحدة.</value>
+  </data>
+  <data name="AddKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح جديد إلى وحدة التخزين المحددة. واقيات المفاتيح تتيح لك فتح الوحدة.</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.Title" xml:space="preserve">
+    <value>إضافة واقي مفتاح</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>إضافة</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.CloseButtonText" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="AddKeyProtectorContentDialogSubTitle.Text" xml:space="preserve">
+    <value>استخدم هذا القسم لإضافة واقي مفتاح جديد إلى الوحدة المحددة.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM</value>
+  </data>
+    <data name="TPMKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN</value>
+  </data>
+    <data name="TPMPINKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + PIN.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + PIN.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + مفتاح بدء التشغيل</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN + مفتاح بدء التشغيل</value>
+  </data>
+    <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + PIN + مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح TPM + PIN + مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>مفتاح بدء التشغيل</value>
+  </data>
+    <data name="StartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة واقي مفتاح مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة واقي مفتاح مفتاح بدء التشغيل.</value>
+  </data>
+  <data name="TPMSectionTitle.Text" xml:space="preserve">
+    <value>وحدة النظام الأساسي الموثوقة</value>
+  </data>
+  <data name="TPMSectionDescription.Text" xml:space="preserve">
+    <value>يستخدم BitLocker وحدة TPM الخاصة بالجهاز لحماية مفتاح التشفير.</value>
+  </data>
+  <data name="TPMSectionBody.Text" xml:space="preserve">
+    <value>مع هذا الواقي، يكون الوصول إلى محرك الأقراص المشفر متاحاً فقط عند اتصاله بلوحة أم مزودة بـ TPM وتظل سلامة إقلاع النظام سليمة. عادةً ما تنطبق الحمايات المستندة إلى TPM فقط على وحدات نظام التشغيل.</value>
+  </data>
+  <data name="TPMPINSectionTitle.Text" xml:space="preserve">
+    <value>TPM ورقم تعريف شخصي</value>
+  </data>
+  <data name="TPMPINSectionDescription.Text" xml:space="preserve">
+    <value>يقترن BitLocker مع TPM برقم PIN للمستخدم. افتراضياً يكون PIN من 4 إلى 20 رقماً؛ مع تمكين PIN المحسّن يمكن أن يكون من 4 إلى 20 حرفاً (حروف، رموز، مسافات أو أرقام).</value>
+  </data>
+  <data name="TPMStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM ومفتاح بدء التشغيل</value>
+  </data>
+  <data name="TPMStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>يستخدم BitLocker الـ TPM مع إدخال من محرك أقراص USB. لبدء تشغيل الجهاز يجب توصيل محرك الـ USB.</value>
+  </data>
+  <data name="TPMPINStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM وPIN ومفتاح بدء التشغيل</value>
+  </data>
+  <data name="TPMPINStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>يستخدم BitLocker مزيجاً من TPM وPIN بدء التشغيل وإدخال من محرك أقراص USB يحتوي مفتاحاً خارجياً. هذه هي التهيئة الأكثر أماناً لـ BitLocker وتوفر مصادقة متعددة العوامل.</value>
+  </data>
+  <data name="StartupKeySectionTitle.Text" xml:space="preserve">
+    <value>مفتاح بدء التشغيل</value>
+  </data>
+  <data name="StartupKeySectionDescription.Text" xml:space="preserve">
+    <value>يستخدم BitLocker إدخالاً من محرك أقراص USB يحتوي المفتاح الخارجي. يجب توصيل جهاز USB قبل أن يتمكن النظام من الإقلاع.</value>
+  </data>
+  <data name="RetrievingBitLockerVolumesEllipsis" xml:space="preserve">
+  <value>جارٍ استرجاع وحدات BitLocker...</value>
+</data>
+<data name="LoadedBitLockerVolumesCount" xml:space="preserve">
+  <value>تم تحميل {0} من وحدات BitLocker.</value>
+</data>
+<data name="NoOutputReturnedFromPath" xml:space="preserve">
+  <value>لا يوجد مخرجات تم إرجاعها من {0}</value>
+</data>
+<data name="NoBitLockerVolumesDetected" xml:space="preserve">
+  <value>لم يتم اكتشاف أي وحدات BitLocker.</value>
+</data>
+<data name="ParentVolumeForKeyProtectorNotFound" xml:space="preserve">
+  <value>لم يتم العثور على وحدة تخزين أصل لواقي المفتاح.</value>
+</data>
+<data name="RemovingKeyProtectorFromVolume" xml:space="preserve">
+  <value>إزالة واقي مفتاح {0} من {1}</value>
+</data>
+<data name="ExternalKeyRemovalConditionalSuccess" xml:space="preserve">
+  <value>إذا لم يكن واقي المفتاح ExternalKey ذو المعرّف {0} من {1} مستخدماً لإبقاء محرك الأقراص مفتوحاً، فقد أزيل. مزيد من المعلومات متاحة في صفحة السجلات.</value>
+</data>
+<data name="SuccessfullyRemovedKeyProtector" xml:space="preserve">
+  <value>تمت إزالة واقي المفتاح من النوع {0} ذو المعرّف {1} بنجاح من {2}.</value>
+</data>
+<data name="NoBitLockerVolumeSelected" xml:space="preserve">
+  <value>لم يتم تحديد وحدة تخزين BitLocker.</value>
+</data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>فتح تلقائي</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة مُعين مفتاح للفتح التلقائي.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة مُعين مفتاح للفتح التلقائي.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>كلمة مرور</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة مُعين مفتاح لكلمة مرور.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة مُعين مفتاح لكلمة مرور.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>كلمة مرور استرداد</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة مُعين مفتاح لكلمة مرور الاسترداد.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة مُعين مفتاح لكلمة مرور الاسترداد.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>فتح تلقائي</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>يُمكّن الفتح التلقائي لوحدة تخزين ليست قرص نظام التشغيل ومحمية بتشفير القرص BitLocker.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>يمكن تكوين BitLocker لفتح وحدات تخزين البيانات التي لا تستضيف نظام التشغيل تلقائيًا. بعد أن يفتح المستخدم قرص نظام التشغيل، يستخدم BitLocker بيانات اعتماد مشفرة مخزّنة في السجل مع بيانات وصف وحدة التخزين ليفتح تلقائيًا أي وحدات تخزين بيانات تم ضبطها على الفتح التلقائي.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>كلمة مرور</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>ستستخدم وحدة تخزين BitLocker كلمة مرور لحماية البيانات.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>كلمة مرور استرداد</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>تحديد كلمة المرور اختياري. إذا لم تحدد هذه الكلمة، فسيتم إنشاؤها تلقائيًا لك وتعيينها لوحدة التخزين المحددة. إذا قررت إدخال الكلمة يدويًا فيجب أن تكون من 48 حرفًا. تُستخدم الكلمة كحماية لمفتاح تشفير الوحدة.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>تشفير</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تشفير أو فك تشفير أو تنفيذ إجراءات أخرى ذات صلة على وحدة التخزين المحددة.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تشفير أو فك تشفير أو تنفيذ إجراءات أخرى ذات صلة على وحدة التخزين المحددة.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تشفير</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تشفير وحدة التخزين المحددة.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تشفير وحدة التخزين المحددة.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>فك تشفير</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فك تشفير وحدة التخزين المحددة.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فك تشفير وحدة التخزين المحددة.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>إيقاف التشفير مؤقتًا</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إيقاف تشفير BitLocker مؤقتًا لتمكين المستخدمين من الوصول إلى البيانات على وحدة تخزين محمية بتشفير BitLocker. يجعل هذا الإجراء مفتاح التشفير متاحًا في صورة غير محمية.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إيقاف تشفير BitLocker مؤقتًا لتمكين المستخدمين من الوصول إلى البيانات على وحدة تخزين محمية بتشفير BitLocker. يجعل هذا الإجراء مفتاح التشفير متاحًا في صورة غير محمية.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>استئناف التشفير</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعادة التشفير لوحدة تخزين تستخدم BitLocker وكان تم إيقاف تشفيرها مؤقتًا سابقًا.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعادة التشفير لوحدة تخزين تستخدم BitLocker وكان تم إيقاف تشفيرها مؤقتًا سابقًا.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>تمكين تشفير BitLocker</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>تمكين</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>تمكين تشفير BitLocker لوحدة التخزين المحددة.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>قرص نظام التشغيل</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تمكين تشفير BitLocker لقرص نظام التشغيل.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تمكين تشفير BitLocker لقرص نظام التشغيل.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>قرص ثابت</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تمكين تشفير BitLocker للقرص الثابت.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تمكين تشفير BitLocker للقرص الثابت.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>قرص قابل للإزالة</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تمكين تشفير BitLocker للقرص القابل للإزالة.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تمكين تشفير BitLocker للقرص القابل للإزالة.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>تشفير قرص نظام التشغيل</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>تشفير قرص نظام التشغيل باستخدام BitLocker.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>مستوى التشفير</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر أحد مستويات التشفير لقرص نظام التشغيل. المستوى العادي سيستخدم حماية مفاتيح TPM و PIN. المستوى المعزز سيستخدم TPM و PIN ومُعين مفتاح بدء تشغيل على محرك USB لتوفير مصادقة متعددة العوامل قوية.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر أحد مستويات التشفير لقرص نظام التشغيل. المستوى العادي سيستخدم حماية مفاتيح TPM و PIN. المستوى المعزز سيستخدم TPM و PIN ومُعين مفتاح بدء تشغيل على محرك USB لتوفير مصادقة متعددة العوامل قوية.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>عادي</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>معزز</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>نطاق التشفير</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>المساحة الحرة والمستخدمة</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>المساحة المستخدمة فقط</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدد نطاق التشفير للقرص. "المساحة الحرة والمستخدمة" سيشفر كل البيانات على القرص، بينما "المساحة المستخدمة فقط" سيشفر المساحة المستخدمة حاليًا مما يستغرق وقتًا أقل للإكمال.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حدد نطاق التشفير للقرص. "المساحة الحرة والمستخدمة" سيشفر كل البيانات على القرص، بينما "المساحة المستخدمة فقط" سيشفر المساحة المستخدمة حاليًا مما يستغرق وقتًا أقل للإكمال.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>سلوك خفض المستوى</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>السماح بخفض المستوى</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>منع خفض المستوى</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إذا كان خفض المستوى مسموحًا، وكان قرص نظام التشغيل مشفرًا بالفعل بالمستوى المعزز واخترت المستوى العادي للتشفير، فسيتم خفض المستوى. أما إذا كان الخفض مرفوضًا فلن تُستكمل العملية وستظهر رسالة خطأ مانعةً خفض مستوى تشفير قرص نظام التشغيل.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إذا كان خفض المستوى مسموحًا، وكان قرص نظام التشغيل مشفرًا بالفعل بالمستوى المعزز واخترت المستوى العادي للتشفير، فسيتم خفض المستوى. أما إذا كان الخفض مرفوضًا فلن تُستكمل العملية وستظهر رسالة خطأ مانعةً خفض مستوى تشفير قرص نظام التشغيل.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>تشفير قرص ثابت</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>تشفير القرص الثابت المحدد. ستكون له كلمة مرور استرداد مكونة من 48 حرفًا وسيفتح تلقائيًا عبر قرص نظام التشغيل المشفر مسبقًا.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>تشفير قرص قابل للإزالة</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>تشفير القرص القابل للإزالة المحدد. ستكون له كلمة مرور استرداد من 48 حرفًا إضافةً إلى كلمة المرور التي توفرها في الحقل.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>إيقاف تشفير BitLocker مؤقتًا</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>إيقاف مؤقت</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>إيقاف تشفير BitLocker للوحدة المحددة مؤقتًا.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>يتيح إيقاف BitLocker مؤقتًا الوصول إلى البيانات المشفرة على وحدة محمية عبر إظهار مفتاح التشفير في حالة غير محمية. من المهم ملاحظة أن الإيقاف المؤقت لا يفك تشفير البيانات الموجودة. بل يجعل المفتاح المطلوب للفك متاحًا بشكل صريح. أي بيانات جديدة تُكتب إلى القرص أثناء هذه الفترة تظل مشفرة. أثناء الإيقاف المؤقت لا تُفرض فحوص سلامة النظام عند بدء التشغيل. تُستخدم هذه الإمكانية عادةً لتسهيل ترقيات البرامج الثابتة أو صيانة النظام دون تشغيل الاسترداد.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>يمكنك هنا تحديد عدد مرات إعادة تشغيل الكمبيوتر قبل انتهاء إيقاف BitLocker مؤقتًا. القيمة 1 تعني أن حماية BitLocker ستُستأنف مباشرة بعد إعادة التشغيل التالية. يمكنك استئناف الحماية يدويًا في أي وقت عبر زر "استئناف".</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>سيتم تطبيق كل تدابير الأمان في فئة BitLocker على النظام قبل بدء عملية التشفير.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>جارٍ فك تشفير BitLocker للقرص {0}</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>ستتم إزالة جميع مُعينات المفاتيح للقرص وسيبدأ فك تشفير المحتوى.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>تم إلغاء العملية.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>استئناف تشفير BitLocker للقرص {0}</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>استعادة تشفير القرص أو وحدة التخزين التي تم إيقافها مؤقتًا سابقًا.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>لم يتم إدخال PIN لبدء التشغيل. يرجى إدخاله والمحاولة مرة أخرى.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>لم يتم تحديد قرص قابل للإزالة. يرجى اختيار واحد والمحاولة مجددًا.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>لم يتم تقديم كلمة مرور. يرجى تقديم واحدة والمحاولة مرة أخرى.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>يجب تشفير قرص نظام التشغيل بالكامل أولًا قبل أن تتمكن من تشفير الأقراص الثابتة، لكنه حاليًا في حالة {0} بنسبة تشفير {1}.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>إضافة {0} إلى {1}</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>تم تصدير {0} من وحدات تخزين BitLocker بنجاح إلى: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>قد يمنعك هذا من استخدام RDP (سطح المكتب البعيد) عن بُعد عبر عنوان IP، وهو غير آمن لأنه يتطلب فتح منافذ معرّضة للعامة ويستخدم NTLM. يمكنك استخدام Quick Assist أو Azure Bastion للأجهزة الافتراضية في Azure كبدائل أكثر أمانًا. الجلسات المحلية عبر RDP مثل جلسة محسّنة في Hyper-V غير متأثرة.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>ستمنعك هذه السياسة من استخدام ميزة "Forgot my PIN" في شاشة القفل أو تسجيل الدخول. إذا نسيت رقم PIN فلن تتمكن من استعادته.</value>
+  </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>حدد محرك أقراص قابل للإزالة</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>أدخل كلمة مرور</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>أدخل رقم PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>أدخل كلمة مرور الاسترداد</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>إجمالي الشهادات</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>حذف الشهادة</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حذف الشهادة المحددة</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حذف الشهادة المحددة</value>
+  </data>
+   <data name="CheckingSSHClientUserConfiguration" xml:space="preserve">
+  <value>التحقق من تهيئة مستخدم عميل SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingSSHClientConfigurationCheck" xml:space="preserve">
+  <value>لم يتم العثور على دليل المستخدم في {0} لأن اسم المستخدم {1} غير صالح، سيتم تجاوز فحص تهيئة عميل SSH.</value>
+</data>
+<data name="SSHClientConfigFileCreatedBecauseDidNotExist" xml:space="preserve">
+  <value>تم إنشاء ملف تهيئة عميل SSH بالمحتوى: {0} لأنه لم يكن موجودًا.</value>
+</data>
+<data name="ExistingMACsConfigurationFoundAndReplaced" xml:space="preserve">
+  <value>تم العثور على تهيئة 'MACs' الحالية واستبدالها.</value>
+</data>
+<data name="MACsConfigurationNotFoundAddedNew" xml:space="preserve">
+  <value>لم يتم العثور على تهيئة MACs، تمت إضافة تهيئة جديدة.</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientUserConfiguration" xml:space="preserve">
+  <value>التحقق من MACs الآمنة في تهيئة مستخدم عميل SSH</value>
+</data>
+<data name="ExistingMACsFoundInUserDirectoryMatchesSecure" xml:space="preserve">
+  <value>تم العثور على تهيئة MACs في دليل المستخدم وتطابق التهيئات الآمنة.</value>
+</data>
+<data name="MACsConfigurationInUserDirectoryIsDifferent" xml:space="preserve">
+  <value>تهيئة MACs في دليل المستخدم مختلفة: {0}</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientSystemWideConfiguration" xml:space="preserve">
+  <value>التحقق من MACs الآمنة في التهيئة على مستوى النظام لعميل SSH</value>
+</data>
+<data name="ExistingMACsFoundInSystemWideConfigurationMatchesSecure" xml:space="preserve">
+  <value>تم العثور على تهيئة MACs في التهيئة على مستوى النظام وتطابق التهيئات الآمنة.</value>
+</data>
+<data name="MACsConfigurationInSystemWideConfigurationIsDifferent" xml:space="preserve">
+  <value>تهيئة MACs في التهيئة على مستوى النظام مختلفة: {0}</value>
+</data>
+<data name="NoSecureMACsFoundInUserAndSystemWideConfigurations" xml:space="preserve">
+  <value>لم يتم العثور على تهيئة MACs آمنة في كلٍ من تهيئة المستخدم والتهيئة على مستوى النظام.</value>
+</data>
+<data name="AttemptingToRemoveMACsFromSSHClientUserConfiguration" xml:space="preserve">
+  <value>محاولة إزالة تهيئة MACs من تهيئة مستخدم عميل SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingRemoval" xml:space="preserve">
+  <value>لم يتم العثور على دليل المستخدم في {0} لأن اسم المستخدم {1} غير صالح، يتم تجاوز الإزالة.</value>
+</data>
+<data name="SSHClientConfigurationFileNotFoundNothingToRemove" xml:space="preserve">
+  <value>لم يتم العثور على ملف تهيئة عميل SSH؛ لا يوجد ما يُزال.</value>
+</data>
+<data name="RemovedMACsFromSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>تمت إزالة تهيئة MACs من ملف تهيئة مستخدم عميل SSH.</value>
+</data>
+<data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>لم يتم العثور على تهيئة MACs لإزالتها في ملف تهيئة مستخدم عميل SSH.</value>
+</data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>الإجمالي: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>محدد</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>خصص لون إطار نافذة التطبيق. يمكنك اختيار لون من لوحة الألوان أو تحديد خيار قوس قزح الذي يتنقل بشكل متحرك عبر جميع الألوان المتاحة.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>لون إطار النافذة</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>خصص لون إطار نافذة التطبيق. يمكنك اختيار لون من لوحة الألوان أو تحديد خيار قوس قزح الذي يتنقل بشكل متحرك عبر جميع الألوان المتاحة.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>خصص لون إطار نافذة التطبيق. يمكنك اختيار لون من لوحة الألوان أو تحديد خيار قوس قزح الذي يتنقل بشكل متحرك عبر جميع الألوان المتاحة.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>بدء حركة قوس قزح</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ابدأ حركة قوس قزح حول إطار نافذة التطبيق.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ابدأ حركة قوس قزح حول إطار نافذة التطبيق.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>إيقاف حركة قوس قزح</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أوقف حركة قوس قزح حول إطار نافذة التطبيق إذا كانت قيد التشغيل.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أوقف حركة قوس قزح حول إطار نافذة التطبيق إذا كانت قيد التشغيل.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>تعيين لون الإطار</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عيّن لون إطار نافذة التطبيق إلى اللون المحدد.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عيّن لون إطار نافذة التطبيق إلى اللون المحدد.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>إعادة تعيين لون الإطار</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أعد تعيين لون إطار نافذة التطبيق إلى اللون الافتراضي.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أعد تعيين لون إطار نافذة التطبيق إلى اللون الافتراضي.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>الرئيسية</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الصفحة الرئيسية وشاشة الترحيب</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>الصفحة الرئيسية وشاشة الترحيب</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="EnableMDAVSandboxMode-MSDefender" xml:space="preserve">
+    <value>تشغيل Microsoft Defender Antivirus في بيئة معزولة لتعزيز الحماية ضد محاولات العبث.</value>
+  </data>
+    <data name="AnimatedApplyAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تطبيق جميع إجراءات الأمان في الصفحة. العناصر التي تنتمي إلى الفئات الفرعية لن تُطبَّق عند استخدام هذا الزر.</value>
+  </data>
+  <data name="AnimatedApplyAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تطبيق جميع إجراءات الأمان في الصفحة. العناصر التي تنتمي إلى الفئات الفرعية لن تُطبَّق عند استخدام هذا الزر.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إزالة جميع إجراءات الأمان في الصفحة.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إزالة جميع إجراءات الأمان في الصفحة.</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>مرحبًا وأهلًا بك</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>شكرًا لاختيارك تطبيق Harden System Security. إذا رغبت في قراءة ملاحظات الإصدار لأحدث تحديث، فيمكنك العثور عليها في قسم الإصدارات في المستودع الرسمي على GitHub. يمكنك أيضًا طرح الأسئلة أو إرسال الملاحظات هناك.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>زيارة صفحة الإصدارات على GitHub</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يفتح صفحة مستودع GitHub في المتصفح بعد النقر على الزر.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يفتح صفحة مستودع GitHub في المتصفح بعد النقر على الزر.</value>
+  </data>
+  <data name="UseAppControlManager.Text" xml:space="preserve">
+    <value>استخدم AppControl Manager</value>
+  </data>
+  <data name="UseAppControlManagerDescription.Text" xml:space="preserve">
+    <value>AppControl Manager هو تطبيق آخر طوّرته لمساعدتك على إدارة التحكم في التطبيقات وسلامة التعليمات البرمجية في نظام التشغيل بسهولة. يتميز بواجهة حديثة وبديهية، ويتشكل وفقًا لملاحظات المجتمع، ويتم صيانته بنشاط.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>زيارة صفحة Microsoft Store</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يفتح صفحة Microsoft Store بعد النقر على الزر.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يفتح صفحة Microsoft Store بعد النقر على الزر.</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagement.Text" xml:space="preserve">
+    <value>إدارة شاملة لسياسات التدقيق</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagementDescription.Text" xml:space="preserve">
+    <value>اعرض جميع سياسات تدقيق النظام في واجهة موحّدة، مع إمكانية تكوين كلٍ منها على حدة. صدّر إعداداتك كقالب لإعادة استيرادها بسهولة على النظام نفسه أو على نظام آخر.</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.Content" xml:space="preserve">
+    <value>الانتقال إلى صفحة سياسات التدقيق</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الانتقال إلى صفحة سياسات التدقيق</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>الانتقال إلى صفحة سياسات التدقيق</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasures" xml:space="preserve">
+    <value>جارٍ تطبيق جميع إجراءات الأمان...</value>
+  </data>
+  <data name="RemovingAllSecurityMeasures" xml:space="preserve">
+    <value>جارٍ إزالة جميع إجراءات الأمان...</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasures" xml:space="preserve">
+    <value>جارٍ التحقق من جميع إجراءات الأمان...</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>تم تطبيق جميع إجراءات الأمان بنجاح.</value>
+  </data>
+  <data name="RemovingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>تمت إزالة جميع إجراءات الأمان بنجاح.</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>تم التحقق من جميع إجراءات الأمان بنجاح.</value>
   </data>
 </root>

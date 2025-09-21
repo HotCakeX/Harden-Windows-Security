@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class Microsoft365AppsSecurityBaseline : Page
 {
-	private Microsoft365AppsSecurityBaselineVM ViewModel { get; } = ViewModelProvider.Microsoft365AppsSecurityBaselineVM;
+	private Microsoft365AppsSecurityBaselineVM ViewModel => ViewModelProvider.Microsoft365AppsSecurityBaselineVM;
 
 	internal Microsoft365AppsSecurityBaseline()
 	{

@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class MicrosoftBaseLinesOverrides : Page
 {
-	private MicrosoftBaseLinesOverridesVM ViewModel { get; } = ViewModelProvider.MicrosoftBaseLinesOverridesVM;
+	private MicrosoftBaseLinesOverridesVM ViewModel => ViewModelProvider.MicrosoftBaseLinesOverridesVM;
 
 	internal MicrosoftBaseLinesOverrides()
 	{

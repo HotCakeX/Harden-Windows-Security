@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class LockScreen : Page
 {
-	private LockScreenVM ViewModel { get; } = ViewModelProvider.LockScreenVM;
+	private LockScreenVM ViewModel => ViewModelProvider.LockScreenVM;
 
 	internal LockScreen()
 	{

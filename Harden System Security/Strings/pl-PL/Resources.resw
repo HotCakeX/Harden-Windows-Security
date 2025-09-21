@@ -205,16 +205,7 @@
     <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>Użyj paska bocznego dla dodatkowych funkcji.</value>
   </data>
-    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
-    <value>Przewodnik po pasku bocznym</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Aby uzyskać przewodnik o tym, jak używać paska bocznego, kliknij/dotknij tutaj, aby przejść do strony GitHub wiki.</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Aby uzyskać przewodnik o tym, jak używać paska bocznego, kliknij/dotknij tutaj, aby przejść do strony GitHub wiki.</value>
-  </data>
-    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>Pomoc - zadaj pytania</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
@@ -604,13 +595,13 @@
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Wybierz jeden z szablonów ochrony do zastosowania, są to predefiniowane zestawy konfiguracji zaprojektowane dla różnych poziomów bezpieczeństwa.</value>
   </data>
-    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="BasicProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Podstawowy</value>
   </data>
-    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="RecommendedProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Zalecany</value>
   </data>
-    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Kompletny</value>
   </data>
   <data name="ProtectPageTitle.Text" xml:space="preserve">
@@ -740,17 +731,9 @@
     <comment>Protection Category Title</comment>
     <value>Sprawdzanie certyfikatów</value>
   </data>
-  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>Sprawdź zainstalowane certyfikaty i znajdź wszystkie, które nie mieszczą się w systemie operacyjnym.</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>Blokowanie IP według kraju</value>
-  </data>
-  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>Blokuj zakresy adresów IP określonych krajów znajdujących się na liście sankcji USA za wspieranie terroryzmu.</value>
   </data>
   <data name="ProtectCategory_NonAdmin" xml:space="preserve">
     <comment>Protection Category Title</comment>
@@ -803,10 +786,6 @@
   <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>Włącz obsługę długich ścieżek plików.</value>
-  </data>
-  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
-    <comment>Protection Sub-Category</comment>
-    <value>Blokuj zakresy IP krajów z listy sankcji OFAC.</value>
   </data>
   <data name="ASRNavItem.Content" xml:space="preserve">
     <value>Redukcja powierzchni ataku</value>
@@ -1592,9 +1571,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>Wzmocnienie bezpieczeństwa zakończone: {0} udane, {1} nieudane.</value>
 </data>
-<data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
-  <value>Błąd podczas operacji wzmocnienia bezpieczeństwa</value>
-</data>
 <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
   <value>Nie udało się zainicjować usługi DISM do weryfikacji.</value>
 </data>
@@ -1610,9 +1586,6 @@
 <data name="IncorrectItems" xml:space="preserve">
   <value>Niepoprawne elementy: {0}</value>
 </data>
-<data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
-  <value>Błąd podczas weryfikacji wzmocnienia bezpieczeństwa</value>
-</data>
 <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
   <value>Nie udało się zainicjować usługi DISM do usunięcia wzmocnienia bezpieczeństwa.</value>
 </data>
@@ -1627,9 +1600,6 @@
 </data>
 <data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
   <value>Usuwanie wzmocnienia bezpieczeństwa zakończone: {0} udane, {1} nieudane.</value>
-</data>
-<data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
-  <value>Błąd podczas operacji usuwania wzmocnienia bezpieczeństwa</value>
 </data>
 <data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
   <value>Błąd podczas usuwania klienta usługi DISM: {0}</value>
@@ -1976,12 +1946,6 @@
 <data name="SeceditFailedWithExitCode" xml:space="preserve">
   <value>Secedit nie powiodło się z kodem wyjścia: {0}</value>
 </data>
-<data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
-  <value>Ostrzeżenie: Nie można usunąć plików tymczasowych.</value>
-</data>
-<data name="SeceditMethodFailed" xml:space="preserve">
-  <value>Metoda Secedit nie powiodła się.</value>
-</data>
 <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
   <value>Nie znaleziono ustawień [System Access] w określonym pliku</value>
 </data>
@@ -1990,9 +1954,6 @@
 </data>
 <data name="FileNotFoundPath" xml:space="preserve">
   <value>Nie znaleziono pliku: {0}</value>
-</data>
-<data name="CreatedPolicyDirectory" xml:space="preserve">
-  <value>Utworzono katalog zasad: {0}</value>
 </data>
 <data name="FileTooSmallForValidHeader" xml:space="preserve">
   <value>Plik jest zbyt mały na prawidłowy nagłówek</value>
@@ -2041,9 +2002,6 @@
 </data>
 <data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
   <value>Załadowano istniejący plik zasad z {0} wpisami</value>
-</data>
-<data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
-  <value>Plik zasad nie istnieje, tworzenie nowego pustego pliku zasad</value>
 </data>
 <data name="ReplacedEntries" xml:space="preserve">
   <value>Zastąpione wpisy: {0}</value>
@@ -2288,7 +2246,7 @@
   <data name="INFToJSONConversionSectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wybierz jeden lub więcej plików INF bezpieczeństwa do konwersji na format JSON</value>
   </data>
-    <data name="SelectedText.Text" xml:space="preserve">
+    <data name="SelectedItemText.Text" xml:space="preserve">
     <value>Wybrane: </value>
   </data>
   <data name="StatusAppliedText" xml:space="preserve">
@@ -2364,10 +2322,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>Status</value>
   </data>
-  <data name="CurrentValueHeader.Text" xml:space="preserve">
+  <data name="CurrentValueHeaderText" xml:space="preserve">
     <value>Bieżąca wartość</value>
   </data>
-  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+  <data name="ExpectedValueHeaderText" xml:space="preserve">
     <value>Oczekiwana wartość</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -2588,5 +2546,1212 @@
   </data>
   <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
    <value>Wyświetl i zarządzaj adresem URL pobierania linii bazowej.</value>
+  </data>
+   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj reguły zapory sieciowej dla wybranego elementu.</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Dodaj reguły zapory sieciowej dla wybranego elementu.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń reguły zapory sieciowej dla wybranego elementu.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Usuń reguły zapory sieciowej dla wybranego elementu.</value>
+  </data>
+  <data name="TargetedListsText.Text" xml:space="preserve">
+   <value>Listy Docelowe</value>
+  </data>
+  <data name="TargetedListsDescriptionText.Text" xml:space="preserve">
+   <value>Prekompilowane i codziennie aktualizowane listy docelowe zawierające zakresy adresów IP specyficzne dla kraju, umożliwiające usprawnienie wdrażania wymagań zgodności i polityk bezpieczeństwa poprzez wydajne kontrole blokujące zapory Windows.</value>
+  </data>
+  <data name="IndividualCountryIPBlockingText.Text" xml:space="preserve">
+   <value>Blokowanie IP Pojedynczego Kraju</value>
+  </data>
+  <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
+   <value>Użyj codziennie aktualizowanych zakresów adresów IP krajów, aby blokować określone kraje w swoim systemie za pomocą reguł zapory Windows.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
+    <value>Dowiedz się więcej</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kliknij lub stuknij tutaj, aby otworzyć stronę internetową z bardziej szczegółowymi informacjami.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Kliknij lub stuknij tutaj, aby otworzyć stronę internetową z bardziej szczegółowymi informacjami.</value>
+  </data>
+  <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
+   <value>Wyszukaj kraje...</value>
+  </data>
+  <!--Certificates ListView Headers Start-->
+  <data name="StoreLocationHeader.Text" xml:space="preserve">
+    <value>Lokalizacja Magazynu</value>
+  </data>
+    <data name="StoreNameHeader.Text" xml:space="preserve">
+    <value>Nazwa Magazynu</value>
+  </data>
+  <data name="SubjectHeader.Text" xml:space="preserve">
+    <value>Podmiot</value>
+  </data>
+  <data name="IssuerHeader.Text" xml:space="preserve">
+    <value>Wystawca</value>
+  </data>
+  <data name="ThumbprintHeader.Text" xml:space="preserve">
+    <value>Odcisk Palca</value>
+  </data>
+    <data name="RootSubjectHeader.Text" xml:space="preserve">
+    <value>Podmiot Główny</value>
+  </data>
+  <data name="RootSha256Header.Text" xml:space="preserve">
+    <value>SHA256 Główny</value>
+  </data>
+  <!--Certificates ListView Headers End-->
+  <!--Certificates ListView Headers Buttons Start-->
+  <data name="StoreLocationColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Lokalizacja Magazynu</value>
+  </data>
+    <data name="StoreNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Nazwa Magazynu</value>
+  </data>
+  <data name="SubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Podmiot</value>
+  </data>
+  <data name="IssuerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Wystawca</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Odcisk Palca</value>
+  </data>
+  <data name="RootSubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Podmiot Główny</value>
+  </data>
+  <data name="RootSha256ColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA256 Główny</value>
+  </data>
+  <!--Certificates ListView Headers Buttons End-->
+  <data name="StartAnalysisButton.Content" xml:space="preserve">
+    <value>Rozpocznij Analizę</value>
+  </data>
+  <data name="StartAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobiera listę Programu Zaufanych Certyfikatów Głównych Microsoft i znajduje wszystkie certyfikaty w magazynach certyfikatów Maszyny Lokalnej i Bieżącego Użytkownika, które nie są powiązane z żadnymi certyfikatami z tej zaufanej listy. Będziesz także mógł usunąć niezaufane certyfikaty ze swojego systemu.</value>
+  </data>
+  <data name="StartAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Pobiera listę Programu Zaufanych Certyfikatów Głównych Microsoft i znajduje wszystkie certyfikaty w magazynach certyfikatów Maszyny Lokalnej i Bieżącego Użytkownika, które nie są powiązane z żadnymi certyfikatami z tej zaufanej listy. Będziesz także mógł usunąć niezaufane certyfikaty ze swojego systemu.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.Content" xml:space="preserve">
+    <value>Pobierz Certyfikaty Lokalne</value>
+  </data>
+  <data name="GetLocalCertificatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobiera wszystkie lokalne certyfikaty z magazynów certyfikatów Maszyny Lokalnej i Bieżącego Użytkownika, pokazuje je wszystkie na Liście i pozwala je sortować, przeszukiwać, kopiować ich szczegóły lub je usuwać.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Pobiera wszystkie lokalne certyfikaty z magazynów certyfikatów Maszyny Lokalnej i Bieżącego Użytkownika, pokazuje je wszystkie na Liście i pozwala je sortować, przeszukiwać, kopiować ich szczegóły lub je usuwać.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.Content" xml:space="preserve">
+    <value>Uwzględnij Wygasłe</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Uwzględnij wygasłe lub jeszcze nieważne certyfikaty w wynikach.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Uwzględnij wygasłe lub jeszcze nieważne certyfikaty w wynikach.</value>
+  </data>
+  <data name="SearchCertificatesTextBox.PlaceholderText" xml:space="preserve">
+   <value>Wyszukaj certyfikaty...</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.Text" xml:space="preserve">
+   <value>Informacje Nagłówka Listy Zaufania Certyfikatów</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Informacje Nagłówka Listy Zaufania Certyfikatów</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Informacje Nagłówka Listy Zaufania Certyfikatów</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.Content" xml:space="preserve">
+    <value>Info Nagłówka CTL</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetla szczegółowe informacje o plikach Listy Zaufanych Certyfikatów pobranych z Serwera Microsoft.</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Wyświetla szczegółowe informacje o plikach Listy Zaufanych Certyfikatów pobranych z Serwera Microsoft.</value>
+  </data>
+  <data name="MainInfoBarDeleteCertificateSelectMessage" xml:space="preserve">
+  <value>Proszę wybrać certyfikat do usunięcia.</value>
+</data>
+<data name="DeleteCertificateDialogTitle" xml:space="preserve">
+  <value>Usuń Certyfikat</value>
+</data>
+<data name="DeleteCertificateDialogContent" xml:space="preserve">
+  <value>Czy na pewno chcesz usunąć ten certyfikat?
+
+Podmiot: {0}
+Magazyn: {1}\{2}
+Odcisk Palca: {3}</value>
+</data>
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
+  <value>Usuń</value>
+</data>
+<data name="InvalidStoreLocationWarning" xml:space="preserve">
+  <value>Nieprawidłowa lokalizacja magazynu: {0}</value>
+</data>
+<data name="CertificateNotFoundInStoreWarning" xml:space="preserve">
+  <value>Certyfikat nie został znaleziony w magazynie.</value>
+</data>
+<data name="CertificateDeletedSuccessMessage" xml:space="preserve">
+  <value>Certyfikat został pomyślnie usunięty z {0}\{1}</value>
+</data>
+<data name="StartingCertificateAnalysisMessage" xml:space="preserve">
+  <value>Rozpoczynanie analizy certyfikatów...</value>
+</data>
+<data name="StlFileParsedMessage" xml:space="preserve">
+  <value>Plik STL przeanalizowano {0} podmiotów w {1} ms.</value>
+</data>
+<data name="CertificateAnalysisCompletedMessage" xml:space="preserve">
+  <value>Analiza certyfikatów zakończona. Znaleziono {0} certyfikatów niepowiązanych z korzeniami STL.</value>
+</data>
+<data name="RetrievingAllCertificatesMessage" xml:space="preserve">
+  <value>Pobieranie wszystkich certyfikatów z magazynów certyfikatów...</value>
+</data>
+<data name="RetrievedCertificatesMessage" xml:space="preserve">
+  <value>Pobrano {0} certyfikatów w {1} ms.</value>
+</data>
+<data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
+  <value>Pobieranie certyfikatów zakończone. Znaleziono łącznie {0} certyfikatów.</value>
+</data>
+<data name="NoRootCertificate" xml:space="preserve">
+  <value>(brak korzenia)</value>
+</data>
+<data name="NoCertificateHash" xml:space="preserve">
+  <value>(brak)</value>
+</data>
+<data name="EmptyValue" xml:space="preserve">
+  <value>PUSTY</value>
+</data>
+<data name="InputFileIsNeitherCABNorSTLError" xml:space="preserve">
+  <value>Plik wejściowy nie jest ani prawidłowym plikiem CAB ani plikiem STL.</value>
+</data>
+<data name="CABFileContainsMoreThanOneFileError" xml:space="preserve">
+  <value>Plik CAB zawiera więcej niż jeden plik. Oczekiwano dokładnie jednego pliku STL.</value>
+</data>
+<data name="NoSTLFileFoundInCABError" xml:space="preserve">
+  <value>Nie znaleziono pliku STL w archiwum CAB.</value>
+</data>
+<data name="CABFileEmptyError" xml:space="preserve">
+  <value>Plik CAB jest pusty lub nie zawiera plików do rozpakowania.</value>
+</data>
+<data name="TooManyRedirectsError" xml:space="preserve">
+  <value>Zbyt wiele przekierowań.</value>
+</data>
+<data name="RedirectResponseMissingLocationError" xml:space="preserve">
+  <value>Odpowiedź przekierowania nie zawiera nagłówka Location.</value>
+</data>
+<data name="SignatureVerificationFailedError" xml:space="preserve">
+  <value>Weryfikacja podpisu nie powiodła się dla SignedCms.</value>
+</data>
+<data name="SignerCertificateNotPresentError" xml:space="preserve">
+  <value>Certyfikat podpisującego nie jest obecny w SignedCms.</value>
+</data>
+<data name="SigningChainRootMismatchError" xml:space="preserve">
+  <value>Korzeń łańcucha podpisywania nie pasuje do dostarczonego certyfikatu CA.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLError" xml:space="preserve">
+  <value>Nieoczekiwane końcowe dane po sekwencji CTL najwyższego poziomu.</value>
+</data>
+<data name="VersionIntegerOutOfRangeError" xml:space="preserve">
+  <value>Wartość liczby całkowitej wersji poza zakresem.</value>
+</data>
+<data name="MissingUsageSequenceError" xml:space="preserve">
+  <value>Brakująca sekwencja użycia.</value>
+</data>
+<data name="UnexpectedTrailingDataUsageSequenceError" xml:space="preserve">
+  <value>Nieoczekiwane końcowe dane wewnątrz sekwencji użycia.</value>
+</data>
+<data name="MissingThisUpdateError" xml:space="preserve">
+  <value>Brakujący thisUpdate.</value>
+</data>
+<data name="MissingAlgorithmIdentifierError" xml:space="preserve">
+  <value>Brakujący identyfikator algorytmu.</value>
+</data>
+<data name="UnexpectedTrailingDataTrustedSubjectError" xml:space="preserve">
+  <value>Nieoczekiwane końcowe dane wewnątrz TrustedSubjectType.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLElementsError" xml:space="preserve">
+  <value>Nieoczekiwane końcowe dane po elementach CTL.</value>
+</data>
+<data name="SubjectMissingFriendlyNameError" xml:space="preserve">
+  <value>Podmiot nie zawiera przyjaznej nazwy.</value>
+</data>
+<data name="UnexpectedTrailingDataEKUSequenceError" xml:space="preserve">
+  <value>Nieoczekiwane końcowe dane po sekwencji EKU.</value>
+</data>
+<data name="InvalidFILETIMEError" xml:space="preserve">
+  <value>Napotkano nieprawidłowy FILETIME.</value>
+</data>
+<data name="BEGINCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>Znacznik BEGIN CERTIFICATE nie został znaleziony w PEM.</value>
+</data>
+<data name="ENDCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>Znacznik END CERTIFICATE nie został znaleziony w PEM.</value>
+</data>
+<data name="InvalidBase64ContentError" xml:space="preserve">
+  <value>Nieprawidłowa zawartość base64 w certyfikacie PEM.</value>
+</data>
+<data name="EmptyEntryNameSkippingMessage" xml:space="preserve">
+  <value>Pusta nazwa wpisu, pomijanie.</value>
+</data>
+<data name="LoadingCountriesDataMessage" xml:space="preserve">
+  <value>Ładowanie danych krajów...</value>
+</data>
+<data name="CountriesLoadedSuccessMessage" xml:space="preserve">
+  <value>Pomyślnie załadowano {0} krajów</value>
+</data>
+<data name="CreatingRulesForMessage" xml:space="preserve">
+  <value>Tworzenie reguł dla {0}</value>
+</data>
+<data name="RemovingRulesForMessage" xml:space="preserve">
+  <value>Usuwanie reguł dla {0}</value>
+</data>
+<data name="SuccessfullyAddedIPRangeMessage" xml:space="preserve">
+  <value>Pomyślnie dodano wybrany zakres IP do blokowania</value>
+</data>
+<data name="SuccessfullyRemovedIPRangeMessage" xml:space="preserve">
+  <value>Pomyślnie usunięto wybrany zakres IP do blokowania</value>
+</data>
+<data name="PleaseSelectCountryWarning" xml:space="preserve">
+  <value>Proszę wybrać kraj z listy</value>
+</data>
+<data name="CreatingIPv4RulesMessage" xml:space="preserve">
+  <value>Tworzenie reguł IPv4 dla {0}</value>
+</data>
+<data name="CreatingIPv6RulesMessage" xml:space="preserve">
+  <value>Tworzenie reguł IPv6 dla {0}</value>
+</data>
+<data name="RemovingIPv4RulesMessage" xml:space="preserve">
+  <value>Usuwanie reguł IPv4 dla {0}</value>
+</data>
+<data name="RemovingIPv6RulesMessage" xml:space="preserve">
+  <value>Usuwanie reguł IPv6 dla {0}</value>
+</data>
+<data name="SuccessfullyAddedIPBlockingRulesMessage" xml:space="preserve">
+  <value>Pomyślnie dodano reguły blokowania IP dla {0}</value>
+</data>
+<data name="SuccessfullyRemovedIPBlockingRulesMessage" xml:space="preserve">
+  <value>Pomyślnie usunięto reguły blokowania IP dla {0}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>Nie udało się utworzyć GroupPolicyObject w STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>Nie udało się zainicjalizować COM w wątku STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>Nie udało się utworzyć GroupPolicyObject - zwrócono pusty wskaźnik z wątku STA</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>Nie udało się zainicjalizować COM. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>Nie udało się otworzyć GPO maszyny lokalnej. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>Wyjątek COM: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>Nie udało się zarejestrować {0} CSE GUID {1:B}. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>Nie udało się zarejestrować {0} CSE GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="DeleteRow.Text" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń aktualnie wybrane element(y).</value>
+  </data>
+  <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń aktualnie wybrane element(y).</value>
+  </data>
+      <data name="AuditPoliciesNavItem.Content" xml:space="preserve">
+    <value>Zasady Audytu</value>
+  </data>
+    <data name="AuditPoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetlanie i zarządzanie wszystkimi Zasadami Audytu w systemie.</value>
+  </data>
+  <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetlanie i zarządzanie wszystkimi Zasadami Audytu w systemie.</value>
+  </data>
+    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <value>Wyświetlanie i zarządzanie wszystkimi Zasadami Audytu w systemie.</value>
+  </data>
+  <!--Audit Policies ListView Headers Start-->
+  <data name="AuditSettingHeader.Text" xml:space="preserve">
+    <value>Ustawienie Audytu</value>
+  </data>
+  <data name="CategoryGUIDHeader.Text" xml:space="preserve">
+    <value>GUID Kategorii</value>
+  </data>
+    <data name="SubcategoryGUIDHeader.Text" xml:space="preserve">
+    <value>GUID Podkategorii</value>
+  </data>
+  <!--Audit Policies ListView Headers End-->
+  <!--Audit Policies ListView Headers Buttons Start-->
+  <data name="AuditSettingColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Ustawienie Audytu</value>
+  </data>
+  <data name="CategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>GUID Kategorii</value>
+  </data>
+  <data name="SubcategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>GUID Podkategorii</value>
+  </data>
+  <!--Audit Policies ListView Headers Buttons End-->
+  <data name="RetrieveAuditPoliciesButton.Content" xml:space="preserve">
+    <value>Pobierz Zasady Audytu</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobiera wszystkie Zasady Audytu z systemu.</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Pobiera wszystkie Zasady Audytu z systemu.</value>
+  </data>
+  <data name="SearchAuditPoliciesPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Wyszukaj zasady audytu...</value>
+  </data>
+  <data name="AuditPolicyAppliedSuccess" xml:space="preserve">
+    <value>Pomyślnie zastosowano zmianę zasady audytu dla {0} do {1}</value>
+  </data>
+  <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
+    <value>Pomyślnie załadowano {0} zasad audytu.</value>
+  </data>
+  <data name="NoAuditPoliciesAvailable" xml:space="preserve">
+    <value>Brak zasad audytu do eksportu. Proszę najpierw pobrać zasady audytu.</value>
+  </data>
+  <data name="SuccessfullyExportedAuditPolicies" xml:space="preserve">
+    <value>Pomyślnie wyeksportowano {0} zasad audytu do {1}</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Importuje zasady audytu z pliku JSON i stosuje je w systemie. Będzie można wybrać plik JSON do importu.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Importuje zasady audytu z pliku JSON i stosuje je w systemie. Będzie można wybrać plik JSON do importu.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.Content" xml:space="preserve">
+    <value>Importuj i Zastosuj</value>
+  </data>
+  <data name="NoAuditPoliciesAvailableToImport" xml:space="preserve">
+    <value>Nie znaleziono prawidłowych zasad audytu w pliku JSON.</value>
+  </data>
+  <data name="NoAuditPoliciesApplicableInJSON" xml:space="preserve">
+    <value>Nie znaleziono odpowiednich zasad audytu w pliku JSON dla tego systemu.</value>
+  </data>
+  <data name="SuccessfullyImportedAuditPolicies" xml:space="preserve">
+    <value>Pomyślnie zaimportowano {0} zasad audytu z {1}</value>
+  </data>
+  <data name="ApplyRecommendedConfigurations" xml:space="preserve">
+    <value>Zastosuj Rekomendacje</value>
+  </data>
+  <data name="VerifyRecommendedConfigurations" xml:space="preserve">
+    <value>Zweryfikuj Rekomendacje</value>
+  </data>
+  <data name="RemoveRecommendedConfigurations" xml:space="preserve">
+    <value>Usuń Rekomendacje</value>
+  </data>
+  <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Skopiuj wybrane elementy do schowka.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Skopiuj wybrane elementy do schowka.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>Kopiuj Wybrane</value>
+  </data>
+  <data name="NoCertificatesAvailableForExport" xml:space="preserve">
+    <value>Brak certyfikatu do eksportu. Proszę najpierw pobrać certyfikaty.</value>
+  </data>
+  <data name="SuccessfullyExportedCertificates" xml:space="preserve">
+    <value>Pomyślnie wyeksportowano {0} certyfikatów do {1}</value>
+  </data>
+        <!--BitLocker Volumes ListView Headers Start-->
+  <data name="MountPointHeader.Text" xml:space="preserve">
+    <value>Punkt montowania</value>
+  </data>
+  <data name="ProtectionStatusHeader.Text" xml:space="preserve">
+    <value>Status ochrony</value>
+  </data>
+  <data name="ConversionStatusHeader.Text" xml:space="preserve">
+    <value>Status konwersji</value>
+  </data>
+  <data name="EncryptionMethodHeader.Text" xml:space="preserve">
+    <value>Metoda szyfrowania</value>
+  </data>
+    <data name="EncryptionPercentageHeader.Text" xml:space="preserve">
+    <value>Procent szyfrowania</value>
+  </data>
+    <data name="WipePercentageHeader.Text" xml:space="preserve">
+    <value>Procent wymazywania</value>
+  </data>
+    <data name="AutoUnlockEnabledHeader.Text" xml:space="preserve">
+    <value>Automatyczne odblokowanie włączone</value>
+  </data>
+    <data name="AutoUnlockKeyStoredHeader.Text" xml:space="preserve">
+    <value>Zapisano klucz auto-odblokowania</value>
+  </data>
+    <data name="VolumeTypeHeader.Text" xml:space="preserve">
+    <value>Typ woluminu</value>
+  </data>
+    <data name="CapacityGBHeader.Text" xml:space="preserve">
+    <value>Pojemność GB</value>
+  </data>
+    <data name="FileSystemTypeHeader.Text" xml:space="preserve">
+    <value>Typ systemu plików</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers End-->
+  <!--BitLocker Volumes ListView Headers Buttons Start-->
+<data name="MountPointColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Punkt montowania</value>
+  </data>
+  <data name="ProtectionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Status ochrony</value>
+  </data>
+  <data name="ConversionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Status konwersji</value>
+  </data>
+  <data name="EncryptionMethodColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Metoda szyfrowania</value>
+  </data>
+    <data name="EncryptionPercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Procent szyfrowania</value>
+  </data>
+    <data name="WipePercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Procent wymazywania</value>
+  </data>
+    <data name="AutoUnlockEnabledColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Automatyczne odblokowanie włączone</value>
+  </data>
+    <data name="AutoUnlockKeyStoredColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Zapisano klucz auto-odblokowania</value>
+  </data>
+    <data name="VolumeTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Typ woluminu</value>
+  </data>
+    <data name="CapacityGBColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Pojemność GB</value>
+  </data>
+    <data name="FileSystemTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Typ systemu plików</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers Buttons End-->
+  <data name="RetrieveBitLockerVolumesButton.Content" xml:space="preserve">
+    <value>Pobierz woluminy BitLocker</value>
+  </data>
+    <data name="RetrieveBitLockerVolumesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobiera wszystkie woluminy i ich szczegółowe informacje BitLocker oraz wyświetla je.</value>
+  </data>
+  <data name="RetrieveBitLockerVolumesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobiera wszystkie woluminy i ich szczegółowe informacje BitLocker oraz wyświetla je.</value>
+  </data>
+  <data name="CloseButton.Content" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+    <data name="CloseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="CloseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zamknij</value>
+  </data>
+  <data name="CopyButton.Content" xml:space="preserve">
+    <value>Kopiuj</value>
+  </data>
+    <data name="CopyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopiuj</value>
+  </data>
+  <data name="CopyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kopiuj</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.Content" xml:space="preserve">
+    <value>Usuń zabezpieczenie klucza</value>
+  </data>
+    <data name="DeleteBLKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuwa zabezpieczenie klucza z wybranego woluminu.</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuwa zabezpieczenie klucza z wybranego woluminu.</value>
+  </data>
+  <data name="NoKeyProtectorsFoundMsg.Text" xml:space="preserve">
+    <value>Nie znaleziono zabezpieczeń klucza dla tego woluminu.</value>
+  </data>
+  <data name="SelectVolumeFirstToSeeKeyProtectorsMsg.Text" xml:space="preserve">
+    <value>Najpierw wybierz wolumin aby zobaczyć jego zabezpieczenia klucza.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.Text" xml:space="preserve">
+    <value>Zabezpieczenia klucza dla</value>
+  </data>
+  <data name="KeyProtectorsForMsg.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyświetlanie wszystkich zabezpieczeń klucza dla wybranego woluminu.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyświetlanie wszystkich zabezpieczeń klucza dla wybranego woluminu.</value>
+  </data>
+  <data name="RecoveryPassword.Text" xml:space="preserve">
+    <value>Hasło odzyskiwania</value>
+  </data>
+  <data name="CertificateType.Text" xml:space="preserve">
+    <value>Typ certyfikatu</value>
+  </data>
+  <data name="FileName.Text" xml:space="preserve">
+    <value>Nazwa pliku</value>
+  </data>
+  <data name="AutoUnlock.Text" xml:space="preserve">
+    <value>Auto-odblokowanie</value>
+  </data>
+  <data name="Type.Text" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Thumbprint.Text" xml:space="preserve">
+    <value>Odcisk</value>
+  </data>
+  <data name="ID.Text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="BitLockerManagementTab.Header" xml:space="preserve">
+    <value>Zarządzanie</value>
+  </data>
+  <data name="BitLockerManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj każdym aspektem woluminów BitLocker: szyfrowanie, deszyfrowanie, kopie zapasowe i więcej.</value>
+  </data>
+  <data name="BitLockerManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zarządzaj każdym aspektem woluminów BitLocker: szyfrowanie, deszyfrowanie, kopie zapasowe i więcej.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>Środki bezpieczeństwa</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj środkami bezpieczeństwa związanymi z BitLocker.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zarządzaj środkami bezpieczeństwa związanymi z BitLocker.</value>
+  </data>
+  <data name="AddKeyProtectorButton.Content" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza</value>
+  </data>
+  <data name="AddKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj nowe zabezpieczenie klucza do wybranego woluminu. Zabezpieczenia klucza umożliwiają odblokowanie woluminu.</value>
+  </data>
+  <data name="AddKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj nowe zabezpieczenie klucza do wybranego woluminu. Zabezpieczenia klucza umożliwiają odblokowanie woluminu.</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.Title" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="AddKeyProtectorContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Użyj tej sekcji aby dodać nowe zabezpieczenie klucza do wybranego woluminu.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM</value>
+  </data>
+    <data name="TPMKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN</value>
+  </data>
+    <data name="TPMPINKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + PIN.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + PIN.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + klucz startowy</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + klucz startowy.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + klucz startowy.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN + klucz startowy</value>
+  </data>
+    <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + PIN + klucz startowy.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza TPM + PIN + klucz startowy.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Klucz startowy</value>
+  </data>
+    <data name="StartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza klucz startowy.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj zabezpieczenie klucza klucz startowy.</value>
+  </data>
+  <data name="TPMSectionTitle.Text" xml:space="preserve">
+    <value>Zaufany moduł platformy</value>
+  </data>
+  <data name="TPMSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker używa TPM urządzenia do ochrony klucza szyfrowania.</value>
+  </data>
+  <data name="TPMSectionBody.Text" xml:space="preserve">
+    <value>Z tym zabezpieczeniem zaszyfrowany dysk jest dostępny tylko gdy jest podłączony do płyty głównej z TPM i integralność rozruchu systemu pozostaje nienaruszona. Zabezpieczenia oparte na TPM zwykle dotyczą tylko woluminów systemu operacyjnego.</value>
+  </data>
+  <data name="TPMPINSectionTitle.Text" xml:space="preserve">
+    <value>TPM i numer PIN</value>
+  </data>
+  <data name="TPMPINSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker łączy TPM z PIN użytkownika. Domyślnie PIN to 4–20 cyfr; przy włączonych rozszerzonych PIN może to być 4–20 znaków (litery, symbole, spacje lub cyfry).</value>
+  </data>
+  <data name="TPMStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM i klucz startowy</value>
+  </data>
+  <data name="TPMStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker używa TPM wraz z danymi z dysku USB. Aby uruchomić urządzenie, dysk USB musi być podłączony.</value>
+  </data>
+  <data name="TPMPINStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM, PIN i klucz startowy</value>
+  </data>
+  <data name="TPMPINStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker używa kombinacji TPM, PIN rozruchu oraz danych z dysku USB zawierającego klucz zewnętrzny. To najbezpieczniejsza konfiguracja BitLocker zapewniająca wieloskładnikowe uwierzytelnianie.</value>
+  </data>
+  <data name="StartupKeySectionTitle.Text" xml:space="preserve">
+    <value>Klucz startowy</value>
+  </data>
+  <data name="StartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker używa danych z dysku USB zawierającego klucz zewnętrzny. Dysk USB musi być podłączony przed uruchomieniem systemu.</value>
+  </data>
+  <data name="RetrievingBitLockerVolumesEllipsis" xml:space="preserve">
+  <value>Pobieranie woluminów BitLocker...</value>
+</data>
+<data name="LoadedBitLockerVolumesCount" xml:space="preserve">
+  <value>Załadowano {0} woluminów BitLocker.</value>
+</data>
+<data name="NoOutputReturnedFromPath" xml:space="preserve">
+  <value>Brak zwróconego wyniku z {0}</value>
+</data>
+<data name="NoBitLockerVolumesDetected" xml:space="preserve">
+  <value>Nie wykryto woluminów BitLocker.</value>
+</data>
+<data name="ParentVolumeForKeyProtectorNotFound" xml:space="preserve">
+  <value>Wolumin nadrzędny dla zabezpieczenia klucza nie został znaleziony.</value>
+</data>
+<data name="RemovingKeyProtectorFromVolume" xml:space="preserve">
+  <value>Usuwanie zabezpieczenia klucza {0} z {1}</value>
+</data>
+<data name="ExternalKeyRemovalConditionalSuccess" xml:space="preserve">
+  <value>Jeśli zabezpieczenie klucza ExternalKey o ID {0} z {1} nie było używane do utrzymania dysku odblokowanego, zostało usunięte. Więcej informacji na stronie dzienników.</value>
+</data>
+<data name="SuccessfullyRemovedKeyProtector" xml:space="preserve">
+  <value>Pomyślnie usunięto zabezpieczenie klucza typu {0} o ID {1} z {2}.</value>
+</data>
+<data name="NoBitLockerVolumeSelected" xml:space="preserve">
+  <value>Nie wybrano woluminu BitLocker.</value>
+</data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Automatyczne odblokowanie</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj element ochrony klucza automatycznego odblokowania.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj element ochrony klucza automatycznego odblokowania.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Hasło</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj element ochrony klucza hasła.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj element ochrony klucza hasła.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Hasło odzyskiwania</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dodaj element ochrony klucza hasła odzyskiwania.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dodaj element ochrony klucza hasła odzyskiwania.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>Automatyczne odblokowanie</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>Umożliwia automatyczne odblokowywanie woluminu niebędącego dyskiem systemu operacyjnego, chronionego przez szyfrowanie dysku BitLocker.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>BitLocker można skonfigurować tak, aby automatycznie odblokowywał woluminy danych, które nie zawierają systemu operacyjnego. Po odblokowaniu przez użytkownika dysku systemowego BitLocker używa zaszyfrowanych poświadczeń przechowywanych w rejestrze wraz z metadanymi woluminu, aby automatycznie odblokować wszystkie woluminy danych ustawione na automatyczne odblokowanie.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>Hasło</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>Wolumin BitLocker będzie używał hasła do ochrony danych.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>Hasło odzyskiwania</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>Podanie hasła jest opcjonalne. Jeśli go nie podasz, zostanie automatycznie wygenerowane i przypisane do wybranego woluminu. Jeśli zdecydujesz się wprowadzić hasło ręcznie, musi mieć 48 znaków. Hasło służy jako ochrona klucza szyfrowania woluminu.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>Szyfrowanie</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Szyfruj, odszyfruj lub wykonaj inne powiązane działania na wybranym woluminie.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Szyfruj, odszyfruj lub wykonaj inne powiązane działania na wybranym woluminie.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Szyfruj</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zaszyfruj wybrany wolumin.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zaszyfruj wybrany wolumin.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Odszyfruj</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odszyfruj wybrany wolumin.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Odszyfruj wybrany wolumin.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Wstrzymaj szyfrowanie</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wstrzymuje szyfrowanie BitLocker, umożliwiając użytkownikom dostęp do danych na woluminie chronionym przez BitLocker. Proces ten udostępnia klucz szyfrowania w niechronionej formie.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wstrzymuje szyfrowanie BitLocker, umożliwiając użytkownikom dostęp do danych na woluminie chronionym przez BitLocker. Proces ten udostępnia klucz szyfrowania w niechronionej formie.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Wznów szyfrowanie</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przywraca szyfrowanie na woluminie korzystającym z BitLocker, którego szyfrowanie było wcześniej wstrzymane.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przywraca szyfrowanie na woluminie korzystającym z BitLocker, którego szyfrowanie było wcześniej wstrzymane.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Włącz</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla wybranego woluminu.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Dysk systemu operacyjnego</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku systemu operacyjnego.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku systemu operacyjnego.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Dysk stały</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku stałego.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku stałego.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Dysk wymienny</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku wymiennego.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Włącz szyfrowanie BitLocker dla dysku wymiennego.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Szyfrowanie dysku systemu operacyjnego</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Zaszyfruj dysk systemu operacyjnego przy użyciu BitLocker.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>Poziom szyfrowania</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz jeden z poziomów szyfrowania dla dysku systemowego. Poziom standardowy użyje zabezpieczeń klucza TPM i PIN. Poziom zaawansowany użyje TPM, PIN oraz klucza startowego na dysku USB, zapewniając silne uwierzytelnianie wieloskładnikowe.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz jeden z poziomów szyfrowania dla dysku systemowego. Poziom standardowy użyje zabezpieczeń klucza TPM i PIN. Poziom zaawansowany użyje TPM, PIN oraz klucza startowego na dysku USB, zapewniając silne uwierzytelnianie wieloskładnikowe.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>Standardowy</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>Zaawansowany</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>Zakres szyfrowania</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>Wolna i używana przestrzeń</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>Tylko używana przestrzeń</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz zakres szyfrowania dysku. "Wolna i używana przestrzeń" zaszyfruje wszystkie dane na dysku, natomiast "Tylko używana przestrzeń" zaszyfruje jedynie aktualnie używaną część, co skróci czas operacji.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz zakres szyfrowania dysku. "Wolna i używana przestrzeń" zaszyfruje wszystkie dane na dysku, natomiast "Tylko używana przestrzeń" zaszyfruje jedynie aktualnie używaną część, co skróci czas operacji.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>Zachowanie przy obniżaniu poziomu</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>Zezwól na obniżenie</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>Zabroń obniżenia</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Jeżeli obniżenie jest dozwolone, a dysk systemu operacyjnego jest już zaszyfrowany poziomem zaawansowanym i wybierzesz poziom standardowy, poziom zostanie obniżony. Jeśli obniżenie jest zabronione, operacja nie zostanie ukończona i pojawi się błąd, zapobiegając obniżeniu poziomu szyfrowania dysku systemowego.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Jeżeli obniżenie jest dozwolone, a dysk systemu operacyjnego jest już zaszyfrowany poziomem zaawansowanym i wybierzesz poziom standardowy, poziom zostanie obniżony. Jeśli obniżenie jest zabronione, operacja nie zostanie ukończona i pojawi się błąd, zapobiegając obniżeniu poziomu szyfrowania dysku systemowego.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Szyfrowanie dysku stałego</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Zaszyfruj wybrany dysk stały. Otrzyma 48-znakowe hasło odzyskiwania i będzie automatycznie odblokowywany przez już zaszyfrowany dysk systemu operacyjnego.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Szyfrowanie dysku wymiennego</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Zaszyfruj wybrany dysk wymienny. Otrzyma 48-znakowe hasło odzyskiwania oraz hasło, które podasz w polu.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>Wstrzymaj szyfrowanie BitLocker</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Wstrzymaj</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Wstrzymaj szyfrowanie BitLocker wybranego woluminu.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>Wstrzymanie BitLocker umożliwia dostęp do zaszyfrowanych danych na chronionym woluminie poprzez udostępnienie klucza szyfrowania w stanie niechronionym. Wstrzymanie nie odszyfrowuje istniejących danych na woluminie, a jedynie udostępnia klucz potrzebny do odszyfrowania. Nowe dane zapisywane na dysk pozostają zaszyfrowane. Podczas wstrzymania szyfrowania kontrola integralności systemu przy uruchomieniu nie jest egzekwowana. Funkcja ta służy zwykle do ułatwienia aktualizacji firmware lub prac serwisowych bez wywoływania trybu odzyskiwania.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>Tutaj możesz określić, ile razy komputer może zostać ponownie uruchomiony przed zakończeniem wstrzymania BitLocker. Wartość 1 oznacza, że ochrona BitLocker zostanie wznowiona natychmiast po następnym restarcie. Możesz wznowić ochronę ręcznie w dowolnym momencie za pomocą przycisku "Wznów".</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>Wszystkie środki bezpieczeństwa w kategorii BitLocker zostaną zastosowane do systemu przed rozpoczęciem procesu szyfrowania.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>Odszyfrowywanie BitLocker dla dysku {0}</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>Wszystkie zabezpieczenia klucza dysku zostaną usunięte i rozpocznie się odszyfrowywanie zawartości.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>Operacja została anulowana.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>Wznów szyfrowanie BitLocker dla dysku {0}</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>Przywróć szyfrowanie dysku lub woluminu, którego szyfrowanie było wcześniej wstrzymane.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>Nie wprowadzono kodu PIN dla uruchamiania. Podaj go i spróbuj ponownie.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>Nie wybrano dysku wymiennego. Wybierz dysk i spróbuj ponownie.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>Nie podano hasła. Podaj hasło i spróbuj ponownie.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>Dysk systemu operacyjnego musi być najpierw w pełni zaszyfrowany zanim zaszyfrujesz dyski stałe, lecz obecnie jego stan to {0} przy {1} procentach szyfrowania.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>Dodawanie {0} do {1}</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>Pomyślnie wyeksportowano {0} wolumin(y) BitLocker do: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>Może to uniemożliwić korzystanie z RDP (Pulpit zdalny) zdalnie poprzez adres IP, co jest niebezpieczne, ponieważ wymaga publicznie otwartych portów i używa NTLM. Możesz użyć Quick Assist lub Azure Bastion dla maszyn wirtualnych Azure jako bezpieczniejszych alternatyw. Lokalny RDP, np. dla rozszerzonej sesji Hyper-V, nie jest objęty.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>Ta zasada uniemożliwi korzystanie z funkcji "Forgot my PIN" na ekranie blokady lub logowania. Jeśli zapomnisz kodu PIN, nie będzie można go odzyskać.</value>
+  </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>Wybierz dysk wymienny</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>Wprowadź hasło</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>Wprowadź kod PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>Wprowadź hasło odzyskiwania</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Łączna liczba certyfikatów</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Usuń certyfikat</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wybrany certyfikat</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń wybrany certyfikat</value>
+  </data>
+   <data name="CheckingSSHClientUserConfiguration" xml:space="preserve">
+  <value>Sprawdzanie konfiguracji użytkownika klienta SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingSSHClientConfigurationCheck" xml:space="preserve">
+  <value>Katalog użytkownika nie został znaleziony w {0}, ponieważ nazwa użytkownika {1} była nieprawidłowa, pomijanie sprawdzania konfiguracji klienta SSH.</value>
+</data>
+<data name="SSHClientConfigFileCreatedBecauseDidNotExist" xml:space="preserve">
+  <value>Plik konfiguracji klienta SSH utworzono z zawartością: {0}, ponieważ nie istniał.</value>
+</data>
+<data name="ExistingMACsConfigurationFoundAndReplaced" xml:space="preserve">
+  <value>Znaleziono i zastąpiono istniejącą konfigurację 'MACs'.</value>
+</data>
+<data name="MACsConfigurationNotFoundAddedNew" xml:space="preserve">
+  <value>Nie znaleziono konfiguracji MACs, dodano nową konfigurację.</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientUserConfiguration" xml:space="preserve">
+  <value>Sprawdzanie bezpiecznych MACs w konfiguracji użytkownika klienta SSH</value>
+</data>
+<data name="ExistingMACsFoundInUserDirectoryMatchesSecure" xml:space="preserve">
+  <value>Znaleziono konfigurację MACs w katalogu użytkownika i jest ona zgodna z bezpiecznymi konfiguracjami.</value>
+</data>
+<data name="MACsConfigurationInUserDirectoryIsDifferent" xml:space="preserve">
+  <value>Konfiguracja MACs w katalogu użytkownika różni się: {0}</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientSystemWideConfiguration" xml:space="preserve">
+  <value>Sprawdzanie bezpiecznych MACs w konfiguracji klienta SSH na poziomie systemu</value>
+</data>
+<data name="ExistingMACsFoundInSystemWideConfigurationMatchesSecure" xml:space="preserve">
+  <value>Znaleziono konfigurację MACs w konfiguracji na poziomie systemu i jest ona zgodna z bezpiecznymi konfiguracjami.</value>
+</data>
+<data name="MACsConfigurationInSystemWideConfigurationIsDifferent" xml:space="preserve">
+  <value>Konfiguracja MACs w konfiguracji na poziomie systemu różni się: {0}</value>
+</data>
+<data name="NoSecureMACsFoundInUserAndSystemWideConfigurations" xml:space="preserve">
+  <value>Nie znaleziono bezpiecznej konfiguracji MACs ani w konfiguracji użytkownika, ani w konfiguracji na poziomie systemu.</value>
+</data>
+<data name="AttemptingToRemoveMACsFromSSHClientUserConfiguration" xml:space="preserve">
+  <value>Próba usunięcia konfiguracji MACs z konfiguracji użytkownika klienta SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingRemoval" xml:space="preserve">
+  <value>Katalog użytkownika w {0} nie został znaleziony, ponieważ nazwa użytkownika {1} była nieprawidłowa, pomijanie usuwania.</value>
+</data>
+<data name="SSHClientConfigurationFileNotFoundNothingToRemove" xml:space="preserve">
+  <value>Nie znaleziono pliku konfiguracji klienta SSH; brak elementów do usunięcia.</value>
+</data>
+<data name="RemovedMACsFromSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>Usunięto konfigurację MACs z pliku konfiguracji użytkownika klienta SSH.</value>
+</data>
+<data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>Nie znaleziono konfiguracji MACs do usunięcia w pliku konfiguracji użytkownika klienta SSH.</value>
+</data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>Razem: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Łączna liczba elementów</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Łączna liczba elementów</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>Wybrano</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>Dostosuj kolor obramowania okna aplikacji. Możesz wybrać kolor z palety albo wybrać opcję tęczy, która będzie w sposób animowany przechodzić przez wszystkie dostępne kolory.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>Kolor obramowania okna</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostosuj kolor obramowania okna aplikacji. Możesz wybrać kolor z palety albo wybrać opcję tęczy, która będzie w sposób animowany przechodzić przez wszystkie dostępne kolory.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostosuj kolor obramowania okna aplikacji. Możesz wybrać kolor z palety albo wybrać opcję tęczy, która będzie w sposób animowany przechodzić przez wszystkie dostępne kolory.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>Uruchom animację tęczy</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Uruchom animację tęczy wokół obramowania okna aplikacji.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Uruchom animację tęczy wokół obramowania okna aplikacji.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>Zatrzymaj animację tęczy</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zatrzymaj animację tęczy wokół obramowania okna aplikacji, jeśli jest uruchomiona.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zatrzymaj animację tęczy wokół obramowania okna aplikacji, jeśli jest uruchomiona.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>Ustaw kolor obramowania</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ustaw kolor obramowania okna aplikacji na wybrany kolor.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ustaw kolor obramowania okna aplikacji na wybrany kolor.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>Resetuj kolor obramowania</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przywróć kolor obramowania okna aplikacji do koloru domyślnego.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przywróć kolor obramowania okna aplikacji do koloru domyślnego.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>Strona główna</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Strona główna i ekran powitalny</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Strona główna i ekran powitalny</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="EnableMDAVSandboxMode-MSDefender" xml:space="preserve">
+    <value>Uruchom program Microsoft Defender Antivirus w piaskownicy, aby zwiększyć ochronę przed nieautoryzowaną ingerencją.</value>
+  </data>
+    <data name="AnimatedApplyAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zastosuj wszystkie środki zabezpieczeń na tej stronie. Elementy należące do podkategorii nie są stosowane przy użyciu tego przycisku.</value>
+  </data>
+  <data name="AnimatedApplyAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zastosuj wszystkie środki zabezpieczeń na tej stronie. Elementy należące do podkategorii nie są stosowane przy użyciu tego przycisku.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń wszystkie środki zabezpieczeń na tej stronie.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Usuń wszystkie środki zabezpieczeń na tej stronie.</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>Witaj i witamy</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>Dziękujemy za wybranie aplikacji Harden System Security. Jeśli chcesz przeczytać informacje o wydaniu dla najnowszej aktualizacji, znajdziesz je w sekcji Releases oficjalnego repozytorium na GitHubie. Tam możesz też zadawać pytania lub przesyłać opinie.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>Odwiedź sekcję Releases na GitHubie</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwiera w przeglądarce stronę repozytorium na GitHubie po kliknięciu przycisku.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwiera w przeglądarce stronę repozytorium na GitHubie po kliknięciu przycisku.</value>
+  </data>
+  <data name="UseAppControlManager.Text" xml:space="preserve">
+    <value>Użyj AppControl Manager</value>
+  </data>
+  <data name="UseAppControlManagerDescription.Text" xml:space="preserve">
+    <value>AppControl Manager to kolejna aplikacja, którą opracowałem, aby ułatwić Ci zarządzanie kontrolą aplikacji i integralnością kodu w systemie operacyjnym. Oferuje nowoczesny, intuicyjny interfejs, jest kształtowana przez opinie społeczności i jest aktywnie utrzymywana.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>Odwiedź stronę Microsoft Store</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwiera stronę Microsoft Store po kliknięciu przycisku.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwiera stronę Microsoft Store po kliknięciu przycisku.</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagement.Text" xml:space="preserve">
+    <value>Kompleksowe zarządzanie zasadami inspekcji</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagementDescription.Text" xml:space="preserve">
+    <value>Wyświetl wszystkie zasady inspekcji systemu w ujednoliconym interfejsie, z możliwością skonfigurowania każdej z osobna. Wyeksportuj swoje ustawienia jako szablon, aby łatwo ponownie zaimportować je na tym samym lub innym systemie.</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.Content" xml:space="preserve">
+    <value>Przejdź do strony zasad inspekcji</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przejdź do strony zasad inspekcji</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Przejdź do strony zasad inspekcji</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasures" xml:space="preserve">
+    <value>Trwa stosowanie wszystkich środków zabezpieczeń...</value>
+  </data>
+  <data name="RemovingAllSecurityMeasures" xml:space="preserve">
+    <value>Trwa usuwanie wszystkich środków zabezpieczeń...</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasures" xml:space="preserve">
+    <value>Trwa weryfikowanie wszystkich środków zabezpieczeń...</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>Pomyślnie zastosowano wszystkie środki zabezpieczeń.</value>
+  </data>
+  <data name="RemovingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>Pomyślnie usunięto wszystkie środki zabezpieczeń.</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>Pomyślnie zweryfikowano wszystkie środki zabezpieczeń.</value>
   </data>
 </root>

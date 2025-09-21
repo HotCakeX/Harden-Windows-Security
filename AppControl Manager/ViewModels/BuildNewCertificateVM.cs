@@ -171,7 +171,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 			if (!ErrorsOccurred)
 			{
 				MainInfoBar.WriteSuccess(GlobalVars.GetStr("CertificateBuildSuccess") + generatedCertThumbPrint + "'",
-					GlobalVars.GetStr("SuccessTitle"));
+					GlobalVars.GetStr("SuccessText"));
 
 				CopyInfoBarToClipboardButtonVisibility = Visibility.Visible;
 			}

@@ -811,9 +811,6 @@
 <data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
     <value>Απενεργοποίηση TLS_RSA_WITH_AES_256_GCM_SHA384 - (ΧΩΡΙΣ PFS)</value>
 </data>
-<data name="ExtensionManifestV2AvailabilityEdge-Edge" xml:space="preserve">
-    <value>Να μην απενεργοποιηθεί ποτέ η υποστήριξη επεκτάσεων Manifest V2</value>
-</data>
 <data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
     <value>Να μην επιτρέπεται ποτέ στους ιστότοπους να ζητούν πρόσβαση σε τοπικές συνδεδεμένες συσκευές USB</value>
 </data>
@@ -942,5 +939,14 @@
 </data>
 <data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
     <value>Απενεργοποίηση TLS v1.1 Server - Μέρος 2</value>
+</data>
+<data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>Δημιουργήστε προσαρμοσμένες προβολές στο Πρόγραμμα Προβολής Συμβάντων των Windows για εύκολη πρόσβαση σε σημαντικά συμβάντα ασφαλείας.</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>Ρυθμίστε τις παραμέτρους του προγράμματος-πελάτη SSH ώστε να χρησιμοποιεί ασφαλή MAC (Message Authentication Codes).</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>Ενεργοποιήστε την καταγραφή και την παρακολούθηση των ενεργειών κλειδώματος και ξεκλειδώματος της οθόνης κλειδώματος.</value>
 </data>
 </root>

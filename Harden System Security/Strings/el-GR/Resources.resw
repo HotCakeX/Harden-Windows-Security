@@ -205,16 +205,7 @@
     <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>Χρησιμοποιήστε την πλευρική μπάρα για επιπλέον λειτουργίες.</value>
   </data>
-    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
-    <value>Οδηγός πλευρικής μπάρας</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Για οδηγό χρήσης της πλευρικής μπάρας παρακαλώ επισκεφθείτε τη σελίδα wiki του GitHub κάνοντας κλικ/πατώντας εδώ.</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Για οδηγό χρήσης της πλευρικής μπάρας παρακαλώ επισκεφθείτε τη σελίδα wiki του GitHub κάνοντας κλικ/πατώντας εδώ.</value>
-  </data>
-    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>Υποστήριξη - Κάντε ερωτήσεις</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
@@ -604,13 +595,13 @@
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Επιλέξτε μία από τις προκαθορισμένες ρυθμίσεις προστασίας για εφαρμογή, είναι προκαθορισμένα σύνολα διαμορφώσεων που σχεδιάστηκαν για διαφορετικά επίπεδα ασφάλειας.</value>
   </data>
-    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="BasicProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Βασικό</value>
   </data>
-    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="RecommendedProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Συνιστώμενο</value>
   </data>
-    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Πλήρες</value>
   </data>
   <data name="ProtectPageTitle.Text" xml:space="preserve">
@@ -740,17 +731,9 @@
     <comment>Protection Category Title</comment>
     <value>Έλεγχος πιστοποιητικών</value>
   </data>
-  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>Έλεγχος των εγκατεστημένων πιστοποιητικών και εντοπισμός όσων δεν ανήκουν στο ίδιο το λειτουργικό σύστημα.</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>Αποκλεισμός IP ανά χώρα</value>
-  </data>
-  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>Αποκλεισμός περιοχών διευθύνσεων IP συγκεκριμένων χωρών στη λίστα κυρώσεων των ΗΠΑ για υποστήριξη τρομοκρατίας.</value>
   </data>
   <data name="ProtectCategory_NonAdmin" xml:space="preserve">
     <comment>Protection Category Title</comment>
@@ -803,10 +786,6 @@
   <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>Ενεργοποίηση υποστήριξης μακρών διαδρομών αρχείων.</value>
-  </data>
-  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
-    <comment>Protection Sub-Category</comment>
-    <value>Αποκλεισμός περιοχών IP χωρών στη λίστα κυρώσεων OFAC.</value>
   </data>
   <data name="ASRNavItem.Content" xml:space="preserve">
     <value>Μείωση επιφάνειας επίθεσης</value>
@@ -1592,9 +1571,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>Η ενίσχυση ασφάλειας ολοκληρώθηκε: {0} επέτυχαν, {1} απέτυχαν.</value>
 </data>
-<data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
-  <value>Σφάλμα κατά τη λειτουργία ενίσχυσης ασφάλειας</value>
-</data>
 <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
   <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM για επαλήθευση.</value>
 </data>
@@ -1610,9 +1586,6 @@
 <data name="IncorrectItems" xml:space="preserve">
   <value>Εσφαλμένα στοιχεία: {0}</value>
 </data>
-<data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
-  <value>Σφάλμα κατά την επαλήθευση ενίσχυσης ασφάλειας</value>
-</data>
 <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
   <value>Αποτυχία αρχικοποίησης υπηρεσίας DISM για αφαίρεση ενίσχυσης ασφάλειας.</value>
 </data>
@@ -1627,9 +1600,6 @@
 </data>
 <data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
   <value>Η αφαίρεση ενίσχυσης ασφάλειας ολοκληρώθηκε: {0} επέτυχαν, {1} απέτυχαν.</value>
-</data>
-<data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
-  <value>Σφάλμα κατά τη λειτουργία αφαίρεσης ενίσχυσης ασφάλειας</value>
 </data>
 <data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
   <value>Σφάλμα απόρριψης πελάτη υπηρεσίας DISM: {0}</value>
@@ -1976,12 +1946,6 @@
 <data name="SeceditFailedWithExitCode" xml:space="preserve">
   <value>Το Secedit απέτυχε με κωδικό εξόδου: {0}</value>
 </data>
-<data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
-  <value>Προειδοποίηση: Δεν ήταν δυνατή η διαγραφή προσωρινών αρχείων.</value>
-</data>
-<data name="SeceditMethodFailed" xml:space="preserve">
-  <value>Η μέθοδος Secedit απέτυχε.</value>
-</data>
 <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
   <value>Δεν βρέθηκαν ρυθμίσεις [System Access] στο καθορισμένο αρχείο</value>
 </data>
@@ -1990,9 +1954,6 @@
 </data>
 <data name="FileNotFoundPath" xml:space="preserve">
   <value>Το αρχείο δεν βρέθηκε: {0}</value>
-</data>
-<data name="CreatedPolicyDirectory" xml:space="preserve">
-  <value>Δημιουργήθηκε φάκελος πολιτικής: {0}</value>
 </data>
 <data name="FileTooSmallForValidHeader" xml:space="preserve">
   <value>Το αρχείο είναι πολύ μικρό για να περιέχει έγκυρη κεφαλίδα</value>
@@ -2041,9 +2002,6 @@
 </data>
 <data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
   <value>Φορτώθηκε υπάρχον αρχείο πολιτικής με {0} καταχωρήσεις</value>
-</data>
-<data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
-  <value>Το αρχείο πολιτικής δεν υπάρχει, δημιουργία νέου κενού αρχείου πολιτικής</value>
 </data>
 <data name="ReplacedEntries" xml:space="preserve">
   <value>Αντικατεστημένες καταχωρήσεις: {0}</value>
@@ -2288,7 +2246,7 @@
   <data name="INFToJSONConversionSectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Επιλέξτε ένα ή περισσότερα αρχεία INF ασφαλείας για μετατροπή σε μορφή JSON</value>
   </data>
-    <data name="SelectedText.Text" xml:space="preserve">
+    <data name="SelectedItemText.Text" xml:space="preserve">
     <value>Επιλεγμένα: </value>
   </data>
   <data name="StatusAppliedText" xml:space="preserve">
@@ -2364,10 +2322,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>Κατάσταση</value>
   </data>
-  <data name="CurrentValueHeader.Text" xml:space="preserve">
+  <data name="CurrentValueHeaderText" xml:space="preserve">
     <value>Τρέχουσα τιμή</value>
   </data>
-  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+  <data name="ExpectedValueHeaderText" xml:space="preserve">
     <value>Αναμενόμενη τιμή</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -2588,5 +2546,1212 @@
   </data>
   <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
    <value>Προβολή και διαχείριση της διεύθυνσης URL λήψης της γραμμής βάσης.</value>
+  </data>
+   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>Προσθήκη</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη κανόνων τείχους προστασίας για το επιλεγμένο στοιχείο.</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Προσθήκη κανόνων τείχους προστασίας για το επιλεγμένο στοιχείο.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>Αφαίρεση</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αφαίρεση κανόνων τείχους προστασίας για το επιλεγμένο στοιχείο.</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Αφαίρεση κανόνων τείχους προστασίας για το επιλεγμένο στοιχείο.</value>
+  </data>
+  <data name="TargetedListsText.Text" xml:space="preserve">
+   <value>Στοχευμένες Λίστες</value>
+  </data>
+  <data name="TargetedListsDescriptionText.Text" xml:space="preserve">
+   <value>Προμεταγλωττισμένες και ημερησίως ενημερωμένες στοχευμένες λίστες που περιέχουν εύρη διευθύνσεων IP ειδικά για χώρες, επιτρέποντας την εξορθολογισμένη υλοποίηση απαιτήσεων συμμόρφωσης και πολιτικών ασφαλείας μέσω αποτελεσματικών ελέγχων αποκλεισμού του Τείχους Προστασίας των Windows.</value>
+  </data>
+  <data name="IndividualCountryIPBlockingText.Text" xml:space="preserve">
+   <value>Αποκλεισμός IP Μεμονωμένης Χώρας</value>
+  </data>
+  <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
+   <value>Χρησιμοποιήστε ημερησίως ενημερωμένα εύρη διευθύνσεων IP χωρών για να αποκλείσετε συγκεκριμένες χώρες στο σύστημά σας μέσω κανόνων Τείχους Προστασίας των Windows.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
+    <value>Μάθετε Περισσότερα</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κάντε κλικ ή πατήστε εδώ για να ανοίξετε μια ιστοσελίδα με πιο λεπτομερείς πληροφορίες.</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Κάντε κλικ ή πατήστε εδώ για να ανοίξετε μια ιστοσελίδα με πιο λεπτομερείς πληροφορίες.</value>
+  </data>
+  <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
+   <value>Αναζήτηση χωρών...</value>
+  </data>
+  <!--Certificates ListView Headers Start-->
+  <data name="StoreLocationHeader.Text" xml:space="preserve">
+    <value>Τοποθεσία Αποθήκης</value>
+  </data>
+    <data name="StoreNameHeader.Text" xml:space="preserve">
+    <value>Όνομα Αποθήκης</value>
+  </data>
+  <data name="SubjectHeader.Text" xml:space="preserve">
+    <value>Θέμα</value>
+  </data>
+  <data name="IssuerHeader.Text" xml:space="preserve">
+    <value>Εκδότης</value>
+  </data>
+  <data name="ThumbprintHeader.Text" xml:space="preserve">
+    <value>Αποτύπωμα</value>
+  </data>
+    <data name="RootSubjectHeader.Text" xml:space="preserve">
+    <value>Θέμα Ρίζας</value>
+  </data>
+  <data name="RootSha256Header.Text" xml:space="preserve">
+    <value>SHA256 Ρίζας</value>
+  </data>
+  <!--Certificates ListView Headers End-->
+  <!--Certificates ListView Headers Buttons Start-->
+  <data name="StoreLocationColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Τοποθεσία Αποθήκης</value>
+  </data>
+    <data name="StoreNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Όνομα Αποθήκης</value>
+  </data>
+  <data name="SubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Θέμα</value>
+  </data>
+  <data name="IssuerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Εκδότης</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αποτύπωμα</value>
+  </data>
+  <data name="RootSubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Θέμα Ρίζας</value>
+  </data>
+  <data name="RootSha256ColumnHeaderBtn.Content" xml:space="preserve">
+    <value>SHA256 Ρίζας</value>
+  </data>
+  <!--Certificates ListView Headers Buttons End-->
+  <data name="StartAnalysisButton.Content" xml:space="preserve">
+    <value>Έναρξη Ανάλυσης</value>
+  </data>
+  <data name="StartAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κατεβάζει τη λίστα του Προγράμματος Αξιόπιστων Πιστοποιητικών Ρίζας της Microsoft και βρίσκει όλα τα πιστοποιητικά στις αποθήκες πιστοποιητικών Τοπικού Μηχανήματος και Τρέχοντος Χρήστη που δεν βασίζονται σε κανένα πιστοποιητικό από αυτή την αξιόπιστη λίστα. Θα μπορείτε επίσης να διαγράψετε τα μη αξιόπιστα πιστοποιητικά από το σύστημά σας.</value>
+  </data>
+  <data name="StartAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Κατεβάζει τη λίστα του Προγράμματος Αξιόπιστων Πιστοποιητικών Ρίζας της Microsoft και βρίσκει όλα τα πιστοποιητικά στις αποθήκες πιστοποιητικών Τοπικού Μηχανήματος και Τρέχοντος Χρήστη που δεν βασίζονται σε κανένα πιστοποιητικό από αυτή την αξιόπιστη λίστα. Θα μπορείτε επίσης να διαγράψετε τα μη αξιόπιστα πιστοποιητικά από το σύστημά σας.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.Content" xml:space="preserve">
+    <value>Λήψη Τοπικών Πιστοποιητικών</value>
+  </data>
+  <data name="GetLocalCertificatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανακτά όλα τα τοπικά πιστοποιητικά από τις αποθήκες πιστοποιητικών Τοπικού Μηχανήματος και Τρέχοντος Χρήστη, τα εμφανίζει όλα στη Λίστα και σας επιτρέπει να τα ταξινομήσετε, να τα αναζητήσετε, να αντιγράψετε τις λεπτομέρειές τους ή να τα διαγράψετε.</value>
+  </data>
+  <data name="GetLocalCertificatesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Ανακτά όλα τα τοπικά πιστοποιητικά από τις αποθήκες πιστοποιητικών Τοπικού Μηχανήματος και Τρέχοντος Χρήστη, τα εμφανίζει όλα στη Λίστα και σας επιτρέπει να τα ταξινομήσετε, να τα αναζητήσετε, να αντιγράψετε τις λεπτομέρειές τους ή να τα διαγράψετε.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.Content" xml:space="preserve">
+    <value>Συμπερίληψη Ληγμένων</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Συμπερίληψη ληγμένων ή μη έγκυρων ακόμη πιστοποιητικών στα αποτελέσματα.</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Συμπερίληψη ληγμένων ή μη έγκυρων ακόμη πιστοποιητικών στα αποτελέσματα.</value>
+  </data>
+  <data name="SearchCertificatesTextBox.PlaceholderText" xml:space="preserve">
+   <value>Αναζήτηση πιστοποιητικών...</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.Text" xml:space="preserve">
+   <value>Πληροφορίες Κεφαλίδας Λίστας Εμπιστοσύνης Πιστοποιητικών</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Πληροφορίες Κεφαλίδας Λίστας Εμπιστοσύνης Πιστοποιητικών</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Πληροφορίες Κεφαλίδας Λίστας Εμπιστοσύνης Πιστοποιητικών</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.Content" xml:space="preserve">
+    <value>Πληροφορίες Κεφαλίδας CTL</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εμφανίζει λεπτομερείς πληροφορίες για τα αρχεία Λίστας Αξιόπιστων Πιστοποιητικών που κατεβάστηκαν από τον Διακομιστή της Microsoft.</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Εμφανίζει λεπτομερείς πληροφορίες για τα αρχεία Λίστας Αξιόπιστων Πιστοποιητικών που κατεβάστηκαν από τον Διακομιστή της Microsoft.</value>
+  </data>
+  <data name="MainInfoBarDeleteCertificateSelectMessage" xml:space="preserve">
+  <value>Παρακαλώ επιλέξτε ένα πιστοποιητικό για διαγραφή.</value>
+</data>
+<data name="DeleteCertificateDialogTitle" xml:space="preserve">
+  <value>Διαγραφή Πιστοποιητικού</value>
+</data>
+<data name="DeleteCertificateDialogContent" xml:space="preserve">
+  <value>Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το πιστοποιητικό;
+
+Θέμα: {0}
+Αποθήκη: {1}\{2}
+Αποτύπωμα: {3}</value>
+</data>
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
+  <value>Διαγραφή</value>
+</data>
+<data name="InvalidStoreLocationWarning" xml:space="preserve">
+  <value>Μη έγκυρη τοποθεσία αποθήκης: {0}</value>
+</data>
+<data name="CertificateNotFoundInStoreWarning" xml:space="preserve">
+  <value>Το πιστοποιητικό δεν βρέθηκε στην αποθήκη.</value>
+</data>
+<data name="CertificateDeletedSuccessMessage" xml:space="preserve">
+  <value>Το πιστοποιητικό διαγράφηκε επιτυχώς από {0}\{1}</value>
+</data>
+<data name="StartingCertificateAnalysisMessage" xml:space="preserve">
+  <value>Έναρξη ανάλυσης πιστοποιητικών...</value>
+</data>
+<data name="StlFileParsedMessage" xml:space="preserve">
+  <value>Το αρχείο STL ανέλυσε {0} θέματα σε {1} ms.</value>
+</data>
+<data name="CertificateAnalysisCompletedMessage" xml:space="preserve">
+  <value>Η ανάλυση πιστοποιητικών ολοκληρώθηκε. Βρέθηκαν {0} πιστοποιητικά που δεν συνδέονται με ρίζες STL.</value>
+</data>
+<data name="RetrievingAllCertificatesMessage" xml:space="preserve">
+  <value>Ανάκτηση όλων των πιστοποιητικών από τις αποθήκες πιστοποιητικών...</value>
+</data>
+<data name="RetrievedCertificatesMessage" xml:space="preserve">
+  <value>Ανακτήθηκαν {0} πιστοποιητικά σε {1} ms.</value>
+</data>
+<data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
+  <value>Η ανάκτηση πιστοποιητικών ολοκληρώθηκε. Βρέθηκαν {0} συνολικά πιστοποιητικά.</value>
+</data>
+<data name="NoRootCertificate" xml:space="preserve">
+  <value>(χωρίς ρίζα)</value>
+</data>
+<data name="NoCertificateHash" xml:space="preserve">
+  <value>(κανένα)</value>
+</data>
+<data name="EmptyValue" xml:space="preserve">
+  <value>ΚΕΝΟ</value>
+</data>
+<data name="InputFileIsNeitherCABNorSTLError" xml:space="preserve">
+  <value>Το αρχείο εισόδου δεν είναι ούτε έγκυρο αρχείο CAB ούτε αρχείο STL.</value>
+</data>
+<data name="CABFileContainsMoreThanOneFileError" xml:space="preserve">
+  <value>Το αρχείο CAB περιέχει περισσότερα από ένα αρχεία. Αναμενόταν ακριβώς ένα αρχείο STL.</value>
+</data>
+<data name="NoSTLFileFoundInCABError" xml:space="preserve">
+  <value>Δεν βρέθηκε αρχείο STL στο αρχείο CAB.</value>
+</data>
+<data name="CABFileEmptyError" xml:space="preserve">
+  <value>Το αρχείο CAB είναι κενό ή δεν περιέχει εξαγώγιμα αρχεία.</value>
+</data>
+<data name="TooManyRedirectsError" xml:space="preserve">
+  <value>Πάρα πολλές ανακατευθύνσεις.</value>
+</data>
+<data name="RedirectResponseMissingLocationError" xml:space="preserve">
+  <value>Η απάντηση ανακατεύθυνσης λείπει η κεφαλίδα Location.</value>
+</data>
+<data name="SignatureVerificationFailedError" xml:space="preserve">
+  <value>Η επαλήθευση υπογραφής απέτυχε για το SignedCms.</value>
+</data>
+<data name="SignerCertificateNotPresentError" xml:space="preserve">
+  <value>Το πιστοποιητικό υπογράφοντος δεν υπάρχει στο SignedCms.</value>
+</data>
+<data name="SigningChainRootMismatchError" xml:space="preserve">
+  <value>Η ρίζα της αλυσίδας υπογραφής δεν ταιριάζει με το παρεχόμενο πιστοποιητικό CA.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLError" xml:space="preserve">
+  <value>Μη αναμενόμενα δεδομένα ουράς μετά την ΑΚΟΛΟΥΘΙΑ CTL ανωτάτου επιπέδου.</value>
+</data>
+<data name="VersionIntegerOutOfRangeError" xml:space="preserve">
+  <value>Η ακέραια τιμή έκδοσης είναι εκτός εύρους.</value>
+</data>
+<data name="MissingUsageSequenceError" xml:space="preserve">
+  <value>Λείπει η ακολουθία χρήσης.</value>
+</data>
+<data name="UnexpectedTrailingDataUsageSequenceError" xml:space="preserve">
+  <value>Μη αναμενόμενα δεδομένα ουράς μέσα στην ακολουθία χρήσης.</value>
+</data>
+<data name="MissingThisUpdateError" xml:space="preserve">
+  <value>Λείπει το thisUpdate.</value>
+</data>
+<data name="MissingAlgorithmIdentifierError" xml:space="preserve">
+  <value>Λείπει ο αναγνωριστής αλγορίθμου.</value>
+</data>
+<data name="UnexpectedTrailingDataTrustedSubjectError" xml:space="preserve">
+  <value>Μη αναμενόμενα δεδομένα ουράς μέσα στο TrustedSubjectType.</value>
+</data>
+<data name="UnexpectedTrailingDataCTLElementsError" xml:space="preserve">
+  <value>Μη αναμενόμενα δεδομένα ουράς μετά τα στοιχεία CTL.</value>
+</data>
+<data name="SubjectMissingFriendlyNameError" xml:space="preserve">
+  <value>Το θέμα λείπει φιλικό όνομα.</value>
+</data>
+<data name="UnexpectedTrailingDataEKUSequenceError" xml:space="preserve">
+  <value>Μη αναμενόμενα δεδομένα ουράς μετά την ακολουθία EKU.</value>
+</data>
+<data name="InvalidFILETIMEError" xml:space="preserve">
+  <value>Αντιμετωπίστηκε μη έγκυρο FILETIME.</value>
+</data>
+<data name="BEGINCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>Ο δείκτης BEGIN CERTIFICATE δεν βρέθηκε στο PEM.</value>
+</data>
+<data name="ENDCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>Ο δείκτης END CERTIFICATE δεν βρέθηκε στο PEM.</value>
+</data>
+<data name="InvalidBase64ContentError" xml:space="preserve">
+  <value>Μη έγκυρο περιεχόμενο base64 στο πιστοποιητικό PEM.</value>
+</data>
+<data name="EmptyEntryNameSkippingMessage" xml:space="preserve">
+  <value>Κενό όνομα εγγραφής, παράληψη.</value>
+</data>
+<data name="LoadingCountriesDataMessage" xml:space="preserve">
+  <value>Φόρτωση δεδομένων χωρών...</value>
+</data>
+<data name="CountriesLoadedSuccessMessage" xml:space="preserve">
+  <value>Φορτώθηκαν επιτυχώς {0} χώρες</value>
+</data>
+<data name="CreatingRulesForMessage" xml:space="preserve">
+  <value>Δημιουργία κανόνων για {0}</value>
+</data>
+<data name="RemovingRulesForMessage" xml:space="preserve">
+  <value>Κατάργηση κανόνων για {0}</value>
+</data>
+<data name="SuccessfullyAddedIPRangeMessage" xml:space="preserve">
+  <value>Προστέθηκε επιτυχώς το επιλεγμένο εύρος IP για αποκλεισμό</value>
+</data>
+<data name="SuccessfullyRemovedIPRangeMessage" xml:space="preserve">
+  <value>Καταργήθηκε επιτυχώς το επιλεγμένο εύρος IP για αποκλεισμό</value>
+</data>
+<data name="PleaseSelectCountryWarning" xml:space="preserve">
+  <value>Παρακαλώ επιλέξτε μια χώρα από τη λίστα</value>
+</data>
+<data name="CreatingIPv4RulesMessage" xml:space="preserve">
+  <value>Δημιουργία κανόνων IPv4 για {0}</value>
+</data>
+<data name="CreatingIPv6RulesMessage" xml:space="preserve">
+  <value>Δημιουργία κανόνων IPv6 για {0}</value>
+</data>
+<data name="RemovingIPv4RulesMessage" xml:space="preserve">
+  <value>Κατάργηση κανόνων IPv4 για {0}</value>
+</data>
+<data name="RemovingIPv6RulesMessage" xml:space="preserve">
+  <value>Κατάργηση κανόνων IPv6 για {0}</value>
+</data>
+<data name="SuccessfullyAddedIPBlockingRulesMessage" xml:space="preserve">
+  <value>Προστέθηκαν επιτυχώς κανόνες αποκλεισμού IP για {0}</value>
+</data>
+<data name="SuccessfullyRemovedIPBlockingRulesMessage" xml:space="preserve">
+  <value>Καταργήθηκαν επιτυχώς κανόνες αποκλεισμού IP για {0}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>Αποτυχία δημιουργίας GroupPolicyObject στο STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>Αποτυχία αρχικοποίησης COM στο νήμα STA. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>Αποτυχία δημιουργίας GroupPolicyObject - επιστράφηκε null pointer από το νήμα STA</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>Αποτυχία αρχικοποίησης COM. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>Αποτυχία ανοίγματος GPO τοπικού μηχανήματος. HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>Εξαίρεση COM: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>Αποτυχία καταχώρησης {0} CSE GUID {1:B}. HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>Αποτυχία καταχώρησης {0} CSE GUID {1:B}: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="DeleteRow.Text" xml:space="preserve">
+    <value>Διαγραφή</value>
+  </data>
+  <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγραφή του/των επιλεγμένου/ων στοιχείου/ων.</value>
+  </data>
+  <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγραφή του/των επιλεγμένου/ων στοιχείου/ων.</value>
+  </data>
+      <data name="AuditPoliciesNavItem.Content" xml:space="preserve">
+    <value>Πολιτικές Ελέγχου</value>
+  </data>
+    <data name="AuditPoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προβολή και διαχείριση όλων των Πολιτικών Ελέγχου του συστήματος.</value>
+  </data>
+  <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προβολή και διαχείριση όλων των Πολιτικών Ελέγχου του συστήματος.</value>
+  </data>
+    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <value>Προβολή και διαχείριση όλων των Πολιτικών Ελέγχου του συστήματος.</value>
+  </data>
+  <!--Audit Policies ListView Headers Start-->
+  <data name="AuditSettingHeader.Text" xml:space="preserve">
+    <value>Ρύθμιση Ελέγχου</value>
+  </data>
+  <data name="CategoryGUIDHeader.Text" xml:space="preserve">
+    <value>GUID Κατηγορίας</value>
+  </data>
+    <data name="SubcategoryGUIDHeader.Text" xml:space="preserve">
+    <value>GUID Υποκατηγορίας</value>
+  </data>
+  <!--Audit Policies ListView Headers End-->
+  <!--Audit Policies ListView Headers Buttons Start-->
+  <data name="AuditSettingColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Ρύθμιση Ελέγχου</value>
+  </data>
+  <data name="CategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>GUID Κατηγορίας</value>
+  </data>
+  <data name="SubcategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>GUID Υποκατηγορίας</value>
+  </data>
+  <!--Audit Policies ListView Headers Buttons End-->
+  <data name="RetrieveAuditPoliciesButton.Content" xml:space="preserve">
+    <value>Ανάκτηση Πολιτικών Ελέγχου</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανακτά όλες τις Πολιτικές Ελέγχου από το σύστημα.</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Ανακτά όλες τις Πολιτικές Ελέγχου από το σύστημα.</value>
+  </data>
+  <data name="SearchAuditPoliciesPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Αναζήτηση πολιτικών ελέγχου...</value>
+  </data>
+  <data name="AuditPolicyAppliedSuccess" xml:space="preserve">
+    <value>Η αλλαγή πολιτικής ελέγχου για το {0} εφαρμόστηκε επιτυχώς στο {1}</value>
+  </data>
+  <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
+    <value>Φορτώθηκαν επιτυχώς {0} πολιτικές ελέγχου.</value>
+  </data>
+  <data name="NoAuditPoliciesAvailable" xml:space="preserve">
+    <value>Δεν υπάρχουν πολιτικές ελέγχου για εξαγωγή. Παρακαλώ ανακτήστε πρώτα τις πολιτικές ελέγχου.</value>
+  </data>
+  <data name="SuccessfullyExportedAuditPolicies" xml:space="preserve">
+    <value>Εξήχθησαν επιτυχώς {0} πολιτικές ελέγχου στο {1}</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Εισάγει πολιτικές ελέγχου από αρχείο JSON και τις εφαρμόζει στο σύστημα. Θα μπορείτε να επιλέξετε το αρχείο JSON για εισαγωγή.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εισάγει πολιτικές ελέγχου από αρχείο JSON και τις εφαρμόζει στο σύστημα. Θα μπορείτε να επιλέξετε το αρχείο JSON για εισαγωγή.</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.Content" xml:space="preserve">
+    <value>Εισαγωγή και Εφαρμογή</value>
+  </data>
+  <data name="NoAuditPoliciesAvailableToImport" xml:space="preserve">
+    <value>Δεν βρέθηκαν έγκυρες πολιτικές ελέγχου στο αρχείο JSON.</value>
+  </data>
+  <data name="NoAuditPoliciesApplicableInJSON" xml:space="preserve">
+    <value>Δεν βρέθηκαν εφαρμόσιμες πολιτικές ελέγχου στο αρχείο JSON για αυτό το σύστημα.</value>
+  </data>
+  <data name="SuccessfullyImportedAuditPolicies" xml:space="preserve">
+    <value>Εισήχθησαν επιτυχώς {0} πολιτικές ελέγχου από το {1}</value>
+  </data>
+  <data name="ApplyRecommendedConfigurations" xml:space="preserve">
+    <value>Εφαρμογή Συστάσεων</value>
+  </data>
+  <data name="VerifyRecommendedConfigurations" xml:space="preserve">
+    <value>Επαλήθευση Συστάσεων</value>
+  </data>
+  <data name="RemoveRecommendedConfigurations" xml:space="preserve">
+    <value>Αφαίρεση Συστάσεων</value>
+  </data>
+  <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγράψτε τα επιλεγμένα στοιχεία στο πρόχειρο.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αντιγράψτε τα επιλεγμένα στοιχεία στο πρόχειρο.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>Αντιγραφή Επιλεγμένων</value>
+  </data>
+  <data name="NoCertificatesAvailableForExport" xml:space="preserve">
+    <value>Δεν υπάρχει πιστοποιητικό για εξαγωγή. Παρακαλώ ανακτήστε πρώτα τα πιστοποιητικά.</value>
+  </data>
+  <data name="SuccessfullyExportedCertificates" xml:space="preserve">
+    <value>Εξήχθησαν επιτυχώς {0} πιστοποιητικά στο {1}</value>
+  </data>
+        <!--BitLocker Volumes ListView Headers Start-->
+  <data name="MountPointHeader.Text" xml:space="preserve">
+    <value>Σημείο προσάρτησης</value>
+  </data>
+  <data name="ProtectionStatusHeader.Text" xml:space="preserve">
+    <value>Κατάσταση προστασίας</value>
+  </data>
+  <data name="ConversionStatusHeader.Text" xml:space="preserve">
+    <value>Κατάσταση μετατροπής</value>
+  </data>
+  <data name="EncryptionMethodHeader.Text" xml:space="preserve">
+    <value>Μέθοδος κρυπτογράφησης</value>
+  </data>
+    <data name="EncryptionPercentageHeader.Text" xml:space="preserve">
+    <value>Ποσοστό κρυπτογράφησης</value>
+  </data>
+    <data name="WipePercentageHeader.Text" xml:space="preserve">
+    <value>Ποσοστό διαγραφής</value>
+  </data>
+    <data name="AutoUnlockEnabledHeader.Text" xml:space="preserve">
+    <value>Αυτόματο ξεκλείδωμα ενεργό</value>
+  </data>
+    <data name="AutoUnlockKeyStoredHeader.Text" xml:space="preserve">
+    <value>Κλειδί αυτόματου ξεκλειδώματος αποθηκεύτηκε</value>
+  </data>
+    <data name="VolumeTypeHeader.Text" xml:space="preserve">
+    <value>Τύπος τόμου</value>
+  </data>
+    <data name="CapacityGBHeader.Text" xml:space="preserve">
+    <value>Χωρητικότητα GB</value>
+  </data>
+    <data name="FileSystemTypeHeader.Text" xml:space="preserve">
+    <value>Τύπος συστήματος αρχείων</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers End-->
+  <!--BitLocker Volumes ListView Headers Buttons Start-->
+<data name="MountPointColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Σημείο προσάρτησης</value>
+  </data>
+  <data name="ProtectionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Κατάσταση προστασίας</value>
+  </data>
+  <data name="ConversionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Κατάσταση μετατροπής</value>
+  </data>
+  <data name="EncryptionMethodColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Μέθοδος κρυπτογράφησης</value>
+  </data>
+    <data name="EncryptionPercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Ποσοστό κρυπτογράφησης</value>
+  </data>
+    <data name="WipePercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Ποσοστό διαγραφής</value>
+  </data>
+    <data name="AutoUnlockEnabledColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αυτόματο ξεκλείδωμα ενεργό</value>
+  </data>
+    <data name="AutoUnlockKeyStoredColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Κλειδί αυτόματου ξεκλειδώματος αποθηκεύτηκε</value>
+  </data>
+    <data name="VolumeTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Τύπος τόμου</value>
+  </data>
+    <data name="CapacityGBColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Χωρητικότητα GB</value>
+  </data>
+    <data name="FileSystemTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Τύπος συστήματος αρχείων</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers Buttons End-->
+  <data name="RetrieveBitLockerVolumesButton.Content" xml:space="preserve">
+    <value>Ανάκτηση τόμων BitLocker</value>
+  </data>
+    <data name="RetrieveBitLockerVolumesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανακτά όλους τους τόμους και τις σχετικές πληροφορίες BitLocker με πλήρεις λεπτομέρειες και τους εμφανίζει.</value>
+  </data>
+  <data name="RetrieveBitLockerVolumesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανακτά όλους τους τόμους και τις σχετικές πληροφορίες BitLocker με πλήρεις λεπτομέρειες και τους εμφανίζει.</value>
+  </data>
+  <data name="CloseButton.Content" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+    <data name="CloseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+  <data name="CloseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+  <data name="CopyButton.Content" xml:space="preserve">
+    <value>Αντιγραφή</value>
+  </data>
+    <data name="CopyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγραφή</value>
+  </data>
+  <data name="CopyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αντιγραφή</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.Content" xml:space="preserve">
+    <value>Διαγραφή προστασίας κλειδιού</value>
+  </data>
+    <data name="DeleteBLKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγράφει την προστασία κλειδιού από τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγράφει την προστασία κλειδιού από τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="NoKeyProtectorsFoundMsg.Text" xml:space="preserve">
+    <value>Δεν βρέθηκαν προστασίες κλειδιού για αυτόν τον τόμο.</value>
+  </data>
+  <data name="SelectVolumeFirstToSeeKeyProtectorsMsg.Text" xml:space="preserve">
+    <value>Επιλέξτε πρώτα έναν τόμο για να δείτε τις προστασίες κλειδιού του.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.Text" xml:space="preserve">
+    <value>Προστασίες κλειδιού για</value>
+  </data>
+  <data name="KeyProtectorsForMsg.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εμφάνιση όλων των προστασιών κλειδιού για τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="KeyProtectorsForMsg.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εμφάνιση όλων των προστασιών κλειδιού για τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="RecoveryPassword.Text" xml:space="preserve">
+    <value>Κωδικός ανάκτησης</value>
+  </data>
+  <data name="CertificateType.Text" xml:space="preserve">
+    <value>Τύπος πιστοποιητικού</value>
+  </data>
+  <data name="FileName.Text" xml:space="preserve">
+    <value>Όνομα αρχείου</value>
+  </data>
+  <data name="AutoUnlock.Text" xml:space="preserve">
+    <value>Αυτόματο ξεκλείδωμα</value>
+  </data>
+  <data name="Type.Text" xml:space="preserve">
+    <value>Τύπος</value>
+  </data>
+  <data name="Thumbprint.Text" xml:space="preserve">
+    <value>Αποτύπωμα</value>
+  </data>
+  <data name="ID.Text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="BitLockerManagementTab.Header" xml:space="preserve">
+    <value>Διαχείριση</value>
+  </data>
+  <data name="BitLockerManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχείριση κάθε πτυχής των τόμων BitLocker όπως κρυπτογράφηση, αποκρυπτογράφηση, δημιουργία αντιγράφων ασφαλείας και άλλα.</value>
+  </data>
+  <data name="BitLockerManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαχείριση κάθε πτυχής των τόμων BitLocker όπως κρυπτογράφηση, αποκρυπτογράφηση, δημιουργία αντιγράφων ασφαλείας και άλλα.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>Μέτρα ασφαλείας</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχείριση μέτρων ασφαλείας σχετικών με το BitLocker.</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαχείριση μέτρων ασφαλείας σχετικών με το BitLocker.</value>
+  </data>
+  <data name="AddKeyProtectorButton.Content" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού</value>
+  </data>
+  <data name="AddKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθέστε νέα προστασία κλειδιού στον επιλεγμένο τόμο. Οι προστασίες κλειδιού επιτρέπουν το ξεκλείδωμα του τόμου.</value>
+  </data>
+  <data name="AddKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθέστε νέα προστασία κλειδιού στον επιλεγμένο τόμο. Οι προστασίες κλειδιού επιτρέπουν το ξεκλείδωμα του τόμου.</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.Title" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Προσθήκη</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Άκυρο</value>
+  </data>
+  <data name="AddKeyProtectorContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Χρησιμοποιήστε αυτή την ενότητα για να προσθέσετε νέα προστασία κλειδιού στον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM</value>
+  </data>
+    <data name="TPMKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM.</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN</value>
+  </data>
+    <data name="TPMPINKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + PIN.</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + PIN.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + κλειδί εκκίνησης</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + κλειδί εκκίνησης.</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + κλειδί εκκίνησης.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN + κλειδί εκκίνησης</value>
+  </data>
+    <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + PIN + κλειδί εκκίνησης.</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού TPM + PIN + κλειδί εκκίνησης.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Κλειδί εκκίνησης</value>
+  </data>
+    <data name="StartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κλειδί εκκίνησης.</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κλειδί εκκίνησης.</value>
+  </data>
+  <data name="TPMSectionTitle.Text" xml:space="preserve">
+    <value>Έμπιστη Μονάδα Πλατφόρμας</value>
+  </data>
+  <data name="TPMSectionDescription.Text" xml:space="preserve">
+    <value>Το BitLocker χρησιμοποιεί το TPM της συσκευής για την προστασία του κλειδιού κρυπτογράφησης.</value>
+  </data>
+  <data name="TPMSectionBody.Text" xml:space="preserve">
+    <value>Με αυτή την προστασία, ο κρυπτογραφημένος δίσκος είναι προσβάσιμος μόνο όταν είναι συνδεδεμένος σε μητρική με TPM και η ακεραιότητα εκκίνησης του συστήματος παραμένει άθικτη. Προστασίες βασισμένες σε TPM εφαρμόζονται συνήθως μόνο σε τόμους λειτουργικού συστήματος.</value>
+  </data>
+  <data name="TPMPINSectionTitle.Text" xml:space="preserve">
+    <value>TPM και Προσωπικός Αριθμός (PIN)</value>
+  </data>
+  <data name="TPMPINSectionDescription.Text" xml:space="preserve">
+    <value>Το BitLocker ζευγοποιεί το TPM με PIN χρήστη. Προεπιλογή 4–20 ψηφία· με ενισχυμένα PIN επιτρέπονται 4–20 χαρακτήρες (γράμματα, σύμβολα, κενά ή αριθμοί).</value>
+  </data>
+  <data name="TPMStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM και κλειδί εκκίνησης</value>
+  </data>
+  <data name="TPMStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>Το BitLocker χρησιμοποιεί το TPM μαζί με είσοδο από μονάδα USB. Για εκκίνηση της συσκευής πρέπει να είναι συνδεδεμένη η USB.</value>
+  </data>
+  <data name="TPMPINStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM, PIN και κλειδί εκκίνησης</value>
+  </data>
+  <data name="TPMPINStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>Το BitLocker χρησιμοποιεί συνδυασμό TPM, PIN εκκίνησης και είσοδο από μονάδα USB με εξωτερικό κλειδί. Αυτή είναι η πιο ασφαλής διαμόρφωση του BitLocker και παρέχει πολυπαραγοντικό έλεγχο ταυτότητας.</value>
+  </data>
+  <data name="StartupKeySectionTitle.Text" xml:space="preserve">
+    <value>Κλειδί εκκίνησης</value>
+  </data>
+  <data name="StartupKeySectionDescription.Text" xml:space="preserve">
+    <value>Το BitLocker χρησιμοποιεί είσοδο από μονάδα USB που περιέχει το εξωτερικό κλειδί. Η συσκευή USB πρέπει να συνδεθεί πριν την εκκίνηση.</value>
+  </data>
+  <data name="RetrievingBitLockerVolumesEllipsis" xml:space="preserve">
+  <value>Ανάκτηση τόμων BitLocker...</value>
+</data>
+<data name="LoadedBitLockerVolumesCount" xml:space="preserve">
+  <value>Φορτώθηκαν {0} τόμοι BitLocker.</value>
+</data>
+<data name="NoOutputReturnedFromPath" xml:space="preserve">
+  <value>Δεν επεστράφη έξοδος από {0}</value>
+</data>
+<data name="NoBitLockerVolumesDetected" xml:space="preserve">
+  <value>Δεν εντοπίστηκαν τόμοι BitLocker.</value>
+</data>
+<data name="ParentVolumeForKeyProtectorNotFound" xml:space="preserve">
+  <value>Ο γονικός τόμος για την προστασία κλειδιού δεν βρέθηκε.</value>
+</data>
+<data name="RemovingKeyProtectorFromVolume" xml:space="preserve">
+  <value>Αφαίρεση προστασίας κλειδιού {0} από {1}</value>
+</data>
+<data name="ExternalKeyRemovalConditionalSuccess" xml:space="preserve">
+  <value>Αν η προστασία κλειδιού ExternalKey με ID {0} από {1} δεν χρησιμοποιούνταν για να παραμένει ο δίσκος ξεκλείδωτος, αφαιρέθηκε. Περισσότερες πληροφορίες διαθέσιμες στη σελίδα Καταγραφών.</value>
+</data>
+<data name="SuccessfullyRemovedKeyProtector" xml:space="preserve">
+  <value>Η προστασία κλειδιού τύπου {0} με ID {1} αφαιρέθηκε επιτυχώς από {2}.</value>
+</data>
+<data name="NoBitLockerVolumeSelected" xml:space="preserve">
+  <value>Δεν έχει επιλεγεί τόμος BitLocker.</value>
+</data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Αυτόματο Ξεκλείδωμα</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού αυτόματου ξεκλειδώματος.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού αυτόματου ξεκλειδώματος.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Κωδικός πρόσβασης</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κωδικού πρόσβασης.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κωδικού πρόσβασης.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>Κωδικός ανάκτησης</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κωδικού ανάκτησης.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσθήκη προστασίας κλειδιού κωδικού ανάκτησης.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>Αυτόματο Ξεκλείδωμα</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>Ενεργοποιεί αυτόματο ξεκλείδωμα για τόμο που δεν είναι ο δίσκος λειτουργικού συστήματος και προστατεύεται με κρυπτογράφηση BitLocker.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>Το BitLocker μπορεί να ρυθμιστεί ώστε να ξεκλειδώνει αυτόματα τόμους δεδομένων που δεν φιλοξενούν το λειτουργικό σύστημα. Αφού ο χρήστης ξεκλειδώσει τον τόμο του λειτουργικού συστήματος, το BitLocker χρησιμοποιεί κρυπτογραφημένα διαπιστευτήρια αποθηκευμένα στο μητρώο μαζί με μεταδεδομένα τόμου για να ξεκλειδώσει αυτόματα κάθε τόμο δεδομένων που έχει οριστεί για αυτόματο ξεκλείδωμα.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>Κωδικός πρόσβασης</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>Ο τόμος BitLocker θα χρησιμοποιεί κωδικό πρόσβασης για την προστασία των δεδομένων.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>Κωδικός ανάκτησης</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>Ο καθορισμός κωδικού πρόσβασης είναι προαιρετικός. Αν δεν τον καθορίσετε, θα δημιουργηθεί αυτόματα και θα εκχωρηθεί στον επιλεγμένο τόμο. Αν αποφασίσετε να τον εισαγάγετε χειροκίνητα, πρέπει να έχει 48 χαρακτήρες. Ο κωδικός χρησιμοποιείται ως προστασία για το κλειδί κρυπτογράφησης του τόμου.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>Κρυπτογράφηση</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κρυπτογραφήστε, αποκρυπτογραφήστε ή εκτελέστε άλλες σχετικές ενέργειες στον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κρυπτογραφήστε, αποκρυπτογραφήστε ή εκτελέστε άλλες σχετικές ενέργειες στον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Κρυπτογράφηση</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κρυπτογραφήστε τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κρυπτογραφήστε τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αποκρυπτογράφηση</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποκρυπτογραφήστε τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποκρυπτογραφήστε τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Παύση κρυπτογράφησης</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Θέτει σε παύση την κρυπτογράφηση BitLocker επιτρέποντας πρόσβαση σε δεδομένα σε τόμο που προστατεύεται με BitLocker. Η διαδικασία καθιστά το κλειδί κρυπτογράφησης προσβάσιμο σε μη προστατευμένη μορφή.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Θέτει σε παύση την κρυπτογράφηση BitLocker επιτρέποντας πρόσβαση σε δεδομένα σε τόμο που προστατεύεται με BitLocker. Η διαδικασία καθιστά το κλειδί κρυπτογράφησης προσβάσιμο σε μη προστατευμένη μορφή.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Συνέχιση κρυπτογράφησης</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαναφορά κρυπτογράφησης σε τόμο που χρησιμοποιεί BitLocker και είχε τεθεί προηγουμένως σε παύση.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επαναφορά κρυπτογράφησης σε τόμο που χρησιμοποιεί BitLocker και είχε τεθεί προηγουμένως σε παύση.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Ενεργοποίηση</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Ακύρωση</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τον επιλεγμένο τόμο.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Μονάδα δίσκου λειτουργικού συστήματος</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τη μονάδα δίσκου λειτουργικού συστήματος.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τη μονάδα δίσκου λειτουργικού συστήματος.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Σταθερός δίσκος</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τον σταθερό δίσκο.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τον σταθερό δίσκο.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>Αφαιρούμενος δίσκος</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τον αφαιρούμενο δίσκο.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενεργοποίηση κρυπτογράφησης BitLocker για τον αφαιρούμενο δίσκο.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Κρυπτογράφηση μονάδας δίσκου λειτουργικού συστήματος</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Κρυπτογραφήστε τη μονάδα δίσκου λειτουργικού συστήματος με το BitLocker.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>Επίπεδο κρυπτογράφησης</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε ένα από τα επίπεδα κρυπτογράφησης για τη μονάδα λειτουργικού συστήματος. Το Κανονικό θα χρησιμοποιεί προστασίες κλειδιού TPM και PIN. Το Ενισχυμένο θα χρησιμοποιεί TPM, PIN και προστασία κλειδιού εκκίνησης σε μονάδα USB, παρέχοντας ισχυρό πολυπαραγοντικό έλεγχο ταυτότητας.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε ένα από τα επίπεδα κρυπτογράφησης για τη μονάδα λειτουργικού συστήματος. Το Κανονικό θα χρησιμοποιεί προστασίες κλειδιού TPM και PIN. Το Ενισχυμένο θα χρησιμοποιεί TPM, PIN και προστασία κλειδιού εκκίνησης σε μονάδα USB, παρέχοντας ισχυρό πολυπαραγοντικό έλεγχο ταυτότητας.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>Κανονικό</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>Ενισχυμένο</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>Κάλυψη κρυπτογράφησης</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>Ελεύθερος και χρησιμοποιούμενος χώρος</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>Μόνο χρησιμοποιούμενος χώρος</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε την κάλυψη κρυπτογράφησης του δίσκου. Ο "Ελεύθερος και χρησιμοποιούμενος χώρος" θα κρυπτογραφήσει όλα τα δεδομένα, ενώ ο "Μόνο χρησιμοποιούμενος χώρος" θα κρυπτογραφήσει μόνο τον τρέχοντα χρησιμοποιούμενο χώρο εξοικονομώντας χρόνο.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε την κάλυψη κρυπτογράφησης του δίσκου. Ο "Ελεύθερος και χρησιμοποιούμενος χώρος" θα κρυπτογραφήσει όλα τα δεδομένα, ενώ ο "Μόνο χρησιμοποιούμενος χώρος" θα κρυπτογραφήσει μόνο τον τρέχοντα χρησιμοποιούμενο χώρο εξοικονομώντας χρόνο.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>Συμπεριφορά υποβάθμισης</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>Να επιτρέπεται η υποβάθμιση</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>Άρνηση υποβάθμισης</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αν επιτρέπεται η υποβάθμιση και η μονάδα λειτουργικού είναι ήδη κρυπτογραφημένη σε Ενισχυμένο επίπεδο κι εσείς επιλέξετε Κανονικό, θα γίνει υποβάθμιση. Αν δεν επιτρέπεται, η λειτουργία δεν θα ολοκληρωθεί και θα εμφανιστεί σφάλμα αποτρέποντας την υποβάθμιση του επιπέδου κρυπτογράφησης.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αν επιτρέπεται η υποβάθμιση και η μονάδα λειτουργικού είναι ήδη κρυπτογραφημένη σε Ενισχυμένο επίπεδο κι εσείς επιλέξετε Κανονικό, θα γίνει υποβάθμιση. Αν δεν επιτρέπεται, η λειτουργία δεν θα ολοκληρωθεί και θα εμφανιστεί σφάλμα αποτρέποντας την υποβάθμιση του επιπέδου κρυπτογράφησης.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Κρυπτογράφηση σταθερού δίσκου</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Κρυπτογραφήστε τον επιλεγμένο σταθερό δίσκο. Θα διαθέτει κωδικό ανάκτησης 48 χαρακτήρων και θα ξεκλειδώνει αυτόματα μέσω της ήδη κρυπτογραφημένης μονάδας λειτουργικού συστήματος.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>Κρυπτογράφηση αφαιρούμενου δίσκου</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>Κρυπτογραφήστε τον επιλεγμένο αφαιρούμενο δίσκο. Θα διαθέτει κωδικό ανάκτησης 48 χαρακτήρων και τον κωδικό πρόσβασης που παρέχετε στο πεδίο.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>Παύση κρυπτογράφησης BitLocker</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Παύση</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Ακύρωση</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Θέστε σε παύση την κρυπτογράφηση BitLocker του επιλεγμένου τόμου.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>Η παύση του BitLocker επιτρέπει πρόσβαση σε κρυπτογραφημένα δεδομένα εκθέτοντας το κλειδί κρυπτογράφησης σε μη προστατευμένη κατάσταση. Η παύση δεν αποκρυπτογραφεί τα υπάρχοντα δεδομένα· απλώς καθιστά διαθέσιμο το κλειδί. Νέα δεδομένα που γράφονται παραμένουν κρυπτογραφημένα. Όσο είναι σε παύση δεν εφαρμόζονται έλεγχοι ακεραιότητας κατά την εκκίνηση. Χρησιμοποιείται συνήθως για αναβαθμίσεις υλικολογισμικού ή συντήρηση χωρίς ενεργοποίηση ανάκτησης.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>Ορίστε πόσες επανεκκινήσεις επιτρέπονται πριν λήξει η παύση. Τιμή 1 σημαίνει επανέναρξη προστασίας μετά την επόμενη επανεκκίνηση. Μπορείτε να την επαναλάβετε χειροκίνητα οποτεδήποτε μέσω του κουμπιού "Συνέχιση".</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>Όλα τα μέτρα ασφαλείας της κατηγορίας BitLocker θα εφαρμοστούν πριν την έναρξη της διαδικασίας κρυπτογράφησης.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>Αποκρυπτογράφηση BitLocker για τον δίσκο {0}</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>Όλες οι προστασίες κλειδιού του δίσκου θα αφαιρεθούν και θα ξεκινήσει η αποκρυπτογράφηση του περιεχομένου.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>Η λειτουργία ακυρώθηκε.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>Συνέχιση κρυπτογράφησης BitLocker για τον δίσκο {0}</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>Επαναφορά κρυπτογράφησης του δίσκου ή τόμου που είχε τεθεί σε παύση.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>Δεν εισήχθη PIN εκκίνησης. Παρακαλώ δώστε ένα και δοκιμάστε ξανά.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>Δεν επιλέχθηκε αφαιρούμενος δίσκος. Επιλέξτε έναν και δοκιμάστε ξανά.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>Δεν παρέχεται κωδικός πρόσβασης. Παρακαλώ δώστε έναν και δοκιμάστε ξανά.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>Η μονάδα λειτουργικού πρέπει να είναι πλήρως κρυπτογραφημένη πριν κρυπτογραφήσετε σταθερούς δίσκους, αλλά βρίσκεται {0} με ποσοστό κρυπτογράφησης {1}.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>Προσθήκη {0} στο {1}</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>Επιτυχής εξαγωγή {0} τόμων BitLocker σε: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>Αυτό μπορεί να αποτρέψει απομακρυσμένη χρήση RDP μέσω διεύθυνσης IP, κάτι μη ασφαλές λόγω ανοιχτών δημόσιων θυρών και χρήσης NTLM. Χρησιμοποιήστε Quick Assist ή Azure Bastion για VM στο Azure ως ασφαλέστερες εναλλακτικές. Το τοπικό RDP (π.χ. ενισχυμένη συνεδρία Hyper-V) δεν επηρεάζεται.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>Αυτή η πολιτική εμποδίζει τη χρήση της λειτουργίας "Forgot my PIN" στην οθόνη κλειδώματος ή σύνδεσης. Αν ξεχάσετε το PIN δεν θα μπορέσετε να το ανακτήσετε.</value>
+  </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>Επιλέξτε αφαιρούμενη μονάδα δίσκου</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>Ανανέωση</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανανέωση</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανανέωση</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>Εισαγάγετε κωδικό πρόσβασης</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>Εισαγάγετε PIN</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>Εισαγάγετε κωδικό ανάκτησης</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>Σύνολο πιστοποιητικών</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Διαγραφή πιστοποιητικού</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγραφή του επιλεγμένου πιστοποιητικού</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγραφή επιλεγμένου πιστοποιητικού</value>
+  </data>
+   <data name="CheckingSSHClientUserConfiguration" xml:space="preserve">
+  <value>Έλεγχος ρύθμισης χρήστη πελάτη SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingSSHClientConfigurationCheck" xml:space="preserve">
+  <value>Ο κατάλογος χρήστη δεν βρέθηκε στο {0} επειδή το όνομα χρήστη {1} δεν ήταν έγκυρο, παράκαμψη ελέγχου ρύθμισης πελάτη SSH.</value>
+</data>
+<data name="SSHClientConfigFileCreatedBecauseDidNotExist" xml:space="preserve">
+  <value>Δημιουργήθηκε αρχείο ρύθμισης πελάτη SSH με περιεχόμενο: {0} επειδή δεν υπήρχε.</value>
+</data>
+<data name="ExistingMACsConfigurationFoundAndReplaced" xml:space="preserve">
+  <value>Βρέθηκε και αντικαταστάθηκε υπάρχουσα ρύθμιση 'MACs'.</value>
+</data>
+<data name="MACsConfigurationNotFoundAddedNew" xml:space="preserve">
+  <value>Η ρύθμιση MACs δεν βρέθηκε, προστέθηκε νέα ρύθμιση.</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientUserConfiguration" xml:space="preserve">
+  <value>Έλεγχος για ασφαλή MACs στη ρύθμιση χρήστη του πελάτη SSH</value>
+</data>
+<data name="ExistingMACsFoundInUserDirectoryMatchesSecure" xml:space="preserve">
+  <value>Βρέθηκε ρύθμιση MACs στον κατάλογο χρήστη και αντιστοιχεί στις ασφαλείς ρυθμίσεις.</value>
+</data>
+<data name="MACsConfigurationInUserDirectoryIsDifferent" xml:space="preserve">
+  <value>Η ρύθμιση MACs στον κατάλογο χρήστη είναι διαφορετική: {0}</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientSystemWideConfiguration" xml:space="preserve">
+  <value>Έλεγχος για ασφαλή MACs στη ρύθμιση πελάτη SSH σε επίπεδο συστήματος</value>
+</data>
+<data name="ExistingMACsFoundInSystemWideConfigurationMatchesSecure" xml:space="preserve">
+  <value>Βρέθηκε ρύθμιση MACs στη ρύθμιση σε επίπεδο συστήματος και αντιστοιχεί στις ασφαλείς ρυθμίσεις.</value>
+</data>
+<data name="MACsConfigurationInSystemWideConfigurationIsDifferent" xml:space="preserve">
+  <value>Η ρύθμιση MACs στη ρύθμιση σε επίπεδο συστήματος είναι διαφορετική: {0}</value>
+</data>
+<data name="NoSecureMACsFoundInUserAndSystemWideConfigurations" xml:space="preserve">
+  <value>Δεν βρέθηκε ασφαλής ρύθμιση MACs ούτε στη ρύθμιση χρήστη ούτε στη ρύθμιση σε επίπεδο συστήματος.</value>
+</data>
+<data name="AttemptingToRemoveMACsFromSSHClientUserConfiguration" xml:space="preserve">
+  <value>Προσπάθεια αφαίρεσης ρύθμισης MACs από τη ρύθμιση χρήστη του πελάτη SSH</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingRemoval" xml:space="preserve">
+  <value>Ο κατάλογος χρήστη δεν βρέθηκε στο {0} επειδή το όνομα χρήστη {1} δεν ήταν έγκυρο, παράκαμψη της αφαίρεσης.</value>
+</data>
+<data name="SSHClientConfigurationFileNotFoundNothingToRemove" xml:space="preserve">
+  <value>Δεν βρέθηκε αρχείο ρύθμισης πελάτη SSH; τίποτα προς αφαίρεση.</value>
+</data>
+<data name="RemovedMACsFromSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>Η ρύθμιση MACs αφαιρέθηκε από το αρχείο ρύθμισης χρήστη του πελάτη SSH.</value>
+</data>
+<data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>Δεν βρέθηκε ρύθμιση MACs προς αφαίρεση στο αρχείο ρύθμισης χρήστη του πελάτη SSH.</value>
+</data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>Σύνολο: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ο συνολικός αριθμός στοιχείων</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ο συνολικός αριθμός στοιχείων</value>
+  </data>
+    <data name="SelectedText" xml:space="preserve">
+     <value>Επιλεγμένο</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής. Μπορείτε να επιλέξετε ένα χρώμα από την παλέτα ή να επιλέξετε την επιλογή ουράνιου τόξου, η οποία θα κάνει κυκλική εναλλαγή με κινούμενη μετάβαση σε όλα τα διαθέσιμα χρώματα.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>Χρώμα Περιγράμματος Παραθύρου</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής. Μπορείτε να επιλέξετε ένα χρώμα από την παλέτα ή να επιλέξετε την επιλογή ουράνιου τόξου, η οποία θα κάνει κυκλική εναλλαγή με κινούμενη μετάβαση σε όλα τα διαθέσιμα χρώματα.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής. Μπορείτε να επιλέξετε ένα χρώμα από την παλέτα ή να επιλέξετε την επιλογή ουράνιου τόξου, η οποία θα κάνει κυκλική εναλλαγή με κινούμενη μετάβαση σε όλα τα διαθέσιμα χρώματα.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>Έναρξη κινούμενου ουράνιου τόξου</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ξεκινήστε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ξεκινήστε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>Διακοπή κινούμενου ουράνιου τόξου</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διακόψτε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής, αν εκτελείται.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διακόψτε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής, αν εκτελείται.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>Ορισμός χρώματος περιγράμματος</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ορίστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο επιλεγμένο χρώμα.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ορίστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο επιλεγμένο χρώμα.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>Επαναφορά χρώματος περιγράμματος</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαναφέρετε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο προεπιλεγμένο χρώμα.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επαναφέρετε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο προεπιλεγμένο χρώμα.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>Αρχική</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αρχική σελίδα και οθόνη καλωσορίσματος</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αρχική σελίδα και οθόνη καλωσορίσματος</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="EnableMDAVSandboxMode-MSDefender" xml:space="preserve">
+    <value>Εκτελέστε το Microsoft Defender Antivirus σε περιβάλλον απομόνωσης για ενισχυμένη προστασία από μη εξουσιοδοτημένη παρέμβαση.</value>
+  </data>
+    <data name="AnimatedApplyAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμόστε όλα τα μέτρα ασφαλείας στη σελίδα. Στοιχεία που ανήκουν σε υποκατηγορίες δεν εφαρμόζονται όταν χρησιμοποιείτε αυτό το κουμπί.</value>
+  </data>
+  <data name="AnimatedApplyAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εφαρμόστε όλα τα μέτρα ασφαλείας στη σελίδα. Στοιχεία που ανήκουν σε υποκατηγορίες δεν εφαρμόζονται όταν χρησιμοποιείτε αυτό το κουμπί.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αφαιρέστε όλα τα μέτρα ασφαλείας στη σελίδα.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αφαιρέστε όλα τα μέτρα ασφαλείας στη σελίδα.</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>Γεια σας και καλώς ήρθατε</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>Σας ευχαριστούμε που επιλέξατε την εφαρμογή Harden System Security. Αν θέλετε να διαβάσετε τις σημειώσεις έκδοσης για την πιο πρόσφατη ενημέρωση, μπορείτε να τις βρείτε στην ενότητα Releases του επίσημου αποθετηρίου στο GitHub. Εκεί μπορείτε επίσης να κάνετε ερωτήσεις ή να υποβάλετε σχόλια.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>Επισκεφθείτε την ενότητα Releases στο GitHub</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίγει στη μηχανή περιήγησης τη σελίδα του αποθετηρίου στο GitHub μετά την επιλογή του κουμπιού.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίγει στη μηχανή περιήγησης τη σελίδα του αποθετηρίου στο GitHub μετά την επιλογή του κουμπιού.</value>
+  </data>
+  <data name="UseAppControlManager.Text" xml:space="preserve">
+    <value>Χρησιμοποιήστε το AppControl Manager</value>
+  </data>
+  <data name="UseAppControlManagerDescription.Text" xml:space="preserve">
+    <value>Το AppControl Manager είναι μια ακόμη εφαρμογή που ανέπτυξα για να σας βοηθήσει να διαχειρίζεστε εύκολα το Application Control και το Code Integrity στο λειτουργικό σύστημα. Διαθέτει σύγχρονο, διαισθητικό περιβάλλον εργασίας, διαμορφώνεται από τα σχόλια της κοινότητας και συντηρείται ενεργά.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>Επισκεφθείτε τη σελίδα του Microsoft Store</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίγει τη σελίδα του Microsoft Store μετά την επιλογή του κουμπιού.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίγει τη σελίδα του Microsoft Store μετά την επιλογή του κουμπιού.</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagement.Text" xml:space="preserve">
+    <value>Ολοκληρωμένη διαχείριση πολιτικών ελέγχου</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagementDescription.Text" xml:space="preserve">
+    <value>Προβάλετε όλες τις πολιτικές ελέγχου του συστήματος σε ενοποιημένο περιβάλλον, με δυνατότητα ρύθμισης καθεμιάς ξεχωριστά. Εξαγάγετε τις ρυθμίσεις σας ως πρότυπο για εύκολη επανεισαγωγή στο ίδιο ή σε άλλο σύστημα.</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.Content" xml:space="preserve">
+    <value>Μετάβαση στη σελίδα Πολιτικών Ελέγχου</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μετάβαση στη σελίδα Πολιτικών Ελέγχου</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μετάβαση στη σελίδα Πολιτικών Ελέγχου</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasures" xml:space="preserve">
+    <value>Εφαρμογή όλων των μέτρων ασφαλείας...</value>
+  </data>
+  <data name="RemovingAllSecurityMeasures" xml:space="preserve">
+    <value>Κατάργηση όλων των μέτρων ασφαλείας...</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasures" xml:space="preserve">
+    <value>Επαλήθευση όλων των μέτρων ασφαλείας...</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>Όλα τα μέτρα ασφαλείας εφαρμόστηκαν με επιτυχία.</value>
+  </data>
+  <data name="RemovingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>Όλα τα μέτρα ασφαλείας καταργήθηκαν με επιτυχία.</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>Όλα τα μέτρα ασφαλείας επαληθεύτηκαν με επιτυχία.</value>
   </data>
 </root>

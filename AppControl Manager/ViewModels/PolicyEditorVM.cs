@@ -89,40 +89,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// </summary>
 	internal readonly string[] TypeOptions = ["Binary", "Boolean", "DWord", "String"];
 
-	// Don't need getters/setters via OnPropertyChanged for the collections above since it is an observable collection and we don't replace it completely
-	// We just use the .Add(), .Remove() etc. methods
-
-	/*
-	private ObservableCollection<PolicyEditor.FileBasedRulesForListView> _fileRulesCollection = [];
-	internal ObservableCollection<PolicyEditor.FileBasedRulesForListView> FileRulesCollection
-	{
-		get => _fileRulesCollection;
-		set
-		{
-			if (_fileRulesCollection != value)
-			{
-				_fileRulesCollection = value;
-				OnPropertyChanged(nameof(FileRulesCollection));
-			}
-		}
-	}
-
-
-	private ObservableCollection<PolicyEditor.SignatureBasedRulesForListView> _signatureRulesCollection = [];
-	internal ObservableCollection<PolicyEditor.SignatureBasedRulesForListView> SignatureRulesCollection
-	{
-		get => _signatureRulesCollection;
-		set
-		{
-			if (_signatureRulesCollection != value)
-			{
-				_signatureRulesCollection = value;
-				OnPropertyChanged(nameof(SignatureRulesCollection));
-			}
-		}
-	}
-	*/
-
 	internal PolicyEditorVM()
 	{
 		MainInfoBar = new InfoBarSettings(
@@ -576,8 +542,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: allowRule.AllowElement.FilePath,
 						type: null,
 						sourceType: PolicyEditor.FileBasedRuleType.Allow,
-						source: allowRule,
-						parentViewModel: this
+						source: allowRule
 					);
 
 					FileRulesCollection.Add(temp1);
@@ -608,8 +573,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: denyRule.DenyElement.FilePath,
 						type: null,
 						sourceType: PolicyEditor.FileBasedRuleType.Deny,
-						source: denyRule,
-						parentViewModel: this
+						source: denyRule
 					);
 
 					FileRulesCollection.Add(temp2);
@@ -640,8 +604,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: fileRule.FileRuleElement.FilePath,
 						type: fileRule.FileRuleElement.Type.ToString(),
 						sourceType: PolicyEditor.FileBasedRuleType.FileRule,
-						source: fileRule,
-						parentViewModel: this
+						source: fileRule
 					);
 
 					FileRulesCollection.Add(temp3);
@@ -677,8 +640,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 						filePath: item.FilePath,
 						type: null,
 						sourceType: PolicyEditor.FileBasedRuleType.CompoundPublisher,
-						source: item,
-						parentViewModel: this
+						source: item
 					);
 
 					FileRulesCollection.Add(temp4);
@@ -731,8 +693,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							name: sig.SignerElement.Name,
 							id: sig.SignerElement.ID,
 							sourceType: PolicyEditor.SignatureBasedRuleType.Signer,
-							source: sig,
-							parentViewModel: this
+							source: sig
 						);
 
 						SignatureRulesCollection.Add(temp6);
@@ -756,8 +717,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							name: sig.SignerElement.Name,
 							id: sig.SignerElement.ID,
 							sourceType: PolicyEditor.SignatureBasedRuleType.WHQLPublisher,
-							source: sig,
-							parentViewModel: this
+							source: sig
 						);
 
 						SignatureRulesCollection.Add(temp7);
@@ -781,8 +741,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							name: sig.SignerElement.Name,
 							id: sig.SignerElement.ID,
 							sourceType: PolicyEditor.SignatureBasedRuleType.UpdatePolicySigner,
-							source: sig,
-							parentViewModel: this
+							source: sig
 						);
 
 						SignatureRulesCollection.Add(temp8);
@@ -806,8 +765,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							name: sig.SignerElement.Name,
 							id: sig.SignerElement.ID,
 							sourceType: PolicyEditor.SignatureBasedRuleType.SupplementalPolicySigner,
-							source: sig,
-							parentViewModel: this
+							source: sig
 						));
 					}
 
@@ -1360,7 +1318,13 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				// Other policy details retrieved from the UI elements
 				PolicyObj.PolicyID = policyIDCheckResult.Item2;
 				PolicyObj.BasePolicyID = basePolicyIDCheckResult.Item2;
-				PolicyObj.VersionEx = PolicyVersionTextBox;
+
+				// Increment the version by 1
+				string incrementedVersionString = VersionIncrementer.AddVersion(new(PolicyVersionTextBox)).ToString();
+
+				// Assign the new incremented version both to the new policy and the textbox on the UI.
+				PolicyObj.VersionEx = incrementedVersionString;
+				PolicyVersionTextBox = incrementedVersionString;
 
 				if (PolicyTypeComboBox is not null)
 					PolicyObj.PolicyType = (PolicyType)PolicyTypeComboBox;

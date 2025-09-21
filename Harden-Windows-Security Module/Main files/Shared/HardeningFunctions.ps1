@@ -1,5 +1,5 @@
 $script:ErrorActionPreference = 'Stop'
-Function Select-Option {
+function Select-Option {
     [CmdletBinding()]
     param(
         [parameter(Mandatory = $True)][System.String]$Message,
@@ -9,13 +9,9 @@ Function Select-Option {
     )
     $Selected = $null
     while ($null -eq $Selected) {
-        # Use this style if showing main categories only
         if (!$SubCategory) { Write-ColorfulText -Color Fuchsia -I $Message }
-        # Use this style if showing sub-categories only that need additional confirmation
         else {
-            # Show sub-category's main prompt
             Write-ColorfulText -Color Orange -I $Message
-            # Show sub-category's notes/extra message if any
             if ($ExtraMessage) { Write-ColorfulText -Color PinkBoldBlink -I $ExtraMessage }
         }
 
@@ -23,7 +19,6 @@ Function Select-Option {
             Write-ColorfulText -Color MintGreen -I "$($I+1): $($Options[$I])"
         }
 
-        # Make sure user only inputs a positive integer
         [System.Int64]$SelectedIndex = 0
         $IsValid = [System.Int64]::TryParse((Read-Host -Prompt 'Select an option'), [ref]$SelectedIndex)
         if ($IsValid) {
@@ -37,7 +32,7 @@ Function Select-Option {
     [HardenWindowsSecurity.Logger]::LogMessage("Selected: $Selected", [HardenWindowsSecurity.LogTypeIntel]::Information)
     return [System.String]$Selected
 }
-Function Write-ColorfulText {
+function Write-ColorfulText {
     param (
         [Parameter(Mandatory = $True)][ValidateSet('Fuchsia', 'Orange', 'MintGreen', 'PinkBoldBlink', 'Plum')][System.String]$Color,
         [parameter(Mandatory = $True)][System.String]$InputText
@@ -48,10 +43,10 @@ Function Write-ColorfulText {
         'MintGreen' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(152,255,152))$InputText$($PSStyle.Reset)"; break }
         'Plum' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(221,160,221))$($PSStyle.Bold)$InputText$($PSStyle.Reset)"; break }
         'PinkBoldBlink' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(255,192,203))$($PSStyle.Bold)$($PSStyle.Blink)$InputText$($PSStyle.Reset)"; break }
-        Default { Throw 'Unspecified Color' }
+        default { throw 'Unspecified Color' }
     }
 }
-Function Invoke-MicrosoftSecurityBaselines {
+function Invoke-MicrosoftSecurityBaselines {
     param([Switch]$RunUnattended)
     :MicrosoftSecurityBaselinesCategoryLabel switch ($RunUnattended ? ($SecBaselines_NoOverrides ? 'Yes' : 'Yes, With the Optional Overrides (Recommended)') : (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?")) {
         'Yes' { [HardenWindowsSecurity.MicrosoftSecurityBaselines]::Invoke() }
@@ -63,7 +58,7 @@ Function Invoke-MicrosoftSecurityBaselines {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-Microsoft365AppsSecurityBaselines {
+function Invoke-Microsoft365AppsSecurityBaselines {
     param([Switch]$RunUnattended)
     :Microsoft365AppsSecurityBaselinesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft 365 Apps Security Baseline ?")) {
         'Yes' {
@@ -72,7 +67,7 @@ Function Invoke-Microsoft365AppsSecurityBaselines {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-MicrosoftDefender {
+function Invoke-MicrosoftDefender {
     param([Switch]$RunUnattended)
     :MicrosoftDefenderLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Microsoft Defender category ?")) {
         'Yes' {
@@ -132,7 +127,7 @@ Function Invoke-MicrosoftDefender {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-AttackSurfaceReductionRules {
+function Invoke-AttackSurfaceReductionRules {
     param([Switch]$RunUnattended)
     :ASRRulesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Attack Surface Reduction Rules category ?")) {
         'Yes' {
@@ -141,7 +136,7 @@ Function Invoke-AttackSurfaceReductionRules {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-BitLockerSettings {
+function Invoke-BitLockerSettings {
     param([Switch]$RunUnattended)
     :BitLockerCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Bitlocker category ?")) {
         'Yes' {
@@ -150,7 +145,7 @@ Function Invoke-BitLockerSettings {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-DeviceGuard {
+function Invoke-DeviceGuard {
     param([Switch]$RunUnattended)
     :DeviceGuardCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Device Guard category ?")) {
         'Yes' {
@@ -165,7 +160,7 @@ Function Invoke-DeviceGuard {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-TLSSecurity {
+function Invoke-TLSSecurity {
     param([Switch]$RunUnattended)
     :TLSSecurityLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun TLS Security category ?")) {
         'Yes' {
@@ -174,7 +169,7 @@ Function Invoke-TLSSecurity {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-LockScreen {
+function Invoke-LockScreen {
     param([Switch]$RunUnattended)
     :LockScreenLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Lock Screen category ?")) {
         'Yes' {
@@ -195,7 +190,7 @@ Function Invoke-LockScreen {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-UserAccountControl {
+function Invoke-UserAccountControl {
     param([Switch]$RunUnattended)
     :UACLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun User Account Control category ?")) {
         'Yes' {
@@ -216,7 +211,7 @@ Function Invoke-UserAccountControl {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-WindowsFirewall {
+function Invoke-WindowsFirewall {
     param([Switch]$RunUnattended)
     :WindowsFirewallLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Firewall category ?")) {
         'Yes' {
@@ -225,7 +220,7 @@ Function Invoke-WindowsFirewall {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-OptionalWindowsFeatures {
+function Invoke-OptionalWindowsFeatures {
     param([Switch]$RunUnattended)
     :OptionalFeaturesLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Optional Windows Features category ?")) {
         'Yes' {
@@ -234,7 +229,7 @@ Function Invoke-OptionalWindowsFeatures {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-WindowsNetworking {
+function Invoke-WindowsNetworking {
     param([Switch]$RunUnattended)
     :WindowsNetworkingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Networking category ?")) {
         'Yes' {
@@ -249,7 +244,7 @@ Function Invoke-WindowsNetworking {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-MiscellaneousConfigurations {
+function Invoke-MiscellaneousConfigurations {
     param([Switch]$RunUnattended)
     :MiscellaneousLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Miscellaneous Configurations category ?")) {
         'Yes' {
@@ -282,7 +277,7 @@ Function Invoke-MiscellaneousConfigurations {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-WindowsUpdateConfigurations {
+function Invoke-WindowsUpdateConfigurations {
     param([Switch]$RunUnattended)
     :WindowsUpdateLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Windows Update Policies ?")) {
         'Yes' {
@@ -291,7 +286,7 @@ Function Invoke-WindowsUpdateConfigurations {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-EdgeBrowserConfigurations {
+function Invoke-EdgeBrowserConfigurations {
     param([Switch]$RunUnattended)
     :MSEdgeLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Edge Browser Configurations ?")) {
         'Yes' {
@@ -300,7 +295,7 @@ Function Invoke-EdgeBrowserConfigurations {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-CertificateCheckingCommands {
+function Invoke-CertificateCheckingCommands {
     param([Switch]$RunUnattended)
     :CertCheckingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Certificate Checking category ?")) {
         'Yes' {
@@ -309,7 +304,7 @@ Function Invoke-CertificateCheckingCommands {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-CountryIPBlocking {
+function Invoke-CountryIPBlocking {
     param(
         [Switch]$RunUnattended
     )
@@ -329,7 +324,7 @@ Function Invoke-CountryIPBlocking {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-DownloadsDefenseMeasures {
+function Invoke-DownloadsDefenseMeasures {
     param([Switch]$RunUnattended)
     :DownloadsDefenseMeasuresLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Downloads Defense Measures category ?")) {
         'Yes' {
@@ -343,20 +338,11 @@ Function Invoke-DownloadsDefenseMeasures {
         'Exit' { break MainSwitchLabel }
     }
 }
-Function Invoke-NonAdminCommands {
+function Invoke-NonAdminCommands {
     param([Switch]$RunUnattended)
     :NonAdminLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?")) {
         'Yes' {
             [HardenWindowsSecurity.NonAdminCommands]::Invoke()
-            # Only suggest restarting the device if Admin related categories were run and the code was not running in unattended mode
-            if (!$RunUnattended) {
-                if (!$Categories -and [System.Environment]::IsPrivilegedProcess) {
-                    Write-Host -Object "`r`n"
-                    Write-ColorfulText -Color Plum -I "################################################################################################`r`n"
-                    Write-ColorfulText -Color Plum -I "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n"
-                    Write-ColorfulText -Color Plum -I "################################################################################################`r`n"
-                }
-            }
         } 'No' { break NonAdminLabel }
         'Exit' { break MainSwitchLabel }
     }

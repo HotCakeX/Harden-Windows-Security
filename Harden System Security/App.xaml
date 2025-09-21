@@ -112,6 +112,21 @@
                 <Setter Property="Margin" Value="6,0,6,5"/>
             </Style>
 
+
+            <!-- For BitLocker related Custom Content Dialogs -->
+
+            <!-- Ensures each section has identical width -->
+
+            <!-- Style applied to each switched panel -->
+            <Style x:Key="PanelStyleV2" TargetType="StackPanel">
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="16"/>
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+                <Setter Property="Spacing" Value="10"/>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

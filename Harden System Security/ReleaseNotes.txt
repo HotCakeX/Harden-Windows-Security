@@ -1,1 +1,28 @@
-* First version of the Harden System Security on the Microsoft Store!
+✅ Added a new security measure to the Microsoft Defender category that will force Microsoft Defender to run in a sandbox for enhanced protection against tampering.
+
+✅ Window Appearance Customization
+
+Introduced a customization option in Settings to personalize the app window with colors selected from an integrated palette.
+
+Added an optional animated rainbow mode that smoothly cycles through the full color spectrum.
+
+Designed for high performance with an extremely minimal resource footprint.
+
+✅ New Home Page
+
+Debuted a new Home page that opens by default on app startup, engineered for speed and efficiency.
+
+Features refined visuals and purposeful animations that remain lightweight and responsive.
+
+Provides concise system HUDs at a glance:
+✔️ Current time
+✔️ Time zone
+✔️ Total RAM
+✔️ Total disk capacity
+✔️ System uptime
+✔️ App memory usage (total RAM used by the app)
+✔️ Internet speed (upload and download shown separately)
+✔️ Includes a modern spotlight section to quickly browse rotating news and content.
+✔️ Very subtle cyber web mesh background that periodically lights up at different coordinates.
+
+More enhancement will be applied to the Home page in future updates. Feel free to share your feedback on GitHub with me.

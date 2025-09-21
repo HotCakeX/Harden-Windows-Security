@@ -17,6 +17,7 @@
 
 using System;
 using System.Threading;
+using AppControlManager.ViewModels;
 using HardenSystemSecurity.WindowComponents;
 using Windows.Storage;
 
@@ -121,6 +122,12 @@ internal static class ViewModelProvider
 	private static readonly Lazy<MicrosoftBaseLinesOverridesVM> _microsoftBaseLinesOverridesVM = new(() =>
 		new MicrosoftBaseLinesOverridesVM(), false);
 
+	private static readonly Lazy<AuditPoliciesVM> _auditPoliciesVM = new(() =>
+		new AuditPoliciesVM(), false);
+
+	private static readonly Lazy<HomeVM> _homeVM = new(() =>
+		new HomeVM(), false);
+
 	// Internal Properties - Core Dependencies \\
 	internal static AppSettings.Main AppSettings => _appSettings.Value;
 
@@ -153,4 +160,19 @@ internal static class ViewModelProvider
 	internal static MicrosoftSecurityBaselineVM MicrosoftSecurityBaselineVM => _microsoftSecurityBaselineVM.Value;
 	internal static Microsoft365AppsSecurityBaselineVM Microsoft365AppsSecurityBaselineVM => _microsoft365AppsSecurityBaselineVM.Value;
 	internal static MicrosoftBaseLinesOverridesVM MicrosoftBaseLinesOverridesVM => _microsoftBaseLinesOverridesVM.Value;
+	internal static AuditPoliciesVM AuditPoliciesVM => _auditPoliciesVM.Value;
+	internal static HomeVM HomeVM => _homeVM.Value;
+
+
+	/// <summary>
+	/// Disposes only those instances that were actually created during the app lifetime and implement <see cref="IDisposable"/>
+	/// </summary>
+	internal static void DisposeCreatedViewModels()
+	{
+		try
+		{
+			if (_logsVM.IsValueCreated) _logsVM.Value.Dispose();
+		}
+		catch { }
+	}
 }

@@ -1,0 +1,507 @@
+<customUI:ContentDialogV2
+    x:Class="HardenSystemSecurity.CustomUIElements.AddKeyProtectorDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:bitLocker="using:HardenSystemSecurity.BitLocker"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    x:Uid="AddKeyProtectorContentDialog"
+    DefaultButton="Close"
+    IsPrimaryButtonEnabled="True"
+    PrimaryButtonClick="{x:Bind OnPrimaryButtonClick}"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <customUI:ContentDialogV2.Resources>
+        <ResourceDictionary>
+            <!-- To use the PivotSegmentedStyle for the Segmented element -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///CommunityToolkit.WinUI.Controls.Segmented/Segmented/Segmented.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <x:Double x:Key="ContentDialogMaxWidth">1200</x:Double>
+        </ResourceDictionary>
+    </customUI:ContentDialogV2.Resources>
+
+    <Grid RowSpacing="12" Padding="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Header text -->
+            <RowDefinition Height="*"/>
+            <!-- SwitchPresenter -->
+            <RowDefinition Height="Auto"/>
+            <!-- Segmented selector -->
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   x:Uid="AddKeyProtectorContentDialogSubTitle"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,2"
+                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+        <!-- Center the content panels -->
+        <ScrollViewer Grid.Row="1"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Top">
+            <controls:SwitchPresenter
+                Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}">
+
+                <controls:Case Value="TPM">
+
+                    <StackPanel Style="{StaticResource PanelStyleV2}"
+                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                        <TextBlock x:Uid="TPMSectionTitle"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="TPMSectionDescription"
+                                   Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                        <Border Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+                                Padding="14"
+                                CornerRadius="8">
+                            <TextBlock x:Uid="TPMSectionBody" TextWrapping="Wrap"/>
+                        </Border>
+                    </StackPanel>
+
+                </controls:Case>
+
+                <controls:Case Value="TPMPIN">
+
+                    <StackPanel Style="{StaticResource PanelStyleV2}"
+                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                        <TextBlock x:Uid="TPMPINSectionTitle"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="TPMPINSectionDescription"
+                                   Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Padding="12"
+                                CornerRadius="6">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Uid="EnterAPinText"/>
+                                <PasswordBox Password="{x:Bind PIN, Mode=TwoWay}"
+                                             PasswordChar="#"
+                                             IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+
+                </controls:Case>
+
+                <controls:Case Value="TPMStartupKey">
+
+                    <StackPanel Style="{StaticResource PanelStyleV2}"
+                                Orientation="Vertical"
+                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                        <TextBlock x:Uid="TPMStartupKeySectionTitle"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="TPMStartupKeySectionDescription"
+                                   Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    Padding="12"
+                                    CornerRadius="6">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Uid="SelectARemovableDriveText"/>
+
+                                <controls:WrapPanel Orientation="Horizontal"
+                                                    HorizontalSpacing="10"
+                                                    VerticalSpacing="10">
+
+                                    <Button x:Uid="RefreshButton"
+                                            IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
+                                            Click="{x:Bind RefreshRemovableDrives}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE72C;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <ComboBox ItemsSource="{x:Bind RemovableDrives}"
+                                              IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
+                                              SelectedItem="{x:Bind SelectedRemovableDrive, Mode=TwoWay}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="bitLocker:BitLockerVolume">
+                                                <TextBlock Text="{x:Bind MountPoint}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                </controls:WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                </controls:Case>
+
+                <controls:Case Value="TPMPINStartupKey">
+
+                    <StackPanel Style="{StaticResource PanelStyleV2}"
+                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                        <TextBlock x:Uid="TPMPINStartupKeySectionTitle"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="TPMPINStartupKeySectionDescription"
+                                   Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Padding="12"
+                                CornerRadius="6">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Uid="EnterAPinText"/>
+                                <PasswordBox Password="{x:Bind PIN, Mode=TwoWay}"
+                                             PasswordChar="#"
+                                             IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Padding="12"
+                                CornerRadius="6">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Uid="SelectARemovableDriveText"/>
+
+                                <controls:WrapPanel Orientation="Horizontal"
+                                                    HorizontalSpacing="10"
+                                                    VerticalSpacing="10">
+
+                                    <Button x:Uid="RefreshButton"
+                                            IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
+                                            Click="{x:Bind RefreshRemovableDrives}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE72C;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <ComboBox ItemsSource="{x:Bind RemovableDrives}"
+                                              IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
+                                              SelectedItem="{x:Bind SelectedRemovableDrive, Mode=TwoWay}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="bitLocker:BitLockerVolume">
+                                                <TextBlock Text="{x:Bind MountPoint}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                </controls:WrapPanel>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+
+                </controls:Case>
+
+                <controls:Case Value="StartupKey">
+
+                    <StackPanel Style="{StaticResource PanelStyleV2}"
+                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                        <TextBlock x:Uid="StartupKeySectionTitle"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="StartupKeySectionDescription"
+                                   Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Padding="12"
+                                CornerRadius="6">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Uid="SelectARemovableDriveText"/>
+
+                                <controls:WrapPanel Orientation="Horizontal"
+                                                    HorizontalSpacing="10"
+                                                    VerticalSpacing="10">
+
+                                    <Button x:Uid="RefreshButton"
+                                            IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
+                                            Click="{x:Bind RefreshRemovableDrives}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE72C;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <ComboBox ItemsSource="{x:Bind RemovableDrives}"
+                                              IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
+                                              SelectedItem="{x:Bind SelectedRemovableDrive, Mode=TwoWay}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="bitLocker:BitLockerVolume">
+                                                <TextBlock Text="{x:Bind MountPoint}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                </controls:WrapPanel>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+
+                </controls:Case>
+
+                <controls:Case Value="AutoUnlock">
+
+                    <StackPanel Style="{StaticResource PanelStyleV2}"
+                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                        <TextBlock x:Uid="AutoUnlockSectionTitle"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="AutoUnlockSectionDescription"
+                                   Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+                                Padding="14"
+                                CornerRadius="8">
+                            <TextBlock x:Uid="AutoUnlockSectionBody" TextWrapping="Wrap"/>
+                        </Border>
+
+                    </StackPanel>
+
+                </controls:Case>
+
+                <controls:Case Value="Password">
+
+                    <StackPanel Style="{StaticResource PanelStyleV2}"
+                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                        <TextBlock x:Uid="PasswordSectionTitle"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="PasswordSectionDescription"
+                                   Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Padding="12"
+                                CornerRadius="6">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Uid="EnterAPasswordText"/>
+                                <PasswordBox Password="{x:Bind Password, Mode=TwoWay}"
+                                             PasswordChar="#"
+                                             IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+
+                </controls:Case>
+
+                <controls:Case Value="RecoveryPassword">
+
+                    <StackPanel Style="{StaticResource PanelStyleV2}"
+                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                        <TextBlock x:Uid="RecoveryPasswordSectionTitle"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="RecoveryPasswordSectionDescription"
+                                   Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Padding="12"
+                                CornerRadius="6">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Uid="EnterARecoveryPassword"/>
+                                <TextBox Text="{x:Bind RecoveryPassword, Mode=TwoWay}"
+                                         IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+
+                </controls:Case>
+
+            </controls:SwitchPresenter>
+        </ScrollViewer>
+
+        <!-- Segmented control -->
+        <controls:Segmented Grid.Row="2"
+                            x:Name="segmentedControl"
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource PivotSegmentedStyle}"
+                            SelectedIndex="{x:Bind SelectedKeyProtectorTypeIndex, Mode=TwoWay}">
+
+            <!-- Replacing the default StackPanel with our WrapPanel so that
+                 Instead of a single horizontal line, the items go to the next rows when width gets too small -->
+            <controls:Segmented.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <controls:WrapPanel Orientation="Horizontal"
+                                        HorizontalSpacing="{ThemeResource SegmentedItemSpacing}"
+                                        VerticalSpacing="{ThemeResource SegmentedItemSpacing}" />
+                </ItemsPanelTemplate>
+            </controls:Segmented.ItemsPanel>
+
+            <controls:SegmentedItem x:Uid="TPMKeyProtectorSegmentedItem"
+                                    IsEnabled="{x:Bind OSOnlyKeyProtectorsAreEnabled}"
+                                    Tag="TPM">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xE950;"
+                                       Width="20"
+                                       Height="20"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="TPMPINKeyProtectorSegmentedItem"
+                                    IsEnabled="{x:Bind OSOnlyKeyProtectorsAreEnabled}"
+                                    Tag="TPMPIN">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xEF3E;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="TPMStartupKeyKeyProtectorSegmentedItem"
+                                    IsEnabled="{x:Bind OSOnlyKeyProtectorsAreEnabled}"
+                                    Tag="TPMStartupKey">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xE9A9;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="TPMPINStartupKeyKeyProtectorSegmentedItem"
+                                    IsEnabled="{x:Bind OSOnlyKeyProtectorsAreEnabled}"
+                                    Tag="TPMPINStartupKey">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xEA18;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="StartupKeyKeyProtectorSegmentedItem"
+                                    IsEnabled="{x:Bind OSOnlyKeyProtectorsAreEnabled}"
+                                    Tag="StartupKey">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xE8D7;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="AutoUnlockKeyProtectorSegmentedItem"
+                        IsEnabled="{x:Bind NON_OSOnlyKeyProtectorsAreEnabled}"
+                        Tag="AutoUnlock">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xE785;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="PasswordKeyProtectorSegmentedItem"
+                        Tag="Password">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xE890;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="RecoveryPasswordKeyProtectorSegmentedItem"
+                                    Tag="RecoveryPassword">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4">
+                            <FontIcon Glyph="&#xE964;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                       HorizontalAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+        </controls:Segmented>
+    </Grid>
+</customUI:ContentDialogV2>

@@ -17,14 +17,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using AppControlManager;
 using AppControlManager.Others;
+using AppControlManager.ViewModels;
+using HardenSystemSecurity.ViewModels;
 
 namespace HardenSystemSecurity.SecurityPolicy;
 
@@ -36,23 +40,103 @@ namespace HardenSystemSecurity.SecurityPolicy;
 /// <param name="categoryGuid">The GUID of the parent category</param>
 /// <param name="categoryName">The friendly name of the parent category</param>
 /// <param name="auditingInformation">The current audit setting</param>
-internal sealed class AuditPolicyInfo(
+internal sealed partial class AuditPolicyInfo(
 	Guid subcategoryGuid,
 	string subcategoryName,
 	Guid categoryGuid,
 	string categoryName,
-	uint auditingInformation)
+	uint auditingInformation) : ViewModelBase
 {
+	[JsonInclude]
+	[JsonPropertyOrder(4)]
 	internal Guid SubcategoryGuid => subcategoryGuid;
+
+	[JsonInclude]
+	[JsonPropertyOrder(1)]
 	internal string SubcategoryName => subcategoryName;
+
+	[JsonInclude]
+	[JsonPropertyOrder(3)]
 	internal Guid CategoryGuid => categoryGuid;
+
+	[JsonInclude]
+	[JsonPropertyOrder(0)]
 	internal string CategoryName => categoryName;
-	internal uint AuditingInformation => auditingInformation;
+
+	[JsonIgnore]
+	private uint _originalAuditingInformation = auditingInformation;
+	[JsonIgnore]
+	private uint _currentAuditingInformation = auditingInformation;
+
+	[JsonInclude]
+	[JsonPropertyOrder(2)]
+	internal uint AuditingInformation
+	{
+		get => _currentAuditingInformation;
+		set
+		{
+			if (_currentAuditingInformation != value)
+			{
+				_currentAuditingInformation = value;
+
+				_ = Dispatcher.TryEnqueue(() =>
+				{
+					OnPropertyChanged(nameof(AuditSettingDescription));
+					OnPropertyChanged(nameof(SelectedAuditSettingIndex));
+					OnPropertyChanged(nameof(HasPendingChanges));
+				});
+			}
+		}
+	}
+
+	[JsonIgnore]
+	internal uint OriginalAuditingInformation => _originalAuditingInformation;
+
+	/// <summary>
+	/// Gets whether there are pending changes (current value different from original)
+	/// </summary>
+	[JsonIgnore]
+	internal bool HasPendingChanges => _currentAuditingInformation != _originalAuditingInformation;
+
+	/// <summary>
+	/// Updates the original value after successful application
+	/// </summary>
+	internal void CommitChanges()
+	{
+		_originalAuditingInformation = _currentAuditingInformation;
+		_ = Dispatcher.TryEnqueue(() =>
+		{
+			OnPropertyChanged(nameof(HasPendingChanges));
+		});
+	}
+
+	/// <summary>
+	/// Reverts current value back to original.
+	/// </summary>
+	internal void RevertChanges()
+	{
+		AuditingInformation = _originalAuditingInformation;
+	}
 
 	/// <summary>
 	/// Gets the human-readable audit setting
 	/// </summary>
-	internal string AuditSettingDescription => GetAuditSettingDescription(auditingInformation);
+	[JsonIgnore]
+	internal string AuditSettingDescription => GetAuditSettingDescription(_currentAuditingInformation);
+
+	/// <summary>
+	/// Gets or sets the selected index for the ComboBox binding (0-3)
+	/// </summary>
+	[JsonIgnore]
+	internal int SelectedAuditSettingIndex
+	{
+		get => (int)_currentAuditingInformation;
+		set
+		{
+			uint newValue = (uint)Math.Max(0, Math.Min(3, value));
+			AuditingInformation = newValue;
+		}
+	}
 
 	/// <summary>
 	/// Converts audit setting numeric value to human-readable description.
@@ -70,6 +154,18 @@ internal sealed class AuditPolicyInfo(
 			_ => GlobalVars.GetStr("UnknownState")
 		};
 	}
+}
+
+[JsonSerializable(typeof(AuditPolicyInfo))]
+[JsonSerializable(typeof(List<AuditPolicyInfo>))]
+[JsonSerializable(typeof(ObservableCollection<AuditPolicyInfo>))]
+[JsonSourceGenerationOptions(
+	WriteIndented = true,
+	PropertyNamingPolicy = JsonKnownNamingPolicy.Unspecified,
+	PropertyNameCaseInsensitive = true,
+	DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
+internal sealed partial class AuditPolicyJsonContext : JsonSerializerContext
+{
 }
 
 /// <summary>
@@ -192,6 +288,18 @@ internal static class AuditPrivilegeHelper
 }
 
 /// <summary>
+/// https://learn.microsoft.com/windows/win32/api/ntsecapi/ns-ntsecapi-audit_policy_information
+/// </summary>
+[Flags]
+internal enum AuditBitFlags : uint
+{
+	POLICY_AUDIT_EVENT_UNCHANGED = 0x00000000,
+	POLICY_AUDIT_EVENT_SUCCESS = 0x00000001,
+	POLICY_AUDIT_EVENT_FAILURE = 0x00000002,
+	POLICY_AUDIT_EVENT_NONE = 0x00000004
+}
+
+/// <summary>
 /// Manages audit policy operations including reading current policies and applying CSV-based policies.
 /// </summary>
 internal static class AuditPolicyManager
@@ -201,7 +309,7 @@ internal static class AuditPolicyManager
 	/// </summary>
 	/// <param name="subcategoryGuid">The subcategory GUID</param>
 	/// <returns>The parent category GUID</returns>
-	private static Guid GetCategoryGuidForSubcategory(Guid subcategoryGuid)
+	internal static Guid GetCategoryGuidForSubcategory(Guid subcategoryGuid)
 	{
 		// Ensure privileges before calling enumeration APIs
 		AuditPrivilegeHelper.EnsurePrivileges();
@@ -221,7 +329,10 @@ internal static class AuditPolicyManager
 				IntPtr categoryGuidPtr = IntPtr.Add(categoriesPtr, (int)i * guidSize);
 				Guid categoryGuid = Marshal.PtrToStructure<Guid>(categoryGuidPtr);
 
-				if (!NativeMethods.AuditEnumerateSubCategories(categoryGuidPtr, true, out IntPtr subCatPtr, out uint subCatCount))
+				// Setting this to FALSE correctly restricts enumeration to subcategories actually belonging to the category.
+				// When TRUE, the API returns ALL subcategories irrespective of the supplied category GUID.
+				// That causes every subcategory to appear under every category. (60 * 9 = 540!!)
+				if (!NativeMethods.AuditEnumerateSubCategories(categoryGuidPtr, false, out IntPtr subCatPtr, out uint subCatCount))
 					continue;
 
 				try
@@ -277,7 +388,9 @@ internal static class AuditPolicyManager
 				IntPtr categoryGuidPtr = IntPtr.Add(categoriesPtr, (int)i * guidSize);
 				Guid categoryGuid = Marshal.PtrToStructure<Guid>(categoryGuidPtr);
 
-				if (!NativeMethods.AuditEnumerateSubCategories(categoryGuidPtr, true, out IntPtr subCatPtr, out uint subCatCount))
+				// FALSE for the 'AllSubCategories' parameter so we only get subcategories that belong to this category.
+				// TRUE would produce every subcategory for every category, causing duplicates and incorrect category mapping.
+				if (!NativeMethods.AuditEnumerateSubCategories(categoryGuidPtr, false, out IntPtr subCatPtr, out uint subCatCount))
 				{
 					continue; // Skip categories that fail to enumerate
 				}
@@ -481,7 +594,7 @@ internal static class AuditPolicyManager
 	/// Applies audit policies from a CSV file to the system.
 	/// The CSV file is in Microsoft Security Baselines.
 	/// </summary>
-	/// <param name="csvFilePath">Path to the CSV file containing audit policies</param>		
+	/// <param name="csvFilePath">Path to the CSV file containing audit policies</param>
 	internal static void ApplyAuditPoliciesFromCsv(string csvFilePath)
 	{
 		// Ensure privileges
@@ -531,19 +644,56 @@ internal static class AuditPolicyManager
 			return;
 		}
 
+		// Without the following logics, we would only add and never remove audit flags.
+		// E.g., we couldn't move from "Success and Failure" to "Success" or "Failure".
+		// E.g., If a policy was "Success" and we set it to "Failure" (or vise versa) it would just change to "Success and Failure".
+
+		for (int i = 0; i < auditPolicies.Length; i++)
+		{
+			if (auditPolicies[i].AuditingInformation == (uint)AuditBitFlags.POLICY_AUDIT_EVENT_UNCHANGED)
+			{
+				auditPolicies[i].AuditingInformation = (uint)AuditBitFlags.POLICY_AUDIT_EVENT_NONE;
+			}
+		}
+
+		// Clone and set all to POLICY_AUDIT_EVENT_NONE sentinel (0x4)
+		AUDIT_POLICY_INFORMATION[] clearPhase = (AUDIT_POLICY_INFORMATION[])auditPolicies.Clone();
+		for (int i = 0; i < clearPhase.Length; i++)
+		{
+			clearPhase[i].AuditingInformation = (uint)AuditBitFlags.POLICY_AUDIT_EVENT_NONE;
+		}
+
+		// Apply clear phase with sentinel values
+		ApplyPoliciesRaw(clearPhase);
+
+		// Apply desired final settings
+		ApplyPoliciesRaw(auditPolicies);
+	}
+
+	/// <summary>
+	/// Passes the AUDIT_POLICY_INFORMATION array as-is
+	/// (including sentinel 0x4 values) by marshalling to unmanaged memory.
+	/// </summary>
+	private static void ApplyPoliciesRaw(AUDIT_POLICY_INFORMATION[] policies)
+	{
+		int count = policies.Length;
+		if (count == 0)
+		{
+			return;
+		}
+
 		int structSize = Marshal.SizeOf<AUDIT_POLICY_INFORMATION>();
-		IntPtr policiesPtr = Marshal.AllocHGlobal(auditPolicies.Length * structSize);
+		IntPtr buffer = Marshal.AllocHGlobal(structSize * count);
 
 		try
 		{
-			for (int i = 0; i < auditPolicies.Length; i++)
+			for (int i = 0; i < count; i++)
 			{
-				Marshal.StructureToPtr(auditPolicies[i], IntPtr.Add(policiesPtr, i * structSize), false);
+				Marshal.StructureToPtr(policies[i], IntPtr.Add(buffer, i * structSize), false);
 			}
 
-			bool result = NativeMethods.AuditSetSystemPolicy(policiesPtr, (uint)auditPolicies.Length);
-
-			if (!result)
+			bool ok = NativeMethods.AuditSetSystemPolicy(buffer, (uint)count);
+			if (!ok)
 			{
 				int lastError = Marshal.GetLastWin32Error();
 				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToApplyAuditPolicyToSystemError"), lastError));
@@ -551,7 +701,7 @@ internal static class AuditPolicyManager
 		}
 		finally
 		{
-			Marshal.FreeHGlobal(policiesPtr);
+			Marshal.FreeHGlobal(buffer);
 		}
 	}
 
@@ -572,7 +722,7 @@ internal static class AuditPolicyManager
 		}
 
 		// Extract relevant columns:
-		// 0: Machine Name, 1: Policy Target, 2: Subcategory, 3: Subcategory GUID, 
+		// 0: Machine Name, 1: Policy Target, 2: Subcategory, 3: Subcategory GUID,
 		// 4: Inclusion Setting, 5: Exclusion Setting, 6: Setting Value
 
 		string subcategoryName = parts[2].Trim();
@@ -665,7 +815,9 @@ internal static class AuditPolicyManager
 				finally
 				{
 					// Free the string allocated by the API
-					Marshal.FreeHGlobal(namePtr);
+					// Marshal.FreeHGlobal(namePtr);
+					// Must be freed via AuditFree per documentation, not FreeHGlobal: https://learn.microsoft.com/windows/win32/api/ntsecapi/nf-ntsecapi-auditlookupsubcategorynamew#parameters
+					NativeMethods.AuditFree(namePtr);
 				}
 			}
 		}
@@ -703,7 +855,9 @@ internal static class AuditPolicyManager
 				finally
 				{
 					// Free the string allocated by the API
-					Marshal.FreeHGlobal(namePtr);
+					// Marshal.FreeHGlobal(namePtr);
+					// Must be freed via AuditFree per documentation, not FreeHGlobal: https://learn.microsoft.com/windows/win32/api/ntsecapi/nf-ntsecapi-auditlookupsubcategorynamew#parameters
+					NativeMethods.AuditFree(namePtr);
 				}
 			}
 		}

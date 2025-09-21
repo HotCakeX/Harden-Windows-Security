@@ -26,9 +26,10 @@ namespace AppControlManager.CustomUIElements;
 
 /// <summary>
 /// A SettingsCard that:
-///  - On RightTapped or Holding (on the card), shows its inner Button.Flyout at the card.
+///  - On RightTapped or Holding (on the card), shows its inner Button.Flyout at the button.
 ///  - On RightTapped (on the Button), shows its Flyout at the button.
-///  It has special use case, for when the setting card hosts a button used for browsing for files/folders.
+/// It has special use case, for when the setting card hosts a ButtonV2 used for browsing for files/folders.
+///  Flyout opening is delegated to ButtonV2's own logic.
 /// </summary>
 internal sealed partial class SettingsCardV3 : SettingsCardV2
 {
@@ -66,21 +67,6 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 		// Hook card-level events
 		RightTapped += Card_RightTapped;
 		Holding += Card_Holding;
-
-		// Hook button-level right-tap
-		_innerButton.RightTapped += Button_RightTapped;
-	}
-
-	private void Button_RightTapped(object sender, RightTappedRoutedEventArgs e)
-	{
-		if (_innerButton is null || !_innerButton.IsEnabled)
-			return;
-
-		FlyoutBase flyout = _innerButton.Flyout;
-		if (flyout is not null && !flyout.IsOpen)
-			flyout.ShowAt(_innerButton);
-
-		e.Handled = true;
 	}
 
 	private void Card_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -88,9 +74,12 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 		if (_innerButton is null || !_innerButton.IsEnabled)
 			return;
 
-		FlyoutBase flyout = _innerButton.Flyout;
-		if (flyout is not null && !flyout.IsOpen)
-			flyout.ShowAt(this);
+		// Delegate to ButtonV2 logic
+		if (_innerButton is ButtonV2 buttonV2)
+		{
+			e.Handled = buttonV2.TryShowFlyout();
+			return;
+		}
 
 		e.Handled = true;
 	}
@@ -100,9 +89,12 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 		if (e.HoldingState != HoldingState.Started || _innerButton is null || !_innerButton.IsEnabled)
 			return;
 
-		FlyoutBase flyout = _innerButton.Flyout;
-		if (flyout is not null && !flyout.IsOpen)
-			flyout.ShowAt(this);
+		// Delegate to ButtonV2 logic
+		if (_innerButton is ButtonV2 buttonV2)
+		{
+			e.Handled = buttonV2.TryShowFlyout();
+			return;
+		}
 
 		e.Handled = true;
 	}

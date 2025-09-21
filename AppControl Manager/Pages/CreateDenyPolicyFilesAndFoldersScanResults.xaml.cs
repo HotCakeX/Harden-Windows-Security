@@ -15,88 +15,20 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
-using AppControlManager.IntelGathering;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// Represents a page for creating deny policy scan results, managing navigation state and data context. Handles user
-/// interactions like copying, filtering, and selecting items.
-/// </summary>
 internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 {
-
 	private CreateDenyPolicyVM ViewModel { get; } = ViewModelProvider.CreateDenyPolicyVM;
 
 	internal CreateDenyPolicyFilesAndFoldersScanResults()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
-	}
-
-	/// <summary>
-	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
-	/// </summary>
-	/// <param name="sender">The event sender.</param>
-	/// <param name="e">The event arguments.</param>
-	private void ListViewFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
-	{
-		// Check if there are selected items in the ListView
-		if (FileIdentitiesListView.SelectedItems.Count > 0)
-		{
-			ListViewHelper.ConvertRowToText(FileIdentitiesListView.SelectedItems, ListViewHelper.FileIdentityPropertyMappings);
-		}
-	}
-
-	/// <summary>
-	/// Click event handler for copy
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
-	{
-		// Attempt to retrieve the property mapping using the Tag as the key.
-		if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue((string)((MenuFlyoutItem)sender).Tag, out var mapping))
-		{
-			ListViewHelper.CopyToClipboard<FileIdentity>(fi => mapping.Getter(fi)?.ToString(), FileIdentitiesListView);
-		}
-	}
-
-
-	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (sender is Button button && button.Tag is string key)
-		{
-			if (ListViewHelper.FileIdentityPropertyMappings.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					keySelector: mapping.Getter,
-					searchBoxText: ViewModel.FilesAndFoldersScanResultsSearchTextBox,
-					originalList: ViewModel.filesAndFoldersScanResultsList,
-					observableCollection: ViewModel.FilesAndFoldersScanResults,
-					sortState: ViewModel.SortStateFilesAndFolders,
-					newKey: key,
-					regKey: ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults);
-			}
-		}
-	}
-
-	/// <summary>
-	/// CTRL + C shortcuts event handler
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-	{
-		ListViewFlyoutMenuCopy_Click(sender, new RoutedEventArgs());
-		args.Handled = true;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 }

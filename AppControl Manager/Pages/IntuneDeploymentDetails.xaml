@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="AppControlManager.Pages.IntuneDeploymentDetails"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:MSGraph="using:AppControlManager.MicrosoftGraph"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Page Header -->
+        <controls:WrapPanel Grid.Row="0" Style="{StaticResource PageHeaderWrapPanelStyle}">
+            <TextBlock x:Uid="IntuneDeploymentDetailsPageTitle"
+                       TextWrapping="WrapWholeWords"
+                       Style="{StaticResource BodyTextBlockStyle}" />
+        </controls:WrapPanel>
+
+        <customUI:InfoBarV2 Grid.Row="1"
+                      IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                      Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                      Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                      IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+
+        <Expander Grid.Row="2"
+                  Margin="0,0,0,10"
+                  Padding="8"
+                  HorizontalAlignment="Stretch">
+            <Expander.Header>
+                <controls:WrapPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    HorizontalSpacing="10"
+                                    VerticalSpacing="10">
+
+                    <!-- Refresh -->
+                    <Button IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            x:Uid="RefreshButton"
+                            Click="{x:Bind ViewModel.RefreshIntuneGroupsButton_Click}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE895;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                    <!-- Create Group -->
+                    <Button IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            x:Uid="CreateGroupButton"
+                            Click="{x:Bind ViewModel.CreateGroupButton_Click}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE710;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                    <!-- Delete Group -->
+                    <Button IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            x:Uid="DeleteGroupButton"
+                            Click="{x:Bind ViewModel.DeleteGroupButton_Click}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                    <!-- Search -->
+                    <TextBox x:Uid="SearchBoxTextBox"
+                             Text="{x:Bind ViewModel.SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             VerticalAlignment="Center"
+                             VerticalContentAlignment="Center"
+                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"/>
+
+                    <!-- Extra actions -->
+                    <DropDownButton x:Uid="ExtraActionsDropDownButton"
+                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
+                        <DropDownButton.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE712;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DropDownButton.ContentTemplate>
+                        <DropDownButton.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem"
+                                                Click="{x:Bind ViewModel.SelectAll_Click}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE762;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem x:Uid="DeSelectAllMenuFlyoutItem"
+                                                Click="{x:Bind ViewModel.DeSelectAll_Click}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8E6;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Click="{x:Bind ViewModel.ClearData}"
+                                                x:Uid="ClearDataMenuFlyoutItem">
+                                    <MenuFlyoutItem.Icon>
+                                        <SymbolIcon Symbol="Delete" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem x:Uid="CreateDummyGroupsMenuFlyoutItem"
+                                                Click="{x:Bind ViewModel.CreateRandomGroups}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE98F;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
+
+                    <!-- Total chip -->
+                    <Border CornerRadius="8"
+                            Padding="10,6"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="6"
+                                    VerticalAlignment="Center">
+                            <FontIcon Glyph="&#xE8A9;"
+                                      Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            <TextBlock VerticalAlignment="Center">
+                                <Run x:Uid="TotalText" />
+                                <Run Text="{x:Bind ViewModel.GroupNamesCollection.Count, Mode=OneWay}"
+                                     FontWeight="SemiBold" />
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                </controls:WrapPanel>
+            </Expander.Header>
+
+            <Expander.Content>
+                <controls:WrapPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    HorizontalSpacing="10"
+                                    VerticalSpacing="10">
+
+                    <Button x:Uid="ExportToJSONButton"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.ExportToJsonButton_Click}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <FontIcon Glyph="&#xE96A;" />
+                                <TextBlock x:Uid="ExportToJSONButtonText" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                </controls:WrapPanel>
+            </Expander.Content>
+        </Expander>
+
+        <!-- ListView -->
+        <customUI:ListViewV2 SelectionMode="Multiple"
+                             ItemsSource="{x:Bind ViewModel.GroupNamesCollection}"
+                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                             Grid.Row="3"
+                             Loaded="{x:Bind ViewModel.MainListView_Loaded}"
+                             ScrollViewer.HorizontalScrollMode="Enabled"
+                             ScrollViewer.IsHorizontalRailEnabled="True"
+                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                             ShowsScrollingPlaceholders="True"
+                             SelectionChanged="{x:Bind ViewModel.ListView_SelectionChanged}"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             RegistryKey="Deployment_IntuneGroupsListView">
+
+            <!-- Header -->
+            <customUI:ListViewV2.Header>
+                <Border CornerRadius="5"
+                        Background="Black"
+                        customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                    <Grid>
+                        <Grid.Transitions>
+                            <TransitionCollection>
+                                <RepositionThemeTransition />
+                            </TransitionCollection>
+                        </Grid.Transitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth3, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth4, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=TwoWay}" MinWidth="50" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Sortable Header Buttons -->
+                        <Button x:Uid="GroupNameColumnHeaderBtn"
+                                Tag="GroupName"
+                                Grid.Column="0"
+                                Margin="10,0,0,0"
+                                FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                Style="{StaticResource ListViewHeaderButton}"
+                                Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="GroupIDColumnHeaderBtn"
+                                Tag="GroupID"
+                                Grid.Column="1"
+                                Margin="0"
+                                FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                Style="{StaticResource ListViewHeaderButton}"
+                                Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="GroupDescriptionColumnHeaderBtn"
+                                Tag="Description"
+                                Grid.Column="2"
+                                Margin="0"
+                                FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                Style="{StaticResource ListViewHeaderButton}"
+                                Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="GroupSecurityIdentifierColumnHeaderBtn"
+                                Tag="SecurityIdentifier"
+                                Grid.Column="3"
+                                Margin="0"
+                                FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                Style="{StaticResource ListViewHeaderButton}"
+                                Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+                        <Button x:Uid="GroupCreatedDateTimeColumnHeaderBtn"
+                                Tag="CreatedDateTime"
+                                Grid.Column="4"
+                                Margin="0"
+                                FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                Style="{StaticResource ListViewHeaderButton}"
+                                Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}"/>
+
+                        <!-- GridSplitters -->
+                        <controls:GridSplitter Grid.Column="1" />
+                        <controls:GridSplitter Grid.Column="2" />
+                        <controls:GridSplitter Grid.Column="3" />
+                        <controls:GridSplitter Grid.Column="4" />
+                    </Grid>
+                </Border>
+            </customUI:ListViewV2.Header>
+
+            <!-- Item Template -->
+            <customUI:ListViewV2.ItemTemplate>
+                <DataTemplate x:DataType="MSGraph:IntuneGroupItemListView" xmlns:VMs="using:AppControlManager.ViewModels">
+                    <Grid Background="Transparent">
+                        <Grid.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem x:Uid="CopyRow"
+                                                Click="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.CopySelectedRows_Click}">
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Key="C"
+                                                             Modifiers="Control"
+                                                             Invoked="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.CtrlC_Invoked}"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
+                                    <MenuFlyoutSubItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutSubItem.Icon>
+                                    <MenuFlyoutSubItem.Items>
+
+                                        <MenuFlyoutItem x:Uid="GroupNameHeader"
+                                                        Tag="GroupName"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.CopySinglePropertyMenuItem_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="GroupIDHeader"
+                                                        Tag="GroupID"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.CopySinglePropertyMenuItem_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="GroupDescriptionHeader"
+                                                        Tag="Description"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.CopySinglePropertyMenuItem_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="GroupSecurityIdentifierHeader"
+                                                        Tag="SecurityIdentifier"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.CopySinglePropertyMenuItem_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="GroupCreatedDateTimeHeader"
+                                                        Tag="CreatedDateTime"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.CopySinglePropertyMenuItem_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                    </MenuFlyoutSubItem.Items>
+                                </MenuFlyoutSubItem>
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.ColumnWidth5, Mode=OneWay}" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{x:Bind GroupName}"
+                                   Style="{StaticResource ListViewCellTextBlock}"
+                                   FontFamily="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                   Grid.Column="0"/>
+                        <TextBlock Text="{x:Bind GroupID}"
+                                   Style="{StaticResource ListViewCellTextBlock}"
+                                   FontFamily="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                   Grid.Column="1"/>
+                        <TextBlock Text="{x:Bind Description}"
+                                   Style="{StaticResource ListViewCellTextBlock}"
+                                   FontFamily="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                   Grid.Column="2"/>
+                        <TextBlock Text="{x:Bind SecurityIdentifier}"
+                                   Style="{StaticResource ListViewCellTextBlock}"
+                                   FontFamily="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                   Grid.Column="3"/>
+                        <TextBlock Text="{x:Bind CreatedDateTime}"
+                                   Style="{StaticResource ListViewCellTextBlock}"
+                                   FontFamily="{x:Bind VMs:ViewModelProvider.IntuneDeploymentDetailsVM.AppSettings.ListViewFontFamily, Mode=OneWay}"
+                                   Grid.Column="4"/>
+                    </Grid>
+                </DataTemplate>
+            </customUI:ListViewV2.ItemTemplate>
+        </customUI:ListViewV2>
+
+    </Grid>
+</Page>

@@ -574,15 +574,6 @@
   <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
     <value>Ver las carpetas que seleccionó.</value>
   </data>
-  <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
-    <value>Registros totales: 0</value>
-  </data>
-  <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El número total de los registros</value>
-  </data>
-  <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El número total de los registros</value>
-  </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>Actualizar Los Registros</value>
   </data>
@@ -660,15 +651,6 @@
   </data>
   <data name="BrowseForBasePolicyTextBlock.Text" xml:space="preserve">
     <value>Examinar en busca de un archivo de directiva Base</value>
-  </data>
-  <data name="BrowseForPolicyTextBlock.Text" xml:space="preserve">
-    <value>Examinar en busca de un archivo XML de directiva</value>
-  </data>
-  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Haga clic/toque para elegir un archivo de directiva XML de su dispositivo</value>
-  </data>
-  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Haga clic/toque para elegir un archivo de directiva XML de su dispositivo</value>
   </data>
   <data name="ScanLevelComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Elija un nivel según el cual se escanearán los Archivos/Registros</value>
@@ -825,24 +807,6 @@
   </data>
   <data name="ViewSelectedXMLFileTextBlock.Text" xml:space="preserve">
     <value>Ver el/los archivo(s) XML que seleccionó.</value>
-  </data>
-  <data name="SelectXMLFileTextBlock.Text" xml:space="preserve">
-    <value>Seleccionar Archivo XML</value>
-  </data>
-  <data name="SelectFilesTextBlock.Text" xml:space="preserve">
-    <value>Seleccionar Archivos</value>
-  </data>
-  <data name="SelectFoldersTextBlock.Text" xml:space="preserve">
-    <value>Seleccionar Carpetas</value>
-  </data>
-  <data name="ScanLogsTextBlock.Text" xml:space="preserve">
-    <value>Escanear Registros</value>
-  </data>
-  <data name="ScanLogsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Escanear el sistema o los archivos EVTX seleccionados en busca de registros de Integridad de Código/AppLocker</value>
-  </data>
-  <data name="ScanLogsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Escanear el sistema o los archivos EVTX seleccionados en busca de registros de Integridad de Código/AppLocker</value>
   </data>
   <data name="RuleOption_EnabledUMCI" xml:space="preserve">
     <value>Las directivas de App Control restringen tanto los binarios en modo kernel como en modo usuario. Por defecto, solo se restringen los binarios en modo kernel. Habilitar esta opción de regla valida los ejecutables y scripts en modo usuario.</value>
@@ -1099,7 +1063,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CertificateBuildError" xml:space="preserve">
     <value>Ocurrieron errores al crear el certificado</value>
   </data>
-  <data name="SuccessTitle" xml:space="preserve">
+  <data name="SuccessText" xml:space="preserve">
     <value>Éxito</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
@@ -1158,9 +1122,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Se creó correctamente la directiva de Denegación</value>
-  </data>
-  <data name="NumberOfPolicies" xml:space="preserve">
-    <value>Número de Directivas: </value>
   </data>
   <data name="WarningTitle" xml:space="preserve">
     <value>ADVERTENCIA</value>
@@ -1244,9 +1205,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Opciones de Directiva</value>
   </data>
   <!-- End of For CI Policy Info ListViews Column Header Buttons -->
-  <data name="Copy" xml:space="preserve">
-    <value>Copiar </value>
-  </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>ID de Directiva: </value>
   </data>
@@ -2836,10 +2794,10 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="AppControlStatusTextBlock.Text" xml:space="preserve">
     <value>Estado de Application Control for Business</value>
   </data>
-  <data name="UMCITextBlock.Text" xml:space="preserve">
+  <data name="UMCITextBlock.Header" xml:space="preserve">
     <value>Integridad de Código en Modo Usuario</value>
   </data>
-  <data name="KMCITextBlock.Text" xml:space="preserve">
+  <data name="KMCITextBlock.Header" xml:space="preserve">
     <value>Integridad de Código en Modo Kernel</value>
   </data>
   <data name="BasePolicies.Text" xml:space="preserve">
@@ -2871,12 +2829,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Esta función le permite intercambiar sin problemas cualquiera de las directivas base no pertenecientes al sistema implementadas aplicables con otra directiva de la lista.</value>
-  </data>
-  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El recuento de todas las directivas mostradas</value>
-  </data>
-  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El recuento de todas las directivas mostradas</value>
   </data>
   <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
     <value>Eliminar Directiva</value>
@@ -3091,9 +3043,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CreatingSnapBackGuarantee" xml:space="preserve">
     <value>Creando garantía de SnapBack en Modo Forzado</value>
   </data>
-  <data name="DeployingAuditModePolicy" xml:space="preserve">
-    <value>Implementando la directiva en modo Auditoría</value>
-  </data>
   <data name="ScanningSelectedDirectories" xml:space="preserve">
     <value>Escaneando los directorios seleccionados</value>
   </data>
@@ -3105,9 +3054,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="ResetSuccessful" xml:space="preserve">
     <value>El restablecimiento fue exitoso.</value>
-  </data>
-  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
-    <value>Implementando la directiva en modo Forzado porque el usuario decidió restablecer la operación</value>
   </data>
   <data name="DeployingEnforceMode" xml:space="preserve">
     <value>Implementando la directiva en modo Forzado.</value>
@@ -3589,9 +3535,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
     <value>Hubo un error al analizar el número de opción de regla {0} a su valor de cadena: {1}</value>
   </data>
-  <data name="NumberOfPoliciesMessage" xml:space="preserve">
-    <value>Número de directivas: {0}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>El ID del objeto de la directiva de Intune era nulo para la directiva seleccionada que se va a eliminar</value>
   </data>
@@ -3693,9 +3636,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
     <value>No se pudo aplicar hash a {0} usando {1}</value>
-  </data>
-    <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
-    <value>La variable de entorno SystemDrive es nula</value>
   </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
     <value>Actualizando las directivas de App Control del sistema</value>
@@ -3970,12 +3910,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">
     <value>Par clave-valor agregado a SignedPolicyStage1RemovalTimes: {0} = {1}</value>
   </data>
-  <data name="AuthResultImmutableErrorMessage" xml:space="preserve">
-    <value>AuthResult es inmutable y no debe establecerse después de la inicialización.</value>
-  </data>
-  <data name="AccountImmutableErrorMessage" xml:space="preserve">
-    <value>La cuenta es inmutable y no debe establecerse después de la inicialización.</value>
-  </data>
   <data name="SignInProcessCancelledMessage" xml:space="preserve">
     <value>El proceso de inicio de sesión fue cancelado</value>
   </data>
@@ -4144,12 +4078,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
     <value>Configurando e iniciando los servicios relacionados con ISG requeridos</value>
   </data>
-  <data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
-    <value>Intentando deserializar el resultado JSON de Device Guard.</value>
-  </data>
-  <data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
-    <value>La deserialización JSON de Device Guard falló. JSON sin procesar:</value>
-  </data>
   <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
     <value>Aumentando el tamaño del registro de Integridad de Código en 1MB porque su espacio libre actual es inferior a 1MB.</value>
   </data>
@@ -4299,9 +4227,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>Se creó correctamente la directiva de Denegación de regla de Ruta de Archivo Basada en Patrón.</value>
-  </data>
-    <data name="TotalFiles" xml:space="preserve">
-    <value>Archivos Totales</value>
   </data>
   <data name="AllDataClearedMsg" xml:space="preserve">
     <value>Todos los datos se han borrado correctamente.</value>
@@ -4683,12 +4608,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 </data>
 <data name="PackageVersionHeader.Text" xml:space="preserve">
     <value>Versión del paquete</value>
-</data>
-<data name="LoadPolicy.Text" xml:space="preserve">
-    <value>Cargar directiva</value>
-</data>
-<data name="BrowseForPolicy.Text" xml:space="preserve">
-    <value>Buscar directiva</value>
 </data>
 <data name="SaveTheChanged.Text" xml:space="preserve">
     <value>Guardar los cambios</value>
@@ -5727,5 +5646,432 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Abrir Directorio de Registros</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>Exportar a archivo JSON</value>
+  </data>
+    <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Exportar todos los datos en el ListView a JSON.</value>
+  </data>
+    <data name="ExportToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+     <value>Exportar todos los datos en el ListView a JSON.</value>
+  </data>
+  <data name="ExportingToJSONMsg" xml:space="preserve">
+     <value>Exportando datos a archivo JSON, por favor espere...</value>
+  </data>
+    <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
+     <value>Se exportaron correctamente {0} datos a JSON y se guardaron en: '{1}'</value>
+  </data>
+    <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copiar los elementos seleccionados al portapapeles.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Copiar los elementos seleccionados al portapapeles.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>Copiar seleccionados</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Description" xml:space="preserve">
+    <value>Redimensiona automáticamente las columnas al desplazarte para ajustar el contenido visible. Las columnas se expandirán y contraerán de forma dinámica. Solo aplica a las Vistas de Lista que admiten esta función. Si esta opción está habilitada y ya hay datos cargados en una Vista de Lista, después de deshabilitarla y regresar a la página con la Vista de Lista, se realizará un cálculo único del ancho para todos los datos.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Header" xml:space="preserve">
+    <value>Redimensionar automáticamente los encabezados de columna en las Vistas de Lista</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Redimensiona automáticamente las columnas al desplazarte para ajustar el contenido visible. Las columnas se expandirán y contraerán de forma dinámica. Solo aplica a las Vistas de Lista que admiten esta función. Si esta opción está habilitada y ya hay datos cargados en una Vista de Lista, después de deshabilitarla y regresar a la página con la Vista de Lista, se realizará un cálculo único del ancho para todos los datos.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Redimensiona automáticamente las columnas al desplazarte para ajustar el contenido visible. Las columnas se expandirán y contraerán de forma dinámica. Solo aplica a las Vistas de Lista que admiten esta función. Si esta opción está habilitada y ya hay datos cargados en una Vista de Lista, después de deshabilitarla y regresar a la página con la Vista de Lista, se realizará un cálculo único del ancho para todos los datos.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>Elige una familia de fuentes para los datos mostrados en las Vistas de Lista de la aplicación. Según la fuente a la que cambies y si ya hay datos cargados en las vistas de lista, su ancho podría requerir un reajuste. Activa la función de redimensionamiento automático de columnas si es necesario.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>Familia de fuentes de las Vistas de Lista</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elige una familia de fuentes para los datos mostrados en las Vistas de Lista de la aplicación. Según la fuente a la que cambies y si ya hay datos cargados en las vistas de lista, su ancho podría requerir un reajuste. Activa la función de redimensionamiento automático de columnas si es necesario.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elige una familia de fuentes para los datos mostrados en las Vistas de Lista de la aplicación. Según la fuente a la que cambies y si ya hay datos cargados en las vistas de lista, su ancho podría requerir un reajuste. Activa la función de redimensionamiento automático de columnas si es necesario.</value>
+  </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>Total: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El número total de elementos</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El número total de elementos</value>
+  </data>
+    <data name="LoadedText.Text" xml:space="preserve">
+    <value>Cargados: </value>
+  </data>
+  <data name="LoadedText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>El número total de elementos que están actualmente cargados en la vista</value>
+  </data>
+  <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>El número total de elementos que están actualmente cargados en la vista</value>
+  </data>
+   <data name="RetrieveTheLogsButton.Content" xml:space="preserve">
+    <value>Obtener los registros</value>
+  </data>
+  <data name="RetrieveTheLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Obtén los registros enviando una consulta de Advanced Hunting a MDE</value>
+  </data>
+  <data name="RetrieveTheLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Obtén los registros enviando una consulta de Advanced Hunting a MDE</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.Content" xml:space="preserve">
+    <value>Ejemplos de consultas</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Puedes copiar las siguientes consultas y usarlas en el portal de MDE Advanced Hunting para generar registros estándar compatibles con AppControl Manager, o puedes usar la funcionalidad integrada de la aplicación para recuperar automáticamente los registros y procesarlos.</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Puedes copiar las siguientes consultas y usarlas en el portal de MDE Advanced Hunting para generar registros estándar compatibles con AppControl Manager, o puedes usar la funcionalidad integrada de la aplicación para recuperar automáticamente los registros y procesarlos.</value>
+  </data>
+  <data name="DragAndDropHint.Text" xml:space="preserve">
+     <value>o arrastra y suelta archivos aquí</value>
+  </data>
+    <data name="DragAndDropHintGetHashesCaption" xml:space="preserve">
+     <value>Suelta un archivo para obtener valores de hash</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>Seleccionado</value>
+  </data>
+  <!-- For Intune Groups ListView - Headers -->
+  <data name="GroupNameHeader.Text" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="GroupIDHeader.Text" xml:space="preserve">
+    <value>Identificador</value>
+  </data>
+    <data name="GroupDescriptionHeader.Text" xml:space="preserve">
+    <value>Descripción</value>
+  </data>
+    <data name="GroupSecurityIdentifierHeader.Text" xml:space="preserve">
+    <value>Identificador de seguridad</value>
+  </data>
+    <data name="GroupCreatedDateTimeHeader.Text" xml:space="preserve">
+    <value>Hora de creación</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Headers -->
+  <!-- For Intune Groups ListView - Buttons -->
+  <data name="GroupNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="GroupIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Identificador</value>
+  </data>
+    <data name="GroupDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Descripción</value>
+  </data>
+    <data name="GroupSecurityIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Identificador de seguridad</value>
+  </data>
+    <data name="GroupCreatedDateTimeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Hora de creación</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Buttons -->
+  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <value>Detalles de implementación de la política de Intune</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Especifique los detalles de una implementación de política de Intune</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Especifique los detalles de una implementación de política de Intune</value>
+  </data>
+  <data name="CreateGroupButton.Content" xml:space="preserve">
+    <value>Crear nuevo grupo</value>
+  </data>
+  <data name="CreateGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cree un nuevo grupo en Microsoft Entra ID</value>
+  </data>
+  <data name="CreateGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cree un nuevo grupo en Microsoft Entra ID</value>
+  </data>
+  <data name="GroupDisplayNameEmptyError" xml:space="preserve">
+    <value>El nombre para mostrar del grupo no puede ser null ni estar vacío.</value>
+  </data>
+  <data name="SuccessfullyCreatedGroupMessage" xml:space="preserve">
+    <value>Se creó correctamente un grupo con el nombre para mostrar: {0} y la descripción: {1} y el ID: {2} y el identificador de seguridad: {3} a las: {4}</value>
+  </data>
+  <data name="FailedCreatingGroupError" xml:space="preserve">
+    <value>Error al crear el grupo con el código de estado: {0} y el contenido: {1}</value>
+  </data>
+<data name="DeleteGroupButton.Content" xml:space="preserve">
+  <value>Eliminar grupo</value>
+</data>
+  <data name="DeleteGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Elimine los grupos seleccionados de su Entra ID.</value>
+  </data>
+  <data name="DeleteGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Elimine los grupos seleccionados de su Entra ID.</value>
+  </data>
+<data name="DeleteGroupDialogTitle" xml:space="preserve">
+  <value>Confirmar eliminación de grupo</value>
+</data>
+<data name="Delete" xml:space="preserve">
+  <value>Eliminar</value>
+</data>
+<data name="DeleteGroupDialogIntroSingle" xml:space="preserve">
+  <value>¿Eliminar el grupo '{0}' ?</value>
+</data>
+<data name="DeleteGroupDialogIntroMultiple" xml:space="preserve">
+  <value>¿Eliminar {0} grupos seleccionados ?</value>
+</data>
+<data name="DeleteGroupDialogWarning" xml:space="preserve">
+  <value>Esta acción es irreversible. Los grupos seleccionados se eliminarán permanentemente de su inquilino.</value>
+</data>
+<data name="SuccessfullyDeletedGroupMessage" xml:space="preserve">
+  <value>Se eliminó el grupo {0} (ID: {1}).</value>
+</data>
+<data name="DeleteGroupDeletionErrorLogTemplate" xml:space="preserve">
+  <value>Error al eliminar el grupo {0}: {1}</value>
+</data>
+<data name="ProvideNewGroupDetails" xml:space="preserve">
+  <value>Proporcione los detalles del nuevo grupo.</value>
+</data>
+<data name="GroupType" xml:space="preserve">
+  <value>Tipo de grupo:</value>
+</data>
+<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+  <value>Administre los grupos de Entra en su inquilino y seleccione los grupos a los que desea implementar la política.</value>
+</data>
+<data name="SelectedGroups.Text" xml:space="preserve">
+  <value>Grupos seleccionados:</value>
+</data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Crear 50 grupos ficticios</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cree 50 grupos ficticios en Entra de su inquilino con detalles aleatorios para fines de prueba.</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cree 50 grupos ficticios en Entra de su inquilino con detalles aleatorios para fines de prueba.</value>
+  </data>
+  <data name="ConfirmationTextForDummyGroupsCreation" xml:space="preserve">
+    <value>¿Está seguro de que desea crear 50 grupos ficticios en Entra de su inquilino con detalles aleatorios para fines de prueba?</value>
+  </data>
+  <data name="SignInAuthenticationRequiredMsg" xml:space="preserve">
+    <value>Autenticación requerida. Inicie sesión primero en su inquilino de Microsoft.</value>
+  </data>
+  <data name="SuccessfullyRefreshedMSGraphTokenMsg" xml:space="preserve">
+    <value>Se actualizó correctamente el token de Microsoft Graph para la cuenta: {0}</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.Content" xml:space="preserve">
+    <value>Seleccionar archivo de política</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Examinar un archivo de política de App Control.</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Examinar un archivo de política de App Control.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.Content" xml:space="preserve">
+    <value>Seleccionar archivos</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Examinar archivos para incluir en la simulación.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Examinar archivos para incluir en la simulación.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.Content" xml:space="preserve">
+    <value>Seleccionar carpetas</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Examinar carpetas para incluir en la simulación. Las carpetas se analizarán de forma recursiva para encontrar archivos compatibles con App Control.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Examinar carpetas para incluir en la simulación. Las carpetas se analizarán de forma recursiva para encontrar archivos compatibles con App Control.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Seleccionar catálogos de seguridad</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Proporcione rutas a directorios donde se encuentran archivos de catálogos de seguridad (.cat). Si no se proporcionan, se usará la ruta predeterminada 'C:\Windows\System32\CatRoot'.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Proporcione rutas a directorios donde se encuentran archivos de catálogos de seguridad (.cat). Si no se proporcionan, se usará la ruta predeterminada 'C:\Windows\System32\CatRoot'.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Analizar catálogos de seguridad</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Indica si se deben analizar los catálogos de seguridad del sistema.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Indica si se deben analizar los catálogos de seguridad del sistema.</value>
+  </data>
+  <data name="LoadPolicyButton.Content" xml:space="preserve">
+    <value>Cargar política</value>
+  </data>
+  <data name="LoadPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cargue la política de App Control seleccionada en la interfaz de usuario.</value>
+  </data>
+  <data name="LoadPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Cargue la política de App Control seleccionada en la interfaz de usuario.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.Content" xml:space="preserve">
+    <value>Analizar datos de Advanced Hunting</value>
+  </data>
+  <data name="ScanMDEAHDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Una vez que seleccione los registros de MDE Advanced Hunting puede usar este botón para analizarlos y mostrar sus resultados en la lista inferior.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Una vez que seleccione los registros de MDE Advanced Hunting puede usar este botón para analizarlos y mostrar sus resultados en la lista inferior.</value>
+  </data>
+    <data name="ScanEventLogsButton.Content" xml:space="preserve">
+    <value>Analizar registros de eventos</value>
+  </data>
+  <data name="ScanEventLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Analice el sistema o los archivos EVTX seleccionados para registros de Code Integrity/AppLocker.</value>
+  </data>
+  <data name="ScanEventLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Analice el sistema o los archivos EVTX seleccionados para registros de Code Integrity/AppLocker.</value>
+  </data>
+  <data name="DeviceNameButton.Content" xml:space="preserve">
+    <value>Nombre del dispositivo</value>
+  </data>
+  <data name="DeviceNameButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Introduzca un nombre de dispositivo para filtrar los datos entrantes de Advanced Hunting.</value>
+  </data>
+  <data name="DeviceNameButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Introduzca un nombre de dispositivo para filtrar los datos entrantes de Advanced Hunting.</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.Header" xml:space="preserve">
+    <value>Opcional: Elija un nombre de dispositivo para filtrar los registros antes de la recuperación</value>
+  </data>
+      <data name="DeviceNameHeaderTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Nombre del dispositivo...</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opcional: Elija un nombre de dispositivo para filtrar los registros antes de la recuperación</value>
+  </data>
+  <data name="ResetFiltersButton.Content" xml:space="preserve">
+    <value>Restablecer filtros</value>
+  </data>
+  <data name="ResetFiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restablecer filtros de propiedad, búsqueda de propiedad y fecha</value>
+  </data>
+  <data name="ResetFiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restablecer filtros de propiedad, búsqueda de propiedad y fecha</value>
+  </data>
+    <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Haga clic/toque para elegir un archivo de directiva XML de su dispositivo</value>
+  </data>
+  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Haga clic/toque para elegir un archivo de directiva XML de su dispositivo</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>Personaliza el color del borde de la ventana de la aplicación. Puedes elegir un color de la paleta o seleccionar la opción arcoíris, que recorrerá de forma animada todos los colores disponibles.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>Color del borde de la ventana</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Personaliza el color del borde de la ventana de la aplicación. Puedes elegir un color de la paleta o seleccionar la opción arcoíris, que recorrerá de forma animada todos los colores disponibles.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Personaliza el color del borde de la ventana de la aplicación. Puedes elegir un color de la paleta o seleccionar la opción arcoíris, que recorrerá de forma animada todos los colores disponibles.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>Iniciar animación de arcoíris</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Inicia la animación de arcoíris alrededor del borde de la ventana de la aplicación.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Inicia la animación de arcoíris alrededor del borde de la ventana de la aplicación.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>Detener animación de arcoíris</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Detén la animación de arcoíris alrededor del borde de la ventana de la aplicación si está en ejecución.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Detén la animación de arcoíris alrededor del borde de la ventana de la aplicación si está en ejecución.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>Establecer color del borde</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Establece el color del borde de la ventana de la aplicación al color seleccionado.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Establece el color del borde de la ventana de la aplicación al color seleccionado.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>Restablecer color del borde</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restablece el color del borde de la ventana de la aplicación al color predeterminado.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restablece el color del borde de la ventana de la aplicación al color predeterminado.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>Inicio</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Página de inicio y pantalla de bienvenida</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Página de inicio y pantalla de bienvenida</value>
+    <comment>Main Navigation</comment>
+  </data>
+    <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
+     <value>Suelta un archivo para ver sus certificados</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>Hola y bienvenido</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>Gracias por elegir AppControl Manager. Si desea leer las notas de la versión de la actualización más reciente, puede encontrarlas en la sección de Releases del repositorio oficial de GitHub. Allí también puede hacer preguntas o enviar comentarios.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>Visitar GitHub Releases</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abre en el navegador la página del repositorio de GitHub después de hacer clic en el botón.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abre en el navegador la página del repositorio de GitHub después de hacer clic en el botón.</value>
+  </data>
+  <data name="UseHardenSystemSecurity.Text" xml:space="preserve">
+    <value>Usar la aplicación Harden System Security</value>
+  </data>
+  <data name="UseHardenSystemSecurityDescription.Text" xml:space="preserve">
+    <value>Harden System Security es otra aplicación que he desarrollado para ayudarle a aplicar fácilmente medidas de seguridad sólidas y avanzadas en un sistema. Ofrece una interfaz moderna e intuitiva, se nutre de los comentarios de la comunidad y se mantiene activamente.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>Visitar la página de Microsoft Store</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abre la página de Microsoft Store después de hacer clic en el botón.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abre la página de Microsoft Store después de hacer clic en el botón.</value>
+  </data>
+  <data name="IntuneIntegrationHomePage.Text" xml:space="preserve">
+    <value>Integración fluida con Microsoft Intune</value>
+  </data>
+  <data name="IntuneIntegrationHomePageDescription.Text" xml:space="preserve">
+    <value>Integración fluida con Microsoft Intune para una gestión de seguridad mejorada, como ver sus directivas distribuidas de forma remota, implementar nuevas directivas o eliminar las existentes.</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.Content" xml:space="preserve">
+    <value>Ir a la página de Implementación</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ir a la página de Implementación</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ir a la página de Implementación</value>
   </data>
 </root>

@@ -574,15 +574,6 @@
   <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
     <value>Προβολή των φακέλων που επιλέξατε.</value>
   </data>
-  <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
-    <value>Συνολικά αρχεία καταγραφής: 0</value>
-  </data>
-  <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ο συνολικός αριθμός των αρχείων καταγραφής</value>
-  </data>
-  <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ο συνολικός αριθμός των αρχείων καταγραφής</value>
-  </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>Ανανέωση των Αρχείων Καταγραφής</value>
   </data>
@@ -660,15 +651,6 @@
   </data>
   <data name="BrowseForBasePolicyTextBlock.Text" xml:space="preserve">
     <value>Αναζήτηση για ένα αρχείο Βασικής πολιτικής</value>
-  </data>
-  <data name="BrowseForPolicyTextBlock.Text" xml:space="preserve">
-    <value>Αναζήτηση για ένα αρχείο XML πολιτικής</value>
-  </data>
-  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Κάντε κλικ/πατήστε για να επιλέξετε ένα αρχείο XML πολιτικής από τη συσκευή σας</value>
-  </data>
-  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Κάντε κλικ/πατήστε για να επιλέξετε ένα αρχείο XML πολιτικής από τη συσκευή σας</value>
   </data>
   <data name="ScanLevelComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>Επιλέξτε ένα επίπεδο με βάση το οποίο θα σαρωθούν τα Αρχεία/Αρχεία Καταγραφής</value>
@@ -825,24 +807,6 @@
   </data>
   <data name="ViewSelectedXMLFileTextBlock.Text" xml:space="preserve">
     <value>Προβολή του(ων) αρχείου(ων) XML που επιλέξατε.</value>
-  </data>
-  <data name="SelectXMLFileTextBlock.Text" xml:space="preserve">
-    <value>Επιλογή Αρχείου XML</value>
-  </data>
-  <data name="SelectFilesTextBlock.Text" xml:space="preserve">
-    <value>Επιλογή Αρχείων</value>
-  </data>
-  <data name="SelectFoldersTextBlock.Text" xml:space="preserve">
-    <value>Επιλογή Φακέλων</value>
-  </data>
-  <data name="ScanLogsTextBlock.Text" xml:space="preserve">
-    <value>Σάρωση Αρχείων Καταγραφής</value>
-  </data>
-  <data name="ScanLogsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Σάρωση του συστήματος ή των επιλεγμένων αρχείων EVTX για αρχεία καταγραφής Ακεραιότητας Κώδικα/AppLocker</value>
-  </data>
-  <data name="ScanLogsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Σάρωση του συστήματος ή των επιλεγμένων αρχείων EVTX για αρχεία καταγραφής Ακεραιότητας Κώδικα/AppLocker</value>
   </data>
   <data name="RuleOption_EnabledUMCI" xml:space="preserve">
     <value>Οι πολιτικές Ελέγχου Εφαρμογών περιορίζουν τόσο τα δυαδικά αρχεία λειτουργίας πυρήνα όσο και τα δυαδικά αρχεία λειτουργίας χρήστη. Από προεπιλογή, περιορίζονται μόνο τα δυαδικά αρχεία λειτουργίας πυρήνα. Η ενεργοποίηση αυτής της επιλογής κανόνα επικυρώνει τα εκτελέσιμα αρχεία και τα σενάρια λειτουργίας χρήστη.</value>
@@ -1099,7 +1063,7 @@
   <data name="CertificateBuildError" xml:space="preserve">
     <value>Παρουσιάστηκαν σφάλματα κατά τη δημιουργία του πιστοποιητικού</value>
   </data>
-  <data name="SuccessTitle" xml:space="preserve">
+  <data name="SuccessText" xml:space="preserve">
     <value>Επιτυχία</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
@@ -1158,9 +1122,6 @@
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>Επιτυχής δημιουργία της πολιτικής Απαγόρευσης</value>
-  </data>
-  <data name="NumberOfPolicies" xml:space="preserve">
-    <value>Αριθμός Πολιτικών: </value>
   </data>
   <data name="WarningTitle" xml:space="preserve">
     <value>ΠΡΟΕΙΔΟΠΟΙΗΣΗ</value>
@@ -1244,9 +1205,6 @@
     <value>Επιλογές Πολιτικής</value>
   </data>
   <!-- End of For CI Policy Info ListViews Column Header Buttons -->
-  <data name="Copy" xml:space="preserve">
-    <value>Αντιγραφή </value>
-  </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>ID Πολιτικής: </value>
   </data>
@@ -2836,10 +2794,10 @@
   <data name="AppControlStatusTextBlock.Text" xml:space="preserve">
     <value>Κατάσταση Ελέγχου Εφαρμογών για Επιχειρήσεις</value>
   </data>
-  <data name="UMCITextBlock.Text" xml:space="preserve">
+  <data name="UMCITextBlock.Header" xml:space="preserve">
     <value>Ακεραιότητα Κώδικα Λειτουργίας Χρήστη</value>
   </data>
-  <data name="KMCITextBlock.Text" xml:space="preserve">
+  <data name="KMCITextBlock.Header" xml:space="preserve">
     <value>Ακεραιότητα Κώδικα Λειτουργίας Πυρήνα</value>
   </data>
   <data name="BasePolicies.Text" xml:space="preserve">
@@ -2871,12 +2829,6 @@
   </data>
   <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αυτή η δυνατότητα σας επιτρέπει να ανταλλάξετε απρόσκοπτα οποιαδήποτε από τις εφαρμόσιμες αναπτυγμένες μη συστημικές βασικές πολιτικές με μια άλλη πολιτική από τη λίστα.</value>
-  </data>
-  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ο αριθμός όλων των εμφανιζόμενων πολιτικών</value>
-  </data>
-  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ο αριθμός όλων των εμφανιζόμενων πολιτικών</value>
   </data>
   <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
     <value>Αφαίρεση Πολιτικής</value>
@@ -3091,9 +3043,6 @@
   <data name="CreatingSnapBackGuarantee" xml:space="preserve">
     <value>Δημιουργία εγγύησης SnapBack Λειτουργίας Επιβολής</value>
   </data>
-  <data name="DeployingAuditModePolicy" xml:space="preserve">
-    <value>Ανάπτυξη της πολιτικής Λειτουργίας Ελέγχου</value>
-  </data>
   <data name="ScanningSelectedDirectories" xml:space="preserve">
     <value>Σάρωση των επιλεγμένων καταλόγων</value>
   </data>
@@ -3105,9 +3054,6 @@
   </data>
   <data name="ResetSuccessful" xml:space="preserve">
     <value>Η επαναφορά ήταν επιτυχής.</value>
-  </data>
-  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
-    <value>Ανάπτυξη της πολιτικής Λειτουργίας Επιβολής επειδή ο χρήστης αποφάσισε να επαναφέρει τη λειτουργία</value>
   </data>
   <data name="DeployingEnforceMode" xml:space="preserve">
     <value>Ανάπτυξη της πολιτικής Λειτουργίας Επιβολής.</value>
@@ -3589,9 +3535,6 @@
   <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
     <value>Παρουσιάστηκε σφάλμα κατά την ανάλυση του αριθμού επιλογής κανόνα {0} στην τιμή συμβολοσειράς του: {1}</value>
   </data>
-  <data name="NumberOfPoliciesMessage" xml:space="preserve">
-    <value>Αριθμός πολιτικών: {0}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>Το ID αντικειμένου πολιτικής Intune ήταν null για την επιλεγμένη πολιτική προς διαγραφή</value>
   </data>
@@ -3693,9 +3636,6 @@
   </data>
   <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
     <value>Δεν ήταν δυνατός ο κατακερματισμός {0} χρησιμοποιώντας {1}</value>
-  </data>
-  <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
-    <value>Η μεταβλητή περιβάλλοντος SystemDrive είναι null</value>
   </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
     <value>Ανανέωση των πολιτικών Ελέγχου Εφαρμογών του συστήματος</value>
@@ -3970,12 +3910,6 @@
   <data name="KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">
     <value>Ζεύγος κλειδιού-τιμής προστέθηκε στο SignedPolicyStage1RemovalTimes: {0} = {1}</value>
   </data>
-  <data name="AuthResultImmutableErrorMessage" xml:space="preserve">
-    <value>Το AuthResult είναι αμετάβλητο και δεν πρέπει να οριστεί μετά την αρχικοποίηση.</value>
-  </data>
-  <data name="AccountImmutableErrorMessage" xml:space="preserve">
-    <value>Ο λογαριασμός είναι αμετάβλητος και δεν πρέπει να οριστεί μετά την αρχικοποίηση.</value>
-  </data>
   <data name="SignInProcessCancelledMessage" xml:space="preserve">
     <value>Η διαδικασία εισόδου ακυρώθηκε</value>
   </data>
@@ -4144,12 +4078,6 @@
   <data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
     <value>Διαμόρφωση και εκκίνηση των απαιτούμενων υπηρεσιών ISG</value>
   </data>
-  <data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
-    <value>Προσπάθεια αποσειριοποίησης του αποτελέσματος JSON του Device Guard.</value>
-  </data>
-  <data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
-    <value>Η αποσειριοποίηση JSON του Device Guard απέτυχε. Ακατέργαστο JSON:</value>
-  </data>
   <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
     <value>Αύξηση του μεγέθους αρχείου καταγραφής Ακεραιότητας Κώδικα κατά 1MB επειδή ο διαθέσιμος χώρος είναι λιγότερος από 1MB.</value>
   </data>
@@ -4299,9 +4227,6 @@
   </data>
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>Η πολιτική Άρνησης κανόνα μοτίβου διαδρομής αρχείου δημιουργήθηκε επιτυχώς.</value>
-  </data>
-    <data name="TotalFiles" xml:space="preserve">
-    <value>Συνολικά Αρχεία</value>
   </data>
   <data name="AllDataClearedMsg" xml:space="preserve">
     <value>Όλα τα δεδομένα εκκαθαρίστηκαν επιτυχώς.</value>
@@ -4683,12 +4608,6 @@
   </data>
   <data name="PackageVersionHeader.Text" xml:space="preserve">
     <value>Έκδοση Πακέτου</value>
-  </data>
-  <data name="LoadPolicy.Text" xml:space="preserve">
-    <value>Φόρτωση Πολιτικής</value>
-  </data>
-  <data name="BrowseForPolicy.Text" xml:space="preserve">
-    <value>Αναζήτηση Πολιτικής</value>
   </data>
   <data name="SaveTheChanged.Text" xml:space="preserve">
     <value>Αποθήκευση Αλλαγών</value>
@@ -5727,5 +5646,432 @@
 </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Άνοιγμα Καταλόγου Αρχείων Καταγραφής</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>Εξαγωγή σε αρχείο JSON</value>
+  </data>
+    <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εξαγωγή όλων των δεδομένων στο ListView σε JSON.</value>
+  </data>
+    <data name="ExportToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+     <value>Εξαγωγή όλων των δεδομένων στο ListView σε JSON.</value>
+  </data>
+  <data name="ExportingToJSONMsg" xml:space="preserve">
+     <value>Γίνεται εξαγωγή δεδομένων σε αρχείο JSON, παρακαλώ περιμένετε...</value>
+  </data>
+    <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
+     <value>Εξήχθησαν επιτυχώς {0} δεδομένα σε JSON και αποθηκεύτηκαν σε: '{1}'</value>
+  </data>
+    <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αντιγραφή των επιλεγμένων στοιχείων στο πρόχειρο.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αντιγραφή των επιλεγμένων στοιχείων στο πρόχειρο.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>Αντιγραφή επιλεγμένων</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Description" xml:space="preserve">
+    <value>Αυτόματη προσαρμογή του πλάτους των στηλών κατά την κύλιση ώστε να ταιριάζει με το ορατό περιεχόμενο. Οι στήλες θα επεκτείνονται και θα συρρικνώνονται δυναμικά. Ισχύει μόνο για τις Προβολές Λίστας που υποστηρίζουν αυτή τη δυνατότητα. Αν αυτή η επιλογή είναι ενεργοποιημένη και τα δεδομένα έχουν ήδη φορτωθεί σε Προβολή Λίστας, αφού την απενεργοποιήσετε και επιστρέψετε στη σελίδα με την Προβολή Λίστας, θα εκτελεστεί εφάπαξ υπολογισμός πλάτους για όλα τα δεδομένα.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Header" xml:space="preserve">
+    <value>Αυτόματη αλλαγή μεγέθους κεφαλίδων στηλών στις Προβολές Λίστας</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αυτόματη προσαρμογή του πλάτους των στηλών κατά την κύλιση ώστε να ταιριάζει με το ορατό περιεχόμενο. Οι στήλες θα επεκτείνονται και θα συρρικνώνονται δυναμικά. Ισχύει μόνο για τις Προβολές Λίστας που υποστηρίζουν αυτή τη δυνατότητα. Αν αυτή η επιλογή είναι ενεργοποιημένη και τα δεδομένα έχουν ήδη φορτωθεί σε Προβολή Λίστας, αφού την απενεργοποιήσετε και επιστρέψετε στη σελίδα με την Προβολή Λίστας, θα εκτελεστεί εφάπαξ υπολογισμός πλάτους για όλα τα δεδομένα.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αυτόματη προσαρμογή του πλάτους των στηλών κατά την κύλιση ώστε να ταιριάζει με το ορατό περιεχόμενο. Οι στήλες θα επεκτείνονται και θα συρρικνώνονται δυναμικά. Ισχύει μόνο για τις Προβολές Λίστας που υποστηρίζουν αυτή τη δυνατότητα. Αν αυτή η επιλογή είναι ενεργοποιημένη και τα δεδομένα έχουν ήδη φορτωθεί σε Προβολή Λίστας, αφού την απενεργοποιήσετε και επιστρέψετε στη σελίδα με την Προβολή Λίστας, θα εκτελεστεί εφάπαξ υπολογισμός πλάτους για όλα τα δεδομένα.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε οικογένεια γραμματοσειράς για τα δεδομένα που εμφανίζονται στις Προβολές Λίστας της εφαρμογής. Ανάλογα με τη γραμματοσειρά στην οποία μεταβαίνετε και εφόσον δεδομένα έχουν ήδη φορτωθεί σε προβολές λίστας, το πλάτος τους ενδέχεται να χρειάζεται επαναρύθμιση. Ενεργοποιήστε τη δυνατότητα αυτόματης αλλαγής μεγέθους στηλών, αν απαιτείται.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>Οικογένεια γραμματοσειράς Προβολών Λίστας</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε οικογένεια γραμματοσειράς για τα δεδομένα που εμφανίζονται στις Προβολές Λίστας της εφαρμογής. Ανάλογα με τη γραμματοσειρά στην οποία μεταβαίνετε και εφόσον δεδομένα έχουν ήδη φορτωθεί σε προβολές λίστας, το πλάτος τους ενδέχεται να χρειάζεται επαναρύθμιση. Ενεργοποιήστε τη δυνατότητα αυτόματης αλλαγής μεγέθους στηλών, αν απαιτείται.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε οικογένεια γραμματοσειράς για τα δεδομένα που εμφανίζονται στις Προβολές Λίστας της εφαρμογής. Ανάλογα με τη γραμματοσειρά στην οποία μεταβαίνετε και εφόσον δεδομένα έχουν ήδη φορτωθεί σε προβολές λίστας, το πλάτος τους ενδέχεται να χρειάζεται επαναρύθμιση. Ενεργοποιήστε τη δυνατότητα αυτόματης αλλαγής μεγέθους στηλών, αν απαιτείται.</value>
+  </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>Σύνολο: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ο συνολικός αριθμός στοιχείων</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ο συνολικός αριθμός στοιχείων</value>
+  </data>
+    <data name="LoadedText.Text" xml:space="preserve">
+    <value>Φορτωμένα: </value>
+  </data>
+  <data name="LoadedText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ο συνολικός αριθμός στοιχείων που είναι αυτή τη στιγμή φορτωμένα στην προβολή</value>
+  </data>
+  <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ο συνολικός αριθμός στοιχείων που είναι αυτή τη στιγμή φορτωμένα στην προβολή</value>
+  </data>
+   <data name="RetrieveTheLogsButton.Content" xml:space="preserve">
+    <value>Ανάκτηση αρχείων καταγραφής</value>
+  </data>
+  <data name="RetrieveTheLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανακτήστε τα αρχεία καταγραφής υποβάλλοντας ένα ερώτημα Advanced Hunting στο MDE</value>
+  </data>
+  <data name="RetrieveTheLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανακτήστε τα αρχεία καταγραφής υποβάλλοντας ένα ερώτημα Advanced Hunting στο MDE</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.Content" xml:space="preserve">
+    <value>Παραδείγματα ερωτημάτων</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μπορείτε να αντιγράψετε τα παρακάτω ερωτήματα και να τα χρησιμοποιήσετε στην πύλη MDE Advanced Hunting για να δημιουργήσετε τυπικά αρχεία καταγραφής συμβατά με το AppControl Manager, ή μπορείτε να χρησιμοποιήσετε τις ενσωματωμένες δυνατότητες της εφαρμογής για να ανακτήσετε αυτόματα τα αρχεία καταγραφής και να τα επεξεργαστείτε.</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μπορείτε να αντιγράψετε τα παρακάτω ερωτήματα και να τα χρησιμοποιήσετε στην πύλη MDE Advanced Hunting για να δημιουργήσετε τυπικά αρχεία καταγραφής συμβατά με το AppControl Manager, ή μπορείτε να χρησιμοποιήσετε τις ενσωματωμένες δυνατότητες της εφαρμογής για να ανακτήσετε αυτόματα τα αρχεία καταγραφής και να τα επεξεργαστείτε.</value>
+  </data>
+  <data name="DragAndDropHint.Text" xml:space="preserve">
+     <value>ή σύρετε και αποθέστε αρχεία εδώ</value>
+  </data>
+    <data name="DragAndDropHintGetHashesCaption" xml:space="preserve">
+     <value>Αποθέστε αρχείο για ανάκτηση τιμών κατακερματισμού</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>Επιλεγμένο</value>
+  </data>
+  <!-- For Intune Groups ListView - Headers -->
+  <data name="GroupNameHeader.Text" xml:space="preserve">
+    <value>Όνομα</value>
+  </data>
+  <data name="GroupIDHeader.Text" xml:space="preserve">
+    <value>Αναγνωριστικό</value>
+  </data>
+    <data name="GroupDescriptionHeader.Text" xml:space="preserve">
+    <value>Περιγραφή</value>
+  </data>
+    <data name="GroupSecurityIdentifierHeader.Text" xml:space="preserve">
+    <value>Αναγνωριστικό ασφαλείας</value>
+  </data>
+    <data name="GroupCreatedDateTimeHeader.Text" xml:space="preserve">
+    <value>Χρόνος δημιουργίας</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Headers -->
+  <!-- For Intune Groups ListView - Buttons -->
+  <data name="GroupNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Όνομα</value>
+  </data>
+  <data name="GroupIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αναγνωριστικό</value>
+  </data>
+    <data name="GroupDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Περιγραφή</value>
+  </data>
+    <data name="GroupSecurityIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αναγνωριστικό ασφαλείας</value>
+  </data>
+    <data name="GroupCreatedDateTimeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Χρόνος δημιουργίας</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Buttons -->
+  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <value>Λεπτομέρειες ανάπτυξης πολιτικής Intune</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καθορίστε τις λεπτομέρειες μιας ανάπτυξης πολιτικής Intune</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καθορίστε τις λεπτομέρειες μιας ανάπτυξης πολιτικής Intune</value>
+  </data>
+  <data name="CreateGroupButton.Content" xml:space="preserve">
+    <value>Δημιουργία νέας ομάδας</value>
+  </data>
+  <data name="CreateGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε μια νέα ομάδα στο Microsoft Entra ID</value>
+  </data>
+  <data name="CreateGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργήστε μια νέα ομάδα στο Microsoft Entra ID</value>
+  </data>
+  <data name="GroupDisplayNameEmptyError" xml:space="preserve">
+    <value>Το εμφανιζόμενο όνομα ομάδας δεν μπορεί να είναι null ή κενό.</value>
+  </data>
+  <data name="SuccessfullyCreatedGroupMessage" xml:space="preserve">
+    <value>Η ομάδα δημιουργήθηκε επιτυχώς με εμφανιζόμενο όνομα: {0} και περιγραφή: {1} και αναγνωριστικό: {2} και αναγνωριστικό ασφαλείας: {3} στις: {4}</value>
+  </data>
+  <data name="FailedCreatingGroupError" xml:space="preserve">
+    <value>Αποτυχία δημιουργίας της ομάδας με κωδικό κατάστασης: {0} και περιεχόμενο: {1}</value>
+  </data>
+<data name="DeleteGroupButton.Content" xml:space="preserve">
+  <value>Διαγραφή ομάδας</value>
+</data>
+  <data name="DeleteGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγράψτε τις επιλεγμένες ομάδες από το Entra ID σας.</value>
+  </data>
+  <data name="DeleteGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγράψτε τις επιλεγμένες ομάδες από το Entra ID σας.</value>
+  </data>
+<data name="DeleteGroupDialogTitle" xml:space="preserve">
+  <value>Επιβεβαίωση διαγραφής ομάδας</value>
+</data>
+<data name="Delete" xml:space="preserve">
+  <value>Διαγραφή</value>
+</data>
+<data name="DeleteGroupDialogIntroSingle" xml:space="preserve">
+  <value>Διαγραφή της ομάδας '{0}' ?</value>
+</data>
+<data name="DeleteGroupDialogIntroMultiple" xml:space="preserve">
+  <value>Διαγραφή {0} επιλεγμένων ομάδων ?</value>
+</data>
+<data name="DeleteGroupDialogWarning" xml:space="preserve">
+  <value>Η ενέργεια αυτή είναι μη αναστρέψιμη. Οι επιλεγμένες ομάδες θα διαγραφούν οριστικά από τον μισθωτή σας.</value>
+</data>
+<data name="SuccessfullyDeletedGroupMessage" xml:space="preserve">
+  <value>Διαγράφηκε η ομάδα {0} (ID: {1}).</value>
+</data>
+<data name="DeleteGroupDeletionErrorLogTemplate" xml:space="preserve">
+  <value>Αποτυχία διαγραφής της ομάδας {0}: {1}</value>
+</data>
+<data name="ProvideNewGroupDetails" xml:space="preserve">
+  <value>Παραθέστε λεπτομέρειες για τη νέα ομάδα.</value>
+</data>
+<data name="GroupType" xml:space="preserve">
+  <value>Τύπος ομάδας:</value>
+</data>
+<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+  <value>Διαχειριστείτε τις ομάδες Entra στον μισθωτή σας και επιλέξτε τις ομάδες στις οποίες θέλετε να αναπτύξετε την πολιτική.</value>
+</data>
+<data name="SelectedGroups.Text" xml:space="preserve">
+  <value>Επιλεγμένες ομάδες:</value>
+</data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Δημιουργία 50 ομάδων δοκιμής</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε 50 ομάδες δοκιμής στο Entra του μισθωτή σας με τυχαίες λεπτομέρειες για σκοπούς δοκιμής.</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργήστε 50 ομάδες δοκιμής στο Entra του μισθωτή σας με τυχαίες λεπτομέρειες για σκοπούς δοκιμής.</value>
+  </data>
+  <data name="ConfirmationTextForDummyGroupsCreation" xml:space="preserve">
+    <value>Είστε βέβαιοι ότι θέλετε να δημιουργήσετε 50 ομάδες δοκιμής στο Entra του μισθωτή σας με τυχαίες λεπτομέρειες για σκοπούς δοκιμής?</value>
+  </data>
+  <data name="SignInAuthenticationRequiredMsg" xml:space="preserve">
+    <value>Απαιτείται έλεγχος ταυτότητας. Παρακαλούμε συνδεθείτε πρώτα στον μισθωτή Microsoft σας.</value>
+  </data>
+  <data name="SuccessfullyRefreshedMSGraphTokenMsg" xml:space="preserve">
+    <value>Το διακριτικό Microsoft Graph ανανεώθηκε με επιτυχία για τον λογαριασμό: {0}</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.Content" xml:space="preserve">
+    <value>Επιλογή αρχείου πολιτικής</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εντοπίστε αρχείο πολιτικής App Control.</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εντοπίστε αρχείο πολιτικής App Control.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.Content" xml:space="preserve">
+    <value>Επιλογή αρχείων</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εντοπίστε αρχεία για συμπερίληψη στην προσομοίωση.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εντοπίστε αρχεία για συμπερίληψη στην προσομοίωση.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.Content" xml:space="preserve">
+    <value>Επιλογή φακέλων</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εντοπίστε φακέλους για συμπερίληψη στην προσομοίωση. Οι φάκελοι θα σαρωθούν αναδρομικά για αρχεία που υποστηρίζονται από το App Control.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εντοπίστε φακέλους για συμπερίληψη στην προσομοίωση. Οι φάκελοι θα σαρωθούν αναδρομικά για αρχεία που υποστηρίζονται από το App Control.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Επιλογή καταλόγων ασφαλείας</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Παρέχετε διαδρομές σε καταλόγους όπου βρίσκονται αρχεία καταλόγων ασφαλείας (.cat). Εάν δεν παρασχεθούν, θα χρησιμοποιηθεί η προεπιλεγμένη διαδρομή 'C:\Windows\System32\CatRoot'.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Παρέχετε διαδρομές σε καταλόγους όπου βρίσκονται αρχεία καταλόγων ασφαλείας (.cat). Εάν δεν παρασχεθούν, θα χρησιμοποιηθεί η προεπιλεγμένη διαδρομή 'C:\Windows\System32\CatRoot'.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Σάρωση καταλόγων ασφαλείας</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αν θα πρέπει να σαρωθούν ή όχι οι κατάλογοι ασφαλείας στο σύστημα.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αν θα πρέπει να σαρωθούν ή όχι οι κατάλογοι ασφαλείας στο σύστημα.</value>
+  </data>
+  <data name="LoadPolicyButton.Content" xml:space="preserve">
+    <value>Φόρτωση πολιτικής</value>
+  </data>
+  <data name="LoadPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Φορτώστε την επιλεγμένη πολιτική App Control στο περιβάλλον χρήστη.</value>
+  </data>
+  <data name="LoadPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Φορτώστε την επιλεγμένη πολιτική App Control στο περιβάλλον χρήστη.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.Content" xml:space="preserve">
+    <value>Σάρωση δεδομένων Advanced Hunting</value>
+  </data>
+  <data name="ScanMDEAHDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μόλις επιλέξετε αρχεία καταγραφής MDE Advanced Hunting, μπορείτε να χρησιμοποιήσετε αυτό το κουμπί για να τα σαρώσετε και να εμφανίσετε τα αποτελέσματα στην παρακάτω λίστα.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μόλις επιλέξετε αρχεία καταγραφής MDE Advanced Hunting, μπορείτε να χρησιμοποιήσετε αυτό το κουμπί για να τα σαρώσετε και να εμφανίσετε τα αποτελέσματα στην παρακάτω λίστα.</value>
+  </data>
+    <data name="ScanEventLogsButton.Content" xml:space="preserve">
+    <value>Σάρωση αρχείων καταγραφής συμβάντων</value>
+  </data>
+  <data name="ScanEventLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Σαρώστε το σύστημα ή τα επιλεγμένα αρχεία EVTX για αρχεία καταγραφής Code Integrity/AppLocker.</value>
+  </data>
+  <data name="ScanEventLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Σαρώστε το σύστημα ή τα επιλεγμένα αρχεία EVTX για αρχεία καταγραφής Code Integrity/AppLocker.</value>
+  </data>
+  <data name="DeviceNameButton.Content" xml:space="preserve">
+    <value>Όνομα συσκευής</value>
+  </data>
+  <data name="DeviceNameButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εισαγάγετε ένα όνομα συσκευής για φιλτράρισμα των εισερχόμενων δεδομένων Advanced Hunting.</value>
+  </data>
+  <data name="DeviceNameButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εισαγάγετε ένα όνομα συσκευής για φιλτράρισμα των εισερχόμενων δεδομένων Advanced Hunting.</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.Header" xml:space="preserve">
+    <value>Προαιρετικό: Επιλέξτε όνομα συσκευής για φιλτράρισμα των αρχείων καταγραφής πριν από την ανάκτηση</value>
+  </data>
+      <data name="DeviceNameHeaderTextBlock.PlaceholderText" xml:space="preserve">
+    <value>Όνομα συσκευής...</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προαιρετικό: Επιλέξτε όνομα συσκευής για φιλτράρισμα των αρχείων καταγραφής πριν από την ανάκτηση</value>
+  </data>
+  <data name="ResetFiltersButton.Content" xml:space="preserve">
+    <value>Επαναφορά φίλτρων</value>
+  </data>
+  <data name="ResetFiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαναφορά φίλτρων ιδιοτήτων, αναζήτησης ιδιοτήτων και ημερομηνιών</value>
+  </data>
+  <data name="ResetFiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επαναφορά φίλτρων ιδιοτήτων, αναζήτησης ιδιοτήτων και ημερομηνιών</value>
+  </data>
+  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κάντε κλικ/πατήστε για να επιλέξετε ένα αρχείο XML πολιτικής από τη συσκευή σας</value>
+  </data>
+  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κάντε κλικ/πατήστε για να επιλέξετε ένα αρχείο XML πολιτικής από τη συσκευή σας</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής. Μπορείτε να επιλέξετε ένα χρώμα από την παλέτα ή να επιλέξετε την επιλογή ουράνιου τόξου, η οποία θα κάνει κυκλική εναλλαγή με κινούμενη μετάβαση σε όλα τα διαθέσιμα χρώματα.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>Χρώμα Περιγράμματος Παραθύρου</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής. Μπορείτε να επιλέξετε ένα χρώμα από την παλέτα ή να επιλέξετε την επιλογή ουράνιου τόξου, η οποία θα κάνει κυκλική εναλλαγή με κινούμενη μετάβαση σε όλα τα διαθέσιμα χρώματα.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσαρμόστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής. Μπορείτε να επιλέξετε ένα χρώμα από την παλέτα ή να επιλέξετε την επιλογή ουράνιου τόξου, η οποία θα κάνει κυκλική εναλλαγή με κινούμενη μετάβαση σε όλα τα διαθέσιμα χρώματα.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>Έναρξη κινούμενου ουράνιου τόξου</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ξεκινήστε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ξεκινήστε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>Διακοπή κινούμενου ουράνιου τόξου</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διακόψτε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής, αν εκτελείται.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διακόψτε την κινούμενη εναλλαγή ουράνιου τόξου γύρω από το περίγραμμα του παραθύρου της εφαρμογής, αν εκτελείται.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>Ορισμός χρώματος περιγράμματος</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ορίστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο επιλεγμένο χρώμα.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ορίστε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο επιλεγμένο χρώμα.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>Επαναφορά χρώματος περιγράμματος</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαναφέρετε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο προεπιλεγμένο χρώμα.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επαναφέρετε το χρώμα του περιγράμματος του παραθύρου της εφαρμογής στο προεπιλεγμένο χρώμα.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>Αρχική</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αρχική σελίδα και οθόνη καλωσορίσματος</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αρχική σελίδα και οθόνη καλωσορίσματος</value>
+    <comment>Main Navigation</comment>
+  </data>
+    <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
+     <value>Αποθέστε αρχείο για να δείτε τα πιστοποιητικά του</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>Γεια σας και καλώς ήρθατε</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>Σας ευχαριστούμε που επιλέξατε το AppControl Manager. Αν θέλετε να διαβάσετε τις σημειώσεις έκδοσης για την πιο πρόσφατη ενημέρωση, μπορείτε να τις βρείτε στην ενότητα Releases του επίσημου αποθετηρίου στο GitHub. Εκεί μπορείτε επίσης να κάνετε ερωτήσεις ή να υποβάλετε σχόλια.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>Επισκεφθείτε την ενότητα Releases στο GitHub</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίγει στη μηχανή περιήγησης τη σελίδα του αποθετηρίου στο GitHub μετά την επιλογή του κουμπιού.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίγει στη μηχανή περιήγησης τη σελίδα του αποθετηρίου στο GitHub μετά την επιλογή του κουμπιού.</value>
+  </data>
+  <data name="UseHardenSystemSecurity.Text" xml:space="preserve">
+    <value>Χρησιμοποιήστε την εφαρμογή Harden System Security</value>
+  </data>
+  <data name="UseHardenSystemSecurityDescription.Text" xml:space="preserve">
+    <value>Το Harden System Security είναι μία ακόμη εφαρμογή που ανέπτυξα, για να σας βοηθήσει να εφαρμόζετε εύκολα ισχυρά και προηγμένα μέτρα ασφαλείας σε ένα σύστημα. Διαθέτει σύγχρονο, διαισθητικό περιβάλλον, διαμορφώνεται από τα σχόλια της κοινότητας και συντηρείται ενεργά.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>Επισκεφθείτε τη σελίδα του Microsoft Store</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίγει τη σελίδα του Microsoft Store μετά την επιλογή του κουμπιού.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίγει τη σελίδα του Microsoft Store μετά την επιλογή του κουμπιού.</value>
+  </data>
+  <data name="IntuneIntegrationHomePage.Text" xml:space="preserve">
+    <value>Απρόσκοπτη ενσωμάτωση με το Microsoft Intune</value>
+  </data>
+  <data name="IntuneIntegrationHomePageDescription.Text" xml:space="preserve">
+    <value>Απρόσκοπτη ενσωμάτωση με το Microsoft Intune για ενισχυμένη διαχείριση ασφαλείας, όπως προβολή των πολιτικών που έχετε αναπτύξει απομακρυσμένα, ανάπτυξη νέων πολιτικών ή κατάργηση των υφιστάμενων.</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.Content" xml:space="preserve">
+    <value>Μετάβαση στη σελίδα Ανάπτυξης</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Μετάβαση στη σελίδα Ανάπτυξης</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Μετάβαση στη σελίδα Ανάπτυξης</value>
   </data>
 </root>

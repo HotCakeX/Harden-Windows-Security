@@ -133,7 +133,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 

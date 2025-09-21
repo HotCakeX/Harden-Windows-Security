@@ -31,8 +31,8 @@ internal sealed partial class CreatePolicy : Page
 
 	internal CreatePolicy()
 	{
-		this.InitializeComponent();
-		this.DataContext = ViewModel;
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
+		InitializeComponent();
+		DataContext = ViewModel;
+		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 }

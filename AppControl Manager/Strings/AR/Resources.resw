@@ -574,15 +574,6 @@
   <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
     <value>عرض المجلدات التي حددتها.</value>
   </data>
-  <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
-    <value>إجمالي السجلات: 0</value>
-  </data>
-  <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>العدد الإجمالي للسجلات</value>
-  </data>
-  <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>العدد الإجمالي للسجلات</value>
-  </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>تحديث السجلات</value>
   </data>
@@ -660,15 +651,6 @@
   </data>
   <data name="BrowseForBasePolicyTextBlock.Text" xml:space="preserve">
     <value>استعراض ملف نهج أساسي</value>
-  </data>
-  <data name="BrowseForPolicyTextBlock.Text" xml:space="preserve">
-    <value>استعراض ملف نهج XML</value>
-  </data>
-  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>انقر/اضغط لاختيار ملف نهج XML من جهازك</value>
-  </data>
-  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>انقر/اضغط لاختيار ملف نهج XML من جهازك</value>
   </data>
   <data name="ScanLevelComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>اختر مستوى يتم بناءً عليه فحص الملفات/السجلات</value>
@@ -825,24 +807,6 @@
   </data>
   <data name="ViewSelectedXMLFileTextBlock.Text" xml:space="preserve">
     <value>عرض ملف (ملفات) XML الذي حددته.</value>
-  </data>
-  <data name="SelectXMLFileTextBlock.Text" xml:space="preserve">
-    <value>تحديد ملف XML</value>
-  </data>
-  <data name="SelectFilesTextBlock.Text" xml:space="preserve">
-    <value>تحديد الملفات</value>
-  </data>
-  <data name="SelectFoldersTextBlock.Text" xml:space="preserve">
-    <value>تحديد المجلدات</value>
-  </data>
-  <data name="ScanLogsTextBlock.Text" xml:space="preserve">
-    <value>فحص السجلات</value>
-  </data>
-  <data name="ScanLogsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>فحص النظام أو ملفات EVTX المحددة بحثًا عن سجلات تكامل التعليمات البرمجية/AppLocker</value>
-  </data>
-  <data name="ScanLogsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>فحص النظام أو ملفات EVTX المحددة بحثًا عن سجلات تكامل التعليمات البرمجية/AppLocker</value>
   </data>
   <data name="RuleOption_EnabledUMCI" xml:space="preserve">
     <value>تقيد نُهج التحكم في التطبيقات الثنائيات في وضع النواة ووضع المستخدم. بشكل افتراضي، يتم تقييد ثنائيات وضع النواة فقط. تمكين خيار القاعدة هذا يتحقق من صحة الملفات التنفيذية والبرامج النصية في وضع المستخدم.</value>
@@ -1099,7 +1063,7 @@
   <data name="CertificateBuildError" xml:space="preserve">
     <value>حدثت أخطاء أثناء إنشاء الشهادة</value>
   </data>
-  <data name="SuccessTitle" xml:space="preserve">
+  <data name="SuccessText" xml:space="preserve">
     <value>نجاح</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
@@ -1158,9 +1122,6 @@
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>تم إنشاء سياسة Deny بنجاح</value>
-  </data>
-  <data name="NumberOfPolicies" xml:space="preserve">
-    <value>عدد السياسات: </value>
   </data>
   <data name="WarningTitle" xml:space="preserve">
     <value>تحذير</value>
@@ -1244,9 +1205,6 @@
     <value>خيارات السياسة</value>
   </data>
   <!-- End of For CI Policy Info ListViews Column Header Buttons -->
-  <data name="Copy" xml:space="preserve">
-    <value>نسخ </value>
-  </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>معرف النهج: </value>
   </data>
@@ -2836,10 +2794,10 @@
   <data name="AppControlStatusTextBlock.Text" xml:space="preserve">
     <value>حالة App Control for Business</value>
   </data>
-  <data name="UMCITextBlock.Text" xml:space="preserve">
+  <data name="UMCITextBlock.Header" xml:space="preserve">
     <value>تكامل التعليمات البرمجية لوضع المستخدم</value>
   </data>
-  <data name="KMCITextBlock.Text" xml:space="preserve">
+  <data name="KMCITextBlock.Header" xml:space="preserve">
     <value>تكامل التعليمات البرمجية لوضع النواة</value>
   </data>
   <data name="BasePolicies.Text" xml:space="preserve">
@@ -2871,12 +2829,6 @@
   </data>
   <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>تتيح لك هذه الميزة تبديل أي من السياسات الأساسية المنشورة غير التابعة للنظام القابلة للتطبيق بسلاسة مع سياسة أخرى من القائمة.</value>
-  </data>
-  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>عدد جميع السياسات المعروضة</value>
-  </data>
-  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>عدد جميع السياسات المعروضة</value>
   </data>
   <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
     <value>إزالة السياسة</value>
@@ -3091,9 +3043,6 @@
   <data name="CreatingSnapBackGuarantee" xml:space="preserve">
     <value>جارٍ إنشاء ضمان SnapBack لوضع الإنفاذ</value>
   </data>
-  <data name="DeployingAuditModePolicy" xml:space="preserve">
-    <value>جارٍ نشر سياسة وضع التدقيق</value>
-  </data>
   <data name="ScanningSelectedDirectories" xml:space="preserve">
     <value>جارٍ فحص الدلائل المحددة</value>
   </data>
@@ -3105,9 +3054,6 @@
   </data>
   <data name="ResetSuccessful" xml:space="preserve">
     <value>تمت إعادة التعيين بنجاح.</value>
-  </data>
-  <data name="DeployingEnforceModeCuzReset" xml:space="preserve">
-    <value>جارٍ نشر سياسة وضع الإنفاذ لأن المستخدم قرر إعادة تعيين العملية</value>
   </data>
   <data name="DeployingEnforceMode" xml:space="preserve">
     <value>جارٍ نشر سياسة وضع الإنفاذ.</value>
@@ -3589,9 +3535,6 @@
   <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
     <value>حدث خطأ أثناء تحليل رقم خيار القاعدة {0} إلى قيمته النصية: {1}</value>
   </data>
-  <data name="NumberOfPoliciesMessage" xml:space="preserve">
-    <value>عدد السياسات: {0}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>كان معرف كائن سياسة Intune فارغًا للسياسة المحددة المراد حذفها</value>
   </data>
@@ -3693,9 +3636,6 @@
   </data>
   <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
     <value>تعذر تجزئة {0} باستخدام {1}</value>
-  </data>
-    <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
-    <value>متغير البيئة SystemDrive فارغ</value>
   </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
     <value>جارٍ تحديث سياسات App Control للنظام</value>
@@ -3970,12 +3910,6 @@
   <data name="KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">
     <value>تمت إضافة زوج المفتاح والقيمة إلى SignedPolicyStage1RemovalTimes: {0} = {1}</value>
   </data>
-  <data name="AuthResultImmutableErrorMessage" xml:space="preserve">
-    <value>AuthResult غير قابل للتغيير ولا يجب تعيينه بعد التهيئة.</value>
-  </data>
-  <data name="AccountImmutableErrorMessage" xml:space="preserve">
-    <value>الحساب غير قابل للتغيير ولا يجب تعيينه بعد التهيئة.</value>
-  </data>
   <data name="SignInProcessCancelledMessage" xml:space="preserve">
     <value>تم إلغاء عملية تسجيل الدخول</value>
   </data>
@@ -4144,12 +4078,6 @@
   <data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
     <value>تكوين وبدء الخدمات المطلوبة المتعلقة بـ ISG</value>
   </data>
-  <data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
-    <value>محاولة إلغاء تسلسل نتيجة JSON لـ Device Guard.</value>
-  </data>
-  <data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
-    <value>فشل إلغاء تسلسل JSON لـ Device Guard. JSON الخام:</value>
-  </data>
   <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
     <value>زيادة حجم سجل تكامل التعليمات البرمجية بمقدار 1 ميجابايت لأن مساحته الحالية أقل من 1 ميجابايت.</value>
   </data>
@@ -4299,9 +4227,6 @@
   </data>
   <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>تم إنشاء سياسة رفض قاعدة مسار الملف المستندة إلى النمط بنجاح.</value>
-  </data>
-    <data name="TotalFiles" xml:space="preserve">
-    <value>إجمالي الملفات</value>
   </data>
   <data name="AllDataClearedMsg" xml:space="preserve">
     <value>تم مسح جميع البيانات بنجاح.</value>
@@ -4683,12 +4608,6 @@
 </data>
 <data name="PackageVersionHeader.Text" xml:space="preserve">
     <value>إصدار الحزمة</value>
-</data>
-<data name="LoadPolicy.Text" xml:space="preserve">
-    <value>تحميل السياسة</value>
-</data>
-<data name="BrowseForPolicy.Text" xml:space="preserve">
-    <value>استعراض السياسة</value>
 </data>
 <data name="SaveTheChanged.Text" xml:space="preserve">
     <value>حفظ التغييرات</value>
@@ -5727,5 +5646,432 @@
 </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>فتح دليل السجلات</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>تصدير إلى ملف JSON</value>
+  </data>
+    <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تصدير جميع البيانات في ListView إلى JSON.</value>
+  </data>
+    <data name="ExportToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+     <value>تصدير جميع البيانات في ListView إلى JSON.</value>
+  </data>
+  <data name="ExportingToJSONMsg" xml:space="preserve">
+     <value>جارٍ تصدير البيانات إلى ملف JSON، يرجى الانتظار...</value>
+  </data>
+    <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
+     <value>تم تصدير {0} من البيانات إلى JSON وحفظها في: '{1}'</value>
+  </data>
+    <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نسخ العناصر المحددة إلى الحافظة.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نسخ العناصر المحددة إلى الحافظة.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>نسخ المحدد</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Description" xml:space="preserve">
+    <value>غيّر حجم الأعمدة تلقائياً أثناء التمرير ليتناسب مع المحتوى المرئي. ستتمدّد الأعمدة وتنكمش ديناميكياً. ينطبق هذا فقط على طرق عرض القوائم التي تدعم هذه الميزة. إذا كان هذا الخيار مفعّلاً وكانت البيانات محمّلة بالفعل في طريقة عرض قائمة، فعند إيقافه والعودة إلى الصفحة التي تحتوي على طريقة عرض القائمة سيتم إجراء حساب عرض لمرة واحدة لجميع البيانات.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Header" xml:space="preserve">
+    <value>تغيير حجم رؤوس الأعمدة تلقائياً في طرق عرض القوائم</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>غيّر حجم الأعمدة تلقائياً أثناء التمرير ليتناسب مع المحتوى المرئي. ستتمدّد الأعمدة وتنكمش ديناميكياً. ينطبق هذا فقط على طرق عرض القوائم التي تدعم هذه الميزة. إذا كان هذا الخيار مفعّلاً وكانت البيانات محمّلة بالفعل في طريقة عرض قائمة، فعند إيقافه والعودة إلى الصفحة التي تحتوي على طريقة عرض القائمة سيتم إجراء حساب عرض لمرة واحدة لجميع البيانات.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>غيّر حجم الأعمدة تلقائياً أثناء التمرير ليتناسب مع المحتوى المرئي. ستتمدّد الأعمدة وتنكمش ديناميكياً. ينطبق هذا فقط على طرق عرض القوائم التي تدعم هذه الميزة. إذا كان هذا الخيار مفعّلاً وكانت البيانات محمّلة بالفعل في طريقة عرض قائمة، فعند إيقافه والعودة إلى الصفحة التي تحتوي على طريقة عرض القائمة سيتم إجراء حساب عرض لمرة واحدة لجميع البيانات.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>اختر عائلة خط للبيانات المعروضة في طرق عرض القوائم داخل التطبيق. استناداً إلى الخط الذي تنتقل إليه وإذا كانت البيانات محمّلة مسبقاً في طرق عرض القوائم، فقد يتطلّب عرضها إعادة ضبط. فعّل ميزة تغيير حجم الأعمدة تلقائياً عند الحاجة.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>عائلة الخط لطرق عرض القوائم</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختر عائلة خط للبيانات المعروضة في طرق عرض القوائم داخل التطبيق. استناداً إلى الخط الذي تنتقل إليه وإذا كانت البيانات محمّلة مسبقاً في طرق عرض القوائم، فقد يتطلّب عرضها إعادة ضبط. فعّل ميزة تغيير حجم الأعمدة تلقائياً عند الحاجة.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختر عائلة خط للبيانات المعروضة في طرق عرض القوائم داخل التطبيق. استناداً إلى الخط الذي تنتقل إليه وإذا كانت البيانات محمّلة مسبقاً في طرق عرض القوائم، فقد يتطلّب عرضها إعادة ضبط. فعّل ميزة تغيير حجم الأعمدة تلقائياً عند الحاجة.</value>
+  </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>الإجمالي: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر</value>
+  </data>
+    <data name="LoadedText.Text" xml:space="preserve">
+    <value>المحمّلة: </value>
+  </data>
+  <data name="LoadedText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر المُحمّلة حالياً في العرض</value>
+  </data>
+  <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>العدد الإجمالي للعناصر المُحمّلة حالياً في العرض</value>
+  </data>
+   <data name="RetrieveTheLogsButton.Content" xml:space="preserve">
+    <value>استرداد السجلات</value>
+  </data>
+  <data name="RetrieveTheLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد السجلات عن طريق إرسال استعلام الصيد المتقدم إلى MDE</value>
+  </data>
+  <data name="RetrieveTheLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد السجلات عن طريق إرسال استعلام الصيد المتقدم إلى MDE</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.Content" xml:space="preserve">
+    <value>أمثلة على الاستعلامات</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يمكنك نسخ الاستعلامات التالية واستخدامها في مدخل MDE Advanced Hunting لإنشاء سجلات قياسية متوافقة مع AppControl Manager، أو يمكنك استخدام الوظائف المضمنة في التطبيق لاسترداد السجلات ومعالجتها تلقائيًا.</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يمكنك نسخ الاستعلامات التالية واستخدامها في مدخل MDE Advanced Hunting لإنشاء سجلات قياسية متوافقة مع AppControl Manager، أو يمكنك استخدام الوظائف المضمنة في التطبيق لاسترداد السجلات ومعالجتها تلقائيًا.</value>
+  </data>
+  <data name="DragAndDropHint.Text" xml:space="preserve">
+     <value>أو اسحب الملفات وأفلتها هنا</value>
+  </data>
+    <data name="DragAndDropHintGetHashesCaption" xml:space="preserve">
+     <value>أفلت ملفًا لاسترداد قيم التجزئة</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>محدد</value>
+  </data>
+  <!-- For Intune Groups ListView - Headers -->
+  <data name="GroupNameHeader.Text" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="GroupIDHeader.Text" xml:space="preserve">
+    <value>المعرّف</value>
+  </data>
+    <data name="GroupDescriptionHeader.Text" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+    <data name="GroupSecurityIdentifierHeader.Text" xml:space="preserve">
+    <value>معرّف الأمان</value>
+  </data>
+    <data name="GroupCreatedDateTimeHeader.Text" xml:space="preserve">
+    <value>وقت الإنشاء</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Headers -->
+  <!-- For Intune Groups ListView - Buttons -->
+  <data name="GroupNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="GroupIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>المعرّف</value>
+  </data>
+    <data name="GroupDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+    <data name="GroupSecurityIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>معرّف الأمان</value>
+  </data>
+    <data name="GroupCreatedDateTimeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>وقت الإنشاء</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Buttons -->
+  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <value>تفاصيل نشر سياسة Intune</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدد تفاصيل نشر سياسة Intune</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حدد تفاصيل نشر سياسة Intune</value>
+  </data>
+  <data name="CreateGroupButton.Content" xml:space="preserve">
+    <value>إنشاء مجموعة جديدة</value>
+  </data>
+  <data name="CreateGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أنشئ مجموعة جديدة في Microsoft Entra ID</value>
+  </data>
+  <data name="CreateGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أنشئ مجموعة جديدة في Microsoft Entra ID</value>
+  </data>
+  <data name="GroupDisplayNameEmptyError" xml:space="preserve">
+    <value>لا يمكن أن يكون اسم العرض للمجموعة null أو فارغاً.</value>
+  </data>
+  <data name="SuccessfullyCreatedGroupMessage" xml:space="preserve">
+    <value>تم إنشاء مجموعة بنجاح بالاسم المعروض: {0} والوصف: {1} والمعرّف: {2} ومعرّف الأمان: {3} في: {4}</value>
+  </data>
+  <data name="FailedCreatingGroupError" xml:space="preserve">
+    <value>فشل إنشاء المجموعة برمز الحالة: {0} والمحتوى: {1}</value>
+  </data>
+<data name="DeleteGroupButton.Content" xml:space="preserve">
+  <value>حذف مجموعة</value>
+</data>
+  <data name="DeleteGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>احذف المجموعات المحددة من Entra ID لديك.</value>
+  </data>
+  <data name="DeleteGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>احذف المجموعات المحددة من Entra ID لديك.</value>
+  </data>
+<data name="DeleteGroupDialogTitle" xml:space="preserve">
+  <value>تأكيد حذف المجموعة</value>
+</data>
+<data name="Delete" xml:space="preserve">
+  <value>حذف</value>
+</data>
+<data name="DeleteGroupDialogIntroSingle" xml:space="preserve">
+  <value>حذف المجموعة '{0}' ?</value>
+</data>
+<data name="DeleteGroupDialogIntroMultiple" xml:space="preserve">
+  <value>حذف {0} من المجموعات المحددة ?</value>
+</data>
+<data name="DeleteGroupDialogWarning" xml:space="preserve">
+  <value>هذه العملية غير قابلة للعكس. ستُحذف المجموعات المحددة نهائياً من المستأجر لديك.</value>
+</data>
+<data name="SuccessfullyDeletedGroupMessage" xml:space="preserve">
+  <value>تم حذف المجموعة {0} (المعرّف: {1}).</value>
+</data>
+<data name="DeleteGroupDeletionErrorLogTemplate" xml:space="preserve">
+  <value>فشل حذف المجموعة {0}: {1}</value>
+</data>
+<data name="ProvideNewGroupDetails" xml:space="preserve">
+  <value>قدم التفاصيل للمجموعة الجديدة.</value>
+</data>
+<data name="GroupType" xml:space="preserve">
+  <value>نوع المجموعة:</value>
+</data>
+<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+  <value>أدِر مجموعات Entra في المستأجر لديك وحدد المجموعات التي تريد نشر السياسة عليها.</value>
+</data>
+<data name="SelectedGroups.Text" xml:space="preserve">
+  <value>المجموعات المحددة:</value>
+</data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>إنشاء 50 مجموعة وهمية</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أنشئ 50 مجموعة وهمية في Entra للمستأجر لديك بتفاصيل عشوائية لأغراض الاختبار.</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أنشئ 50 مجموعة وهمية في Entra للمستأجر لديك بتفاصيل عشوائية لأغراض الاختبار.</value>
+  </data>
+  <data name="ConfirmationTextForDummyGroupsCreation" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد إنشاء 50 مجموعة وهمية في Entra للمستأجر لديك بتفاصيل عشوائية لأغراض الاختبار؟</value>
+  </data>
+  <data name="SignInAuthenticationRequiredMsg" xml:space="preserve">
+    <value>مطلوب مصادقة. يرجى تسجيل الدخول إلى مستأجر Microsoft لديك أولاً.</value>
+  </data>
+  <data name="SuccessfullyRefreshedMSGraphTokenMsg" xml:space="preserve">
+    <value>تم تحديث رمز Microsoft Graph بنجاح للحساب: {0}</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.Content" xml:space="preserve">
+    <value>تحديد ملف سياسة</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض لتحديد ملف سياسة App Control.</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض لتحديد ملف سياسة App Control.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.Content" xml:space="preserve">
+    <value>تحديد ملفات</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض لاختيار ملفات ليتم تضمينها في المحاكاة.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض لاختيار ملفات ليتم تضمينها في المحاكاة.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.Content" xml:space="preserve">
+    <value>تحديد مجلدات</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعرض لتحديد مجلدات ليتم تضمينها في المحاكاة. ستُفحص المجلدات بشكل متكرر للبحث عن ملفات يدعمها App Control.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استعرض لتحديد مجلدات ليتم تضمينها في المحاكاة. ستُفحص المجلدات بشكل متكرر للبحث عن ملفات يدعمها App Control.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تحديد كتالوجات الأمان</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قدّم مسارات إلى الأدلة التي توجد فيها ملفات كتالوجات الأمان (.cat). إذا لم تُقدم، سيُستخدم المسار الافتراضي 'C:\Windows\System32\CatRoot'.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قدّم مسارات إلى الأدلة التي توجد فيها ملفات كتالوجات الأمان (.cat). إذا لم تُقدم، سيُستخدم المسار الافتراضي 'C:\Windows\System32\CatRoot'.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>فحص كتالوجات الأمان</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ما إذا كان يجب فحص كتالوجات الأمان في النظام أم لا.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ما إذا كان يجب فحص كتالوجات الأمان في النظام أم لا.</value>
+  </data>
+  <data name="LoadPolicyButton.Content" xml:space="preserve">
+    <value>تحميل سياسة</value>
+  </data>
+  <data name="LoadPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حمّل سياسة App Control المحددة إلى واجهة المستخدم.</value>
+  </data>
+  <data name="LoadPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>حمّل سياسة App Control المحددة إلى واجهة المستخدم.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.Content" xml:space="preserve">
+    <value>فحص بيانات Advanced Hunting</value>
+  </data>
+  <data name="ScanMDEAHDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>بعد اختيار سجلات MDE Advanced Hunting يمكنك استخدام هذا الزر لفحصها وعرض نتائجها في عرض القائمة أدناه.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>بعد اختيار سجلات MDE Advanced Hunting يمكنك استخدام هذا الزر لفحصها وعرض نتائجها في عرض القائمة أدناه.</value>
+  </data>
+    <data name="ScanEventLogsButton.Content" xml:space="preserve">
+    <value>فحص سجلات الأحداث</value>
+  </data>
+  <data name="ScanEventLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>افحص النظام أو ملفات EVTX المحددة للحصول على سجلات Code Integrity/AppLocker.</value>
+  </data>
+  <data name="ScanEventLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>افحص النظام أو ملفات EVTX المحددة للحصول على سجلات Code Integrity/AppLocker.</value>
+  </data>
+  <data name="DeviceNameButton.Content" xml:space="preserve">
+    <value>اسم الجهاز</value>
+  </data>
+  <data name="DeviceNameButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أدخل اسم جهاز لتصفية بيانات Advanced Hunting الواردة.</value>
+  </data>
+  <data name="DeviceNameButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أدخل اسم جهاز لتصفية بيانات Advanced Hunting الواردة.</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.Header" xml:space="preserve">
+    <value>اختياري: اختر اسم جهاز لتصفية السجلات قبل الاسترجاع</value>
+  </data>
+      <data name="DeviceNameHeaderTextBlock.PlaceholderText" xml:space="preserve">
+    <value>اسم الجهاز...</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختياري: اختر اسم جهاز لتصفية السجلات قبل الاسترجاع</value>
+  </data>
+  <data name="ResetFiltersButton.Content" xml:space="preserve">
+    <value>إعادة تعيين عوامل التصفية</value>
+  </data>
+  <data name="ResetFiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أعد تعيين عوامل تصفية الخاصية وبحث الخاصية والتاريخ</value>
+  </data>
+  <data name="ResetFiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أعد تعيين عوامل تصفية الخاصية وبحث الخاصية والتاريخ</value>
+  </data>
+    <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انقر/اضغط لاختيار ملف نهج XML من جهازك</value>
+  </data>
+  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>انقر/اضغط لاختيار ملف نهج XML من جهازك</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>خصص لون إطار نافذة التطبيق. يمكنك اختيار لون من لوحة الألوان أو تحديد خيار قوس قزح الذي يتنقل بشكل متحرك عبر جميع الألوان المتاحة.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>لون إطار النافذة</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>خصص لون إطار نافذة التطبيق. يمكنك اختيار لون من لوحة الألوان أو تحديد خيار قوس قزح الذي يتنقل بشكل متحرك عبر جميع الألوان المتاحة.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>خصص لون إطار نافذة التطبيق. يمكنك اختيار لون من لوحة الألوان أو تحديد خيار قوس قزح الذي يتنقل بشكل متحرك عبر جميع الألوان المتاحة.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>بدء حركة قوس قزح</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ابدأ حركة قوس قزح حول إطار نافذة التطبيق.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ابدأ حركة قوس قزح حول إطار نافذة التطبيق.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>إيقاف حركة قوس قزح</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أوقف حركة قوس قزح حول إطار نافذة التطبيق إذا كانت قيد التشغيل.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أوقف حركة قوس قزح حول إطار نافذة التطبيق إذا كانت قيد التشغيل.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>تعيين لون الإطار</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عيّن لون إطار نافذة التطبيق إلى اللون المحدد.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>عيّن لون إطار نافذة التطبيق إلى اللون المحدد.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>إعادة تعيين لون الإطار</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أعد تعيين لون إطار نافذة التطبيق إلى اللون الافتراضي.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أعد تعيين لون إطار نافذة التطبيق إلى اللون الافتراضي.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>الرئيسية</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الصفحة الرئيسية وشاشة الترحيب</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>الصفحة الرئيسية وشاشة الترحيب</value>
+    <comment>Main Navigation</comment>
+  </data>
+    <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
+     <value>إفلات ملف لعرض شهاداته</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>مرحبًا وأهلًا بك</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>شكرًا لاختيارك AppControl Manager. إذا رغبت في قراءة ملاحظات الإصدار لأحدث تحديث، فيمكنك العثور عليها في قسم الإصدارات في المستودع الرسمي على GitHub. يمكنك أيضًا طرح الأسئلة أو إرسال الملاحظات هناك.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>زيارة صفحة الإصدارات على GitHub</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يفتح صفحة مستودع GitHub في المتصفح بعد النقر على الزر.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يفتح صفحة مستودع GitHub في المتصفح بعد النقر على الزر.</value>
+  </data>
+  <data name="UseHardenSystemSecurity.Text" xml:space="preserve">
+    <value>استخدم تطبيق Harden System Security</value>
+  </data>
+  <data name="UseHardenSystemSecurityDescription.Text" xml:space="preserve">
+    <value>Harden System Security هو تطبيق آخر طوّرته لمساعدتك على تطبيق إجراءات أمان قوية ومتقدمة على النظام بسهولة. يتميز بواجهة حديثة وبديهية، ويتشكل وفقًا لملاحظات المجتمع، ويتم صيانته بنشاط.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>زيارة صفحة Microsoft Store</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يفتح صفحة Microsoft Store بعد النقر على الزر.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يفتح صفحة Microsoft Store بعد النقر على الزر.</value>
+  </data>
+  <data name="IntuneIntegrationHomePage.Text" xml:space="preserve">
+    <value>تكامل سلس مع Microsoft Intune</value>
+  </data>
+  <data name="IntuneIntegrationHomePageDescription.Text" xml:space="preserve">
+    <value>تكامل سلس مع Microsoft Intune لإدارة أمان معززة مثل عرض السياسات الموزعة عن بُعد، ونشر سياسات جديدة، أو إزالة السياسات الحالية.</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.Content" xml:space="preserve">
+    <value>الانتقال إلى صفحة النشر</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الانتقال إلى صفحة النشر</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>الانتقال إلى صفحة النشر</value>
   </data>
 </root>

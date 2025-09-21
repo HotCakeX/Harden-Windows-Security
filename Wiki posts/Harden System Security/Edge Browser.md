@@ -44,12 +44,6 @@
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Policy](https://learn.microsoft.com/deployedge/microsoft-edge-policies#extensionmanifestv2availability) that will keep support for Manifest V2 extensions enabled even after its depreciation. Manifest V2 extension support is vital for proper functioning of ublock origin (and similar extensions) which is beyond a simple adblocker and can provide lots of protection when browsing the web through its custom lists.
-
-   * Note that this is something being pushed by Google through their controlling power of Chromium, not Microsoft.
-
-<br>
-
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Policy](https://learn.microsoft.com/DeployEdge/microsoft-edge-policies#defaultwebusbguardsetting) that will prevent websites to even request access to the local connected USB devices.
 
 <br>

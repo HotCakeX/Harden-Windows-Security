@@ -84,6 +84,13 @@ internal sealed partial class ListViewV2 : ListView
 
 			ListView lv = (ListView)sender;
 
+			// Early exit when there is no selection or the list is empty.
+			// This prevents container lookups and ScrollIntoView calls.
+			if (lv.Items.Count == 0 || lv.SelectedIndex < 0)
+			{
+				return;
+			}
+
 			await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(
 					listViewBase: lv,
 					listView: lv,
@@ -96,7 +103,7 @@ internal sealed partial class ListViewV2 : ListView
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -104,30 +111,40 @@ internal sealed partial class ListViewV2 : ListView
 	// This is a much more expected behavior. Without this, the right-click would be meaningless on the ListView unless user left-clicks on the row first
 	private void OnListViewV2ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
 	{
-		var container = args.ItemContainer;
-
 		// When the container is being recycled, detach the handler.
 		if (args.InRecycleQueue)
 		{
-			container.RightTapped -= OnListViewV2ItemRightTapped;
+			args.ItemContainer.RightTapped -= OnListViewV2ItemRightTapped;
 		}
 		else
 		{
 			// Detach first to avoid multiple subscriptions, then attach the handler.
-			container.RightTapped -= OnListViewV2ItemRightTapped;
-			container.RightTapped += OnListViewV2ItemRightTapped;
+			args.ItemContainer.RightTapped -= OnListViewV2ItemRightTapped;
+			args.ItemContainer.RightTapped += OnListViewV2ItemRightTapped;
 		}
 	}
 
+	// When right-clicking on a row:
+	// - If we right-click on an item that is already selected, or if we right-click on one of the items among multiple items that are selected,
+	// keep the current selection and just show the context menu for that selection.
+	// - If we right-click on an unselected item, clear the previous selection and select only that item.
+	// P.S: We skip the next two SelectionChanged events to avoid unintended smooth scrolling due to programmatic changes.
 	private void OnListViewV2ItemRightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
-		// If the item is not already selected, clear previous selections and select this one.
-		if (sender is ListViewItem item && !item.IsSelected)
-		{
-			// Set the counter so that the SelectionChanged event handler will ignore the next 2 events.
-			_skipSelectionChangedCount = 2;
-			item.IsSelected = true;
-		}
+		// Don't proceed further if the sender is not a ListViewItem or if the ListView is in None or Single selection mode because then SelectedItems property is readonly and we get COM error if we attempt to clear it.
+		if (sender is not ListViewItem item || this.SelectionMode is ListViewSelectionMode.None or ListViewSelectionMode.Single)
+			return;
+
+		// If the item is already selected, do nothing so multi-selection is preserved.
+		// This allows right-click actions (copy/delete) to apply to the full current selection.
+		if (item.IsSelected)
+			return;
+
+		// Otherwise, switch to single-selection on this item.
+		// SelectionChanged will fire for Clear and for the new selection; suppress both.
+		_skipSelectionChangedCount = 2;
+		this.SelectedItems.Clear();
+		item.IsSelected = true;
 	}
 
 	/// <summary>
@@ -154,6 +171,23 @@ internal sealed partial class ListViewV2 : ListView
 	private void OnUnloaded(object? sender, RoutedEventArgs e)
 	{
 		ListViewHelper.Unregister(RegistryKey, this);
+	}
+
+	/// <summary>
+	/// Suppresses the SelectionChanged handler from performing smooth centering
+	/// for the next 'count' SelectionChanged events (used to avoid unintended
+	/// scroll jumps during programmatic operations like sorting).
+	/// </summary>
+	/// <param name="count">How many upcoming SelectionChanged events to skip; minimum is 1.</param>
+	internal void SuppressSelectionChanged(int count = 1)
+	{
+		if (count < 1)
+		{
+			count = 1;
+		}
+
+		// Reusing the existing counter leveraged by right-click selection logic.
+		_skipSelectionChangedCount = count;
 	}
 
 }

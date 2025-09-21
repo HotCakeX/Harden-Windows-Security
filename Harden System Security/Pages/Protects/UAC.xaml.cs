@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class UAC : Page
 {
-	private UACVM ViewModel { get; } = ViewModelProvider.UACVM;
+	private UACVM ViewModel => ViewModelProvider.UACVM;
 
 	internal UAC()
 	{

@@ -15,18 +15,29 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 
 namespace AppControlManager.Others;
 
 /// <summary>
-/// Represents a signed CMS and its certificate chain
+/// Represents a signed CMS and its certificate chain.
+/// Since .NET isn't showing any warnings for not disposing of this type, we have to make sure we do it ourselves.
 /// </summary>
 /// <param name="signerCertificate"></param>
-/// <param name="certificateChain"></param>
-internal sealed class AllFileSigners(SignedCms signerCertificate, X509Chain certificateChain)
+/// <param name="chainContext"></param>
+internal sealed partial class AllFileSigners(SignedCms signerCertificate, IntPtr chainContext) : IDisposable
 {
+	private readonly X509Chain _chain = chainContext == IntPtr.Zero
+		? new X509Chain()
+		: new X509Chain(chainContext);
+
 	internal SignedCms Signer => signerCertificate;
-	internal X509Chain Chain => certificateChain;
+	internal X509Chain Chain => _chain;
+
+	public void Dispose()
+	{
+		_chain.Dispose();
+	}
 }

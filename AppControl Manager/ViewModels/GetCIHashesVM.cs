@@ -16,6 +16,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AppControlManager.Main;
@@ -23,6 +24,8 @@ using AppControlManager.Others;
 using AppControlManager.Pages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 
 namespace AppControlManager.ViewModels;
 
@@ -58,6 +61,52 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	#endregion
 
 	internal string? selectedFile { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Handles when files are dragged over the page.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void OnDragOver(object sender, DragEventArgs e)
+	{
+		if (e.DataView.Contains(StandardDataFormats.StorageItems))
+		{
+			e.AcceptedOperation = DataPackageOperation.Copy;
+			e.DragUIOverride.Caption = GlobalVars.GetStr("DragAndDropHintGetHashesCaption");
+			e.DragUIOverride.IsCaptionVisible = true;
+			e.DragUIOverride.IsContentVisible = true;
+		}
+		else
+		{
+			e.AcceptedOperation = DataPackageOperation.None;
+		}
+	}
+
+	/// <summary>
+	/// Handles when files are dropped on the page.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal async void OnDrop(object sender, DragEventArgs e)
+	{
+		if (e.DataView.Contains(StandardDataFormats.StorageItems))
+		{
+			try
+			{
+				IReadOnlyList<IStorageItem> items = await e.DataView.GetStorageItemsAsync();
+
+				if (items.Count > 0 && items[0] is StorageFile file)
+				{
+					selectedFile = file.Path;
+					await Calculate();
+				}
+			}
+			catch (Exception ex)
+			{
+				MainInfoBar.WriteError(ex);
+			}
+		}
+	}
 
 	private void InitializeHashItems()
 	{

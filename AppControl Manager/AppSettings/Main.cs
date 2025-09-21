@@ -27,6 +27,7 @@ using AppControlManager.AppSettings;
 namespace HardenSystemSecurity.AppSettings;
 #endif
 #if APP_CONTROL_MANAGER
+using AppControlManager.MicrosoftGraph;
 namespace AppControlManager.AppSettings;
 #endif
 
@@ -70,6 +71,13 @@ internal sealed partial class Main : ViewModelBase
 		ScreenShield = ReadValue(nameof(ScreenShield), ScreenShield);
 		PublishUserActivityInTheOS = ReadValue(nameof(PublishUserActivityInTheOS), PublishUserActivityInTheOS);
 		LinkPreviewsForSecurityMeasure = ReadValue(nameof(LinkPreviewsForSecurityMeasure), LinkPreviewsForSecurityMeasure);
+		AutoResizeListViewColumns = ReadValue(nameof(AutoResizeListViewColumns), AutoResizeListViewColumns);
+		ListViewFontFamily = ReadValue(nameof(ListViewFontFamily), ListViewFontFamily);
+#if APP_CONTROL_MANAGER
+		SelectedSignInMethodForMSGraph = ReadValue(nameof(SelectedSignInMethodForMSGraph), SelectedSignInMethodForMSGraph);
+#endif
+		IsAnimatedRainbowEnabled = ReadValue(nameof(IsAnimatedRainbowEnabled), IsAnimatedRainbowEnabled);
+		CustomAppWindowsBorder = ReadValue(nameof(CustomAppWindowsBorder), CustomAppWindowsBorder);
 	}
 
 	/// <summary>
@@ -481,4 +489,82 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = true;
+
+	/// <summary>
+	/// Whether ListViews that implement Incremental Collections also use auto column resizing feature.
+	/// </summary>
+	internal bool AutoResizeListViewColumns
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(AutoResizeListViewColumns), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// The selected Font Family for List View items.
+	/// </summary>
+	internal string ListViewFontFamily
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(ListViewFontFamily), field);
+				ListViewHelper.UpdateFontFamily(value); // Update the font family used for list view text measurements.
+			}
+		}
+	} = "Segoe UI"; // https://github.com/MicrosoftDocs/winapps-winrt-api/blob/docs//microsoft.ui.xaml.media/fontfamily_xamlautofontfamily.md
+
+#if APP_CONTROL_MANAGER
+	/// <summary>
+	/// The selected sign-in method for Microsoft Graph authentication in ComboBox.
+	/// </summary>
+	internal int SelectedSignInMethodForMSGraph
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(SelectedSignInMethodForMSGraph), field);
+			}
+		}
+	} = (int)SignInMethods.WebBrowser;
+#endif
+
+	/// <summary>
+	/// Whether the app's window is using animated rainbow effect.
+	/// </summary>
+	internal bool IsAnimatedRainbowEnabled
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(IsAnimatedRainbowEnabled), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Custom color of the app's window.
+	/// </summary>
+	internal string CustomAppWindowsBorder
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(CustomAppWindowsBorder), field);
+			}
+		}
+	} = string.Empty;
 }

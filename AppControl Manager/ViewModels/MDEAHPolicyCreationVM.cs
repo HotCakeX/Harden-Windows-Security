@@ -34,11 +34,10 @@ using Microsoft.UI.Xaml.Input;
 
 namespace AppControlManager.ViewModels;
 
-internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
+internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthHost, IDisposable
 {
 
 	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
-	internal ViewModelForMSGraph ViewModelMSGraph { get; } = ViewModelProvider.ViewModelForMSGraph;
 
 	internal MDEAHPolicyCreationVM()
 	{
@@ -54,8 +53,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value), AuthenticationContext.MDEAdvancedHunting);
-
-		ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
 
 		// To adjust the initial width of the columns, giving them nice paddings.
 		CalculateColumnWidths();
@@ -108,7 +105,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 		AreElementsEnabled = on;
 	}
 
-	internal readonly AuthenticationCompanion AuthCompanionCLS;
+	public AuthenticationCompanion AuthCompanionCLS { get; private set; }
 
 	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
@@ -135,9 +132,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 	internal string? PolicyToAddLogsTo { get; set => SP(ref field, value); }
 	internal string? BasePolicyXMLFile { get; set => SP(ref field, value); }
 
-	internal string TotalCountOfTheFilesTextBox { get; set => SP(ref field, value); } = GlobalVars.GetStr("TotalLogsTextBlock/PlaceholderText");
-
-
 	internal Visibility OpenInPolicyEditorInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
@@ -148,7 +142,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Determines whether the UI elements are enabled or disabled.
 	/// </summary>
-	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
+	public bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
 	/// Used to set default selected item for the SelectorBar and also maintain selected item between page navigations since we turned off cache.
@@ -185,7 +179,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 		}
 	}
 
-
 	internal bool ScanLogsProgressRingIsActive { get; set => SP(ref field, value); }
 	internal Visibility ScanLogsProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -218,7 +211,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IDisposable
 			}
 		}
 	} = 1;
-
 
 	internal string? DeviceNameTextBox { get; set => SPT(ref field, value); }
 
@@ -388,10 +380,7 @@ DeviceEvents
 		}
 	}
 
-	internal void BrowseForLogs_Flyout_Clear_Click()
-	{
-		MDEAdvancedHuntingLogs = null;
-	}
+	internal void BrowseForLogs_Flyout_Clear_Click() => MDEAdvancedHuntingLogs = null;
 
 	/// <summary>
 	/// Event handler for the select Code Integrity EVTX file path button
@@ -456,37 +445,18 @@ DeviceEvents
 	}
 
 	/// <summary>
-	/// Updates the total logs count displayed on the UI
-	/// </summary>
-	internal void UpdateTotalLogs(bool? Zero = null)
-	{
-		if (Zero == true)
-		{
-			TotalCountOfTheFilesTextBox = GlobalVars.GetStr("TotalLogsTextBlock/PlaceholderText");
-		}
-		else
-		{
-			TotalCountOfTheFilesTextBox = string.Format(GlobalVars.GetStr("TotalLogsCountMessage"), FileIdentities.Count);
-		}
-	}
-
-	/// <summary>
 	/// Event handler for the Clear Data button
 	/// </summary>
 	internal void ClearDataButton_Click()
 	{
 		FileIdentities.Clear();
 		AllFileIdentities.Clear();
-
-		UpdateTotalLogs(true);
 	}
 
 	/// <summary>
 	/// Applies the date, search, and property filters to the data in the ListView.
 	/// </summary>
-	private void ApplyFilters()
-	{
-		ListViewHelper.ApplyFilters(
+	private void ApplyFilters() => ListViewHelper.ApplyFilters(
 			allFileIdentities: AllFileIdentities.AsEnumerable(),
 			filteredCollection: FileIdentities,
 			searchText: SearchBoxText,
@@ -495,9 +465,6 @@ DeviceEvents
 			selectedPropertyFilter: SelectedPropertyFilter,
 			propertyFilterValue: PropertyFilterValue
 		);
-		UpdateTotalLogs();
-	}
-
 
 	/// <summary>
 	/// Selects all of the displayed rows on the ListView
@@ -538,8 +505,6 @@ DeviceEvents
 			_ = FileIdentities.Remove(item);
 			_ = AllFileIdentities.Remove(item); // Removing it from the other list so that when user deletes data when search filtering is applied, after removing the search, the deleted data won't be restored
 		}
-
-		UpdateTotalLogs();
 	}
 
 	/// <summary>
@@ -564,8 +529,6 @@ DeviceEvents
 			// Clear the FileIdentities before getting and showing the new ones
 			FileIdentities.Clear();
 			AllFileIdentities.Clear();
-
-			UpdateTotalLogs(true);
 
 			// To store the output of the MDE Advanced Hunting logs scan
 			HashSet<FileIdentity> Output = [];
@@ -600,13 +563,8 @@ DeviceEvents
 			// Store all of the data in the ObservableCollection
 			foreach (FileIdentity item in Output)
 			{
-				// Add a reference to the ViewModel class instance to every item
-				// so we can use it for navigation in the XAML
-				item.ParentViewModelMDEAHPolicyCreationVM = this;
 				FileIdentities.Add(item);
 			}
-
-			UpdateTotalLogs();
 
 			CalculateColumnWidths();
 		}
@@ -965,11 +923,8 @@ DeviceEvents
 				// Store all of the data in the ObservableCollection
 				foreach (FileIdentity item in Output)
 				{
-					item.ParentViewModelMDEAHPolicyCreationVM = this;
 					FileIdentities.Add(item);
 				}
-
-				UpdateTotalLogs();
 
 				CalculateColumnWidths();
 			}
@@ -1037,15 +992,8 @@ DeviceEvents
 
 	public void Dispose()
 	{
-		try
-		{
-			// Unsubscribe from the collection changed event to prevent memory leaks
-			ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged -= AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
-		}
-		catch { }
-
 		// Dispose the AuthenticationCompanion which implements IDisposable
-		AuthCompanionCLS?.Dispose();
+		AuthCompanionCLS.Dispose();
 	}
 
 	/// <summary>

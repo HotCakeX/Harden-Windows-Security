@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="ComManager.vcxproj" Id="13d7155e-c304-48cf-91d4-726971205240" />
+</Solution>

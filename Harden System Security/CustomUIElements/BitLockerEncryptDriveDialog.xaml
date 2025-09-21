@@ -1,0 +1,263 @@
+<customUI:ContentDialogV2
+    x:Class="HardenSystemSecurity.CustomUIElements.BitLockerEncryptDriveDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:bitLocker="using:HardenSystemSecurity.BitLocker"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    x:Uid="BitLockerEncryptDriveContentDialog"
+    DefaultButton="Close"
+    IsPrimaryButtonEnabled="True"
+    PrimaryButtonClick="{x:Bind OnPrimaryButtonClick}"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <customUI:ContentDialogV2.Resources>
+        <ResourceDictionary>
+            <!-- To use the PivotSegmentedStyle for the Segmented element -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///CommunityToolkit.WinUI.Controls.Segmented/Segmented/Segmented.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <x:Double x:Key="ContentDialogMaxWidth">1200</x:Double>
+        </ResourceDictionary>
+    </customUI:ContentDialogV2.Resources>
+
+    <Grid RowSpacing="12" Padding="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Header text -->
+            <RowDefinition Height="*"/>
+            <!-- SwitchPresenter -->
+            <RowDefinition Height="Auto"/>
+            <!-- Segmented selector -->
+        </Grid.RowDefinitions>
+
+
+        <controls:WrapPanel Orientation="Vertical" Grid.Row="0" Margin="0,0,0,2" HorizontalSpacing="5" VerticalSpacing="10">
+
+            <TextBlock x:Uid="BitLockerEncryptDriveContentDialogSubtitle"
+                   TextWrapping="Wrap"
+                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+            <TextBlock x:Uid="BitLockerEncryptDriveContentDialogSubtitleSecond"
+                       TextWrapping="Wrap"
+                       Foreground="{ThemeResource SystemFillColorCautionBrush}"/>
+
+        </controls:WrapPanel>
+
+        <!-- Center the content panels -->
+        <ScrollViewer Grid.Row="1"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Top">
+            <controls:SwitchPresenter
+                    Value="{x:Bind ((controls:SegmentedItem)segmentedControl.SelectedItem).Tag, Mode=OneWay}">
+
+                <controls:Case Value="OSDrive">
+
+                    <StackPanel Style="{StaticResource PanelStyleV2}"
+                                 animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                 animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                        <TextBlock x:Uid="OSDriveEncryptionSectionTitle"
+                                    Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="OSDriveEncryptionSectionDescription"
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        <RadioButtons x:Uid="OSDriveEncryptionLevelSelectionRadioButtons">
+                            <RadioButton x:Uid="OSDriveEncryptionNormalLevel"
+                                         IsChecked="{x:Bind IsNormalOSDriveEncryptionLevelSelected, Mode=TwoWay}" />
+                            <RadioButton x:Uid="OSDriveEncryptionEnhancedLevel"
+                                         IsChecked="{x:Bind IsEnhancedOSDriveEncryptionLevelSelected, Mode=TwoWay}" />
+                        </RadioButtons>
+
+                        <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="20" VerticalSpacing="10">
+                            <ToggleSwitch x:Uid="FreePlusUsedSpaceEncryptionToggleSwitch"
+                                          IsOn="{x:Bind FreePlusUsedSpaceEncryption, Mode=TwoWay}" />
+                            <ToggleSwitch x:Uid="AllowDowngradeOSDriveEncryptionLevelToggleSwitch"
+                                          IsOn="{x:Bind AllowDowngradeOSDriveEncryptionLevel, Mode=TwoWay}" />
+                        </controls:WrapPanel>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Padding="12"
+                                CornerRadius="6">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Uid="EnterAPinText"/>
+                                <PasswordBox Password="{x:Bind PIN, Mode=TwoWay}"
+                                             PasswordChar="#"
+                                             IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Padding="12"
+                                Visibility="{x:Bind IsEnhancedOSDriveEncryptionLevelSelected, Mode=OneWay}"
+                                CornerRadius="6">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Uid="SelectARemovableDriveText"/>
+
+                                <controls:WrapPanel Orientation="Horizontal"
+                                                    HorizontalSpacing="10"
+                                                    VerticalSpacing="10">
+
+                                    <Button x:Uid="RefreshButton"
+                                            IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
+                                            Click="{x:Bind RefreshRemovableDrives}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE72C;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <ComboBox ItemsSource="{x:Bind RemovableDrives}"
+                                              IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
+                                              SelectedItem="{x:Bind SelectedRemovableDrive, Mode=TwoWay}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="bitLocker:BitLockerVolume">
+                                                <TextBlock Text="{x:Bind MountPoint}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                </controls:WrapPanel>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+
+                </controls:Case>
+
+                <controls:Case Value="FixedDrive">
+
+                    <StackPanel Style="{StaticResource PanelStyleV2}"
+                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                        <TextBlock x:Uid="FixedDriveEncryptionSectionTitle"
+                                    Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="FixedDriveEncryptionSectionDescription"
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        <ToggleSwitch x:Uid="FreePlusUsedSpaceEncryptionToggleSwitch"
+                                      IsOn="{x:Bind FreePlusUsedSpaceEncryption, Mode=TwoWay}" />
+
+                    </StackPanel>
+
+                </controls:Case>
+
+                <controls:Case Value="RemovableDrive">
+
+                    <StackPanel Style="{StaticResource PanelStyleV2}"
+                                Orientation="Vertical"
+                                animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                                animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+                        <TextBlock x:Uid="RemovableDriveEncryptionSectionTitle"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <TextBlock x:Uid="RemovableDriveEncryptionSectionDescription"
+                                   Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                        <ToggleSwitch x:Uid="FreePlusUsedSpaceEncryptionToggleSwitch"
+                                      IsOn="{x:Bind FreePlusUsedSpaceEncryption, Mode=TwoWay}" />
+
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                Padding="12"
+                                CornerRadius="6">
+                            <StackPanel Spacing="6">
+                                <TextBlock x:Uid="EnterAPasswordText"/>
+                                <PasswordBox Password="{x:Bind Password, Mode=TwoWay}"
+                                             PasswordChar="#"
+                                             IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+
+                </controls:Case>
+
+            </controls:SwitchPresenter>
+        </ScrollViewer>
+
+        <!-- Segmented control -->
+        <controls:Segmented Grid.Row="2"
+                         x:Name="segmentedControl"
+                         HorizontalAlignment="Center"
+                         Style="{StaticResource PivotSegmentedStyle}"
+                         SelectedIndex="{x:Bind SelectedKeyProtectorTypeIndex, Mode=TwoWay}">
+
+            <!-- Replacing the default StackPanel with our WrapPanel so that
+              Instead of a single horizontal line, the items go to the next rows when width gets too small -->
+            <controls:Segmented.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <controls:WrapPanel Orientation="Horizontal"
+                                        HorizontalSpacing="{ThemeResource SegmentedItemSpacing}"
+                                        VerticalSpacing="{ThemeResource SegmentedItemSpacing}" />
+                </ItemsPanelTemplate>
+            </controls:Segmented.ItemsPanel>
+
+            <controls:SegmentedItem x:Uid="OSDriveSegmentedItem"
+                                    IsEnabled="{x:Bind IsOSDriveSectionEnabled}"
+                                    Tag="OSDrive">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                 HorizontalAlignment="Center"
+                                 Spacing="4">
+                            <FontIcon Glyph="&#xE8FC;"
+                                    Width="20"
+                                    Height="20"
+                                    VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                    HorizontalAlignment="Center"
+                                    TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="FixedDriveSegmentedItem"
+                                    IsEnabled="{x:Bind IsFixedDriveSectionEnabled}"
+                                    Tag="FixedDrive">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                 HorizontalAlignment="Center"
+                                 Spacing="4">
+                            <FontIcon Glyph="&#xEDA2;"
+                                      Width="20"
+                                      Height="20"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                    HorizontalAlignment="Center"
+                                    TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+            <controls:SegmentedItem x:Uid="RemovableDriveSegmentedItem"
+                                    IsEnabled="{x:Bind IsRemovableDriveSectionEnabled}"
+                                    Tag="RemovableDrive">
+                <controls:SegmentedItem.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Vertical"
+                                 HorizontalAlignment="Center"
+                                 Spacing="4">
+                            <FontIcon Glyph="&#xE88E;"
+                                   Width="20"
+                                   Height="20"
+                                   VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind}"
+                                    HorizontalAlignment="Center"
+                                    TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </controls:SegmentedItem.ContentTemplate>
+            </controls:SegmentedItem>
+
+        </controls:Segmented>
+    </Grid>
+</customUI:ContentDialogV2>

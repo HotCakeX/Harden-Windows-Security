@@ -2,7 +2,9 @@
 
 Harden System Security is a modern secure lightweight application that can help you harden, secure and lock down your system. It is designed to be user-friendly and efficient, providing a range of features to enhance the security of your Windows operating system.
 
-## How To Install or Update The App
+It always stays up to date with the latest security patches and provides constant and consistent maintenance and support.
+
+## How To Install or Update The App<img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/heart-purple.gif" width="35">
 
 ### Use The [Microsoft Store](https://apps.microsoft.com/detail/9p7ggfl7dx57)
 
@@ -43,7 +45,7 @@ Please feel free to open a discussion if you have any questions about the build 
 
 <br>
 
-## Technical Details of The App
+## Technical Details of The App <img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/pinkbow.gif" width="32">
 
 * Secure and transparent development and build process.
 * Built using [WinUI3](https://learn.microsoft.com/windows/apps/winui/winui3/) / [XAML](https://github.com/microsoft/microsoft-ui-xaml) / [C#](https://learn.microsoft.com/dotnet/csharp/).
@@ -63,7 +65,31 @@ Please feel free to open a discussion if you have any questions about the build 
 
 <br>
 
-## Security
+## Features <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Features.png">
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> No Windows functionality is removed/disabled against Microsoft's recommendations.
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> All of the links in the documentations and sources are from official Microsoft websites, straight from the source. No bias, No FUD, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles, and such.
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> When a security measure is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from the app in order to prevent any problems and because it won't be necessary anymore. **Community feedback will always be taken into account when doing so.**
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Applying the security measures can make your system compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features) - [See what makes a Secured-core PC](https://learn.microsoft.com/windows-hardware/design/device-experiences/oem-highly-secure-11#what-makes-a-secured-core-pc) - <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard">Check Device Guard category for more info</a>
+> [Secured-core](https://learn.microsoft.com/windows-hardware/design/device-experiences/oem-highly-secure-11) – recommended for the most sensitive systems and industries like financial, healthcare, and government agencies. Builds on the previous layers and leverages advanced processor capabilities to provide protection from firmware attacks.
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Since I originally created this repository for myself and people I care about, I always maintain it to the highest possible standard.
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> If you have multiple accounts on your device, you only need to apply the security measures 1 time with Admin privileges, that will make system-wide changes. Then you can ***optionally*** run the app, without Admin privileges, for each standard user to apply the [Non-Admin category](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures).
+
+<br>
+
+## Security <img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/pinkbutterflyholopastel.gif" width="35">
+
+> [!IMPORTANT]\
+> The Harden System Security application is built publicly using a [GitHub Workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/runs/17206622843/workflow) and uploaded to the Microsoft Partner Center for validation and signing. The action uses [SBOM (Software Bill of Materials)](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies) generation to comply with the highest [security standards](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) such as [SLSA](https://slsa.dev/spec/v1.0/levels) level 3. [GitHub's CodeQL Advanced workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml) with extended security model scans the entire repository. All of the dependencies of any project in this repository are uploaded to GitHub and are available in the [Dependency Graph](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies).
+
+<br>
 
 Harden System Security is architected with a security-first philosophy from its inception. Every feature is designed and implemented with an offensive security mindset, ensuring that security is never an afterthought—and never will be. When selecting a solution tasked with defending critical systems, the last thing you want is a so‑called security tool that silently broadens your attack surface or neglects foundational safeguards. This application is built to be inherently trustworthy, defensible, and resilient.
 
@@ -85,9 +111,51 @@ The codebase is extensively and thoughtfully documented, enabling reviewers to t
 
 <br>
 
-## Documentation
+## Documentation <img src="https://raw.githubusercontent.com/HotCakeX/.github/c26ab12b9bc18eb51041857c6244d6abe11a707a/Pictures/Gifs/peaheartbento.gif" width="40">
 
-Full documentation for every single feature of the Harden System Security app is available on [the GitHub Wiki](https://github.com/HotCakeX/Harden-Windows-Security/wiki#-harden-system-security--)
+> [!NOTE]\
+> Mixing 3rd party security solutions with advanced Microsoft Defender features or other features offered by the Harden System Security app is not recommended as it can create conflicts.
+
+### Symbols Reference
+
+The following chart explains various symbols you will see throughout the documentations for the Harden System Security app, helping you understand how they are each applied.
+
+<div align="center">
+
+| Indicator| Description                   |
+|:--------:|:-----------------------------:|
+| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> | Security measure is applied via Registry/API/COM etc. |
+| <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> | Security measure is applied via Group Policies |
+| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="25" alt="Rotating green checkmark denoting CSP"> | [CSP](https://learn.microsoft.com/windows/configuration/provisioning-packages/how-it-pros-can-use-configuration-service-providers) for the security measure |
+| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> | Sub-category |
+
+</div>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/be5b79427cba6546ece58984428841a4d1a31789/Pictures/Gifs/Harden%20System%20Security%20Menu/Protect.gif" alt="Harden System Security Menu Item" width="30"> [Protect](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect)
+
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines)
+    - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/d32e4aced203262acc7eff373e888f22247a4212/images/MicrosoftBaseLinesOverrides.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Security Baselines Overrides](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-365-Apps-Security-Baselines.png" alt="Harden System Security Menu Item" width="30"> [Microsoft 365 Apps Security Baseline](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-365-Apps-Security-Baseline)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsDefender.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Defender](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ASRrules.png" alt="Harden System Security Menu Item" width="30"> [Attack Surface Reduction](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png" alt="Harden System Security Menu Item" width="30"> [Bitlocker](https://github.com/HotCakeX/Harden-Windows-Security/wiki/BitLocker)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/DeviceGuard.png" alt="Harden System Security Menu Item" width="30"> [Device Guard](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png" alt="Harden System Security Menu Item" width="30"> [TLS Security](https://github.com/HotCakeX/Harden-Windows-Security/wiki/TLS-Security)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LockScreen.png" alt="Harden System Security Menu Item" width="30"> [Lock Screen](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Lock-Screen)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png" alt="Harden System Security Menu Item" width="30"> [User Account Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/User-Account-Control)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Firewall.png" alt="Harden System Security Menu Item" width="30"> [Windows Firewall](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/OptionalFeatures.png" alt="Harden System Security Menu Item" width="30"> [Optional Windows Features](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Networking.png" alt="Harden System Security Menu Item" width="30"> [Windows Networking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Networking)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/MiscellaneousCommands.png" alt="Harden System Security Menu Item" width="30"> [Miscellaneous Configurations](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Miscellaneous-Configurations)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsUpdate.png" alt="Harden System Security Menu Item" width="30"> [Windows Update](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Update)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/EdgeBrowser.png" alt="Harden System Security Menu Item" width="30"> [Edge Browser](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edge-Browser)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Certificate.png" alt="Harden System Security Menu Item" width="30"> [Certificate Checking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Certificate-Checking)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/CountryIPBlocking.png" alt="Harden System Security Menu Item" width="30"> [Country IP Blocking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking)
+    - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/NonAdmin.png" alt="Harden System Security Menu Item" width="30"> [Non Admin Measures](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/Star.gif" alt="Harden System Security Menu Item" width="30"> [Group Policy Editor](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy-Editor)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/Toolbox.gif" alt="Harden System Security Menu Item" width="30"> [Manage Installed Apps](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/kawaii.gif" alt="Harden System Security Menu Item" width="30"> [File Reputation](https://github.com/HotCakeX/Harden-Windows-Security/wiki/File-Reputation)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/be5b79427cba6546ece58984428841a4d1a31789/Pictures/Gifs/Harden%20System%20Security%20Menu/ChocolateBar.gif" alt="Harden System Security Menu Item" width="30"> [Audit Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Audit-Policies)
 
 <br>
 
@@ -103,6 +171,30 @@ The Harden System Security fully supports the following languages.
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/saudi-arabia.svg" width="25" alt="Country flag"> Arabic
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/mexico.svg" width="25" alt="Country flag"> Spanish
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/poland.svg" width="25" alt="Country flag"> Polish
+
+<br>
+
+## Under the Hood: Files and Directories Structures Explained
+
+Here are the breakdown of some of the directories and files used by the Harden System Security app.
+
+* [Animated Icon Sources](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icon%20Sources) is the location hosting JSON content of the Lottie animations used for the animated buttons.
+
+* [Animated Icons](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icons) contain source generated files used for animated icons in various parts of the app.
+
+* [Resources](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources) directory contains JSON data used by the app to apply Security Measures for the following sources: `Group Policies`, `Registry Keys`, `Security Policies Registry Keys`.
+
+* [CountryIPsData](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/CountryIPsData) contains the JSON files used by the app in the [Country IP Blocking](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking) page.
+
+* [Mitigations](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/Mitigations) contains files used by the app to apply, verify or remove Exploit Protection for different processes defined in it.
+
+* [DISMService.exe](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden%20System%20Security/DISMService.exe) is one of the components of the Harden System Security app that provides DISM functionalities via named pipe.
+
+* [CppInterop](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/CppInterop) directory contains parts of the Harden System Security app written in C++.
+
+<br>
+
+If you'd like to know more about a specific file or directory please feel free to reach out.
 
 <br>
 
@@ -318,25 +410,15 @@ function Build_HSS {
 
     #region --- Compile C++ projects ---
 
-    ### ManageDefender
+    ### ComManager
 
-    . $MSBuildPath '..\AppControl Manager\eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
+    . $MSBuildPath '..\AppControl Manager\eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for X64. Exit Code: $LASTEXITCODE") }
 
-    . $MSBuildPath '..\AppControl Manager\eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
+    . $MSBuildPath '..\AppControl Manager\eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for ARM64. Exit Code: $LASTEXITCODE") }
-
-    ### ScheduledTaskManager
-
-    . $MSBuildPath '..\AppControl Manager\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ScheduledTaskManager solution for X64. Exit Code: $LASTEXITCODE") }
-
-    . $MSBuildPath '..\AppControl Manager\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ScheduledTaskManager solution for ARM64. Exit Code: $LASTEXITCODE") }
 
     #region --- RUST projects ---
 
@@ -363,37 +445,6 @@ function Build_HSS {
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed checking for Rust version. Exit Code: $LASTEXITCODE") }
 
     [string]$Current_Location = (Get-Location).Path
-
-    Set-Location -Path '..\AppControl Manager\eXclude\Rust WMI Interop\Device Guard\Program'
-
-    if (Test-Path -PathType Leaf -LiteralPath 'Cargo.lock') {
-        Remove-Item -Force -LiteralPath 'Cargo.lock'
-    }
-
-    cargo clean
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning the Rust project. Exit Code: $LASTEXITCODE") }
-
-    cargo update --verbose
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed updating Rust. Exit Code: $LASTEXITCODE") }
-
-    cargo tree
-
-    rustup show active-toolchain
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed showing active Rust toolchain. Exit Code: $LASTEXITCODE") }
-
-    cargo build_x64
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 Device Guard Rust project. Exit Code: $LASTEXITCODE") }
-
-    cargo build_arm64
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building arm64 Device Guard Rust project. Exit Code: $LASTEXITCODE") }
-
-    Set-Location -Path $Current_Location
-
 
     Set-Location -Path '..\AppControl Manager\eXclude\Rust Interop Library'
 
@@ -449,13 +500,29 @@ function Build_HSS {
 
     #region --- C# projects ---
 
-    dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release
-    dotnet build '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release --verbosity minimal
-    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
+    dotnet restore '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' -r win-x64
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed restoring DISMService for x64. Exit Code: $LASTEXITCODE") }
+
+    dotnet restore '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' -r win-arm64
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed restoring DISMService for ARM64. Exit Code: $LASTEXITCODE") }
 
     dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning DISMService (first pass). Exit Code: $LASTEXITCODE") }
+
     dotnet build '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release --verbosity minimal
-    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Platform=arm64 /p:PublishProfile=win-arm64 /t:Publish -v:minimal
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building DISMService (first pass). Exit Code: $LASTEXITCODE") }
+
+    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Configuration=Release /restore /p:Platform=x64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-x64.pubxml" /t:Publish -v:minimal
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for x64. Exit Code: $LASTEXITCODE") }
+
+    dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning DISMService (second pass). Exit Code: $LASTEXITCODE") }
+
+    dotnet build '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' --configuration Release --verbosity minimal
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building DISMService (second pass). Exit Code: $LASTEXITCODE") }
+
+    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Configuration=Release /restore /p:Platform=arm64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-arm64.pubxml" /t:Publish -v:minimal
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for ARM64. Exit Code: $LASTEXITCODE") }
 
     #endregion
 
@@ -466,40 +533,34 @@ function Build_HSS {
     # https://learn.microsoft.com/visualstudio/msbuild/common-msbuild-project-properties
 
     # Copy the X64 components to the directory before the build starts
-    Copy-Item -Path '..\AppControl Manager\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
 
-    Copy-Item -Path '..\AppControl Manager\eXclude\C++ WMI Interop\ManageDefender\x64\Release\ManageDefender-x64.exe' -Destination '.\CppInterop\ManageDefender.exe' -Force
-
-    Copy-Item -Path '..\AppControl Manager\eXclude\Rust WMI Interop\Device Guard\Program\target\x86_64-pc-windows-msvc\release\DeviceGuardWMIRetriever-X64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
+    Copy-Item -Path '..\AppControl Manager\eXclude\ComManager\x64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
     Copy-Item -Path '..\AppControl Manager\eXclude\DISMService\OutputX64\DISMService.exe' -Destination '.\DISMService.exe' -Force
 
     # Generate for X64 architecture
-    dotnet clean 'Harden System Security.slnx' --configuration Release
-    dotnet build 'Harden System Security.slnx' --configuration Release --verbosity minimal /p:Platform=x64
+    dotnet clean 'Harden System Security.csproj' --configuration Release
+    dotnet build 'Harden System Security.csproj' --configuration Release --verbosity minimal /p:Platform=x64 /p:RuntimeIdentifier=win-x64
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 
-    dotnet msbuild 'Harden System Security.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
+    dotnet msbuild 'Harden System Security.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging x64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 
     # Copy the ARM64 components to the directory before the build starts
-    Copy-Item -Path '..\AppControl Manager\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
 
-    Copy-Item -Path '..\AppControl Manager\eXclude\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination '.\CppInterop\ManageDefender.exe' -Force
-
-    Copy-Item -Path '..\AppControl Manager\eXclude\Rust WMI Interop\Device Guard\Program\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
+    Copy-Item -Path '..\AppControl Manager\eXclude\ComManager\ARM64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
     Copy-Item -Path '..\AppControl Manager\eXclude\DISMService\OutputARM64\DISMService.exe' -Destination '.\DISMService.exe' -Force
 
     # Generate for ARM64 architecture
-    dotnet clean 'Harden System Security.slnx' --configuration Release
-    dotnet build 'Harden System Security.slnx' --configuration Release --verbosity minimal /p:Platform=ARM64
+    dotnet clean 'Harden System Security.csproj' --configuration Release
+    dotnet build 'Harden System Security.csproj' --configuration Release --verbosity minimal /p:Platform=ARM64 /p:RuntimeIdentifier=win-arm64
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ARM64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 
-    dotnet msbuild 'Harden System Security.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
+    dotnet msbuild 'Harden System Security.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-arm64 /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging ARM64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 
@@ -542,16 +603,16 @@ function Build_HSS {
     }
 
     #region Finding X64 outputs
-    [System.String]$FinalMSIXX64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64\.msix' -ErrorMessageFolder 'Could not find the directory for X64 MSIX file' -ErrorMessageFile 'Could not find the X64 MSIX file'
+    [System.String]$FinalMSIXX64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64\.msix' -ErrorMessageFolder 'Could not find the directory for X64 MSIX file' -ErrorMessageFile 'Could not find the X64 MSIX file'
     [System.String]$FinalMSIXX64Name = [System.IO.Path]::GetFileName($FinalMSIXX64Path)
-    [System.String]$FinalMSIXX64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64\.msixsym' -ErrorMessageFolder 'Could not find the directory for X64 symbol file' -ErrorMessageFile 'Could not find the X64 symbol file'
+    [System.String]$FinalMSIXX64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64\.appxsym' -ErrorMessageFolder 'Could not find the directory for X64 symbol file' -ErrorMessageFile 'Could not find the X64 symbol file'
     [System.String]$FinalMSIXX64SymbolName = [System.IO.Path]::GetFileName($FinalMSIXX64SymbolPath)
     #endregion
 
     #region Finding ARM64 outputs
-    [System.String]$FinalMSIXARM64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64\.msix' -ErrorMessageFolder 'Could not find the directory for ARM64 MSIX file' -ErrorMessageFile 'Could not find the ARM64 MSIX file'
+    [System.String]$FinalMSIXARM64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64\.msix' -ErrorMessageFolder 'Could not find the directory for ARM64 MSIX file' -ErrorMessageFile 'Could not find the ARM64 MSIX file'
     [System.String]$FinalMSIXARM64Name = [System.IO.Path]::GetFileName($FinalMSIXARM64Path)
-    [System.String]$FinalMSIXARM64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64\.msixsym' -ErrorMessageFolder 'Could not find the directory for ARM64 symbol file' -ErrorMessageFile 'Could not find the ARM64 symbol file'
+    [System.String]$FinalMSIXARM64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64\.appxsym' -ErrorMessageFolder 'Could not find the directory for ARM64 symbol file' -ErrorMessageFile 'Could not find the ARM64 symbol file'
     [System.String]$FinalMSIXARM64SymbolName = [System.IO.Path]::GetFileName($FinalMSIXARM64SymbolPath)
     #endregion
 
@@ -698,12 +759,12 @@ function Build_HSS {
     if ($Upload) {
         dotnet clean '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release
         dotnet build '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release --verbosity minimal
-        dotnet msbuild '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
+        dotnet msbuild '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Configuration=Release /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
 
         [System.String]$TokenEndpoint = $env:PARTNERCENTER_TOKENENDPOINT
         [System.String]$ClientId = $env:PARTNERCENTER_CLIENTID
         [System.String]$ClientSecret = $env:PARTNERCENTER_CLIENTSECRET
-        [System.String]$ApplicationId = $env:PARTNERCENTER_APPLICATIONID
+        [System.String]$ApplicationId = $env:PARTNERCENTER_APPLICATIONID_HSS
 
         [System.String]$PackageFilePath = $MSIXBundle
         [System.String]$ReleaseNotesFilePath = (Resolve-Path -Path ReleaseNotes.txt).Path

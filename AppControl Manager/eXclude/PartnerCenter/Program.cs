@@ -127,12 +127,16 @@ internal sealed class ApplicationPackage
 		HashSet<string> extraProperties = new(actualProperties);
 		extraProperties.ExceptWith(expectedProperties);
 
-		// Throw exceptions if there are discrepancies, shouldn't continue.
-		if (missingProperties.Count > 0)
-		{
-			throw new InvalidOperationException($"Missing required properties in ApplicationPackage JSON: {string.Join(", ", missingProperties)}");
-		}
+		// TargetPlatform property disappears from all packages once we mark the oldest package for deletion!
+		// So commenting this check because it would just always throw and wouldn't let us continue.
 
+		// Throw exceptions if there are discrepancies, shouldn't continue.
+		// if (missingProperties.Count > 0)
+		// {
+		//	throw new InvalidOperationException($"Missing required properties in ApplicationPackage JSON: {string.Join(", ", missingProperties)}");
+		// }
+
+		// Throwing on extra properties is good to keep because that means we need to update the JSON class for source-generated (de)serialization.
 		if (extraProperties.Count > 0)
 		{
 			throw new InvalidOperationException($"Unexpected extra properties in ApplicationPackage JSON: {string.Join(", ", extraProperties)}. This may indicate new features have been added to the API that are not supported by this version of the code.");
@@ -161,6 +165,7 @@ internal static class Helpers
 	private const int DeleteDelayMinutes = 3;
 	private const int CommitStatusTimeoutMinutes = 30; // timeout for commit status checking
 	private const int CommitStatusCheckIntervalSeconds = 10; // Check every 10 seconds
+	private const int MaxApplicationPackages = 30; // Maximum number of application packages allowed in Partner Center
 
 	// Set to false when in production
 	private const bool WriteSensitiveLogsEnabled = false;
@@ -840,6 +845,130 @@ internal static class Helpers
 	}
 
 	/// <summary>
+	/// Marks the oldest active package as PendingDelete
+	/// when the active (non-PendingDelete) package count has reached the configured MaxApplicationPackages limit before adding a new one.
+	/// </summary>
+	/// <param name="accessToken"></param>
+	/// <param name="applicationId"></param>
+	/// <param name="submissionId"></param>
+	/// <param name="maxPackages"></param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	/// <exception cref="HttpRequestException"></exception>
+	internal static async Task RemoveOldestPackageIfLimitReachedAsync(
+		string accessToken,
+		string applicationId,
+		string submissionId,
+		int maxPackages)
+	{
+		// Get current submission to inspect packages
+		string currentSubmissionJson = await GetSubmissionConfigAsync(accessToken, applicationId, submissionId);
+		JsonNode? submissionNode = JsonNode.Parse(currentSubmissionJson) ?? throw new InvalidOperationException("Failed to parse submission JSON (package removal stage).");
+
+		JsonNode? packagesNode = submissionNode["applicationPackages"];
+		if (packagesNode is not JsonArray packagesArray)
+		{
+			// No packages array present
+			return;
+		}
+
+		// Build list of (index, node) for active packages (anything not already PendingDelete)
+		List<(int Index, JsonObject PackageObject)> activePackages = new(capacity: packagesArray.Count);
+		for (int i = 0; i < packagesArray.Count; i++)
+		{
+			JsonNode? node = packagesArray[i];
+			if (node is JsonObject obj)
+			{
+				// If fileStatus != PendingDelete (case-insensitive) treat as active
+				if (!obj.TryGetPropertyValue("fileStatus", out JsonNode? statusNode))
+				{
+					// if missing status treat as active to avoid exceeding limit silently
+					activePackages.Add((i, obj));
+					continue;
+				}
+
+				string? statusValue = statusNode?.GetValue<string>();
+				if (!string.Equals(statusValue, "PendingDelete", StringComparison.OrdinalIgnoreCase))
+				{
+					activePackages.Add((i, obj));
+				}
+			}
+		}
+
+		int activeCount = activePackages.Count;
+		Console.WriteLine($"Active (non-PendingDelete) application packages count: {activeCount}");
+
+		// Only proceed if we have reached or exceeded the threshold before adding a new package.
+		if (activeCount < maxPackages)
+		{
+			return; // Nothing to do yet.
+		}
+
+		// Find the oldest active package -> lowest index among activePackages
+		(int Index, JsonObject PackageObject) oldest = activePackages[0];
+
+		// Validate before modification
+		try
+		{
+			using JsonDocument singleDoc = JsonDocument.Parse(oldest.PackageObject.ToJsonString());
+			ApplicationPackage _ = ApplicationPackage.FromJsonElement(singleDoc.RootElement);
+			WriteSensitiveLogs($"Oldest active package candidate for marking PendingDelete: {oldest.PackageObject["fileName"]?.GetValue<string>() ?? "<unknown>"}");
+		}
+		catch (Exception ex)
+		{
+			WriteSensitiveLogs($"Validation of oldest package before marking PendingDelete failed: {ex.Message}");
+			throw;
+		}
+
+		// Set fileStatus = PendingDelete (must keep ALL other fields intact; API requires retaining the entry)
+		// If fileStatus property missing, we add it.
+		oldest.PackageObject["fileStatus"] = "PendingDelete";
+
+		string removedFileName = oldest.PackageObject.TryGetPropertyValue("fileName", out JsonNode? removedNameNode)
+			? (removedNameNode?.GetValue<string>() ?? "<unknown>")
+			: "<unknown>";
+
+		Console.WriteLine($"Marked oldest package for deletion: {removedFileName}");
+
+		// Serialize updated submission (without adding the new package yet). This ensures deletion marking happens first.
+		string updatedJson = submissionNode.ToJsonString(new JsonSerializerOptions
+		{
+			WriteIndented = false,
+			Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All)
+		});
+
+		// PUT update to persist the status change prior to uploading/adding the new package
+		_ = await ExecuteWithRetryAsync(async () =>
+		{
+			using HttpClient client = new()
+			{
+				Timeout = TimeSpan.FromSeconds(ExtendedTimeoutSeconds)
+			};
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+			Uri requestUrl = new($"https://manage.devcenter.microsoft.com/v1.0/my/applications/{applicationId}/submissions/{submissionId}");
+
+			using StringContent content = new(updatedJson, Encoding.UTF8, "application/json");
+			_ = (content.Headers?.ContentType?.CharSet = "UTF-8");
+
+			using HttpResponseMessage response = await client.PutAsync(requestUrl, content);
+
+			Console.WriteLine($"PendingDelete marking update response status: {response.StatusCode}");
+			string responseContent = await response.Content.ReadAsStringAsync();
+			if (response.IsSuccessStatusCode)
+			{
+				Console.WriteLine("Oldest package successfully marked as PendingDelete (submission updated).");
+				return 0;
+			}
+			else
+			{
+				WriteSensitiveLogs($"Response Content: {responseContent}");
+				throw new HttpRequestException($"Failed to update submission when marking oldest package PendingDelete. Status {response.StatusCode}.");
+			}
+		}, "mark oldest package PendingDelete");
+	}
+
+	/// <summary>
 	/// Uploads a package and updates the submission with package information.
 	/// </summary>
 	internal static async Task AddPackageToSubmissionAsync(
@@ -854,6 +983,13 @@ internal static class Helpers
 		}
 
 		Console.WriteLine($"Adding package to submission: {Path.GetFileName(packageFilePath)}");
+
+		// Ensure we enforce the maximum number of packages by removing the oldest first if limit reached.
+		await RemoveOldestPackageIfLimitReachedAsync(
+			accessToken,
+			applicationId,
+			submissionId,
+			MaxApplicationPackages);
 
 		// Upload the package file (as ZIP)
 		string uploadedFileName = await UploadPackageAsync(accessToken, applicationId, submissionId, packageFilePath);

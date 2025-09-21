@@ -17,7 +17,7 @@
 
 namespace AppControlManager.Others;
 
-internal readonly struct HashCreator(string authenticodeSHA256, string authenticodeSHA1, string filePath, string? fileName, int siSigningScenario)
+internal sealed class HashCreator(string authenticodeSHA256, string authenticodeSHA1, string filePath, string? fileName, int siSigningScenario)
 {
 	internal string AuthenticodeSHA256 => authenticodeSHA256;
 	internal string AuthenticodeSHA1 => authenticodeSHA1;

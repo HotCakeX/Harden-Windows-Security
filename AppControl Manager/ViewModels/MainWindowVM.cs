@@ -62,7 +62,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.MergePolicies),
 		typeof(Pages.Settings),
 		typeof(Pages.ConfigurePolicyRuleOptions),
-		typeof(Pages.ViewFileCertificates)
+		typeof(Pages.ViewFileCertificates),
+		typeof(Pages.Home)
 		];
 
 
@@ -144,8 +145,14 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		breadCrumbMappingsV2[typeof(Pages.DeploymentPage)] = new PageTitleMap
 		(
-			titles: [GlobalVars.GetStr("DeploymentNavItem/Content")],
-			pages: [typeof(Pages.DeploymentPage)]
+			titles: [GlobalVars.GetStr("DeploymentNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItem/Content")],
+			pages: [typeof(Pages.DeploymentPage), typeof(Pages.IntuneDeploymentDetails)]
+		);
+
+		breadCrumbMappingsV2[typeof(Pages.IntuneDeploymentDetails)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("DeploymentNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItem/Content")],
+			pages: [typeof(Pages.DeploymentPage), typeof(Pages.IntuneDeploymentDetails)]
 		);
 
 		breadCrumbMappingsV2[typeof(Pages.EventLogsPolicyCreation)] = new PageTitleMap
@@ -225,12 +232,17 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("PolicyEditorNavItem/Content")],
 			pages: [typeof(Pages.PolicyEditor)]
 		);
+
+		breadCrumbMappingsV2[typeof(Pages.Home)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("HomeNavItem/Content")],
+			pages: [typeof(Pages.Home)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
 	// initially adding the default page that loads when the app is loaded to the collection
-	internal readonly ObservableCollection<Crumb> Breadcrumbs = App.IsElevated ? [new Crumb(GlobalVars.GetStr("CreatePolicyNavItem/Content"), typeof(Pages.CreatePolicy))] :
-		[new Crumb(GlobalVars.GetStr("PolicyEditorNavItem/Content"), typeof(Pages.PolicyEditor))];
+	internal readonly ObservableCollection<Crumb> Breadcrumbs = [new Crumb(GlobalVars.GetStr("HomeNavItem/Content"), typeof(Pages.Home))];
 
 	/// <summary>
 	/// Dictionary of all the main pages in the app, used for the main navigation.
@@ -259,7 +271,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "ValidatePolicies", typeof(Pages.ValidatePolicy) },
 		{ "ViewFileCertificates", typeof(Pages.ViewFileCertificates) },
 		{ "PolicyEditor", typeof(Pages.PolicyEditor) },
-		{ "Update", typeof(Pages.UpdatePage) }
+		{ "Update", typeof(Pages.UpdatePage) },
+		{ "Home", typeof(Pages.Home) }
 	};
 
 
@@ -299,6 +312,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("PolicyEditorNavItem/Content")] = typeof(Pages.PolicyEditor);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("UpdatePageCustomMSIXPath")] = typeof(Pages.UpdatePageCustomMSIXPath);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("HomeNavItem/Content")] = typeof(Pages.Home);
 	}
 
 	/// <summary>
@@ -306,7 +320,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// </summary>
 	internal MainWindowVM()
 	{
-
 		RebuildBreadcrumbMappings();
 		RebuildNavigationPageToItemContentMapForSearch();
 
@@ -439,24 +452,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// </summary>
 	internal IconElement? UpdateIcon { get; set => SP(ref field, value); }
 
-	#endregion
-
-
 	/// <summary>
-	/// Event handler triggered when the UpdateAvailable event is raised, indicating an update is available.
-	/// Updates InfoBadgeOpacity to show the InfoBadge in the UI if an update is available.
+	/// Icon for the Home navigation item.
 	/// </summary>
-	/// <param name="sender">Sender of the event, in this case, AppUpdate class.</param>
-	/// <param name="e">Boolean indicating whether an update is available.</param>
-	private void OnUpdateAvailable(object sender, UpdateAvailableEventArgs e)
-	{
-		// Marshal back to the UI thread using the dispatcher to safely update UI-bound properties
-		_ = Dispatcher.TryEnqueue(() =>
-		{
-			// Set InfoBadgeOpacity based on update availability: 1 to show, 0 to hide
-			InfoBadgeOpacity = e.IsUpdateAvailable ? 1 : 0;
-		});
-	}
+	internal IconElement? HomeIcon { get; set => SP(ref field, value); }
+
+	#endregion
 
 	/// <summary>
 	/// Event handler for the sidebar toggle button for auto assignment
@@ -466,7 +467,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		// Save the status in app settings
 		App.Settings.AutomaticAssignmentSidebar = AutomaticAssignmentSidebarToggleSwitchToggledState;
 	}
-
 
 	/// <summary>
 	/// Event handler for sidebar settings cards for auto assignment
@@ -659,6 +659,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Honeymoon()
 					};
 
+					HomeIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -7, -7, -7),
+						Source = new Home()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -792,6 +798,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					HomeIcon = new FontIcon
+					{
+						Glyph = "\uE80F",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -818,6 +830,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					ValidatePoliciesIcon = new FontIcon { Glyph = "\uED5E" };
 					ViewFileCertificatesIcon = new FontIcon { Glyph = "\uEBD2" };
 					PolicyEditorIcon = new FontIcon { Glyph = "\uE70F" };
+					HomeIcon = new FontIcon { Glyph = "\uE80F" };
 					break;
 				}
 		}

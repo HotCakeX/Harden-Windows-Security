@@ -21,6 +21,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
@@ -70,7 +71,10 @@ internal static partial class ListViewHelper
 		GroupPolicyEditor = 10000,
 		MicrosoftDefender = 10001,
 		MicrosoftSecurityBaseline = 10002,
-		Microsoft365AppsSecurityBaseline = 10003
+		Microsoft365AppsSecurityBaseline = 10003,
+		CertificateChecking_NonStlCerts = 10004,
+		AuditPolicies = 10005,
+		BitLockerVolumes = 10006
 	}
 
 	/// <summary>
@@ -92,6 +96,8 @@ internal static partial class ListViewHelper
 	internal static void Register(ListViewsRegistry key, ListView listView, ScrollViewer viewer)
 	{
 		// Logger.Write("Registering ListView in the cache");
+
+		// Update caches to point to the new instance
 		ListViewsCache[key] = listView;
 		ListViewsScrollViewerCache[key] = viewer;
 	}
@@ -105,13 +111,15 @@ internal static partial class ListViewHelper
 		// Always remove the exact instance from the tracking map.
 		_ = ObjRemovalTracking.Remove(instance);
 
-		// Only clear the caches if they still point to this specific instance.
-		// The goal is to be race-safe so we compare references always to avoid accidentally removing tracking for a page that was quickly loaded and registered its ListView.
+		// Only clear caches if they still point to this specific instance.
 		if (ListViewsCache.TryGetValue(key, out ListView? current) && ReferenceEquals(current, instance))
 		{
+			// Remove caches for this registry since they still reference the instance being unloaded.
 			_ = ListViewsCache.Remove(key);
 			_ = ListViewsScrollViewerCache.Remove(key);
 		}
+		// If the cached instance does not match the one being unregistered, there is an active newer instance.
+		// Do Not remove anything in that case; they belong to the active instance.
 	}
 
 	/// <summary>
@@ -165,7 +173,20 @@ internal static partial class ListViewHelper
 		Margin = new Thickness(10, 0, 2, 0),
 		TextWrapping = TextWrapping.NoWrap,
 		Padding = new Thickness(5),
+		FontFamily = new("Segoe UI") // Set as the same value as the one in the App Setting's default property value.
 	};
+
+	/// <summary>
+	/// Called when the user changes the font for ListViews in the Settings page.
+	/// </summary>
+	/// <param name="fontFamily"></param>
+	internal static void UpdateFontFamily(string fontFamily)
+	{
+		// Ensure the width is calculated correctly based on the selected font for List Views so the size of the text is accurate.
+		tb.FontFamily = new FontFamily(fontFamily);
+	}
+
+	private static readonly Size SizeForMeasurement = new(double.PositiveInfinity, double.PositiveInfinity);
 
 	/// <summary>
 	/// Measures the text width (in pixels) required to display the given text.
@@ -174,8 +195,21 @@ internal static partial class ListViewHelper
 	internal static double MeasureText(string? text)
 	{
 		tb.Text = text;
-		tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+		tb.Measure(SizeForMeasurement);
 		return tb.DesiredSize.Width + InitValueAdded;
+	}
+
+	/// <summary>
+	/// Used by Incremental Collections to measure column cell widths without adding the InitValueAdded padding.
+	/// </summary>
+	/// <param name="text"></param>
+	/// <returns></returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	internal static double MeasureTextEx(string? text)
+	{
+		tb.Text = text;
+		tb.Measure(SizeForMeasurement);
+		return tb.DesiredSize.Width;
 	}
 
 	/// <summary>
@@ -187,7 +221,7 @@ internal static partial class ListViewHelper
 	internal static double MeasureText(string? text, double maxWidth)
 	{
 		tb.Text = text;
-		tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+		tb.Measure(SizeForMeasurement);
 		return tb.DesiredSize.Width > maxWidth ? tb.DesiredSize.Width : maxWidth;
 	}
 
@@ -214,7 +248,6 @@ internal static partial class ListViewHelper
 			lw.SelectedItems.Add(item);
 		}
 	}
-
 
 	/// <summary>
 	/// Used to store sorting states of columns in ListViews
@@ -294,7 +327,7 @@ internal static partial class ListViewHelper
 
 		// Re-populate the ObservableCollection
 		observableCollection.Clear();
-		foreach (var item in sortedData)
+		foreach (TElement item in sortedData)
 		{
 			observableCollection.Add(item);
 		}
@@ -302,10 +335,9 @@ internal static partial class ListViewHelper
 		// Restore horizontal scroll position
 		if (Sv != null && savedHorizontal.HasValue)
 		{
-			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: true);
 		}
 	}
-
 
 	/// <summary>
 	/// Formats one or more items of type TElement into a string using the supplied property mappings.
@@ -443,7 +475,8 @@ internal static partial class ListViewHelper
 		index = (index < 0) ? (index + listViewBase.Items.Count) : index;
 
 		bool isVirtualizing = default;
-		double previousXOffset = default, previousYOffset = default;
+		double previousXOffset = default;
+		double previousYOffset = default;
 
 		ScrollViewer? scrollViewer = listViewBase.FindDescendant<ScrollViewer>();
 		SelectorItem? selectorItem = listViewBase.ContainerFromIndex(index) as SelectorItem;
@@ -503,7 +536,8 @@ internal static partial class ListViewHelper
 		double maxXPosition = position.X;
 		double maxYPosition = position.Y;
 
-		double finalXPosition, finalYPosition;
+		double finalXPosition;
+		double finalYPosition;
 
 		// If the Item is in view and scrollIfVisible is false then we don't need to scroll
 		if (!scrollIfVisible && (previousXOffset <= maxXPosition && previousXOffset >= minXPosition) && (previousYOffset <= maxYPosition && previousYOffset >= minYPosition))
@@ -579,7 +613,6 @@ internal static partial class ListViewHelper
 		}
 	}
 
-
 	/// <summary>
 	/// Property mappings for PackagedAppView used for clipboard operations
 	/// </summary>
@@ -597,5 +630,55 @@ internal static partial class ListViewHelper
 			["InstallLocation"] = (GlobalVars.GetStr("PFNInstallLocation/Text"), app => app.InstallLocation),
 			["FullName"] = (GlobalVars.GetStr("PFNFullNameLabel/Text"), app => app.FullName)
 		}.ToFrozenDictionary();
+
+
+	#region Header Resource And Property Keys For Incremental Collections Controllers
+
+	// FilesAndFolders sections of the Supplemental And Deny policy creations use the same exact columns/properties.
+	internal static readonly string[] SupplementalAndDenyPolicyCreationHeaderResourceKeys =
+	[
+		"FileNameHeader/Text",
+		"SignatureStatusHeader/Text",
+		"OriginalFileNameHeader/Text",
+		"InternalNameHeader/Text",
+		"FileDescriptionHeader/Text",
+		"ProductNameHeader/Text",
+		"FileVersionHeader/Text",
+		"PackageFamilyNameHeader/Text",
+		"SHA256HashHeader/Text",
+		"SHA1HashHeader/Text",
+		"SigningScenarioHeader/Text",
+		"FilePathHeader/Text",
+		"SHA1PageHashHeader/Text",
+		"SHA256PageHashHeader/Text",
+		"HasWHQLSignerHeader/Text",
+		"FilePublishersHeader/Text",
+		"IsECCSignedHeader/Text",
+		"OpusDataHeader/Text"
+	];
+
+	internal static readonly string[] SupplementalAndDenyPolicyCreationPropertyKeys =
+	[
+		"FileName",
+		"SignatureStatus",
+		"OriginalFileName",
+		"InternalName",
+		"FileDescription",
+		"ProductName",
+		"FileVersion",
+		"PackageFamilyName",
+		"SHA256Hash",
+		"SHA1Hash",
+		"SISigningScenario",
+		"FilePath",
+		"SHA1PageHash",
+		"SHA256PageHash",
+		"HasWHQLSigner",
+		"FilePublishersToDisplay",
+		"IsECCSigned",
+		"Opus"
+	];
+
+	#endregion
 
 }

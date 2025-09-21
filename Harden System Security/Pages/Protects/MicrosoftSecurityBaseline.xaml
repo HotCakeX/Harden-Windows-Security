@@ -3,22 +3,15 @@
     x:Class="HardenSystemSecurity.Pages.Protects.MicrosoftSecurityBaseline"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HardenSystemSecurity.Pages.Protects"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:others="using:AppControlManager.Others"
-    xmlns:Protect="using:HardenSystemSecurity.Protect"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:viewModels="using:HardenSystemSecurity.ViewModels"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:GroupPolicy="using:HardenSystemSecurity.GroupPolicy"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-    mc:Ignorable="d">
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -32,7 +25,7 @@
 
             <TextBlock x:Uid="MicrosoftSecurityBaselinePageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines" />
 
         </controls:WrapPanel>
 
@@ -110,9 +103,27 @@
                     ExternalOperationStarted="{x:Bind ViewModel.VerifyAllCancellableButton.OperationStarted, Mode=OneWay}"
                     Click="{x:Bind ViewModel.VerifySecurityBaseline}"/>
 
-                <Button x:Uid="ClearDataButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ClearData}" />
+                <Button x:Uid="ClearDataButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ClearData}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xED62;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
-                <Button x:Uid="ExportToJsonButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ExportToJson}" />
+                <Button x:Uid="ExportToJsonButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ExportToJson}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE74E;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
                 <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                         x:Uid="DownloadURLButton"
@@ -145,10 +156,22 @@
                     </Button.Flyout>
                 </Button>
 
-                <TextBox Text="{x:Bind ViewModel.TotalResults, Mode=OneWay}"
-                         IsReadOnly="True"
-                         VerticalAlignment="Center"
-                         VerticalContentAlignment="Center"/>
+                <!-- Total chip -->
+                <Border CornerRadius="8"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Padding="10,6"
+                        BorderThickness="1"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock VerticalAlignment="Center">
+                            <Run x:Uid="TotalText" />
+                            <Run Text="{x:Bind ViewModel.VerificationResults.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
 
                 <TextBox Width="300"
                          IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
@@ -168,10 +191,7 @@
 
             <customUI:ListViewV2.Header>
 
-                <Border CornerRadius="5" Background="Black">
-                    <interactivity:Interaction.Behaviors>
-                        <customUI:StickyHeaderBehaviorV2/>
-                    </interactivity:Interaction.Behaviors>
+                <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">                    
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
@@ -198,15 +218,15 @@
 
             <!-- DataTemplate for ListView items -->
             <customUI:ListViewV2.ItemTemplate>
-                <DataTemplate x:DataType="GroupPolicy:VerificationResult">
+                <DataTemplate x:DataType="GroupPolicy:VerificationResult" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind MicrosoftSecurityBaselineVMRef.ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind MicrosoftSecurityBaselineVMRef.ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind MicrosoftSecurityBaselineVMRef.ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind MicrosoftSecurityBaselineVMRef.ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind MicrosoftSecurityBaselineVMRef.ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth5, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{x:Bind FriendlyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
                         <TextBlock Text="{x:Bind SourceDisplay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>

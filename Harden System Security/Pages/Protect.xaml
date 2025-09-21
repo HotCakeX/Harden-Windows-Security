@@ -3,18 +3,14 @@
     x:Class="HardenSystemSecurity.Pages.Protect"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HardenSystemSecurity.Pages"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:others="using:AppControlManager.Others"
     xmlns:Protect="using:HardenSystemSecurity.Protect"
+    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-    mc:Ignorable="d">
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -84,10 +80,20 @@
                                   Margin="12,6,0,6">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="Protect:SubCategoryDefinition">
-                                <CheckBox Content="{x:Bind Description}"
-                                          IsChecked="True"
+                                <StackPanel Orientation="Vertical" Spacing="4" Margin="6">
+                                    <!--By default the sub-categories are not checked/selected-->
+                                    <CheckBox Content="{x:Bind Description}"
+                                          IsChecked="False"
                                           ToolTipService.ToolTip="{x:Bind Description}"
                                           AutomationProperties.HelpText="{x:Bind Description}" />
+
+                                    <TextBlock Text="{x:Bind Tip}"
+                                               ToolTipService.ToolTip="{x:Bind Tip}"
+                                               Visibility="{x:Bind Protect:SubCategoryDefinition.HasTip(Tip)}"
+                                               AutomationProperties.HelpText="{x:Bind Tip}"
+                                               Style="{StaticResource CaptionTextBlockStyle}"
+                                               Foreground="{ThemeResource SystemFillColorCautionBrush}"/>
+                                </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -100,7 +106,7 @@
 
             <TextBlock x:Uid="ProtectPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect" />
 
         </controls:WrapPanel>
 
@@ -138,10 +144,16 @@
 
                     <ComboBox x:Uid="ProtectionPresetsComboBox"
                               IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                              ItemsSource="{x:Bind ViewModel.ProtectionPresetsSource}"
                               SelectedIndex="{x:Bind ViewModel.ProtectionPresetsSelectedIndex, Mode=TwoWay}">
-                        <ComboBoxItem x:Uid="BasicProtectionPresetComboBoxItem"/>
-                        <ComboBoxItem x:Uid="RecommendedProtectionPresetComboBoxItem"/>
-                        <ComboBoxItem x:Uid="CompleteProtectionPresetComboBoxItem"/>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="Protect:ProtectionPresetComboBoxType">
+                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                    <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                    <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
 
                     <!-- Apply Selected Button -->

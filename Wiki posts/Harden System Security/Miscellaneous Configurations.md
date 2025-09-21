@@ -37,10 +37,6 @@
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Enables all Windows users to use Hyper-V and Windows Sandbox](https://learn.microsoft.com/archive/blogs/virtual_pc_guy/why-do-you-have-to-elevate-powershell-to-use-hyper-v-cmdlets) by adding all Windows users to the "Hyper-V Administrators" security group using its [SID](https://learn.microsoft.com/windows/win32/secauthz/well-known-sids). By default, only Administrators can use Hyper-V or Windows Sandbox.
-
-<br>
-
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Creates custom views for [Windows Event Viewer](https://learn.microsoft.com/shows/inside/event-viewer) to help keep tabs on important security events:
 
     - [Attack Surface Reduction Rules](https://learn.microsoft.com/microsoft-365/security/defender-endpoint/overview-attack-surface-reduction?view=o365-worldwide#xml-for-attack-surface-reduction-rule-events)

@@ -133,11 +133,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Total number of policies loaded.
-	/// </summary>
-	internal string TotalPolicies { get; set => SP(ref field, value); } = "0";
-
-	/// <summary>
 	/// Collection of all policies bound to the ListView.
 	/// </summary>
 	internal ObservableCollection<RegistryPolicyEntry> Policies = [];
@@ -193,8 +188,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			Policies.Add(item);
 		}
 
-		TotalPolicies = Policies.Count.ToString();
-
 		if (Sv != null && savedHorizontal.HasValue)
 		{
 			// restore horizontal scroll position
@@ -244,6 +237,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	#endregion
 
 	#region Copy
+
 	/// <summary>
 	/// Converts the properties of a RegistryPolicyEntry row into a labeled, formatted string for copying to clipboard.
 	/// </summary>
@@ -280,6 +274,95 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			ListViewHelper.CopyToClipboard<RegistryPolicyEntry>(ci => map.Getter(ci)?.ToString(), lv);
 		}
 	}
+	#endregion
+
+	#region Delete
+
+	/// <summary>
+	/// Deletes the selected policies from the currently loaded POL file and refreshes the UI.
+	/// </summary>
+	internal async void DeleteSelectedPolicies_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.GroupPolicyEditor);
+
+		if (lv is null || lv.SelectedItems.Count == 0)
+		{
+			MainInfoBar.WriteWarning("No policies selected for deletion.");
+			return;
+		}
+
+		// Check if we have a valid POL file loaded
+		if (string.IsNullOrEmpty(SelectedFile) || !IsValidPOLFile(SelectedFile))
+		{
+			MainInfoBar.WriteWarning("No valid POL file is currently loaded. Please load a POL file first.");
+			return;
+		}
+
+		try
+		{
+			ElementsAreEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			// Get the selected policies
+			List<RegistryPolicyEntry> policiesToDelete = [];
+			foreach (object item in lv.SelectedItems)
+			{
+				if (item is RegistryPolicyEntry policy)
+				{
+					policiesToDelete.Add(policy);
+				}
+			}
+
+			if (policiesToDelete.Count == 0)
+			{
+				MainInfoBar.WriteWarning("No policies selected for deletion.");
+				return;
+			}
+
+			await Task.Run(() =>
+			{
+				// Remove policies directly from the loaded POL file
+				RegistryPolicyParser.RemovePoliciesFromPOLFile(SelectedFile, policiesToDelete);
+			});
+
+			// Remove policies from UI collections
+			foreach (RegistryPolicyEntry policy in policiesToDelete)
+			{
+				_ = Policies.Remove(policy);
+				_ = AllPolicies.Remove(policy);
+			}
+
+			// Update UI
+			CalculateColumnWidths();
+
+			MainInfoBar.WriteSuccess($"Successfully deleted {policiesToDelete.Count} policies from the POL file.");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
+	/// <summary>
+	/// Checks if the specified file is a valid POL file that exists on disk.
+	/// </summary>
+	/// <param name="filePath">The file path to check</param>
+	/// <returns>True if it's a valid POL file that exists, false otherwise</returns>
+	private static bool IsValidPOLFile(string filePath)
+	{
+		if (string.IsNullOrEmpty(filePath))
+			return false;
+
+		// Check if it's a POL file and exists
+		return string.Equals(Path.GetExtension(filePath), ".pol", StringComparison.OrdinalIgnoreCase) &&
+			   File.Exists(filePath);
+	}
+
 	#endregion
 
 	/// <summary>
@@ -339,34 +422,31 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 				if (string.Equals(fileExtension, ".json", StringComparison.OrdinalIgnoreCase))
 				{
-
 					List<RegistryPolicyEntry> policy = RegistryPolicyEntry.Load(SelectedFile);
+
+					// Retrieve friendly names
+					AdmxAdmlParser.PopulateFriendlyNames(policy);
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
 						foreach (RegistryPolicyEntry item in policy)
 						{
-							// Assign the ParentVM instance to this class.
-							item.ParentVM = this;
-
 							Policies.Add(item);
 							AllPolicies.Add(item);
 						}
-
 					});
 				}
 				else if (string.Equals(fileExtension, ".pol", StringComparison.OrdinalIgnoreCase))
 				{
-
 					RegistryPolicyFile policy = RegistryPolicyParser.ParseFile(SelectedFile);
+
+					// Retrieve friendly names
+					AdmxAdmlParser.PopulateFriendlyNames(policy.Entries);
 
 					await Dispatcher.EnqueueAsync(() =>
 					{
 						foreach (RegistryPolicyEntry item in policy.Entries)
 						{
-							// Assign the ParentVM instance to this class.
-							item.ParentVM = this;
-
 							Policies.Add(item);
 							AllPolicies.Add(item);
 						}
@@ -380,9 +460,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			});
 
 			CalculateColumnWidths();
-
-			TotalPolicies = Policies.Count.ToString();
-
 			MainInfoBar.WriteSuccess(GlobalVars.GetStr("GroupPolicyDataLoadedSuccess"));
 		}
 		catch (Exception ex)
@@ -437,9 +514,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	{
 		Policies.Clear();
 		AllPolicies.Clear();
-
-		TotalPolicies = "0";
-
 		CalculateColumnWidths();
 	}
 
@@ -577,13 +651,16 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 				{
 					RegistryPolicyFile policy = RegistryPolicyParser.ParseFile(item);
 
+					// Retrieve friendly names
+					AdmxAdmlParser.PopulateFriendlyNames(policy.Entries);
+
 					string? saveLoc = null;
 
 					if (OutputDirForJsonFilesAfterConversion is null)
 					{
 						saveLoc = Path.Combine(
-						Path.GetDirectoryName(item) ?? GlobalVars.SystemDrive,
-						Path.GetFileNameWithoutExtension(item) + ".json");
+							Path.GetDirectoryName(item) ?? GlobalVars.SystemDrive,
+							Path.GetFileNameWithoutExtension(item) + ".json");
 					}
 					else
 					{

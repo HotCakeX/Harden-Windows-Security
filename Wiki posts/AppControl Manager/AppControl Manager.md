@@ -2,11 +2,13 @@
 
 AppControl Manager is a modern secure app that provides easy to use graphical user interface to manage App Control and Code Integrity on your local or remote devices.
 
+It always stays up to date with the latest security patches and provides constant and consistent maintenance and support.
+
 **⚡What is App Control? [Check Out This Article ⚡](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)**
 
 <br>
 
-## How To Install or Update The App
+## How To Install or Update The App<img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/heart-purple.gif" width="40">
 
 ### Use The Microsoft Store
 
@@ -68,7 +70,7 @@ Please feel free to open a discussion if you have any questions about the build 
 
 <br>
 
-## Technical Details of The App
+## Technical Details of The App <img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/pinkbow.gif" width="32">
 
 * Secure and transparent development and build process.
 * Built using [WinUI3](https://learn.microsoft.com/windows/apps/winui/winui3/) / [XAML](https://github.com/microsoft/microsoft-ui-xaml) / [C#](https://learn.microsoft.com/dotnet/csharp/).
@@ -89,7 +91,7 @@ Please feel free to open a discussion if you have any questions about the build 
 
 <br>
 
-## Features Implemented So Far
+## Features Implemented So Far <img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/pinklollipoppurplebow.gif" width="35">
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20Policy.gif" alt="AppControl Manager Menu Item" width="20"> [Create AppControl Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20Supplemental%20Policy.gif" alt="AppControl Manager Menu Item" width="20"> [Create Supplemental Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy)
@@ -131,10 +133,13 @@ The AppControl Manager fully supports the following languages. You can request f
 
 <br>
 
-## Security
+## Security <img src="https://raw.githubusercontent.com/HotCakeX/.github/995a58370317109287d14bc4465b00ff89872ddf/Pictures/Gifs/pinkbutterflyholopastel.gif" width="35">
 
 > [!IMPORTANT]\
-> The AppControl Manager application is built publicly using a [GitHub Workflow](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/.github/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml) and uploaded to the GitHub release. The action uses [Artifact Attestation](https://github.com/HotCakeX/Harden-Windows-Security/attestations) and [SBOM (Software Bill of Materials)](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies) generation to comply with the highest [security standards](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) such as [SLSA](https://slsa.dev/spec/v1.0/levels) level 3. The source code as well as the package is [uploaded to Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) automatically. Also [GitHub's CodeQL Advanced workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml) with extended security model scans the entire repository.
+> The AppControl Manager application is built publicly using a [GitHub Workflow](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/.github/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml) and uploaded to the GitHub release. The action uses [Artifact Attestation](https://github.com/HotCakeX/Harden-Windows-Security/attestations) and [SBOM (Software Bill of Materials)](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies) generation to comply with the highest [security standards](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) such as [SLSA](https://slsa.dev/spec/v1.0/levels) level 3. The source code as well as the package is [uploaded to Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) automatically. Also [GitHub's CodeQL Advanced workflow](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml) with extended security model scans the entire repository. All of the dependencies of any project in this repository are uploaded to GitHub and are available in the [Dependency Graph](https://github.com/HotCakeX/Harden-Windows-Security/network/dependencies).
+
+> [!NOTE]\
+> [United States Veteran Affairs (VA) Technical Reference Model regarding AppControl Manager.](https://www.oit.va.gov/Services/TRM/ToolPage.aspx?tid=16938)
 
 Security is paramount when selecting any application designed to safeguard your systems. The last thing you want is a security-focused tool that inadvertently expands your attack surface or one that doesn't prioritize security at its core.
 
@@ -522,30 +527,17 @@ function Build_ACM {
 
     #region --- Compile C++ projects ---
 
-    ### ManageDefender
+    ### ComManager
 
-    . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
+    . $MSBuildPath 'eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for X64. Exit Code: $LASTEXITCODE") }
 
     if (!$X64ONLY) {
 
-        . $MSBuildPath 'eXclude\C++ WMI Interop\ManageDefender\ManageDefender.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
+        . $MSBuildPath 'eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
 
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for ARM64. Exit Code: $LASTEXITCODE") }
-    }
-
-    ### ScheduledTaskManager
-
-    . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ScheduledTaskManager solution for X64. Exit Code: $LASTEXITCODE") }
-
-    if (!$X64ONLY) {
-
-        . $MSBuildPath 'eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ScheduledTaskManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
-
-        if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ScheduledTaskManager solution for ARM64. Exit Code: $LASTEXITCODE") }
     }
 
     ### Shell
@@ -598,41 +590,6 @@ function Build_ACM {
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed checking for Rust version. Exit Code: $LASTEXITCODE") }
 
     [string]$Current_Location = (Get-Location).Path
-
-    Set-Location -Path '.\eXclude\Rust WMI Interop\Device Guard\Program'
-
-    if (Test-Path -PathType Leaf -LiteralPath 'Cargo.lock') {
-        Remove-Item -Force -LiteralPath 'Cargo.lock'
-    }
-
-    cargo clean
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning the Rust project. Exit Code: $LASTEXITCODE") }
-
-    cargo update --verbose
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed updating Rust. Exit Code: $LASTEXITCODE") }
-
-    cargo tree
-
-    rustup show active-toolchain
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed showing active Rust toolchain. Exit Code: $LASTEXITCODE") }
-
-    cargo build_x64
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 Device Guard Rust project. Exit Code: $LASTEXITCODE") }
-
-    if (!$X64ONLY) {
-
-        cargo build_arm64
-
-        if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building arm64 Device Guard Rust project. Exit Code: $LASTEXITCODE") }
-
-    }
-
-    Set-Location -Path $Current_Location
-
 
     Set-Location -Path '.\eXclude\Rust Interop Library'
 
@@ -739,19 +696,15 @@ function Build_ACM {
     # Copy the X64 components to the directory before the build starts
     Copy-Item -Path '.\eXclude\Shell\x64\Release\Shell.dll' -Destination 'Shell' -Force
 
-    Copy-Item -Path '.\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\x64\Release\ScheduledTaskManager-x64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
-
-    Copy-Item -Path '.\eXclude\C++ WMI Interop\ManageDefender\x64\Release\ManageDefender-x64.exe' -Destination '.\CppInterop\ManageDefender.exe' -Force
-
-    Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\x86_64-pc-windows-msvc\release\DeviceGuardWMIRetriever-X64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
+    Copy-Item -Path '.\eXclude\ComManager\x64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
     # Generate for X64 architecture
-    dotnet clean 'AppControl Manager.slnx' --configuration Release
-    dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=x64
+    dotnet clean 'AppControl Manager.csproj' --configuration Release
+    dotnet build 'AppControl Manager.csproj' --configuration Release --verbosity minimal /p:Platform=x64 /p:RuntimeIdentifier=win-x64
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 
-    dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
+    dotnet msbuild 'AppControl Manager.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging x64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 
@@ -760,19 +713,15 @@ function Build_ACM {
         # Copy the ARM64 components to the directory before the build starts
         Copy-Item -Path '.\eXclude\Shell\ARM64\Release\Shell.dll' -Destination 'Shell' -Force
 
-        Copy-Item -Path '.\eXclude\C++ ScheduledTaskManager\ScheduledTaskManager\ARM64\Release\ScheduledTaskManager-ARM64.exe' -Destination '.\CppInterop\ScheduledTaskManager.exe' -Force
-
-        Copy-Item -Path '.\eXclude\C++ WMI Interop\ManageDefender\ARM64\Release\ManageDefender-ARM64.exe' -Destination '.\CppInterop\ManageDefender.exe' -Force
-
-        Copy-Item -Path '.\eXclude\Rust WMI Interop\Device Guard\Program\target\aarch64-pc-windows-msvc\release\DeviceGuardWMIRetriever-ARM64.exe' -Destination '.\RustInterop\DeviceGuardWMIRetriever.exe' -Force
+        Copy-Item -Path '.\eXclude\ComManager\ARM64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
         # Generate for ARM64 architecture
-        dotnet clean 'AppControl Manager.slnx' --configuration Release
-        dotnet build 'AppControl Manager.slnx' --configuration Release --verbosity minimal /p:Platform=ARM64
+        dotnet clean 'AppControl Manager.csproj' --configuration Release
+        dotnet build 'AppControl Manager.csproj' --configuration Release --verbosity minimal /p:Platform=ARM64 /p:RuntimeIdentifier=win-arm64
 
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ARM64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 
-        dotnet msbuild 'AppControl Manager.slnx' /p:Configuration=Release /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
+        dotnet msbuild 'AppControl Manager.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-arm64 /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
 
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging ARM64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
     }
@@ -816,18 +765,18 @@ function Build_ACM {
     }
 
     #region Finding X64 outputs
-    [System.String]$FinalMSIXX64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64\.msix' -ErrorMessageFolder 'Could not find the directory for X64 MSIX file' -ErrorMessageFile 'Could not find the X64 MSIX file'
+    [System.String]$FinalMSIXX64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64\.msix' -ErrorMessageFolder 'Could not find the directory for X64 MSIX file' -ErrorMessageFile 'Could not find the X64 MSIX file'
     [System.String]$FinalMSIXX64Name = [System.IO.Path]::GetFileName($FinalMSIXX64Path)
-    [System.String]$FinalMSIXX64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64\.msixsym' -ErrorMessageFolder 'Could not find the directory for X64 symbol file' -ErrorMessageFile 'Could not find the X64 symbol file'
+    [System.String]$FinalMSIXX64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_x64\.appxsym' -ErrorMessageFolder 'Could not find the directory for X64 symbol file' -ErrorMessageFile 'Could not find the X64 symbol file'
     [System.String]$FinalMSIXX64SymbolName = [System.IO.Path]::GetFileName($FinalMSIXX64SymbolPath)
     #endregion
 
     if (!$X64ONLY) {
 
         #region Finding ARM64 outputs
-        [System.String]$FinalMSIXARM64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msix' -ErrorMessageFolder 'Could not find the directory for ARM64 MSIX file' -ErrorMessageFile 'Could not find the ARM64 MSIX file'
+        [System.String]$FinalMSIXARM64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msix' -ErrorMessageFolder 'Could not find the directory for ARM64 MSIX file' -ErrorMessageFile 'Could not find the ARM64 MSIX file'
         [System.String]$FinalMSIXARM64Name = [System.IO.Path]::GetFileName($FinalMSIXARM64Path)
-        [System.String]$FinalMSIXARM64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.msixsym' -ErrorMessageFolder 'Could not find the directory for ARM64 symbol file' -ErrorMessageFile 'Could not find the ARM64 symbol file'
+        [System.String]$FinalMSIXARM64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64_Test' -FileNamePattern 'AppControl Manager_\d+\.\d+\.\d+\.\d+_arm64\.appxsym' -ErrorMessageFolder 'Could not find the directory for ARM64 symbol file' -ErrorMessageFile 'Could not find the ARM64 symbol file'
         [System.String]$FinalMSIXARM64SymbolName = [System.IO.Path]::GetFileName($FinalMSIXARM64SymbolPath)
         #endregion
 
@@ -1003,7 +952,7 @@ function Build_ACM {
     if ($Upload) {
         dotnet clean '.\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release
         dotnet build '.\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release --verbosity minimal
-        dotnet msbuild '.\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
+        dotnet msbuild '.\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Configuration=Release /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
 
         [System.String]$TokenEndpoint = $env:PARTNERCENTER_TOKENENDPOINT
         [System.String]$ClientId = $env:PARTNERCENTER_CLIENTID

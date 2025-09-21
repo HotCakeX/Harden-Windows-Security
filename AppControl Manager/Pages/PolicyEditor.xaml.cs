@@ -37,8 +37,8 @@ internal sealed partial class PolicyEditor : Page
 	/// </summary>
 	internal PolicyEditor()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 		_DiamondButtonFlyout = DiamondButtonFlyout;
 		_DiamondButton = DiamondButton;

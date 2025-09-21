@@ -16,7 +16,6 @@
 //
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -179,7 +178,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	private readonly string _pipeName;
 	private bool _disposed;
 
-	internal event Action<uint, uint>? ProgressUpdated;
 	internal event Action<string, LogTypeIntel>? LogReceived;
 	internal event Action<string, uint, uint>? ItemProgressUpdated;
 
@@ -503,14 +501,6 @@ internal sealed partial class DismServiceClient : IDisposable
 		{
 			Response response = (Response)_reader!.ReadByte();
 
-			if (response == Response.Progress)
-			{
-				uint current = _reader.ReadUInt32();
-				uint total = _reader.ReadUInt32();
-				ProgressUpdated?.Invoke(current, total);
-				continue;
-			}
-
 			if (response == Response.Log)
 			{
 				string message = ReadString();
@@ -640,7 +630,6 @@ internal sealed partial class DismServiceClient : IDisposable
 	{
 		ResultsData = 1,
 		OperationComplete = 2,
-		Progress = 3,
 		ShutdownComplete = 4,
 		Log = 5,
 		ItemProgress = 6,
@@ -777,7 +766,7 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -792,7 +781,7 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 }
@@ -801,8 +790,18 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 {
 	private DismServiceClient? _dismServiceClient;
 
+	/// <summary>
+	/// Track current operation type for progress logging
+	/// </summary>
+	private string? _currentOperationType;
+
 	internal OptionalWindowsFeaturesVM()
 	{
+		// Initialize the animated cancellable buttons
+		ApplyCancellableButton = new AnimatedCancellableButtonInitializer(GlobalVars.GetStr("ApplyRecommendedConfigurations"));
+		VerifyCancellableButton = new AnimatedCancellableButtonInitializer(GlobalVars.GetStr("VerifyRecommendedConfigurations"));
+		RemoveCancellableButton = new AnimatedCancellableButtonInitializer(GlobalVars.GetStr("RemoveRecommendedConfigurations"));
+
 		MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
@@ -811,7 +810,25 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			null, null);
 
 		UpdateFilteredItems();
+
+		// Create the secure states.
+		SecurityHardeningConfigs = CreateSecurityHardeningConfigs();
 	}
+
+	/// <summary>
+	/// Initialization details for the Apply Security Hardening button
+	/// </summary>
+	internal AnimatedCancellableButtonInitializer ApplyCancellableButton { get; }
+
+	/// <summary>
+	/// Initialization details for the Verify Security Hardening button
+	/// </summary>
+	internal AnimatedCancellableButtonInitializer VerifyCancellableButton { get; }
+
+	/// <summary>
+	/// Initialization details for the Remove Security Hardening button
+	/// </summary>
+	internal AnimatedCancellableButtonInitializer RemoveCancellableButton { get; }
 
 	/// <summary>
 	/// The main InfoBar for this VM.
@@ -966,24 +983,6 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			{
 				_dismServiceClient = new DismServiceClient();
 
-				// Subscribe to progress updates
-				_dismServiceClient.ProgressUpdated += async (current, total) =>
-				{
-					// Update UI with progress information
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						if (total > 0)
-						{
-							double percentage = (current * 100.0) / total;
-							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("ProgressInfo"), current, total, percentage.ToString("F1")));
-						}
-						else
-						{
-							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("ProgressUnknownInfo"), current));
-						}
-					});
-				};
-
 				// Subscribe to item-specific progress updates
 				_dismServiceClient.ItemProgressUpdated += async (itemName, current, total) =>
 				{
@@ -992,6 +991,18 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					{
 						DISMOutputEntry? entry = DISMItemsLVBound.FirstOrDefault(x => x.Name == itemName);
 						entry?.UpdateProgress(current, total);
+
+						// Also show progress in InfoBar with feature name and action
+						string actionText = _currentOperationType ?? "Processing";
+						if (total > 0)
+						{
+							double percentage = (current * 100.0) / total;
+							MainInfoBar.WriteInfo($"{string.Format(GlobalVars.GetStr("ProgressInfo"), current, total, percentage.ToString("F1"))} - {actionText}: {itemName}");
+						}
+						else
+						{
+							MainInfoBar.WriteInfo($"{string.Format(GlobalVars.GetStr("ProgressUnknownInfo"), current)} - {actionText}: {itemName}");
+						}
 					});
 				};
 
@@ -1104,6 +1115,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	{
 		try
 		{
+			// Set operation type for progress logging
+			_currentOperationType = "Enabling";
+
 			// Disable buttons and search, but set processing state for the specific item
 			await Dispatcher.EnqueueAsync(() =>
 			{
@@ -1185,6 +1199,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				entry.ProgressCurrent = 0;
 				entry.ProgressTotal = 0;
 				ElementsAreEnabled = true;
+				_currentOperationType = null;
 			});
 		}
 	}
@@ -1197,6 +1212,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	{
 		try
 		{
+			// Set operation type for progress logging
+			_currentOperationType = "Disabling";
+
 			// Disable buttons and search, but set processing state for the specific item
 			await Dispatcher.EnqueueAsync(() =>
 			{
@@ -1278,6 +1296,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				entry.ProgressCurrent = 0;
 				entry.ProgressTotal = 0;
 				ElementsAreEnabled = true;
+				_currentOperationType = null;
 			});
 		}
 	}
@@ -1295,6 +1314,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 		try
 		{
+			// Set operation type for progress logging
+			_currentOperationType = "Enabling Selected Item";
+
 			ElementsAreEnabled = false;
 
 			// Initialize DISM service if not already done
@@ -1421,6 +1443,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			await Dispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = true;
+				_currentOperationType = null;
 			});
 		}
 	}
@@ -1438,6 +1461,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 		try
 		{
+			// Set operation type for progress logging
+			_currentOperationType = "Disabling Selected Item";
+
 			ElementsAreEnabled = false;
 
 			// Initialize DISM service if not already done
@@ -1564,6 +1590,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			await Dispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = true;
+				_currentOperationType = null;
 			});
 		}
 	}
@@ -1641,7 +1668,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 	#endregion
 
-	#region Bulk Operations for Protect Tab
+	#region Bulk Operations for Protect Tab and Recommended States application
 
 	/// <summary>
 	/// Defines the operation to perform during Apply for each feature/capability
@@ -1669,188 +1696,153 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		internal HashSet<DismPackageFeatureState> ValidVerificationStates => validVerificationStates;
 	}
 
+	private static List<OptionalFeatureConfig> CreateSecurityHardeningConfigs()
+	{
+		List<OptionalFeatureConfig> output = [
+
+			#region FEATURES
+
+			new OptionalFeatureConfig(
+				name:                   "MicrosoftWindowsPowerShellV2",
+				type:                   DISMResultType.Feature,
+				applyStrategy:          ApplyOperation.Disable,  // Apply = Disable
+				removeStrategy:         ApplyOperation.Enable,   // Remove = Enable (restore)
+				validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
+				 DismPackageFeatureState.DismStateNotPresent]
+			),
+			new OptionalFeatureConfig(
+				name:                   "MicrosoftWindowsPowerShellV2Root",
+				type:                   DISMResultType.Feature,
+				applyStrategy:          ApplyOperation.Disable,
+				removeStrategy:         ApplyOperation.Enable,
+				validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
+				DismPackageFeatureState.DismStateNotPresent]
+			),
+			new OptionalFeatureConfig(
+				name:                   "WorkFolders-Client",
+				type:                   DISMResultType.Feature,
+				applyStrategy:          ApplyOperation.Disable,
+				removeStrategy:         ApplyOperation.Enable,
+				validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
+				DismPackageFeatureState.DismStateNotPresent]
+			),
+			new OptionalFeatureConfig(
+				name:                   "Printing-Foundation-InternetPrinting-Client",
+				type:                   DISMResultType.Feature,
+				applyStrategy:          ApplyOperation.Disable,
+				removeStrategy:         ApplyOperation.Enable,
+				validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
+				DismPackageFeatureState.DismStateNotPresent]
+			),
+			new OptionalFeatureConfig(
+				name:                   "Containers-DisposableClientVM",
+				type:                   DISMResultType.Feature,
+				applyStrategy:          ApplyOperation.Enable,   // Apply = Enable
+				removeStrategy:         ApplyOperation.Disable,  // Remove = Disable (undo)
+				validVerificationStates:[DismPackageFeatureState.DismStateInstalled,
+				DismPackageFeatureState.DismStateInstallPending]
+			),
+			new OptionalFeatureConfig(
+				name:                   "Microsoft-Hyper-V-All",
+				type:                   DISMResultType.Feature,
+				applyStrategy:          ApplyOperation.Enable,
+				removeStrategy:         ApplyOperation.Disable,
+				validVerificationStates:[DismPackageFeatureState.DismStateInstalled,
+				DismPackageFeatureState.DismStateInstallPending]
+			),
+
+			#endregion
+
+			#region CAPABILITIES
+
+			new OptionalFeatureConfig(
+				name:                   "Media.WindowsMediaPlayer~~~~0.0.12.0",
+				type:                   DISMResultType.Capability,
+				applyStrategy:          ApplyOperation.Disable,  // Apply = Remove (disable for capabilities)
+				removeStrategy:         ApplyOperation.Enable,   // Remove = Add (restore)
+				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
+				DismPackageFeatureState.DismStateRemoved]
+			),
+			new OptionalFeatureConfig(
+				name:                   "WMIC~~~~",
+				type:                   DISMResultType.Capability,
+				applyStrategy:          ApplyOperation.Disable,
+				removeStrategy:         ApplyOperation.Enable,
+				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
+				DismPackageFeatureState.DismStateRemoved]
+			),
+			new OptionalFeatureConfig(
+				name:                   "Microsoft.Windows.Notepad.System~~~~0.0.1.0",
+				type:                   DISMResultType.Capability,
+				applyStrategy:          ApplyOperation.Disable,
+				removeStrategy:         ApplyOperation.Enable,
+				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
+				DismPackageFeatureState.DismStateRemoved]
+			),
+			new OptionalFeatureConfig(
+				name:                   "Microsoft.Windows.WordPad~~~~0.0.1.0",
+				type:                   DISMResultType.Capability,
+				applyStrategy:          ApplyOperation.Disable,
+				removeStrategy:         ApplyOperation.Enable,
+				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
+				DismPackageFeatureState.DismStateRemoved]
+			),
+			new OptionalFeatureConfig(
+				name:                   "Microsoft.Windows.PowerShell.ISE~~~~0.0.1.0",
+				type:                   DISMResultType.Capability,
+				applyStrategy:          ApplyOperation.Disable,
+				removeStrategy:         ApplyOperation.Enable,
+				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
+				DismPackageFeatureState.DismStateRemoved]
+			),
+			new OptionalFeatureConfig(
+				name:                   "App.StepsRecorder~~~~0.0.1.0",
+				type:                   DISMResultType.Capability,
+				applyStrategy:          ApplyOperation.Disable,
+				removeStrategy:         ApplyOperation.Enable,
+				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
+				DismPackageFeatureState.DismStateRemoved]
+			),
+			new OptionalFeatureConfig(
+				name:                   "VBSCRIPT~~~~",
+				type:                   DISMResultType.Capability,
+				applyStrategy:          ApplyOperation.Disable,
+				removeStrategy:         ApplyOperation.Enable,
+				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
+				DismPackageFeatureState.DismStateRemoved]
+			),
+			new OptionalFeatureConfig(
+				name:                   "Browser.InternetExplorer~~~~0.0.11.0",
+				type:                   DISMResultType.Capability,
+				applyStrategy:          ApplyOperation.Disable,
+				removeStrategy:         ApplyOperation.Enable,
+				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
+				DismPackageFeatureState.DismStateRemoved]
+			)
+
+			#endregion
+		];
+
+		// Only add this if OS is older than 24H2 since it doesn't exist in newer versions.
+		if (GlobalVars.IsOlderThan24H2)
+		{
+			output.Add(new OptionalFeatureConfig(
+				name: "Windows-Defender-ApplicationGuard",
+				type: DISMResultType.Feature,
+				applyStrategy: ApplyOperation.Disable,
+				removeStrategy: ApplyOperation.Disable, // It's deprecated, don't enable it since it's not even enabled in 24H2 and later.
+				validVerificationStates: [DismPackageFeatureState.DismStateRemoved,
+				DismPackageFeatureState.DismStateNotPresent]
+			));
+		}
+
+		return output;
+	}
+
 	/// <summary>
 	/// Predefined configurations for this hardening category that needs to run to provide a secure system state.
 	/// </summary>
-	private static readonly FrozenDictionary<string, OptionalFeatureConfig> SecurityHardeningConfigs = new Dictionary<string, OptionalFeatureConfig>(StringComparer.OrdinalIgnoreCase)
-{
-
-#region FEATURES
-
-	{
-	"MicrosoftWindowsPowerShellV2",
-	new OptionalFeatureConfig(
-		name:                   "MicrosoftWindowsPowerShellV2",
-		type:                   DISMResultType.Feature,
-		applyStrategy:          ApplyOperation.Disable,  // Apply = Disable
-		removeStrategy:         ApplyOperation.Enable,   // Remove = Enable (restore)
-		validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
-		 DismPackageFeatureState.DismStateNotPresent]
-	)
-},
-{
-	"MicrosoftWindowsPowerShellV2Root",
-	new OptionalFeatureConfig(
-		name:                   "MicrosoftWindowsPowerShellV2Root",
-		type:                   DISMResultType.Feature,
-		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Enable,
-		validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
-		DismPackageFeatureState.DismStateNotPresent]
-	)
-},
-{
-	"WorkFolders-Client",
-	new OptionalFeatureConfig(
-		name:                   "WorkFolders-Client",
-		type:                   DISMResultType.Feature,
-		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Enable,
-		validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
-		DismPackageFeatureState.DismStateNotPresent]
-	)
-},
-{
-	"Printing-Foundation-InternetPrinting-Client",
-	new OptionalFeatureConfig(
-		name:                   "Printing-Foundation-InternetPrinting-Client",
-		type:                   DISMResultType.Feature,
-		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Enable,
-		validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
-		DismPackageFeatureState.DismStateNotPresent]
-	)
-},
-{
-	"Windows-Defender-ApplicationGuard",
-	new OptionalFeatureConfig(
-		name:                   "Windows-Defender-ApplicationGuard",
-		type:                   DISMResultType.Feature,
-		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Disable, // It's deprecated, don't enable it since it's not even enabled in 24H2 and later.
-		validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
-		DismPackageFeatureState.DismStateNotPresent]
-	)
-},
-{
-	"Containers-DisposableClientVM",
-	new OptionalFeatureConfig(
-		name:                   "Containers-DisposableClientVM",
-		type:                   DISMResultType.Feature,
-		applyStrategy:          ApplyOperation.Enable,   // Apply = Enable
-		removeStrategy:         ApplyOperation.Disable,  // Remove = Disable (undo)
-		validVerificationStates:[DismPackageFeatureState.DismStateInstalled,
-		DismPackageFeatureState.DismStateInstallPending]
-	)
-},
-{
-	"Microsoft-Hyper-V-All",
-	new OptionalFeatureConfig(
-		name:                   "Microsoft-Hyper-V-All",
-		type:                   DISMResultType.Feature,
-		applyStrategy:          ApplyOperation.Enable,
-		removeStrategy:         ApplyOperation.Disable,
-		validVerificationStates:[DismPackageFeatureState.DismStateInstalled,
-		DismPackageFeatureState.DismStateInstallPending]
-	)
-},
-
-#endregion
-
-#region CAPABILITIES
-
-	{
-	"Media.WindowsMediaPlayer~~~~0.0.12.0",
-	new OptionalFeatureConfig(
-		name:                   "Media.WindowsMediaPlayer~~~~0.0.12.0",
-		type:                   DISMResultType.Capability,
-		applyStrategy:          ApplyOperation.Disable,  // Apply = Remove (disable for capabilities)
-		removeStrategy:         ApplyOperation.Enable,   // Remove = Add (restore)
-		validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-		DismPackageFeatureState.DismStateRemoved]
-	)
-},
-{
-	"WMIC~~~~",
-	new OptionalFeatureConfig(
-		name:                   "WMIC~~~~",
-		type:                   DISMResultType.Capability,
-		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Enable,
-		validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-		DismPackageFeatureState.DismStateRemoved]
-	)
-},
-{
-	"Microsoft.Windows.Notepad.System~~~~0.0.1.0",
-	new OptionalFeatureConfig(
-		name:                   "Microsoft.Windows.Notepad.System~~~~0.0.1.0",
-		type:                   DISMResultType.Capability,
-		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Enable,
-		validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-		DismPackageFeatureState.DismStateRemoved]
-	)
-},
-{
-	"Microsoft.Windows.WordPad~~~~0.0.1.0",
-	new OptionalFeatureConfig(
-		name:                   "Microsoft.Windows.WordPad~~~~0.0.1.0",
-		type:                   DISMResultType.Capability,
-		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Enable,
-		validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-		DismPackageFeatureState.DismStateRemoved]
-	)
-},
-{
-	"Microsoft.Windows.PowerShell.ISE~~~~0.0.1.0",
-	new OptionalFeatureConfig(
-		name:                   "Microsoft.Windows.PowerShell.ISE~~~~0.0.1.0",
-		type:                   DISMResultType.Capability,
-		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Enable,
-		validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-		DismPackageFeatureState.DismStateRemoved]
-	)
-},
-{
-	"App.StepsRecorder~~~~0.0.1.0",
-	new OptionalFeatureConfig(
-		name:                   "App.StepsRecorder~~~~0.0.1.0",
-		type:                   DISMResultType.Capability,
-		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Enable,
-		validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-		DismPackageFeatureState.DismStateRemoved]
-	)
-},
-{
-	"VBSCRIPT~~~~",
-	new OptionalFeatureConfig(
-		name:                   "VBSCRIPT~~~~",
-		type:                   DISMResultType.Capability,
-		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Enable,
-		validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-		DismPackageFeatureState.DismStateRemoved]
-	)
-},
-{
-	"Browser.InternetExplorer~~~~0.0.11.0",
-	new OptionalFeatureConfig(
-		name:                   "Browser.InternetExplorer~~~~0.0.11.0",
-		type:                   DISMResultType.Capability,
-		applyStrategy:          ApplyOperation.Disable,
-		removeStrategy:         ApplyOperation.Enable,
-		validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-		DismPackageFeatureState.DismStateRemoved]
-	)
-}
-
-#endregion
-
-}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
+	private static List<OptionalFeatureConfig> SecurityHardeningConfigs { get; set; } = [];
 
 	/// <summary>
 	/// Execute the specified operation on a feature or capability
@@ -1884,10 +1876,12 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 	/// <summary>
 	/// Apply the recommended configs by processing predefined features and capabilities according to their configurations we defined earlier.
-	/// Called from the Protect tab when Optional Windows Features category is applied.
+	/// Called from the Protect tab when Optional Windows Features category is applied and from the UI buttons.
 	/// </summary>
 	internal async Task ApplySecurityHardening()
 	{
+		bool errorsOccurred = false;
+
 		try
 		{
 			ElementsAreEnabled = false;
@@ -1899,6 +1893,11 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				return;
 			}
 
+			ApplyCancellableButton.Begin();
+
+			// Set operation type for progress logging
+			_currentOperationType = "Applying Recommended Configurations";
+
 			int successCount = 0;
 			int failureCount = 0;
 			List<string> failedItems = [];
@@ -1907,8 +1906,10 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			await Task.Run(async () =>
 			{
-				foreach (OptionalFeatureConfig config in SecurityHardeningConfigs.Values)
+				foreach (OptionalFeatureConfig config in SecurityHardeningConfigs)
 				{
+					ApplyCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 					try
 					{
 						bool result = await ExecuteOperationAsync(config, config.ApplyStrategy);
@@ -1936,6 +1937,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					}
 				}
 			});
+
+			ApplyCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 			await Dispatcher.EnqueueAsync(() =>
 			{
@@ -1967,24 +1970,34 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			await Dispatcher.EnqueueAsync(() =>
 			{
-				MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringSecurityHardeningOperation"));
+				HandleExceptions(ex, ref errorsOccurred, ref ApplyCancellableButton.wasCancelled, MainInfoBar);
 			});
 		}
 		finally
 		{
+			if (ApplyCancellableButton.wasCancelled)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("RemoveOperationCancelledByUser"));
+			}
 			await Dispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = true;
+				ApplyCancellableButton.End();
+				_currentOperationType = null;
 			});
 		}
 	}
 
 	/// <summary>
 	/// Verify that security hardening has been applied correctly by checking if items are in their valid states
-	/// Called from the Protect tab when Optional Windows Features category is verified
+	/// Called from the Protect tab when Optional Windows Features category is verified and from the UI buttons
 	/// </summary>
 	internal async Task<bool> VerifySecurityHardening()
 	{
+		bool errorsOccurred = false;
+
+		VerifyCancellableButton.Begin();
+
 		try
 		{
 			ElementsAreEnabled = false;
@@ -1996,6 +2009,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				return false;
 			}
 
+			// Set operation type for progress logging
+			_currentOperationType = "Verifying Recommended Configurations";
+
 			int correctCount = 0;
 			int incorrectCount = 0;
 			List<string> incorrectItems = [];
@@ -2004,15 +2020,17 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			Dictionary<string, DismPackageFeatureState> actualStates = [];
 
+			VerifyCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 			await Task.Run(async () =>
 			{
 				// Get current states for all targets
-				string[] capabilityNames = SecurityHardeningConfigs.Values
+				string[] capabilityNames = SecurityHardeningConfigs
 					.Where(config => config.Type == DISMResultType.Capability)
 					.Select(config => config.Name)
 					.ToArray();
 
-				string[] featureNames = SecurityHardeningConfigs.Values
+				string[] featureNames = SecurityHardeningConfigs
 					.Where(config => config.Type == DISMResultType.Feature)
 					.Select(config => config.Name)
 					.ToArray();
@@ -2026,6 +2044,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					}
 				}
 
+				VerifyCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 				if (featureNames.Length > 0)
 				{
 					List<DISMOutput> featureResults = await _dismServiceClient!.GetSpecificFeaturesAsync(featureNames);
@@ -2036,8 +2056,10 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				}
 
 				// Compare with valid verification states for each item
-				foreach (OptionalFeatureConfig config in SecurityHardeningConfigs.Values)
+				foreach (OptionalFeatureConfig config in SecurityHardeningConfigs)
 				{
+					VerifyCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 					if (actualStates.TryGetValue(config.Name, out DismPackageFeatureState actualState))
 					{
 						if (config.ValidVerificationStates.Contains(actualState))
@@ -2072,6 +2094,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				}
 			});
 
+			VerifyCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 			// Show verification results
 			bool allCorrect = incorrectCount == 0;
 			await Dispatcher.EnqueueAsync(() =>
@@ -2102,25 +2126,35 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			await Dispatcher.EnqueueAsync(() =>
 			{
-				MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringSecurityHardeningVerification"));
+				HandleExceptions(ex, ref errorsOccurred, ref VerifyCancellableButton.wasCancelled, MainInfoBar);
 			});
 			return false;
 		}
 		finally
 		{
+			if (VerifyCancellableButton.wasCancelled)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("RemoveOperationCancelledByUser"));
+			}
 			await Dispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = true;
+				VerifyCancellableButton.End();
+				_currentOperationType = null;
 			});
 		}
 	}
 
 	/// <summary>
 	/// Remove security hardening by executing the remove strategy for each item
-	/// Called from the Protect tab when Optional Windows Features category is removed
+	/// Called from the Protect tab when Optional Windows Features category is removed and from the UI buttons
 	/// </summary>
 	internal async Task RemoveSecurityHardening()
 	{
+		bool errorsOccurred = false;
+
+		RemoveCancellableButton.Begin();
+
 		try
 		{
 			ElementsAreEnabled = false;
@@ -2132,6 +2166,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				return;
 			}
 
+			// Set operation type for progress logging
+			_currentOperationType = "Removing Recommended Configurations";
+
 			int successCount = 0;
 			int failureCount = 0;
 			List<string> failedItems = [];
@@ -2140,8 +2177,10 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			await Task.Run(async () =>
 			{
-				foreach (OptionalFeatureConfig config in SecurityHardeningConfigs.Values)
+				foreach (OptionalFeatureConfig config in SecurityHardeningConfigs)
 				{
+					RemoveCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
 					try
 					{
 						bool result = await ExecuteOperationAsync(config, config.RemoveStrategy);
@@ -2169,6 +2208,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					}
 				}
 			});
+
+			RemoveCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 			// Show final results
 			await Dispatcher.EnqueueAsync(() =>
@@ -2201,16 +2242,46 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			await Dispatcher.EnqueueAsync(() =>
 			{
-				MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringSecurityHardeningRemovalOperation"));
+				HandleExceptions(ex, ref errorsOccurred, ref RemoveCancellableButton.wasCancelled, MainInfoBar);
 			});
 		}
 		finally
 		{
+			if (RemoveCancellableButton.wasCancelled)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("RemoveOperationCancelledByUser"));
+			}
 			await Dispatcher.EnqueueAsync(() =>
 			{
 				ElementsAreEnabled = true;
+				RemoveCancellableButton.End();
+				_currentOperationType = null;
 			});
 		}
+	}
+
+	/// <summary>
+	/// UI wrapper for ApplySecurityHardening - calls the async Task method
+	/// </summary>
+	internal async void ApplySecurityHardeningUI()
+	{
+		await ApplySecurityHardening();
+	}
+
+	/// <summary>
+	/// UI wrapper for VerifySecurityHardening - calls the async Task<bool> method
+	/// </summary>
+	internal async void VerifySecurityHardeningUI()
+	{
+		_ = await VerifySecurityHardening();
+	}
+
+	/// <summary>
+	/// UI wrapper for RemoveSecurityHardening - calls the async Task method
+	/// </summary>
+	internal async void RemoveSecurityHardeningUI()
+	{
+		await RemoveSecurityHardening();
 	}
 
 	#endregion

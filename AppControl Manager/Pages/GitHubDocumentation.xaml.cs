@@ -42,10 +42,10 @@ internal sealed partial class GitHubDocumentation : Page
 	/// </summary>
 	internal GitHubDocumentation()
 	{
-		this.InitializeComponent();
+		InitializeComponent();
 
 		// Make sure navigating to/from this page maintains its state
-		this.NavigationCacheMode = NavigationCacheMode.Enabled;
+		NavigationCacheMode = NavigationCacheMode.Enabled;
 	}
 
 	/// <summary>
@@ -73,10 +73,7 @@ internal sealed partial class GitHubDocumentation : Page
 	/// <summary>
 	/// Event handler for Reload button
 	/// </summary>
-	private void ReloadButton_Click()
-	{
-		GitHubDocumentationWebView2.Reload();
-	}
+	private void ReloadButton_Click() => GitHubDocumentationWebView2.Reload();
 
 	/// <summary>
 	/// Event handler for Home button

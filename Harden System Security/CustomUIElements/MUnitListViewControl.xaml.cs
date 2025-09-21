@@ -27,9 +27,13 @@ using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace AppControlManager.CustomUIElements;
 
+/// <summary>
+/// UserControl that hosts the grouped ListView of MUnits plus command bar.
+/// </summary>
 internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 {
 	private HardenSystemSecurity.AppSettings.Main AppSettings => App.Settings;
@@ -37,13 +41,103 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	internal MUnitListViewControl()
 	{
 		this.InitializeComponent();
-		this.Unloaded += MUnitListViewControl_Unloaded;
-
-		// Configure the ItemsStackPanel after the control is loaded
-		this.Loaded += MUnitListViewControl_Loaded;
 	}
 
 	private bool _isDisposed;
+
+	#region Explicit Disposal Control
+
+	/// <summary>
+	/// DependencyProperty to control whether this control disposes itself automatically on Unloaded.
+	/// When set to true, disposal is skipped on Unloaded and must be invoked explicitly by the host
+	/// (e.g. in Page.OnNavigatedFrom). Default is false.
+	/// </summary>
+	internal static readonly DependencyProperty DisposeOnlyOnExplicitCallProperty =
+		DependencyProperty.Register(
+			nameof(DisposeOnlyOnExplicitCall),
+			typeof(bool),
+			typeof(MUnitListViewControl),
+			new PropertyMetadata(false));
+
+	/// <summary>
+	/// Wrapper so XAML can set the property.
+	/// </summary>
+	public bool DisposeOnlyOnExplicitCall
+	{
+		get => (bool)GetValue(DisposeOnlyOnExplicitCallProperty);
+		set => SetValue(DisposeOnlyOnExplicitCallProperty, value);
+	}
+
+	/// <summary>
+	/// DependencyProperty that, when true, attempts to mark all child controls that implement <see cref="IExplicitDisposalOptIn"/>
+	/// with their own DisposeOnlyOnExplicitCall flag so they also survive transient unloads under a TabView.
+	/// </summary>
+	internal static readonly DependencyProperty ChildButtonsDisposeOnlyOnExplicitCallProperty =
+		DependencyProperty.Register(
+			nameof(ChildButtonsDisposeOnlyOnExplicitCall),
+			typeof(bool),
+			typeof(MUnitListViewControl),
+			new PropertyMetadata(false, OnChildButtonsDisposeOnlyOnExplicitCallChanged));
+
+	public bool ChildButtonsDisposeOnlyOnExplicitCall
+	{
+		get => (bool)GetValue(ChildButtonsDisposeOnlyOnExplicitCallProperty);
+		set => SetValue(ChildButtonsDisposeOnlyOnExplicitCallProperty, value);
+	}
+
+	private static void OnChildButtonsDisposeOnlyOnExplicitCallChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		if (d is MUnitListViewControl control && (bool)e.NewValue)
+		{
+			control.TrySetChildExplicitDisposalOptIn();
+		}
+	}
+
+	private void MainListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+	{
+		if (!_isDisposed && ChildButtonsDisposeOnlyOnExplicitCall && args.ItemContainer is not null)
+		{
+			// Traverse the container's subtree to set the flag on any new controls
+			TrySetChildExplicitDisposalOptIn(args.ItemContainer);
+		}
+	}
+
+	/// <summary>
+	/// Traverses visual tree breadth-first to set DisposeOnlyOnExplicitCall = true
+	/// on any descendant implementing <see cref="IExplicitDisposalOptIn"/>.
+	/// </summary>
+	private void TrySetChildExplicitDisposalOptIn(DependencyObject? rootOverride = null)
+	{
+		if (_isDisposed) return;
+		if (!ChildButtonsDisposeOnlyOnExplicitCall) return;
+
+		try
+		{
+			DependencyObject start = rootOverride ?? this;
+			Queue<DependencyObject> queue = new();
+			queue.Enqueue(start);
+
+			while (queue.Count > 0)
+			{
+				DependencyObject current = queue.Dequeue();
+				int count = VisualTreeHelper.GetChildrenCount(current);
+				for (int i = 0; i < count; i++)
+				{
+					DependencyObject child = VisualTreeHelper.GetChild(current, i);
+
+					if (child is IExplicitDisposalOptIn explicitControl && !explicitControl.DisposeOnlyOnExplicitCall)
+					{
+						explicitControl.DisposeOnlyOnExplicitCall = true;
+					}
+
+					queue.Enqueue(child);
+				}
+			}
+		}
+		catch { }
+	}
+
+	#endregion
 
 	/// <summary>
 	/// Handles the Loaded event to configure the ItemsStackPanel with current settings
@@ -53,11 +147,22 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		// Set the initial value and configure the panel
 		ConfigureItemsStackPanel();
 
+		ApplyCombinedFilters();
+
+		// Ensure status counts are available immediately for the flyout numbers
+		UpdateStatusCounts();
+
 		// Subscribe to AppSettings property changes when control is loaded
 		if (AppSettings is INotifyPropertyChanged notifyPropertyChanged)
 		{
 			notifyPropertyChanged.PropertyChanged -= AppSettings_PropertyChanged; // Ensure no duplicate subscription
 			notifyPropertyChanged.PropertyChanged += AppSettings_PropertyChanged;
+		}
+
+		// If caller requested propagation to child controls, attempt it now (some may already be realized).
+		if (ChildButtonsDisposeOnlyOnExplicitCall)
+		{
+			TrySetChildExplicitDisposalOptIn();
 		}
 	}
 
@@ -91,75 +196,12 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 			typeof(MUnitListViewControl),
 			new PropertyMetadata(new ObservableCollection<GroupInfoListForMUnit>(), OnListViewItemsSourceChanged));
 
-	internal static readonly DependencyProperty ProgressBarVisibilityProperty =
-		DependencyProperty.Register(
-			nameof(ProgressBarVisibility),
-			typeof(Visibility),
-			typeof(MUnitListViewControl),
-			new PropertyMetadata(Visibility.Collapsed));
-
-	internal static readonly DependencyProperty ElementsAreEnabledProperty =
-		DependencyProperty.Register(
-			nameof(ElementsAreEnabled),
-			typeof(bool),
-			typeof(MUnitListViewControl),
-			new PropertyMetadata(true));
-
 	internal static readonly DependencyProperty ViewModelProperty =
 		DependencyProperty.Register(
 			nameof(ViewModel),
 			typeof(IMUnitListViewModel),
 			typeof(MUnitListViewControl),
 			new PropertyMetadata(null, OnViewModelChanged));
-
-	internal static readonly DependencyProperty SearchKeywordProperty =
-		DependencyProperty.Register(
-			nameof(SearchKeyword),
-			typeof(string),
-			typeof(MUnitListViewControl),
-			new PropertyMetadata(null, OnSearchKeywordChanged));
-
-	internal static readonly DependencyProperty TotalItemsCountProperty =
-		DependencyProperty.Register(
-			nameof(TotalItemsCount),
-			typeof(int),
-			typeof(MUnitListViewControl),
-			new PropertyMetadata(0));
-
-	internal static readonly DependencyProperty FilteredItemsCountProperty =
-		DependencyProperty.Register(
-			nameof(FilteredItemsCount),
-			typeof(int),
-			typeof(MUnitListViewControl),
-			new PropertyMetadata(0));
-
-	internal static readonly DependencyProperty SelectedItemsCountProperty =
-		DependencyProperty.Register(
-			nameof(SelectedItemsCount),
-			typeof(int),
-			typeof(MUnitListViewControl),
-			new PropertyMetadata(0));
-
-	internal static readonly DependencyProperty UndeterminedItemsCountProperty =
-		DependencyProperty.Register(
-			nameof(UndeterminedItemsCount),
-			typeof(int),
-			typeof(MUnitListViewControl),
-			new PropertyMetadata(0));
-
-	internal static readonly DependencyProperty AppliedItemsCountProperty =
-		DependencyProperty.Register(
-			nameof(AppliedItemsCount),
-			typeof(int),
-			typeof(MUnitListViewControl),
-			new PropertyMetadata(0));
-
-	internal static readonly DependencyProperty NotAppliedItemsCountProperty =
-		DependencyProperty.Register(
-			nameof(NotAppliedItemsCount),
-			typeof(int),
-			typeof(MUnitListViewControl),
-			new PropertyMetadata(0));
 
 	/// <summary>
 	/// Flag to prevent recursive selection change events during selection restoration
@@ -172,64 +214,10 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		set => SetValue(ListViewItemsSourceProperty, value);
 	}
 
-	public Visibility ProgressBarVisibility
-	{
-		get => (Visibility)GetValue(ProgressBarVisibilityProperty);
-		set => SetValue(ProgressBarVisibilityProperty, value);
-	}
-
-	public bool ElementsAreEnabled
-	{
-		get => (bool)GetValue(ElementsAreEnabledProperty);
-		set => SetValue(ElementsAreEnabledProperty, value);
-	}
-
 	public IMUnitListViewModel? ViewModel
 	{
 		get => (IMUnitListViewModel?)GetValue(ViewModelProperty);
 		set => SetValue(ViewModelProperty, value);
-	}
-
-	public string SearchKeyword
-	{
-		get => (string)GetValue(SearchKeywordProperty);
-		set => SetValue(SearchKeywordProperty, value);
-	}
-
-	public int TotalItemsCount
-	{
-		get => (int)GetValue(TotalItemsCountProperty);
-		set => SetValue(TotalItemsCountProperty, value);
-	}
-
-	public int FilteredItemsCount
-	{
-		get => (int)GetValue(FilteredItemsCountProperty);
-		set => SetValue(FilteredItemsCountProperty, value);
-	}
-
-	public int SelectedItemsCount
-	{
-		get => (int)GetValue(SelectedItemsCountProperty);
-		set => SetValue(SelectedItemsCountProperty, value);
-	}
-
-	public int UndeterminedItemsCount
-	{
-		get => (int)GetValue(UndeterminedItemsCountProperty);
-		set => SetValue(UndeterminedItemsCountProperty, value);
-	}
-
-	public int AppliedItemsCount
-	{
-		get => (int)GetValue(AppliedItemsCountProperty);
-		set => SetValue(AppliedItemsCountProperty, value);
-	}
-
-	public int NotAppliedItemsCount
-	{
-		get => (int)GetValue(NotAppliedItemsCountProperty);
-		set => SetValue(NotAppliedItemsCountProperty, value);
 	}
 
 	private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -240,8 +228,8 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 			control.SetUserControlReferenceInMUnits();
 			// Restore selection if needed
 			control.RestoreSelectionFromViewModel();
-			// Update counts when ViewModel changes
-			control.UpdateCounts();
+			// Ensure status counts are computed right away
+			control.UpdateStatusCounts();
 		}
 	}
 
@@ -254,8 +242,6 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 			// Set user control reference in all MUnits when the items source changes
 			control.SetUserControlReferenceInMUnits();
-			// Update counts when items source changes
-			control.UpdateCounts();
 			// Restore selection when items source changes (e.g., after data loading)
 			control.RestoreSelectionFromViewModel();
 			// Subscribe to status changes for all MUnits to track status counts
@@ -263,6 +249,12 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 			// Configure the ItemsStackPanel when items source changes
 			control.ConfigureItemsStackPanel();
+
+			// If requested, propagate explicit-disposal configuration to child controls (they may appear now)
+			if (control.ChildButtonsDisposeOnlyOnExplicitCall)
+			{
+				control.TrySetChildExplicitDisposalOptIn();
+			}
 		}
 	}
 
@@ -334,24 +326,6 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	}
 
 	/// <summary>
-	/// Updates the count properties based on current data
-	/// </summary>
-	private void UpdateCounts()
-	{
-		if (ViewModel == null || _isDisposed) return;
-
-		// Update basic counts from ViewModel
-		TotalItemsCount = ViewModel.TotalItemsCount;
-		FilteredItemsCount = ViewModel.FilteredItemsCount;
-		SelectedItemsCount = ViewModel.SelectedItemsCount;
-
-		// Update status counts from ViewModel
-		UndeterminedItemsCount = ViewModel.UndeterminedItemsCount;
-		AppliedItemsCount = ViewModel.AppliedItemsCount;
-		NotAppliedItemsCount = ViewModel.NotAppliedItemsCount;
-	}
-
-	/// <summary>
 	/// Updates the status counts by examining all MUnits in the backing field
 	/// </summary>
 	private void UpdateStatusCounts()
@@ -389,11 +363,6 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		ViewModel.UndeterminedItemsCount = undeterminedCount;
 		ViewModel.AppliedItemsCount = appliedCount;
 		ViewModel.NotAppliedItemsCount = notAppliedCount;
-
-		// Update local properties for UI binding
-		UndeterminedItemsCount = undeterminedCount;
-		AppliedItemsCount = appliedCount;
-		NotAppliedItemsCount = notAppliedCount;
 	}
 
 	/// <summary>
@@ -442,85 +411,9 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		}
 	}
 
-	private static void OnSearchKeywordChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-	{
-		if (d is MUnitListViewControl control && !control._isDisposed)
-		{
-			if (control.ViewModel == null)
-				return;
-
-			control.ViewModel.SearchKeyword = e.NewValue as string;
-			control.PerformSearch(control.ViewModel.SearchKeyword);
-		}
-	}
-
-	private void PerformSearch(string? searchTerm)
-	{
-		if (ViewModel?.ListViewItemsSourceBackingField == null || _isDisposed)
-			return;
-
-		UnsubscribeFromAllMUnits();
-
-		if (string.IsNullOrWhiteSpace(searchTerm))
-		{
-			// Show all items when search is empty
-			ListViewItemsSource.Clear();
-			foreach (GroupInfoListForMUnit group in ViewModel.ListViewItemsSourceBackingField)
-			{
-				ListViewItemsSource.Add(group);
-			}
-			// Set user control reference after restoring items
-			SetUserControlReferenceInMUnits();
-
-			// Update filtered count to total count
-			ViewModel.FilteredItemsCount = ViewModel.TotalItemsCount;
-			UpdateCounts();
-
-			// Restore selection after clearing search
-			RestoreSelectionFromViewModel();
-			// Re-subscribe to status changes after clearing search
-			SubscribeToStatusChanges();
-			return;
-		}
-
-		// Perform case-insensitive search
-		List<GroupInfoListForMUnit> filteredGroups = ViewModel.ListViewItemsSourceBackingField
-			.Select(group => new GroupInfoListForMUnit(
-				items: group.Where(munit =>
-					(munit.Name?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-					(munit.SubCategoryName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-					(munit.URL?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)),
-				key: group.Key))
-			.Where(group => group.Any()) // Only include groups that have matching items
-			.ToList();
-
-		ListViewItemsSource.Clear();
-		foreach (GroupInfoListForMUnit group in filteredGroups)
-		{
-			ListViewItemsSource.Add(group);
-		}
-
-		// Update filtered count
-		int filteredCount = 0;
-		foreach (GroupInfoListForMUnit group in filteredGroups)
-		{
-			filteredCount += group.Count;
-		}
-		ViewModel.FilteredItemsCount = filteredCount;
-
-		// Set user control reference after filtering
-		SetUserControlReferenceInMUnits();
-		UpdateCounts();
-
-		// Restore selection after filtering (only items that match search will be selected)
-		RestoreSelectionFromViewModel();
-		// Re-subscribe to status changes after filtering
-		SubscribeToStatusChanges();
-	}
-
 	/// <summary>
-	/// For selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged"/> method as well,
-	/// Adding the items to <see cref="ItemsSourceSelectedItems"/>.
+	/// For selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged(object, SelectionChangedEventArgs)"/> method as well,
+	/// Adding the items to <see cref="IMUnitListViewModel.ItemsSourceSelectedItems"/>.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
@@ -538,8 +431,8 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	}
 
 	/// <summary>
-	/// For De-selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged"/> method as well,
-	/// Removing the items from <see cref="ItemsSourceSelectedItems"/>.
+	/// For De-selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged(object, SelectionChangedEventArgs)"/> method as well,
+	/// Removing the items from <see cref="IMUnitListViewModel.ItemsSourceSelectedItems"/>.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
@@ -576,7 +469,6 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		if (ViewModel != null)
 		{
 			ViewModel.SelectedItemsCount = ViewModel.ItemsSourceSelectedItems.Count;
-			UpdateCounts();
 		}
 	}
 
@@ -592,11 +484,19 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 		try
 		{
+			// Mark a per-item operation as running so the "All" animated buttons disable themselves.
+			BeginItemOperation();
+
 			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, [mUnit], MUnitOperation.Apply);
 		}
 		catch (Exception ex)
 		{
 			ViewModel?.MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			// Clear the per-item operation running flag.
+			EndItemOperation();
 		}
 	}
 
@@ -613,11 +513,19 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 			if (mUnit.RemoveStrategy == null)
 				return;
 
+			// Mark a per-item operation as running so the "All" animated buttons disable themselves.
+			BeginItemOperation();
+
 			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, [mUnit], MUnitOperation.Remove);
 		}
 		catch (Exception ex)
 		{
 			ViewModel?.MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			// Clear the per-item operation running flag.
+			EndItemOperation();
 		}
 	}
 
@@ -634,11 +542,19 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 			if (mUnit.VerifyStrategy == null)
 				return;
 
+			// Mark a per-item operation as running so the "All" animated buttons disable themselves.
+			BeginItemOperation();
+
 			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, [mUnit], MUnitOperation.Verify);
 		}
 		catch (Exception ex)
 		{
 			ViewModel?.MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			// Clear the per-item operation running flag.
+			EndItemOperation();
 		}
 	}
 
@@ -660,12 +576,20 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		try
 		{
 			ViewModel.ElementsAreEnabled = false;
-			ViewModel.MainInfoBar.WriteInfo("Applying all configurations...");
+			ViewModel.MainInfoBar.WriteInfo(GlobalVars.GetStr("ApplyingAllSecurityMeasures"));
 
 			List<MUnit> allMUnits = [];
 			foreach (GroupInfoListForMUnit group in ListViewItemsSource)
 			{
-				allMUnits.AddRange(group);
+				// Only include MUnits whose sub-category is null for Apply All
+				// Because user might not be expecting to apply the more extreme sub-categories when using the "Apply All" button.
+				foreach (MUnit mUnit in group)
+				{
+					if (mUnit.SubCategory is null)
+					{
+						allMUnits.Add(mUnit);
+					}
+				}
 			}
 			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, allMUnits, MUnitOperation.Apply, ViewModel.ApplyAllCancellableButton.Cts?.Token);
 		}
@@ -677,11 +601,11 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		{
 			if (ViewModel.ApplyAllCancellableButton.wasCancelled)
 			{
-				ViewModel.MainInfoBar.WriteWarning("Apply All operation was cancelled by user");
+				ViewModel.MainInfoBar.WriteWarning(GlobalVars.GetStr("ApplyOperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
-				ViewModel.MainInfoBar.WriteSuccess("Successfully applied all configurations");
+				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.GetStr("ApplyingAllSecurityMeasuresSuccessful"));
 			}
 
 			ViewModel.ApplyAllCancellableButton.End();
@@ -706,7 +630,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -724,7 +648,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		try
 		{
 			ViewModel.ElementsAreEnabled = false;
-			ViewModel.MainInfoBar.WriteInfo("Removing all configurations...");
+			ViewModel.MainInfoBar.WriteInfo(GlobalVars.GetStr("RemovingAllSecurityMeasures"));
 
 			List<MUnit> allMUnits = [];
 			foreach (GroupInfoListForMUnit group in ListViewItemsSource)
@@ -747,11 +671,11 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		{
 			if (ViewModel.RemoveAllCancellableButton.wasCancelled)
 			{
-				ViewModel.MainInfoBar.WriteWarning("Remove All operation was cancelled by user");
+				ViewModel.MainInfoBar.WriteWarning(GlobalVars.GetStr("RemoveOperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
-				ViewModel.MainInfoBar.WriteSuccess("Successfully removed all configurations");
+				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.GetStr("RemovingAllSecurityMeasuresSuccessful"));
 			}
 
 			ViewModel.RemoveAllCancellableButton.End();
@@ -787,7 +711,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -805,7 +729,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		try
 		{
 			ViewModel.ElementsAreEnabled = false;
-			ViewModel.MainInfoBar.WriteInfo("Verifying all configurations...");
+			ViewModel.MainInfoBar.WriteInfo(GlobalVars.GetStr("VerifyingAllSecurityMeasures"));
 
 			List<MUnit> allMUnits = [];
 			foreach (GroupInfoListForMUnit group in ListViewItemsSource)
@@ -828,11 +752,11 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		{
 			if (ViewModel.VerifyAllCancellableButton.wasCancelled)
 			{
-				ViewModel.MainInfoBar.WriteWarning("Verify All operation was cancelled by user");
+				ViewModel.MainInfoBar.WriteWarning(GlobalVars.GetStr("VerifyOperationCancelledByUser"));
 			}
 			else if (!errorsOccurred)
 			{
-				ViewModel.MainInfoBar.WriteSuccess("Successfully verified all configurations");
+				ViewModel.MainInfoBar.WriteSuccess(GlobalVars.GetStr("VerifyingAllSecurityMeasuresSuccessful"));
 			}
 
 			ViewModel.VerifyAllCancellableButton.End();
@@ -869,7 +793,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -880,6 +804,11 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// </summary>
 	private void MUnitListViewControl_Unloaded(object sender, RoutedEventArgs e)
 	{
+		// If the host requested explicit disposal, skip automatic disposal here.
+		if (DisposeOnlyOnExplicitCall)
+		{
+			return;
+		}
 		Dispose();
 	}
 
@@ -896,9 +825,243 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 		// Unsubscribe from all MUnit events
 		UnsubscribeFromAllMUnits();
-
-		// Unregister from events
-		this.Unloaded -= MUnitListViewControl_Unloaded;
-		this.Loaded -= MUnitListViewControl_Loaded;
 	}
+
+	#region Logic for Animated Button Enablement
+
+	// ============================================================================================================
+	// - If one of the three animated "All" buttons (Apply/Verify/Remove) is running, the other two must be disabled.
+	// - If any per-item operation is running, all three animated "All" buttons must be disabled until it completes.
+	// Implemented by:
+	//   1) A DP flag AnyItemOperationInProgress, toggled around per-item operations.
+	//   2) Three compute helpers used by XAML x:Bind to control IsEnabled for the top animated buttons.	
+	// ============================================================================================================
+
+	/// <summary>
+	/// Tracks whether any item-level operation (single-row Apply/Verify/Remove) is currently in progress.
+	/// XAML binds this to decide if the three "All" animated buttons should be disabled.
+	/// </summary>
+	internal static readonly DependencyProperty AnyItemOperationInProgressProperty =
+		DependencyProperty.Register(
+			nameof(AnyItemOperationInProgress),
+			typeof(bool),
+			typeof(MUnitListViewControl),
+			new PropertyMetadata(false));
+
+	/// <summary>
+	/// True when at least one per-item operation is running.
+	/// </summary>
+	public bool AnyItemOperationInProgress
+	{
+		get => (bool)GetValue(AnyItemOperationInProgressProperty);
+		set => SetValue(AnyItemOperationInProgressProperty, value);
+	}
+
+	/// <summary>
+	/// Internal counter to handle overlapping per-item operations without flicker.
+	/// </summary>
+	private int _itemOpsInFlight;
+
+	/// <summary>
+	/// Call when a per-item operation begins. Keeps top animated buttons disabled while any item op runs.
+	/// </summary>
+	private void BeginItemOperation()
+	{
+		_itemOpsInFlight++;
+		AnyItemOperationInProgress = _itemOpsInFlight > 0;
+	}
+
+	/// <summary>
+	/// Call when a per-item operation finishes.
+	/// </summary>
+	private void EndItemOperation()
+	{
+		if (_itemOpsInFlight > 0)
+		{
+			_itemOpsInFlight--;
+		}
+		AnyItemOperationInProgress = _itemOpsInFlight > 0;
+	}
+
+	/// <summary>
+	/// Enables Apply-All if it's currently running (so Cancel remains clickable),
+	/// otherwise disables it when Verify-All or Remove-All or any item op is running.
+	/// </summary>
+	internal bool ComputeApplyAllEnabled(bool isApplyAllBusy, bool isVerifyAllBusy, bool isRemoveAllBusy, bool anyItemBusy)
+	{
+		bool enabled = isApplyAllBusy || !(isVerifyAllBusy || isRemoveAllBusy || anyItemBusy);
+		return enabled;
+	}
+
+	/// <summary>
+	/// Enables Verify-All if it's currently running (so Cancel remains clickable),
+	/// otherwise disables it when Apply-All or Remove-All or any item op is running.
+	/// </summary>
+	internal bool ComputeVerifyAllEnabled(bool isVerifyAllBusy, bool isApplyAllBusy, bool isRemoveAllBusy, bool anyItemBusy)
+	{
+		bool enabled = isVerifyAllBusy || !(isApplyAllBusy || isRemoveAllBusy || anyItemBusy);
+		return enabled;
+	}
+
+	/// <summary>
+	/// Enables Remove-All if it's currently running (so Cancel remains clickable),
+	/// otherwise disables it when Apply-All or Verify-All or any item op is running.
+	/// </summary>
+	internal bool ComputeRemoveAllEnabled(bool isRemoveAllBusy, bool isApplyAllBusy, bool isVerifyAllBusy, bool anyItemBusy)
+	{
+		bool enabled = isRemoveAllBusy || !(isApplyAllBusy || isVerifyAllBusy || anyItemBusy);
+		return enabled;
+	}
+
+	#endregion
+
+
+	#region Unified Search and Filteration
+
+	// Function binding for SearchKeyword used by the SearchBox Text binding.
+	// Getter returns current VM keyword.
+	private string? GetSearchKeyword()
+	{
+		if (ViewModel is null) return string.Empty;
+		return ViewModel.SearchKeyword;
+	}
+
+	// BindBack handler for SearchKeyword. Updates VM and runs filter.
+	private void SetSearchKeyword(string? value)
+	{
+		if (_isDisposed || ViewModel is null) return;
+		ViewModel.SearchKeyword = value;
+		ApplyCombinedFilters();
+	}
+
+	private static void OnStatusFilterPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+	{
+		// Apply status filter changes immediately
+		if (d is MUnitListViewControl control && !control._isDisposed)
+		{
+			control.ApplyCombinedFilters();
+		}
+	}
+
+	/// <summary>
+	/// Applies both search and status filters to rebuild the ListViewItemsSource
+	/// without duplicating backing data (always uses ViewModel.ListViewItemsSourceBackingField).
+	/// </summary>
+	private void ApplyCombinedFilters()
+	{
+		if (ViewModel?.ListViewItemsSourceBackingField == null || _isDisposed)
+			return;
+
+		// Rebuild filtered view from the single backing field.
+		UnsubscribeFromAllMUnits();
+
+		// Pre-dedicate the max capacity to the list.
+		List<GroupInfoListForMUnit> filteredGroups = new(ViewModel.ListViewItemsSourceBackingField.Count);
+
+		foreach (GroupInfoListForMUnit group in ViewModel.ListViewItemsSourceBackingField)
+		{
+			// Filter items by status toggles and optional search.
+			IEnumerable<MUnit> filteredItemsEnum = group.Where(munit =>
+				// Status filter
+				((munit.StatusState == StatusState.Applied && ViewModel.ShowApplied) ||
+				 (munit.StatusState == StatusState.NotApplied && ViewModel.ShowNotApplied) ||
+				 (munit.StatusState == StatusState.Undetermined && ViewModel.ShowUndetermined))
+				// Search filter
+				&& (string.IsNullOrWhiteSpace(ViewModel.SearchKeyword) ||
+					(munit.Name?.Contains(ViewModel.SearchKeyword, StringComparison.OrdinalIgnoreCase) ?? false) ||
+					(munit.SubCategoryName?.Contains(ViewModel.SearchKeyword, StringComparison.OrdinalIgnoreCase) ?? false) ||
+					(munit.URL?.Contains(ViewModel.SearchKeyword, StringComparison.OrdinalIgnoreCase) ?? false)));
+
+			List<MUnit> filteredItems = filteredItemsEnum.ToList();
+
+			if (filteredItems.Count > 0)
+			{
+				// Create lightweight group wrappers referencing the same MUnit instances.
+				filteredGroups.Add(new GroupInfoListForMUnit(filteredItems, group.Key));
+			}
+		}
+
+		ListViewItemsSource.Clear();
+		foreach (GroupInfoListForMUnit group in filteredGroups)
+		{
+			ListViewItemsSource.Add(group);
+		}
+
+		// Update filtered count
+		int filteredCount = 0;
+		foreach (GroupInfoListForMUnit group in filteredGroups)
+		{
+			filteredCount += group.Count;
+		}
+		ViewModel.FilteredItemsCount = filteredCount;
+
+		// Maintain the rest of the plumbing
+		SetUserControlReferenceInMUnits();
+
+		// Restore selection after filtering (only items that match search will be selected)
+		RestoreSelectionFromViewModel();
+
+		// Re-subscribe to status changes after filtering
+		SubscribeToStatusChanges();
+
+		if (ChildButtonsDisposeOnlyOnExplicitCall)
+		{
+			TrySetChildExplicitDisposalOptIn();
+		}
+	}
+
+
+	// Function binding getters used by x:Bind for the Status Overview checkboxes.
+	// Return bool? because CheckBox.IsChecked is nullable.
+	// Default to showing all items when VM not ready
+	private bool? GetShowApplied() => ViewModel is null ? true : ViewModel.ShowApplied;
+	private bool? GetShowNotApplied() => ViewModel is null ? true : ViewModel.ShowNotApplied;
+	private bool? GetShowUndetermined() => ViewModel is null ? true : ViewModel.ShowUndetermined;
+
+	// Function binding BindBack handlers. They set the VM property and trigger re-filter only when changed.
+	private void SetShowApplied(bool? value)
+	{
+		if (_isDisposed || ViewModel is null) return;
+
+		bool effective = value == true;
+		if (ViewModel.ShowApplied == effective)
+		{
+			// No change; skip re-filtering work
+			return;
+		}
+
+		ViewModel.ShowApplied = effective;
+		ApplyCombinedFilters();
+	}
+
+	private void SetShowNotApplied(bool? value)
+	{
+		if (_isDisposed || ViewModel is null) return;
+
+		bool effective = value == true;
+		if (ViewModel.ShowNotApplied == effective)
+		{
+			return;
+		}
+
+		ViewModel.ShowNotApplied = effective;
+		ApplyCombinedFilters();
+	}
+
+	private void SetShowUndetermined(bool? value)
+	{
+		if (_isDisposed || ViewModel is null) return;
+
+		bool effective = value == true;
+		if (ViewModel.ShowUndetermined == effective)
+		{
+			return;
+		}
+
+		ViewModel.ShowUndetermined = effective;
+		ApplyCombinedFilters();
+	}
+
+	#endregion
+
 }

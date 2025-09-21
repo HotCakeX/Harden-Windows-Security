@@ -144,7 +144,7 @@ Revision=1
 				}
 				catch (Exception dirDelEx)
 				{
-					Logger.Write(ErrorWriter.FormatException(dirDelEx));
+					Logger.Write(dirDelEx);
 				}
 			}
 		}
@@ -193,7 +193,7 @@ Revision=1
 			propagation,
 			AccessControlType.Allow);
 
-		// Users - Read & Execute only 
+		// Users - Read & Execute only
 		FileSystemRights usersRights =
 			FileSystemRights.ReadAndExecute |
 			FileSystemRights.ListDirectory |

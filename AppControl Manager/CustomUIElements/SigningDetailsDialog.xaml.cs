@@ -54,7 +54,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 
 	internal SigningDetailsDialog(SiPolicy.SiPolicy? policyObject = null)
 	{
-		this.InitializeComponent();
+		InitializeComponent();
 
 		policyObjectToVerify = policyObject;
 
@@ -73,13 +73,11 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 		CertificatePath = currentUserConfigs.CertificatePath;
 		CertificateCommonName = currentUserConfigs.CertificateCommonName;
 		SignToolPath = currentUserConfigs.SignToolCustomPath;
-
-		// Set the focus on the Verify button when the Content Dialog opens
-		VerifyButton.Loaded += VerifyButton_Loaded;
 	}
 
 	/// <summary>
-	/// Event handler for when the Verify button is loaded
+	/// Event handler for when the Verify button is loaded.
+	/// Sets the focus on the Verify button when the Content Dialog opens.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
@@ -178,7 +176,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 		catch (Exception ex)
 		{
 			ShowTeachingTip(ex.Message);
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -412,7 +410,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 		catch (Exception ex)
 		{
 			ShowTeachingTip(ex.Message);
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 		finally
 		{

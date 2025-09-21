@@ -44,91 +44,91 @@ internal sealed class DeviceConfigurationPolicy(
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("@odata.type")]
-	internal string? ODataType { get; } = oDataType;
+	internal string? ODataType => oDataType;
 
 	/// <summary>
 	/// Unique identifier for the policy.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("id")]
-	internal string? Id { get; } = id;
+	internal string? Id => id;
 
 	/// <summary>
 	/// Date and time when the policy was last modified.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("lastModifiedDateTime")]
-	internal DateTimeOffset? LastModifiedDateTime { get; } = lastModifiedDateTime;
+	internal DateTimeOffset? LastModifiedDateTime => lastModifiedDateTime;
 
 	/// <summary>
 	/// List of role scope tag identifiers.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("roleScopeTagIds")]
-	internal List<string>? RoleScopeTagIds { get; } = roleScopeTagIds;
+	internal List<string>? RoleScopeTagIds => roleScopeTagIds;
 
 	/// <summary>
 	/// Indicates whether the policy supports scope tags.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("supportsScopeTags")]
-	internal bool SupportsScopeTags { get; } = supportsScopeTags;
+	internal bool SupportsScopeTags => supportsScopeTags;
 
 	/// <summary>
 	/// OS edition rule for device management applicability.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("deviceManagementApplicabilityRuleOsEdition")]
-	internal string? DeviceManagementApplicabilityRuleOsEdition { get; } = deviceManagementApplicabilityRuleOsEdition;
+	internal string? DeviceManagementApplicabilityRuleOsEdition => deviceManagementApplicabilityRuleOsEdition;
 
 	/// <summary>
 	/// OS version rule for device management applicability.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("deviceManagementApplicabilityRuleOsVersion")]
-	internal string? DeviceManagementApplicabilityRuleOsVersion { get; } = deviceManagementApplicabilityRuleOsVersion;
+	internal string? DeviceManagementApplicabilityRuleOsVersion => deviceManagementApplicabilityRuleOsVersion;
 
 	/// <summary>
 	/// Device mode rule for device management applicability.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("deviceManagementApplicabilityRuleDeviceMode")]
-	internal string? DeviceManagementApplicabilityRuleDeviceMode { get; } = deviceManagementApplicabilityRuleDeviceMode;
+	internal string? DeviceManagementApplicabilityRuleDeviceMode => deviceManagementApplicabilityRuleDeviceMode;
 
 	/// <summary>
 	/// Date and time when the policy was created.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("createdDateTime")]
-	internal DateTimeOffset? CreatedDateTime { get; } = createdDateTime;
+	internal DateTimeOffset? CreatedDateTime => createdDateTime;
 
 	/// <summary>
 	/// Description of the policy.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("description")]
-	internal string? Description { get; } = description;
+	internal string? Description => description;
 
 	/// <summary>
 	/// Display name of the policy.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("displayName")]
-	internal string? DisplayName { get; } = displayName;
+	internal string? DisplayName => displayName;
 
 	/// <summary>
 	/// Version of the policy.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("version")]
-	internal int Version { get; } = version;
+	internal int Version => version;
 
 	/// <summary>
 	/// List of OMA settings.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("omaSettings")]
-	internal List<OmaSettingBase64>? OmaSettings { get; } = omaSettings;
+	internal List<OmaSettingBase64>? OmaSettings => omaSettings;
 }
 
 /// <summary>
@@ -145,19 +145,19 @@ internal sealed class DeviceConfigurationPoliciesResponse(
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("@odata.context")]
-	internal string? ODataContext { get; } = oDataContext;
+	internal string? ODataContext => oDataContext;
 
 	/// <summary>
 	/// Additional Microsoft Graph tips.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("@microsoft.graph.tips")]
-	internal string? MicrosoftGraphTips { get; } = microsoftGraphTips;
+	internal string? MicrosoftGraphTips => microsoftGraphTips;
 
 	/// <summary>
 	/// The list of device configuration policies.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("value")]
-	internal List<DeviceConfigurationPolicy>? Value { get; } = value;
+	internal List<DeviceConfigurationPolicy>? Value => value;
 }

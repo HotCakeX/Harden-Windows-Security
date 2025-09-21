@@ -4,17 +4,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:AppControlManager.CustomUIElements"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:protect="using:HardenSystemSecurity.Protect"
     xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:protect="using:HardenSystemSecurity.Protect"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-    xmlns:animatedvisuals="using:AnimatedVisuals"
-    mc:Ignorable="d">
+    Loaded="{x:Bind MUnitListViewControl_Loaded}"
+    Unloaded="{x:Bind MUnitListViewControl_Unloaded}"
+    xmlns:animatedvisuals="using:AnimatedVisuals">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -187,9 +184,9 @@
                                         </AnimatedIcon>
 
                                         <TextBlock x:Uid="RemoveText"
-                                       FontSize="12"
-                                       FontWeight="SemiBold"
-                                       VerticalAlignment="Center"/>
+                                                   FontSize="12"                                       
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Button>
 
@@ -245,9 +242,9 @@
 
                         <TextBox Grid.Column="1"
                                  x:Name="SearchBox"
-                                 IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
+                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                  x:Uid="SearchSecurityMeasuresPlaceHolder"
-                                 Text="{x:Bind SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Text="{x:Bind GetSearchKeyword(), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, BindBack=SetSearchKeyword}"
                                  VerticalAlignment="Center"
                                  BorderThickness="0"
                                  Margin="0,0,8,0"/>
@@ -273,10 +270,10 @@
                         <TextBlock VerticalAlignment="Center"
                                    FontSize="14"
                                    FontWeight="SemiBold">
-                            <Run Text="Total: "/>
-                            <Run Text="{x:Bind TotalItemsCount, Mode=OneWay}"/>
+                            <Run x:Uid="TotalText"/>
+                            <Run Text="{x:Bind ViewModel.TotalItemsCount, Mode=OneWay}"/>
                             <Run Text=" | Displayed: "/>
-                            <Run Text="{x:Bind FilteredItemsCount, Mode=OneWay}"/>
+                            <Run Text="{x:Bind ViewModel.FilteredItemsCount, Mode=OneWay}"/>
                         </TextBlock>
 
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -300,86 +297,92 @@
                                                HorizontalAlignment="Center"
                                                Margin="0,0,0,8"/>
 
-                                    <!-- Applied Status -->
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
+                                    <!-- Applied Status (checkable) -->
+                                    <CheckBox IsChecked="{x:Bind GetShowApplied(), Mode=TwoWay, BindBack=SetShowApplied}" VerticalAlignment="Center">
+                                        <Grid VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
 
-                                        <Ellipse Grid.Column="0"
-                                                 Width="12"
-                                                 Height="12"
-                                                 Fill="#28A745"
-                                                 VerticalAlignment="Center"/>
+                                            <Ellipse Grid.Column="0"
+                                                     Width="12"
+                                                     Height="12"
+                                                     Fill="#28A745"
+                                                     VerticalAlignment="Center"/>
 
-                                        <TextBlock Grid.Column="1"
-                                                   Text="Applied"
-                                                   FontSize="14"
-                                                   VerticalAlignment="Center"
-                                                   Margin="12,0,0,0"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="Applied -"
+                                                       FontSize="14"
+                                                       VerticalAlignment="Center"
+                                                       Margin="12,0,5,0"/>
 
-                                        <TextBlock Grid.Column="2"
-                                                   Text="{x:Bind AppliedItemsCount, Mode=OneWay}"
-                                                   FontSize="14"
-                                                   FontWeight="SemiBold"
-                                                   VerticalAlignment="Center"/>
-                                    </Grid>
+                                            <TextBlock Grid.Column="2"
+                                                       Text="{x:Bind ViewModel.AppliedItemsCount, Mode=OneWay}"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </CheckBox>
 
-                                    <!-- Not Applied Status -->
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
+                                    <!-- Not Applied Status (checkable) -->
+                                    <CheckBox IsChecked="{x:Bind GetShowNotApplied(), Mode=TwoWay, BindBack=SetShowNotApplied}" VerticalAlignment="Center">
+                                        <Grid VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
 
-                                        <Ellipse Grid.Column="0"
-                                                 Width="12"
-                                                 Height="12"
-                                                 Fill="#DC3545"
-                                                 VerticalAlignment="Center"/>
+                                            <Ellipse Grid.Column="0"
+                                                     Width="12"
+                                                     Height="12"
+                                                     Fill="#DC3545"
+                                                     VerticalAlignment="Center"/>
 
-                                        <TextBlock Grid.Column="1"
-                                                   Text="Not Applied"
-                                                   FontSize="14"
-                                                   VerticalAlignment="Center"
-                                                   Margin="12,0,0,0"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="Not Applied -"
+                                                       FontSize="14"
+                                                       VerticalAlignment="Center"
+                                                       Margin="12,0,5,0"/>
 
-                                        <TextBlock Grid.Column="2"
-                                                   Text="{x:Bind NotAppliedItemsCount, Mode=OneWay}"
-                                                   FontSize="14"
-                                                   FontWeight="SemiBold"
-                                                   VerticalAlignment="Center"/>
-                                    </Grid>
+                                            <TextBlock Grid.Column="2"
+                                                       Text="{x:Bind ViewModel.NotAppliedItemsCount, Mode=OneWay}"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </CheckBox>
 
-                                    <!-- Undetermined Status (N/A) -->
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
+                                    <!-- Undetermined Status (N/A) (checkable) -->
+                                    <CheckBox IsChecked="{x:Bind GetShowUndetermined(), Mode=TwoWay, BindBack=SetShowUndetermined}" VerticalAlignment="Center">
+                                        <Grid VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
 
-                                        <Ellipse Grid.Column="0"
-                                                 Width="12"
-                                                 Height="12"
-                                                 Fill="#FFC107"
-                                                 VerticalAlignment="Center"/>
+                                            <Ellipse Grid.Column="0"
+                                                     Width="12"
+                                                     Height="12"
+                                                     Fill="#FFC107"
+                                                     VerticalAlignment="Center"/>
 
-                                        <TextBlock Grid.Column="1"
-                                                   Text="Undetermined (N/A)"
-                                                   FontSize="14"
-                                                   VerticalAlignment="Center"
-                                                   Margin="12,0,0,0"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="Undetermined (N/A) -"
+                                                       FontSize="14"
+                                                       VerticalAlignment="Center"
+                                                       Margin="12,0,5,0"/>
 
-                                        <TextBlock Grid.Column="2"
-                                                   Text="{x:Bind UndeterminedItemsCount, Mode=OneWay}"
-                                                   FontSize="14"
-                                                   FontWeight="SemiBold"
-                                                   VerticalAlignment="Center"/>
-                                    </Grid>
+                                            <TextBlock Grid.Column="2"
+                                                       Text="{x:Bind ViewModel.UndeterminedItemsCount, Mode=OneWay}"
+                                                       FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </CheckBox>
 
                                 </StackPanel>
                             </Border>
@@ -388,7 +391,7 @@
                 </Button>
 
                 <ProgressRing IsActive="True"
-                              Visibility="{x:Bind ProgressBarVisibility, Mode=OneWay}"
+                              Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
                               VerticalAlignment="Center">
                     <ani:Implicit.HideAnimations>
                         <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
@@ -402,6 +405,7 @@
 
                 <!-- Apply All Button -->
                 <customUI:AnimatedCancellableButton
+                    x:Uid="AnimatedApplyAllButton"
                     CancelMethod="{x:Bind ViewModel.ApplyAllCancellableButton.Cancel, Mode=OneWay}"
                     ExternalOperationInProgress="{x:Bind ViewModel.ApplyAllCancellableButton.IsOperationInProgress, Mode=OneWay}"
                     ExternalIsCancelState="{x:Bind ViewModel.ApplyAllCancellableButton.IsCancelState, Mode=OneWay}"
@@ -416,7 +420,8 @@
                     ExternalInternalSuppressExternalClick="{x:Bind ViewModel.ApplyAllCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
                     ExternalShadowAnimationRunning="{x:Bind ViewModel.ApplyAllCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
                     ExternalOperationStarted="{x:Bind ViewModel.ApplyAllCancellableButton.OperationStarted, Mode=OneWay}"
-                    Click="{x:Bind ApplyAllMUnits}">
+                    Click="{x:Bind ApplyAllMUnits}"
+                    IsEnabled="{x:Bind ComputeApplyAllEnabled(ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.VerifyAllCancellableButton.IsOperationInProgress, ViewModel.RemoveAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}">
 
                     <ani:Implicit.HideAnimations>
                         <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
@@ -446,7 +451,8 @@
                     ExternalInternalSuppressExternalClick="{x:Bind ViewModel.VerifyAllCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
                     ExternalShadowAnimationRunning="{x:Bind ViewModel.VerifyAllCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
                     ExternalOperationStarted="{x:Bind ViewModel.VerifyAllCancellableButton.OperationStarted, Mode=OneWay}"
-                    Click="{x:Bind VerifyAllMUnits}">
+                    Click="{x:Bind VerifyAllMUnits}"
+                    IsEnabled="{x:Bind ComputeVerifyAllEnabled(ViewModel.VerifyAllCancellableButton.IsOperationInProgress, ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.RemoveAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}">
 
                     <ani:Implicit.HideAnimations>
                         <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
@@ -461,6 +467,7 @@
 
                 <!-- Remove All Button -->
                 <customUI:AnimatedCancellableButton
+                    x:Uid="AnimatedRemoveAllButton"
                     CancelMethod="{x:Bind ViewModel.RemoveAllCancellableButton.Cancel, Mode=OneWay}"
                     ExternalOperationInProgress="{x:Bind ViewModel.RemoveAllCancellableButton.IsOperationInProgress, Mode=OneWay}"
                     ExternalIsCancelState="{x:Bind ViewModel.RemoveAllCancellableButton.IsCancelState, Mode=OneWay}"
@@ -475,7 +482,8 @@
                     ExternalInternalSuppressExternalClick="{x:Bind ViewModel.RemoveAllCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
                     ExternalShadowAnimationRunning="{x:Bind ViewModel.RemoveAllCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
                     ExternalOperationStarted="{x:Bind ViewModel.RemoveAllCancellableButton.OperationStarted, Mode=OneWay}"
-                    Click="{x:Bind RemoveAllMUnits}">
+                    Click="{x:Bind RemoveAllMUnits}"
+                    IsEnabled="{x:Bind ComputeRemoveAllEnabled(ViewModel.RemoveAllCancellableButton.IsOperationInProgress, ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.VerifyAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}">
 
                     <ani:Implicit.HideAnimations>
                         <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
@@ -500,13 +508,13 @@
 
                     <DropDownButton.Flyout>
                         <MenuFlyout Placement="Bottom">
-                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind SelectAllMenuFlyoutItem_Click}">
+                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind SelectAllMenuFlyoutItem_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8B3;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="RemoveSelectionsMenuFlyoutItem" IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind RemoveSelectionsMenuFlyoutItem_Click}">
+                            <MenuFlyoutItem x:Uid="RemoveSelectionsMenuFlyoutItem" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind RemoveSelectionsMenuFlyoutItem_Click}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8E6;"/>
                                 </MenuFlyoutItem.Icon>
@@ -514,19 +522,19 @@
 
                             <MenuFlyoutSeparator/>
 
-                            <MenuFlyoutItem x:Uid="ApplySelectedMenuFlyoutItem" IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ApplySelectedMUnits}" >
+                            <MenuFlyoutItem x:Uid="ApplySelectedMenuFlyoutItem" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ApplySelectedMUnits}" >
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEC61;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="VerifySelectedMenuFlyoutItem" IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind VerifySelectedMUnits}" >
+                            <MenuFlyoutItem x:Uid="VerifySelectedMenuFlyoutItem" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind VerifySelectedMUnits}" >
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xF0B9;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="RemoveSelectedMenuFlyoutItem" IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind RemoveSelectedMUnits}" >
+                            <MenuFlyoutItem x:Uid="RemoveSelectedMenuFlyoutItem" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind RemoveSelectedMUnits}" >
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xEDAE;"/>
                                 </MenuFlyoutItem.Icon>
@@ -553,8 +561,8 @@
                                FontWeight="SemiBold"
                                Foreground="WhiteSmoke"
                                VerticalAlignment="Center">
-                        <Run x:Uid="SelectedText" />
-                        <Run Text="{x:Bind SelectedItemsCount, Mode=OneWay}"/>
+                        <Run x:Uid="SelectedItemText" />
+                        <Run Text="{x:Bind ViewModel.SelectedItemsCount, Mode=OneWay}"/>
                     </TextBlock>
                 </Border>
 
@@ -570,10 +578,11 @@
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollMode="Enabled"
                   ScrollViewer.VerticalScrollMode="Enabled"
-                  IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"
+                  IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                   ItemTemplate="{StaticResource MUnitListViewTemplate}"
                   ItemsSource="{x:Bind ProtectionCategoriesCollectionViewSource.View, Mode=OneWay}"
                   SelectionChanged="{x:Bind MainListView_SelectionChanged}"
+                  ContainerContentChanging="{x:Bind MainListView_ContainerContentChanging}"
                   SelectionMode="Multiple">
             <ani:Implicit.HideAnimations>
                 <ani:OpacityAnimation Duration="0:0:0.4" To="0.0"/>

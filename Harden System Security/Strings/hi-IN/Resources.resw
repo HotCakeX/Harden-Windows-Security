@@ -205,16 +205,7 @@
     <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
     <value>अतिरिक्त सुविधाओं के लिए साइडबार का उपयोग करें।</value>
   </data>
-    <data name="SidebarGuideHyperlinkButton.Content" xml:space="preserve">
-    <value>साइडबार गाइड</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>साइडबार का उपयोग करने के लिए गाइड के लिए, कृपया यहाँ क्लिक/टैप करके GitHub wiki पेज पर जाएं।</value>
-  </data>
-  <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>साइडबार का उपयोग करने के लिए गाइड के लिए, कृपया यहाँ क्लिक/टैप करके GitHub wiki पेज पर जाएं।</value>
-  </data>
-    <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
+  <data name="SidebarHelpHyperlinkTextBlock.Text" xml:space="preserve">
     <value>सहायता - प्रश्न पूछें</value>
   </data>
   <data name="SettingsPageTitle.Text" xml:space="preserve">
@@ -604,13 +595,13 @@
   <data name="ProtectionPresetsComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>लागू करने के लिए सुरक्षा प्रीसेट में से एक चुनें, ये विभिन्न सुरक्षा स्तरों के लिए डिज़ाइन किए गए पूर्व-निर्धारित कॉन्फ़िगरेशन सेट हैं।</value>
   </data>
-    <data name="BasicProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="BasicProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>बुनियादी</value>
   </data>
-    <data name="RecommendedProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="RecommendedProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>अनुशंसित</value>
   </data>
-    <data name="CompleteProtectionPresetComboBoxItem.Content" xml:space="preserve">
+    <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>पूर्ण</value>
   </data>
   <data name="ProtectPageTitle.Text" xml:space="preserve">
@@ -740,17 +731,9 @@
     <comment>Protection Category Title</comment>
     <value>प्रमाणपत्र जांच</value>
   </data>
-  <data name="ProtectCategory_Description_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>इंस्टॉल किए गए प्रमाणपत्रों की जांच करें और उन सभी का पता लगाएं जो ऑपरेटिंग सिस्टम के अंतर्गत नहीं आते।</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>देश द्वारा IP अवरोधन</value>
-  </data>
-  <data name="ProtectCategory_Description_CountryIPBlock" xml:space="preserve">
-    <comment>Protection Category Description</comment>
-    <value>आतंकवाद समर्थन के लिए अमेरिकी प्रतिबंध सूची में शामिल विशिष्ट देशों की IP पता श्रेणियों को अवरुद्ध करें।</value>
   </data>
   <data name="ProtectCategory_NonAdmin" xml:space="preserve">
     <comment>Protection Category Title</comment>
@@ -803,10 +786,6 @@
   <data name="ProtectSubCategory_EnableLongPathSupport" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>लंबे फ़ाइल पथ समर्थन सक्षम करें।</value>
-  </data>
-  <data name="ProtectSubCategory_BlockOFACSanctionedCountries" xml:space="preserve">
-    <comment>Protection Sub-Category</comment>
-    <value>OFAC प्रतिबंध सूची में शामिल देशों की IP श्रेणियों को अवरुद्ध करें।</value>
   </data>
   <data name="ASRNavItem.Content" xml:space="preserve">
     <value>हमला सतह कमी</value>
@@ -1592,9 +1571,6 @@
 <data name="SecurityHardeningCompleted" xml:space="preserve">
   <value>सुरक्षा कठोरीकरण पूर्ण: {0} सफल, {1} विफल।</value>
 </data>
-<data name="ErrorDuringSecurityHardeningOperation" xml:space="preserve">
-  <value>सुरक्षा कठोरीकरण ऑपरेशन के दौरान त्रुटि</value>
-</data>
 <data name="FailedToInitializeDISMServiceForVerification" xml:space="preserve">
   <value>सत्यापन के लिए DISM सेवा आरंभ करने में विफल।</value>
 </data>
@@ -1610,9 +1586,6 @@
 <data name="IncorrectItems" xml:space="preserve">
   <value>गलत आइटम: {0}</value>
 </data>
-<data name="ErrorDuringSecurityHardeningVerification" xml:space="preserve">
-  <value>सुरक्षा कठोरीकरण सत्यापन के दौरान त्रुटि</value>
-</data>
 <data name="FailedToInitializeDISMServiceForRemovingSecurityHardening" xml:space="preserve">
   <value>सुरक्षा कठोरीकरण हटाने के लिए DISM सेवा आरंभ करने में विफल।</value>
 </data>
@@ -1627,9 +1600,6 @@
 </data>
 <data name="SecurityHardeningRemovalCompleted" xml:space="preserve">
   <value>सुरक्षा कठोरीकरण हटाना पूर्ण: {0} सफल, {1} विफल।</value>
-</data>
-<data name="ErrorDuringSecurityHardeningRemovalOperation" xml:space="preserve">
-  <value>सुरक्षा कठोरीकरण हटाने के ऑपरेशन के दौरान त्रुटि</value>
 </data>
 <data name="ErrorDisposingDISMServiceClient" xml:space="preserve">
   <value>DISM सेवा क्लाइंट का निपटान करने में त्रुटि: {0}</value>
@@ -1976,12 +1946,6 @@
 <data name="SeceditFailedWithExitCode" xml:space="preserve">
   <value>Secedit एक्जिट कोड के साथ विफल: {0}</value>
 </data>
-<data name="WarningCouldNotDeleteTemporaryFiles" xml:space="preserve">
-  <value>चेतावनी: अस्थायी फ़ाइलें हटाई नहीं जा सकीं।</value>
-</data>
-<data name="SeceditMethodFailed" xml:space="preserve">
-  <value>Secedit विधि विफल।</value>
-</data>
 <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
   <value>निर्दिष्ट फ़ाइल में कोई [System Access] सेटिंग्स नहीं मिलीं</value>
 </data>
@@ -1990,9 +1954,6 @@
 </data>
 <data name="FileNotFoundPath" xml:space="preserve">
   <value>फ़ाइल नहीं मिली: {0}</value>
-</data>
-<data name="CreatedPolicyDirectory" xml:space="preserve">
-  <value>नीति निर्देशिका बनाई गई: {0}</value>
 </data>
 <data name="FileTooSmallForValidHeader" xml:space="preserve">
   <value>फ़ाइल वैध हेडर के लिए बहुत छोटी है</value>
@@ -2041,9 +2002,6 @@
 </data>
 <data name="LoadedExistingPolicyFileWithEntries" xml:space="preserve">
   <value>{0} एंट्रियों के साथ मौजूदा नीति फ़ाइल लोड की गई</value>
-</data>
-<data name="PolicyFileDoesNotExistCreatingNew" xml:space="preserve">
-  <value>नीति फ़ाइल मौजूद नहीं है, नई खाली नीति फ़ाइल बना रहे हैं</value>
 </data>
 <data name="ReplacedEntries" xml:space="preserve">
   <value>प्रतिस्थापित एंट्रियां: {0}</value>
@@ -2288,7 +2246,7 @@
   <data name="INFToJSONConversionSectionSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>JSON फॉर्मेट में कन्वर्ट करने के लिए एक या अधिक सुरक्षा INF फाइलें चुनें</value>
   </data>
-    <data name="SelectedText.Text" xml:space="preserve">
+    <data name="SelectedItemText.Text" xml:space="preserve">
     <value>चयनित: </value>
   </data>
   <data name="StatusAppliedText" xml:space="preserve">
@@ -2364,10 +2322,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>स्थिति</value>
   </data>
-  <data name="CurrentValueHeader.Text" xml:space="preserve">
+  <data name="CurrentValueHeaderText" xml:space="preserve">
     <value>वर्तमान मान</value>
   </data>
-  <data name="ExpectedValueHeader.Text" xml:space="preserve">
+  <data name="ExpectedValueHeaderText" xml:space="preserve">
     <value>अपेक्षित मान</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -2588,5 +2546,1212 @@
   </data>
   <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
    <value>आधारभूत के डाउनलोड URL को देखें और प्रबंधित करें।</value>
+  </data>
+   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>जोड़ें</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित आइटम के लिए फ़ायरवॉल नियम जोड़ें।</value>
+  </data>
+  <data name="AddCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>चयनित आइटम के लिए फ़ायरवॉल नियम जोड़ें।</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.Content" xml:space="preserve">
+    <value>हटाएं</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित आइटम के लिए फ़ायरवॉल नियम हटाएं।</value>
+  </data>
+  <data name="RemoveCountryFirewallRulesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>चयनित आइटम के लिए फ़ायरवॉल नियम हटाएं।</value>
+  </data>
+  <data name="TargetedListsText.Text" xml:space="preserve">
+   <value>लक्षित सूचियां</value>
+  </data>
+  <data name="TargetedListsDescriptionText.Text" xml:space="preserve">
+   <value>पूर्व-संकलित और दैनिक अपडेट की जाने वाली लक्षित सूचियां जिनमें देश-विशिष्ट IP पता श्रेणियां शामिल हैं, जो कुशल Windows फ़ायरवॉल अवरोधन नियंत्रणों के माध्यम से अनुपालन आवश्यकताओं और सुरक्षा नीतियों के सुव्यवस्थित कार्यान्वयन को सक्षम बनाती हैं।</value>
+  </data>
+  <data name="IndividualCountryIPBlockingText.Text" xml:space="preserve">
+   <value>व्यक्तिगत देश IP अवरोधन</value>
+  </data>
+  <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
+   <value>Windows फ़ायरवॉल नियमों के माध्यम से अपने सिस्टम पर विशिष्ट देशों को अवरुद्ध करने के लिए दैनिक अपडेट होने वाली देशीय IP पता श्रेणियों का उपयोग करें।</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
+    <value>और जानें</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अधिक विस्तृत जानकारी के साथ वेब पेज खोलने के लिए यहां क्लिक या टैप करें।</value>
+  </data>
+  <data name="LearnMoreHyperLinkButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>अधिक विस्तृत जानकारी के साथ वेब पेज खोलने के लिए यहां क्लिक या टैप करें।</value>
+  </data>
+  <data name="SearchCountriesTextBox.PlaceholderText" xml:space="preserve">
+   <value>देश खोजें...</value>
+  </data>
+  <!--Certificates ListView Headers Start-->
+  <data name="StoreLocationHeader.Text" xml:space="preserve">
+    <value>स्टोर स्थान</value>
+  </data>
+    <data name="StoreNameHeader.Text" xml:space="preserve">
+    <value>स्टोर नाम</value>
+  </data>
+  <data name="SubjectHeader.Text" xml:space="preserve">
+    <value>विषय</value>
+  </data>
+  <data name="IssuerHeader.Text" xml:space="preserve">
+    <value>जारीकर्ता</value>
+  </data>
+  <data name="ThumbprintHeader.Text" xml:space="preserve">
+    <value>अंगूठाछाप</value>
+  </data>
+    <data name="RootSubjectHeader.Text" xml:space="preserve">
+    <value>मूल विषय</value>
+  </data>
+  <data name="RootSha256Header.Text" xml:space="preserve">
+    <value>मूल SHA256</value>
+  </data>
+  <!--Certificates ListView Headers End-->
+  <!--Certificates ListView Headers Buttons Start-->
+  <data name="StoreLocationColumnHeaderBtn.Content" xml:space="preserve">
+    <value>स्टोर स्थान</value>
+  </data>
+    <data name="StoreNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>स्टोर नाम</value>
+  </data>
+  <data name="SubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>विषय</value>
+  </data>
+  <data name="IssuerColumnHeaderBtn.Content" xml:space="preserve">
+    <value>जारीकर्ता</value>
+  </data>
+  <data name="ThumbprintColumnHeaderBtn.Content" xml:space="preserve">
+    <value>अंगूठाछाप</value>
+  </data>
+  <data name="RootSubjectColumnHeaderBtn.Content" xml:space="preserve">
+    <value>मूल विषय</value>
+  </data>
+  <data name="RootSha256ColumnHeaderBtn.Content" xml:space="preserve">
+    <value>मूल SHA256</value>
+  </data>
+  <!--Certificates ListView Headers Buttons End-->
+  <data name="StartAnalysisButton.Content" xml:space="preserve">
+    <value>विश्लेषण प्रारंभ करें</value>
+  </data>
+  <data name="StartAnalysisButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>माइक्रोसॉफ्ट की विश्वसनीय मूल प्रमाणपत्र प्रोग्राम सूची डाउनलोड करता है और स्थानीय मशीन और वर्तमान उपयोगकर्ता प्रमाणपत्र स्टोर्स में सभी प्रमाणपत्रों को ढूंढता है जो उस विश्वसनीय सूची में किसी भी प्रमाणपत्र से जुड़े नहीं हैं। आप अपने सिस्टम से अविश्वसनीय प्रमाणपत्रों को भी हटा सकेंगे।</value>
+  </data>
+  <data name="StartAnalysisButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>माइक्रोसॉफ्ट की विश्वसनीय मूल प्रमाणपत्र प्रोग्राम सूची डाउनलोड करता है और स्थानीय मशीन और वर्तमान उपयोगकर्ता प्रमाणपत्र स्टोर्स में सभी प्रमाणपत्रों को ढूंढता है जो उस विश्वसनीय सूची में किसी भी प्रमाणपत्र से जुड़े नहीं हैं। आप अपने सिस्टम से अविश्वसनीय प्रमाणपत्रों को भी हटा सकेंगे।</value>
+  </data>
+  <data name="GetLocalCertificatesButton.Content" xml:space="preserve">
+    <value>स्थानीय प्रमाणपत्र प्राप्त करें</value>
+  </data>
+  <data name="GetLocalCertificatesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>स्थानीय मशीन और वर्तमान उपयोगकर्ता प्रमाणपत्र स्टोर्स से सभी स्थानीय प्रमाणपत्र पुनर्प्राप्त करता है, उन सभी को सूची में दिखाता है और आपको उन्हें क्रमबद्ध करने, उनमें खोज करने, उनके विवरण कॉपी करने या उन्हें हटाने की अनुमति देता है।</value>
+  </data>
+  <data name="GetLocalCertificatesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>स्थानीय मशीन और वर्तमान उपयोगकर्ता प्रमाणपत्र स्टोर्स से सभी स्थानीय प्रमाणपत्र पुनर्प्राप्त करता है, उन सभी को सूची में दिखाता है और आपको उन्हें क्रमबद्ध करने, उनमें खोज करने, उनके विवरण कॉपी करने या उन्हें हटाने की अनुमति देता है।</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.Content" xml:space="preserve">
+    <value>समाप्त प्रमाणपत्र शामिल करें</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>परिणामों में समाप्त या अभी तक वैध नहीं प्रमाणपत्र शामिल करें।</value>
+  </data>
+  <data name="IncludeExpiredCertsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>परिणामों में समाप्त या अभी तक वैध नहीं प्रमाणपत्र शामिल करें।</value>
+  </data>
+  <data name="SearchCertificatesTextBox.PlaceholderText" xml:space="preserve">
+   <value>प्रमाणपत्र खोजें...</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.Text" xml:space="preserve">
+   <value>प्रमाणपत्र विश्वास सूची हेडर जानकारी</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.ToolTipService.ToolTip" xml:space="preserve">
+    <value>प्रमाणपत्र विश्वास सूची हेडर जानकारी</value>
+  </data>
+  <data name="CertificatesCTLHeaderInfo.AutomationProperties.HelpText" xml:space="preserve">
+   <value>प्रमाणपत्र विश्वास सूची हेडर जानकारी</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.Content" xml:space="preserve">
+    <value>CTL हेडर जानकारी</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>माइक्रोसॉफ्ट के सर्वर से डाउनलोड की गई प्रमाणपत्र विश्वसनीय सूची फाइलों के बारे में विस्तृत जानकारी प्रदर्शित करता है।</value>
+  </data>
+  <data name="CTLHeaderInfoFlyoutButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>माइक्रोसॉफ्ट के सर्वर से डाउनलोड की गई प्रमाणपत्र विश्वसनीय सूची फाइलों के बारे में विस्तृत जानकारी प्रदर्शित करता है।</value>
+  </data>
+  <data name="MainInfoBarDeleteCertificateSelectMessage" xml:space="preserve">
+  <value>कृपया हटाने के लिए एक प्रमाणपत्र चुनें।</value>
+</data>
+<data name="DeleteCertificateDialogTitle" xml:space="preserve">
+  <value>प्रमाणपत्र हटाएं</value>
+</data>
+<data name="DeleteCertificateDialogContent" xml:space="preserve">
+  <value>क्या आप वाकई इस प्रमाणपत्र को हटाना चाहते हैं?
+
+विषय: {0}
+स्टोर: {1}\{2}
+अंगूठाछाप: {3}</value>
+</data>
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
+  <value>हटाएं</value>
+</data>
+<data name="InvalidStoreLocationWarning" xml:space="preserve">
+  <value>अमान्य स्टोर स्थान: {0}</value>
+</data>
+<data name="CertificateNotFoundInStoreWarning" xml:space="preserve">
+  <value>प्रमाणपत्र स्टोर में नहीं मिला।</value>
+</data>
+<data name="CertificateDeletedSuccessMessage" xml:space="preserve">
+  <value>प्रमाणपत्र सफलतापूर्वक {0}\{1} से हटा दिया गया</value>
+</data>
+<data name="StartingCertificateAnalysisMessage" xml:space="preserve">
+  <value>प्रमाणपत्र विश्लेषण प्रारंभ किया जा रहा है...</value>
+</data>
+<data name="StlFileParsedMessage" xml:space="preserve">
+  <value>STL फाइल ने {1} मिलीसेकंड में {0} विषयों का विश्लेषण किया।</value>
+</data>
+<data name="CertificateAnalysisCompletedMessage" xml:space="preserve">
+  <value>प्रमाणपत्र विश्लेषण पूरा हुआ। {0} प्रमाणपत्र मिले जो STL रूट्स से जुड़े नहीं हैं।</value>
+</data>
+<data name="RetrievingAllCertificatesMessage" xml:space="preserve">
+  <value>प्रमाणपत्र स्टोर्स से सभी प्रमाणपत्र प्राप्त किए जा रहे हैं...</value>
+</data>
+<data name="RetrievedCertificatesMessage" xml:space="preserve">
+  <value>{1} मिलीसेकंड में {0} प्रमाणपत्र प्राप्त किए गए।</value>
+</data>
+<data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
+  <value>प्रमाणपत्र प्राप्ति पूरी हुई। कुल {0} प्रमाणपत्र मिले।</value>
+</data>
+<data name="NoRootCertificate" xml:space="preserve">
+  <value>(कोई मूल नहीं)</value>
+</data>
+<data name="NoCertificateHash" xml:space="preserve">
+  <value>(कोई नहीं)</value>
+</data>
+<data name="EmptyValue" xml:space="preserve">
+  <value>खाली</value>
+</data>
+<data name="InputFileIsNeitherCABNorSTLError" xml:space="preserve">
+  <value>इनपुट फाइल न तो वैध CAB फाइल है और न ही STL फाइल है।</value>
+</data>
+<data name="CABFileContainsMoreThanOneFileError" xml:space="preserve">
+  <value>CAB फाइल में एक से अधिक फाइल है। बिल्कुल एक STL फाइल अपेक्षित थी।</value>
+</data>
+<data name="NoSTLFileFoundInCABError" xml:space="preserve">
+  <value>CAB संग्रह में कोई STL फाइल नहीं मिली।</value>
+</data>
+<data name="CABFileEmptyError" xml:space="preserve">
+  <value>CAB फाइल खाली है या इसमें निकालने योग्य कोई फाइल नहीं है।</value>
+</data>
+<data name="TooManyRedirectsError" xml:space="preserve">
+  <value>बहुत अधिक रीडायरेक्ट्स।</value>
+</data>
+<data name="RedirectResponseMissingLocationError" xml:space="preserve">
+  <value>रीडायरेक्ट प्रतिक्रिया में स्थान हेडर गुम है।</value>
+</data>
+<data name="SignatureVerificationFailedError" xml:space="preserve">
+  <value>SignedCms के लिए हस्ताक्षर सत्यापन असफल।</value>
+</data>
+<data name="SignerCertificateNotPresentError" xml:space="preserve">
+  <value>हस्ताक्षरकर्ता प्रमाणपत्र SignedCms में मौजूद नहीं है।</value>
+</data>
+<data name="SigningChainRootMismatchError" xml:space="preserve">
+  <value>हस्ताक्षर श्रृंखला रूट प्रदान किए गए CA प्रमाणपत्र से मेल नहीं खाता।</value>
+</data>
+<data name="UnexpectedTrailingDataCTLError" xml:space="preserve">
+  <value>शीर्ष-स्तर CTL अनुक्रम के बाद अप्रत्याशित अनुगामी डेटा।</value>
+</data>
+<data name="VersionIntegerOutOfRangeError" xml:space="preserve">
+  <value>संस्करण पूर्णांक मान सीमा से बाहर।</value>
+</data>
+<data name="MissingUsageSequenceError" xml:space="preserve">
+  <value>उपयोग अनुक्रम अनुपस्थित।</value>
+</data>
+<data name="UnexpectedTrailingDataUsageSequenceError" xml:space="preserve">
+  <value>उपयोग अनुक्रम के अंदर अप्रत्याशित अनुगामी डेटा।</value>
+</data>
+<data name="MissingThisUpdateError" xml:space="preserve">
+  <value>thisUpdate अनुपस्थित।</value>
+</data>
+<data name="MissingAlgorithmIdentifierError" xml:space="preserve">
+  <value>एल्गोरिदम पहचानकर्ता अनुपस्थित।</value>
+</data>
+<data name="UnexpectedTrailingDataTrustedSubjectError" xml:space="preserve">
+  <value>TrustedSubjectType के अंदर अप्रत्याशित अनुगामी डेटा।</value>
+</data>
+<data name="UnexpectedTrailingDataCTLElementsError" xml:space="preserve">
+  <value>CTL तत्वों के बाद अप्रत्याशित अनुगामी डेटा।</value>
+</data>
+<data name="SubjectMissingFriendlyNameError" xml:space="preserve">
+  <value>विषय में अनुकूल नाम अनुपस्थित है।</value>
+</data>
+<data name="UnexpectedTrailingDataEKUSequenceError" xml:space="preserve">
+  <value>EKU अनुक्रम के बाद अप्रत्याशित अनुगामी डेटा।</value>
+</data>
+<data name="InvalidFILETIMEError" xml:space="preserve">
+  <value>अमान्य FILETIME का सामना हुआ।</value>
+</data>
+<data name="BEGINCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>PEM में BEGIN CERTIFICATE मार्कर नहीं मिला।</value>
+</data>
+<data name="ENDCertificateMarkerNotFoundError" xml:space="preserve">
+  <value>PEM में END CERTIFICATE मार्कर नहीं मिला।</value>
+</data>
+<data name="InvalidBase64ContentError" xml:space="preserve">
+  <value>PEM प्रमाणपत्र में अमान्य base64 सामग्री।</value>
+</data>
+<data name="EmptyEntryNameSkippingMessage" xml:space="preserve">
+  <value>खाली प्रविष्टि नाम, छोड़ा जा रहा है।</value>
+</data>
+<data name="LoadingCountriesDataMessage" xml:space="preserve">
+  <value>देशों का डेटा लोड किया जा रहा है...</value>
+</data>
+<data name="CountriesLoadedSuccessMessage" xml:space="preserve">
+  <value>सफलतापूर्वक {0} देश लोड किए गए</value>
+</data>
+<data name="CreatingRulesForMessage" xml:space="preserve">
+  <value>{0} के लिए नियम बनाए जा रहे हैं</value>
+</data>
+<data name="RemovingRulesForMessage" xml:space="preserve">
+  <value>{0} के लिए नियम हटाए जा रहे हैं</value>
+</data>
+<data name="SuccessfullyAddedIPRangeMessage" xml:space="preserve">
+  <value>ब्लॉकिंग के लिए चयनित IP रेंज सफलतापूर्वक जोड़ा गया</value>
+</data>
+<data name="SuccessfullyRemovedIPRangeMessage" xml:space="preserve">
+  <value>ब्लॉकिंग के लिए चयनित IP रेंज सफलतापूर्वक हटाया गया</value>
+</data>
+<data name="PleaseSelectCountryWarning" xml:space="preserve">
+  <value>कृपया सूची से एक देश चुनें</value>
+</data>
+<data name="CreatingIPv4RulesMessage" xml:space="preserve">
+  <value>{0} के लिए IPv4 नियम बनाए जा रहे हैं</value>
+</data>
+<data name="CreatingIPv6RulesMessage" xml:space="preserve">
+  <value>{0} के लिए IPv6 नियम बनाए जा रहे हैं</value>
+</data>
+<data name="RemovingIPv4RulesMessage" xml:space="preserve">
+  <value>{0} के लिए IPv4 नियम हटाए जा रहे हैं</value>
+</data>
+<data name="RemovingIPv6RulesMessage" xml:space="preserve">
+  <value>{0} के लिए IPv6 नियम हटाए जा रहे हैं</value>
+</data>
+<data name="SuccessfullyAddedIPBlockingRulesMessage" xml:space="preserve">
+  <value>{0} के लिए IP ब्लॉकिंग नियम सफलतापूर्वक जोड़े गए</value>
+</data>
+<data name="SuccessfullyRemovedIPBlockingRulesMessage" xml:space="preserve">
+  <value>{0} के लिए IP ब्लॉकिंग नियम सफलतापूर्वक हटाए गए</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectError" xml:space="preserve">
+  <value>STA में GroupPolicyObject बनाने में असफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToInitializeCOMInSTAError" xml:space="preserve">
+  <value>STA थ्रेड में COM प्रारंभ करने में असफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToCreateGroupPolicyObjectNullPointerError" xml:space="preserve">
+  <value>GroupPolicyObject बनाने में असफल - STA थ्रेड से null पॉइंटर वापस आया</value>
+</data>
+<data name="FailedToInitializeCOMError" xml:space="preserve">
+  <value>COM प्रारंभ करने में असफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="FailedToOpenLocalMachineGPOError" xml:space="preserve">
+  <value>स्थानीय मशीन GPO खोलने में असफल। HRESULT: 0x{0:X8}</value>
+</data>
+<data name="COMExceptionMessage" xml:space="preserve">
+  <value>COM अपवाद: {0} (HRESULT: 0x{1:X8})</value>
+</data>
+<data name="FailedToRegisterCSEGUIDError" xml:space="preserve">
+  <value>{0} CSE GUID {1:B} पंजीकृत करने में असफल। HRESULT: 0x{2:X8}</value>
+</data>
+<data name="FailedToRegisterCSEGUIDCOMError" xml:space="preserve">
+  <value>{0} CSE GUID {1:B} पंजीकृत करने में असफल: {2} (HRESULT: 0x{3:X8})</value>
+</data>
+  <data name="DeleteRow.Text" xml:space="preserve">
+    <value>हटाएं</value>
+  </data>
+  <data name="DeleteRow.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वर्तमान में चयनित आइटम(आइटम्स) को हटाएं।</value>
+  </data>
+  <data name="DeleteRow.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वर्तमान में चयनित आइटम(आइटम्स) को हटाएं।</value>
+  </data>
+      <data name="AuditPoliciesNavItem.Content" xml:space="preserve">
+    <value>ऑडिट नीतियां</value>
+  </data>
+    <data name="AuditPoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम की सभी ऑडिट नीतियों को देखें और प्रबंधित करें।</value>
+  </data>
+  <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम की सभी ऑडिट नीतियों को देखें और प्रबंधित करें।</value>
+  </data>
+    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <value>सिस्टम की सभी ऑडिट नीतियों को देखें और प्रबंधित करें।</value>
+  </data>
+  <!--Audit Policies ListView Headers Start-->
+  <data name="AuditSettingHeader.Text" xml:space="preserve">
+    <value>ऑडिट सेटिंग</value>
+  </data>
+  <data name="CategoryGUIDHeader.Text" xml:space="preserve">
+    <value>श्रेणी GUID</value>
+  </data>
+    <data name="SubcategoryGUIDHeader.Text" xml:space="preserve">
+    <value>उपश्रेणी GUID</value>
+  </data>
+  <!--Audit Policies ListView Headers End-->
+  <!--Audit Policies ListView Headers Buttons Start-->
+  <data name="AuditSettingColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ऑडिट सेटिंग</value>
+  </data>
+  <data name="CategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>श्रेणी GUID</value>
+  </data>
+  <data name="SubcategoryGUIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>उपश्रेणी GUID</value>
+  </data>
+  <!--Audit Policies ListView Headers Buttons End-->
+  <data name="RetrieveAuditPoliciesButton.Content" xml:space="preserve">
+    <value>ऑडिट नीतियां प्राप्त करें</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम से सभी ऑडिट नीतियां प्राप्त करता है।</value>
+  </data>
+  <data name="RetrieveAuditPoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>सिस्टम से सभी ऑडिट नीतियां प्राप्त करता है।</value>
+  </data>
+  <data name="SearchAuditPoliciesPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>ऑडिट नीतियां खोजें...</value>
+  </data>
+  <data name="AuditPolicyAppliedSuccess" xml:space="preserve">
+    <value>{0} के लिए ऑडिट नीति परिवर्तन {1} पर सफलतापूर्वक लागू किया गया</value>
+  </data>
+  <data name="AuditPoliciesLoadedSuccess" xml:space="preserve">
+    <value>सफलतापूर्वक {0} ऑडिट नीतियां लोड की गईं।</value>
+  </data>
+  <data name="NoAuditPoliciesAvailable" xml:space="preserve">
+    <value>निर्यात के लिए कोई ऑडिट नीतियाँ नहीं। कृपया पहले ऑडिट नीतियाँ प्राप्त करें।</value>
+  </data>
+  <data name="SuccessfullyExportedAuditPolicies" xml:space="preserve">
+    <value>सफलतापूर्वक {0} ऑडिट नीतियाँ {1} में निर्यात की गईं</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>JSON फाइल से ऑडिट नीतियाँ आयात करता है और उन्हें सिस्टम में लागू करता है। आप आयात करने के लिए JSON फाइल चुन सकेंगे।</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>JSON फाइल से ऑडिट नीतियाँ आयात करता है और उन्हें सिस्टम में लागू करता है। आप आयात करने के लिए JSON फाइल चुन सकेंगे।</value>
+  </data>
+  <data name="ImportAndApplyAuditPoliciesFromJsonButton.Content" xml:space="preserve">
+    <value>आयात करें और लागू करें</value>
+  </data>
+  <data name="NoAuditPoliciesAvailableToImport" xml:space="preserve">
+    <value>JSON फाइल में कोई वैध ऑडिट नीतियाँ नहीं मिलीं।</value>
+  </data>
+  <data name="NoAuditPoliciesApplicableInJSON" xml:space="preserve">
+    <value>इस सिस्टम के लिए JSON फाइल में कोई लागू होने वाली ऑडिट नीतियाँ नहीं मिलीं।</value>
+  </data>
+  <data name="SuccessfullyImportedAuditPolicies" xml:space="preserve">
+    <value>सफलतापूर्वक {1} से {0} ऑडिट नीतियाँ आयात की गईं</value>
+  </data>
+  <data name="ApplyRecommendedConfigurations" xml:space="preserve">
+    <value>सुझाव लागू करें</value>
+  </data>
+  <data name="VerifyRecommendedConfigurations" xml:space="preserve">
+    <value>सुझाव सत्यापित करें</value>
+  </data>
+  <data name="RemoveRecommendedConfigurations" xml:space="preserve">
+    <value>सुझाव हटाएं</value>
+  </data>
+  <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित आइटमों को क्लिपबोर्ड में कॉपी करें।</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित आइटमों को क्लिपबोर्ड में कॉपी करें।</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>चयनित कॉपी करें</value>
+  </data>
+  <data name="NoCertificatesAvailableForExport" xml:space="preserve">
+    <value>निर्यात के लिए कोई प्रमाणपत्र नहीं। कृपया पहले प्रमाणपत्र प्राप्त करें।</value>
+  </data>
+  <data name="SuccessfullyExportedCertificates" xml:space="preserve">
+    <value>सफलतापूर्वक {0} प्रमाणपत्र {1} में निर्यात किए गए</value>
+  </data>
+        <!--BitLocker Volumes ListView Headers Start-->
+  <data name="MountPointHeader.Text" xml:space="preserve">
+    <value>माउंट पॉइंट</value>
+  </data>
+  <data name="ProtectionStatusHeader.Text" xml:space="preserve">
+    <value>सुरक्षा स्थिति</value>
+  </data>
+  <data name="ConversionStatusHeader.Text" xml:space="preserve">
+    <value>रूपांतरण स्थिति</value>
+  </data>
+  <data name="EncryptionMethodHeader.Text" xml:space="preserve">
+    <value>एनक्रिप्शन विधि</value>
+  </data>
+    <data name="EncryptionPercentageHeader.Text" xml:space="preserve">
+    <value>एनक्रिप्शन प्रतिशत</value>
+  </data>
+    <data name="WipePercentageHeader.Text" xml:space="preserve">
+    <value>वाइप प्रतिशत</value>
+  </data>
+    <data name="AutoUnlockEnabledHeader.Text" xml:space="preserve">
+    <value>ऑटो अनलॉक सक्षम</value>
+  </data>
+    <data name="AutoUnlockKeyStoredHeader.Text" xml:space="preserve">
+    <value>ऑटो अनलॉक कुंजी संग्रहीत</value>
+  </data>
+    <data name="VolumeTypeHeader.Text" xml:space="preserve">
+    <value>वॉल्यूम प्रकार</value>
+  </data>
+    <data name="CapacityGBHeader.Text" xml:space="preserve">
+    <value>क्षमता GB</value>
+  </data>
+    <data name="FileSystemTypeHeader.Text" xml:space="preserve">
+    <value>फाइल सिस्टम प्रकार</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers End-->
+  <!--BitLocker Volumes ListView Headers Buttons Start-->
+<data name="MountPointColumnHeaderBtn.Content" xml:space="preserve">
+    <value>माउंट पॉइंट</value>
+  </data>
+  <data name="ProtectionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>सुरक्षा स्थिति</value>
+  </data>
+  <data name="ConversionStatusColumnHeaderBtn.Content" xml:space="preserve">
+    <value>रूपांतरण स्थिति</value>
+  </data>
+  <data name="EncryptionMethodColumnHeaderBtn.Content" xml:space="preserve">
+    <value>एनक्रिप्शन विधि</value>
+  </data>
+    <data name="EncryptionPercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>एनक्रिप्शन प्रतिशत</value>
+  </data>
+    <data name="WipePercentageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>वाइप प्रतिशत</value>
+  </data>
+    <data name="AutoUnlockEnabledColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ऑटो अनलॉक सक्षम</value>
+  </data>
+    <data name="AutoUnlockKeyStoredColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ऑटो अनलॉक कुंजी संग्रहीत</value>
+  </data>
+    <data name="VolumeTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>वॉल्यूम प्रकार</value>
+  </data>
+    <data name="CapacityGBColumnHeaderBtn.Content" xml:space="preserve">
+    <value>क्षमता GB</value>
+  </data>
+    <data name="FileSystemTypeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>फाइल सिस्टम प्रकार</value>
+  </data>
+  <!--BitLocker Volumes ListView Headers Buttons End-->
+  <data name="RetrieveBitLockerVolumesButton.Content" xml:space="preserve">
+    <value>BitLocker वॉल्यूम प्राप्त करें</value>
+  </data>
+    <data name="RetrieveBitLockerVolumesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सभी वॉल्यूम और उनके BitLocker संबंधित पूर्ण विवरण प्राप्त कर सूचीबद्ध करता है।</value>
+  </data>
+  <data name="RetrieveBitLockerVolumesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सभी वॉल्यूम और उनके BitLocker संबंधित पूर्ण विवरण प्राप्त कर सूचीबद्ध करता है।</value>
+  </data>
+  <data name="CloseButton.Content" xml:space="preserve">
+    <value>बंद करें</value>
+  </data>
+    <data name="CloseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>बंद करें</value>
+  </data>
+  <data name="CloseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>बंद करें</value>
+  </data>
+  <data name="CopyButton.Content" xml:space="preserve">
+    <value>कॉपी</value>
+  </data>
+    <data name="CopyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>कॉपी</value>
+  </data>
+  <data name="CopyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>कॉपी</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.Content" xml:space="preserve">
+    <value>कुंजी संरक्षक हटाएं</value>
+  </data>
+    <data name="DeleteBLKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित वॉल्यूम से कुंजी संरक्षक हटाता है।</value>
+  </data>
+  <data name="DeleteBLKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित वॉल्यूम से कुंजी संरक्षक हटाता है।</value>
+  </data>
+  <data name="NoKeyProtectorsFoundMsg.Text" xml:space="preserve">
+    <value>इस वॉल्यूम के लिए कोई कुंजी संरक्षक नहीं मिला।</value>
+  </data>
+  <data name="SelectVolumeFirstToSeeKeyProtectorsMsg.Text" xml:space="preserve">
+    <value>कुंजी संरक्षक देखने के लिए पहले एक वॉल्यूम चुनें।</value>
+  </data>
+  <data name="KeyProtectorsForMsg.Text" xml:space="preserve">
+    <value>कुंजी संरक्षक हेतु</value>
+  </data>
+  <data name="KeyProtectorsForMsg.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित वॉल्यूम के सभी कुंजी संरक्षक प्रदर्शित कर रहा है।</value>
+  </data>
+  <data name="KeyProtectorsForMsg.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित वॉल्यूम के सभी कुंजी संरक्षक प्रदर्शित कर रहा है।</value>
+  </data>
+  <data name="RecoveryPassword.Text" xml:space="preserve">
+    <value>रिकवरी पासवर्ड</value>
+  </data>
+  <data name="CertificateType.Text" xml:space="preserve">
+    <value>प्रमाणपत्र प्रकार</value>
+  </data>
+  <data name="FileName.Text" xml:space="preserve">
+    <value>फ़ाइल नाम</value>
+  </data>
+  <data name="AutoUnlock.Text" xml:space="preserve">
+    <value>ऑटो अनलॉक</value>
+  </data>
+  <data name="Type.Text" xml:space="preserve">
+    <value>प्रकार</value>
+  </data>
+  <data name="Thumbprint.Text" xml:space="preserve">
+    <value>थम्बप्रिंट</value>
+  </data>
+  <data name="ID.Text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="BitLockerManagementTab.Header" xml:space="preserve">
+    <value>प्रबंधन</value>
+  </data>
+  <data name="BitLockerManagementTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>BitLocker वॉल्यूम के एन्क्रिप्शन, डिक्रिप्शन, बैकअप आदि का प्रबंधन करें।</value>
+  </data>
+  <data name="BitLockerManagementTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>BitLocker वॉल्यूम के एन्क्रिप्शन, डिक्रिप्शन, बैकअप आदि का प्रबंधन करें।</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>सुरक्षा उपाय</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>BitLocker संबंधित सुरक्षा उपाय प्रबंधित करें।</value>
+  </data>
+  <data name="BitLockerSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>BitLocker संबंधित सुरक्षा उपाय प्रबंधित करें।</value>
+  </data>
+  <data name="AddKeyProtectorButton.Content" xml:space="preserve">
+    <value>कुंजी संरक्षक जोड़ें</value>
+  </data>
+  <data name="AddKeyProtectorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित वॉल्यूम में नया कुंजी संरक्षक जोड़ें। कुंजी संरक्षक वॉल्यूम अनलॉक करने में सक्षम बनाते हैं।</value>
+  </data>
+  <data name="AddKeyProtectorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित वॉल्यूम में नया कुंजी संरक्षक जोड़ें। कुंजी संरक्षक वॉल्यूम अनलॉक करने में सक्षम बनाते हैं।</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.Title" xml:space="preserve">
+    <value>कुंजी संरक्षक जोड़ें</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>जोड़ें</value>
+  </data>
+  <data name="AddKeyProtectorContentDialog.CloseButtonText" xml:space="preserve">
+    <value>रद्द</value>
+  </data>
+  <data name="AddKeyProtectorContentDialogSubTitle.Text" xml:space="preserve">
+    <value>इस अनुभाग का उपयोग चयनित वॉल्यूम में नया कुंजी संरक्षक जोड़ने हेतु करें।</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM</value>
+  </data>
+    <data name="TPMKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>TPM कुंजी संरक्षक जोड़ें।</value>
+  </data>
+  <data name="TPMKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>TPM कुंजी संरक्षक जोड़ें।</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN</value>
+  </data>
+    <data name="TPMPINKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>TPM + PIN कुंजी संरक्षक जोड़ें।</value>
+  </data>
+  <data name="TPMPINKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>TPM + PIN कुंजी संरक्षक जोड़ें।</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + स्टार्टअप कुंजी</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>TPM + स्टार्टअप कुंजी संरक्षक जोड़ें।</value>
+  </data>
+  <data name="TPMStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>TPM + स्टार्टअप कुंजी संरक्षक जोड़ें।</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>TPM + PIN + स्टार्टअप कुंजी</value>
+  </data>
+    <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>TPM + PIN + स्टार्टअप कुंजी संरक्षक जोड़ें।</value>
+  </data>
+  <data name="TPMPINStartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>TPM + PIN + स्टार्टअप कुंजी संरक्षक जोड़ें।</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>स्टार्टअप कुंजी</value>
+  </data>
+    <data name="StartupKeyKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>स्टार्टअप कुंजी संरक्षक जोड़ें।</value>
+  </data>
+  <data name="StartupKeyKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>स्टार्टअप कुंजी संरक्षक जोड़ें।</value>
+  </data>
+  <data name="TPMSectionTitle.Text" xml:space="preserve">
+    <value>ट्रस्टेड प्लेटफ़ॉर्म मॉड्यूल</value>
+  </data>
+  <data name="TPMSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker एन्क्रिप्शन कुंजी की सुरक्षा हेतु डिवाइस के TPM का उपयोग करता है।</value>
+  </data>
+  <data name="TPMSectionBody.Text" xml:space="preserve">
+    <value>इस संरक्षक के साथ एन्क्रिप्टेड ड्राइव केवल TPM युक्त मदरबोर्ड पर और सिस्टम बूट अखंडता सुरक्षित होने पर ही सुलभ होता है। TPM आधारित संरक्षक सामान्यतः केवल OS वॉल्यूम पर लागू होते हैं।</value>
+  </data>
+  <data name="TPMPINSectionTitle.Text" xml:space="preserve">
+    <value>TPM और व्यक्तिगत पहचान संख्या</value>
+  </data>
+  <data name="TPMPINSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker TPM को उपयोगकर्ता PIN के साथ युग्मित करता है। डिफ़ॉल्ट रूप से PIN 4–20 अंक होता है; विस्तृत PIN पर 4–20 वर्ण (अक्षर, प्रतीक, रिक्ति या अंक) हो सकते हैं।</value>
+  </data>
+  <data name="TPMStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM और स्टार्टअप कुंजी</value>
+  </data>
+  <data name="TPMStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker TPM को USB फ्लैश ड्राइव से इनपुट के साथ उपयोग करता है। डिवाइस बूट करने हेतु USB फ्लैश ड्राइव लगा होना चाहिए।</value>
+  </data>
+  <data name="TPMPINStartupKeySectionTitle.Text" xml:space="preserve">
+    <value>TPM, PIN और स्टार्टअप कुंजी</value>
+  </data>
+  <data name="TPMPINStartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker TPM, स्टार्टअप PIN और बाह्य कुंजी युक्त USB फ्लैश ड्राइव के इनपुट का संयोजन उपयोग करता है। यह BitLocker का सबसे सुरक्षित विन्यास है तथा बहु-कारक प्रमाणीकरण प्रदान करता है.</value>
+  </data>
+  <data name="StartupKeySectionTitle.Text" xml:space="preserve">
+    <value>स्टार्टअप कुंजी</value>
+  </data>
+  <data name="StartupKeySectionDescription.Text" xml:space="preserve">
+    <value>BitLocker बाहरी कुंजी वाले USB फ्लैश ड्राइव के इनपुट का उपयोग करता है। सिस्टम बूट से पहले USB डिवाइस जुड़ा होना चाहिए।</value>
+  </data>
+  <data name="RetrievingBitLockerVolumesEllipsis" xml:space="preserve">
+  <value>BitLocker वॉल्यूम प्राप्त कर रहा है...</value>
+</data>
+<data name="LoadedBitLockerVolumesCount" xml:space="preserve">
+  <value>{0} BitLocker वॉल्यूम लोड किए गए.</value>
+</data>
+<data name="NoOutputReturnedFromPath" xml:space="preserve">
+  <value>{0} से कोई आउटपुट वापस नहीं आया</value>
+</data>
+<data name="NoBitLockerVolumesDetected" xml:space="preserve">
+  <value>कोई BitLocker वॉल्यूम नहीं मिला.</value>
+</data>
+<data name="ParentVolumeForKeyProtectorNotFound" xml:space="preserve">
+  <value>कुंजी संरक्षक का मूल वॉल्यूम नहीं मिला.</value>
+</data>
+<data name="RemovingKeyProtectorFromVolume" xml:space="preserve">
+  <value>{1} से कुंजी संरक्षक {0} हटाया जा रहा है</value>
+</data>
+<data name="ExternalKeyRemovalConditionalSuccess" xml:space="preserve">
+  <value>यदि ExternalKey कुंजी संरक्षक जिसकी ID {0} {1} पर है ड्राइव को अनलॉक रखने हेतु उपयोग में नहीं था तो उसे हटा दिया गया. अधिक जानकारी लॉग पृष्ठ पर उपलब्ध है.</value>
+</data>
+<data name="SuccessfullyRemovedKeyProtector" xml:space="preserve">
+  <value>{2} से ID {1} वाला प्रकार {0} का कुंजी संरक्षक सफलतापूर्वक हटाया गया.</value>
+</data>
+<data name="NoBitLockerVolumeSelected" xml:space="preserve">
+  <value>कोई BitLocker वॉल्यूम चयनित नहीं है.</value>
+</data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>स्वचालित अनलॉक</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक स्वचालित अनलॉक कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="AutoUnlockKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक स्वचालित अनलॉक कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>पासवर्ड</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक पासवर्ड कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="PasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक पासवर्ड कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.Content" xml:space="preserve">
+    <value>रिकवरी पासवर्ड</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक रिकवरी पासवर्ड कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="RecoveryPasswordKeyProtectorSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक रिकवरी पासवर्ड कुंजी संरक्षक जोड़ें.</value>
+  </data>
+  <data name="AutoUnlockSectionTitle.Text" xml:space="preserve">
+    <value>स्वचालित अनलॉक</value>
+  </data>
+  <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker डिस्क एन्क्रिप्शन द्वारा संरक्षित किसी गैर ऑपरेटिंग सिस्टम वॉल्यूम के लिए स्वचालित अनलॉक सक्षम करता है.</value>
+  </data>
+  <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
+    <value>BitLocker को इस प्रकार कॉन्फ़िगर किया जा सकता है कि वह उन डेटा वॉल्यूमों को स्वचालित रूप से अनलॉक करे जो ऑपरेटिंग सिस्टम को होस्ट नहीं करते. जब कोई उपयोगकर्ता OS ड्राइव अनलॉक करता है, तो BitLocker रजिस्ट्री में संग्रहीत एन्क्रिप्टेड क्रेडेंशियल्स तथा वॉल्यूम मेटाडेटा का उपयोग करके किसी भी डेटा वॉल्यूम को स्वचालित रूप से अनलॉक कर देता है जिसे स्वचालित अनलॉक के लिए सेट किया गया है.</value>
+  </data>
+  <data name="PasswordSectionTitle.Text" xml:space="preserve">
+    <value>पासवर्ड</value>
+  </data>
+  <data name="PasswordSectionDescription.Text" xml:space="preserve">
+    <value>BitLocker वॉल्यूम डेटा को सुरक्षित करने के लिए पासवर्ड का उपयोग करेगा.</value>
+  </data>
+  <data name="RecoveryPasswordSectionTitle.Text" xml:space="preserve">
+    <value>रिकवरी पासवर्ड</value>
+  </data>
+  <data name="RecoveryPasswordSectionDescription.Text" xml:space="preserve">
+    <value>पासवर्ड निर्दिष्ट करना वैकल्पिक है. यदि आप यह पासवर्ड निर्दिष्ट नहीं करते, तो आपके लिए स्वतः उत्पन्न किया जाएगा और चयनित वॉल्यूम को असाइन किया जाएगा. यदि आप पासवर्ड मैन्युअल रूप से दर्ज करने का निर्णय लेते हैं तो यह 48 अक्षरों का होना चाहिए. यह पासवर्ड वॉल्यूम एन्क्रिप्शन कुंजी के लिए संरक्षक के रूप में उपयोग होता है.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.Content" xml:space="preserve">
+    <value>एन्क्रिप्शन</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित वॉल्यूम पर एन्क्रिप्ट, डिक्रिप्ट या अन्य संबंधित कार्य करें.</value>
+  </data>
+  <data name="BitLockerEncryptionDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित वॉल्यूम पर एन्क्रिप्ट, डिक्रिप्ट या अन्य संबंधित कार्य करें.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>एन्क्रिप्ट</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित वॉल्यूम को एन्क्रिप्ट करें.</value>
+  </data>
+  <data name="EncryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित वॉल्यूम को एन्क्रिप्ट करें.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.Text" xml:space="preserve">
+    <value>डिक्रिप्ट</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित वॉल्यूम को डिक्रिप्ट करें.</value>
+  </data>
+  <data name="DecryptMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित वॉल्यूम को डिक्रिप्ट करें.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.Text" xml:space="preserve">
+    <value>एन्क्रिप्शन निलंबित करें</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>BitLocker एन्क्रिप्शन को निलंबित करता है, जिससे BitLocker से संरक्षित वॉल्यूम पर डेटा का उपयोग संभव होता है. यह प्रक्रिया एन्क्रिप्शन कुंजी को असुरक्षित रूप में सुलभ बनाती है.</value>
+  </data>
+  <data name="SuspendMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>BitLocker एन्क्रिप्शन को निलंबित करता है, जिससे BitLocker से संरक्षित वॉल्यूम पर डेटा का उपयोग संभव होता है. यह प्रक्रिया एन्क्रिप्शन कुंजी को असुरक्षित रूप में सुलभ बनाती है.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>एन्क्रिप्शन पुनः प्रारंभ करें</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>उस वॉल्यूम पर एन्क्रिप्शन पुनर्स्थापित करें जो BitLocker का उपयोग करता है और जिसे पहले निलंबित किया गया था.</value>
+  </data>
+  <data name="ResumeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>उस वॉल्यूम पर एन्क्रिप्शन पुनर्स्थापित करें जो BitLocker का उपयोग करता है और जिसे पहले निलंबित किया गया था.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.Title" xml:space="preserve">
+    <value>BitLocker एन्क्रिप्शन सक्षम करें</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>सक्षम करें</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialog.CloseButtonText" xml:space="preserve">
+    <value>रद्द करें</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitle.Text" xml:space="preserve">
+    <value>चयनित वॉल्यूम के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.Content" xml:space="preserve">
+    <value>OS ड्राइव</value>
+  </data>
+  <data name="OSDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>OS ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="OSDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>OS ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.Content" xml:space="preserve">
+    <value>फिक्स्ड ड्राइव</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फिक्स्ड ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="FixedDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>फिक्स्ड ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.Content" xml:space="preserve">
+    <value>रिमूवेबल ड्राइव</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>रिमूवेबल ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="RemovableDriveSegmentedItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>रिमूवेबल ड्राइव के लिए BitLocker एन्क्रिप्शन सक्षम करें.</value>
+  </data>
+  <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम ड्राइव एन्क्रिप्शन</value>
+  </data>
+  <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम ड्राइव को BitLocker से एन्क्रिप्ट करें.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
+    <value>एन्क्रिप्शन स्तर</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.ToolTipService.ToolTip" xml:space="preserve">
+    <value>OS ड्राइव के लिए एन्क्रिप्शन स्तरों में से एक चुनें. सामान्य स्तर TPM और PIN कुंजी संरक्षक का उपयोग करेगा. उन्नत स्तर TPM, PIN तथा USB ड्राइव पर स्टार्टअप कुंजी संरक्षक का उपयोग करेगा, जिससे मजबूत मल्टीफैक्टर प्रमाणीकरण मिलता है.</value>
+  </data>
+  <data name="OSDriveEncryptionLevelSelectionRadioButtons.AutomationProperties.HelpText" xml:space="preserve">
+    <value>OS ड्राइव के लिए एन्क्रिप्शन स्तरों में से एक चुनें. सामान्य स्तर TPM और PIN कुंजी संरक्षक का उपयोग करेगा. उन्नत स्तर TPM, PIN तथा USB ड्राइव पर स्टार्टअप कुंजी संरक्षक का उपयोग करेगा, जिससे मजबूत मल्टीफैक्टर प्रमाणीकरण मिलता है.</value>
+  </data>
+  <data name="OSDriveEncryptionNormalLevel.Content" xml:space="preserve">
+    <value>सामान्य</value>
+  </data>
+  <data name="OSDriveEncryptionEnhancedLevel.Content" xml:space="preserve">
+    <value>उन्नत</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.Header" xml:space="preserve">
+    <value>एन्क्रिप्शन कवरेज</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OnContent" xml:space="preserve">
+    <value>फ्री और उपयोग में स्पेस</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.OffContent" xml:space="preserve">
+    <value>केवल उपयोग में स्पेस</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ड्राइव के एन्क्रिप्शन कवरेज का चयन करें. "फ्री और उपयोग में स्पेस" ड्राइव पर सभी डेटा को एन्क्रिप्ट करेगा, जबकि "केवल उपयोग में स्पेस" केवल वर्तमान में उपयोग हो रहे स्पेस को एन्क्रिप्ट करेगा जिससे समय कम लगेगा.</value>
+  </data>
+  <data name="FreePlusUsedSpaceEncryptionToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ड्राइव के एन्क्रिप्शन कवरेज का चयन करें. "फ्री और उपयोग में स्पेस" ड्राइव पर सभी डेटा को एन्क्रिप्ट करेगा, जबकि "केवल उपयोग में स्पेस" केवल वर्तमान में उपयोग हो रहे स्पेस को एन्क्रिप्ट करेगा जिससे समय कम लगेगा.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.Header" xml:space="preserve">
+    <value>डाउनग्रेड व्यवहार</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OnContent" xml:space="preserve">
+    <value>डाउनग्रेड की अनुमति दें</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.OffContent" xml:space="preserve">
+    <value>डाउनग्रेड अस्वीकार करें</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>यदि डाउनग्रेड की अनुमति है, और ऑपरेटिंग सिस्टम ड्राइव पहले से उन्नत स्तर पर एन्क्रिप्टेड है तथा आप सामान्य स्तर चुनते हैं, तो स्तर घटा दिया जाएगा. यदि डाउनग्रेड अस्वीकृत है, तो संचालन पूर्ण नहीं होगा और त्रुटि दिखेगी, जिससे OS ड्राइव के एन्क्रिप्शन स्तर का डाउनग्रेड रोका जाएगा.</value>
+  </data>
+  <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>यदि डाउनग्रेड की अनुमति है, और ऑपरेटिंग सिस्टम ड्राइव पहले से उन्नत स्तर पर एन्क्रिप्टेड है तथा आप सामान्य स्तर चुनते हैं, तो स्तर घटा दिया जाएगा. यदि डाउनग्रेड अस्वीकृत है, तो संचालन पूर्ण नहीं होगा और त्रुटि दिखेगी, जिससे OS ड्राइव के एन्क्रिप्शन स्तर का डाउनग्रेड रोका जाएगा.</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>फिक्स्ड ड्राइव एन्क्रिप्शन</value>
+  </data>
+  <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>चयनित फिक्स्ड ड्राइव को एन्क्रिप्ट करें. इसमें 48-अक्षरों का रिकवरी पासवर्ड होगा और यह पहले से एन्क्रिप्टेड ऑपरेटिंग सिस्टम ड्राइव के माध्यम से स्वतः अनलॉक होगा.</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
+    <value>रिमूवेबल ड्राइव एन्क्रिप्शन</value>
+  </data>
+  <data name="RemovableDriveEncryptionSectionDescription.Text" xml:space="preserve">
+    <value>चयनित रिमूवेबल ड्राइव को एन्क्रिप्ट करें. इसमें 48-अक्षरों का रिकवरी पासवर्ड और वह पासवर्ड होगा जो आप बॉक्स में प्रदान करते हैं.</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.Title" xml:space="preserve">
+    <value>BitLocker एन्क्रिप्शन निलंबित करें</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>निलंबित करें</value>
+  </data>
+  <data name="BitLockerSuspendContentDialog.CloseButtonText" xml:space="preserve">
+    <value>रद्द करें</value>
+  </data>
+  <data name="BitLockerSuspendContentDialogSubTitle.Text" xml:space="preserve">
+    <value>चयनित वॉल्यूम का BitLocker एन्क्रिप्शन निलंबित करें.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionDescription.Text" xml:space="preserve">
+    <value>BitLocker को निलंबित करने से एक संरक्षित वॉल्यूम पर एन्क्रिप्टेड डेटा तक पहुँच मिलती है क्योंकि एन्क्रिप्शन कुंजी को असुरक्षित स्थिति में उजागर किया जाता है. यह महत्वपूर्ण है कि निलंबन मौजूदा डेटा को डिक्रिप्ट नहीं करता. यह केवल डिक्रिप्शन हेतु आवश्यक कुंजी को खुला उपलब्ध कराता है. इस अवधि के दौरान लिखे गए नए डेटा एन्क्रिप्टेड ही रहते हैं. जब BitLocker निलंबित होता है, स्टार्टअप पर सिस्टम अखंडता जाँचें लागू नहीं होतीं. यह क्षमता आम तौर पर फर्मवेयर अपग्रेड या सिस्टम मेंटेनेंस को रिकवरी ट्रिगर किए बिना सक्षम करने के लिए उपयोग की जाती है.</value>
+  </data>
+  <data name="BitLockerSuspendEncryptionRestartCountDescription.Text" xml:space="preserve">
+    <value>यहाँ आप निर्दिष्ट कर सकते हैं कि BitLocker निलंबन समाप्त होने से पहले कंप्यूटर कितनी बार पुनरारंभ हो सकता है. मान 1 का अर्थ है कि अगली पुनरारंभ के तुरंत बाद BitLocker सुरक्षा फिर से शुरू हो जाएगी. आप किसी भी समय "पुनः प्रारंभ करें" बटन के माध्यम से सुरक्षा फिर से शुरू कर सकते हैं.</value>
+  </data>
+  <data name="BitLockerEncryptDriveContentDialogSubtitleSecond.Text" xml:space="preserve">
+    <value>एन्क्रिप्शन प्रक्रिया आरंभ करने से पहले BitLocker श्रेणी के अंतर्गत सभी सुरक्षा उपाय सिस्टम पर लागू किए जाएंगे.</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeTitle" xml:space="preserve">
+    <value>ड्राइव {0} के लिए BitLocker एन्क्रिप्शन डिक्रिप्ट किया जा रहा है</value>
+  </data>
+  <data name="BitLockerDecryptingSelectedVolumeBody" xml:space="preserve">
+    <value>ड्राइव के सभी कुंजी संरक्षक हटाए जाएंगे और सामग्री का डिक्रिप्शन प्रारंभ होगा.</value>
+  </data>
+  <data name="OperationCancelledMsg" xml:space="preserve">
+    <value>संचालन रद्द कर दिया गया.</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeTitle" xml:space="preserve">
+    <value>ड्राइव {0} के लिए BitLocker एन्क्रिप्शन पुनः प्रारंभ करें</value>
+  </data>
+  <data name="BitLockerResumeSelectedVolumeBody" xml:space="preserve">
+    <value>पूर्व में निलंबित ड्राइव या वॉल्यूम के एन्क्रिप्शन को पुनर्स्थापित करें.</value>
+  </data>
+  <data name="NoPINEnteredError" xml:space="preserve">
+    <value>स्टार्टअप के लिए कोई PIN दर्ज नहीं किया गया. कृपया एक प्रदान करें और पुनः प्रयास करें.</value>
+  </data>
+  <data name="NoRemovableDriveSelectedError" xml:space="preserve">
+    <value>कोई रिमूवेबल ड्राइव चयनित नहीं हुआ. कृपया एक चुनें और पुनः प्रयास करें.</value>
+  </data>
+  <data name="NoPasswordProvidedError" xml:space="preserve">
+    <value>कोई पासवर्ड प्रदान नहीं किया गया. कृपया एक प्रदान करें और पुनः प्रयास करें.</value>
+  </data>
+  <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
+    <value>फिक्स्ड ड्राइव को एन्क्रिप्ट करने से पहले ऑपरेटिंग सिस्टम ड्राइव को पूर्णतः एन्क्रिप्ट किया जाना चाहिए, लेकिन वर्तमान में इसकी स्थिति {0} है और एन्क्रिप्शन प्रतिशत {1} है.</value>
+  </data>
+  <data name="AddingItemToAnotherMsg" xml:space="preserve">
+    <value>{0} को {1} में जोड़ा जा रहा है</value>
+  </data>
+  <data name="BitLockerSuccessExportMsg" xml:space="preserve">
+    <value>{0} BitLocker वॉल्यूम(स) सफलतापूर्वक निर्यात किए गए: {1}</value>
+  </data>
+  <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
+    <value>यह आपको IP पते के माध्यम से दूरस्थ रूप से RDP (Remote Desktop) उपयोग करने से रोक सकता है, जो असुरक्षित है क्योंकि यह सार्वजनिक रूप से खुले पोर्ट की आवश्यकता करता है और NTLM का उपयोग करता है. आप Quick Assist या Azure VM के लिए Azure Bastion का उपयोग सुरक्षित विकल्पों के रूप में कर सकते हैं. Hyper-V एन्हांस्ड सत्र जैसे स्थानीय RDP पर इसका प्रभाव नहीं पड़ता.</value>
+  </data>
+  <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
+    <value>यह नीति आपको लॉक स्क्रीन या लॉगऑन स्क्रीन पर "Forgot my PIN" फीचर का उपयोग करने से रोकेगी. यदि आप अपना PIN भूल जाते हैं, तो आप उसे पुनर्प्राप्त नहीं कर पाएंगे.</value>
+  </data>
+  <data name="SelectARemovableDriveText.Text" xml:space="preserve">
+    <value>एक हटाने योग्य ड्राइव चुनें</value>
+  </data>
+  <data name="RefreshButton.Content" xml:space="preserve">
+    <value>ताज़ा करें</value>
+  </data>
+  <data name="RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ताज़ा करें</value>
+  </data>
+  <data name="RefreshButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ताज़ा करें</value>
+  </data>
+  <data name="EnterAPasswordText.Text" xml:space="preserve">
+    <value>पासवर्ड दर्ज करें</value>
+  </data>
+  <data name="EnterAPinText.Text" xml:space="preserve">
+    <value>PIN दर्ज करें</value>
+  </data>
+  <data name="EnterARecoveryPassword.Text" xml:space="preserve">
+    <value>रिकवरी पासवर्ड दर्ज करें</value>
+  </data>
+  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
+    <value>कुल प्रमाणपत्र</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
+    <value>प्रमाणपत्र हटाएँ</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित प्रमाणपत्र हटाएँ</value>
+  </data>
+  <data name="DeleteCertMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>चयनित प्रमाणपत्र हटाएँ</value>
+  </data>
+   <data name="CheckingSSHClientUserConfiguration" xml:space="preserve">
+  <value>SSH क्लाइंट उपयोगकर्ता कॉन्फ़िगरेशन की जाँच</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingSSHClientConfigurationCheck" xml:space="preserve">
+  <value>उपयोगकर्ता निर्देशिका {0} पर नहीं मिली क्योंकि उपयोगकर्ता नाम {1} मान्य नहीं था, SSH क्लाइंट कॉन्फ़िगरेशन जाँच छोड़ी जा रही है.</value>
+</data>
+<data name="SSHClientConfigFileCreatedBecauseDidNotExist" xml:space="preserve">
+  <value>SSH क्लाइंट कॉन्फ़िगरेशन फ़ाइल सामग्री: {0} के साथ बनाई गई क्योंकि वह मौजूद नहीं थी.</value>
+</data>
+<data name="ExistingMACsConfigurationFoundAndReplaced" xml:space="preserve">
+  <value>मौजूदा 'MACs' कॉन्फ़िगरेशन मिला और प्रतिस्थापित किया गया.</value>
+</data>
+<data name="MACsConfigurationNotFoundAddedNew" xml:space="preserve">
+  <value>MACs कॉन्फ़िगरेशन नहीं मिला, नया कॉन्फ़िगरेशन जोड़ा गया.</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientUserConfiguration" xml:space="preserve">
+  <value>SSH क्लाइंट उपयोगकर्ता कॉन्फ़िगरेशन में सुरक्षित MACs की जाँच</value>
+</data>
+<data name="ExistingMACsFoundInUserDirectoryMatchesSecure" xml:space="preserve">
+  <value>उपयोगकर्ता निर्देशिका में MACs कॉन्फ़िगरेशन मिला और वह सुरक्षित कॉन्फ़िगरेशनों से मेल खाता है.</value>
+</data>
+<data name="MACsConfigurationInUserDirectoryIsDifferent" xml:space="preserve">
+  <value>उपयोगकर्ता निर्देशिका में MACs कॉन्फ़िगरेशन अलग है: {0}</value>
+</data>
+<data name="CheckingSecureMACsInSSHClientSystemWideConfiguration" xml:space="preserve">
+  <value>SSH क्लाइंट सिस्टम-व्यापी कॉन्फ़िगरेशन में सुरक्षित MACs की जाँच</value>
+</data>
+<data name="ExistingMACsFoundInSystemWideConfigurationMatchesSecure" xml:space="preserve">
+  <value>सिस्टम-व्यापी कॉन्फ़िगरेशन में MACs कॉन्फ़िगरेशन मिला और वह सुरक्षित कॉन्फ़िगरेशनों से मेल खाता है.</value>
+</data>
+<data name="MACsConfigurationInSystemWideConfigurationIsDifferent" xml:space="preserve">
+  <value>सिस्टम-व्यापी कॉन्फ़िगरेशन में MACs कॉन्फ़िगरेशन अलग है: {0}</value>
+</data>
+<data name="NoSecureMACsFoundInUserAndSystemWideConfigurations" xml:space="preserve">
+  <value>उपयोगकर्ता तथा सिस्टम-व्यापी दोनों कॉन्फ़िगरेशनों में सुरक्षित MACs कॉन्फ़िगरेशन नहीं मिला.</value>
+</data>
+<data name="AttemptingToRemoveMACsFromSSHClientUserConfiguration" xml:space="preserve">
+  <value>SSH क्लाइंट उपयोगकर्ता कॉन्फ़िगरेशन से MACs कॉन्फ़िगरेशन हटाने का प्रयास</value>
+</data>
+<data name="UserDirectoryNotFoundSkippingRemoval" xml:space="preserve">
+  <value>उपयोगकर्ता निर्देशिका {0} पर नहीं मिली क्योंकि उपयोगकर्ता नाम {1} मान्य नहीं था, हटाने को छोड़ा जा रहा है.</value>
+</data>
+<data name="SSHClientConfigurationFileNotFoundNothingToRemove" xml:space="preserve">
+  <value>SSH क्लाइंट कॉन्फ़िगरेशन फ़ाइल नहीं मिली; हटाने के लिए कुछ नहीं है.</value>
+</data>
+<data name="RemovedMACsFromSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>SSH क्लाइंट उपयोगकर्ता कॉन्फ़िगरेशन फ़ाइल से MACs कॉन्फ़िगरेशन हटाया गया.</value>
+</data>
+<data name="NoMACsConfigurationFoundToRemoveInSSHClientUserConfigurationFile" xml:space="preserve">
+  <value>SSH क्लाइंट उपयोगकर्ता कॉन्फ़िगरेशन फ़ाइल में हटाने के लिए MACs कॉन्फ़िगरेशन नहीं मिला.</value>
+</data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>कुल: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>आइटमों की कुल संख्या</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>आइटमों की कुल संख्या</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>चयनित</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>ऐप की विंडो की बॉर्डर का रंग अनुकूलित करें। आप पैलेट से कोई रंग चुन सकते हैं या रेनबो विकल्प चुन सकते हैं, जो एनीमेटेड तरीके से सभी उपलब्ध रंगों को क्रमवार दिखाएगा.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>विंडो बॉर्डर का रंग</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप की विंडो की बॉर्डर का रंग अनुकूलित करें। आप पैलेट से कोई रंग चुन सकते हैं या रेनबो विकल्प चुन सकते हैं, जो एनीमेटेड तरीके से सभी उपलब्ध रंगों को क्रमवार दिखाएगा.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप की विंडो की बॉर्डर का रंग अनुकूलित करें। आप पैलेट से कोई रंग चुन सकते हैं या रेनबो विकल्प चुन सकते हैं, जो एनीमेटेड तरीके से सभी उपलब्ध रंगों को क्रमवार दिखाएगा.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>रेनबो एनीमेशन शुरू करें</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप की विंडो की बॉर्डर के चारों ओर रेनबो एनीमेशन शुरू करें.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप की विंडो की बॉर्डर के चारों ओर रेनबो एनीमेशन शुरू करें.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>रेनबो एनीमेशन रोकें</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>यदि यह चल रहा हो तो ऐप की विंडो की बॉर्डर के चारों ओर रेनबो एनीमेशन रोकें.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>यदि यह चल रहा हो तो ऐप की विंडो की बॉर्डर के चारों ओर रेनबो एनीमेशन रोकें.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>बॉर्डर का रंग सेट करें</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप विंडो की बॉर्डर का रंग चयनित रंग पर सेट करें.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप विंडो की बॉर्डर का रंग चयनित रंग पर सेट करें.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>बॉर्डर रंग रीसेट करें</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप विंडो की बॉर्डर का रंग डिफ़ॉल्ट रंग पर रीसेट करें.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप विंडो की बॉर्डर का रंग डिफ़ॉल्ट रंग पर रीसेट करें.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>मुखपृष्ठ</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>मुखपृष्ठ और स्वागत स्क्रीन</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>मुखपृष्ठ और स्वागत स्क्रीन</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="EnableMDAVSandboxMode-MSDefender" xml:space="preserve">
+    <value>Microsoft Defender Antivirus को सैंडबॉक्स में चलाएँ ताकि अनधिकृत छेड़छाड़ के विरुद्ध उन्नत सुरक्षा मिल सके.</value>
+  </data>
+    <data name="AnimatedApplyAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पृष्ठ में सभी सुरक्षा उपाय लागू करें. उप-श्रेणियों से संबंधित आइटम इस बटन का उपयोग करने पर लागू नहीं किए जाते.</value>
+  </data>
+  <data name="AnimatedApplyAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>पृष्ठ में सभी सुरक्षा उपाय लागू करें. उप-श्रेणियों से संबंधित आइटम इस बटन का उपयोग करने पर लागू नहीं किए जाते.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पृष्ठ में सभी सुरक्षा उपाय हटाएं.</value>
+  </data>
+  <data name="AnimatedRemoveAllButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>पृष्ठ में सभी सुरक्षा उपाय हटाएं.</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>नमस्ते और स्वागत है</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>Harden System Security ऐप चुनने के लिए धन्यवाद. यदि आप नवीनतम अपडेट के लिए रिलीज़ नोट्स पढ़ना चाहते हैं, तो आप उन्हें आधिकारिक GitHub रिपॉज़िटरी के Releases सेक्शन में पा सकते हैं. आप वहाँ प्रश्न पूछ सकते हैं या फ़ीडबैक भी भेज सकते हैं.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>GitHub Releases पर जाएं</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>बटन पर क्लिक करने के बाद ब्राउज़र में GitHub रिपॉज़िटरी का पेज खुलता है.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>बटन पर क्लिक करने के बाद ब्राउज़र में GitHub रिपॉज़िटरी का पेज खुलता है.</value>
+  </data>
+  <data name="UseAppControlManager.Text" xml:space="preserve">
+    <value>AppControl Manager का उपयोग करें</value>
+  </data>
+  <data name="UseAppControlManagerDescription.Text" xml:space="preserve">
+    <value>AppControl Manager एक और एप्लिकेशन है जिसे मैंने ऑपरेटिंग सिस्टम में Application Control और Code Integrity को आसानी से प्रबंधित करने में आपकी सहायता के लिए विकसित किया है. इसमें आधुनिक, सहज इंटरफ़ेस है, जो समुदाय की प्रतिक्रिया से आकार लेता है, और सक्रिय रूप से मेंटेन किया जाता है.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>Microsoft Store पेज पर जाएं</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>बटन पर क्लिक करने के बाद Microsoft Store पेज खुलता है.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>बटन पर क्लिक करने के बाद Microsoft Store पेज खुलता है.</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagement.Text" xml:space="preserve">
+    <value>ऑडिट नीतियों का व्यापक प्रबंधन</value>
+  </data>
+  <data name="ComprehensiveAuditPoliciesManagementDescription.Text" xml:space="preserve">
+    <value>एकीकृत इंटरफ़ेस में सभी सिस्टम ऑडिट नीतियाँ देखें, और प्रत्येक को अलग-अलग कॉन्फ़िगर करने की क्षमता के साथ. अपनी सेटिंग्स को एक टेम्पलेट के रूप में निर्यात करें ताकि उसी या किसी अन्य सिस्टम पर आसानी से पुनः आयात कर सकें.</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.Content" xml:space="preserve">
+    <value>ऑडिट नीतियों के पेज पर जाएं</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऑडिट नीतियों के पेज पर जाएं</value>
+  </data>
+  <data name="NavigateToAuditPoliciesPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऑडिट नीतियों के पेज पर जाएं</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasures" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय लागू किए जा रहे हैं...</value>
+  </data>
+  <data name="RemovingAllSecurityMeasures" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय हटाए जा रहे हैं...</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasures" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय सत्यापित किए जा रहे हैं...</value>
+  </data>
+  <data name="ApplyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय सफलतापूर्वक लागू किए गए.</value>
+  </data>
+  <data name="RemovingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय सफलतापूर्वक हटाए गए.</value>
+  </data>
+  <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
+    <value>सभी सुरक्षा उपाय सफलतापूर्वक सत्यापित किए गए.</value>
   </data>
 </root>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="AppControlManager.CustomUIElements.GuideButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AppControlManager.CustomUIElements">
+
+    <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="{x:Bind NavigateUri}">
+        <HyperlinkButton.ContentTemplate>
+            <DataTemplate x:DataType="x:String">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="&#xE7BE;" FontSize="16"/>
+                    <TextBlock Text="{x:Bind}"/>
+                </StackPanel>
+            </DataTemplate>
+        </HyperlinkButton.ContentTemplate>
+    </HyperlinkButton>
+
+</UserControl>

@@ -1,6 +1,6 @@
 # Optional overrides for Microsoft Security Baseline
 
-Since Microsoft Security Baselines are geared towards Enterprise level security, some functionalities that home users might require are disabled. Use the following overrides in the Harden Windows Security module to bring back those functionalities. **Some of these are necessary when using the module in Azure VMs.**
+Since Microsoft Security Baselines are geared towards Enterprise level security, some functionalities that home users might require are disabled. Use the following overrides in [the Harden System Security App](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) to bring back those functionalities. **Some of these are necessary when using the app in Azure VMs.**
 
 > [!IMPORTANT]\
 > All of the features and functionalities listed below are enabled by default in Windows.
@@ -11,7 +11,7 @@ Since Microsoft Security Baselines are geared towards Enterprise level security,
 
 <br>
 
-## 1. Windows Game Recording and Broadcasting
+## Windows Game Recording and Broadcasting
 
 This setting enables or disables the Windows Game Recording and Broadcasting features. If you disable this setting, Windows Game Recording will not be allowed.
 If the setting is enabled or not configured, then Recording and Broadcasting (streaming) will be allowed.
@@ -28,7 +28,7 @@ Computer Configuration\Administrative Templates\Windows Components\Windows Game 
 
 <br>
 
-## 2. Prohibit use of Internet Connection Sharing on your DNS domain network
+## Prohibit use of Internet Connection Sharing on your DNS domain network
 
 Determines whether administrators can enable and configure the Internet Connection Sharing (ICS) feature of an Internet connection and if the ICS service can run on the computer.
 
@@ -60,7 +60,7 @@ Computer Configuration\Administrative Templates\Network\Network Connections\Proh
 
 <br>
 
-## 3. Firewall local rule merging
+## Firewall local rule merging
 
 This can prevent Hyper-V default switch from working properly, please see [this forum post on Microsoft Tech Community](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-with-hyper-v-default-switch/m-p/2622890) for more info.
 
@@ -85,7 +85,7 @@ Here is an screenshot of the settings for the Public Profile tab:
 
 <br>
 
-## 4. Deny write access to removable drives not protected by BitLocker
+## Deny write access to removable drives not protected by BitLocker
 
 Disabling this policy because it can cause inconvenience and if your flash drive is BitLocker encrypted, it can't be used as a bootable Windows installation USB flash drive.
 
@@ -101,25 +101,7 @@ Computer Configuration\Administrative Templates\Windows Components\BitLocker Dri
 
 <br>
 
-## 5. Set the status of these 4 Xbox services back to their default states
-
-`XboxGipSvc`, `XblAuthManager`,`XblGameSave`,`XboxNetApiSvc`
-
-Microsoft Security Baseline sets their status to disabled.
-
-Policy path:
-
-```powershell
-Computer Configuration\Windows Settings\
-```
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## 6. Enable Clipboard and Drive redirection when using Remote Desktop connection
+## Enable Clipboard and Drive redirection when using Remote Desktop connection
 
 It is necessary when using Hyper-V VM Enhanced session mode and you want to copy items between guest and host OS.
 
@@ -135,23 +117,7 @@ Computer Configuration\Administrative Templates\Windows Components\Remote Deskto
 
 <br>
 
-## 7. Enable the XblGameSave Standby Task
-
-The scheduled task is disabled as a result of applying the Microsoft Security Baselines. Using the optional overrides, it will be enabled and its status will be set back to the default state. The task syncs Xbox game saves on PC.
-
-PowerShell command
-
-```powershell
-SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable
-```
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## 8. Enable Microsoft Defender exclusion lists to be visible to Local Admins
+## Enable Microsoft Defender exclusion lists to be visible to Local Admins
 
 Disables this [policy](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationhideexclusionsfromlocaladmins) which is located in the following Group Policy path
 
@@ -165,7 +131,7 @@ Computer Configuration\Administrative Templates\Windows Components\Microsoft Def
 
 <br>
 
-## 9. Disabled "Turn off Microsoft Consumer Experiences"
+## Disabled "Turn off Microsoft Consumer Experiences"
 
 It disables some important features in Windows Settings -> Bluetooth & Devices -> Mobile Devices
 
@@ -181,9 +147,9 @@ Computer Configuration\Administrative Templates\Windows Components\Cloud Content
 
 <br>
 
-## 10. Disabled "Configure password backup directory"
+## Disabled "Configure password backup directory"
 
-Microsoft Security Baselines set its value to "Active Directory", but since the Harden Windows Security module does not apply to computers managed by domain controllers or Entra ID, there is no need for this policy to be active.
+Microsoft Security Baselines set its value to "Active Directory", but since the Harden System Security app does not apply to computers managed by domain controllers or Entra ID, there is no need for this policy to be active.
 
 ```
 Computer Configuration\Administrative Templates\System\LAPS
@@ -195,7 +161,7 @@ Computer Configuration\Administrative Templates\System\LAPS
 
 <br>
 
-## 11. Enabled "Apply UAC restrictions to local accounts on network logons"
+## Enabled "Apply UAC restrictions to local accounts on network logons"
 
 A [Security feature](https://learn.microsoft.com/en-US/troubleshoot/windows-server/windows-security/user-account-control-and-remote-restriction) that is enabled by default and should stay enabled.
 
@@ -209,7 +175,7 @@ Computer Configuration\Administrative Templates\MS Security Guide
 
 <br>
 
-## 12. Restores the ability of Administrator to enable Sudo
+## Restores the ability of Administrator to enable Sudo
 
 Microsoft Security baselines disable the usage of [Sudo](https://devblogs.microsoft.com/commandline/introducing-sudo-for-windows/) which also makes the Sudo option hidden from Windows settings.
 

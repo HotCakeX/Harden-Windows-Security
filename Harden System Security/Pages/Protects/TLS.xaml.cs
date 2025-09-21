@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class TLS : Page
 {
-	private TLSVM ViewModel { get; } = ViewModelProvider.TLSVM;
+	private TLSVM ViewModel => ViewModelProvider.TLSVM;
 
 	internal TLS()
 	{

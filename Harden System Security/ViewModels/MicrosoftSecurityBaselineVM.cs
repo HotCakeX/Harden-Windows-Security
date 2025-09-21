@@ -143,8 +143,8 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
 		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SourceHeader/Text"));
 		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("StatusHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("CurrentValueHeader/Text"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("ExpectedValueHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("CurrentValueHeaderText"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("ExpectedValueHeaderText"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (VerificationResult item in VerificationResults)
@@ -176,11 +176,6 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 				SearchBox_TextChanged();
 		}
 	}
-
-	/// <summary>
-	/// Total number of verification results loaded.
-	/// </summary>
-	internal string TotalResults { get; set => SP(ref field, value); } = "0";
 
 	/// <summary>
 	/// Collection of all verification results bound to the ListView.
@@ -227,8 +222,6 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		{
 			VerificationResults.Add(item);
 		}
-
-		TotalResults = VerificationResults.Count.ToString();
 
 		if (Sv != null && savedHorizontal.HasValue)
 		{
@@ -448,7 +441,6 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 			}
 
 			CalculateColumnWidths();
-			TotalResults = VerificationResults.Count.ToString();
 
 			int compliantCount = results.Count(r => r.IsCompliant);
 			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("VerificationCompletedCompliantPolicies"), compliantCount, results.Count));
@@ -480,9 +472,6 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	{
 		VerificationResults.Clear();
 		AllVerificationResults.Clear();
-
-		TotalResults = "0";
-
 		CalculateColumnWidths();
 	}
 

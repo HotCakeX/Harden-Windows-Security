@@ -43,17 +43,11 @@ internal static class LocalFilesScan
 	/// <param name="files">File paths to scan</param>
 	/// <param name="scalability">How many parallel tasks to use during the scan</param>
 	/// <param name="progressReporter">A callback method that will run to display the scan progress in real time and updates the value of its associated ProgressRing UI element.</param>
-	/// <param name="assignVMRef">Assigns the reference to the ViewModel reference to each instance of the FileIdentity class so we can use it via compiled binding in XAML to navigate our way into the ViewModel Class in the ItemTemplate of the ListView and use it for XAML compiled binding of column widths.</param>
-	/// <param name="VMRef">The reference to the ViewModel class.</param>
-	/// <typeparam name="TReference">The generic type used for ViewModel class reference. There are mode than 1 type.</typeparam>
 	/// <returns></returns>
-	internal static IEnumerable<FileIdentity> Scan<TReference>(
+	internal static IEnumerable<FileIdentity> Scan(
 		(IEnumerable<string>, int) files,
 		ushort scalability,
 		IProgress<double> progressReporter,
-		TReference VMRef,
-		Action<FileIdentity,
-		TReference> assignVMRef,
 		CancellationToken? cToken = null)
 	{
 
@@ -347,8 +341,13 @@ internal static class LocalFilesScan
 								}
 							}
 
-							// Assign the extra parameter to the appropriate property using the delegate for ViewModel instance.
-							assignVMRef(currentFileIdentity, VMRef);
+							// Disposing all AllFileSigners instances now that we have extracted
+							// every piece of information. This prevents X509Chain native resource accumulation.
+							// As of this moment, .NET doesn't warn us about doing this even with all analyzers enabled.
+							foreach (AllFileSigners signer in FileSignatureResults)
+							{
+								signer.Dispose();
+							}
 
 							// Add the current file's identity to the output ConcurrentDictionary with a dummy bool for value
 							_ = MainOutput.TryAdd(currentFileIdentity, true);

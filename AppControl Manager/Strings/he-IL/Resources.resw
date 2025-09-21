@@ -574,15 +574,6 @@
   <data name="ViewSelectedFoldersTextBlock.Text" xml:space="preserve">
     <value>הצג את התיקיות שבחרת.</value>
   </data>
-  <data name="TotalLogsTextBlock.PlaceholderText" xml:space="preserve">
-    <value>סך כל היומנים: 0</value>
-  </data>
-  <data name="TotalLogsTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>המספר הכולל של היומנים</value>
-  </data>
-  <data name="TotalLogsTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>המספר הכולל של היומנים</value>
-  </data>
   <data name="RefreshLogFilesButton.Content" xml:space="preserve">
     <value>רענן את היומנים</value>
   </data>
@@ -660,15 +651,6 @@
   </data>
   <data name="BrowseForBasePolicyTextBlock.Text" xml:space="preserve">
     <value>עיין בקובץ מדיניות בסיסית</value>
-  </data>
-  <data name="BrowseForPolicyTextBlock.Text" xml:space="preserve">
-    <value>עיין בקובץ XML של מדיניות</value>
-  </data>
-  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>לחץ/הקש כדי לבחור קובץ מדיניות XML מהמכשיר שלך</value>
-  </data>
-  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>לחץ/הקש כדי לבחור קובץ מדיניות XML מהמכשיר שלך</value>
   </data>
   <data name="ScanLevelComboBox.ToolTipService.ToolTip" xml:space="preserve">
     <value>בחר רמה שבה הקבצים/יומנים ייסרקו</value>
@@ -825,24 +807,6 @@
   </data>
   <data name="ViewSelectedXMLFileTextBlock.Text" xml:space="preserve">
     <value>הצג את קובצי ה-XML שבחרת.</value>
-  </data>
-  <data name="SelectXMLFileTextBlock.Text" xml:space="preserve">
-    <value>בחר קובץ XML</value>
-  </data>
-  <data name="SelectFilesTextBlock.Text" xml:space="preserve">
-    <value>בחר קבצים</value>
-  </data>
-  <data name="SelectFoldersTextBlock.Text" xml:space="preserve">
-    <value>בחר תיקיות</value>
-  </data>
-  <data name="ScanLogsTextBlock.Text" xml:space="preserve">
-    <value>סרוק יומנים</value>
-  </data>
-  <data name="ScanLogsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>סרוק את המערכת או את קבצי ה-EVTX שנבחרו עבור יומני שלמות קוד/AppLocker</value>
-  </data>
-  <data name="ScanLogsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>סרוק את המערכת או את קבצי ה-EVTX שנבחרו עבור יומני שלמות קוד/AppLocker</value>
   </data>
   <data name="RuleOption_EnabledUMCI" xml:space="preserve">
     <value>מדיניות בקרת אפליקציות מגבילות הן בינאריים במצב ליבה והן בינאריים במצב משתמש. כברירת מחדל, רק בינאריים במצב ליבה מוגבלים. הפעלת אפשרות חוק זו מאמתת קבצי הפעלה וסקריפטים במצב משתמש.</value>
@@ -1099,7 +1063,7 @@
   <data name="CertificateBuildError" xml:space="preserve">
     <value>אירעו שגיאות במהלך בניית התעודה</value>
   </data>
-  <data name="SuccessTitle" xml:space="preserve">
+  <data name="SuccessText" xml:space="preserve">
     <value>הצלחה</value>
   </data>
   <data name="CertificateBuildSuccess" xml:space="preserve">
@@ -1158,9 +1122,6 @@
   </data>
   <data name="DenyPolicyCreated" xml:space="preserve">
     <value>יצרתי בהצלחה את מדיניות הדחייה</value>
-  </data>
-  <data name="NumberOfPolicies" xml:space="preserve">
-    <value>מספר המדיניות: </value>
   </data>
   <data name="WarningTitle" xml:space="preserve">
     <value>אזהרה</value>
@@ -1244,9 +1205,6 @@
     <value>אפשרויות מדיניות</value>
   </data>
   <!-- End of For CI Policy Info ListViews Column Header Buttons -->
-  <data name="Copy" xml:space="preserve">
-    <value>העתק</value>
-  </data>
   <data name="PolicyIDLabel" xml:space="preserve">
     <value>מזהה מדיניות: </value>
   </data>
@@ -2836,10 +2794,10 @@
   <data name="AppControlStatusTextBlock.Text" xml:space="preserve">
     <value>מצב בקרת היישומים לעסקים</value>
   </data>
-  <data name="UMCITextBlock.Text" xml:space="preserve">
+  <data name="UMCITextBlock.Header" xml:space="preserve">
     <value>שלמות הקוד במצב משתמש</value>
   </data>
-  <data name="KMCITextBlock.Text" xml:space="preserve">
+  <data name="KMCITextBlock.Header" xml:space="preserve">
     <value>שלמות הקוד במצב Kernel</value>
   </data>
   <data name="BasePolicies.Text" xml:space="preserve">
@@ -2871,12 +2829,6 @@
   </data>
   <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>תכונה זו מאפשרת החלפה חלקה של כל מדיניות בסיסית שאינה מערכתית שהופעלה, במדיניות אחרת מתוך הרשימה.</value>
-  </data>
-  <data name="PoliciesCountTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מספר כל המדיניות המוצגות.</value>
-  </data>
-  <data name="PoliciesCountTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מספר כל המדיניות המוצגות.</value>
   </data>
   <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
     <value>הסר מדיניות</value>
@@ -3091,9 +3043,6 @@
 <data name="CreatingSnapBackGuarantee" xml:space="preserve">
   <value>יוצר ערבות SnapBack במצב אכיפה</value>
 </data>
-<data name="DeployingAuditModePolicy" xml:space="preserve">
-  <value>פורסת את מדיניות מצב הביקורת</value>
-</data>
 <data name="ScanningSelectedDirectories" xml:space="preserve">
   <value>סורקת את הספריות הנבחרות</value>
 </data>
@@ -3105,9 +3054,6 @@
 </data>
 <data name="ResetSuccessful" xml:space="preserve">
   <value>האתחול בוצע בהצלחה.</value>
-</data>
-<data name="DeployingEnforceModeCuzReset" xml:space="preserve">
-  <value>פורסת את מדיניות מצב האכיפה מכיוון שהמשתמש החליט לאתחל את הפעולה</value>
 </data>
 <data name="DeployingEnforceMode" xml:space="preserve">
   <value>פורסת את מדיניות מצב האכיפה.</value>
@@ -3593,9 +3539,6 @@
   <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
     <value>אירעה שגיאה בניתוח מספר אפשרות הכלל {0} לערך המחרוזת שלו: {1}</value>
   </data>
-  <data name="NumberOfPoliciesMessage" xml:space="preserve">
-    <value>מספר המדיניות: {0}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>מזהה האובייקט של מדיניות Intune היה null עבור המדיניות הנבחרת למחיקה</value>
   </data>
@@ -3694,9 +3637,6 @@
   </data>
   <data name="GetAuthenticodeHashCalcFileHashError" xml:space="preserve">
     <value>לא ניתן לבצע Hash ל-{0} באמצעות {1}</value>
-  </data>
-  <data name="DeployDriversBlockRulesSystemDriveNullMessage" xml:space="preserve">
-    <value>משתנה הסביבה SystemDrive הוא null</value>
   </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
     <value>מרענן את מדיניות App Control של המערכת</value>
@@ -3971,12 +3911,6 @@
 <data name="KeyValuePairAddedToSignedPolicyStage1RemovalTimesMessage" xml:space="preserve">
     <value>זוג מפתח-ערך נוסף ל-SignedPolicyStage1RemovalTimes: {0} = {1}</value>
 </data>
-<data name="AuthResultImmutableErrorMessage" xml:space="preserve">
-    <value>AuthResult אינו ניתן לשינוי ולא יש לשנותו לאחר האתחול.</value>
-</data>
-<data name="AccountImmutableErrorMessage" xml:space="preserve">
-    <value>Account אינו ניתן לשינוי ולא יש לשנותו לאחר האתחול.</value>
-</data>
 <data name="SignInProcessCancelledMessage" xml:space="preserve">
     <value>תהליך הכניסה בוטל</value>
 </data>
@@ -4145,12 +4079,6 @@
 <data name="ConfiguringAndStartingRequiredIsgServicesMessage" xml:space="preserve">
     <value>מגדיר ומפעיל את שירותי ISG הדרושים</value>
 </data>
-<data name="AttemptingToDeserializeDeviceGuardJsonResultMessage" xml:space="preserve">
-    <value>מנסה לדסיריאליזציה של תוצאת Device Guard JSON.</value>
-</data>
-<data name="DeviceGuardDeserializationFailedMessage" xml:space="preserve">
-    <value>הדסיריאליזציה של Device Guard JSON נכשלה. JSON גולמי:</value>
-</data>
 <data name="IncreasingCodeIntegrityLogSizeMessage" xml:space="preserve">
     <value>מגדיל את גודל יומן שלמות הקוד ב-1MB מכיוון שהשטח הפנוי הנוכחי קטן מ-1MB.</value>
 </data>
@@ -4301,9 +4229,6 @@
 <data name="SuccessfullyCreatedPatternBasedFilePathRuleDenyPolicyMessage" xml:space="preserve">
     <value>נוצרה בהצלחה מדיניות Pattern-based File Path rule Deny.</value>
 </data>
-  <data name="TotalFiles" xml:space="preserve">
-    <value>סך הכל קבצים</value>
-  </data>
   <data name="AllDataClearedMsg" xml:space="preserve">
     <value>כל הנתונים נוקו בהצלחה.</value>
   </data>
@@ -4684,12 +4609,6 @@
 </data>
 <data name="PackageVersionHeader.Text" xml:space="preserve">
     <value>גרסת החבילה</value>
-</data>
-<data name="LoadPolicy.Text" xml:space="preserve">
-    <value>טען מדיניות</value>
-</data>
-<data name="BrowseForPolicy.Text" xml:space="preserve">
-    <value>עיין במדיניות</value>
 </data>
 <data name="SaveTheChanged.Text" xml:space="preserve">
     <value>שמור את השינויים</value>
@@ -5728,5 +5647,432 @@
 </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>פתח תיקיית לוגים</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>ייצוא לקובץ JSON</value>
+  </data>
+    <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ייצוא כל הנתונים ב-ListView ל-JSON.</value>
+  </data>
+    <data name="ExportToJSONButton.ToolTipService.ToolTip" xml:space="preserve">
+     <value>ייצוא כל הנתונים ב-ListView ל-JSON.</value>
+  </data>
+  <data name="ExportingToJSONMsg" xml:space="preserve">
+     <value>מייצא נתונים לקובץ JSON, אנא המתן...</value>
+  </data>
+    <data name="SuccessfullyExportedDataToJSON" xml:space="preserve">
+     <value>יוצאו בהצלחה {0} נתונים ל-JSON ונשמרו ב: '{1}'</value>
+  </data>
+    <data name="CopySelectedButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העתק את הפריטים שנבחרו ללוח.</value>
+  </data>
+  <data name="CopySelectedButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>העתק את הפריטים שנבחרו ללוח.</value>
+  </data>
+  <data name="CopySelectedButton.Content" xml:space="preserve">
+    <value>העתק נבחרים</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Description" xml:space="preserve">
+    <value>התאם את רוחב העמודות באופן אוטומטי בזמן הגלילה כך שיתאים לתוכן הגלוי. העמודות יתרחבו ויצטמצמו באופן דינמי. חל רק על תצוגות רשימה התומכות בתכונה זו. אם אפשרות זו מופעלת וכבר נטענו נתונים בתצוגת רשימה, לאחר ביטולה וחזרה לדף עם תצוגת הרשימה תתבצע פעולת חישוב רוחב חד-פעמית לכלל הנתונים.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.Header" xml:space="preserve">
+    <value>שינוי גודל אוטומטי של כותרות העמודות בתצוגות רשימה</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם את רוחב העמודות באופן אוטומטי בזמן הגלילה כך שיתאים לתוכן הגלוי. העמודות יתרחבו ויצטמצמו באופן דינמי. חל רק על תצוגות רשימה התומכות בתכונה זו. אם אפשרות זו מופעלת וכבר נטענו נתונים בתצוגת רשימה, לאחר ביטולה וחזרה לדף עם תצוגת הרשימה תתבצע פעולת חישוב רוחב חד-פעמית לכלל הנתונים.</value>
+  </data>
+  <data name="AutoResizeListViewColumnsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאם את רוחב העמודות באופן אוטומטי בזמן הגלילה כך שיתאים לתוכן הגלוי. העמודות יתרחבו ויצטמצמו באופן דינמי. חל רק על תצוגות רשימה התומכות בתכונה זו. אם אפשרות זו מופעלת וכבר נטענו נתונים בתצוגת רשימה, לאחר ביטולה וחזרה לדף עם תצוגת הרשימה תתבצע פעולת חישוב רוחב חד-פעמית לכלל הנתונים.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Description" xml:space="preserve">
+    <value>בחר משפחת גופן עבור הנתונים המוצגים בתצוגות רשימה ביישום. בהתאם לגופן שאליו תעבור ואם נתונים כבר נטענו בתצוגות הרשימה, ייתכן שרוחב העמודות יצריך התאמה מחדש. במידת הצורך, הפעל את תכונת שינוי הגודל האוטומטי של העמודות.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.Header" xml:space="preserve">
+    <value>משפחת גופן לתצוגות רשימה</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר משפחת גופן עבור הנתונים המוצגים בתצוגות רשימה ביישום. בהתאם לגופן שאליו תעבור ואם נתונים כבר נטענו בתצוגות הרשימה, ייתכן שרוחב העמודות יצריך התאמה מחדש. במידת הצורך, הפעל את תכונת שינוי הגודל האוטומטי של העמודות.</value>
+  </data>
+  <data name="ListViewFontFamilySettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר משפחת גופן עבור הנתונים המוצגים בתצוגות רשימה ביישום. בהתאם לגופן שאליו תעבור ואם נתונים כבר נטענו בתצוגות הרשימה, ייתכן שרוחב העמודות יצריך התאמה מחדש. במידת הצורך, הפעל את תכונת שינוי הגודל האוטומטי של העמודות.</value>
+  </data>
+  <data name="TotalText.Text" xml:space="preserve">
+    <value>סך הכול: </value>
+  </data>
+  <data name="TotalText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מספר הפריטים הכולל</value>
+  </data>
+  <data name="TotalText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מספר הפריטים הכולל</value>
+  </data>
+    <data name="LoadedText.Text" xml:space="preserve">
+    <value>טעונים: </value>
+  </data>
+  <data name="LoadedText.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מספר הפריטים הכולל הטעונים כעת בתצוגה</value>
+  </data>
+  <data name="LoadedText.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מספר הפריטים הכולל הטעונים כעת בתצוגה</value>
+  </data>
+    <data name="RetrieveTheLogsButton.Content" xml:space="preserve">
+    <value>אחזר את היומנים</value>
+  </data>
+  <data name="RetrieveTheLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את היומנים באמצעות שליחת שאילתת Advanced Hunting ל-MDE</value>
+  </data>
+  <data name="RetrieveTheLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את היומנים באמצעות שליחת שאילתת Advanced Hunting ל-MDE</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.Content" xml:space="preserve">
+    <value>דוגמאות לשאילתות</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>באפשרותך להעתיק את השאילתות הבאות ולהשתמש בהן בפורטל Advanced Hunting של MDE כדי להפיק יומנים סטנדרטיים התואמים ל-AppControl Manager, או להשתמש ביכולות המובנות של היישום כדי לאחזר את היומנים ולעבד אותם באופן אוטומטי.</value>
+  </data>
+  <data name="MDEAHQueryExamplesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>באפשרותך להעתיק את השאילתות הבאות ולהשתמש בהן בפורטל Advanced Hunting של MDE כדי להפיק יומנים סטנדרטיים התואמים ל-AppControl Manager, או להשתמש ביכולות המובנות של היישום כדי לאחזר את היומנים ולעבד אותם באופן אוטומטי.</value>
+  </data>
+  <data name="DragAndDropHint.Text" xml:space="preserve">
+     <value>או גרור ושחרר קבצים לכאן</value>
+  </data>
+    <data name="DragAndDropHintGetHashesCaption" xml:space="preserve">
+     <value>שחרר קובץ כדי לאחזר ערכי גיבוב</value>
+  </data>
+  <data name="SelectedText" xml:space="preserve">
+     <value>נבחר</value>
+  </data>
+  <!-- For Intune Groups ListView - Headers -->
+  <data name="GroupNameHeader.Text" xml:space="preserve">
+    <value>שם</value>
+  </data>
+  <data name="GroupIDHeader.Text" xml:space="preserve">
+    <value>מזהה</value>
+  </data>
+    <data name="GroupDescriptionHeader.Text" xml:space="preserve">
+    <value>תיאור</value>
+  </data>
+    <data name="GroupSecurityIdentifierHeader.Text" xml:space="preserve">
+    <value>מזהה אבטחה</value>
+  </data>
+    <data name="GroupCreatedDateTimeHeader.Text" xml:space="preserve">
+    <value>זמן יצירה</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Headers -->
+  <!-- For Intune Groups ListView - Buttons -->
+  <data name="GroupNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם</value>
+  </data>
+  <data name="GroupIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מזהה</value>
+  </data>
+    <data name="GroupDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>תיאור</value>
+  </data>
+    <data name="GroupSecurityIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מזהה אבטחה</value>
+  </data>
+    <data name="GroupCreatedDateTimeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>זמן יצירה</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Buttons -->
+  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <value>פרטי פריסת מדיניות Intune</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ציין את פרטי פריסת מדיניות Intune</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ציין את פרטי פריסת מדיניות Intune</value>
+  </data>
+  <data name="CreateGroupButton.Content" xml:space="preserve">
+    <value>צור קבוצה חדשה</value>
+  </data>
+  <data name="CreateGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור קבוצה חדשה ב‑Microsoft Entra ID</value>
+  </data>
+  <data name="CreateGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור קבוצה חדשה ב‑Microsoft Entra ID</value>
+  </data>
+  <data name="GroupDisplayNameEmptyError" xml:space="preserve">
+    <value>שם התצוגה של הקבוצה אינו יכול להיות null או ריק.</value>
+  </data>
+  <data name="SuccessfullyCreatedGroupMessage" xml:space="preserve">
+    <value>נוצרה בהצלחה קבוצה עם שם התצוגה: {0} ותיאור: {1} ומזהה: {2} ומזהה אבטחה: {3} בזמן: {4}</value>
+  </data>
+  <data name="FailedCreatingGroupError" xml:space="preserve">
+    <value>יצירת הקבוצה נכשלה עם קוד מצב: {0} ותוכן: {1}</value>
+  </data>
+<data name="DeleteGroupButton.Content" xml:space="preserve">
+  <value>מחק קבוצה</value>
+</data>
+  <data name="DeleteGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את הקבוצות שנבחרו מ‑Entra ID שלך.</value>
+  </data>
+  <data name="DeleteGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מחק את הקבוצות שנבחרו מ‑Entra ID שלך.</value>
+  </data>
+<data name="DeleteGroupDialogTitle" xml:space="preserve">
+  <value>אישור מחיקת קבוצה</value>
+</data>
+<data name="Delete" xml:space="preserve">
+  <value>מחק</value>
+</data>
+<data name="DeleteGroupDialogIntroSingle" xml:space="preserve">
+  <value>למחוק את הקבוצה '{0}' ?</value>
+</data>
+<data name="DeleteGroupDialogIntroMultiple" xml:space="preserve">
+  <value>למחוק {0} קבוצות שנבחרו ?</value>
+</data>
+<data name="DeleteGroupDialogWarning" xml:space="preserve">
+  <value>פעולה זו בלתי הפיכה. הקבוצות שנבחרו יימחקו לצמיתות מהדייר שלך.</value>
+</data>
+<data name="SuccessfullyDeletedGroupMessage" xml:space="preserve">
+  <value>נמחקה הקבוצה {0} (מזהה: {1}).</value>
+</data>
+<data name="DeleteGroupDeletionErrorLogTemplate" xml:space="preserve">
+  <value>כשל במחיקת הקבוצה {0}: {1}</value>
+</data>
+<data name="ProvideNewGroupDetails" xml:space="preserve">
+  <value>ספק פרטים עבור הקבוצה החדשה.</value>
+</data>
+<data name="GroupType" xml:space="preserve">
+  <value>סוג קבוצה:</value>
+</data>
+<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+  <value>נהל את קבוצות Entra בדייר שלך ובחר את הקבוצות שאליהן תרצה לפרוס את המדיניות.</value>
+</data>
+<data name="SelectedGroups.Text" xml:space="preserve">
+  <value>קבוצות שנבחרו:</value>
+</data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>צור 50 קבוצות דמה</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור 50 קבוצות דמה ב‑Entra של הדייר שלך עם פרטים אקראיים לצורכי בדיקות.</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור 50 קבוצות דמה ב‑Entra של הדייר שלך עם פרטים אקראיים לצורכי בדיקות.</value>
+  </data>
+  <data name="ConfirmationTextForDummyGroupsCreation" xml:space="preserve">
+    <value>האם אתה בטוח שברצונך ליצור 50 קבוצות דמה ב‑Entra של הדייר שלך עם פרטים אקראיים לצורכי בדיקות?</value>
+  </data>
+  <data name="SignInAuthenticationRequiredMsg" xml:space="preserve">
+    <value>נדרשת אימות. אנא היכנס תחילה לדייר Microsoft שלך.</value>
+  </data>
+  <data name="SuccessfullyRefreshedMSGraphTokenMsg" xml:space="preserve">
+    <value>רענון אסימון Microsoft Graph עבור החשבון: {0} בוצע בהצלחה</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.Content" xml:space="preserve">
+    <value>בחר קובץ מדיניות</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין ובחר קובץ מדיניות App Control.</value>
+  </data>
+  <data name="SelectAppControlPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין ובחר קובץ מדיניות App Control.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.Content" xml:space="preserve">
+    <value>בחר קבצים</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין ובחר קבצים שייכללו בסימולציה.</value>
+  </data>
+  <data name="SelectFilesForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין ובחר קבצים שייכללו בסימולציה.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.Content" xml:space="preserve">
+    <value>בחר תיקיות</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עיין ובחר תיקיות שייכללו בסימולציה. התיקיות ייסרקו רקורסיבית עבור קבצים הנתמכים על‑ידי App Control.</value>
+  </data>
+  <data name="SelectFoldersForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עיין ובחר תיקיות שייכללו בסימולציה. התיקיות ייסרקו רקורסיבית עבור קבצים הנתמכים על‑ידי App Control.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>בחר קטלוגי אבטחה</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ספק נתיב(ים) לתיקיות שבהן נמצאים קובצי קטלוגי אבטחה (.cat). אם לא יסופק, ייעשה שימוש בנתיב ברירת המחדל 'C:\Windows\System32\CatRoot'.</value>
+  </data>
+  <data name="SelectSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ספק נתיב(ים) לתיקיות שבהן נמצאים קובצי קטלוגי אבטחה (.cat). אם לא יסופק, ייעשה שימוש בנתיב ברירת המחדל 'C:\Windows\System32\CatRoot'.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>סרוק קטלוגי אבטחה</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>האם יש לסרוק את קטלוגי האבטחה במערכת או לא.</value>
+  </data>
+  <data name="ScanSecurityCatalogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>האם יש לסרוק את קטלוגי האבטחה במערכת או לא.</value>
+  </data>
+  <data name="LoadPolicyButton.Content" xml:space="preserve">
+    <value>טען מדיניות</value>
+  </data>
+  <data name="LoadPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>טען את מדיניות App Control שנבחרה לממשק המשתמש.</value>
+  </data>
+  <data name="LoadPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>טען את מדיניות App Control שנבחרה לממשק המשתמש.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.Content" xml:space="preserve">
+    <value>סרוק נתוני Advanced Hunting</value>
+  </data>
+  <data name="ScanMDEAHDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>לאחר שתבחר ביומני MDE Advanced Hunting, תוכל להשתמש בלחצן זה כדי לסרוק אותם ולהציג את התוצאות בתצוגת הרשימה למטה.</value>
+  </data>
+  <data name="ScanMDEAHDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>לאחר שתבחר ביומני MDE Advanced Hunting, תוכל להשתמש בלחצן זה כדי לסרוק אותם ולהציג את התוצאות בתצוגת הרשימה למטה.</value>
+  </data>
+    <data name="ScanEventLogsButton.Content" xml:space="preserve">
+    <value>סרוק יומני אירועים</value>
+  </data>
+  <data name="ScanEventLogsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>סרוק את המערכת או את קובצי ה‑EVTX שנבחרו עבור יומני Code Integrity/AppLocker.</value>
+  </data>
+  <data name="ScanEventLogsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>סרוק את המערכת או את קובצי ה‑EVTX שנבחרו עבור יומני Code Integrity/AppLocker.</value>
+  </data>
+  <data name="DeviceNameButton.Content" xml:space="preserve">
+    <value>שם התקן</value>
+  </data>
+  <data name="DeviceNameButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הזן שם התקן כדי לסנן את נתוני Advanced Hunting הנכנסים.</value>
+  </data>
+  <data name="DeviceNameButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הזן שם התקן כדי לסנן את נתוני Advanced Hunting הנכנסים.</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.Header" xml:space="preserve">
+    <value>רשות: בחר שם התקן כדי לסנן את היומנים לפני האחזור</value>
+  </data>
+      <data name="DeviceNameHeaderTextBlock.PlaceholderText" xml:space="preserve">
+    <value>שם התקן...</value>
+  </data>
+  <data name="DeviceNameHeaderTextBlock.AutomationProperties.HelpText" xml:space="preserve">
+    <value>רשות: בחר שם התקן כדי לסנן את היומנים לפני האחזור</value>
+  </data>
+  <data name="ResetFiltersButton.Content" xml:space="preserve">
+    <value>אפס מסננים</value>
+  </data>
+  <data name="ResetFiltersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אפס את מסנני המאפיינים, חיפוש המאפיינים ומסנני התאריכים</value>
+  </data>
+  <data name="ResetFiltersButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אפס את מסנני המאפיינים, חיפוש המאפיינים ומסנני התאריכים</value>
+  </data>
+  <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>לחץ/הקש כדי לבחור קובץ מדיניות XML מהמכשיר שלך</value>
+  </data>
+  <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>לחץ/הקש כדי לבחור קובץ מדיניות XML מהמכשיר שלך</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
+    <value>התאם אישית את צבע מסגרת חלון היישום. באפשרותך לבחור צבע מהפלטה או לבחור באפשרות 'קשת' אשר תסבב באופן מונפש בין כל הצבעים הזמינים.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.Header" xml:space="preserve">
+    <value>צבע מסגרת החלון</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התאם אישית את צבע מסגרת חלון היישום. באפשרותך לבחור צבע מהפלטה או לבחור באפשרות 'קשת' אשר תסבב באופן מונפש בין כל הצבעים הזמינים.</value>
+  </data>
+  <data name="AppWindowBorderColorSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התאם אישית את צבע מסגרת חלון היישום. באפשרותך לבחור צבע מהפלטה או לבחור באפשרות 'קשת' אשר תסבב באופן מונפש בין כל הצבעים הזמינים.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.Content" xml:space="preserve">
+    <value>התחל אנימציית קשת</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחל את אנימציית הקשת סביב מסגרת חלון היישום.</value>
+  </data>
+  <data name="RainbowBorderAnimationStartButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחל את אנימציית הקשת סביב מסגרת חלון היישום.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.Content" xml:space="preserve">
+    <value>עצור אנימציית קשת</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>עצור את אנימציית הקשת סביב מסגרת חלון היישום אם היא פועלת.</value>
+  </data>
+  <data name="RainbowBorderAnimationStopButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>עצור את אנימציית הקשת סביב מסגרת חלון היישום אם היא פועלת.</value>
+  </data>
+  <data name="SetBorderColorButton.Content" xml:space="preserve">
+    <value>הגדר צבע המסגרת</value>
+  </data>
+  <data name="SetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הגדר את צבע מסגרת חלון היישום לצבע שנבחר.</value>
+  </data>
+  <data name="SetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הגדר את צבע מסגרת חלון היישום לצבע שנבחר.</value>
+  </data>
+  <data name="ResetBorderColorButton.Content" xml:space="preserve">
+    <value>אפס את צבע המסגרת</value>
+  </data>
+  <data name="ResetBorderColorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אפס את צבע מסגרת חלון היישום לצבע ברירת המחדל.</value>
+  </data>
+  <data name="ResetBorderColorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אפס את צבע מסגרת חלון היישום לצבע ברירת המחדל.</value>
+  </data>
+    <data name="HomeNavItem.Content" xml:space="preserve">
+    <value>דף הבית</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>דף הבית ומסך ברוכים הבאים</value>
+    <comment>Main Navigation</comment>
+  </data>
+  <data name="HomeNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>דף הבית ומסך ברוכים הבאים</value>
+    <comment>Main Navigation</comment>
+  </data>
+    <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
+     <value>שחרר קובץ כדי להציג את התעודות שלו</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>שלום וברוכים הבאים</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>תודה שבחרת ב-AppControl Manager. אם ברצונך לקרוא את הערות הגרסה לעדכון האחרון, באפשרותך למצוא אותן במקטע ה-Releases במאגר GitHub הרשמי. ניתן גם לשאול שאלות או לשלוח משוב שם.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>פתח את דף ה-Releases ב-GitHub</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פותח בדפדפן את דף המאגר ב-GitHub לאחר לחיצה על הלחצן.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פותח בדפדפן את דף המאגר ב-GitHub לאחר לחיצה על הלחצן.</value>
+  </data>
+  <data name="UseHardenSystemSecurity.Text" xml:space="preserve">
+    <value>השתמש ביישום Harden System Security</value>
+  </data>
+  <data name="UseHardenSystemSecurityDescription.Text" xml:space="preserve">
+    <value>Harden System Security הוא יישום נוסף שפיתחתי כדי לסייע לך להחיל בקלות אמצעי אבטחה מתקדמים וחזקים על מערכת. הוא כולל ממשק מודרני ואינטואיטיבי, מעוצב בהתאם למשוב מהקהילה ומתוחזק באופן פעיל.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>פתח את דף ה-Microsoft Store</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פותח את דף ה-Microsoft Store לאחר לחיצה על הלחצן.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פותח את דף ה-Microsoft Store לאחר לחיצה על הלחצן.</value>
+  </data>
+  <data name="IntuneIntegrationHomePage.Text" xml:space="preserve">
+    <value>שילוב חלק עם Intune</value>
+  </data>
+  <data name="IntuneIntegrationHomePageDescription.Text" xml:space="preserve">
+    <value>שילוב חלק עם Microsoft Intune לניהול אבטחה מתקדם, כגון צפייה במדיניות שפורסמו מרחוק, פריסת מדיניות חדשות או הסרת הקיימות.</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.Content" xml:space="preserve">
+    <value>נווט לדף הפריסה</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נווט לדף הפריסה</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נווט לדף הפריסה</value>
   </data>
 </root>

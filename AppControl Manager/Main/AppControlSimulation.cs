@@ -67,7 +67,7 @@ internal static class AppControlSimulation
 	/// <param name="filePaths"></param>
 	/// <param name="folderPaths"></param>
 	/// <param name="xmlFilePath"></param>
-	/// <param name="noCatalogScanning"></param>
+	/// <param name="scanSecurityCatalogs"></param>
 	/// <param name="catRootPath"></param>
 	/// <param name="threadsCount"> The number of concurrent threads used to run the simulation </param>
 	/// <param name="progressReporter"></param>
@@ -79,7 +79,7 @@ internal static class AppControlSimulation
 		IReadOnlyCollection<string>? filePaths,
 		IReadOnlyCollection<string>? folderPaths,
 		string xmlFilePath,
-		bool noCatalogScanning,
+		bool scanSecurityCatalogs,
 		List<string>? catRootPath,
 		ushort threadsCount = 2,
 		IProgress<double>? progressReporter = null)
@@ -114,7 +114,7 @@ internal static class AppControlSimulation
 		// A dictionary where each key is a hash and value is the .Cat file path where the hash was found in
 		ConcurrentDictionary<string, string> AllSecurityCatalogHashes = [];
 
-		if (!noCatalogScanning)
+		if (scanSecurityCatalogs)
 		{
 			// Get the security catalog data to include in the scan
 			AllSecurityCatalogHashes = CatRootScanner.Scan(catRootPath, threadsCount);
@@ -188,32 +188,27 @@ internal static class AppControlSimulation
 		#endregion
 
 
-		// Create a timer to update the progress ring every 2 seconds.
-		Timer? progressTimer = null;
-
-		if (progressReporter is not null)
-		{
-			progressTimer = new(state =>
-			{
-				// Read the current value in a thread-safe manner.
-				int current = Volatile.Read(ref processedFilesCount);
-
-				// Calculate the percentage complete
-				int currentPercentage = (int)(current / AllFilesCount * 100);
-
-				// Cap the percentage at 100
-				int percentageToUse = Math.Min(currentPercentage, 100);
-
-				progressReporter.Report(percentageToUse);
-
-				// Update the taskbar progress
-				Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
-
-			}, null, 0, 2000);
-		}
-
 		try
 		{
+			// Create a timer to update the progress ring every 2 seconds.
+			using Timer? progressTimer = progressReporter is not null ? new Timer(state =>
+				{
+					// Read the current value in a thread-safe manner.
+					int current = Volatile.Read(ref processedFilesCount);
+
+					// Calculate the percentage complete
+					int currentPercentage = (int)(current / AllFilesCount * 100);
+
+					// Cap the percentage at 100
+					int percentageToUse = Math.Min(currentPercentage, 100);
+
+					progressReporter.Report(percentageToUse);
+
+					// Update the taskbar progress
+					Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, (ulong)percentageToUse, 100);
+
+				}, null, 0, 2000) : null;
+
 			Taskbar.Badge.SetBadgeAsActive();
 
 			// split the file paths by ThreadsCount which by default is 2 and minimum 1
@@ -359,16 +354,17 @@ internal static class AppControlSimulation
 						// If the file's hash does not exist in the supplied XML file, then check its signature
 						else
 						{
+							List<AllFileSigners> FileSignatureResults = [];
 							try
 							{
-								List<AllFileSigners> FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathObj.FullName);
+								FileSignatureResults = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathObj.FullName);
 
 								// If there is no result then check if the file is allowed by a security catalog
 								if (FileSignatureResults.Count == 0)
 								{
 									string? MatchedHashResult = null;
 
-									if (!noCatalogScanning)
+									if (scanSecurityCatalogs)
 									{
 										_ = AllSecurityCatalogHashes.TryGetValue(CurrentFilePathHashSHA1, out string? CurrentFilePathHashSHA1CatResult);
 										_ = AllSecurityCatalogHashes.TryGetValue(CurrentFilePathHashSHA256, out string? CurrentFilePathHashSHA256CatResult);
@@ -376,7 +372,7 @@ internal static class AppControlSimulation
 										MatchedHashResult = CurrentFilePathHashSHA1CatResult ?? CurrentFilePathHashSHA256CatResult;
 									}
 
-									if (!noCatalogScanning && MatchedHashResult is not null)
+									if (scanSecurityCatalogs && MatchedHashResult is not null)
 									{
 										AllFileSigners CatalogSignerDits = AllCertificatesGrabber.GetAllFileSigners(MatchedHashResult).First();
 
@@ -402,6 +398,9 @@ internal static class AppControlSimulation
 												CertificateHelper.GetTBSCertificate(CatalogSignerDits.Chain.ChainElements[0].Certificate),
 												CurrentFilePathObj.FullName
 											));
+
+										// Disposing catalog signer after extracting all needed info to free native chain resources.
+										CatalogSignerDits.Dispose();
 
 										// Move to the next file
 										continue;
@@ -504,6 +503,14 @@ internal static class AppControlSimulation
 								// Move to the next file
 								continue;
 							}
+							finally
+							{
+								// Disposing all AllFileSigners instances to free X509Chain native resources.
+								foreach (AllFileSigners signer in FileSignatureResults)
+								{
+									signer.Dispose();
+								}
+							}
 						}
 					}
 				}));
@@ -518,9 +525,7 @@ internal static class AppControlSimulation
 
 		}
 		finally
-		{   // Dispose of the timer
-			progressTimer?.Dispose();
-
+		{
 			// Clear the taskbar progress
 			Taskbar.TaskBarProgress.UpdateTaskbarProgress(GlobalVars.hWnd, 0, 0);
 			Taskbar.Badge.ClearBadge();

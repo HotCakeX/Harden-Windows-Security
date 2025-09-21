@@ -1,4 +1,4 @@
-Function Protect-WindowsSecurity {
+function Protect-WindowsSecurity {
     [CmdletBinding(DefaultParameterSetName = 'Online Mode')]
     param (
         [parameter(Mandatory = $false, ParameterSetName = 'GUI')][Switch]$GUI,
@@ -8,11 +8,10 @@ Function Protect-WindowsSecurity {
         [ArgumentCompleter({
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
                 $Existing = $CommandAst.FindAll(
-                    # The predicate scriptblock to define the criteria for filtering the AST nodes
                     {
                         $Args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
                     },
-                    $false # The recurse flag, whether to search nested scriptblocks or not.
+                    $false
                 ).Value
                 ([HardenWindowsSecurity.GlobalVars]::HardeningCategorieX) | ForEach-Object -Process {
                     if ($_ -notin $Existing) {
@@ -22,7 +21,7 @@ Function Protect-WindowsSecurity {
             })]
         [ValidateScript({
                 if ($_ -notin ([HardenWindowsSecurity.GlobalVars]::HardeningCategorieX)) { throw "Invalid Category Name: $_" }
-                $true # Return true if everything is okay
+                $true
             })]
         [System.String[]]$Categories,
 
@@ -32,32 +31,24 @@ Function Protect-WindowsSecurity {
 
         [Switch]$Offline
     )
-    # This offers granular control over sub-category automation, handles the parameter validation and correlation between selected categories and the subcategory switch parameter, doesn't populate the argument completer on the console with unrelated parameters
-    DynamicParam {
+    dynamicparam {
         $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
-
-        # A script block to create and add dynamic parameters to the dictionary for the sub-categories
         [System.Management.Automation.ScriptBlock]$DynParamCreatorSubCategories = {
             param([System.String]$Name)
-
-            # Create a parameter attribute to add the ParameterSet for 'Online Mode'
             $ParamAttrib1 = [System.Management.Automation.ParameterAttribute]@{
                 Mandatory        = $false
                 ParameterSetName = 'Online Mode'
             }
-            # Create a parameter attribute to add the ParameterSet for 'Offline Mode'
             $ParamAttrib2 = [System.Management.Automation.ParameterAttribute]@{
                 Mandatory        = $false
                 ParameterSetName = 'Offline Mode'
             }
-            # Add the dynamic parameter to the param dictionary
             $ParamDictionary.Add($Name, [System.Management.Automation.RuntimeDefinedParameter]::new(
-                    $Name, # Define parameter name
-                    [Switch], # Define parameter type
+                    $Name,
+                    [Switch],
                     [System.Management.Automation.ParameterAttribute[]]@($ParamAttrib1, $ParamAttrib2) # Add both attributes to the parameter
                 ))
         }
-
         if ('MicrosoftSecurityBaselines' -in $PSBoundParameters['Categories']) {
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'SecBaselines_NoOverrides'
         }
@@ -85,29 +76,18 @@ Function Protect-WindowsSecurity {
         if ('DownloadsDefenseMeasures' -in $PSBoundParameters['Categories']) {
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'DangerousScriptHostsBlocking'
         }
-
-        # Creating dynamic parameters for the offline mode files
         if ($PSBoundParameters.Offline.IsPresent) {
-
-            # Opens File picker GUI so that user can select a .zip file using WPF
             [scriptblock]$ArgumentCompleterZipFilePathsPicker = {
                 Add-Type -AssemblyName 'PresentationFramework'
                 [Microsoft.Win32.OpenFileDialog]$Dialog = [Microsoft.Win32.OpenFileDialog]::new()
                 $Dialog.Filter = 'Zip files (*.zip)|*.zip'
                 $Dialog.Title = 'Select the Zip file'
                 $Result = $Dialog.ShowDialog()
-                # If the user clicked OK
                 if ($Result -eq $true) {
                     return "`'$($Dialog.FileName)`'"
                 }
             }
-
-            #Region-Dyn-Param-For-PathToLGPO
-
-            # Create a parameter attribute collection
             $PathToLGPO_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
-
-            # Create a mandatory attribute and add it to the collection
             [System.Management.Automation.ParameterAttribute]$PathToLGPO_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
             $PathToLGPO_MandatoryAttrib.Mandatory = $true
             $PathToLGPO_AttributesCollection.Add($PathToLGPO_MandatoryAttrib)
@@ -116,34 +96,23 @@ Function Protect-WindowsSecurity {
             $PathToLGPO_ParamSetAttribute.ParameterSetName = 'Offline Mode'
             $PathToLGPO_AttributesCollection.Add($PathToLGPO_ParamSetAttribute)
 
-            # Create a validate script attribute and add it to the collection
             [System.Management.Automation.ValidateScriptAttribute]$PathToLGPO_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
-                    if (-NOT ([HardenWindowsSecurity.SneakAndPeek]::Search('LGPO_*/LGPO.exe', $_))) {
-                        Throw 'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly'
+                    if (-not ([HardenWindowsSecurity.SneakAndPeek]::Search('LGPO_*/LGPO.exe', $_))) {
+                        throw 'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly'
                     }
-                    $true # Return true if everything is okay
+                    $true
                 })
-            # Add the validate script attribute to the collection
             $PathToLGPO_AttributesCollection.Add($PathToLGPO_ValidateScriptAttrib)
 
-            # Create an argument completer attribute and add it to the collection
             [System.Management.Automation.ArgumentCompleterAttribute]$PathToLGPO_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterZipFilePathsPicker)
             $PathToLGPO_AttributesCollection.Add($PathToLGPO_ArgumentCompleterAttrib)
 
-            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
             [System.Management.Automation.RuntimeDefinedParameter]$PathToLGPO = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('PathToLGPO', [System.IO.FileInfo], $PathToLGPO_AttributesCollection)
 
-            # Add the dynamic parameter object to the dictionary
             $ParamDictionary.Add('PathToLGPO', $PathToLGPO)
 
-            #Endregion-Dyn-Param-For-PathToLGPO
-
-            #Region-Dyn-Param-For-PathToMSFT365AppsSecurityBaselines
-
-            # Create a parameter attribute collection
             $PathToMSFT365AppsSecurityBaselines_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
 
-            # Create a mandatory attribute and add it to the collection
             [System.Management.Automation.ParameterAttribute]$PathToMSFT365AppsSecurityBaselines_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
             $PathToMSFT365AppsSecurityBaselines_MandatoryAttrib.Mandatory = $true
             $PathToMSFT365AppsSecurityBaselines_AttributesCollection.Add($PathToMSFT365AppsSecurityBaselines_MandatoryAttrib)
@@ -152,34 +121,23 @@ Function Protect-WindowsSecurity {
             $PathToMSFT365AppsSecurityBaselinesParamSetAttribute.ParameterSetName = 'Offline Mode'
             $PathToMSFT365AppsSecurityBaselines_AttributesCollection.Add($PathToMSFT365AppsSecurityBaselinesParamSetAttribute)
 
-            # Create a validate script attribute and add it to the collection
             [System.Management.Automation.ValidateScriptAttribute]$PathToMSFT365AppsSecurityBaselines_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
-                    if (-NOT ([HardenWindowsSecurity.SneakAndPeek]::Search('Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1', $_))) {
-                        Throw 'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
+                    if (-not ([HardenWindowsSecurity.SneakAndPeek]::Search('Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1', $_))) {
+                        throw 'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
                     }
-                    $true # Return true if everything is okay
+                    $true
                 })
-            # Add the validate script attribute to the collection
             $PathToMSFT365AppsSecurityBaselines_AttributesCollection.Add($PathToMSFT365AppsSecurityBaselines_ValidateScriptAttrib)
 
-            # Create an argument completer attribute and add it to the collection
             [System.Management.Automation.ArgumentCompleterAttribute]$PathToMSFT365AppsSecurityBaselines_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterZipFilePathsPicker)
             $PathToMSFT365AppsSecurityBaselines_AttributesCollection.Add($PathToMSFT365AppsSecurityBaselines_ArgumentCompleterAttrib)
 
-            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
             [System.Management.Automation.RuntimeDefinedParameter]$PathToMSFT365AppsSecurityBaselines = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('PathToMSFT365AppsSecurityBaselines', [System.IO.FileInfo], $PathToMSFT365AppsSecurityBaselines_AttributesCollection)
 
-            # Add the dynamic parameter object to the dictionary
             $ParamDictionary.Add('PathToMSFT365AppsSecurityBaselines', $PathToMSFT365AppsSecurityBaselines)
 
-            #Endregion-Dyn-Param-For-PathToMSFT365AppsSecurityBaselines
-
-            #Region-Dyn-Param-For-PathToMSFTSecurityBaselines
-
-            # Create a parameter attribute collection
             $PathToMSFTSecurityBaselines_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
 
-            # Create a mandatory attribute and add it to the collection
             [System.Management.Automation.ParameterAttribute]$PathToMSFTSecurityBaselines_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
             $PathToMSFTSecurityBaselines_MandatoryAttrib.Mandatory = $true
             $PathToMSFTSecurityBaselines_AttributesCollection.Add($PathToMSFTSecurityBaselines_MandatoryAttrib)
@@ -188,36 +146,26 @@ Function Protect-WindowsSecurity {
             $PathToMSFTSecurityBaselines_ParamSetAttribute.ParameterSetName = 'Offline Mode'
             $PathToMSFTSecurityBaselines_AttributesCollection.Add($PathToMSFTSecurityBaselines_ParamSetAttribute)
 
-            # Create a validate script attribute and add it to the collection
             [System.Management.Automation.ValidateScriptAttribute]$PathToMSFTSecurityBaselines_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
-                    if (-NOT ([HardenWindowsSecurity.SneakAndPeek]::Search('Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1', $_))) {
-                        Throw 'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
+                    if (-not ([HardenWindowsSecurity.SneakAndPeek]::Search('Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1', $_))) {
+                        throw 'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
                     }
-                    $true # Return true if everything is okay
+                    $true
                 })
-            # Add the validate script attribute to the collection
             $PathToMSFTSecurityBaselines_AttributesCollection.Add($PathToMSFTSecurityBaselines_ValidateScriptAttrib)
 
-            # Create an argument completer attribute and add it to the collection
             [System.Management.Automation.ArgumentCompleterAttribute]$PathToMSFTSecurityBaselines_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterZipFilePathsPicker)
             $PathToMSFTSecurityBaselines_AttributesCollection.Add($PathToMSFTSecurityBaselines_ArgumentCompleterAttrib)
 
-            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
             [System.Management.Automation.RuntimeDefinedParameter]$PathToMSFTSecurityBaselines = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('PathToMSFTSecurityBaselines', [System.IO.FileInfo], $PathToMSFTSecurityBaselines_AttributesCollection)
 
-            # Add the dynamic parameter object to the dictionary
             $ParamDictionary.Add('PathToMSFTSecurityBaselines', $PathToMSFTSecurityBaselines)
-
-            #Endregion-Dyn-Param-For-PathToMSFTSecurityBaselines
         }
 
-        # Creating dynamic parameters for the LogPath
         if ($PSBoundParameters.Log.IsPresent) {
 
-            # Create a parameter attribute collection
             $LogPath_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
 
-            # Define argument completer's scriptblock
             [System.Management.Automation.ScriptBlock]$ArgumentCompleterLogFilePathPicker = {
                 Add-Type -AssemblyName 'PresentationFramework'
                 [Microsoft.Win32.SaveFileDialog]$Dialog = [Microsoft.Win32.SaveFileDialog]::new()
@@ -230,44 +178,36 @@ Function Protect-WindowsSecurity {
                 }
             }
 
-            # Create an argument completer attribute and add it to the collection
             [System.Management.Automation.ArgumentCompleterAttribute]$LogPath_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterLogFilePathPicker)
             $LogPath_AttributesCollection.Add($LogPath_ArgumentCompleterAttrib)
 
-            # Create a mandatory attribute and add it to the collection
             [System.Management.Automation.ParameterAttribute]$LogPath_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
             $LogPath_MandatoryAttrib.Mandatory = $true
             $LogPath_AttributesCollection.Add($LogPath_MandatoryAttrib)
 
-            # Create a parameter attribute to add the ParameterSet for 'Offline Mode'
             [System.Management.Automation.ParameterAttribute]$LogPath_ParamSetAttribute1 = New-Object -TypeName System.Management.Automation.ParameterAttribute
             $LogPath_ParamSetAttribute1.ParameterSetName = 'Offline Mode'
             $LogPath_AttributesCollection.Add($LogPath_ParamSetAttribute1)
 
-            # Create a parameter attribute to add the ParameterSet for 'Online Mode'
             [System.Management.Automation.ParameterAttribute]$LogPath_ParamSetAttribute2 = New-Object -TypeName System.Management.Automation.ParameterAttribute
             $LogPath_ParamSetAttribute2.ParameterSetName = 'Online Mode'
             $LogPath_AttributesCollection.Add($LogPath_ParamSetAttribute2)
 
-            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
             [System.Management.Automation.RuntimeDefinedParameter]$LogPath = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('LogPath', [System.IO.FileInfo], $LogPath_AttributesCollection)
 
-            # Add the dynamic parameter object to the dictionary
             $ParamDictionary.Add('LogPath', $LogPath)
         }
-
-        # Only use the dynamic parameters if the GUI switch is not present
-        if (-NOT $PSBoundParameters.GUI.IsPresent) {
+        if (-not $PSBoundParameters.GUI.IsPresent) {
             return $ParamDictionary
         }
     }
     begin {
+        Write-Warning -Message "This module is deprecated.`nPlease use the new Harden System Security App, available on Microsoft Store: https://apps.microsoft.com/detail/9P7GGFL7DX57`nGitHub Document: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security"
         try { LoadHardenWindowsSecurityNecessaryDLLsInternal } catch { Write-Verbose ([HardenWindowsSecurity.GlobalVars]::ReRunText); ReRunTheModuleAgain -C $MyInvocation.Statement }
         $script:ErrorActionPreference = 'Stop'
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
         [bool]$ErrorsOccurred = $false
 
-        # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
         ('SecBaselines_NoOverrides', 'MSFTDefender_SAC', 'MSFTDefender_NoDiagData', 'MSFTDefender_NoScheduledTask',
         'MSFTDefender_BetaChannels', 'LockScreen_CtrlAltDel', 'LockScreen_NoLastSignedIn', 'UAC_NoFastSwitching',
         'UAC_OnlyElevateSigned', 'WindowsNetworking_BlockNTLM', 'Miscellaneous_WindowsProtectedPrint', 'CountryIPBlocking_OFAC',
@@ -275,25 +215,13 @@ Function Protect-WindowsSecurity {
         'MiscellaneousConfigurations_LongPathSupport', 'DeviceGuard_MandatoryVBS', 'MiscellaneousConfigurations_StrongKeyProtection', 'MiscellaneousConfigurations_ReducedTelemetry') | ForEach-Object -Process {
             New-Variable -Name $_ -Value $($PSBoundParameters[$_]) -Force
         }
-        # Set the default value for LogPath to the current working directory if not specified
         New-Variable -Name 'LogPath' -Value $($PSBoundParameters['LogPath'] ?? (Join-Path -Path $(Get-Location).Path -ChildPath "Log-Protect-WindowsSecurity-$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss').txt")) -Force
 
-        # Detecting if Offline mode is used
         ([HardenWindowsSecurity.GlobalVars]::Offline) = $PSBoundParameters['Offline'] ? $true : $false
 
-        if (!([HardenWindowsSecurity.GlobalVars]::Offline)) {
-            [HardenWindowsSecurity.Logger]::LogMessage('Checking for updates...', [HardenWindowsSecurity.LogTypeIntel]::Information)
-            Update-HardenWindowsSecurity -InvocationStatement $MyInvocation.Statement
-        }
-        else {
-            [HardenWindowsSecurity.Logger]::LogMessage('Skipping update check since the -Offline switch was used', [HardenWindowsSecurity.LogTypeIntel]::Information)
-        }
-
         [System.String]$CurrentExecutionPolicy = Get-ExecutionPolicy -Scope 'Process'
-        # Change the execution policy temporarily only for the current PowerShell session
         Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
 
-        # Get the current title of the PowerShell
         try { [System.String]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle }
         catch { [System.String]$CurrentPowerShellTitle = $null }
 
@@ -305,33 +233,20 @@ Function Protect-WindowsSecurity {
         }
         if ($PSBoundParameters.GUI.IsPresent) {
             [HardenWindowsSecurity.GUIHandOff]::Boot()
-            Return # Return from the Begin block if GUI was used
+            return
         }
     }
     process {
-        # doing a try-catch-finally block on the entire code so that when CTRL + C is pressed to forcefully exit the operation,
-        # or break is passed, clean up will still happen for secure exit. Any error that happens will be thrown
         try {
+            if ($PSBoundParameters.GUI.IsPresent) { return }
 
-            # Return from the Process block if GUI was used and then closed, triggers the finally block to run for proper clean-up
-            if ($PSBoundParameters.GUI.IsPresent) { Return }
-
-            # Import all of the required functions
             . "$([HardenWindowsSecurity.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
 
-            # If the -Log switch is used
             if ($Log) {
                 [HardenWindowsSecurity.Logger]::LogFilePathCLI = $LogPath
-                # Create a new stopwatch object to measure the execution time
                 [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()
             }
 
-            if (!$Categories) {
-                Write-Host -Object "`r`n"
-                Write-ColorfulText -Color Plum -InputText "############################################################################################################`r`n"
-                Write-ColorfulText -Color Plum -InputText "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n"
-                Write-ColorfulText -Color Plum -InputText "############################################################################################################`r`n"
-            }
             [HardenWindowsSecurity.ChangePSConsoleTitle]::Set('⏬ Downloading')
 
             if (!([HardenWindowsSecurity.GlobalVars]::Offline)) {
@@ -343,7 +258,6 @@ Function Protect-WindowsSecurity {
 
             Write-Progress -Activity 'Applying the security measures' -Status 'Protecting' -PercentComplete 50
 
-            # a label to break out of the main switch statements and run the finally block when user chooses to exit
             :MainSwitchLabel switch ($Categories) {
                 'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines -RunUnattended }
                 'Microsoft365AppsSecurityBaselines' { Invoke-Microsoft365AppsSecurityBaselines -RunUnattended }
@@ -365,18 +279,15 @@ Function Protect-WindowsSecurity {
                 'DownloadsDefenseMeasures' { Invoke-DownloadsDefenseMeasures -RunUnattended }
                 'NonAdminCommands' { Invoke-NonAdminCommands -RunUnattended }
                 default {
-                    # Get the values of the ValidateSet attribute of the Categories parameter of the main function
                     foreach ($Category in ([HardenWindowsSecurity.GlobalVars]::HardeningCategorieX)) {
-                        # Run all of the categories' functions if the user didn't specify any
                         . "Invoke-$Category"
                     }
                 }
             }
-            # No code should be placed after this.
         }
         catch {
             $ErrorsOccurred = $true
-            Throw $_
+            throw $_
         }
         finally {
             Write-Progress -Activity 'Protection completed' -Status 'Completed' -Completed
@@ -390,14 +301,12 @@ Function Protect-WindowsSecurity {
                 $StopWatch.Stop()
                 [HardenWindowsSecurity.Logger]::LogMessage("Protect-WindowsSecurity completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds", [HardenWindowsSecurity.LogTypeIntel]::Information)
             }
-
-            # If no errors occurred, recycle the current session for there can't be more than 1 Application in the same App Domain
             if (!$ErrorsOccurred) { pwsh.exe -NoProfile -NoLogo -NoExit }
         }
     }
     <#
 .SYNOPSIS
-    Applies the hardening measures described in the GitHub readme.
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security
     Use the GUI for much better experience: Protect-WindowsSecurity -GUI
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security

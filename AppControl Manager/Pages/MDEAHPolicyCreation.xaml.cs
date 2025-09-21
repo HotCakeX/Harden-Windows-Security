@@ -37,9 +37,9 @@ internal sealed partial class MDEAHPolicyCreation : Page
 
 	internal MDEAHPolicyCreation()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 
 		// Perform initial selected item assignment for the SelectorBar
 		InitSelectorBar();

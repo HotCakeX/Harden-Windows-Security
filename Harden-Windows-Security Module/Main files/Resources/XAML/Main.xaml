@@ -9,18 +9,35 @@
             <ColumnDefinition Width='*' />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" FontSize="20" FontWeight="Bold" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Margin="10" TextWrapping="Wrap" Background="#FFF3CD" Foreground="#1A1A1A" TextAlignment="Center">
+    <Run Text="This module is deprecated." />
+    <Run Text="Please use the" />
+    <Run Text="New Harden System Security App" Foreground="Fuchsia" />
+    <Run Text="that includes 100% of the features plus so much more:" />
+    <Hyperlink x:Name="HyperLink1" NavigateUri="https://apps.microsoft.com/detail/9P7GGFL7DX57" Foreground="DeepPink">
+        Microsoft Store page
+    </Hyperlink>
+    <Run Text="| Full documentations available on GitHub:" />
+    <Hyperlink x:Name="HyperLink2" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security" Foreground="#0B5FFF">
+        Access it here
+    </Hyperlink>
+        </TextBlock>
+
         <ProgressBar x:Name="MainProgressBar"
-    Grid.Row="0"
+    Grid.Row="2"
     IsIndeterminate="True"
     Height="5"
     Margin="0,0,0,5"
     Grid.ColumnSpan="2"
     BorderThickness="0" />
         <!-- Navigation Panel -->
-        <Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment='Left' Width='228' Margin="0,50,0,50" x:Name="SidebarGrid">
+        <Grid Grid.Column="0" Grid.Row="3" HorizontalAlignment='Left' Width='228' Margin="0,50,0,50" x:Name="SidebarGrid">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel Width='228'>
                     <!-- Protect -->
@@ -96,6 +113,6 @@
                 </StackPanel>
             </ScrollViewer>
         </Grid>
-        <ContentControl Content='{Binding CurrentView}' Grid.Column="1" Grid.Row="1"/>
+        <ContentControl Content='{Binding CurrentView}' Grid.Column="1" Grid.Row="3"/>
     </Grid>
 </Window>

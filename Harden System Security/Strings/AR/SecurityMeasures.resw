@@ -811,9 +811,6 @@
 <data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
     <value>تعطيل TLS_RSA_WITH_AES_256_GCM_SHA384 - (بدون PFS)</value>
 </data>
-<data name="ExtensionManifestV2AvailabilityEdge-Edge" xml:space="preserve">
-    <value>عدم تعطيل دعم ملحقات Manifest V2 أبدًا</value>
-</data>
 <data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
     <value>عدم السماح للمواقع بطلب الوصول إلى أجهزة USB المحلية المتصلة أبدًا</value>
 </data>
@@ -942,5 +939,14 @@
 </data>
 <data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
     <value>تعطيل خادم TLS الإصدار 1.1 - الجزء 2</value>
+</data>
+  <data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>أنشئ طرق عرض مخصصة في عارض أحداث Windows للوصول السهل إلى أحداث الأمان المهمة.</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>قم بتهيئة إعدادات عميل SSH لاستخدام شيفرات تحقق رسائل (MAC) آمنة (Message Authentication Codes).</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>مكّن التدقيق وتتبع عمليات قفل وفتح شاشة القفل.</value>
 </data>
 </root>

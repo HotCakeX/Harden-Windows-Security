@@ -36,9 +36,9 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 
 	internal ConfigurePolicyRuleOptions()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 
 	#region Augmentation Interface

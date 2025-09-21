@@ -200,7 +200,7 @@ internal sealed partial class ASRVM : ViewModelBase
 		Dictionary<string, ASRRuleState> output = [];
 
 		// Get ASR rule IDs from the system
-		string? idsJson = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 AttackSurfaceReductionRules_Ids");
+		string? idsJson = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Ids");
 
 		if (string.IsNullOrEmpty(idsJson))
 		{
@@ -209,7 +209,7 @@ internal sealed partial class ASRVM : ViewModelBase
 		}
 
 		// Get ASR rule actions from the system
-		string? actionsJson = ProcessStarter.RunCommand(GlobalVars.ManageDefenderProcessPath, "get 0 AttackSurfaceReductionRules_Actions");
+		string? actionsJson = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Actions");
 
 		if (string.IsNullOrEmpty(actionsJson))
 		{

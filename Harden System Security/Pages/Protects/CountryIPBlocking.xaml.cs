@@ -23,7 +23,7 @@ namespace HardenSystemSecurity.Pages.Protects;
 
 internal sealed partial class CountryIPBlocking : Page
 {
-	private CountryIPBlockingVM ViewModel { get; } = ViewModelProvider.CountryIPBlockingVM;
+	private CountryIPBlockingVM ViewModel => ViewModelProvider.CountryIPBlockingVM;
 
 	internal CountryIPBlocking()
 	{

@@ -105,6 +105,12 @@ internal static class ViewModelProvider
 	private static readonly Lazy<LogsVM> _logsVM = new(() =>
 		new LogsVM(), false);
 
+	private static readonly Lazy<IntuneDeploymentDetailsVM> _intuneDeploymentDetailsVM = new(() =>
+		new IntuneDeploymentDetailsVM(), false);
+
+	private static readonly Lazy<HomeVM> _homeVM = new(() =>
+		new HomeVM(), false);
+
 	// View Models with Dependencies \\
 	private static readonly Lazy<PolicyEditorVM> _policyEditorVM = new(() =>
 		new PolicyEditorVM(), false);
@@ -119,13 +125,13 @@ internal static class ViewModelProvider
 		new NavigationService(MainWindowVM, SidebarVM), false);
 
 	private static readonly Lazy<ViewOnlinePoliciesVM> _viewOnlinePoliciesVM = new(() =>
-		new ViewOnlinePoliciesVM(ViewModelForMSGraph), false);
+		new ViewOnlinePoliciesVM(), false);
 
-	// Internal Properties - Core Dependencies \\
+	// Core Dependencies \\
 	internal static AppSettings.Main AppSettings => _appSettings.Value;
 	internal static EventLogUtility EventLogUtility => _eventLogUtility.Value;
 
-	// Internal Properties - View Models \\
+	// View Models \\
 	internal static SidebarVM SidebarVM => _sidebarVM.Value;
 	internal static ViewCurrentPoliciesVM ViewCurrentPoliciesVM => _viewCurrentPoliciesVM.Value;
 	internal static SettingsVM SettingsVM => _settingsVM.Value;
@@ -152,4 +158,55 @@ internal static class ViewModelProvider
 	internal static BuildNewCertificateVM BuildNewCertificateVM => _buildNewCertificateVM.Value;
 	internal static GetSecurePolicySettingsVM GetSecurePolicySettingsVM => _getSecurePolicySettingsVM.Value;
 	internal static LogsVM LogsVM => _logsVM.Value;
+	internal static IntuneDeploymentDetailsVM IntuneDeploymentDetailsVM => _intuneDeploymentDetailsVM.Value;
+	internal static HomeVM HomeVM => _homeVM.Value;
+
+
+	/// <summary>
+	/// Disposes only those instances that were actually created during the app lifetime and implement <see cref="IDisposable"/>
+	/// </summary>
+	internal static void DisposeCreatedViewModels()
+	{
+		try
+		{
+			if (_createDenyPolicyVM.IsValueCreated) _createDenyPolicyVM.Value.Dispose();
+		}
+		catch { }
+
+		try
+		{
+			if (_deploymentVM.IsValueCreated) _deploymentVM.Value.Dispose();
+		}
+		catch { }
+
+		try
+		{
+			if (_logsVM.IsValueCreated) _logsVM.Value.Dispose();
+		}
+		catch { }
+
+		try
+		{
+			if (_mdeahPolicyCreationVM.IsValueCreated) _mdeahPolicyCreationVM.Value.Dispose();
+		}
+		catch { }
+
+		try
+		{
+			if (_viewOnlinePoliciesVM.IsValueCreated) _viewOnlinePoliciesVM.Value.Dispose();
+		}
+		catch { }
+
+		try
+		{
+			if (_eventLogUtility.IsValueCreated) _eventLogUtility.Value.Dispose();
+		}
+		catch { }
+
+		try
+		{
+			if (_createSupplementalPolicyVM.IsValueCreated) _createSupplementalPolicyVM.Value.Dispose();
+		}
+		catch { }
+	}
 }

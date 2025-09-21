@@ -34,13 +34,13 @@ namespace HardenSystemSecurity.Pages;
 /// </summary>
 internal sealed partial class Logs : Page
 {
-	private LogsVM ViewModel { get; } = ViewModelProvider.LogsVM;
+	private LogsVM ViewModel => ViewModelProvider.LogsVM;
 
 	internal Logs()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 
 	/// <summary>

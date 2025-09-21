@@ -4,7 +4,7 @@
 
 A security baseline is a group of Microsoft-recommended configuration settings that explains their security implications. These settings are based on feedback from Microsoft security engineering teams, product groups, partners, and customers.
 
-In this page, the Harden System Security app enables you to apply the Microsoft Security Baselines on your system, verify compliance, and remove the applied policies.
+In this page, [the Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) enables you to apply the Microsoft Security Baselines on your system, verify compliance, and remove the applied policies.
 
 You can measure the compliance level of your system using the built-in compliance assessment functionality by simply pressing the **Verify** button on this page. You will receive a detailed report of every security measure inside the Microsoft Security Baseline and you will be able to export this security report to a properly formatted JSON file as well.
 
@@ -22,11 +22,11 @@ You can change the download URL of the Microsoft Security Baselines in this page
 
 <br>
 
-> [!NOTE]  
+> [!NOTE]
 > When applying the Microsoft Security Baseline, Harden System Security app will **automatically download the latest version directly from Microsoft's servers** or from the URL you provided, process it entirely **in memory**, and apply it without writing any temporary files to disk. The same is true for verification or removal processes.
->  
-> While this approach increases development complexity, it significantly improves security by preventing malicious interference with temporary files before application.  
->  
+>
+> While this approach increases development complexity, it significantly improves security by preventing malicious interference with temporary files before application.
+>
 > The app caches the baseline in memory to avoid unnecessary re-downloads. The cache expires every **2 hours**, after which it is refreshed with the latest data from the Microsoft Server/Custom URL you provided, and this only happens if the app is open. The cache is compressed to minimize memory usage.
 
 <br>

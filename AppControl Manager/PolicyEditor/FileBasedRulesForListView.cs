@@ -55,8 +55,7 @@ internal sealed class FileBasedRulesForListView(
 	string? filePath,
 	string? type,
 	FileBasedRuleType sourceType,
-	object source,
-	PolicyEditorVM parentViewModel
+	object source
 	)
 {
 	internal string? Id => id;
@@ -75,9 +74,4 @@ internal sealed class FileBasedRulesForListView(
 	internal string? Type => type;
 	internal FileBasedRuleType SourceType => sourceType;
 	internal object Source => source;
-
-
-	// A property for the parent view model of the Policy Editor page to store a reference to it
-	// so we can access the variables in the View Model class via compiled binding in XAML.
-	internal PolicyEditorVM ParentViewModel => parentViewModel;
 }

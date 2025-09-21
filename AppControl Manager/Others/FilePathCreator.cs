@@ -17,7 +17,7 @@
 
 namespace AppControlManager.Others;
 
-internal readonly struct FilePathCreator(string filePath, string minimumFileVersion, int siSigningScenario)
+internal sealed class FilePathCreator(string filePath, string minimumFileVersion, int siSigningScenario)
 {
 	internal string FilePath => filePath;
 	internal string MinimumFileVersion => minimumFileVersion;

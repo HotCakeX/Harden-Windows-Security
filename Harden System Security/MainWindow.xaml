@@ -5,13 +5,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HardenSystemSecurity"
     xmlns:WindowComponents="using:AppControlManager.WindowComponents"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
-    mc:Ignorable="d"
     SizeChanged="{x:Bind ViewModel.MainWindow_SizeChanged}"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     SystemBackdrop="{x:Bind ViewModel.SystemBackDropStyle, Mode=OneWay}"
@@ -176,6 +173,8 @@
                         IsPaneToggleButtonVisible="False">
 
             <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="HomeNavItem" x:Uid="HomeNavItem" Icon="{x:Bind ViewModel.HomeIcon, Mode=OneWay}" Tag="Home" />
+
                 <!-- Protect Group -->
                 <NavigationViewItemHeader x:Name="ProtectNavigationViewItemHeader" x:Uid="ProtectNavigationViewItemHeader" />
 
@@ -310,7 +309,7 @@
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Name="CertificatesNavItem" Visibility="Collapsed" x:Uid="CertificatesNavItem" Tag="Certificates">
+                        <NavigationViewItem x:Name="CertificatesNavItem" x:Uid="CertificatesNavItem" Tag="Certificates">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/Certificate.png"
                                 ShowAsMonochrome="False"
@@ -318,7 +317,7 @@
                             </NavigationViewItem.Icon>
                         </NavigationViewItem>
 
-                        <NavigationViewItem x:Name="CountryIPBlockingNavItem" Visibility="Collapsed" x:Uid="CountryIPBlockingNavItem" Tag="CountryIPBlocking">
+                        <NavigationViewItem x:Name="CountryIPBlockingNavItem" x:Uid="CountryIPBlockingNavItem" Tag="CountryIPBlocking">
                             <NavigationViewItem.Icon>
                                 <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/CountryIPBlocking.png"
                                 ShowAsMonochrome="False"
@@ -340,6 +339,7 @@
                 <NavigationViewItem x:Name="InstalledAppsManagementNavItem" x:Uid="InstalledAppsManagementNavItem" Icon="{x:Bind ViewModel.InstalledAppsManagementIcon, Mode=OneWay}" Tag="InstalledAppsManagement"/>
                 <NavigationViewItem x:Name="FileReputationNavItem" x:Uid="FileReputationNavItem" Icon="{x:Bind ViewModel.FileReputationIcon, Mode=OneWay}" Tag="FileReputation"/>
                 <NavigationViewItem x:Name="GroupPolicyEditorNavItem" x:Uid="GroupPolicyEditorNavItem" Icon="{x:Bind ViewModel.GroupPolicyEditorIcon, Mode=OneWay}" Tag="GroupPolicyEditor"/>
+                <NavigationViewItem x:Name="AuditPoliciesNavItem" x:Uid="AuditPoliciesNavItem" Icon="{x:Bind ViewModel.AuditPoliciesIcon, Mode=OneWay}" Tag="AuditPolicies"/>
 
                 <!-- Documentation Group -->
                 <NavigationViewItemHeader x:Name="DocumentationNavigationViewItemHeader" x:Uid="DocumentationNavigationViewItemHeader"/>
@@ -387,16 +387,6 @@
 
                                 <TextBlock x:Name="SidebarMainCaptionTextBlock" x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
 
-                                <HyperlinkButton x:Name="SidebarGuideHyperlinkButton"
-                                                 x:Uid="SidebarGuideHyperlinkButton"
-                                                 HorizontalAlignment="Center"
-                                                 NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar"
-                                                 Padding="12,8"
-                                                 CornerRadius="6"
-                                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                 BorderThickness="1"/>
-
                                 <HyperlinkButton x:Name="SidebarHelpHyperlinkButton"
                                                  HorizontalAlignment="Center"
                                                  NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/discussions"
@@ -415,6 +405,15 @@
                                                    FontWeight="SemiBold"/>
                                     </StackPanel>
                                 </HyperlinkButton>
+
+                                <HyperlinkButton Content="AppControl Manager"
+                                                 HorizontalAlignment="Center"
+                                                 NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"
+                                                 Padding="12,8"
+                                                 CornerRadius="6"
+                                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                 BorderThickness="1"/>
 
                             </controls:WrapPanel>
 

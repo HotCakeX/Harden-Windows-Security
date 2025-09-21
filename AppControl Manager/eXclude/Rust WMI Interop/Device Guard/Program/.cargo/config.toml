@@ -1,6 +1,0 @@
-[build]
-target-dir = "target"
-
-[alias]
-build_x64 = "build --target x86_64-pc-windows-msvc --bin DeviceGuardWMIRetriever-X64 --verbose --release"
-build_arm64 = "build --target aarch64-pc-windows-msvc --bin DeviceGuardWMIRetriever-ARM64 --verbose --release"

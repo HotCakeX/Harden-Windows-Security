@@ -1,20 +1,3 @@
-// MIT License
-//
-// Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
-//
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,7 +17,7 @@ namespace AppControlManager.MicrosoftGraph;
 internal static class Main
 {
 
-	private static ViewModelForMSGraph ViewModelMSGraph { get; } = ViewModels.ViewModelProvider.ViewModelForMSGraph;
+	private static ViewModelForMSGraph ViewModelMSGraph => ViewModels.ViewModelProvider.ViewModelForMSGraph;
 
 	/// <summary>
 	/// For Microsoft Graph Command Line Tools
@@ -97,8 +80,8 @@ internal static class Main
 		// Scopes required to create and assign device configurations for Intune
 		// https://learn.microsoft.com/graph/permissions-reference
 		{ AuthenticationContext.Intune, [
-		"Group.Read.All", // For Groups enumeration
-		"DeviceManagementConfiguration.ReadWrite.All" // For uploading policy
+		"Group.ReadWrite.All", // For Groups enumeration, deletion and addition.
+		"DeviceManagementConfiguration.ReadWrite.All" // For uploading and removing policies.
 		]},
 
 		// Scopes required to retrieve MDE Advanced Hunting results
@@ -108,13 +91,48 @@ internal static class Main
 	};
 
 	/// <summary>
-	/// Interface to restrict access to the following two properties only within the Main class.
+	/// Helper method to retrieve a valid access token. It performs a proactive (10 minute) refresh using AcquireTokenSilent.
+	/// Uses the account's recorded SignIn method to decide which IPublicClientApplication instance to use.
+	/// If the access token is still sufficiently valid it is returned directly.
+	/// Updates the stored AuthenticationResult upon successful silent refresh.
+	/// Throws MsalUiRequiredException if user interaction is required (caller may trigger interactive sign-in).
 	/// </summary>
-	internal interface IRestrictedAuthenticatedAccounts
+	/// <param name="account">The authenticated account wrapper.</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>Fresh or cached access token string.</returns>
+	internal static async Task<string> GetValidAccessTokenAsync(AuthenticatedAccounts account, CancellationToken cancellationToken)
 	{
-		AuthenticationResult AuthResult { get; set; }
-		IAccount Account { get; set; }
+		// Proactive refresh window to avoid near-expiry usage
+		TimeSpan proactiveWindow = TimeSpan.FromMinutes(10);
+
+		AuthenticationResult currentResult = account.AuthResult;
+		DateTimeOffset now = DateTimeOffset.UtcNow;
+
+		// If token is sufficiently valid, return it
+		if (currentResult.ExpiresOn - now > proactiveWindow)
+		{
+			return currentResult.AccessToken;
+		}
+
+		// Select correct application based on original sign-in method
+		IPublicClientApplication selectedApp = account.MethodUsed == SignInMethods.WebAccountManager ? AppWAMBased : App;
+
+		// Perform silent acquisition using the original scopes for this authentication context
+		AuthenticationResult refreshedResult = await selectedApp
+			.AcquireTokenSilent(Scopes[account.AuthContext], account.Account)
+			.ExecuteAsync(cancellationToken)
+			.ConfigureAwait(false);
+
+		// Update stored result so subsequent calls benefit
+		account.AuthResult = refreshedResult;
+
+		Logger.Write(string.Format(
+			GlobalVars.GetStr("SuccessfullyRefreshedMSGraphTokenMsg"),
+			account.Username));
+
+		return refreshedResult.AccessToken;
 	}
+
 
 	/// <summary>
 	/// Performs an Advanced Hunting query using Microsoft Defender for Endpoint
@@ -132,8 +150,11 @@ internal static class Main
 
 		string? output = null;
 
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
 		// Set up the HTTP headers
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken);
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		QueryPayload queryPayload;
@@ -165,10 +186,15 @@ DeviceEvents
 
 		string jsonPayload = JsonSerializer.Serialize(queryPayload, MSGraphJsonContext.Default.QueryPayload);
 
-		using StringContent content = new(jsonPayload, Encoding.UTF8, "application/json");
-
 		// Make the POST request
-		HttpResponseMessage response = await httpClient.PostAsync(MDEAH, content);
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"RunMDEAdvancedHuntingQuery",
+			() => new HttpRequestMessage(HttpMethod.Post, MDEAH)
+			{
+				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
+			},
+			httpClient
+		);
 
 		if (response.IsSuccessStatusCode)
 		{
@@ -193,67 +219,94 @@ DeviceEvents
 
 
 	/// <summary>
-	/// Fetches the M365 security groups
+	/// Fetches the M365/Entra ID groups.
 	/// </summary>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static async Task<Dictionary<string, string>> FetchGroups(AuthenticatedAccounts? account)
+	internal static async Task<List<IntuneGroupItemListView>> FetchGroups(AuthenticatedAccounts account)
 	{
 
-		Dictionary<string, string> output = [];
-
-		if (account is null)
-			return output;
+		List<IntuneGroupItemListView> output = [];
 
 		using SecHttpClient httpClient = new();
 
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
 		// Set up the HTTP headers
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken);
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-		// Make the request to get all groups
-		HttpResponseMessage response = await httpClient.GetAsync(GroupsUrl);
+		// Start with initial endpoint
+		string? nextLink = GroupsUrl.ToString();
 
-		if (response.IsSuccessStatusCode)
+		while (!string.IsNullOrEmpty(nextLink))
 		{
-			string content = await response.Content.ReadAsStringAsync();
-			JsonElement groupsJson = JsonSerializer.Deserialize(content, MSGraphJsonContext.Default.JsonElement);
+			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+				"FetchGroups",
+				() => new HttpRequestMessage(HttpMethod.Get, new Uri(nextLink)),
+				httpClient
+			);
 
-			if (groupsJson.TryGetProperty("value", out JsonElement groups))
+			if (response.IsSuccessStatusCode)
 			{
-				foreach (JsonElement group in groups.EnumerateArray())
-				{
-					string? groupName = group.GetProperty("displayName").GetString();
-					string? groupId = group.GetProperty("id").GetString();
+				string content = await response.Content.ReadAsStringAsync();
+				JsonElement root = JsonSerializer.Deserialize(content, MSGraphJsonContext.Default.JsonElement);
 
-					if (!string.IsNullOrEmpty(groupName) && !string.IsNullOrEmpty(groupId))
+				if (root.TryGetProperty("value", out JsonElement groups))
+				{
+					foreach (JsonElement group in groups.EnumerateArray())
 					{
-						output[groupName] = groupId;
+						string? groupName = group.GetProperty("displayName").GetString();
+						string? groupId = group.GetProperty("id").GetString();
+						string? description = group.GetProperty("description").GetString();
+						string? securityIdentifier = group.GetProperty("securityIdentifier").GetString();
+						DateTime createdDateTime = group.GetProperty("createdDateTime").GetDateTime();
+
+						if (!string.IsNullOrEmpty(groupName) && !string.IsNullOrEmpty(groupId))
+						{
+							output.Add(new IntuneGroupItemListView(
+								groupName: groupName,
+								groupID: groupId,
+								description: description,
+								securityIdentifier: securityIdentifier,
+								createdDateTime: createdDateTime
+							));
+						}
 					}
 				}
+				else
+				{
+					Logger.Write(GlobalVars.GetStr("NoGroupsFoundInResponseMessage"));
+				}
 
-				Logger.Write(string.Format(
-					GlobalVars.GetStr("SuccessfullyFetchedGroupsMessage"),
-					output.Count));
+				// Follow pagination if present
+				if (root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement))
+				{
+					nextLink = nextLinkElement.GetString();
+				}
+				else
+				{
+					nextLink = null;
+				}
 			}
 			else
 			{
-				Logger.Write(
-					GlobalVars.GetStr("NoGroupsFoundInResponseMessage"));
+				Logger.Write(string.Format(
+					GlobalVars.GetStr("FailedToFetchGroupsMessage"),
+					response.StatusCode));
+
+				string errorContent = await response.Content.ReadAsStringAsync();
+
+				throw new InvalidOperationException(string.Format(
+					GlobalVars.GetStr("ErrorDetailsMessage"),
+					errorContent));
 			}
 		}
-		else
-		{
-			Logger.Write(string.Format(
-				GlobalVars.GetStr("FailedToFetchGroupsMessage"),
-				response.StatusCode));
 
-			string errorContent = await response.Content.ReadAsStringAsync();
-
-			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("ErrorDetailsMessage"),
-				errorContent));
-		}
+		Logger.Write(string.Format(
+			GlobalVars.GetStr("SuccessfullyFetchedGroupsMessage"),
+			output.Count));
 
 		return output;
 	}
@@ -318,7 +371,8 @@ DeviceEvents
 					permissions: string.Join(", ", Scopes[context]),
 					authContext: context,
 					authResult: authResult,
-					account: authResult.Account
+					account: authResult.Account,
+					methodUsed: signInMethod // Record the method used for future silent refresh
 				);
 
 				AuthenticatedAccounts? possibleDuplicate =
@@ -352,12 +406,9 @@ DeviceEvents
 	/// Signs out the user
 	/// </summary>
 	/// <returns></returns>
-	internal static async Task SignOut(AuthenticatedAccounts? account)
+	internal static async Task SignOut(AuthenticatedAccounts account)
 	{
-		if (account is null)
-			return;
-
-		await App.RemoveAsync(((IRestrictedAuthenticatedAccounts)account).Account);
+		await App.RemoveAsync(account.Account);
 		_ = ViewModelMSGraph.AuthenticatedAccounts.Remove(account);
 		Logger.Write(string.Format(
 			GlobalVars.GetStr("SignedOutAccountMessage"),
@@ -376,11 +427,8 @@ DeviceEvents
 	/// <param name="account"></param>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static async Task UploadPolicyToIntune(AuthenticatedAccounts? account, string policyPath, List<string> groupIds, string? policyName, string policyID, string descriptionText)
+	internal static async Task UploadPolicyToIntune(AuthenticatedAccounts account, string policyPath, List<string> groupIds, string? policyName, string policyID, string descriptionText)
 	{
-
-		if (account is null)
-			return;
 
 		DirectoryInfo stagingArea = StagingArea.NewStagingArea("IntuneCIPUpload");
 
@@ -391,8 +439,11 @@ DeviceEvents
 		// https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune#deploy-app-control-policies-with-custom-oma-uri
 		string base64String = ConvertBinFileToBase64(tempPolicyPath, 350000);
 
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
 		// Call Microsoft Graph API to create the custom policy
-		string? policyId = await CreateCustomIntunePolicy(((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken, base64String, policyName, policyID, descriptionText);
+		string? policyId = await CreateCustomIntunePolicy(accessToken, base64String, policyName, policyID, descriptionText);
 
 		Logger.Write(string.Format(
 			GlobalVars.GetStr("PolicyCreatedMessage"),
@@ -400,7 +451,7 @@ DeviceEvents
 
 		if (groupIds.Count > 0 && policyId is not null)
 		{
-			await AssignIntunePolicyToGroup(policyId, ((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken, groupIds);
+			await AssignIntunePolicyToGroup(policyId, accessToken, groupIds);
 		}
 
 		// await GetPoliciesAndAssignments(result.AccessToken);
@@ -437,12 +488,16 @@ DeviceEvents
 			// Serialize the assignment payload to JSON.
 			string jsonPayload = JsonSerializer.Serialize(assignmentPayload, MSGraphJsonContext.Default.AssignmentPayload);
 
-			using StringContent content = new(jsonPayload, Encoding.UTF8, "application/json");
-
 			// Send the POST request to assign the policy to the group.
-			HttpResponseMessage response = await httpClient.PostAsync(
-				new Uri($"{DeviceConfigurationsURL.OriginalString}/{policyId}/assignments"),
-				content
+			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+				"AssignIntunePolicyToGroup",
+				() => new HttpRequestMessage(
+					HttpMethod.Post,
+					new Uri($"{DeviceConfigurationsURL.OriginalString}/{policyId}/assignments"))
+				{
+					Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
+				},
+				httpClient
 			);
 
 			// Process the response for the current group.
@@ -520,12 +575,14 @@ DeviceEvents
 		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-		using StringContent content = new(jsonPayload, Encoding.UTF8, "application/json");
-
 		// Send the POST request
-		HttpResponseMessage response = await httpClient.PostAsync(
-			DeviceConfigurationsURL,
-			content
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"CreateCustomIntunePolicy",
+			() => new HttpRequestMessage(HttpMethod.Post, DeviceConfigurationsURL)
+			{
+				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
+			},
+			httpClient
 		);
 
 		// Process the response
@@ -661,47 +718,102 @@ DeviceEvents
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<DeviceConfigurationPoliciesResponse?> RetrieveDeviceConfigurations(AuthenticatedAccounts account)
 	{
+
 		using SecHttpClient httpClient = new();
 
-		// Set up the HTTP headers for the request.
-		// Use GET instead of POST as the endpoint expects a GET request.
-		// HttpResponseMessage response = await httpClient.GetAsync(new Uri("https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations"));
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
 		httpClient.DefaultRequestHeaders.Authorization =
 			new AuthenticationHeaderValue(
 				"Bearer",
-				((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken);
+				accessToken);
 
 		httpClient.DefaultRequestHeaders.Accept
-		.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+		// Initial request URL.
 		// Applying a filter to retrieve only the policies for Windows custom configurations
-		HttpResponseMessage response = await httpClient.GetAsync(
-			new Uri("https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations?$filter=isof('microsoft.graph.windows10CustomConfiguration')"));
+		string nextLink = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations?$filter=isof('microsoft.graph.windows10CustomConfiguration')";
 
-		if (response.IsSuccessStatusCode)
+		// Accumulators for all pages.
+		List<DeviceConfigurationPolicy> allPolicies = [];
+
+		// Capture these from the first successful page (if present).
+		string? oDataContext = null;
+		string? msGraphTips = null;
+
+		while (!string.IsNullOrEmpty(nextLink))
 		{
+			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+				"RetrieveDeviceConfigurations",
+				() => new HttpRequestMessage(
+					HttpMethod.Get,
+					new Uri(nextLink)),
+				httpClient
+			);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				Logger.Write(string.Format(
+					GlobalVars.GetStr("FailedToRetrieveDeviceConfigurationsMessage"),
+					response.StatusCode));
+
+				string errorContentFailed = await response.Content.ReadAsStringAsync();
+
+				throw new InvalidOperationException(string.Format(
+					GlobalVars.GetStr("ErrorDetailsMessage"),
+					errorContentFailed));
+			}
+
 			string jsonResponse = await response.Content.ReadAsStringAsync();
-			Logger.Write(GlobalVars.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
 
-			// Deserialize the JSON response using the source-generated context.
-			DeviceConfigurationPoliciesResponse? policies = JsonSerializer.Deserialize(
+			// Root element for pagination handling.
+			JsonElement root = JsonSerializer.Deserialize(
 				jsonResponse,
-				MSGraphJsonContext.Default.DeviceConfigurationPoliciesResponse);
+				MSGraphJsonContext.Default.JsonElement);
 
-			return policies;
+			// Deserialize the page into the existing strongly typed response model to reuse mapping.
+			DeviceConfigurationPoliciesResponse? page =
+				JsonSerializer.Deserialize(
+					jsonResponse,
+					MSGraphJsonContext.Default.DeviceConfigurationPoliciesResponse);
+
+			// Capture context / tips only once (from first page that provides them).
+			if (oDataContext is null && root.TryGetProperty("@odata.context", out JsonElement ctxEl))
+			{
+				oDataContext = ctxEl.GetString();
+			}
+			if (msGraphTips is null && root.TryGetProperty("@microsoft.graph.tips", out JsonElement tipsEl))
+			{
+				msGraphTips = tipsEl.GetString();
+			}
+
+			// Aggregate page policies.
+			if (page?.Value is not null && page.Value.Count > 0)
+			{
+				allPolicies.AddRange(page.Value);
+			}
+
+			// Determine if there is another page.
+			if (root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement))
+			{
+				nextLink = nextLinkElement.GetString() ?? string.Empty;
+			}
+			else
+			{
+				nextLink = string.Empty;
+			}
 		}
-		else
-		{
-			Logger.Write(string.Format(
-				GlobalVars.GetStr("FailedToRetrieveDeviceConfigurationsMessage"),
-				response.StatusCode));
 
-			string errorContent = await response.Content.ReadAsStringAsync();
+		// Log after all pages processed.
+		Logger.Write(GlobalVars.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
 
-			throw new InvalidOperationException(string.Format(
-				GlobalVars.GetStr("ErrorDetailsMessage"),
-				errorContent));
-		}
+		// Return aggregated response.
+		return new DeviceConfigurationPoliciesResponse(
+			oDataContext,
+			msGraphTips,
+			allPolicies);
 	}
 
 
@@ -720,15 +832,22 @@ DeviceEvents
 
 		using SecHttpClient httpClient = new();
 
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
 		// Set up the HTTP headers.
-		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ((IRestrictedAuthenticatedAccounts)account).AuthResult.AccessToken);
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Construct the DELETE URL using the base DeviceConfigurationsURL.
 		string deleteUrl = $"{DeviceConfigurationsURL.OriginalString}/{policyId}";
 
 		// Send the DELETE request.
-		HttpResponseMessage response = await httpClient.DeleteAsync(new Uri(deleteUrl));
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"DeletePolicy",
+			() => new HttpRequestMessage(HttpMethod.Delete, new Uri(deleteUrl)),
+			httpClient
+		);
 
 		// Process the response.
 		if (response.IsSuccessStatusCode)
@@ -748,4 +867,154 @@ DeviceEvents
 		}
 	}
 
+	/// <summary>
+	/// Creates a new group (Security or Microsoft 365 Unified) in Microsoft Entra via Microsoft Graph.
+	/// </summary>
+	/// <param name="account">The authenticated account context.</param>
+	/// <param name="displayName">Display name of the group (required).</param>
+	/// <param name="description">Optional description.</param>
+	/// <param name="unifiedGroup">
+	/// If true, creates a Microsoft 365 (Unified) group.
+	/// If false, creates a Security group.
+	/// </param>
+	/// <returns></returns>
+	/// <exception cref="ArgumentException">Thrown if displayName is null or empty.</exception>
+	/// <exception cref="InvalidOperationException">Thrown if Graph returns a failure.</exception>
+	internal static async Task CreateGroup(
+		AuthenticatedAccounts account,
+		string displayName,
+		string? description,
+		bool unifiedGroup)
+	{
+
+		if (string.IsNullOrWhiteSpace(displayName))
+		{
+			throw new ArgumentException(GlobalVars.GetStr("GroupDisplayNameEmptyError"), nameof(displayName));
+		}
+
+		using SecHttpClient httpClient = new();
+
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+		// mailNickname is required by Graph for group creation. Sanitize it.
+		string mailNickname = new(displayName.Where(char.IsLetterOrDigit).ToArray());
+
+		if (string.IsNullOrWhiteSpace(mailNickname))
+		{
+			// Fallback if everything was stripped
+			mailNickname = "Group" + Guid.NewGuid().ToString("N")[..8];
+		}
+
+		// Prepare payload according to group type.
+		// Security group: mailEnabled = false, securityEnabled = true, groupTypes = []
+		// Unified (M365) group: mailEnabled = true, securityEnabled = false, groupTypes = ["Unified"]
+		GroupCreatePayload payload = new(
+			displayName: displayName,
+			description: string.IsNullOrWhiteSpace(description) ? null : description,
+			mailEnabled: unifiedGroup,
+			mailNickname: mailNickname,
+			securityEnabled: !unifiedGroup,
+			groupTypes: unifiedGroup ? ["Unified"] : []
+		);
+
+		string jsonPayload = JsonSerializer.Serialize(
+			payload,
+			MSGraphJsonContext.Default.GroupCreatePayload);
+
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"CreateGroup",
+			() => new HttpRequestMessage(HttpMethod.Post, GroupsUrl)
+			{
+				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
+			},
+			httpClient
+		);
+
+		if (response.IsSuccessStatusCode)
+		{
+			string content = await response.Content.ReadAsStringAsync();
+
+			JsonElement groupJson = JsonSerializer.Deserialize(content, MSGraphJsonContext.Default.JsonElement);
+
+			// Get the details of the newly created group for logging.
+			string? id = groupJson.GetProperty("id").GetString();
+			string? dn = groupJson.GetProperty("displayName").GetString();
+			string? desc = groupJson.TryGetProperty("description", out JsonElement dEl) ? dEl.GetString() : null;
+			string? secId = groupJson.TryGetProperty("securityIdentifier", out JsonElement sidEl) ? sidEl.GetString() : null;
+			DateTime created = groupJson.TryGetProperty("createdDateTime", out JsonElement cdtEl)
+				? cdtEl.GetDateTime() : DateTime.UtcNow;
+
+			Logger.Write(string.Format(
+				GlobalVars.GetStr("SuccessfullyCreatedGroupMessage"),
+				dn,
+				desc,
+				id,
+				secId,
+				created));
+		}
+		else
+		{
+			string errorContent = await response.Content.ReadAsStringAsync();
+
+			Logger.Write(string.Format(
+				GlobalVars.GetStr("FailedCreatingGroupError"),
+				response.StatusCode,
+				errorContent));
+
+			throw new InvalidOperationException(errorContent);
+		}
+	}
+
+	/// <summary>
+	/// Deletes a Microsoft Entra group by its ID.
+	/// </summary>
+	/// <param name="account">Authenticated account context.</param>
+	/// <param name="groupId">Target group ID.</param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static async Task DeleteGroup(AuthenticatedAccounts? account, string groupId)
+	{
+		if (account is null)
+		{
+			return;
+		}
+		if (string.IsNullOrWhiteSpace(groupId))
+		{
+			throw new ArgumentException("groupId is null or empty", nameof(groupId));
+		}
+
+		using SecHttpClient httpClient = new();
+
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
+		httpClient.DefaultRequestHeaders.Authorization =
+			new AuthenticationHeaderValue("Bearer", accessToken);
+		httpClient.DefaultRequestHeaders.Accept.Add(
+			new MediaTypeWithQualityHeaderValue("application/json"));
+
+		Uri deleteUri = new($"{GroupsUrl}/{groupId}");
+
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"DeleteGroup",
+			() => new HttpRequestMessage(HttpMethod.Delete, deleteUri),
+			httpClient
+		);
+
+		if (response.IsSuccessStatusCode)
+		{
+			Logger.Write($"Deleted group {groupId}");
+			return;
+		}
+		else
+		{
+			string errorContent = await response.Content.ReadAsStringAsync();
+			Logger.Write($"Failed to delete group {groupId} - {response.StatusCode}");
+			throw new InvalidOperationException(errorContent);
+		}
+	}
 }

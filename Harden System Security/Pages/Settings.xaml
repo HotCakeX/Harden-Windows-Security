@@ -3,16 +3,12 @@
     x:Class="HardenSystemSecurity.Pages.Settings"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HardenSystemSecurity.Pages"
     xmlns:others="using:AppControlManager.Others"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-    mc:Ignorable="d">
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ScrollViewer>
 
@@ -81,6 +77,62 @@
                                 <x:String>Left</x:String>
                                 <x:String>Top</x:String>
                             </ComboBox>
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 x:Uid="AppWindowBorderColorSettingsCard"
+                                                 HeaderIcon="{ui:FontIcon Glyph=&#xEF3C;}">
+
+                            <StackPanel HorizontalAlignment="Center">
+                                <ComboBox x:Name="BorderTypeSelection"
+                                          Margin="0,0,0,8"
+                                          HorizontalAlignment="Center"
+                                          SelectedIndex="0">
+                                    <x:String>Rainbow</x:String>
+                                    <x:String>Custom Color</x:String>
+                                </ComboBox>
+
+                                <!-- SwitchPresenter binds to a value -->
+                                <controls:SwitchPresenter Value="{x:Bind BorderTypeSelection.SelectedItem, Mode=OneWay}">
+                                    <!--And then only dynamically displays the Case with the matching Value -->
+
+                                    <controls:Case Value="Rainbow">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+                                            <Button x:Uid="RainbowBorderAnimationStartButton" Click="{x:Bind ViewModel.StartRainbowAnimation}" />
+                                            <Button x:Uid="RainbowBorderAnimationStopButton" Click="{x:Bind ViewModel.StopRainbowAnimation}" />
+                                        </StackPanel>
+                                    </controls:Case>
+
+                                    <controls:Case Value="Custom Color">
+
+                                        <controls:WrapPanel Orientation="Vertical"
+                                                            HorizontalSpacing="10"
+                                                            VerticalSpacing="10">
+
+                                            <StackPanel Orientation="Horizontal"
+                                                        HorizontalAlignment="Center"
+                                                        Spacing="10">
+                                                <Button x:Uid="SetBorderColorButton" Click="{x:Bind ViewModel.StartCustomColorAnimation}" />
+                                                <Button x:Uid="ResetBorderColorButton" Click="{x:Bind ViewModel.StopCustomColorAnimation}" />
+
+                                            </StackPanel>
+
+                                            <ColorPicker ColorSpectrumShape="Ring"
+                                                         IsMoreButtonVisible="False"
+                                                         IsColorSliderVisible="False"
+                                                         IsColorChannelTextInputVisible="False"
+                                                         IsHexInputVisible="False"
+                                                         IsAlphaEnabled="False"
+                                                         ColorChanged="{x:Bind ViewModel.ColorPicker_ColorChanged}"
+                                                         IsAlphaSliderVisible="False"
+                                                         IsAlphaTextInputVisible="False" />
+
+                                        </controls:WrapPanel>
+
+                                    </controls:Case>
+                                </controls:SwitchPresenter>
+
+                            </StackPanel>
+
                         </customUI:SettingsCardV2>
 
                     </controls:SettingsExpander.Items>
@@ -194,9 +246,39 @@
                 </controls:SettingsExpander>
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
-                    <HyperlinkButton x:Uid="SendFeedbackHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
-                    <HyperlinkButton x:Uid="Icons8WebsiteHyperLinkButton" NavigateUri="https://icons8.com" />
-                    <HyperlinkButton x:Uid="SourceCodeHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security" />
+                    <HyperlinkButton x:Uid="SendFeedbackHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose">
+                        <HyperlinkButton.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xED15;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </HyperlinkButton.ContentTemplate>
+                    </HyperlinkButton>
+
+                    <HyperlinkButton x:Uid="Icons8WebsiteHyperLinkButton" NavigateUri="https://icons8.com">
+                        <HyperlinkButton.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xED58;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </HyperlinkButton.ContentTemplate>
+                    </HyperlinkButton>
+
+                    <HyperlinkButton x:Uid="SourceCodeHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security">
+                        <HyperlinkButton.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE943;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </HyperlinkButton.ContentTemplate>
+                    </HyperlinkButton>
+
                 </controls:WrapPanel>
 
             </StackPanel>

@@ -16,13 +16,16 @@
 //
 
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+
 
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.ViewModels;
@@ -60,6 +63,11 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	private volatile bool _isDisposed;
 
 	/// <summary>
+	/// Reference to the ListView control for accessing selected items.
+	/// </summary>
+	private ListView? LogListView { get; set; }
+
+	/// <summary>
 	/// Filter predicate for log lines.
 	/// </summary>
 	private static readonly Func<string, string, bool> FilterPredicate = static (line, filter) =>
@@ -73,9 +81,9 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	private static readonly Func<string, LogLine> ItemFactory = static line => new(line);
 
 	/// <summary>
-	/// Observable collection of log file paths for the ComboBox.
+	/// List of log file paths for the ComboBox.
 	/// </summary>
-	internal readonly ObservableCollection<string> LogFiles = [];
+	internal readonly List<FileInfo> LogFiles = [];
 
 	/// <summary>
 	/// Incremental collection for the ListView.
@@ -85,12 +93,12 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// The currently selected log file path.
 	/// </summary>
-	internal string? SelectedLogFile
+	internal FileInfo? SelectedLogFile
 	{
 		get;
 		set
 		{
-			if (SP(ref field, value) && !string.IsNullOrWhiteSpace(value))
+			if (SP(ref field, value) && value is not null)
 			{
 				_ = DisplayLogContentAsync(value);
 			}
@@ -156,28 +164,23 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	{
 		try
 		{
-			// Get files matching the pattern;
-			FileInfo[] logFiles = Directory.GetFiles(App.LogsDirectory, LogFilePattern)
+			// Get files matching the pattern
+			IOrderedEnumerable<FileInfo> logFiles = Directory.GetFiles(App.LogsDirectory, LogFilePattern)
 				.Select(static f => new FileInfo(f))
-				.OrderByDescending(static f => f.CreationTime).ToArray();
+				.OrderByDescending(static f => f.CreationTime);
 
-			// Clear and fill the ObservableCollection with full file paths.
+			// Clear and fill the ObservableCollection
 			LogFiles.Clear();
 
-			for (int i = 0; i < logFiles.Length; i++)
-			{
-				LogFiles.Add(logFiles[i].FullName);
-			}
+			LogFiles.AddRange(logFiles);
 
-			// If files were found, select the first one and display its content.
-			if (logFiles.Length > 0)
-			{
-				SelectedLogFile = logFiles[0].FullName;
-			}
+			// If files were found, select the first one
+			if (LogFiles.Count > 0)
+				SelectedLogFile = LogFiles[0];
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -211,7 +214,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 				}
 				catch (Exception ex)
 				{
-					Logger.Write(ErrorWriter.FormatException(ex));
+					Logger.Write(ex);
 					return new EmptyFileDataProvider();
 				}
 			});
@@ -221,7 +224,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Runs every time the selected log file changes on the ComboBox.
 	/// </summary>
-	private async Task DisplayLogContentAsync(string filePath)
+	private async Task DisplayLogContentAsync(FileInfo log)
 	{
 		if (_isDisposed) return;
 
@@ -235,7 +238,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 
 			IsLoading = true;
 
-			if (File.Exists(filePath))
+			if (File.Exists(log.FullName))
 			{
 				// Perform immediate aggressive memory cleanup for the previous log file
 				await LogCollection.ClearAllData();
@@ -248,21 +251,17 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 
 				try
 				{
-					Func<Task<IFileDataProvider>> dataProviderFactory = CreateDataProviderFactory(filePath);
+					Func<Task<IFileDataProvider>> dataProviderFactory = CreateDataProviderFactory(log.FullName);
 
-					// Final check before starting data load
-					if (currentOperationId == _displayOperationId)
-					{
-						// Update the data provider factory and reload data
-						LogCollection.UpdateDataProviderFactory(dataProviderFactory);
-						await LogCollection.LoadDataAsync();
-					}
+					// Update the data provider factory and reload data
+					LogCollection.UpdateDataProviderFactory(dataProviderFactory);
+					await LogCollection.LoadDataAsync();
 				}
 				catch (Exception ex)
 				{
 					if (currentOperationId == _displayOperationId)
 					{
-						Logger.Write(ErrorWriter.FormatException(ex));
+						Logger.Write(ex);
 
 						await LogCollection.ClearAllData();
 					}
@@ -330,7 +329,38 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
+		}
+	}
+
+	/// <summary>
+	/// Copies the selected log lines to the clipboard.
+	/// </summary>
+	internal void CopySelectedLogLines()
+	{
+		try
+		{
+			if (LogListView?.SelectedItems is null || LogListView.SelectedItems.Count == 0)
+			{
+				return;
+			}
+
+			StringBuilder stringBuilder = new();
+
+			// Iterate through selected items and build the text to copy
+			for (int i = 0; i < LogListView.SelectedItems.Count; i++)
+			{
+				if (LogListView.SelectedItems[i] is LogLine logLine)
+				{
+					_ = stringBuilder.AppendLine(logLine.Text);
+				}
+			}
+
+			ClipboardManagement.CopyText(stringBuilder.ToString());
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
 		}
 	}
 
@@ -401,6 +431,8 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 			LogCollection?.Dispose();
 		}
 		catch { }
+
+		LogListView = null;
 	}
 
 	internal async void OpenLogsDirectory()
@@ -411,8 +443,17 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
+	/// <summary>
+	/// Loaded event for the UI ListView.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void ListView_Loaded(object sender, RoutedEventArgs e)
+	{
+		LogListView = (ListView)sender;
+	}
 }

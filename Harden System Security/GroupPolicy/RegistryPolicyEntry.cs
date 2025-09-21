@@ -121,12 +121,6 @@ internal sealed class RegistryPolicyEntry(
 	[JsonIgnore]
 	internal object? ParsedValue { get; } = GetValue(data, type);
 
-	/// <summary>
-	/// Used to reference the VM of the ListView displaying this type.
-	/// </summary>
-	[JsonIgnore]
-	internal GroupPolicyEditorVM? ParentVM;
-
 	private static object? GetValue(byte[] data, RegistryValueType type)
 	{
 		if (data == null || data.Length == 0)

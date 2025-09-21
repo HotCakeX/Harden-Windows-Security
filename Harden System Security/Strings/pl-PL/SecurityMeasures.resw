@@ -811,9 +811,6 @@
 <data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
     <value>Wyłącz TLS_RSA_WITH_AES_256_GCM_SHA384 - (Bez PFS)</value>
 </data>
-<data name="ExtensionManifestV2AvailabilityEdge-Edge" xml:space="preserve">
-    <value>Nigdy nie wyłączaj obsługi rozszerzeń Manifest V2</value>
-</data>
 <data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
     <value>Nigdy nie zezwalaj witrynom na żądanie dostępu do lokalnie podłączonych urządzeń USB</value>
 </data>
@@ -942,5 +939,14 @@
 </data>
 <data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
     <value>Wyłącz serwer TLS v1.1 - Część 2</value>
+</data>
+<data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>Utwórz widoki niestandardowe w Podglądzie zdarzeń Windows, aby łatwo uzyskiwać dostęp do ważnych zdarzeń zabezpieczeń.</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>Skonfiguruj ustawienia klienta SSH, aby używać bezpiecznych MAC (Message Authentication Codes).</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>Włącz inspekcję i śledzenie blokowania oraz odblokowywania ekranu blokady.</value>
 </data>
 </root>

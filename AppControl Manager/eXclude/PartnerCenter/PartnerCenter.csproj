@@ -1,25 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
-       <OutputType>Exe</OutputType>
-       <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
-       <TargetFramework>net10.0-windows10.0.22000.0</TargetFramework>
-       <Version>$(FileVersion)</Version>
-       <FileVersion>1.0.0.0</FileVersion>
-       <AssemblyVersion>$(FileVersion)</AssemblyVersion>
-       <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-       <StackTraceSupport>false</StackTraceSupport>
-       <PublishAot>True</PublishAot>
-       <PublishTrimmed>True</PublishTrimmed>
-       <TrimMode>full</TrimMode>
-       <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-       <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
-       <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
-       <TrimmerSingleWarn>false</TrimmerSingleWarn>
-       <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-       <OptimizationPreference>Speed</OptimizationPreference>
-       <Title>Partner Center</Title>
-       <Copyright>Violet Hansen</Copyright>
-       <Description>Partner Center</Description>
-       <DebugType>none</DebugType>
-   </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
+        <Version>$(FileVersion)</Version>
+        <FileVersion>1.0.0.0</FileVersion>
+        <AssemblyVersion>$(FileVersion)</AssemblyVersion>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <StackTraceSupport>false</StackTraceSupport>
+        <PublishAot>True</PublishAot>
+        <PublishTrimmed>True</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+        <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <OptimizationPreference>Speed</OptimizationPreference>
+        <Title>Partner Center</Title>
+        <Copyright>Violet Hansen</Copyright>
+        <Description>Partner Center</Description>
+        <DebugType>none</DebugType>
+        <PackageTags>Partner Center, Microsoft</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <IlcArg Include="--debug" />
+        <IlcArg Include="--verbose" />
+        <LinkerArg Include="/DEPENDENTLOADFLAG:0x800" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
+        <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
+    </ItemGroup>
+
 </Project>

@@ -35,8 +35,8 @@ internal sealed partial class MergePolicies : Page
 	/// </summary>
 	internal MergePolicies()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 }

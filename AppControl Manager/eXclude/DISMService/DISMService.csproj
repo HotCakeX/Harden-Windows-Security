@@ -1,20 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
-       <OutputType>WinExe</OutputType>
-       <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
-       <PublishAot>True</PublishAot>
-       <OptimizationPreference>Size</OptimizationPreference>
-       <PublishTrimmed>True</PublishTrimmed>
-       <TrimMode>full</TrimMode>
-       <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-       <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
-       <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
-       <TrimmerSingleWarn>false</TrimmerSingleWarn>
-       <UseNativeHttpHandler>false</UseNativeHttpHandler>
-       <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-       <Http3Support>false</Http3Support>
-       <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-       <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-       <DebugType>none</DebugType>
-   </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+        <Version>$(FileVersion)</Version>
+        <FileVersion>1.0.0.0</FileVersion>
+        <Title>DISMService</Title>
+        <Copyright>Violet Hansen</Copyright>
+        <Description>DISM Service Component</Description>
+        <AssemblyVersion>$(FileVersion)</AssemblyVersion>
+        <PublishAot>True</PublishAot>
+        <OptimizationPreference>Size</OptimizationPreference>
+        <PublishTrimmed>True</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+        <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+        <UseNativeHttpHandler>false</UseNativeHttpHandler>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <Http3Support>false</Http3Support>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <DebugType>none</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <IlcArg Include="--debug" />
+        <IlcArg Include="--verbose" />
+        <LinkerArg Include="/DEPENDENTLOADFLAG:0x800" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
+        <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
+    </ItemGroup>
 </Project>

@@ -53,6 +53,16 @@ internal sealed partial class ProtectVM : ViewModelBase
 	}
 
 	/// <summary>
+	/// The protection presets source for the ComboBox with ratings.
+	/// </summary>
+	internal readonly List<ProtectionPresetComboBoxType> ProtectionPresetsSource =
+	[
+		new ProtectionPresetComboBoxType(GlobalVars.GetStr("BasicProtectionPresetComboBoxItemText"), 1),
+		new ProtectionPresetComboBoxType(GlobalVars.GetStr("RecommendedProtectionPresetComboBoxItemText"), 3),
+		new ProtectionPresetComboBoxType(GlobalVars.GetStr("CompleteProtectionPresetComboBoxItemText"), 5)
+	];
+
+	/// <summary>
 	/// The order of these must match the order of the Categories Enum.
 	/// </summary>
 	private readonly BitmapImage[] CategoryImages = [
@@ -443,7 +453,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.WindowsNetworking_BlockNTLM,
-							description: GlobalVars.GetStr("ProtectSubCategory_BlockNTLM"))
+							description: GlobalVars.GetStr("ProtectSubCategory_BlockNTLM"),
+							tip: GlobalVars.GetStr("WindowsNetworking_BlockNTLMTIP"))
 							]
 						));
 
@@ -563,7 +574,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.LockScreen_NoLastSignedIn,
-							description: GlobalVars.GetStr("ProtectSubCategory_NoLastSignedIn")),
+							description: GlobalVars.GetStr("ProtectSubCategory_NoLastSignedIn"),
+							tip: GlobalVars.GetStr("UAC_NoFastUserSwitchingTIP")),
 
 							new SubCategoryDefinition(
 							subCategory:SubCategories.LockScreen_RequireCTRLAltDel,
@@ -580,7 +592,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.UAC_NoFastUserSwitching,
-							description: GlobalVars.GetStr("ProtectSubCategory_NoFastUserSwitching")),
+							description: GlobalVars.GetStr("ProtectSubCategory_NoFastUserSwitching"),
+							tip: GlobalVars.GetStr("UAC_NoFastUserSwitchingTIP")),
 
 							new SubCategoryDefinition(
 							subCategory:SubCategories.UAC_OnlyElevateSigned,
@@ -671,36 +684,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					/*
-
-					// 16
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.CertificateChecking,
-						title: GlobalVars.GetStr("ProtectCategory_CertificateCheck"),
-						subTitle: GlobalVars.GetStr("ProtectCategory_Description_CertificateCheck"),
-						logo: CategoryImages[(int)Categories.CertificateChecking],
-						subCategories: []
-						));
-
-					*/
-
-					/*
-
-					// 17
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.CountryIPBlocking,
-						title: GlobalVars.GetStr("ProtectCategory_CountryIPBlock"),
-						subTitle: GlobalVars.GetStr("ProtectCategory_Description_CountryIPBlock"),
-						logo: CategoryImages[(int)Categories.CountryIPBlocking],
-						subCategories: [
-							new SubCategoryDefinition(
-							subCategory:SubCategories.CountryIPBlocking_BlockOFACSanctionedCountries,
-							description: GlobalVars.GetStr("ProtectSubCategory_BlockOFACSanctionedCountries"))
-							]
-						));
-
-					*/
-
 					// 18
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.NonAdminCommands,
@@ -753,7 +736,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -768,7 +751,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -783,7 +766,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 

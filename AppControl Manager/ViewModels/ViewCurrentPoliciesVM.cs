@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
+using AppControlManager.SiPolicy;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -83,11 +84,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	} = true;
 
 	internal bool IncludeAppControlManagerSupplementalPoliciesCheckboxState { get; set => SP(ref field, value); }
-
-	internal string PoliciesCountTextBox
-	{
-		get; set => SP(ref field, value);
-	} = "Number of Policies: 0";
 
 	internal string? SearchBoxTextBox { get; set => SPT(ref field, value); }
 
@@ -221,21 +217,15 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				policies = await Task.Run(() => CiToolHelper.GetPolicies(ShouldIncludeSystem, ShouldIncludeBase, ShouldIncludeSupplemental).Where(x => !string.Equals(x.FriendlyName, GlobalVars.AppControlManagerSpecialPolicyName, StringComparison.OrdinalIgnoreCase)).ToList());
 			}
 
+			// Add all the retrieved policies to the list in class instance
+			AllPoliciesOutput.AddRange(policies);
+
 			// Store all of the policies in the ObservableCollection
 			foreach (CiPolicyInfo policy in policies)
 			{
-				// Attach the current instance of the ViewModel class to the object so we can use it in the XAML via compiled binding to find this ViewModel in the ItemTemplate of the ListView
-				policy.ParentViewModel = this;
-
-				// Add the retrieved policies to the list in class instance
-				AllPoliciesOutput.Add(policy);
-
 				// Add the retrieved policies to the ObservableCollection
 				AllPolicies.Add(policy);
 			}
-
-			// Update the UI once the task completes
-			PoliciesCountTextBox = GlobalVars.GetStr("NumberOfPolicies") + policies.Count;
 
 			CalculateColumnWidths();
 		}
@@ -591,31 +581,32 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								string XMLPolicyPath;
 
 								// Instantiate the Content Dialog
-								using SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!);
-
-								// Show the dialog and await its result
-								ContentDialogResult result = await customDialog.ShowAsync();
-
-								// Ensure primary button was selected
-								if (result is ContentDialogResult.Primary)
+								using (SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID!))
 								{
-									SignToolPath = customDialog.SignToolPath!;
-									CertPath = customDialog.CertificatePath!;
-									CertCN = customDialog.CertificateCommonName!;
-									XMLPolicyPath = customDialog.XMLPolicyPath!;
 
-									// Sometimes the content dialog lingers on or re-appears so making sure it hides
-									customDialog.Hide();
-								}
-								else
-								{
-									return;
-								}
+									// Show the dialog and await its result
+									ContentDialogResult result = await customDialog.ShowAsync();
 
+									// Ensure primary button was selected
+									if (result is ContentDialogResult.Primary)
+									{
+										SignToolPath = customDialog.SignToolPath!;
+										CertPath = customDialog.CertificatePath!;
+										CertCN = customDialog.CertificateCommonName!;
+										XMLPolicyPath = customDialog.XMLPolicyPath!;
+
+										// Sometimes the content dialog lingers on or re-appears so making sure it hides
+										customDialog.Hide();
+									}
+									else
+									{
+										return;
+									}
+								}
 								#endregion
 
 								// Add the unsigned policy rule option to the policy
-								CiRuleOptions.Set(filePath: XMLPolicyPath, rulesToAdd: [SiPolicy.OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+								CiRuleOptions.Set(filePath: XMLPolicyPath, rulesToAdd: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 								// Making sure SupplementalPolicySigners do not exist in the XML policy
 								CiPolicyHandler.RemoveSupplementalSigners(XMLPolicyPath);
@@ -628,7 +619,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip.p7");
 
 								// Convert the XML file to CIP, overwriting the unsigned one
-								SiPolicy.Management.ConvertXMLToBinary(XMLPolicyPath, null, CIPFilePath);
+								Management.ConvertXMLToBinary(XMLPolicyPath, null, CIPFilePath);
 
 								// Sign the CIP
 								SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
@@ -639,7 +630,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								// Deploy the signed CIP file
 								CiToolHelper.UpdatePolicy(CIPFilePath);
 
-								SiPolicy.SiPolicy policyObj = SiPolicy.Management.Initialize(XMLPolicyPath, null);
+								SiPolicy.SiPolicy policyObj = Management.Initialize(XMLPolicyPath, null);
 
 								// The time of first stage of the signed policy removal
 								// Since policy object has the full ID, in upper case with curly brackets,
@@ -786,9 +777,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			{
 				AllPolicies.Add(item);
 			}
-
-			// Update the policies count text
-			PoliciesCountTextBox = GlobalVars.GetStr("NumberOfPolicies") + AllPolicies.Count;
 
 			if (Sv != null && savedHorizontal.HasValue)
 			{

@@ -4,19 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:others="using:AppControlManager.Others"
     xmlns:VM="using:AppControlManager.ViewModels"
-    d:DataContext="{d:DesignInstance Type=VM:ViewCurrentPoliciesVM}"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:AppControlManager="using:AppControlManager"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-    mc:Ignorable="d">
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
 
@@ -92,7 +86,22 @@
                     </Button.KeyboardAccelerators>
                 </Button>
 
-                <TextBlock Text="{x:Bind ViewModel.PoliciesCountTextBox, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center" x:Uid="PoliciesCountTextBlock"/>
+                <!-- Total chip -->
+                <Border CornerRadius="8"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Padding="10,6"
+                        BorderThickness="1"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock VerticalAlignment="Center">
+                            <Run x:Uid="TotalText" />
+                            <Run Text="{x:Bind ViewModel.AllPolicies.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
 
                 <Button IsEnabled="{x:Bind ViewModel.RemovePolicyButtonState, Mode=OneWay}" Click="{x:Bind ViewModel.RemovePolicy_Click}" HorizontalAlignment="Center" VerticalAlignment="Center" x:Uid="RemovePolicyButton">
                     <Button.Content>
@@ -132,22 +141,18 @@
 
         </Border>
 
-        <customUI:ListViewV2
-  RegistryKey="Locally_Deployed_Policies"
-  Grid.Row="2"
-  SelectionMode="Single"
-  IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
-  SelectedIndex="{x:Bind ViewModel.ListViewSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-  SelectionChanged="{x:Bind ViewModel.DeployedPolicies_SelectionChanged}"
-  SelectedItem="{x:Bind ViewModel.ListViewSelectedPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-  ItemsSource="{x:Bind ViewModel.AllPolicies, Mode=OneWay}">
+        <customUI:ListViewV2 RegistryKey="Locally_Deployed_Policies"
+                             Grid.Row="2"
+                             SelectionMode="Single"
+                             IsEnabled="{x:Bind ViewModel.UIElementsEnabledState, Mode=OneWay}"
+                             SelectedIndex="{x:Bind ViewModel.ListViewSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             SelectionChanged="{x:Bind ViewModel.DeployedPolicies_SelectionChanged}"
+                             SelectedItem="{x:Bind ViewModel.ListViewSelectedPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             ItemsSource="{x:Bind ViewModel.AllPolicies, Mode=OneWay}">
 
             <customUI:ListViewV2.Header>
 
-                <Border CornerRadius="5" Background="Black">
-                    <interactivity:Interaction.Behaviors>
-                        <customUI:StickyHeaderBehaviorV2/>
-                    </interactivity:Interaction.Behaviors>
+                <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">                    
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->
@@ -164,16 +169,16 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Header Buttons -->
-                        <Button x:Uid="PolicyIDColumnHeaderBtn" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="BasePolicyIDColumnHeaderBtn" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="BasePolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="FriendlyNameColumnHeaderBtn" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="FriendlyName" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="VersionColumnHeaderBtn" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="Version" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="IsAuthorizedColumnHeaderBtn" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsAuthorized" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="IsEnforcedColumnHeaderBtn" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsEnforced" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="IsOnDiskColumnHeaderBtn" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsOnDisk" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="IsSignedPolicyColumnHeaderBtn" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsSignedPolicy" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="IsSystemPolicyColumnHeaderBtn" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsSystemPolicy" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
-                        <Button x:Uid="PolicyOptionsColumnHeaderBtn" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyOptions" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="PolicyIDColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="BasePolicyIDColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="BasePolicyID" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="FriendlyNameColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="FriendlyName" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="VersionColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="Version" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IsAuthorizedColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsAuthorized" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IsEnforcedColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsEnforced" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IsOnDiskColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsOnDisk" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IsSignedPolicyColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsSignedPolicy" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="IsSystemPolicyColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="IsSystemPolicy" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
+                        <Button x:Uid="PolicyOptionsColumnHeaderBtn" FontFamily="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=OneWay}" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Tag="PolicyOptions" Click="{x:Bind ViewModel.HeaderColumnSortingButton_Click}" />
 
                         <!-- GridSplitters between columns -->
                         <controls:GridSplitter Grid.Column="1" />
@@ -191,16 +196,16 @@
 
             <!-- DataTemplate for ListView items -->
             <customUI:ListViewV2.ItemTemplate>
-                <DataTemplate x:DataType="others:CiPolicyInfo">
+                <DataTemplate x:DataType="others:CiPolicyInfo" xmlns:VMs="using:AppControlManager.ViewModels">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
 
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind ParentViewModel.CopySelectedPolicies_Click}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopySelectedPolicies_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind ParentViewModel.CopySelectedPolicies_Click}"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopySelectedPolicies_Click}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />
@@ -214,61 +219,61 @@
 
                                     <MenuFlyoutSubItem.Items>
 
-                                        <MenuFlyoutItem x:Uid="PolicyIDHeader" Tag="PolicyID" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="PolicyIDHeader" Tag="PolicyID" Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="BasePolicyIDHeader" Tag="BasePolicyID" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="BasePolicyIDHeader" Tag="BasePolicyID" Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="FriendlyNameHeader" Tag="FriendlyName" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="FriendlyNameHeader" Tag="FriendlyName" Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="VersionHeader" Tag="Version" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="VersionHeader" Tag="Version" Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsAuthorizedHeader" Tag="IsAuthorized" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="IsAuthorizedHeader" Tag="IsAuthorized" Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsEnforcedHeader" Tag="IsEnforced" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="IsEnforcedHeader" Tag="IsEnforced" Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsOnDiskHeader" Tag="IsOnDisk" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="IsOnDiskHeader" Tag="IsOnDisk" Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsSignedPolicyHeader" Tag="IsSignedPolicy" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="IsSignedPolicyHeader" Tag="IsSignedPolicy" Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="IsSystemPolicyHeader" Tag="IsSystemPolicy" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="IsSystemPolicyHeader" Tag="IsSystemPolicy" Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
 
-                                        <MenuFlyoutItem x:Uid="PolicyOptionsHeader" Tag="PolicyOptions" Click="{x:Bind ParentViewModel.CopyPolicyProperty_Click}">
+                                        <MenuFlyoutItem x:Uid="PolicyOptionsHeader" Tag="PolicyOptions" Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.CopyPolicyProperty_Click}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8C8;" />
                                             </MenuFlyoutItem.Icon>
@@ -281,27 +286,27 @@
                         </Grid.ContextFlyout>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth1, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth2, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth3, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth4, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth5, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth6, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth7, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth8, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth9, Mode=OneWay}" />
-                            <ColumnDefinition Width="{x:Bind ParentViewModel.ColumnWidth10, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.ColumnWidth6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.ColumnWidth7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.ColumnWidth8, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.ColumnWidth9, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.ColumnWidth10, Mode=OneWay}" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind PolicyID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
-                        <TextBlock Text="{x:Bind BasePolicyID}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
-                        <TextBlock Text="{x:Bind FriendlyName}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
-                        <TextBlock Text="{x:Bind Version}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
-                        <TextBlock Text="{x:Bind IsAuthorized}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
-                        <TextBlock Text="{x:Bind IsEnforced}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
-                        <TextBlock Text="{x:Bind IsOnDisk}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
-                        <TextBlock Text="{x:Bind IsSignedPolicy}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
-                        <TextBlock Text="{x:Bind IsSystemPolicy}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
-                        <TextBlock Text="{x:Bind PolicyOptionsDisplay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
+                        <TextBlock Text="{x:Bind PolicyID}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                        <TextBlock Text="{x:Bind BasePolicyID}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                        <TextBlock Text="{x:Bind FriendlyName}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                        <TextBlock Text="{x:Bind Version}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                        <TextBlock Text="{x:Bind IsAuthorized}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                        <TextBlock Text="{x:Bind IsEnforced}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                        <TextBlock Text="{x:Bind IsOnDisk}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                        <TextBlock Text="{x:Bind IsSignedPolicy}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
+                        <TextBlock Text="{x:Bind IsSystemPolicy}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
+                        <TextBlock Text="{x:Bind PolicyOptionsDisplay}" FontFamily="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.AppSettings.ListViewFontFamily, Mode=OneWay}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
                     </Grid>
                 </DataTemplate>
             </customUI:ListViewV2.ItemTemplate>

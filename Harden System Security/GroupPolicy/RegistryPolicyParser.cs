@@ -528,7 +528,7 @@ internal static class RegistryPolicyParser
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				throw;
 			}
 		}
@@ -601,7 +601,7 @@ internal static class RegistryPolicyParser
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 
 			// Mark all policies as unverified on error
 			foreach (RegistryPolicyEntry policy in policies)
@@ -632,58 +632,74 @@ internal static class RegistryPolicyParser
 					return;
 				}
 
-				// Read the current system policies
-				RegistryPolicyFile policyFile = ParseFile(PolicyContextFilePath);
-
-				// Set of keys to remove
-				HashSet<string> policiesToRemove = new(StringComparer.OrdinalIgnoreCase);
-				foreach (RegistryPolicyEntry policy in policies)
-				{
-					string key = $"{policy.KeyName}|{policy.ValueName}";
-					_ = policiesToRemove.Add(key);
-				}
-
-				// Filter out the policies to be removed
-				List<RegistryPolicyEntry> remainingEntries = [];
-				List<string> removedEntries = [];
-
-				foreach (RegistryPolicyEntry entry in policyFile.Entries)
-				{
-					string key = $"{entry.KeyName}|{entry.ValueName}";
-					if (policiesToRemove.Contains(key))
-					{
-						removedEntries.Add($"{entry.KeyName}\\{entry.ValueName}");
-					}
-					else
-					{
-						remainingEntries.Add(entry);
-					}
-				}
-
-				// Create a new policy file without the removed entries
-				RegistryPolicyFile updatedFile = new(
-					signature: RegistryPolicyFile.REGISTRY_FILE_SIGNATURE,
-					version: RegistryPolicyFile.REGISTRY_FILE_VERSION,
-					entries: remainingEntries
-				);
-
-				// Write the updated policy file
-				WriteFile(PolicyContextFilePath, updatedFile);
-
-				foreach (string removedEntry in removedEntries)
-				{
-					Logger.Write(string.Format(GlobalVars.GetStr("RemovedPolicyEntry"), removedEntry));
-				}
-
-				RefreshPolicies.Refresh();
-
-				Logger.Write(string.Format(GlobalVars.GetStr("PolicyRemovalComplete"), removedEntries.Count));
+				RemovePoliciesFromPOLFile(PolicyContextFilePath, policies);
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(ErrorWriter.FormatException(ex));
+				Logger.Write(ex);
 				throw;
 			}
 		}
+	}
+
+	/// <summary>
+	/// Removes policies from a specific POL file and saves the updated file back to disk.
+	/// </summary>
+	/// <param name="polFilePath">Path to the POL file to modify</param>
+	/// <param name="policies">List of policies to remove from the file</param>
+	internal static void RemovePoliciesFromPOLFile(string polFilePath, List<RegistryPolicyEntry> policies)
+	{
+		// Read the current system policies
+		RegistryPolicyFile policyFile = ParseFile(polFilePath);
+
+		// Set of keys to remove
+		HashSet<string> policiesToRemove = new(StringComparer.OrdinalIgnoreCase);
+		foreach (RegistryPolicyEntry policy in policies)
+		{
+			string key = $"{policy.KeyName}|{policy.ValueName}";
+			_ = policiesToRemove.Add(key);
+		}
+
+		// Filter out the policies to be removed
+		List<RegistryPolicyEntry> remainingEntries = [];
+		List<string> removedEntries = [];
+
+		foreach (RegistryPolicyEntry entry in policyFile.Entries)
+		{
+			string key = $"{entry.KeyName}|{entry.ValueName}";
+			if (policiesToRemove.Contains(key))
+			{
+				removedEntries.Add($"{entry.KeyName}\\{entry.ValueName}");
+			}
+			else
+			{
+				remainingEntries.Add(entry);
+			}
+		}
+
+		// Create a new policy file without the removed entries
+		RegistryPolicyFile updatedFile = new(
+			signature: RegistryPolicyFile.REGISTRY_FILE_SIGNATURE,
+			version: RegistryPolicyFile.REGISTRY_FILE_VERSION,
+			entries: remainingEntries
+		);
+
+		// Write the updated policy file
+		WriteFile(polFilePath, updatedFile);
+
+		foreach (string removedEntry in removedEntries)
+		{
+			Logger.Write(string.Format(GlobalVars.GetStr("RemovedPolicyEntry"), removedEntry));
+		}
+
+		if (string.Equals(polFilePath, LocalPolicyUserFilePath, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(polFilePath, LocalPolicyMachineFilePath, StringComparison.OrdinalIgnoreCase))
+		{
+			// Refresh the policies if it's a system policy file
+			RefreshPolicies.Refresh();
+		}
+
+		Logger.Write(string.Format(GlobalVars.GetStr("PolicyRemovalComplete"), removedEntries.Count));
+
 	}
 }

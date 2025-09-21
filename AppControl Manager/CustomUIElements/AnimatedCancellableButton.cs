@@ -29,7 +29,7 @@ using Windows.UI;
 
 namespace AppControlManager.CustomUIElements;
 
-internal sealed partial class AnimatedCancellableButton : Button, IDisposable
+internal sealed partial class AnimatedCancellableButton : Button, IDisposable, IExplicitDisposalOptIn
 {
 	private const string ZeroOffsetString = "0";
 	private const string ButtonDefaultText = "Button";
@@ -73,15 +73,6 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 	private int _colorHoldCounter;
 	private bool _inColorTransition;
 	private const double SHADOW_OPACITY = 0.85;
-
-	private static readonly AttachedCardShadow TransparentShadow = new()
-	{
-		Color = TransparentColor,
-		Offset = ZeroOffsetString,
-		BlurRadius = 0.0,
-		Opacity = 0.0,
-		CornerRadius = 0.0
-	};
 
 	private static readonly Color[] _shadowColors = [
 		Color.FromArgb(255, 255, 192, 203), // Pink
@@ -405,6 +396,26 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 		}
 	}
 
+	// Allows opting out of automatic disposal on Unloaded (default false).
+	internal static readonly DependencyProperty DisposeOnlyOnExplicitCallProperty =
+		DependencyProperty.Register(
+			nameof(DisposeOnlyOnExplicitCall),
+			typeof(bool),
+			typeof(AnimatedCancellableButton),
+			new PropertyMetadata(false));
+
+	/// <summary>
+	/// When true, the control will not dispose itself on Unloaded. The host must call Dispose() explicitly (e.g. in Page.OnNavigatedFrom).
+	/// Defaults to false.
+	/// Currently only used for pages that implement TabView. Cycling through different tabs in the same page that has a TabView causes unload event to fire unnecessarily
+	/// So we use Page's code-behind instead to manually call the dispose method.
+	/// </summary>
+	public bool DisposeOnlyOnExplicitCall
+	{
+		get => (bool)GetValue(DisposeOnlyOnExplicitCallProperty);
+		set => SetValue(DisposeOnlyOnExplicitCallProperty, value);
+	}
+
 	private void InitializeClickDelayTimer()
 	{
 		_clickDelayTimer = new DispatcherTimer
@@ -692,7 +703,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 
 			if (_hasShadowApplied)
 			{
-				Effects.SetShadow(this, TransparentShadow);
+				ClearValue(Effects.ShadowProperty);
 				_hasShadowApplied = false;
 			}
 
@@ -1168,6 +1179,12 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 
 	private void AnimatedCancellableButton_Unloaded(object? sender, RoutedEventArgs e)
 	{
+		// Respect DisposeOnlyOnExplicitCall flag so that
+		// in special pages (Pages with TabView) transient Unloaded does not kill the control.
+		if (DisposeOnlyOnExplicitCall)
+		{
+			return;
+		}
 		if (_isDisposed) return;
 		PerformCleanup();
 	}
@@ -1203,12 +1220,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable
 
 			if (_hasShadowApplied)
 			{
-				try
-				{
-					Effects.SetShadow(this, TransparentShadow);
-				}
-				catch (Exception)
-				{ }
+				ClearValue(Effects.ShadowProperty);
 				_hasShadowApplied = false;
 			}
 

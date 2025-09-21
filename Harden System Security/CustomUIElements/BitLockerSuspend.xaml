@@ -1,0 +1,59 @@
+<customUI:ContentDialogV2
+    x:Class="HardenSystemSecurity.CustomUIElements.BitLockerSuspend"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:bitLocker="using:HardenSystemSecurity.BitLocker"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    x:Uid="BitLockerSuspendContentDialog"
+    DefaultButton="Close"
+    IsPrimaryButtonEnabled="True"
+    Style="{ThemeResource DefaultContentDialogStyle}"
+    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <Grid RowSpacing="12" Padding="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   x:Uid="BitLockerSuspendContentDialogSubTitle"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,2"
+                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+        <ScrollViewer Grid.Row="1"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Top">
+
+            <StackPanel Style="{StaticResource PanelStyleV2}"
+                        animations:Implicit.ShowAnimations="{StaticResource ShowTransitions}"
+                        animations:Implicit.HideAnimations="{StaticResource HideTransitions}">
+
+                <TextBlock x:Uid="BitLockerSuspendEncryptionDescription"
+                           TextWrapping="Wrap"
+                           Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        Padding="12"
+                        CornerRadius="6">
+                    <StackPanel Spacing="12">
+                        <TextBlock x:Uid="BitLockerSuspendEncryptionRestartCountDescription" TextWrapping="Wrap" />
+                        <NumberBox Minimum="1"
+                                   Maximum="15"
+                                   SpinButtonPlacementMode="Inline"
+                                   SmallChange="1"
+                                   Value="{x:Bind RestartCount, Mode=TwoWay}" />
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+
+        </ScrollViewer>
+
+    </Grid>
+
+</customUI:ContentDialogV2>

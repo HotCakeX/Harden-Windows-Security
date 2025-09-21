@@ -28,39 +28,30 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
-internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
+internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHost, IDisposable
 {
 
 	#region MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
-	/// <summary>
-	/// To store the view model of the MS Graph that is retrieved from the constructor
-	/// </summary>
-	internal readonly ViewModelForMSGraph _ViewModelMSGraph;
+	public AuthenticationCompanion AuthCompanionCLS { get; private set; }
 
-	internal readonly AuthenticationCompanion AuthCompanionCLS;
-
-	/// <summary>
-	/// Enable the retrieve button whenever a value is set as Active account
-	/// </summary>
-	/// <param name="on"></param>
-	private void UpdateButtonsStates(bool on) => RetrievePoliciesButtonState = on;
+	private void UpdateButtonsStates(bool on)
+	{
+		// Enable the retrieve button if a valid value is set as Active Account
+		AreElementsEnabled = on;
+	}
 
 	/// <summary>
 	/// Automatically provided via constructor injection by the DI container during build.
 	/// </summary>
 	/// <param name="GraphVM">The view model instance used to manage data and state related to Microsoft Graph.</param>
-	internal ViewOnlinePoliciesVM(ViewModelForMSGraph GraphVM)
+	internal ViewOnlinePoliciesVM()
 	{
-		_ViewModelMSGraph = GraphVM;
-
 		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value), AuthenticationContext.Intune);
-
-		_ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
 
 		MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
@@ -84,21 +75,16 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
 	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
 
-	internal bool ListViewState { get; set => SP(ref field, value); } = true;
-
-	internal bool SearchTextBoxState { get; set => SP(ref field, value); } = true;
-
-	internal bool RetrievePoliciesButtonState { get; set => SP(ref field, value); }
-
 	internal CiPolicyInfo? ListViewSelectedPolicy { get; set => SP(ref field, value); }
 
 	internal int ListViewSelectedIndex { get; set => SP(ref field, value); }
 
-	internal string PoliciesCountTextBox { get; set => SP(ref field, value); } = "Number of Policies: 0";
-
 	internal string? SearchBoxTextBox { get; set => SPT(ref field, value); }
 
-	internal bool RemovePolicyButtonState { get; set => SP(ref field, value); }
+	/// <summary>
+	/// Determines whether the UI elements are enabled or disabled.
+	/// </summary>
+	public bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
 
 	#endregion
 
@@ -119,18 +105,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 	internal GridLength ColumnWidth6 { get; set => SP(ref field, value); }
 
 	#endregion
-
-
-	internal void DeployedPolicies_SelectionChanged()
-	{
-		if (ListViewSelectedPolicy is null)
-		{
-			return;
-		}
-
-		RemovePolicyButtonState = true;
-	}
-
 
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
@@ -174,7 +148,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 	{
 		try
 		{
-			ManageButtonsStates(false);
+			AreElementsEnabled = false;
 
 			AllPoliciesOutput.Clear();
 			AllPolicies.Clear();
@@ -241,8 +215,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 							// Replace the rule options number with their actual string names
 							policyResult.Item2.PolicyOptions = optionsToReplaceWith;
 
-							policyResult.Item2.OnlineParentViewModel = this;
-
 							policyResult.Item2.IntunePolicyObjectID = item.Id;
 
 							AllPolicies.Add(policyResult.Item2);
@@ -267,7 +239,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 							policyOptions: null
 						)
 						{
-							OnlineParentViewModel = this,
 							IntunePolicyObjectID = item.Id
 						};
 
@@ -285,26 +256,8 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 		}
 		finally
 		{
-			// Update the policies count text
-			PoliciesCountTextBox = string.Format(
-				GlobalVars.GetStr("NumberOfPoliciesMessage"),
-				AllPolicies.Count);
-
-			ManageButtonsStates(true);
+			AreElementsEnabled = true;
 		}
-	}
-
-
-	/// <summary>
-	/// Enable or Disable button states
-	/// </summary>
-	/// <param name="on">True will enable and False will disable UI buttons when an operation is ongoing</param>
-	private void ManageButtonsStates(bool on)
-	{
-		RetrievePoliciesButtonState = on;
-		SearchTextBoxState = on;
-		ListViewState = on;
-		RemovePolicyButtonState = on;
 	}
 
 	#region Sort
@@ -331,7 +284,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 	}
 
 	#endregion
-
 
 	/// <summary>
 	/// Event handler for the search box text change
@@ -378,9 +330,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 				AllPolicies.Add(item);
 			}
 
-			// Update the policies count text
-			PoliciesCountTextBox = GlobalVars.GetStr("NumberOfPolicies") + AllPolicies.Count;
-
 			if (Sv != null && savedHorizontal.HasValue)
 			{
 				// restore horizontal scroll position
@@ -413,7 +362,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 					GlobalVars.GetStr("IntunePolicyObjectIdNullMessage"));
 			}
 
-			ManageButtonsStates(false);
+			AreElementsEnabled = false;
 
 			await MicrosoftGraph.Main.DeletePolicy(
 				AuthCompanionCLS.CurrentActiveAccount,
@@ -424,10 +373,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 			// Remove the policy from the Lists after removal from Intune
 			_ = AllPolicies.Remove(ListViewSelectedPolicy);
 			_ = AllPoliciesOutput.Remove(ListViewSelectedPolicy);
-
-			// Update the policies count text
-			PoliciesCountTextBox =
-				GlobalVars.GetStr("NumberOfPolicies") + AllPolicies.Count;
 		}
 		catch (Exception ex)
 		{
@@ -435,7 +380,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 		}
 		finally
 		{
-			ManageButtonsStates(true);
+			AreElementsEnabled = true;
 			MainInfoBarIsClosable = true;
 		}
 	}
@@ -452,7 +397,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 		if (lv.SelectedItems.Count > 0)
 		{
 			// SelectedItems is an IList, and contains CiPolicyInfo
-			ListViewHelper.ConvertRowToText(lv.SelectedItems, ViewModels.ViewCurrentPoliciesVM.CiPolicyInfoPropertyMappings);
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, ViewCurrentPoliciesVM.CiPolicyInfoPropertyMappings);
 		}
 	}
 
@@ -470,7 +415,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 
 		if (lv is null) return;
 
-		if (ViewModels.ViewCurrentPoliciesVM.CiPolicyInfoPropertyMappings.TryGetValue(key, out var map))
+		if (ViewCurrentPoliciesVM.CiPolicyInfoPropertyMappings.TryGetValue(key, out var map))
 		{
 			// TElement = CiPolicyInfo, copy just that one property
 			ListViewHelper.CopyToClipboard<CiPolicyInfo>(ci => map.Getter(ci)?.ToString(), lv);
@@ -479,14 +424,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IDisposable
 
 	public void Dispose()
 	{
-		try
-		{
-			// Unsubscribe from the collection changed event to prevent memory leaks
-			_ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged -= AuthCompanionCLS.AuthenticatedAccounts_CollectionChanged;
-		}
-		catch { }
-
 		// Dispose the AuthenticationCompanion which implements IDisposable
-		AuthCompanionCLS?.Dispose();
+		AuthCompanionCLS.Dispose();
 	}
 }

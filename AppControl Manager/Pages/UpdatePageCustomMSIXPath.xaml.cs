@@ -30,8 +30,8 @@ internal sealed partial class UpdatePageCustomMSIXPath : Page
 
 	internal UpdatePageCustomMSIXPath()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
-		this.DataContext = ViewModel;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
 }

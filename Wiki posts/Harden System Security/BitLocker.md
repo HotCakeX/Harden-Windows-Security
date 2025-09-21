@@ -62,3 +62,40 @@
 Refer to this [official documentation about the countermeasures of Bitlocker](https://learn.microsoft.com/windows/security/information-protection/bitlocker/bitlocker-countermeasures)
 
 <br>
+
+## BitLocker Management
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/b70cfc85f491ca1e80bd00df62bfebeb0f3b7d5b/Pictures/APNGs/Harden%20System%20Security/HardenSystemSecurity_BitLockerManagementDemo.apng" alt="BitLocker management in Harden System Security" />
+
+<br>
+
+### Full Drive Encryption
+
+You can enable BitLocker encryption for the **Operating System (OS) drive**, **fixed drives**, and **removable drives** via a guided, safety-first workflow. All messages and UI elements related to BitLocker are localized for the languages supported by the app. BitLocker management is implemented in the low-level **ComManager** component of Harden System Security.
+
+### Add or Modify Key Protectors
+
+A step-by-step workflow allows you to add and modify a variety of key protectors for BitLocker-protected volumes, making key management straightforward and auditable.
+
+### Suspend BitLocker Encryption
+
+Need to update firmware or perform maintenance? Use the Suspend feature to temporarily suspend BitLocker protection on the OS drive. You may optionally specify the number of restarts after which protection will be automatically resumed.
+
+### Resume BitLocker Encryption
+
+Quickly resume protection for drives whose BitLocker state was previously suspended.
+
+### Backup BitLocker Key Protectors
+
+Back up recovery passwords and key protector details for your drives so you have access to the required 48-character recovery keys when needed.
+
+After enabling BitLocker for a drive or adding a new Key Protector, the Export button will light up briefly, giving you a subtle reminder that it's best to export the data and back them up so you don't forget that.
+
+<br>
+
+![ExportButtonLightup](https://github.com/user-attachments/assets/54fb97bb-51fb-4dcd-a1a8-7527c41dc2ff)
+
+> [!TIP]
+> Because BitLocker operations can be consequential, every action requires explicit confirmation before proceeding. Additionally, the preselected (focused) button in each confirmation dialog is **Cancel** to further reduce the chance of accidental acceptance.
+
+<br>

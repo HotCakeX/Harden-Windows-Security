@@ -20,8 +20,18 @@ namespace AppControlManager.MicrosoftGraph;
 /// <summary>
 /// Different methods for the sign in process
 /// </summary>
-internal enum SignInMethods
+internal enum SignInMethods : int
 {
-	WebAccountManager,
-	WebBrowser
+	WebAccountManager = 0,
+	WebBrowser = 1
+}
+
+internal sealed class AuthenticationContextComboBox(
+	string name,
+	SignInMethods authContext,
+	string image)
+{
+	internal string Name => name;
+	internal SignInMethods AuthContext => authContext;
+	internal string Image => image;
 }

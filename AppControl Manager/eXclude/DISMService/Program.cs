@@ -39,9 +39,6 @@ internal sealed class Program
 		{
 			if (_writer != null && _pipeServer?.IsConnected == true)
 			{
-				// Send general progress
-				SendProgress(current, total);
-
 				// Send item-specific progress if we have a current item
 				if (!string.IsNullOrEmpty(_currentItemName))
 				{
@@ -320,11 +317,13 @@ internal sealed class Program
 
 			SendResponse(Response.OperationComplete);
 			_writer!.Write(success);
-			_currentItemName = null;
 		}
 		catch (Exception ex)
 		{
 			SendError($"AddCapability error: {ex.Message}");
+		}
+		finally
+		{
 			_currentItemName = null;
 		}
 	}
@@ -339,11 +338,13 @@ internal sealed class Program
 
 			SendResponse(Response.OperationComplete);
 			_writer!.Write(success);
-			_currentItemName = null;
 		}
 		catch (Exception ex)
 		{
 			SendError($"RemoveCapability error: {ex.Message}");
+		}
+		finally
+		{
 			_currentItemName = null;
 		}
 	}
@@ -370,11 +371,13 @@ internal sealed class Program
 
 			SendResponse(Response.OperationComplete);
 			_writer!.Write(success);
-			_currentItemName = null;
 		}
 		catch (Exception ex)
 		{
 			SendError($"EnableFeature error: {ex.Message}");
+		}
+		finally
+		{
 			_currentItemName = null;
 		}
 	}
@@ -389,11 +392,13 @@ internal sealed class Program
 
 			SendResponse(Response.OperationComplete);
 			_writer!.Write(success);
-			_currentItemName = null;
 		}
 		catch (Exception ex)
 		{
 			SendError($"DisableFeature error: {ex.Message}");
+		}
+		finally
+		{
 			_currentItemName = null;
 		}
 	}
@@ -434,25 +439,6 @@ internal sealed class Program
 			{
 				_writer.Write((byte)Response.ItemProgress);
 				WriteString(itemName);
-				_writer.Write(current);
-				_writer.Write(total);
-				_writer.Flush();
-				_pipeServer.Flush();
-			}
-		}
-		catch
-		{
-			// Ignore flush errors
-		}
-	}
-
-	private static void SendProgress(uint current, uint total)
-	{
-		try
-		{
-			if (_writer != null && _pipeServer?.IsConnected == true)
-			{
-				_writer.Write((byte)Response.Progress);
 				_writer.Write(current);
 				_writer.Write(total);
 				_writer.Flush();
@@ -546,7 +532,6 @@ internal enum Response : byte
 {
 	ResultsData = 1,
 	OperationComplete = 2,
-	Progress = 3,
 	ShutdownComplete = 4,
 	Log = 5,
 	ItemProgress = 6,

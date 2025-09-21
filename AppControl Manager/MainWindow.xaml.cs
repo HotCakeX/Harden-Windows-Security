@@ -49,10 +49,10 @@ internal sealed partial class MainWindow : Window
 {
 
 #pragma warning disable CA1822
-	private MainWindowVM ViewModel { get; } = ViewModelProvider.MainWindowVM;
-	private AppSettings.Main AppSettings { get; } = App.Settings;
+	private MainWindowVM ViewModel => ViewModelProvider.MainWindowVM;
+	private AppSettings.Main AppSettings => App.Settings;
 #if APP_CONTROL_MANAGER
-	private SidebarVM sidebarVM { get; } = ViewModelProvider.SidebarVM;
+	private SidebarVM sidebarVM => ViewModelProvider.SidebarVM;
 #endif
 #pragma warning restore CA1822
 
@@ -424,6 +424,22 @@ internal sealed partial class MainWindow : Window
 			ViewModel.RebuildBreadcrumbMappings();
 			ViewModel.RebuildNavigationPageToItemContentMapForSearch();
 
+			HomeNavItem.Content = GlobalVars.GetStr("HomeNavItem/Content");
+			AutomationProperties.SetHelpText(HomeNavItem, GlobalVars.GetStr("HomeNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(HomeNavItem, GlobalVars.GetStr("HomeNavItem/ToolTipService/ToolTip"));
+
+			GitHubDocsNavItem.Content = GlobalVars.GetStr("GitHubDocsNavItem/Content");
+			AutomationProperties.SetHelpText(GitHubDocsNavItem, GlobalVars.GetStr("GitHubDocsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(GitHubDocsNavItem, GlobalVars.GetStr("GitHubDocsNavItem/ToolTipService/ToolTip"));
+
+			LogsNavItem.Content = GlobalVars.GetStr("LogsNavItem/Content");
+			AutomationProperties.SetHelpText(LogsNavItem, GlobalVars.GetStr("LogsNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(LogsNavItem, GlobalVars.GetStr("LogsNavItem/ToolTipService/ToolTip"));
+
+			UpdateNavItem.Content = GlobalVars.GetStr("UpdateNavItem/Content");
+			AutomationProperties.SetHelpText(UpdateNavItem, GlobalVars.GetStr("UpdateNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(UpdateNavItem, GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip"));
+
 #if HARDEN_SYSTEM_SECURITY
 
 			TitleBarSearchBox.PlaceholderText = GlobalVars.GetStr("MainSearchAutoSuggestBox/PlaceholderText");
@@ -515,23 +531,9 @@ internal sealed partial class MainWindow : Window
 
 			DocumentationNavigationViewItemHeader.Content = GlobalVars.GetStr("DocumentationNavigationViewItemHeader/Content");
 
-			GitHubDocsNavItem.Content = GlobalVars.GetStr("GitHubDocsNavItem/Content");
-			AutomationProperties.SetHelpText(GitHubDocsNavItem, GlobalVars.GetStr("GitHubDocsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(GitHubDocsNavItem, GlobalVars.GetStr("GitHubDocsNavItem/ToolTipService/ToolTip"));
-
-			LogsNavItem.Content = GlobalVars.GetStr("LogsNavItem/Content");
-			AutomationProperties.SetHelpText(LogsNavItem, GlobalVars.GetStr("LogsNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(LogsNavItem, GlobalVars.GetStr("LogsNavItem/ToolTipService/ToolTip"));
-
-			UpdateNavItem.Content = GlobalVars.GetStr("UpdateNavItem/Content");
-			AutomationProperties.SetHelpText(UpdateNavItem, GlobalVars.GetStr("UpdateNavItem/AutomationProperties/HelpText"));
-			ToolTipService.SetToolTip(UpdateNavItem, GlobalVars.GetStr("UpdateNavItem/ToolTipService/ToolTip"));
-
 			SidebarTextBlock.Text = GlobalVars.GetStr("SidebarTextBlock/Text");
 
 			SidebarMainCaptionTextBlock.Text = GlobalVars.GetStr("SidebarMainCaptionTextBlock/Text");
-
-			SidebarGuideHyperlinkButton.Content = GlobalVars.GetStr("SidebarGuideHyperlinkButton/Content");
 
 			SidebarHelpHyperlinkTextBlock.Text = GlobalVars.GetStr("SidebarHelpHyperlinkTextBlock/Text");
 
@@ -546,6 +548,10 @@ internal sealed partial class MainWindow : Window
 			Microsoft365AppsSecurityBaselineNavItem.Content = GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content");
 			AutomationProperties.SetHelpText(Microsoft365AppsSecurityBaselineNavItem, GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(Microsoft365AppsSecurityBaselineNavItem, GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/ToolTipService/ToolTip"));
+
+			AuditPoliciesNavItem.Content = GlobalVars.GetStr("AuditPoliciesNavItem/Content");
+			AutomationProperties.SetHelpText(AuditPoliciesNavItem, GlobalVars.GetStr("AuditPoliciesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(AuditPoliciesNavItem, GlobalVars.GetStr("AuditPoliciesNavItem/ToolTipService/ToolTip"));
 
 #endif
 

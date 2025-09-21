@@ -3,21 +3,13 @@
     x:Class="HardenSystemSecurity.Pages.InstalledAppsManagement"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HardenSystemSecurity.Pages"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:others="using:AppControlManager.Others"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:vm="using:HardenSystemSecurity.ViewModels"
-    xmlns:protect="using:HardenSystemSecurity.Protect"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-    xmlns:animatedvisuals="using:AnimatedVisuals"
-    mc:Ignorable="d">
+    xmlns:animatedvisuals="using:AnimatedVisuals">
 
     <Grid>
 
@@ -376,7 +368,7 @@
 
             <TextBlock x:Uid="InstalledAppsManagementPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
 
-            <HyperlinkButton x:Uid="GuideButtonAtTop" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps" />
+            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps" />
 
         </controls:WrapPanel>
 
@@ -412,7 +404,7 @@
                     <TextBlock VerticalAlignment="Center"
                                FontSize="14"
                                FontWeight="SemiBold">
-                        <Run Text="Total: "/>
+                        <Run x:Uid="TotalText"/>
                         <Run Text="{x:Bind ViewModel.TotalItemsCount, Mode=OneWay}"/>
                         <Run Text=" | Displayed: "/>
                         <Run Text="{x:Bind ViewModel.FilteredItemsCount, Mode=OneWay}"/>

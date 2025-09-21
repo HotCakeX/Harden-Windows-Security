@@ -23,13 +23,12 @@ namespace HardenSystemSecurity.Pages;
 
 internal sealed partial class GroupPolicyEditor : Page
 {
-	private GroupPolicyEditorVM ViewModel { get; } = ViewModelProvider.GroupPolicyEditorVM;
+	private GroupPolicyEditorVM ViewModel => ViewModelProvider.GroupPolicyEditorVM;
 
 	internal GroupPolicyEditor()
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
-
 	}
 }

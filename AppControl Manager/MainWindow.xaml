@@ -4,13 +4,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:WindowComponents="using:AppControlManager.WindowComponents"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
-    mc:Ignorable="d"
     SizeChanged="{x:Bind ViewModel.MainWindow_SizeChanged}"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     SystemBackdrop="{x:Bind ViewModel.SystemBackDropStyle, Mode=OneWay}"
@@ -203,6 +200,8 @@
             -->
 
             <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="HomeNavItem" x:Uid="HomeNavItem" Icon="{x:Bind ViewModel.HomeIcon, Mode=OneWay}" Tag="Home" />
+
                 <!-- Creation Group -->
                 <NavigationViewItemHeader x:Name="CreationNavigationViewItemHeader" x:Uid="CreationNavigationViewItemHeader" />
                 <NavigationViewItem x:Name="CreatePolicyNavItem" x:Uid="CreatePolicyNavItem" Icon="{x:Bind ViewModel.CreatePolicyIcon, Mode=OneWay}" Tag="CreatePolicy" />
@@ -307,7 +306,7 @@
                                             <Button.Content>
                                                 <StackPanel Orientation="Horizontal">
                                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                        <FontIcon Glyph="&#xE8E5;" Margin="0,0,8,0" />
+                                                        <FontIcon Glyph="&#xEC50;" Margin="0,0,8,0" />
                                                         <TextBlock x:Name="BrowseTextBlock" x:Uid="BrowseTextBlock"/>
                                                     </StackPanel>
                                                 </StackPanel>

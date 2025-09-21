@@ -146,10 +146,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// Raises the PropertyChanged event.
 	/// </summary>
 	/// <param name="propertyName">The name of the property that changed.</param>
-	protected void OnPropertyChanged(string? propertyName)
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
+	protected void OnPropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 #if APP_CONTROL_MANAGER
 	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSource =
@@ -364,7 +361,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		return ContainsOperationCanceledExceptionRecursive(exception, visited);
 	}
 
-
 #if APP_CONTROL_MANAGER
 	/// <summary>
 	/// Opens the directory where a file is located in File Explorer.
@@ -373,8 +369,14 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	internal static void OpenInFileExplorer(ListViewHelper.ListViewsRegistry ListViewKey)
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewKey);
-		if (lv is null) return;
+		OpenInFileExplorerCore(lv);
+	}
 
+	internal static void OpenInFileExplorer(ListView? lv) => OpenInFileExplorerCore(lv);
+
+	private static void OpenInFileExplorerCore(ListView? lv)
+	{
+		if (lv is null) return;
 		string? fileToOpen = null;
 
 		FileIdentity? attempt1 = lv.SelectedItem as FileIdentity;
@@ -426,7 +428,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		}
 		catch (Exception ex)
 		{
-			Logger.Write(ErrorWriter.FormatException(ex));
+			Logger.Write(ex);
 		}
 	}
 
@@ -462,4 +464,45 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 #endif
 
+}
+
+/// <summary>
+/// Classes that already inherit from something else can implement this interface for easy access to the SP method.
+/// </summary>
+internal interface INPCImplant : INotifyPropertyChanged
+{
+	// Must raise PropertyChanged for the given property name with this instance as sender.
+	void RaisePropertyChanged(string? propertyName);
+}
+
+internal static class PropertyChangeExtensions
+{
+	/// <summary>
+	/// Extension Method.
+	/// Sets the field to <paramref name="newValue"/> if it differs from its current contents,
+	/// raises PropertyChanged, and returns true if a change occurred.
+	/// This also prevents infinite loops where a property raises OnPropertyChanged which could trigger an update in the UI,
+	/// and the UI might call set again, leading to an infinite loop.
+	/// </summary>
+	/// <param name="field">The existing value.</param>
+	/// <param name="newValue">The new value.</param>
+	/// <param name="propertyName"></param>
+	internal static bool SP<T>(this INPCImplant host, ref T field, T newValue, [CallerMemberName] string? propertyName = null)
+	{
+		if (EqualityComparer<T>.Default.Equals(field, newValue))
+			return false;
+
+		field = newValue;
+
+		if (App.AppDispatcher.HasThreadAccess)
+		{
+			host.RaisePropertyChanged(propertyName);
+		}
+		else
+		{
+			_ = App.AppDispatcher.TryEnqueue(() => host.RaisePropertyChanged(propertyName));
+		}
+
+		return true;
+	}
 }

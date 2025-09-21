@@ -23,6 +23,8 @@ Taken from this URL: https://github.com/CommunityToolkit/Windows/tree/321f5ddc8f
 
 It's removed the "ScrollViewer_GotFocus" from the base class to prevent scroll positions from changing when clicking on the header which is an unwanted behavior.
 
+It is also self-contained and does not require any additional dependencies such as "CommunityToolkit.WinUI.Behaviors" and "Microsoft.Xaml.Behaviors.WinUI.Managed".
+
 License file: https://github.com/CommunityToolkit/Windows/blob/main/License.md
 
 Windows Community Toolkit
@@ -39,10 +41,10 @@ THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED
 
  */
 
+using System;
 using System.Numerics;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations.Expressions;
-using CommunityToolkit.WinUI.Behaviors;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -50,206 +52,257 @@ using Microsoft.UI.Xaml.Hosting;
 
 namespace AppControlManager.CustomUIElements;
 
+#pragma warning disable CA1515
+
 /// <summary>
-/// Base class helper for header behaviors which manipulate an element within a viewport of a <see cref="ListViewBase"/> based control.
+/// Sticky Header for List Views.
 /// </summary>
-internal abstract class HeaderBehaviorBase : BehaviorBase<FrameworkElement>
+public static class StickyHeaderBehaviorV2
 {
-	// From Doc: https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.canvas.zindex
+	/// <summary>
+	/// From Doc: https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.canvas.zindex
+	/// </summary>
 	private const int CanvasZIndexMax = 1_000_000;
 
 	/// <summary>
-	/// The ScrollViewer associated with the ListViewBase control.
+	/// Attached property to enable/disable the behavior
 	/// </summary>
-	private protected ScrollViewer? _scrollViewer;
+	public static readonly DependencyProperty IsEnabledProperty =
+		DependencyProperty.RegisterAttached(
+			"IsEnabled",
+			typeof(bool),
+			typeof(StickyHeaderBehaviorV2),
+			new PropertyMetadata(false, OnIsEnabledChanged));
 
-	/// <summary>
-	/// The CompositionPropertySet associated with the ScrollViewer.
-	/// </summary>
-	private protected CompositionPropertySet? _scrollProperties;
-
-	/// <summary>
-	/// The CompositionPropertySet associated with the animation.
-	/// </summary>
-	private protected CompositionPropertySet? _animationProperties;
-
-	/// <summary>
-	/// The Visual associated with the header element.
-	/// </summary>
-	private protected Visual? _headerVisual;
-
-	/// <summary>
-	/// Attaches the behavior to the associated object.
-	/// </summary>
-	/// <returns>
-	///   <c>true</c> if attaching succeeded; otherwise <c>false</c>.
-	/// </returns>
-	protected override bool Initialize()
+	public static void SetIsEnabled(DependencyObject element, bool value)
 	{
-		bool result = AssignAnimation();
-		return result;
+		ArgumentNullException.ThrowIfNull(element);
+		element.SetValue(IsEnabledProperty, value);
+	}
+
+	public static bool GetIsEnabled(DependencyObject element)
+	{
+		ArgumentNullException.ThrowIfNull(element);
+		// Default metadata for IsEnabledProperty is false, so this cast is safe
+		return (bool)element.GetValue(IsEnabledProperty);
 	}
 
 	/// <summary>
-	/// Detaches the behavior from the associated object.
+	/// Private attached property to hold per-element state
 	/// </summary>
-	/// <returns>
-	///   <c>true</c> if detaching succeeded; otherwise <c>false</c>.
-	/// </returns>
-	protected override bool Uninitialize()
+	private static readonly DependencyProperty StateProperty =
+		DependencyProperty.RegisterAttached(
+			"State",
+			typeof(StickyHeaderState),
+			typeof(StickyHeaderBehaviorV2),
+			new PropertyMetadata(null));
+
+	private static void SetState(DependencyObject element, StickyHeaderState? value) => element.SetValue(StateProperty, value);
+
+	private static StickyHeaderState? GetState(DependencyObject element) => (StickyHeaderState?)element.GetValue(StateProperty);
+
+	private static void OnIsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
-		RemoveAnimation();
-		return true;
-	}
-
-	/// <summary>
-	/// Uses Composition API to get the UIElement and sets an ExpressionAnimation.
-	/// </summary>
-	/// <remarks>
-	/// If this method returns true, you should have access to all protected fields with assigned components to use.
-	/// </remarks>
-	/// <returns><c>true</c> if the assignment was successful; otherwise, <c>false</c>.</returns>
-	protected virtual bool AssignAnimation()
-	{
-		StopAnimation();
-
-		// Double-check that we have an element associated with us (we should) and that it has size
-		if (AssociatedObject == null || AssociatedObject.RenderSize.Height == 0)
+		if (d is not FrameworkElement element)
 		{
-			return false;
+			return;
 		}
 
-		if (_scrollViewer == null)
-		{
-			// TODO: We probably want checks which provide better guidance if we detect we're not attached correctly?
-			_scrollViewer = AssociatedObject.FindAscendant<ScrollViewer>();
-		}
+		bool enabled = e.NewValue is bool b && b;
 
-		if (_scrollViewer == null)
+		StickyHeaderState? existing = GetState(element);
+		if (enabled)
 		{
-			return false;
-		}
-
-		ItemsControl? itemsControl = AssociatedObject.FindAscendant<ItemsControl>();
-
-		if (itemsControl != null && itemsControl.ItemsPanelRoot != null)
-		{
-			// This appears to be important to force the items within the ScrollViewer of an ItemsControl behind our header element.
-			Canvas.SetZIndex(itemsControl.ItemsPanelRoot, -1);
+			if (existing is null)
+			{
+				StickyHeaderState state = new();
+				SetState(element, state);
+				state.Attach(element);
+			}
 		}
 		else
 		{
-			// If we're not part of a collection panel, then we're probably just in the ScrollViewer,
-			// And we should ensure our 'header' element is on top of any other content within the ScrollViewer.
-			Canvas.SetZIndex(AssociatedObject, CanvasZIndexMax);
-		}
-
-		if (_scrollProperties == null)
-		{
-			_scrollProperties = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(_scrollViewer);
-		}
-
-		if (_scrollProperties == null)
-		{
-			return false;
-		}
-
-		if (_headerVisual == null)
-		{
-			_headerVisual = ElementCompositionPreview.GetElementVisual(AssociatedObject);
-		}
-
-		if (_headerVisual == null)
-		{
-			return false;
-		}
-
-		// TODO: Not sure if we need to provide an option to turn these events off, as FadeHeaderBehavior didn't use these two, unlike QuickReturn/Sticky did...
-		AssociatedObject.SizeChanged -= ScrollHeader_SizeChanged;
-		AssociatedObject.SizeChanged += ScrollHeader_SizeChanged;
-
-		Compositor compositor = _scrollProperties.Compositor;
-
-		if (_animationProperties == null)
-		{
-			_animationProperties = compositor.CreatePropertySet();
-		}
-
-		return true;
-	}
-
-	/// <summary>
-	/// Stop the animation of the UIElement.
-	/// </summary>
-	protected abstract void StopAnimation();
-
-	/// <summary>
-	/// Remove the animation from the UIElement.
-	/// </summary>
-	protected virtual void RemoveAnimation()
-	{
-
-		if (AssociatedObject != null)
-		{
-			AssociatedObject.SizeChanged -= ScrollHeader_SizeChanged;
-		}
-
-		StopAnimation();
-	}
-
-	private void ScrollHeader_SizeChanged(object sender, SizeChangedEventArgs e)
-	{
-		_ = AssignAnimation();
-	}
-}
-
-
-internal sealed class StickyHeaderBehaviorV2 : HeaderBehaviorBase
-{
-
-	/// <summary>
-	/// Show the header
-	/// </summary>
-	public void Show()
-	{
-		if (_headerVisual != null && _scrollViewer != null)
-		{
-			_animationProperties?.InsertScalar("OffsetY", 0.0f);
+			if (existing is not null)
+			{
+				existing.Detach();
+				SetState(element, null);
+			}
 		}
 	}
 
-	/// <inheritdoc/>
-	protected override bool AssignAnimation()
+	// Encapsulates all composition state and event hookups for a single attached element
+	private sealed class StickyHeaderState
 	{
-		if (base.AssignAnimation())
-		{
-			_animationProperties?.InsertScalar("OffsetY", 0.0f);
+		private FrameworkElement? _headerElement;
 
-			ScalarNode propSetOffset = _animationProperties!.GetReference().GetScalarProperty("OffsetY");
-			ManipulationPropertySetReferenceNode scrollPropSet = _scrollProperties!.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
+		/// <summary>
+		/// The ScrollViewer associated with the ListViewBase control.
+		/// </summary>
+		private ScrollViewer? _scrollViewer;
+
+		/// <summary>
+		/// The CompositionPropertySet associated with the ScrollViewer.
+		/// </summary>
+		private CompositionPropertySet? _scrollProperties;
+
+
+		private CompositionPropertySet? _animationProperties;
+
+		/// <summary>
+		/// The Visual associated with the header element.
+		/// </summary>
+		private Visual? _headerVisual;
+
+
+		private bool _isAttached;
+
+		internal void Attach(FrameworkElement element)
+		{
+			if (_isAttached)
+			{
+				return;
+			}
+
+			_headerElement = element;
+
+			// Hook load/unload to manage lifecycle robustly
+			_headerElement.Loaded -= OnLoaded;
+			_headerElement.Unloaded -= OnUnloaded;
+			_headerElement.Loaded += OnLoaded;
+			_headerElement.Unloaded += OnUnloaded;
+
+			// If already loaded, initialize immediately
+			if (_headerElement.IsLoaded)
+			{
+				InitializeAndStart();
+			}
+
+			_isAttached = true;
+		}
+
+		internal void Detach()
+		{
+			if (!_isAttached)
+			{
+				return;
+			}
+
+			if (_headerElement is not null)
+			{
+				_headerElement.SizeChanged -= OnSizeChanged;
+				_headerElement.Loaded -= OnLoaded;
+				_headerElement.Unloaded -= OnUnloaded;
+			}
+
+			StopAnimation();
+
+			_scrollViewer = null;
+			_scrollProperties = null;
+			_animationProperties = null;
+			_headerVisual = null;
+			_headerElement = null;
+
+			_isAttached = false;
+		}
+
+		private void OnLoaded(object sender, RoutedEventArgs e) => InitializeAndStart();
+
+		// Ensure everything is released when element leaves the tree
+		private void OnUnloaded(object sender, RoutedEventArgs e) => StopAnimation();
+
+		private void OnSizeChanged(object sender, SizeChangedEventArgs e) => InitializeAndStart();
+
+		private void InitializeAndStart()
+		{
+			if (_headerElement is null)
+			{
+				return;
+			}
+
+			StopAnimation();
+
+			// Must have a meaningful size to set up the expression properly
+			if (_headerElement.RenderSize.Height == 0)
+			{
+				_headerElement.SizeChanged -= OnSizeChanged;
+				_headerElement.SizeChanged += OnSizeChanged;
+				return;
+			}
+
+			if (_scrollViewer is null)
+			{
+				// Find the ancestor ScrollViewer within the ListView/Grid/List control
+				_scrollViewer = _headerElement.FindAscendant<ScrollViewer>();
+				if (_scrollViewer is null)
+				{
+					return;
+				}
+			}
+
+			// Ensure the header is above list content (or list content behind header)
+			ItemsControl? itemsControl = _headerElement.FindAscendant<ItemsControl>();
+			if (itemsControl is not null && itemsControl.ItemsPanelRoot is not null)
+			{
+				Canvas.SetZIndex(itemsControl.ItemsPanelRoot, -1);
+			}
+			else
+			{
+				Canvas.SetZIndex(_headerElement, CanvasZIndexMax);
+			}
+
+			if (_scrollProperties is null)
+			{
+				_scrollProperties = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(_scrollViewer);
+				if (_scrollProperties is null)
+				{
+					return;
+				}
+			}
+
+			if (_headerVisual is null)
+			{
+				_headerVisual = ElementCompositionPreview.GetElementVisual(_headerElement);
+				if (_headerVisual is null)
+				{
+					return;
+				}
+			}
+
+			_headerElement.SizeChanged -= OnSizeChanged;
+			_headerElement.SizeChanged += OnSizeChanged;
+
+			Compositor compositor = _scrollProperties.Compositor;
+
+			if (_animationProperties is null)
+			{
+				_animationProperties = compositor.CreatePropertySet();
+			}
+
+			_animationProperties.InsertScalar("OffsetY", 0.0f);
+
+			// Build expression: max(OffsetY - Scroll.Translation.Y, 0)
+			ScalarNode propSetOffset = _animationProperties.GetReference().GetScalarProperty("OffsetY");
+			ManipulationPropertySetReferenceNode scrollPropSet = _scrollProperties.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
 			ScalarNode expressionAnimation = ExpressionFunctions.Max(propSetOffset - scrollPropSet.Translation.Y, 0);
 
-			_headerVisual?.StartAnimation("Offset.Y", expressionAnimation);
-
-			return true;
+			_headerVisual.StartAnimation("Offset.Y", expressionAnimation);
 		}
 
-		return false;
-	}
-
-	/// <inheritdoc/>
-	protected override void StopAnimation()
-	{
-		_animationProperties?.InsertScalar("OffsetY", 0.0f);
-
-		if (_headerVisual != null)
+		/// <summary>
+		/// Stop the animation of the UIElement.
+		/// </summary>
+		private void StopAnimation()
 		{
-			_headerVisual.StopAnimation("Offset.Y");
+			_animationProperties?.InsertScalar("OffsetY", 0.0f);
 
-			Vector3 offset = _headerVisual.Offset;
-			offset.Y = 0.0f;
-			_headerVisual.Offset = offset;
+			if (_headerVisual is not null)
+			{
+				_headerVisual.StopAnimation("Offset.Y");
+
+				Vector3 offset = _headerVisual.Offset;
+				offset.Y = 0.0f;
+				_headerVisual.Offset = offset;
+			}
 		}
 	}
-
 }

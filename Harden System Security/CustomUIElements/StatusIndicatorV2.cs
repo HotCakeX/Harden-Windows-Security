@@ -17,6 +17,7 @@
 
 using System;
 using AppControlManager.Others;
+using HardenSystemSecurity.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -45,7 +46,7 @@ internal enum StatusState
 /// Uses MinWidth based on localized text so long strings are never cut.
 /// Sizes the left/right panels based on the actual width given by the parent, so edges remain visible even when the localized label string is longer than usual.
 /// </summary>
-internal sealed partial class StatusIndicatorV2 : UserControl, IDisposable
+internal sealed partial class StatusIndicatorV2 : UserControl, IDisposable, IExplicitDisposalOptIn
 {
 	// Visual sizing constants
 	private const double MinBadgeWidth = 80.0;     // Minimal visual width to keep badge shape
@@ -101,6 +102,23 @@ internal sealed partial class StatusIndicatorV2 : UserControl, IDisposable
 	{
 		get => (StatusState)GetValue(StatusProperty);
 		set => SetValue(StatusProperty, value);
+	}
+
+	// Explicit disposal opt-in DP (shared pattern)
+	internal static readonly DependencyProperty DisposeOnlyOnExplicitCallProperty =
+		DependencyProperty.Register(
+			nameof(DisposeOnlyOnExplicitCall),
+			typeof(bool),
+			typeof(StatusIndicatorV2),
+			new PropertyMetadata(false));
+
+	/// <summary>
+	/// When true, skips automatic disposal on transient Unloaded events.
+	/// </summary>
+	public bool DisposeOnlyOnExplicitCall
+	{
+		get => (bool)GetValue(DisposeOnlyOnExplicitCallProperty);
+		set => SetValue(DisposeOnlyOnExplicitCallProperty, value);
 	}
 
 	internal StatusIndicatorV2()
@@ -292,11 +310,6 @@ internal sealed partial class StatusIndicatorV2 : UserControl, IDisposable
 			// Main container is already Stretch; just make sure child elements respect the full width
 			_ = (_contentGrid?.Height = IndicatorHeight);
 
-			if (_mainBorder != null)
-			{
-				// Stretching already; no explicit width set to avoid constraining parent layout.
-			}
-
 			// Each sliding panel occupies half of the available width (+1px overlap for the seam).
 			double panelWidth = (width / 2.0) + 1.0;
 
@@ -480,6 +493,11 @@ internal sealed partial class StatusIndicatorV2 : UserControl, IDisposable
 
 	private void StatusIndicatorV2_Unloaded(object sender, RoutedEventArgs e)
 	{
+		// Skip disposal if explicit-only flag is set.
+		if (DisposeOnlyOnExplicitCall)
+		{
+			return;
+		}
 		if (_isDisposed) return;
 		PerformCleanup();
 	}

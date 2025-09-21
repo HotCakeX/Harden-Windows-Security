@@ -345,13 +345,31 @@ End time: {DateTime.Now}
 			{
 				e.Handled = true;
 			}
-
-			//	app.Shutdown();
 		};
 
 		#endregion
 
 		// Finding the progress bar
 		mainProgressBar = (ProgressBar)mainGUIWindow.FindName("MainProgressBar");
+
+		Hyperlink hyperLink1 = (Hyperlink)mainGUIWindow.FindName("HyperLink1");
+		hyperLink1.RequestNavigate += (sender, args) =>
+		{
+			_ = Process.Start(new ProcessStartInfo
+			{
+				FileName = "https://apps.microsoft.com/detail/9P7GGFL7DX57",
+				UseShellExecute = true
+			});
+		};
+
+		Hyperlink hyperLink2 = (Hyperlink)mainGUIWindow.FindName("HyperLink2");
+		hyperLink2.RequestNavigate += (sender, args) =>
+		{
+			_ = Process.Start(new ProcessStartInfo
+			{
+				FileName = "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security",
+				UseShellExecute = true
+			});
+		};
 	}
 }

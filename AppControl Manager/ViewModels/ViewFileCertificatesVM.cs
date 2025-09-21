@@ -31,6 +31,8 @@ using AppControlManager.Others;
 using AppControlManager.SimulationMethods;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 
 namespace AppControlManager.ViewModels;
 
@@ -626,6 +628,52 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.AnyFilePickerFilter);
 
 		await Fetch();
+	}
+
+	/// <summary>
+	/// DragOver handler.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void OnDragOver(object sender, DragEventArgs e)
+	{
+		if (e.DataView.Contains(StandardDataFormats.StorageItems))
+		{
+			e.AcceptedOperation = DataPackageOperation.Copy;
+			e.DragUIOverride.Caption = GlobalVars.GetStr("DragAndDropHintViewFileCertificatesCaption");
+			e.DragUIOverride.IsCaptionVisible = true;
+			e.DragUIOverride.IsContentVisible = true;
+		}
+		else
+		{
+			e.AcceptedOperation = DataPackageOperation.None;
+		}
+	}
+
+	/// <summary>
+	/// Drop handler, triggers Fetch().
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal async void OnDrop(object sender, DragEventArgs e)
+	{
+		if (e.DataView.Contains(StandardDataFormats.StorageItems))
+		{
+			try
+			{
+				IReadOnlyList<IStorageItem> items = await e.DataView.GetStorageItemsAsync();
+
+				if (items.Count > 0 && items[0] is StorageFile file)
+				{
+					selectedFile = file.Path;
+					await Fetch();
+				}
+			}
+			catch (Exception ex)
+			{
+				MainInfoBar.WriteError(ex);
+			}
+		}
 	}
 
 	/// <summary>

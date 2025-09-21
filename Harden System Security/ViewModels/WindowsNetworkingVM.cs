@@ -132,6 +132,13 @@ internal sealed partial class WindowsNetworkingVM : ViewModelBase, IMUnitListVie
 	public int NotAppliedItemsCount { get; set => SP(ref field, value); }
 
 	/// <summary>
+	/// Persisted status filter toggles for this ViewModel.
+	/// </summary>
+	public bool ShowApplied { get; set => SP(ref field, value); } = true;
+	public bool ShowNotApplied { get; set => SP(ref field, value); } = true;
+	public bool ShowUndetermined { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	/// <returns>List of all MUnits for this ViewModel</returns>

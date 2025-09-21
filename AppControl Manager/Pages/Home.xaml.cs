@@ -1993,7 +1993,7 @@ internal sealed partial class Home : Page, IDisposable
 		float lateral1 = halfTop + (halfBottom - halfTop) * 0.40f;
 		lateral1 *= 1.0f + edgeFeather;
 
-		CanvasPathBuilder pb = new(ds.Device);
+		using CanvasPathBuilder pb = new(ds.Device);
 		pb.BeginFigure(cx - halfTop, topY);
 		pb.AddCubicBezier(new Vector2(cx - halfTop, y1),
 			new Vector2(cx - lateral1, y2),
@@ -2004,7 +2004,6 @@ internal sealed partial class Home : Page, IDisposable
 			new Vector2(cx + halfTop, topY));
 		pb.EndFigure(CanvasFigureLoop.Closed);
 		CanvasGeometry g = CanvasGeometry.CreatePath(pb);
-		pb.Dispose();
 		return g;
 	}
 

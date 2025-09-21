@@ -3,33 +3,33 @@
     x:Class="AppControlManager.CustomUIElements.HomePageStageContents.Item4"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:AppControlManager.CustomUIElements.HomePageStageContents"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    xmlns:local="using:AppControlManager.CustomUIElements.HomePageStageContents">
 
-    <Grid Padding="0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <ScrollView>
 
-        <TextBlock Grid.Row="0"
-                   Text="Comprehensive Audit Policies Management"
+        <Grid Padding="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                   x:Uid="ComprehensiveAuditPoliciesManagement"
+                   TextWrapping="Wrap"
                    FontSize="20"
                    Margin="0,0,0,4"
                    Foreground="#FFAADFFF"/>
 
-        <TextBlock Grid.Row="1"
-                   Text="View all of your audit policies, configure them in a template that you can then export and re-import on another system."
+            <TextBlock Grid.Row="1"
+                   x:Uid="ComprehensiveAuditPoliciesManagementDescription"
                    FontSize="13"
                    TextWrapping="Wrap"
                    Foreground="#FFE1EEFA"
                    Margin="0,0,0,12"/>
 
-        <Button Grid.Row="2"
-                Content="Navigate to Audit Policies page"
+            <Button Grid.Row="2"
+                x:Uid="NavigateToAuditPoliciesPageButton"
                 HorizontalAlignment="Left"
                 FontSize="14"
                 Click="{x:Bind Button_Click}"
@@ -38,5 +38,8 @@
                 Foreground="White"
                 BorderThickness="0"
                 CornerRadius="6"/>
-    </Grid>
+        </Grid>
+
+    </ScrollView>
+
 </UserControl>

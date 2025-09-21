@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Others;
@@ -35,8 +36,9 @@ internal enum MUnitOperation
 
 /// <summary>
 /// ViewModels that implement ListView that shows <see cref="MUnit"/> must use this interface.
+/// If this doesn't inherit from <see cref="INotifyPropertyChanged"/>, then the MUnitListViewControl won't update bindings.
 /// </summary>
-internal interface IMUnitListViewModel
+internal interface IMUnitListViewModel : INotifyPropertyChanged
 {
 	/// <summary>
 	/// Main collection bound to the ListView.
@@ -197,4 +199,11 @@ internal interface IMUnitListViewModel
 			}
 		});
 	}
+
+	/// <summary>
+	/// Status Overview toggles status for filtering.
+	/// </summary>
+	bool ShowApplied { get; set; }
+	bool ShowNotApplied { get; set; }
+	bool ShowUndetermined { get; set; }
 }

@@ -3,18 +3,12 @@
     x:Class="AppControlManager.Pages.EventLogsPolicyCreation"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:AppControlManager.Pages"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
-    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-    mc:Ignorable="d">
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <!--
     Never use a ScrollViewer in a page that's gonna have a ListView
@@ -201,8 +195,8 @@
 
                     <customUI:ButtonV2 Content="Select Code Integrity EVTX Files"
                                        ObservedData="{x:Bind ViewModel.CodeIntegrityEVTX, Mode=OneWay}"
-                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                   Click="{x:Bind ViewModel.SelectCodeIntegrityEVTXFiles_Click}">
+                                       IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                       Click="{x:Bind ViewModel.SelectCodeIntegrityEVTXFiles_Click}">
                         <customUI:ButtonV2.Flyout>
                             <Flyout>
                                 <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -346,14 +340,14 @@
                     </Button>
 
                     <CalendarDatePicker x:Uid="FilterByDateCalendarDatePicker"
-                                    Date="{x:Bind ViewModel.DatePickerDate, Mode=TwoWay}"
-                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
+                                        Date="{x:Bind ViewModel.DatePickerDate, Mode=TwoWay}"
+                                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
 
                     <ComboBox x:Uid="ScanLevelComboBox"
-                          IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                          SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
-                          SelectedIndex="0"
-                          ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}">
+                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                              SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
+                              SelectedIndex="0"
+                              ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="intelgathering:ScanLevelsComboBoxType">
                                 <StackPanel Orientation="Horizontal" Spacing="5">
@@ -408,10 +402,9 @@
 
             <customUI:ListViewV2.Header>
 
-                <Border CornerRadius="5" Background="Black">
-                    <interactivity:Interaction.Behaviors>
-                        <customUI:StickyHeaderBehaviorV2/>
-                    </interactivity:Interaction.Behaviors>
+                <Border CornerRadius="5"
+                        Background="Black"
+                        customUI:StickyHeaderBehaviorV2.IsEnabled="True">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->

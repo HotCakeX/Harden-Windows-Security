@@ -3,22 +3,16 @@
     x:Class="AppControlManager.Pages.CreateSupplementalPolicy"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:AppControlManager.Pages"
     xmlns:others="using:AppControlManager.Others"
     xmlns:ani="using:CommunityToolkit.WinUI.Animations"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-    mc:Ignorable="d">
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ScrollView>
 
@@ -377,27 +371,7 @@
                 <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy" />
 
             </controls:WrapPanel>
-            <!--
-            <Border Grid.Row="1" ui:Effects.Shadow="{StaticResource BorderShadow}" BorderThickness="0" Margin="15,0,15,0">
-                <ani:Explicit.Animations>
-                    <ani:AnimationSet x:Name="ShadowEnterAnimation">
-                        <ani:BlurRadiusDropShadowAnimation To="20"/>
-                    </ani:AnimationSet>
-
-                    <ani:AnimationSet x:Name="ShadowExitAnimation">
-                        <ani:BlurRadiusDropShadowAnimation To="10"/>
-                    </ani:AnimationSet>
-                </ani:Explicit.Animations>
-                <interactivity:Interaction.Behaviors>
-                    <interactivity:EventTriggerBehavior EventName="PointerEntered">
-                        <behaviors:StartAnimationAction Animation="{x:Bind ShadowEnterAnimation}"/>
-                    </interactivity:EventTriggerBehavior>
-                    <interactivity:EventTriggerBehavior EventName="PointerExited">
-                        <behaviors:StartAnimationAction Animation="{x:Bind ShadowExitAnimation}"/>
-                    </interactivity:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-
-            -->
+           
             <Border x:Name="AnimatedBorder"
                     Grid.Row="1"
                     ui:Effects.Shadow="{StaticResource BorderShadow}"

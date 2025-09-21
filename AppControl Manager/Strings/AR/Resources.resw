@@ -6026,4 +6026,52 @@
     <value>الصفحة الرئيسية وشاشة الترحيب</value>
     <comment>Main Navigation</comment>
   </data>
+    <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
+     <value>إفلات ملف لعرض شهاداته</value>
+  </data>
+  <data name="HelloAndWelcome.Text" xml:space="preserve">
+    <value>مرحبًا وأهلًا بك</value>
+  </data>
+  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
+    <value>شكرًا لاختيارك AppControl Manager. إذا رغبت في قراءة ملاحظات الإصدار لأحدث تحديث، فيمكنك العثور عليها في قسم الإصدارات في المستودع الرسمي على GitHub. يمكنك أيضًا طرح الأسئلة أو إرسال الملاحظات هناك.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
+    <value>زيارة صفحة الإصدارات على GitHub</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يفتح صفحة مستودع GitHub في المتصفح بعد النقر على الزر.</value>
+  </data>
+  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يفتح صفحة مستودع GitHub في المتصفح بعد النقر على الزر.</value>
+  </data>
+  <data name="UseHardenSystemSecurity.Text" xml:space="preserve">
+    <value>استخدم تطبيق Harden System Security</value>
+  </data>
+  <data name="UseHardenSystemSecurityDescription.Text" xml:space="preserve">
+    <value>Harden System Security هو تطبيق آخر طوّرته لمساعدتك على تطبيق إجراءات أمان قوية ومتقدمة على النظام بسهولة. يتميز بواجهة حديثة وبديهية، ويتشكل وفقًا لملاحظات المجتمع، ويتم صيانته بنشاط.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
+    <value>زيارة صفحة Microsoft Store</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يفتح صفحة Microsoft Store بعد النقر على الزر.</value>
+  </data>
+  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يفتح صفحة Microsoft Store بعد النقر على الزر.</value>
+  </data>
+  <data name="IntuneIntegrationHomePage.Text" xml:space="preserve">
+    <value>تكامل سلس مع Microsoft Intune</value>
+  </data>
+  <data name="IntuneIntegrationHomePageDescription.Text" xml:space="preserve">
+    <value>تكامل سلس مع Microsoft Intune لإدارة أمان معززة مثل عرض السياسات الموزعة عن بُعد، ونشر سياسات جديدة، أو إزالة السياسات الحالية.</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.Content" xml:space="preserve">
+    <value>الانتقال إلى صفحة النشر</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الانتقال إلى صفحة النشر</value>
+  </data>
+  <data name="NavigateToDeploymentPageButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>الانتقال إلى صفحة النشر</value>
+  </data>
 </root>

@@ -3,33 +3,33 @@
     x:Class="AppControlManager.CustomUIElements.HomePageStageContents.Item2"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:AppControlManager.CustomUIElements.HomePageStageContents"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    xmlns:local="using:AppControlManager.CustomUIElements.HomePageStageContents">
 
-    <Grid Padding="0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <ScrollView>
 
-        <TextBlock Grid.Row="0"
-                   Text="Try out Harden System Security app!"
+        <Grid Padding="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                   x:Uid="UseHardenSystemSecurity"
+                   TextWrapping="Wrap"
                    FontSize="20"
                    Margin="0,0,0,4"
                    Foreground="#FFFFAAE6"/>
 
-        <TextBlock Grid.Row="1"
-                   Text="Harden System Security is another app made by me that enables you to easily and correctly harden your system and offers so many features. It's shaped by community feedback and is actively maintained as well."
+            <TextBlock Grid.Row="1"
+                   x:Uid="UseHardenSystemSecurityDescription"
                    FontSize="13"
                    TextWrapping="Wrap"
                    Foreground="#FFEBD2E6"
                    Margin="0,0,0,12"/>
 
-        <Button Grid.Row="2"
-                Content="Visit Microsoft Store Page"
+            <Button Grid.Row="2"
+                x:Uid="VisitMicrosoftStorePageButton"
                 HorizontalAlignment="Left"
                 FontSize="14"
                 Click="{x:Bind Button_Click}"
@@ -39,5 +39,8 @@
                 BorderThickness="0"
                 CornerRadius="6"/>
 
-    </Grid>
+        </Grid>
+
+    </ScrollView>
+
 </UserControl>

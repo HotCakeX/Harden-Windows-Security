@@ -3,17 +3,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:MSGraph="using:AppControlManager.MicrosoftGraph"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:AppControlManager.CustomUIElements"
-    xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    xmlns:ui="using:CommunityToolkit.WinUI">
 
     <Button BorderThickness="0.8" x:Uid="MicrosoftGraphButton">
 

@@ -466,10 +466,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		}
 
 		// Update selected count
-		if (ViewModel != null)
-		{
-			ViewModel.SelectedItemsCount = ViewModel.ItemsSourceSelectedItems.Count;
-		}
+		_ = (ViewModel?.SelectedItemsCount = ViewModel.ItemsSourceSelectedItems.Count);
 	}
 
 	#region Single MUnit Operations
@@ -934,15 +931,6 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		ApplyCombinedFilters();
 	}
 
-	private static void OnStatusFilterPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-	{
-		// Apply status filter changes immediately
-		if (d is MUnitListViewControl control && !control._isDisposed)
-		{
-			control.ApplyCombinedFilters();
-		}
-	}
-
 	/// <summary>
 	/// Applies both search and status filters to rebuild the ListViewItemsSource
 	/// without duplicating backing data (always uses ViewModel.ListViewItemsSourceBackingField).
@@ -1014,9 +1002,9 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	// Function binding getters used by x:Bind for the Status Overview checkboxes.
 	// Return bool? because CheckBox.IsChecked is nullable.
 	// Default to showing all items when VM not ready
-	private bool? GetShowApplied() => ViewModel is null ? true : ViewModel.ShowApplied;
-	private bool? GetShowNotApplied() => ViewModel is null ? true : ViewModel.ShowNotApplied;
-	private bool? GetShowUndetermined() => ViewModel is null ? true : ViewModel.ShowUndetermined;
+	private bool? GetShowApplied() => ViewModel is null || ViewModel.ShowApplied;
+	private bool? GetShowNotApplied() => ViewModel is null || ViewModel.ShowNotApplied;
+	private bool? GetShowUndetermined() => ViewModel is null || ViewModel.ShowUndetermined;
 
 	// Function binding BindBack handlers. They set the VM property and trigger re-filter only when changed.
 	private void SetShowApplied(bool? value)

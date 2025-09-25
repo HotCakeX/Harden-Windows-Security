@@ -15,14 +15,16 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Text.Json.Serialization;
-
 namespace CommonCore.QuantumRelay;
 
-[JsonConverter(typeof(JsonStringEnumConverter<QCommandType>))]
-public enum QCommandType
+internal enum RequestCommand : byte
 {
-	CiTool,
-	DISM,
-	COM
+	RunProcess = 1
+}
+
+internal enum ResponseType : byte
+{
+	Final = 1,    // string output
+	Log = 2,      // string message
+	Error = 255   // int exitCode, string errorMessage
 }

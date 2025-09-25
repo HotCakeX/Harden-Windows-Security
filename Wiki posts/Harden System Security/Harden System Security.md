@@ -500,6 +500,8 @@ function Build_HSS {
 
     #region --- C# projects ---
 
+    # DISM Service
+
     dotnet restore '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' -r win-x64
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed restoring DISMService for x64. Exit Code: $LASTEXITCODE") }
 
@@ -524,6 +526,34 @@ function Build_HSS {
     dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.slnx' /p:Configuration=Release /restore /p:Platform=arm64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-arm64.pubxml" /t:Publish -v:minimal
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for ARM64. Exit Code: $LASTEXITCODE") }
 
+
+    # Windows Service
+
+    dotnet restore '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' -r win-x64
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed restoring QuantumRelayHSS for x64. Exit Code: $LASTEXITCODE") }
+
+    dotnet restore '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' -r win-arm64
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed restoring QuantumRelayHSS for ARM64. Exit Code: $LASTEXITCODE") }
+
+    dotnet clean '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning QuantumRelayHSS (first pass). Exit Code: $LASTEXITCODE") }
+
+    dotnet build '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release --verbosity minimal /p:Platform=x64 /p:RuntimeIdentifier=win-x64
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building QuantumRelayHSS (first pass). Exit Code: $LASTEXITCODE") }
+
+    dotnet msbuild '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' /p:Configuration=Release /restore /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:PublishProfile="..\AppControl Manager\eXclude\QuantumRelayHSS\Properties\PublishProfiles\win-x64.pubxml" /t:Publish -v:minimal
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing QuantumRelayHSS for x64. Exit Code: $LASTEXITCODE") }
+
+    dotnet clean '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning QuantumRelayHSS (second pass). Exit Code: $LASTEXITCODE") }
+
+    dotnet build '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release --verbosity minimal /p:Platform=ARM64 /p:RuntimeIdentifier=win-arm64
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building QuantumRelayHSS (second pass). Exit Code: $LASTEXITCODE") }
+
+    dotnet msbuild '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' /p:Configuration=Release /restore /p:Platform=arm64 /p:RuntimeIdentifier=win-arm64 /p:PublishProfile="..\AppControl Manager\eXclude\QuantumRelayHSS\Properties\PublishProfiles\win-arm64.pubxml" /t:Publish -v:minimal
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing QuantumRelayHSS for ARM64. Exit Code: $LASTEXITCODE") }
+
+
     #endregion
 
     [string]$CsProjFilePath = (Resolve-Path -Path '.\Harden System Security.csproj').Path
@@ -537,6 +567,8 @@ function Build_HSS {
     Copy-Item -Path '..\AppControl Manager\eXclude\ComManager\x64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
     Copy-Item -Path '..\AppControl Manager\eXclude\DISMService\OutputX64\DISMService.exe' -Destination '.\DISMService.exe' -Force
+
+    Copy-Item -Path '..\AppControl Manager\eXclude\QuantumRelayHSS\OutputX64\QuantumRelayHSS.exe' -Destination '.\QuantumRelayHSS.exe' -Force
 
     # Generate for X64 architecture
     dotnet clean 'Harden System Security.csproj' --configuration Release
@@ -553,6 +585,8 @@ function Build_HSS {
     Copy-Item -Path '..\AppControl Manager\eXclude\ComManager\ARM64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
     Copy-Item -Path '..\AppControl Manager\eXclude\DISMService\OutputARM64\DISMService.exe' -Destination '.\DISMService.exe' -Force
+
+    Copy-Item -Path '..\AppControl Manager\eXclude\QuantumRelayHSS\OutputARM64\QuantumRelayHSS.exe' -Destination '.\QuantumRelayHSS.exe' -Force
 
     # Generate for ARM64 architecture
     dotnet clean 'Harden System Security.csproj' --configuration Release
@@ -796,6 +830,7 @@ function Build_HSS {
 # Build_HSS -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Upload $true
 # Local - ARM64 + X64
 Build_HSS -DownloadRepo $true -InstallDeps $true -Workflow $false -UpdateWorkLoads $false -Upload $false
+
 
 ```
 

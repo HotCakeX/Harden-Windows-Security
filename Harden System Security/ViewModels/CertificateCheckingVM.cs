@@ -103,11 +103,6 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	/// </summary>
 	internal readonly List<NonStlRootCert> AllNonStlCertificates = [];
 
-	/// <summary>
-	/// Total count of certificates found
-	/// </summary>
-	internal string TotalCertificatesCount { get; set => SP(ref field, value); } = "0";
-
 	#endregion
 
 	#region CTL Header Properties
@@ -281,7 +276,6 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			}
 		}
 
-		TotalCertificatesCount = NonStlCertificates.Count.ToString(CultureInfo.InvariantCulture);
 		CalculateColumnWidths();
 	}
 
@@ -414,8 +408,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			_ = AllNonStlCertificates.Remove(selectedCert);
 			_ = NonStlCertificates.Remove(selectedCert);
 
-			// Update count and recalculate column widths
-			TotalCertificatesCount = NonStlCertificates.Count.ToString(CultureInfo.InvariantCulture);
+			// Recalculate column widths
 			CalculateColumnWidths();
 
 			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("CertificateDeletedSuccessMessage"), selectedCert.StoreLocationString, selectedCert.StoreNameString));
@@ -527,12 +520,11 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 						NonStlCertificates.Add(cert);
 					}
 
-					TotalCertificatesCount = NonStlCertificates.Count.ToString(CultureInfo.InvariantCulture);
 					CalculateColumnWidths();
 				});
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("CertificateAnalysisCompletedMessage"), TotalCertificatesCount));
+			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("CertificateAnalysisCompletedMessage"), NonStlCertificates.Count));
 		}
 		catch (Exception ex)
 		{
@@ -594,14 +586,13 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 						NonStlCertificates.Add(cert);
 					}
 
-					TotalCertificatesCount = NonStlCertificates.Count.ToString(CultureInfo.InvariantCulture);
 					CalculateColumnWidths();
 				});
 
 				MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("RetrievedCertificatesMessage"), allCertificates.Count.ToString(CultureInfo.InvariantCulture), (end - start).TotalMilliseconds.ToString("F2", CultureInfo.InvariantCulture)));
 			});
 
-			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("CertificateRetrievalCompletedMessage"), TotalCertificatesCount));
+			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("CertificateRetrievalCompletedMessage"), NonStlCertificates.Count));
 		}
 		catch (Exception ex)
 		{
@@ -751,7 +742,6 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	{
 		AllNonStlCertificates.Clear();
 		NonStlCertificates.Clear();
-		TotalCertificatesCount = "0";
 		SearchKeyword = null;
 		CurrentCtlHeader = null;
 		CalculateColumnWidths();

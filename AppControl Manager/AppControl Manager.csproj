@@ -17,7 +17,7 @@
 
         https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
         -->
-        <WindowsSdkPackageVersion>10.0.26100.75</WindowsSdkPackageVersion>
+        <WindowsSdkPackageVersion>10.0.26100.78</WindowsSdkPackageVersion>
 
         <!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -254,10 +254,10 @@
         <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
         <PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250402" />
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-        <PackageReference Include="Microsoft.Identity.Client" Version="4.77.0" />
-        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.77.0" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.77.1" />
+        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.77.1" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.250720.1" />
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250907003" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250916003" />
         <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0-rc.1.25451.107" />
         <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0-rc.1.25451.107" />
 
@@ -267,16 +267,16 @@
         <PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
         <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.14.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4948" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
         <PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
         <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.4" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="1.8.37" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="1.8.38" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="1.8.250831001" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="1.8.25090401" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.250906002" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.8.250906004" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.250907003" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.250916003" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="1.8.250904007" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.250906003" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.20250829.1">

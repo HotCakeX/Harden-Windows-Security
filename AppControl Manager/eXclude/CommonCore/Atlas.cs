@@ -15,34 +15,15 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+global using CommonCore;
 
-namespace CommonCore.QuantumRelay;
+namespace CommonCore;
 
 /// <summary>
-/// Represents a command request from the client application
+/// Hosts constants for all of the projects that utilize the CommonCore.
 /// </summary>
-public sealed class CommandRequest(
-	QCommandType commandType,
-	IReadOnlyCollection<string> arguments,
-	Dictionary<string, string>? metadata = null)
+internal static class Atlas
 {
-	/// <summary>
-	/// The type of command to execute
-	/// </summary>
-	[JsonPropertyName("commandType")]
-	public QCommandType CommandType => commandType;
-
-	/// <summary>
-	/// Arguments for the command
-	/// </summary>
-	[JsonPropertyName("arguments")]
-	public IReadOnlyCollection<string> Arguments => arguments;
-
-	/// <summary>
-	/// Optional metadata for the command
-	/// </summary>
-	[JsonPropertyName("metadata")]
-	public Dictionary<string, string>? Metadata => metadata;
+	internal const string QuantumRelayHSSServiceName = "QuantumRelayHSS";
+	internal const string QuantumRelayHSSPipeName = $"{QuantumRelayHSSServiceName}_CommandPipe";
 }

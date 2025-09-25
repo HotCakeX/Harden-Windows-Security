@@ -478,4 +478,20 @@ internal static partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial bool FDICopy(IntPtr hdfi, string pszCabinet, string pszCabPath, int flags, IntPtr fnNotify, IntPtr fnDecrypt, IntPtr userData);
 
+
+	[LibraryImport("advapi32.dll", EntryPoint = "StartServiceW", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool StartServiceW(IntPtr hService, uint dwNumServiceArgs, IntPtr lpServiceArgVectors);
+
+
+	[LibraryImport("advapi32.dll", EntryPoint = "QueryServiceStatusEx", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool QueryServiceStatusEx(
+		IntPtr hService,
+		int InfoLevel,
+		IntPtr lpBuffer,
+		uint cbBufSize,
+		out uint pcbBytesNeeded);
 }

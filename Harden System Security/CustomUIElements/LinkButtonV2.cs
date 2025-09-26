@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using HardenSystemSecurity;
-using HardenSystemSecurity.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;

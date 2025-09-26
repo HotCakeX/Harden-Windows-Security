@@ -1,9 +1,7 @@
 ✅ Removed 2 dependencies, "CommunityToolkit.WinUI.Behaviors" and "Microsoft.Xaml.Behaviors.WinUI.Managed". The result is reduced package size by ~150 KB for the app bundle and improved overall performance since the new codes are more targeted and optimized. This project always strives for leaner and more efficient codebases and less dependency usage.
 
-✅ Fixed a visual issue in Remote Desktop sessions on hosts without a GPU where the new home page's stage background displayed in a too bright color, making the text hard to read.
-
-✅ Updated and localized the Home page's content.
-
-✅ You can now use the keyword left and right arrow keys to navigate the carousel in the Home page. As a reminder, you can also use touch gestures to navigate it.
-
 ✅ The View File Certificates page now supports drag and drop when the app is running unelevated. Simply drag and drop your files on the page to view their certificates.
+
+✅ Updated Dependencies to the latest versions.
+
+✅ Completely changed the design of the Home page, it's more beautiful, compatible with dark and light themes, and displays more information.

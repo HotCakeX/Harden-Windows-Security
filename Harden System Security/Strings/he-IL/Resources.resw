@@ -3691,51 +3691,6 @@
   <data name="AnimatedRemoveAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>הסר את כל אמצעי האבטחה בעמוד.</value>
   </data>
-  <data name="HelloAndWelcome.Text" xml:space="preserve">
-    <value>שלום וברוכים הבאים</value>
-  </data>
-  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
-    <value>תודה שבחרת ביישום Harden System Security. אם ברצונך לקרוא את הערות הגרסה לעדכון האחרון, באפשרותך למצוא אותן במקטע ה-Releases במאגר GitHub הרשמי. ניתן גם לשאול שאלות או לשלוח משוב שם.</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
-    <value>פתח את דף ה-Releases ב-GitHub</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פותח בדפדפן את דף המאגר ב-GitHub לאחר לחיצה על הלחצן.</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פותח בדפדפן את דף המאגר ב-GitHub לאחר לחיצה על הלחצן.</value>
-  </data>
-  <data name="UseAppControlManager.Text" xml:space="preserve">
-    <value>השתמש ב-AppControl Manager</value>
-  </data>
-  <data name="UseAppControlManagerDescription.Text" xml:space="preserve">
-    <value>AppControl Manager הוא יישום נוסף שפיתחתי כדי לסייע לך לנהל בקלות את בקרת היישומים (Application Control) ואת שלמות הקוד (Code Integrity) במערכת ההפעלה. הוא כולל ממשק מודרני ואינטואיטיבי, מעוצב בהתאם למשוב מהקהילה ומתוחזק באופן פעיל.</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
-    <value>פתח את דף ה-Microsoft Store</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>פותח את דף ה-Microsoft Store לאחר לחיצה על הלחצן.</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>פותח את דף ה-Microsoft Store לאחר לחיצה על הלחצן.</value>
-  </data>
-  <data name="ComprehensiveAuditPoliciesManagement.Text" xml:space="preserve">
-    <value>ניהול מקיף של מדיניות ביקורת</value>
-  </data>
-  <data name="ComprehensiveAuditPoliciesManagementDescription.Text" xml:space="preserve">
-    <value>הצג את כל מדיניות הביקורת של המערכת בממשק מאוחד, עם אפשרות להגדיר כל אחת מהן בנפרד. ייצא את ההגדרות שלך כתבנית לייבוא חוזר קל באותה מערכת או במערכת אחרת.</value>
-  </data>
-  <data name="NavigateToAuditPoliciesPageButton.Content" xml:space="preserve">
-    <value>נווט לדף מדיניות הביקורת</value>
-  </data>
-  <data name="NavigateToAuditPoliciesPageButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>נווט לדף מדיניות הביקורת</value>
-  </data>
-  <data name="NavigateToAuditPoliciesPageButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>נווט לדף מדיניות הביקורת</value>
-  </data>
   <data name="ApplyingAllSecurityMeasures" xml:space="preserve">
     <value>מיישם את כל אמצעי האבטחה...</value>
   </data>

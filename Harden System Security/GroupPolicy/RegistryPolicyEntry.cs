@@ -24,7 +24,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using AppControlManager.Others;
 using HardenSystemSecurity.Protect;
-using HardenSystemSecurity.ViewModels;
 
 #pragma warning disable CA1819
 

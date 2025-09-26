@@ -1,11 +1,30 @@
+// MIT License
+//
+// Copyright (c) 2023-Present - Violet Hansen - (aka HotCakeX on GitHub) - Email Address: spynetgirl@outlook.com
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
+//
+
 using System;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media.Animation;
 
 namespace AppControlManager.ViewModels;
 
@@ -17,12 +36,8 @@ internal sealed partial class HomeVM : ViewModelBase
 	/// Glitch storyboards are short, single-run bursts and are triggered by the page every N seconds.
 	/// </summary>
 	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal void OnHomePageLoaded(object sender)
 	{
-		FrameworkElement root = (FrameworkElement)sender;
-		((Storyboard)root.Resources["GlitchJitterStoryboard"]).Stop();
-
 		// Initialize and start the minute-aligned clock updater that only fires when the minute changes.
 		InitializeSystemTimeUpdater();
 
@@ -31,6 +46,9 @@ internal sealed partial class HomeVM : ViewModelBase
 
 		// Initialize and start the internet speed updater that fires every 2 second.
 		InitializeInternetSpeedUpdater();
+
+		// Refresh the Windows Defender feed info asynchronously (fire-and-forget)
+		_ = RefreshDefenderFeedAsync();
 	}
 
 	/// <summary>
@@ -499,4 +517,77 @@ internal sealed partial class HomeVM : ViewModelBase
 			return val.ToString("0.0", CultureInfo.InvariantCulture) + " Kbps";
 		}
 	}
+
+	#region Defender Feed Fields
+
+	internal string? EngineVersionText { get; set => SP(ref field, value); } = "Antimalware engine version: Unavailable";
+	internal string? SignatureVersionText { get; set => SP(ref field, value); } = "Antivirus definition version: Unavailable";
+	internal string? PlatformVersionText { get; set => SP(ref field, value); } = "Platform version: Unavailable";
+	internal string? SignatureUpdateDateText { get; set => SP(ref field, value); } = "Definition update time: Unavailable";
+
+	private static readonly Uri OnlineMSDefenderStatusURL = new("https://definitionupdates.microsoft.com/packages?action=info");
+
+	private async Task RefreshDefenderFeedAsync(CancellationToken cancellationToken = default)
+	{
+		// Defaults for failure cases
+		string engine = "Unavailable";
+		string signatures = "Unavailable";
+		string platform = "Unavailable";
+		string dateText = "Unavailable";
+
+		try
+		{
+			using HttpClient httpClient = new()
+			{
+				Timeout = TimeSpan.FromSeconds(8)
+			};
+
+			// Download XML
+
+			using CancellationTokenSource timeoutCts = new(TimeSpan.FromSeconds(10));
+			using CancellationTokenSource linked = CancellationTokenSource.CreateLinkedTokenSource(timeoutCts.Token, cancellationToken);
+			string xml = await httpClient.GetStringAsync(OnlineMSDefenderStatusURL, linked.Token)
+										 .ConfigureAwait(false);
+
+			// Parse
+			XDocument doc = XDocument.Parse(xml, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+			XElement root = doc.Root!;
+			if (root != null && string.Equals(root.Name.LocalName, "versions", StringComparison.OrdinalIgnoreCase))
+			{
+				string engineVal = root.Element(XName.Get("engine"))?.Value?.Trim() ?? string.Empty;
+				string platformVal = root.Element(XName.Get("platform"))?.Value?.Trim() ?? string.Empty;
+
+				XElement? sigEl = root.Element(XName.Get("signatures"));
+				string signaturesVal = sigEl?.Value?.Trim() ?? string.Empty;
+				string? dateAttr = sigEl?.Attribute(XName.Get("date"))?.Value;
+
+				// Assign parsed or fallback
+				engine = string.IsNullOrWhiteSpace(engineVal) ? "Unavailable" : engineVal;
+				platform = string.IsNullOrWhiteSpace(platformVal) ? "Unavailable" : platformVal;
+				signatures = string.IsNullOrWhiteSpace(signaturesVal) ? "Unavailable" : signaturesVal;
+
+				if (!string.IsNullOrWhiteSpace(dateAttr))
+				{
+					// The feed gives "YYYY-MM-DD HH:MM:SSZ"
+					if (DateTimeOffset.TryParse(dateAttr, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal, out DateTimeOffset dto))
+					{
+						// Keep UTC and format compactly
+						dateText = dto.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss 'UTC'", CultureInfo.InvariantCulture);
+					}
+				}
+			}
+		}
+		catch
+		{
+			// Network/parse failures fall back to "Unavailable" texts
+		}
+
+		EngineVersionText = $"Antimalware engine version: {engine}";
+		SignatureVersionText = $"Antivirus definition version: {signatures}";
+		PlatformVersionText = $"Platform version: {platform}";
+		SignatureUpdateDateText = $"Definition update time: {dateText}";
+	}
+
+	#endregion
+
 }

@@ -3691,51 +3691,6 @@
   <data name="AnimatedRemoveAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>പേജിലെ എല്ലാ സുരക്ഷാ നടപടികളും നീക്കം ചെയ്യുക.</value>
   </data>
-  <data name="HelloAndWelcome.Text" xml:space="preserve">
-    <value>നമസ്കാരം, സ്വാഗതം</value>
-  </data>
-  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
-    <value>Harden System Security ആപ്പ് തെരഞ്ഞെടുത്തതിന് നന്ദി. ഏറ്റവും പുതിയ അപ്ഡേറ്റിന്റെ റിലീസ് നോട്ടുകൾ വായിക്കാൻ ആഗ്രഹിക്കുന്നുവെങ്കിൽ, ഔദ്യോഗിക GitHub റീപ്പോസിറ്ററിയിലെ Releases വിഭാഗത്തിൽ അവ ലഭ്യമാണ്. അവിടെ നിങ്ങൾക്ക് ചോദ്യങ്ങൾ ചോദിക്കുകയോ ഫീഡ്ബാക്ക് സമർപ്പിക്കുകയോ ചെയ്യാം.</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
-    <value>GitHub Releases സന്ദർശിക്കുക</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ബട്ടൺ ക്ലിക് ചെയ്ത ശേഷം ബ്രൗസറിൽ GitHub റീപ്പോസിറ്ററിയുടെ പേജ് തുറക്കും.</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ബട്ടൺ ക്ലിക് ചെയ്ത ശേഷം ബ്രൗസറിൽ GitHub റീപ്പോസിറ്ററിയുടെ പേജ് തുറക്കും.</value>
-  </data>
-  <data name="UseAppControlManager.Text" xml:space="preserve">
-    <value>AppControl Manager ഉപയോഗിക്കുക</value>
-  </data>
-  <data name="UseAppControlManagerDescription.Text" xml:space="preserve">
-    <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ Application Control ഉം Code Integrity യും എളുപ്പമായി നിയന്ത്രിക്കാൻ നിങ്ങളെ സഹായിക്കാൻ ഞാൻ വികസിപ്പിച്ച മറ്റൊരു ആപ്പാണ് AppControl Manager. ഇത് ആധുനികവും ബുദ്ധിഗ്രാഹ്യമുമായ ഇന്റർഫേസ് നൽകുന്നു, സമൂഹത്തിന്റെ അഭിപ്രായങ്ങളെ അടിസ്ഥാനമാക്കി രൂപപ്പെട്ടതും സജീവമായി പരിപാലിക്കുന്നതുമാണ്.</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
-    <value>Microsoft Store പേജ് സന്ദർശിക്കുക</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ബട്ടൺ ക്ലിക് ചെയ്ത ശേഷം Microsoft Store പേജ് തുറക്കും.</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ബട്ടൺ ക്ലിക് ചെയ്ത ശേഷം Microsoft Store പേജ് തുറക്കും.</value>
-  </data>
-  <data name="ComprehensiveAuditPoliciesManagement.Text" xml:space="preserve">
-    <value>ഓഡിറ്റ് നയങ്ങളുടെ സമഗ്ര മാനേജ്മെന്റ്</value>
-  </data>
-  <data name="ComprehensiveAuditPoliciesManagementDescription.Text" xml:space="preserve">
-    <value>ഒന്നിച്ചുള്ള ഇന്റർഫേസിൽ എല്ലാ സിസ്റ്റം ഓഡിറ്റ് നയങ്ങളും കാണുക, ഓരോന്നും വേർതിരിച്ച് കോൺഫിഗർ ചെയ്യാനുള്ള കഴിവോടെ. നിങ്ങളുടെ ക്രമീകരണങ്ങൾ ഒരു ടെംപ്ലേറ്റായി എക്സ്പോർട്ട് ചെയ്യുക, അതിനെ അതേ സിസ്റ്റത്തിലോ മറ്റൊരു സിസ്റ്റത്തിലോ എളുപ്പത്തിൽ വീണ്ടും ഇറക്കുമതി ചെയ്യാൻ.</value>
-  </data>
-  <data name="NavigateToAuditPoliciesPageButton.Content" xml:space="preserve">
-    <value>ഓഡിറ്റ് നയങ്ങളുടെ പേജിലേക്ക് പോകുക</value>
-  </data>
-  <data name="NavigateToAuditPoliciesPageButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>ഓഡിറ്റ് നയങ്ങളുടെ പേജിലേക്ക് പോകുക</value>
-  </data>
-  <data name="NavigateToAuditPoliciesPageButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>ഓഡിറ്റ് നയങ്ങളുടെ പേജിലേക്ക് പോകുക</value>
-  </data>
   <data name="ApplyingAllSecurityMeasures" xml:space="preserve">
     <value>എല്ലാ സുരക്ഷാ നടപടികളും പ്രയോഗിക്കുന്നു...</value>
   </data>

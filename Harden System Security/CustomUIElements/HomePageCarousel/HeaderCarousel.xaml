@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<UserControl
+    x:Class="HardenSystemSecurity.CustomUIElements.HomePageCarousel.HeaderCarousel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:HardenSystemSecurity.CustomUIElements.HomePageCarousel"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    Loaded="{x:Bind UserControl_Loaded}"
+    Unloaded="{x:Bind UserControl_Unloaded}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <RadialGradientBrush x:Key="OverlayRadialGradient" Center="0.5,0.22" GradientOrigin="0.5,0" MappingMode="RelativeToBoundingBox" RadiusX="0.92" RadiusY="0.8200000000000001" SpreadMethod="Pad">
+                        <GradientStop Offset="0" Color="#FFFFFFFF" />
+                        <GradientStop Offset="0.05" Color="#FFFFFFFF" />
+                        <GradientStop Offset="0.35" Color="#FFFFFFFF" />
+                        <GradientStop Offset="0.55" Color="#FFFFFFFF" />
+                        <GradientStop Offset="0.95" Color="#00FFFFFF" />
+                        <GradientStop Offset="1" Color="#00FFFFFF" />
+                    </RadialGradientBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <RadialGradientBrush x:Key="OverlayRadialGradient" Center="0.5,0.22" GradientOrigin="0.5,0.0" MappingMode="RelativeToBoundingBox" RadiusX="0.92" RadiusY="0.8200000000000001" SpreadMethod="Pad">
+                        <GradientStop Offset="0" Color="#FF000000" />
+                        <GradientStop Offset="0.05" Color="#FF000000" />
+                        <GradientStop Offset="0.35" Color="#FF000000" />
+                        <GradientStop Offset="0.55" Color="#FF000000" />
+                        <GradientStop Offset="0.85" Color="#00000000" />
+                        <GradientStop Offset="0.95" Color="#00000000" />
+                        <GradientStop Offset="1" Color="#00000000" />
+                    </RadialGradientBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <RadialGradientBrush x:Key="OverlayRadialGradient" Center="0.5,0.22" GradientOrigin="0.5,0" MappingMode="RelativeToBoundingBox" RadiusX="0.92" RadiusY="0.8200000000000001" SpreadMethod="Pad">
+                        <GradientStop Offset="0" Color="#FF000000" />
+                        <GradientStop Offset="0.05" Color="#FF000000" />
+                        <GradientStop Offset="0.35" Color="#FF000000" />
+                        <GradientStop Offset="0.55" Color="#FF000000" />
+                        <GradientStop Offset="0.95" Color="#00000000" />
+                        <GradientStop Offset="1" Color="#00000000" />
+                    </RadialGradientBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <!-- Title text gradient options -->
+            <LinearGradientBrush x:Key="LightTextGradient" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0.1" Color="#FFFFFF" />
+                <GradientStop Offset="0.3" Color="#E9E9E9" />
+                <GradientStop Offset="0.6" Color="#FDFDFD" />
+                <GradientStop Offset="0.9" Color="#FFFFFF" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="DarkTextGradient" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0.1" Color="#303030" />
+                <GradientStop Offset="0.3" Color="#4A4A4A" />
+                <GradientStop Offset="0.6" Color="#161515" />
+                <GradientStop Offset="0.9" Color="#303030" />
+            </LinearGradientBrush>
+
+            <!-- Glitch jitter for the header title (single-run, triggered by a timer in code-behind).
+                 Note: Also toggles overlay text opacity so there is NO tint when idle. -->
+            <Storyboard x:Key="CarouselGlitchStoryboard" RepeatBehavior="1x">
+                <!-- Cyan channel shift -->
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CarouselCyanShift" Storyboard.TargetProperty="X" Duration="0:0:0.7">
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.10" Value="3"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.18" Value="-2"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.30" Value="10"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.34" Value="-1"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.50" Value="4"/>
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.70" Value="0"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CarouselCyanShift" Storyboard.TargetProperty="Y" Duration="0:0:0.7">
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.18" Value="-1"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.30" Value="2"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.50" Value="-1"/>
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.70" Value="0"/>
+                </DoubleAnimationUsingKeyFrames>
+
+                <!-- Magenta channel shift -->
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CarouselMagentaShift" Storyboard.TargetProperty="X" Duration="0:0:0.7">
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.12" Value="-4"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.22" Value="2"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.38" Value="-11"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.46" Value="1"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.58" Value="-3"/>
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.70" Value="0"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CarouselMagentaShift" Storyboard.TargetProperty="Y" Duration="0:0:0.7">
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.22" Value="1"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.38" Value="-2"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.58" Value="1"/>
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.70" Value="0"/>
+                </DoubleAnimationUsingKeyFrames>
+
+                <!-- Cyan overlay opacity (flicker on/off during shift) -->
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CarouselCyanText" Storyboard.TargetProperty="Opacity" Duration="0:0:0.7">
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.10" Value="0.9"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.18" Value="0.0"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.30" Value="0.9"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.50" Value="0.0"/>
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.70" Value="0.0"/>
+                </DoubleAnimationUsingKeyFrames>
+
+                <!-- Magenta overlay opacity (staggered flicker) -->
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CarouselMagentaText" Storyboard.TargetProperty="Opacity" Duration="0:0:0.7">
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.12" Value="0.9"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.22" Value="0.0"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.38" Value="0.9"/>
+                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.58" Value="0.0"/>
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.70" Value="0.0"/>
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid x:Name="RootGrid" CornerRadius="8,0,0,0">
+        <local:OpacityMaskView HorizontalAlignment="Stretch"
+                               VerticalAlignment="Top">
+            <local:OpacityMaskView.OpacityMask>
+                <Rectangle Fill="{ThemeResource OverlayRadialGradient}" />
+            </local:OpacityMaskView.OpacityMask>
+            <local:AnimatedImage x:Name="BackDropImage"
+                                 Height="400"
+                                 ImageUrl="ms-appx:///Assets/TileImages/BackgroundBlur.png"
+                                 Visibility="Visible">
+                <media:UIElementExtensions.VisualFactory>
+                    <media:PipelineVisualFactory>
+                        <media:BlurEffect Amount="100.0" />
+                    </media:PipelineVisualFactory>
+                </media:UIElementExtensions.VisualFactory>
+            </local:AnimatedImage>
+        </local:OpacityMaskView>
+
+        <ScrollViewer
+            x:Name="scrollViewer"
+            Grid.Row="1"
+            Margin="0,24,0,0"
+            HorizontalScrollBarVisibility="Hidden"
+            VerticalScrollBarVisibility="Disabled"
+            VerticalScrollMode="Disabled">
+            <StackPanel
+                x:Name="TilePanel"
+                Padding="64,0,64,0"
+                Orientation="Horizontal"
+                Spacing="-48">
+                <local:HeaderTile
+                    Description="Thanks for choosing the Harden System Security App"
+                    Foreground="{StaticResource DarkTextGradient}"
+                    Header="Welcome"
+                    ImageUrl="ms-appx:///Assets/TileImages/1-Welcome.jpg"
+                    SampleID="Welcome" />
+                <local:HeaderTile
+                    Description="Use Presets For Easy Application of Security Measures"
+                    Foreground="{StaticResource LightTextGradient}"
+                    Header="Presets"
+                    ImageUrl="ms-appx:///Assets/TileImages/2-Protect.jpg"
+                    SampleID="Presets" />
+                <local:HeaderTile
+                    Description="Via The Microsoft's Intelligent Security Graph"
+                    Foreground="{StaticResource LightTextGradient}"
+                    Header="Protect Against The Unknown"
+                    ImageUrl="ms-appx:///Assets/TileImages/UFO.jpg"
+                    SampleID="AgainstUnknown" />
+                <local:HeaderTile
+                    Description="Stay Safe when playing Online Multiplayer games"
+                    Foreground="{StaticResource LightTextGradient}"
+                    Header="Safer Online Gaming on PC"
+                    ImageUrl="ms-appx:///Assets/TileImages/Xbox.jpg"
+                    SampleID="Gaming" />
+                <local:HeaderTile
+                    Description="Unlock the full potential of the OS Security"
+                    Foreground="{StaticResource DarkTextGradient}"
+                    Header="Activate Dormant Security Features"
+                    ImageUrl="ms-appx:///Assets/TileImages/WinSecFeatures.png"
+                    SampleID="WinSecFeatures" />
+                <local:HeaderTile
+                    Description="Categories give you full control over each security measure"
+                    Foreground="{StaticResource LightTextGradient}"
+                    Header="Modular"
+                    ImageUrl="ms-appx:///Assets/TileImages/Modular.jpg"
+                    SampleID="Modular" />
+                <local:HeaderTile
+                    Description="Apply and Enforce Audit Policies For Visibility"
+                    Foreground="{StaticResource DarkTextGradient}"
+                    Header="Behind the Neon Glow"
+                    ImageUrl="ms-appx:///Assets/TileImages/NeonGril.jpg"
+                    SampleID="Audit" />
+                <local:HeaderTile
+                    Description="Easily Verify System Security Compliance"
+                    Foreground="{StaticResource LightTextGradient}"
+                    Header="Illuminate Configuration Drift"
+                    ImageUrl="ms-appx:///Assets/TileImages/NeonShores.jpg"
+                    SampleID="ConfigDrift" />
+                <local:HeaderTile
+                    Description="View, Manage or Delete the Applied Policies"
+                    Foreground="{StaticResource LightTextGradient}"
+                    Header="Group Policy Editor"
+                    ImageUrl="ms-appx:///Assets/TileImages/groupPolicyEditor.jpg"
+                    SampleID="GroupPolicy" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Padding="24,12,24,24"
+                    HorizontalAlignment="Center"
+                    Orientation="Vertical"
+                    Spacing="12">
+
+            <!-- Glitch-enabled title with two overlay layers are invisible by default
+                 and are only shown during glitch via storyboard. -->
+            <Grid HorizontalAlignment="Center" IsHitTestVisible="False">
+                <TextBlock HorizontalAlignment="Center"
+                       CharacterSpacing="48"
+                       FontSize="40"
+                       FontWeight="Bold"
+                       Opacity="0.8"
+                       Text="Harden System Security"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush x:Name="AnimatedGradientBrush"
+                                         StartPoint="0,0"
+                                         EndPoint="1,1">
+                            <GradientStop Offset="0.1"
+                                      Color="#303030" />
+                            <GradientStop Offset="0.3"
+                                      Color="#4A4A4A" />
+                            <GradientStop Offset="0.6"
+                                      Color="#161515" />
+                            <GradientStop Offset="0.9"
+                                      Color="#303030" />
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+
+                <!-- CYAN GLITCH LAYER (overlay; hidden when idle) -->
+                <TextBlock x:Name="CarouselCyanText"
+                           HorizontalAlignment="Center"
+                           CharacterSpacing="48"
+                           FontSize="40"
+                           FontWeight="Bold"
+                           Text="Harden System Security"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           Foreground="#6000FFFF"
+                           Opacity="0">
+                    <TextBlock.RenderTransform>
+                        <TranslateTransform x:Name="CarouselCyanShift" X="0" Y="0"/>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+
+                <!-- MAGENTA GLITCH LAYER (overlay; hidden when idle) -->
+                <TextBlock x:Name="CarouselMagentaText"
+                           HorizontalAlignment="Center"
+                           CharacterSpacing="48"
+                           FontSize="40"
+                           FontWeight="Bold"
+                           Text="Harden System Security"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           Foreground="#60FF00FF"
+                           Opacity="0">
+                    <TextBlock.RenderTransform>
+                        <TranslateTransform x:Name="CarouselMagentaShift" X="0" Y="0"/>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </Grid>
+
+            <Grid RequestedTheme="Light">
+                <Grid Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+                      CornerRadius="12"
+                      Opacity="0.6" />
+                <TextBlock Margin="10,4,10,4"
+                           HorizontalAlignment="Center"
+                           FontSize="12"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap">
+                    <Run Text="Harden Windows Safely, Securely, Only With Official Microsoft" />
+                    <Hyperlink NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki">Methods</Hyperlink><Run Text="." />
+                </TextBlock>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

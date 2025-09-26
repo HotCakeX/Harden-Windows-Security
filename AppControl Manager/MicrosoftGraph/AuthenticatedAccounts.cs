@@ -16,7 +16,6 @@
 //
 
 using System;
-using AppControlManager.Others;
 using Microsoft.Identity.Client;
 
 namespace AppControlManager.MicrosoftGraph;

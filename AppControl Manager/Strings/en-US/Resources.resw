@@ -6029,49 +6029,4 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
      <value>Drop file to view their certificates</value>
   </data>
-  <data name="HelloAndWelcome.Text" xml:space="preserve">
-    <value>Hello &amp; Welcome</value>
-  </data>
-  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
-    <value>Thanks for choosing the AppControl Manager. If you'd like to read the release notes for the latest update, you can find them on the official GitHub repository's release section. You can also ask questions or submit feedbacks in there.</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
-    <value>Visit GitHub Releases</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Opens the GitHub repository's page in the browser after clicking the button.</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Opens the GitHub repository's page in the browser after clicking the button.</value>
-  </data>
-  <data name="UseHardenSystemSecurity.Text" xml:space="preserve">
-    <value>Use Harden System Security App</value>
-  </data>
-  <data name="UseHardenSystemSecurityDescription.Text" xml:space="preserve">
-    <value>Harden System Security is another application I've developed to help you easily apply robust and advanced security measures on a system. It features a modern, intuitive interface, is shaped by community feedback, and is actively maintained.</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
-    <value>Visit Microsoft Store Page</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Opens the Microsoft Store page after clicking the button.</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Opens the Microsoft Store page after clicking the button.</value>
-  </data>
-  <data name="IntuneIntegrationHomePage.Text" xml:space="preserve">
-    <value>Seamless Intune Integration</value>
-  </data>
-  <data name="IntuneIntegrationHomePageDescription.Text" xml:space="preserve">
-    <value>Seamless integration with Microsoft Intune for enhanced security management such as viewing your remotely deployed policies, deploying new policies or removing the existing ones.</value>
-  </data>
-  <data name="NavigateToDeploymentPageButton.Content" xml:space="preserve">
-    <value>Navigate to Deployment Page</value>
-  </data>
-  <data name="NavigateToDeploymentPageButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Navigate to Deployment Page</value>
-  </data>
-  <data name="NavigateToDeploymentPageButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Navigate to Deployment Page</value>
-  </data>
 </root>

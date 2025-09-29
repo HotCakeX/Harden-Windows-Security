@@ -4,565 +4,446 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:local="using:AppControlManager.Pages"
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    xmlns:customUI="using:HardenSystemSecurity.CustomUIElements.HomePageCarousel"    
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     Loaded="{x:Bind OnInitialLoaded}"
     Unloaded="{x:Bind OnUnloadedDisposeResources}"
     Background="Transparent">
 
-    <Page.KeyboardAccelerators>
-        <KeyboardAccelerator Key="Left"  Invoked="{x:Bind OnLeftRightAcceleratorInvoked}"/>
-        <KeyboardAccelerator Key="Right" Invoked="{x:Bind OnLeftRightAcceleratorInvoked}"/>
-    </Page.KeyboardAccelerators>
-
     <Page.Resources>
 
-        <!-- Stage panel background that stays readable in both Light and Dark themes -->
         <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <!-- For Light theme: reduce luminosity and lower tint opacity to avoid washed-out content -->
-                <!-- https://github.com/microsoft/microsoft-ui-xaml/blob/main/src/controls/dev/Materials/Acrylic/AcrylicBrush_themeresources.xaml -->
-                <!-- The fallback color helps keeping the text that appears on the background readable by making background dark when Acrylic can't be rendered in RDP sessions, Azure Bastion and such. -->
-                <ResourceDictionary x:Key="Light">
-                    <AcrylicBrush x:Key="StagePanelBackgroundBrush"
-                              TintColor="{StaticResource SystemChromeAltHighColor}"
-                              TintOpacity="0.8"
-                              FallbackColor="#1E1E1E"/>
-                </ResourceDictionary>
-
-                <!-- For Dark theme: slightly stronger tint, still no luminosity lifting -->
-                <ResourceDictionary x:Key="Dark">
-                    <AcrylicBrush x:Key="StagePanelBackgroundBrush"
-                              TintColor="{StaticResource SystemChromeAltHighColor}"
-                              TintOpacity="0.8"
-                              FallbackColor="#1E1E1E"/>
-                </ResourceDictionary>
-
-                <!-- High Contrast: defer to system window color -->
-                <ResourceDictionary x:Key="HighContrast">
-                    <SolidColorBrush x:Key="StagePanelBackgroundBrush"
-                                 Color="{ThemeResource SystemColorWindowColor}"/>
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
-
-            <!-- Glitch storyboard is single-run; it is triggered from code every n seconds (not continuous because incurs too much GPU cost). -->
-            <Storyboard x:Key="GlitchJitterStoryboard" RepeatBehavior="1x">
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CyanShift" Storyboard.TargetProperty="X" Duration="0:0:0.7">
-                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.10" Value="3"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.18" Value="-2"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.30" Value="10"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.34" Value="-1"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.50" Value="4"/>
-                    <LinearDoubleKeyFrame KeyTime="0:0:0.70" Value="0"/>
-                </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CyanShift" Storyboard.TargetProperty="Y" Duration="0:0:0.7">
-                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.18" Value="-1"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.30" Value="2"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.50" Value="-1"/>
-                    <LinearDoubleKeyFrame KeyTime="0:0:0.70" Value="0"/>
-                </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MagentaShift" Storyboard.TargetProperty="X" Duration="0:0:0.7">
-                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.12" Value="-4"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.22" Value="2"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.38" Value="-11"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.46" Value="1"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.58" Value="-3"/>
-                    <LinearDoubleKeyFrame KeyTime="0:0:0.70" Value="0"/>
-                </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="MagentaShift" Storyboard.TargetProperty="Y" Duration="0:0:0.7">
-                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="0"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.22" Value="1"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.38" Value="-2"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.58" Value="1"/>
-                    <LinearDoubleKeyFrame KeyTime="0:0:0.70" Value="0"/>
-                </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="GlitchBase" Storyboard.TargetProperty="Opacity" Duration="0:0:1.4">
-                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="1.00"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.22" Value="0.90"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.30" Value="1.00"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.48" Value="0.95"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:0.70" Value="1.00"/>
-                    <DiscreteDoubleKeyFrame KeyTime="0:0:1.00" Value="0.88"/>
-                    <LinearDoubleKeyFrame KeyTime="0:0:1.40" Value="1.00"/>
-                </DoubleAnimationUsingKeyFrames>
-            </Storyboard>
-
-            <!-- Compact, subtle HUD styles -->
-            <Style x:Key="HudLabelTextStyle" TargetType="TextBlock">
-                <Setter Property="FontSize" Value="8"/>
-                <Setter Property="Foreground" Value="#B3FFFFFF"/>
-                <Setter Property="TextWrapping" Value="NoWrap"/>
-                <Setter Property="Opacity" Value="0.85"/>
-            </Style>
-            <Style x:Key="HudValueTextStyle" TargetType="TextBlock">
-                <Setter Property="FontSize" Value="10"/>
-                <Setter Property="Foreground" Value="#F2F2F2F2"/>
-                <Setter Property="FontWeight" Value="SemiBold"/>
-                <Setter Property="TextWrapping" Value="NoWrap"/>
-                <Setter Property="Opacity" Value="0.95"/>
+            <!-- Card visuals used for information items -->
+            <Style x:Key="OverviewCardBorderStyle" TargetType="Border">
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="16"/>
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+                <Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefaultBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
             </Style>
         </ResourceDictionary>
     </Page.Resources>
-
     <Grid Background="Transparent">
-        <Border x:Name="RootRoundedContainer"
-                CornerRadius="28"
-                Background="#0A0A0A"
-                BorderBrush="#181818"
-                BorderThickness="1"
-                ui:Effects.Shadow="{StaticResource BorderShadow}"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
-            <Grid>
-                <!-- Responsive z-order: on narrow width, places HUDs under stage/projector (lower Z); on wide, above. -->
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="WidthStates">
-                        <VisualState x:Name="Wide">
-                            <VisualState.StateTriggers>
-                                <AdaptiveTrigger MinWindowWidth="980"/>
-                            </VisualState.StateTriggers>
-                            <VisualState.Setters>
-                                <Setter Target="LeftHudPanel.(Canvas.ZIndex)" Value="3"/>
-                                <Setter Target="RightHudPanel.(Canvas.ZIndex)" Value="3"/>
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Medium">
-                            <VisualState.StateTriggers>
-                                <AdaptiveTrigger MinWindowWidth="820"/>
-                            </VisualState.StateTriggers>
-                            <VisualState.Setters>
-                                <Setter Target="LeftHudPanel.(Canvas.ZIndex)" Value="3"/>
-                                <Setter Target="RightHudPanel.(Canvas.ZIndex)" Value="3"/>
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Narrow">
-                            <VisualState.StateTriggers>
-                                <AdaptiveTrigger MinWindowWidth="0"/>
-                            </VisualState.StateTriggers>
-                            <VisualState.Setters>
-                                <!-- Putting HUDs under the stage/projector instead of covering them -->
-                                <Setter Target="LeftHudPanel.(Canvas.ZIndex)" Value="1"/>
-                                <Setter Target="RightHudPanel.(Canvas.ZIndex)" Value="1"/>
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
 
-                <!-- Background Web (first child draws behind everything else) -->
-                <!-- Force LTR for Win2D coordinate space so RTL does not mirror drawing -->
-                <canvas:CanvasControl x:Name="BackgroundCanvas"
-                                      FlowDirection="LeftToRight"
-                                      ClearColor="Transparent"
-                                      Draw="OnBackgroundCanvasDraw"
-                                      IsHitTestVisible="False"
-                                      HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch"/>
-
-                <!-- Edge smoke layer: full rasterization (CanvasControls with cached textures, no live gradients) -->
-                <Grid x:Name="EdgeEffectsLayer" IsHitTestVisible="False" FlowDirection="LeftToRight">
-                    <canvas:CanvasControl x:Name="LeftGlowCanvas"
-                                          FlowDirection="LeftToRight"
-                                          Width="180"
-                                          Margin="-90,0,0,0"
-                                          HorizontalAlignment="Left"
-                                          VerticalAlignment="Stretch"
-                                          ClearColor="Transparent"
-                                          Draw="OnLeftGlowCanvasDraw"
-                                          IsHitTestVisible="False"/>
-                    <canvas:CanvasControl x:Name="RightGlowCanvas"
-                                          FlowDirection="LeftToRight"
-                                          Width="180"
-                                          Margin="0,0,-90,0"
-                                          HorizontalAlignment="Right"
-                                          VerticalAlignment="Stretch"
-                                          ClearColor="Transparent"
-                                          Draw="OnRightGlowCanvasDraw"
-                                          IsHitTestVisible="False"/>
-                </Grid>
-
-                <!-- Carousel viewport and stages -->
-                <Grid x:Name="StageCarouselViewport"
-                      FlowDirection="LeftToRight"
-                      SizeChanged="{x:Bind OnViewportSizeChanged}"
-                      PointerPressed="{x:Bind OnCarouselPointerPressed}"
-                      PointerReleased="{x:Bind OnCarouselPointerReleased}"
-                      Margin="0,0,0,140"
+        <Grid x:Name="BackgroundLayer"
                       HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch"
-                      Canvas.ZIndex="2">
-                    <Grid.Clip>
-                        <RectangleGeometry x:Name="CarouselClip" Rect="0,0,0,0"/>
-                    </Grid.Clip>
+                      VerticalAlignment="Stretch">
+            <!-- Background Web (first child draws behind everything else) -->
+            <!-- Force LTR for Win2D coordinate space so RTL does not mirror drawing -->
+            <canvas:CanvasControl x:Name="BackgroundCanvas"
+                                          FlowDirection="LeftToRight"
+                                          ClearColor="Transparent"
+                                          Draw="OnBackgroundCanvasDraw"
+                                          IsHitTestVisible="False"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch"/>
+        </Grid>
 
-                    <StackPanel x:Name="StageCarouselPanel"
-                                FlowDirection="LeftToRight"
-                                Orientation="Horizontal"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Stretch">
-                        <StackPanel.RenderTransform>
-                            <TranslateTransform x:Name="PanelTransform" X="0" Y="0"/>
-                        </StackPanel.RenderTransform>
+        <Grid x:Name="ContentLayer"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
 
-                        <!-- Stage 0 -->
-                        <Grid x:Name="StageItem0"
-                              FlowDirection="LeftToRight"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Stretch"
-                              Opacity="1.0"
-                              RenderTransformOrigin="0.5,0.5">
-                            <Grid.RenderTransform>
-                                <ScaleTransform x:Name="StageScale0" ScaleX="1.0" ScaleY="1.0"/>
-                            </Grid.RenderTransform>
-                            <canvas:CanvasControl x:Name="StageCanvas0"
-                                                  FlowDirection="LeftToRight"
-                                                  Tag="warm"
-                                                  ClearColor="Transparent"
-                                                  Draw="OnStageCanvasDraw"
-                                                  IsHitTestVisible="False"
-                                                  HorizontalAlignment="Stretch"
-                                                  VerticalAlignment="Stretch"/>
-                            <Grid x:Name="StageContent0"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch"
-                                  IsHitTestVisible="True">
-                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="PanelHost0">
-                                    <Grid Width="440" Height="250">
-                                        <Border x:Name="PanelGlow0"
-                                                CornerRadius="22"
-                                                Opacity="0.80"
-                                                Background="#30202020"/>
-                                        <Border x:Name="PanelBody0"
-                                                CornerRadius="16"
-                                                BorderThickness="1.5"
-                                                Background="{StaticResource StagePanelBackgroundBrush}"
-                                                BorderBrush="#FF8A5A18">
-                                            <Grid>
-                                                <ContentPresenter x:Name="StagePresenter0"
-                                                                  HorizontalAlignment="Stretch"
-                                                                  VerticalAlignment="Stretch"
-                                                                  Margin="18"/>
-                                                <Grid x:Name="PanelCorners0" IsHitTestVisible="False">
-                                                    <Rectangle Width="42" Height="3" Fill="#FF8A5A18" HorizontalAlignment="Left"  VerticalAlignment="Top"    Margin="6,6,0,0"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF8A5A18" HorizontalAlignment="Left"  VerticalAlignment="Top"    Margin="6,6,0,0"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FF8A5A18" HorizontalAlignment="Right" VerticalAlignment="Top"    Margin="0,6,6,0"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF8A5A18" HorizontalAlignment="Right" VerticalAlignment="Top"    Margin="0,6,6,0"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FF8A5A18" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Margin="6,0,0,6"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF8A5A18" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Margin="6,0,0,6"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FF8A5A18" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF8A5A18" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6"/>
-                                                </Grid>
-                                            </Grid>
-                                        </Border>
-                                    </Grid>
-                                </Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <customUI:HeaderCarousel Margin="0,0,0,-12" />
+
+            <!-- Overview-style sections -->
+            <ScrollViewer Grid.Row="2">
+                <Grid Margin="24,24,24,24">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="36"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Section 1: System Overview -->
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="2,0,0,8"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Text="System Overview"
+                        TextWrapping="Wrap" />
+
+                    <!-- Using ItemsControl with a VariableSizedWrapGrid to allow direct XAML content and wrap layout -->
+                    <ItemsControl Grid.Row="1">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VariableSizedWrapGrid Orientation="Horizontal"
+                                                       ItemWidth="274"
+                                                       ItemHeight="96"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <!-- SYSTEM TIME -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xE823;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="System Time"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.SystemTimeText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
                             </Grid>
-                        </Grid>
+                        </Border>
 
-                        <!-- Stage 1 -->
-                        <Grid x:Name="StageItem1"
-                              FlowDirection="LeftToRight"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Stretch"
-                              Opacity="0.55"
-                              RenderTransformOrigin="0.5,0.5">
-                            <Grid.RenderTransform>
-                                <ScaleTransform x:Name="StageScale1" ScaleX="0.85" ScaleY="0.85"/>
-                            </Grid.RenderTransform>
-                            <canvas:CanvasControl x:Name="StageCanvas1"
-                                                  FlowDirection="LeftToRight"
-                                                  Tag="pink"
-                                                  ClearColor="Transparent"
-                                                  Draw="OnStageCanvasDraw"
-                                                  IsHitTestVisible="False"
-                                                  HorizontalAlignment="Stretch"
-                                                  VerticalAlignment="Stretch"/>
-                            <Grid x:Name="StageContent1"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch"
-                                  IsHitTestVisible="True">
-                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="PanelHost1">
-                                    <Grid Width="440" Height="250">
-                                        <Border x:Name="PanelGlow1"
-                                                CornerRadius="22"
-                                                Opacity="0.80"
-                                                Background="#30202020"/>
-                                        <Border x:Name="PanelBody1"
-                                                CornerRadius="16"
-                                                BorderThickness="1.5"
-                                                Background="{StaticResource StagePanelBackgroundBrush}"
-                                                BorderBrush="#FFB6408A">
-                                            <Grid>
-                                                <ContentPresenter x:Name="StagePresenter1"
-                                                                  HorizontalAlignment="Stretch"
-                                                                  VerticalAlignment="Stretch"
-                                                                  Margin="18"/>
-                                                <Grid x:Name="PanelCorners1" IsHitTestVisible="False">
-                                                    <Rectangle Width="42" Height="3" Fill="#FFB6408A" HorizontalAlignment="Left"  VerticalAlignment="Top"    Margin="6,6,0,0"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FFB6408A" HorizontalAlignment="Left"  VerticalAlignment="Top"    Margin="6,6,0,0"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FFB6408A" HorizontalAlignment="Right" VerticalAlignment="Top"    Margin="0,6,6,0"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FFB6408A" HorizontalAlignment="Right" VerticalAlignment="Top"    Margin="0,6,6,0"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FFB6408A" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Margin="6,0,0,6"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FFB6408A" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Margin="6,0,0,6"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FFB6408A" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FFB6408A" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6"/>
-                                                </Grid>
-                                            </Grid>
-                                        </Border>
-                                    </Grid>
-                                </Grid>
+                        <!-- TIME ZONE -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xE707;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="Time Zone"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.TimeZoneText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
                             </Grid>
-                        </Grid>
+                        </Border>
 
-                        <!-- Stage 2 -->
-                        <Grid x:Name="StageItem2"
-                              FlowDirection="LeftToRight"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Stretch"
-                              Opacity="0.55"
-                              RenderTransformOrigin="0.5,0.5">
-                            <Grid.RenderTransform>
-                                <ScaleTransform x:Name="StageScale2" ScaleX="0.85" ScaleY="0.85"/>
-                            </Grid.RenderTransform>
-                            <canvas:CanvasControl x:Name="StageCanvas2"
-                                                  FlowDirection="LeftToRight"
-                                                  Tag="green"
-                                                  ClearColor="Transparent"
-                                                  Draw="OnStageCanvasDraw"
-                                                  IsHitTestVisible="False"
-                                                  HorizontalAlignment="Stretch"
-                                                  VerticalAlignment="Stretch"/>
-                            <Grid x:Name="StageContent2"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch"
-                                  IsHitTestVisible="True">
-                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="PanelHost2">
-                                    <Grid Width="440" Height="250">
-                                        <Border x:Name="PanelGlow2"
-                                                CornerRadius="22"
-                                                Opacity="0.80"
-                                                Background="#30202020"/>
-                                        <Border x:Name="PanelBody2"
-                                                CornerRadius="16"
-                                                BorderThickness="1.5"
-                                                Background="{StaticResource StagePanelBackgroundBrush}"
-                                                BorderBrush="#FF2F9F68">
-                                            <Grid>
-                                                <ContentPresenter x:Name="StagePresenter2"
-                                                                  HorizontalAlignment="Stretch"
-                                                                  VerticalAlignment="Stretch"
-                                                                  Margin="18"/>
-                                                <Grid x:Name="PanelCorners2" IsHitTestVisible="False">
-                                                    <Rectangle Width="42" Height="3" Fill="#FF2F9F68" HorizontalAlignment="Left"  VerticalAlignment="Top"    Margin="6,6,0,0"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF2F9F68" HorizontalAlignment="Left"  VerticalAlignment="Top"    Margin="6,6,0,0"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FF2F9F68" HorizontalAlignment="Right" VerticalAlignment="Top"    Margin="0,6,6,0"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF2F9F68" HorizontalAlignment="Right"  VerticalAlignment="Top"    Margin="0,6,6,0"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FF2F9F68" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Margin="6,0,0,6"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF2F9F68" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Margin="6,0,0,6"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FF2F9F68" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF2F9F68" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6"/>
-                                                </Grid>
-                                            </Grid>
-                                        </Border>
-                                    </Grid>
-                                </Grid>
+                        <!-- USER -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xE77B;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="User"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.UserKindText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
                             </Grid>
-                        </Grid>
+                        </Border>
 
-                        <!-- Stage 3 -->
-                        <Grid x:Name="StageItem3"
-                              FlowDirection="LeftToRight"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Stretch"
-                              Opacity="0.55"
-                              RenderTransformOrigin="0.5,0.5">
-                            <Grid.RenderTransform>
-                                <ScaleTransform x:Name="StageScale3" ScaleX="0.85" ScaleY="0.85"/>
-                            </Grid.RenderTransform>
-                            <canvas:CanvasControl x:Name="StageCanvas3"
-                                                  FlowDirection="LeftToRight"
-                                                  Tag="blue"
-                                                  ClearColor="Transparent"
-                                                  Draw="OnStageCanvasDraw"
-                                                  IsHitTestVisible="False"
-                                                  HorizontalAlignment="Stretch"
-                                                  VerticalAlignment="Stretch"/>
-                            <Grid x:Name="StageContent3"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch"
-                                  IsHitTestVisible="True">
-                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="PanelHost3">
-                                    <Grid Width="440" Height="250">
-                                        <Border x:Name="PanelGlow3"
-                                                CornerRadius="22"
-                                                Opacity="0.80"
-                                                Background="#30202020"/>
-                                        <Border x:Name="PanelBody3"
-                                                CornerRadius="16"
-                                                BorderThickness="1.5"
-                                                Background="{StaticResource StagePanelBackgroundBrush}"
-                                                BorderBrush="#FF6BB7FF">
-                                            <Grid>
-                                                <ContentPresenter x:Name="StagePresenter3"
-                                                                  HorizontalAlignment="Stretch"
-                                                                  VerticalAlignment="Stretch"
-                                                                  Margin="18"/>
-                                                <Grid x:Name="PanelCorners3" IsHitTestVisible="False">
-                                                    <Rectangle Width="42" Height="3" Fill="#FF6BB7FF" HorizontalAlignment="Left"  VerticalAlignment="Top"    Margin="6,6,0,0"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF6BB7FF" HorizontalAlignment="Left"  VerticalAlignment="Top"    Margin="6,6,0,0"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FF6BB7FF" HorizontalAlignment="Right" VerticalAlignment="Top"    Margin="0,6,6,0"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF6BB7FF" HorizontalAlignment="Right" VerticalAlignment="Top"    Margin="0,6,6,0"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FF6BB7FF" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Margin="6,0,0,6"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF6BB7FF" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Margin="6,0,0,6"/>
-                                                    <Rectangle Width="42" Height="3" Fill="#FF6BB7FF" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6"/>
-                                                    <Rectangle Width="3"  Height="42" Fill="#FF6BB7FF" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,6"/>
-                                                </Grid>
-                                            </Grid>
-                                        </Border>
-                                    </Grid>
-                                </Grid>
+                        <!-- UPTIME -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xE81C;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="Uptime"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.UptimeText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
                             </Grid>
-                        </Grid>
-                    </StackPanel>
+                        </Border>
 
-                    <Button x:Name="LeftNavButton"
-                            Content="&#x276E;"
-                            FontSize="26"
-                            Padding="6,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Width="44"
-                            Height="64"
-                            Background="#202020"
-                            Foreground="#F0F0F0"
-                            BorderBrush="#404040"
-                            BorderThickness="1"
-                            Opacity="0.85"
-                            CornerRadius="6"
-                            Click="OnLeftNavClick"/>
+                        <!-- SYSTEM RAM -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xE7F8;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="System RAM"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.SystemRamText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
 
-                    <Button x:Name="RightNavButton"
-                            Content="&#x276F;"
-                            FontSize="26"
-                            Padding="6,0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Width="44"
-                            Height="64"
-                            Background="#202020"
-                            Foreground="#F0F0F0"
-                            BorderBrush="#404040"
-                            BorderThickness="1"
-                            Opacity="0.85"
-                            CornerRadius="6"
-                            Click="OnRightNavClick"/>
+                        <!-- APP RAM -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xEAC2;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="App RAM"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.AppRamText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- DISK SIZE -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xEDA2;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="Disk Size"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.DiskSizeText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- INTERNET SPEED -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xE839;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="Internet Speed"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.InternetSpeedText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
+                    </ItemsControl>
+
+                    <!-- spacer between sections -->
+                    <TextBlock Grid.Row="2" Text="" />
+
+                    <!-- Section 2: Online Microsoft Defender Status -->
+                    <TextBlock
+                        Grid.Row="3"
+                        Margin="2,0,0,8"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Text="Online Microsoft Defender Status"
+                        TextWrapping="Wrap" />
+
+                    <!-- Using ItemsControl here as well -->
+                    <ItemsControl Grid.Row="4">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VariableSizedWrapGrid Orientation="Horizontal"
+                                                       ItemWidth="274"
+                                                       ItemHeight="96"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <!-- ENGINE VERSION -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xE7EF;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="Engine Version"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.EngineVersionText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- SIGNATURE VERSION -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xE8A5;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="Signature Version"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.SignatureVersionText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- PLATFORM VERSION -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xE7F8;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="Platform Version"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.PlatformVersionText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- UPDATE DATE (UTC) -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
+                            <Grid RowSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <FontIcon
+                                        AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="20"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Glyph="&#xE823;"/>
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="Signature Update (UTC)"/>
+                                </StackPanel>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Bind ViewModel.SignatureUpdateDateText, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"/>
+                            </Grid>
+                        </Border>
+                    </ItemsControl>
                 </Grid>
-
-                <!-- Glitch text -->
-                <Grid x:Name="GlitchContainer"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Bottom"
-                      Margin="0,0,0,52"
-                      IsHitTestVisible="False">
-                    <TextBlock x:Name="GlitchBase"
-                               Text="Harden System Security"
-                               FontFamily="Gabriola"
-                               FontSize="48"
-                               FontWeight="SemiBold"
-                               Foreground="#F0FFFFFF"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-                    <TextBlock Text="Harden System Security"
-                               FontFamily="Gabriola"
-                               FontSize="48"
-                               FontWeight="SemiBold"
-                               Foreground="#6000FFFF"
-                               Opacity="0.9"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center">
-                        <TextBlock.RenderTransform>
-                            <TranslateTransform x:Name="CyanShift" X="0" Y="0"/>
-                        </TextBlock.RenderTransform>
-                    </TextBlock>
-                    <TextBlock Text="Harden System Security"
-                               FontFamily="Gabriola"
-                               FontSize="48"
-                               FontWeight="SemiBold"
-                               Foreground="#60FF00FF"
-                               Opacity="0.9"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center">
-                        <TextBlock.RenderTransform>
-                            <TranslateTransform x:Name="MagentaShift" X="0" Y="0"/>
-                        </TextBlock.RenderTransform>
-                    </TextBlock>
-                </Grid>
-
-                <Grid x:Name="ContentHost"
-                      Margin="32"
-                      IsHitTestVisible="True"/>
-
-                <!-- HUDs that show system info -->
-                <!-- Top Left HUD -->
-                <StackPanel x:Name="LeftHudPanel"
-                            Orientation="Vertical"
-                            Spacing="2"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Margin="12,10,0,0"
-                            IsHitTestVisible="False">
-                    <StackPanel Orientation="Vertical" Spacing="0">
-                        <TextBlock Text="SYSTEM TIME" Style="{StaticResource HudLabelTextStyle}"/>
-                        <TextBlock Text="{x:Bind ViewModel.SystemTimeText, Mode=OneWay}" Style="{StaticResource HudValueTextStyle}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical" Spacing="0" Margin="0,2,0,0">
-                        <TextBlock Text="TIME ZONE" Style="{StaticResource HudLabelTextStyle}"/>
-                        <TextBlock Text="{x:Bind ViewModel.TimeZoneText, Mode=OneWay}" Style="{StaticResource HudValueTextStyle}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical" Spacing="0" Margin="0,2,0,0">
-                        <TextBlock Text="USER" Style="{StaticResource HudLabelTextStyle}"/>
-                        <TextBlock Text="{x:Bind ViewModel.UserKindText, Mode=OneWay}" Style="{StaticResource HudValueTextStyle}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical" Spacing="0" Margin="0,2,0,0">
-                        <TextBlock Text="UPTIME" Style="{StaticResource HudLabelTextStyle}"/>
-                        <TextBlock Text="{x:Bind ViewModel.UptimeText, Mode=OneWay}" Style="{StaticResource HudValueTextStyle}"/>
-                    </StackPanel>
-                </StackPanel>
-
-                <!-- Top Right HUD -->
-                <StackPanel x:Name="RightHudPanel"
-                            Orientation="Vertical"
-                            Spacing="2"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Margin="0,10,12,0"
-                            IsHitTestVisible="False">
-                    <StackPanel Orientation="Vertical" Spacing="0">
-                        <TextBlock Text="SYSTEM RAM" Style="{StaticResource HudLabelTextStyle}"/>
-                        <TextBlock Text="{x:Bind ViewModel.SystemRamText, Mode=OneWay}" Style="{StaticResource HudValueTextStyle}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical" Spacing="0" Margin="0,2,0,0">
-                        <TextBlock Text="APP RAM" Style="{StaticResource HudLabelTextStyle}"/>
-                        <TextBlock Text="{x:Bind ViewModel.AppRamText, Mode=OneWay}" Style="{StaticResource HudValueTextStyle}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical" Spacing="0" Margin="0,2,0,0">
-                        <TextBlock Text="DISK SIZE" Style="{StaticResource HudLabelTextStyle}"/>
-                        <TextBlock Text="{x:Bind ViewModel.DiskSizeText, Mode=OneWay}" Style="{StaticResource HudValueTextStyle}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical" Spacing="0" Margin="0,2,0,0">
-                        <TextBlock Text="INTERNET SPEED" Style="{StaticResource HudLabelTextStyle}"/>
-                        <TextBlock Text="{x:Bind ViewModel.InternetSpeedText, Mode=OneWay}" Style="{StaticResource HudValueTextStyle}"/>
-                    </StackPanel>
-                </StackPanel>
-                <!-- End Of HUDs -->
-            </Grid>
-        </Border>
+            </ScrollViewer>
+        </Grid>
     </Grid>
-
 </Page>

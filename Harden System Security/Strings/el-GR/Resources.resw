@@ -3691,51 +3691,6 @@
   <data name="AnimatedRemoveAllButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Αφαιρέστε όλα τα μέτρα ασφαλείας στη σελίδα.</value>
   </data>
-  <data name="HelloAndWelcome.Text" xml:space="preserve">
-    <value>Γεια σας και καλώς ήρθατε</value>
-  </data>
-  <data name="ThanksForChoosingTheApp.Text" xml:space="preserve">
-    <value>Σας ευχαριστούμε που επιλέξατε την εφαρμογή Harden System Security. Αν θέλετε να διαβάσετε τις σημειώσεις έκδοσης για την πιο πρόσφατη ενημέρωση, μπορείτε να τις βρείτε στην ενότητα Releases του επίσημου αποθετηρίου στο GitHub. Εκεί μπορείτε επίσης να κάνετε ερωτήσεις ή να υποβάλετε σχόλια.</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.Content" xml:space="preserve">
-    <value>Επισκεφθείτε την ενότητα Releases στο GitHub</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ανοίγει στη μηχανή περιήγησης τη σελίδα του αποθετηρίου στο GitHub μετά την επιλογή του κουμπιού.</value>
-  </data>
-  <data name="VisitGitHubReleasesButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ανοίγει στη μηχανή περιήγησης τη σελίδα του αποθετηρίου στο GitHub μετά την επιλογή του κουμπιού.</value>
-  </data>
-  <data name="UseAppControlManager.Text" xml:space="preserve">
-    <value>Χρησιμοποιήστε το AppControl Manager</value>
-  </data>
-  <data name="UseAppControlManagerDescription.Text" xml:space="preserve">
-    <value>Το AppControl Manager είναι μια ακόμη εφαρμογή που ανέπτυξα για να σας βοηθήσει να διαχειρίζεστε εύκολα το Application Control και το Code Integrity στο λειτουργικό σύστημα. Διαθέτει σύγχρονο, διαισθητικό περιβάλλον εργασίας, διαμορφώνεται από τα σχόλια της κοινότητας και συντηρείται ενεργά.</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.Content" xml:space="preserve">
-    <value>Επισκεφθείτε τη σελίδα του Microsoft Store</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ανοίγει τη σελίδα του Microsoft Store μετά την επιλογή του κουμπιού.</value>
-  </data>
-  <data name="VisitMicrosoftStorePageButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ανοίγει τη σελίδα του Microsoft Store μετά την επιλογή του κουμπιού.</value>
-  </data>
-  <data name="ComprehensiveAuditPoliciesManagement.Text" xml:space="preserve">
-    <value>Ολοκληρωμένη διαχείριση πολιτικών ελέγχου</value>
-  </data>
-  <data name="ComprehensiveAuditPoliciesManagementDescription.Text" xml:space="preserve">
-    <value>Προβάλετε όλες τις πολιτικές ελέγχου του συστήματος σε ενοποιημένο περιβάλλον, με δυνατότητα ρύθμισης καθεμιάς ξεχωριστά. Εξαγάγετε τις ρυθμίσεις σας ως πρότυπο για εύκολη επανεισαγωγή στο ίδιο ή σε άλλο σύστημα.</value>
-  </data>
-  <data name="NavigateToAuditPoliciesPageButton.Content" xml:space="preserve">
-    <value>Μετάβαση στη σελίδα Πολιτικών Ελέγχου</value>
-  </data>
-  <data name="NavigateToAuditPoliciesPageButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Μετάβαση στη σελίδα Πολιτικών Ελέγχου</value>
-  </data>
-  <data name="NavigateToAuditPoliciesPageButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Μετάβαση στη σελίδα Πολιτικών Ελέγχου</value>
-  </data>
   <data name="ApplyingAllSecurityMeasures" xml:space="preserve">
     <value>Εφαρμογή όλων των μέτρων ασφαλείας...</value>
   </data>

@@ -28,7 +28,6 @@ using System.Threading;
 using AppControlManager;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using HardenSystemSecurity.ViewModels;
 
 namespace HardenSystemSecurity.SecurityPolicy;
 

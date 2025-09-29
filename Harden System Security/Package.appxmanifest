@@ -35,7 +35,7 @@
   <Identity
     Name="VioletHansen.HardenSystemSecurity"
     Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189"
-    Version="1.0.13.0" />
+    Version="1.0.14.0" />
 
   <mp:PhoneIdentity PhoneProductId="74d36aa3-e613-41ec-808e-c5d051224316" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 
@@ -61,8 +61,8 @@
   </Properties>
 
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.22621.0" MaxVersionTested="10.0.26120.0" />
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22621.0" MaxVersionTested="10.0.26120.0" />
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.22621.0" MaxVersionTested="10.0.26200.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22621.0" MaxVersionTested="10.0.26200.0" />
   </Dependencies>
 
   <!-- https://learn.microsoft.com/windows/apps/winui/winui3/localize-winui3-app -->
@@ -114,6 +114,12 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
 
+        <!-- Service -->
+        <desktop6:Extension Category="windows.service" Executable="QuantumRelayHSS.exe" EntryPoint="main">
+            <desktop6:Service Name="QuantumRelayHSS" StartupType="manual" StartAccount="localSystem">
+            </desktop6:Service>
+        </desktop6:Extension>
+
       </Extensions>
 
     </Application>
@@ -125,5 +131,7 @@
     <rescap:Capability Name="allowElevation" />
     <rescap:Capability Name="packageQuery" />
     <rescap:Capability Name="unvirtualizedResources" />
+    <rescap:Capability Name="localSystemServices" />
+    <rescap:Capability Name="packagedServices" />
   </Capabilities>
 </Package>

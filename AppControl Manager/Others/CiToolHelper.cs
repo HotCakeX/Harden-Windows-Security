@@ -116,10 +116,6 @@ internal static class CiToolHelper
 				process.ExitCode));
 		}
 
-		// Execute CiTool.exe through the QuantumRelay service
-		// List<string> arguments = ["-lp", "-json"];
-		// string jsonOutput = AccessBridge.ExecuteCiToolAsync(arguments).GetAwaiter().GetResult();
-
 		// Parse the JSON into a JsonElement for easy traversal
 		using JsonDocument document = JsonDocument.Parse(Encoding.UTF8.GetBytes(jsonOutput));
 
@@ -215,11 +211,6 @@ internal static class CiToolHelper
 				)
 			);
 		}
-
-		// Execute CiTool.exe through the QuantumRelay service
-		// List<string> arguments = ["--remove-policy", $"\"{{{policyId}}}\"", "-json"];
-		// string jsonOutput = AccessBridge.ExecuteCiToolAsync(arguments).GetAwaiter().GetResult();
-		// Logger.Write(jsonOutput, LogTypeIntel.Information);
 	}
 
 	/// <summary>
@@ -271,11 +262,6 @@ internal static class CiToolHelper
 					)
 				);
 			}
-
-			// Execute CiTool.exe through the QuantumRelay service
-			// List<string> arguments = ["--remove-policy", $"\"{{{ID}}}\"", "-json"];
-			// string jsonOutput = AccessBridge.ExecuteCiToolAsync(arguments).GetAwaiter().GetResult();
-			// Logger.Write(jsonOutput, LogTypeIntel.Information);
 		}
 	}
 
@@ -339,11 +325,6 @@ internal static class CiToolHelper
 					)
 				);
 		}
-
-		// Execute CiTool.exe through the QuantumRelay service
-		// List<string> arguments = ["--update-policy", $"\"{CipPath}\"", "-json"];
-		// string jsonOutput = AccessBridge.ExecuteCiToolAsync(arguments).GetAwaiter().GetResult();
-		// Logger.Write(jsonOutput, LogTypeIntel.Information);
 	}
 
 	/// <summary>
@@ -382,11 +363,6 @@ internal static class CiToolHelper
 					)
 				);
 		}
-
-		// Execute CiTool.exe through the QuantumRelay service
-		// List<string> arguments = ["--refresh", "-json"];
-		// string jsonOutput = AccessBridge.ExecuteCiToolAsync(arguments).GetAwaiter().GetResult();
-		// Logger.Write(jsonOutput, LogTypeIntel.Information);
 	}
 }
 

@@ -1,9 +1,3 @@
-✅ Removed 2 dependencies, "CommunityToolkit.WinUI.Behaviors" and "Microsoft.Xaml.Behaviors.WinUI.Managed". The result is reduced package size by ~150 KB for the app bundle and improved overall performance since the new codes are more targeted and optimized. This project always strives for leaner and more efficient codebases and less dependency usage.
+✅ Updated dependencies to the latest versions.
 
-✅ Fixed a visual issue in Remote Desktop sessions on hosts without a GPU where the new home page's stage background displayed in a too bright color, making the text hard to read.
-
-✅ Added an extra check before applying/removing/verifying some of the security measures in the Microsoft Defender category related to the Defender antivirus, to make sure they have been initialized by the OS first.
-
-✅ Improved the user experience: When an operation is in progress using the Apply All, Remove All, or Verify All buttons on a page, the other buttons are temporarily disabled until it completes. The active button remains enabled, allowing the operation to be canceled. Similarly, when the Apply, Remove, or Verify button of an individual security measure is running, all other buttons are disabled until it finishes. This change conveys the intended usage of the UI elements more clearly.
-
-✅ To see the rest of the release notes (since they can't all be included here) please visit the GitHub release page: https://github.com/HotCakeX/Harden-Windows-Security/releases
+✅ Created a Windows Service that is responsible for performing Intune configurations detection during verification jobs so that even when you applied the security measures via Intune, they will be detected and verifiable by the app. The service is very compact (2MBs only), highly optimized and runs only when needed. It does not consume any resources when idle. The service is designed to automatically shut itself down when idle for 120 seconds. It can only be used by elevated Administrators and SYSTEM account. It is automatically installed when the Harden System Security app is installed and removed when the Harden System Security app is uninstalled, not leaving any leftovers on the system. It has 0 dependency other than the .NET SDK itself and its executable is inside the app's package.

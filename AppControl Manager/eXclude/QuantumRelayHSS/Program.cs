@@ -15,14 +15,25 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Text.Json.Serialization;
+using System;
 
-namespace CommonCore.QuantumRelay;
+namespace QuantumRelayHSS;
 
-[JsonConverter(typeof(JsonStringEnumConverter<LogLevel>))]
-public enum LogLevel
+internal static class Program
 {
-	Information,
-	Warning,
-	Error
+	internal static int Main()
+	{
+		try
+		{
+			return WindowsServiceHost.Run();
+		}
+		catch (Exception ex)
+		{
+			NativeEventLogger.WriteEntry(
+				$"{Atlas.QuantumRelayHSSServiceName} Fatal error starting service: {ex.Message}\n{ex.StackTrace}",
+				NativeEventLogger.EventLogEntryType.Error);
+
+			return 1;
+		}
+	}
 }

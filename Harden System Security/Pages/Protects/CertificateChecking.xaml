@@ -273,11 +273,22 @@
                     </Button.Flyout>
                 </Button>
 
-                <TextBox Text="{x:Bind ViewModel.TotalCertificatesCount, Mode=OneWay}"
-                         x:Uid="TotalCertsPlaceHolder"
-                         IsReadOnly="True"
-                         VerticalAlignment="Center"
-                         VerticalContentAlignment="Center"/>
+                <!-- Total chip -->
+                <Border CornerRadius="8"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Padding="10,6"
+                        BorderThickness="1"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <TextBlock VerticalAlignment="Center">
+                 <Run x:Uid="TotalText" />
+                 <Run Text="{x:Bind ViewModel.NonStlCertificates.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
 
             </controls:WrapPanel>
 
@@ -291,7 +302,7 @@
 
             <customUI:ListViewV2.Header>
 
-                <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">                   
+                <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{x:Bind ViewModel.StoreLocationColumnWidth, Mode=TwoWay}" MinWidth="50" />

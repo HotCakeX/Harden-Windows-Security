@@ -766,4 +766,10 @@ internal unsafe static partial class NativeMethods
 		private fixed byte bDescr[256];
 	}
 
+
+	[LibraryImport("shell32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SHGetKnownFolderPath(
+	ref Guid rfid, uint dwFlags, IntPtr hToken, out IntPtr ppszPath);
+
 }

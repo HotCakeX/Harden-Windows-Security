@@ -312,8 +312,14 @@
         <Content Include="Resources\Blocking RMMs - Remote Monitor and Management.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Resources\Dangerous-Script-Hosts-Blocking.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="Resources\Default Windows Template.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Downloads-Defense-Measures.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Resources\EmptyPolicy.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>

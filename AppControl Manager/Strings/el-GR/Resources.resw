@@ -6029,4 +6029,61 @@
     <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
      <value>Αποθέστε αρχείο για να δείτε τα πιστοποιητικά του</value>
   </data>
+    <data name="DownloadsDefenseMeasureSection.Header" xml:space="preserve">
+    <value>Πολιτική μέτρων άμυνας λήψεων</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.Description" xml:space="preserve">
+    <value>Για την καταπολέμηση της απειλής πιο εξελιγμένου κακόβουλου λογισμικού, λαμβάνεται ένα προληπτικό μέτρο με τη δημιουργία και την ανάπτυξη μιας πολιτικής ελέγχου εφαρμογών στο σύστημα. Αυτή η πολιτική αποκλείει την εκτέλεση εκτελέσιμων αρχείων και άλλων δυνητικά επιβλαβών τύπων αρχείων στον φάκελο Λήψεις. Αυτή η πολιτική υπερασπίζεται το σύστημα από κακόβουλο λογισμικό που μπορεί να εκκινηθεί αυτόματα μετά τη λήψη από το Διαδίκτυο και έχει τη δυνατότητα να προστατεύσει από εκμεταλλεύσεις μηδενικού κλικ. Ο χρήστης πρέπει να διασφαλίσει την ασφάλεια του αρχείου και να το μεταφέρει ρητά σε διαφορετικό φάκελο πριν το εκτελέσει.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Για την καταπολέμηση της απειλής πιο εξελιγμένου κακόβουλου λογισμικού, λαμβάνεται ένα προληπτικό μέτρο με τη δημιουργία και την ανάπτυξη μιας πολιτικής ελέγχου εφαρμογών στο σύστημα. Αυτή η πολιτική αποκλείει την εκτέλεση εκτελέσιμων αρχείων και άλλων δυνητικά επιβλαβών τύπων αρχείων στον φάκελο Λήψεις. Αυτή η πολιτική υπερασπίζεται το σύστημα από κακόβουλο λογισμικό που μπορεί να εκκινηθεί αυτόματα μετά τη λήψη από το Διαδίκτυο και έχει τη δυνατότητα να προστατεύσει από εκμεταλλεύσεις μηδενικού κλικ. Ο χρήστης πρέπει να διασφαλίσει την ασφάλεια του αρχείου και να το μεταφέρει ρητά σε διαφορετικό φάκελο πριν το εκτελέσει.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Για την καταπολέμηση της απειλής πιο εξελιγμένου κακόβουλου λογισμικού, λαμβάνεται ένα προληπτικό μέτρο με τη δημιουργία και την ανάπτυξη μιας πολιτικής ελέγχου εφαρμογών στο σύστημα. Αυτή η πολιτική αποκλείει την εκτέλεση εκτελέσιμων αρχείων και άλλων δυνητικά επιβλαβών τύπων αρχείων στον φάκελο Λήψεις. Αυτή η πολιτική υπερασπίζεται το σύστημα από κακόβουλο λογισμικό που μπορεί να εκκινηθεί αυτόματα μετά τη λήψη από το Διαδίκτυο και έχει τη δυνατότητα να προστατεύσει από εκμεταλλεύσεις μηδενικού κλικ. Ο χρήστης πρέπει να διασφαλίσει την ασφάλεια του αρχείου και να το μεταφέρει ρητά σε διαφορετικό φάκελο πριν το εκτελέσει.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.Content" xml:space="preserve">
+    <value>Δημιουργία</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργία της πολιτικής μέτρων άμυνας λήψεων</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργία της πολιτικής μέτρων άμυνας λήψεων</value>
+  </data>
+  <data name="DownloadsDefenseMeasurePolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Η πολιτική μέτρων άμυνας λήψεων δημιουργήθηκε επιτυχώς</value>
+  </data>
+  <data name="CreatingPolicyRMMBlocking" xml:space="preserve">
+    <value>Δημιουργία της πολιτικής αποκλεισμού απομακρυσμένης παρακολούθησης και διαχείρισης</value>
+  </data>
+  <data name="CreatingPolicyDownloadsDefenseMeasure" xml:space="preserve">
+    <value>Δημιουργία της πολιτικής μέτρων άμυνας λήψεων</value>
+  </data>
+  <data name="CreatingPolicyDangerousScriptHostsBlocking" xml:space="preserve">
+    <value>Δημιουργία της πολιτικής αποκλεισμού επικίνδυνων κεντρικών υπολογιστών σεναρίων</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Η πολιτική αποκλεισμού επικίνδυνων κεντρικών υπολογιστών σεναρίων δημιουργήθηκε επιτυχώς</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Header" xml:space="preserve">
+    <value>Πολιτική αποκλεισμού επικίνδυνων κεντρικών υπολογιστών σεναρίων</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Description" xml:space="preserve">
+    <value>Δημιουργεί μια προσαρμοσμένη πολιτική ελέγχου εφαρμογών που αποκλείει την εκτέλεση των "wscript.exe", "mshta.exe" και "cscript.exe". Είναι μη ασφαλείς, χωρίς sandbox κεντρικοί υπολογιστές σεναρίων που αποτελούν κίνδυνο ασφαλείας.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργεί μια προσαρμοσμένη πολιτική ελέγχου εφαρμογών που αποκλείει την εκτέλεση των "wscript.exe", "mshta.exe" και "cscript.exe". Είναι μη ασφαλείς, χωρίς sandbox κεντρικοί υπολογιστές σεναρίων που αποτελούν κίνδυνο ασφαλείας.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργεί μια προσαρμοσμένη πολιτική ελέγχου εφαρμογών που αποκλείει την εκτέλεση των "wscript.exe", "mshta.exe" και "cscript.exe". Είναι μη ασφαλείς, χωρίς sandbox κεντρικοί υπολογιστές σεναρίων που αποτελούν κίνδυνο ασφαλείας.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.Content" xml:space="preserve">
+    <value>Δημιουργία</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργία της πολιτικής αποκλεισμού επικίνδυνων κεντρικών υπολογιστών σεναρίων</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργία της πολιτικής αποκλεισμού επικίνδυνων κεντρικών υπολογιστών σεναρίων</value>
+  </data>
   </root>

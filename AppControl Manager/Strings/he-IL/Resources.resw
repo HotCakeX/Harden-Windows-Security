@@ -6030,4 +6030,61 @@
     <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
      <value>שחרר קובץ כדי להציג את התעודות שלו</value>
   </data>
+    <data name="DownloadsDefenseMeasureSection.Header" xml:space="preserve">
+    <value>מדיניות אמצעי הגנה על תיקיית ההורדות</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.Description" xml:space="preserve">
+    <value>כדי להתמודד עם האיום של תוכנות זדוניות מתוחכמות יותר, ננקט אמצע מונע על ידי יצירה ופריסה של מדיניות App Control במערכת. מדיניות זו חוסמת את הפעלת קבצי הפעלה וסוגי קבצים מזיקים פוטנציאליים אחרים בתיקיית ההורדות. מדיניות זו מגינה על המערכת מפני תוכנות זדוניות שיכולות להפעיל את עצמן באופן אוטומטי לאחר הורדה מהאינטרנט ויש לה פוטנציאל להגן מפני ניצולים ללא קליק. המשתמש חייב לוודא את בטיחות הקובץ ולהעביר אותו במפורש לתיקייה אחרת לפני הפעלתו.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כדי להתמודד עם האיום של תוכנות זדוניות מתוחכמות יותר, ננקט אמצע מונע על ידי יצירה ופריסה של מדיניות App Control במערכת. מדיניות זו חוסמת את הפעלת קבצי הפעלה וסוגי קבצים מזיקים פוטנציאליים אחרים בתיקיית ההורדות. מדיניות זו מגינה על המערכת מפני תוכנות זדוניות שיכולות להפעיל את עצמן באופן אוטומטי לאחר הורדה מהאינטרנט ויש לה פוטנציאל להגן מפני ניצולים ללא קליק. המשתמש חייב לוודא את בטיחות הקובץ ולהעביר אותו במפורש לתיקייה אחרת לפני הפעלתו.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כדי להתמודד עם האיום של תוכנות זדוניות מתוחכמות יותר, ננקט אמצע מונע על ידי יצירה ופריסה של מדיניות App Control במערכת. מדיניות זו חוסמת את הפעלת קבצי הפעלה וסוגי קבצים מזיקים פוטנציאליים אחרים בתיקיית ההורדות. מדיניות זו מגינה על המערכת מפני תוכנות זדוניות שיכולות להפעיל את עצמן באופן אוטומטי לאחר הורדה מהאינטרנט ויש לה פוטנציאל להגן מפני ניצולים ללא קליק. המשתמש חייב לוודא את בטיחות הקובץ ולהעביר אותו במפורש לתיקייה אחרת לפני הפעלתו.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.Content" xml:space="preserve">
+    <value>צור</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור את מדיניות אמצעי ההגנה על תיקיית ההורדות</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור את מדיניות אמצעי ההגנה על תיקיית ההורדות</value>
+  </data>
+  <data name="DownloadsDefenseMeasurePolicyCreatedSuccessfully" xml:space="preserve">
+    <value>מדיניות אמצעי ההגנה על תיקיית ההורדות נוצרה בהצלחה</value>
+  </data>
+  <data name="CreatingPolicyRMMBlocking" xml:space="preserve">
+    <value>יוצר את מדיניות חסימת ניטור וניהול מרחוק</value>
+  </data>
+  <data name="CreatingPolicyDownloadsDefenseMeasure" xml:space="preserve">
+    <value>יוצר את מדיניות אמצעי ההגנה על תיקיית ההורדות</value>
+  </data>
+  <data name="CreatingPolicyDangerousScriptHostsBlocking" xml:space="preserve">
+    <value>יוצר את מדיניות חסימת מארחי סקריפטים מסוכנים</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>מדיניות חסימת מארחי סקריפטים מסוכנים נוצרה בהצלחה</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Header" xml:space="preserve">
+    <value>מדיניות חסימת מארחי סקריפטים מסוכנים</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Description" xml:space="preserve">
+    <value>יוצר מדיניות App Control מותאמת אישית שחוסמת את הפעלת "wscript.exe", "mshta.exe" ו-"cscript.exe". אלו הם מארחי סקריפטים לא מאובטחים וללא ארגז חול המהווים סיכון אבטחה.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>יוצר מדיניות App Control מותאמת אישית שחוסמת את הפעלת "wscript.exe", "mshta.exe" ו-"cscript.exe". אלו הם מארחי סקריפטים לא מאובטחים וללא ארגז חול המהווים סיכון אבטחה.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>יוצר מדיניות App Control מותאמת אישית שחוסמת את הפעלת "wscript.exe", "mshta.exe" ו-"cscript.exe". אלו הם מארחי סקריפטים לא מאובטחים וללא ארגז חול המהווים סיכון אבטחה.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.Content" xml:space="preserve">
+    <value>צור</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור את מדיניות חסימת מארחי סקריפטים מסוכנים</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור את מדיניות חסימת מארחי סקריפטים מסוכנים</value>
+  </data>
   </root>

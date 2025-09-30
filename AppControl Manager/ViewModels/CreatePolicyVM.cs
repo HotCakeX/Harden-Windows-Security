@@ -79,6 +79,20 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			() => RMMBlockingSettingsInfoBarSeverity, value => RMMBlockingSettingsInfoBarSeverity = value,
 			() => RMMBlockingSettingsInfoBarIsClosable, value => RMMBlockingSettingsInfoBarIsClosable = value,
 			null, null);
+
+		DownloadsDefenseMeasureInfoBar = new InfoBarSettings(
+			() => DownloadsDefenseMeasureSettingsInfoBarIsOpen, value => DownloadsDefenseMeasureSettingsInfoBarIsOpen = value,
+			() => DownloadsDefenseMeasureSettingsInfoBarMessage, value => DownloadsDefenseMeasureSettingsInfoBarMessage = value,
+			() => DownloadsDefenseMeasureSettingsInfoBarSeverity, value => DownloadsDefenseMeasureSettingsInfoBarSeverity = value,
+			() => DownloadsDefenseMeasureSettingsInfoBarIsClosable, value => DownloadsDefenseMeasureSettingsInfoBarIsClosable = value,
+			null, null);
+
+		DangerousScriptHostsBlockingInfoBar = new InfoBarSettings(
+			() => DangerousScriptHostsBlockingSettingsInfoBarIsOpen, value => DangerousScriptHostsBlockingSettingsInfoBarIsOpen = value,
+			() => DangerousScriptHostsBlockingSettingsInfoBarMessage, value => DangerousScriptHostsBlockingSettingsInfoBarMessage = value,
+			() => DangerousScriptHostsBlockingSettingsInfoBarSeverity, value => DangerousScriptHostsBlockingSettingsInfoBarSeverity = value,
+			() => DangerousScriptHostsBlockingSettingsInfoBarIsClosable, value => DangerousScriptHostsBlockingSettingsInfoBarIsClosable = value,
+			null, null);
 	}
 
 	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
@@ -777,7 +791,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			RMMBlockingSectionIsEnabled = false;
 			RMMBlockingSettingsInfoBarIsClosable = false;
 
-			RMMBlockingInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicy"));
+			RMMBlockingInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyRMMBlocking"));
 
 			_policyPathRMMBlocking = await Task.Run(() =>
 			{
@@ -853,6 +867,166 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			RMMBlockingInfoBar.WriteError(ex);
 		}
 	}
+
+	#endregion
+
+	#region Downloads Defense Measures
+
+	internal Visibility DownloadsDefenseMeasureInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	internal string? _policyPathDownloadsDefenseMeasure { get; set => SP(ref field, value); }
+
+	internal bool DownloadsDefenseMeasureSectionIsEnabled { get; set => SP(ref field, value); } = true;
+
+	internal bool DownloadsDefenseMeasureCreateAndDeploy { get; set => SP(ref field, value); }
+
+	internal bool DownloadsDefenseMeasureAudit { get; set => SP(ref field, value); }
+
+	internal bool DownloadsDefenseMeasureSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal bool DownloadsDefenseMeasureSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal InfoBarSeverity DownloadsDefenseMeasureSettingsInfoBarSeverity { get; set => SP(ref field, value); }
+	internal string? DownloadsDefenseMeasureSettingsInfoBarMessage { get; set => SP(ref field, value); }
+	internal bool DownloadsDefenseMeasureSettingsIsExpanded { get; set => SP(ref field, value); }
+
+	private readonly InfoBarSettings DownloadsDefenseMeasureInfoBar;
+
+	/// <summary>
+	/// Event handler to prepare the Downloads Defense Measures policy
+	/// </summary>
+	internal async void DownloadsDefenseMeasurePolicyCreateButton_Click()
+	{
+		await DownloadsDefenseMeasurePolicyCreateButton_Private();
+	}
+
+	private async Task DownloadsDefenseMeasurePolicyCreateButton_Private()
+	{
+		bool errorsOccurred = false;
+
+		try
+		{
+			DownloadsDefenseMeasureSettingsIsExpanded = true;
+
+			DownloadsDefenseMeasureInfoBarActionButtonVisibility = Visibility.Collapsed;
+
+			DownloadsDefenseMeasureSectionIsEnabled = false;
+			DownloadsDefenseMeasureSettingsInfoBarIsClosable = false;
+
+			DownloadsDefenseMeasureInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyDownloadsDefenseMeasure"));
+
+			_policyPathDownloadsDefenseMeasure = await Task.Run(() =>
+			{
+				DirectoryInfo stagingArea = StagingArea.NewStagingArea("Downloads Defense Measures Policy Prepare");
+
+				return BasePolicyCreator.BuildDownloadsDefenseMeasures(stagingArea.FullName, DownloadsDefenseMeasureAudit, DownloadsDefenseMeasureCreateAndDeploy);
+			});
+		}
+		catch (Exception ex)
+		{
+			errorsOccurred = true;
+			DownloadsDefenseMeasureInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			if (!errorsOccurred)
+			{
+				DownloadsDefenseMeasureInfoBarActionButtonVisibility = Visibility.Visible;
+
+				DownloadsDefenseMeasureInfoBar.WriteSuccess(GlobalVars.GetStr("DownloadsDefenseMeasurePolicyCreatedSuccessfully"));
+			}
+
+			DownloadsDefenseMeasureSettingsInfoBarIsClosable = true;
+			DownloadsDefenseMeasureSectionIsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Event handler to open the created Downloads Defense Measures policy in the Policy Editor
+	/// </summary>
+	internal async void OpenInPolicyEditor_DownloadsDefenseMeasurePolicy() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathDownloadsDefenseMeasure);
+
+	internal async void OpenInDefaultFileHandler_DownloadsDefenseMeasurePolicy() => await OpenInDefaultFileHandler(_policyPathDownloadsDefenseMeasure);
+
+	internal async void OpenInConfigurePolicyRuleOptions_DownloadsDefenseMeasurePolicy() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathDownloadsDefenseMeasure);
+
+	#endregion
+
+	#region Dangerous Script Hosts Blocking
+
+	internal Visibility DangerousScriptHostsBlockingInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	internal string? _policyPathDangerousScriptHostsBlocking { get; set => SP(ref field, value); }
+
+	internal bool DangerousScriptHostsBlockingSectionIsEnabled { get; set => SP(ref field, value); } = true;
+
+	internal bool DangerousScriptHostsBlockingCreateAndDeploy { get; set => SP(ref field, value); }
+
+	internal bool DangerousScriptHostsBlockingAudit { get; set => SP(ref field, value); }
+
+	internal bool DangerousScriptHostsBlockingSettingsInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal bool DangerousScriptHostsBlockingSettingsInfoBarIsClosable { get; set => SP(ref field, value); }
+	internal InfoBarSeverity DangerousScriptHostsBlockingSettingsInfoBarSeverity { get; set => SP(ref field, value); }
+	internal string? DangerousScriptHostsBlockingSettingsInfoBarMessage { get; set => SP(ref field, value); }
+	internal bool DangerousScriptHostsBlockingSettingsIsExpanded { get; set => SP(ref field, value); }
+
+	private readonly InfoBarSettings DangerousScriptHostsBlockingInfoBar;
+
+	/// <summary>
+	/// Event handler to prepare the Dangerous Script Hosts Blocking policy
+	/// </summary>
+	internal async void DangerousScriptHostsBlockingPolicyCreateButton_Click()
+	{
+		await DangerousScriptHostsBlockingPolicyCreateButton_Private();
+	}
+
+	private async Task DangerousScriptHostsBlockingPolicyCreateButton_Private()
+	{
+		bool errorsOccurred = false;
+
+		try
+		{
+			DangerousScriptHostsBlockingSettingsIsExpanded = true;
+
+			DangerousScriptHostsBlockingInfoBarActionButtonVisibility = Visibility.Collapsed;
+
+			DangerousScriptHostsBlockingSectionIsEnabled = false;
+			DangerousScriptHostsBlockingSettingsInfoBarIsClosable = false;
+
+			DangerousScriptHostsBlockingInfoBar.WriteInfo(GlobalVars.GetStr("CreatingPolicyDangerousScriptHostsBlocking"));
+
+			_policyPathDangerousScriptHostsBlocking = await Task.Run(() =>
+			{
+				DirectoryInfo stagingArea = StagingArea.NewStagingArea("Dangerous Script Hosts Blocking Policy Prepare");
+
+				return BasePolicyCreator.BuildDangerousScriptBlockingPolicy(stagingArea.FullName, DangerousScriptHostsBlockingAudit, DangerousScriptHostsBlockingCreateAndDeploy);
+			});
+		}
+		catch (Exception ex)
+		{
+			errorsOccurred = true;
+			DangerousScriptHostsBlockingInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			if (!errorsOccurred)
+			{
+				DangerousScriptHostsBlockingInfoBarActionButtonVisibility = Visibility.Visible;
+
+				DangerousScriptHostsBlockingInfoBar.WriteSuccess(GlobalVars.GetStr("DangerousScriptHostsBlockingPolicyCreatedSuccessfully"));
+			}
+
+			DangerousScriptHostsBlockingSettingsInfoBarIsClosable = true;
+			DangerousScriptHostsBlockingSectionIsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Event handler to open the created Dangerous Script Hosts Blocking policy in the Policy Editor
+	/// </summary>
+	internal async void OpenInPolicyEditor_DangerousScriptHostsBlockingPolicy() => await PolicyEditorViewModel.OpenInPolicyEditor(_policyPathDangerousScriptHostsBlocking);
+
+	internal async void OpenInDefaultFileHandler_DangerousScriptHostsBlockingPolicy() => await OpenInDefaultFileHandler(_policyPathDangerousScriptHostsBlocking);
+
+	internal async void OpenInConfigurePolicyRuleOptions_DangerousScriptHostsBlockingPolicy() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathDangerousScriptHostsBlocking);
 
 	#endregion
 

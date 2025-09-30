@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
+  <VersionEx>1.0.0.0</VersionEx>
+  <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+  <Rules>
+    <Rule>
+      <Option>Enabled:UMCI</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Inherit Default Policy</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Unsigned System Integrity Policy</Option>
+    </Rule>
+    <Rule>
+      <Option>Disabled:Script Enforcement</Option>
+    </Rule>
+    <Rule>
+      <Option>Required:Enforce Store Applications</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Update Policy No Reboot</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Allow Supplemental Policies</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Dynamic Code Security</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Revoked Expired As Unsigned</Option>
+    </Rule>
+  </Rules>
+  <EKUs />
+  <FileRules>
+    <Allow ID="ID_ALLOW_A_1_0" FriendlyName="" FileName="*" />
+    <Allow ID="ID_ALLOW_A_2_0" FriendlyName="" FileName="*" />
+    <Deny ID="ID_DENY_D_1_1" FriendlyName="System Downloads Folder" FilePath="To-Be-Detected" />
+  </FileRules>
+  <Signers />
+  <SigningScenarios>
+    <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Kernel-Mode Signing Scenario">
+      <ProductSigners>
+        <FileRulesRef>
+          <FileRuleRef RuleID="ID_ALLOW_A_1_0" />
+        </FileRulesRef>
+      </ProductSigners>
+    </SigningScenario>
+    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User-Mode Signing Scenario">
+      <ProductSigners>
+        <FileRulesRef>
+          <FileRuleRef RuleID="ID_ALLOW_A_2_0" />
+          <FileRuleRef RuleID="ID_DENY_D_1_1" />
+        </FileRulesRef>
+      </ProductSigners>
+    </SigningScenario>
+  </SigningScenarios>
+  <UpdatePolicySigners />
+  <CiSigners />
+  <HvciOptions>2</HvciOptions>
+  <BasePolicyID>{98FC8E9B-A6B1-431C-B2BE-EB23A86B5DE5}</BasePolicyID>
+  <PolicyID>{98FC8E9B-A6B1-431C-B2BE-EB23A86B5DE5}</PolicyID>
+  <Settings>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
+      <Value>
+        <String>Downloads-Defense-Measures</String>
+      </Value>
+    </Setting>
+  </Settings>
+</SiPolicy>

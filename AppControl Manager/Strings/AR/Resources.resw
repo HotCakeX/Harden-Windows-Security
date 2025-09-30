@@ -6029,4 +6029,61 @@
     <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
      <value>إفلات ملف لعرض شهاداته</value>
   </data>
+    <data name="DownloadsDefenseMeasureSection.Header" xml:space="preserve">
+    <value>سياسة تدابير الدفاع عن التنزيلات</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.Description" xml:space="preserve">
+    <value>لمكافحة تهديد البرامج الضارة الأكثر تطوراً، يتم اتخاذ إجراء وقائي من خلال إنشاء ونشر سياسة التحكم في التطبيقات على النظام. تحظر هذه السياسة تنفيذ الملفات القابلة للتنفيذ وأنواع الملفات الضارة المحتملة الأخرى في مجلد التنزيلات. تدافع هذه السياسة عن النظام ضد البرامج الضارة التي يمكن أن تطلق نفسها تلقائياً بعد تنزيلها من الإنترنت ولديها القدرة على الحماية من الثغرات بدون نقرات. يجب على المستخدم التأكد من سلامة الملف ونقله صراحةً إلى مجلد مختلف قبل تشغيله.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>لمكافحة تهديد البرامج الضارة الأكثر تطوراً، يتم اتخاذ إجراء وقائي من خلال إنشاء ونشر سياسة التحكم في التطبيقات على النظام. تحظر هذه السياسة تنفيذ الملفات القابلة للتنفيذ وأنواع الملفات الضارة المحتملة الأخرى في مجلد التنزيلات. تدافع هذه السياسة عن النظام ضد البرامج الضارة التي يمكن أن تطلق نفسها تلقائياً بعد تنزيلها من الإنترنت ولديها القدرة على الحماية من الثغرات بدون نقرات. يجب على المستخدم التأكد من سلامة الملف ونقله صراحةً إلى مجلد مختلف قبل تشغيله.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>لمكافحة تهديد البرامج الضارة الأكثر تطوراً، يتم اتخاذ إجراء وقائي من خلال إنشاء ونشر سياسة التحكم في التطبيقات على النظام. تحظر هذه السياسة تنفيذ الملفات القابلة للتنفيذ وأنواع الملفات الضارة المحتملة الأخرى في مجلد التنزيلات. تدافع هذه السياسة عن النظام ضد البرامج الضارة التي يمكن أن تطلق نفسها تلقائياً بعد تنزيلها من الإنترنت ولديها القدرة على الحماية من الثغرات بدون نقرات. يجب على المستخدم التأكد من سلامة الملف ونقله صراحةً إلى مجلد مختلف قبل تشغيله.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.Content" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إنشاء سياسة تدابير الدفاع عن التنزيلات</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إنشاء سياسة تدابير الدفاع عن التنزيلات</value>
+  </data>
+  <data name="DownloadsDefenseMeasurePolicyCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء سياسة تدابير الدفاع عن التنزيلات بنجاح</value>
+  </data>
+  <data name="CreatingPolicyRMMBlocking" xml:space="preserve">
+    <value>إنشاء سياسة حظر المراقبة والإدارة عن بُعد</value>
+  </data>
+  <data name="CreatingPolicyDownloadsDefenseMeasure" xml:space="preserve">
+    <value>إنشاء سياسة تدابير الدفاع عن التنزيلات</value>
+  </data>
+  <data name="CreatingPolicyDangerousScriptHostsBlocking" xml:space="preserve">
+    <value>إنشاء سياسة حظر مضيفات البرامج النصية الخطيرة</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء سياسة حظر مضيفات البرامج النصية الخطيرة بنجاح</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Header" xml:space="preserve">
+    <value>سياسة حظر مضيفات البرامج النصية الخطيرة</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Description" xml:space="preserve">
+    <value>ينشئ سياسة تحكم في التطبيقات مخصصة تحظر تنفيذ "wscript.exe" و "mshta.exe" و "cscript.exe". إنها مضيفات برامج نصية غير آمنة وبدون عزل تشكل خطراً أمنياً.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ينشئ سياسة تحكم في التطبيقات مخصصة تحظر تنفيذ "wscript.exe" و "mshta.exe" و "cscript.exe". إنها مضيفات برامج نصية غير آمنة وبدون عزل تشكل خطراً أمنياً.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ينشئ سياسة تحكم في التطبيقات مخصصة تحظر تنفيذ "wscript.exe" و "mshta.exe" و "cscript.exe". إنها مضيفات برامج نصية غير آمنة وبدون عزل تشكل خطراً أمنياً.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.Content" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إنشاء سياسة حظر مضيفات البرامج النصية الخطيرة</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إنشاء سياسة حظر مضيفات البرامج النصية الخطيرة</value>
+  </data>
   </root>

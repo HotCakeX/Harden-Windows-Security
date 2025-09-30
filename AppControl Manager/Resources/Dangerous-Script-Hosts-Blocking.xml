@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
+  <VersionEx>1.0.0.0</VersionEx>
+  <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+  <Rules>
+    <Rule>
+      <Option>Enabled:UMCI</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Inherit Default Policy</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Unsigned System Integrity Policy</Option>
+    </Rule>
+    <Rule>
+      <Option>Disabled:Script Enforcement</Option>
+    </Rule>
+    <Rule>
+      <Option>Required:Enforce Store Applications</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Update Policy No Reboot</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Allow Supplemental Policies</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Dynamic Code Security</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Revoked Expired As Unsigned</Option>
+    </Rule>
+  </Rules>
+  <EKUs />
+  <FileRules>
+    <FileAttrib ID="ID_FILEATTRIB_F_2F" FriendlyName="cscript.exe FileAttribute" FileName="cscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_32" FriendlyName="mshta.exe FileAttribute" FileName="MSHTA.EXE" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_34" FriendlyName="wscript.exe FileAttribute" FileName="wscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <Allow ID="ID_ALLOW_A_1_1" FriendlyName="" FileName="*" />
+    <Allow ID="ID_ALLOW_A_2_1" FriendlyName="" FileName="*" />
+  </FileRules>
+  <Signers>
+    <Signer ID="ID_SIGNER_F_7" Name="Microsoft Windows Production PCA 2011">
+      <CertRoot Type="TBS" Value="4E80BE107C860DE896384B3EFF50504DC2D76AC7151DF3102A4450637A032146" />
+      <CertPublisher Value="Microsoft Windows" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_2F" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_32" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_34" />
+    </Signer>
+  </Signers>
+  <SigningScenarios>
+    <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Kernel-Mode Signing Scenario">
+      <ProductSigners>
+        <FileRulesRef>
+          <FileRuleRef RuleID="ID_ALLOW_A_1_1" />
+        </FileRulesRef>
+      </ProductSigners>
+    </SigningScenario>
+    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User-Mode Signing Scenario">
+      <ProductSigners>
+        <DeniedSigners>
+          <DeniedSigner SignerId="ID_SIGNER_F_7" />
+        </DeniedSigners>
+        <FileRulesRef>
+          <FileRuleRef RuleID="ID_ALLOW_A_2_1" />
+        </FileRulesRef>
+      </ProductSigners>
+    </SigningScenario>
+  </SigningScenarios>
+  <UpdatePolicySigners />
+  <CiSigners>
+    <CiSigner SignerId="ID_SIGNER_F_7" />
+  </CiSigners>
+  <HvciOptions>2</HvciOptions>
+  <BasePolicyID>{9F0581B7-7E1D-4FDD-8D33-6DBE847D3130}</BasePolicyID>
+  <PolicyID>{9F0581B7-7E1D-4FDD-8D33-6DBE847D3130}</PolicyID>
+  <Settings>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
+      <Value>
+        <String>Dangerous-Script-Hosts-Blocking</String>
+      </Value>
+    </Setting>
+  </Settings>
+</SiPolicy>

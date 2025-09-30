@@ -6029,4 +6029,61 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
      <value>Suelta un archivo para ver sus certificados</value>
   </data>
+    <data name="DownloadsDefenseMeasureSection.Header" xml:space="preserve">
+    <value>Política de medidas de defensa de descargas</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.Description" xml:space="preserve">
+    <value>Para combatir la amenaza de malware más sofisticado, se toma una medida preventiva creando e implementando una política de App Control en el sistema. Esta política bloquea la ejecución de ejecutables y otros tipos de archivos potencialmente dañinos en la carpeta de Descargas. Esta política defiende el sistema contra malware que puede iniciarse automáticamente después de descargarse de Internet y tiene el potencial de proteger contra exploits de cero clics. El usuario debe asegurarse de la seguridad del archivo y transferirlo explícitamente a una carpeta diferente antes de ejecutarlo.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Para combatir la amenaza de malware más sofisticado, se toma una medida preventiva creando e implementando una política de App Control en el sistema. Esta política bloquea la ejecución de ejecutables y otros tipos de archivos potencialmente dañinos en la carpeta de Descargas. Esta política defiende el sistema contra malware que puede iniciarse automáticamente después de descargarse de Internet y tiene el potencial de proteger contra exploits de cero clics. El usuario debe asegurarse de la seguridad del archivo y transferirlo explícitamente a una carpeta diferente antes de ejecutarlo.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Para combatir la amenaza de malware más sofisticado, se toma una medida preventiva creando e implementando una política de App Control en el sistema. Esta política bloquea la ejecución de ejecutables y otros tipos de archivos potencialmente dañinos en la carpeta de Descargas. Esta política defiende el sistema contra malware que puede iniciarse automáticamente después de descargarse de Internet y tiene el potencial de proteger contra exploits de cero clics. El usuario debe asegurarse de la seguridad del archivo y transferirlo explícitamente a una carpeta diferente antes de ejecutarlo.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.Content" xml:space="preserve">
+    <value>Crear</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Crear la política de medidas de defensa de descargas</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Crear la política de medidas de defensa de descargas</value>
+  </data>
+  <data name="DownloadsDefenseMeasurePolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Se creó exitosamente la política de medidas de defensa de descargas</value>
+  </data>
+  <data name="CreatingPolicyRMMBlocking" xml:space="preserve">
+    <value>Creando la política de bloqueo de monitoreo y administración remota</value>
+  </data>
+  <data name="CreatingPolicyDownloadsDefenseMeasure" xml:space="preserve">
+    <value>Creando la política de medidas de defensa de descargas</value>
+  </data>
+  <data name="CreatingPolicyDangerousScriptHostsBlocking" xml:space="preserve">
+    <value>Creando la política de bloqueo de hosts de scripts peligrosos</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Se creó exitosamente la política de bloqueo de hosts de scripts peligrosos</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Header" xml:space="preserve">
+    <value>Política de bloqueo de hosts de scripts peligrosos</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Description" xml:space="preserve">
+    <value>Crea una política personalizada de App Control que bloquea la ejecución de "wscript.exe", "mshta.exe" y "cscript.exe". Son hosts de scripts inseguros y sin espacio aislado que representan un riesgo de seguridad.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Crea una política personalizada de App Control que bloquea la ejecución de "wscript.exe", "mshta.exe" y "cscript.exe". Son hosts de scripts inseguros y sin espacio aislado que representan un riesgo de seguridad.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Crea una política personalizada de App Control que bloquea la ejecución de "wscript.exe", "mshta.exe" y "cscript.exe". Son hosts de scripts inseguros y sin espacio aislado que representan un riesgo de seguridad.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.Content" xml:space="preserve">
+    <value>Crear</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Crear la política de bloqueo de hosts de scripts peligrosos</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Crear la política de bloqueo de hosts de scripts peligrosos</value>
+  </data>
   </root>

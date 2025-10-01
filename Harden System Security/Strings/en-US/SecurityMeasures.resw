@@ -949,4 +949,8 @@
 <data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
     <value>Enable auditing and tracking Lock Screen locks and unlocks.</value>
 </data>
+<!--NEW-->
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>Allow network connectivity during connected-modern-standby (only when plugged in)</value>
+</data>
 </root>

@@ -783,7 +783,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 	/*
 	/// <summary>
 	/// E.g., specialized apply strategy that runs before the main apply operation.
-	/// Can check system prerequisites before applying Intel TDT feature. Not exactly a realistic scenario but trying to be wholesome here for future-proofing.
+	/// Can check system prerequisites before applying Intel TDT feature.
 	/// </summary>
 	private sealed class TDTPreApplyCheck : ISpecializedApplyStrategy
 	{
@@ -797,7 +797,7 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 
 	/// <summary>
 	/// E.g., specialized remove strategy that runs after the main remove operation.
-	/// Maybe a JSON based policy needs some additional personal touch to be completely removed. Again not exactly a realistic scenario but for future-proofing.
+	/// Maybe a JSON based policy needs some additional personal touch to be completely removed.
 	/// </summary>
 	private sealed class TDTPostRemoveCleanup : ISpecializedRemoveStrategy
 	{

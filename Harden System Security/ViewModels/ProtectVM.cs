@@ -396,7 +396,12 @@ internal sealed partial class ProtectVM : ViewModelBase
 						title: GlobalVars.GetStr("ProtectCategory_TLS"),
 						subTitle: GlobalVars.GetStr("ProtectCategory_Description_TLS"),
 						logo: CategoryImages[(int)Categories.TLSSecurity],
-						subCategories: []
+						subCategories: [
+							new SubCategoryDefinition(
+							subCategory:SubCategories.TLS_ForBattleNet,
+							description: GlobalVars.GetStr("ProtectSubCategory_TLS_ForBattleNet"),
+							tip: GlobalVars.GetStr("TLSSecurity_TLS_ForBattleNet"))
+							]
 						));
 
 					// 7
@@ -467,7 +472,12 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.MiscellaneousConfigurations_EnableLongPathSupport,
-							description: GlobalVars.GetStr("ProtectSubCategory_EnableLongPathSupport"))
+							description: GlobalVars.GetStr("ProtectSubCategory_EnableLongPathSupport")),
+
+							new SubCategoryDefinition(
+							subCategory:SubCategories.MiscellaneousConfigurations_ReducedTelemetry,
+							description: GlobalVars.GetStr("ProtectSubCategory_MiscellaneousConfigurations_ReducedTelemetry"),
+							tip: GlobalVars.GetStr("MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry"))
 							]
 						));
 
@@ -562,7 +572,12 @@ internal sealed partial class ProtectVM : ViewModelBase
 						title: GlobalVars.GetStr("ProtectCategory_TLS"),
 						subTitle: GlobalVars.GetStr("ProtectCategory_Description_TLS"),
 						logo: CategoryImages[(int)Categories.TLSSecurity],
-						subCategories: []
+						subCategories: [
+							new SubCategoryDefinition(
+							subCategory:SubCategories.TLS_ForBattleNet,
+							description: GlobalVars.GetStr("ProtectSubCategory_TLS_ForBattleNet"),
+							tip: GlobalVars.GetStr("TLSSecurity_TLS_ForBattleNet"))
+							]
 						));
 
 					// 7
@@ -662,7 +677,12 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 							new SubCategoryDefinition(
 							subCategory:SubCategories.MiscellaneousConfigurations_EnableLongPathSupport,
-							description: GlobalVars.GetStr("ProtectSubCategory_EnableLongPathSupport"))
+							description: GlobalVars.GetStr("ProtectSubCategory_EnableLongPathSupport")),
+
+							new SubCategoryDefinition(
+							subCategory:SubCategories.MiscellaneousConfigurations_ReducedTelemetry,
+							description: GlobalVars.GetStr("ProtectSubCategory_MiscellaneousConfigurations_ReducedTelemetry"),
+							tip: GlobalVars.GetStr("MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry"))
 							]
 						));
 

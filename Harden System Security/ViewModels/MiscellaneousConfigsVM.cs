@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.SecurityPolicy;
@@ -146,6 +147,9 @@ internal sealed partial class MiscellaneousConfigsVM : ViewModelBase, IMUnitList
 	/// <returns>List of all MUnits for this ViewModel</returns>
 	public List<MUnit> CreateAllMUnits()
 	{
+		// Register specialized strategies.
+		RegisterSpecializedStrategies();
+
 		List<MUnit> units = CreateUnits();
 
 		units.AddRange(MUnit.CreateMUnitsFromPolicies(Categories.MiscellaneousConfigurations));
@@ -292,6 +296,77 @@ internal sealed partial class MiscellaneousConfigsVM : ViewModelBase, IMUnitList
 		}
 
 		return output;
+	}
+
+
+	/// <summary>
+	/// Registers specialized strategies for specific policies.
+	/// </summary>
+	private void RegisterSpecializedStrategies()
+	{
+		// Register specialized remove strategy for EnableSvchostMitigationPolicy.
+		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
+			"System\\CurrentControlSet\\Control\\SCMConfig|EnableSvchostMitigationPolicy",
+			new EnableSvchostMitigationPolicyPostRemoveCleanup()
+		);
+
+		// Register specialized remove strategy for LongPathsEnabled.
+		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
+			"System\\CurrentControlSet\\Control\\FileSystem|LongPathsEnabled",
+			new LongPathsEnabledPostRemoveCleanup()
+		);
+	}
+
+	/// <summary>
+	/// Specialized remove strategy that runs after the main remove operation.
+	/// Because the original policy is Group Policy, defined in JSON, and it's a tattooed policy so setting the policy to Not-Configured state won't automatically reset the registry key associated with the policy.
+	/// This cleanup step ensures the registry key is removed after the main removal operation.
+	/// </summary>
+	private sealed class EnableSvchostMitigationPolicyPostRemoveCleanup : ISpecializedRemoveStrategy
+	{
+		public ExecutionTiming Timing => ExecutionTiming.After;
+
+		public void Remove()
+		{
+			RegistryManager.Manager.EditRegistry(new(
+				source: GroupPolicy.Source.Registry,
+				keyName: "System\\CurrentControlSet\\Control\\SCMConfig",
+				valueName: "EnableSvchostMitigationPolicy",
+				type: GroupPolicy.RegistryValueType.REG_DWORD,
+				size: 4,
+				data: [])
+			{
+				hive = Hive.HKLM,
+				RegValue = "0",
+				policyAction = PolicyAction.Apply
+			});
+		}
+	}
+
+	/// <summary>
+	/// Specialized remove strategy that runs after the main remove operation.
+	/// Because the original policy is Group Policy, defined in JSON, and it's a tattooed policy so setting the policy to Not-Configured state won't automatically reset the registry key associated with the policy.
+	/// This cleanup step ensures the registry key is removed after the main removal operation.
+	/// </summary>
+	private sealed class LongPathsEnabledPostRemoveCleanup : ISpecializedRemoveStrategy
+	{
+		public ExecutionTiming Timing => ExecutionTiming.After;
+
+		public void Remove()
+		{
+			RegistryManager.Manager.EditRegistry(new(
+				source: GroupPolicy.Source.Registry,
+				keyName: "System\\CurrentControlSet\\Control\\FileSystem",
+				valueName: "LongPathsEnabled",
+				type: GroupPolicy.RegistryValueType.REG_DWORD,
+				size: 4,
+				data: [])
+			{
+				hive = Hive.HKLM,
+				RegValue = "0",
+				policyAction = PolicyAction.Apply
+			});
+		}
 	}
 
 }

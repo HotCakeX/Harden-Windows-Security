@@ -6029,4 +6029,61 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
      <value>Drop file to view their certificates</value>
   </data>
+  <data name="DownloadsDefenseMeasureSection.Header" xml:space="preserve">
+    <value>Downloads Defense Measures Policy</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.Description" xml:space="preserve">
+    <value>To combat the threat of more sophisticated malware, a preemptive measure is taken by creating and deploying an App Control policy on the system. This policy blocks the execution of executables and other potentially harmful file types in the Downloads folder. This policy defends the system from malware that can launch itself automatically after being downloaded from the Internet and has the potential to protect against zero-click exploits. The user must ensure the file's safety and explicitly transfer it to a different folder before running it.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>To combat the threat of more sophisticated malware, a preemptive measure is taken by creating and deploying an App Control policy on the system. This policy blocks the execution of executables and other potentially harmful file types in the Downloads folder. This policy defends the system from malware that can launch itself automatically after being downloaded from the Internet and has the potential to protect against zero-click exploits. The user must ensure the file's safety and explicitly transfer it to a different folder before running it.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>To combat the threat of more sophisticated malware, a preemptive measure is taken by creating and deploying an App Control policy on the system. This policy blocks the execution of executables and other potentially harmful file types in the Downloads folder. This policy defends the system from malware that can launch itself automatically after being downloaded from the Internet and has the potential to protect against zero-click exploits. The user must ensure the file's safety and explicitly transfer it to a different folder before running it.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.Content" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the Downloads Defense Measures Policy</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create the Downloads Defense Measures Policy</value>
+  </data>
+  <data name="DownloadsDefenseMeasurePolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Successfully created the Downloads Defense Measures policy</value>
+  </data>
+  <data name="CreatingPolicyRMMBlocking" xml:space="preserve">
+    <value>Creating the Remote Monitoring and Management Blocking policy</value>
+  </data>
+  <data name="CreatingPolicyDownloadsDefenseMeasure" xml:space="preserve">
+    <value>Creating the Downloads Defense Measures policy</value>
+  </data>
+  <data name="CreatingPolicyDangerousScriptHostsBlocking" xml:space="preserve">
+    <value>Creating the Dangerous Script Hosts Blocking policy</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Successfully created the Dangerous Script Hosts Blocking policy</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Header" xml:space="preserve">
+    <value>Dangerous Script Hosts Blocking Policy</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Description" xml:space="preserve">
+    <value>Creates a custom App Control policy that blocks the execution of "wscript.exe", "mshta.exe" and "cscript.exe". They are insecure, unsandboxed script hosts that pose a security risk.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Creates a custom App Control policy that blocks the execution of "wscript.exe", "mshta.exe" and "cscript.exe". They are insecure, unsandboxed script hosts that pose a security risk.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Creates a custom App Control policy that blocks the execution of "wscript.exe", "mshta.exe" and "cscript.exe". They are insecure, unsandboxed script hosts that pose a security risk.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.Content" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create the Dangerous Script Hosts Blocking Policy</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Create the Dangerous Script Hosts Blocking Policy</value>
+  </data>
 </root>

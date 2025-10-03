@@ -15,10 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using AppControlManager;
 using AppControlManager.Others;
 
 namespace HardenSystemSecurity.Protect;

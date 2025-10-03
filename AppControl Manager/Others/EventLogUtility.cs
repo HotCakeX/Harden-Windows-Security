@@ -14,7 +14,6 @@
 //
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
-using System;
 using System.ComponentModel;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
@@ -75,15 +74,6 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 				}
 			}
 		}
-	}
-
-	[Flags]
-	internal enum RegNotifyFilter : uint
-	{
-		Name = 1,
-		Attributes = 2,
-		LastSet = 4,
-		Security = 8
 	}
 
 	private RegistryKey? _regKey;
@@ -275,37 +265,5 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 			return long.MaxValue;
 		}
 	}
-
-
-	/* Retired method - the log size is now retrieved in real time
-
-	/// <summary>
-	/// Gets the Code Integrity Operational Log Max capacity in Double
-	/// </summary>
-	/// <returns></returns>
-	internal static double GetCurrentLogSize()
-	{
-		Logger.Write("Getting the Code Integrity Log Capacity");
-
-		try
-		{
-			using EventLogConfiguration logConfig = new(logName);
-			long logCapacityBytes = logConfig.MaximumSizeInBytes;
-
-			// Convert bytes to megabytes
-			double logCapacityMB = logCapacityBytes / (1024.0 * 1024.0);
-
-			Logger.Write($"Log capacity: {logCapacityMB:F2} MB.");
-
-			return logCapacityMB;
-		}
-		catch (Exception ex)
-		{
-			Logger.Write($"An error occurred while retrieving the log capacity: {ex.Message}");
-			throw;
-		}
-	}
-	*/
-
 
 }

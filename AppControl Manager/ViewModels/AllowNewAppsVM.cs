@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -863,7 +862,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		if (!string.IsNullOrWhiteSpace(selectedFile))
 		{
 			// The extra validations are required since user can provide path in the text box directly
-			if (File.Exists(selectedFile) && (Path.GetExtension(selectedFile).Equals(".xml", StringComparison.OrdinalIgnoreCase)))
+			if (File.Exists(selectedFile) && Path.GetExtension(selectedFile).Equals(".xml", StringComparison.OrdinalIgnoreCase))
 			{
 				// Store the selected XML file path
 				selectedXMLFilePath = selectedFile;

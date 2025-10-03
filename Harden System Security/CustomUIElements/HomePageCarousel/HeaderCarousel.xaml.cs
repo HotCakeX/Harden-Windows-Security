@@ -22,7 +22,6 @@
 // License file: https://github.com/microsoft/ai-dev-gallery/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections;
 using System.Collections.Frozen;
 using System.Collections.Generic;
@@ -540,7 +539,7 @@ internal static partial class ListViewHelper
 		double finalYPosition;
 
 		// If the Item is in view and scrollIfVisible is false then we don't need to scroll
-		if (!scrollIfVisible && (previousXOffset <= maxXPosition && previousXOffset >= minXPosition) && (previousYOffset <= maxYPosition && previousYOffset >= minYPosition))
+		if (!scrollIfVisible && previousXOffset <= maxXPosition && previousXOffset >= minXPosition && previousYOffset <= maxYPosition && previousYOffset >= minYPosition)
 		{
 			finalXPosition = previousXOffset;
 			finalYPosition = previousYOffset;

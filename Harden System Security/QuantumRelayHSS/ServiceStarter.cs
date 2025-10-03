@@ -15,12 +15,10 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager;
 
 namespace HardenSystemSecurity.QuantumRelayHSS;
 
@@ -159,9 +157,9 @@ internal static partial class ServiceStarter
 	}
 
 	// Query SERVICE_STATUS_PROCESS using QueryServiceStatusEx(SC_STATUS_PROCESS_INFO).
-	private static SERVICE_STATUS_PROCESS QueryServiceStatusProcess(IntPtr serviceHandle)
+	private unsafe static SERVICE_STATUS_PROCESS QueryServiceStatusProcess(IntPtr serviceHandle)
 	{
-		int size = Marshal.SizeOf<SERVICE_STATUS_PROCESS>();
+		int size = sizeof(SERVICE_STATUS_PROCESS);
 		IntPtr buffer = Marshal.AllocHGlobal(size);
 
 		try
@@ -173,7 +171,7 @@ internal static partial class ServiceStarter
 				throw new Win32Exception(err, $"QueryServiceStatusEx failed with error {err}.");
 			}
 
-			SERVICE_STATUS_PROCESS status = Marshal.PtrToStructure<SERVICE_STATUS_PROCESS>(buffer);
+			SERVICE_STATUS_PROCESS status = *(SERVICE_STATUS_PROCESS*)buffer;
 			return status;
 		}
 		finally

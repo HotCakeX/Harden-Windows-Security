@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Diagnostics;
 using AppControlManager.Others;
 using Microsoft.UI.Dispatching;
@@ -28,7 +27,6 @@ namespace AppControlManager.CustomUIElements;
 #endif
 
 #if HARDEN_SYSTEM_SECURITY
-using AppControlManager;
 namespace HardenSystemSecurity.CustomUIElements;
 #endif
 

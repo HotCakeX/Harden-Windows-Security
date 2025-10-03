@@ -10,4 +10,5 @@
     <Platform Solution="*|x64" Project="x64" />
     <Deploy />
   </Project>
+  <Project Path="eXclude/CommonCore/CommonCore.shproj" Id="076556fd-204b-4b34-9fb9-82e48a87e3e4" />
 </Solution>

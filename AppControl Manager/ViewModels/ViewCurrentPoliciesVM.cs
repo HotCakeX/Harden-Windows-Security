@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -762,10 +761,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				(p.PolicyID?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.FriendlyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
 				(p.VersionString?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
-				(p.IsSystemPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(p.IsSignedPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(p.IsOnDisk.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(p.IsEnforced.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+				p.IsSystemPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+				p.IsSignedPolicy.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+				p.IsOnDisk.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+				p.IsEnforced.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 				(p.PolicyOptionsDisplay?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
 				);
 			});

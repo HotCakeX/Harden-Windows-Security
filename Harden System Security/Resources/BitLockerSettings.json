@@ -318,5 +318,21 @@
         "Category": 4,
         "SubCategory": null,
         "DefaultRegValue": null
+    },
+    {
+        "Source": 0,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Power\\PowerSettings\\f15576e8-98b7-4186-b944-eafa664402d9",
+        "ValueName": "ACSettingIndex",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AQAAAA==",
+        "RegValue": "0",
+        "Hive": null,
+        "PolicyAction": 0,
+        "FriendlyName": "ACConnectivityInStandby_BitLocker",
+        "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-power#acconnectivityinstandby_2",
+        "Category": 4,
+        "SubCategory": null,
+        "DefaultRegValue": null
     }
 ]

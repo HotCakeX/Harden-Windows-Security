@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,7 +55,7 @@ internal static class WindowsServiceHost
 		IntPtr serviceNamePtr = IntPtr.Zero;
 		try
 		{
-			NativeMethods.SERVICE_TABLE_ENTRY[] dispatchTable = new NativeMethods.SERVICE_TABLE_ENTRY[2];
+			SERVICE_TABLE_ENTRY[] dispatchTable = new SERVICE_TABLE_ENTRY[2];
 
 			// Allocate unmanaged memory for the service name (LPWSTR)
 			serviceNamePtr = Marshal.StringToHGlobalUni(Atlas.QuantumRelayHSSServiceName);
@@ -64,14 +63,14 @@ internal static class WindowsServiceHost
 			// Get a function pointer for the managed ServiceMain delegate
 			IntPtr serviceMainPtr = Marshal.GetFunctionPointerForDelegate(s_serviceMainDelegate);
 
-			dispatchTable[0] = new NativeMethods.SERVICE_TABLE_ENTRY
+			dispatchTable[0] = new SERVICE_TABLE_ENTRY
 			{
 				lpServiceName = serviceNamePtr,
 				lpServiceProc = serviceMainPtr
 			};
 
 			// Sentinel terminator entry must be all zeros
-			dispatchTable[1] = new NativeMethods.SERVICE_TABLE_ENTRY
+			dispatchTable[1] = new SERVICE_TABLE_ENTRY
 			{
 				lpServiceName = IntPtr.Zero,
 				lpServiceProc = IntPtr.Zero
@@ -126,7 +125,7 @@ internal static class WindowsServiceHost
 			}
 
 			// Report start pending
-			ReportServiceStatus(NativeMethods.SERVICE_STATE.SERVICE_START_PENDING, waitHintMs: 30000);
+			ReportServiceStatus(SERVICE_STATE.SERVICE_START_PENDING, waitHintMs: 30000);
 
 			// Initialize and start worker
 			s_stoppingCts = new CancellationTokenSource();
@@ -159,7 +158,7 @@ internal static class WindowsServiceHost
 			// Report running
 			s_runningReported = true;
 
-			ReportServiceStatus(NativeMethods.SERVICE_STATE.SERVICE_RUNNING, controlsAccepted:
+			ReportServiceStatus(SERVICE_STATE.SERVICE_RUNNING, controlsAccepted:
 				NativeMethods.SERVICE_ACCEPT_STOP | NativeMethods.SERVICE_ACCEPT_SHUTDOWN);
 
 			// Wait for worker to end; stop is requested by SCM or fatal error
@@ -170,9 +169,9 @@ internal static class WindowsServiceHost
 			catch { } // If the task throws, proceed to stop reporting
 
 			// Perform stop finalization and report stopped
-			ReportServiceStatus(NativeMethods.SERVICE_STATE.SERVICE_STOP_PENDING, waitHintMs: 30000);
+			ReportServiceStatus(SERVICE_STATE.SERVICE_STOP_PENDING, waitHintMs: 30000);
 			TryStopServerSync();
-			ReportServiceStatus(NativeMethods.SERVICE_STATE.SERVICE_STOPPED);
+			ReportServiceStatus(SERVICE_STATE.SERVICE_STOPPED);
 		}
 		catch (Exception ex)
 		{
@@ -183,7 +182,7 @@ internal static class WindowsServiceHost
 			// Best-effort stop report
 			try
 			{
-				ReportServiceStatus(NativeMethods.SERVICE_STATE.SERVICE_STOPPED, win32ExitCode: 1);
+				ReportServiceStatus(SERVICE_STATE.SERVICE_STOPPED, win32ExitCode: 1);
 			}
 			catch { }
 		}
@@ -219,7 +218,7 @@ internal static class WindowsServiceHost
 		{
 			try
 			{
-				ReportServiceStatus(NativeMethods.SERVICE_STATE.SERVICE_STOP_PENDING, waitHintMs: 30000);
+				ReportServiceStatus(SERVICE_STATE.SERVICE_STOP_PENDING, waitHintMs: 30000);
 			}
 			catch { }
 		}
@@ -278,9 +277,9 @@ internal static class WindowsServiceHost
 		catch { }
 	}
 
-	private static void ReportServiceStatus(NativeMethods.SERVICE_STATE currentState, uint controlsAccepted = 0, uint win32ExitCode = 0, uint waitHintMs = 0)
+	private static void ReportServiceStatus(SERVICE_STATE currentState, uint controlsAccepted = 0, uint win32ExitCode = 0, uint waitHintMs = 0)
 	{
-		NativeMethods.SERVICE_STATUS status = new()
+		SERVICE_STATUS status = new()
 		{
 			dwServiceType = NativeMethods.SERVICE_WIN32_OWN_PROCESS,
 			dwCurrentState = (uint)currentState,
@@ -294,7 +293,7 @@ internal static class WindowsServiceHost
 		_ = NativeMethods.SetServiceStatus(s_statusHandle, ref status);
 	}
 
-	private static void SetupKillOnJobClose()
+	private unsafe static void SetupKillOnJobClose()
 	{
 		try
 		{
@@ -311,18 +310,18 @@ internal static class WindowsServiceHost
 				return;
 			}
 
-			NativeMethods.JOBOBJECT_EXTENDED_LIMIT_INFORMATION info = new()
+			JOBOBJECT_EXTENDED_LIMIT_INFORMATION info = new()
 			{
-				BasicLimitInformation = new NativeMethods.JOBOBJECT_BASIC_LIMIT_INFORMATION
+				BasicLimitInformation = new JOBOBJECT_BASIC_LIMIT_INFORMATION
 				{
 					LimitFlags = NativeMethods.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
 				}
 			};
 
-			uint size = (uint)Marshal.SizeOf<NativeMethods.JOBOBJECT_EXTENDED_LIMIT_INFORMATION>();
+			uint size = (uint)sizeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION);
 			bool setOk = NativeMethods.SetInformationJobObject(
 				s_jobHandle,
-				NativeMethods.JOBOBJECTINFOCLASS.JobObjectExtendedLimitInformation,
+				JOBOBJECTINFOCLASS.JobObjectExtendedLimitInformation,
 				ref info,
 				size);
 

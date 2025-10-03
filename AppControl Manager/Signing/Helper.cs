@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using AppControlManager.Others;

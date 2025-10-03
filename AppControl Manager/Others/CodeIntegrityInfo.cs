@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -121,27 +120,38 @@ internal static partial class DetailsRetrieval
 	/// </summary>
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static SystemCodeIntegrityInfo Get()
+	internal static unsafe SystemCodeIntegrityInfo Get()
 	{
+		// Creating the structure and set Length
+		SYSTEM_CODEINTEGRITY_INFORMATION sci;
+		sci.Length = (uint)sizeof(SYSTEM_CODEINTEGRITY_INFORMATION);
+		sci.CodeIntegrityOptions = 0;
 
-		SYSTEM_CODEINTEGRITY_INFORMATION sci = new()
-		{
-			Length = (uint)Marshal.SizeOf<SYSTEM_CODEINTEGRITY_INFORMATION>()
-		};
+		int bufferSize = sizeof(SYSTEM_CODEINTEGRITY_INFORMATION);
 
-		nint buffer = Marshal.AllocHGlobal((int)sci.Length);
-		Marshal.StructureToPtr(sci, buffer, false);
+		// Allocating unmanaged memory of the exact size
+		nint buffer = Marshal.AllocHGlobal(bufferSize);
 
 		try
 		{
-			int length = 0;
+			// Write the initialized struct directly into unmanaged memory.
+			*(SYSTEM_CODEINTEGRITY_INFORMATION*)buffer = sci;
 
-			int result = NativeMethods.NtQuerySystemInformation(SystemCodeIntegrityInformation, buffer, (int)sci.Length, ref length);
+			int returnLength = 0;
+
+			int result = NativeMethods.NtQuerySystemInformation(
+				SystemCodeIntegrityInformation,
+				buffer,
+				bufferSize,
+				ref returnLength);
 
 			if (result != 0)
+			{
 				throw new InvalidOperationException("NtQuerySystemInformation failed with status: " + result);
+			}
 
-			sci = Marshal.PtrToStructure<SYSTEM_CODEINTEGRITY_INFORMATION>(buffer);
+			// Read back the updated structure directly
+			sci = *(SYSTEM_CODEINTEGRITY_INFORMATION*)buffer;
 
 			SystemCodeIntegrityInfo output = new(
 				codeIntegrityOptions: sci.CodeIntegrityOptions,

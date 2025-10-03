@@ -22,7 +22,6 @@
 // License file: https://github.com/microsoft/ai-dev-gallery/blob/main/LICENSE
 //
 
-using System;
 using System.Numerics;
 using Microsoft.UI;
 using Microsoft.UI.Composition;

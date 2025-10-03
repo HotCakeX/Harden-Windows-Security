@@ -15,9 +15,10 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.IO;
 using System.Text;
+
+#pragma warning disable IDE0130
 
 namespace CommonCore.QuantumRelay;
 

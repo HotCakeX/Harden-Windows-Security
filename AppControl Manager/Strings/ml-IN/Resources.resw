@@ -6029,4 +6029,61 @@
     <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
      <value>അതിന്റെ സർട്ടിഫിക്കറ്റുകൾ കാണാൻ ഫയൽ ഡ്രോപ്പ് ചെയ്യുക</value>
   </data>
+    <data name="DownloadsDefenseMeasureSection.Header" xml:space="preserve">
+    <value>ഡൗൺലോഡുകൾ പ്രതിരോധ നടപടികൾ നയം</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.Description" xml:space="preserve">
+    <value>കൂടുതൽ സങ്കീർണമായ ദുഷിച്ച സോഫ്റ്റ്‌വെയറിന്റെ ഭീഷണിയെ ചെറുക്കുന്നതിന്, സിസ്റ്റത്തിൽ ഒരു ആപ്പ് നിയന്ത്രണ നയം സൃഷ്‌ടിക്കുകയും വിന്യസിക്കുകയും ചെയ്തുകൊണ്ട് ഒരു മുൻകൂർ നടപടി സ്വീകരിക്കുന്നു. ഈ നയം ഡൗൺലോഡുകൾ ഫോൾഡറിലെ എക്‌സിക്യൂട്ടബിളുകളുടെയും മറ്റ് അപകടകരമായേക്കാവുന്ന ഫയൽ തരങ്ങളുടെയും നിർവഹണം തടയുന്നു. ഇന്റർനെറ്റിൽ നിന്ന് ഡൗൺലോഡ് ചെയ്തതിന് ശേഷം സ്വയമേവ സ്വയം ലോഞ്ച് ചെയ്യാൻ കഴിയുന്ന ദുഷിച്ച സോഫ്റ്റ്‌വെയറിൽ നിന്ന് സിസ്റ്റത്തെ ഈ നയം പ്രതിരോധിക്കുകയും സീറോ-ക്ലിക്ക് എക്‌സ്‌പ്ലോയിറ്റുകളിൽ നിന്ന് സംരക്ഷിക്കാനുള്ള സാധ്യത ഉണ്ടായിരിക്കുകയും ചെയ്യുന്നു. ഉപയോക്താവ് ഫയലിന്റെ സുരക്ഷ ഉറപ്പാക്കുകയും അത് പ്രവർത്തിപ്പിക്കുന്നതിന് മുമ്പ് വ്യക്തമായി മറ്റൊരു ഫോൾഡറിലേക്ക് മാറ്റുകയും വേണം.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കൂടുതൽ സങ്കീർണമായ ദുഷിച്ച സോഫ്റ്റ്‌വെയറിന്റെ ഭീഷണിയെ ചെറുക്കുന്നതിന്, സിസ്റ്റത്തിൽ ഒരു ആപ്പ് നിയന്ത്രണ നയം സൃഷ്‌ടിക്കുകയും വിന്യസിക്കുകയും ചെയ്തുകൊണ്ട് ഒരു മുൻകൂർ നടപടി സ്വീകരിക്കുന്നു. ഈ നയം ഡൗൺലോഡുകൾ ഫോൾഡറിലെ എക്‌സിക്യൂട്ടബിളുകളുടെയും മറ്റ് അപകടകരമായേക്കാവുന്ന ഫയൽ തരങ്ങളുടെയും നിർവഹണം തടയുന്നു. ഇന്റർനെറ്റിൽ നിന്ന് ഡൗൺലോഡ് ചെയ്തതിന് ശേഷം സ്വയമേവ സ്വയം ലോഞ്ച് ചെയ്യാൻ കഴിയുന്ന ദുഷിച്ച സോഫ്റ്റ്‌വെയറിൽ നിന്ന് സിസ്റ്റത്തെ ഈ നയം പ്രതിരോധിക്കുകയും സീറോ-ക്ലിക്ക് എക്‌സ്‌പ്ലോയിറ്റുകളിൽ നിന്ന് സംരക്ഷിക്കാനുള്ള സാധ്യത ഉണ്ടായിരിക്കുകയും ചെയ്യുന്നു. ഉപയോക്താവ് ഫയലിന്റെ സുരക്ഷ ഉറപ്പാക്കുകയും അത് പ്രവർത്തിപ്പിക്കുന്നതിന് മുമ്പ് വ്യക്തമായി മറ്റൊരു ഫോൾഡറിലേക്ക് മാറ്റുകയും വേണം.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കൂടുതൽ സങ്കീർണമായ ദുഷിച്ച സോഫ്റ്റ്‌വെയറിന്റെ ഭീഷണിയെ ചെറുക്കുന്നതിന്, സിസ്റ്റത്തിൽ ഒരു ആപ്പ് നിയന്ത്രണ നയം സൃഷ്‌ടിക്കുകയും വിന്യസിക്കുകയും ചെയ്തുകൊണ്ട് ഒരു മുൻകൂർ നടപടി സ്വീകരിക്കുന്നു. ഈ നയം ഡൗൺലോഡുകൾ ഫോൾഡറിലെ എക്‌സിക്യൂട്ടബിളുകളുടെയും മറ്റ് അപകടകരമായേക്കാവുന്ന ഫയൽ തരങ്ങളുടെയും നിർവഹണം തടയുന്നു. ഇന്റർനെറ്റിൽ നിന്ന് ഡൗൺലോഡ് ചെയ്തതിന് ശേഷം സ്വയമേവ സ്വയം ലോഞ്ച് ചെയ്യാൻ കഴിയുന്ന ദുഷിച്ച സോഫ്റ്റ്‌വെയറിൽ നിന്ന് സിസ്റ്റത്തെ ഈ നയം പ്രതിരോധിക്കുകയും സീറോ-ക്ലിക്ക് എക്‌സ്‌പ്ലോയിറ്റുകളിൽ നിന്ന് സംരക്ഷിക്കാനുള്ള സാധ്യത ഉണ്ടായിരിക്കുകയും ചെയ്യുന്നു. ഉപയോക്താവ് ഫയലിന്റെ സുരക്ഷ ഉറപ്പാക്കുകയും അത് പ്രവർത്തിപ്പിക്കുന്നതിന് മുമ്പ് വ്യക്തമായി മറ്റൊരു ഫോൾഡറിലേക്ക് മാറ്റുകയും വേണം.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.Content" xml:space="preserve">
+    <value>സൃഷ്‌ടിക്കുക</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഡൗൺലോഡുകൾ പ്രതിരോധ നടപടികൾ നയം സൃഷ്‌ടിക്കുക</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഡൗൺലോഡുകൾ പ്രതിരോധ നടപടികൾ നയം സൃഷ്‌ടിക്കുക</value>
+  </data>
+  <data name="DownloadsDefenseMeasurePolicyCreatedSuccessfully" xml:space="preserve">
+    <value>ഡൗൺലോഡുകൾ പ്രതിരോധ നടപടികൾ നയം വിജയകരമായി സൃഷ്‌ടിച്ചു</value>
+  </data>
+  <data name="CreatingPolicyRMMBlocking" xml:space="preserve">
+    <value>വിദൂര നിരീക്ഷണവും മാനേജ്‌മെന്റും തടയൽ നയം സൃഷ്‌ടിക്കുന്നു</value>
+  </data>
+  <data name="CreatingPolicyDownloadsDefenseMeasure" xml:space="preserve">
+    <value>ഡൗൺലോഡുകൾ പ്രതിരോധ നടപടികൾ നയം സൃഷ്‌ടിക്കുന്നു</value>
+  </data>
+  <data name="CreatingPolicyDangerousScriptHostsBlocking" xml:space="preserve">
+    <value>അപകടകരമായ സ്‌ക്രിപ്റ്റ് ഹോസ്റ്റുകൾ തടയൽ നയം സൃഷ്‌ടിക്കുന്നു</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>അപകടകരമായ സ്‌ക്രിപ്റ്റ് ഹോസ്റ്റുകൾ തടയൽ നയം വിജയകരമായി സൃഷ്‌ടിച്ചു</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Header" xml:space="preserve">
+    <value>അപകടകരമായ സ്‌ക്രിപ്റ്റ് ഹോസ്റ്റുകൾ തടയൽ നയം</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Description" xml:space="preserve">
+    <value>"wscript.exe", "mshta.exe", "cscript.exe" എന്നിവയുടെ നിർവഹണം തടയുന്ന ഒരു ഇഷ്‌ടാനുസൃത ആപ്പ് നിയന്ത്രണ നയം സൃഷ്‌ടിക്കുന്നു. അവ സുരക്ഷിതമല്ലാത്തതും സാൻഡ്‌ബോക്‌സ് ചെയ്യാത്തതുമായ സ്‌ക്രിപ്റ്റ് ഹോസ്റ്റുകളാണ്, അവ സുരക്ഷാ അപകടസാധ്യത സൃഷ്‌ടിക്കുന്നു.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>"wscript.exe", "mshta.exe", "cscript.exe" എന്നിവയുടെ നിർവഹണം തടയുന്ന ഒരു ഇഷ്‌ടാനുസൃത ആപ്പ് നിയന്ത്രണ നയം സൃഷ്‌ടിക്കുന്നു. അവ സുരക്ഷിതമല്ലാത്തതും സാൻഡ്‌ബോക്‌സ് ചെയ്യാത്തതുമായ സ്‌ക്രിപ്റ്റ് ഹോസ്റ്റുകളാണ്, അവ സുരക്ഷാ അപകടസാധ്യത സൃഷ്‌ടിക്കുന്നു.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>"wscript.exe", "mshta.exe", "cscript.exe" എന്നിവയുടെ നിർവഹണം തടയുന്ന ഒരു ഇഷ്‌ടാനുസൃത ആപ്പ് നിയന്ത്രണ നയം സൃഷ്‌ടിക്കുന്നു. അവ സുരക്ഷിതമല്ലാത്തതും സാൻഡ്‌ബോക്‌സ് ചെയ്യാത്തതുമായ സ്‌ക്രിപ്റ്റ് ഹോസ്റ്റുകളാണ്, അവ സുരക്ഷാ അപകടസാധ്യത സൃഷ്‌ടിക്കുന്നു.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.Content" xml:space="preserve">
+    <value>സൃഷ്‌ടിക്കുക</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അപകടകരമായ സ്‌ക്രിപ്റ്റ് ഹോസ്റ്റുകൾ തടയൽ നയം സൃഷ്‌ടിക്കുക</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അപകടകരമായ സ്‌ക്രിപ്റ്റ് ഹോസ്റ്റുകൾ തടയൽ നയം സൃഷ്‌ടിക്കുക</value>
+  </data>
   </root>

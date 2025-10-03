@@ -22,7 +22,6 @@
 // License file: https://github.com/microsoft/ai-dev-gallery/blob/main/LICENSE
 //
 
-using System;
 using CommunityToolkit.WinUI.Animations;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

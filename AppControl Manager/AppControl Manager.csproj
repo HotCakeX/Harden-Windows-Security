@@ -57,7 +57,7 @@
         <AssemblyName>AppControlManager</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>2.0.43.0</FileVersion>
+        <FileVersion>2.0.44.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
         <StartupObject>AppControlManager.Program</StartupObject>
@@ -82,6 +82,14 @@
         <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
         <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
         <Configurations>Debug;Release</Configurations>
+
+		<!-- https://learn.microsoft.com/en-us/dotnet/standard/native-interop/disabled-marshalling -->
+		<!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#disableruntimemarshalling -->
+		<!-- https://github.com/dotnet/runtime/blob/main/docs/design/libraries/LibraryImportGenerator/Compatibility.md#bool-marshalling -->
+		<!-- https://learn.microsoft.com/en-us/dotnet/standard/native-interop/type-marshalling -->
+		<!-- Disabling runtime marshaling is better because of predictability, and problems arise during compilation rather than runtime. -->
+		<!-- It's also a best practice to disable runtime marshaling so we will be explicit rather than relying on implicit details. -->
+		<!-- <DisableRuntimeMarshalling>True</DisableRuntimeMarshalling> -->
 
     </PropertyGroup>
 
@@ -312,8 +320,14 @@
         <Content Include="Resources\Blocking RMMs - Remote Monitor and Management.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Resources\Dangerous-Script-Hosts-Blocking.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="Resources\Default Windows Template.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Downloads-Defense-Measures.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Resources\EmptyPolicy.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -399,5 +413,8 @@
         <Content Remove="target\**" />
         <None Remove="target\**" />
     </ItemGroup>
+
+	<!-- Imports the Common Core -->
+	<Import Project="eXclude\CommonCore\CommonCore.projitems" Label="Shared" />
 
 </Project>

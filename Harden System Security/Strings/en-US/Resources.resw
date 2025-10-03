@@ -3709,4 +3709,19 @@ Thumbprint: {3}</value>
   <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
     <value>Successfully verified all of the security measures.</value>
   </data>
+  <!--NEW-->
+  <data name="ProtectSubCategory_TLS_ForBattleNet" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Keep an insecure Cipher Suite required for Battle.net game client Internet connectivity enabled.</value>
+  </data>
+  <data name="TLSSecurity_TLS_ForBattleNet" xml:space="preserve">
+    <value>Only select this if you actually use the Battle.net Game client.</value>
+  </data>
+  <data name="ProtectSubCategory_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Apply policies that reduce telemetry in the OS.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <value>Some OS features will become unavailable.</value>
+  </data>
 </root>

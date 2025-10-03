@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.IO;
@@ -29,12 +28,11 @@ namespace AppControlManager.IntelGathering;
 
 internal static class KernelModeDrivers
 {
-	private static readonly IntPtr INVALID_HANDLE_VALUE = new(-1);
 	private static readonly Guid CRYPT_SUBJTYPE_CABINET_IMAGE = new("C689AABA-8E78-11d0-8C47-00C04FC295EE");
 	private static readonly Guid CRYPT_SUBJTYPE_CATALOG_IMAGE = new("DE351A43-8E59-11d0-8C47-00C04FC295EE");
 	private static readonly Guid CRYPT_SUBJTYPE_CTL_IMAGE = new("9BA61D3F-E73A-11d0-8CD2-00C04FC295EE");
 
-	private static readonly int ImportDescriptorSize = Marshal.SizeOf<IMAGE_IMPORT_DESCRIPTOR>();
+	private static readonly unsafe int ImportDescriptorSize = sizeof(IMAGE_IMPORT_DESCRIPTOR);
 
 	private const string KernelModeFileExtension = ".sys";
 
@@ -48,6 +46,7 @@ internal static class KernelModeDrivers
 		"kernel32.dll", "kernelbase.dll", "mscoree.dll", "ntdll.dll", "user32.dll"
 	}.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 
+	[StructLayout(LayoutKind.Sequential)]
 	private struct IMAGE_IMPORT_DESCRIPTOR
 	{
 		internal uint CharacteristicsOrOriginalFirstThunk;
@@ -58,18 +57,18 @@ internal static class KernelModeDrivers
 	}
 
 
-	private static IntPtr OpenFile(string path, out int error)
+	private static IntPtr OpenFile(string path, out uint error)
 	{
 		error = 0;
 		IntPtr fileHandle = NativeMethods.CreateFileW(path, 2147483648U, 1U, IntPtr.Zero, 3U, 33554432U, IntPtr.Zero);
-		IntPtr invalidHandleValue = INVALID_HANDLE_VALUE;
+		IntPtr invalidHandleValue = NativeMethods.INVALID_HANDLE_VALUE;
 
 		if (fileHandle != invalidHandleValue)
 		{
 			return fileHandle;
 		}
 
-		error = Marshal.GetLastWin32Error();
+		error = NativeMethods.GetLastError();
 		return fileHandle;
 	}
 
@@ -107,11 +106,11 @@ internal static class KernelModeDrivers
 
 		try
 		{
-			fileHandle = OpenFile(filePath, out int error);
+			fileHandle = OpenFile(filePath, out uint OpenFileError);
 
-			if (fileHandle == INVALID_HANDLE_VALUE)
+			if (fileHandle == NativeMethods.INVALID_HANDLE_VALUE)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("CouldNotOpenFileMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("CouldNotOpenFileMessage"), filePath, OpenFileError));
 
 				return new KernelUserVerdict
 				(
@@ -163,11 +162,12 @@ internal static class KernelModeDrivers
 
 			uint fileSize = NativeMethods.GetFileSize(fileHandle, ref localPointerFileSizeHigh);
 
+			// This is because the PE image size limit is 4GB.
 			if (fileSize == uint.MaxValue || localPointerFileSizeHigh != 0U)
 			{
-				error = Marshal.GetLastWin32Error();
+				uint fileSizeError = NativeMethods.GetLastError();
 
-				Logger.Write(string.Format(GlobalVars.GetStr("GetFileSizeFailedMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("GetFileSizeFailedMessage"), filePath, fileSizeError));
 
 				return new KernelUserVerdict
 				(
@@ -198,7 +198,7 @@ internal static class KernelModeDrivers
 			// - 2U: Map as read-write (PAGE_READWRITE).
 			// - lpFileSizeHigh, fileSize: High and low 32-bit file size for large files.
 			// - localPointerName: Unique name derived from the GUID to prevent name collisions in the global namespace.
-			fileMappingHandle = NativeMethods.CreateFileMapping(fileHandle,
+			fileMappingHandle = NativeMethods.CreateFileMappingW(fileHandle,
 				IntPtr.Zero,
 				2U,
 				localPointerFileSizeHigh,
@@ -206,11 +206,11 @@ internal static class KernelModeDrivers
 				localPointerName
 				);
 
-			error = Marshal.GetLastWin32Error();
+			uint fileMappingHandleError = NativeMethods.GetLastError();
 
 			if (fileMappingHandle == IntPtr.Zero)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("CreateFileMappingFailedMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("CreateFileMappingFailedMessage"), filePath, fileMappingHandleError));
 
 				return new KernelUserVerdict
 				(
@@ -222,9 +222,9 @@ internal static class KernelModeDrivers
 
 			}
 
-			if (error == 183)
+			if (OpenFileError == 183)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("CreateFileMappingAlreadyExistsMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("CreateFileMappingAlreadyExistsMessage"), filePath, OpenFileError));
 
 				return new KernelUserVerdict
 				(
@@ -247,12 +247,11 @@ internal static class KernelModeDrivers
 				IntPtr.Zero
 				);
 
-
 			if (fileMappingView == IntPtr.Zero)
 			{
-				error = Marshal.GetLastWin32Error();
+				uint fileMappingViewError = NativeMethods.GetLastError();
 
-				Logger.Write(string.Format(GlobalVars.GetStr("MapViewOfFileFailedMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("MapViewOfFileFailedMessage"), filePath, fileMappingViewError));
 
 				return new KernelUserVerdict
 				(
@@ -267,9 +266,9 @@ internal static class KernelModeDrivers
 
 			if (ntHeaders == IntPtr.Zero)
 			{
-				error = Marshal.GetLastWin32Error();
+				uint ImageNtHeaderError = NativeMethods.GetLastError();
 
-				if (error == 193)
+				if (ImageNtHeaderError == 193)
 				{
 					return new KernelUserVerdict
 					(
@@ -280,8 +279,7 @@ internal static class KernelModeDrivers
 					);
 				}
 
-
-				Logger.Write(string.Format(GlobalVars.GetStr("ImageNtHeaderFailedMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("ImageNtHeaderFailedMessage"), filePath, ImageNtHeaderError));
 
 				return new KernelUserVerdict
 				(
@@ -304,9 +302,9 @@ internal static class KernelModeDrivers
 
 			if (dataEx == IntPtr.Zero)
 			{
-				error = Marshal.GetLastWin32Error();
+				uint dataExError = NativeMethods.GetLastError();
 
-				if (error == 0)
+				if (dataExError == 0)
 				{
 					return new KernelUserVerdict
 					(
@@ -317,8 +315,7 @@ internal static class KernelModeDrivers
 					);
 				}
 
-
-				Logger.Write(string.Format(GlobalVars.GetStr("ImageDirectoryEntryToDataExFailedMessage"), filePath, error));
+				Logger.Write(string.Format(GlobalVars.GetStr("ImageDirectoryEntryToDataExFailedMessage"), filePath, dataExError));
 
 				return new KernelUserVerdict
 				(
@@ -335,24 +332,26 @@ internal static class KernelModeDrivers
 				// Get the pointer to the current IMAGE_IMPORT_DESCRIPTOR in unmanaged memory
 				IntPtr currentImportDescriptorPtr = (IntPtr)((long)dataEx + offset);
 
-				// Marshal the IMAGE_IMPORT_DESCRIPTOR from unmanaged memory
-				IMAGE_IMPORT_DESCRIPTOR importDescriptor = Marshal.PtrToStructure<IMAGE_IMPORT_DESCRIPTOR>(currentImportDescriptorPtr);
-
-				// Check if the CharacteristicsOrOriginalFirstThunk is 0, indicating the end of the list
-				if (importDescriptor.CharacteristicsOrOriginalFirstThunk == 0)
+				unsafe
 				{
-					break;
-				}
+					IMAGE_IMPORT_DESCRIPTOR importDescriptor = *(IMAGE_IMPORT_DESCRIPTOR*)currentImportDescriptorPtr;
 
-				// Get the RVA for the import name
-				IntPtr importNamePtr = NativeMethods.ImageRvaToVa(ntHeaders, fileMappingView, importDescriptor.Name, IntPtr.Zero);
+					// Check if the CharacteristicsOrOriginalFirstThunk is 0, indicating the end of the list
+					if (importDescriptor.CharacteristicsOrOriginalFirstThunk == 0)
+					{
+						break;
+					}
 
-				// Marshal the string from the unmanaged memory
-				string? importName = Marshal.PtrToStringAnsi(importNamePtr);
+					// Get the RVA for the import name
+					IntPtr importNamePtr = NativeMethods.ImageRvaToVa(ntHeaders, fileMappingView, importDescriptor.Name, IntPtr.Zero);
 
-				if (importName is not null)
-				{
-					importNames.Add(importName);
+					// Marshal the string from the unmanaged memory
+					string? importName = Marshal.PtrToStringAnsi(importNamePtr);
+
+					if (importName is not null)
+					{
+						importNames.Add(importName);
+					}
 				}
 			}
 
@@ -396,28 +395,28 @@ internal static class KernelModeDrivers
 			{
 				if (NativeMethods.UnmapViewOfFile(fileMappingView) == 0)
 				{
-					int lastWin32Error = Marshal.GetLastWin32Error();
+					uint UnmapViewOfFileError = NativeMethods.GetLastError();
 
-					Logger.Write(string.Format(GlobalVars.GetStr("UnmapViewOfFileFailedMessage"), filePath, lastWin32Error));
+					Logger.Write(string.Format(GlobalVars.GetStr("UnmapViewOfFileFailedMessage"), filePath, UnmapViewOfFileError));
 				}
 			}
-			if (fileMappingHandle != IntPtr.Zero && fileMappingHandle != INVALID_HANDLE_VALUE)
+			if (fileMappingHandle != IntPtr.Zero && fileMappingHandle != NativeMethods.INVALID_HANDLE_VALUE)
 			{
 				if (!NativeMethods.CloseHandle(fileMappingHandle))
 				{
-					int lastWin32Error = Marshal.GetLastWin32Error();
+					uint error = NativeMethods.GetLastError();
 
-					Logger.Write(string.Format(GlobalVars.GetStr("CouldNotCloseMapHandleMessage"), filePath, lastWin32Error));
+					Logger.Write(string.Format(GlobalVars.GetStr("CouldNotCloseMapHandleMessage"), filePath, error));
 
 				}
 			}
-			if (fileHandle != IntPtr.Zero && fileHandle != INVALID_HANDLE_VALUE)
+			if (fileHandle != IntPtr.Zero && fileHandle != NativeMethods.INVALID_HANDLE_VALUE)
 			{
 				if (!NativeMethods.CloseHandle(fileHandle))
 				{
-					int lastWin32Error = Marshal.GetLastWin32Error();
+					uint error = NativeMethods.GetLastError();
 
-					Logger.Write(string.Format(GlobalVars.GetStr("CouldNotCloseFileHandleMessage"), filePath, lastWin32Error));
+					Logger.Write(string.Format(GlobalVars.GetStr("CouldNotCloseFileHandleMessage"), filePath, error));
 				}
 			}
 		}

@@ -15,11 +15,9 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
-using AppControlManager;
 using AppControlManager.Others;
 using HardenSystemSecurity.GroupPolicy;
 
@@ -40,7 +38,7 @@ internal static class FileTrustChecker
 	/// <param name="filePath"></param>
 	/// <exception cref="FileNotFoundException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static FileTrustResult CheckFileTrust(string filePath)
+	internal unsafe static FileTrustResult CheckFileTrust(string filePath)
 	{
 
 		IntPtr fileHandle = default;
@@ -84,7 +82,7 @@ internal static class FileTrustChecker
 			}
 
 			// Query the file's trust score using the function pointer and the file handle
-			long result = mpQueryFileTrust(fileHandle, IntPtr.Zero, IntPtr.Zero, ref parameters, ref MpFileTrustExtraInfoCOUNT, ref extraInfoPtr);
+			long result = mpQueryFileTrust(fileHandle, IntPtr.Zero, IntPtr.Zero, &parameters, &MpFileTrustExtraInfoCOUNT, &extraInfoPtr);
 
 			// If query is successful
 			if (result is 0)
@@ -95,7 +93,8 @@ internal static class FileTrustChecker
 				// Output extra info if available
 				if (MpFileTrustExtraInfoCOUNT > 0 && extraInfoPtr != IntPtr.Zero)
 				{
-					MpFileTrustExtraInfo extraInfo = Marshal.PtrToStructure<MpFileTrustExtraInfo>(extraInfoPtr);
+					MpFileTrustExtraInfo extraInfo = *(MpFileTrustExtraInfo*)extraInfoPtr;
+
 					Logger.Write(string.Format(GlobalVars.GetStr("ExtraInfoFileReputationCheck"), extraInfo.First, extraInfo.Second, extraInfo.DataSize, extraInfo.Data), LogTypeIntel.Information);
 				}
 			}
@@ -185,25 +184,4 @@ internal static class FileTrustChecker
 		Good = 0,
 		HighTrust = 1
 	}
-
-	// Structure to hold extra info about the file trust
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct MpFileTrustExtraInfo
-	{
-		internal uint First;             // First extra info field
-		internal uint Second;            // Second extra info field
-		internal uint DataSize;          // Size of the data
-		internal uint AlignmentPadding;  // Padding for memory alignment
-		internal IntPtr Data;            // Pointer to extra data
-	}
-
-	// Structure to hold parameters for file trust query in Microsoft Defender
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct Params
-	{
-		public uint StructSize;         // Size of the structure
-		public int TrustScore;          // Trust score of the file
-		public ulong ValidityDurationMs; // Validity of the trust score in milliseconds
-	}
-
 }

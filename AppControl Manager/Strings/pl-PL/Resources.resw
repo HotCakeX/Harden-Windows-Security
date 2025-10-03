@@ -6029,4 +6029,61 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
      <value>Upuść plik, aby wyświetlić jego certyfikaty</value>
   </data>
+    <data name="DownloadsDefenseMeasureSection.Header" xml:space="preserve">
+    <value>Zasady obrony folderu Pobrane</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.Description" xml:space="preserve">
+    <value>Aby zwalczyć zagrożenie bardziej zaawansowanym złośliwym oprogramowaniem, podejmowany jest środek zapobiegawczy poprzez utworzenie i wdrożenie zasad App Control w systemie. Te zasady blokują wykonywanie plików wykonywalnych i innych potencjalnie szkodliwych typów plików w folderze Pobrane. Te zasady chronią system przed złośliwym oprogramowaniem, które może uruchamiać się automatycznie po pobraniu z Internetu i mają potencjał ochrony przed exploitami bezklików. Użytkownik musi upewnić się co do bezpieczeństwa pliku i wyraźnie przenieść go do innego folderu przed uruchomieniem.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aby zwalczyć zagrożenie bardziej zaawansowanym złośliwym oprogramowaniem, podejmowany jest środek zapobiegawczy poprzez utworzenie i wdrożenie zasad App Control w systemie. Te zasady blokują wykonywanie plików wykonywalnych i innych potencjalnie szkodliwych typów plików w folderze Pobrane. Te zasady chronią system przed złośliwym oprogramowaniem, które może uruchamiać się automatycznie po pobraniu z Internetu i mają potencjał ochrony przed exploitami bezklików. Użytkownik musi upewnić się co do bezpieczeństwa pliku i wyraźnie przenieść go do innego folderu przed uruchomieniem.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aby zwalczyć zagrożenie bardziej zaawansowanym złośliwym oprogramowaniem, podejmowany jest środek zapobiegawczy poprzez utworzenie i wdrożenie zasad App Control w systemie. Te zasady blokują wykonywanie plików wykonywalnych i innych potencjalnie szkodliwych typów plików w folderze Pobrane. Te zasady chronią system przed złośliwym oprogramowaniem, które może uruchamiać się automatycznie po pobraniu z Internetu i mają potencjał ochrony przed exploitami bezklików. Użytkownik musi upewnić się co do bezpieczeństwa pliku i wyraźnie przenieść go do innego folderu przed uruchomieniem.</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.Content" xml:space="preserve">
+    <value>Utwórz</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz zasady obrony folderu Pobrane</value>
+  </data>
+  <data name="DownloadsDefenseMeasureCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utwórz zasady obrony folderu Pobrane</value>
+  </data>
+  <data name="DownloadsDefenseMeasurePolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Pomyślnie utworzono zasady obrony folderu Pobrane</value>
+  </data>
+  <data name="CreatingPolicyRMMBlocking" xml:space="preserve">
+    <value>Tworzenie zasad blokowania zdalnego monitorowania i zarządzania</value>
+  </data>
+  <data name="CreatingPolicyDownloadsDefenseMeasure" xml:space="preserve">
+    <value>Tworzenie zasad obrony folderu Pobrane</value>
+  </data>
+  <data name="CreatingPolicyDangerousScriptHostsBlocking" xml:space="preserve">
+    <value>Tworzenie zasad blokowania niebezpiecznych hostów skryptów</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Pomyślnie utworzono zasady blokowania niebezpiecznych hostów skryptów</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Header" xml:space="preserve">
+    <value>Zasady blokowania niebezpiecznych hostów skryptów</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.Description" xml:space="preserve">
+    <value>Tworzy niestandardowe zasady App Control, które blokują wykonywanie "wscript.exe", "mshta.exe" i "cscript.exe". Są to niebezpieczne, niezabezpieczone hosty skryptów, które stanowią zagrożenie bezpieczeństwa.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tworzy niestandardowe zasady App Control, które blokują wykonywanie "wscript.exe", "mshta.exe" i "cscript.exe". Są to niebezpieczne, niezabezpieczone hosty skryptów, które stanowią zagrożenie bezpieczeństwa.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingSection.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Tworzy niestandardowe zasady App Control, które blokują wykonywanie "wscript.exe", "mshta.exe" i "cscript.exe". Są to niebezpieczne, niezabezpieczone hosty skryptów, które stanowią zagrożenie bezpieczeństwa.</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.Content" xml:space="preserve">
+    <value>Utwórz</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz zasady blokowania niebezpiecznych hostów skryptów</value>
+  </data>
+  <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utwórz zasady blokowania niebezpiecznych hostów skryptów</value>
+  </data>
   </root>

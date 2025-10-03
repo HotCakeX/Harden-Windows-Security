@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -26,7 +25,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using AppControlManager;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using CommunityToolkit.WinUI;
@@ -212,20 +210,23 @@ internal sealed partial class DismServiceClient : IDisposable
 				return await Task.Run(async () =>
 				{
 
-					NativeMethods.STARTUPINFO startupInfo = new()
+					STARTUPINFO startupInfo = default;
+
+					unsafe
 					{
-						cb = (uint)Marshal.SizeOf<NativeMethods.STARTUPINFO>(),
-						lpReserved = IntPtr.Zero,
-						lpDesktop = desktopPtr,
-						lpTitle = titlePtr,
-						dwFlags = 0,
-						wShowWindow = 0,
-						cbReserved2 = 0,
-						lpReserved2 = IntPtr.Zero,
-						hStdInput = IntPtr.Zero,
-						hStdOutput = IntPtr.Zero,
-						hStdError = IntPtr.Zero
-					};
+						startupInfo.cb = (uint)sizeof(STARTUPINFO);
+					}
+
+					startupInfo.lpReserved = IntPtr.Zero;
+					startupInfo.lpDesktop = desktopPtr;
+					startupInfo.lpTitle = titlePtr;
+					startupInfo.dwFlags = 0;
+					startupInfo.wShowWindow = 0;
+					startupInfo.cbReserved2 = 0;
+					startupInfo.lpReserved2 = IntPtr.Zero;
+					startupInfo.hStdInput = IntPtr.Zero;
+					startupInfo.hStdOutput = IntPtr.Zero;
+					startupInfo.hStdError = IntPtr.Zero;
 
 					string commandLine = $"\"{serviceExecutablePath}\" {_pipeName}";
 
@@ -239,7 +240,7 @@ internal sealed partial class DismServiceClient : IDisposable
 						IntPtr.Zero,
 						null,
 						ref startupInfo,
-						out NativeMethods.PROCESS_INFORMATION processInfo);
+						out PROCESS_INFORMATION processInfo);
 
 					if (!success)
 					{
@@ -697,7 +698,7 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 		}
 	}
 
-	internal double ProgressPercentage => ProgressTotal > 0 ? (ProgressCurrent * 100.0) / ProgressTotal : 0;
+	internal double ProgressPercentage => ProgressTotal > 0 ? ProgressCurrent * 100.0 / ProgressTotal : 0;
 
 	internal string ProgressPercentageFormatted => ProgressPercentage.ToString("F1");
 
@@ -996,7 +997,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						string actionText = _currentOperationType ?? "Processing";
 						if (total > 0)
 						{
-							double percentage = (current * 100.0) / total;
+							double percentage = current * 100.0 / total;
 							MainInfoBar.WriteInfo($"{string.Format(GlobalVars.GetStr("ProgressInfo"), current, total, percentage.ToString("F1"))} - {actionText}: {itemName}");
 						}
 						else

@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -591,7 +590,7 @@ internal static class BinaryOpsReverse
 			return null;
 		}
 		byte[] buf = reader.ReadBytes((int)len);
-		int pad = -((int)len) & 3;
+		int pad = -(int)len & 3;
 		if (pad > 0) _ = reader.ReadBytes(pad);
 		_ = reader.ReadUInt32();
 		return Encoding.Unicode.GetString(buf);
@@ -607,7 +606,7 @@ internal static class BinaryOpsReverse
 		long rem = reader.BaseStream.Length - reader.BaseStream.Position;
 		if (len > rem) throw new InvalidOperationException($"Invalid byte-array length {len}");
 		byte[] data = reader.ReadBytes((int)len);
-		int pad = -((int)len) & 3;
+		int pad = -(int)len & 3;
 		if (pad > 0) _ = reader.ReadBytes(pad);
 		return data;
 	}

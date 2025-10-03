@@ -267,6 +267,10 @@
 
 <br>
 
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Runs Microsoft Defender Antivirus in [Sandbox Mode](https://learn.microsoft.com/en-us/defender-endpoint/sandbox-mdav) for enhanced protection against tampering.
+
+<br>
+
 > [!TIP]\
 > [Performance analyzer for Microsoft Defender Antivirus](https://learn.microsoft.com/defender-endpoint/tune-performance-defender-antivirus)
 

@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Media;
 using HardenSystemSecurity.ViewModels;

@@ -77,7 +77,7 @@
 
         <!-- We create the bundle ourselves -->
         <AppxBundle>Never</AppxBundle>
-
+		
         <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
         <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
         <AssemblyName>HardenSystemSecurity</AssemblyName>
@@ -112,6 +112,14 @@
         <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
         <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
 
+		<!-- https://learn.microsoft.com/en-us/dotnet/standard/native-interop/disabled-marshalling -->
+		<!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#disableruntimemarshalling -->
+		<!-- https://github.com/dotnet/runtime/blob/main/docs/design/libraries/LibraryImportGenerator/Compatibility.md#bool-marshalling -->
+		<!-- https://learn.microsoft.com/en-us/dotnet/standard/native-interop/type-marshalling -->
+		<!-- Disabling runtime marshaling is better because of predictability, and problems arise during compilation rather than runtime. -->
+		<!-- It's also a best practice to disable runtime marshaling so we will be explicit rather than relying on implicit details. -->
+		<!-- <DisableRuntimeMarshalling>True</DisableRuntimeMarshalling> -->
+		
     </PropertyGroup>
 
     <!--
@@ -303,8 +311,6 @@
         <Compile Include="..\AppControl Manager\IncrementalCollection\GenericIncrementalCollection.cs" Link="IncrementalCollection\GenericIncrementalCollection.cs" />
         <Compile Include="..\AppControl Manager\IncrementalCollection\IncrementalCollection.cs" Link="IncrementalCollection\IncrementalCollection.cs" />
         <Compile Include="..\AppControl Manager\MainWindow.xaml.cs" Link="MainWindow.xaml.cs" />
-        <Compile Include="..\AppControl Manager\NativeMethods.cs" Link="NativeMethods.cs" />
-        <Compile Include="..\AppControl Manager\NativeMethods_RustInterop.cs" Link="NativeMethods_RustInterop.cs" />
         <Compile Include="..\AppControl Manager\Others\AppUpdate.cs" Link="Others\AppUpdate.cs" />
         <Compile Include="..\AppControl Manager\Others\ClipboardManagement.cs" Link="Others\ClipboardManagement.cs" />
         <Compile Include="..\AppControl Manager\Others\EventLogUtility.cs" Link="Others\EventLogUtility.cs" />
@@ -322,7 +328,6 @@
         <Compile Include="..\AppControl Manager\Others\UniqueStringObservableCollection.cs" Link="Others\UniqueStringObservableCollection.cs" />
         <Compile Include="..\AppControl Manager\Others\UpdateAvailableEventArgs.cs" Link="Others\UpdateAvailableEventArgs.cs" />
         <Compile Include="..\AppControl Manager\Others\UpdateCheckResponse.cs" Link="Others\UpdateCheckResponse.cs" />
-        <Compile Include="..\AppControl Manager\Others\Win32Interop.cs" Link="Others\Win32Interop.cs" />
         <Compile Include="..\AppControl Manager\Others\WindowDisplayAffinity.cs" Link="Others\WindowDisplayAffinity.cs" />
         <Compile Include="..\AppControl Manager\Others\AnimatedCancellableButtonInitializer.cs" Link="Others\AnimatedCancellableButtonInitializer.cs" />
         <Compile Include="..\AppControl Manager\Pages\GitHubDocumentation.xaml.cs" Link="Pages\GitHubDocumentation.xaml.cs" />

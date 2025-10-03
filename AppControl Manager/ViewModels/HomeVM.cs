@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Globalization;
 using System.IO;
 using System.Net.Http;
@@ -238,8 +237,8 @@ internal sealed partial class HomeVM : ViewModelBase
 	/// <returns>bytes</returns>
 	private static string GetAppPrivateWorkingSetBytes_Native()
 	{
-		NativeMethods.PROCESS_MEMORY_COUNTERS_EX2 counters = default;
-		counters.cb = (uint)Unsafe.SizeOf<NativeMethods.PROCESS_MEMORY_COUNTERS_EX2>();
+		PROCESS_MEMORY_COUNTERS_EX2 counters = default;
+		counters.cb = (uint)Unsafe.SizeOf<PROCESS_MEMORY_COUNTERS_EX2>();
 
 		IntPtr hProcess = NativeMethods.GetCurrentProcess_Pseudo();
 		bool ok = NativeMethods.K32GetProcessMemoryInfo_Native(hProcess, ref counters, counters.cb);
@@ -413,8 +412,8 @@ internal sealed partial class HomeVM : ViewModelBase
 		ulong deltaOut = curOut - _prevOutBytes;
 
 		// Bytes/sec -> bits/sec, then format to human-readable Mbps/Gbps with one decimal.
-		double bpsDown = (deltaIn * 8.0) / elapsedSec;
-		double bpsUp = (deltaOut * 8.0) / elapsedSec;
+		double bpsDown = deltaIn * 8.0 / elapsedSec;
+		double bpsUp = deltaOut * 8.0 / elapsedSec;
 
 		_prevInBytes = curIn;
 		_prevOutBytes = curOut;

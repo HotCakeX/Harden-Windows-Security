@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -29,7 +28,6 @@ using Windows.Foundation;
 using Windows.Graphics;
 
 #if HARDEN_SYSTEM_SECURITY
-using AppControlManager;
 using AppControlManager.ViewModels;
 namespace HardenSystemSecurity.ViewModels;
 #endif

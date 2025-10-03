@@ -8,4 +8,4 @@
 
 ✅ Added Miscellaneous Sub-Category for reduced telemetry in the OS to the Protect page.
 
-✅ Added a new policy to the BitLocker category: "Allow network connectivity during connected-modern-standby (only when plugged in)". Keeps the Operation System and Microsoft Defender up to date while the device Modern Standby capable and is plugged in (meaning it's not on battery).
+✅ Added a new policy to the BitLocker category: "Allow network connectivity during connected-modern-standby (only when plugged in)". Keeps the Operation System and Microsoft Defender up to date if the device is Modern Standby capable and is plugged in (meaning it's not on battery).

@@ -31,23 +31,17 @@ internal static class ProcessStarter
 	/// <returns>The string output of the command</returns>
 	internal static string RunCommand(string command, string? arguments = null)
 	{
-
-		ProcessStartInfo processInfo = new()
+		using Process process = new();
+		process.StartInfo = new ProcessStartInfo
 		{
 			FileName = command,
+			Arguments = arguments ?? string.Empty,
 			RedirectStandardOutput = true,
 			RedirectStandardError = true,
 			UseShellExecute = false,
 			CreateNoWindow = true
 		};
 
-		if (arguments is not null)
-		{
-			processInfo.Arguments = arguments;
-		}
-
-		using Process process = new();
-		process.StartInfo = processInfo;
 		_ = process.Start();
 
 		// Capture output and errors
@@ -82,22 +76,16 @@ internal static class ProcessStarter
 	/// <exception cref="InvalidOperationException">Thrown immediately upon receiving any Error line.</exception>
 	internal static void RunCommandInRealTime(InfoBarSettings infoBar, string command, string? arguments = null)
 	{
-		ProcessStartInfo processInfo = new()
+		using Process process = new();
+		process.StartInfo = new ProcessStartInfo
 		{
 			FileName = command,
+			Arguments = arguments ?? string.Empty,
 			RedirectStandardOutput = true,
 			RedirectStandardError = true,
 			UseShellExecute = false,
 			CreateNoWindow = true
 		};
-
-		if (arguments is not null)
-		{
-			processInfo.Arguments = arguments;
-		}
-
-		using Process process = new();
-		process.StartInfo = processInfo;
 
 		_ = process.Start();
 

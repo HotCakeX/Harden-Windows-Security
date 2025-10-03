@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -29,7 +30,6 @@ namespace AppControlManager.Others;
 
 internal static class GetAppsList
 {
-
 	// Package Manager object used by the PFN section
 	private static readonly PackageManager packageManager = new();
 
@@ -43,42 +43,37 @@ internal static class GetAppsList
 	/// <returns>Tuple containing width and height, or (0,0) if unable to read</returns>
 	private static (int width, int height) GetImageDimensions(string filePath)
 	{
+		if (filePath is not { Length: > 0 } || !File.Exists(filePath))
+			return (0, 0);
+
 		try
 		{
 			using FileStream stream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 			using BinaryReader reader = new(stream);
 
 			// Read first few bytes to determine file type
-			byte[] header = reader.ReadBytes(8);
+			Span<byte> header = stackalloc byte[8];
+			int bytesRead = reader.Read(header);
 			_ = stream.Seek(0, SeekOrigin.Begin);
 
-			// PNG signature: 89 50 4E 47 0D 0A 1A 0A
-			if (header.Length >= 8 && header[0] == 0x89 && header[1] == 0x50 && header[2] == 0x4E && header[3] == 0x47)
-			{
-				return ReadPngDimensions(reader);
-			}
-			// JPEG signature: FF D8 FF
-			else if (header.Length >= 3 && header[0] == 0xFF && header[1] == 0xD8 && header[2] == 0xFF)
-			{
-				return ReadJpegDimensions(reader);
-			}
-			// BMP signature: 42 4D
-			else if (header.Length >= 2 && header[0] == 0x42 && header[1] == 0x4D)
-			{
-				return ReadBmpDimensions(reader);
-			}
-			// GIF signature: 47 49 46 38
-			else if (header.Length >= 4 && header[0] == 0x47 && header[1] == 0x49 && header[2] == 0x46 && header[3] == 0x38)
-			{
-				return ReadGifDimensions(reader);
-			}
-			// ICO signature: 00 00 01 00
-			else if (header.Length >= 4 && header[0] == 0x00 && header[1] == 0x00 && header[2] == 0x01 && header[3] == 0x00)
-			{
-				return ReadIcoDimensions(reader);
-			}
+			if (bytesRead < 2)
+				return (0, 0);
 
-			return (0, 0);
+			return header switch
+			{
+				// PNG signature: 89 50 4E 47 0D 0A 1A 0A
+				[0x89, 0x50, 0x4E, 0x47, ..] when header.Length >= 8 => ReadPngDimensions(reader),
+				// JPEG signature: FF D8 FF
+				[0xFF, 0xD8, 0xFF, ..] when header.Length >= 3 => ReadJpegDimensions(reader),
+				// BMP signature: 42 4D
+				[0x42, 0x4D, ..] => ReadBmpDimensions(reader),
+				// GIF signature: 47 49 46 38
+				[0x47, 0x49, 0x46, 0x38, ..] => ReadGifDimensions(reader),
+				// ICO signature: 00 00 01 00
+				[0x00, 0x00, 0x01, 0x00, ..] => ReadIcoDimensions(reader),
+				// Default
+				_ => (0, 0)
+			};
 		}
 		catch
 		{
@@ -91,10 +86,9 @@ internal static class GetAppsList
 	/// </summary>
 	private static (int width, int height) ReadPngDimensions(BinaryReader reader)
 	{
-		_ = reader.BaseStream.Seek(16, SeekOrigin.Begin); // Skip PNG signature and IHDR chunk header
-		int width = ReadBigEndianInt32(reader);
-		int height = ReadBigEndianInt32(reader);
-		return (width, height);
+		// Skip PNG signature and IHDR chunk header
+		_ = reader.BaseStream.Seek(16, SeekOrigin.Begin);
+		return (ReadBigEndianInt32(reader), ReadBigEndianInt32(reader));
 	}
 
 	/// <summary>
@@ -102,7 +96,8 @@ internal static class GetAppsList
 	/// </summary>
 	private static (int width, int height) ReadJpegDimensions(BinaryReader reader)
 	{
-		_ = reader.BaseStream.Seek(2, SeekOrigin.Begin); // Skip FF D8
+		// Skip FF D8
+		_ = reader.BaseStream.Seek(2, SeekOrigin.Begin);
 
 		while (reader.BaseStream.Position < reader.BaseStream.Length - 1)
 		{
@@ -112,12 +107,14 @@ internal static class GetAppsList
 			if (marker1 != 0xFF) continue;
 
 			// SOF0, SOF1, SOF2 markers
-			if (marker2 == 0xC0 || marker2 == 0xC1 || marker2 == 0xC2)
+			if (marker2 is 0xC0 or 0xC1 or 0xC2)
 			{
 				_ = reader.ReadUInt16(); // Skip length
 				_ = reader.ReadByte();   // Skip precision
+
 				int height = (reader.ReadByte() << 8) | reader.ReadByte();
 				int width = (reader.ReadByte() << 8) | reader.ReadByte();
+
 				return (width, height);
 			}
 
@@ -135,8 +132,10 @@ internal static class GetAppsList
 	private static (int width, int height) ReadBmpDimensions(BinaryReader reader)
 	{
 		_ = reader.BaseStream.Seek(18, SeekOrigin.Begin); // Skip BMP header to width/height
+
 		int width = reader.ReadInt32();
 		int height = reader.ReadInt32();
+
 		return (width, Math.Abs(height)); // Height can be negative in BMP
 	}
 
@@ -146,8 +145,10 @@ internal static class GetAppsList
 	private static (int width, int height) ReadGifDimensions(BinaryReader reader)
 	{
 		_ = reader.BaseStream.Seek(6, SeekOrigin.Begin); // Skip GIF signature
+
 		int width = reader.ReadUInt16();
 		int height = reader.ReadUInt16();
+
 		return (width, height);
 	}
 
@@ -178,8 +179,10 @@ internal static class GetAppsList
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static int ReadBigEndianInt32(BinaryReader reader)
 	{
-		byte[] bytes = reader.ReadBytes(4);
-		return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
+		Span<byte> buffer = stackalloc byte[4];
+		_ = reader.Read(buffer);
+
+		return BinaryPrimitives.ReadInt32BigEndian(buffer);
 	}
 
 	/// <summary>
@@ -189,20 +192,23 @@ internal static class GetAppsList
 	/// <returns>True if the logo meets size requirements, false otherwise</returns>
 	private static bool IsLogoSizeValid(string logoUri)
 	{
+		const int minSize = 10;
+		if (logoUri is not { Length: > 0 })
+			return false;
+
 		try
 		{
 			// Convert ms-appx URI to local file path if needed
-			string filePath = logoUri;
 			if (logoUri.StartsWith("ms-appx://", StringComparison.OrdinalIgnoreCase))
 			{
 				// For ms-appx URIs, we'll skip size validation as it's complex to resolve synchronously
 				return true; // Assume valid to avoid blocking, since these are usually system-provided icons
 			}
 
+			string filePath = logoUri;
 			// For file:// URIs, convert to local path
-			if (logoUri.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
+			if (Uri.TryCreate(logoUri, UriKind.Absolute, out var uri) && uri.IsFile)
 			{
-				Uri uri = new(logoUri);
 				filePath = uri.LocalPath;
 			}
 
@@ -211,10 +217,8 @@ internal static class GetAppsList
 				return false;
 			}
 
-			(int width, int height) = GetImageDimensions(filePath);
-
 			// Check if width or height is less than 10 pixels
-			return width >= 10 && height >= 10;
+			return GetImageDimensions(filePath) is (>= minSize, >= minSize);
 		}
 		catch (Exception ex)
 		{
@@ -241,11 +245,9 @@ internal static class GetAppsList
 			// The list to return as output
 			List<PackagedAppView> apps = [];
 
-			// Get all of the packages on the system
-			IEnumerable<Package> allApps = packageManager.FindPackages();
-
+			// Get all the packages on the system
 			// Loop over each package
-			foreach (Package item in allApps)
+			foreach (Package item in packageManager.FindPackages())
 			{
 				try
 				{
@@ -302,29 +304,26 @@ internal static class GetAppsList
 
 	}
 
-
-	// To create a collection of grouped items, create a query that groups
-	// an existing list, or returns a grouped collection from a database.
-	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
+	/// <summary>
+	/// To create a collection of grouped items, create a query that groups
+	/// an existing list, or returns a grouped collection from a database.
+	/// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
+	/// </summary>
 	internal static async Task<ObservableCollection<GroupInfoListForPackagedAppView>> GetContactsGroupedAsync(object? VMRef = null)
 	{
 		// Grab Apps objects from pre-existing list
 		IEnumerable<GroupInfoListForPackagedAppView> query = from item in await Get(VMRef)
+			// Ensure DisplayName is not null before grouping
+			// This also prevents apps without a DisplayName to exist in the returned apps list
+			where !string.IsNullOrWhiteSpace(item.DisplayName)
+			// Group the items returned from the query, sort and select the ones you want to keep
+			group item by item.DisplayName[..1].ToUpper() into g
+			orderby g.Key
+			// GroupInfoListForPackagedAppView is a simple custom class that has an IEnumerable type attribute, and
+			// a key attribute. The IGrouping-typed variable g now holds the App objects,
+			// and these objects will be used to create a new GroupInfoListForPackagedAppView object.
+			select new GroupInfoListForPackagedAppView(items: g, key: g.Key);
 
-																 // Ensure DisplayName is not null before grouping
-																 // This also prevents apps without a DisplayName to exist in the returned apps list
-															 where !string.IsNullOrWhiteSpace(item.DisplayName)
-
-															 // Group the items returned from the query, sort and select the ones you want to keep
-															 group item by item.DisplayName[..1].ToUpper() into g
-															 orderby g.Key
-
-															 // GroupInfoListForPackagedAppView is a simple custom class that has an IEnumerable type attribute, and
-															 // a key attribute. The IGrouping-typed variable g now holds the App objects,
-															 // and these objects will be used to create a new GroupInfoListForPackagedAppView object.
-															 select new GroupInfoListForPackagedAppView(items: g, key: g.Key);
-
-		return new(query);
+		return new ObservableCollection<GroupInfoListForPackagedAppView>(query);
 	}
-
 }

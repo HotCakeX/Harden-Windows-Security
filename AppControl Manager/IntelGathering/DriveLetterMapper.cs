@@ -15,9 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using AppControlManager.Others;
 
 namespace AppControlManager.IntelGathering;
@@ -60,65 +58,78 @@ internal static partial class DriveLetterMapper
 		uint lpcchReturnLength = 0;
 
 		// Get the first volume handle
-		IntPtr volumeHandle = NativeMethods.FindFirstVolume(volumeNameBuffer, max);
+		IntPtr volumeHandle = NativeMethods.FindFirstVolumeW(volumeNameBuffer, max);
 
 		// Check if the volume handle is valid
-		if (volumeHandle == IntPtr.Zero)
+		if (volumeHandle == NativeMethods.INVALID_HANDLE_VALUE)
 		{
-			throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+			uint error = NativeMethods.GetLastError(); // capture immediately
+			throw new System.ComponentModel.Win32Exception((int)error);
 		}
 
-		// Loop through all the volumes
-		do
+		try
 		{
-			// Convert the volume name to a string, trimming any leftover null characters
-			string volume = new string(volumeNameBuffer).TrimEnd('\0');
-			// Get the mount point for the volume
-			_ = NativeMethods.GetVolumePathNamesForVolumeNameW(volume, mountPointBuffer, max, ref lpcchReturnLength);
-			// Get the device path for the volume
-			uint returnLength = NativeMethods.QueryDosDevice(volume[4..^1], pathNameBuffer, (int)max);
 
-			// Check if the device path is found
-			if (returnLength > 0)
+			// Loop through all the volumes
+			do
 			{
-				// Add a new drive mapping to the list with valid details
-				drives.Add(new DriveMapping(
-					// Extract the drive letter (mount point) from the buffer
-					// Use Array.IndexOf to locate the first null character ('\0')
-					// If null is not found, use the entire length of the buffer
-					// Replace ":\" with ":" for consistent formatting
-					driveLetter: new string(mountPointBuffer, 0, Array.IndexOf(mountPointBuffer, '\0') >= 0
-						? Array.IndexOf(mountPointBuffer, '\0')
-						: mountPointBuffer.Length)
-						.Replace(@":\", ":", StringComparison.OrdinalIgnoreCase),
+				// Convert the volume name to a string, trimming any leftover null characters
+				string volume = new string(volumeNameBuffer).TrimEnd('\0');
+				// Get the mount point for the volume
+				_ = NativeMethods.GetVolumePathNamesForVolumeNameW(volume, mountPointBuffer, max, ref lpcchReturnLength);
+				// Get the device path for the volume
+				uint returnLength = NativeMethods.QueryDosDeviceW(volume[4..^1], pathNameBuffer, (int)max);
 
-					// Assign the current volume name
-					volumeName: volume,
+				// Check if the device path is found
+				if (returnLength > 0)
+				{
+					// Add a new drive mapping to the list with valid details
+					drives.Add(new DriveMapping(
+						// Extract the drive letter (mount point) from the buffer
+						// Use Array.IndexOf to locate the first null character ('\0')
+						// If null is not found, use the entire length of the buffer
+						// Replace ":\" with ":" for consistent formatting
+						driveLetter: new string(mountPointBuffer, 0, Array.IndexOf(mountPointBuffer, '\0') >= 0
+							? Array.IndexOf(mountPointBuffer, '\0')
+							: mountPointBuffer.Length)
+							.Replace(@":\", ":", StringComparison.OrdinalIgnoreCase),
 
-					// Extract the device path from the buffer
-					// Use Array.IndexOf to locate the first null character ('\0')
-					// If null is not found, use the entire length of the buffer
-					devicePath: new string(pathNameBuffer, 0, Array.IndexOf(pathNameBuffer, '\0') >= 0
-						? Array.IndexOf(pathNameBuffer, '\0')
-						: pathNameBuffer.Length)
-				));
-			}
-			else
+						// Assign the current volume name
+						volumeName: volume,
+
+						// Extract the device path from the buffer
+						// Use Array.IndexOf to locate the first null character ('\0')
+						// If null is not found, use the entire length of the buffer
+						devicePath: new string(pathNameBuffer, 0, Array.IndexOf(pathNameBuffer, '\0') >= 0
+							? Array.IndexOf(pathNameBuffer, '\0')
+							: pathNameBuffer.Length)
+					));
+				}
+				else
+				{
+					// Add a new drive mapping with a localized message when the path is invalid
+					drives.Add(new DriveMapping(
+						// No drive letter since the mount point is unavailable
+						driveLetter: null,
+
+						// Assign the current volume name
+						volumeName: volume,
+
+						// Use resource for the "No mountpoint found" message
+						devicePath: GlobalVars.GetStr("NoMountpointFoundMessage")
+					));
+				}
+
+			} while (NativeMethods.FindNextVolumeW(volumeHandle, volumeNameBuffer, max)); // Continue until there are no more volumes
+
+		}
+		finally
+		{
+			if (volumeHandle != NativeMethods.INVALID_HANDLE_VALUE)
 			{
-				// Add a new drive mapping with a localized message when the path is invalid
-				drives.Add(new DriveMapping(
-					// No drive letter since the mount point is unavailable
-					driveLetter: null,
-
-					// Assign the current volume name
-					volumeName: volume,
-
-					// Use resource for the "No mountpoint found" message
-					devicePath: GlobalVars.GetStr("NoMountpointFoundMessage")
-				));
+				_ = NativeMethods.FindVolumeClose(volumeHandle);
 			}
-
-		} while (NativeMethods.FindNextVolume(volumeHandle, volumeNameBuffer, max)); // Continue until there are no more volumes
+		}
 
 		// Return the list of drive mappings
 		return drives;

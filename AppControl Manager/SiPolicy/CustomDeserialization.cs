@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
@@ -768,7 +767,7 @@ internal static class CustomDeserialization
 			throw new InvalidOperationException(GlobalVars.GetStr("FileRuleNoIDValidationError"));
 		}
 
-		if (!(IDsCollection.Add(fr.ID)))
+		if (!IDsCollection.Add(fr.ID))
 		{
 			throw new InvalidOperationException($"{GlobalVars.GetStr("FileRuleDupIDValidationError")}: {fr.ID}");
 		}

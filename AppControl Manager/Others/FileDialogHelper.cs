@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -36,12 +35,6 @@ internal unsafe static class FileDialogHelper
 	private static string DirectoryToOpen = Path.GetPathRoot(Environment.SystemDirectory)!;
 #endif
 
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct StringArray
-	{
-		internal IntPtr Strings;
-		internal int Count;
-	}
 
 	/// <summary>
 	/// Shows a single file picker dialog with filter.
@@ -85,7 +78,7 @@ internal unsafe static class FileDialogHelper
 	/// <exception cref="COMException">Thrown when the operation fails</exception>
 	internal static unsafe List<string> ShowMultipleFilePickerDialog(string filter)
 	{
-		StringArray result = NativeMethods.show_files_picker(filter, DirectoryToOpen, out int lastError);
+		StringArrayForFileDialogHelper result = NativeMethods.show_files_picker(filter, DirectoryToOpen, out int lastError);
 
 		if (lastError != 0)
 			throw Marshal.GetExceptionForHR(lastError)!;
@@ -160,7 +153,7 @@ internal unsafe static class FileDialogHelper
 	/// <exception cref="COMException">Thrown when the operation fails</exception>
 	internal static unsafe List<string> ShowMultipleDirectoryPickerDialog()
 	{
-		StringArray result = NativeMethods.show_folders_picker(DirectoryToOpen, out int lastError);
+		StringArrayForFileDialogHelper result = NativeMethods.show_folders_picker(DirectoryToOpen, out int lastError);
 
 		if (lastError != 0)
 			throw Marshal.GetExceptionForHR(lastError)!;

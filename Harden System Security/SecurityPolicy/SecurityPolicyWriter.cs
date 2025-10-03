@@ -15,12 +15,10 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using AppControlManager;
 using AppControlManager.Others;
 using Microsoft.Win32;
 
@@ -99,7 +97,7 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="privilegeRights">Dictionary where key is privilege name and value is array of SIDs/account names</param>
 	/// <returns></returns>
-	internal static void SetPrivilegeRights(Dictionary<string, string[]> privilegeRights)
+	internal unsafe static void SetPrivilegeRights(Dictionary<string, string[]> privilegeRights)
 	{
 		if (privilegeRights.Count == 0)
 		{
@@ -108,7 +106,7 @@ internal static class SecurityPolicyWriter
 
 		LSA_OBJECT_ATTRIBUTES lsaAttr = new()
 		{
-			Length = Marshal.SizeOf<LSA_OBJECT_ATTRIBUTES>(),
+			Length = sizeof(LSA_OBJECT_ATTRIBUTES),
 			RootDirectory = IntPtr.Zero,
 			ObjectName = IntPtr.Zero,
 			Attributes = 0,
@@ -169,7 +167,7 @@ internal static class SecurityPolicyWriter
 	/// <param name="privilegeName">Name of the privilege (e.g., "SeServiceLogonRight")</param>
 	/// <param name="accountSidsOrNames">Array of SIDs or account names to assign the privilege to</param>
 	/// <returns></returns>
-	private static void SetSinglePrivilegeRight(nint policyHandle, string privilegeName, string[] accountSidsOrNames)
+	private unsafe static void SetSinglePrivilegeRight(nint policyHandle, string privilegeName, string[] accountSidsOrNames)
 	{
 		LSA_UNICODE_STRING userRight = new(privilegeName);
 
@@ -179,7 +177,7 @@ internal static class SecurityPolicyWriter
 		// Open a separate policy handle specifically for enumeration with the correct access rights
 		LSA_OBJECT_ATTRIBUTES enumLsaAttr = new()
 		{
-			Length = Marshal.SizeOf<LSA_OBJECT_ATTRIBUTES>(),
+			Length = sizeof(LSA_OBJECT_ATTRIBUTES),
 			RootDirectory = IntPtr.Zero,
 			ObjectName = IntPtr.Zero,
 			Attributes = 0,
@@ -211,8 +209,7 @@ internal static class SecurityPolicyWriter
 						{
 							for (int i = 0; i < countReturned; i++)
 							{
-								LSA_ENUMERATION_INFORMATION info = Marshal.PtrToStructure<LSA_ENUMERATION_INFORMATION>(
-									IntPtr.Add(enumBuffer, i * Marshal.SizeOf<LSA_ENUMERATION_INFORMATION>()));
+								LSA_ENUMERATION_INFORMATION info = *(LSA_ENUMERATION_INFORMATION*)IntPtr.Add(enumBuffer, i * sizeof(LSA_ENUMERATION_INFORMATION));
 
 								try
 								{
@@ -452,7 +449,7 @@ internal static class SecurityPolicyWriter
 	/// <param name="minimumPasswordAge"></param>
 	/// <param name="maximumPasswordAge"></param>
 	/// <returns></returns>
-	internal static bool SetPasswordAge(int minimumPasswordAge, int maximumPasswordAge)
+	internal unsafe static bool SetPasswordAge(int minimumPasswordAge, int maximumPasswordAge)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 0, out nint buffer);
@@ -463,10 +460,10 @@ internal static class SecurityPolicyWriter
 
 		try
 		{
-			USER_MODALS_INFO_0 currentInfo = Marshal.PtrToStructure<USER_MODALS_INFO_0>(buffer);
+			USER_MODALS_INFO_0 currentInfo = *(USER_MODALS_INFO_0*)buffer;
 
 			// Allocate new buffer for setting
-			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)Marshal.SizeOf<USER_MODALS_INFO_0>(), out nint newBuffer);
+			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_0), out nint newBuffer);
 			if (allocResult != SecurityPolicyReader.NERR_Success)
 			{
 				return false;
@@ -487,8 +484,7 @@ internal static class SecurityPolicyWriter
 					force_logoff = currentInfo.force_logoff,
 					password_hist_len = currentInfo.password_hist_len
 				};
-
-				Marshal.StructureToPtr(newInfo, newBuffer, false);
+				*(USER_MODALS_INFO_0*)newBuffer = newInfo;
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 0, newBuffer, out uint parmErr);
 				return setResult == SecurityPolicyReader.NERR_Success;
@@ -509,7 +505,7 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="minimumPasswordLength"></param>
 	/// <returns></returns>
-	internal static bool SetMinimumPasswordLength(int minimumPasswordLength)
+	internal unsafe static bool SetMinimumPasswordLength(int minimumPasswordLength)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 0, out nint buffer);
@@ -520,10 +516,10 @@ internal static class SecurityPolicyWriter
 
 		try
 		{
-			USER_MODALS_INFO_0 currentInfo = Marshal.PtrToStructure<USER_MODALS_INFO_0>(buffer);
+			USER_MODALS_INFO_0 currentInfo = *(USER_MODALS_INFO_0*)buffer;
 
 			// Allocate new buffer for setting
-			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)Marshal.SizeOf<USER_MODALS_INFO_0>(), out nint newBuffer);
+			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_0), out nint newBuffer);
 			if (allocResult != SecurityPolicyReader.NERR_Success)
 			{
 				return false;
@@ -539,8 +535,7 @@ internal static class SecurityPolicyWriter
 					force_logoff = currentInfo.force_logoff,
 					password_hist_len = currentInfo.password_hist_len
 				};
-
-				Marshal.StructureToPtr(newInfo, newBuffer, false);
+				*(USER_MODALS_INFO_0*)newBuffer = newInfo;
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 0, newBuffer, out uint parmErr);
 				return setResult == SecurityPolicyReader.NERR_Success;
@@ -561,7 +556,7 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="passwordHistorySize"></param>
 	/// <returns></returns>
-	internal static bool SetPasswordHistorySize(int passwordHistorySize)
+	internal unsafe static bool SetPasswordHistorySize(int passwordHistorySize)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 0, out nint buffer);
@@ -572,10 +567,10 @@ internal static class SecurityPolicyWriter
 
 		try
 		{
-			USER_MODALS_INFO_0 currentInfo = Marshal.PtrToStructure<USER_MODALS_INFO_0>(buffer);
+			USER_MODALS_INFO_0 currentInfo = *(USER_MODALS_INFO_0*)buffer;
 
 			// Allocate new buffer for setting
-			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)Marshal.SizeOf<USER_MODALS_INFO_0>(), out nint newBuffer);
+			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_0), out nint newBuffer);
 			if (allocResult != SecurityPolicyReader.NERR_Success)
 			{
 				return false;
@@ -591,8 +586,7 @@ internal static class SecurityPolicyWriter
 					force_logoff = currentInfo.force_logoff,
 					password_hist_len = (uint)passwordHistorySize
 				};
-
-				Marshal.StructureToPtr(newInfo, newBuffer, false);
+				*(USER_MODALS_INFO_0*)newBuffer = newInfo;
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 0, newBuffer, out uint parmErr);
 				return setResult == SecurityPolicyReader.NERR_Success;
@@ -615,7 +609,7 @@ internal static class SecurityPolicyWriter
 	/// <param name="resetLockoutCount"></param>
 	/// <param name="lockoutDuration"></param>
 	/// <returns></returns>
-	internal static bool SetLockoutPolicy(int lockoutBadCount, int resetLockoutCount, int lockoutDuration)
+	internal unsafe static bool SetLockoutPolicy(int lockoutBadCount, int resetLockoutCount, int lockoutDuration)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 3, out nint buffer);
@@ -626,10 +620,10 @@ internal static class SecurityPolicyWriter
 
 		try
 		{
-			USER_MODALS_INFO_3 currentInfo = Marshal.PtrToStructure<USER_MODALS_INFO_3>(buffer);
+			USER_MODALS_INFO_3 currentInfo = *(USER_MODALS_INFO_3*)buffer;
 
 			// Allocate new buffer for setting
-			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)Marshal.SizeOf<USER_MODALS_INFO_3>(), out nint newBuffer);
+			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_3), out nint newBuffer);
 			if (allocResult != SecurityPolicyReader.NERR_Success)
 			{
 				return false;
@@ -647,8 +641,7 @@ internal static class SecurityPolicyWriter
 					// Convert minutes to seconds by multiplying by 60
 					lockout_duration = lockoutDuration == -1 ? uint.MaxValue : (uint)(lockoutDuration * 60)
 				};
-
-				Marshal.StructureToPtr(newInfo, newBuffer, false);
+				*(USER_MODALS_INFO_3*)newBuffer = newInfo;
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out uint parmErr);
 				return setResult == SecurityPolicyReader.NERR_Success;
@@ -669,7 +662,7 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="lockoutBadCount"></param>
 	/// <returns></returns>
-	internal static void SetLockoutBadCount(int lockoutBadCount)
+	internal unsafe static void SetLockoutBadCount(int lockoutBadCount)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 3, out nint buffer);
@@ -680,10 +673,10 @@ internal static class SecurityPolicyWriter
 
 		try
 		{
-			USER_MODALS_INFO_3 currentInfo = Marshal.PtrToStructure<USER_MODALS_INFO_3>(buffer);
+			USER_MODALS_INFO_3 currentInfo = *(USER_MODALS_INFO_3*)buffer;
 
 			// Allocate new buffer for setting
-			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)Marshal.SizeOf<USER_MODALS_INFO_3>(), out nint newBuffer);
+			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_3), out nint newBuffer);
 			if (allocResult != SecurityPolicyReader.NERR_Success)
 			{
 				throw new InvalidOperationException("Failed to allocate memory for new user modals information.");
@@ -697,8 +690,7 @@ internal static class SecurityPolicyWriter
 					lockout_observation_window = currentInfo.lockout_observation_window,
 					lockout_duration = currentInfo.lockout_duration
 				};
-
-				Marshal.StructureToPtr(newInfo, newBuffer, false);
+				*(USER_MODALS_INFO_3*)newBuffer = newInfo;
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out uint parmErr);
 				if (setResult != SecurityPolicyReader.NERR_Success)
@@ -722,7 +714,7 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="resetLockoutCount"></param>
 	/// <returns></returns>
-	internal static void SetResetLockoutCount(int resetLockoutCount)
+	internal unsafe static void SetResetLockoutCount(int resetLockoutCount)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 3, out nint buffer);
@@ -733,10 +725,10 @@ internal static class SecurityPolicyWriter
 
 		try
 		{
-			USER_MODALS_INFO_3 currentInfo = Marshal.PtrToStructure<USER_MODALS_INFO_3>(buffer);
+			USER_MODALS_INFO_3 currentInfo = *(USER_MODALS_INFO_3*)buffer;
 
 			// Allocate new buffer for setting
-			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)Marshal.SizeOf<USER_MODALS_INFO_3>(), out nint newBuffer);
+			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_3), out nint newBuffer);
 			if (allocResult != SecurityPolicyReader.NERR_Success)
 			{
 				throw new InvalidOperationException("Failed to allocate memory for new user modals information.");
@@ -753,8 +745,7 @@ internal static class SecurityPolicyWriter
 
 					lockout_duration = currentInfo.lockout_duration
 				};
-
-				Marshal.StructureToPtr(newInfo, newBuffer, false);
+				*(USER_MODALS_INFO_3*)newBuffer = newInfo;
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out uint parmErr);
 				if (setResult != SecurityPolicyReader.NERR_Success)
@@ -778,7 +769,7 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="lockoutDuration"></param>
 	/// <returns></returns>
-	internal static void SetLockoutDuration(int lockoutDuration)
+	internal unsafe static void SetLockoutDuration(int lockoutDuration)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 3, out nint buffer);
@@ -789,10 +780,10 @@ internal static class SecurityPolicyWriter
 
 		try
 		{
-			USER_MODALS_INFO_3 currentInfo = Marshal.PtrToStructure<USER_MODALS_INFO_3>(buffer);
+			USER_MODALS_INFO_3 currentInfo = *(USER_MODALS_INFO_3*)buffer;
 
 			// Allocate new buffer for setting
-			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)Marshal.SizeOf<USER_MODALS_INFO_3>(), out nint newBuffer);
+			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_3), out nint newBuffer);
 			if (allocResult != SecurityPolicyReader.NERR_Success)
 			{
 				throw new InvalidOperationException("Failed to allocate memory for new user modals information.");
@@ -808,8 +799,7 @@ internal static class SecurityPolicyWriter
 					// Convert minutes to seconds by multiplying by 60
 					lockout_duration = lockoutDuration == -1 ? uint.MaxValue : (uint)(lockoutDuration * 60)
 				};
-
-				Marshal.StructureToPtr(newInfo, newBuffer, false);
+				*(USER_MODALS_INFO_3*)newBuffer = newInfo;
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out uint parmErr);
 				if (setResult != SecurityPolicyReader.NERR_Success)

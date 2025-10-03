@@ -15,11 +15,9 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
-using AppControlManager;
 using AppControlManager.Others;
 
 namespace HardenSystemSecurity.GroupPolicy;
@@ -200,10 +198,14 @@ internal sealed partial class GroupPolicyObject : IDisposable
 		// IGroupPolicyObject methods: New(3), OpenDSGPO(4), OpenLocalMachineGPO(5)
 		IntPtr methodPtr = Marshal.ReadIntPtr(vtablePtr, 5 * IntPtr.Size);
 
-		// Delegate for OpenLocalMachineGPO
-		OpenLocalMachineGPODelegate openLocalMachineGPO = Marshal.GetDelegateForFunctionPointer<OpenLocalMachineGPODelegate>(methodPtr);
+		unsafe
+		{
+			// Direct unmanaged stdcall function pointer: (this, dwFlags) -> HRESULT(int)
+			delegate* unmanaged[Stdcall]<IntPtr, uint, int> openLocalMachineGPO =
+				(delegate* unmanaged[Stdcall]<IntPtr, uint, int>)methodPtr;
 
-		return openLocalMachineGPO(_gpoPointer, dwFlags);
+			return openLocalMachineGPO(_gpoPointer, dwFlags);
+		}
 	}
 
 	public int Save(bool bMachine, bool bAdd, Guid pGuidExtension, Guid pGuid)
@@ -218,10 +220,20 @@ internal sealed partial class GroupPolicyObject : IDisposable
 		// IGroupPolicyObject methods: New(3), OpenDSGPO(4), OpenLocalMachineGPO(5), OpenRemoteMachineGPO(6), Save(7)
 		IntPtr methodPtr = Marshal.ReadIntPtr(vtablePtr, 7 * IntPtr.Size);
 
-		// Delegate for Save
-		SaveDelegate save = Marshal.GetDelegateForFunctionPointer<SaveDelegate>(methodPtr);
+		unsafe
+		{
+			// Signature: (this, int bMachine, int bAdd, GUID*, GUID*) -> HRESULT(int)
+			delegate* unmanaged[Stdcall]<IntPtr, int, int, Guid*, Guid*, int> savePtr =
+				(delegate* unmanaged[Stdcall]<IntPtr, int, int, Guid*, Guid*, int>)methodPtr;
 
-		return save(_gpoPointer, bMachine ? 1 : 0, bAdd ? 1 : 0, ref pGuidExtension, ref pGuid);
+			// Take addresses of the by-value parameters.
+			return savePtr(
+				_gpoPointer,
+				bMachine ? 1 : 0,
+				bAdd ? 1 : 0,
+				&pGuidExtension,
+				&pGuid);
+		}
 	}
 
 	private void ThrowIfDisposed()
@@ -248,12 +260,6 @@ internal sealed partial class GroupPolicyObject : IDisposable
 			_disposed = true;
 		}
 	}
-
-	[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-	private delegate int OpenLocalMachineGPODelegate(IntPtr thisPtr, uint dwFlags);
-
-	[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-	private delegate int SaveDelegate(IntPtr thisPtr, int bMachine, int bAdd, ref Guid pGuidExtension, ref Guid pGuid);
 }
 
 

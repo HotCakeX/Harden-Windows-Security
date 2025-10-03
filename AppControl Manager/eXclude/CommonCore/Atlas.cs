@@ -15,7 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+global using System;
 global using CommonCore;
+global using CommonCore.Interop;
+
+#pragma warning disable IDE0130
 
 namespace CommonCore;
 

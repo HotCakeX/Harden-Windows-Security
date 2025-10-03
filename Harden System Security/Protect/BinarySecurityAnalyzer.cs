@@ -15,12 +15,10 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using AppControlManager;
 using AppControlManager.Others;
 
 namespace HardenSystemSecurity.Protect;
@@ -72,7 +70,7 @@ internal sealed class BinarySecurityProfile(
 internal static class BinarySecurityAnalyzer
 {
 
-	private static BinarySecurityProfile[] ScanDirectory(string directoryPath)
+	private unsafe static BinarySecurityProfile[] ScanDirectory(string directoryPath)
 	{
 		IntPtr resultsPtr = NativeMethods.scan_directory_via_interop(directoryPath);
 
@@ -83,13 +81,13 @@ internal static class BinarySecurityAnalyzer
 
 		try
 		{
-			SecurityAnalysisCollection results = Marshal.PtrToStructure<SecurityAnalysisCollection>(resultsPtr);
+			SecurityAnalysisCollection results = *(SecurityAnalysisCollection*)resultsPtr;
 			BinarySecurityProfile[] profileArray = new BinarySecurityProfile[results.TotalCount];
 
 			for (int i = 0; i < results.TotalCount; i++)
 			{
-				IntPtr resultPtr = IntPtr.Add(results.AnalysisResults, i * Marshal.SizeOf<SecurityAnalysisResult>());
-				SecurityAnalysisResult result = Marshal.PtrToStructure<SecurityAnalysisResult>(resultPtr);
+				IntPtr resultPtr = IntPtr.Add(results.AnalysisResults, i * sizeof(SecurityAnalysisResult));
+				SecurityAnalysisResult result = *(SecurityAnalysisResult*)resultPtr;
 
 				profileArray[i] = new BinarySecurityProfile
 				(

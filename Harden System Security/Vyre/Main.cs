@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Formats.Asn1;
@@ -29,7 +28,6 @@ using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json.Serialization;
-using AppControlManager;
 using AppControlManager.Others;
 
 #pragma warning disable CA1819
@@ -1421,7 +1419,7 @@ internal static partial class CabinetArchiveExtractor
 		private IntPtr fdiContextHandle;
 		private bool isDisposed;
 
-		internal CabinetDecompressionContext(byte[] decompressionBytes, Action<CabinetFileEntry> extractedEntryCallback)
+		internal unsafe CabinetDecompressionContext(byte[] decompressionBytes, Action<CabinetFileEntry> extractedEntryCallback)
 		{
 			cabinetContentBytes = decompressionBytes;
 			entryCallback = extractedEntryCallback;
@@ -1544,7 +1542,7 @@ internal static partial class CabinetArchiveExtractor
 			}
 		}
 
-		private IntPtr OpenCabinetStream(string pszFile, int oflag, int pmode)
+		private unsafe IntPtr OpenCabinetStream(byte* pszFile, int oflag, int pmode)
 		{
 			IntPtr syntheticHandle = new(syntheticHandleTable.Count + 1);
 			syntheticHandleTable.Add(syntheticHandle, 0);
@@ -1641,14 +1639,17 @@ internal static partial class CabinetArchiveExtractor
 			return newPosition;
 		}
 
-		private IntPtr HandleFdiNotification(FdiNotificationType notificationType, ref FdiNotificationRecord notificationRecord)
+		private unsafe IntPtr HandleFdiNotification(FdiNotificationType notificationType, FdiNotificationRecord* notificationRecord)
 		{
 			switch (notificationType)
 			{
 				case FdiNotificationType.COPY_FILE:
 					{
+						// Copy the struct value
+						FdiNotificationRecord record = *notificationRecord;
+
 						// Begin a new file entry and prepare to accumulate its data
-						CabinetFileEntry entry = new(notificationRecord)
+						CabinetFileEntry entry = new(record)
 						{
 							_handle = new IntPtr(syntheticHandleTable.Count + 1)
 						};
@@ -1660,9 +1661,9 @@ internal static partial class CabinetArchiveExtractor
 				case FdiNotificationType.CLOSE_FILE_INFO:
 					{
 						// Finish accumulating the file and emit it through the callback
-						if (syntheticHandleTable.TryGetValue(notificationRecord.hf, out object? stored) && stored is CabinetFileEntry entry)
+						if (syntheticHandleTable.TryGetValue(notificationRecord->hf, out object? stored) && stored is CabinetFileEntry entry)
 						{
-							_ = CloseHandleOrEntry(notificationRecord.hf);
+							_ = CloseHandleOrEntry(notificationRecord->hf);
 							entryCallback(entry);
 							return new IntPtr(1); // success/continue
 						}
@@ -1733,8 +1734,8 @@ internal static partial class CabinetArchiveExtractor
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	private delegate void FdiFreeDelegate(IntPtr pv);
 
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-	private delegate IntPtr FdiOpenDelegate(string pszFile, int oflag, int pmode);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	private unsafe delegate IntPtr FdiOpenDelegate(byte* pszFile, int oflag, int pmode);
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	private delegate int FdiReadDelegate(IntPtr hf, IntPtr pv, int cb);
@@ -1749,7 +1750,7 @@ internal static partial class CabinetArchiveExtractor
 	private delegate int FdiSeekDelegate(IntPtr hf, int dist, SeekOrigin seektype);
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate IntPtr FdiNotifyDelegate(FdiNotificationType fdint, ref FdiNotificationRecord pfdin);
+	private unsafe delegate IntPtr FdiNotifyDelegate(FdiNotificationType fdint, FdiNotificationRecord* pfdin);
 
 	internal sealed class CabinetFileEntry
 	{
@@ -1771,7 +1772,7 @@ internal static partial class CabinetArchiveExtractor
 
 			int year = ((notificationRecord.date >> 9) & 0x7F) + 1980;
 			int month = (notificationRecord.date >> 5) & 0x0F;
-			int day = (notificationRecord.date & 0x1F);
+			int day = notificationRecord.date & 0x1F;
 			int hour = (notificationRecord.time >> 11) & 0x1F;
 			int minute = (notificationRecord.time >> 5) & 0x3F;
 			int second = (notificationRecord.time & 0x1F) * 2;

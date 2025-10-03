@@ -41,7 +41,6 @@ THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED
 
  */
 
-using System;
 using System.Numerics;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations.Expressions;

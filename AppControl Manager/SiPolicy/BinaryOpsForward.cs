@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -89,7 +88,7 @@ internal static partial class BinaryOpsForward
 		BodyWriter.Write(data!);
 
 		// compute padding
-		int padding = -((int)length) & 3;
+		int padding = -(int)length & 3;
 		if (padding > 0)
 		{
 			BodyWriter.Write(stackalloc byte[padding]);

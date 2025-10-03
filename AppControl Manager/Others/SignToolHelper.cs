@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -211,7 +210,7 @@ internal static class SignToolHelper
 		try
 		{
 			FileVersionInfo fileInfo = FileVersionInfo.GetVersionInfo(filePath);
-			return (new Version(fileInfo.ProductVersion!) > new Version("10.0.22621.2428"));
+			return new Version(fileInfo.ProductVersion!) > new Version("10.0.22621.2428");
 		}
 		catch
 		{

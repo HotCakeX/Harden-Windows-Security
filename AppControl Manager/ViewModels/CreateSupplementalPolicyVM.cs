@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -827,7 +826,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					// Create rule for the certificate based on the first element in its chain
 					certificateResults.Add(new CertificateSignerCreator(
 					   CertificateHelper.GetTBSCertificate(CertObject),
-						(CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false)),
+						CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
 						signingScenario ? 1 : 0 // By default it's set to User-Mode in XAML/UI
 					));
 				}

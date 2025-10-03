@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -260,13 +259,13 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		{
 			// Filter certificates based on search term
 			List<NonStlRootCert> filteredResults = AllNonStlCertificates.Where(cert =>
-				(cert.StoreLocationString.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(cert.StoreNameString.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(cert.Subject.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(cert.Issuer.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(cert.LeafThumbprintSha1.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(cert.RootSubject.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-				(cert.RootSha256Hex.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+				cert.StoreLocationString.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+				cert.StoreNameString.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+				cert.Subject.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+				cert.Issuer.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+				cert.LeafThumbprintSha1.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+				cert.RootSubject.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+				cert.RootSha256Hex.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
 			).ToList();
 
 			NonStlCertificates.Clear();

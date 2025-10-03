@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
@@ -603,7 +602,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 			CalculateColumnWidths();
 
-			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("FileCertificatesScanResultMessage"), selectedFile, (FilteredCertificates.Count > 0 ? FilteredCertificates.Max(x => x.SignerNumber) : 0), (IncludeSecurityCatalogsToggleSwitch ? GlobalVars.GetStr("IncludedText") : GlobalVars.GetStr("NotIncludedText"))));
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("FileCertificatesScanResultMessage"), selectedFile, FilteredCertificates.Count > 0 ? FilteredCertificates.Max(x => x.SignerNumber) : 0, IncludeSecurityCatalogsToggleSwitch ? GlobalVars.GetStr("IncludedText") : GlobalVars.GetStr("NotIncludedText")));
 
 			await PublishUserActivityAsync(LaunchProtocolActions.FileSignature,
 				selectedFile,

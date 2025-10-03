@@ -15,9 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Formats.Asn1;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
@@ -44,50 +42,60 @@ internal static class CertificateHelper
 		{
 			// Attempt to acquire a cryptographic provider context.
 			// First, try with the default provider.
-			if (!NativeMethods.CryptAcquireContext(out hProv, null, null, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+			if (!NativeMethods.CryptAcquireContextW(out hProv, null, null, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
 			{
 				// If that fails, try specifying "Microsoft Base Cryptographic Provider v1.0"
-				if (!NativeMethods.CryptAcquireContext(out hProv, null, "Microsoft Base Cryptographic Provider v1.0", PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+				if (!NativeMethods.CryptAcquireContextW(out hProv, null, "Microsoft Base Cryptographic Provider v1.0", PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
 				{
+					uint error = NativeMethods.GetLastError();
+
 					throw new InvalidOperationException(string.Format(
 						GlobalVars.GetStr("CryptAcquireContextFailedMessage"),
-						Marshal.GetLastWin32Error()));
+						error));
 				}
 			}
 
 			// Create an MD2 hash object.
 			if (!NativeMethods.CryptCreateHash(hProv, CALG_MD2, IntPtr.Zero, 0, out hHash))
 			{
+				uint error = NativeMethods.GetLastError();
+
 				throw new InvalidOperationException(string.Format(
 					GlobalVars.GetStr("CryptCreateHashFailedMessage"),
-					Marshal.GetLastWin32Error()));
+					error));
 			}
 
 			// Feed the data into the hash object.
 			byte[] dataArray = data.ToArray();
 			if (!NativeMethods.CryptHashData(hHash, dataArray, (uint)dataArray.Length, 0))
 			{
+				uint error = NativeMethods.GetLastError();
+
 				throw new InvalidOperationException(string.Format(
 					GlobalVars.GetStr("CryptHashDataFailedMessage"),
-					Marshal.GetLastWin32Error()));
+					error));
 			}
 
 			// Determine the size of the hash value.
 			uint hashSize = 0;
 			if (!NativeMethods.CryptGetHashParam(hHash, HP_HASHVAL, null, ref hashSize, 0))
 			{
+				uint error = NativeMethods.GetLastError();
+
 				throw new InvalidOperationException(string.Format(
 					GlobalVars.GetStr("CryptGetHashParamSizeFailedMessage"),
-					Marshal.GetLastWin32Error()));
+					error));
 			}
 
 			// Allocate the buffer for the hash value.
 			byte[] hashValue = new byte[hashSize];
 			if (!NativeMethods.CryptGetHashParam(hHash, HP_HASHVAL, hashValue, ref hashSize, 0))
 			{
+				uint error = NativeMethods.GetLastError();
+
 				throw new InvalidOperationException(string.Format(
 					GlobalVars.GetStr("CryptGetHashParamValueFailedMessage"),
-					Marshal.GetLastWin32Error()));
+					error));
 			}
 
 			return hashValue;

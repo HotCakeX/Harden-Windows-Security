@@ -83,6 +83,14 @@
         <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
         <Configurations>Debug;Release</Configurations>
 
+		<!-- https://learn.microsoft.com/en-us/dotnet/standard/native-interop/disabled-marshalling -->
+		<!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#disableruntimemarshalling -->
+		<!-- https://github.com/dotnet/runtime/blob/main/docs/design/libraries/LibraryImportGenerator/Compatibility.md#bool-marshalling -->
+		<!-- https://learn.microsoft.com/en-us/dotnet/standard/native-interop/type-marshalling -->
+		<!-- Disabling runtime marshaling is better because of predictability, and problems arise during compilation rather than runtime. -->
+		<!-- It's also a best practice to disable runtime marshaling so we will be explicit rather than relying on implicit details. -->
+		<!-- <DisableRuntimeMarshalling>True</DisableRuntimeMarshalling> -->
+
     </PropertyGroup>
 
     <!--
@@ -405,5 +413,8 @@
         <Content Remove="target\**" />
         <None Remove="target\**" />
     </ItemGroup>
+
+	<!-- Imports the Common Core -->
+	<Import Project="eXclude\CommonCore\CommonCore.projitems" Label="Shared" />
 
 </Project>

@@ -15,10 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using AppControlManager;
 
 namespace HardenSystemSecurity.Hardware;
 
@@ -30,7 +28,7 @@ internal static class GPUInfoManager
 	/// Retrieves a list of all GPUs in the system.
 	/// </summary>
 	/// <returns></returns>
-	private static List<GpuInfo> GetSystemGPUs()
+	private unsafe static List<GpuInfo> GetSystemGPUs()
 	{
 		// If the list is already populated, return it.
 		if (GPUsList.Count > 0)
@@ -47,14 +45,14 @@ internal static class GPUInfoManager
 				return GPUsList;
 			}
 
-			GpuInformationCollection collection = Marshal.PtrToStructure<GpuInformationCollection>(collectionPtr);
+			GpuInformationCollection collection = *(GpuInformationCollection*)collectionPtr;
 
 			if (collection.total_count <= 0 || collection.gpu_information == IntPtr.Zero)
 			{
 				return GPUsList;
 			}
 
-			int structSize = Marshal.SizeOf<GpuInformation>();
+			int structSize = sizeof(GpuInformation);
 
 			for (int i = 0; i < collection.total_count; i++)
 			{
@@ -62,7 +60,7 @@ internal static class GPUInfoManager
 				IntPtr currentStructPtr = IntPtr.Add(collection.gpu_information, i * structSize);
 
 				// Marshal the structure
-				GpuInformation gpuInfo = Marshal.PtrToStructure<GpuInformation>(currentStructPtr);
+				GpuInformation gpuInfo = *(GpuInformation*)currentStructPtr;
 
 				GpuInfo managedGpuInfo = new(
 					name: MarshalStringFromPtr(gpuInfo.name),

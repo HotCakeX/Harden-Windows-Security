@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -25,7 +24,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading;
-using AppControlManager;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 
@@ -254,17 +252,17 @@ internal static class AuditPrivilegeHelper
 	/// <param name="privilegeName">Privilege name</param>
 	private static void EnablePrivilege(IntPtr tokenHandle, string privilegeName)
 	{
-		bool lookup = NativeMethods.LookupPrivilegeValue(null, privilegeName, out NativeMethods.LUID luid);
+		bool lookup = NativeMethods.LookupPrivilegeValue(null, privilegeName, out LUID luid);
 		if (!lookup)
 		{
 			int errLookup = Marshal.GetLastWin32Error();
 			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("LookupPrivilegeValueFailedError"), privilegeName, errLookup));
 		}
 
-		NativeMethods.TOKEN_PRIVILEGES tp = new()
+		TOKEN_PRIVILEGES tp = new()
 		{
 			PrivilegeCount = 1,
-			Privileges = new NativeMethods.LUID_AND_ATTRIBUTES
+			Privileges = new LUID_AND_ATTRIBUTES
 			{
 				Luid = luid,
 				Attributes = SE_PRIVILEGE_ENABLED
@@ -308,7 +306,7 @@ internal static class AuditPolicyManager
 	/// </summary>
 	/// <param name="subcategoryGuid">The subcategory GUID</param>
 	/// <returns>The parent category GUID</returns>
-	internal static Guid GetCategoryGuidForSubcategory(Guid subcategoryGuid)
+	internal unsafe static Guid GetCategoryGuidForSubcategory(Guid subcategoryGuid)
 	{
 		// Ensure privileges before calling enumeration APIs
 		AuditPrivilegeHelper.EnsurePrivileges();
@@ -321,12 +319,12 @@ internal static class AuditPolicyManager
 
 		try
 		{
-			int guidSize = Marshal.SizeOf<Guid>();
+			int guidSize = sizeof(Guid);
 
 			for (uint i = 0; i < categoriesCount; i++)
 			{
 				IntPtr categoryGuidPtr = IntPtr.Add(categoriesPtr, (int)i * guidSize);
-				Guid categoryGuid = Marshal.PtrToStructure<Guid>(categoryGuidPtr);
+				Guid categoryGuid = *(Guid*)categoryGuidPtr;
 
 				// Setting this to FALSE correctly restricts enumeration to subcategories actually belonging to the category.
 				// When TRUE, the API returns ALL subcategories irrespective of the supplied category GUID.
@@ -338,7 +336,7 @@ internal static class AuditPolicyManager
 				{
 					for (uint j = 0; j < subCatCount; j++)
 					{
-						Guid subGuid = Marshal.PtrToStructure<Guid>(IntPtr.Add(subCatPtr, (int)j * guidSize));
+						Guid subGuid = *(Guid*)IntPtr.Add(subCatPtr, (int)j * guidSize);
 						if (subGuid == subcategoryGuid)
 						{
 							return categoryGuid;
@@ -363,7 +361,7 @@ internal static class AuditPolicyManager
 	/// Gets the current audit policy settings for all available subcategories
 	/// </summary>
 	/// <returns>List of all audit policy information</returns>
-	internal static List<AuditPolicyInfo> GetAllAuditPolicies()
+	internal static unsafe List<AuditPolicyInfo> GetAllAuditPolicies()
 	{
 		// Ensure privileges before any enumeration/query
 		AuditPrivilegeHelper.EnsurePrivileges();
@@ -378,14 +376,14 @@ internal static class AuditPolicyManager
 
 		try
 		{
-			int guidSize = Marshal.SizeOf<Guid>();
+			int guidSize = sizeof(Guid);
 			List<(Guid subCategoryGuid, Guid categoryGuid)> allSubCategories = [];
 
 			// Enumerate all subcategories for each category
 			for (uint i = 0; i < categoriesCount; i++)
 			{
 				IntPtr categoryGuidPtr = IntPtr.Add(categoriesPtr, (int)i * guidSize);
-				Guid categoryGuid = Marshal.PtrToStructure<Guid>(categoryGuidPtr);
+				Guid categoryGuid = *(Guid*)categoryGuidPtr;
 
 				// FALSE for the 'AllSubCategories' parameter so we only get subcategories that belong to this category.
 				// TRUE would produce every subcategory for every category, causing duplicates and incorrect category mapping.
@@ -398,7 +396,7 @@ internal static class AuditPolicyManager
 				{
 					for (uint j = 0; j < subCatCount; j++)
 					{
-						Guid subCategoryGuid = Marshal.PtrToStructure<Guid>(IntPtr.Add(subCatPtr, (int)j * guidSize));
+						Guid subCategoryGuid = *(Guid*)IntPtr.Add(subCatPtr, (int)j * guidSize);
 						allSubCategories.Add((subCategoryGuid, categoryGuid));
 					}
 				}
@@ -425,8 +423,7 @@ internal static class AuditPolicyManager
 					// Copy GUIDs for this batch
 					for (int i = 0; i < currentBatchSize; i++)
 					{
-						Marshal.StructureToPtr(allSubCategories[batchStart + i].subCategoryGuid,
-							IntPtr.Add(batchGuidsPtr, i * guidSize), false);
+						*(Guid*)IntPtr.Add(batchGuidsPtr, i * guidSize) = allSubCategories[batchStart + i].subCategoryGuid;
 					}
 
 					if (!NativeMethods.AuditQuerySystemPolicy(batchGuidsPtr, (uint)currentBatchSize, out IntPtr auditPolicyPtr))
@@ -444,8 +441,7 @@ internal static class AuditPolicyManager
 					{
 						for (int i = 0; i < currentBatchSize; i++)
 						{
-							AUDIT_POLICY_INFORMATION info = Marshal.PtrToStructure<AUDIT_POLICY_INFORMATION>(
-								IntPtr.Add(auditPolicyPtr, i * Marshal.SizeOf<AUDIT_POLICY_INFORMATION>()));
+							AUDIT_POLICY_INFORMATION info = *(AUDIT_POLICY_INFORMATION*)IntPtr.Add(auditPolicyPtr, i * sizeof(AUDIT_POLICY_INFORMATION));
 
 							string subcategoryName = GetSubcategoryName(allSubCategories[batchStart + i].subCategoryGuid);
 							string categoryName = GetCategoryName(allSubCategories[batchStart + i].categoryGuid);
@@ -484,7 +480,7 @@ internal static class AuditPolicyManager
 	/// </summary>
 	/// <param name="subcategoryGuids">Array of subcategory GUIDs to query</param>
 	/// <returns>Dictionary where key is GUID and value is the audit setting</returns>
-	internal static Dictionary<Guid, uint> GetSpecificAuditPolicies(Guid[] subcategoryGuids)
+	internal unsafe static Dictionary<Guid, uint> GetSpecificAuditPolicies(Guid[] subcategoryGuids)
 	{
 		// Ensure privileges
 		AuditPrivilegeHelper.EnsurePrivileges();
@@ -495,14 +491,14 @@ internal static class AuditPolicyManager
 		}
 
 		Dictionary<Guid, uint> results = [];
-		int guidSize = Marshal.SizeOf<Guid>();
+		int guidSize = sizeof(Guid);
 		IntPtr guidsPtr = Marshal.AllocHGlobal(subcategoryGuids.Length * guidSize);
 
 		try
 		{
 			for (int i = 0; i < subcategoryGuids.Length; i++)
 			{
-				Marshal.StructureToPtr(subcategoryGuids[i], IntPtr.Add(guidsPtr, i * guidSize), false);
+				*(Guid*)IntPtr.Add(guidsPtr, i * guidSize) = subcategoryGuids[i];
 			}
 
 			if (!NativeMethods.AuditQuerySystemPolicy(guidsPtr, (uint)subcategoryGuids.Length, out IntPtr auditPolicyPtr))
@@ -520,8 +516,7 @@ internal static class AuditPolicyManager
 			{
 				for (int i = 0; i < subcategoryGuids.Length; i++)
 				{
-					AUDIT_POLICY_INFORMATION info = Marshal.PtrToStructure<AUDIT_POLICY_INFORMATION>(
-						IntPtr.Add(auditPolicyPtr, i * Marshal.SizeOf<AUDIT_POLICY_INFORMATION>()));
+					AUDIT_POLICY_INFORMATION info = *(AUDIT_POLICY_INFORMATION*)IntPtr.Add(auditPolicyPtr, i * sizeof(AUDIT_POLICY_INFORMATION));
 
 					results[subcategoryGuids[i]] = info.AuditingInformation;
 				}
@@ -673,7 +668,7 @@ internal static class AuditPolicyManager
 	/// Passes the AUDIT_POLICY_INFORMATION array as-is
 	/// (including sentinel 0x4 values) by marshalling to unmanaged memory.
 	/// </summary>
-	private static void ApplyPoliciesRaw(AUDIT_POLICY_INFORMATION[] policies)
+	private unsafe static void ApplyPoliciesRaw(AUDIT_POLICY_INFORMATION[] policies)
 	{
 		int count = policies.Length;
 		if (count == 0)
@@ -681,14 +676,14 @@ internal static class AuditPolicyManager
 			return;
 		}
 
-		int structSize = Marshal.SizeOf<AUDIT_POLICY_INFORMATION>();
+		int structSize = sizeof(AUDIT_POLICY_INFORMATION);
 		IntPtr buffer = Marshal.AllocHGlobal(structSize * count);
 
 		try
 		{
 			for (int i = 0; i < count; i++)
 			{
-				Marshal.StructureToPtr(policies[i], IntPtr.Add(buffer, i * structSize), false);
+				*(AUDIT_POLICY_INFORMATION*)IntPtr.Add(buffer, i * structSize) = policies[i];
 			}
 
 			bool ok = NativeMethods.AuditSetSystemPolicy(buffer, (uint)count);
@@ -797,14 +792,16 @@ internal static class AuditPolicyManager
 	/// </summary>
 	/// <param name="subcategoryGuid">The subcategory GUID</param>
 	/// <returns>Friendly name or GUID string if lookup fails</returns>
-	private static string GetSubcategoryName(Guid subcategoryGuid)
+	private unsafe static string GetSubcategoryName(Guid subcategoryGuid)
 	{
-		IntPtr guidPtr = Marshal.AllocHGlobal(Marshal.SizeOf<Guid>());
+		// Allocating space for one GUID on the stack to avoid heap allocation and runtime marshalling APIs.
+		Guid* pGuid = stackalloc Guid[1];
+		*pGuid = subcategoryGuid;
+
 		try
 		{
-			Marshal.StructureToPtr(subcategoryGuid, guidPtr, false);
-
-			if (NativeMethods.AuditLookupSubCategoryNameW(guidPtr, out IntPtr namePtr) && namePtr != IntPtr.Zero)
+			// Calling native API with pointer to our GUID.
+			if (NativeMethods.AuditLookupSubCategoryNameW((IntPtr)pGuid, out IntPtr namePtr) && namePtr != IntPtr.Zero)
 			{
 				try
 				{
@@ -824,11 +821,8 @@ internal static class AuditPolicyManager
 		{
 			// Fall through to return GUID string
 		}
-		finally
-		{
-			Marshal.FreeHGlobal(guidPtr);
-		}
 
+		// Fallback, return the GUID in braces format.
 		return subcategoryGuid.ToString("B");
 	}
 
@@ -837,14 +831,14 @@ internal static class AuditPolicyManager
 	/// </summary>
 	/// <param name="categoryGuid">The category GUID</param>
 	/// <returns>Friendly name or GUID string if lookup fails</returns>
-	private static string GetCategoryName(Guid categoryGuid)
+	private unsafe static string GetCategoryName(Guid categoryGuid)
 	{
-		IntPtr guidPtr = Marshal.AllocHGlobal(Marshal.SizeOf<Guid>());
+		Guid* pGuid = stackalloc Guid[1];
+		*pGuid = categoryGuid;
+
 		try
 		{
-			Marshal.StructureToPtr(categoryGuid, guidPtr, false);
-
-			if (NativeMethods.AuditLookupCategoryNameW(guidPtr, out IntPtr namePtr) && namePtr != IntPtr.Zero)
+			if (NativeMethods.AuditLookupCategoryNameW((IntPtr)pGuid, out IntPtr namePtr) && namePtr != IntPtr.Zero)
 			{
 				try
 				{
@@ -863,10 +857,6 @@ internal static class AuditPolicyManager
 		catch
 		{
 			// Fall through to return GUID string
-		}
-		finally
-		{
-			Marshal.FreeHGlobal(guidPtr);
 		}
 
 		return categoryGuid.ToString("B");

@@ -1308,6 +1308,9 @@ dotnet_diagnostic.CsWinRT1035.severity = error
 # CsWinRT1033: Cast to [ComImport] type not supported
 dotnet_diagnostic.CsWinRT1033.severity = error
 
+# IDE0047: Remove unnecessary parentheses
+dotnet_diagnostic.IDE0047.severity = error
+
 # All Code quality rule configuration options: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/code-quality-rule-options
 # dotnet_code_quality.dispose_analysis_kind = AllPaths
 # dotnet_code_quality.CA2000.interprocedural_analysis_kind = ContextSensitive

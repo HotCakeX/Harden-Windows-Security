@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -42,7 +41,7 @@ internal static partial class Opus
 	// Returns a List of OpusInfoObj, taking a SignedCms parameter
 	// https://learn.microsoft.com/windows/win32/seccrypto/example-c-program--verifying-the-signature-of-a-pe-file
 	// https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fdownload.microsoft.com%2Fdownload%2F9%2Fc%2F5%2F9c5b2167-8017-4bae-9fde-d599bac8184a%2FAuthenticode_PE.docx
-	internal static List<OpusInfoObj> GetOpusData(SignedCms signature)
+	internal unsafe static List<OpusInfoObj> GetOpusData(SignedCms signature)
 	{
 		// Initializing a new List of OpusInfoObj to store the output data to return
 		List<OpusInfoObj> OEMOpusData = [];
@@ -65,7 +64,7 @@ internal static partial class Opus
 					{
 						AsnEncodedData asnEncodedData = signedAttribute.Values[0];  // Retrieving the first value from the signed attribute's Values collection
 
-						// Decoding ASN.1-encoded data using CryptDecodeObject
+						// Decoding ASN.1-encoded data using CryptDecodeObject (1st pass to get size)
 						if (!NativeMethods.CryptDecodeObject(65537U, SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, IntPtr.Zero, ref pcbStructInfo))
 						{
 							// If CryptDecodeObject fails, ignore
@@ -75,15 +74,33 @@ internal static partial class Opus
 							// Allocating unmanaged memory to decodedDataPtr based on pcbStructInfo size
 							decodedDataPtr = Marshal.AllocCoTaskMem((int)pcbStructInfo);
 
-							// Decoding ASN.1-encoded data again into decodedDataPtr
+							// Decoding ASN.1-encoded data again into decodedDataPtr (2nd pass actual decode)
 							if (!NativeMethods.CryptDecodeObject(65537U, SPC_SP_OPUS_INFO_STRUCT, asnEncodedData.RawData, (uint)asnEncodedData.RawData.Length, 0U, decodedDataPtr, ref pcbStructInfo))
 							{
 								// If CryptDecodeObject fails, ignore
 							}
 							else
 							{
-								// Converting the unmanaged memory block to OpusInfoObj structure
-								OpusInfoObj structure = Marshal.PtrToStructure<OpusInfoObj>(decodedDataPtr)!;
+								// Manually parsing the unmanaged SPC_SP_OPUS_INFO equivalent
+								// Expected Layout (sequential pointers):
+								// offset 0 * IntPtr.Size : LPCWSTR (CertOemID / publisher display)
+								// offset 1 * IntPtr.Size : PublisherInfo (pointer to nested structure or string)
+								// offset 2 * IntPtr.Size : MoreInfo (pointer to nested structure or string)
+								IntPtr certOemIdPtr = Marshal.ReadIntPtr(decodedDataPtr, 0);
+								IntPtr publisherInfoPtr = Marshal.ReadIntPtr(decodedDataPtr, IntPtr.Size);
+								IntPtr moreInfoPtr = Marshal.ReadIntPtr(decodedDataPtr, 2 * IntPtr.Size);
+
+								// Convert first pointer (if non-null) to managed string (Unicode)
+								string certOemId = certOemIdPtr != IntPtr.Zero ? (Marshal.PtrToStringUni(certOemIdPtr) ?? string.Empty) : string.Empty;
+
+								// Construct managed OpusInfoObj (fields are internal, so assigning directly)
+								OpusInfoObj structure = new()
+								{
+									CertOemID = certOemId,
+									PublisherInfo = publisherInfoPtr,
+									MoreInfo = moreInfoPtr
+								};
+
 								// Adding the structure to OEMOpusData list
 								OEMOpusData.Add(structure);
 							}
@@ -91,7 +108,7 @@ internal static partial class Opus
 					}
 					finally
 					{
-						// Freeing the allocated unmanaged memory (decodedDataPtr)
+						// Freeing the allocated unmanaged memory
 						Marshal.FreeCoTaskMem(decodedDataPtr);
 					}
 				}

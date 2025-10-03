@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -24,7 +23,6 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
-using AppControlManager;
 using Microsoft.Win32;
 
 namespace HardenSystemSecurity.SecurityPolicy;
@@ -372,12 +370,18 @@ internal static class DataDump
 		}
 	}
 
-	private static string GetAvailablePhysicalMemory()
+	private unsafe static string GetAvailablePhysicalMemory()
 	{
 		try
 		{
-			NativeMethods.PerformanceInformation perfInfo = new();
-			if (NativeMethods.GetPerformanceInfo(out perfInfo, Marshal.SizeOf(perfInfo)))
+			PerformanceInformation perfInfo = new()
+			{
+				Size = (uint)sizeof(PerformanceInformation)
+			};
+
+			int structSize = sizeof(PerformanceInformation);
+
+			if (NativeMethods.GetPerformanceInfo(ref perfInfo, structSize))
 			{
 				long availableMemory = perfInfo.PhysicalAvailable * perfInfo.PageSize;
 				return FormatBytes(availableMemory);

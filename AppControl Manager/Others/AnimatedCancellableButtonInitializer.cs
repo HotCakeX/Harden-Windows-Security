@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.ViewModels;

@@ -10,6 +10,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Atlas.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeMethods_RustInterop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes_ExploitMitigation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\BinaryProtocol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\Helpers.cs" />
   </ItemGroup>

@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -178,7 +177,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			(policy.Category is not null && (policy.Category?.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||
 			(policy.SubCategory is not null && (policy.SubCategory?.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||
 			(policy.FriendlyName is not null && policy.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(policy.policyAction.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+			policy.policyAction.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
 		).ToList();
 
 		Policies.Clear();

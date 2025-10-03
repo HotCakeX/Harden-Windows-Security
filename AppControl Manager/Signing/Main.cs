@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -152,7 +151,7 @@ internal static class Main
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="ArgumentException"></exception>
 	/// <exception cref="Win32Exception"></exception>
-	private static void SignFilePE(string FilePath,
+	private static unsafe void SignFilePE(string FilePath,
 								   X509Certificate2 signingCertificate,
 								   string? timestampUrl = null,
 								   bool enablePageHashing = false)
@@ -174,94 +173,91 @@ internal static class Main
 		IntPtr ppSignerContext = IntPtr.Zero;
 		IntPtr pActualSignerContext = IntPtr.Zero;
 
+		// Track unmanaged allocation of the wide string for file name
+		IntPtr pFileNameString = IntPtr.Zero;
+
 		try
 		{
-			// Set up signer index
+			// Allocate and initialize signer index (DWORD)
 			uint signerIndex = 0;
-			pSignerIndex = Marshal.AllocHGlobal(Marshal.SizeOf(signerIndex));
-			Marshal.WriteInt32(pSignerIndex, (int)signerIndex);
+			pSignerIndex = Marshal.AllocHGlobal(sizeof(uint));
+			*(uint*)pSignerIndex = signerIndex;
 
-			Structure.SIGNER_FILE_INFO fileInfo = new()
-			{
-				cbSize = (uint)Marshal.SizeOf<Structure.SIGNER_FILE_INFO>(),
-				pwszFileName = FilePath,
-				hFile = IntPtr.Zero
-			};
-			pSignerFileInfo = Marshal.AllocHGlobal(Marshal.SizeOf(fileInfo));
-			Marshal.StructureToPtr(fileInfo, pSignerFileInfo, false);
+			// SIGNER_FILE_INFO
+			int fileInfoSize = sizeof(Structure.SIGNER_FILE_INFO);
+			pSignerFileInfo = Marshal.AllocHGlobal(fileInfoSize);
+			Structure.SIGNER_FILE_INFO* pFileInfo = (Structure.SIGNER_FILE_INFO*)pSignerFileInfo;
+			pFileInfo->cbSize = (uint)fileInfoSize;
+			pFileNameString = Marshal.StringToHGlobalUni(FilePath); // unmanaged LPCWSTR
+			pFileInfo->pwszFileName = pFileNameString;
+			pFileInfo->hFile = IntPtr.Zero;
 
-			Structure.SIGNER_SUBJECT_INFO subjectInfo = new()
-			{
-				cbSize = (uint)Marshal.SizeOf<Structure.SIGNER_SUBJECT_INFO>(),
-				pdwIndex = pSignerIndex,
-				dwSubjectChoice = Structure.SIGNER_SUBJECT_FILE
-			};
-			subjectInfo.Info.pSignerFileInfo = pSignerFileInfo;
-			pSignerSubjectInfo = Marshal.AllocHGlobal(Marshal.SizeOf(subjectInfo));
-			Marshal.StructureToPtr(subjectInfo, pSignerSubjectInfo, false);
+			// SIGNER_SUBJECT_INFO
+			int subjectInfoSize = sizeof(Structure.SIGNER_SUBJECT_INFO);
+			pSignerSubjectInfo = Marshal.AllocHGlobal(subjectInfoSize);
+			Structure.SIGNER_SUBJECT_INFO* pSubjectInfo = (Structure.SIGNER_SUBJECT_INFO*)pSignerSubjectInfo;
+			pSubjectInfo->cbSize = (uint)subjectInfoSize;
+			pSubjectInfo->pdwIndex = pSignerIndex;
+			pSubjectInfo->dwSubjectChoice = Structure.SIGNER_SUBJECT_FILE;
+			pSubjectInfo->Info.pSignerFileInfo = pSignerFileInfo;
 
-			Structure.SIGNER_CERT_STORE_INFO certStoreInfo = new()
-			{
-				cbSize = (uint)Marshal.SizeOf<Structure.SIGNER_CERT_STORE_INFO>(),
-				pSigningCert = signingCertificate.Handle,
-				dwCertPolicy = Structure.SIGNER_CERT_POLICY_CHAIN_NO_ROOT, // Standard policy
-				hCertStore = IntPtr.Zero // No additional cert store
-			};
-			pSignerCertStoreInfo = Marshal.AllocHGlobal(Marshal.SizeOf(certStoreInfo));
-			Marshal.StructureToPtr(certStoreInfo, pSignerCertStoreInfo, false);
+			// SIGNER_CERT_STORE_INFO
+			int certStoreInfoSize = sizeof(Structure.SIGNER_CERT_STORE_INFO);
+			pSignerCertStoreInfo = Marshal.AllocHGlobal(certStoreInfoSize);
+			Structure.SIGNER_CERT_STORE_INFO* pCertStoreInfo = (Structure.SIGNER_CERT_STORE_INFO*)pSignerCertStoreInfo;
+			pCertStoreInfo->cbSize = (uint)certStoreInfoSize;
+			pCertStoreInfo->pSigningCert = signingCertificate.Handle;
+			pCertStoreInfo->dwCertPolicy = Structure.SIGNER_CERT_POLICY_CHAIN_NO_ROOT;
+			pCertStoreInfo->hCertStore = IntPtr.Zero;
 
-			Structure.SIGNER_CERT signerCert = new()
-			{
-				cbSize = (uint)Marshal.SizeOf<Structure.SIGNER_CERT>(),
-				dwCertChoice = Structure.SIGNER_CERT_STORE, // Use cert store info
-				hwnd = IntPtr.Zero // No UI
-			};
-			signerCert.CertChoice.pCertStoreInfo = pSignerCertStoreInfo;
-			pSignerCert = Marshal.AllocHGlobal(Marshal.SizeOf(signerCert));
-			Marshal.StructureToPtr(signerCert, pSignerCert, false);
+			// SIGNER_CERT
+			int signerCertSize = sizeof(Structure.SIGNER_CERT);
+			pSignerCert = Marshal.AllocHGlobal(signerCertSize);
+			Structure.SIGNER_CERT* pSignerCertStruct = (Structure.SIGNER_CERT*)pSignerCert;
+			pSignerCertStruct->cbSize = (uint)signerCertSize;
+			pSignerCertStruct->dwCertChoice = Structure.SIGNER_CERT_STORE;
+			pSignerCertStruct->CertChoice.pCertStoreInfo = pSignerCertStoreInfo;
+			pSignerCertStruct->hwnd = IntPtr.Zero;
 
-			uint algId = GetAlgIdFromCertSignatureAlgorithm(signingCertificate);
+			// SIGNER_SIGNATURE_INFO
+			int sigInfoSize = sizeof(Structure.SIGNER_SIGNATURE_INFO);
+			pSignerSignatureInfo = Marshal.AllocHGlobal(sigInfoSize);
+			Structure.SIGNER_SIGNATURE_INFO* pSigInfo = (Structure.SIGNER_SIGNATURE_INFO*)pSignerSignatureInfo;
+			pSigInfo->cbSize = (uint)sigInfoSize;
+			pSigInfo->algidHash = GetAlgIdFromCertSignatureAlgorithm(signingCertificate);
+			pSigInfo->dwAttrChoice = Structure.SIGNER_NO_ATTR;
+			pSigInfo->Attr.pAttrAuthcode = IntPtr.Zero;
+			pSigInfo->psAuthenticated = IntPtr.Zero;
+			pSigInfo->psUnauthenticated = IntPtr.Zero;
 
-			Structure.SIGNER_SIGNATURE_INFO signatureInfo = new()
-			{
-				cbSize = (uint)Marshal.SizeOf<Structure.SIGNER_SIGNATURE_INFO>(),
-				algidHash = algId,
-				dwAttrChoice = Structure.SIGNER_NO_ATTR,
-				psAuthenticated = IntPtr.Zero,
-				psUnauthenticated = IntPtr.Zero
-			};
-
-			pSignerSignatureInfo = Marshal.AllocHGlobal(Marshal.SizeOf(signatureInfo));
-			Marshal.StructureToPtr(signatureInfo, pSignerSignatureInfo, false);
-
+			// PSIGNER_CONTEXT*
 			ppSignerContext = Marshal.AllocHGlobal(IntPtr.Size);
 			Marshal.WriteIntPtr(ppSignerContext, IntPtr.Zero);
 
-			// For SigningMode.File, pSipData remains IntPtr.Zero, letting the system find a SIP if applicable.
-			IntPtr pSipData = IntPtr.Zero;
-
-			// Set dwFlags based on enablePageHashing
+			// Flags
 			uint dwFlags = 0;
 			if (enablePageHashing)
 			{
 				dwFlags |= Structure.SPC_INC_PE_PAGE_HASHES_FLAG;
 			}
 
+			IntPtr pSipData = IntPtr.Zero;
+
 			int hr = NativeMethods.SignerSignEx3(
-				dwFlags,               // dwFlags for page hashing etc.
+				dwFlags,
 				pSignerSubjectInfo,
 				pSignerCert,
 				pSignerSignatureInfo,
-				IntPtr.Zero,           // pProviderInfo (NULL for default CSP)
-				0,                     // dwTimestampFlags (0 for no timestamp by default, or specific flags if URL is used)
-				null,                  // pszTimestampAlgorithmOid (for timestamp, if dwTimestampFlags is set)
-				timestampUrl,          // pwszHttpTimeStamp
-				IntPtr.Zero,           // psRequest (for timestamp server attributes)
-				pSipData,              // pSipData (IntPtr.Zero for PE files unless specific SIP is used)
-				ppSignerContext,       // PSIGNER_CONTEXT* (pointer to where the context pointer will be written)
-				IntPtr.Zero,           // pCryptoPolicy (NULL for default)
-				IntPtr.Zero,           // pSignEx3Params (this is the 13th param, original code passed IntPtr.Zero)
-				IntPtr.Zero            // ppReserved (must be NULL)
+				IntPtr.Zero,
+				0,
+				null,
+				timestampUrl,
+				IntPtr.Zero,
+				pSipData,
+				ppSignerContext,
+				IntPtr.Zero,
+				IntPtr.Zero,
+				IntPtr.Zero
 			);
 
 			if (hr != Structure.S_OK) // S_OK is 0
@@ -284,7 +280,7 @@ internal static class Main
 		{
 			if (pActualSignerContext != IntPtr.Zero)
 				_ = NativeMethods.SignerFreeSignerContext(pActualSignerContext);
-			if (ppSignerContext != IntPtr.Zero) Marshal.FreeHGlobal(ppSignerContext); // Free the memory allocated for the pointer itself
+			if (ppSignerContext != IntPtr.Zero) Marshal.FreeHGlobal(ppSignerContext);
 
 			// Cleanup for Authenticode common structures
 			if (pSignerSignatureInfo != IntPtr.Zero) Marshal.FreeHGlobal(pSignerSignatureInfo);
@@ -293,6 +289,7 @@ internal static class Main
 			if (pSignerSubjectInfo != IntPtr.Zero) Marshal.FreeHGlobal(pSignerSubjectInfo);
 			if (pSignerIndex != IntPtr.Zero) Marshal.FreeHGlobal(pSignerIndex);
 			if (pSignerFileInfo != IntPtr.Zero) Marshal.FreeHGlobal(pSignerFileInfo);
+			if (pFileNameString != IntPtr.Zero) Marshal.FreeHGlobal(pFileNameString);
 		}
 	}
 
@@ -305,7 +302,7 @@ internal static class Main
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="ArgumentException"></exception>
 	/// <exception cref="Win32Exception"></exception>
-	private static void SignFilePackage(string FilePath,
+	private static unsafe void SignFilePackage(string FilePath,
 										X509Certificate2 signingCertificate,
 										string? timestampUrl = null)
 	{
@@ -331,106 +328,107 @@ internal static class Main
 		IntPtr pLegacySignerEx3ParamsForSip = IntPtr.Zero; // This points to a SIGNER_SIGN_EX3_PARAMS struct for SIP
 		IntPtr pSipData = IntPtr.Zero;                     // This will be set to pAppxSipClientData for Package mode
 
+		// Track unmanaged allocation of file name string
+		IntPtr pFileNameString = IntPtr.Zero;
+
 		try
 		{
 			// Set up signer index
 			uint signerIndex = 0;
-			pSignerIndex = Marshal.AllocHGlobal(Marshal.SizeOf(signerIndex));
-			Marshal.WriteInt32(pSignerIndex, (int)signerIndex);
+			pSignerIndex = Marshal.AllocHGlobal(sizeof(uint));
+			*(uint*)pSignerIndex = signerIndex;
 
-			Structure.SIGNER_FILE_INFO fileInfo = new()
-			{
-				cbSize = (uint)Marshal.SizeOf<Structure.SIGNER_FILE_INFO>(),
-				pwszFileName = FilePath,
-				hFile = IntPtr.Zero
-			};
-			pSignerFileInfo = Marshal.AllocHGlobal(Marshal.SizeOf(fileInfo));
-			Marshal.StructureToPtr(fileInfo, pSignerFileInfo, false);
+			// SIGNER_FILE_INFO
+			int fileInfoSize = sizeof(Structure.SIGNER_FILE_INFO);
+			pSignerFileInfo = Marshal.AllocHGlobal(fileInfoSize);
+			Structure.SIGNER_FILE_INFO* pFileInfo = (Structure.SIGNER_FILE_INFO*)pSignerFileInfo;
+			pFileInfo->cbSize = (uint)fileInfoSize;
+			pFileNameString = Marshal.StringToHGlobalUni(FilePath);
+			pFileInfo->pwszFileName = pFileNameString;
+			pFileInfo->hFile = IntPtr.Zero;
 
-			Structure.SIGNER_SUBJECT_INFO subjectInfo = new()
-			{
-				cbSize = (uint)Marshal.SizeOf<Structure.SIGNER_SUBJECT_INFO>(),
-				pdwIndex = pSignerIndex,
-				dwSubjectChoice = Structure.SIGNER_SUBJECT_FILE // AppX SIP uses file-based subject
-			};
-			subjectInfo.Info.pSignerFileInfo = pSignerFileInfo;
-			pSignerSubjectInfo = Marshal.AllocHGlobal(Marshal.SizeOf(subjectInfo));
-			Marshal.StructureToPtr(subjectInfo, pSignerSubjectInfo, false);
+			// SIGNER_SUBJECT_INFO
+			int subjectInfoSize = sizeof(Structure.SIGNER_SUBJECT_INFO);
+			pSignerSubjectInfo = Marshal.AllocHGlobal(subjectInfoSize);
+			Structure.SIGNER_SUBJECT_INFO* pSubjectInfo = (Structure.SIGNER_SUBJECT_INFO*)pSignerSubjectInfo;
+			pSubjectInfo->cbSize = (uint)subjectInfoSize;
+			pSubjectInfo->pdwIndex = pSignerIndex;
+			pSubjectInfo->dwSubjectChoice = Structure.SIGNER_SUBJECT_FILE; // AppX SIP uses file-based subject
+			pSubjectInfo->Info.pSignerFileInfo = pSignerFileInfo;
 
-			Structure.SIGNER_CERT_STORE_INFO certStoreInfo = new()
-			{
-				cbSize = (uint)Marshal.SizeOf<Structure.SIGNER_CERT_STORE_INFO>(),
-				pSigningCert = signingCertificate.Handle,
-				dwCertPolicy = Structure.SIGNER_CERT_POLICY_CHAIN_NO_ROOT,
-				hCertStore = IntPtr.Zero
-			};
-			pSignerCertStoreInfo = Marshal.AllocHGlobal(Marshal.SizeOf(certStoreInfo));
-			Marshal.StructureToPtr(certStoreInfo, pSignerCertStoreInfo, false);
+			// SIGNER_CERT_STORE_INFO
+			int certStoreInfoSize = sizeof(Structure.SIGNER_CERT_STORE_INFO);
+			pSignerCertStoreInfo = Marshal.AllocHGlobal(certStoreInfoSize);
+			Structure.SIGNER_CERT_STORE_INFO* pCertStoreInfo = (Structure.SIGNER_CERT_STORE_INFO*)pSignerCertStoreInfo;
+			pCertStoreInfo->cbSize = (uint)certStoreInfoSize;
+			pCertStoreInfo->pSigningCert = signingCertificate.Handle;
+			pCertStoreInfo->dwCertPolicy = Structure.SIGNER_CERT_POLICY_CHAIN_NO_ROOT;
+			pCertStoreInfo->hCertStore = IntPtr.Zero;
 
-			Structure.SIGNER_CERT signerCert = new()
-			{
-				cbSize = (uint)Marshal.SizeOf<Structure.SIGNER_CERT>(),
-				dwCertChoice = Structure.SIGNER_CERT_STORE,
-				hwnd = IntPtr.Zero
-			};
-			signerCert.CertChoice.pCertStoreInfo = pSignerCertStoreInfo;
-			pSignerCert = Marshal.AllocHGlobal(Marshal.SizeOf(signerCert));
-			Marshal.StructureToPtr(signerCert, pSignerCert, false);
+			// SIGNER_CERT
+			int signerCertSize = sizeof(Structure.SIGNER_CERT);
+			pSignerCert = Marshal.AllocHGlobal(signerCertSize);
+			Structure.SIGNER_CERT* pSignerCertStruct = (Structure.SIGNER_CERT*)pSignerCert;
+			pSignerCertStruct->cbSize = (uint)signerCertSize;
+			pSignerCertStruct->dwCertChoice = Structure.SIGNER_CERT_STORE;
+			pSignerCertStruct->CertChoice.pCertStoreInfo = pSignerCertStoreInfo;
+			pSignerCertStruct->hwnd = IntPtr.Zero;
 
-			uint algId = GetAlgIdFromCertSignatureAlgorithm(signingCertificate);
+			// SIGNER_SIGNATURE_INFO
+			int sigInfoSize = sizeof(Structure.SIGNER_SIGNATURE_INFO);
+			pSignerSignatureInfo = Marshal.AllocHGlobal(sigInfoSize);
+			Structure.SIGNER_SIGNATURE_INFO* pSigInfo = (Structure.SIGNER_SIGNATURE_INFO*)pSignerSignatureInfo;
+			pSigInfo->cbSize = (uint)sigInfoSize;
+			pSigInfo->algidHash = GetAlgIdFromCertSignatureAlgorithm(signingCertificate);
+			pSigInfo->dwAttrChoice = Structure.SIGNER_NO_ATTR; // No authenticated attributes for Package signing in this path
+			pSigInfo->Attr.pAttrAuthcode = IntPtr.Zero;
+			pSigInfo->psAuthenticated = IntPtr.Zero;
+			pSigInfo->psUnauthenticated = IntPtr.Zero;
 
-			Structure.SIGNER_SIGNATURE_INFO signatureInfo = new()
-			{
-				cbSize = (uint)Marshal.SizeOf<Structure.SIGNER_SIGNATURE_INFO>(),
-				algidHash = algId,
-				dwAttrChoice = Structure.SIGNER_NO_ATTR, // No authenticated attributes for Package signing in this path
-				psAuthenticated = IntPtr.Zero,
-				psUnauthenticated = IntPtr.Zero
-			};
-
-			pSignerSignatureInfo = Marshal.AllocHGlobal(Marshal.SizeOf(signatureInfo));
-			Marshal.StructureToPtr(signatureInfo, pSignerSignatureInfo, false);
-
+			// PSIGNER_CONTEXT*
 			ppSignerContext = Marshal.AllocHGlobal(IntPtr.Size);
 			Marshal.WriteIntPtr(ppSignerContext, IntPtr.Zero);
 
-			// Specific setup for Package mode (AppX/MSIX SIP)
-			// The SIGNER_SIGN_EX3_PARAMS struct is what APPX_SIP_CLIENT_DATA.pSignerParams points to.
-			pLegacySignerEx3ParamsForSip = Marshal.AllocHGlobal(Marshal.SizeOf<Structure.SIGNER_SIGN_EX3_PARAMS>());
-			Structure.SIGNER_SIGN_EX3_PARAMS signerEx3ParamsStructForSip = new()
-			{
-				pSubjectInfo = pSignerSubjectInfo,
-				pSigningCert = pSignerCert,
-				pSignatureInfo = pSignerSignatureInfo,
-				pProviderInfo = IntPtr.Zero,
-			};
-			Marshal.StructureToPtr(signerEx3ParamsStructForSip, pLegacySignerEx3ParamsForSip, false);
+			// SIGNER_SIGN_EX3_PARAMS for SIP (subset we need)
+			int ex3ParamsSize = sizeof(Structure.SIGNER_SIGN_EX3_PARAMS);
+			pLegacySignerEx3ParamsForSip = Marshal.AllocHGlobal(ex3ParamsSize);
+			Structure.SIGNER_SIGN_EX3_PARAMS* pEx3 = (Structure.SIGNER_SIGN_EX3_PARAMS*)pLegacySignerEx3ParamsForSip;
 
-			pAppxSipClientData = Marshal.AllocHGlobal(Marshal.SizeOf<Structure.APPX_SIP_CLIENT_DATA>());
-			Structure.APPX_SIP_CLIENT_DATA appxSipClientDataStruct = new()
+			// Zero memory (defensive)
+			for (int i = 0; i < ex3ParamsSize / sizeof(int); i++)
 			{
-				pSignerParams = pLegacySignerEx3ParamsForSip, // This is PSIGNER_SIGN_EX3_PARAMS
-				pAppxSipState = IntPtr.Zero // To be filled by SIP
-			};
-			Marshal.StructureToPtr(appxSipClientDataStruct, pAppxSipClientData, false);
-			pSipData = pAppxSipClientData; // Use the prepared SIP data for AppX/MSIX
+				((int*)pEx3)[i] = 0;
+			}
 
-			uint dwFlags = 0; // Page hashing (SPC_INC_PE_PAGE_HASHES_FLAG) is not applicable for packages.
+			pEx3->pSubjectInfo = pSignerSubjectInfo;
+			pEx3->pSigningCert = pSignerCert;
+			pEx3->pSignatureInfo = pSignerSignatureInfo;
+
+			// APPX_SIP_CLIENT_DATA
+			int sipClientDataSize = sizeof(Structure.APPX_SIP_CLIENT_DATA);
+			pAppxSipClientData = Marshal.AllocHGlobal(sipClientDataSize);
+			Structure.APPX_SIP_CLIENT_DATA* pSipClientData = (Structure.APPX_SIP_CLIENT_DATA*)pAppxSipClientData;
+			pSipClientData->pSignerParams = pLegacySignerEx3ParamsForSip;
+			pSipClientData->pAppxSipState = IntPtr.Zero;
+
+			pSipData = pAppxSipClientData; // Use prepared SIP data
+
+			uint dwFlags = 0; // Page hashing flag not used for packages
 
 			int hr = NativeMethods.SignerSignEx3(
-				dwFlags,        // Main dwFlags for SignerSignEx3, usually 0 for packages.
+				dwFlags,        // dwFlags
 				pSignerSubjectInfo,
 				pSignerCert,
 				pSignerSignatureInfo,
 				IntPtr.Zero,    // pProviderInfo
-				0,              // dwTimestampFlags for SignerSignEx3 function
-				null,           // pszTimestampAlgorithmOid for SignerSignEx3 function
-				timestampUrl,   // pwszHttpTimeStamp for SignerSignEx3 function
+				0,              // dwTimestampFlags
+				null,           // pszTimestampAlgorithmOid
+				timestampUrl,   // pwszHttpTimeStamp
 				IntPtr.Zero,    // psRequest
-				pSipData,       // Pass pSipData (which is pAppxSipClientData)
+				pSipData,       // pSipData
 				ppSignerContext,// PSIGNER_CONTEXT*
 				IntPtr.Zero,    // pCryptoPolicy
-				IntPtr.Zero,    // pSignEx3Params (13th param, usually for non-SIP advanced scenarios or overrides)
+				IntPtr.Zero,    // pSignEx3Params
 				IntPtr.Zero     // ppReserved
 			);
 
@@ -449,18 +447,15 @@ internal static class Main
 			pActualSignerContext = Marshal.ReadIntPtr(ppSignerContext);
 			// Package is now signed.
 
-			if (pAppxSipClientData != IntPtr.Zero) // pSipData is pAppxSipClientData here
+			if (pAppxSipClientData != IntPtr.Zero)
 			{
-				// Re-read the struct from pAppxSipClientData in case SIP modified pAppxSipState
-				Structure.APPX_SIP_CLIENT_DATA finalSipClientData =
-					Marshal.PtrToStructure<Structure.APPX_SIP_CLIENT_DATA>(pAppxSipClientData);
-
+				// Read back updated SIP state
+				Structure.APPX_SIP_CLIENT_DATA finalSipClientData = *(Structure.APPX_SIP_CLIENT_DATA*)pAppxSipClientData;
 				if (finalSipClientData.pAppxSipState != IntPtr.Zero)
 				{
 					IntPtr pUnk = finalSipClientData.pAppxSipState;
-					IntPtr pVtbl = Marshal.ReadIntPtr(pUnk, 0); // Read the VTable pointer from the object's first field
-					Structure.IUnknownVtbl vtbl = Marshal.PtrToStructure<Structure.IUnknownVtbl>(pVtbl);
-
+					IntPtr pVtbl = Marshal.ReadIntPtr(pUnk, 0); // VTable pointer
+					Structure.IUnknownVtbl vtbl = *(Structure.IUnknownVtbl*)pVtbl;
 					Structure.Release_Delegate releaseDelegate =
 						Marshal.GetDelegateForFunctionPointer<Structure.Release_Delegate>(vtbl.Release);
 					_ = releaseDelegate(pUnk); // Call Release
@@ -483,6 +478,7 @@ internal static class Main
 			if (pSignerSubjectInfo != IntPtr.Zero) Marshal.FreeHGlobal(pSignerSubjectInfo);
 			if (pSignerIndex != IntPtr.Zero) Marshal.FreeHGlobal(pSignerIndex);
 			if (pSignerFileInfo != IntPtr.Zero) Marshal.FreeHGlobal(pSignerFileInfo);
+			if (pFileNameString != IntPtr.Zero) Marshal.FreeHGlobal(pFileNameString);
 		}
 	}
 

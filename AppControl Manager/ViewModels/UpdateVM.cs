@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.IO;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;

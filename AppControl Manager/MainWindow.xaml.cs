@@ -27,7 +27,6 @@ using Windows.ApplicationModel;
 using Windows.Graphics;
 using AnimatedVisuals;
 using Microsoft.UI.Xaml.Automation;
-using System;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;

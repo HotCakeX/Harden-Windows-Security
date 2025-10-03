@@ -14,7 +14,6 @@
 //
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;

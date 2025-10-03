@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -212,7 +211,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 		_containerGrid.Children.Insert(baseIndex + 5, _segment5Path!);
 
 		// 5) Create and insert moving dot
-		double initialDotSize = (ScaleWidth * ArcScaleFactor) * DotScaleFactor;
+		double initialDotSize = ScaleWidth * ArcScaleFactor * DotScaleFactor;
 		_indicatorDot = new Ellipse
 		{
 			Fill = new SolidColorBrush(Colors.White),
@@ -359,7 +358,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 		UpdateSeg(_segment5Path, a4, vAngle);
 
 		// reposition the dot
-		double dotSize = (ScaleWidth * ArcScaleFactor) * DotScaleFactor;
+		double dotSize = ScaleWidth * ArcScaleFactor * DotScaleFactor;
 		Point dotCenter = ScalePoint(vAngle, radius);
 		_indicatorDot.Width = dotSize;
 		_indicatorDot.Height = dotSize;

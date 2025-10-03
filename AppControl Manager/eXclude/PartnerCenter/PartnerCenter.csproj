@@ -21,6 +21,7 @@
         <Description>Partner Center</Description>
         <DebugType>none</DebugType>
         <PackageTags>Partner Center, Microsoft</PackageTags>
+		<DisableRuntimeMarshalling>True</DisableRuntimeMarshalling>
     </PropertyGroup>
 
     <ItemGroup>

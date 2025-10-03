@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Runtime.InteropServices;
 
 namespace AppControlManager.Signing;
@@ -65,11 +64,6 @@ internal static class Structure
 	internal const int E_INVALIDARG_HRESULT = unchecked((int)0x80070057);
 
 	#region Native AOT compatible IUnknown VTable definitions
-	[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-	internal delegate int QueryInterface_Delegate(IntPtr pUnk, ref Guid riid, out IntPtr ppvObject);
-
-	[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-	internal delegate uint AddRef_Delegate(IntPtr pUnk);
 
 	[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 	internal delegate uint Release_Delegate(IntPtr pUnk);
@@ -81,32 +75,31 @@ internal static class Structure
 		internal IntPtr AddRef;
 		internal IntPtr Release;
 	}
+
 	#endregion
 
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-file-info
 	/// </summary>
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_FILE_INFO
 	{
 		internal uint cbSize;
-		[MarshalAs(UnmanagedType.LPWStr)]
-		internal string pwszFileName;
+		internal IntPtr pwszFileName;
 		internal IntPtr hFile;
 	}
 
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/seccrypto/signer-blob-info
 	/// </summary>
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_BLOB_INFO
 	{
 		internal uint cbSize;
 		internal IntPtr pGuidSubject;
 		internal uint cbBlob;
 		internal IntPtr pbBlob;
-		[MarshalAs(UnmanagedType.LPWStr)]
-		internal string pwszDisplayName;
+		internal IntPtr pwszDisplayName;
 	}
 
 	[StructLayout(LayoutKind.Explicit)]
@@ -128,7 +121,7 @@ internal static class Structure
 		internal SIGNER_SUBJECT_INFO_UNION Info;
 	}
 
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_ATTR_AUTHCODE
 	{
 		internal uint cbSize;
@@ -136,10 +129,8 @@ internal static class Structure
 		internal bool fCommercial;
 		[MarshalAs(UnmanagedType.Bool)]
 		internal bool fIndividual;
-		[MarshalAs(UnmanagedType.LPWStr)]
-		internal string pwszName;
-		[MarshalAs(UnmanagedType.LPWStr)]
-		internal string pwszInfo;
+		internal IntPtr pwszName;
+		internal IntPtr pwszInfo;
 	}
 
 	[StructLayout(LayoutKind.Explicit)]
@@ -170,24 +161,22 @@ internal static class Structure
 		internal IntPtr pwszKeyContainer;
 	}
 
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_PROVIDER_INFO
 	{
 		internal uint cbSize;
-		[MarshalAs(UnmanagedType.LPWStr)]
-		internal string pwszProviderName;
+		internal IntPtr pwszProviderName;
 		internal uint dwProviderType;
 		internal uint dwKeySpec;
 		internal uint dwPvkChoice;
 		internal SIGNER_PROVIDER_INFO_UNION PvkChoice;
 	}
 
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_SPC_CHAIN_INFO
 	{
 		internal uint cbSize;
-		[MarshalAs(UnmanagedType.LPWStr)]
-		internal string pwszSpcFile;
+		internal IntPtr pwszSpcFile;
 		internal uint dwCertPolicy;
 		internal IntPtr hCertStore;
 	}
@@ -231,7 +220,7 @@ internal static class Structure
 		internal IntPtr pbBlob;
 	}
 
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	[StructLayout(LayoutKind.Sequential)]
 	internal struct SIGNER_SIGN_EX3_PARAMS
 	{
 		internal uint dwFlags;
@@ -240,10 +229,8 @@ internal static class Structure
 		internal IntPtr pSignatureInfo;
 		internal IntPtr pProviderInfo;
 		internal uint dwTimestampFlags;
-		[MarshalAs(UnmanagedType.LPStr)]
-		internal string pszAlgorithmOid;
-		[MarshalAs(UnmanagedType.LPWStr)]
-		internal string pwszTimestampURL;
+		internal IntPtr pszAlgorithmOid;
+		internal IntPtr pwszTimestampURL;
 		internal IntPtr pCryptAttrs;
 		internal IntPtr pSipData;
 		internal IntPtr pSignerContext;
@@ -268,8 +255,7 @@ internal static class Structure
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct CRYPT_ATTRIBUTE
 	{
-		[MarshalAs(UnmanagedType.LPStr)]
-		internal string pszObjId;
+		internal IntPtr pszObjId;
 		internal uint cValue;
 		internal IntPtr rgValue; // PCRYPT_ATTR_BLOB
 	}
@@ -304,8 +290,7 @@ internal static class Structure
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct CRYPT_ALGORITHM_IDENTIFIER
 	{
-		[MarshalAs(UnmanagedType.LPStr)]
-		internal string pszObjId;
+		internal IntPtr pszObjId;
 		internal CRYPT_OBJID_BLOB Parameters;
 	}
 

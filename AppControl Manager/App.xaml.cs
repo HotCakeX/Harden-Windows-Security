@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,7 +42,6 @@ using Microsoft.UI.Dispatching;
 using HardenSystemSecurity.Others;
 using HardenSystemSecurity.ViewModels;
 using HardenSystemSecurity.WindowComponents;
-using AppControlManager;
 namespace HardenSystemSecurity;
 #endif
 #if APP_CONTROL_MANAGER
@@ -657,13 +655,13 @@ public partial class App : Application
 				Settings.MainWindowWidth = size.Width;
 				Settings.MainWindowHeight = size.Height;
 
-				Win32InteropInternal.WINDOWPLACEMENT windowPlacement = new();
+				WINDOWPLACEMENT windowPlacement = new();
 
 				// Check if the window is maximized
 				_ = NativeMethods.GetWindowPlacement(GlobalVars.hWnd, ref windowPlacement);
 
 				// Save the maximized status of the window before closing to the app settings
-				Settings.MainWindowIsMaximized = windowPlacement.showCmd is Win32InteropInternal.ShowWindowCommands.SW_SHOWMAXIMIZED;
+				Settings.MainWindowIsMaximized = windowPlacement.showCmd is ShowWindowCommands.SW_SHOWMAXIMIZED;
 			}
 			catch (Exception ex)
 			{

@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
@@ -117,24 +116,31 @@ internal static partial class GetExtendedFileAttrib
 	/// <param name="data">The byte array containing version information to be extracted.</param>
 	/// <param name="version">Outputs the extracted version information as a Version object.</param>
 	/// <returns>Returns true if the version was successfully extracted, otherwise false.</returns>
-	private static bool TryGetVersion(Span<byte> data, out Version? version)
+	private static unsafe bool TryGetVersion(Span<byte> data, out Version? version)
 	{
 		version = null;
-		// Query the root block for version info
-		if (!NativeMethods.VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(data.ToArray(), 0), "\\", out nint buffer, out _))
-			return false;
 
-		// Marshal the version info structure
-		FileVersionInfo fileInfo = Marshal.PtrToStructure<FileVersionInfo>(buffer);
+		// pin span directly
+		fixed (byte* pData = data)
+		{
+			IntPtr basePtr = (IntPtr)pData;
 
-		// Construct Version object from version info
-		version = new Version(
-			(int)(fileInfo.dwFileVersionMS >> 16),
-			(int)(fileInfo.dwFileVersionMS & ushort.MaxValue),
-			(int)(fileInfo.dwFileVersionLS >> 16),
-			(int)(fileInfo.dwFileVersionLS & ushort.MaxValue)
-		);
-		return true;
+			// Query the root block for version info
+			if (!NativeMethods.VerQueryValue(basePtr, "\\", out nint buffer, out _))
+				return false;
+
+			// Directly read the unmanaged VS_FIXEDFILEINFO structure (blittable)
+			FileVersionInfo fileInfo = *(FileVersionInfo*)buffer;
+
+			// Construct Version object from version info
+			version = new Version(
+				(int)(fileInfo.dwFileVersionMS >> 16),
+				(int)(fileInfo.dwFileVersionMS & ushort.MaxValue),
+				(int)(fileInfo.dwFileVersionLS >> 16),
+				(int)(fileInfo.dwFileVersionLS & ushort.MaxValue)
+			);
+			return true;
+		}
 	}
 
 
@@ -145,22 +151,29 @@ internal static partial class GetExtendedFileAttrib
 	/// <param name="locale">Outputs the locale information derived from the data.</param>
 	/// <param name="encoding">Outputs the encoding information derived from the data.</param>
 	/// <returns>Returns a boolean indicating the success of the extraction process.</returns>
-	private static bool TryGetLocaleAndEncoding(Span<byte> data, out string? locale, out string? encoding)
+	private static unsafe bool TryGetLocaleAndEncoding(Span<byte> data, out string? locale, out string? encoding)
 	{
 		locale = null;
 		encoding = null;
-		// Query the translation block for locale and encoding
-		if (!NativeMethods.VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(data.ToArray(), 0), "\\VarFileInfo\\Translation", out nint buffer, out _))
-			return false;
 
-		// Copy the translation values
-		short[] translations = new short[2];
-		Marshal.Copy(buffer, translations, 0, 2);
+		// pin span instead of allocating a new array each call.
+		fixed (byte* pData = data)
+		{
+			IntPtr basePtr = (IntPtr)pData;
 
-		// Convert the translation values to hex strings
-		locale = translations[0].ToString("X4", CultureInfo.InvariantCulture);
-		encoding = translations[1].ToString("X4", CultureInfo.InvariantCulture);
-		return true;
+			// Query the translation block for locale and encoding
+			if (!NativeMethods.VerQueryValue(basePtr, "\\VarFileInfo\\Translation", out nint buffer, out _))
+				return false;
+
+			// Copy the translation values (two WORDs)
+			short[] translations = new short[2];
+			Marshal.Copy(buffer, translations, 0, 2);
+
+			// Convert the translation values to hex strings
+			locale = translations[0].ToString("X4", CultureInfo.InvariantCulture);
+			encoding = translations[1].ToString("X4", CultureInfo.InvariantCulture);
+			return true;
+		}
 	}
 
 	/// <summary>
@@ -171,20 +184,26 @@ internal static partial class GetExtendedFileAttrib
 	/// <param name="locale">Indicates the locale for which the resource string is being requested.</param>
 	/// <param name="resource">Identifies the specific resource string to retrieve from the version information.</param>
 	/// <returns>Returns the localized resource string or null if not found.</returns>
-	private static string? GetLocalizedResource(Span<byte> versionBlock, string encoding, string locale, string resource)
+	private static unsafe string? GetLocalizedResource(Span<byte> versionBlock, string encoding, string locale, string resource)
 	{
 		string[] encodings = [encoding, Cp1252FallbackCode, UnicodeFallbackCode];
 
-		foreach (string enc in encodings)
+		// pin once, reuse base pointer across attempts.
+		fixed (byte* pData = versionBlock)
 		{
-			string subBlock = $"StringFileInfo\\{locale}{enc}{resource}";
+			IntPtr basePtr = (IntPtr)pData;
 
-			if (NativeMethods.VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(versionBlock.ToArray(), 0), subBlock, out nint buffer, out _))
-				return Marshal.PtrToStringAuto(buffer);
+			foreach (string enc in encodings)
+			{
+				string subBlock = $"StringFileInfo\\{locale}{enc}{resource}";
 
-			// If error is not resource type not found, throw the error
-			if (Marshal.GetHRForLastWin32Error() != HR_ERROR_RESOURCE_TYPE_NOT_FOUND)
-				throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
+				if (NativeMethods.VerQueryValue(basePtr, subBlock, out nint buffer, out _))
+					return Marshal.PtrToStringAuto(buffer);
+
+				// If error is not resource type not found, throw the error
+				if (Marshal.GetHRForLastWin32Error() != HR_ERROR_RESOURCE_TYPE_NOT_FOUND)
+					throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
+			}
 		}
 		return null;
 	}
@@ -195,10 +214,7 @@ internal static partial class GetExtendedFileAttrib
 	/// </summary>
 	/// <param name="value"></param>
 	/// <returns></returns>
-	private static string? CheckAndSetNull(string? value)
-	{
-		return string.IsNullOrWhiteSpace(value) ? null : value;
-	}
+	private static string? CheckAndSetNull(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
 
 	/// <summary>
 	/// Structure to hold file version information

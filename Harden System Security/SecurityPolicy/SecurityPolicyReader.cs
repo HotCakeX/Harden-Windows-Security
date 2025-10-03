@@ -15,13 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using AppControlManager;
 using Microsoft.Win32;
 
 namespace HardenSystemSecurity.SecurityPolicy;
@@ -57,7 +55,7 @@ internal static class SecurityPolicyReader
 	/// Gets the Audit info for the [Event Audit] section.
 	/// </summary>
 	/// <returns></returns>
-	private static EventAuditInfo GetEventAudit()
+	private unsafe static EventAuditInfo GetEventAudit()
 	{
 		EventAuditInfo eventAudit = new();
 
@@ -81,12 +79,12 @@ internal static class SecurityPolicyReader
 
 		try
 		{
-			int guidSize = Marshal.SizeOf<Guid>();
+			int guidSize = sizeof(Guid);
 			List<Guid> subCatGuids = [];
 
 			for (uint i = 0; i < categoriesCount; i++)
 			{
-				Guid catGuid = Marshal.PtrToStructure<Guid>(IntPtr.Add(categoriesPtr, (int)i * guidSize));
+				Guid catGuid = *(Guid*)IntPtr.Add(categoriesPtr, (int)i * guidSize);
 				if (!NativeMethods.AuditEnumerateSubCategories(IntPtr.Add(categoriesPtr, (int)i * guidSize), true, out nint subCatPtr, out uint subCatCount))
 					continue;
 
@@ -94,7 +92,7 @@ internal static class SecurityPolicyReader
 				{
 					for (uint j = 0; j < subCatCount; j++)
 					{
-						Guid subGuid = Marshal.PtrToStructure<Guid>(IntPtr.Add(subCatPtr, (int)j * guidSize));
+						Guid subGuid = *(Guid*)IntPtr.Add(subCatPtr, (int)j * guidSize);
 						subCatGuids.Add(subGuid);
 					}
 				}
@@ -114,7 +112,7 @@ internal static class SecurityPolicyReader
 			{
 				for (int i = 0; i < subCatGuids.Count; i++)
 				{
-					Marshal.StructureToPtr(subCatGuids[i], IntPtr.Add(allGuidsPtr, i * guidSize), false);
+					*(Guid*)IntPtr.Add(allGuidsPtr, i * guidSize) = subCatGuids[i];
 				}
 
 				if (!NativeMethods.AuditQuerySystemPolicy(allGuidsPtr, (uint)subCatGuids.Count, out nint auditPolicyPtr) || auditPolicyPtr == IntPtr.Zero)
@@ -127,8 +125,7 @@ internal static class SecurityPolicyReader
 					Dictionary<string, uint> found = new(StringComparer.Ordinal);
 					for (int i = 0; i < subCatGuids.Count; i++)
 					{
-						AUDIT_POLICY_INFORMATION info = Marshal.PtrToStructure<AUDIT_POLICY_INFORMATION>(
-							IntPtr.Add(auditPolicyPtr, i * Marshal.SizeOf<AUDIT_POLICY_INFORMATION>()));
+						AUDIT_POLICY_INFORMATION info = *(AUDIT_POLICY_INFORMATION*)IntPtr.Add(auditPolicyPtr, i * sizeof(AUDIT_POLICY_INFORMATION));
 						string key = info.AuditSubCategoryGuid.ToString();
 						if (auditMapping.TryGetValue(key.ToLowerInvariant(), out string? name))
 						{
@@ -214,12 +211,12 @@ internal static class SecurityPolicyReader
 	/// Gets the information for the [Privilege Rights] section.
 	/// </summary>
 	/// <returns></returns>
-	internal static Dictionary<string, string[]> GetPrivilegeRights()
+	internal unsafe static Dictionary<string, string[]> GetPrivilegeRights()
 	{
 		Dictionary<string, string[]> privilegeRights = new(StringComparer.Ordinal);
 		LSA_OBJECT_ATTRIBUTES lsaAttr = new()
 		{
-			Length = Marshal.SizeOf<LSA_OBJECT_ATTRIBUTES>(),
+			Length = sizeof(LSA_OBJECT_ATTRIBUTES),
 			RootDirectory = IntPtr.Zero,
 			ObjectName = IntPtr.Zero,
 			Attributes = 0,
@@ -248,8 +245,7 @@ internal static class SecurityPolicyReader
 					{
 						for (int i = 0; i < countReturned; i++)
 						{
-							LSA_ENUMERATION_INFORMATION info = Marshal.PtrToStructure<LSA_ENUMERATION_INFORMATION>(
-								IntPtr.Add(enumBuffer, i * Marshal.SizeOf<LSA_ENUMERATION_INFORMATION>()));
+							LSA_ENUMERATION_INFORMATION info = *(LSA_ENUMERATION_INFORMATION*)IntPtr.Add(enumBuffer, i * sizeof(LSA_ENUMERATION_INFORMATION));
 							try
 							{
 								SecurityIdentifier sid = new(info.PSid);
@@ -449,7 +445,7 @@ internal static class SecurityPolicyReader
 	/// Reads the [System Access] policies.
 	/// </summary>
 	/// <returns></returns>
-	internal static SystemAccessInfo GetSystemAccess()
+	internal unsafe static SystemAccessInfo GetSystemAccess()
 	{
 		SystemAccessInfo systemAccess = new();
 
@@ -459,7 +455,7 @@ internal static class SecurityPolicyReader
 		{
 			try
 			{
-				USER_MODALS_INFO_0 info0 = Marshal.PtrToStructure<USER_MODALS_INFO_0>(buffer0);
+				USER_MODALS_INFO_0 info0 = *(USER_MODALS_INFO_0*)buffer0;
 				systemAccess.MinimumPasswordLength = (int)info0.min_passwd_len;
 
 				// max_passwd_age is in seconds, convert to days by dividing by 86400 (24*60*60)
@@ -485,7 +481,7 @@ internal static class SecurityPolicyReader
 		{
 			try
 			{
-				USER_MODALS_INFO_3 info3 = Marshal.PtrToStructure<USER_MODALS_INFO_3>(buffer3);
+				CommonCore.Interop.USER_MODALS_INFO_3 info3 = *(USER_MODALS_INFO_3*)buffer3;
 
 				// lockout_duration is in seconds, convert to minutes by dividing by 60
 				systemAccess.LockoutDuration = info3.lockout_duration == uint.MaxValue ? -1 : (int)(info3.lockout_duration / 60);
@@ -504,7 +500,7 @@ internal static class SecurityPolicyReader
 		// Get password complexity and other domain settings using SAM
 		LSA_OBJECT_ATTRIBUTES lsaAttr = new()
 		{
-			Length = Marshal.SizeOf<LSA_OBJECT_ATTRIBUTES>(),
+			Length = sizeof(LSA_OBJECT_ATTRIBUTES),
 			RootDirectory = IntPtr.Zero,
 			ObjectName = IntPtr.Zero,
 			Attributes = 0,
@@ -525,7 +521,7 @@ internal static class SecurityPolicyReader
 				{
 					try
 					{
-						POLICY_ACCOUNT_DOMAIN_INFO domainInfo = Marshal.PtrToStructure<POLICY_ACCOUNT_DOMAIN_INFO>(domainBuffer);
+						POLICY_ACCOUNT_DOMAIN_INFO domainInfo = *(POLICY_ACCOUNT_DOMAIN_INFO*)domainBuffer;
 
 						// Connect to SAM with correct access rights for reading domain password policy
 						IntPtr serverHandle = IntPtr.Zero;
@@ -550,7 +546,7 @@ internal static class SecurityPolicyReader
 										{
 											try
 											{
-												DOMAIN_PASSWORD_INFORMATION passwordInfo = Marshal.PtrToStructure<DOMAIN_PASSWORD_INFORMATION>(passwordBuffer);
+												DOMAIN_PASSWORD_INFORMATION passwordInfo = *(DOMAIN_PASSWORD_INFORMATION*)passwordBuffer;
 
 												// PasswordComplexity: Check DOMAIN_PASSWORD_COMPLEX (0x1) flag in PasswordProperties
 												systemAccess.PasswordComplexity = (passwordInfo.PasswordProperties & DOMAIN_PASSWORD_COMPLEX) != 0 ? 1 : 0;
@@ -603,7 +599,7 @@ internal static class SecurityPolicyReader
 			{
 				try
 				{
-					USER_INFO_1 adminInfo = Marshal.PtrToStructure<USER_INFO_1>(adminBuffer);
+					USER_INFO_1 adminInfo = *(USER_INFO_1*)adminBuffer;
 					systemAccess.NewAdministratorName = adminName;
 					systemAccess.EnableAdminAccount = (adminInfo.usri1_flags & UF_ACCOUNTDISABLE) == 0 ? 1 : 0;
 				}
@@ -634,7 +630,7 @@ internal static class SecurityPolicyReader
 			{
 				try
 				{
-					USER_INFO_1 guestInfo = Marshal.PtrToStructure<USER_INFO_1>(guestBuffer);
+					USER_INFO_1 guestInfo = *(USER_INFO_1*)guestBuffer;
 					systemAccess.NewGuestName = guestName;
 					systemAccess.EnableGuestAccount = (guestInfo.usri1_flags & UF_ACCOUNTDISABLE) == 0 ? 1 : 0;
 				}
@@ -663,13 +659,13 @@ internal static class SecurityPolicyReader
 	/// </summary>
 	/// <param name="rid"></param>
 	/// <returns></returns>
-	private static string GetAccountNameByRid(uint rid)
+	private static unsafe string GetAccountNameByRid(uint rid)
 	{
 		try
 		{
 			LSA_OBJECT_ATTRIBUTES lsaAttr = new()
 			{
-				Length = Marshal.SizeOf<LSA_OBJECT_ATTRIBUTES>(),
+				Length = sizeof(LSA_OBJECT_ATTRIBUTES),
 				RootDirectory = IntPtr.Zero,
 				ObjectName = IntPtr.Zero,
 				Attributes = 0,
@@ -691,7 +687,7 @@ internal static class SecurityPolicyReader
 
 				try
 				{
-					POLICY_ACCOUNT_DOMAIN_INFO domainInfo = Marshal.PtrToStructure<POLICY_ACCOUNT_DOMAIN_INFO>(domainBuffer);
+					POLICY_ACCOUNT_DOMAIN_INFO domainInfo = *(POLICY_ACCOUNT_DOMAIN_INFO*)domainBuffer;
 
 					// Connect to SAM
 					LSA_UNICODE_STRING serverName = new(null);
@@ -722,7 +718,7 @@ internal static class SecurityPolicyReader
 
 								try
 								{
-									SAM_USER_GENERAL_INFORMATION userInfo = Marshal.PtrToStructure<SAM_USER_GENERAL_INFORMATION>(userBuffer);
+									SAM_USER_GENERAL_INFORMATION userInfo = *(SAM_USER_GENERAL_INFORMATION*)userBuffer;
 									return Marshal.PtrToStringUni(userInfo.UserName.Buffer, userInfo.UserName.Length / 2) ?? string.Empty;
 								}
 								finally

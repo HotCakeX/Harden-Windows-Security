@@ -3,3 +3,9 @@
 ✅ Created a Windows Service that is responsible for performing Intune configurations detection during verification jobs so that even when you applied the security measures via Intune, they will be detected and verifiable by the app. The service is very compact (2MBs only), highly optimized and runs only when needed. It does not consume any resources when idle. The service is designed to automatically shut itself down when idle for 120 seconds. It can only be used by elevated Administrators and SYSTEM account. It is automatically installed when the Harden System Security app is installed and removed when the Harden System Security app is uninstalled, not leaving any leftovers on the system. It has 0 dependency other than the .NET SDK itself and its executable is inside the app's package.
 
 ✅ Completely changed the design of the Home page, it's more beautiful, compatible with dark and light themes, and displays more information.
+
+✅ Added TLS Sub-Category for Battle.net game client to the Protect page.
+
+✅ Added Miscellaneous Sub-Category for reduced telemetry in the OS to the Protect page.
+
+✅ Added a new policy to the BitLocker category: "Allow network connectivity during connected-modern-standby (only when plugged in)". Keeps the Operation System and Microsoft Defender up to date while the device Modern Standby capable and is plugged in (meaning it's not on battery).

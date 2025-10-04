@@ -422,7 +422,7 @@ internal static unsafe partial class NativeMethods
 		[MarshalAs(UnmanagedType.Bool)] bool asynchronous);
 
 
-	/// <summary> 
+	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptsignmessage
 	/// </summary>
 	[LibraryImport("crypt32.dll", SetLastError = true)]
@@ -641,6 +641,10 @@ internal static unsafe partial class NativeMethods
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
 
+	[LibraryImport("USER32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GetWindowDisplayAffinity(IntPtr hwnd, out uint affinity);
 
 	/// <summary>
 	/// Import GetLastError to get detailed error information. A replacement for "Marshal.GetLastWin32Error()" method that relies on Runtime Marshaling.

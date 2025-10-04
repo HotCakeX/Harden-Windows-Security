@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 
 namespace AppControlManager.Others;
 
-internal unsafe static class FileDialogHelper
+internal static class FileDialogHelper
 {
 	// Location where File/Folder picker dialog will be opened
 	// It is only the directory where the first dialog will be opened in, it will then be replaced by the directory
@@ -35,14 +35,13 @@ internal unsafe static class FileDialogHelper
 	private static string DirectoryToOpen = Path.GetPathRoot(Environment.SystemDirectory)!;
 #endif
 
-
 	/// <summary>
 	/// Shows a single file picker dialog with filter.
 	/// </summary>
 	/// <param name="filter">Filter string in format "Description|*.ext|Description2|*.ext2"</param>
 	/// <returns>Selected file path, or null if cancelled</returns>
 	/// <exception cref="COMException">Thrown when the operation fails</exception>
-	internal static unsafe string? ShowFilePickerDialog(string filter)
+	internal static string? ShowFilePickerDialog(string filter)
 	{
 		IntPtr result = NativeMethods.show_file_picker(filter, DirectoryToOpen, out int lastError);
 
@@ -76,7 +75,7 @@ internal unsafe static class FileDialogHelper
 	/// <param name="filter">Filter string in format "Description|*.ext|Description2|*.ext2"</param>
 	/// <returns>List of selected file paths, or empty list if cancelled</returns>
 	/// <exception cref="COMException">Thrown when the operation fails</exception>
-	internal static unsafe List<string> ShowMultipleFilePickerDialog(string filter)
+	internal static List<string> ShowMultipleFilePickerDialog(string filter)
 	{
 		StringArrayForFileDialogHelper result = NativeMethods.show_files_picker(filter, DirectoryToOpen, out int lastError);
 
@@ -122,7 +121,7 @@ internal unsafe static class FileDialogHelper
 	/// </summary>
 	/// <returns>Selected folder path, or null if cancelled</returns>
 	/// <exception cref="COMException">Thrown when the operation fails</exception>
-	internal static unsafe string? ShowDirectoryPickerDialog()
+	internal static string? ShowDirectoryPickerDialog()
 	{
 		IntPtr result = NativeMethods.show_folder_picker(DirectoryToOpen, out int lastError);
 
@@ -151,7 +150,7 @@ internal unsafe static class FileDialogHelper
 	/// </summary>
 	/// <returns>List of selected folder paths, or empty list if cancelled</returns>
 	/// <exception cref="COMException">Thrown when the operation fails</exception>
-	internal static unsafe List<string> ShowMultipleDirectoryPickerDialog()
+	internal static List<string> ShowMultipleDirectoryPickerDialog()
 	{
 		StringArrayForFileDialogHelper result = NativeMethods.show_folders_picker(DirectoryToOpen, out int lastError);
 
@@ -197,7 +196,7 @@ internal unsafe static class FileDialogHelper
 	/// <param name="defaultFilename">Optional default filename to pre-fill in the dialog</param>
 	/// <returns>Selected save file path, or null if cancelled</returns>
 	/// <exception cref="COMException">Thrown when the operation fails</exception>
-	internal static unsafe string? ShowSaveFileDialog(string filter, string? defaultFilename = null)
+	internal static string? ShowSaveFileDialog(string filter, string? defaultFilename = null)
 	{
 		IntPtr result = NativeMethods.show_save_file_dialog(filter, DirectoryToOpen, defaultFilename, out int lastError);
 

@@ -278,7 +278,7 @@ internal static class AppWindowBorderCustomization
 				Logger.Write($"Failed to set static window border color. DwmSetWindowAttribute returned: {result}", LogTypeIntel.Error);
 
 			// Save the color as hex in the App settings.
-			App.Settings.CustomAppWindowsBorder = RGBHEX.ToHex(r, g, b);
+			App.Settings.CustomAppWindowsBorder = RgbHex.ToHex(r, g, b);
 		}
 		catch (Exception ex)
 		{

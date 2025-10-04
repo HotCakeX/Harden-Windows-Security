@@ -305,13 +305,13 @@ internal sealed partial class MiscellaneousConfigsVM : ViewModelBase, IMUnitList
 	{
 		// Register specialized remove strategy for EnableSvchostMitigationPolicy.
 		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
-			"System\\CurrentControlSet\\Control\\SCMConfig|EnableSvchostMitigationPolicy",
+			@"System\CurrentControlSet\Control\SCMConfig|EnableSvchostMitigationPolicy",
 			new EnableSvchostMitigationPolicyPostRemoveCleanup()
 		);
 
 		// Register specialized remove strategy for LongPathsEnabled.
 		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
-			"System\\CurrentControlSet\\Control\\FileSystem|LongPathsEnabled",
+			@"System\CurrentControlSet\Control\FileSystem|LongPathsEnabled",
 			new LongPathsEnabledPostRemoveCleanup()
 		);
 	}
@@ -328,10 +328,10 @@ internal sealed partial class MiscellaneousConfigsVM : ViewModelBase, IMUnitList
 		public void Remove()
 		{
 			RegistryManager.Manager.EditRegistry(new(
-				source: GroupPolicy.Source.Registry,
-				keyName: "System\\CurrentControlSet\\Control\\SCMConfig",
+				source: Source.Registry,
+				keyName: @"System\CurrentControlSet\Control\SCMConfig",
 				valueName: "EnableSvchostMitigationPolicy",
-				type: GroupPolicy.RegistryValueType.REG_DWORD,
+				type: RegistryValueType.REG_DWORD,
 				size: 4,
 				data: [])
 			{
@@ -354,10 +354,10 @@ internal sealed partial class MiscellaneousConfigsVM : ViewModelBase, IMUnitList
 		public void Remove()
 		{
 			RegistryManager.Manager.EditRegistry(new(
-				source: GroupPolicy.Source.Registry,
-				keyName: "System\\CurrentControlSet\\Control\\FileSystem",
+				source: Source.Registry,
+				keyName: @"System\CurrentControlSet\Control\FileSystem",
 				valueName: "LongPathsEnabled",
-				type: GroupPolicy.RegistryValueType.REG_DWORD,
+				type: RegistryValueType.REG_DWORD,
 				size: 4,
 				data: [])
 			{

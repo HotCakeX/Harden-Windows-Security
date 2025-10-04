@@ -38,14 +38,12 @@ internal static class FileTrustChecker
 	/// <param name="filePath"></param>
 	/// <exception cref="FileNotFoundException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal unsafe static FileTrustResult CheckFileTrust(string filePath)
+	internal static unsafe FileTrustResult CheckFileTrust(string filePath)
 	{
-
-		IntPtr fileHandle = default;
+		IntPtr fileHandle = 0;
 
 		try
 		{
-
 			// Initializing Params structure
 			Params parameters = new() { StructSize = 0x10 };
 
@@ -140,7 +138,7 @@ internal static class FileTrustChecker
 	internal static TrustSource GetTrustSource()
 	{
 		string? result = RegistryManager.Manager.ReadRegistry(
-				new(
+			new RegistryPolicyEntry(
 				source: Source.Registry,
 				keyName: @"SYSTEM\CurrentControlSet\Control\CI\Policy",
 				valueName: "VerifiedAndReputablePolicyState",
@@ -152,14 +150,9 @@ internal static class FileTrustChecker
 					hive = Hive.HKLM
 				});
 
-		if (string.Equals(result, "1", StringComparison.OrdinalIgnoreCase))
-		{
-			return TrustSource.SmartAppControl;
-		}
-		else
-		{
-			return TrustSource.SmartScreen;
-		}
+		return string.Equals(result, "1", StringComparison.OrdinalIgnoreCase)
+			? TrustSource.SmartAppControl
+			: TrustSource.SmartScreen;
 	}
 
 	internal sealed class FileTrustResult(

@@ -371,7 +371,7 @@
                 <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy" />
 
             </controls:WrapPanel>
-           
+
             <Border x:Name="AnimatedBorder"
                     Grid.Row="1"
                     ui:Effects.Shadow="{StaticResource BorderShadow}"

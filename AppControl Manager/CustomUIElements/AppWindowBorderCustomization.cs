@@ -69,6 +69,9 @@ internal static class AppWindowBorderCustomization
 	/// </summary>
 	private static bool AppWindowSubscribed;
 
+
+	private static bool IsStopping;
+
 	/// <summary>
 	/// Starts the animated frame effect. No effect if already started.
 	/// </summary>
@@ -305,5 +308,53 @@ internal static class AppWindowBorderCustomization
 		{
 			Logger.Write(ex);
 		}
+	}
+
+	/// <summary>
+	/// Stops the animation for application shutdown without modifying persisted settings or clearing the saved custom color.
+	/// </summary>
+	internal static void StopAnimatedFrameForAppShutdown()
+	{
+		// Quick exit if nothing active.
+		if (!IsStarted && Timer is null)
+			return;
+
+		if (IsStopping)
+			return;
+
+		IsStopping = true;
+		IsStarted = false;
+
+		if (Timer is not null)
+		{
+			try
+			{
+				if (Timer.IsRunning)
+				{
+					Timer.Stop();
+				}
+				Timer.Tick -= TickHandler;
+			}
+			catch { }
+			finally
+			{
+				Timer = null;
+			}
+		}
+
+		if (AppWindowSubscribed)
+		{
+			try
+			{
+				App.MainWindow?.AppWindow.Changed -= AppWindow_Changed;
+			}
+			catch { }
+			finally
+			{
+				AppWindowSubscribed = false;
+			}
+		}
+
+		IsStopping = false;
 	}
 }

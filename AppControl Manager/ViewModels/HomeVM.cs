@@ -240,8 +240,8 @@ internal sealed partial class HomeVM : ViewModelBase
 		PROCESS_MEMORY_COUNTERS_EX2 counters = default;
 		counters.cb = (uint)Unsafe.SizeOf<PROCESS_MEMORY_COUNTERS_EX2>();
 
-		IntPtr hProcess = NativeMethods.GetCurrentProcess_Pseudo();
-		bool ok = NativeMethods.K32GetProcessMemoryInfo_Native(hProcess, ref counters, counters.cb);
+		IntPtr hProcess = NativeMethods.GetCurrentProcess();
+		bool ok = NativeMethods.K32GetProcessMemoryInfo(hProcess, ref counters, counters.cb);
 		if (!ok)
 		{
 			return ByteToString(0UL);

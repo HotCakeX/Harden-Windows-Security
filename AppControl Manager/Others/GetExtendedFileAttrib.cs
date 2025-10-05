@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
@@ -55,7 +56,7 @@ internal static partial class GetExtendedFileAttrib
 		ExFileInfo BadCaseReturnVal = new(null, null, null, null, null);
 
 		// Get the size of the version information block
-		int versionInfoSize = NativeMethods.GetFileVersionInfoSizeEx(FILE_VER_GET_NEUTRAL, filePath, out int handle);
+		int versionInfoSize = NativeMethods.GetFileVersionInfoSizeExW(FILE_VER_GET_NEUTRAL, filePath, out int handle);
 
 		if (versionInfoSize == 0)
 		{
@@ -65,7 +66,7 @@ internal static partial class GetExtendedFileAttrib
 		// Allocate array for version data and retrieve it
 		byte[] versionData = new byte[versionInfoSize];
 
-		if (!NativeMethods.GetFileVersionInfoEx(FILE_VER_GET_NEUTRAL, filePath, handle, versionInfoSize, versionData))
+		if (!NativeMethods.GetFileVersionInfoExW(FILE_VER_GET_NEUTRAL, filePath, handle, versionInfoSize, versionData))
 		{
 			return BadCaseReturnVal;
 		}
@@ -75,15 +76,16 @@ internal static partial class GetExtendedFileAttrib
 			Span<byte> spanData = new(versionData);
 
 			// Extract version from the version data
-			if (!TryGetVersion(spanData, out Version? version))
+			if (!TryGetVersion(spanData, out Version? version, out int versionErrorCode))
 			{
-				throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
+				// Throw Win32Exception using captured error code
+				throw new Win32Exception(versionErrorCode);
 			}
 
 			// Extract locale and encoding information
-			if (!TryGetLocaleAndEncoding(spanData, out string? locale, out string? encoding))
+			if (!TryGetLocaleAndEncoding(spanData, out string? locale, out string? encoding, out int localeErrorCode))
 			{
-				throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
+				throw new Win32Exception(localeErrorCode);
 			}
 
 			// Retrieve various file information based on locale and encoding and return the result
@@ -115,10 +117,12 @@ internal static partial class GetExtendedFileAttrib
 	/// </summary>
 	/// <param name="data">The byte array containing version information to be extracted.</param>
 	/// <param name="version">Outputs the extracted version information as a Version object.</param>
+	/// <param name="win32Error">Outputs the Win32 error code when extraction fails.</param>
 	/// <returns>Returns true if the version was successfully extracted, otherwise false.</returns>
-	private static unsafe bool TryGetVersion(Span<byte> data, out Version? version)
+	private static unsafe bool TryGetVersion(Span<byte> data, out Version? version, out int win32Error)
 	{
 		version = null;
+		win32Error = 0;
 
 		// pin span directly
 		fixed (byte* pData = data)
@@ -126,8 +130,12 @@ internal static partial class GetExtendedFileAttrib
 			IntPtr basePtr = (IntPtr)pData;
 
 			// Query the root block for version info
-			if (!NativeMethods.VerQueryValue(basePtr, "\\", out nint buffer, out _))
+			if (!NativeMethods.VerQueryValueW(basePtr, "\\", out nint buffer, out _))
+			{
+				// Capture Win32 error immediately after failure.
+				win32Error = Marshal.GetLastPInvokeError();
 				return false;
+			}
 
 			// Directly read the unmanaged VS_FIXEDFILEINFO structure (blittable)
 			FileVersionInfo fileInfo = *(FileVersionInfo*)buffer;
@@ -150,11 +158,13 @@ internal static partial class GetExtendedFileAttrib
 	/// <param name="data">The byte span containing data from which locale and encoding are extracted.</param>
 	/// <param name="locale">Outputs the locale information derived from the data.</param>
 	/// <param name="encoding">Outputs the encoding information derived from the data.</param>
+	/// <param name="win32Error">Outputs the Win32 error code when extraction fails.</param>
 	/// <returns>Returns a boolean indicating the success of the extraction process.</returns>
-	private static unsafe bool TryGetLocaleAndEncoding(Span<byte> data, out string? locale, out string? encoding)
+	private static unsafe bool TryGetLocaleAndEncoding(Span<byte> data, out string? locale, out string? encoding, out int win32Error)
 	{
 		locale = null;
 		encoding = null;
+		win32Error = 0;
 
 		// pin span instead of allocating a new array each call.
 		fixed (byte* pData = data)
@@ -162,8 +172,11 @@ internal static partial class GetExtendedFileAttrib
 			IntPtr basePtr = (IntPtr)pData;
 
 			// Query the translation block for locale and encoding
-			if (!NativeMethods.VerQueryValue(basePtr, "\\VarFileInfo\\Translation", out nint buffer, out _))
+			if (!NativeMethods.VerQueryValueW(basePtr, "\\VarFileInfo\\Translation", out nint buffer, out _))
+			{
+				win32Error = Marshal.GetLastPInvokeError();
 				return false;
+			}
 
 			// Copy the translation values (two WORDs)
 			short[] translations = new short[2];
@@ -197,12 +210,15 @@ internal static partial class GetExtendedFileAttrib
 			{
 				string subBlock = $"StringFileInfo\\{locale}{enc}{resource}";
 
-				if (NativeMethods.VerQueryValue(basePtr, subBlock, out nint buffer, out _))
+				if (NativeMethods.VerQueryValueW(basePtr, subBlock, out nint buffer, out _))
 					return Marshal.PtrToStringAuto(buffer);
 
+				// Capture the VerQueryValueW's error immediately if it failed above.
+				int lastError = Marshal.GetLastPInvokeError();
+
 				// If error is not resource type not found, throw the error
-				if (Marshal.GetHRForLastWin32Error() != HR_ERROR_RESOURCE_TYPE_NOT_FOUND)
-					throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
+				if (lastError != HR_ERROR_RESOURCE_TYPE_NOT_FOUND)
+					throw new Win32Exception(lastError);
 			}
 		}
 		return null;

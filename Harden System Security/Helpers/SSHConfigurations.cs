@@ -44,10 +44,7 @@ internal static class SSHConfigurations
 		}
 
 		// Ensure the SSH client directory exists
-		if (!Directory.Exists(SSHClientUserConfigDirectory))
-		{
-			_ = Directory.CreateDirectory(SSHClientUserConfigDirectory);
-		}
+		_ = Directory.CreateDirectory(SSHClientUserConfigDirectory);
 
 		// Check if the configuration file exists
 		if (!File.Exists(SSHClientUserConfigFile))

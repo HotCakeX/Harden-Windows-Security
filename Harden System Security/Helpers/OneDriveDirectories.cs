@@ -37,6 +37,10 @@ internal static class OneDriveDirectories
 		// Combine system drive with "Users" to get the path to the Users directory
 		string usersPath = Path.Combine(GlobalVars.SystemDrive, "Users");
 
+		// catch to prevent unnecessary exception
+		if (!Directory.Exists(usersPath))
+			return [];
+
 		try
 		{
 			// Enumerate all top-level directories under the Users directory

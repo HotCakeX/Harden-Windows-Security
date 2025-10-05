@@ -31,7 +31,7 @@ internal static class Methods
 	/// </summary>
 	private static IntPtr CurrentDISMSession = IntPtr.Zero;
 
-	internal static bool EnableFeature(string featureName, string[]? sourcePaths = null)
+	internal static unsafe bool EnableFeature(string featureName, string[]? sourcePaths = null)
 	{
 		// Get a new session if one doesn't already exist
 		InitDISM();
@@ -47,7 +47,7 @@ internal static class Methods
 
 		try
 		{
-			DISMAPI.DismFeatureInfo featureInfo = Marshal.PtrToStructure<DISMAPI.DismFeatureInfo>(featureInfoPtr);
+			DISMAPI.DismFeatureInfo featureInfo = *(DISMAPI.DismFeatureInfo*)featureInfoPtr;
 			if (featureInfo.FeatureState is DISMAPI.DismPackageFeatureState.DismStateNotPresent)
 			{
 				Logger.Write($"Feature '{featureName}' is not present (Disabled with Payload Removed). A valid source path (e.g., sources\\sxs) is required.", LogTypeIntel.Information);
@@ -85,7 +85,7 @@ internal static class Methods
 					stringPtrs[i] = Marshal.StringToHGlobalUni(sourcePaths[i]);
 				}
 
-				sourcePathsPtr = Marshal.AllocHGlobal(Marshal.SizeOf<IntPtr>() * (int)sourcePathCount);
+				sourcePathsPtr = Marshal.AllocHGlobal(sizeof(nint) * (int)sourcePathCount);
 				Marshal.Copy(stringPtrs, 0, sourcePathsPtr, (int)sourcePathCount);
 			}
 
@@ -202,7 +202,7 @@ internal static class Methods
 		CurrentDISMSession = session;
 	}
 
-	internal static void GetFeatures(List<DISMOutput> ListToAdd)
+	internal static unsafe void GetFeatures(List<DISMOutput> ListToAdd)
 	{
 		// Get a new session if one doesn't already exist
 		InitDISM();
@@ -219,10 +219,10 @@ internal static class Methods
 
 			for (uint i = 0; i < featureCount; i++)
 			{
-				IntPtr featurePtr = IntPtr.Add(featureList, (int)(i * Marshal.SizeOf<DISMAPI.DismFeature>()));
+				IntPtr featurePtr = IntPtr.Add(featureList, (int)(i * sizeof(DISMAPI.DismFeature)));
 				try
 				{
-					DISMAPI.DismFeature feature = Marshal.PtrToStructure<DISMAPI.DismFeature>(featurePtr);
+					DISMAPI.DismFeature feature = *(DISMAPI.DismFeature*)featurePtr;
 					string featureName = PtrToStringUniSafe(feature.FeatureName);
 					if (string.IsNullOrEmpty(featureName))
 					{
@@ -236,7 +236,7 @@ internal static class Methods
 					{
 						try
 						{
-							DISMAPI.DismFeatureInfo featureInfo = Marshal.PtrToStructure<DISMAPI.DismFeatureInfo>(stateFeatureInfoPtr);
+							DISMAPI.DismFeatureInfo featureInfo = *(DISMAPI.DismFeatureInfo*)stateFeatureInfoPtr;
 							state = featureInfo.FeatureState;
 						}
 						finally
@@ -264,10 +264,6 @@ internal static class Methods
 	private static string PtrToStringUniSafe(IntPtr ptr)
 	{
 		if (ptr == IntPtr.Zero)
-			return string.Empty;
-
-		long ptrValue = ptr.ToInt64();
-		if (ptrValue < 0x1000000 || ptrValue > 0x7FFFFFFFFFFF)
 			return string.Empty;
 
 		try
@@ -323,7 +319,7 @@ internal static class Methods
 
 	// to add a capability
 	// e.g.: AddCapability("App.StepsRecorder~~~~0.0.1.0", false, null);
-	internal static bool AddCapability(string capabilityName, bool limitAccess = false, string[]? sourcePaths = null)
+	internal static unsafe bool AddCapability(string capabilityName, bool limitAccess = false, string[]? sourcePaths = null)
 	{
 		// Get a new session if one doesn't already exist
 		InitDISM();
@@ -351,7 +347,7 @@ internal static class Methods
 				}
 
 				// Allocating memory for the array of pointers
-				sourcePathsPtr = Marshal.AllocHGlobal(Marshal.SizeOf<IntPtr>() * (int)sourcePathCount);
+				sourcePathsPtr = Marshal.AllocHGlobal(sizeof(nint) * (int)sourcePathCount);
 				Marshal.Copy(stringPtrs, 0, sourcePathsPtr, (int)sourcePathCount);
 			}
 
@@ -404,7 +400,7 @@ internal static class Methods
 		}
 	}
 
-	internal static void GetCapabilities(List<DISMOutput> ListToAdd)
+	internal static unsafe void GetCapabilities(List<DISMOutput> ListToAdd)
 	{
 		// Get a new session if one doesn't already exist
 		InitDISM();
@@ -429,7 +425,7 @@ internal static class Methods
 			IntPtr currentPtr = capabilityPtr;
 			for (uint i = 0; i < count; i++)
 			{
-				DISMAPI.DismCapability capability = Marshal.PtrToStructure<DISMAPI.DismCapability>(currentPtr);
+				DISMAPI.DismCapability capability = *(DISMAPI.DismCapability*)currentPtr;
 
 				// Validate the Name pointer
 				string? name;
@@ -441,19 +437,10 @@ internal static class Methods
 					}
 					else
 					{
-						// Check pointer alignment and range
-						long ptrValue = capability.Name.ToInt64();
-						if (ptrValue < 0x1000 || ptrValue > 0x7FFFFFFFFFFF || (ptrValue % 2) != 0)
+						name = Marshal.PtrToStringUni(capability.Name);
+						if (string.IsNullOrEmpty(name))
 						{
 							name = "<invalid>";
-						}
-						else
-						{
-							name = Marshal.PtrToStringUni(capability.Name);
-							if (string.IsNullOrEmpty(name) || name.Length > 2048)
-							{
-								name = "<invalid>";
-							}
 						}
 					}
 				}
@@ -465,7 +452,7 @@ internal static class Methods
 				// Skip weird names
 				if (name == "<null>" || name == "<invalid>" || name == "<access_violation>")
 				{
-					currentPtr = IntPtr.Add(currentPtr, Marshal.SizeOf<DISMAPI.DismCapability>());
+					currentPtr = IntPtr.Add(currentPtr, sizeof(DISMAPI.DismCapability));
 					continue;
 				}
 
@@ -473,7 +460,7 @@ internal static class Methods
 
 				processedCount++;
 
-				currentPtr = IntPtr.Add(currentPtr, Marshal.SizeOf<DISMAPI.DismCapability>());
+				currentPtr = IntPtr.Add(currentPtr, sizeof(DISMAPI.DismCapability));
 			}
 
 			Logger.Write($"Successfully processed {processedCount} capabilities out of {count} total.", LogTypeIntel.Information);
@@ -493,7 +480,7 @@ internal static class Methods
 	/// This is faster than GetFeatures as it only fetches the requested features instead of iterating through all features.
 	/// </summary>
 	/// <param name="featureNames">List of feature names to fetch</param>
-	internal static List<DISMOutput> GetSpecificFeatures(string[] featureNames)
+	internal static unsafe List<DISMOutput> GetSpecificFeatures(string[] featureNames)
 	{
 		// Get a new session if one doesn't already exist
 		InitDISM();
@@ -522,7 +509,7 @@ internal static class Methods
 
 				try
 				{
-					DISMAPI.DismFeatureInfo featureInfo = Marshal.PtrToStructure<DISMAPI.DismFeatureInfo>(featureInfoPtr);
+					DISMAPI.DismFeatureInfo featureInfo = *(DISMAPI.DismFeatureInfo*)featureInfoPtr;
 
 					output.Add(new DISMOutput(featureName, featureInfo.FeatureState, DISMResultType.Feature));
 					Logger.Write($"Successfully retrieved feature: {featureName}, State: {featureInfo.FeatureState}", LogTypeIntel.Information);
@@ -548,7 +535,7 @@ internal static class Methods
 	/// This is faster than GetCapabilities as it only fetches the requested capabilities instead of iterating through all capabilities.
 	/// </summary>
 	/// <param name="capabilityNames">List of capability names to fetch</param>
-	internal static List<DISMOutput> GetSpecificCapabilities(string[] capabilityNames)
+	internal static unsafe List<DISMOutput> GetSpecificCapabilities(string[] capabilityNames)
 	{
 		// Get a new session if one doesn't already exist
 		InitDISM();
@@ -578,7 +565,7 @@ internal static class Methods
 
 				try
 				{
-					DISMAPI.DismCapabilityInfo capabilityInfo = Marshal.PtrToStructure<DISMAPI.DismCapabilityInfo>(capabilityInfoPtr);
+					DISMAPI.DismCapabilityInfo capabilityInfo = *(DISMAPI.DismCapabilityInfo*)capabilityInfoPtr;
 
 					output.Add(new DISMOutput(capabilityName, capabilityInfo.State, DISMResultType.Capability));
 					Logger.Write($"Successfully retrieved capability: {capabilityName}, State: {capabilityInfo.State}", LogTypeIntel.Information);

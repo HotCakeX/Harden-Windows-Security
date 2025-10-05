@@ -184,7 +184,7 @@
                                         </AnimatedIcon>
 
                                         <TextBlock x:Uid="RemoveText"
-                                                   FontSize="12"                                       
+                                                   FontSize="12"
                                                    FontWeight="SemiBold"
                                                    VerticalAlignment="Center"/>
                                     </StackPanel>

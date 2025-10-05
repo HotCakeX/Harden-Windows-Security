@@ -57,7 +57,7 @@ internal static partial class CryptoAPI
 			int flags = isIssuer ? CERT_NAME_ISSUER_FLAG : 0;
 
 			// Call the CertGetNameString function to get the name string
-			int result = NativeMethods.CertGetNameString(
+			int result = NativeMethods.CertGetNameStringW(
 				pCertContext,
 				dwType,
 				flags,

@@ -16,6 +16,7 @@
 //
 
 using System.Formats.Asn1;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
@@ -47,7 +48,7 @@ internal static class CertificateHelper
 				// If that fails, try specifying "Microsoft Base Cryptographic Provider v1.0"
 				if (!NativeMethods.CryptAcquireContextW(out hProv, null, "Microsoft Base Cryptographic Provider v1.0", PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
 				{
-					uint error = NativeMethods.GetLastError();
+					int error = Marshal.GetLastPInvokeError();
 
 					throw new InvalidOperationException(string.Format(
 						GlobalVars.GetStr("CryptAcquireContextFailedMessage"),
@@ -58,7 +59,7 @@ internal static class CertificateHelper
 			// Create an MD2 hash object.
 			if (!NativeMethods.CryptCreateHash(hProv, CALG_MD2, IntPtr.Zero, 0, out hHash))
 			{
-				uint error = NativeMethods.GetLastError();
+				int error = Marshal.GetLastPInvokeError();
 
 				throw new InvalidOperationException(string.Format(
 					GlobalVars.GetStr("CryptCreateHashFailedMessage"),
@@ -69,7 +70,7 @@ internal static class CertificateHelper
 			byte[] dataArray = data.ToArray();
 			if (!NativeMethods.CryptHashData(hHash, dataArray, (uint)dataArray.Length, 0))
 			{
-				uint error = NativeMethods.GetLastError();
+				int error = Marshal.GetLastPInvokeError();
 
 				throw new InvalidOperationException(string.Format(
 					GlobalVars.GetStr("CryptHashDataFailedMessage"),
@@ -80,7 +81,7 @@ internal static class CertificateHelper
 			uint hashSize = 0;
 			if (!NativeMethods.CryptGetHashParam(hHash, HP_HASHVAL, null, ref hashSize, 0))
 			{
-				uint error = NativeMethods.GetLastError();
+				int error = Marshal.GetLastPInvokeError();
 
 				throw new InvalidOperationException(string.Format(
 					GlobalVars.GetStr("CryptGetHashParamSizeFailedMessage"),
@@ -91,7 +92,7 @@ internal static class CertificateHelper
 			byte[] hashValue = new byte[hashSize];
 			if (!NativeMethods.CryptGetHashParam(hHash, HP_HASHVAL, hashValue, ref hashSize, 0))
 			{
-				uint error = NativeMethods.GetLastError();
+				int error = Marshal.GetLastPInvokeError();
 
 				throw new InvalidOperationException(string.Format(
 					GlobalVars.GetStr("CryptGetHashParamValueFailedMessage"),

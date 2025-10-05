@@ -830,7 +830,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	// - If any per-item operation is running, all three animated "All" buttons must be disabled until it completes.
 	// Implemented by:
 	//   1) A DP flag AnyItemOperationInProgress, toggled around per-item operations.
-	//   2) Three compute helpers used by XAML x:Bind to control IsEnabled for the top animated buttons.	
+	//   2) Three compute helpers used by XAML x:Bind to control IsEnabled for the top animated buttons.
 	// ============================================================================================================
 
 	/// <summary>

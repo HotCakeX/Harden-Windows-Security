@@ -16,6 +16,7 @@
 //
 
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace AppControlManager.Others;
 
@@ -69,8 +70,8 @@ internal static class WindowDisplayAffinity
 
 			if (!result)
 			{
-				uint errorCode = NativeMethods.GetLastError();
-				throw new Win32Exception((int)errorCode, $"SetWindowDisplayAffinity failed with error code: {errorCode}");
+				int errorCode = Marshal.GetLastPInvokeError();
+				throw new Win32Exception(errorCode, $"SetWindowDisplayAffinity failed with error code: {errorCode}");
 			}
 		}
 		catch (Exception ex)

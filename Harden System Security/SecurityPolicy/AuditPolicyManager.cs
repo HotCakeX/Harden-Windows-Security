@@ -228,8 +228,8 @@ internal static class AuditPrivilegeHelper
 			bool opened = NativeMethods.OpenProcessToken(processHandle, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, out nint tokenHandle);
 			if (!opened)
 			{
-				int err = Marshal.GetLastWin32Error();
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("OpenProcessTokenFailedError"), err));
+				int error = Marshal.GetLastPInvokeError();
+				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("OpenProcessTokenFailedError"), error));
 			}
 
 			try
@@ -252,10 +252,10 @@ internal static class AuditPrivilegeHelper
 	/// <param name="privilegeName">Privilege name</param>
 	private static void EnablePrivilege(IntPtr tokenHandle, string privilegeName)
 	{
-		bool lookup = NativeMethods.LookupPrivilegeValue(null, privilegeName, out LUID luid);
+		bool lookup = NativeMethods.LookupPrivilegeValueW(null, privilegeName, out LUID luid);
 		if (!lookup)
 		{
-			int errLookup = Marshal.GetLastWin32Error();
+			int errLookup = Marshal.GetLastPInvokeError();
 			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("LookupPrivilegeValueFailedError"), privilegeName, errLookup));
 		}
 
@@ -270,7 +270,8 @@ internal static class AuditPrivilegeHelper
 		};
 
 		bool adjusted = NativeMethods.AdjustTokenPrivileges(tokenHandle, false, ref tp, 0, IntPtr.Zero, IntPtr.Zero);
-		int adjustError = Marshal.GetLastWin32Error();
+
+		int adjustError = Marshal.GetLastPInvokeError();
 
 		if (!adjusted)
 		{
@@ -313,8 +314,8 @@ internal static class AuditPolicyManager
 
 		if (!NativeMethods.AuditEnumerateCategories(out IntPtr categoriesPtr, out uint categoriesCount))
 		{
-			int lastError = Marshal.GetLastWin32Error();
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToEnumerateAuditCategoriesError"), lastError));
+			int error = Marshal.GetLastPInvokeError();
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToEnumerateAuditCategoriesError"), error));
 		}
 
 		try
@@ -330,7 +331,9 @@ internal static class AuditPolicyManager
 				// When TRUE, the API returns ALL subcategories irrespective of the supplied category GUID.
 				// That causes every subcategory to appear under every category. (60 * 9 = 540!!)
 				if (!NativeMethods.AuditEnumerateSubCategories(categoryGuidPtr, false, out IntPtr subCatPtr, out uint subCatCount))
+				{
 					continue;
+				}
 
 				try
 				{
@@ -370,8 +373,8 @@ internal static class AuditPolicyManager
 
 		if (!NativeMethods.AuditEnumerateCategories(out IntPtr categoriesPtr, out uint categoriesCount))
 		{
-			int lastError = Marshal.GetLastWin32Error();
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToEnumerateAuditCategoriesError"), lastError));
+			int error = Marshal.GetLastPInvokeError();
+			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToEnumerateAuditCategoriesError"), error));
 		}
 
 		try
@@ -428,8 +431,8 @@ internal static class AuditPolicyManager
 
 					if (!NativeMethods.AuditQuerySystemPolicy(batchGuidsPtr, (uint)currentBatchSize, out IntPtr auditPolicyPtr))
 					{
-						int lastError = Marshal.GetLastWin32Error();
-						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToQueryAuditSystemPolicyBatchError"), batchStart, lastError));
+						int error = Marshal.GetLastPInvokeError();
+						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToQueryAuditSystemPolicyBatchError"), batchStart, error));
 					}
 
 					if (auditPolicyPtr == IntPtr.Zero)
@@ -503,8 +506,8 @@ internal static class AuditPolicyManager
 
 			if (!NativeMethods.AuditQuerySystemPolicy(guidsPtr, (uint)subcategoryGuids.Length, out IntPtr auditPolicyPtr))
 			{
-				int lastError = Marshal.GetLastWin32Error();
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToQuerySpecificAuditPoliciesError"), lastError));
+				int error = Marshal.GetLastPInvokeError();
+				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToQuerySpecificAuditPoliciesError"), error));
 			}
 
 			if (auditPolicyPtr == IntPtr.Zero)
@@ -689,8 +692,8 @@ internal static class AuditPolicyManager
 			bool ok = NativeMethods.AuditSetSystemPolicy(buffer, (uint)count);
 			if (!ok)
 			{
-				int lastError = Marshal.GetLastWin32Error();
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToApplyAuditPolicyToSystemError"), lastError));
+				int error = Marshal.GetLastPInvokeError();
+				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("FailedToApplyAuditPolicyToSystemError"), error));
 			}
 		}
 		finally

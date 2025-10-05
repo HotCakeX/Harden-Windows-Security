@@ -86,7 +86,9 @@ internal static class SecurityPolicyReader
 			{
 				Guid catGuid = *(Guid*)IntPtr.Add(categoriesPtr, (int)i * guidSize);
 				if (!NativeMethods.AuditEnumerateSubCategories(IntPtr.Add(categoriesPtr, (int)i * guidSize), true, out nint subCatPtr, out uint subCatCount))
+				{
 					continue;
+				}
 
 				try
 				{

@@ -112,7 +112,7 @@ internal static partial class NativeMethods
 	);
 
 	// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismaddcapability
-	[LibraryImport("DismApi.dll", EntryPoint = "DismAddCapability", StringMarshalling = StringMarshalling.Utf16)]
+	[LibraryImport("DismApi.dll", StringMarshalling = StringMarshalling.Utf16)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int DismAddCapability(
 		IntPtr Session,

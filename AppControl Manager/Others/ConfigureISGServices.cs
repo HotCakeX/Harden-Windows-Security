@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace AppControlManager.Others;
@@ -34,21 +35,28 @@ internal static class ConfigureISGServices
 	/// <param name="startType">Desired start type.</param>
 	private static void SetServiceStartType(string serviceName, ServiceStartType startType)
 	{
-		IntPtr scmHandle = NativeMethods.OpenSCManager(null, null, SC_MANAGER_ALL_ACCESS);
+		IntPtr scmHandle = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_ALL_ACCESS);
 
 		if (scmHandle == IntPtr.Zero)
-			throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+		{
+			int error = Marshal.GetLastPInvokeError();
+
+			throw new IOException($"OpenSCManagerW failed with the error code: {error}");
+		}
 
 		try
 		{
-			IntPtr serviceHandle = NativeMethods.OpenService(scmHandle, serviceName, SC_MANAGER_ALL_ACCESS);
+			IntPtr serviceHandle = NativeMethods.OpenServiceW(scmHandle, serviceName, SC_MANAGER_ALL_ACCESS);
 
 			if (serviceHandle == IntPtr.Zero)
-				throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+			{
+				int error = Marshal.GetLastPInvokeError();
 
+				throw new IOException($"OpenServiceW failed with the error code: {error}");
+			}
 			try
 			{
-				bool result = NativeMethods.ChangeServiceConfig(
+				bool result = NativeMethods.ChangeServiceConfigW(
 					serviceHandle,
 					SERVICE_NO_CHANGE,                // Service type: no change
 					(uint)startType,                  // New start type
@@ -56,14 +64,18 @@ internal static class ConfigureISGServices
 					null,                             // Binary path: no change
 					null,                             // Load order group: no change
 					IntPtr.Zero,                      // Tag ID: no change
-					null,                             // Dependencies: no change
+					IntPtr.Zero,                      // Dependencies: no change
 					null,                             // Account name: no change
 					null,                             // Password: no change
 					null                              // Display name: no change
 				);
 
 				if (!result)
-					throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+				{
+					int error = Marshal.GetLastPInvokeError();
+
+					throw new IOException($"ChangeServiceConfigW failed with the error code: {error}");
+				}
 			}
 			finally
 			{

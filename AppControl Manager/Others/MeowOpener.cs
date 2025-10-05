@@ -54,8 +54,8 @@ internal static class MeowParser
 			if (MeowLogHandle == IntPtr.Zero)
 			{
 				// If the handle is not obtained, capture the error code.
-				int lastWin32Error = Marshal.GetLastWin32Error();
-				Logger.Write(string.Format(GlobalVars.GetStr("CryptCATOpenFailedMessage"), lastWin32Error));
+				int error = Marshal.GetLastPInvokeError();
+				Logger.Write(string.Format(GlobalVars.GetStr("CryptCATOpenFailedMessage"), error));
 			}
 
 			// Iterates through the catalog members.

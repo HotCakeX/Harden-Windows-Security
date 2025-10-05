@@ -57,7 +57,7 @@ internal static class KernelModeDrivers
 	}
 
 
-	private static IntPtr OpenFile(string path, out uint error)
+	private static IntPtr OpenFile(string path, out int error)
 	{
 		error = 0;
 		IntPtr fileHandle = NativeMethods.CreateFileW(path, 2147483648U, 1U, IntPtr.Zero, 3U, 33554432U, IntPtr.Zero);
@@ -68,7 +68,7 @@ internal static class KernelModeDrivers
 			return fileHandle;
 		}
 
-		error = NativeMethods.GetLastError();
+		error = Marshal.GetLastPInvokeError();
 		return fileHandle;
 	}
 
@@ -106,7 +106,7 @@ internal static class KernelModeDrivers
 
 		try
 		{
-			fileHandle = OpenFile(filePath, out uint OpenFileError);
+			fileHandle = OpenFile(filePath, out int OpenFileError);
 
 			if (fileHandle == NativeMethods.INVALID_HANDLE_VALUE)
 			{
@@ -165,7 +165,7 @@ internal static class KernelModeDrivers
 			// This is because the PE image size limit is 4GB.
 			if (fileSize == uint.MaxValue || localPointerFileSizeHigh != 0U)
 			{
-				uint fileSizeError = NativeMethods.GetLastError();
+				int fileSizeError = Marshal.GetLastPInvokeError();
 
 				Logger.Write(string.Format(GlobalVars.GetStr("GetFileSizeFailedMessage"), filePath, fileSizeError));
 
@@ -206,7 +206,7 @@ internal static class KernelModeDrivers
 				localPointerName
 				);
 
-			uint fileMappingHandleError = NativeMethods.GetLastError();
+			int fileMappingHandleError = Marshal.GetLastPInvokeError();
 
 			if (fileMappingHandle == IntPtr.Zero)
 			{
@@ -249,7 +249,7 @@ internal static class KernelModeDrivers
 
 			if (fileMappingView == IntPtr.Zero)
 			{
-				uint fileMappingViewError = NativeMethods.GetLastError();
+				int fileMappingViewError = Marshal.GetLastPInvokeError();
 
 				Logger.Write(string.Format(GlobalVars.GetStr("MapViewOfFileFailedMessage"), filePath, fileMappingViewError));
 
@@ -266,7 +266,7 @@ internal static class KernelModeDrivers
 
 			if (ntHeaders == IntPtr.Zero)
 			{
-				uint ImageNtHeaderError = NativeMethods.GetLastError();
+				int ImageNtHeaderError = Marshal.GetLastPInvokeError();
 
 				if (ImageNtHeaderError == 193)
 				{
@@ -302,7 +302,7 @@ internal static class KernelModeDrivers
 
 			if (dataEx == IntPtr.Zero)
 			{
-				uint dataExError = NativeMethods.GetLastError();
+				int dataExError = Marshal.GetLastPInvokeError();
 
 				if (dataExError == 0)
 				{
@@ -395,7 +395,7 @@ internal static class KernelModeDrivers
 			{
 				if (NativeMethods.UnmapViewOfFile(fileMappingView) == 0)
 				{
-					uint UnmapViewOfFileError = NativeMethods.GetLastError();
+					int UnmapViewOfFileError = Marshal.GetLastPInvokeError();
 
 					Logger.Write(string.Format(GlobalVars.GetStr("UnmapViewOfFileFailedMessage"), filePath, UnmapViewOfFileError));
 				}
@@ -404,7 +404,7 @@ internal static class KernelModeDrivers
 			{
 				if (!NativeMethods.CloseHandle(fileMappingHandle))
 				{
-					uint error = NativeMethods.GetLastError();
+					int error = Marshal.GetLastPInvokeError();
 
 					Logger.Write(string.Format(GlobalVars.GetStr("CouldNotCloseMapHandleMessage"), filePath, error));
 
@@ -414,7 +414,7 @@ internal static class KernelModeDrivers
 			{
 				if (!NativeMethods.CloseHandle(fileHandle))
 				{
-					uint error = NativeMethods.GetLastError();
+					int error = Marshal.GetLastPInvokeError();
 
 					Logger.Write(string.Format(GlobalVars.GetStr("CouldNotCloseFileHandleMessage"), filePath, error));
 				}

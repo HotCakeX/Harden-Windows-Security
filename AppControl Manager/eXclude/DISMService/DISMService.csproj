@@ -22,6 +22,7 @@
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 		<DebugType>none</DebugType>
+		<DisableRuntimeMarshalling>True</DisableRuntimeMarshalling>
 	</PropertyGroup>
 
 	<ItemGroup>

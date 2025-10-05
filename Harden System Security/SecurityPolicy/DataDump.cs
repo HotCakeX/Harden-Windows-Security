@@ -23,6 +23,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using AppControlManager.Others;
 using Microsoft.Win32;
 
 namespace HardenSystemSecurity.SecurityPolicy;
@@ -386,6 +387,13 @@ internal static class DataDump
 				long availableMemory = perfInfo.PhysicalAvailable * perfInfo.PageSize;
 				return FormatBytes(availableMemory);
 			}
+			else
+			{
+				int error = Marshal.GetLastPInvokeError();
+
+				Logger.Write($"GetPerformanceInfo failed with error code: {error}", LogTypeIntel.Error);
+			}
+
 			return "Unknown";
 		}
 		catch

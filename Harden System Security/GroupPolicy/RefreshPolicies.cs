@@ -34,7 +34,7 @@ internal static class RefreshPolicies
 
 		if (!result)
 		{
-			int error = Marshal.GetLastWin32Error();
+			int error = Marshal.GetLastPInvokeError();
 			throw new InvalidOperationException($"RefreshPolicyEx failed with error code: {error}");
 		}
 
@@ -42,7 +42,7 @@ internal static class RefreshPolicies
 
 		if (!result)
 		{
-			int error = Marshal.GetLastWin32Error();
+			int error = Marshal.GetLastPInvokeError();
 			throw new InvalidOperationException($"RefreshPolicyEx failed with error code: {error}");
 		}
 

@@ -118,7 +118,7 @@ int wmain(int argc, wchar_t* argv[])
 		return rc;
 	}
 
-	// Primary: GetAvailability	
+	// Primary: GetAvailability
 	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"getavailability"))
 	{
 		// Must have exactly 5 arguments.

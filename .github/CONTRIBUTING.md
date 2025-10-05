@@ -16,10 +16,14 @@ When submitting a Pull Request (PR), please enable the "Allow edits by maintaine
 
 ## Code Style
 
-If your PR includes C# code, make sure it adheres to the coding styles enforced by the .editorconfig files located in the respective project directories. This helps maintain consistency across the codebase.
+If your PR includes C# code, make sure it adheres to the coding styles enforced by the .editorconfig files located in the respective project directories. This helps maintain consistency across the codebase. It must fully compile without any errors or warnings in the release profile, without adding any suppressions.
 
 If your PR includes Rust code, always make sure it adheres to the latest available Rust edition at the time of writing your code and it uses the latest available Rust toolchain version. Your code must not generate any errors or warnings whatsoever during compilation for the release profile.
 
 ## Type of Code
 
 The only type of code Contributions accepted at this time are C# and Rust. Please contact me first if you want to contribute in other languages.
+
+## Separation of Changes
+
+Please divide the changes in your pull request into multiple, smaller commits as much as possible. This helps reviewers understand and compare each change more easily and makes it possible to cherry-pick specific commits. Large pull requests that modify many files are less likely to be accepted in full so this practice is encouraged.

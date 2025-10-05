@@ -10,7 +10,6 @@ updates:
   - package-ecosystem: "dotnet-sdk"
     directories:
       - "/AppControl Manager/"
-      - "/Harden-Windows-Security Module/"
       - "/Harden System Security/"
     schedule:
       interval: "weekly"
@@ -20,7 +19,6 @@ updates:
   - package-ecosystem: "nuget"
     directories:
       - "/AppControl Manager/"
-      - "/Harden-Windows-Security Module/"
       - "/Harden System Security/"
     schedule:
       interval: "daily"

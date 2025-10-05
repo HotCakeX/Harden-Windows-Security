@@ -33,6 +33,7 @@ internal static class SSHConfigurations
 
 	internal static void SecureMACs()
 	{
+
 		Logger.Write(GlobalVars.GetStr("CheckingSSHClientUserConfiguration"), LogTypeIntel.Information);
 
 		// First ensure the detected username is valid so we don't create a directory in non-existent user directory
@@ -43,8 +44,10 @@ internal static class SSHConfigurations
 		}
 
 		// Ensure the SSH client directory exists
-		// CreateDirectory already checks if exists
-		_ = Directory.CreateDirectory(SSHClientUserConfigDirectory);
+		if (!Directory.Exists(SSHClientUserConfigDirectory))
+		{
+			_ = Directory.CreateDirectory(SSHClientUserConfigDirectory);
+		}
 
 		// Check if the configuration file exists
 		if (!File.Exists(SSHClientUserConfigFile))
@@ -104,18 +107,20 @@ internal static class SSHConfigurations
 			// Check if any line starts with "MACs "
 			for (int i = 0; i < configLines.Count; i++)
 			{
-				if (!configLines[i].StartsWith("MACs ", StringComparison.OrdinalIgnoreCase))
-					continue;
-
-				if (string.Equals(configLines[i], sshConfigContent, StringComparison.OrdinalIgnoreCase))
+				if (configLines[i].StartsWith("MACs ", StringComparison.OrdinalIgnoreCase))
 				{
-					Logger.Write(GlobalVars.GetStr("ExistingMACsFoundInUserDirectoryMatchesSecure"), LogTypeIntel.Information);
-					return true;
+					if (string.Equals(configLines[i], sshConfigContent, StringComparison.OrdinalIgnoreCase))
+					{
+						Logger.Write(GlobalVars.GetStr("ExistingMACsFoundInUserDirectoryMatchesSecure"), LogTypeIntel.Information);
+						return true;
+					}
+					else
+					{
+						// Log when the MACs value does not match the secure configuration
+						Logger.Write(string.Format(GlobalVars.GetStr("MACsConfigurationInUserDirectoryIsDifferent"), configLines[i]), LogTypeIntel.Information);
+						return false;
+					}
 				}
-
-				// Log when the MACs value does not match the secure configuration
-				Logger.Write(string.Format(GlobalVars.GetStr("MACsConfigurationInUserDirectoryIsDifferent"), configLines[i]), LogTypeIntel.Information);
-				return false;
 			}
 		}
 
@@ -134,18 +139,20 @@ internal static class SSHConfigurations
 			// Check if any line starts with "MACs "
 			for (int i = 0; i < configLines.Count; i++)
 			{
-				if (!configLines[i].StartsWith("MACs ", StringComparison.OrdinalIgnoreCase))
-					continue;
-
-				if (string.Equals(configLines[i], sshConfigContent, StringComparison.OrdinalIgnoreCase))
+				if (configLines[i].StartsWith("MACs ", StringComparison.OrdinalIgnoreCase))
 				{
-					Logger.Write(GlobalVars.GetStr("ExistingMACsFoundInSystemWideConfigurationMatchesSecure"), LogTypeIntel.Information);
-					return true;
+					if (string.Equals(configLines[i], sshConfigContent, StringComparison.OrdinalIgnoreCase))
+					{
+						Logger.Write(GlobalVars.GetStr("ExistingMACsFoundInSystemWideConfigurationMatchesSecure"), LogTypeIntel.Information);
+						return true;
+					}
+					else
+					{
+						// Log when the MACs value does not match the secure configuration
+						Logger.Write(string.Format(GlobalVars.GetStr("MACsConfigurationInSystemWideConfigurationIsDifferent"), configLines[i]), LogTypeIntel.Information);
+						return false;
+					}
 				}
-
-				// Log when the MACs value does not match the secure configuration
-				Logger.Write(string.Format(GlobalVars.GetStr("MACsConfigurationInSystemWideConfigurationIsDifferent"), configLines[i]), LogTypeIntel.Information);
-				return false;
 			}
 		}
 

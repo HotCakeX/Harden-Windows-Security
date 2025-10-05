@@ -525,7 +525,7 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 		{
 			if (sender is Button button && button.DataContext is KeyProtector protector)
 			{
-				List<object> items = [protector];
+				List<object> items = new(capacity: 1) { protector };
 				ListViewHelper.ConvertRowToText(items, KeyProtectorPropertyMappings);
 			}
 		}

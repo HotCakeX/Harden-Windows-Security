@@ -26,6 +26,7 @@ namespace HardenSystemSecurity.RegistryManager;
 
 internal static class Manager
 {
+
 	private const char Separator = ';';
 
 	/// <summary>
@@ -37,38 +38,152 @@ internal static class Manager
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void EditRegistry(RegistryPolicyEntry package)
 	{
-		using RegistryKey baseKey = GetBaseRegistryKey(package.hive);
-		using RegistryKey subKey = baseKey.OpenSubKey(package.KeyName, writable: true)
-           ?? baseKey.CreateSubKey(package.KeyName)
-           ?? throw new InvalidOperationException($"Failed to open or create registry key: {package.KeyName}");
+
+		RegistryKey baseRegistryKey = package.hive switch
+		{
+			Hive.HKLM => Registry.LocalMachine,
+			Hive.HKCU => Registry.CurrentUser,
+			Hive.HKCR => Registry.ClassesRoot,
+			_ => throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidRegistryBaseKey"), package.hive))
+		};
+
+		using RegistryKey subKey = baseRegistryKey.OpenSubKey(package.KeyName, true) ?? baseRegistryKey.CreateSubKey(package.KeyName);
 
 		if (package.RegValue is null)
 			throw new InvalidOperationException(GlobalVars.GetStr("RegistryKeyDidNotHaveRegValue"));
 
-		switch (package.policyAction)
+		if (package.policyAction is PolicyAction.Apply)
 		{
-			case PolicyAction.Apply:
-				var (kind, value) = ConvertValue(package.Type, package.RegValue);
-				if (value is not null) subKey.SetValue(package.ValueName, value, kind);
-				break;
+			RegistryValueKind valueType;
+			object convertedValue;
 
-			case PolicyAction.Remove:
-				if (package.DefaultRegValue is null)
-				{
-					if (subKey.GetValue(package.ValueName) is not null)
-						subKey.DeleteValue(package.ValueName, throwOnMissingValue: true);
-				}
-				else
-				{
-					var (defKind, defValue) = ConvertValue(package.Type, package.DefaultRegValue);
-					if (defValue is not null) subKey.SetValue(package.ValueName, defValue, defKind);
-				}
-				break;
+			switch (package.Type)
+			{
+				case RegistryValueType.REG_SZ:
+					{
+						valueType = RegistryValueKind.String;
+						convertedValue = package.RegValue;
+						break;
+					}
+				case RegistryValueType.REG_DWORD:
+					{
+						valueType = RegistryValueKind.DWord;
+						convertedValue = int.Parse(package.RegValue, NumberStyles.Integer, CultureInfo.InvariantCulture);
+						break;
+					}
+				case RegistryValueType.REG_QWORD:
+					{
+						valueType = RegistryValueKind.QWord;
+						convertedValue = long.Parse(package.RegValue, NumberStyles.Integer, CultureInfo.InvariantCulture);
+						break;
+					}
+				case RegistryValueType.REG_BINARY:
+					{
+						valueType = RegistryValueKind.Binary;
+						convertedValue = Convert.FromBase64String(package.RegValue);
+						break;
+					}
+				case RegistryValueType.REG_MULTI_SZ:
+					{
+						valueType = RegistryValueKind.MultiString;
+						convertedValue = package.RegValue.Split(Separator, StringSplitOptions.None);
+						break;
+					}
+				case RegistryValueType.REG_EXPAND_SZ:
+					{
+						valueType = RegistryValueKind.ExpandString;
+						convertedValue = package.RegValue;
+						break;
+					}
+				case RegistryValueType.REG_NONE:
+				case RegistryValueType.REG_DWORD_BIG_ENDIAN:
+				case RegistryValueType.REG_LINK:
+				case RegistryValueType.REG_RESOURCE_LIST:
+				case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:
+				case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
+				default:
+					{
+						throw new ArgumentException(GlobalVars.GetStr("InvalidRegistryValueType"));
+					}
+			}
 
-			default:
-				throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidActionSpecified"), package.policyAction));
+			subKey.SetValue(package.ValueName, convertedValue, valueType);
+		}
+		else if (package.policyAction is PolicyAction.Remove)
+		{
+			// Check if DefaultRegValue is null - if so, delete the registry value as before
+			if (package.DefaultRegValue is null)
+			{
+				if (subKey.GetValue(package.ValueName) is not null)
+				{
+					subKey.DeleteValue(package.ValueName, true);
+				}
+			}
+			else
+			{
+				// DefaultRegValue is not null, so set the registry value to the default value
+				RegistryValueKind valueType;
+				object convertedValue;
+
+				switch (package.Type)
+				{
+					case RegistryValueType.REG_SZ:
+						{
+							valueType = RegistryValueKind.String;
+							convertedValue = package.DefaultRegValue;
+							break;
+						}
+					case RegistryValueType.REG_DWORD:
+						{
+							valueType = RegistryValueKind.DWord;
+							convertedValue = int.Parse(package.DefaultRegValue, NumberStyles.Integer, CultureInfo.InvariantCulture);
+							break;
+						}
+					case RegistryValueType.REG_QWORD:
+						{
+							valueType = RegistryValueKind.QWord;
+							convertedValue = long.Parse(package.DefaultRegValue, NumberStyles.Integer, CultureInfo.InvariantCulture);
+							break;
+						}
+					case RegistryValueType.REG_BINARY:
+						{
+							valueType = RegistryValueKind.Binary;
+							convertedValue = Convert.FromBase64String(package.DefaultRegValue);
+							break;
+						}
+					case RegistryValueType.REG_MULTI_SZ:
+						{
+							valueType = RegistryValueKind.MultiString;
+							convertedValue = package.DefaultRegValue.Split(Separator, StringSplitOptions.None);
+							break;
+						}
+					case RegistryValueType.REG_EXPAND_SZ:
+						{
+							valueType = RegistryValueKind.ExpandString;
+							convertedValue = package.DefaultRegValue;
+							break;
+						}
+					case RegistryValueType.REG_NONE:
+					case RegistryValueType.REG_DWORD_BIG_ENDIAN:
+					case RegistryValueType.REG_LINK:
+					case RegistryValueType.REG_RESOURCE_LIST:
+					case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:
+					case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
+					default:
+						{
+							throw new ArgumentException(GlobalVars.GetStr("InvalidRegistryValueType"));
+						}
+				}
+
+				subKey.SetValue(package.ValueName, convertedValue, valueType);
+			}
+		}
+		else
+		{
+			throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidActionSpecified"), package.policyAction));
 		}
 	}
+
 
 	/// <summary>
 	/// Reads the registry value for the given <see cref="RegistryPolicyEntry"/>.
@@ -83,12 +198,21 @@ internal static class Manager
 	internal static string? ReadRegistry(RegistryPolicyEntry package)
 	{
 		// Determine base hive
-		using RegistryKey baseKey = GetBaseRegistryKey(package.hive);
+		RegistryKey baseRegistryKey = package.hive switch
+		{
+			Hive.HKLM => Registry.LocalMachine,
+			Hive.HKCU => Registry.CurrentUser,
+			Hive.HKCR => Registry.ClassesRoot,
+			_ => throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidRegistryBaseKey"), package.hive))
+		};
+
 		// Open subkey readonly
-		using RegistryKey? subKey = baseKey.OpenSubKey(package.KeyName, writable: false);
+		using RegistryKey? subKey = baseRegistryKey.OpenSubKey(package.KeyName, writable: false);
+		if (subKey is null)
+			return null;
 
 		// Try get the raw value
-		object? rawValue = subKey?.GetValue(package.ValueName);
+		object? rawValue = subKey.GetValue(package.ValueName);
 		if (rawValue is null)
 			return null;
 
@@ -240,26 +364,39 @@ internal static class Manager
 	/// <param name="actualValue">Actual value from registry</param>
 	/// <param name="expectedValue">Expected value</param>
 	/// <returns>True if values match, false otherwise</returns>
-	private static bool CompareRegistryValues(RegistryValueType type, string actualValue, string expectedValue) =>
-		type switch
+	private static bool CompareRegistryValues(RegistryValueType type, string actualValue, string expectedValue)
+	{
+		try
 		{
-			RegistryValueType.REG_SZ or RegistryValueType.REG_EXPAND_SZ
-				=> string.Equals(actualValue, expectedValue, StringComparison.OrdinalIgnoreCase),
+			return type switch
+			{
+				RegistryValueType.REG_SZ or RegistryValueType.REG_EXPAND_SZ
+					=> string.Equals(actualValue, expectedValue, StringComparison.OrdinalIgnoreCase),
 
-			RegistryValueType.REG_DWORD
-				=> uint.TryParse(actualValue, out var actD) && uint.TryParse(expectedValue, out var expD) && actD == expD,
+				RegistryValueType.REG_DWORD
+					=> uint.TryParse(actualValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint actualDword) &&
+					   uint.TryParse(expectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint expectedDword) &&
+					   actualDword == expectedDword,
 
-			RegistryValueType.REG_QWORD
-				=> long.TryParse(actualValue, out var actQ) && long.TryParse(expectedValue, out var expQ) && actQ == expQ,
+				RegistryValueType.REG_QWORD
+					=> long.TryParse(actualValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out long actualQword) &&
+					   long.TryParse(expectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out long expectedQword) &&
+					   actualQword == expectedQword,
 
-			RegistryValueType.REG_MULTI_SZ
-				=> CompareMultiStringValues(actualValue, expectedValue),
+				RegistryValueType.REG_MULTI_SZ
+					=> CompareMultiStringValues(actualValue, expectedValue),
 
-			RegistryValueType.REG_BINARY
-				=> string.Equals(actualValue, expectedValue, StringComparison.OrdinalIgnoreCase),
+				RegistryValueType.REG_BINARY
+					=> string.Equals(actualValue, expectedValue, StringComparison.OrdinalIgnoreCase),
 
-			_ => string.Equals(actualValue, expectedValue, StringComparison.OrdinalIgnoreCase)
-		};
+				_ => string.Equals(actualValue, expectedValue, StringComparison.OrdinalIgnoreCase)
+			};
+		}
+		catch
+		{
+			return false;
+		}
+	}
 
 	/// <summary>
 	/// Compares multi-string registry values.
@@ -269,37 +406,10 @@ internal static class Manager
 	/// <returns>True if values match, false otherwise</returns>
 	private static bool CompareMultiStringValues(string actualValue, string expectedValue)
 	{
-		string[] actualArray = actualValue.Split(Separator);
-		string[] expectedArray = expectedValue.Split(Separator);
+		string[] actualArray = actualValue.Split(Separator, StringSplitOptions.None);
+		string[] expectedArray = expectedValue.Split(Separator, StringSplitOptions.None);
 
 		return actualArray.Length == expectedArray.Length &&
 			   actualArray.SequenceEqual(expectedArray, StringComparer.OrdinalIgnoreCase);
 	}
-
-	private static (RegistryValueKind, object?) ConvertValue(RegistryValueType type, string? rawValue) =>
-		type switch
-		{
-			RegistryValueType.REG_SZ
-				=> (RegistryValueKind.String, rawValue),
-			RegistryValueType.REG_EXPAND_SZ
-				=> (RegistryValueKind.ExpandString, rawValue),
-			RegistryValueType.REG_DWORD
-				=> (RegistryValueKind.DWord, int.Parse(rawValue ?? string.Empty, NumberStyles.Integer, CultureInfo.InvariantCulture)),
-			RegistryValueType.REG_QWORD
-				=> (RegistryValueKind.QWord, long.Parse(rawValue ?? string.Empty, NumberStyles.Integer, CultureInfo.InvariantCulture)),
-			RegistryValueType.REG_BINARY
-				=> (RegistryValueKind.Binary, Convert.FromBase64String(rawValue ?? string.Empty)),
-			RegistryValueType.REG_MULTI_SZ
-				=> (RegistryValueKind.MultiString, rawValue?.Split(Separator) ?? []),
-			_ => throw new ArgumentException(GlobalVars.GetStr("InvalidRegistryValueType"))
-		};
-
-	private static RegistryKey GetBaseRegistryKey(Hive? hive) =>
-		hive switch
-		{
-			Hive.HKLM => Registry.LocalMachine,
-			Hive.HKCU => Registry.CurrentUser,
-			Hive.HKCR => Registry.ClassesRoot,
-			_ => throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidRegistryBaseKey"), hive))
-		};
 }

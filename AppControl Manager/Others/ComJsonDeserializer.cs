@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 
 namespace AppControlManager.Others;
@@ -45,9 +44,9 @@ internal static class ComJsonDeserializer
 		{
 			throw new ArgumentNullException(nameof(json), "JSON input is null or whitespace.");
 		}
-
 		using JsonDocument doc = JsonDocument.Parse(json);
-		return ConvertElement(doc.RootElement);
+		JsonElement root = doc.RootElement;
+		return ConvertElement(root);
 	}
 
 	/// <summary>
@@ -65,16 +64,30 @@ internal static class ComJsonDeserializer
 		// Root array case: expect an array of objects
 		if (root is List<object?> list)
 		{
-			// double casting absolutely justifiable for better readability -> not perf hot path
-			return list.Any(item => item is not Dictionary<string, object?>)
-				? throw new InvalidOperationException("Expected array of objects at JSON root.")
-				: list.Cast<Dictionary<string, object?>>().ToList();
+			List<Dictionary<string, object?>> instances = new(list.Count);
+			for (int i = 0; i < list.Count; i++)
+			{
+				object? item = list[i];
+				if (item is Dictionary<string, object?> obj)
+				{
+					instances.Add(obj);
+				}
+				else
+				{
+					throw new InvalidOperationException("Expected an array of objects in the JSON root.");
+				}
+			}
+			return instances;
 		}
 
 		// Single object case
 		if (root is Dictionary<string, object?> single)
 		{
-			return [single];
+			List<Dictionary<string, object?>> instances = new(1)
+			{
+				single
+			};
+			return instances;
 		}
 
 		throw new InvalidOperationException("Unexpected JSON shape: expected an object or an array of objects.");
@@ -85,17 +98,41 @@ internal static class ComJsonDeserializer
 	/// </summary>
 	private static object? ConvertElement(JsonElement element)
 	{
-		return element.ValueKind switch
+		switch (element.ValueKind)
 		{
-			JsonValueKind.Null or JsonValueKind.Undefined => null,
-			JsonValueKind.String => element.GetString(),
-			JsonValueKind.True => true,
-			JsonValueKind.False => false,
-			JsonValueKind.Number => ConvertNumber(element),
-			JsonValueKind.Array => element.EnumerateArray().Select(ConvertElement).ToList(),
-			JsonValueKind.Object => ConvertObject(element),
-			_ => null
-		};
+			case JsonValueKind.Null:
+			case JsonValueKind.Undefined:
+				return null;
+
+			case JsonValueKind.String:
+				return element.GetString();
+
+			case JsonValueKind.True:
+				return true;
+
+			case JsonValueKind.False:
+				return false;
+
+			case JsonValueKind.Number:
+				return ConvertNumber(element);
+
+			case JsonValueKind.Array:
+				{
+					List<object?> list = [];
+					foreach (JsonElement child in element.EnumerateArray())
+					{
+						object? item = ConvertElement(child);
+						list.Add(item);
+					}
+					return list;
+				}
+
+			case JsonValueKind.Object:
+				return ConvertObject(element);
+
+			default:
+				return null;
+		}
 	}
 
 	/// <summary>
@@ -103,11 +140,13 @@ internal static class ComJsonDeserializer
 	/// </summary>
 	private static Dictionary<string, object?> ConvertObject(JsonElement obj)
 	{
-		return obj.EnumerateObject()
-			.ToDictionary(
-				prop => prop.Name,
-				prop => ConvertElement(prop.Value),
-				StringComparer.OrdinalIgnoreCase);
+		Dictionary<string, object?> map = new(StringComparer.OrdinalIgnoreCase);
+		foreach (JsonProperty prop in obj.EnumerateObject())
+		{
+			object? value = ConvertElement(prop.Value);
+			map[prop.Name] = value;
+		}
+		return map;
 	}
 
 	/// <summary>
@@ -119,10 +158,15 @@ internal static class ComJsonDeserializer
 	/// </summary>
 	private static object ConvertNumber(JsonElement element)
 	{
-		if (element.TryGetInt64(out long int64Value)) return int64Value;
-		if (element.TryGetDecimal(out decimal decimalValue)) return decimalValue;
-		if (element.TryGetDouble(out double doubleValue)) return doubleValue;
+		if (element.TryGetInt64(out long int64Value))
+			return int64Value;
 
-		return element.GetRawText(); // fallback for very large/precise numbers
+		if (element.TryGetDecimal(out decimal decimalValue))
+			return decimalValue;
+
+		if (element.TryGetDouble(out double doubleValue))
+			return doubleValue;
+
+		return element.GetRawText();
 	}
 }

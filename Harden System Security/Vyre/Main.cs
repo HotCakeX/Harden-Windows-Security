@@ -1426,14 +1426,14 @@ internal static partial class CabinetArchiveExtractor
 
 			syntheticHandleTable = [];
 
-			fdiAllocDelegate = AllocateFdiBuffer;
-			fdiFreeDelegate = FreeFdiBuffer;
-			fdiOpenDelegate = OpenCabinetStream;
-			fdiReadDelegate = ReadCabinetStream;
-			fdiWriteDelegate = WriteDecompressedData;
-			fdiCloseDelegate = CloseHandleOrEntry;
-			fdiSeekDelegate = SeekCabinetStream;
-			fdiNotifyDelegate = HandleFdiNotification;
+			fdiAllocDelegate = new FdiAllocDelegate(AllocateFdiBuffer);
+			fdiFreeDelegate = new FdiFreeDelegate(FreeFdiBuffer);
+			fdiOpenDelegate = new FdiOpenDelegate(OpenCabinetStream);
+			fdiReadDelegate = new FdiReadDelegate(ReadCabinetStream);
+			fdiWriteDelegate = new FdiWriteDelegate(WriteDecompressedData);
+			fdiCloseDelegate = new FdiCloseDelegate(CloseHandleOrEntry);
+			fdiSeekDelegate = new FdiSeekDelegate(SeekCabinetStream);
+			fdiNotifyDelegate = new FdiNotifyDelegate(HandleFdiNotification);
 
 			fdiErrorInfo = new FdiErrorInfo();
 			fdiErrorInfoHandle = GCHandle.Alloc(fdiErrorInfo, GCHandleType.Pinned);

@@ -582,7 +582,7 @@ public partial class App : Application
 		// If the user has set a custom color for the app window border, apply it
 		else if (!string.IsNullOrEmpty(Settings.CustomAppWindowsBorder))
 		{
-			if (RgbHex.ToRGB(Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
+			if (RGBHEX.ToRGB(Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
 				CustomUIElements.AppWindowBorderCustomization.SetBorderColor(r, g, b);
 		}
 

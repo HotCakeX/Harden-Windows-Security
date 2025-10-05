@@ -23,7 +23,7 @@ using HardenSystemSecurity;
 
 namespace AppControlManager.Others;
 
-internal static unsafe class Relaunch
+internal unsafe static class Relaunch
 {
 	/// <summary>
 	/// Relaunches the application with Administrator privileges using Rust implementation

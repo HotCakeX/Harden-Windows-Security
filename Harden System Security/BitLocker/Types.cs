@@ -276,10 +276,10 @@ internal enum ReFSDedupMode : uint
 /// </summary>
 [JsonSourceGenerationOptions(
 	PropertyNameCaseInsensitive = true,
+
 	// Enums values will be written as string instead of numbers during serialization.
 	// For Deserialization, both strings and numbers are supported for parsing enum values.
-	Converters =
-	[
+	Converters = new Type[] {
 		typeof(JsonStringEnumConverter<KeyProtectorType>),
 		typeof(JsonStringEnumConverter<EncryptionMethod>),
 		typeof(JsonStringEnumConverter<ProtectionStatus>),
@@ -288,9 +288,9 @@ internal enum ReFSDedupMode : uint
 		typeof(JsonStringEnumConverter<WipingStatus>),
 		typeof(JsonStringEnumConverter<VolumeType>),
 		typeof(JsonStringEnumConverter<FileSystemType>),
-		typeof(JsonStringEnumConverter<ReFSDedupMode>)
-	],
-	WriteIndented = true)]
+		typeof(JsonStringEnumConverter<ReFSDedupMode>) },
+
+WriteIndented = true)]
 [JsonSerializable(typeof(BitLockerVolume[]))]
 internal sealed partial class BitLockerJsonContext : JsonSerializerContext
 {

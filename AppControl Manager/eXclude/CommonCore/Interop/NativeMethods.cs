@@ -632,10 +632,6 @@ internal static unsafe partial class NativeMethods
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool SetWindowDisplayAffinity(IntPtr hWnd, uint dwAffinity);
 
-	[LibraryImport("USER32", SetLastError = true)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static partial bool GetWindowDisplayAffinity(IntPtr hwnd, out uint affinity);
 
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowplacement

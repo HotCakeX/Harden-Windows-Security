@@ -66,7 +66,9 @@ internal static class WindowDisplayAffinity
 
 		try
 		{
-			if (!NativeMethods.SetWindowDisplayAffinity(windowHandle, (uint)affinity))
+			bool result = NativeMethods.SetWindowDisplayAffinity(windowHandle, (uint)affinity);
+
+			if (!result)
 			{
 				int errorCode = Marshal.GetLastPInvokeError();
 				throw new Win32Exception(errorCode, $"SetWindowDisplayAffinity failed with error code: {errorCode}");
@@ -76,22 +78,5 @@ internal static class WindowDisplayAffinity
 		{
 			Logger.Write(ex);
 		}
-	}
-
-	/// <summary>
-	/// Gets the current display affinity for the specified window.
-	/// </summary>
-	internal static DisplayAffinity GetWindowDisplayAffinity(IntPtr windowHandle)
-	{
-		if (windowHandle == IntPtr.Zero)
-			throw new ArgumentException("Invalid window handle.", nameof(windowHandle));
-
-		if (!NativeMethods.GetWindowDisplayAffinity(windowHandle, out uint affinity))
-		{
-			int errorCode = Marshal.GetLastWin32Error();
-			throw new Win32Exception(errorCode, $"GetWindowDisplayAffinity failed with error code: {errorCode}");
-		}
-
-		return (DisplayAffinity)affinity;
 	}
 }

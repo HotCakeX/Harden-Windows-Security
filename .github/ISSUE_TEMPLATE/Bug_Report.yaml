@@ -16,7 +16,6 @@ body:
       description: Which Product Does This Bug Belong To?
       options:
         - Harden System Security App
-        - Harden Windows Security Module
         - AppControl Manager
     validations:
       required: true
@@ -24,7 +23,7 @@ body:
     id: Requirements
     attributes:
       label: Does Your System Meet The Requirements?
-      description: Depending on which product your bug belongs to, please make sure you have read their requirements and meet them [Harden Windows Security Requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-), [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#supported-operation-systems)
+      description: Depending on which product your bug belongs to, please make sure you have read their requirements and meet them [Harden System Security Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security#supported-operation-systems), [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#supported-operation-systems)
       options:
         - label: Yes, I acknowledge that I've read the requirements and my system meets them. 👍
           required: true

@@ -157,7 +157,7 @@ internal sealed partial class WindowsUpdateVM : ViewModelBase, IMUnitListViewMod
 		// Register specialized verification strategy for "Allow updates to be downloaded automatically over metered connections"
 		// so its status can be detected via COM too.
 		SpecializedStrategiesRegistry.RegisterSpecializedVerification(
-			"Software\\Policies\\Microsoft\\Windows\\WindowsUpdate|AllowAutoWindowsUpdateDownloadOverMeteredNetwork",
+			@"Software\Policies\Microsoft\Windows\WindowsUpdate|AllowAutoWindowsUpdateDownloadOverMeteredNetwork",
 			new AllowAutoWindowsUpdateDownloadOverMeteredNetworkSpecVerify()
 		);
 
@@ -172,7 +172,9 @@ internal sealed partial class WindowsUpdateVM : ViewModelBase, IMUnitListViewMod
 		{
 			try
 			{
-				string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get root\\cimv2\\mdm\\dmmap MDM_Policy_Result01_Update02 AllowAutoWindowsUpdateDownloadOverMeteredNetwork");
+				string result = QuantumRelayHSS.Client.RunCommand(
+					GlobalVars.ComManagerProcessPath,
+					@"get root\cimv2\mdm\dmmap MDM_Policy_Result01_Update02 AllowAutoWindowsUpdateDownloadOverMeteredNetwork");
 
 				return string.Equals(result, "1", StringComparison.OrdinalIgnoreCase);
 			}

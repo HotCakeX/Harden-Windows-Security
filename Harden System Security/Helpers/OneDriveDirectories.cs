@@ -33,22 +33,24 @@ internal static class OneDriveDirectories
 	{
 		// List to store the OneDrive directories found
 		List<string> directoriesList = [];
-
 		// Combine system drive with "Users" to get the path to the Users directory
 		string usersPath = Path.Combine(GlobalVars.SystemDrive, "Users");
+
+		// catch to prevent unnecessary exception
+		if (!Directory.Exists(usersPath))
+			return [];
 
 		try
 		{
 			// Enumerate all top-level directories under the Users directory
-			IEnumerable<string> userDirectories = Directory.EnumerateDirectories(usersPath);
-
-			foreach (string userDirectory in userDirectories)
+			foreach (string userDirectory in Directory.EnumerateDirectories(usersPath))
 			{
 				try
 				{
 					// Enumerate directories within each user directory that start with "OneDrive"
-					IEnumerable<string> directories = Directory.EnumerateDirectories(userDirectory, "OneDrive*", SearchOption.TopDirectoryOnly)
-											   .Where(dir => dir.StartsWith(Path.Combine(userDirectory, "OneDrive"), StringComparison.OrdinalIgnoreCase));
+					IEnumerable<string> directories =
+						Directory.EnumerateDirectories(userDirectory, "OneDrive*", SearchOption.TopDirectoryOnly)
+						.Where(dir => dir.StartsWith(Path.Combine(userDirectory, "OneDrive"), StringComparison.OrdinalIgnoreCase));
 
 					// Add each found directory to the list
 					directoriesList.AddRange(directories);
@@ -70,6 +72,6 @@ internal static class OneDriveDirectories
 			Logger.Write($"An error occurred: {ex.Message}", LogTypeIntel.Error);
 		}
 
-		return directoriesList.ToArray();
+		return [.. directoriesList];
 	}
 }

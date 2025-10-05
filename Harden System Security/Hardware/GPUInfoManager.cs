@@ -22,13 +22,13 @@ namespace HardenSystemSecurity.Hardware;
 
 internal static class GPUInfoManager
 {
-	private readonly static List<GpuInfo> GPUsList = [];
+	private static readonly List<GpuInfo> GPUsList = [];
 
 	/// <summary>
 	/// Retrieves a list of all GPUs in the system.
 	/// </summary>
 	/// <returns></returns>
-	private unsafe static List<GpuInfo> GetSystemGPUs()
+	private static unsafe List<GpuInfo> GetSystemGPUs()
 	{
 		// If the list is already populated, return it.
 		if (GPUsList.Count > 0)
@@ -111,21 +111,10 @@ internal static class GPUInfoManager
 	/// <returns></returns>
 	internal static bool HasOnlyIntelGPU()
 	{
-		List<GpuInfo> gpus = GetSystemGPUs();
-
-		if (gpus.Count != 1)
+		if (GetSystemGPUs() is not [GpuInfo singleGpu])
 			return false;
 
-		foreach (GpuInfo gpu in gpus)
-		{
-			if (gpu.Brand.Equals("Intel", StringComparison.OrdinalIgnoreCase))
-				return true;
-
-			// Also check by vendor ID as backup
-			if (gpu.VendorId == 0x8086) // 32902
-				return true;
-		}
-
-		return false;
+		return singleGpu.Brand.Equals("Intel", StringComparison.OrdinalIgnoreCase)
+			   || singleGpu.VendorId == 0x8086; // Also check by vendor ID (32902) as backup
 	}
 }

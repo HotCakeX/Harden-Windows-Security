@@ -43,6 +43,9 @@ internal static class GetAppsList
 	/// <returns>Tuple containing width and height, or (0,0) if unable to read</returns>
 	private static (int width, int height) GetImageDimensions(string filePath)
 	{
+		if (filePath is not { Length: > 0 } || !File.Exists(filePath))
+			return (0, 0);
+
 		try
 		{
 			using FileStream stream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -91,10 +94,9 @@ internal static class GetAppsList
 	/// </summary>
 	private static (int width, int height) ReadPngDimensions(BinaryReader reader)
 	{
-		_ = reader.BaseStream.Seek(16, SeekOrigin.Begin); // Skip PNG signature and IHDR chunk header
-		int width = ReadBigEndianInt32(reader);
-		int height = ReadBigEndianInt32(reader);
-		return (width, height);
+		// Skip PNG signature and IHDR chunk header
+		_ = reader.BaseStream.Seek(16, SeekOrigin.Begin);
+		return (ReadBigEndianInt32(reader), ReadBigEndianInt32(reader));
 	}
 
 	/// <summary>

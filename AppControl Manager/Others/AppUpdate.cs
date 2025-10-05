@@ -90,7 +90,7 @@ internal static class AppUpdate
 	/// Checks for update based on the Store Context.
 	/// </summary>
 	/// <returns></returns>
-	internal async static Task<UpdateCheckResponse> CheckStore()
+	internal static async Task<UpdateCheckResponse> CheckStore()
 	{
 		_StoreContext = StoreContext.GetDefault();
 

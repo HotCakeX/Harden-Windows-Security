@@ -66,9 +66,7 @@ internal static class WindowDisplayAffinity
 
 		try
 		{
-			bool result = NativeMethods.SetWindowDisplayAffinity(windowHandle, (uint)affinity);
-
-			if (!result)
+			if (!NativeMethods.SetWindowDisplayAffinity(windowHandle, (uint)affinity))
 			{
 				int errorCode = Marshal.GetLastPInvokeError();
 				throw new Win32Exception(errorCode, $"SetWindowDisplayAffinity failed with error code: {errorCode}");

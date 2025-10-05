@@ -16,6 +16,7 @@
 //
 
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace AppControlManager.Others;
 

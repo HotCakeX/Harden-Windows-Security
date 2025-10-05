@@ -301,6 +301,17 @@ internal struct USER_MODALS_INFO_0
 }
 
 /// <summary>
+/// https://learn.microsoft.com/windows/win32/api/lmaccess/ns-lmaccess-user_modals_info_1
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct USER_MODALS_INFO_1
+{
+	internal uint role;
+	[MarshalAs(UnmanagedType.LPWStr)]
+	internal string primary;
+}
+
+/// <summary>
 /// https://learn.microsoft.com/windows/win32/api/lmaccess/ns-lmaccess-user_modals_info_3
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
@@ -473,7 +484,6 @@ internal struct StringArrayForFileDialogHelper
 /// <summary>
 /// https://learn.microsoft.com/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
 /// Rust implementation: https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/WinTrust/struct.SPC_SP_OPUS_INFO.html
-/// This is NON-Blittable because of the string inside it, but it is fine because we don't pass it to any Native methods.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct OpusInfoObj
@@ -502,15 +512,15 @@ internal struct OpusInfoObj
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 internal readonly struct MeowMemberCrypt
 {
-	public readonly uint StructureSize;
-	public readonly IntPtr Hashes;
-	public readonly IntPtr FileName;
-	public readonly Guid SubjectType;
-	public readonly uint MemberFlags;
-	public readonly IntPtr IndirectDataStructure;
-	public readonly uint CertVersion;
-	private readonly uint Reserved1;
-	private readonly IntPtr Reserved2;
+	public readonly uint StructureSize; // Size of the structure, Stored as LPCWSTR pointer.
+	public readonly IntPtr Hashes; // The hashes associated with the catalog member (LPCWSTR).
+	public readonly IntPtr FileName; // The file name of the catalog member (LPCWSTR).
+	public readonly Guid SubjectType; // The subject type GUID.
+	public readonly uint MemberFlags; // Flags associated with the member.
+	public readonly IntPtr IndirectDataStructure; // Pointer to the indirect data structure.
+	public readonly uint CertVersion; // The certificate version.
+	private readonly uint Reserved1; // Reserved for future use.
+	private readonly IntPtr Reserved2; // Reserved for future use.
 }
 
 internal enum JOBOBJECTINFOCLASS

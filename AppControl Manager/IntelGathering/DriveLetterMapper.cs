@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using AppControlManager.Others;
 
 namespace AppControlManager.IntelGathering;
@@ -64,8 +63,8 @@ internal static partial class DriveLetterMapper
 		// Check if the volume handle is valid
 		if (volumeHandle == NativeMethods.INVALID_HANDLE_VALUE)
 		{
-			int error = Marshal.GetLastPInvokeError(); // capture error immediately
-			throw new System.ComponentModel.Win32Exception(error);
+			uint error = NativeMethods.GetLastError(); // capture immediately
+			throw new System.ComponentModel.Win32Exception((int)error);
 		}
 
 		try

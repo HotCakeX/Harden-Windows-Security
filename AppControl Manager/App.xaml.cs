@@ -638,9 +638,6 @@ public partial class App : Application
 		DismServiceClient.TerminateActiveService();
 #endif
 
-		// Stop any active custom border
-		CustomUIElements.AppWindowBorderCustomization.StopAnimatedFrameForAppShutdown();
-
 		// Clean up the staging area
 		if (IsElevated && Directory.Exists(GlobalVars.StagingArea))
 		{

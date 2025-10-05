@@ -46,19 +46,19 @@ internal static partial class ServiceStarter
 		try
 		{
 			// Open the Service Control Manager by openning a service handle.
-			scmHandle = NativeMethods.OpenSCManagerW(null, null, SC_MANAGER_CONNECT);
+			scmHandle = NativeMethods.OpenSCManager(null, null, SC_MANAGER_CONNECT);
 			if (scmHandle == IntPtr.Zero)
 			{
-				int error = Marshal.GetLastPInvokeError();
-				throw new Win32Exception(error, $"OpenSCManagerW failed with error {error}.");
+				int err = Marshal.GetLastPInvokeError();
+				throw new Win32Exception(err, $"OpenSCManagerW failed with error {err}.");
 			}
 
 			// Open the service with rights to start and query status.
-			serviceHandle = NativeMethods.OpenServiceW(scmHandle, serviceName, SERVICE_START | SERVICE_QUERY_STATUS);
+			serviceHandle = NativeMethods.OpenService(scmHandle, serviceName, SERVICE_START | SERVICE_QUERY_STATUS);
 			if (serviceHandle == IntPtr.Zero)
 			{
-				int error = Marshal.GetLastPInvokeError();
-				throw new Win32Exception(error, $"OpenServiceW failed for '{serviceName}' with error {error}.");
+				int err = Marshal.GetLastPInvokeError();
+				throw new Win32Exception(err, $"OpenServiceW failed for '{serviceName}' with error {err}.");
 			}
 
 			DateTime deadlineUtc = DateTime.UtcNow + timeout;
@@ -80,10 +80,10 @@ internal static partial class ServiceStarter
 			bool startOk = NativeMethods.StartServiceW(serviceHandle, 0, IntPtr.Zero);
 			if (!startOk)
 			{
-				int error = Marshal.GetLastPInvokeError();
-				if (error != ERROR_SERVICE_ALREADY_RUNNING)
+				int err = Marshal.GetLastPInvokeError();
+				if (err != ERROR_SERVICE_ALREADY_RUNNING)
 				{
-					throw new Win32Exception(error, $"StartServiceW failed for '{serviceName}' with error {error}.");
+					throw new Win32Exception(err, $"StartServiceW failed for '{serviceName}' with error {err}.");
 				}
 			}
 
@@ -167,8 +167,8 @@ internal static partial class ServiceStarter
 			bool ok = NativeMethods.QueryServiceStatusEx(serviceHandle, SC_STATUS_PROCESS_INFO, buffer, (uint)size, out uint bytesNeeded);
 			if (!ok)
 			{
-				int error = Marshal.GetLastPInvokeError();
-				throw new Win32Exception(error, $"QueryServiceStatusEx failed with error {error}.");
+				int err = Marshal.GetLastPInvokeError();
+				throw new Win32Exception(err, $"QueryServiceStatusEx failed with error {err}.");
 			}
 
 			SERVICE_STATUS_PROCESS status = *(SERVICE_STATUS_PROCESS*)buffer;

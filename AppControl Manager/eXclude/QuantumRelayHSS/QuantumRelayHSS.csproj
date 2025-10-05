@@ -34,7 +34,6 @@
 		<EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
 		<EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
 		<DebuggerSupport>false</DebuggerSupport>
-		<DisableRuntimeMarshalling>True</DisableRuntimeMarshalling>
 	</PropertyGroup>
 
 	<Import Project="..\CommonCore\CommonCore.projitems" Label="Shared" />

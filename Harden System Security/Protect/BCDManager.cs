@@ -56,8 +56,7 @@ internal static class BCDManager
 			int result = NativeMethods.BcdOpenSystemStore(out storeHandle);
 			if (result != STATUS_SUCCESS)
 			{
-				int error = NativeMethods.RtlNtStatusToDosError(result);
-				throw new Win32Exception(error, GlobalVars.GetStr("FailedToOpenBCDSystemStore"));
+				throw new Win32Exception(NativeMethods.RtlNtStatusToDosError(result), GlobalVars.GetStr("FailedToOpenBCDSystemStore"));
 			}
 
 			// Parse the current entry GUID
@@ -74,8 +73,7 @@ internal static class BCDManager
 				{
 					throw new InvalidOperationException(GlobalVars.GetStr("CurrentBootEntryNotFoundAdministrator"));
 				}
-				int error = NativeMethods.RtlNtStatusToDosError(result);
-				throw new Win32Exception(error, GlobalVars.GetStr("FailedToOpenBCDObject"));
+				throw new Win32Exception(NativeMethods.RtlNtStatusToDosError(result), GlobalVars.GetStr("FailedToOpenBCDObject"));
 			}
 
 			// Set the nx element
@@ -110,8 +108,7 @@ internal static class BCDManager
 
 			if (result != STATUS_SUCCESS)
 			{
-				int error = NativeMethods.RtlNtStatusToDosError(result);
-				throw new Win32Exception(error, GlobalVars.GetStr("FailedToSetBCDElement"));
+				throw new Win32Exception(NativeMethods.RtlNtStatusToDosError(result), GlobalVars.GetStr("FailedToSetBCDElement"));
 			}
 		}
 		finally

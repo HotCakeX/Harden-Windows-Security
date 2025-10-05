@@ -79,13 +79,12 @@ internal static class WindowsServiceHost
 			bool ok = NativeMethods.StartServiceCtrlDispatcherW(dispatchTable);
 			if (!ok)
 			{
-				int error = Marshal.GetLastPInvokeError();
-
+				int err = Marshal.GetLastPInvokeError();
 				NativeEventLogger.WriteEntry(
-					$"{Atlas.QuantumRelayHSSServiceName} StartServiceCtrlDispatcherW failed with error {error}. The executable must be started by the Service Control Manager.",
+					$"{Atlas.QuantumRelayHSSServiceName} StartServiceCtrlDispatcherW failed with error {err}. The executable must be started by the Service Control Manager.",
 					NativeEventLogger.EventLogEntryType.Error);
 
-				return error != 0 ? error : 1;
+				return err != 0 ? err : 1;
 			}
 
 			return 0;
@@ -116,10 +115,10 @@ internal static class WindowsServiceHost
 			s_statusHandle = NativeMethods.RegisterServiceCtrlHandlerExW(Atlas.QuantumRelayHSSServiceName, s_handlerExDelegate, IntPtr.Zero);
 			if (s_statusHandle == IntPtr.Zero)
 			{
-				int error = Marshal.GetLastPInvokeError();
+				int err = Marshal.GetLastPInvokeError();
 
 				NativeEventLogger.WriteEntry(
-					$"{Atlas.QuantumRelayHSSServiceName} RegisterServiceCtrlHandlerExW failed with error {error}",
+					$"{Atlas.QuantumRelayHSSServiceName} RegisterServiceCtrlHandlerExW failed with error {err}",
 					NativeEventLogger.EventLogEntryType.Error);
 
 				return;
@@ -301,11 +300,11 @@ internal static class WindowsServiceHost
 			s_jobHandle = NativeMethods.CreateJobObjectW(IntPtr.Zero, null);
 			if (s_jobHandle == IntPtr.Zero)
 			{
-				int error = Marshal.GetLastPInvokeError();
+				int err = Marshal.GetLastPInvokeError();
 				if (s_debugLoggingEnabled)
 				{
 					NativeEventLogger.WriteEntry(
-						$"{Atlas.QuantumRelayHSSServiceName} CreateJobObjectW failed with error {error}.",
+						$"{Atlas.QuantumRelayHSSServiceName} CreateJobObjectW failed with error {err}.",
 						NativeEventLogger.EventLogEntryType.Information);
 				}
 				return;
@@ -328,11 +327,11 @@ internal static class WindowsServiceHost
 
 			if (!setOk)
 			{
-				int error = Marshal.GetLastPInvokeError();
+				int err = Marshal.GetLastPInvokeError();
 				if (s_debugLoggingEnabled)
 				{
 					NativeEventLogger.WriteEntry(
-						$"{Atlas.QuantumRelayHSSServiceName} SetInformationJobObject failed with error {error}.",
+						$"{Atlas.QuantumRelayHSSServiceName} SetInformationJobObject failed with error {err}.",
 						NativeEventLogger.EventLogEntryType.Information);
 				}
 				// Keep the handle anyway; Assign may still work, but kill-on-close might not be set.
@@ -342,11 +341,11 @@ internal static class WindowsServiceHost
 			bool assignOk = NativeMethods.AssignProcessToJobObject(s_jobHandle, currentProcess);
 			if (!assignOk)
 			{
-				int error = Marshal.GetLastPInvokeError();
+				int err = Marshal.GetLastPInvokeError();
 				if (s_debugLoggingEnabled)
 				{
 					NativeEventLogger.WriteEntry(
-						$"{Atlas.QuantumRelayHSSServiceName} AssignProcessToJobObject failed with error {error}. The service may already be in a job.",
+						$"{Atlas.QuantumRelayHSSServiceName} AssignProcessToJobObject failed with error {err}. The service may already be in a job.",
 						NativeEventLogger.EventLogEntryType.Information);
 				}
 			}

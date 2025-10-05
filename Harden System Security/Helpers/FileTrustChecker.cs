@@ -51,7 +51,7 @@ internal static class FileTrustChecker
 
 			IntPtr extraInfoPtr = IntPtr.Zero;   // Pointer to extra info data
 
-			// Load Microsoft Defender library dynamically
+			// Load Windows Defender library dynamically
 			IntPtr hModule = NativeMethods.LoadLibraryExW(DefenderPath, IntPtr.Zero, 0);
 
 			if (hModule == IntPtr.Zero)
@@ -76,8 +76,7 @@ internal static class FileTrustChecker
 			// Check if file failed to open
 			if (fileHandle == new IntPtr(-1))
 			{
-				int error = Marshal.GetLastPInvokeError();
-				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorOpeningHandleToFile"), filePath, error));
+				throw new InvalidOperationException(string.Format(GlobalVars.GetStr("ErrorOpeningHandleToFile"), filePath, Marshal.GetLastWin32Error()));
 			}
 
 			// Query the file's trust score using the function pointer and the file handle

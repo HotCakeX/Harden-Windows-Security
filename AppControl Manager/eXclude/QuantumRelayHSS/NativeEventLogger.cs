@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace QuantumRelayHSS;
@@ -55,39 +54,19 @@ internal static partial class NativeEventLogger
 					_ => 0x0004                              // EVENTLOG_INFORMATION_TYPE
 				};
 
-				// Single insertion string.
-				string insertion = message ?? string.Empty;
-				IntPtr pInsertion = IntPtr.Zero;
-				IntPtr pArray = IntPtr.Zero;
+				string[] strings = [message ?? string.Empty];
 
-				try
-				{
-					pInsertion = Marshal.StringToHGlobalUni(insertion);    // LPWSTR
-					pArray = Marshal.AllocHGlobal(IntPtr.Size);            // LPWSTR*
-					Marshal.WriteIntPtr(pArray, pInsertion);               // array[0] = pInsertion
-
-					_ = NativeMethods.ReportEventW(
-						hEventLog,
-						wType,
-						0,              // Category
-						0,              // EventID
-						IntPtr.Zero,    // No user SID
-						1,              // One insertion string
-						0,              // No raw data
-						pArray,         // LPWSTR*
-						IntPtr.Zero);   // No raw data pointer
-				}
-				finally
-				{
-					if (pArray != IntPtr.Zero)
-					{
-						Marshal.FreeHGlobal(pArray);
-					}
-					if (pInsertion != IntPtr.Zero)
-					{
-						Marshal.FreeHGlobal(pInsertion);
-					}
-				}
+				// Category = 0, EventID = 0, no SID, one insertion string, no raw data
+				_ = NativeMethods.ReportEventW(
+					hEventLog,
+					wType,
+					0,
+					0,
+					IntPtr.Zero,
+					(ushort)strings.Length,
+					0,
+					strings,
+					IntPtr.Zero);
 			}
 			finally
 			{

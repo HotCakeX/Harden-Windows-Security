@@ -244,7 +244,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <param name="flowD">The Flow Direction to set.</param>
 	internal static void SetCaptionButtonsFlowDirection(FlowDirection flowD)
 	{
-		IntPtr exStyle = NativeMethods.GetWindowLongPtrW(GlobalVars.hWnd, GWL_EXSTYLE);
+		IntPtr exStyle = NativeMethods.GetWindowLongPtr(GlobalVars.hWnd, GWL_EXSTYLE);
 
 		if (flowD is FlowDirection.LeftToRight)
 		{
@@ -255,7 +255,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			exStyle |= WS_EX_LAYOUTRTL;
 		}
 
-		_ = NativeMethods.SetWindowLongPtrW(GlobalVars.hWnd, GWL_EXSTYLE, exStyle);
+		_ = NativeMethods.SetWindowLongPtr(GlobalVars.hWnd, GWL_EXSTYLE, exStyle);
 	}
 
 	/// <summary>
@@ -264,7 +264,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static bool IsWindowRTL()
 	{
-		IntPtr exStyle = NativeMethods.GetWindowLongPtrW(GlobalVars.hWnd, GWL_EXSTYLE);
+		IntPtr exStyle = NativeMethods.GetWindowLongPtr(GlobalVars.hWnd, GWL_EXSTYLE);
 		return (exStyle.ToInt32() & WS_EX_LAYOUTRTL) != 0;
 	}
 

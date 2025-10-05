@@ -230,7 +230,7 @@ internal sealed partial class DismServiceClient : IDisposable
 
 					string commandLine = $"\"{serviceExecutablePath}\" {_pipeName}";
 
-					bool success = NativeMethods.CreateProcessW(
+					bool success = NativeMethods.CreateProcess(
 						null,
 						commandLine,
 						IntPtr.Zero,
@@ -244,7 +244,7 @@ internal sealed partial class DismServiceClient : IDisposable
 
 					if (!success)
 					{
-						int error = Marshal.GetLastPInvokeError();
+						int error = Marshal.GetLastWin32Error();
 						LogReceived?.Invoke(string.Format(GlobalVars.GetStr("FailedToCreateProcessWin32Error"), error), LogTypeIntel.Error);
 						return false;
 					}
@@ -602,11 +602,7 @@ internal sealed partial class DismServiceClient : IDisposable
 				uint waitResult = NativeMethods.WaitForSingleObject(_processHandle, 1000); // Wait 1 second
 				if (waitResult != 0) // If process is still running
 				{
-					if (!NativeMethods.TerminateProcess(_processHandle, 0))
-					{
-						int error = Marshal.GetLastPInvokeError();
-						Logger.Write($"Failed terminating DISMService process: {error}", LogTypeIntel.Error);
-					}
+					_ = NativeMethods.TerminateProcess(_processHandle, 0);
 				}
 				_ = NativeMethods.CloseHandle(_processHandle);
 				_processHandle = IntPtr.Zero;

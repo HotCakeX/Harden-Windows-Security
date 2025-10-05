@@ -152,7 +152,7 @@
 
             <customUI:ListViewV2.Header>
 
-                <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">                    
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <!-- TwoWay binding needed of course but the MinWidth constraints make them look better on the UI when resizing so it won't get too small -->

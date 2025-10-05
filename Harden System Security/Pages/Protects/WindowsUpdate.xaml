@@ -31,7 +31,7 @@
                     IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
         <customUI:MUnitListViewControl Grid.Row="2"
-                       ViewModel="{x:Bind ViewModel}"
+                       ViewModel="{x:Bind ViewModel}"                      
                        ListViewItemsSource="{x:Bind ViewModel.ListViewItemsSource, Mode=OneWay}"/>
 
     </Grid>

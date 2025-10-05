@@ -15,7 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 
 namespace AppControlManager.Others;
 
@@ -36,34 +36,38 @@ internal static class FileAccessCheck
 	/// <returns>True if the file is accessible for modification; otherwise, false.</returns>
 	internal static bool IsFileAccessibleForWrite(string filePath)
 	{
-		// Open with read + write access, sharing read & write.
-		IntPtr handle = NativeMethods.CreateFileW(
-			filePath,
-			GENERIC_READ | GENERIC_WRITE,          // Desired access
-			FILE_SHARE_READ | FILE_SHARE_WRITE,    // Share mode
-			IntPtr.Zero,                           // Security attributes
-			OPEN_EXISTING,                         // Creation disposition
-			0,                                     // Flags & attributes (none special)
-			IntPtr.Zero);                          // Template
+		SafeFileHandle? handle = null;
 
-		if (handle == NativeMethods.INVALID_HANDLE_VALUE)
+		try
 		{
-			Logger.Write(
-				string.Format(
-					GlobalVars.GetStr("FileRequiresElevatedPermissionsMessage"),
-					filePath
-				)
-			);
-			return false;
-		}
+			handle = NativeMethods.CreateFile(
+				filePath,
+				GENERIC_READ | GENERIC_WRITE,                   // Desired access.
+				FILE_SHARE_READ | FILE_SHARE_WRITE,             // Share mode.
+				IntPtr.Zero,                                    // Default security attributes.
+				OPEN_EXISTING,                                  // Open only if the file exists.
+				0,                                              // No special flags or attributes.
+				IntPtr.Zero);                                   // No template file.
 
-		// We do not need the handle beyond this point so closing it immediately.
-		if (!NativeMethods.CloseHandle(handle))
+			if (handle.IsInvalid)
+			{
+				Logger.Write(
+					string.Format(
+						GlobalVars.GetStr("FileRequiresElevatedPermissionsMessage"),
+						filePath
+					)
+				);
+
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		finally
 		{
-			int closeErr = Marshal.GetLastPInvokeError();
-			Logger.Write($"CloseHandle failed for {filePath} with error {closeErr}");
+			handle?.Close();
 		}
-
-		return true;
 	}
 }

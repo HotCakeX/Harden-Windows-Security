@@ -263,14 +263,12 @@ internal static class Main
 			if (hr != Structure.S_OK) // S_OK is 0
 			{
 				string errorMessage = string.Format(GlobalVars.GetStr("SignerSignEx3Failed"), hr);
-
 				if (hr == Structure.ERROR_BAD_FORMAT_HRESULT)
 					errorMessage += GlobalVars.GetStr("ErrorBadFormat");
 				else if (hr == Structure.ERROR_FILE_NOT_FOUND_HRESULT)
 					errorMessage += GlobalVars.GetStr("ErrorFileNotFound");
 				else if (hr == Structure.E_INVALIDARG_HRESULT)
 					errorMessage += GlobalVars.GetStr("ErrorInvalidArg");
-
 				throw new Win32Exception(hr, errorMessage);
 			}
 
@@ -282,9 +280,7 @@ internal static class Main
 		{
 			if (pActualSignerContext != IntPtr.Zero)
 				_ = NativeMethods.SignerFreeSignerContext(pActualSignerContext);
-
-			if (ppSignerContext != IntPtr.Zero)
-				Marshal.FreeHGlobal(ppSignerContext);
+			if (ppSignerContext != IntPtr.Zero) Marshal.FreeHGlobal(ppSignerContext);
 
 			// Cleanup for Authenticode common structures
 			if (pSignerSignatureInfo != IntPtr.Zero) Marshal.FreeHGlobal(pSignerSignatureInfo);
@@ -439,14 +435,12 @@ internal static class Main
 			if (hr != Structure.S_OK)
 			{
 				string errorMessage = string.Format(GlobalVars.GetStr("SignerSignEx3Failed"), hr);
-
 				if (hr == Structure.ERROR_BAD_FORMAT_HRESULT)
 					errorMessage += GlobalVars.GetStr("ErrorBadFormat");
 				else if (hr == Structure.ERROR_FILE_NOT_FOUND_HRESULT)
 					errorMessage += GlobalVars.GetStr("ErrorFileNotFound");
 				else if (hr == Structure.E_INVALIDARG_HRESULT)
 					errorMessage += GlobalVars.GetStr("ErrorInvalidArg");
-
 				throw new Win32Exception(hr, errorMessage);
 			}
 
@@ -472,15 +466,10 @@ internal static class Main
 		{
 			if (pActualSignerContext != IntPtr.Zero)
 				_ = NativeMethods.SignerFreeSignerContext(pActualSignerContext);
+			if (ppSignerContext != IntPtr.Zero) Marshal.FreeHGlobal(ppSignerContext);
 
-			if (ppSignerContext != IntPtr.Zero)
-				Marshal.FreeHGlobal(ppSignerContext);
-
-			if (pAppxSipClientData != IntPtr.Zero)
-				Marshal.FreeHGlobal(pAppxSipClientData);
-
-			if (pLegacySignerEx3ParamsForSip != IntPtr.Zero)
-				Marshal.FreeHGlobal(pLegacySignerEx3ParamsForSip);
+			if (pAppxSipClientData != IntPtr.Zero) Marshal.FreeHGlobal(pAppxSipClientData);
+			if (pLegacySignerEx3ParamsForSip != IntPtr.Zero) Marshal.FreeHGlobal(pLegacySignerEx3ParamsForSip);
 
 			// Cleanup for Authenticode common structures
 			if (pSignerSignatureInfo != IntPtr.Zero) Marshal.FreeHGlobal(pSignerSignatureInfo);

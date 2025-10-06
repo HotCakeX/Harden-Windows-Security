@@ -2555,9 +2555,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
     <value>Unsigned Policy Path:</value>
   </data>
-  <data name="SignToolCustomPathTextBox.Header" xml:space="preserve">
-    <value>Custom Sign Tool Path:</value>
-  </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>Certificate Common Name:</value>
   </data>
@@ -2925,18 +2922,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="CertificateCommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Common Name (CN) of the certificate that will be used during the signing operation.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Header" xml:space="preserve">
-    <value>SignTool Path</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Description" xml:space="preserve">
-    <value>Used to sign the policy CIP file</value>
-  </data>
-  <data name="SignToolPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The path to the SignTool.exe that will be used during the signing operation to sign the CIP binary file.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The path to the SignTool.exe that will be used during the signing operation to sign the CIP binary file.</value>
   </data>
   <data name="CreationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Creation</value>
@@ -3682,9 +3667,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="VerifyButtonText" xml:space="preserve">
     <value>Verify</value>
   </data>
-  <data name="DownloadingSignToolButtonText" xml:space="preserve">
-    <value>Downloading SignTool</value>
-  </data>
   <data name="VerificationSuccessfulText" xml:space="preserve">
     <value>Verification Successful</value>
   </data>
@@ -3709,16 +3691,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>The selected certificate file and common name don't match.</value>
   </data>
-  <data name="PleaseSelectSignToolPathOrEnableAutoAcquireMessage" xml:space="preserve">
-    <value>Please select the path to SignTool.exe or enable the auto-acquire option.</value>
-  </data>
-  <data name="SignToolNotExistMessage" xml:space="preserve">
-    <value>SignTool.exe does not exist in the selected path. You can enable the auto-acquire option if you don't have it.</value>
-  </data>
-  <data name="SignToolExtensionInvalidMessage" xml:space="preserve">
-    <value>The SignTool path must end with (.exe). You can enable the auto-acquire option if you don't have it.</value>
-  </data>
-    <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
+  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
     <value>Please select the XML policy file of the policy being removed.</value>
   </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
@@ -4107,48 +4080,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage" xml:space="preserve">
     <value>Removing the SupplementalPolicySigners blocks and corresponding Signers.</value>
-  </data>
-    <data name="SigningCodeIntegrityPolicyFileMessage" xml:space="preserve">
-    <value>Signing {0}</value>
-  </data>
-  <data name="SignToolFailedWithExitCodeErrorMessage" xml:space="preserve">
-    <value>SignTool failed with exit code {0}. Error: {1}</value>
-  </data>
-  <data name="FindingLatestVersionOfBuildToolsPackageMessage" xml:space="preserve">
-    <value>Finding the latest version of the microsoft.windows.sdk.buildtools package from NuGet</value>
-  </data>
-  <data name="DownloadingLatestNuPkgVersionMessage" xml:space="preserve">
-    <value>Downloading the latest .nupkg package file version '{0}' from the following URL: {1}</value>
-  </data>
-  <data name="DownloadedNuPkgToMessage" xml:space="preserve">
-    <value>Downloaded package to {0}</value>
-  </data>
-  <data name="ExtractedPackageToMessage" xml:space="preserve">
-    <value>Extracted package to {0}</value>
-  </data>
-  <data name="PathToSignToolMessage" xml:space="preserve">
-    <value>Path to signtool.exe: {0}</value>
-  </data>
-  <data name="SignToolPathNotProvidedByParameterMessage" xml:space="preserve">
-    <value>SignTool.exe path was not provided by parameter, trying to detect it automatically</value>
-  </data>
-  <data name="SuccessfullyDetectedSignToolOnSystemMessage" xml:space="preserve">
-    <value>Successfully detected the SignTool.exe on the system: {0}</value>
-  </data>
-  <data name="FailedToDetectSignToolPathAutomaticallyMessage" xml:space="preserve">
-    <value>Failed to detect SignTool.exe path automatically: {0}</value>
-  </data>
-  <data name="SignToolPathProvidedByParameterMessage" xml:space="preserve">
-    <value>SignTool.exe path was provided by parameter</value>
-  </data>
-  <data name="ProvidedSignToolIsValidMessage" xml:space="preserve">
-    <value>The provided SignTool.exe is valid</value>
-  </data>
-  <data name="ProvidedSignToolIsNotValidMessage" xml:space="preserve">
-    <value>The provided SignTool.exe is not valid</value>
-  </data>
-  <data name="SettingSignToolPathInUserConfigMessage" xml:space="preserve">
-    <value>Setting the SignTool path in the common user configurations to: {0}</value>
   </data>
   <data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
     <value>Creating the scheduled task for Snap Back Guarantee.</value>

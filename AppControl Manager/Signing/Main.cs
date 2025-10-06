@@ -80,40 +80,33 @@ internal static class Main
 		};
 	}
 
-
 	/// <summary>
-	/// Method for SigningMode.Blob, CIP files. Problem with it is that it generates CMS V3
-	/// but then the signed CIP files will not be authorized by the OS after deployment
-	/// since they need CMS V1 which is less secure and not compatible with CNG.
+	/// Method for signing Code Integrity Policies (CIP).
 	/// </summary>
-	/// <param name="filePath"></param>
-	/// <param name="signingCertificate"></param>
-	/// <param name="contentOid"></param>
+	/// <param name="filePath">The CIP file to be signed.</param>
+	/// <param name="CertCN"></param>
+	/// <param name="Cert"></param>
 	/// <exception cref="ArgumentNullException"></exception>
-	/// <exception cref="ArgumentException"></exception>
-	/// <exception cref="FileNotFoundException"></exception>
-	private static void SignFileBlob(string filePath,
-									  X509Certificate2 signingCertificate,
-									  string? contentOid = null)
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static void SignCIP(string filePath, string? CertCN = null, X509Certificate2? Cert = null)
 	{
-		if (string.IsNullOrEmpty(filePath))
-			throw new ArgumentNullException(nameof(filePath));
-
-		ArgumentNullException.ThrowIfNull(signingCertificate);
+		X509Certificate2? signingCertificate = (Cert ??
+			Helper.FindCertificateBySubjectName(CertCN ??
+			throw new ArgumentNullException(nameof(CertCN)))) ??
+			throw new InvalidOperationException("No certificate was found");
 
 		if (!signingCertificate.HasPrivateKey)
-			throw new ArgumentException(GlobalVars.GetStr("CertificateMustHavePrivateKey"), nameof(signingCertificate));
+			throw new InvalidOperationException(GlobalVars.GetStr("CertificateMustHavePrivateKey"));
 
 		// Read the file content to be signed
 		byte[] fileContent = File.ReadAllBytes(filePath);
 
-		// Determine the content type OID; default to PKCS #7 Data if not specified
-		string contentTypeOid = contentOid ?? "1.2.840.113549.1.7.1";
+		// The required OID for Code Integrity policy signing.
+		const string contentTypeOid = "1.3.6.1.4.1.311.79.1";
 
 		// Create ContentInfo with the specified content type OID and file content
 		ContentInfo contentInfo = new(new Oid(contentTypeOid), fileContent);
 
-		// Initialize SignedCms with attached content (not detached)
 		SignedCms signedCms = new(contentInfo, false);
 
 		// Configure the signer with the certificate
@@ -126,6 +119,8 @@ internal static class Main
 		// Include only the signing certificate
 		signer.IncludeOption = X509IncludeOption.EndCertOnly;
 
+		signer.SignerIdentifierType = SubjectIdentifierType.IssuerAndSerialNumber; // Required
+
 		// Compute the signature
 		// Using the silent feature would throw error when the following group policy is in effect:
 		// System Cryptography: Force strong key protection for user keys stored on the computer
@@ -134,11 +129,105 @@ internal static class Main
 		// Encode the signed PKCS #7 message
 		byte[] signedBytes = signedCms.Encode();
 
-		// Replace the original file with the signed content
+		ForceCmsVersionToV1(signedBytes);
+
 		File.Delete(filePath);
 		File.WriteAllBytes(filePath, signedBytes);
 
 		Logger.Write(string.Format(GlobalVars.GetStr("PKCS7SignatureWritten"), filePath));
+	}
+
+	/// <summary>
+	/// Forces the CMS version to v1 by patching the ASN.1 encoded data.
+	/// </summary>
+	private static void ForceCmsVersionToV1(Span<byte> data)
+	{
+		// PKCS#7 SignedData structure:
+		// SEQUENCE (0x30)
+		//   OID for signedData (1.2.840.113549.1.7.2)
+		//   [0] EXPLICIT (0xA0)
+		//     SEQUENCE (0x30)
+		//       INTEGER version (0x02)
+		//         length
+		//         value (we want to change this from 03 to 01)
+
+		int index = 0;
+
+		// Skip the outer SEQUENCE tag and length
+		if (data[index] == 0x30) // SEQUENCE tag
+		{
+			index++;
+			// Skip length bytes (do not skip the SEQUENCE value itself)
+			if ((data[index] & 0x80) != 0)
+			{
+				int lengthBytes = data[index] & 0x7F;
+				index += lengthBytes + 1;
+			}
+			else
+			{
+				index++;
+			}
+
+			// Look for signedData OID: 06 09 2A 86 48 86 F7 0D 01 07 02
+			if (data[index] == 0x06 && data[index + 1] == 0x09)
+			{
+				// Verify it's the signedData OID
+				ReadOnlySpan<byte> signedDataOid = [0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x07, 0x02];
+
+				bool isSignedData = data.Slice(index + 2, 9).SequenceEqual(signedDataOid);
+
+				if (isSignedData)
+				{
+					index += 11; // Skip OID (1 tag + 1 length + 9 value)
+
+					// Should now be at [0] EXPLICIT tag (0xA0)
+					if (data[index] == 0xA0)
+					{
+						index++;
+						// Skip length bytes
+						if ((data[index] & 0x80) != 0)
+						{
+							int lengthBytes = data[index] & 0x7F;
+							index += lengthBytes + 1;
+						}
+						else
+						{
+							index++;
+						}
+
+						// Should now be at inner SEQUENCE (0x30)
+						if (data[index] == 0x30)
+						{
+							index++;
+							// Skip length bytes
+							if ((data[index] & 0x80) != 0)
+							{
+								int lengthBytes = data[index] & 0x7F;
+								index += lengthBytes + 1;
+							}
+							else
+							{
+								index++;
+							}
+
+							// Should now be at INTEGER tag for version (0x02)
+							if (data[index] == 0x02)
+							{
+								index++;
+								_ = data[index]; // length
+								index++;
+
+								// Now at the version value - change it to 1
+								if (data[index] == 0x03) // If it's version 3
+								{
+									data[index] = 0x01; // Change to version 1
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/// <summary>
@@ -490,35 +579,6 @@ internal static class Main
 			if (pSignerIndex != IntPtr.Zero) Marshal.FreeHGlobal(pSignerIndex);
 			if (pSignerFileInfo != IntPtr.Zero) Marshal.FreeHGlobal(pSignerFileInfo);
 			if (pFileNameString != IntPtr.Zero) Marshal.FreeHGlobal(pFileNameString);
-		}
-	}
-
-
-	/// <summary>
-	/// Signs a CIP Code Integrity policy file.
-	/// </summary>
-	/// <param name="CIPPath"></param>
-	/// <param name="CertCN"></param>
-	internal static void SignCIPUnUsed(string CIPPath, string CertCN)
-	{
-		X509Certificate2? cert = null;
-
-		try
-		{
-			// Find the certificate based on the provided subject CN
-			cert = Helper.FindCertificateBySubjectName(CertCN);
-
-			SignFileBlob(CIPPath, cert!, Structure.CodeIntegrityOID);
-		}
-		catch (Win32Exception w32Ex)
-		{
-			Logger.Write(string.Format(GlobalVars.GetStr("Win32ErrorSigningFile"), w32Ex.NativeErrorCode, w32Ex.NativeErrorCode, w32Ex.Message));
-
-			throw;
-		}
-		finally
-		{
-			cert?.Dispose();
 		}
 	}
 

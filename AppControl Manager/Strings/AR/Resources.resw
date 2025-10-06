@@ -2555,9 +2555,6 @@
   <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
     <value>مسار النهج غير الموقع:</value>
   </data>
-  <data name="SignToolCustomPathTextBox.Header" xml:space="preserve">
-    <value>مسار أداة التوقيع المخصص:</value>
-  </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>الاسم الشائع للشهادة:</value>
   </data>
@@ -2925,18 +2922,6 @@
   </data>
   <data name="CertificateCommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>الاسم الشائع (CN) للشهادة التي سيتم استخدامها أثناء عملية التوقيع.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Header" xml:space="preserve">
-    <value>مسار أداة التوقيع</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Description" xml:space="preserve">
-    <value>يستخدم لتوقيع ملف سياسة CIP</value>
-  </data>
-  <data name="SignToolPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>مسار SignTool.exe الذي سيتم استخدامه أثناء عملية التوقيع لتوقيع ملف CIP الثنائي.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>مسار SignTool.exe الذي سيتم استخدامه أثناء عملية التوقيع لتوقيع ملف CIP الثنائي.</value>
   </data>
   <data name="CreationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>إنشاء</value>
@@ -3682,9 +3667,6 @@
   <data name="VerifyButtonText" xml:space="preserve">
     <value>تحقق</value>
   </data>
-  <data name="DownloadingSignToolButtonText" xml:space="preserve">
-    <value>جارٍ تنزيل أداة التوقيع</value>
-  </data>
   <data name="VerificationSuccessfulText" xml:space="preserve">
     <value>تم التحقق بنجاح</value>
   </data>
@@ -3709,16 +3691,7 @@
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>ملف الشهادة المحدد والاسم الشائع لا يتطابقان.</value>
   </data>
-  <data name="PleaseSelectSignToolPathOrEnableAutoAcquireMessage" xml:space="preserve">
-    <value>الرجاء تحديد مسار SignTool.exe أو تمكين خيار الاكتساب التلقائي.</value>
-  </data>
-  <data name="SignToolNotExistMessage" xml:space="preserve">
-    <value>SignTool.exe غير موجود في المسار المحدد. يمكنك تمكين خيار الاكتساب التلقائي إذا لم يكن لديك.</value>
-  </data>
-  <data name="SignToolExtensionInvalidMessage" xml:space="preserve">
-    <value>يجب أن ينتهي مسار أداة التوقيع بـ (.exe). يمكنك تمكين خيار الاكتساب التلقائي إذا لم يكن لديك.</value>
-  </data>
-    <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
+  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
     <value>الرجاء تحديد ملف سياسة XML للسياسة التي يتم إزالتها.</value>
   </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
@@ -4108,49 +4081,7 @@
   <data name="RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage" xml:space="preserve">
     <value>إزالة كتل موقعي السياسة التكميلية والموقعين المقابلين.</value>
   </data>
-    <data name="SigningCodeIntegrityPolicyFileMessage" xml:space="preserve">
-    <value>توقيع {0}</value>
-  </data>
-  <data name="SignToolFailedWithExitCodeErrorMessage" xml:space="preserve">
-    <value>فشلت أداة التوقيع برمز الخروج {0}. الخطأ: {1}</value>
-  </data>
-  <data name="FindingLatestVersionOfBuildToolsPackageMessage" xml:space="preserve">
-    <value>البحث عن أحدث إصدار من حزمة microsoft.windows.sdk.buildtools من NuGet</value>
-  </data>
-  <data name="DownloadingLatestNuPkgVersionMessage" xml:space="preserve">
-    <value>تنزيل أحدث إصدار من ملف حزمة .nupkg "{0}" من عنوان URL التالي: {1}</value>
-  </data>
-  <data name="DownloadedNuPkgToMessage" xml:space="preserve">
-    <value>تم تنزيل الحزمة إلى {0}</value>
-  </data>
-  <data name="ExtractedPackageToMessage" xml:space="preserve">
-    <value>تم استخراج الحزمة إلى {0}</value>
-  </data>
-  <data name="PathToSignToolMessage" xml:space="preserve">
-    <value>مسار signtool.exe: {0}</value>
-  </data>
-  <data name="SignToolPathNotProvidedByParameterMessage" xml:space="preserve">
-    <value>لم يتم توفير مسار SignTool.exe بواسطة المعلمة، محاولة الكشف عنه تلقائيًا</value>
-  </data>
-  <data name="SuccessfullyDetectedSignToolOnSystemMessage" xml:space="preserve">
-    <value>تم الكشف بنجاح عن SignTool.exe على النظام: {0}</value>
-  </data>
-  <data name="FailedToDetectSignToolPathAutomaticallyMessage" xml:space="preserve">
-    <value>فشل في الكشف عن مسار SignTool.exe تلقائيًا: {0}</value>
-  </data>
-  <data name="SignToolPathProvidedByParameterMessage" xml:space="preserve">
-    <value>تم توفير مسار SignTool.exe بواسطة المعلمة</value>
-  </data>
-  <data name="ProvidedSignToolIsValidMessage" xml:space="preserve">
-    <value>إن SignTool.exe المقدم صالح</value>
-  </data>
-  <data name="ProvidedSignToolIsNotValidMessage" xml:space="preserve">
-    <value>إن SignTool.exe المقدم غير صالح</value>
-  </data>
-  <data name="SettingSignToolPathInUserConfigMessage" xml:space="preserve">
-    <value>تعيين مسار أداة التوقيع في تكوينات المستخدم الشائعة إلى: {0}</value>
-  </data>
-  <data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
+    <data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
     <value>إنشاء المهمة المجدولة لضمان Snap Back.</value>
   </data>
   <data name="FileHasHashMismatchMessage" xml:space="preserve">

@@ -1,40 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <SiPolicy PolicyType="Supplemental Policy" xmlns="urn:schemas-microsoft-com:sipolicy">
-  <VersionEx>1.0.0.0</VersionEx>
-  <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+  <VersionEx>1.0.0.1</VersionEx>
   <PolicyID>{45706A68-8D37-4275-A4EC-27795F18D0C7}</PolicyID>
   <BasePolicyID>{238B8D21-C1E5-46D9-ADFC-FB15DA09B0CD}</BasePolicyID>
+  <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
   <Rules>
     <Rule>
       <Option>Enabled:Unsigned System Integrity Policy</Option>
     </Rule>
   </Rules>
-  <EKUs/>
+  <EKUs />
   <FileRules>
-    <Allow ID="ID_ALLOW_A_1" FriendlyName="AppControlManager_sadt7br7jpt02 FileRule" PackageFamilyName="AppControlManager_sadt7br7jpt02" MinimumFileVersion="0.0.0.0"/>
-    <FileAttrib ID="ID_FILEATTRIB_A_1" FriendlyName="SignTool.exe" FileName="SIGNTOOL.EXE" MinimumFileVersion="10.0.26100.1"/>
+    <Allow ID="ID_ALLOW_A_1" FriendlyName="AppControl Manager PFN Rule" PackageFamilyName="ToBeDetermined" MinimumFileVersion="0.0.0.0" />
   </FileRules>
-  <Signers>
-    <Signer Name="Microsoft Code Signing PCA 2011" ID="ID_SIGNER_A_1">
-      <CertRoot Type="TBS" Value="F6F717A43AD9ABDDC8CEFDDE1C505462535E7D1307E630F9544A2D14FE8BF26E"/>
-      <CertPublisher Value="Microsoft Corporation"/>
-      <FileAttribRef RuleID="ID_FILEATTRIB_A_1"/>
-    </Signer>
-  </Signers>
+  <Signers />
   <SigningScenarios>
-    <SigningScenario ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Code Integrity" Value="12">
+    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Code Integrity">
       <ProductSigners>
-        <AllowedSigners>
-          <AllowedSigner SignerId="ID_SIGNER_A_1"/>
-        </AllowedSigners>
         <FileRulesRef>
-          <FileRuleRef RuleID="ID_ALLOW_A_1"/>
+          <FileRuleRef RuleID="ID_ALLOW_A_1" />
         </FileRulesRef>
       </ProductSigners>
     </SigningScenario>
   </SigningScenarios>
-  <UpdatePolicySigners/>
-  <CiSigners/>
+  <UpdatePolicySigners />
+  <CiSigners />
   <HvciOptions>2</HvciOptions>
   <Settings>
     <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">

@@ -280,7 +280,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	internal string? SignedPolicyPathTextBox { get; set => SP(ref field, value); }
 	internal string? UnsignedPolicyPathTextBox { get; set => SP(ref field, value); }
-	internal string? SignToolCustomPathTextBox { get; set => SP(ref field, value); }
 	internal string? CertificatePathTextBox { get; set => SP(ref field, value); }
 
 	internal bool MainUserConfigurationsSettingsExpanderIsExpanded { get; set => SP(ref field, value); }
@@ -292,7 +291,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 		SignedPolicyPathTextBox = userConfig.SignedPolicyPath ?? string.Empty;
 		UnsignedPolicyPathTextBox = userConfig.UnsignedPolicyPath ?? string.Empty;
-		SignToolCustomPathTextBox = userConfig.SignToolCustomPath ?? string.Empty;
 		CertCNsAutoSuggestBoxText = userConfig.CertificateCommonName ?? string.Empty;
 		CertificatePathTextBox = userConfig.CertificatePath ?? string.Empty;
 
@@ -336,28 +334,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal void BrowseButton_UnsignedPolicyPath_Click()
 	{
 		UnsignedPolicyPathTextBox = FileDialogHelper.ShowFilePickerDialog(GlobalVars.XMLFilePickerFilter);
-	}
-
-	#endregion
-
-	#region Custom Sign Tool Path
-
-	internal void EditButton_SignToolCustomPath_Click()
-	{
-		_ = UserConfiguration.Set(SignToolCustomPath: SignToolCustomPathTextBox);
-		Logger.Write($"Edited SignToolCustomPath to {SignToolCustomPathTextBox}");
-	}
-
-	internal void ClearButton_SignToolCustomPath_Click()
-	{
-		UserConfiguration.Remove(SignToolCustomPath: true);
-		Logger.Write("Cleared SignToolCustomPath");
-		SignToolCustomPathTextBox = null;
-	}
-
-	internal void BrowseButton_SignToolCustomPath_Click()
-	{
-		SignToolCustomPathTextBox = FileDialogHelper.ShowFilePickerDialog(GlobalVars.ExecutablesPickerFilter);
 	}
 
 	#endregion

@@ -2555,9 +2555,6 @@
   <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
     <value>ഒപ്പിടാത്ത നയ പാത:</value>
   </data>
-  <data name="SignToolCustomPathTextBox.Header" xml:space="preserve">
-    <value>ഇഷ്ടാനുസൃത സൈൻ ടൂൾ പാത:</value>
-  </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>സർട്ടിഫിക്കറ്റ് പൊതുനാമം:</value>
   </data>
@@ -2925,18 +2922,6 @@
   </data>
   <data name="CertificateCommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>ഒപ്പിടൽ പ്രവർത്തന സമയത്ത് ഉപയോഗിക്കുന്ന സർട്ടിഫിക്കറ്റിന്റെ പൊതുനാമം (CN).</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Header" xml:space="preserve">
-    <value>സൈൻടൂൾ പാത</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Description" xml:space="preserve">
-    <value>നയ CIP ഫയൽ ഒപ്പിടാൻ ഉപയോഗിക്കുന്നു</value>
-  </data>
-  <data name="SignToolPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>CIP ബൈനറി ഫയൽ ഒപ്പിടുന്നതിനുള്ള ഒപ്പിടൽ പ്രവർത്തന സമയത്ത് ഉപയോഗിക്കുന്ന SignTool.exe-യുടെ പാത.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>CIP ബൈനറി ഫയൽ ഒപ്പിടുന്നതിനുള്ള ഒപ്പിടൽ പ്രവർത്തന സമയത്ത് ഉപയോഗിക്കുന്ന SignTool.exe-യുടെ പാത.</value>
   </data>
   <data name="CreationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>സൃഷ്ടിക്കൽ</value>
@@ -3682,9 +3667,6 @@
   <data name="VerifyButtonText" xml:space="preserve">
     <value>പരിശോധിക്കുക</value>
   </data>
-  <data name="DownloadingSignToolButtonText" xml:space="preserve">
-    <value>സൈൻടൂൾ ഡൗൺലോഡ് ചെയ്യുന്നു</value>
-  </data>
   <data name="VerificationSuccessfulText" xml:space="preserve">
     <value>പരിശോധന വിജയകരം</value>
   </data>
@@ -3708,15 +3690,6 @@
   </data>
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത സർട്ടിഫിക്കറ്റ് ഫയലും പൊതുനാമവും പൊരുത്തപ്പെടുന്നില്ല.</value>
-  </data>
-  <data name="PleaseSelectSignToolPathOrEnableAutoAcquireMessage" xml:space="preserve">
-    <value>SignTool.exe-യുടെ പാത തിരഞ്ഞെടുക്കുക അല്ലെങ്കിൽ ഓട്ടോ-അക്വയർ ഓപ്ഷൻ പ്രവർത്തനക്ഷമമാക്കുക.</value>
-  </data>
-  <data name="SignToolNotExistMessage" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത പാതയിൽ SignTool.exe നിലവിലില്ല. നിങ്ങൾക്ക് അത് ഇല്ലെങ്കിൽ ഓട്ടോ-അക്വയർ ഓപ്ഷൻ പ്രവർത്തനക്ഷമമാക്കാം.</value>
-  </data>
-  <data name="SignToolExtensionInvalidMessage" xml:space="preserve">
-    <value>SignTool പാത (.exe) എന്നതിൽ അവസാനിക്കണം. നിങ്ങൾക്ക് അത് ഇല്ലെങ്കിൽ ഓട്ടോ-അക്വയർ ഓപ്ഷൻ പ്രവർത്തനക്ഷമമാക്കാം.</value>
   </data>
   <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
     <value>നീക്കം ചെയ്യുന്ന നയത്തിന്റെ XML നയ ഫയൽ ദയവായി തിരഞ്ഞെടുക്കുക.</value>
@@ -4107,48 +4080,6 @@
   </data>
   <data name="RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage" xml:space="preserve">
     <value>അനുബന്ധ നയ സൈനർ ബ്ലോക്കുകളും അനുബന്ധ സൈനർമാരും നീക്കംചെയ്യുന്നു.</value>
-  </data>
-  <data name="SigningCodeIntegrityPolicyFileMessage" xml:space="preserve">
-    <value>{0} ഒപ്പിടുന്നു</value>
-  </data>
-  <data name="SignToolFailedWithExitCodeErrorMessage" xml:space="preserve">
-    <value>SignTool {0} എക്സിറ്റ് കോഡ് ഉപയോഗിച്ച് പരാജയപ്പെട്ടു. പിശക്: {1}</value>
-  </data>
-  <data name="FindingLatestVersionOfBuildToolsPackageMessage" xml:space="preserve">
-    <value>NuGet-ൽ നിന്ന് microsoft.windows.sdk.buildtools പാക്കേജിന്റെ ഏറ്റവും പുതിയ പതിപ്പ് കണ്ടെത്തുന്നു</value>
-  </data>
-  <data name="DownloadingLatestNuPkgVersionMessage" xml:space="preserve">
-    <value>ഏറ്റവും പുതിയ .nupkg പാക്കേജ് ഫയൽ പതിപ്പ് '{0}' താഴെപ്പറയുന്ന URL-ൽ നിന്ന് ഡൗൺലോഡ് ചെയ്യുന്നു: {1}</value>
-  </data>
-  <data name="DownloadedNuPkgToMessage" xml:space="preserve">
-    <value>പാക്കേജ് {0} എന്നതിലേക്ക് ഡൗൺലോഡ് ചെയ്‌തു</value>
-  </data>
-  <data name="ExtractedPackageToMessage" xml:space="preserve">
-    <value>പാക്കേജ് {0} എന്നതിലേക്ക് എക്‌സ്‌ട്രാക്‌റ്റ് ചെയ്‌തു</value>
-  </data>
-  <data name="PathToSignToolMessage" xml:space="preserve">
-    <value>signtool.exe-യുടെ പാത: {0}</value>
-  </data>
-  <data name="SignToolPathNotProvidedByParameterMessage" xml:space="preserve">
-    <value>SignTool.exe പാത പാരാമീറ്റർ വഴി നൽകിയിട്ടില്ല, അത് യാന്ത്രികമായി കണ്ടെത്താൻ ശ്രമിക്കുന്നു</value>
-  </data>
-  <data name="SuccessfullyDetectedSignToolOnSystemMessage" xml:space="preserve">
-    <value>സിസ്റ്റത്തിൽ SignTool.exe വിജയകരമായി കണ്ടെത്തി: {0}</value>
-  </data>
-  <data name="FailedToDetectSignToolPathAutomaticallyMessage" xml:space="preserve">
-    <value>SignTool.exe പാത യാന്ത്രികമായി കണ്ടെത്തുന്നതിൽ പരാജയപ്പെട്ടു: {0}</value>
-  </data>
-  <data name="SignToolPathProvidedByParameterMessage" xml:space="preserve">
-    <value>SignTool.exe പാത പാരാമീറ്റർ വഴി നൽകി</value>
-  </data>
-  <data name="ProvidedSignToolIsValidMessage" xml:space="preserve">
-    <value>നൽകിയിട്ടുള്ള SignTool.exe സാധുവാണ്</value>
-  </data>
-  <data name="ProvidedSignToolIsNotValidMessage" xml:space="preserve">
-    <value>നൽകിയിട്ടുള്ള SignTool.exe സാധുവല്ല</value>
-  </data>
-  <data name="SettingSignToolPathInUserConfigMessage" xml:space="preserve">
-    <value>സാധാരണ ഉപയോക്തൃ കോൺഫിഗറേഷനുകളിൽ SignTool പാത സജ്ജമാക്കുന്നു: {0}</value>
   </data>
   <data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
     <value>സ്നാപ്പ് ബാക്ക് ഗ്യാരണ്ടിക്കായി ഷെഡ്യൂൾ ചെയ്‌ത ടാസ്‌ക് സൃഷ്‌ടിക്കുന്നു.</value>

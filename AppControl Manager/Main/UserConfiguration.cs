@@ -41,49 +41,32 @@ internal sealed partial class UserConfigurationContext : JsonSerializerContext
 internal sealed partial class UserConfiguration(
 		string? signedPolicyPath,
 		string? unsignedPolicyPath,
-		string? signToolCustomPath,
 		string? certificateCommonName,
 		string? certificatePath,
 		Guid? strictKernelPolicyGUID,
-		DateTime? lastUpdateCheck,
 		bool? autoUpdateCheck,
 		Dictionary<string, DateTime>? signedPolicyStage1RemovalTimes = null
 	)
 {
 	[JsonInclude]
-	[JsonPropertyOrder(1)]
 	internal string? SignedPolicyPath { get; set; } = signedPolicyPath;
 
 	[JsonInclude]
-	[JsonPropertyOrder(2)]
 	internal string? UnsignedPolicyPath { get; set; } = unsignedPolicyPath;
 
 	[JsonInclude]
-	[JsonPropertyOrder(3)]
-	internal string? SignToolCustomPath { get; set; } = signToolCustomPath;
-
-	[JsonInclude]
-	[JsonPropertyOrder(4)]
 	internal string? CertificateCommonName { get; set; } = certificateCommonName;
 
 	[JsonInclude]
-	[JsonPropertyOrder(5)]
 	internal string? CertificatePath { get; set; } = certificatePath;
 
 	[JsonInclude]
-	[JsonPropertyOrder(6)]
 	internal Guid? StrictKernelPolicyGUID { get; set; } = strictKernelPolicyGUID;
 
 	[JsonInclude]
-	[JsonPropertyOrder(7)]
-	internal DateTime? LastUpdateCheck { get; set; } = lastUpdateCheck;
-
-	[JsonInclude]
-	[JsonPropertyOrder(8)]
 	internal bool? AutoUpdateCheck { get; set; } = autoUpdateCheck;
 
 	[JsonInclude]
-	[JsonPropertyOrder(9)]
 	internal Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes { get; set; } = signedPolicyStage1RemovalTimes;
 
 
@@ -93,11 +76,9 @@ internal sealed partial class UserConfiguration(
 	/// </summary>
 	/// <param name="SignedPolicyPath"></param>
 	/// <param name="UnsignedPolicyPath"></param>
-	/// <param name="SignToolCustomPath"></param>
 	/// <param name="CertificateCommonName"></param>
 	/// <param name="CertificatePath"></param>
 	/// <param name="StrictKernelPolicyGUID"></param>
-	/// <param name="LastUpdateCheck"></param>
 	/// <param name="AutoUpdateCheck"></param>
 	/// <param name="SignedPolicyStage1RemovalTimes"></param>
 	/// <returns></returns>
@@ -105,11 +86,9 @@ internal sealed partial class UserConfiguration(
 	internal static UserConfiguration Set(
 	string? SignedPolicyPath = null,
 	string? UnsignedPolicyPath = null,
-	string? SignToolCustomPath = null,
 	string? CertificateCommonName = null,
 	string? CertificatePath = null,
 	Guid? StrictKernelPolicyGUID = null,
-	DateTime? LastUpdateCheck = null,
 	bool? AutoUpdateCheck = null,
 	Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes = null
 )
@@ -159,11 +138,9 @@ internal sealed partial class UserConfiguration(
 		// Modify the properties based on the input
 		if (!string.IsNullOrWhiteSpace(SignedPolicyPath)) UserConfiguration.SignedPolicyPath = SignedPolicyPath;
 		if (!string.IsNullOrWhiteSpace(UnsignedPolicyPath)) UserConfiguration.UnsignedPolicyPath = UnsignedPolicyPath;
-		if (!string.IsNullOrWhiteSpace(SignToolCustomPath)) UserConfiguration.SignToolCustomPath = SignToolCustomPath;
 		if (!string.IsNullOrWhiteSpace(CertificateCommonName)) UserConfiguration.CertificateCommonName = CertificateCommonName;
 		if (!string.IsNullOrWhiteSpace(CertificatePath)) UserConfiguration.CertificatePath = CertificatePath;
 		if (StrictKernelPolicyGUID.HasValue) UserConfiguration.StrictKernelPolicyGUID = StrictKernelPolicyGUID;
-		if (LastUpdateCheck.HasValue) UserConfiguration.LastUpdateCheck = LastUpdateCheck;
 		if (AutoUpdateCheck.HasValue) UserConfiguration.AutoUpdateCheck = AutoUpdateCheck;
 
 		if (SignedPolicyStage1RemovalTimes is not null)
@@ -195,21 +172,17 @@ internal sealed partial class UserConfiguration(
 	/// </summary>
 	/// <param name="SignedPolicyPath"></param>
 	/// <param name="UnsignedPolicyPath"></param>
-	/// <param name="SignToolCustomPath"></param>
 	/// <param name="CertificateCommonName"></param>
 	/// <param name="CertificatePath"></param>
 	/// <param name="StrictKernelPolicyGUID"></param>
-	/// <param name="LastUpdateCheck"></param>
 	/// <param name="AutoUpdateCheck"></param>
 	/// <param name="SignedPolicyStage1RemovalTimes"></param>
 	internal static void Remove(
 	bool SignedPolicyPath = false,
 	bool UnsignedPolicyPath = false,
-	bool SignToolCustomPath = false,
 	bool CertificateCommonName = false,
 	bool CertificatePath = false,
 	bool StrictKernelPolicyGUID = false,
-	bool LastUpdateCheck = false,
 	bool AutoUpdateCheck = false,
 	bool SignedPolicyStage1RemovalTimes = false
 	)
@@ -220,11 +193,9 @@ internal sealed partial class UserConfiguration(
 		// Remove properties by setting them to null based on the specified flags
 		if (SignedPolicyPath) currentConfig.SignedPolicyPath = null;
 		if (UnsignedPolicyPath) currentConfig.UnsignedPolicyPath = null;
-		if (SignToolCustomPath) currentConfig.SignToolCustomPath = null;
 		if (CertificateCommonName) currentConfig.CertificateCommonName = null;
 		if (CertificatePath) currentConfig.CertificatePath = null;
 		if (StrictKernelPolicyGUID) currentConfig.StrictKernelPolicyGUID = null;
-		if (LastUpdateCheck) currentConfig.LastUpdateCheck = null;
 		if (AutoUpdateCheck) currentConfig.AutoUpdateCheck = null;
 		if (SignedPolicyStage1RemovalTimes) currentConfig.SignedPolicyStage1RemovalTimes = null;
 
@@ -266,7 +237,7 @@ internal sealed partial class UserConfiguration(
 				ex.Message));
 
 			// Create a new configuration with default values and write it to the file
-			UserConfiguration defaultConfig = new(null, null, null, null, null, null, null, null, null);
+			UserConfiguration defaultConfig = new(null, null, null, null, null, null, null);
 			WriteUserConfiguration(defaultConfig);
 
 			return defaultConfig;
@@ -286,11 +257,9 @@ internal sealed partial class UserConfiguration(
 		return new UserConfiguration(
 			TryGetStringProperty(root, nameof(SignedPolicyPath)),
 			TryGetStringProperty(root, nameof(UnsignedPolicyPath)),
-			TryGetStringProperty(root, nameof(SignToolCustomPath)),
 			TryGetStringProperty(root, nameof(CertificateCommonName)),
 			TryGetStringProperty(root, nameof(CertificatePath)),
 			TryGetGuidProperty(root, nameof(StrictKernelPolicyGUID)),
-			TryGetDateTimeProperty(root, nameof(LastUpdateCheck)),
 			TryGetBoolProperty(root, nameof(AutoUpdateCheck)),
 			TryGetKeyValuePairsProperty(root, nameof(SignedPolicyStage1RemovalTimes))
 		);
@@ -299,7 +268,7 @@ internal sealed partial class UserConfiguration(
 		{
 			try
 			{
-				return root.TryGetProperty(propertyName, out var propertyValue) ? propertyValue.GetString() : null;
+				return root.TryGetProperty(propertyName, out JsonElement propertyValue) ? propertyValue.GetString() : null;
 			}
 			catch
 			{
@@ -311,19 +280,7 @@ internal sealed partial class UserConfiguration(
 		{
 			try
 			{
-				return root.TryGetProperty(propertyName, out var propertyValue) ? Guid.TryParse(propertyValue.GetString(), out var guid) ? guid : null : null;
-			}
-			catch
-			{
-				return null;
-			}
-		}
-
-		static DateTime? TryGetDateTimeProperty(JsonElement root, string propertyName)
-		{
-			try
-			{
-				return root.TryGetProperty(propertyName, out var propertyValue) ? propertyValue.GetDateTime() : null;
+				return root.TryGetProperty(propertyName, out JsonElement propertyValue) ? Guid.TryParse(propertyValue.GetString(), out Guid guid) ? guid : null : null;
 			}
 			catch
 			{
@@ -335,7 +292,7 @@ internal sealed partial class UserConfiguration(
 		{
 			try
 			{
-				return root.TryGetProperty(propertyName, out var propertyValue) ? propertyValue.GetBoolean() : null;
+				return root.TryGetProperty(propertyName, out JsonElement propertyValue) ? propertyValue.GetBoolean() : null;
 			}
 			catch
 			{
@@ -347,7 +304,7 @@ internal sealed partial class UserConfiguration(
 		{
 			try
 			{
-				return root.TryGetProperty(propertyName, out var propertyValue) && propertyValue.ValueKind == JsonValueKind.Object
+				return root.TryGetProperty(propertyName, out JsonElement propertyValue) && propertyValue.ValueKind == JsonValueKind.Object
 					? propertyValue.EnumerateObject().ToDictionary(e => e.Name, e => e.Value.GetDateTime().ToUniversalTime())
 					: null;
 			}

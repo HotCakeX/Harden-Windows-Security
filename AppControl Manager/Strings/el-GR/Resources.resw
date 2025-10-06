@@ -2555,9 +2555,6 @@
   <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
     <value>Διαδρομή Μη Υπογεγραμμένης Πολιτικής:</value>
   </data>
-  <data name="SignToolCustomPathTextBox.Header" xml:space="preserve">
-    <value>Προσαρμοσμένη Διαδρομή Εργαλείου Υπογραφής:</value>
-  </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>Κοινό Όνομα Πιστοποιητικού:</value>
   </data>
@@ -2925,18 +2922,6 @@
   </data>
   <data name="CertificateCommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Το Κοινό Όνομα (CN) του πιστοποιητικού που θα χρησιμοποιηθεί κατά τη λειτουργία υπογραφής.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Header" xml:space="preserve">
-    <value>Διαδρομή SignTool</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Description" xml:space="preserve">
-    <value>Χρησιμοποιείται για την υπογραφή του αρχείου CIP της πολιτικής</value>
-  </data>
-  <data name="SignToolPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Η διαδρομή προς το SignTool.exe που θα χρησιμοποιηθεί κατά τη λειτουργία υπογραφής για την υπογραφή του δυαδικού αρχείου CIP.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Η διαδρομή προς το SignTool.exe που θα χρησιμοποιηθεί κατά τη λειτουργία υπογραφής για την υπογραφή του δυαδικού αρχείου CIP.</value>
   </data>
   <data name="CreationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Δημιουργία</value>
@@ -3682,9 +3667,6 @@
   <data name="VerifyButtonText" xml:space="preserve">
     <value>Επαλήθευση</value>
   </data>
-  <data name="DownloadingSignToolButtonText" xml:space="preserve">
-    <value>Λήψη του SignTool</value>
-  </data>
   <data name="VerificationSuccessfulText" xml:space="preserve">
     <value>Η επαλήθευση ήταν επιτυχής</value>
   </data>
@@ -3708,15 +3690,6 @@
   </data>
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>Το επιλεγμένο αρχείο πιστοποιητικού και το κοινό όνομα δεν ταιριάζουν.</value>
-  </data>
-  <data name="PleaseSelectSignToolPathOrEnableAutoAcquireMessage" xml:space="preserve">
-    <value>Παρακαλώ επιλέξτε τη διαδρομή προς το SignTool.exe ή ενεργοποιήστε την επιλογή αυτόματης λήψης.</value>
-  </data>
-  <data name="SignToolNotExistMessage" xml:space="preserve">
-    <value>Το SignTool.exe δεν υπάρχει στη διαδρομή που επιλέξατε. Μπορείτε να ενεργοποιήσετε την επιλογή αυτόματης λήψης εάν δεν το έχετε.</value>
-  </data>
-  <data name="SignToolExtensionInvalidMessage" xml:space="preserve">
-    <value>Η διαδρομή του SignTool πρέπει να τελειώνει με (.exe). Μπορείτε να ενεργοποιήσετε την επιλογή αυτόματης λήψης εάν δεν το έχετε.</value>
   </data>
   <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
     <value>Παρακαλώ επιλέξτε το αρχείο πολιτικής XML που αφαιρείται.</value>
@@ -4107,48 +4080,6 @@
   </data>
   <data name="RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage" xml:space="preserve">
     <value>Αφαίρεση των μπλοκ SupplementalPolicySigners και των αντίστοιχων Signers.</value>
-  </data>
-  <data name="SigningCodeIntegrityPolicyFileMessage" xml:space="preserve">
-    <value>Υπογραφή {0}</value>
-  </data>
-  <data name="SignToolFailedWithExitCodeErrorMessage" xml:space="preserve">
-    <value>Το SignTool απέτυχε με κωδικό εξόδου {0}. Σφάλμα: {1}</value>
-  </data>
-  <data name="FindingLatestVersionOfBuildToolsPackageMessage" xml:space="preserve">
-    <value>Αναζήτηση της πιο πρόσφατης έκδοσης του πακέτου microsoft.windows.sdk.buildtools από το NuGet</value>
-  </data>
-  <data name="DownloadingLatestNuPkgVersionMessage" xml:space="preserve">
-    <value>Λήψη της πιο πρόσφατης έκδοσης αρχείου .nupkg '{0}' από το ακόλουθο URL: {1}</value>
-  </data>
-  <data name="DownloadedNuPkgToMessage" xml:space="preserve">
-    <value>Το πακέτο λήφθηκε στο {0}</value>
-  </data>
-  <data name="ExtractedPackageToMessage" xml:space="preserve">
-    <value>Το πακέτο εξήχθη στο {0}</value>
-  </data>
-  <data name="PathToSignToolMessage" xml:space="preserve">
-    <value>Διαδρομή προς signtool.exe: {0}</value>
-  </data>
-  <data name="SignToolPathNotProvidedByParameterMessage" xml:space="preserve">
-    <value>Η διαδρομή του SignTool.exe δεν παρέχεται ως παράμετρος, προσπάθεια αυτόματης ανίχνευσης</value>
-  </data>
-  <data name="SuccessfullyDetectedSignToolOnSystemMessage" xml:space="preserve">
-    <value>Επιτυχής ανίχνευση του SignTool.exe στο σύστημα: {0}</value>
-  </data>
-  <data name="FailedToDetectSignToolPathAutomaticallyMessage" xml:space="preserve">
-    <value>Αποτυχία αυτόματης ανίχνευσης διαδρομής SignTool.exe: {0}</value>
-  </data>
-  <data name="SignToolPathProvidedByParameterMessage" xml:space="preserve">
-    <value>Η διαδρομή του SignTool.exe παρέχεται ως παράμετρος</value>
-  </data>
-  <data name="ProvidedSignToolIsValidMessage" xml:space="preserve">
-    <value>Το παρεχόμενο SignTool.exe είναι έγκυρο</value>
-  </data>
-  <data name="ProvidedSignToolIsNotValidMessage" xml:space="preserve">
-    <value>Το παρεχόμενο SignTool.exe δεν είναι έγκυρο</value>
-  </data>
-  <data name="SettingSignToolPathInUserConfigMessage" xml:space="preserve">
-    <value>Ορισμός διαδρομής SignTool στις κοινές ρυθμίσεις χρήστη σε: {0}</value>
   </data>
   <data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
     <value>Δημιουργία προγραμματισμένης εργασίας για Snap Back Guarantee.</value>

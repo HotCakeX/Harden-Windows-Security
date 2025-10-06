@@ -82,23 +82,6 @@
 
                 </controls:SettingsCard>
 
-                <controls:SettingsCard x:Uid="SignToolPathSettingsCard"
-                HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">
-
-                    <controls:WrapPanel VerticalSpacing="10" HorizontalSpacing="10" Orientation="Vertical">
-
-                        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,0,0,5" ToolTipService.ToolTip="Automatically downloads the signtool.exe from Microsoft servers">
-                            <ToggleSwitch x:Uid="ToggleSwitchGeneral" x:Name="AutoAcquireSignTool" Toggled="{x:Bind AutoAcquireSignTool_Toggled}" />
-                            <TextBlock Text="Auto Acquire" Margin="0,8.7,0,0" />
-                        </StackPanel>
-
-                        <Button x:Name="SignToolBrowseButton" Click="{x:Bind SignToolBrowseButton_Click}" HorizontalAlignment="Center" x:Uid="FileBrowseButton"/>
-                        <TextBox MaxWidth="700" x:Name="SignToolPathTextBox" PlaceholderText="SignTool.exe Path" TextWrapping="Wrap"/>
-
-                    </controls:WrapPanel>
-
-                </controls:SettingsCard>
-
                 <controls:SettingsCard Header="XML File"
                     Description="The XML file of the Signed policy that is going to be removed"
                     HeaderIcon="{ui:FontIcon Glyph=&#xEA86;}">

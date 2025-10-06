@@ -407,7 +407,6 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 		string CertCN;
 		string CertPath;
-		string SignToolPath;
 
 		// Instantiate the Content Dialog
 		using SigningDetailsDialog customDialog = new();
@@ -418,7 +417,6 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		// Ensure primary button was selected
 		if (result is ContentDialogResult.Primary)
 		{
-			SignToolPath = customDialog.SignToolPath!;
 			CertPath = customDialog.CertificatePath!;
 			CertCN = customDialog.CertificateCommonName!;
 		}
@@ -465,16 +463,11 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 					string xmlFileName = Path.GetFileName(file);
 					string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
 
-					string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip.p7");
-
 					// Convert the XML file to CIP, overwriting the unsigned one
 					Management.ConvertXMLToBinary(file, null, CIPFilePath);
 
 					// Sign the CIP
-					SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
-
-					// Rename the .p7 signed file to .cip
-					File.Move(CIPp7SignedFilePath, CIPFilePath, true);
+					Signing.Main.SignCIP(CIPFilePath, CertCN);
 
 					// If the SignOnlyNoDeployToggleSwitch is on, don't deploy the policy, only create signed CIP
 					if (SignOnlyNoDeployToggleSwitch)
@@ -505,7 +498,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 							// Sign and deploy the required AppControlManager supplemental policy
 							if (SupplementalForSelf.IsEligible(policyObject, file))
-								SupplementalForSelf.DeploySigned(policyObject.PolicyID, CertPath, SignToolPath, CertCN);
+								SupplementalForSelf.DeploySigned(policyObject.PolicyID, CertPath, CertCN);
 
 							// Deploy the CIP file locally
 							CiToolHelper.UpdatePolicy(CIPFilePath);

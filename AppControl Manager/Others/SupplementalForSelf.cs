@@ -35,22 +35,7 @@ internal static class SupplementalForSelf
 	/// <param name="basePolicyID">Identifies the base policy to which the supplemental policy is associated.</param>
 	internal static void Deploy(string StagingArea, string basePolicyID)
 	{
-		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.AppControlManagerSpecialPolicyPath, null);
-
-		#region Replace the BasePolicyID of the Supplemental Policy and reset its PolicyID which is necessary in order to have more than 1 of these supplemental policies deployed on the system
-
-		policyObj.BasePolicyID = basePolicyID;
-
-		// Generate a new GUID
-		Guid newRandomGUID = Guid.CreateVersion7();
-
-		// Convert it to string
-		string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
-
-		policyObj.PolicyID = newRandomGUIDString;
-
-		#endregion
+		SiPolicy.SiPolicy policyObj = SwapDetails(basePolicyID);
 
 		string savePath = Path.Combine(StagingArea, $"{GlobalVars.AppControlManagerSpecialPolicyName}.xml");
 
@@ -80,13 +65,11 @@ internal static class SupplementalForSelf
 		{
 			Logger.Write(string.Format(GlobalVars.GetStr("LogSupplementalPolicyNotDeployedDeploying"), GlobalVars.AppControlManagerSpecialPolicyName, basePolicyID));
 
-			SiPolicy.Management.ConvertXMLToBinary(savePath, null, cipPath);
+			Management.ConvertXMLToBinary(savePath, null, cipPath);
 
 			CiToolHelper.UpdatePolicy(cipPath);
 		}
-
 	}
-
 
 	/// <summary>
 	/// Signs and Deploys the Supplemental Policy that allows the Application to be allowed to run after deployment
@@ -94,29 +77,13 @@ internal static class SupplementalForSelf
 	/// </summary>
 	/// <param name="basePolicyID">Identifies the base policy to which the supplemental policy is associated.</param>
 	/// <param name="CertPath">Specifies the location of the certificate used for signing the policy.</param>
-	/// <param name="SignToolPath">Indicates the path to the tool used for signing the policy.</param>
 	/// <param name="CertCN">Represents the common name of the certificate for signing purposes.</param>
-	internal static void DeploySigned(string basePolicyID, string CertPath, string SignToolPath, string CertCN)
+	internal static void DeploySigned(string basePolicyID, string CertPath, string CertCN)
 	{
 
 		DirectoryInfo stagingArea = StagingArea.NewStagingArea("SignedSupplementalPolicySpecialDeployment");
 
-		// Instantiate the policy
-		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.AppControlManagerSpecialPolicyPath, null);
-
-		#region Replace the BasePolicyID of the Supplemental Policy and reset its PolicyID which is necessary in order to have more than 1 of these supplemental policies deployed on the system
-
-		policyObj.BasePolicyID = basePolicyID;
-
-		// Generate a new GUID
-		Guid newRandomGUID = Guid.CreateVersion7();
-
-		// Convert it to string
-		string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
-
-		policyObj.PolicyID = newRandomGUIDString;
-
-		#endregion
+		SiPolicy.SiPolicy policyObj = SwapDetails(basePolicyID);
 
 		string savePath = Path.Combine(stagingArea.FullName, $"{GlobalVars.AppControlManagerSpecialPolicyName}.xml");
 
@@ -155,21 +122,15 @@ internal static class SupplementalForSelf
 		string xmlFileName = Path.GetFileName(savePath);
 		string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
 
-		string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip.p7");
-
 		// Convert the XML file to CIP
 		Management.ConvertXMLToBinary(savePath, null, CIPFilePath);
 
 		// Sign the CIP
-		SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
-
-		// Rename the .p7 signed file to .cip
-		File.Move(CIPp7SignedFilePath, CIPFilePath, true);
+		Signing.Main.SignCIP(CIPFilePath, CertCN);
 
 		// Deploy the signed CIP file
 		CiToolHelper.UpdatePolicy(CIPFilePath);
 	}
-
 
 	/// <summary>
 	/// Checks whether an App Control policy is eligible to have the AppControlManager supplemental policy
@@ -197,4 +158,39 @@ internal static class SupplementalForSelf
 
 		return false;
 	}
+
+	private static SiPolicy.SiPolicy SwapDetails(string basePolicyID)
+	{
+		// Instantiate the policy
+		SiPolicy.SiPolicy policyObj = Management.Initialize(GlobalVars.AppControlManagerSpecialPolicyPath, null);
+
+		#region Replace the BasePolicyID of the Supplemental Policy and reset its PolicyID which is necessary in order to have more than 1 of these supplemental policies deployed on the system
+
+		policyObj.BasePolicyID = basePolicyID;
+
+		// Generate a new GUID
+		Guid newRandomGUID = Guid.CreateVersion7();
+
+		// Convert it to string
+		string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
+
+		policyObj.PolicyID = newRandomGUIDString;
+
+		#endregion
+
+		#region Change the PFN
+
+		Allow? appControlAllowRule = (policyObj.FileRules?
+		.OfType<Allow>()
+		.FirstOrDefault(fa => string.Equals(fa.PackageFamilyName, "ToBeDetermined", StringComparison.OrdinalIgnoreCase))) ??
+		throw new InvalidOperationException("Required allow directive absent. Supplemental binding withheld.");
+
+		// Replace the placeholder value in the policy file with the app's real PFN.
+		appControlAllowRule.PackageFamilyName = App.PFN;
+
+		#endregion
+
+		return policyObj;
+	}
+
 }

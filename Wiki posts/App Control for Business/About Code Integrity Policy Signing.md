@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A Code Integrity policy, also known as [Application Control for Business policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction), is a binary file containing the rules that define which applications, files or drivers are allowed to run on the operating system. They can be cryptographically signed which adds extra benefits and protections against temper. [You can find more information about that here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/The-Strength-of-Signed-App-Control-Policies)
+A Code Integrity policy, also known as [Application Control for Business policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction), is a binary file containing the rules that define which applications, files or drivers are allowed to run on the operating system. They can be cryptographically signed which adds extra benefits and protections against tampering. [You can find more information about that here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/The-Strength-of-Signed-App-Control-Policies)
 
 <br>
 

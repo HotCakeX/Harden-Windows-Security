@@ -15,11 +15,13 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AppControlManager.SiPolicyIntel;
+
 namespace AppControlManager.Others;
 
-internal sealed class CertificateSignerCreator(string tbs, string signerName, int siSigningScenario)
+internal sealed class CertificateSignerCreator(string tbs, string signerName, SSType siSigningScenario)
 {
 	internal string TBS => tbs;
 	internal string SignerName => signerName;
-	internal int SiSigningScenario => siSigningScenario;
+	internal SSType SiSigningScenario => siSigningScenario;
 }

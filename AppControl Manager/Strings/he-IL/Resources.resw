@@ -6018,4 +6018,115 @@
   <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>צור את מדיניות חסימת מארחי סקריפטים מסוכנים</value>
   </data>
+    <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>מיטוב הזיכרון</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ניסיון להפחית את השימוש בזיכרון באמצעות איסוף ודחיסה של זיכרון מנוהל שאינו בשימוש (כולל אובייקטים גדולים). מערכת ההפעלה עשויה לשחרר RAM בהדרגה, ולכן ייתכן שהשינויים לא יופיעו מיד. עיין ביומנים לאחר לחיצה על כפתור זה לקבלת פרטים נוספים.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ניסיון להפחית את השימוש בזיכרון באמצעות איסוף ודחיסה של זיכרון מנוהל שאינו בשימוש (כולל אובייקטים גדולים). מערכת ההפעלה עשויה לשחרר RAM בהדרגה, ולכן ייתכן שהשינויים לא יופיעו מיד. עיין ביומנים לאחר לחיצה על כפתור זה לקבלת פרטים נוספים.</value>
+  </data>
+  <data name="HasPrivateKeyHeader.Text" xml:space="preserve">
+    <value>מפתח פרטי קיים</value>
+  </data>
+  <data name="HasPrivateKeyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מפתח פרטי קיים</value>
+  </data>
+  <data name="ArchivedHeader.Text" xml:space="preserve">
+    <value>בארכיון</value>
+  </data>
+  <data name="ArchivedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>בארכיון</value>
+  </data>
+  <data name="CertificatePoliciesHeader.Text" xml:space="preserve">
+    <value>מדיניות תעודות</value>
+  </data>
+  <data name="CertificatePoliciesColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מדיניות תעודות</value>
+  </data>
+  <data name="AuthorityInformationAccessHeader.Text" xml:space="preserve">
+    <value>גישה למידע של הרשות</value>
+  </data>
+  <data name="AuthorityInformationAccessColumnHeaderBtn.Content" xml:space="preserve">
+    <value>גישה למידע של הרשות</value>
+  </data>
+  <data name="CRLDistributionPointsHeader.Text" xml:space="preserve">
+    <value>נקודות הפצה של CRL</value>
+  </data>
+  <data name="CRLDistributionPointsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>נקודות הפצה של CRL</value>
+  </data>
+  <data name="BasicConstraintsHeader.Text" xml:space="preserve">
+    <value>אילוצים בסיסיים</value>
+  </data>
+  <data name="BasicConstraintsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>אילוצים בסיסיים</value>
+  </data>
+  <data name="KeyUsageHeader.Text" xml:space="preserve">
+    <value>שימושי מפתח</value>
+  </data>
+  <data name="KeyUsageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שימושי מפתח</value>
+  </data>
+  <data name="AuthorityKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>מזהה מפתח הרשות</value>
+  </data>
+  <data name="AuthorityKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מזהה מפתח הרשות</value>
+  </data>
+  <data name="SubjectKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>מזהה מפתח הנושא</value>
+  </data>
+  <data name="SubjectKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מזהה מפתח הנושא</value>
+  </data>
+  <data name="RawDataLengthHeader.Text" xml:space="preserve">
+    <value>אורך הנתונים הגולמיים</value>
+  </data>
+  <data name="RawDataLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>אורך הנתונים הגולמיים</value>
+  </data>
+  <data name="PublicKeyLengthHeader.Text" xml:space="preserve">
+    <value>אורך המפתח הציבורי</value>
+  </data>
+  <data name="PublicKeyLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>אורך המפתח הציבורי</value>
+  </data>
+  <data name="CMSDetailsButton.Content" xml:space="preserve">
+    <value>פרטי CMS</value>
+  </data>
+  <data name="CMSDetailsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצג מטא־נתוני חתימה של PKCS #7/CMS (Cryptographic Message Syntax) עבור הקובץ שנבחר.</value>
+  </data>
+  <data name="CMSDetailsButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>הצג מטא־נתוני חתימה של PKCS #7/CMS (Cryptographic Message Syntax) עבור הקובץ שנבחר.</value>
+  </data>
+  <data name="CMSVersion.Text" xml:space="preserve">
+    <value>גרסת CMS:</value>
+  </data>
+  <data name="CMSIsDetached.Text" xml:space="preserve">
+  <value>האם מנותק:</value>
+</data>
+<data name="CMSContentTypeFriendlyName.Text" xml:space="preserve">
+  <value>שם ידידותי של סוג התוכן:</value>
+</data>
+<data name="CMSContentTypeOid.Text" xml:space="preserve">
+  <value>OID של סוג התוכן:</value>
+</data>
+<data name="CMSRawCmsDataLength.Text" xml:space="preserve">
+  <value>אורך נתוני CMS הגולמיים:</value>
+</data>
+<data name="CMSContentInfoDataLength.Text" xml:space="preserve">
+  <value>אורך נתוני מידע התוכן:</value>
+</data>
+  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
+    <value>פתח בעורך המדיניות</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את המדיניות שנבחרה בעורך המדיניות, שבו ניתן לראות סקירה מפורטת של המדיניות ויש אפשרות להתאמה אישית נוספת ישירות בתוך היישום.</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח את המדיניות שנבחרה בעורך המדיניות, שבו ניתן לראות סקירה מפורטת של המדיניות ויש אפשרות להתאמה אישית נוספת ישירות בתוך היישום.</value>
+  </data>
   </root>

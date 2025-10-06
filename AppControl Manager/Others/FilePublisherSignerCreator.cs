@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using AppControlManager.SiPolicyIntel;
 
 namespace AppControlManager.Others;
 
@@ -44,7 +45,7 @@ internal sealed class FilePublisherSignerCreator(
 	string? fileName,
 	string? authenticodeSHA256,
 	string? authenticodeSHA1,
-	int siSigningScenario)
+	SSType siSigningScenario)
 {
 	internal List<CertificateDetailsCreator> CertificateDetails => certificateDetails;
 	internal Version? FileVersion => fileVersion;
@@ -56,6 +57,6 @@ internal sealed class FilePublisherSignerCreator(
 	internal string? FileName => fileName;
 	internal string? AuthenticodeSHA256 => authenticodeSHA256;
 	internal string? AuthenticodeSHA1 => authenticodeSHA1;
-	internal int SiSigningScenario => siSigningScenario;
+	internal SSType SiSigningScenario => siSigningScenario;
 
 }

@@ -83,7 +83,7 @@ internal static class NewPublisherLevelRules
 				// Adding signer to the Signer Scenario and CiSigners
 
 				// For User-Mode files
-				if (publisherData.SiSigningScenario is 1)
+				if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
 					// Create AllowedSigner nodes inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
 					XmlElement newUMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
@@ -98,7 +98,7 @@ internal static class NewPublisherLevelRules
 				}
 
 				// For Kernel-Mode files
-				else if (publisherData.SiSigningScenario is 0)
+				else if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
 					// Create AllowedSigner nodes inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
 					XmlElement newKMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
@@ -175,7 +175,7 @@ internal static class NewPublisherLevelRules
 				// Adding signer to the Signer Scenario and CiSigners
 
 				// For User-Mode files
-				if (publisherData.SiSigningScenario is 1)
+				if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
 					// Create DeniedSigner nodes inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
 					XmlElement newUMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
@@ -190,7 +190,7 @@ internal static class NewPublisherLevelRules
 				}
 
 				// For Kernel-Mode files
-				else if (publisherData.SiSigningScenario is 0)
+				else if (publisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
 					// Create DeniedSigner nodes inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
 					XmlElement newKMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);

@@ -949,4 +949,7 @@
 <data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
     <value>הפעל ביקורת ומעקב אחר פעולות נעילה ופתיחה של מסך הנעילה.</value>
 </data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>אפשר קישוריות רשת במהלך connected-modern-standby (רק כאשר מחובר לחשמל)</value>
+</data>
 </root>

@@ -6017,4 +6017,115 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Crear la política de bloqueo de hosts de scripts peligrosos</value>
   </data>
+    <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>Optimizar memoria</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Intento de reducir el uso de memoria recopilando y compactando memoria administrada no utilizada (incluidos objetos grandes). El sistema operativo puede liberar la RAM gradualmente, por lo que los cambios podrían no mostrarse de inmediato. Revisa los registros después de presionar este botón para más detalles.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Intento de reducir el uso de memoria recopilando y compactando memoria administrada no utilizada (incluidos objetos grandes). El sistema operativo puede liberar la RAM gradualmente, por lo que los cambios podrían no mostrarse de inmediato. Revisa los registros después de presionar este botón para más detalles.</value>
+  </data>
+  <data name="HasPrivateKeyHeader.Text" xml:space="preserve">
+    <value>Tiene clave privada</value>
+  </data>
+  <data name="HasPrivateKeyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Tiene clave privada</value>
+  </data>
+  <data name="ArchivedHeader.Text" xml:space="preserve">
+    <value>Archivado</value>
+  </data>
+  <data name="ArchivedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Archivado</value>
+  </data>
+  <data name="CertificatePoliciesHeader.Text" xml:space="preserve">
+    <value>Políticas de certificados</value>
+  </data>
+  <data name="CertificatePoliciesColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Políticas de certificados</value>
+  </data>
+  <data name="AuthorityInformationAccessHeader.Text" xml:space="preserve">
+    <value>Acceso a la información de la autoridad</value>
+  </data>
+  <data name="AuthorityInformationAccessColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Acceso a la información de la autoridad</value>
+  </data>
+  <data name="CRLDistributionPointsHeader.Text" xml:space="preserve">
+    <value>Puntos de distribución de CRL</value>
+  </data>
+  <data name="CRLDistributionPointsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Puntos de distribución de CRL</value>
+  </data>
+  <data name="BasicConstraintsHeader.Text" xml:space="preserve">
+    <value>Restricciones básicas</value>
+  </data>
+  <data name="BasicConstraintsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Restricciones básicas</value>
+  </data>
+  <data name="KeyUsageHeader.Text" xml:space="preserve">
+    <value>Uso de clave</value>
+  </data>
+  <data name="KeyUsageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Uso de clave</value>
+  </data>
+  <data name="AuthorityKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>Identificador de clave de la autoridad</value>
+  </data>
+  <data name="AuthorityKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Identificador de clave de la autoridad</value>
+  </data>
+  <data name="SubjectKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>Identificador de clave del sujeto</value>
+  </data>
+  <data name="SubjectKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Identificador de clave del sujeto</value>
+  </data>
+  <data name="RawDataLengthHeader.Text" xml:space="preserve">
+    <value>Longitud de datos sin procesar</value>
+  </data>
+  <data name="RawDataLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Longitud de datos sin procesar</value>
+  </data>
+  <data name="PublicKeyLengthHeader.Text" xml:space="preserve">
+    <value>Longitud de la clave pública</value>
+  </data>
+  <data name="PublicKeyLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Longitud de la clave pública</value>
+  </data>
+  <data name="CMSDetailsButton.Content" xml:space="preserve">
+    <value>Detalles de CMS</value>
+  </data>
+  <data name="CMSDetailsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mostrar metadatos de firma PKCS #7/CMS (Cryptographic Message Syntax) para el archivo seleccionado.</value>
+  </data>
+  <data name="CMSDetailsButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Mostrar metadatos de firma PKCS #7/CMS (Cryptographic Message Syntax) para el archivo seleccionado.</value>
+  </data>
+  <data name="CMSVersion.Text" xml:space="preserve">
+    <value>Versión de CMS:</value>
+  </data>
+  <data name="CMSIsDetached.Text" xml:space="preserve">
+  <value>Está desacoplado:</value>
+</data>
+<data name="CMSContentTypeFriendlyName.Text" xml:space="preserve">
+  <value>Nombre descriptivo del tipo de contenido:</value>
+</data>
+<data name="CMSContentTypeOid.Text" xml:space="preserve">
+  <value>OID del tipo de contenido:</value>
+</data>
+<data name="CMSRawCmsDataLength.Text" xml:space="preserve">
+  <value>Longitud de datos CMS sin procesar:</value>
+</data>
+<data name="CMSContentInfoDataLength.Text" xml:space="preserve">
+  <value>Longitud de los datos de información de contenido:</value>
+</data>
+  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
+    <value>Abrir en el Editor de Políticas</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abrir la política seleccionada en el Editor de Políticas, donde puedes ver una vista general detallada de la política y tienes la opción de personalizarla más dentro de esta aplicación.</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abrir la política seleccionada en el Editor de Políticas, donde puedes ver una vista general detallada de la política y tienes la opción de personalizarla más dentro de esta aplicación.</value>
+  </data>
   </root>

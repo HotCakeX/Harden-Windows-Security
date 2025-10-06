@@ -6017,4 +6017,115 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Create the Dangerous Script Hosts Blocking Policy</value>
   </data>
+  <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>Optimize Memory</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Attempt to reduce memory usage by collecting and compacting unused managed memory (including large objects). The OS may release RAM gradually, so changes might not show immediately. Check Logs after pressing this button for more details.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Attempt to reduce memory usage by collecting and compacting unused managed memory (including large objects). The OS may release RAM gradually, so changes might not show immediately. Check Logs after pressing this button for more details.</value>
+  </data>
+  <data name="HasPrivateKeyHeader.Text" xml:space="preserve">
+    <value>Has Private Key</value>
+  </data>
+  <data name="HasPrivateKeyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Has Private Key</value>
+  </data>
+  <data name="ArchivedHeader.Text" xml:space="preserve">
+    <value>Archived</value>
+  </data>
+  <data name="ArchivedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Archived</value>
+  </data>
+  <data name="CertificatePoliciesHeader.Text" xml:space="preserve">
+    <value>Certificate Policies</value>
+  </data>
+  <data name="CertificatePoliciesColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Certificate Policies</value>
+  </data>
+  <data name="AuthorityInformationAccessHeader.Text" xml:space="preserve">
+    <value>Authority Information Access</value>
+  </data>
+  <data name="AuthorityInformationAccessColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Authority Information Access</value>
+  </data>
+  <data name="CRLDistributionPointsHeader.Text" xml:space="preserve">
+    <value>CRL Distribution Points</value>
+  </data>
+  <data name="CRLDistributionPointsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>CRL Distribution Points</value>
+  </data>
+  <data name="BasicConstraintsHeader.Text" xml:space="preserve">
+    <value>Basic Constraints</value>
+  </data>
+  <data name="BasicConstraintsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Basic Constraints</value>
+  </data>
+  <data name="KeyUsageHeader.Text" xml:space="preserve">
+    <value>Key Usage</value>
+  </data>
+  <data name="KeyUsageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Key Usage</value>
+  </data>
+  <data name="AuthorityKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>Authority Key Identifier</value>
+  </data>
+  <data name="AuthorityKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Authority Key Identifier</value>
+  </data>
+  <data name="SubjectKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>Subject Key Identifier</value>
+  </data>
+  <data name="SubjectKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Subject Key Identifier</value>
+  </data>
+  <data name="RawDataLengthHeader.Text" xml:space="preserve">
+    <value>Raw Data Length</value>
+  </data>
+  <data name="RawDataLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Raw Data Length</value>
+  </data>
+  <data name="PublicKeyLengthHeader.Text" xml:space="preserve">
+    <value>Public Key Length</value>
+  </data>
+  <data name="PublicKeyLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Public Key Length</value>
+  </data>
+  <data name="CMSDetailsButton.Content" xml:space="preserve">
+    <value>CMS Details</value>
+  </data>
+  <data name="CMSDetailsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Show PKCS #7/CMS (Cryptographic Message Syntax) signature metadata for the selected file.</value>
+  </data>
+  <data name="CMSDetailsButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Show PKCS #7/CMS (Cryptographic Message Syntax) signature metadata for the selected file.</value>
+  </data>
+  <data name="CMSVersion.Text" xml:space="preserve">
+    <value>CMS Version:</value>
+  </data>
+  <data name="CMSIsDetached.Text" xml:space="preserve">
+  <value>Is Detached:</value>
+</data>
+<data name="CMSContentTypeFriendlyName.Text" xml:space="preserve">
+  <value>Content Type Friendly Name:</value>
+</data>
+<data name="CMSContentTypeOid.Text" xml:space="preserve">
+  <value>Content Type OID:</value>
+</data>
+<data name="CMSRawCmsDataLength.Text" xml:space="preserve">
+  <value>Raw CMS Data Length:</value>
+</data>
+<data name="CMSContentInfoDataLength.Text" xml:space="preserve">
+  <value>Content Info Data Length:</value>
+</data>
+  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
+    <value>Open In The Policy Editor</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the selected policy in the Policy Editor where you can see detailed overview of the policy and have the option to customize it further right inside of this app.</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the selected policy in the Policy Editor where you can see detailed overview of the policy and have the option to customize it further right inside of this app.</value>
+  </data>
 </root>

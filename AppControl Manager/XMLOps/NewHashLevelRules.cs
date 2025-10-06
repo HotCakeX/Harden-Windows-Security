@@ -71,7 +71,7 @@ internal static class NewHashLevelRules
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth1HashNode);
 
 			// For User-Mode files
-			if (hash.SiSigningScenario is 1)
+			if (hash.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
 				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
 				XmlElement NewUMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
@@ -85,7 +85,7 @@ internal static class NewHashLevelRules
 			}
 
 			// For Kernel-Mode files
-			else if (hash.SiSigningScenario is 0)
+			else if (hash.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 			{
 
 				// Display a warning if a hash rule for a kernel-mode file is being created and the file is not an MSI
@@ -159,7 +159,7 @@ internal static class NewHashLevelRules
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newAuth1HashNode);
 
 			// For User-Mode files
-			if (hash.SiSigningScenario == 1)
+			if (hash.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
 				// Create FileRuleRef for Authenticode SHA256 Hash inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
 				XmlElement NewUMCIFileRuleRefNodeFor256 = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
@@ -173,7 +173,7 @@ internal static class NewHashLevelRules
 			}
 
 			// For Kernel-Mode files
-			else if (hash.SiSigningScenario == 0)
+			else if (hash.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 			{
 
 				// Display a warning if a hash rule for a kernel-mode file is being created and the file is not an MSI

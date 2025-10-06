@@ -3709,4 +3709,27 @@
   <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
     <value>എല്ലാ സുരക്ഷാ നടപടികളും വിജയകരമായി സ്ഥിരീകരിച്ചു.</value>
   </data>
+    <data name="ProtectSubCategory_TLS_ForBattleNet" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Battle.net ഗെയിം ക്ലയന്റിന്റെ ഇന്റർനെറ്റ് കണക്റ്റിവിറ്റിക്കായി ആവശ്യമായ അസുരക്ഷിതമായ Cipher Suite സജീവമായി നിലനിർത്തുക.</value>
+  </data>
+  <data name="TLSSecurity_TLS_ForBattleNet" xml:space="preserve">
+    <value>നിങ്ങൾ യഥാർത്ഥത്തിൽ Battle.net ഗെയിം ക്ലയന്റ് ഉപയോഗിക്കുന്നുവെങ്കിൽ മാത്രമേ ഇത് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="ProtectSubCategory_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>OS ലെ ടെലിമെട്രി കുറയ്ക്കുന്ന നയങ്ങൾ പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <value>ചില OS സവിശേഷതകൾ ലഭ്യമാകില്ല.</value>
+  </data>
+  <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>മെമ്മറി ഓപ്റ്റിമൈസ് ചെയ്യുക</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഉപയോഗത്തിലില്ലാത്ത മാനേജുചെയ്യുന്ന മെമ്മറി (വലുതായ ഒബ്ജക്റ്റുകൾ ഉൾപ്പെടെ) ശേഖരിച്ചു കമ്പാക്റ്റ് ചെയ്ത് മെമ്മറി ഉപയോഗം കുറയ്ക്കാനുള്ള ശ്രമം. ഓ.എസ്. RAM ക്രമേണ റിലീസ് ചെയ്യാൻ സാധ്യതയുണ്ട്, അതിനാൽ മാറ്റങ്ങൾ ഉടൻ പ്രകടമാകണമെന്നില്ല. കൂടുതൽ വിവരങ്ങൾക്ക് ഈ ബട്ടൺ അമർത്തിയതിന് ശേഷം ലോഗുകൾ പരിശോധിക്കുക.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഉപയോഗത്തിലില്ലാത്ത മാനേജുചെയ്യുന്ന മെമ്മറി (വലുതായ ഒബ്ജക്റ്റുകൾ ഉൾപ്പെടെ) ശേഖരിച്ചു കമ്പാക്റ്റ് ചെയ്ത് മെമ്മറി ഉപയോഗം കുറയ്ക്കാനുള്ള ശ്രമം. ഓ.എസ്. RAM ക്രമേണ റിലീസ് ചെയ്യാൻ സാധ്യതയുണ്ട്, അതിനാൽ മാറ്റങ്ങൾ ഉടൻ പ്രകടമാകണമെന്നില്ല. കൂടുതൽ വിവരങ്ങൾക്ക് ഈ ബട്ടൺ അമർത്തിയതിന് ശേഷം ലോഗുകൾ പരിശോധിക്കുക.</value>
+  </data>
 </root>

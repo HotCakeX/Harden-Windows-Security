@@ -215,7 +215,7 @@ internal static class GetEventLogsData
 					SHA1FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Flat Hash']"),
 					SHA256FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Flat Hash']"),
 					USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
-					SISigningScenario = GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SI Signing Scenario']") ?? 1,
+					SISigningScenario = (SiPolicyIntel.SSType)(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SI Signing Scenario']") ?? 1),
 					PolicyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyName']"),
 					PolicyID = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyID']"),
 					PolicyHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyHash']"),
@@ -402,7 +402,7 @@ internal static class GetEventLogsData
 					SHA1FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Flat Hash']"),
 					SHA256FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Flat Hash']"),
 					USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
-					SISigningScenario = GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SI Signing Scenario']") ?? 1,
+					SISigningScenario = (SiPolicyIntel.SSType)(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SI Signing Scenario']") ?? 1),
 					PolicyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyName']"),
 					PolicyID = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyID']"),
 					PolicyHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyHash']"),
@@ -666,7 +666,7 @@ internal static class GetEventLogsData
 					SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Sha1Hash']"),
 					SHA256Hash = SHA256Hash,
 					USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
-					SISigningScenario = 1, // AppLocker doesn't apply to Kernel mode files, so all of these logs have Signing Scenario 1 for User-Mode files
+					SISigningScenario = SiPolicyIntel.SSType.UserMode, // AppLocker doesn't apply to Kernel mode files, so all of these logs have User-Mode Signing Scenario
 					OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFilename']"),
 					InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
 					FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
@@ -823,7 +823,7 @@ internal static class GetEventLogsData
 					SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Sha1Hash']"),
 					SHA256Hash = SHA256Hash,
 					USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
-					SISigningScenario = 1, // AppLocker doesn't apply to Kernel mode files, so all of these logs have Signing Scenario 1 for User-Mode files
+					SISigningScenario = SiPolicyIntel.SSType.UserMode, // AppLocker doesn't apply to Kernel mode files, so all of these logs have User-Mode Signing Scenario
 					OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFilename']"),
 					InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
 					FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),

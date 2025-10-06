@@ -827,7 +827,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					certificateResults.Add(new CertificateSignerCreator(
 					   CertificateHelper.GetTBSCertificate(CertObject),
 						CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
-						signingScenario ? 1 : 0 // By default it's set to User-Mode in XAML/UI
+						signingScenario ? SiPolicyIntel.SSType.UserMode : SiPolicyIntel.SSType.KernelMode // By default it's set to User-Mode in XAML/UI
 					));
 				}
 
@@ -1341,12 +1341,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					DateTime lastRebootTime = DateTime.Now - TimeSpan.FromMilliseconds(Environment.TickCount64);
 
 					// Signed kernel-mode files that were run after last reboot
-					Output = [.. Output.Where(fileIdentity => fileIdentity.TimeCreated >= lastRebootTime && fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned)];
+					Output = [.. Output.Where(fileIdentity => fileIdentity.TimeCreated >= lastRebootTime && fileIdentity.SISigningScenario is SiPolicyIntel.SSType.KernelMode && fileIdentity.SignatureStatus is SignatureStatus.IsSigned)];
 				}
 				else
 				{
 					// Signed kernel-mode files
-					Output = [.. Output.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned)];
+					Output = [.. Output.Where(fileIdentity => fileIdentity.SISigningScenario is SiPolicyIntel.SSType.KernelMode && fileIdentity.SignatureStatus is SignatureStatus.IsSigned)];
 				}
 			});
 
@@ -1601,7 +1601,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					DriverAutoDetectionProgressRingValueProgress);
 
 				// Only keep the signed kernel-mode files
-				LocalFilesResults = LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is 0 && fileIdentity.SignatureStatus is SignatureStatus.IsSigned);
+				LocalFilesResults = LocalFilesResults.Where(fileIdentity => fileIdentity.SISigningScenario is SiPolicyIntel.SSType.KernelMode && fileIdentity.SignatureStatus is SignatureStatus.IsSigned);
 
 				StrictKernelModeScanResultsList.Clear();
 

@@ -15,13 +15,15 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AppControlManager.SiPolicyIntel;
+
 namespace AppControlManager.Others;
 
-internal sealed class HashCreator(string authenticodeSHA256, string authenticodeSHA1, string filePath, string? fileName, int siSigningScenario)
+internal sealed class HashCreator(string authenticodeSHA256, string authenticodeSHA1, string filePath, string? fileName, SSType siSigningScenario)
 {
 	internal string AuthenticodeSHA256 => authenticodeSHA256;
 	internal string AuthenticodeSHA1 => authenticodeSHA1;
 	internal string FilePath => filePath;
 	internal string? FileName => fileName;
-	internal int SiSigningScenario => siSigningScenario;
+	internal SSType SiSigningScenario => siSigningScenario;
 }

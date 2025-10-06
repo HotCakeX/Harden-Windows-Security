@@ -3709,7 +3709,6 @@ Thumbprint: {3}</value>
   <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
     <value>Successfully verified all of the security measures.</value>
   </data>
-  <!--NEW-->
   <data name="ProtectSubCategory_TLS_ForBattleNet" xml:space="preserve">
     <comment>Protection Sub-Category</comment>
     <value>Keep an insecure Cipher Suite required for Battle.net game client Internet connectivity enabled.</value>
@@ -3723,5 +3722,14 @@ Thumbprint: {3}</value>
   </data>
   <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
     <value>Some OS features will become unavailable.</value>
+  </data>
+  <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>Optimize Memory</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Attempt to reduce memory usage by collecting and compacting unused managed memory (including large objects). The OS may release RAM gradually, so changes might not show immediately. Check Logs after pressing this button for more details.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Attempt to reduce memory usage by collecting and compacting unused managed memory (including large objects). The OS may release RAM gradually, so changes might not show immediately. Check Logs after pressing this button for more details.</value>
   </data>
 </root>

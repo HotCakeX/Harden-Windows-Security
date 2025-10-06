@@ -949,4 +949,7 @@
 <data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
     <value>مكّن التدقيق وتتبع عمليات قفل وفتح شاشة القفل.</value>
 </data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>السماح باتصال الشبكة أثناء connected-modern-standby (فقط عند التوصيل بالطاقة)</value>
+</data>
 </root>

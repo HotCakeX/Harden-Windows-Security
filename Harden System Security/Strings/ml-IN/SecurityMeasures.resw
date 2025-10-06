@@ -949,4 +949,7 @@
 <data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
     <value>Lock Screen ലോക്കുകളും അൺലോക്കുകളും ഓഡിറ്റും ട്രാക്കിംഗും സജീവമാക്കുക.</value>
 </data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>connected-modern-standby സമയത്ത് നെറ്റ്‌വർക്ക് കണക്റ്റിവിറ്റി അനുവദിക്കുക (പ്ലഗ് ഇൻ ചെയ്തിരിക്കുന്നപ്പോൾ മാത്രം)</value>
+</data>
 </root>

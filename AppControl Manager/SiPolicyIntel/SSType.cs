@@ -18,10 +18,10 @@
 namespace AppControlManager.SiPolicyIntel;
 
 /// <summary>
-/// Defines the signing Scenario the SiPolicy elements belong to
+/// Defines the signing Scenario the SiPolicy elements belong to and for all App Control policies.
 /// </summary>
-internal enum SSType
+internal enum SSType : int
 {
-	UserMode,
-	KernelMode
+	KernelMode = 0,
+	UserMode = 1
 }

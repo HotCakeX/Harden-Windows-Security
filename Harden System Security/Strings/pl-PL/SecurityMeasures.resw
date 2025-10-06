@@ -949,4 +949,7 @@
 <data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
     <value>Włącz inspekcję i śledzenie blokowania oraz odblokowywania ekranu blokady.</value>
 </data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>Zezwól na łączność sieciową podczas connected-modern-standby (tylko po podłączeniu do zasilania)</value>
+</data>
 </root>

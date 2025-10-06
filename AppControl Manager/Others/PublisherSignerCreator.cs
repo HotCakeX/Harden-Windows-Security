@@ -32,11 +32,11 @@ internal sealed class PublisherSignerCreator(
 	string? fileName,
 	string? authenticodeSHA256,
 	string? authenticodeSHA1,
-	int siSigningScenario)
+	SiPolicyIntel.SSType siSigningScenario)
 {
 	internal List<CertificateDetailsCreator> CertificateDetails => certificateDetails;
 	internal string? FileName => fileName;
 	internal string? AuthenticodeSHA256 => authenticodeSHA256;
 	internal string? AuthenticodeSHA1 => authenticodeSHA1;
-	internal int SiSigningScenario => siSigningScenario;
+	internal SiPolicyIntel.SSType SiSigningScenario => siSigningScenario;
 }

@@ -66,7 +66,7 @@ internal static class NewCertificateSignerRules
 
 
 			// For User-Mode files
-			if (signer.SiSigningScenario is 1)
+			if (signer.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
 				// Create Allowed Signers inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
 				XmlElement newAllowedSigner = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
@@ -81,7 +81,7 @@ internal static class NewCertificateSignerRules
 			}
 
 			// For Kernel-Mode files
-			else if (signer.SiSigningScenario is 0)
+			else if (signer.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 			{
 				// Create Allowed Signers inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
 				XmlElement newAllowedSigner = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);

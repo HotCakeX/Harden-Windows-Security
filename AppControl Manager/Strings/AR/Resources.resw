@@ -6017,4 +6017,115 @@
   <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>إنشاء سياسة حظر مضيفات البرامج النصية الخطيرة</value>
   </data>
+    <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>تحسين الذاكرة</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>محاولة تقليل استهلاك الذاكرة عبر جمع الذاكرة المُدارة غير المستخدمة وضغطها (بما في ذلك الكائنات الكبيرة). قد يقوم نظام التشغيل بإطلاق ذاكرة RAM تدريجياً، لذا قد لا تظهر التغييرات مباشرة. راجع السجلات بعد الضغط على هذا الزر لمزيد من التفاصيل.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>محاولة تقليل استهلاك الذاكرة عبر جمع الذاكرة المُدارة غير المستخدمة وضغطها (بما في ذلك الكائنات الكبيرة). قد يقوم نظام التشغيل بإطلاق ذاكرة RAM تدريجياً، لذا قد لا تظهر التغييرات مباشرة. راجع السجلات بعد الضغط على هذا الزر لمزيد من التفاصيل.</value>
+  </data>
+  <data name="HasPrivateKeyHeader.Text" xml:space="preserve">
+    <value>يوجد مفتاح خاص</value>
+  </data>
+  <data name="HasPrivateKeyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>يوجد مفتاح خاص</value>
+  </data>
+  <data name="ArchivedHeader.Text" xml:space="preserve">
+    <value>مؤرشف</value>
+  </data>
+  <data name="ArchivedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>مؤرشف</value>
+  </data>
+  <data name="CertificatePoliciesHeader.Text" xml:space="preserve">
+    <value>سياسات الشهادات</value>
+  </data>
+  <data name="CertificatePoliciesColumnHeaderBtn.Content" xml:space="preserve">
+    <value>سياسات الشهادات</value>
+  </data>
+  <data name="AuthorityInformationAccessHeader.Text" xml:space="preserve">
+    <value>الوصول إلى معلومات الجهة المصدِّرة</value>
+  </data>
+  <data name="AuthorityInformationAccessColumnHeaderBtn.Content" xml:space="preserve">
+    <value>الوصول إلى معلومات الجهة المصدِّرة</value>
+  </data>
+  <data name="CRLDistributionPointsHeader.Text" xml:space="preserve">
+    <value>نقاط توزيع CRL</value>
+  </data>
+  <data name="CRLDistributionPointsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>نقاط توزيع CRL</value>
+  </data>
+  <data name="BasicConstraintsHeader.Text" xml:space="preserve">
+    <value>القيود الأساسية</value>
+  </data>
+  <data name="BasicConstraintsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>القيود الأساسية</value>
+  </data>
+  <data name="KeyUsageHeader.Text" xml:space="preserve">
+    <value>استخدامات المفتاح</value>
+  </data>
+  <data name="KeyUsageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>استخدامات المفتاح</value>
+  </data>
+  <data name="AuthorityKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>معرّف مفتاح الجهة المصدِّرة</value>
+  </data>
+  <data name="AuthorityKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>معرّف مفتاح الجهة المصدِّرة</value>
+  </data>
+  <data name="SubjectKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>معرّف مفتاح الموضوع</value>
+  </data>
+  <data name="SubjectKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>معرّف مفتاح الموضوع</value>
+  </data>
+  <data name="RawDataLengthHeader.Text" xml:space="preserve">
+    <value>طول البيانات الخام</value>
+  </data>
+  <data name="RawDataLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>طول البيانات الخام</value>
+  </data>
+  <data name="PublicKeyLengthHeader.Text" xml:space="preserve">
+    <value>طول المفتاح العمومي</value>
+  </data>
+  <data name="PublicKeyLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>طول المفتاح العمومي</value>
+  </data>
+  <data name="CMSDetailsButton.Content" xml:space="preserve">
+    <value>تفاصيل CMS</value>
+  </data>
+  <data name="CMSDetailsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>عرض بيانات وصف توقيع PKCS #7/CMS (صياغة الرسائل المشفّرة) للملف المحدد.</value>
+  </data>
+  <data name="CMSDetailsButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>عرض بيانات وصف توقيع PKCS #7/CMS (صياغة الرسائل المشفّرة) للملف المحدد.</value>
+  </data>
+  <data name="CMSVersion.Text" xml:space="preserve">
+    <value>إصدار CMS:</value>
+  </data>
+  <data name="CMSIsDetached.Text" xml:space="preserve">
+  <value>هل هو منفصل:</value>
+</data>
+<data name="CMSContentTypeFriendlyName.Text" xml:space="preserve">
+  <value>الاسم المألوف لنوع المحتوى:</value>
+</data>
+<data name="CMSContentTypeOid.Text" xml:space="preserve">
+  <value>معرّف الكائن (OID) لنوع المحتوى:</value>
+</data>
+<data name="CMSRawCmsDataLength.Text" xml:space="preserve">
+  <value>طول بيانات CMS الخام:</value>
+</data>
+<data name="CMSContentInfoDataLength.Text" xml:space="preserve">
+  <value>طول بيانات معلومات المحتوى:</value>
+</data>
+  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
+    <value>فتح في محرر السياسات</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>افتح السياسة المحددة في محرر السياسات حيث يمكنك الاطلاع على نظرة عامة مفصلة على السياسة ولديك خيار تخصيصها بشكل إضافي داخل هذا التطبيق.</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>افتح السياسة المحددة في محرر السياسات حيث يمكنك الاطلاع على نظرة عامة مفصلة على السياسة ولديك خيار تخصيصها بشكل إضافي داخل هذا التطبيق.</value>
+  </data>
   </root>

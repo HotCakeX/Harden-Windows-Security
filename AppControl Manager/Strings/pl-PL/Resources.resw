@@ -6017,4 +6017,115 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Utwórz zasady blokowania niebezpiecznych hostów skryptów</value>
   </data>
+    <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>Optymalizuj pamięć</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Próba zmniejszenia użycia pamięci poprzez zebranie i skompaktowanie nieużywanej pamięci zarządzanej (w tym dużych obiektów). System operacyjny może zwalniać pamięć RAM stopniowo, dlatego zmiany mogą nie być widoczne od razu. Sprawdź dzienniki po naciśnięciu tego przycisku, aby uzyskać więcej szczegółów.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Próba zmniejszenia użycia pamięci poprzez zebranie i skompaktowanie nieużywanej pamięci zarządzanej (w tym dużych obiektów). System operacyjny może zwalniać pamięć RAM stopniowo, dlatego zmiany mogą nie być widoczne od razu. Sprawdź dzienniki po naciśnięciu tego przycisku, aby uzyskać więcej szczegółów.</value>
+  </data>
+  <data name="HasPrivateKeyHeader.Text" xml:space="preserve">
+    <value>Ma klucz prywatny</value>
+  </data>
+  <data name="HasPrivateKeyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Ma klucz prywatny</value>
+  </data>
+  <data name="ArchivedHeader.Text" xml:space="preserve">
+    <value>Zarchiwizowany</value>
+  </data>
+  <data name="ArchivedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Zarchiwizowany</value>
+  </data>
+  <data name="CertificatePoliciesHeader.Text" xml:space="preserve">
+    <value>Zasady certyfikatów</value>
+  </data>
+  <data name="CertificatePoliciesColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Zasady certyfikatów</value>
+  </data>
+  <data name="AuthorityInformationAccessHeader.Text" xml:space="preserve">
+    <value>Dostęp do informacji urzędu</value>
+  </data>
+  <data name="AuthorityInformationAccessColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Dostęp do informacji urzędu</value>
+  </data>
+  <data name="CRLDistributionPointsHeader.Text" xml:space="preserve">
+    <value>Punkty dystrybucji CRL</value>
+  </data>
+  <data name="CRLDistributionPointsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Punkty dystrybucji CRL</value>
+  </data>
+  <data name="BasicConstraintsHeader.Text" xml:space="preserve">
+    <value>Podstawowe ograniczenia</value>
+  </data>
+  <data name="BasicConstraintsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Podstawowe ograniczenia</value>
+  </data>
+  <data name="KeyUsageHeader.Text" xml:space="preserve">
+    <value>Zastosowanie klucza</value>
+  </data>
+  <data name="KeyUsageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Zastosowanie klucza</value>
+  </data>
+  <data name="AuthorityKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>Identyfikator klucza urzędu</value>
+  </data>
+  <data name="AuthorityKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Identyfikator klucza urzędu</value>
+  </data>
+  <data name="SubjectKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>Identyfikator klucza podmiotu</value>
+  </data>
+  <data name="SubjectKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Identyfikator klucza podmiotu</value>
+  </data>
+  <data name="RawDataLengthHeader.Text" xml:space="preserve">
+    <value>Długość danych surowych</value>
+  </data>
+  <data name="RawDataLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Długość danych surowych</value>
+  </data>
+  <data name="PublicKeyLengthHeader.Text" xml:space="preserve">
+    <value>Długość klucza publicznego</value>
+  </data>
+  <data name="PublicKeyLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Długość klucza publicznego</value>
+  </data>
+  <data name="CMSDetailsButton.Content" xml:space="preserve">
+    <value>Szczegóły CMS</value>
+  </data>
+  <data name="CMSDetailsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pokaż metadane podpisu PKCS #7/CMS (Cryptographic Message Syntax) dla wybranego pliku.</value>
+  </data>
+  <data name="CMSDetailsButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Pokaż metadane podpisu PKCS #7/CMS (Cryptographic Message Syntax) dla wybranego pliku.</value>
+  </data>
+  <data name="CMSVersion.Text" xml:space="preserve">
+    <value>Wersja CMS:</value>
+  </data>
+  <data name="CMSIsDetached.Text" xml:space="preserve">
+  <value>Czy odłączony:</value>
+</data>
+<data name="CMSContentTypeFriendlyName.Text" xml:space="preserve">
+  <value>Przyjazna nazwa typu zawartości:</value>
+</data>
+<data name="CMSContentTypeOid.Text" xml:space="preserve">
+  <value>OID typu zawartości:</value>
+</data>
+<data name="CMSRawCmsDataLength.Text" xml:space="preserve">
+  <value>Długość surowych danych CMS:</value>
+</data>
+<data name="CMSContentInfoDataLength.Text" xml:space="preserve">
+  <value>Długość danych informacji o zawartości:</value>
+</data>
+  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
+    <value>Otwórz w Edytorze Zasad</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz wybraną zasadę w Edytorze Zasad, gdzie możesz zobaczyć szczegółowy przegląd zasad oraz masz możliwość dalszej personalizacji bezpośrednio w tej aplikacji.</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwórz wybraną zasadę w Edytorze Zasad, gdzie możesz zobaczyć szczegółowy przegląd zasad oraz masz możliwość dalszej personalizacji bezpośrednio w tej aplikacji.</value>
+  </data>
   </root>

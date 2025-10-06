@@ -63,7 +63,7 @@ internal static class NewFilePathRules
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileRule);
 
 			// For User-Mode files only as FilePath rules are not applicable to Kernel-Mode drivers
-			if (item.SiSigningScenario is 1)
+			if (item.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
 				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
 				XmlElement NewUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);
@@ -117,7 +117,7 @@ internal static class NewFilePathRules
 			_ = codeIntegrityPolicy.FileRulesNode.AppendChild(newFileRule);
 
 			// For User-Mode files
-			if (item.SiSigningScenario is 1)
+			if (item.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 			{
 				// Create FileRuleRef inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
 				XmlElement NewUMCIFileRuleRefNode = codeIntegrityPolicy.XmlDocument.CreateElement("FileRuleRef", GlobalVars.SiPolicyNamespace);

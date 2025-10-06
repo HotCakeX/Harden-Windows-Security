@@ -35,7 +35,6 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <!-- Rule Name -->
@@ -56,7 +55,7 @@
                                                Visibility="{x:Bind HasURL, Mode=OneWay}"/>
 
                         <!-- State Selection -->
-                        <Grid Grid.Row="2" Margin="0,0,0,12">
+                        <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
@@ -80,15 +79,14 @@
                         </Grid>
 
                         <!-- Apply Button -->
-                        <Grid Grid.Row="3">
+                        <Grid Grid.Row="2">
                             <Button HorizontalAlignment="Right"
                                     Click="{x:Bind ApplyRule}">
                                 <StackPanel Orientation="Horizontal" Spacing="4">
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
                                               Glyph="&#xE73E;"
                                               FontSize="14"/>
-                                    <TextBlock x:Uid="ApplyText"
-                                               FontSize="12"
+                                    <TextBlock x:Uid="ApplyText"                                               
                                                FontWeight="SemiBold"
                                                VerticalAlignment="Center"/>
                                 </StackPanel>
@@ -141,8 +139,7 @@
                             </AnimatedIcon.Source>
                         </AnimatedIcon>
 
-                        <TextBlock x:Uid="ApplyAllButtonText"
-                                   FontSize="12"
+                        <TextBlock x:Uid="ApplyAllButtonText"                                   
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
@@ -159,8 +156,7 @@
                             </AnimatedIcon.Source>
                         </AnimatedIcon>
 
-                        <TextBlock x:Uid="RemoveAllButtonText"
-                                   FontSize="12"
+                        <TextBlock x:Uid="RemoveAllButtonText"                                   
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
@@ -177,8 +173,7 @@
                             </AnimatedIcon.Source>
                         </AnimatedIcon>
 
-                        <TextBlock x:Uid="ApplyRecommendedButtonText"
-                                   FontSize="12"
+                        <TextBlock x:Uid="ApplyRecommendedButtonText"                                   
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
@@ -195,8 +190,7 @@
                             </AnimatedIcon.Source>
                         </AnimatedIcon>
 
-                        <TextBlock x:Uid="RetrieveLatestStatesButton"
-                                   FontSize="12"
+                        <TextBlock x:Uid="RetrieveLatestStatesButton"                                   
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
                     </StackPanel>

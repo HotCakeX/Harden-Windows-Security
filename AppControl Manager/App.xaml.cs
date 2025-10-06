@@ -69,7 +69,7 @@ public partial class App : Application
 	/// <summary>
 	/// Package Family Name of the application
 	/// </summary>
-	private static readonly string PFN = Package.Current.Id.FamilyName;
+	internal static readonly string PFN = Package.Current.Id.FamilyName;
 
 	/// <summary>
 	/// The App User Model ID which is in the format of PackageFamilyName!App
@@ -638,8 +638,12 @@ public partial class App : Application
 		DismServiceClient.TerminateActiveService();
 #endif
 
-		// Stop any active custom border
-		CustomUIElements.AppWindowBorderCustomization.StopAnimatedFrameForAppShutdown();
+		try
+		{
+			// Stop any active custom border
+			CustomUIElements.AppWindowBorderCustomization.StopAnimatedFrameForAppShutdown();
+		}
+		catch { }
 
 		// Clean up the staging area
 		if (IsElevated && Directory.Exists(GlobalVars.StagingArea))
@@ -672,8 +676,12 @@ public partial class App : Application
 			}
 		}
 
-		// Dispose of disposable ViewModels on App exist
-		ViewModelProvider.DisposeCreatedViewModels();
+		try
+		{
+			// Dispose of disposable ViewModels on App exist
+			ViewModelProvider.DisposeCreatedViewModels();
+		}
+		catch { }
 
 		// Release the Mutex
 		_mutex?.Dispose();

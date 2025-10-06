@@ -2555,9 +2555,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
     <value>Ruta de la Directiva Sin Firmar:</value>
   </data>
-  <data name="SignToolCustomPathTextBox.Header" xml:space="preserve">
-    <value>Ruta Personalizada de SignTool:</value>
-  </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>Nombre Común del Certificado:</value>
   </data>
@@ -2925,18 +2922,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   </data>
   <data name="CertificateCommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Nombre Común (CN) del certificado que se utilizará durante la operación de firma.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Header" xml:space="preserve">
-    <value>Ruta de SignTool</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Description" xml:space="preserve">
-    <value>Utilizado para firmar el archivo CIP de la directiva</value>
-  </data>
-  <data name="SignToolPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>La ruta a SignTool.exe que se utilizará durante la operación de firma para firmar el archivo binario CIP.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>La ruta a SignTool.exe que se utilizará durante la operación de firma para firmar el archivo binario CIP.</value>
   </data>
   <data name="CreationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Creación</value>
@@ -3682,9 +3667,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="VerifyButtonText" xml:space="preserve">
     <value>Verificar</value>
   </data>
-  <data name="DownloadingSignToolButtonText" xml:space="preserve">
-    <value>Descargando SignTool</value>
-  </data>
   <data name="VerificationSuccessfulText" xml:space="preserve">
     <value>Verificación Exitosa</value>
   </data>
@@ -3709,16 +3691,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>El archivo de certificado y el nombre común seleccionados no coinciden.</value>
   </data>
-  <data name="PleaseSelectSignToolPathOrEnableAutoAcquireMessage" xml:space="preserve">
-    <value>Por favor, seleccione la ruta a SignTool.exe o habilite la opción de adquisición automática.</value>
-  </data>
-  <data name="SignToolNotExistMessage" xml:space="preserve">
-    <value>SignTool.exe no existe en la ruta seleccionada. Puede habilitar la opción de adquisición automática si no lo tiene.</value>
-  </data>
-  <data name="SignToolExtensionInvalidMessage" xml:space="preserve">
-    <value>La ruta de SignTool debe terminar con (.exe). Puede habilitar la opción de adquisición automática si no lo tiene.</value>
-  </data>
-    <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
+  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
     <value>Por favor, seleccione el archivo de directiva XML de la directiva que se está eliminando.</value>
   </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
@@ -4108,49 +4081,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage" xml:space="preserve">
     <value>Eliminando los bloques SupplementalPolicySigners y los Firmantes correspondientes.</value>
   </data>
-    <data name="SigningCodeIntegrityPolicyFileMessage" xml:space="preserve">
-    <value>Firmando {0}</value>
-  </data>
-  <data name="SignToolFailedWithExitCodeErrorMessage" xml:space="preserve">
-    <value>SignTool falló con el código de salida {0}. Error: {1}</value>
-  </data>
-  <data name="FindingLatestVersionOfBuildToolsPackageMessage" xml:space="preserve">
-    <value>Buscando la última versión del paquete microsoft.windows.sdk.buildtools desde NuGet</value>
-  </data>
-  <data name="DownloadingLatestNuPkgVersionMessage" xml:space="preserve">
-    <value>Descargando la última versión del archivo de paquete .nupkg '{0}' desde la siguiente URL: {1}</value>
-  </data>
-  <data name="DownloadedNuPkgToMessage" xml:space="preserve">
-    <value>Paquete descargado en {0}</value>
-  </data>
-  <data name="ExtractedPackageToMessage" xml:space="preserve">
-    <value>Paquete extraído en {0}</value>
-  </data>
-  <data name="PathToSignToolMessage" xml:space="preserve">
-    <value>Ruta a signtool.exe: {0}</value>
-  </data>
-  <data name="SignToolPathNotProvidedByParameterMessage" xml:space="preserve">
-    <value>La ruta de SignTool.exe no fue proporcionada por parámetro, intentando detectarla automáticamente</value>
-  </data>
-  <data name="SuccessfullyDetectedSignToolOnSystemMessage" xml:space="preserve">
-    <value>Se detectó correctamente SignTool.exe en el sistema: {0}</value>
-  </data>
-  <data name="FailedToDetectSignToolPathAutomaticallyMessage" xml:space="preserve">
-    <value>Error al detectar automáticamente la ruta de SignTool.exe: {0}</value>
-  </data>
-  <data name="SignToolPathProvidedByParameterMessage" xml:space="preserve">
-    <value>La ruta de SignTool.exe fue proporcionada por parámetro</value>
-  </data>
-  <data name="ProvidedSignToolIsValidMessage" xml:space="preserve">
-    <value>El SignTool.exe proporcionado es válido</value>
-  </data>
-  <data name="ProvidedSignToolIsNotValidMessage" xml:space="preserve">
-    <value>El SignTool.exe proporcionado no es válido</value>
-  </data>
-  <data name="SettingSignToolPathInUserConfigMessage" xml:space="preserve">
-    <value>Estableciendo la ruta de SignTool en las configuraciones comunes del usuario en: {0}</value>
-  </data>
-  <data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
+    <data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
     <value>Creando la tarea programada para la Garantía de Snap Back.</value>
   </data>
   <data name="FileHasHashMismatchMessage" xml:space="preserve">

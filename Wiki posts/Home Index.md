@@ -85,6 +85,8 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [How to Use Microsoft Defender for Endpoint Advanced Hunting With App Control](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Use-Microsoft-Defender-for-Endpoint-Advanced-Hunting-With-WDAC-App-Control)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [App Control Frequently Asked Questions (FAQs)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Application-Control-(WDAC)-Frequently-Asked-Questions-(FAQs))
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [System Integrity Policy Transformations | XML to CIP and Back](https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Integrity-Policy-Transformations-%7C-XML-to-CIP-and-Back)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [About Code Integrity Policy Signing](https://github.com/HotCakeX/Harden-Windows-Security/wiki/About-Code-Integrity-Policy-Signing)
+
 
 <br>
 

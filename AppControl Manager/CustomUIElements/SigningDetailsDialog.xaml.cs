@@ -39,7 +39,6 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 	// Properties to access the input value
 	internal string? CertificatePath { get; private set; }
 	internal string? CertificateCommonName { get; private set; }
-	internal string? SignToolPath { get; private set; }
 
 	// To track whether verification is running so it won't happen again
 	// Enabling/Disabling Verification button causes the Primary button to not have its theme properly for some reason
@@ -66,12 +65,10 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 		// Fill in the text boxes based on the current user configs
 		CertFilePathTextBox.Text = currentUserConfigs.CertificatePath;
 		CertificateCommonNameAutoSuggestBox.Text = currentUserConfigs.CertificateCommonName;
-		SignToolPathTextBox.Text = currentUserConfigs.SignToolCustomPath;
 
 		// Assign the data from user configurations to the local variables
 		CertificatePath = currentUserConfigs.CertificatePath;
 		CertificateCommonName = currentUserConfigs.CertificateCommonName;
-		SignToolPath = currentUserConfigs.SignToolCustomPath;
 	}
 
 	/// <summary>
@@ -202,24 +199,6 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 		// Fill in the text boxes based on the current user configs
 		CertificatePath = CertFilePathTextBox.Text;
 		CertificateCommonName = CertificateCommonNameAutoSuggestBox.Text;
-		SignToolPath = SignToolPathTextBox.Text;
-	}
-
-	/// <summary>
-	/// Event handler for the toggle switch to automatically download SignTool.exe from the Microsoft servers
-	/// </summary>
-	private void AutoAcquireSignTool_Toggled()
-	{
-		if (AutoAcquireSignTool.IsOn)
-		{
-			SignToolBrowseButton.IsEnabled = false;
-			SignToolPathTextBox.IsEnabled = false;
-		}
-		else
-		{
-			SignToolBrowseButton.IsEnabled = true;
-			SignToolPathTextBox.IsEnabled = true;
-		}
 	}
 
 	/// <summary>
@@ -227,11 +206,8 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 	/// </summary>
 	private void DisableUIElements()
 	{
-		SignToolPathTextBox.IsEnabled = false;
 		CertificateCommonNameAutoSuggestBox.IsEnabled = false;
-		AutoAcquireSignTool.IsEnabled = false;
 		CertFileBrowseButton.IsEnabled = false;
-		SignToolBrowseButton.IsEnabled = false;
 		CertFilePathTextBox.IsEnabled = false;
 	}
 
@@ -240,11 +216,8 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 	/// </summary>
 	private void EnableUIElements()
 	{
-		SignToolPathTextBox.IsEnabled = true;
 		CertificateCommonNameAutoSuggestBox.IsEnabled = true;
-		AutoAcquireSignTool.IsEnabled = true;
 		CertFileBrowseButton.IsEnabled = true;
-		SignToolBrowseButton.IsEnabled = true;
 		CertFilePathTextBox.IsEnabled = true;
 	}
 
@@ -351,57 +324,10 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 
 			#endregion
 
-			// Verify the SignTool
-			if (!AutoAcquireSignTool.IsOn)
-			{
-				if (string.IsNullOrWhiteSpace(SignToolPathTextBox.Text))
-				{
-					ShowTeachingTip(GlobalVars.GetStr("PleaseSelectSignToolPathOrEnableAutoAcquireMessage"));
-					return;
-				}
-
-				if (!File.Exists(SignToolPathTextBox.Text))
-				{
-					ShowTeachingTip(GlobalVars.GetStr("SignToolNotExistMessage"));
-					return;
-				}
-
-				if (!string.Equals(Path.GetExtension(SignToolPathTextBox.Text), ".exe", StringComparison.OrdinalIgnoreCase))
-				{
-					ShowTeachingTip(GlobalVars.GetStr("SignToolExtensionInvalidMessage"));
-					return;
-				}
-			}
-			else
-			{
-				try
-				{
-					VerifyButtonContentTextBlock.Text = GlobalVars.GetStr("DownloadingSignToolButtonText");
-
-					string newSignToolPath;
-
-					// Get the SignTool.exe path
-					newSignToolPath = await Task.Run(() => SignToolHelper.GetSignToolPath());
-
-					// Assign it to the local variable
-					SignToolPath = newSignToolPath;
-
-					// Set it to the UI text box
-					SignToolPathTextBox.Text = newSignToolPath;
-				}
-				finally
-				{
-					VerifyButtonContentTextBlock.Text = GlobalVars.GetStr("VerifyButtonText");
-				}
-			}
-
 			// If everything checks out then enable the Primary button for submission
 			this.IsPrimaryButtonEnabled = true;
 
 			everythingChecksOut = true;
-
-			// Set the SignTool.exe path that was verified to be valid to the user configurations
-			_ = UserConfiguration.Set(SignToolCustomPath: SignToolPath);
 
 			// Set certificate details that were verified to the user configurations
 			_ = UserConfiguration.Set(CertificateCommonName: CertificateCommonNameAutoSuggestBox.Text, CertificatePath: CertFilePathTextBox.Text);
@@ -426,20 +352,6 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 			}
 
 			VerificationRunning = false;
-		}
-	}
-
-	/// <summary>
-	/// Event handler for SignTool.exe browse button
-	/// </summary>
-	private void SignToolBrowseButton_Click()
-	{
-		string? selectedFiles = FileDialogHelper.ShowFilePickerDialog(GlobalVars.ExecutablesPickerFilter);
-
-		if (!string.IsNullOrWhiteSpace(selectedFiles))
-		{
-			SignToolPath = selectedFiles;
-			SignToolPathTextBox.Text = selectedFiles;
 		}
 	}
 

@@ -2555,9 +2555,6 @@
   <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
     <value>נתיב מדיניות לא חתומה:</value>
   </data>
-  <data name="SignToolCustomPathTextBox.Header" xml:space="preserve">
-    <value>נתיב מותאם לכלי חתימה:</value>
-  </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>שם נפוץ של התעודה:</value>
   </data>
@@ -2925,18 +2922,6 @@
   </data>
   <data name="CertificateCommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>שם כללי (CN) של התעודה שישמש במהלך פעולת החתימה.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Header" xml:space="preserve">
-    <value>נתיב ל-SignTool</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Description" xml:space="preserve">
-    <value>משמש לחתימת קובץ המדיניות CIP</value>
-  </data>
-  <data name="SignToolPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>הנתיב לקובץ SignTool.exe שישמש במהלך פעולת החתימה לחתום על קובץ הבינארי CIP.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>הנתיב לקובץ SignTool.exe שישמש במהלך פעולת החתימה לחתום על קובץ הבינארי CIP.</value>
   </data>
   <data name="CreationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>יצירה</value>
@@ -3683,9 +3668,6 @@
 <data name="VerifyButtonText" xml:space="preserve">
     <value>אמת</value>
 </data>
-<data name="DownloadingSignToolButtonText" xml:space="preserve">
-    <value>מוריד את SignTool</value>
-</data>
 <data name="VerificationSuccessfulText" xml:space="preserve">
     <value>האימות הושלם בהצלחה</value>
 </data>
@@ -3709,15 +3691,6 @@
 </data>
 <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>קובץ התעודה ושם הרגיל שנבחר אינם תואמים.</value>
-</data>
-<data name="PleaseSelectSignToolPathOrEnableAutoAcquireMessage" xml:space="preserve">
-    <value>אנא בחר את הנתיב ל-SignTool.exe או אפשר את אפשרות ההורדה האוטומטית.</value>
-</data>
-<data name="SignToolNotExistMessage" xml:space="preserve">
-    <value>SignTool.exe אינו נמצא בנתיב הנבחר. ניתן לאפשר את אפשרות ההורדה האוטומטית אם אין ברשותך אותו.</value>
-</data>
-<data name="SignToolExtensionInvalidMessage" xml:space="preserve">
-    <value>הנתיב ל-SignTool חייב להסתיים ב (.exe). ניתן לאפשר את אפשרות ההורדה האוטומטית אם אין ברשותך אותו.</value>
 </data>
 <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
     <value>אנא בחר את קובץ מדיניות ה-XML של המדיניות שמוסרת.</value>
@@ -4108,48 +4081,6 @@
 </data>
 <data name="RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage" xml:space="preserve">
     <value>מסיר את בלוקי SupplementalPolicySigners וה-Signers המתאימים להם.</value>
-</data>
-<data name="SigningCodeIntegrityPolicyFileMessage" xml:space="preserve">
-    <value>חותם על {0}</value>
-</data>
-<data name="SignToolFailedWithExitCodeErrorMessage" xml:space="preserve">
-    <value>SignTool נכשל עם קוד יציאה {0}. שגיאה: {1}</value>
-</data>
-<data name="FindingLatestVersionOfBuildToolsPackageMessage" xml:space="preserve">
-    <value>מוצא את הגרסה העדכנית ביותר של חבילת microsoft.windows.sdk.buildtools מ-NuGet</value>
-</data>
-<data name="DownloadingLatestNuPkgVersionMessage" xml:space="preserve">
-    <value>מוריד את גרסת קובץ .nupkg האחרונה '{0}' מה-URL הבא: {1}</value>
-</data>
-<data name="DownloadedNuPkgToMessage" xml:space="preserve">
-    <value>הוריד את החבילה אל {0}</value>
-</data>
-<data name="ExtractedPackageToMessage" xml:space="preserve">
-    <value>חילץ את החבילה אל {0}</value>
-</data>
-<data name="PathToSignToolMessage" xml:space="preserve">
-    <value>הנתיב ל-signtool.exe: {0}</value>
-</data>
-<data name="SignToolPathNotProvidedByParameterMessage" xml:space="preserve">
-    <value>הנתיב ל-SignTool.exe לא סופק בפרמטר, מנסה לאתר אותו אוטומטית</value>
-</data>
-<data name="SuccessfullyDetectedSignToolOnSystemMessage" xml:space="preserve">
-    <value>זיהוי SignTool.exe במערכת הושלם בהצלחה: {0}</value>
-</data>
-<data name="FailedToDetectSignToolPathAutomaticallyMessage" xml:space="preserve">
-    <value>לא הצליח לזהות אוטומטית את הנתיב ל-SignTool.exe: {0}</value>
-</data>
-<data name="SignToolPathProvidedByParameterMessage" xml:space="preserve">
-    <value>הנתיב ל-SignTool.exe סופק בפרמטר</value>
-</data>
-<data name="ProvidedSignToolIsValidMessage" xml:space="preserve">
-    <value>SignTool.exe שסופק תקין</value>
-</data>
-<data name="ProvidedSignToolIsNotValidMessage" xml:space="preserve">
-    <value>SignTool.exe שסופק אינו תקין</value>
-</data>
-<data name="SettingSignToolPathInUserConfigMessage" xml:space="preserve">
-    <value>מגדיר את הנתיב ל-SignTool בהגדרות המשתמש המשותפות ל: {0}</value>
 </data>
 <data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
     <value>יוצר את משימת התזמון עבור Snap Back Guarantee.</value>

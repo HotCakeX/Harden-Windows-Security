@@ -2555,9 +2555,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
     <value>अनसाइन की गई नीति पथ:</value>
   </data>
-  <data name="SignToolCustomPathTextBox.Header" xml:space="preserve">
-    <value>कस्टम साइन टूल पथ:</value>
-  </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>प्रमाणपत्र सामान्य नाम:</value>
   </data>
@@ -2925,18 +2922,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="CertificateCommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>साइनिंग ऑपरेशन के दौरान उपयोग किए जाने वाले प्रमाणपत्र का सामान्य नाम (CN)।</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Header" xml:space="preserve">
-    <value>SignTool पथ</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Description" xml:space="preserve">
-    <value>नीति CIP फ़ाइल पर साइन करने में उपयोग किया जाता है</value>
-  </data>
-  <data name="SignToolPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>किसी CIP बाइनरी फ़ाइल पर साइन करने के लिए साइनिंग ऑपरेशन में उपयोग किए जाने वाले SignTool.exe का पथ।</value>
-  </data>
-  <data name="SignToolPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>किसी CIP बाइनरी फ़ाइल पर साइन करने के लिए साइनिंग ऑपरेशन में उपयोग किए जाने वाले SignTool.exe का पथ।</value>
   </data>
   <data name="CreationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>निर्माण</value>
@@ -3682,9 +3667,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="VerifyButtonText" xml:space="preserve">
     <value>सत्यापित करें</value>
   </data>
-  <data name="DownloadingSignToolButtonText" xml:space="preserve">
-    <value>SignTool डाउनलोड हो रहा है</value>
-  </data>
   <data name="VerificationSuccessfulText" xml:space="preserve">
     <value>सत्यापन सफल</value>
   </data>
@@ -3708,15 +3690,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>चयनित प्रमाणपत्र फ़ाइल और सामान्य नाम मेल नहीं खाते।</value>
-  </data>
-  <data name="PleaseSelectSignToolPathOrEnableAutoAcquireMessage" xml:space="preserve">
-    <value>कृपया SignTool.exe का पथ चुनें या ऑटो-अक्वायर विकल्प सक्षम करें।</value>
-  </data>
-  <data name="SignToolNotExistMessage" xml:space="preserve">
-    <value>चयनित पथ में SignTool.exe मौजूद नहीं है। यदि आपके पास नहीं है तो ऑटो-अक्वायर विकल्प सक्षम कर सकते हैं।</value>
-  </data>
-  <data name="SignToolExtensionInvalidMessage" xml:space="preserve">
-    <value>SignTool पथ (.exe) पर समाप्त होना चाहिए। यदि आपके पास नहीं है तो ऑटो-अक्वायर विकल्प सक्षम कर सकते हैं।</value>
   </data>
   <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
     <value>कृपया हटाई जा रही नीति की XML फ़ाइल चुनें।</value>
@@ -4107,48 +4080,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
   <data name="RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage" xml:space="preserve">
     <value>SupplementalPolicySigners ब्लॉक्स और संबंधित Signers हटा रहे हैं।</value>
-  </data>
-  <data name="SigningCodeIntegrityPolicyFileMessage" xml:space="preserve">
-    <value>{0} पर साइन कर रहे हैं</value>
-  </data>
-  <data name="SignToolFailedWithExitCodeErrorMessage" xml:space="preserve">
-    <value>SignTool exit कोड {0} के साथ विफल हुआ। त्रुटि: {1}</value>
-  </data>
-  <data name="FindingLatestVersionOfBuildToolsPackageMessage" xml:space="preserve">
-    <value>NuGet से microsoft.windows.sdk.buildtools पैकेज का नवीनतम संस्करण खोज रहे हैं</value>
-  </data>
-  <data name="DownloadingLatestNuPkgVersionMessage" xml:space="preserve">
-    <value>निम्नलिखित URL से नवीनतम .nupkg पैकेज फ़ाइल संस्करण '{0}' डाउनलोड कर रहे हैं: {1}</value>
-  </data>
-  <data name="DownloadedNuPkgToMessage" xml:space="preserve">
-    <value>पैकेज को डाउनलोड किया गया: {0}</value>
-  </data>
-  <data name="ExtractedPackageToMessage" xml:space="preserve">
-    <value>पैकेज को निकाला गया: {0}</value>
-  </data>
-  <data name="PathToSignToolMessage" xml:space="preserve">
-    <value>signtool.exe का पथ: {0}</value>
-  </data>
-  <data name="SignToolPathNotProvidedByParameterMessage" xml:space="preserve">
-    <value>SignTool.exe पथ पैरामीटर द्वारा प्रदान नहीं किया गया, स्वचालित रूप से पता लगाने का प्रयास कर रहे हैं</value>
-  </data>
-  <data name="SuccessfullyDetectedSignToolOnSystemMessage" xml:space="preserve">
-    <value>सिस्टम पर SignTool.exe सफलतापूर्वक पाया गया: {0}</value>
-  </data>
-  <data name="FailedToDetectSignToolPathAutomaticallyMessage" xml:space="preserve">
-    <value>SignTool.exe पथ स्वचालित रूप से पता लगाने में विफल: {0}</value>
-  </data>
-  <data name="SignToolPathProvidedByParameterMessage" xml:space="preserve">
-    <value>SignTool.exe पथ पैरामीटर द्वारा प्रदान किया गया था</value>
-  </data>
-  <data name="ProvidedSignToolIsValidMessage" xml:space="preserve">
-    <value>प्रदान किया गया SignTool.exe मान्य है</value>
-  </data>
-  <data name="ProvidedSignToolIsNotValidMessage" xml:space="preserve">
-    <value>प्रदान किया गया SignTool.exe मान्य नहीं है</value>
-  </data>
-  <data name="SettingSignToolPathInUserConfigMessage" xml:space="preserve">
-    <value>कॉमन उपयोगकर्ता विन्यासों में SignTool पथ सेट कर रहे हैं: {0}</value>
   </data>
   <data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
     <value>Snap Back Guarantee के लिए शेड्यूल्ड टास्क बना रहे हैं।</value>

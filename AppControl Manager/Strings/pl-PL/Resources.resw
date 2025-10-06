@@ -2555,9 +2555,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="UnsignedPolicyPathTextBox.Header" xml:space="preserve">
     <value>Ścieżka niepodpisanych zasad:</value>
   </data>
-  <data name="SignToolCustomPathTextBox.Header" xml:space="preserve">
-    <value>Niestandardowa ścieżka narzędzia do podpisywania:</value>
-  </data>
   <data name="CertificateCommonNameAutoSuggestBox.Header" xml:space="preserve">
     <value>Nazwa pospolita certyfikatu:</value>
   </data>
@@ -2925,18 +2922,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
   <data name="CertificateCommonNameSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Nazwa pospolita (CN) certyfikatu, który zostanie użyty podczas operacji podpisywania.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Header" xml:space="preserve">
-    <value>Ścieżka SignTool</value>
-  </data>
-  <data name="SignToolPathSettingsCard.Description" xml:space="preserve">
-    <value>Służy do podpisywania pliku CIP zasad</value>
-  </data>
-  <data name="SignToolPathSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ścieżka do SignTool.exe, która zostanie użyta podczas operacji podpisywania do podpisania pliku binarnego CIP.</value>
-  </data>
-  <data name="SignToolPathSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ścieżka do SignTool.exe, która zostanie użyta podczas operacji podpisywania do podpisania pliku binarnego CIP.</value>
   </data>
   <data name="CreationNavigationViewItemHeader.Content" xml:space="preserve">
     <value>Tworzenie</value>
@@ -3682,9 +3667,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="VerifyButtonText" xml:space="preserve">
     <value>Weryfikuj</value>
   </data>
-  <data name="DownloadingSignToolButtonText" xml:space="preserve">
-    <value>Pobieranie SignTool</value>
-  </data>
   <data name="VerificationSuccessfulText" xml:space="preserve">
     <value>Weryfikacja zakończona pomyślnie</value>
   </data>
@@ -3709,16 +3691,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>Wybrany plik certyfikatu i nazwa pospolita nie pasują do siebie.</value>
   </data>
-  <data name="PleaseSelectSignToolPathOrEnableAutoAcquireMessage" xml:space="preserve">
-    <value>Proszę wybrać ścieżkę do SignTool.exe lub włączyć opcję automatycznego pobierania.</value>
-  </data>
-  <data name="SignToolNotExistMessage" xml:space="preserve">
-    <value>SignTool.exe nie istnieje w wybranej ścieżce. Możesz włączyć opcję automatycznego pobierania, jeśli go nie masz.</value>
-  </data>
-  <data name="SignToolExtensionInvalidMessage" xml:space="preserve">
-    <value>Ścieżka SignTool musi kończyć się na (.exe). Możesz włączyć opcję automatycznego pobierania, jeśli go nie masz.</value>
-  </data>
-    <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
+  <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
     <value>Proszę wybrać plik zasad XML usuwanych zasad.</value>
   </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
@@ -4108,49 +4081,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="RemovingSupplementalPolicySignersBlocksAndCorrespondingSignersMessage" xml:space="preserve">
     <value>Usuwanie bloków SupplementalPolicySigners i odpowiadających im podpisujących.</value>
   </data>
-    <data name="SigningCodeIntegrityPolicyFileMessage" xml:space="preserve">
-    <value>Podpisywanie {0}</value>
-  </data>
-  <data name="SignToolFailedWithExitCodeErrorMessage" xml:space="preserve">
-    <value>SignTool nie powiódł się z kodem zakończenia {0}. Błąd: {1}</value>
-  </data>
-  <data name="FindingLatestVersionOfBuildToolsPackageMessage" xml:space="preserve">
-    <value>Wyszukiwanie najnowszej wersji pakietu microsoft.windows.sdk.buildtools z NuGet</value>
-  </data>
-  <data name="DownloadingLatestNuPkgVersionMessage" xml:space="preserve">
-    <value>Pobieranie najnowszej wersji pliku pakietu .nupkg „{0}” z następującego adresu URL: {1}</value>
-  </data>
-  <data name="DownloadedNuPkgToMessage" xml:space="preserve">
-    <value>Pobrano pakiet do {0}</value>
-  </data>
-  <data name="ExtractedPackageToMessage" xml:space="preserve">
-    <value>Rozpakowano pakiet do {0}</value>
-  </data>
-  <data name="PathToSignToolMessage" xml:space="preserve">
-    <value>Ścieżka do signtool.exe: {0}</value>
-  </data>
-  <data name="SignToolPathNotProvidedByParameterMessage" xml:space="preserve">
-    <value>Ścieżka SignTool.exe nie została podana przez parametr, próba automatycznego wykrycia</value>
-  </data>
-  <data name="SuccessfullyDetectedSignToolOnSystemMessage" xml:space="preserve">
-    <value>Pomyślnie wykryto SignTool.exe w systemie: {0}</value>
-  </data>
-  <data name="FailedToDetectSignToolPathAutomaticallyMessage" xml:space="preserve">
-    <value>Nie udało się automatycznie wykryć ścieżki SignTool.exe: {0}</value>
-  </data>
-  <data name="SignToolPathProvidedByParameterMessage" xml:space="preserve">
-    <value>Ścieżka SignTool.exe została podana przez parametr</value>
-  </data>
-  <data name="ProvidedSignToolIsValidMessage" xml:space="preserve">
-    <value>Podany SignTool.exe jest prawidłowy</value>
-  </data>
-  <data name="ProvidedSignToolIsNotValidMessage" xml:space="preserve">
-    <value>Podany SignTool.exe nie jest prawidłowy</value>
-  </data>
-  <data name="SettingSignToolPathInUserConfigMessage" xml:space="preserve">
-    <value>Ustawianie ścieżki SignTool w wspólnych konfiguracjach użytkownika na: {0}</value>
-  </data>
-  <data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
+    <data name="CreatingScheduledTaskForSnapBackGuaranteeMessage" xml:space="preserve">
     <value>Tworzenie zaplanowanego zadania dla gwarancji Snap Back.</value>
   </data>
   <data name="FileHasHashMismatchMessage" xml:space="preserve">

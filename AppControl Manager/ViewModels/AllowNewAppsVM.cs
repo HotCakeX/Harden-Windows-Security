@@ -153,7 +153,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	// They will be retrieved from the content dialog
 	private string? _CertCN;
 	private string? _CertPath;
-	private string? _SignToolPath;
 
 	// Paths for the entire operation of this page
 	private DirectoryInfo? stagingArea;
@@ -794,9 +793,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 				string CIPPath = Path.Combine(stagingArea.FullName, $"{selectedSupplementalPolicyName}.cip");
 
-				// This path is only used if the policy is signed
-				string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{selectedSupplementalPolicyName}.cip.p7");
-
 				// Convert the XML file to CIP
 				Management.ConvertXMLToBinary(OutputPath, null, CIPPath);
 
@@ -806,10 +802,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				if (_IsSignedPolicy)
 				{
 					// Sign the CIP
-					SignToolHelper.Sign(new FileInfo(CIPPath), new FileInfo(_SignToolPath!), _CertCN!);
-
-					// Rename the .p7 signed file to .cip
-					File.Move(CIPp7SignedFilePath, CIPPath, true);
+					Signing.Main.SignCIP(CIPPath, _CertCN);
 				}
 				else
 				{
@@ -1182,7 +1175,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				// Ensure primary button was selected
 				if (result is ContentDialogResult.Primary)
 				{
-					_SignToolPath = customDialog.SignToolPath!;
 					_CertPath = customDialog.CertificatePath!;
 					_CertCN = customDialog.CertificateCommonName!;
 				}
@@ -1233,21 +1225,14 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					// Create audit mode CIP
 					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToAdd: [OptionType.EnabledAuditMode], rulesToRemove: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
-					string CIPp7SignedFilePathAudit = Path.Combine(stagingArea.FullName, "BaseAudit.cip.p7");
-
 					// Convert the XML file to CIP
 					Management.ConvertXMLToBinary(tempBasePolicyPath, null, AuditModeCIP);
 
 					// Sign the CIP
-					SignToolHelper.Sign(new FileInfo(AuditModeCIP), new FileInfo(_SignToolPath!), _CertCN!);
-
-					// Rename the .p7 signed file to .cip
-					File.Move(CIPp7SignedFilePathAudit, AuditModeCIP, true);
+					Signing.Main.SignCIP(AuditModeCIP, _CertCN);
 
 					// Create Enforced mode CIP
 					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [OptionType.EnabledAuditMode, OptionType.EnabledUnsignedSystemIntegrityPolicy]);
-
-					string CIPp7SignedFilePathEnforced = Path.Combine(stagingArea.FullName, "BaseAuditTemp.cip.p7");
 
 					string tempEnforcedModeCIPPath = Path.Combine(stagingArea.FullName, "BaseAuditTemp.cip");
 
@@ -1255,10 +1240,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					Management.ConvertXMLToBinary(tempBasePolicyPath, null, tempEnforcedModeCIPPath);
 
 					// Sign the CIP
-					SignToolHelper.Sign(new FileInfo(tempEnforcedModeCIPPath), new FileInfo(_SignToolPath!), _CertCN!);
-
-					// Rename the .p7 signed file to .cip
-					File.Move(CIPp7SignedFilePathEnforced, EnforcedModeCIP, true);
+					Signing.Main.SignCIP(tempEnforcedModeCIPPath, _CertCN);
 				}
 
 				Logger.Write(GlobalVars.GetStr("CreatingSnapBackGuarantee"));
@@ -1519,7 +1501,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			_BasePolicyObject = null;
 			_CertCN = null;
 			_CertPath = null;
-			_SignToolPath = null;
 			_IsSignedPolicy = false;
 
 			// Disable the data grids access

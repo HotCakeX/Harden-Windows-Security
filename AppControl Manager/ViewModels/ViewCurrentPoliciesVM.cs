@@ -576,7 +576,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 								string CertCN;
 								string CertPath;
-								string SignToolPath;
 								string XMLPolicyPath;
 
 								// Instantiate the Content Dialog
@@ -589,7 +588,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 									// Ensure primary button was selected
 									if (result is ContentDialogResult.Primary)
 									{
-										SignToolPath = customDialog.SignToolPath!;
 										CertPath = customDialog.CertificatePath!;
 										CertCN = customDialog.CertificateCommonName!;
 										XMLPolicyPath = customDialog.XMLPolicyPath!;
@@ -615,16 +613,11 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 								string xmlFileName = Path.GetFileName(XMLPolicyPath);
 								string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
 
-								string CIPp7SignedFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip.p7");
-
 								// Convert the XML file to CIP, overwriting the unsigned one
 								Management.ConvertXMLToBinary(XMLPolicyPath, null, CIPFilePath);
 
 								// Sign the CIP
-								SignToolHelper.Sign(new FileInfo(CIPFilePath), new FileInfo(SignToolPath), CertCN);
-
-								// Rename the .p7 signed file to .cip
-								File.Move(CIPp7SignedFilePath, CIPFilePath, true);
+								Signing.Main.SignCIP(CIPFilePath, CertCN);
 
 								// Deploy the signed CIP file
 								CiToolHelper.UpdatePolicy(CIPFilePath);

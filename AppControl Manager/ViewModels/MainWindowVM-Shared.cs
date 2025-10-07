@@ -16,9 +16,11 @@
 //
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Composition.SystemBackdrops;
@@ -27,14 +29,12 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.Graphics;
-using System.Threading.Tasks;
 
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.ViewModels;
 namespace HardenSystemSecurity.ViewModels;
 #endif
 #if APP_CONTROL_MANAGER
-using System.Diagnostics;
 namespace AppControlManager.ViewModels;
 #endif
 

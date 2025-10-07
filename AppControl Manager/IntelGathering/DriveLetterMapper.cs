@@ -37,6 +37,50 @@ internal static partial class DriveLetterMapper
 	}
 
 	/// <summary>
+	/// Returns the root path of the EFI System Partition (ESP) as a Volume GUID path,
+	/// for example: "\\?\Volume{GUID}\".
+	/// The returned path can be used directly with Directory APIs.
+	/// </summary>
+	/// <returns>null if no EFI partition is found or accessible, otherwise the EFI partition root.</returns>
+	internal static string? GetEfiPartitionRootPath()
+	{
+		// Get all volume names (Volume GUID paths).
+		List<DriveMapping> drives = GetGlobalRootDrives();
+
+		// Scan volumes and pick the first one that contains an "EFI" directory at its root.
+		// This works even when the partition has no drive letter.
+		for (int i = 0; i < drives.Count; i++)
+		{
+			string? volume = drives[i].VolumeName;
+			if (string.IsNullOrEmpty(volume))
+			{
+				continue;
+			}
+
+			// Volume names returned by FindFirst/NextVolume usually include a trailing backslash.
+			// Build the path to the well-known "EFI" directory.
+			string efiDirPath = string.Concat(volume, "EFI");
+
+			try
+			{
+				// Directory.Exists will return false on inaccessible or non-existent paths.
+				if (System.IO.Directory.Exists(efiDirPath))
+				{
+					// Found the ESP. Return its root Volume GUID path.
+					return volume;
+				}
+			}
+			catch
+			{
+				// Ignore any exceptional volumes and continue scanning the rest.
+			}
+		}
+
+		// Not found
+		return null;
+	}
+
+	/// <summary>
 	/// A method that gets the DriveLetter mappings in the global root namespace
 	/// And fixes these: \Device\Harddiskvolume
 	/// </summary>

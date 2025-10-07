@@ -139,8 +139,7 @@
                                             </AnimatedIcon.Source>
                                         </AnimatedIcon>
 
-                                        <TextBlock x:Uid="ApplyText"
-                                                   FontSize="12"
+                                        <TextBlock x:Uid="ApplyText"                                                   
                                                    FontWeight="SemiBold"
                                                    VerticalAlignment="Center"/>
                                     </StackPanel>
@@ -161,8 +160,7 @@
                                             </AnimatedIcon.Source>
                                         </AnimatedIcon>
 
-                                        <TextBlock x:Uid="VerifyText"
-                                                   FontSize="12"
+                                        <TextBlock x:Uid="VerifyText"                                                   
                                                    FontWeight="SemiBold"
                                                    VerticalAlignment="Center"/>
                                     </StackPanel>
@@ -183,8 +181,7 @@
                                             </AnimatedIcon.Source>
                                         </AnimatedIcon>
 
-                                        <TextBlock x:Uid="RemoveText"
-                                                   FontSize="12"
+                                        <TextBlock x:Uid="RemoveText"                                                   
                                                    FontWeight="SemiBold"
                                                    VerticalAlignment="Center"/>
                                     </StackPanel>

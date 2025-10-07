@@ -22,6 +22,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AppControlManager.Others;
+using AppControlManager.SiPolicyIntel;
 
 namespace AppControlManager.IntelGathering;
 
@@ -107,7 +108,7 @@ internal sealed class FileIdentity
 	internal string? SHA256FlatHash { get; set; } // Flat file hashes - Event logs provide this
 
 	[JsonInclude]
-	internal int SISigningScenario { get; set; } // 1 for user mode files - 0 for kernel mode files
+	internal SSType SISigningScenario { get; set; }
 
 	[JsonInclude]
 	internal string? OriginalFileName { get; set; }

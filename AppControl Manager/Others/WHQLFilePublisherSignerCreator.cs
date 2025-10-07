@@ -30,7 +30,7 @@ internal sealed class WHQLFilePublisherSignerCreator(
 	string? fileName,
 	string? authenticodeSHA256,
 	string? authenticodeSHA1,
-	int siSigningScenario,
+	SiPolicyIntel.SSType siSigningScenario,
 	string opus)
 {
 	internal List<CertificateDetailsCreator> CertificateDetails => certificateDetails;
@@ -43,6 +43,6 @@ internal sealed class WHQLFilePublisherSignerCreator(
 	internal string? FileName => fileName;
 	internal string? AuthenticodeSHA256 => authenticodeSHA256;
 	internal string? AuthenticodeSHA1 => authenticodeSHA1;
-	internal int SiSigningScenario => siSigningScenario;
+	internal SiPolicyIntel.SSType SiSigningScenario => siSigningScenario;
 	internal string Opus => opus;
 }

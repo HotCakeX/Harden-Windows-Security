@@ -3709,4 +3709,27 @@
   <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
     <value>כל אמצעי האבטחה אומתו בהצלחה.</value>
   </data>
+    <data name="ProtectSubCategory_TLS_ForBattleNet" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>השאר סוויטת צופן לא מאובטחת הנדרשת לקישוריות אינטרנט של לקוח המשחק Battle.net פעילה.</value>
+  </data>
+  <data name="TLSSecurity_TLS_ForBattleNet" xml:space="preserve">
+    <value>בחר באפשרות זו רק אם אתה אכן משתמש בלקוח המשחק של Battle.net.</value>
+  </data>
+  <data name="ProtectSubCategory_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>החל מדיניות שמפחיתה טלמטריה במערכת ההפעלה.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <value>חלק מתכונות מערכת ההפעלה ייהפכו לבלתי זמינות.</value>
+  </data>
+  <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>מיטוב הזיכרון</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ניסיון להפחית את השימוש בזיכרון באמצעות איסוף ודחיסה של זיכרון מנוהל שאינו בשימוש (כולל אובייקטים גדולים). מערכת ההפעלה עשויה לשחרר RAM בהדרגה, ולכן ייתכן שהשינויים לא יופיעו מיד. עיין ביומנים לאחר לחיצה על כפתור זה לקבלת פרטים נוספים.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ניסיון להפחית את השימוש בזיכרון באמצעות איסוף ודחיסה של זיכרון מנוהל שאינו בשימוש (כולל אובייקטים גדולים). מערכת ההפעלה עשויה לשחרר RAM בהדרגה, ולכן ייתכן שהשינויים לא יופיעו מיד. עיין ביומנים לאחר לחיצה על כפתור זה לקבלת פרטים נוספים.</value>
+  </data>
 </root>

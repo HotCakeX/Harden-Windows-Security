@@ -949,4 +949,7 @@
 <data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
     <value>Lock Screen को लॉक और अनलॉक करने की ऑडिटिंग तथा ट्रैकिंग सक्षम करें.</value>
 </data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>connected-modern-standby के दौरान नेटवर्क कनेक्टिविटी की अनुमति दें (केवल जब प्लग इन हो)</value>
+</data>
 </root>

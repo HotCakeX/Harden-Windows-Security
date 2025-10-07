@@ -517,7 +517,7 @@ internal static class SignerAndHashBuilder
 			string? sha256 = hashData.SHA256Hash;
 			string? sha1 = hashData.SHA1Hash;
 			string? filePath = hashData.FilePath;
-			int siSigningScenario = hashData.SISigningScenario;
+			SiPolicyIntel.SSType siSigningScenario = hashData.SISigningScenario;
 
 			if (string.IsNullOrWhiteSpace(sha256) || string.IsNullOrWhiteSpace(sha1) || string.IsNullOrWhiteSpace(filePath))
 			{
@@ -554,14 +554,14 @@ internal static class SignerAndHashBuilder
 		{
 
 			// Create wildcard path - If user selected a root of a drive then do not add the extra backward slash otherwise we'd create an invalid path such as "D:\\*" in the policy
-			string wildcardPath = DriveLetters.Any(x => string.Equals(x, item[..^1], System.StringComparison.OrdinalIgnoreCase)) ? item + "*" : item + @"\" + "*";
+			string wildcardPath = DriveLetters.Any(x => string.Equals(x, item[..^1], StringComparison.OrdinalIgnoreCase)) ? item + "*" : item + @"\" + "*";
 
 			// FilePath rules can only be used for User-Mode files only
 			// Plus we wouldn't know if the folder contains user-mode or kernel-mode files
 			filePaths.Add(new FilePathCreator(
 				wildcardPath,
 				"0.0.0.0", // Minimum version of all files allowed by path
-				1 // for User Mode
+				SiPolicyIntel.SSType.UserMode
 				));
 		}
 
@@ -575,7 +575,7 @@ internal static class SignerAndHashBuilder
 			filePaths.Add(new FilePathCreator(
 				item,
 				"0.0.0.0", // Minimum version of all files allowed by path
-				1 // for User Mode
+				SiPolicyIntel.SSType.UserMode
 				));
 		}
 
@@ -586,7 +586,7 @@ internal static class SignerAndHashBuilder
 			pfnRules.Add(new PFNRuleCreator(
 				item,
 				"0.0.0.0", // Minimum version of the app allowed by PFN
-				1 // for User Mode
+				SiPolicyIntel.SSType.UserMode
 				));
 		}
 

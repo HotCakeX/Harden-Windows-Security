@@ -3709,4 +3709,27 @@
   <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
     <value>تم التحقق من جميع إجراءات الأمان بنجاح.</value>
   </data>
+    <data name="ProtectSubCategory_TLS_ForBattleNet" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>ابقِ مجموعة تشفير غير آمنة مطلوبة لاتصال الإنترنت لعميل لعبة Battle.net مفعّلة.</value>
+  </data>
+  <data name="TLSSecurity_TLS_ForBattleNet" xml:space="preserve">
+    <value>حدّد هذا فقط إذا كنت تستخدم بالفعل عميل لعبة Battle.net.</value>
+  </data>
+  <data name="ProtectSubCategory_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>تطبيق سياسات تقلل القياس عن بُعد في نظام التشغيل.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <value>ستصبح بعض ميزات نظام التشغيل غير متاحة.</value>
+  </data>
+  <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>تحسين الذاكرة</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>محاولة تقليل استهلاك الذاكرة عبر جمع الذاكرة المُدارة غير المستخدمة وضغطها (بما في ذلك الكائنات الكبيرة). قد يقوم نظام التشغيل بإطلاق ذاكرة RAM تدريجياً، لذا قد لا تظهر التغييرات مباشرة. راجع السجلات بعد الضغط على هذا الزر لمزيد من التفاصيل.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>محاولة تقليل استهلاك الذاكرة عبر جمع الذاكرة المُدارة غير المستخدمة وضغطها (بما في ذلك الكائنات الكبيرة). قد يقوم نظام التشغيل بإطلاق ذاكرة RAM تدريجياً، لذا قد لا تظهر التغييرات مباشرة. راجع السجلات بعد الضغط على هذا الزر لمزيد من التفاصيل.</value>
+  </data>
 </root>

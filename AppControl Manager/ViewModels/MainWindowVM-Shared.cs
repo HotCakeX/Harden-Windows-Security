@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime;
 using System.Runtime.CompilerServices;
 using AppControlManager.Others;
 using AppControlManager.WindowComponents;
@@ -26,6 +27,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.Graphics;
+using System.Threading.Tasks;
 
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.ViewModels;
@@ -41,8 +43,8 @@ namespace AppControlManager.ViewModels;
 /// </summary>
 internal sealed partial class MainWindowVM : ViewModelBase
 {
-
 	internal object? NavViewSelectedItem { get; set => SP(ref field, value); }
+
 	internal Thickness NavViewMargin { get; } = new Thickness(0);
 
 	/// <summary>
@@ -101,10 +103,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// The state of the OpenConfigDirectoryButton button which is on the Sidebar
 	/// </summary>
-	internal bool OpenConfigDirectoryButtonState
-	{
-		get; set => SP(ref field, value);
-	} = App.IsElevated;
+	internal bool OpenConfigDirectoryButtonState { get; set => SP(ref field, value); } = App.IsElevated;
 
 	/// <summary>
 	/// Backing field for InfoBadgeOpacity, which controls the visibility of the InfoBadge in the UI.
@@ -122,34 +121,22 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	///  Adjust the elevation of the border to achieve the shadow effect
 	/// </summary>
-	internal Vector3 BorderTranslation
-	{
-		get; set => SP(ref field, value);
-	} = new(0, 0, 500);
+	internal Vector3 BorderTranslation { get; set => SP(ref field, value); } = new(0, 0, 500);
 
 	/// <summary>
 	/// Whether the main NavigationView's pane is open or closed
 	/// </summary>
-	internal bool MainNavigationIsPaneOpen
-	{
-		get; set => SP(ref field, value);
-	} = true;
+	internal bool MainNavigationIsPaneOpen { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
 	/// The width of the TitleColumn in the main window's custom title bar
 	/// </summary>
-	internal GridLength TitleColumnWidth
-	{
-		get; set => SP(ref field, value);
-	} = GridLength.Auto;
+	internal GridLength TitleColumnWidth { get; set => SP(ref field, value); } = GridLength.Auto;
 
 	/// <summary>
 	/// Event handler for the main Sidebar button click
 	/// </summary>
-	internal void SidebarButton_Click()
-	{
-		SidebarPaneIsOpen = !SidebarPaneIsOpen;
-	}
+	internal void SidebarButton_Click() => SidebarPaneIsOpen = !SidebarPaneIsOpen;
 
 	/// <summary>
 	/// Event handler triggered when the UpdateAvailable event is raised, indicating an update is available.
@@ -184,10 +171,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the hamburger/main menu button click
 	/// </summary>
-	internal void HamburgerMenuButton_Click()
-	{
-		MainNavigationIsPaneOpen = !MainNavigationIsPaneOpen;
-	}
+	internal void HamburgerMenuButton_Click() => MainNavigationIsPaneOpen = !MainNavigationIsPaneOpen;
 
 	/// <summary>
 	/// Event handler for the Background ComboBox selection change event in the Settings page.
@@ -295,6 +279,78 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	{
 		rect.X = (int)Math.Round(totalWidthPx - (rect.X + rect.Width));
 		return rect;
+	}
+
+	/// <summary>
+	/// Whether the OptimizeMemory button on the Sidebar is enabled or disabled.
+	/// </summary>
+	internal bool OptimizeMemoryButtonIsEnabled { get; set => SP(ref field, value); } = true;
+
+	internal async void OptimizeMemory()
+	{
+		OptimizeMemoryButtonIsEnabled = false;
+
+		try
+		{
+			await Task.Run(() =>
+			{
+
+				// Baseline memory snapshot before forcing GC/compaction.
+				long beforeHeapBytes = GC.GetGCMemoryInfo().HeapSizeBytes;
+				long beforeManagedBytes = GC.GetTotalMemory(false);
+				long beforeWorkingSetBytes = Process.GetCurrentProcess().WorkingSet64;
+				long beforePrivateBytes = Process.GetCurrentProcess().PrivateMemorySize64;
+
+				// Request a one-time LOH compaction.
+				GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+
+				// First pass: thorough, compacting collection across all generations.
+				GC.Collect(
+				GC.MaxGeneration,
+				GCCollectionMode.Forced,
+				blocking: true,
+				compacting: true);
+
+				// Ensure all pending finalizers run, releasing references.
+				GC.WaitForPendingFinalizers();
+
+				// Second pass: collect anything finalized above.
+				GC.Collect(
+					GC.MaxGeneration,
+					GCCollectionMode.Forced,
+					blocking: true,
+					compacting: true);
+
+				// Memory snapshot after GC/compaction completes.
+				long afterHeapBytes = GC.GetGCMemoryInfo().HeapSizeBytes;
+				long afterManagedBytes = GC.GetTotalMemory(false);
+				long afterWorkingSetBytes = Process.GetCurrentProcess().WorkingSet64;
+				long afterPrivateBytes = Process.GetCurrentProcess().PrivateMemorySize64;
+
+				// Compute deltas
+				long heapDelta = beforeHeapBytes - afterHeapBytes;
+				long managedDelta = beforeManagedBytes - afterManagedBytes;
+				long workingSetDelta = beforeWorkingSetBytes - afterWorkingSetBytes;
+				long privateDelta = beforePrivateBytes - afterPrivateBytes;
+
+				Logger.Write(
+					$"Memory after compaction:\n" +
+					$"GC Heap: ({beforeHeapBytes / 1048576.0:F2} MiB) -> ({afterHeapBytes / 1048576.0:F2} MiB), Δ ({heapDelta / 1048576.0:F2} MiB);\n" +
+					$"Managed (GetTotalMemory): ({beforeManagedBytes / 1048576.0:F2} MiB) -> ({afterManagedBytes / 1048576.0:F2} MiB), Δ ({managedDelta / 1048576.0:F2} MiB);\n" +
+					$"Working Set: ({beforeWorkingSetBytes / 1048576.0:F2} MiB) -> ({afterWorkingSetBytes / 1048576.0:F2} MiB), Δ ({workingSetDelta / 1048576.0:F2} MiB);\n" +
+					$"Private Bytes: ({beforePrivateBytes / 1048576.0:F2} MiB) -> ({afterPrivateBytes / 1048576.0:F2} MiB), Δ ({privateDelta / 1048576.0:F2} MiB)"
+				);
+
+			});
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+		finally
+		{
+			OptimizeMemoryButtonIsEnabled = true;
+		}
 	}
 
 }

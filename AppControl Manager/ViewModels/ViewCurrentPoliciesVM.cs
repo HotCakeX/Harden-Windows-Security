@@ -115,6 +115,11 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 	internal int ListViewSelectedIndex { get; set => SP(ref field, value); }
 
+	/// <summary>
+	/// Path to the selected policy file on disk, if any.
+	/// </summary>
+	internal string? SelectedPolicyLocalFilePath { get; set => SPT(ref field, value); }
+
 	#region Properties to hold each columns' width.
 
 	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
@@ -187,6 +192,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		try
 		{
 			UIElementsEnabledState = false;
+
+			SelectedPolicyLocalFilePath = null;
 
 			SwapPolicyComboBoxSelectedIndex = -1;
 
@@ -792,6 +799,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	{
 		if (ListViewSelectedPolicy is null)
 		{
+			SelectedPolicyLocalFilePath = null;
 			return;
 		}
 
@@ -813,6 +821,9 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 		// Enable the Swap Policy ComboBox only when the selected policy is a base type, unsigned and non-system
 		SwapPolicyComboBoxState = string.Equals(ListViewSelectedPolicy.BasePolicyID, ListViewSelectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase) && !ListViewSelectedPolicy.IsSignedPolicy && !ListViewSelectedPolicy.IsSystemPolicy;
+
+		// Get the local CIP file path of the selected policy, if it exists on the system.
+		SelectedPolicyLocalFilePath = GetLocalCIPFile(ListViewSelectedPolicy);
 	}
 
 	/// <summary>
@@ -862,6 +873,86 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		if (sender is MenuFlyoutV2 { IsPointerOver: true })
 		{
 			args.Cancel = true;
+		}
+	}
+
+	/// <summary>
+	/// Path to the directory where unsigned Code Integrity policies are located.
+	/// </summary>
+	private static readonly string UnsignedPoliciesPath = Path.Combine(GlobalVars.SystemDrive, "Windows", "System32", "CodeIntegrity", "CIPolicies", "Active");
+
+	/// <summary>
+	/// To avoid querying the EFI partition path multiple times, we store it here after the first successful retrieval.
+	/// </summary>
+	private static string? EFIRootPath;
+
+	/// <summary>
+	/// Finds the local CIP file path of a given policy, if it exists on the system.
+	/// </summary>
+	/// <param name="policyInfoObj"></param>
+	/// <returns></returns>
+	internal static string? GetLocalCIPFile(CiPolicyInfo? policyInfoObj)
+	{
+		string? output = null;
+
+		if (policyInfoObj is null || policyInfoObj.PolicyID is null)
+			return output;
+
+		// Normalized file name because that's how Code Integrity policies are saved on the disk.
+		string policyIDAsGUID = $"{{{policyInfoObj.PolicyID}}}.cip";
+
+		// Try to find it first among unsigned policeis.
+		string[] files = Directory.GetFiles(UnsignedPoliciesPath, policyIDAsGUID, SearchOption.AllDirectories);
+
+		// Check if any files were found
+		if (files.Length > 0)
+		{
+			output = files[0];
+		}
+		// Now search among the signed policies
+		else
+		{
+			// Get the EFI partition path if we haven't already gotten it
+			if (EFIRootPath is null)
+				EFIRootPath = IntelGathering.DriveLetterMapper.GetEfiPartitionRootPath();
+
+			// If we couldn't get the EFI partition path
+			if (EFIRootPath is not null)
+			{
+				// Search recursively on the EFI partition
+				string[] files2 = Directory.GetFiles(EFIRootPath, policyIDAsGUID, SearchOption.AllDirectories);
+
+				if (files2.Length > 0)
+				{
+					output = files2[0];
+				}
+			}
+		}
+
+		return output;
+	}
+
+	/// <summary>
+	/// Event handler for the button that opens the selected policy in the Policy Editor
+	/// </summary>
+	internal async void OpenSelectedPolicyInPolicyEditor()
+	{
+		if (SelectedPolicyLocalFilePath is null)
+			return;
+
+		try
+		{
+			UIElementsEnabledState = false;
+
+			await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(SelectedPolicyLocalFilePath);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			UIElementsEnabledState = true;
 		}
 	}
 

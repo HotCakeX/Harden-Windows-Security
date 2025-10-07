@@ -15,11 +15,13 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AppControlManager.SiPolicyIntel;
+
 namespace AppControlManager.Others;
 
-internal sealed class FilePathCreator(string filePath, string minimumFileVersion, int siSigningScenario)
+internal sealed class FilePathCreator(string filePath, string minimumFileVersion, SSType siSigningScenario)
 {
 	internal string FilePath => filePath;
 	internal string MinimumFileVersion => minimumFileVersion;
-	internal int SiSigningScenario => siSigningScenario;
+	internal SSType SiSigningScenario => siSigningScenario;
 }

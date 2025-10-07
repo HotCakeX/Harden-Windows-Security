@@ -6017,4 +6017,115 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>खतरनाक स्क्रिप्ट होस्ट अवरोधन नीति बनाएं</value>
   </data>
+    <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>मेमोरी अनुकूलित करें</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अप्रयुक्त प्रबंधित मेमोरी (बड़े ऑब्जेक्ट सहित) को एकत्रित और कॉम्पैक्ट करके मेमोरी उपयोग कम करने का प्रयास। OS RAM को धीरे-धीरे रिलीज़ कर सकता है, इसलिए परिवर्तन तुरंत दिखाई नहीं भी दें। इस बटन को दबाने के बाद अधिक विवरण के लिए लॉग्स देखें।</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अप्रयुक्त प्रबंधित मेमोरी (बड़े ऑब्जेक्ट सहित) को एकत्रित और कॉम्पैक्ट करके मेमोरी उपयोग कम करने का प्रयास। OS RAM को धीरे-धीरे रिलीज़ कर सकता है, इसलिए परिवर्तन तुरंत दिखाई नहीं भी दें। इस बटन को दबाने के बाद अधिक विवरण के लिए लॉग्स देखें।</value>
+  </data>
+  <data name="HasPrivateKeyHeader.Text" xml:space="preserve">
+    <value>निजी कुंजी है</value>
+  </data>
+  <data name="HasPrivateKeyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>निजी कुंजी है</value>
+  </data>
+  <data name="ArchivedHeader.Text" xml:space="preserve">
+    <value>संग्रहीत</value>
+  </data>
+  <data name="ArchivedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>संग्रहीत</value>
+  </data>
+  <data name="CertificatePoliciesHeader.Text" xml:space="preserve">
+    <value>प्रमाणपत्र नीतियाँ</value>
+  </data>
+  <data name="CertificatePoliciesColumnHeaderBtn.Content" xml:space="preserve">
+    <value>प्रमाणपत्र नीतियाँ</value>
+  </data>
+  <data name="AuthorityInformationAccessHeader.Text" xml:space="preserve">
+    <value>प्राधिकरण जानकारी अभिगम</value>
+  </data>
+  <data name="AuthorityInformationAccessColumnHeaderBtn.Content" xml:space="preserve">
+    <value>प्राधिकरण जानकारी अभिगम</value>
+  </data>
+  <data name="CRLDistributionPointsHeader.Text" xml:space="preserve">
+    <value>CRL वितरण बिंदु</value>
+  </data>
+  <data name="CRLDistributionPointsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>CRL वितरण बिंदु</value>
+  </data>
+  <data name="BasicConstraintsHeader.Text" xml:space="preserve">
+    <value>बुनियादी बाधाएँ</value>
+  </data>
+  <data name="BasicConstraintsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>बुनियादी बाधाएँ</value>
+  </data>
+  <data name="KeyUsageHeader.Text" xml:space="preserve">
+    <value>कुंजी उपयोग</value>
+  </data>
+  <data name="KeyUsageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>कुंजी उपयोग</value>
+  </data>
+  <data name="AuthorityKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>प्राधिकरण कुंजी पहचानकर्ता</value>
+  </data>
+  <data name="AuthorityKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>प्राधिकरण कुंजी पहचानकर्ता</value>
+  </data>
+  <data name="SubjectKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>विषय कुंजी पहचानकर्ता</value>
+  </data>
+  <data name="SubjectKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>विषय कुंजी पहचानकर्ता</value>
+  </data>
+  <data name="RawDataLengthHeader.Text" xml:space="preserve">
+    <value>कच्चे डेटा की लंबाई</value>
+  </data>
+  <data name="RawDataLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>कच्चे डेटा की लंबाई</value>
+  </data>
+  <data name="PublicKeyLengthHeader.Text" xml:space="preserve">
+    <value>सार्वजनिक कुंजी की लंबाई</value>
+  </data>
+  <data name="PublicKeyLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>सार्वजनिक कुंजी की लंबाई</value>
+  </data>
+  <data name="CMSDetailsButton.Content" xml:space="preserve">
+    <value>CMS विवरण</value>
+  </data>
+  <data name="CMSDetailsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित फ़ाइल के लिए PKCS #7/CMS (Cryptographic Message Syntax) हस्ताक्षर मेटाडेटा दिखाएँ।</value>
+  </data>
+  <data name="CMSDetailsButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>चयनित फ़ाइल के लिए PKCS #7/CMS (Cryptographic Message Syntax) हस्ताक्षर मेटाडेटा दिखाएँ।</value>
+  </data>
+  <data name="CMSVersion.Text" xml:space="preserve">
+    <value>CMS संस्करण:</value>
+  </data>
+  <data name="CMSIsDetached.Text" xml:space="preserve">
+  <value>क्या पृथक है:</value>
+</data>
+<data name="CMSContentTypeFriendlyName.Text" xml:space="preserve">
+  <value>सामग्री प्रकार का अनुकूल नाम:</value>
+</data>
+<data name="CMSContentTypeOid.Text" xml:space="preserve">
+  <value>सामग्री प्रकार OID:</value>
+</data>
+<data name="CMSRawCmsDataLength.Text" xml:space="preserve">
+  <value>कच्चे CMS डेटा की लंबाई:</value>
+</data>
+<data name="CMSContentInfoDataLength.Text" xml:space="preserve">
+  <value>सामग्री जानकारी डेटा की लंबाई:</value>
+</data>
+  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
+    <value>नीति संपादक में खोलें</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>नीति संपादक में चयनित नीति खोलें, जहाँ आप नीति का विस्तृत अवलोकन देख सकते हैं और इसी ऐप के भीतर इसे आगे अनुकूलित करने का विकल्प है।</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>नीति संपादक में चयनित नीति खोलें, जहाँ आप नीति का विस्तृत अवलोकन देख सकते हैं और इसी ऐप के भीतर इसे आगे अनुकूलित करने का विकल्प है।</value>
+  </data>
   </root>

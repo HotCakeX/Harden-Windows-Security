@@ -3709,4 +3709,27 @@
   <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
     <value>Όλα τα μέτρα ασφαλείας επαληθεύτηκαν με επιτυχία.</value>
   </data>
+    <data name="ProtectSubCategory_TLS_ForBattleNet" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Διατηρήστε ενεργοποιημένη μια μη ασφαλή σουίτα κρυπτογράφησης που απαιτείται για τη σύνδεση στο Internet του προγράμματος-πελάτη Battle.net.</value>
+  </data>
+  <data name="TLSSecurity_TLS_ForBattleNet" xml:space="preserve">
+    <value>Επιλέξτε το μόνο αν χρησιμοποιείτε πράγματι τον πελάτη παιχνιδιού Battle.net.</value>
+  </data>
+  <data name="ProtectSubCategory_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Εφαρμόστε πολιτικές που μειώνουν την τηλεμετρία στο λειτουργικό σύστημα.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <value>Ορισμένες λειτουργίες του λειτουργικού συστήματος θα καταστούν μη διαθέσιμες.</value>
+  </data>
+  <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>Βελτιστοποίηση μνήμης</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσπάθεια μείωσης της χρήσης μνήμης μέσω συλλογής και συμπίεσης μη χρησιμοποιούμενης διαχειριζόμενης μνήμης (συμπεριλαμβανομένων μεγάλων αντικειμένων). Το λειτουργικό σύστημα ενδέχεται να αποδεσμεύει τη RAM σταδιακά, οπότε οι αλλαγές ίσως να μην εμφανιστούν αμέσως. Ελέγξτε τα αρχεία καταγραφής μετά το πάτημα αυτού του κουμπιού για περισσότερες λεπτομέρειες.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσπάθεια μείωσης της χρήσης μνήμης μέσω συλλογής και συμπίεσης μη χρησιμοποιούμενης διαχειριζόμενης μνήμης (συμπεριλαμβανομένων μεγάλων αντικειμένων). Το λειτουργικό σύστημα ενδέχεται να αποδεσμεύει τη RAM σταδιακά, οπότε οι αλλαγές ίσως να μην εμφανιστούν αμέσως. Ελέγξτε τα αρχεία καταγραφής μετά το πάτημα αυτού του κουμπιού για περισσότερες λεπτομέρειες.</value>
+  </data>
 </root>

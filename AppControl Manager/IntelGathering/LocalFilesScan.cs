@@ -196,7 +196,7 @@ internal static class LocalFilesScan
 								SHA256Hash = fileHashes.SHA256Authenticode,
 								SHA1PageHash = fileHashes.SHA1Page,
 								SHA256PageHash = fileHashes.SHA256Page,
-								SISigningScenario = KernelModeDrivers.CheckKernelUserModeStatus(file).Verdict is SiPolicyIntel.SSType.UserMode ? 1 : 0,
+								SISigningScenario = KernelModeDrivers.CheckKernelUserModeStatus(file).Verdict,
 								OriginalFileName = ExtendedFileInfo.OriginalFileName,
 								InternalName = ExtendedFileInfo.InternalName,
 								FileDescription = ExtendedFileInfo.FileDescription,

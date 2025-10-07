@@ -21,8 +21,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
@@ -63,6 +65,14 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
 
 	internal bool IncludeSecurityCatalogsToggleSwitch { get; set => SP(ref field, value); } = true;
+
+	// Properties for the CMS section
+	internal int RawCmsDataLength { get; set => SP(ref field, value); }
+	internal int ContentInfoDataLength { get; set => SP(ref field, value); }
+	internal int CmsVersion { get; set => SP(ref field, value); }
+	internal bool IsDetached { get; set => SP(ref field, value); }
+	internal string? ContentTypeOid { get; set => SP(ref field, value); }
+	internal string? ContentTypeFriendlyName { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Main collection assigned to the ListView
@@ -107,6 +117,18 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	internal GridLength ColumnWidth9 { get; set => SP(ref field, value); }
 	internal GridLength ColumnWidth10 { get; set => SP(ref field, value); }
 	internal GridLength ColumnWidth11 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth12 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth13 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth14 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth15 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth16 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth17 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth18 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth19 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth20 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth21 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth22 { get; set => SP(ref field, value); }
+	internal GridLength ColumnWidth23 { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
@@ -126,6 +148,18 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		double maxWidth9 = ListViewHelper.MeasureText(GlobalVars.GetStr("ThumbprintHeader/Text"));
 		double maxWidth10 = ListViewHelper.MeasureText(GlobalVars.GetStr("TBSHashHeader/Text"));
 		double maxWidth11 = ListViewHelper.MeasureText(GlobalVars.GetStr("ExtensionOIDsHeader/Text"));
+		double maxWidth12 = ListViewHelper.MeasureText(GlobalVars.GetStr("VersionHeader/Text"));
+		double maxWidth13 = ListViewHelper.MeasureText(GlobalVars.GetStr("HasPrivateKeyHeader/Text"));
+		double maxWidth14 = ListViewHelper.MeasureText(GlobalVars.GetStr("ArchivedHeader/Text"));
+		double maxWidth15 = ListViewHelper.MeasureText(GlobalVars.GetStr("CertificatePoliciesHeader/Text"));
+		double maxWidth16 = ListViewHelper.MeasureText(GlobalVars.GetStr("AuthorityInformationAccessHeader/Text"));
+		double maxWidth17 = ListViewHelper.MeasureText(GlobalVars.GetStr("CRLDistributionPointsHeader/Text"));
+		double maxWidth18 = ListViewHelper.MeasureText(GlobalVars.GetStr("BasicConstraintsHeader/Text"));
+		double maxWidth19 = ListViewHelper.MeasureText(GlobalVars.GetStr("KeyUsageHeader/Text"));
+		double maxWidth20 = ListViewHelper.MeasureText(GlobalVars.GetStr("AuthorityKeyIdentifierHeader/Text"));
+		double maxWidth21 = ListViewHelper.MeasureText(GlobalVars.GetStr("SubjectKeyIdentifierHeader/Text"));
+		double maxWidth22 = ListViewHelper.MeasureText(GlobalVars.GetStr("RawDataLengthHeader/Text"));
+		double maxWidth23 = ListViewHelper.MeasureText(GlobalVars.GetStr("PublicKeyLengthHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (FileCertificateInfoCol item in FileCertificates)
@@ -141,6 +175,18 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			maxWidth9 = ListViewHelper.MeasureText(item.Thumbprint, maxWidth9);
 			maxWidth10 = ListViewHelper.MeasureText(item.TBSHash, maxWidth10);
 			maxWidth11 = ListViewHelper.MeasureText(item.OIDs, maxWidth11);
+			maxWidth12 = ListViewHelper.MeasureText(item.Version?.ToString(), maxWidth12);
+			maxWidth13 = ListViewHelper.MeasureText(item.HasPrivateKey?.ToString(), maxWidth13);
+			maxWidth14 = ListViewHelper.MeasureText(item.Archived?.ToString(), maxWidth14);
+			maxWidth15 = ListViewHelper.MeasureText(item.CertificatePolicies, maxWidth15);
+			maxWidth16 = ListViewHelper.MeasureText(item.AuthorityInformationAccess, maxWidth16);
+			maxWidth17 = ListViewHelper.MeasureText(item.CRLDistributionPoints, maxWidth17);
+			maxWidth18 = ListViewHelper.MeasureText(item.BasicConstraints, maxWidth18);
+			maxWidth19 = ListViewHelper.MeasureText(item.KeyUsage, maxWidth19);
+			maxWidth20 = ListViewHelper.MeasureText(item.AuthorityKeyIdentifier, maxWidth20);
+			maxWidth21 = ListViewHelper.MeasureText(item.SubjectKeyIdentifier, maxWidth21);
+			maxWidth22 = ListViewHelper.MeasureText(item.RawDataLength.ToString(), maxWidth22);
+			maxWidth23 = ListViewHelper.MeasureText(item.PublicKeyLength.ToString(), maxWidth23);
 		}
 
 		// Set the column width properties.
@@ -155,6 +201,18 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		ColumnWidth9 = new GridLength(maxWidth9);
 		ColumnWidth10 = new GridLength(maxWidth10);
 		ColumnWidth11 = new GridLength(maxWidth11);
+		ColumnWidth12 = new GridLength(maxWidth12);
+		ColumnWidth13 = new GridLength(maxWidth13);
+		ColumnWidth14 = new GridLength(maxWidth14);
+		ColumnWidth15 = new GridLength(maxWidth15);
+		ColumnWidth16 = new GridLength(maxWidth16);
+		ColumnWidth17 = new GridLength(maxWidth17);
+		ColumnWidth18 = new GridLength(maxWidth18);
+		ColumnWidth19 = new GridLength(maxWidth19);
+		ColumnWidth20 = new GridLength(maxWidth20);
+		ColumnWidth21 = new GridLength(maxWidth21);
+		ColumnWidth22 = new GridLength(maxWidth22);
+		ColumnWidth23 = new GridLength(maxWidth23);
 	}
 
 	#endregion
@@ -189,7 +247,19 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 					cert.NotBefore.ToString().Contains(query, StringComparison.OrdinalIgnoreCase) ||
 					(cert.HashingAlgorithm is not null && cert.HashingAlgorithm.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
 					(cert.SerialNumber is not null && cert.SerialNumber.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
-					(cert.Thumbprint is not null && cert.Thumbprint.Contains(query, StringComparison.OrdinalIgnoreCase))
+					(cert.Thumbprint is not null && cert.Thumbprint.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.Version?.ToString() is not null && cert.Version.Value.ToString().Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.HasPrivateKey?.ToString() is not null && cert.HasPrivateKey.Value.ToString().Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.Archived?.ToString() is not null && cert.Archived.Value.ToString().Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.CertificatePolicies is not null && cert.CertificatePolicies.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.AuthorityInformationAccess is not null && cert.AuthorityInformationAccess.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.CRLDistributionPoints is not null && cert.CRLDistributionPoints.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.BasicConstraints is not null && cert.BasicConstraints.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.KeyUsage is not null && cert.KeyUsage.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.AuthorityKeyIdentifier is not null && cert.AuthorityKeyIdentifier.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					(cert.SubjectKeyIdentifier is not null && cert.SubjectKeyIdentifier.Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+					cert.RawDataLength.ToString().Contains(query, StringComparison.OrdinalIgnoreCase) ||
+					cert.PublicKeyLength.ToString().Contains(query, StringComparison.OrdinalIgnoreCase)
 				).ToList();
 
 		FileCertificates.Clear();
@@ -226,7 +296,19 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			{ "SerialNumber",      (GlobalVars.GetStr("SerialNumberHeader/Text") + ": ",      fc => fc.SerialNumber) },
 			{ "Thumbprint",        (GlobalVars.GetStr("ThumbprintHeader/Text") + ": ",        fc => fc.Thumbprint) },
 			{ "TBSHash",           (GlobalVars.GetStr("TBSHashHeader/Text") + ": ",           fc => fc.TBSHash) },
-			{ "OIDs",              (GlobalVars.GetStr("ExtensionOIDsHeader/Text") + ": ",     fc => fc.OIDs) }
+			{ "OIDs",              (GlobalVars.GetStr("ExtensionOIDsHeader/Text") + ": ",     fc => fc.OIDs) },
+			{ "Version",           (GlobalVars.GetStr("VersionHeader/Text") + ": ",           fc => fc.Version) },
+			{ "HasPrivateKey",     (GlobalVars.GetStr("HasPrivateKeyHeader/Text") + ": ",     fc => fc.HasPrivateKey) },
+			{ "Archived",          (GlobalVars.GetStr("ArchivedHeader/Text") + ": ",          fc => fc.Archived) },
+			{ "CertificatePolicies",(GlobalVars.GetStr("CertificatePoliciesHeader/Text") + ": ", fc => fc.CertificatePolicies) },
+			{ "AuthorityInformationAccess", (GlobalVars.GetStr("AuthorityInformationAccessHeader/Text") + ": ", fc => fc.AuthorityInformationAccess) },
+			{ "CRLDistributionPoints", (GlobalVars.GetStr("CRLDistributionPointsHeader/Text") + ": ", fc => fc.CRLDistributionPoints) },
+			{ "BasicConstraints",  (GlobalVars.GetStr("BasicConstraintsHeader/Text") + ": ",  fc => fc.BasicConstraints) },
+			{ "KeyUsage",          (GlobalVars.GetStr("KeyUsageHeader/Text") + ": ",          fc => fc.KeyUsage) },
+			{ "AuthorityKeyIdentifier", (GlobalVars.GetStr("AuthorityKeyIdentifierHeader/Text") + ": ", fc => fc.AuthorityKeyIdentifier) },
+			{ "SubjectKeyIdentifier", (GlobalVars.GetStr("SubjectKeyIdentifierHeader/Text") + ": ", fc => fc.SubjectKeyIdentifier) },
+			{ "RawDataLength",     (GlobalVars.GetStr("RawDataLengthHeader/Text") + ": ",     fc => fc.RawDataLength) },
+			{ "PublicKeyLength",   (GlobalVars.GetStr("PublicKeyLengthHeader/Text") + ": ",   fc => fc.PublicKeyLength) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
@@ -324,6 +406,10 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 				// Loop over the array of X509Certificate2 objects that represent the certificates used to sign the message
 				foreach (X509Certificate2 signer in certificateArray)
 				{
+					// Extract additional details similar to the comparer
+					(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
+						= ExtractDetailedFields(signer);
+
 					output.Add(new FileCertificateInfoCol
 					(
 						signerNumber: i,
@@ -339,7 +425,19 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 						oIDs: string.Join(", ", signer.Extensions
 								.Select(ext =>
 									ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-								.Where(oid => !string.IsNullOrWhiteSpace(oid)))
+								.Where(oid => !string.IsNullOrWhiteSpace(oid))),
+						version: det.Version,
+						hasPrivateKey: det.HasPrivateKey,
+						archived: det.Archived,
+						certificatePolicies: det.CertificatePolicies,
+						authorityInformationAccess: det.AuthorityInformationAccess,
+						crlDistributionPoints: det.CrlDistributionPoints,
+						basicConstraints: det.BasicConstraints,
+						keyUsage: det.KeyUsage,
+						authorityKeyIdentifier: det.AuthorityKeyIdentifier,
+						subjectKeyIdentifier: det.SubjectKeyIdentifier,
+						rawDataLength: det.RawDataLength,
+						publicKeyLength: det.PublicKeyLength
 					));
 
 					i++;
@@ -373,6 +471,10 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 				// Create a certificate object from the .cer file
 				X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(file);
 
+				// Extract additional details similar to the comparer
+				(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
+					= ExtractDetailedFields(CertObject);
+
 				// Add the certificate as leaf certificate
 				output.Add(new FileCertificateInfoCol
 				(
@@ -389,7 +491,19 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 					oIDs: string.Join(", ", CertObject.Extensions
 							.Select(ext =>
 								ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-							.Where(oid => !string.IsNullOrWhiteSpace(oid)))
+							.Where(oid => !string.IsNullOrWhiteSpace(oid))),
+					version: det.Version,
+					hasPrivateKey: det.HasPrivateKey,
+					archived: det.Archived,
+					certificatePolicies: det.CertificatePolicies,
+					authorityInformationAccess: det.AuthorityInformationAccess,
+					crlDistributionPoints: det.CrlDistributionPoints,
+					basicConstraints: det.BasicConstraints,
+					keyUsage: det.KeyUsage,
+					authorityKeyIdentifier: det.AuthorityKeyIdentifier,
+					subjectKeyIdentifier: det.SubjectKeyIdentifier,
+					rawDataLength: det.RawDataLength,
+					publicKeyLength: det.PublicKeyLength
 				));
 
 			});
@@ -435,12 +549,41 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			{
 				// Get the results
 				output = await FetchForCIP(selectedFile);
+
+				try
+				{
+					byte[] bytes = await File.ReadAllBytesAsync(selectedFile);
+					SignedCms cms = new();
+					cms.Decode(bytes.AsSpan());
+					RawCmsDataLength = bytes.Length;
+					ContentInfoDataLength = cms.ContentInfo.Content.Length;
+					CmsVersion = cms.Version;
+					IsDetached = cms.Detached;
+					ContentTypeOid = cms.ContentInfo.ContentType.Value;
+					ContentTypeFriendlyName = cms.ContentInfo.ContentType.FriendlyName;
+				}
+				catch
+				{
+					RawCmsDataLength = 0;
+					ContentInfoDataLength = 0;
+					CmsVersion = 0;
+					IsDetached = false;
+					ContentTypeOid = null;
+					ContentTypeFriendlyName = null;
+				}
 			}
 
 			else if (string.Equals(fileExtension, ".cer", StringComparison.OrdinalIgnoreCase))
 			{
 				// Get the results
 				output = await FetchForCER(selectedFile);
+
+				RawCmsDataLength = 0;
+				ContentInfoDataLength = 0;
+				CmsVersion = 0;
+				IsDetached = false;
+				ContentTypeOid = null;
+				ContentTypeFriendlyName = null;
 			}
 
 			// For any other files
@@ -509,6 +652,11 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 							// If the signer has Leaf certificate
 							if (signer.LeafCertificate is not null)
 							{
+								X509Certificate2 LeafCert = signer.LeafCertificate.Certificate;
+
+								(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
+									= ExtractDetailedFields(LeafCert);
+
 								output.Add(new FileCertificateInfoCol
 								(
 									signerNumber: i,
@@ -517,14 +665,26 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 									issuerCN: signer.LeafCertificate.IssuerCN,
 									notBefore: signer.LeafCertificate.NotBefore,
 									notAfter: signer.LeafCertificate.NotAfter,
-									hashingAlgorithm: signer.LeafCertificate.Certificate.SignatureAlgorithm.FriendlyName,
-									serialNumber: signer.LeafCertificate.Certificate.SerialNumber,
-									thumbprint: signer.LeafCertificate.Certificate.Thumbprint,
+									hashingAlgorithm: LeafCert.SignatureAlgorithm.FriendlyName,
+									serialNumber: LeafCert.SerialNumber,
+									thumbprint: LeafCert.Thumbprint,
 									tBSHash: signer.LeafCertificate.TBSValue,
-									oIDs: string.Join(", ", signer.LeafCertificate.Certificate.Extensions
+									oIDs: string.Join(", ", LeafCert.Extensions
 										.Select(ext =>
 											ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-										.Where(oid => !string.IsNullOrWhiteSpace(oid)))
+										.Where(oid => !string.IsNullOrWhiteSpace(oid))),
+									version: det.Version,
+									hasPrivateKey: det.HasPrivateKey,
+									archived: det.Archived,
+									certificatePolicies: det.CertificatePolicies,
+									authorityInformationAccess: det.AuthorityInformationAccess,
+									crlDistributionPoints: det.CrlDistributionPoints,
+									basicConstraints: det.BasicConstraints,
+									keyUsage: det.KeyUsage,
+									authorityKeyIdentifier: det.AuthorityKeyIdentifier,
+									subjectKeyIdentifier: det.SubjectKeyIdentifier,
+									rawDataLength: det.RawDataLength,
+									publicKeyLength: det.PublicKeyLength
 								));
 							}
 
@@ -534,6 +694,11 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 								// Loop over Intermediate certificates of the file
 								foreach (ChainElement intermediate in signer.IntermediateCertificates)
 								{
+									X509Certificate2 IntCert = intermediate.Certificate;
+
+									(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
+										= ExtractDetailedFields(IntCert);
+
 									output.Add(new FileCertificateInfoCol
 									(
 										signerNumber: i,
@@ -542,36 +707,67 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 										issuerCN: intermediate.IssuerCN,
 										notBefore: intermediate.NotBefore,
 										notAfter: intermediate.NotAfter,
-										hashingAlgorithm: intermediate.Certificate.SignatureAlgorithm.FriendlyName,
-										serialNumber: intermediate.Certificate.SerialNumber,
-										thumbprint: intermediate.Certificate.Thumbprint,
+										hashingAlgorithm: IntCert.SignatureAlgorithm.FriendlyName,
+										serialNumber: IntCert.SerialNumber,
+										thumbprint: IntCert.Thumbprint,
 										tBSHash: intermediate.TBSValue,
-										oIDs: string.Join(", ", intermediate.Certificate.Extensions
+										oIDs: string.Join(", ", IntCert.Extensions
 											.Select(ext =>
 												ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-											.Where(oid => !string.IsNullOrWhiteSpace(oid)))
+											.Where(oid => !string.IsNullOrWhiteSpace(oid))),
+										version: det.Version,
+										hasPrivateKey: det.HasPrivateKey,
+										archived: det.Archived,
+										certificatePolicies: det.CertificatePolicies,
+										authorityInformationAccess: det.AuthorityInformationAccess,
+										crlDistributionPoints: det.CrlDistributionPoints,
+										basicConstraints: det.BasicConstraints,
+										keyUsage: det.KeyUsage,
+										authorityKeyIdentifier: det.AuthorityKeyIdentifier,
+										subjectKeyIdentifier: det.SubjectKeyIdentifier,
+										rawDataLength: det.RawDataLength,
+										publicKeyLength: det.PublicKeyLength
 									));
 								}
 							}
 
 							// Add the root certificate
-							output.Add(new FileCertificateInfoCol
-							(
-								signerNumber: i,
-								type: CertificateType.Root,
-								subjectCN: signer.RootCertificate.SubjectCN,
-								issuerCN: signer.RootCertificate.SubjectCN, // Issuer is itself for Root certificate type
-								notBefore: signer.RootCertificate.NotBefore,
-								notAfter: signer.RootCertificate.NotAfter,
-								hashingAlgorithm: signer.RootCertificate.Certificate.SignatureAlgorithm.FriendlyName,
-								serialNumber: signer.RootCertificate.Certificate.SerialNumber,
-								thumbprint: signer.RootCertificate.Certificate.Thumbprint,
-								tBSHash: signer.RootCertificate.TBSValue,
-								oIDs: string.Join(", ", signer.RootCertificate.Certificate.Extensions
+							{
+								X509Certificate2 RootCert = signer.RootCertificate.Certificate;
+
+								(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
+									= ExtractDetailedFields(RootCert);
+
+								output.Add(new FileCertificateInfoCol
+								(
+									signerNumber: i,
+									type: CertificateType.Root,
+									subjectCN: signer.RootCertificate.SubjectCN,
+									issuerCN: signer.RootCertificate.SubjectCN, // Issuer is itself for Root certificate type
+									notBefore: signer.RootCertificate.NotBefore,
+									notAfter: signer.RootCertificate.NotAfter,
+									hashingAlgorithm: RootCert.SignatureAlgorithm.FriendlyName,
+									serialNumber: RootCert.SerialNumber,
+									thumbprint: RootCert.Thumbprint,
+									tBSHash: signer.RootCertificate.TBSValue,
+									oIDs: string.Join(", ", RootCert.Extensions
 									.Select(ext =>
 										ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-									.Where(oid => !string.IsNullOrWhiteSpace(oid)))
-							));
+									.Where(oid => !string.IsNullOrWhiteSpace(oid))),
+									version: det.Version,
+									hasPrivateKey: det.HasPrivateKey,
+									archived: det.Archived,
+									certificatePolicies: det.CertificatePolicies,
+									authorityInformationAccess: det.AuthorityInformationAccess,
+									crlDistributionPoints: det.CrlDistributionPoints,
+									basicConstraints: det.BasicConstraints,
+									keyUsage: det.KeyUsage,
+									authorityKeyIdentifier: det.AuthorityKeyIdentifier,
+									subjectKeyIdentifier: det.SubjectKeyIdentifier,
+									rawDataLength: det.RawDataLength,
+									publicKeyLength: det.PublicKeyLength
+								));
+							}
 
 							// Increase the counter
 							i++;
@@ -587,6 +783,13 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 						}
 					}
 				});
+
+				RawCmsDataLength = 0;
+				ContentInfoDataLength = 0;
+				CmsVersion = 0;
+				IsDetached = false;
+				ContentTypeOid = null;
+				ContentTypeFriendlyName = null;
 			}
 
 			// Add the results to the collection
@@ -694,6 +897,197 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		catch (Exception ex)
 		{
 			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	/// <summary>
+	/// Retrieves detailed fields from an X509Certificate2 object.
+	/// </summary>
+	/// <param name="cert"></param>
+	/// <returns></returns>
+	private static (int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) ExtractDetailedFields(X509Certificate2 cert)
+	{
+		int? version = cert?.Version;
+		bool? hasPrivateKey = cert?.HasPrivateKey;
+		bool? archived = cert?.Archived;
+		string? certificatePolicies = null;
+		string? authorityInformationAccess = null;
+		string? crlDistributionPoints = null;
+		string? basicConstraints = null;
+		string? keyUsage = null;
+		string? authorityKeyIdentifier = null;
+		string? subjectKeyIdentifier = null;
+		int rawDataLength = cert?.RawData?.Length ?? 0;
+
+		int publicKeyLength = 0;
+		try
+		{
+			if (cert?.PublicKey?.Oid?.Value == "1.2.840.113549.1.1.1")
+			{
+				using RSA? rsa = cert.GetRSAPublicKey();
+				if (rsa != null)
+				{
+					publicKeyLength = rsa.KeySize;
+				}
+			}
+			else if (cert?.PublicKey?.Oid?.Value == "1.2.840.10045.2.1")
+			{
+				using ECDsa? ecdsa = cert.GetECDsaPublicKey();
+				if (ecdsa != null)
+				{
+					publicKeyLength = ecdsa.KeySize;
+				}
+			}
+			else
+			{
+				using DSA? dsa = cert?.GetDSAPublicKey();
+				if (dsa != null)
+				{
+					publicKeyLength = dsa.KeySize;
+				}
+
+				if (publicKeyLength == 0)
+				{
+					using ECDiffieHellman? ecdh = cert?.GetECDiffieHellmanPublicKey();
+					if (ecdh != null)
+					{
+						publicKeyLength = ecdh.KeySize;
+					}
+				}
+			}
+		}
+		catch
+		{
+			publicKeyLength = 0;
+		}
+
+		try
+		{
+			if (cert is not null)
+			{
+				foreach (X509Extension ext in cert.Extensions)
+				{
+					if (ext.Oid?.Value is null)
+					{
+						continue;
+					}
+
+					if (string.Equals(ext.Oid.Value, "2.5.29.37", StringComparison.OrdinalIgnoreCase))
+					{
+						try
+						{
+							X509EnhancedKeyUsageExtension ekuExt = new(ext, ext.Critical);
+							keyUsage = ekuExt.Format(false);
+						}
+						catch { }
+					}
+					else if (string.Equals(ext.Oid.Value, "2.5.29.15", StringComparison.OrdinalIgnoreCase))
+					{
+						try
+						{
+							X509KeyUsageExtension kuExt = new(ext, ext.Critical);
+							keyUsage = kuExt.Format(false);
+						}
+						catch { }
+					}
+					else if (string.Equals(ext.Oid.Value, "2.5.29.19", StringComparison.OrdinalIgnoreCase))
+					{
+						try
+						{
+							X509BasicConstraintsExtension bcExt = new(ext, ext.Critical);
+							basicConstraints = $"CA: {bcExt.CertificateAuthority}, PathLengthConstraint: {(bcExt.HasPathLengthConstraint ? bcExt.PathLengthConstraint.ToString() : "None")}";
+						}
+						catch { }
+					}
+					else if (string.Equals(ext.Oid.Value, "2.5.29.35", StringComparison.OrdinalIgnoreCase))
+					{
+						try
+						{
+							authorityKeyIdentifier = Convert.ToHexString(ext.RawData);
+						}
+						catch { }
+					}
+					else if (string.Equals(ext.Oid.Value, "2.5.29.14", StringComparison.OrdinalIgnoreCase))
+					{
+						try
+						{
+							X509SubjectKeyIdentifierExtension skiExt = new(ext, ext.Critical);
+							subjectKeyIdentifier = skiExt.SubjectKeyIdentifier;
+						}
+						catch { }
+					}
+					else if (string.Equals(ext.Oid.Value, "2.5.29.31", StringComparison.OrdinalIgnoreCase))
+					{
+						try
+						{
+							crlDistributionPoints = ext.Format(false);
+						}
+						catch { }
+					}
+					else if (string.Equals(ext.Oid.Value, "1.3.6.1.5.5.7.1.1", StringComparison.OrdinalIgnoreCase))
+					{
+						try
+						{
+							authorityInformationAccess = ext.Format(false);
+						}
+						catch { }
+					}
+					else if (string.Equals(ext.Oid.Value, "2.5.29.32", StringComparison.OrdinalIgnoreCase))
+					{
+						try
+						{
+							certificatePolicies = ext.Format(false);
+						}
+						catch { }
+					}
+				}
+			}
+		}
+		catch { }
+
+		return (version, hasPrivateKey, archived, certificatePolicies, authorityInformationAccess, crlDistributionPoints, basicConstraints, keyUsage, authorityKeyIdentifier, subjectKeyIdentifier, rawDataLength, publicKeyLength);
+	}
+
+	/// <summary>
+	/// Exports the displayed data to JSON.
+	/// </summary>
+	internal async void ExportToJSON()
+	{
+		try
+		{
+			AreElementsEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			DateTime now = DateTime.Now;
+			string formattedDateTime = now.ToString("yyyy-MM-dd_HH-mm-ss");
+			string fileName = $"AppControlManager_SignerDataExport_{formattedDateTime}.json";
+
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, fileName);
+
+			if (savePath is null)
+				return;
+
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("ExportingToJSONMsg"));
+
+			await Task.Run(() =>
+			{
+				string jsonString = JsonSerializer.Serialize(
+					FilteredCertificates,
+					FileCertificateInfoColJsonSerializationContext.Default.ListFileCertificateInfoCol);
+
+				File.WriteAllText(savePath, jsonString);
+			});
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedDataToJSON"), FilteredCertificates.Count, savePath));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+			MainInfoBarIsClosable = true;
 		}
 	}
 }

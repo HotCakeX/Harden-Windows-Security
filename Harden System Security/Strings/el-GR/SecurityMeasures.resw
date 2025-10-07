@@ -949,4 +949,7 @@
 <data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
     <value>Ενεργοποιήστε την καταγραφή και την παρακολούθηση των ενεργειών κλειδώματος και ξεκλειδώματος της οθόνης κλειδώματος.</value>
 </data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>Να επιτρέπεται η συνδεσιμότητα δικτύου κατά τη διάρκεια του connected-modern-standby (μόνο όταν είναι συνδεδεμένο στο ρεύμα)</value>
+</data>
 </root>

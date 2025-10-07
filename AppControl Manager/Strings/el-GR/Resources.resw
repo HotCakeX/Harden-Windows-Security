@@ -6017,4 +6017,115 @@
   <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Δημιουργία της πολιτικής αποκλεισμού επικίνδυνων κεντρικών υπολογιστών σεναρίων</value>
   </data>
+    <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>Βελτιστοποίηση μνήμης</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσπάθεια μείωσης της χρήσης μνήμης μέσω συλλογής και συμπίεσης μη χρησιμοποιούμενης διαχειριζόμενης μνήμης (συμπεριλαμβανομένων μεγάλων αντικειμένων). Το λειτουργικό σύστημα ενδέχεται να αποδεσμεύει τη RAM σταδιακά, οπότε οι αλλαγές ίσως να μην εμφανιστούν αμέσως. Ελέγξτε τα αρχεία καταγραφής μετά το πάτημα αυτού του κουμπιού για περισσότερες λεπτομέρειες.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσπάθεια μείωσης της χρήσης μνήμης μέσω συλλογής και συμπίεσης μη χρησιμοποιούμενης διαχειριζόμενης μνήμης (συμπεριλαμβανομένων μεγάλων αντικειμένων). Το λειτουργικό σύστημα ενδέχεται να αποδεσμεύει τη RAM σταδιακά, οπότε οι αλλαγές ίσως να μην εμφανιστούν αμέσως. Ελέγξτε τα αρχεία καταγραφής μετά το πάτημα αυτού του κουμπιού για περισσότερες λεπτομέρειες.</value>
+  </data>
+  <data name="HasPrivateKeyHeader.Text" xml:space="preserve">
+    <value>Διαθέτει ιδιωτικό κλειδί</value>
+  </data>
+  <data name="HasPrivateKeyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Διαθέτει ιδιωτικό κλειδί</value>
+  </data>
+  <data name="ArchivedHeader.Text" xml:space="preserve">
+    <value>Αρχειοθετημένο</value>
+  </data>
+  <data name="ArchivedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αρχειοθετημένο</value>
+  </data>
+  <data name="CertificatePoliciesHeader.Text" xml:space="preserve">
+    <value>Πολιτικές πιστοποιητικών</value>
+  </data>
+  <data name="CertificatePoliciesColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Πολιτικές πιστοποιητικών</value>
+  </data>
+  <data name="AuthorityInformationAccessHeader.Text" xml:space="preserve">
+    <value>Πρόσβαση σε πληροφορίες αρχής</value>
+  </data>
+  <data name="AuthorityInformationAccessColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Πρόσβαση σε πληροφορίες αρχής</value>
+  </data>
+  <data name="CRLDistributionPointsHeader.Text" xml:space="preserve">
+    <value>Σημεία διανομής CRL</value>
+  </data>
+  <data name="CRLDistributionPointsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Σημεία διανομής CRL</value>
+  </data>
+  <data name="BasicConstraintsHeader.Text" xml:space="preserve">
+    <value>Βασικοί περιορισμοί</value>
+  </data>
+  <data name="BasicConstraintsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Βασικοί περιορισμοί</value>
+  </data>
+  <data name="KeyUsageHeader.Text" xml:space="preserve">
+    <value>Χρήση κλειδιού</value>
+  </data>
+  <data name="KeyUsageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Χρήση κλειδιού</value>
+  </data>
+  <data name="AuthorityKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>Αναγνωριστικό κλειδιού αρχής</value>
+  </data>
+  <data name="AuthorityKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αναγνωριστικό κλειδιού αρχής</value>
+  </data>
+  <data name="SubjectKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>Αναγνωριστικό κλειδιού υποκειμένου</value>
+  </data>
+  <data name="SubjectKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αναγνωριστικό κλειδιού υποκειμένου</value>
+  </data>
+  <data name="RawDataLengthHeader.Text" xml:space="preserve">
+    <value>Μήκος ακατέργαστων δεδομένων</value>
+  </data>
+  <data name="RawDataLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Μήκος ακατέργαστων δεδομένων</value>
+  </data>
+  <data name="PublicKeyLengthHeader.Text" xml:space="preserve">
+    <value>Μήκος δημόσιου κλειδιού</value>
+  </data>
+  <data name="PublicKeyLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Μήκος δημόσιου κλειδιού</value>
+  </data>
+  <data name="CMSDetailsButton.Content" xml:space="preserve">
+    <value>Λεπτομέρειες CMS</value>
+  </data>
+  <data name="CMSDetailsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εμφάνιση μεταδεδομένων υπογραφής PKCS #7/CMS (Σύνταξη Κρυπτογραφικών Μηνυμάτων) για το επιλεγμένο αρχείο.</value>
+  </data>
+  <data name="CMSDetailsButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Εμφάνιση μεταδεδομένων υπογραφής PKCS #7/CMS (Σύνταξη Κρυπτογραφικών Μηνυμάτων) για το επιλεγμένο αρχείο.</value>
+  </data>
+  <data name="CMSVersion.Text" xml:space="preserve">
+    <value>Έκδοση CMS:</value>
+  </data>
+  <data name="CMSIsDetached.Text" xml:space="preserve">
+  <value>Είναι αποσπασμένο:</value>
+</data>
+<data name="CMSContentTypeFriendlyName.Text" xml:space="preserve">
+  <value>Φιλική ονομασία τύπου περιεχομένου:</value>
+</data>
+<data name="CMSContentTypeOid.Text" xml:space="preserve">
+  <value>OID τύπου περιεχομένου:</value>
+</data>
+<data name="CMSRawCmsDataLength.Text" xml:space="preserve">
+  <value>Μήκος ακατέργαστων δεδομένων CMS:</value>
+</data>
+<data name="CMSContentInfoDataLength.Text" xml:space="preserve">
+  <value>Μήκος δεδομένων πληροφοριών περιεχομένου:</value>
+</data>
+  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
+    <value>Άνοιγμα στον Επεξεργαστή Πολιτικών</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίξτε την επιλεγμένη πολιτική στον Επεξεργαστή Πολιτικών, όπου μπορείτε να δείτε αναλυτική επισκόπηση της πολιτικής και έχετε τη δυνατότητα να την προσαρμόσετε περαιτέρω μέσα στην εφαρμογή.</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίξτε την επιλεγμένη πολιτική στον Επεξεργαστή Πολιτικών, όπου μπορείτε να δείτε αναλυτική επισκόπηση της πολιτικής και έχετε τη δυνατότητα να την προσαρμόσετε περαιτέρω μέσα στην εφαρμογή.</value>
+  </data>
   </root>

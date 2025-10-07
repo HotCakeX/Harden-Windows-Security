@@ -6017,4 +6017,115 @@
   <data name="DangerousScriptHostsBlockingCreateButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>അപകടകരമായ സ്‌ക്രിപ്റ്റ് ഹോസ്റ്റുകൾ തടയൽ നയം സൃഷ്‌ടിക്കുക</value>
   </data>
+    <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>മെമ്മറി ഓപ്റ്റിമൈസ് ചെയ്യുക</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഉപയോഗത്തിലില്ലാത്ത മാനേജുചെയ്യുന്ന മെമ്മറി (വലുതായ ഒബ്ജക്റ്റുകൾ ഉൾപ്പെടെ) ശേഖരിച്ചു കമ്പാക്റ്റ് ചെയ്ത് മെമ്മറി ഉപയോഗം കുറയ്ക്കാനുള്ള ശ്രമം. ഓ.എസ്. RAM ക്രമേണ റിലീസ് ചെയ്യാൻ സാധ്യതയുണ്ട്, അതിനാൽ മാറ്റങ്ങൾ ഉടൻ പ്രകടമാകണമെന്നില്ല. കൂടുതൽ വിവരങ്ങൾക്ക് ഈ ബട്ടൺ അമർത്തിയതിന് ശേഷം ലോഗുകൾ പരിശോധിക്കുക.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഉപയോഗത്തിലില്ലാത്ത മാനേജുചെയ്യുന്ന മെമ്മറി (വലുതായ ഒബ്ജക്റ്റുകൾ ഉൾപ്പെടെ) ശേഖരിച്ചു കമ്പാക്റ്റ് ചെയ്ത് മെമ്മറി ഉപയോഗം കുറയ്ക്കാനുള്ള ശ്രമം. ഓ.എസ്. RAM ക്രമേണ റിലീസ് ചെയ്യാൻ സാധ്യതയുണ്ട്, അതിനാൽ മാറ്റങ്ങൾ ഉടൻ പ്രകടമാകണമെന്നില്ല. കൂടുതൽ വിവരങ്ങൾക്ക് ഈ ബട്ടൺ അമർത്തിയതിന് ശേഷം ലോഗുകൾ പരിശോധിക്കുക.</value>
+  </data>
+  <data name="HasPrivateKeyHeader.Text" xml:space="preserve">
+    <value>സ്വകാര്യ കീ ഉണ്ട്</value>
+  </data>
+  <data name="HasPrivateKeyColumnHeaderBtn.Content" xml:space="preserve">
+    <value>സ്വകാര്യ കീ ഉണ്ട്</value>
+  </data>
+  <data name="ArchivedHeader.Text" xml:space="preserve">
+    <value>ആർക്കൈവ് ചെയ്തത്</value>
+  </data>
+  <data name="ArchivedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ആർക്കൈവ് ചെയ്തത്</value>
+  </data>
+  <data name="CertificatePoliciesHeader.Text" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റ് നയങ്ങൾ</value>
+  </data>
+  <data name="CertificatePoliciesColumnHeaderBtn.Content" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റ് നയങ്ങൾ</value>
+  </data>
+  <data name="AuthorityInformationAccessHeader.Text" xml:space="preserve">
+    <value>അഥോറിറ്റി ഇൻഫർമേഷൻ ആക്‌സസ്</value>
+  </data>
+  <data name="AuthorityInformationAccessColumnHeaderBtn.Content" xml:space="preserve">
+    <value>അഥോറിറ്റി ഇൻഫർമേഷൻ ആക്‌സസ്</value>
+  </data>
+  <data name="CRLDistributionPointsHeader.Text" xml:space="preserve">
+    <value>CRL വിതരണ പോയിന്റുകൾ</value>
+  </data>
+  <data name="CRLDistributionPointsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>CRL വിതരണ പോയിന്റുകൾ</value>
+  </data>
+  <data name="BasicConstraintsHeader.Text" xml:space="preserve">
+    <value>അടിസ്ഥാന നിയന്ത്രണങ്ങൾ</value>
+  </data>
+  <data name="BasicConstraintsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>അടിസ്ഥാന നിയന്ത്രണങ്ങൾ</value>
+  </data>
+  <data name="KeyUsageHeader.Text" xml:space="preserve">
+    <value>കീ ഉപയോഗം</value>
+  </data>
+  <data name="KeyUsageColumnHeaderBtn.Content" xml:space="preserve">
+    <value>കീ ഉപയോഗം</value>
+  </data>
+  <data name="AuthorityKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>അഥോറിറ്റി കീ ഐഡന്റിഫയർ</value>
+  </data>
+  <data name="AuthorityKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>అഥോറിറ്റി കീ ഐഡന്റിഫയർ</value>
+  </data>
+  <data name="SubjectKeyIdentifierHeader.Text" xml:space="preserve">
+    <value>സബ്ജക്ട് കീ ഐഡന്റിഫയർ</value>
+  </data>
+  <data name="SubjectKeyIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>സബ്ജക്ട് കീ ഐഡന്റിഫയർ</value>
+  </data>
+  <data name="RawDataLengthHeader.Text" xml:space="preserve">
+    <value>അസംസ്കൃത ഡാറ്റയുടെ നീളം</value>
+  </data>
+  <data name="RawDataLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>അസംസ്കൃത ഡാറ്റയുടെ നീളം</value>
+  </data>
+  <data name="PublicKeyLengthHeader.Text" xml:space="preserve">
+    <value>പബ്ലിക് കീയുടെ നീളം</value>
+  </data>
+  <data name="PublicKeyLengthColumnHeaderBtn.Content" xml:space="preserve">
+    <value>പബ്ലിക് കീയുടെ നീളം</value>
+  </data>
+  <data name="CMSDetailsButton.Content" xml:space="preserve">
+    <value>CMS വിശദാംശങ്ങൾ</value>
+  </data>
+  <data name="CMSDetailsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ഫയലിനായി PKCS #7/CMS (Cryptographic Message Syntax) ഒപ്പിന്റെ മെറ്റാഡാറ്റ പ്രദർശിപ്പിക്കുക.</value>
+  </data>
+  <data name="CMSDetailsButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>തിരഞ്ഞെടുത്ത ഫയലിനായി PKCS #7/CMS (Cryptographic Message Syntax) ഒപ്പിന്റെ മെറ്റാഡാറ്റ പ്രദർശിപ്പിക്കുക.</value>
+  </data>
+  <data name="CMSVersion.Text" xml:space="preserve">
+    <value>CMS പതിപ്പ്:</value>
+  </data>
+  <data name="CMSIsDetached.Text" xml:space="preserve">
+  <value>വേർതിരിച്ചിരിക്കുന്നു:</value>
+</data>
+<data name="CMSContentTypeFriendlyName.Text" xml:space="preserve">
+  <value>ഉള്ളടക്ക തരം സൗഹൃദ നാമം:</value>
+</data>
+<data name="CMSContentTypeOid.Text" xml:space="preserve">
+  <value>ഉള്ളടക്ക തരം OID:</value>
+</data>
+<data name="CMSRawCmsDataLength.Text" xml:space="preserve">
+  <value>അസംസ്കൃത CMS ഡാറ്റയുടെ നീളം:</value>
+</data>
+<data name="CMSContentInfoDataLength.Text" xml:space="preserve">
+  <value>കണ്ടന്റ് ഇൻഫോ ഡാറ്റയുടെ നീളം:</value>
+</data>
+  <data name="OpenInPolicyEditorButton.Content" xml:space="preserve">
+    <value>പോളിസി എഡിറ്ററിൽ തുറക്കുക</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസി പോളിസി എഡിറ്ററിൽ തുറക്കുക, അവിടെ നിങ്ങൾക്ക് പോളിസിയുടെ വിശദമായ അവലോകനം കാണാനും ഈ ആപ്പിനുള്ളിൽ തന്നെ അത് കൂടുതൽ ഇഷ്ടാനുസൃതമാക്കാനും കഴിയും.</value>
+  </data>
+  <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത പോളിസി പോളിസി എഡിറ്ററിൽ തുറക്കുക, അവിടെ നിങ്ങൾക്ക് പോളിസിയുടെ വിശദമായ അവലോകനം കാണാനും ഈ ആപ്പിനുള്ളിൽ തന്നെ അത് കൂടുതൽ ഇഷ്ടാനുസൃതമാക്കാനും കഴിയും.</value>
+  </data>
   </root>

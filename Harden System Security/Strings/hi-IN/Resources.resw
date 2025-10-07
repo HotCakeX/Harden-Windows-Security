@@ -3709,4 +3709,27 @@
   <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
     <value>सभी सुरक्षा उपाय सफलतापूर्वक सत्यापित किए गए.</value>
   </data>
+    <data name="ProtectSubCategory_TLS_ForBattleNet" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Battle.net गेम क्लाइंट की इंटरनेट कनेक्टिविटी हेतु आवश्यक असुरक्षित Cipher Suite को सक्षम रखें।</value>
+  </data>
+  <data name="TLSSecurity_TLS_ForBattleNet" xml:space="preserve">
+    <value>इसे तभी चुनें जब आप वास्तव में Battle.net गेम क्लाइंट का उपयोग करते हों।</value>
+  </data>
+  <data name="ProtectSubCategory_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>OS में टेलीमेट्री को कम करने वाली नीतियाँ लागू करें।</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <value>OS की कुछ विशेषताएँ उपलब्ध नहीं रहेंगी।</value>
+  </data>
+  <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>मेमोरी अनुकूलित करें</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अप्रयुक्त प्रबंधित मेमोरी (बड़े ऑब्जेक्ट सहित) को एकत्रित और कॉम्पैक्ट करके मेमोरी उपयोग कम करने का प्रयास। OS RAM को धीरे-धीरे रिलीज़ कर सकता है, इसलिए परिवर्तन तुरंत दिखाई नहीं भी दें। इस बटन को दबाने के बाद अधिक विवरण के लिए लॉग्स देखें।</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अप्रयुक्त प्रबंधित मेमोरी (बड़े ऑब्जेक्ट सहित) को एकत्रित और कॉम्पैक्ट करके मेमोरी उपयोग कम करने का प्रयास। OS RAM को धीरे-धीरे रिलीज़ कर सकता है, इसलिए परिवर्तन तुरंत दिखाई नहीं भी दें। इस बटन को दबाने के बाद अधिक विवरण के लिए लॉग्स देखें।</value>
+  </data>
 </root>

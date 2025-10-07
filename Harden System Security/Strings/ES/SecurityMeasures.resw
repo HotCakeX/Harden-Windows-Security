@@ -949,4 +949,7 @@
 <data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
     <value>Habilite la auditoría y el seguimiento de los bloqueos y desbloqueos de la pantalla de bloqueo.</value>
 </data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>Permitir la conectividad de red durante connected-modern-standby (solo cuando está conectado a la corriente)</value>
+</data>
 </root>

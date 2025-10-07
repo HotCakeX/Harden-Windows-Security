@@ -385,7 +385,7 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
 		<PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.14.0" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3485.44" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
 		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
 		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />

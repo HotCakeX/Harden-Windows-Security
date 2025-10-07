@@ -3709,4 +3709,27 @@ Huella Digital: {3}</value>
   <data name="VerifyingAllSecurityMeasuresSuccessful" xml:space="preserve">
     <value>Todas las medidas de seguridad se verificaron correctamente.</value>
   </data>
+    <data name="ProtectSubCategory_TLS_ForBattleNet" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Mantén habilitada una suite de cifrado insegura requerida para la conectividad a Internet del cliente de juego de Battle.net.</value>
+  </data>
+  <data name="TLSSecurity_TLS_ForBattleNet" xml:space="preserve">
+    <value>Selecciona esto solo si realmente usas el cliente de juego de Battle.net.</value>
+  </data>
+  <data name="ProtectSubCategory_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Aplicar políticas que reduzcan la telemetría en el sistema operativo.</value>
+  </data>
+  <data name="MiscellaneousConfigurations_MiscellaneousConfigurations_ReducedTelemetry" xml:space="preserve">
+    <value>Algunas funciones del sistema operativo dejarán de estar disponibles.</value>
+  </data>
+  <data name="OptimizeMemoryButton.Content" xml:space="preserve">
+    <value>Optimizar memoria</value>
+  </data>
+  <data name="OptimizeMemoryButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Intento de reducir el uso de memoria recopilando y compactando memoria administrada no utilizada (incluidos objetos grandes). El sistema operativo puede liberar la RAM gradualmente, por lo que los cambios podrían no mostrarse de inmediato. Revisa los registros después de presionar este botón para más detalles.</value>
+  </data>
+  <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Intento de reducir el uso de memoria recopilando y compactando memoria administrada no utilizada (incluidos objetos grandes). El sistema operativo puede liberar la RAM gradualmente, por lo que los cambios podrían no mostrarse de inmediato. Revisa los registros después de presionar este botón para más detalles.</value>
+  </data>
 </root>

@@ -15,6 +15,8 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AppControlManager.SiPolicyIntel;
+
 namespace AppControlManager.Others;
 
 /// <summary>
@@ -23,10 +25,10 @@ namespace AppControlManager.Others;
 /// <param name="packageFamilyName">Specifies the name of the package family for which the rule is created.</param>
 /// <param name="minimumFileVersion">Indicates the minimum file version required for the rule to apply.</param>
 /// <param name="siSigningScenario">Represents the signing scenario associated with the rule.</param>
-internal sealed class PFNRuleCreator(string packageFamilyName, string minimumFileVersion, int siSigningScenario)
+internal sealed class PFNRuleCreator(string packageFamilyName, string minimumFileVersion, SSType siSigningScenario)
 {
 	internal string PackageFamilyName => packageFamilyName;
 	internal string MinimumFileVersion => minimumFileVersion;
-	internal int SiSigningScenario => siSigningScenario;
+	internal SSType SiSigningScenario => siSigningScenario;
 }
 

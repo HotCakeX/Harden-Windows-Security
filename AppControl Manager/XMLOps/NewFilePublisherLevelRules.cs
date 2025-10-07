@@ -130,7 +130,7 @@ internal static class NewFilePublisherLevelRules
 				#region Adding signer to the Signer Scenario and CiSigners
 
 				// For User-Mode files
-				if (filePublisherData.SiSigningScenario is 1)
+				if (filePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
 
 					// Create Allowed Signers inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
@@ -146,7 +146,7 @@ internal static class NewFilePublisherLevelRules
 				}
 
 				// For Kernel-Mode files
-				else if (filePublisherData.SiSigningScenario is 0)
+				else if (filePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
 
 					// Create Allowed Signers inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
@@ -273,7 +273,7 @@ internal static class NewFilePublisherLevelRules
 				#region Adding signer to the Signer Scenario and CiSigners
 
 				// For User-Mode files
-				if (filePublisherData.SiSigningScenario is 1)
+				if (filePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
 
 					// Create Denied Signers inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
@@ -289,7 +289,7 @@ internal static class NewFilePublisherLevelRules
 				}
 
 				// For Kernel-Mode files
-				else if (filePublisherData.SiSigningScenario is 0)
+				else if (filePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
 
 					// Create Denied Signers inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="131">

@@ -155,7 +155,7 @@ internal static class NewWHQLFilePublisherLevelRules
 				#region Adding signer to the Signer Scenario and CiSigners
 
 				// For User-Mode files
-				if (whqlFilePublisherData.SiSigningScenario is 1)
+				if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
 					// Create Allowed Signers inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
 					XmlElement newUMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
@@ -169,9 +169,8 @@ internal static class NewWHQLFilePublisherLevelRules
 				}
 
 				// For Kernel-Mode files
-				else if (whqlFilePublisherData.SiSigningScenario is 0)
+				else if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
-
 					// Create Allowed Signers inside the <AllowedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
 					XmlElement newKMCIAllowedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("AllowedSigner", GlobalVars.SiPolicyNamespace);
 					newKMCIAllowedSignerNode.SetAttribute("SignerId", signerID);
@@ -316,7 +315,7 @@ internal static class NewWHQLFilePublisherLevelRules
 				#region Adding signer to the Signer Scenario and CiSigners
 
 				// For User-Mode files
-				if (whqlFilePublisherData.SiSigningScenario is 1)
+				if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.UserMode)
 				{
 					// Create Denied Signers inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="12">
 					XmlElement newUMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);
@@ -330,7 +329,7 @@ internal static class NewWHQLFilePublisherLevelRules
 				}
 
 				// For Kernel-Mode files
-				else if (whqlFilePublisherData.SiSigningScenario is 0)
+				else if (whqlFilePublisherData.SiSigningScenario is SiPolicyIntel.SSType.KernelMode)
 				{
 					// Create Denied Signers inside the <DeniedSigners> -> <ProductSigners> -> <SigningScenario Value="131">
 					XmlElement newKMCIDeniedSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("DeniedSigner", GlobalVars.SiPolicyNamespace);

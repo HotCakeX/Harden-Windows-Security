@@ -28,6 +28,7 @@ using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.Graphics;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.ViewModels;

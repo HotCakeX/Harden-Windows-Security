@@ -15,7 +15,7 @@ updates:
       interval: "weekly"
       day: "tuesday"
     labels:
-      - "Dependabot"
+      - "Dependabot ✨"
   - package-ecosystem: "nuget"
     directories:
       - "/AppControl Manager/"
@@ -25,14 +25,14 @@ updates:
       time: "07:30"
       timezone: "Israel"
     labels:
-      - "Dependabot"
+      - "Dependabot ✨"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       # Check for updates to GitHub Actions every week: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
       interval: "daily"
     labels:
-      - "Dependabot"
+      - "Dependabot ✨"
   - package-ecosystem: "cargo"
     directories:
       - "/AppControl Manager/"

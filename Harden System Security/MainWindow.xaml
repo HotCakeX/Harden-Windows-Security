@@ -340,6 +340,7 @@
                 <NavigationViewItem x:Name="FileReputationNavItem" x:Uid="FileReputationNavItem" Icon="{x:Bind ViewModel.FileReputationIcon, Mode=OneWay}" Tag="FileReputation"/>
                 <NavigationViewItem x:Name="GroupPolicyEditorNavItem" x:Uid="GroupPolicyEditorNavItem" Icon="{x:Bind ViewModel.GroupPolicyEditorIcon, Mode=OneWay}" Tag="GroupPolicyEditor"/>
                 <NavigationViewItem x:Name="AuditPoliciesNavItem" x:Uid="AuditPoliciesNavItem" Icon="{x:Bind ViewModel.AuditPoliciesIcon, Mode=OneWay}" Tag="AuditPolicies"/>
+                <NavigationViewItem x:Name="CBOMNavItem" Icon="{x:Bind ViewModel.CBOMIcon, Mode=OneWay}" x:Uid="CBOMNavItem" Tag="CBOM"/>
 
                 <!-- Documentation Group -->
                 <NavigationViewItemHeader x:Name="DocumentationNavigationViewItemHeader" x:Uid="DocumentationNavigationViewItemHeader"/>
@@ -418,7 +419,7 @@
                                 <Button HorizontalAlignment="Center"
                                         VerticalAlignment="Bottom"
                                         x:Uid="OptimizeMemoryButton"
-                                        IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"                                        
+                                        IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
                                         Click="{x:Bind ViewModel.OptimizeMemory}">
                                     <Button.ContentTemplate>
                                         <DataTemplate x:DataType="x:String">

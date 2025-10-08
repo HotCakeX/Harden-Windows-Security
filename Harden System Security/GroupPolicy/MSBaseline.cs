@@ -30,7 +30,6 @@ using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
 using HardenSystemSecurity.SecurityPolicy;
-using HardenSystemSecurity.ViewModels;
 using Microsoft.Win32;
 
 namespace HardenSystemSecurity.GroupPolicy;
@@ -220,14 +219,11 @@ internal static class MSBaseline
 	internal static async Task<List<VerificationResult>?> DownloadAndProcessSecurityBaseline(
 		Uri downloadUrl,
 		Action action,
-		CancellationToken? cancellationToken = null,
-		MicrosoftSecurityBaselineVM? microsoftSecurityBaselineVMRef = null,
-		Microsoft365AppsSecurityBaselineVM? microsoft365AppsSecurityBaselineVMRef = null)
+		CancellationToken? cancellationToken = null)
 	{
 		// Many methods simply don't run in Async mode so we make sure the entire thing runs in another thread to prevent UI blocks
 		return await Task.Run(async () =>
 		{
-
 			string actionText = action switch
 			{
 				Action.Apply => "application",
@@ -236,13 +232,18 @@ internal static class MSBaseline
 				_ => throw new InvalidOperationException("Invalid action specified")
 			};
 
-			Logger.Write($"Starting download and {actionText} of the Baseline from: {downloadUrl}");
+			// Log depending on source type
+			string startVerb = downloadUrl.IsFile ? "load" : "download";
+			Logger.Write($"Starting {startVerb} and {actionText} of the Baseline from: {downloadUrl}");
 
 			cancellationToken?.ThrowIfCancellationRequested();
 
-			// Download the ZIP file into memory
-			byte[] zipContent = await DownloadSecurityBaselineZip(downloadUrl);
-			Logger.Write($"Downloaded ZIP file into memory ({zipContent.Length:N0} bytes)");
+			// Obtain ZIP bytes either from local file or over HTTP
+			byte[] zipContent = downloadUrl.IsFile
+				? await ReadBaselineZipFromFileAsync(downloadUrl)
+				: await DownloadSecurityBaselineZip(downloadUrl);
+
+			Logger.Write($"Obtained ZIP file into memory ({zipContent.Length:N0} bytes)");
 
 			cancellationToken?.ThrowIfCancellationRequested();
 
@@ -280,6 +281,25 @@ internal static class MSBaseline
 				return null;
 			}
 		}, cancellationToken ?? default);
+	}
+
+	/// <summary>
+	/// Reads baseline ZIP from a local file path when a file:// URI is provided
+	/// </summary>
+	private static async Task<byte[]> ReadBaselineZipFromFileAsync(Uri fileUri)
+	{
+		if (!fileUri.IsFile)
+			throw new InvalidOperationException("The provided URI is not a file URI.");
+
+		string path = fileUri.LocalPath;
+
+		if (!File.Exists(path))
+			throw new FileNotFoundException($"Baseline ZIP file not found on disk: {path}", path);
+
+		Logger.Write($"Reading security baseline ZIP file from disk: {path}");
+		byte[] content = await File.ReadAllBytesAsync(path);
+		Logger.Write($"Successfully read {content.Length / 1024.0:N2} KB from disk into memory");
+		return content;
 	}
 
 	/// <summary>

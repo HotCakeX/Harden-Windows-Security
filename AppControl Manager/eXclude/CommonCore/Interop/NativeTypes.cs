@@ -604,3 +604,48 @@ internal struct SERVICE_TABLE_ENTRY
 	internal IntPtr lpServiceName; // LPWSTR
 	internal IntPtr lpServiceProc; // LPSERVICE_MAIN_FUNCTIONW
 }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/bcrypt/ns-bcrypt-crypt_context_functions
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal readonly struct CRYPT_CONTEXT_FUNCTIONS
+{
+	internal readonly uint cFunctions;
+	internal readonly IntPtr rgpszFunctions;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/bcrypt/ns-bcrypt-crypt_provider_refs
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal readonly struct CRYPT_PROVIDER_REFS
+{
+	internal readonly uint cProviders;
+	internal readonly IntPtr rgpProviders;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/bcrypt/ns-bcrypt-crypt_provider_ref
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal readonly struct CRYPT_PROVIDER_REF
+{
+	internal readonly uint dwInterface;
+	internal readonly IntPtr pszFunction;
+	internal readonly IntPtr pszProvider;
+	internal readonly uint cProperties;
+	internal readonly IntPtr rgpProperties;
+	internal readonly IntPtr pUM;
+	internal readonly IntPtr pKM;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/bcrypt/ns-bcrypt-crypt_providers
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal readonly struct CRYPT_PROVIDERS
+{
+	internal readonly uint cProviders;
+	internal readonly IntPtr rgpszProviders;
+}

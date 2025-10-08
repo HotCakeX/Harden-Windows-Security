@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,10 +24,6 @@ namespace QuantumRelayHSS;
 
 internal static class WindowsServiceHost
 {
-	// Static delegates must be rooted to prevent GC
-	private static readonly NativeMethods.ServiceMainFunction s_serviceMainDelegate = new(ServiceMain);
-	private static readonly NativeMethods.HandlerEx s_handlerExDelegate = new(ServiceControlHandler);
-
 	// Service status handle
 	private static IntPtr s_statusHandle = IntPtr.Zero;
 
@@ -61,7 +58,12 @@ internal static class WindowsServiceHost
 			serviceNamePtr = Marshal.StringToHGlobalUni(Atlas.QuantumRelayHSSServiceName);
 
 			// Get a function pointer for the managed ServiceMain delegate
-			IntPtr serviceMainPtr = Marshal.GetFunctionPointerForDelegate(s_serviceMainDelegate);
+			IntPtr serviceMainPtr;
+			unsafe
+			{
+				// Use an unmanaged function pointer
+				serviceMainPtr = (IntPtr)(delegate* unmanaged[Stdcall]<uint, IntPtr, void>)&ServiceMain_Unmanaged;
+			}
 
 			dispatchTable[0] = new SERVICE_TABLE_ENTRY
 			{
@@ -113,7 +115,12 @@ internal static class WindowsServiceHost
 	{
 		try
 		{
-			s_statusHandle = NativeMethods.RegisterServiceCtrlHandlerExW(Atlas.QuantumRelayHSSServiceName, s_handlerExDelegate, IntPtr.Zero);
+			unsafe
+			{
+				// Register unmanaged control handler using an unmanaged function pointer
+				IntPtr handlerPtr = (IntPtr)(delegate* unmanaged[Stdcall]<uint, uint, IntPtr, IntPtr, uint>)&ServiceControlHandler_Unmanaged;
+				s_statusHandle = NativeMethods.RegisterServiceCtrlHandlerExW(Atlas.QuantumRelayHSSServiceName, handlerPtr, IntPtr.Zero);
+			}
 			if (s_statusHandle == IntPtr.Zero)
 			{
 				int error = Marshal.GetLastPInvokeError();
@@ -380,4 +387,14 @@ internal static class WindowsServiceHost
 			return false;
 		}
 	}
+
+	// Unmanaged entry point for SCM table
+	[UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+	private static void ServiceMain_Unmanaged(uint argc, IntPtr argv) => ServiceMain(argc, argv);
+
+	// Unmanaged control handler for RegisterServiceCtrlHandlerExW
+	[UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+	private static uint ServiceControlHandler_Unmanaged(uint control, uint eventType, IntPtr eventData, IntPtr context) =>
+		 ServiceControlHandler(control, eventType, eventData, context);
+
 }

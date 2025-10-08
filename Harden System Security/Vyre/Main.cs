@@ -1406,18 +1406,15 @@ internal static partial class CabinetArchiveExtractor
 		private readonly Dictionary<IntPtr, object> syntheticHandleTable;
 		private MemoryStream? currentFileAccumulationStream;
 		private readonly Action<CabinetFileEntry> entryCallback;
-		private readonly FdiAllocDelegate fdiAllocDelegate;
-		private readonly FdiFreeDelegate fdiFreeDelegate;
-		private readonly FdiOpenDelegate fdiOpenDelegate;
-		private readonly FdiReadDelegate fdiReadDelegate;
-		private readonly FdiWriteDelegate fdiWriteDelegate;
-		private readonly FdiCloseDelegate fdiCloseDelegate;
-		private readonly FdiSeekDelegate fdiSeekDelegate;
-		private readonly FdiNotifyDelegate fdiNotifyDelegate;
 		private FdiErrorInfo fdiErrorInfo;
 		private GCHandle fdiErrorInfoHandle;
 		private IntPtr fdiContextHandle;
 		private bool isDisposed;
+
+		// Thread-affine context for unmanaged callbacks (FDI invokes callbacks on the calling thread).
+		// We set this before FDICreate/FDICopy/FDIDestroy so static unmanaged callbacks can reach the instance.
+		[ThreadStatic]
+		private static CabinetDecompressionContext? s_current;
 
 		internal unsafe CabinetDecompressionContext(byte[] decompressionBytes, Action<CabinetFileEntry> extractedEntryCallback)
 		{
@@ -1426,28 +1423,50 @@ internal static partial class CabinetArchiveExtractor
 
 			syntheticHandleTable = [];
 
-			fdiAllocDelegate = AllocateFdiBuffer;
-			fdiFreeDelegate = FreeFdiBuffer;
-			fdiOpenDelegate = OpenCabinetStream;
-			fdiReadDelegate = ReadCabinetStream;
-			fdiWriteDelegate = WriteDecompressedData;
-			fdiCloseDelegate = CloseHandleOrEntry;
-			fdiSeekDelegate = SeekCabinetStream;
-			fdiNotifyDelegate = HandleFdiNotification;
-
 			fdiErrorInfo = new FdiErrorInfo();
 			fdiErrorInfoHandle = GCHandle.Alloc(fdiErrorInfo, GCHandleType.Pinned);
 
-			fdiContextHandle = NativeMethods.FDICreate(
-				Marshal.GetFunctionPointerForDelegate(fdiAllocDelegate),
-				Marshal.GetFunctionPointerForDelegate(fdiFreeDelegate),
-				Marshal.GetFunctionPointerForDelegate(fdiOpenDelegate),
-				Marshal.GetFunctionPointerForDelegate(fdiReadDelegate),
-				Marshal.GetFunctionPointerForDelegate(fdiWriteDelegate),
-				Marshal.GetFunctionPointerForDelegate(fdiCloseDelegate),
-				Marshal.GetFunctionPointerForDelegate(fdiSeekDelegate),
-				0,
-				fdiErrorInfoHandle.AddrOfPinnedObject());
+			// Creating the FDI context using unmanaged function pointers (cdecl).
+			// FDICreate may call pfnalloc/pfnfree during creation. Ensure callbacks can reach this instance.
+			s_current = this;
+
+			IntPtr pfnalloc;
+			IntPtr pfnfree;
+			IntPtr pfnopen;
+			IntPtr pfnread;
+			IntPtr pfnwrite;
+			IntPtr pfnclose;
+			IntPtr pfnseek;
+
+			unsafe
+			{
+				pfnalloc = (IntPtr)(delegate* unmanaged[Cdecl]<int, IntPtr>)&FdiAlloc_Unmanaged;
+				pfnfree = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, void>)&FdiFree_Unmanaged;
+				pfnopen = (IntPtr)(delegate* unmanaged[Cdecl]<byte*, int, int, IntPtr>)&FdiOpen_Unmanaged;
+				pfnread = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int, int>)&FdiRead_Unmanaged;
+				pfnwrite = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, IntPtr, int, int>)&FdiWrite_Unmanaged;
+				pfnclose = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, int>)&FdiClose_Unmanaged;
+				pfnseek = (IntPtr)(delegate* unmanaged[Cdecl]<IntPtr, int, SeekOrigin, int>)&FdiSeek_Unmanaged;
+			}
+
+			try
+			{
+				fdiContextHandle = NativeMethods.FDICreate(
+					pfnalloc,
+					pfnfree,
+					pfnopen,
+					pfnread,
+					pfnwrite,
+					pfnclose,
+					pfnseek,
+					0,
+					fdiErrorInfoHandle.AddrOfPinnedObject());
+			}
+			finally
+			{
+				// clear thread-affine context even if FDICreate throws.
+				s_current = null;
+			}
 
 			if (fdiContextHandle == IntPtr.Zero)
 			{
@@ -1464,14 +1483,33 @@ internal static partial class CabinetArchiveExtractor
 		{
 			ObjectDisposedException.ThrowIf(isDisposed, this);
 
-			bool success = NativeMethods.FDICopy(
-				fdiContextHandle,
-				string.Empty,
-				string.Empty,
-				0,
-				Marshal.GetFunctionPointerForDelegate(fdiNotifyDelegate),
-				IntPtr.Zero,
-				IntPtr.Zero);
+			// FDICopy invokes the notify callback and then the stream callbacks (all on this thread).
+			s_current = this;
+
+			bool success;
+			IntPtr fnNotify;
+
+			unsafe
+			{
+				fnNotify = (IntPtr)(delegate* unmanaged[Cdecl]<FdiNotificationType, FdiNotificationRecord*, IntPtr>)&FdiNotify_Unmanaged;
+			}
+
+			try
+			{
+				success = NativeMethods.FDICopy(
+					fdiContextHandle,
+					string.Empty,
+					string.Empty,
+					0,
+					fnNotify,
+					IntPtr.Zero,
+					IntPtr.Zero);
+			}
+			finally
+			{
+				// Clear thread context to avoid accidental bleed if caller reuses the same thread for other operations.
+				s_current = null;
+			}
 
 			if (!success)
 			{
@@ -1497,11 +1535,17 @@ internal static partial class CabinetArchiveExtractor
 			{
 				try
 				{
+					// FDIDestroy may call the provided free callback; ensure thread-context is set.
+					s_current = this;
 					_ = NativeMethods.FDIDestroy(fdiContextHandle);
 				}
 				catch
 				{
 					// Ignore failures
+				}
+				finally
+				{
+					s_current = null;
 				}
 				fdiContextHandle = IntPtr.Zero;
 			}
@@ -1690,6 +1734,70 @@ internal static partial class CabinetArchiveExtractor
 					return IntPtr.Zero;
 			}
 		}
+
+		#region Unmanaged (cdecl) callbacks
+
+		[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static IntPtr FdiAlloc_Unmanaged(int cb)
+		{
+			CabinetDecompressionContext? ctx = s_current;
+			return ctx is null ? IntPtr.Zero : ctx.AllocateFdiBuffer(cb);
+		}
+
+		[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static void FdiFree_Unmanaged(IntPtr pv)
+		{
+			CabinetDecompressionContext? ctx = s_current;
+			if (ctx is null)
+			{
+				return;
+			}
+			ctx.FreeFdiBuffer(pv);
+		}
+
+		[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static unsafe IntPtr FdiOpen_Unmanaged(byte* pszFile, int oflag, int pmode)
+		{
+			CabinetDecompressionContext? ctx = s_current;
+			return ctx is null ? IntPtr.Zero : ctx.OpenCabinetStream(pszFile, oflag, pmode);
+		}
+
+		[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static int FdiRead_Unmanaged(IntPtr hf, IntPtr pv, int cb)
+		{
+			CabinetDecompressionContext? ctx = s_current;
+			return ctx is null ? -1 : ctx.ReadCabinetStream(hf, pv, cb);
+		}
+
+		[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static int FdiWrite_Unmanaged(IntPtr hf, IntPtr pv, int cb)
+		{
+			CabinetDecompressionContext? ctx = s_current;
+			return ctx is null ? -1 : ctx.WriteDecompressedData(hf, pv, cb);
+		}
+
+		[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static int FdiClose_Unmanaged(IntPtr hf)
+		{
+			CabinetDecompressionContext? ctx = s_current;
+			return ctx is null ? 0 : ctx.CloseHandleOrEntry(hf);
+		}
+
+		[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static int FdiSeek_Unmanaged(IntPtr hf, int dist, SeekOrigin seektype)
+		{
+			CabinetDecompressionContext? ctx = s_current;
+			return ctx is null ? -1 : ctx.SeekCabinetStream(hf, dist, seektype);
+		}
+
+		[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static unsafe IntPtr FdiNotify_Unmanaged(FdiNotificationType fdint, FdiNotificationRecord* pfdin)
+		{
+			CabinetDecompressionContext? ctx = s_current;
+			return ctx is null ? IntPtr.Zero : ctx.HandleFdiNotification(fdint, pfdin);
+		}
+
+		#endregion
 	}
 
 	private enum FdiNotificationType
@@ -1727,30 +1835,6 @@ internal static partial class CabinetArchiveExtractor
 		internal ushort iFolder;
 		internal int fdie;
 	}
-
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate IntPtr FdiAllocDelegate(int cb);
-
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate void FdiFreeDelegate(IntPtr pv);
-
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private unsafe delegate IntPtr FdiOpenDelegate(byte* pszFile, int oflag, int pmode);
-
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate int FdiReadDelegate(IntPtr hf, IntPtr pv, int cb);
-
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate int FdiWriteDelegate(IntPtr hf, IntPtr pv, int cb);
-
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate int FdiCloseDelegate(IntPtr hf);
-
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate int FdiSeekDelegate(IntPtr hf, int dist, SeekOrigin seektype);
-
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private unsafe delegate IntPtr FdiNotifyDelegate(FdiNotificationType fdint, FdiNotificationRecord* pfdin);
 
 	internal sealed class CabinetFileEntry
 	{

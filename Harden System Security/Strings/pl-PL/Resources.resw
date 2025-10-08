@@ -2529,25 +2529,7 @@
 <data name="VerifyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
   <value>Weryfikowanie linii bazowej bezpieczeństwa Microsoft 365 Apps...</value>
 </data>
-<data name="ResetURLButton.Content" xml:space="preserve">
-    <value>Resetuj</value>
-  </data>
-  <data name="ResetURLButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Resetuj adres URL pobierania do wartości domyślnej.</value>
-  </data>
-  <data name="ResetURLButton.AutomationProperties.HelpText" xml:space="preserve">
-   <value>Resetuj adres URL pobierania do wartości domyślnej.</value>
-  </data>
-  <data name="DownloadURLButtonText.Text" xml:space="preserve">
-    <value>Adres URL Pobierania</value>
-  </data>
-  <data name="DownloadURLButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Wyświetl i zarządzaj adresem URL pobierania linii bazowej.</value>
-  </data>
-  <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
-   <value>Wyświetl i zarządzaj adresem URL pobierania linii bazowej.</value>
-  </data>
-   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+<data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
     <value>Dodaj</value>
   </data>
   <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -3731,5 +3713,242 @@ Odcisk Palca: {3}</value>
   </data>
   <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Próba zmniejszenia użycia pamięci poprzez zebranie i skompaktowanie nieużywanej pamięci zarządzanej (w tym dużych obiektów). System operacyjny może zwalniać pamięć RAM stopniowo, dlatego zmiany mogą nie być widoczne od razu. Sprawdź dzienniki po naciśnięciu tego przycisku, aby uzyskać więcej szczegółów.</value>
+  </data>
+    <data name="SecurityBaselinesComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz bazową konfigurację zabezpieczeń firmy Microsoft, której chcesz użyć.</value>
+  </data>
+  <data name="SecurityBaselinesComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wybierz bazową konfigurację zabezpieczeń firmy Microsoft, której chcesz użyć.</value>
+  </data>
+  <data name="RetrieveButton.Content" xml:space="preserve">
+    <value>Pobierz</value>
+  </data>
+<data name="CryptoAlgorithmsTab.Header" xml:space="preserve">
+  <value>Algorytmy</value>
+</data>
+<data name="CngCurvesTab.Header" xml:space="preserve">
+  <value>Krzywe CNG</value>
+</data>
+<data name="SslProviderCurvesTab.Header" xml:space="preserve">
+  <value>Krzywe dostawców SSL</value>
+</data>
+<data name="TlsCipherSuitesTab.Header" xml:space="preserve">
+  <value>Zestawy szyfrów TLS</value>
+</data>
+<data name="RegisteredProvidersTab.Header" xml:space="preserve">
+  <value>Zarejestrowani dostawcy</value>
+</data>
+<data name="ConfiguredOnlyToggleSwitch.OnContent" xml:space="preserve">
+  <value>Tylko skonfigurowane</value>
+</data>
+<data name="ConfiguredOnlyToggleSwitch.OffContent" xml:space="preserve">
+  <value>Wszystkie</value>
+</data>
+<data name="CA_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Nazwa</value>
+</data>
+<data name="CA_TypeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Typ</value>
+</data>
+<data name="CA_FlagsColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Flagi</value>
+</data>
+<data name="CA_IsOpenableColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Możliwość otwarcia</value>
+</data>
+<data name="CA_IsPQColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Postkwantowe</value>
+</data>
+<data name="CA_KeyGenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Generowanie klucza</value>
+</data>
+<data name="CA_ParamSetsColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Zestawy parametrów</value>
+</data>
+<data name="CNG_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Nazwa</value>
+</data>
+<data name="CNG_OidColumnHeaderBtn.Content" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="CNG_LengthColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Bity klucza publicznego</value>
+</data>
+<data name="SSL_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Nazwa</value>
+</data>
+<data name="SSL_OidColumnHeaderBtn.Content" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="SSL_LengthColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Bity klucza publicznego</value>
+</data>
+<data name="SSL_TypeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Typ krzywej</value>
+</data>
+<data name="SSL_FlagsColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Flagi</value>
+</data>
+<data name="TLS_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Nazwa</value>
+</data>
+<data name="TLS_CipherColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Szyfr</value>
+</data>
+<data name="TLS_CSColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Zestaw szyfrów</value>
+</data>
+<data name="TLS_BaseCSColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Bazowy zestaw szyfrów</value>
+</data>
+<data name="TLS_HashColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Skrót</value>
+</data>
+<data name="TLS_ExchangeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Wymiana kluczy</value>
+</data>
+<data name="TLS_CertColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Certyfikat</value>
+</data>
+<data name="TLS_CLenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Długość szyfru</value>
+</data>
+<data name="TLS_CBLenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Długość bloku</value>
+</data>
+<data name="TLS_HLenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Długość skrótu</value>
+</data>
+<data name="TLS_MinExColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Minimalna długość wymiany</value>
+</data>
+<data name="TLS_MaxExColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Maksymalna długość wymiany</value>
+</data>
+<data name="TLS_KeyTypeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Typ klucza</value>
+</data>
+<data name="REG_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Nazwa</value>
+</data>
+  <data name="CBOMNavItem.Content" xml:space="preserve">
+    <value>Kryptograficzny wykaz materiałów</value>
+  </data>
+    <data name="CBOMNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kryptograficzny wykaz materiałów (CBOM) zapewnia inwentaryzację na poziomie systemu w zakresie kryptografii systemu operacyjnego — algorytmów, krzywych, zestawów szyfrów i dostawców — odwzorowując kryptograficzną postawę platformy.</value>
+  </data>
+  <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kryptograficzny wykaz materiałów (CBOM) zapewnia inwentaryzację na poziomie systemu w zakresie kryptografii systemu operacyjnego — algorytmów, krzywych, zestawów szyfrów i dostawców — odwzorowując kryptograficzną postawę platformy.</value>
+  </data>
+  <data name="CBOMPageTitle.Text" xml:space="preserve">
+    <value>Kryptograficzny wykaz materiałów (CBOM) oferuje inwentaryzację i wgląd na poziomie systemu w kryptografię systemu operacyjnego, ujawniając algorytmy, krzywe, zestawy szyfrów i dostawców, które definiują kryptograficzną postawę platformy. Standaryzując to, co eksponuje system operacyjny, zapewnia przejrzystość podobną do SBOM w obszarze kryptografii: umożliwia audyty oparte na dowodach, kontrole zgodności z liniami bazowymi, wykrywanie dryfu w kolejnych aktualizacjach, identyfikację przestarzałych/słabych prymitywów oraz planowanie przejść postkwantowych.</value>
+  </data>
+<data name="CA_NameHeader.Text" xml:space="preserve">
+  <value>Nazwa</value>
+</data>
+<data name="CA_TypeHeader.Text" xml:space="preserve">
+  <value>Typ</value>
+</data>
+<data name="CA_FlagsHeader.Text" xml:space="preserve">
+  <value>Flagi</value>
+</data>
+<data name="CA_IsOpenableHeader.Text" xml:space="preserve">
+  <value>Możliwość otwarcia</value>
+</data>
+<data name="CA_IsPQHeader.Text" xml:space="preserve">
+  <value>Postkwantowe</value>
+</data>
+<data name="CA_KeyGenHeader.Text" xml:space="preserve">
+  <value>Generowanie klucza</value>
+</data>
+<data name="CA_ParamSetsHeader.Text" xml:space="preserve">
+  <value>Zestawy parametrów</value>
+</data>
+<data name="CNG_NameHeader.Text" xml:space="preserve">
+  <value>Nazwa</value>
+</data>
+<data name="CNG_OidHeader.Text" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="CNG_LengthHeader.Text" xml:space="preserve">
+  <value>Bity klucza publicznego</value>
+</data>
+<data name="SSL_NameHeader.Text" xml:space="preserve">
+  <value>Nazwa</value>
+</data>
+<data name="SSL_OidHeader.Text" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="SSL_LengthHeader.Text" xml:space="preserve">
+  <value>Bity klucza publicznego</value>
+</data>
+<data name="SSL_TypeHeader.Text" xml:space="preserve">
+  <value>Typ krzywej</value>
+</data>
+<data name="SSL_FlagsHeader.Text" xml:space="preserve">
+  <value>Flagi</value>
+</data>
+<data name="TLS_NameHeader.Text" xml:space="preserve">
+  <value>Nazwa</value>
+</data>
+<data name="TLS_CipherHeader.Text" xml:space="preserve">
+  <value>Szyfr</value>
+</data>
+<data name="TLS_CSHeader.Text" xml:space="preserve">
+  <value>Zestaw szyfrów</value>
+</data>
+<data name="TLS_BaseCSHeader.Text" xml:space="preserve">
+  <value>Bazowy zestaw szyfrów</value>
+</data>
+<data name="TLS_HashHeader.Text" xml:space="preserve">
+  <value>Skrót</value>
+</data>
+<data name="TLS_ExchangeHeader.Text" xml:space="preserve">
+  <value>Wymiana kluczy</value>
+</data>
+<data name="TLS_CertHeader.Text" xml:space="preserve">
+  <value>Certyfikat</value>
+</data>
+<data name="TLS_CLenHeader.Text" xml:space="preserve">
+  <value>Długość szyfru</value>
+</data>
+<data name="TLS_CBLenHeader.Text" xml:space="preserve">
+  <value>Długość bloku</value>
+</data>
+<data name="TLS_HLenHeader.Text" xml:space="preserve">
+  <value>Długość skrótu</value>
+</data>
+<data name="TLS_MinExHeader.Text" xml:space="preserve">
+  <value>Minimalna długość wymiany</value>
+</data>
+<data name="TLS_MaxExHeader.Text" xml:space="preserve">
+  <value>Maksymalna długość wymiany</value>
+</data>
+<data name="TLS_KeyTypeHeader.Text" xml:space="preserve">
+  <value>Typ klucza</value>
+</data>
+<data name="REG_NameHeader.Text" xml:space="preserve">
+  <value>Nazwa</value>
+</data>
+  <data name="GenerateCBOMButton.Content" xml:space="preserve">
+    <value>Generuj CBOM</value>
+  </data>
+  <data name="GenerateCBOMButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wygeneruj kryptograficzny wykaz materiałów dla bieżącego systemu.</value>
+  </data>
+  <data name="GenerateCBOMButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wygeneruj kryptograficzny wykaz materiałów dla bieżącego systemu.</value>
+  </data>
+  <data name="ViewSelectedFilesTextBlock.Text" xml:space="preserve">
+    <value>Wyświetl wybrane pliki.</value>
+  </data>
+  <data name="FileBrowseButton.Content" xml:space="preserve">
+    <value>Przeglądaj</value>
+  </data>
+  <data name="FileBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwiera okno wyboru plików, umożliwiające wybranie pliku/plików</value>
+  </data>
+  <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwiera okno wyboru plików, umożliwiające wybranie pliku/plików</value>
   </data>
 </root>

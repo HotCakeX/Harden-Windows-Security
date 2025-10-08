@@ -15,29 +15,20 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.IO;
-using System.Text.RegularExpressions;
+using HardenSystemSecurity.ViewModels;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
-namespace AppControlManager.XMLOps;
+namespace HardenSystemSecurity.Pages;
 
-internal static partial class CheckForAllowAll
+internal sealed partial class CryptographicBillOfMaterials : Page
 {
-	/// <summary>
-	/// Takes a XML file path and checks whether it has an allow all rule
-	/// </summary>
-	/// <param name="xmlFilePath"></param>
-	/// <returns></returns>
-	internal static bool Check(string xmlFilePath)
+	private CryptographicBillOfMaterialsVM ViewModel => ViewModelProvider.CryptographicBillOfMaterialsVM;
+
+	internal CryptographicBillOfMaterials()
 	{
-		// Read the content of the XML file into a string
-		string xmlContent = File.ReadAllText(xmlFilePath);
-
-		Regex allowAllRegex = MyRegex();
-
-		// Check if the pattern matches the XML content
-		return allowAllRegex.IsMatch(xmlContent);
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
-
-	[GeneratedRegex(@"<Allow ID=""ID_ALLOW_.*"" FriendlyName="".*"" FileName=""\*"".*/>")]
-	private static partial Regex MyRegex();
 }

@@ -66,7 +66,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// Pattern for finding ASR rules that belong to the AppControl Manager
 	/// </summary>
 	/// <returns></returns>
-	[GeneratedRegex("__sadt7br7jpt02", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+	[GeneratedRegex("__sadt7br7jpt02", RegexOptions.IgnoreCase)]
 	internal partial Regex AppPFNRegex();
 
 	/// <summary>

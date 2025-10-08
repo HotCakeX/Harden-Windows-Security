@@ -737,7 +737,7 @@ public partial class App : Application
 
 	private static readonly Regex ProtocolDetailsExtraction = Regex1();
 
-	[GeneratedRegex(Pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant)]
+	[GeneratedRegex(Pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
 	private static partial Regex Regex1();
 
 }

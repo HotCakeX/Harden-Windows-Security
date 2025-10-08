@@ -86,7 +86,7 @@
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
                                               Glyph="&#xE73E;"
                                               FontSize="14"/>
-                                    <TextBlock x:Uid="ApplyText"                                               
+                                    <TextBlock x:Uid="ApplyText"
                                                FontWeight="SemiBold"
                                                VerticalAlignment="Center"/>
                                 </StackPanel>
@@ -139,7 +139,7 @@
                             </AnimatedIcon.Source>
                         </AnimatedIcon>
 
-                        <TextBlock x:Uid="ApplyAllButtonText"                                   
+                        <TextBlock x:Uid="ApplyAllButtonText"
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
@@ -156,7 +156,7 @@
                             </AnimatedIcon.Source>
                         </AnimatedIcon>
 
-                        <TextBlock x:Uid="RemoveAllButtonText"                                   
+                        <TextBlock x:Uid="RemoveAllButtonText"
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
@@ -173,7 +173,7 @@
                             </AnimatedIcon.Source>
                         </AnimatedIcon>
 
-                        <TextBlock x:Uid="ApplyRecommendedButtonText"                                   
+                        <TextBlock x:Uid="ApplyRecommendedButtonText"
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
@@ -190,7 +190,7 @@
                             </AnimatedIcon.Source>
                         </AnimatedIcon>
 
-                        <TextBlock x:Uid="RetrieveLatestStatesButton"                                   
+                        <TextBlock x:Uid="RetrieveLatestStatesButton"
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
                     </StackPanel>

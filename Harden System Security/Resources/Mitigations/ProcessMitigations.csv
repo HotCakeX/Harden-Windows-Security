@@ -152,3 +152,28 @@ AppControlManager.exe,EnableRopStackPivot,On,True,AppControl Manager hardening
 AppControlManager.exe,EnableRopCallerCheck,On,True,AppControl Manager hardening
 AppControlManager.exe,UserShadowStack,On,True,AppControl Manager hardening
 AppControlManager.exe,UserShadowStackStrictMode,On,True,AppControl Manager hardening
+HardenSystemSecurity.exe,DisableNonSystemFonts,On,True,Harden System Security hardening
+HardenSystemSecurity.exe,BlockRemoteImageLoads,On,True,Harden System Security hardening
+HardenSystemSecurity.exe,BlockLowLabelImageLoads,On,True,Harden System Security hardening
+HardenSystemSecurity.exe,EnableExportAddressFilter,On,True,Harden System Security hardening
+HardenSystemSecurity.exe,EnableExportAddressFilterPlus,On,True,Harden System Security hardening
+HardenSystemSecurity.exe,EnableImportAddressFilter,On,True,Harden System Security hardening
+HardenSystemSecurity.exe,EnableRopStackPivot,On,True,Harden System Security hardening
+HardenSystemSecurity.exe,EnableRopCallerCheck,On,True,Harden System Security hardening
+HardenSystemSecurity.exe,UserShadowStack,On,True,Harden System Security hardening
+HardenSystemSecurity.exe,UserShadowStackStrictMode,On,True,Harden System Security hardening
+HardenSystemSecurity.exe,MicrosoftSignedOnly,On,True,Harden System Security hardening
+HardenSystemSecurity.exe,AllowStoreSignedBinaries,On,True,Harden System Security hardening
+QuantumRelayHSS.exe,DisableNonSystemFonts,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,BlockRemoteImageLoads,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,BlockLowLabelImageLoads,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,EnableExportAddressFilter,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,EnableExportAddressFilterPlus,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,EnableImportAddressFilter,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,EnableRopStackPivot,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,EnableRopCallerCheck,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,UserShadowStack,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,UserShadowStackStrictMode,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,BlockDynamicCode,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,MicrosoftSignedOnly,On,True,Harden System Security Quantum Relay Service hardening
+QuantumRelayHSS.exe,AllowStoreSignedBinaries,On,True,Harden System Security Quantum Relay Service hardening

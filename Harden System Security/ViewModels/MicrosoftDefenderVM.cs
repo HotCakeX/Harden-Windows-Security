@@ -15,12 +15,15 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using AppControlManager.Others;
-using AppControlManager.ViewModels;
+using CommunityToolkit.WinUI;
 using HardenSystemSecurity.ExploitMitigation;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
@@ -29,8 +32,9 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace HardenSystemSecurity.ViewModels;
 
-internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListViewModel
+internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 {
+	[SetsRequiredMembers]
 	internal MicrosoftDefenderVM()
 	{
 		MainInfoBar = new InfoBarSettings(
@@ -46,105 +50,16 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
+
+		// To size the listview columns with some padding after initial page load.
+		ComputeColumnWidths();
 	}
-
-	/// <summary>
-	/// The main InfoBar for this VM.
-	/// </summary>
-	public InfoBarSettings MainInfoBar { get; }
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
-
-	public Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
-	public bool ElementsAreEnabled
-	{
-		get; set
-		{
-			if (SP(ref field, value))
-			{
-				ProgressBarVisibility = field ? Visibility.Collapsed : Visibility.Visible;
-			}
-		}
-	} = true;
-
-	/// <summary>
-	/// Items Source of the ListView.
-	/// </summary>
-	public ObservableCollection<GroupInfoListForMUnit> ListViewItemsSource { get; set => SP(ref field, value); } = [];
-
-	public List<GroupInfoListForMUnit> ListViewItemsSourceBackingField { get; set; } = [];
-
-	/// <summary>
-	/// Selected Items list in the ListView.
-	/// </summary>
-	public List<MUnit> ItemsSourceSelectedItems { get; set; } = [];
-
-	/// <summary>
-	/// Search keyword for ListView.
-	/// </summary>
-	public string? SearchKeyword { get; set; }
-
-	/// <summary>
-	/// Initialization details for the Apply All button
-	/// </summary>
-	public AnimatedCancellableButtonInitializer ApplyAllCancellableButton { get; }
-
-	/// <summary>
-	/// Initialization details for the Remove All button
-	/// </summary>
-	public AnimatedCancellableButtonInitializer RemoveAllCancellableButton { get; }
-
-	/// <summary>
-	/// Initialization details for the Verify All button
-	/// </summary>
-	public AnimatedCancellableButtonInitializer VerifyAllCancellableButton { get; }
-
-	/// <summary>
-	/// Total number of items loaded (all MUnits)
-	/// </summary>
-	public int TotalItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Number of items currently displayed after filtering
-	/// </summary>
-	public int FilteredItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Number of currently selected items
-	/// </summary>
-	public int SelectedItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Number of items with Undetermined status (N/A state)
-	/// </summary>
-	public int UndeterminedItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Number of items with Applied status
-	/// </summary>
-	public int AppliedItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Number of items with NotApplied status
-	/// </summary>
-	public int NotAppliedItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Persisted status filter toggles for this ViewModel.
-	/// </summary>
-	public bool ShowApplied { get; set => SP(ref field, value); } = true;
-	public bool ShowNotApplied { get; set => SP(ref field, value); } = true;
-	public bool ShowUndetermined { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	/// <returns>List of all MUnits for this ViewModel</returns>
-	public List<MUnit> CreateAllMUnits()
+	public override List<MUnit> CreateAllMUnits()
 	{
 		// Register specialized strategies and dependencies.
 		RegisterSpecializedStrategies();
@@ -843,4 +758,722 @@ internal sealed partial class MicrosoftDefenderVM : ViewModelBase, IMUnitListVie
 			return false;
 		}
 	}
+
+	#region Exclusion
+
+	// Column widths
+	internal GridLength EXColWidth1 { get; set => SP(ref field, value); }
+	internal GridLength EXColWidth2 { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Compute dynamic column widths.
+	/// </summary>
+	private void ComputeColumnWidths()
+	{
+		double w1 = ListViewHelper.MeasureText(GlobalVars.GetStr("TargetHeader/Text"));
+		double w2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SourceHeader/Text"));
+
+		foreach (Exclusions v in Exclusions)
+		{
+			w1 = ListViewHelper.MeasureText(v.Target, w1);
+			w2 = ListViewHelper.MeasureText(v.SourceFriendlyName, w2);
+		}
+
+		EXColWidth1 = new GridLength(w1);
+		EXColWidth2 = new GridLength(w2);
+	}
+
+	internal readonly ObservableCollection<Exclusions> Exclusions = [];
+	private readonly List<Exclusions> AllExclusions = [];
+
+	internal Visibility ExclusionProgressVisibility { get; private set => SP(ref field, value); } = Visibility.Collapsed;
+
+	internal bool ExclusionsUIIsEnabled
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				ExclusionProgressVisibility = value ? Visibility.Collapsed : Visibility.Visible;
+
+			}
+		}
+	} = true;
+
+	internal string? ExclusionsSearchText
+	{
+		get; set
+		{
+			if (SPT(ref field, value))
+			{
+				SearchBox_TextChanged();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Clear the exclusions list in the UI.
+	/// </summary>
+	internal void ClearExclusionsList()
+	{
+		Exclusions.Clear();
+		AllExclusions.Clear();
+		ExclusionsSearchText = null;
+		ComputeColumnWidths();
+	}
+
+	/// <summary>
+	/// Mapping of sortable / copyable fields.
+	/// </summary>
+	private static readonly FrozenDictionary<string, (string Label, Func<Exclusions, object?> Getter)> _exclusionsMappings =
+		new Dictionary<string, (string Label, Func<Exclusions, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
+		{
+			{ "Target",     (GlobalVars.GetStr("TargetHeader/Text"),  v => v.Target) },
+			{ "Source",     (GlobalVars.GetStr("SourceHeader/Text"),  v => v.SourceFriendlyName) }
+		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
+
+	#region Sort
+
+	/// <summary>
+	/// Local sort state
+	/// </summary>
+	private ListViewHelper.SortState SortState { get; set; } = new();
+
+	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is Button button && button.Tag is string key)
+		{
+			// Look up the mapping in the reusable property mappings dictionary.
+			if (_exclusionsMappings.TryGetValue(key, out (string Label, Func<Exclusions, object?> Getter) mapping))
+			{
+				ListViewHelper.SortColumn(
+					mapping.Getter,
+					ExclusionsSearchText,
+					AllExclusions,
+					Exclusions,
+					SortState,
+					key,
+					regKey: ListViewHelper.ListViewsRegistry.MD_Exclusions);
+			}
+		}
+	}
+	#endregion
+
+	#region Copy
+
+	/// <summary>
+	/// Converts selected Exclusions rows to text.
+	/// </summary>
+	internal void CopySelectedExclusions_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.MD_Exclusions);
+		if (lv is null) return;
+		if (lv.SelectedItems.Count > 0)
+		{
+			// SelectedItems is an IList
+			ListViewHelper.ConvertRowToText(lv.SelectedItems, _exclusionsMappings);
+		}
+	}
+
+	/// <summary>
+	/// Copy a single property of the current selection
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void CopyExclusionProperty_Click(object sender, RoutedEventArgs e)
+	{
+		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
+		string key = (string)menuItem.Tag;
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.MD_Exclusions);
+		if (lv is null) return;
+
+		if (_exclusionsMappings.TryGetValue(key, out var map))
+		{
+			// TElement = Exclusions, copy just that one property
+			ListViewHelper.CopyToClipboard<Exclusions>(ci => map.Getter(ci)?.ToString(), lv);
+		}
+	}
+
+	#endregion
+
+	#region Search
+
+	/// <summary>
+	/// Event handler for the SearchBox text change
+	/// </summary>
+	internal void SearchBox_TextChanged()
+	{
+		string? searchTerm = ExclusionsSearchText?.Trim();
+		if (searchTerm is null)
+			return;
+
+		// Get the ListView ScrollViewer info
+		ScrollViewer? Sv = ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.MD_Exclusions);
+
+		double? savedHorizontal = null;
+		if (Sv != null)
+		{
+			savedHorizontal = Sv.HorizontalOffset;
+		}
+
+		// Perform a case-insensitive search in all relevant fields
+		List<Exclusions> filteredResults = AllExclusions.Where(v =>
+			v.Target.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+			v.SourceFriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+
+		Exclusions.Clear();
+		foreach (Exclusions item in filteredResults)
+		{
+			Exclusions.Add(item);
+		}
+
+		if (Sv != null && savedHorizontal.HasValue)
+		{
+			// restore horizontal scroll position
+			_ = Sv.ChangeView(savedHorizontal, null, null, disableAnimation: false);
+		}
+	}
+	#endregion
+
+	/// <summary>
+	/// Event handler for the UI.
+	/// </summary>
+	internal async void RetrieveAllExclusions() => await RetrieveAllExclusionsInternal();
+
+	/// <summary>
+	/// Retrieves all exclusions from Microsoft Defender.
+	/// </summary>
+	private async Task RetrieveAllExclusionsInternal()
+	{
+
+		try
+		{
+			ExclusionsUIIsEnabled = false;
+
+			ClearExclusionsList();
+
+			List<Exclusions> allData = [];
+
+			await Task.Run(() =>
+			{
+
+				string results = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference");
+
+				List<Dictionary<string, object?>> DeserializedResults = ComJsonDeserializer.DeserializeInstances(results);
+
+				if (DeserializedResults.Count < 0)
+					return;
+
+				// Microsoft Defender - File and Folder paths exclusions
+				if (DeserializedResults[0].TryGetValue("ExclusionPath", out object? ExclusionPath))
+				{
+					List<string> finalResults = ComJsonDeserializer.CoerceToStringList(ExclusionPath);
+
+					foreach (string item in finalResults)
+					{
+						allData.Add(new(target: item, source: ExclusionSource.Antivirus_Path));
+					}
+				}
+
+				// Microsoft Defender - Process exclusions
+				if (DeserializedResults[0].TryGetValue("ExclusionProcess", out object? ExclusionProcess))
+				{
+					List<string> finalResults = ComJsonDeserializer.CoerceToStringList(ExclusionProcess);
+
+					foreach (string item in finalResults)
+					{
+						allData.Add(new(target: item, source: ExclusionSource.Antivirus_Process));
+					}
+				}
+
+				// Microsoft Defender - Extension exclusions
+				if (DeserializedResults[0].TryGetValue("ExclusionExtension", out object? ExclusionExtension))
+				{
+					List<string> finalResults = ComJsonDeserializer.CoerceToStringList(ExclusionExtension);
+
+					foreach (string item in finalResults)
+					{
+						allData.Add(new(target: item, source: ExclusionSource.Antivirus_Extension));
+					}
+				}
+
+				// Controlled Folder Access exclusions
+				if (DeserializedResults[0].TryGetValue("ControlledFolderAccessAllowedApplications", out object? cfaAppsObj))
+				{
+					List<string> finalResults = ComJsonDeserializer.CoerceToStringList(cfaAppsObj);
+
+					foreach (string item in finalResults)
+					{
+						allData.Add(new(target: item, source: ExclusionSource.ControlledFolderAccess));
+					}
+				}
+
+				// Attack Surface Reduction rules exclusions
+				if (DeserializedResults[0].TryGetValue("AttackSurfaceReductionOnlyExclusions", out object? asrObj))
+				{
+					List<string> finalResults = ComJsonDeserializer.CoerceToStringList(asrObj);
+
+					foreach (string item in finalResults)
+					{
+						allData.Add(new(target: item, source: ExclusionSource.AttackSurfaceReduction));
+					}
+				}
+			});
+
+			foreach (Exclusions item in allData)
+			{
+				Exclusions.Add(item);
+				AllExclusions.Add(item);
+			}
+
+			ComputeColumnWidths();
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("RetrievedExclusionsSuccessfullyMsg"));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ExclusionsUIIsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Add exclusions for Microsoft Defender - File path.
+	/// </summary>
+	internal async void AddFilePathExclusion()
+	{
+		try
+		{
+			ExclusionsUIIsEnabled = false;
+
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+
+			if (selectedFiles.Count == 0)
+				return;
+
+			await Task.Run(() =>
+			{
+				foreach (string item in selectedFiles)
+				{
+					_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionPath \"{item}\"");
+
+					_ = Dispatcher.EnqueueAsync(() =>
+					{
+						MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
+					});
+				}
+			});
+
+			await RetrieveAllExclusionsInternal();
+
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ExclusionsUIIsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Add exclusions for Microsoft Defender - Folder path.
+	/// </summary>
+	internal async void AddFolderPathExclusion()
+	{
+		try
+		{
+			ExclusionsUIIsEnabled = false;
+
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+
+			if (selectedFiles.Count == 0)
+				return;
+
+			await Task.Run(() =>
+			{
+				foreach (string item in selectedFiles)
+				{
+					_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionPath \"{item}\"");
+
+					_ = Dispatcher.EnqueueAsync(() =>
+					{
+						MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
+					});
+				}
+			});
+
+			await RetrieveAllExclusionsInternal();
+
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ExclusionsUIIsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Add exclusions for Microsoft Defender - Extension.
+	/// </summary>
+	internal async void AddExtensionExclusion()
+	{
+		try
+		{
+			ExclusionsUIIsEnabled = false;
+
+			TextBox inputBox = new()
+			{
+				Header = "Enter the file extension to exclude",
+				PlaceholderText = ".ext",
+				Text = string.Empty
+			};
+
+			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+			{
+				Title = GlobalVars.GetStr("AddExtensionExclusionText"),
+				Content = inputBox,
+				PrimaryButtonText = GlobalVars.GetStr("AddToExclusionsText"),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				DefaultButton = ContentDialogButton.Primary
+			};
+
+			// Show dialog
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			// If user didn't confirm, exit early
+			if (result != ContentDialogResult.Primary)
+			{
+				return;
+			}
+
+			string text = inputBox.Text;
+
+			// Add to Defender exclusions
+			await Task.Run(() =>
+			{
+				// Normalize and validate the extension
+				string normalizedExtension = NormalizeExtensionOrThrow(text);
+
+				_ = ProcessStarter.RunCommand(
+					GlobalVars.ComManagerProcessPath,
+					$"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionExtension \"{normalizedExtension}\"");
+
+				_ = Dispatcher.EnqueueAsync(() =>
+				{
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), normalizedExtension));
+				});
+			});
+
+			await RetrieveAllExclusionsInternal();
+
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ExclusionsUIIsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Method to normalize and validate a file extension.
+	/// </summary>
+	private static string NormalizeExtensionOrThrow(string value)
+	{
+		if (string.IsNullOrWhiteSpace(value))
+		{
+			throw new InvalidOperationException(GlobalVars.GetStr("EnterFileExtensionText"));
+		}
+
+		string extension = value.Trim();
+
+		// Prepend '.' if missing
+		if (!extension.StartsWith('.'))
+		{
+			extension = "." + extension;
+		}
+
+		// Must have something after the dot
+		if (extension.Length <= 1)
+		{
+			throw new InvalidOperationException(GlobalVars.GetStr("FileExtensionInvalidMsg"));
+		}
+
+		// Validate characters (no invalid file name characters allowed)
+		char[] invalidChars = Path.GetInvalidFileNameChars();
+		if (extension.IndexOfAny(invalidChars) >= 0)
+		{
+			throw new InvalidOperationException(GlobalVars.GetStr("FileExtensionHasInvalidCharsMsg"));
+		}
+
+		// Do not allow directory separators or drive specifiers
+		if (extension.Contains('\\', StringComparison.Ordinal) ||
+			extension.Contains('/', StringComparison.Ordinal) ||
+			extension.Contains(':', StringComparison.Ordinal))
+		{
+			throw new InvalidOperationException("The file extension must not contain path separators or a drive specifier.");
+		}
+
+		return extension;
+	}
+
+	/// <summary>
+	/// Add exclusions for Microsoft Defender - Process.
+	/// </summary>
+	internal async void AddProcessExclusion()
+	{
+		try
+		{
+			ExclusionsUIIsEnabled = false;
+
+			TextBox inputBox = new()
+			{
+				Header = "Enter the process name (e.g., notepad.exe) or a full path",
+				PlaceholderText = "notepad.exe",
+				Text = string.Empty
+			};
+
+			using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+			{
+				Title = GlobalVars.GetStr("AddProcessExclusionText"),
+				Content = inputBox,
+				PrimaryButtonText = GlobalVars.GetStr("AddToExclusionsText"),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				DefaultButton = ContentDialogButton.Primary
+			};
+
+			// Show dialog
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			// If user didn't confirm, exit early
+			if (result != ContentDialogResult.Primary)
+			{
+				return;
+			}
+
+			string text = inputBox.Text;
+
+			// Add to Defender exclusions
+			await Task.Run(() =>
+			{
+				// Normalize and validate the process name
+				string normalizedProcessName = NormalizeProcessNameOrThrow(text);
+
+				_ = ProcessStarter.RunCommand(
+					GlobalVars.ComManagerProcessPath,
+					$"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionProcess \"{normalizedProcessName}\"");
+
+				_ = Dispatcher.EnqueueAsync(() =>
+				{
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), normalizedProcessName));
+				});
+			});
+
+			await RetrieveAllExclusionsInternal();
+
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ExclusionsUIIsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Local function to normalize and validate a process name or path.
+	/// </summary>
+	private static string NormalizeProcessNameOrThrow(string value)
+	{
+		if (string.IsNullOrWhiteSpace(value))
+		{
+			throw new InvalidOperationException(GlobalVars.GetStr("EnterProcessNameText"));
+		}
+
+		string input = value.Trim();
+
+		// If it's a path, extract the file name
+		string name = input;
+		if (input.Contains('\\', StringComparison.Ordinal) ||
+			input.Contains('/', StringComparison.Ordinal) ||
+			input.Contains(':', StringComparison.Ordinal))
+		{
+			name = Path.GetFileName(input);
+		}
+
+		if (string.IsNullOrWhiteSpace(name))
+		{
+			throw new InvalidOperationException(GlobalVars.GetStr("ProcessNameInvalidMsg"));
+		}
+
+		// Ensure it ends with .exe
+		if (!name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+		{
+			name += ".exe";
+		}
+
+		// Validate characters (no invalid file name characters allowed)
+		char[] invalidChars = Path.GetInvalidFileNameChars();
+		if (name.IndexOfAny(invalidChars) >= 0)
+		{
+			throw new InvalidOperationException(GlobalVars.GetStr("ProcessNameHasInvalidCharsMsg"));
+		}
+
+		// Must not contain path separators after normalization
+		if (name.Contains('\\', StringComparison.Ordinal) ||
+			name.Contains('/', StringComparison.Ordinal) ||
+			name.Contains(':', StringComparison.Ordinal))
+		{
+			throw new InvalidOperationException("The process name must not contain path separators or a drive specifier.");
+		}
+
+		return name;
+	}
+
+	/// <summary>
+	/// Add exclusions for Microsoft Defender - Controlled Folder Access.
+	/// </summary>
+	internal async void AddControlledFolderAccessExclusion()
+	{
+		try
+		{
+			ExclusionsUIIsEnabled = false;
+
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+
+			if (selectedFiles.Count == 0)
+				return;
+
+			await Task.Run(() =>
+			{
+				foreach (string item in selectedFiles)
+				{
+					_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ControlledFolderAccessAllowedApplications \"{item}\"");
+
+					_ = Dispatcher.EnqueueAsync(() =>
+					{
+						MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
+					});
+				}
+			});
+
+			await RetrieveAllExclusionsInternal();
+
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ExclusionsUIIsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Add exclusions for Microsoft Defender - Attack Surface Reduction.
+	/// </summary>
+	internal async void AddASRExclusion()
+	{
+		try
+		{
+			ExclusionsUIIsEnabled = false;
+
+			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(GlobalVars.AnyFilePickerFilter);
+
+			if (selectedFiles.Count == 0)
+				return;
+
+			await Task.Run(() =>
+			{
+				foreach (string item in selectedFiles)
+				{
+					_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{item}\"");
+
+					_ = Dispatcher.EnqueueAsync(() =>
+					{
+						MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
+					});
+				}
+			});
+
+			await RetrieveAllExclusionsInternal();
+
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ExclusionsUIIsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Removes a single exclusion based on its source type.
+	/// Triggered by the per-row context menu "Remove" item.
+	/// </summary>
+	internal async void RemoveExclusion_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			ExclusionsUIIsEnabled = false;
+
+			// Retrieve the specific exclusion from the flyout item's Tag
+			MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
+
+			Exclusions exclusion = (Exclusions)menuItem.Tag;
+
+			// Map the ExclusionSource to the corresponding MSFT_MpPreference property
+			// Each exclusion type is removed from its own string[] property via "remove"
+			string propertyName = exclusion.Source switch
+			{
+				ExclusionSource.Antivirus_Path => "ExclusionPath",
+				ExclusionSource.Antivirus_Extension => "ExclusionExtension",
+				ExclusionSource.Antivirus_Process => "ExclusionProcess",
+				ExclusionSource.ControlledFolderAccess => "ControlledFolderAccessAllowedApplications",
+				ExclusionSource.AttackSurfaceReduction => "AttackSurfaceReductionOnlyExclusions",
+				_ => throw new InvalidOperationException("Unsupported exclusion type.")
+			};
+
+			string target = exclusion.Target;
+
+			// Perform the removal in background to keep UI responsive
+			await Task.Run(() =>
+			{
+				_ = ProcessStarter.RunCommand(
+					GlobalVars.ComManagerProcessPath,
+					$"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference remove {propertyName} \"{target}\"");
+			});
+
+			// Refresh the list
+			await RetrieveAllExclusionsInternal();
+
+			MainInfoBar.WriteInfo($"Removed exclusion: '{target}' from {exclusion.SourceFriendlyName}");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ExclusionsUIIsEnabled = true;
+		}
+	}
+
+	#endregion
+
 }

@@ -130,7 +130,7 @@
     <value>Set the Cloud Block Level to the maximum value: No Tolerance.</value>
 </data>
 <data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
-    <value>Extended cloud check timeout set to maximum value."</value>
+    <value>Extended cloud check timeout set to maximum value.</value>
 </data>
 <data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
     <value>Enable calculation of File Hashes.</value>

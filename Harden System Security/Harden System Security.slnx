@@ -4,6 +4,10 @@
     <Platform Name="x64" />
   </Configurations>
   <Project Path="../AppControl Manager/eXclude/CommonCore/CommonCore.shproj" Id="076556fd-204b-4b34-9fb9-82e48a87e3e4" />
+  <Project Path="../AppControl Manager/eXclude/DISMService/DISMService.csproj">
+    <Platform Solution="*|ARM64" Project="arm64" />
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
   <Project Path="../AppControl Manager/eXclude/QuantumRelayHSS/QuantumRelayHSS.csproj">
     <Platform Solution="*|ARM64" Project="arm64" />
     <Platform Solution="*|x64" Project="x64" />

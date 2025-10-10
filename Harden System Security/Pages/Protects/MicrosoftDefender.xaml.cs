@@ -31,4 +31,20 @@ internal sealed partial class MicrosoftDefender : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	/// <summary>
+	/// OnNavigatedFrom indicates real page navigation (not transient Unloaded under TabView).
+	/// We explicitly dispose the special controls that were prevented from auto-disposal.
+	/// </summary>
+	/// <param name="e"></param>
+	protected override void OnNavigatedFrom(NavigationEventArgs e)
+	{
+		base.OnNavigatedFrom(e);
+
+		// Dispose all descendants that explicitly opted out of automatic disposal.
+		AppControlManager.ViewModels.ViewModelBase.DisposeExplicitOptInDescendants(SecurityMeasuresList);
+
+		// Finally dispose the list control itself.
+		SecurityMeasuresList.Dispose();
+	}
 }

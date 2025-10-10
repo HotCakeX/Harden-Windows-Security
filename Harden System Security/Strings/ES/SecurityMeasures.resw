@@ -130,7 +130,7 @@
     <value>Establecer el Nivel de Bloqueo en la Nube al valor máximo: Tolerancia Cero.</value>
 </data>
 <data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
-    <value>El tiempo de espera extendido de verificación en la nube se estableció al valor máximo."</value>
+    <value>El tiempo de espera extendido de verificación en la nube se estableció al valor máximo.</value>
 </data>
 <data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
     <value>Habilitar cálculo de hashes de archivos.</value>

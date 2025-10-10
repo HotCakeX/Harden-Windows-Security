@@ -25,6 +25,9 @@ using System.Threading.Tasks;
 using Windows.System;
 using Windows.ApplicationModel.UserActivities;
 using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
+
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.AppSettings;
@@ -462,6 +465,50 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	internal ObservableCollection<ListViewHelper.PropertyFilterItem> PropertyFilterItems => _lazyItems.Value;
 
 #endif
+
+	/// <summary>
+	/// Traverses the visual tree breadth-first and disposes any descendant control that:
+	///  - Implements IExplicitDisposalOptIn (meaning it skipped disposal on Unloaded)
+	///  - Implements IDisposable
+	/// This keeps the logic generic (works for AnimatedCancellableButton, LinkButtonV2, StatusIndicatorV2, etc.).
+	/// </summary>
+	internal static void DisposeExplicitOptInDescendants(FrameworkElement root)
+	{
+		if (root == null)
+		{
+			return;
+		}
+
+		Queue<DependencyObject> queue = new();
+		queue.Enqueue(root);
+
+		while (queue.Count > 0)
+		{
+			DependencyObject current = queue.Dequeue();
+			int childCount = VisualTreeHelper.GetChildrenCount(current);
+			for (int i = 0; i < childCount; i++)
+			{
+				DependencyObject child = VisualTreeHelper.GetChild(current, i);
+
+				// If it opted in and is disposable, dispose it.
+				if (child is IExplicitDisposalOptIn explicitOptIn &&
+					child is IDisposable disposable &&
+					explicitOptIn.DisposeOnlyOnExplicitCall)
+				{
+					try
+					{
+						disposable.Dispose();
+					}
+					catch
+					{
+						// Swallow: disposal errors should not block the rest.
+					}
+				}
+
+				queue.Enqueue(child);
+			}
+		}
+	}
 
 }
 

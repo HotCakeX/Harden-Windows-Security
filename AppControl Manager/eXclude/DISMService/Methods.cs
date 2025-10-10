@@ -15,9 +15,10 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using CommonCore.DISM;
 
 namespace DISMService;
 
@@ -26,10 +27,23 @@ internal static class Methods
 	// Resource for DISM error codes.
 	// https://learn.microsoft.com/windows/win32/debug/system-error-codes--1700-3999-
 
+	[UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+	internal static void DismProgressCallbackUnmanaged(uint current, uint total, nint userData) => Program.SendProgressCallback(current, total);
+
+	private static unsafe nint GetDismProgressCallbackPtr() => (nint)(delegate* unmanaged[Stdcall]<uint, uint, nint, void>)&DismProgressCallbackUnmanaged;
+
+	// Exposes a precomputed unmanaged function pointer for DISM
+	internal static readonly nint DismProgressCallbackPtr = GetDismProgressCallbackPtr();
+
 	/// <summary>
 	/// To store the DISM session for usage by the entire app.
 	/// </summary>
 	private static IntPtr CurrentDISMSession = IntPtr.Zero;
+
+	/// <summary>
+	/// Handle "item not found/not applicable" from DISM/CBS gracefully across all operations.
+	/// </summary>
+	private const int HRESULT_CBS_E_ITEM_NOT_FOUND = unchecked((int)0x800F080C);
 
 	internal static unsafe bool EnableFeature(string featureName, string[]? sourcePaths = null)
 	{
@@ -38,26 +52,33 @@ internal static class Methods
 
 		Logger.Write($"Attempting to enable feature: {featureName}", LogTypeIntel.Information);
 
-		int hr = NativeMethods.DismGetFeatureInfo(CurrentDISMSession, featureName, null, DISMAPI.DismPackageIdentifier.DismPackageNone, out IntPtr featureInfoPtr);
+		int hr = NativeMethods.DismGetFeatureInfo(CurrentDISMSession, featureName, null, DismPackageIdentifier.DismPackageNone, out IntPtr featureInfoPtr);
 		if (hr != 0 || featureInfoPtr == IntPtr.Zero)
 		{
+			// If the feature doesn't exist on this system, treat as a no-op success.
+			if (hr == HRESULT_CBS_E_ITEM_NOT_FOUND)
+			{
+				Logger.Write($"Feature '{featureName}' is not available on this system (0x{hr:X8}); skipping enable.", LogTypeIntel.Information);
+				return true;
+			}
+
 			Logger.Write($"Failed to get feature info for '{featureName}'. Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
 			return false;
 		}
 
 		try
 		{
-			DISMAPI.DismFeatureInfo featureInfo = *(DISMAPI.DismFeatureInfo*)featureInfoPtr;
-			if (featureInfo.FeatureState is DISMAPI.DismPackageFeatureState.DismStateNotPresent)
+			DismFeatureInfo featureInfo = *(DismFeatureInfo*)featureInfoPtr;
+			if (featureInfo.FeatureState is DismPackageFeatureState.DismStateNotPresent)
 			{
 				Logger.Write($"Feature '{featureName}' is not present (Disabled with Payload Removed). A valid source path (e.g., sources\\sxs) is required.", LogTypeIntel.Information);
 			}
-			else if (featureInfo.FeatureState is DISMAPI.DismPackageFeatureState.DismStateInstalled)
+			else if (featureInfo.FeatureState is DismPackageFeatureState.DismStateInstalled)
 			{
 				Logger.Write($"Feature '{featureName}' is already enabled.", LogTypeIntel.Information);
 				return true;
 			}
-			else if (featureInfo.FeatureState is DISMAPI.DismPackageFeatureState.DismStateStaged)
+			else if (featureInfo.FeatureState is DismPackageFeatureState.DismStateStaged)
 			{
 				Logger.Write($"Feature '{featureName}' is disabled but staged. No source path required.", LogTypeIntel.Information);
 			}
@@ -68,7 +89,6 @@ internal static class Methods
 				_ = NativeMethods.DismDelete(featureInfoPtr);
 		}
 
-		DISMAPI.DismProgressCallback callback = DISMAPI.ProgressCallback;
 		IntPtr sourcePathsPtr = IntPtr.Zero;
 		uint sourcePathCount = 0;
 		IntPtr[]? stringPtrs = null;
@@ -93,13 +113,13 @@ internal static class Methods
 				CurrentDISMSession,
 				featureName,
 				null,
-				DISMAPI.DismPackageIdentifier.DismPackageNone,
+				DismPackageIdentifier.DismPackageNone,
 				true,
 				sourcePathsPtr,
 				sourcePathCount,
-				false,
+				true,
 				IntPtr.Zero,
-				callback,
+				DismProgressCallbackPtr,
 				IntPtr.Zero);
 
 			if (hr == 0)
@@ -110,6 +130,12 @@ internal static class Methods
 			if (hr == 3010)
 			{
 				Logger.Write($"Successfully enabled feature, Reboot required: {featureName}", LogTypeIntel.Information);
+				return true;
+			}
+			// If the feature is not available on this system, treat as a no-op success.
+			if (hr == HRESULT_CBS_E_ITEM_NOT_FOUND)
+			{
+				Logger.Write($"Feature '{featureName}' is not available on this system (0x{hr:X8}); skipping enable.", LogTypeIntel.Information);
 				return true;
 			}
 			else
@@ -150,16 +176,14 @@ internal static class Methods
 
 			Logger.Write($"Attempting to disable feature: {featureName}", LogTypeIntel.Information);
 
-			DISMAPI.DismProgressCallback callback = DISMAPI.ProgressCallback;
-
 			int hr = NativeMethods.DismDisableFeature(
 				CurrentDISMSession,
 				featureName,
 				null,
-				DISMAPI.DismPackageIdentifier.DismPackageNone,
-				IntPtr.Zero,
-				callback,
-				IntPtr.Zero);
+				true,                 // RemovePayload: ensure payload is removed
+				IntPtr.Zero,          // CancelEvent
+				DismProgressCallbackPtr,
+				IntPtr.Zero);         // UserData
 
 			if (hr == 0)
 			{
@@ -168,12 +192,19 @@ internal static class Methods
 			}
 			if (hr == 3010)
 			{
+				// 3010 == ERROR_SUCCESS_REBOOT_REQUIRED
 				Logger.Write($"Successfully disabled feature, Reboot required: {featureName}", LogTypeIntel.Information);
+				return true;
+			}
+			// If the feature does not exist or is not applicable on this system, treat as no-op success.
+			if (hr == HRESULT_CBS_E_ITEM_NOT_FOUND)
+			{
+				Logger.Write($"Feature '{featureName}' is not available on this system (0x{hr:X8}); skipping disable.", LogTypeIntel.Information);
 				return true;
 			}
 			else
 			{
-				Logger.Write($"Failed to disable feature: {featureName}. Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
+				Logger.Write($"Failed to disable feature (payload removal requested): {featureName}. Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
 				return false;
 			}
 		}
@@ -187,13 +218,14 @@ internal static class Methods
 	{
 		if (CurrentDISMSession != IntPtr.Zero) return;
 
-		int hr = NativeMethods.DismInitialize(DISMAPI.DismLogLevel.DismLogErrorWarningInfo, null, null);
+		// This is what the DISM API will write to the defualt file path, doesn't affect the errors from API calls at all.
+		int hr = NativeMethods.DismInitialize(DismLogLevel.DismLogErrors, null, null);
 		if (hr != 0)
 		{
 			throw new InvalidOperationException($"Failed to initialize DISM. Error code: 0x{hr:X8}, HR: {hr}");
 		}
 
-		hr = NativeMethods.DismOpenSession(DISMAPI.OnlineImage, null, null, out IntPtr session);
+		hr = NativeMethods.DismOpenSession(Program.OnlineImage, null, null, out IntPtr session);
 		if (hr != 0)
 		{
 			throw new InvalidOperationException($"Failed to open DISM session. Error code: 0x{hr:X8}, HR: {hr}");
@@ -207,7 +239,7 @@ internal static class Methods
 		// Get a new session if one doesn't already exist
 		InitDISM();
 
-		nint getFeaturesHR = NativeMethods.DismGetFeatures(CurrentDISMSession, null, DISMAPI.DismPackageIdentifier.DismPackageNone, out IntPtr featureList, out uint featureCount);
+		nint getFeaturesHR = NativeMethods.DismGetFeatures(CurrentDISMSession, null, DismPackageIdentifier.DismPackageNone, out IntPtr featureList, out uint featureCount);
 		if (getFeaturesHR != 0 || featureList == IntPtr.Zero)
 		{
 			throw new InvalidOperationException($"DismGetFeatures failed. Error code: 0x{getFeaturesHR:X8}, HR: {getFeaturesHR}");
@@ -217,12 +249,22 @@ internal static class Methods
 		{
 			Logger.Write("Getting the available features.", LogTypeIntel.Information);
 
+			// Pre-sizing the output list to avoid growth overhead during bulk enumeration
+			int targetCapacity = ListToAdd.Count + (int)featureCount;
+			if (targetCapacity > ListToAdd.Capacity)
+			{
+				ListToAdd.Capacity = targetCapacity;
+			}
+
+			// Pointer iteration to traverse the native array
+			DismFeature* featureBase = (DismFeature*)featureList;
 			for (uint i = 0; i < featureCount; i++)
 			{
-				IntPtr featurePtr = IntPtr.Add(featureList, (int)(i * sizeof(DISMAPI.DismFeature)));
 				try
 				{
-					DISMAPI.DismFeature feature = *(DISMAPI.DismFeature*)featurePtr;
+					DismFeature* featurePtr = featureBase + i;
+					DismFeature feature = *featurePtr;
+
 					string featureName = PtrToStringUniSafe(feature.FeatureName);
 					if (string.IsNullOrEmpty(featureName))
 					{
@@ -230,14 +272,16 @@ internal static class Methods
 						continue;
 					}
 
-					nint getFeatureInfoHR = NativeMethods.DismGetFeatureInfo(CurrentDISMSession, featureName, null, DISMAPI.DismPackageIdentifier.DismPackageNone, out IntPtr stateFeatureInfoPtr);
-					DISMAPI.DismPackageFeatureState state = feature.State;
+					nint getFeatureInfoHR = NativeMethods.DismGetFeatureInfo(CurrentDISMSession, featureName, null, DismPackageIdentifier.DismPackageNone, out IntPtr stateFeatureInfoPtr);
+					DismPackageFeatureState state = feature.State;
+					string description = string.Empty;
 					if (getFeatureInfoHR == 0 && stateFeatureInfoPtr != IntPtr.Zero)
 					{
 						try
 						{
-							DISMAPI.DismFeatureInfo featureInfo = *(DISMAPI.DismFeatureInfo*)stateFeatureInfoPtr;
+							DismFeatureInfo featureInfo = *(DismFeatureInfo*)stateFeatureInfoPtr;
 							state = featureInfo.FeatureState;
+							description = PtrToStringUniSafe(featureInfo.Description);
 						}
 						finally
 						{
@@ -245,7 +289,7 @@ internal static class Methods
 						}
 					}
 
-					ListToAdd.Add(new DISMOutput(featureName, state, DISMResultType.Feature));
+					ListToAdd.Add(new DISMOutput(featureName, state, DISMResultType.Feature, description));
 				}
 				catch (Exception ex)
 				{
@@ -261,14 +305,17 @@ internal static class Methods
 		}
 	}
 
-	private static string PtrToStringUniSafe(IntPtr ptr)
+	/// <summary>
+	/// PCWSTR -> string conversion
+	/// </summary>
+	private static unsafe string PtrToStringUniSafe(IntPtr ptr)
 	{
 		if (ptr == IntPtr.Zero)
 			return string.Empty;
 
 		try
 		{
-			return Marshal.PtrToStringUni(ptr) ?? string.Empty;
+			return new string((char*)ptr);
 		}
 		catch (AccessViolationException)
 		{
@@ -291,10 +338,7 @@ internal static class Methods
 
 			Logger.Write($"Attempting to remove capability: {capabilityName}", LogTypeIntel.Information);
 
-			// a delegate for the progress callback
-			DISMAPI.DismProgressCallback callback = DISMAPI.ProgressCallback;
-
-			int hr = NativeMethods.DismRemoveCapability(CurrentDISMSession, capabilityName, IntPtr.Zero, callback, IntPtr.Zero);
+			int hr = NativeMethods.DismRemoveCapability(CurrentDISMSession, capabilityName, IntPtr.Zero, DismProgressCallbackPtr, IntPtr.Zero);
 			if (hr == 0)
 			{
 				Logger.Write($"Successfully removed capability: {capabilityName}", LogTypeIntel.Information);
@@ -303,6 +347,12 @@ internal static class Methods
 			if (hr == 3010)
 			{
 				Logger.Write($"Successfully removed capability, Reboot required: {capabilityName}", LogTypeIntel.Information);
+				return true;
+			}
+			// If the capability does not exist or is not applicable on this system, treat as no-op success.
+			if (hr == HRESULT_CBS_E_ITEM_NOT_FOUND)
+			{
+				Logger.Write($"Capability '{capabilityName}' is not available on this system (0x{hr:X8}); skipping remove.", LogTypeIntel.Information);
 				return true;
 			}
 			else
@@ -325,9 +375,6 @@ internal static class Methods
 		InitDISM();
 
 		Logger.Write($"Attempting to add capability: {capabilityName}", LogTypeIntel.Information);
-
-		// Delegate for the progress callback
-		DISMAPI.DismProgressCallback callback = DISMAPI.ProgressCallback;
 
 		IntPtr sourcePathsPtr = IntPtr.Zero;
 		uint sourcePathCount = 0;
@@ -358,7 +405,7 @@ internal static class Methods
 				sourcePathsPtr,
 				sourcePathCount,
 				IntPtr.Zero, // CancelEvent
-				callback,
+				DismProgressCallbackPtr,
 				IntPtr.Zero  // UserData
 			);
 
@@ -370,6 +417,12 @@ internal static class Methods
 			if (hr == 3010)
 			{
 				Logger.Write($"Successfully added capability, Reboot required: {capabilityName}", LogTypeIntel.Information);
+				return true;
+			}
+			// If the capability does not exist or is not applicable on this system, treat as no-op success.
+			if (hr == HRESULT_CBS_E_ITEM_NOT_FOUND)
+			{
+				Logger.Write($"Capability '{capabilityName}' is not available on this system (0x{hr:X8}); skipping add.", LogTypeIntel.Information);
 				return true;
 			}
 			else
@@ -421,46 +474,55 @@ internal static class Methods
 
 			Logger.Write($"Found {count} Windows capabilities:", LogTypeIntel.Information);
 
+			// Pre-sizing the output list to avoid growth overhead during bulk enumeration
+			int targetCapacity = ListToAdd.Count + (int)count;
+			if (targetCapacity > ListToAdd.Capacity)
+			{
+				ListToAdd.Capacity = targetCapacity;
+			}
+
+			// Pointer iteration to traverse the native array
 			int processedCount = 0;
-			IntPtr currentPtr = capabilityPtr;
+			DismCapability* capBase = (DismCapability*)capabilityPtr;
+
 			for (uint i = 0; i < count; i++)
 			{
-				DISMAPI.DismCapability capability = *(DISMAPI.DismCapability*)currentPtr;
+				DismCapability* capPtr = capBase + i;
+				DismCapability capability = *capPtr;
 
-				// Validate the Name pointer
-				string? name;
-				try
+				// Convert name and skip if empty/invalid
+				string name = PtrToStringUniSafe(capability.Name);
+				if (string.IsNullOrEmpty(name))
 				{
-					if (capability.Name == IntPtr.Zero)
-					{
-						name = "<null>";
-					}
-					else
-					{
-						name = Marshal.PtrToStringUni(capability.Name);
-						if (string.IsNullOrEmpty(name))
-						{
-							name = "<invalid>";
-						}
-					}
-				}
-				catch (AccessViolationException)
-				{
-					name = "<access_violation>";
-				}
-
-				// Skip weird names
-				if (name == "<null>" || name == "<invalid>" || name == "<access_violation>")
-				{
-					currentPtr = IntPtr.Add(currentPtr, sizeof(DISMAPI.DismCapability));
 					continue;
 				}
 
-				ListToAdd.Add(new DISMOutput(name, capability.State, DISMResultType.Capability));
+				DismPackageFeatureState state = capability.State;
+				string description = string.Empty;
+
+				// This increases the retrieval time by over 2 minutes!
+				// It's because the DismCapability, doesn't give us the description like the DismFeatureInfo does, so we have to get DismGetCapabilityInfo for each capability.
+				// The reason commands like "Get-WindowsOptionalFeature -online" are fast is because they use the APIs that return structs with only 2 properties.
+				/*
+				nint getCapabilityInfoHR = NativeMethods.DismGetCapabilityInfo(CurrentDISMSession, name, out IntPtr capabilityInfoPtr);
+				if (getCapabilityInfoHR == 0 && capabilityInfoPtr != IntPtr.Zero)
+				{
+					try
+					{
+						DismCapabilityInfo capabilityInfo = *(DismCapabilityInfo*)capabilityInfoPtr;
+						state = capabilityInfo.State;
+						description = PtrToStringUniSafe(capabilityInfo.Description);
+					}
+					finally
+					{
+						_ = NativeMethods.DismDelete(capabilityInfoPtr);
+					}
+				}
+				*/
+
+				ListToAdd.Add(new DISMOutput(name, state, DISMResultType.Capability, description));
 
 				processedCount++;
-
-				currentPtr = IntPtr.Add(currentPtr, sizeof(DISMAPI.DismCapability));
 			}
 
 			Logger.Write($"Successfully processed {processedCount} capabilities out of {count} total.", LogTypeIntel.Information);
@@ -499,19 +561,35 @@ internal static class Methods
 		{
 			try
 			{
-				nint getFeatureInfoHR = NativeMethods.DismGetFeatureInfo(CurrentDISMSession, featureName, null, DISMAPI.DismPackageIdentifier.DismPackageNone, out IntPtr featureInfoPtr);
+				nint getFeatureInfoHR = NativeMethods.DismGetFeatureInfo(
+					CurrentDISMSession,
+					featureName,
+					null,
+					DismPackageIdentifier.DismPackageNone,
+					out IntPtr featureInfoPtr);
 
 				if (getFeatureInfoHR != 0 || featureInfoPtr == IntPtr.Zero)
 				{
+					// Handle missing/removed features quietly as NotAvailableOnSystem
+					if ((int)getFeatureInfoHR == HRESULT_CBS_E_ITEM_NOT_FOUND)
+					{
+						output.Add(new DISMOutput(featureName, DismPackageFeatureState.NotAvailableOnSystem, DISMResultType.Feature, string.Empty));
+						Logger.Write($"Feature '{featureName}' is not available on this system (0x{getFeatureInfoHR:X8}); marking as NotAvailableOnSystem.", LogTypeIntel.Information);
+						continue;
+					}
+
+					// Preserve existing behavior for other failures
 					Logger.Write($"Failed to get feature info for '{featureName}'. Error code: 0x{getFeatureInfoHR:X8}, HR: {getFeatureInfoHR}", LogTypeIntel.Warning);
 					continue;
 				}
 
 				try
 				{
-					DISMAPI.DismFeatureInfo featureInfo = *(DISMAPI.DismFeatureInfo*)featureInfoPtr;
+					DismFeatureInfo featureInfo = *(DismFeatureInfo*)featureInfoPtr;
 
-					output.Add(new DISMOutput(featureName, featureInfo.FeatureState, DISMResultType.Feature));
+					string description = PtrToStringUniSafe(featureInfo.Description);
+
+					output.Add(new DISMOutput(featureName, featureInfo.FeatureState, DISMResultType.Feature, description));
 					Logger.Write($"Successfully retrieved feature: {featureName}, State: {featureInfo.FeatureState}", LogTypeIntel.Information);
 				}
 				finally
@@ -565,9 +643,11 @@ internal static class Methods
 
 				try
 				{
-					DISMAPI.DismCapabilityInfo capabilityInfo = *(DISMAPI.DismCapabilityInfo*)capabilityInfoPtr;
+					DismCapabilityInfo capabilityInfo = *(DismCapabilityInfo*)capabilityInfoPtr;
 
-					output.Add(new DISMOutput(capabilityName, capabilityInfo.State, DISMResultType.Capability));
+					string description = PtrToStringUniSafe(capabilityInfo.Description);
+
+					output.Add(new DISMOutput(capabilityName, capabilityInfo.State, DISMResultType.Capability, description));
 					Logger.Write($"Successfully retrieved capability: {capabilityName}, State: {capabilityInfo.State}", LogTypeIntel.Information);
 				}
 				finally
@@ -641,10 +721,10 @@ internal static class Methods
 		if (obj is null)
 			return false;
 
-		if (obj.State is DISMAPI.DismPackageFeatureState.DismStateNotPresent or
-			DISMAPI.DismPackageFeatureState.DismStateUninstallPending or
-			DISMAPI.DismPackageFeatureState.DismStateStaged or
-			DISMAPI.DismPackageFeatureState.DismStateRemoved)
+		if (obj.State is DismPackageFeatureState.DismStateNotPresent or
+			DismPackageFeatureState.DismStateUninstallPending or
+			DismPackageFeatureState.DismStateStaged or
+			DismPackageFeatureState.DismStateRemoved)
 		{
 			return false;
 		}

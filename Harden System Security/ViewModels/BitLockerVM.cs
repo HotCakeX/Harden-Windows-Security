@@ -18,25 +18,25 @@
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using AppControlManager.ViewModels;
 using HardenSystemSecurity.BitLocker;
 using HardenSystemSecurity.CustomUIElements;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 
 namespace HardenSystemSecurity.ViewModels;
 
-internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
+internal sealed partial class BitLockerVM : MUnitListViewModelBase
 {
+	[SetsRequiredMembers]
 	internal BitLockerVM()
 	{
 		MainInfoBar = new InfoBarSettings(
@@ -57,148 +57,12 @@ internal sealed partial class BitLockerVM : ViewModelBase, IMUnitListViewModel
 	}
 
 	/// <summary>
-	/// The main InfoBar for this VM.
-	/// </summary>
-	public InfoBarSettings MainInfoBar { get; }
-
-	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
-	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
-	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
-	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
-
-	public Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
-	public bool ElementsAreEnabled
-	{
-		get; set
-		{
-			if (SP(ref field, value))
-			{
-				ProgressBarVisibility = field ? Visibility.Collapsed : Visibility.Visible;
-			}
-		}
-	} = true;
-
-	/// <summary>
-	/// Items Source of the ListView.
-	/// </summary>
-	public ObservableCollection<GroupInfoListForMUnit> ListViewItemsSource { get; set => SP(ref field, value); } = [];
-
-	public List<GroupInfoListForMUnit> ListViewItemsSourceBackingField { get; set; } = [];
-
-	/// <summary>
-	/// Selected Items list in the ListView.
-	/// </summary>
-	public List<MUnit> ItemsSourceSelectedItems { get; set; } = [];
-
-	/// <summary>
-	/// Search keyword for ListView.
-	/// </summary>
-	public string? SearchKeyword { get; set; }
-
-	/// <summary>
-	/// Initialization details for the Apply All button
-	/// </summary>
-	public AnimatedCancellableButtonInitializer ApplyAllCancellableButton { get; }
-
-	/// <summary>
-	/// Initialization details for the Remove All button
-	/// </summary>
-	public AnimatedCancellableButtonInitializer RemoveAllCancellableButton { get; }
-
-	/// <summary>
-	/// Initialization details for the Verify All button
-	/// </summary>
-	public AnimatedCancellableButtonInitializer VerifyAllCancellableButton { get; }
-
-	/// <summary>
-	/// Total number of items loaded (all MUnits)
-	/// </summary>
-	public int TotalItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Number of items currently displayed after filtering
-	/// </summary>
-	public int FilteredItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Number of currently selected items
-	/// </summary>
-	public int SelectedItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Number of items with Undetermined status (N/A state)
-	/// </summary>
-	public int UndeterminedItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Number of items with Applied status
-	/// </summary>
-	public int AppliedItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Number of items with NotApplied status
-	/// </summary>
-	public int NotAppliedItemsCount { get; set => SP(ref field, value); }
-
-	/// <summary>
-	/// Persisted status filter toggles for this ViewModel.
-	/// </summary>
-	public bool ShowApplied { get; set => SP(ref field, value); } = true;
-	public bool ShowNotApplied { get; set => SP(ref field, value); } = true;
-	public bool ShowUndetermined { get; set => SP(ref field, value); } = true;
-
-	/// <summary>
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	/// <returns>List of all MUnits for this ViewModel</returns>
-	public List<MUnit> CreateAllMUnits()
+	public override List<MUnit> CreateAllMUnits()
 	{
 		return MUnit.CreateMUnitsFromPolicies(Categories.BitLockerSettings);
-	}
-
-	/// <summary>
-	/// Traverses the visual tree breadth-first and disposes any descendant control that:
-	///  - Implements IExplicitDisposalOptIn (meaning it skipped disposal on Unloaded)
-	///  - Implements IDisposable
-	/// This keeps the logic generic (works for AnimatedCancellableButton, LinkButtonV2, StatusIndicatorV2, etc.).
-	/// </summary>
-	internal static void DisposeExplicitOptInDescendants(FrameworkElement root)
-	{
-		if (root == null)
-		{
-			return;
-		}
-
-		Queue<DependencyObject> queue = new();
-		queue.Enqueue(root);
-
-		while (queue.Count > 0)
-		{
-			DependencyObject current = queue.Dequeue();
-			int childCount = VisualTreeHelper.GetChildrenCount(current);
-			for (int i = 0; i < childCount; i++)
-			{
-				DependencyObject child = VisualTreeHelper.GetChild(current, i);
-
-				// If it opted in and is disposable, dispose it.
-				if (child is IExplicitDisposalOptIn explicitOptIn &&
-					child is IDisposable disposable &&
-					explicitOptIn.DisposeOnlyOnExplicitCall)
-				{
-					try
-					{
-						disposable.Dispose();
-					}
-					catch
-					{
-						// Swallow: disposal errors should not block the rest.
-					}
-				}
-
-				queue.Enqueue(child);
-			}
-		}
 	}
 
 	/// <summary>

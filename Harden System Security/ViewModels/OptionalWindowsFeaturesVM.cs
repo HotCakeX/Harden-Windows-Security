@@ -27,6 +27,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using CommonCore.DISM;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -252,9 +253,6 @@ internal sealed partial class DismServiceClient : IDisposable
 					_processHandle = processInfo.hProcess;
 
 					_ = NativeMethods.CloseHandle(processInfo.hThread);
-
-					// Wait a bit for the service to start
-					await Task.Delay(2000);
 
 					_pipeClient = new NamedPipeClientStream(".", _pipeName, PipeDirection.InOut,
 						PipeOptions.Asynchronous, System.Security.Principal.TokenImpersonationLevel.None);
@@ -554,8 +552,9 @@ internal sealed partial class DismServiceClient : IDisposable
 				string name = ReadString();
 				DismPackageFeatureState state = (DismPackageFeatureState)_reader.ReadInt32();
 				DISMResultType type = (DISMResultType)_reader.ReadInt32();
+				string description = ReadString();
 
-				results.Add(new DISMOutput(name, state, type));
+				results.Add(new DISMOutput(name, state, type, description));
 			}
 		}
 
@@ -642,12 +641,30 @@ internal sealed partial class DismServiceClient : IDisposable
 	}
 }
 
-
+/// <summary>
+/// Used as ListView data to display Features and Capabilities to manage.
+/// </summary>
 /// <summary>
 /// Used as ListView data to display Features and Capabilities to manage.
 /// </summary>
 internal sealed partial class DISMOutputEntry : ViewModelBase
 {
+	internal string Description { get; }
+
+	internal SolidColorBrush StateBadgeBrush => State switch
+	{
+		DismPackageFeatureState.DismStateInstalled => new SolidColorBrush(Color.FromArgb(255, 16, 137, 62)),         // Green
+		DismPackageFeatureState.DismStateInstallPending => new SolidColorBrush(Color.FromArgb(255, 247, 99, 12)),   // Orange
+		DismPackageFeatureState.DismStatePartiallyInstalled => new SolidColorBrush(Color.FromArgb(255, 247, 99, 12)),// Orange
+		DismPackageFeatureState.DismStateStaged => new SolidColorBrush(Color.FromArgb(255, 0, 120, 215)),           // Blue
+		DismPackageFeatureState.DismStateUninstallPending => new SolidColorBrush(Color.FromArgb(255, 247, 99, 12)), // Orange
+		DismPackageFeatureState.DismStateSuperseded => new SolidColorBrush(Color.FromArgb(255, 96, 94, 92)),        // Gray
+		DismPackageFeatureState.DismStateRemoved => new SolidColorBrush(Color.FromArgb(255, 232, 17, 35)),          // Red
+		DismPackageFeatureState.DismStateNotPresent => new SolidColorBrush(Color.FromArgb(255, 96, 94, 92)),        // Gray
+		DismPackageFeatureState.NotAvailableOnSystem => new SolidColorBrush(Color.FromArgb(255, 96, 94, 92)),       // Gray
+		_ => new SolidColorBrush(Color.FromArgb(255, 96, 94, 92))                                                   // Default Gray
+	};
+
 	internal string Name { get; }
 	internal DISMResultType Type { get; }
 	internal DismPackageFeatureState State
@@ -658,6 +675,7 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 			if (SP(ref field, value))
 			{
 				OnPropertyChanged(nameof(StateDisplayName));
+				OnPropertyChanged(nameof(StateBadgeBrush));
 			}
 		}
 	}
@@ -729,10 +747,6 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 
 	internal string TypeDisplayName => Type == DISMResultType.Feature ? GlobalVars.GetStr("FeatureType") : GlobalVars.GetStr("CapabilityType");
 
-	internal SolidColorBrush TypeColor => Type == DISMResultType.Feature
-		? new SolidColorBrush(Color.FromArgb(255, 0, 120, 215))    // Blue for Features
-		: new SolidColorBrush(Color.FromArgb(255, 16, 137, 62));   // Green for Capabilities
-
 	internal OptionalWindowsFeaturesVM ParentVM { get; }
 
 	internal DISMOutputEntry(DISMOutput dismOutput, OptionalWindowsFeaturesVM parentVM)
@@ -744,6 +758,7 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 		IsProcessing = false;
 		ProgressCurrent = 0;
 		ProgressTotal = 0;
+		Description = dismOutput.Description;
 	}
 
 	internal void UpdateProgress(uint current, uint total)
@@ -791,6 +806,11 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 	}
 }
 
+internal sealed partial class GroupInfoListForDISMItems(IEnumerable<DISMOutputEntry> items, string key) : List<DISMOutputEntry>(items)
+{
+	internal string Key => $"{key} ({Count})";
+}
+
 internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDisposable
 {
 	private DismServiceClient? _dismServiceClient;
@@ -816,8 +836,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 		UpdateFilteredItems();
 
-		// Create the secure states.
-		SecurityHardeningConfigs = CreateSecurityHardeningConfigs();
+		UpdateCancellableButtonsEnabledStates();
 	}
 
 	/// <summary>
@@ -847,8 +866,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-	internal ObservableCollection<DISMOutputEntry> DISMItemsLVBound = [];
-	internal ObservableCollection<DISMOutputEntry> FilteredDISMItems = [];
+	internal List<DISMOutputEntry> AllItems = [];
 
 	/// <summary>
 	/// Selected Items list in the ListView.
@@ -880,13 +898,55 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				ProgressBarVisibility = field ? Visibility.Collapsed : Visibility.Visible;
 
 				// Update all entry button states
-				foreach (DISMOutputEntry entry in DISMItemsLVBound)
+				foreach (DISMOutputEntry entry in AllItems)
 				{
 					entry.NotifyButtonsEnabledChanged();
 				}
+
+				UpdateCancellableButtonsEnabledStates();
 			}
 		}
 	} = true;
+
+	// Computed properties to control IsEnabled state of the three AnimatedCancellableButton controls
+	internal bool IsApplyButtonEnabled => ComputeCancellableButtonEnabled(ApplyCancellableButton);
+	internal bool IsVerifyButtonEnabled => ComputeCancellableButtonEnabled(VerifyCancellableButton);
+	internal bool IsRemoveButtonEnabled => ComputeCancellableButtonEnabled(RemoveCancellableButton);
+
+	// Re-evaluate and notify bindings for the three buttons' IsEnabled
+	private void UpdateCancellableButtonsEnabledStates()
+	{
+		OnPropertyChanged(nameof(IsApplyButtonEnabled));
+		OnPropertyChanged(nameof(IsVerifyButtonEnabled));
+		OnPropertyChanged(nameof(IsRemoveButtonEnabled));
+	}
+
+	/// <summary>
+	/// Core logic for enabling/disabling the animated cancellable buttons
+	/// </summary>
+	private bool ComputeCancellableButtonEnabled(AnimatedCancellableButtonInitializer candidate)
+	{
+		bool anyInProgress =
+			ApplyCancellableButton.IsOperationInProgress ||
+			VerifyCancellableButton.IsOperationInProgress ||
+			RemoveCancellableButton.IsOperationInProgress;
+
+		// If other UI activity is in progress (ElementsAreEnabled == false)
+		// then disable all three unless this button is the one running (so user can cancel).
+		if (!ElementsAreEnabled)
+		{
+			return anyInProgress && candidate.IsOperationInProgress;
+		}
+
+		// If no one is running and UI is enabled -> enable all
+		if (!anyInProgress)
+		{
+			return true;
+		}
+
+		// If someone is running and UI is enabled -> enable only the running one
+		return candidate.IsOperationInProgress;
+	}
 
 	/// <summary>
 	/// Total number of items loaded (all features and capabilities)
@@ -908,35 +968,141 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// </summary>
 	private volatile bool _isUpdatingSelection;
 
+	/// <summary>
+	/// Items source bound to the ListView.
+	/// </summary>
+	internal readonly ObservableCollection<GroupInfoListForDISMItems> GroupedFilteredDISMItems = [];
+
 	private void UpdateFilteredItems()
 	{
-		FilteredDISMItems.Clear();
+		// Choose the source items based on search query
+		IEnumerable<DISMOutputEntry> filtered;
 
-		if (string.IsNullOrWhiteSpace(SearchQuery))
+		if (string.IsNullOrEmpty(SearchQuery))
 		{
-			foreach (DISMOutputEntry item in DISMItemsLVBound)
-			{
-				FilteredDISMItems.Add(item);
-			}
+			filtered = AllItems;
 		}
 		else
 		{
-			string? query = SearchQuery.ToLowerInvariant();
-			foreach (DISMOutputEntry item in DISMItemsLVBound.Where(x =>
-				x.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-				x.TypeDisplayName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-				x.StateDisplayName.Contains(query, StringComparison.OrdinalIgnoreCase)))
+			filtered = AllItems.Where(x =>
+				x.Name.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
+				x.TypeDisplayName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
+				x.Description.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
+				x.StateDisplayName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase));
+		}
+
+		// Update total counts
+		TotalItemsCount = AllItems.Count;
+
+		HashSet<string> recommendedNames = SecurityHardeningConfigs
+			.Select(config => config.Name)
+			.ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+		List<DISMOutputEntry> RecommendedItems = [];
+		List<DISMOutputEntry> OtherItems = [];
+
+		foreach (DISMOutputEntry item in filtered)
+		{
+			if (recommendedNames.Contains(item.Name))
 			{
-				FilteredDISMItems.Add(item);
+				RecommendedItems.Add(item);
+			}
+			else
+			{
+				OtherItems.Add(item);
 			}
 		}
 
-		// Update counts
-		TotalItemsCount = DISMItemsLVBound.Count;
-		FilteredItemsCount = FilteredDISMItems.Count;
+		// Publish grouped collection for the XAML CollectionViewSource
+		GroupedFilteredDISMItems.Clear();
+		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(RecommendedItems, "Recommended"));
+		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(OtherItems, "Others"));
+
+		// Update filtered counts
+		FilteredItemsCount = RecommendedItems.Count + OtherItems.Count;
 
 		// Sync ListView selection with our selection list after filtering
 		SyncListViewSelection();
+	}
+
+	/// <summary>
+	/// For the button event handler.
+	/// </summary>
+	internal async void EnsureRecommendedItemsRetrievedAndGroupAsync_Click()
+	{
+		try
+		{
+			await EnsureRecommendedItemsRetrievedAndGroupAsync();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	/// <summary>
+	/// Retrieve only the recommended items (features and capabilities) and ensure grouping is up-to-date.
+	/// </summary>
+	private async Task EnsureRecommendedItemsRetrievedAndGroupAsync()
+	{
+		try
+		{
+			ElementsAreEnabled = false;
+
+			// Initialize DISM service
+			if (!await InitializeDismServiceAsync())
+			{
+				return;
+			}
+
+			// Build unique, case-insensitive name lists for recommended capabilities and features
+			string[] capabilityNames = SecurityHardeningConfigs
+				.Where(config => config.Type == DISMResultType.Capability)
+				.Select(config => config.Name)
+				.Distinct(StringComparer.OrdinalIgnoreCase)
+				.ToArray();
+
+			string[] featureNames = SecurityHardeningConfigs
+				.Where(config => config.Type == DISMResultType.Feature)
+				.Select(config => config.Name)
+				.Distinct(StringComparer.OrdinalIgnoreCase)
+				.ToArray();
+
+			List<DISMOutput> results = new(featureNames.Length + capabilityNames.Length);
+
+			// Retrieve only the recommended features and capabilities
+			if (featureNames.Length > 0)
+			{
+				List<DISMOutput> featureResults = await _dismServiceClient!.GetSpecificFeaturesAsync(featureNames);
+				results.AddRange(featureResults);
+			}
+
+			if (capabilityNames.Length > 0)
+			{
+				List<DISMOutput> capabilityResults = await _dismServiceClient!.GetSpecificCapabilitiesAsync(capabilityNames);
+				results.AddRange(capabilityResults);
+			}
+
+			// Filter out items that are not available on this system, so they won't appear in the ListView
+			// This applies to features that were marked as NotAvailableOnSystem by the service.
+			List<DISMOutput> filteredResults = results
+				.Where(r => r.State is not DismPackageFeatureState.NotAvailableOnSystem)
+				.ToList();
+
+			// Populate list
+			AllItems.Clear();
+			for (int i = 0; i < filteredResults.Count; i++)
+			{
+				AllItems.Add(new DISMOutputEntry(filteredResults[i], this));
+			}
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+		}
+
+		// Rebuild filtered and grouped views to reflect current content and search (if any)
+		UpdateFilteredItems();
 	}
 
 	/// <summary>
@@ -954,10 +1120,21 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			// Clear current ListView selection
 			UIListView.SelectedItems.Clear();
 
-			// Re-select items that are in our selection list and currently visible in filtered items
-			foreach (DISMOutputEntry selectedItem in ItemsSourceSelectedItems)
+			// Re-select items that are in our selection list and currently visible in grouped view
+			for (int s = 0; s < ItemsSourceSelectedItems.Count; s++)
 			{
-				if (FilteredDISMItems.Contains(selectedItem))
+				DISMOutputEntry selectedItem = ItemsSourceSelectedItems[s];
+
+				bool isVisible = false;
+				for (int g = 0; g < GroupedFilteredDISMItems.Count && !isVisible; g++)
+				{
+					if (GroupedFilteredDISMItems[g].Contains(selectedItem))
+					{
+						isVisible = true;
+					}
+				}
+
+				if (isVisible)
 				{
 					UIListView.SelectedItems.Add(selectedItem);
 				}
@@ -967,14 +1144,6 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			_isUpdatingSelection = false;
 		}
-	}
-
-	/// <summary>
-	/// Update the selected items count display
-	/// </summary>
-	private void UpdateSelectedItemsCount()
-	{
-		SelectedItemsCount = ItemsSourceSelectedItems.Count;
 	}
 
 	/// <summary>
@@ -994,7 +1163,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					// Update UI with item progress
 					await Dispatcher.EnqueueAsync(() =>
 					{
-						DISMOutputEntry? entry = DISMItemsLVBound.FirstOrDefault(x => x.Name == itemName);
+						DISMOutputEntry? entry = AllItems.FirstOrDefault(x => x.Name == itemName);
 						entry?.UpdateProgress(current, total);
 
 						// Also show progress in InfoBar with feature name and action
@@ -1072,13 +1241,16 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// </summary>
 	internal async void LoadAll()
 	{
+		// Prevent the RefreshContainer to trigger a load when activity is in progress.
+		if (!ElementsAreEnabled)
+			return;
+
 		try
 		{
 			ElementsAreEnabled = false;
 
 			// Clear existing items and reset their processing state
-			DISMItemsLVBound.Clear();
-			FilteredDISMItems.Clear();
+			AllItems.Clear();
 			ItemsSourceSelectedItems.Clear();
 
 			// Initialize DISM service
@@ -1090,15 +1262,15 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			// Retrieve all features and capabilities from the service
 			List<DISMOutput> results = await _dismServiceClient!.GetAllResultsAsync();
 
-			// Add results to the ListView
+			// Add results to the master list
 			foreach (DISMOutput result in results)
 			{
-				DISMItemsLVBound.Add(new DISMOutputEntry(result, this));
+				AllItems.Add(new DISMOutputEntry(result, this));
 			}
 
-			// Update filtered items and counts
+			// Update grouped view and counts
 			UpdateFilteredItems();
-			UpdateSelectedItemsCount();
+			SelectedItemsCount = ItemsSourceSelectedItems.Count;
 
 			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyLoadedWindowsFeaturesCapabilities"), results.Count));
 		}
@@ -1612,9 +1784,13 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	{
 		if (_isUpdatingSelection) return;
 
-		foreach (DISMOutputEntry item in FilteredDISMItems)
+		for (int g = 0; g < GroupedFilteredDISMItems.Count; g++)
 		{
-			UIListView?.SelectedItems.Add(item);
+			GroupInfoListForDISMItems group = GroupedFilteredDISMItems[g];
+			for (int i = 0; i < group.Count; i++)
+			{
+				UIListView?.SelectedItems.Add(group[i]);
+			}
 		}
 	}
 
@@ -1668,7 +1844,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		}
 
 		// Update the selected count display
-		UpdateSelectedItemsCount();
+		SelectedItemsCount = ItemsSourceSelectedItems.Count;
 	}
 
 	#endregion
@@ -1692,18 +1868,38 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		DISMResultType type,
 		ApplyOperation applyStrategy,
 		ApplyOperation removeStrategy,
-		HashSet<DismPackageFeatureState> validVerificationStates)
+		List<DismPackageFeatureState> validVerificationStates)
 	{
 		internal string Name => name;
 		internal DISMResultType Type => type;
 		internal ApplyOperation ApplyStrategy => applyStrategy;
 		internal ApplyOperation RemoveStrategy => removeStrategy;
-		internal HashSet<DismPackageFeatureState> ValidVerificationStates => validVerificationStates;
+		internal List<DismPackageFeatureState> ValidVerificationStates => validVerificationStates;
 	}
 
-	private static List<OptionalFeatureConfig> CreateSecurityHardeningConfigs()
-	{
-		List<OptionalFeatureConfig> output = [
+	/// <summary>
+	/// Acceptable states of a feature or capability that should be disabled/removed from the system.
+	/// </summary>
+	private static readonly List<DismPackageFeatureState> ValidStatesForRemoval = [
+					DismPackageFeatureState.DismStateRemoved,
+					DismPackageFeatureState.DismStateNotPresent,
+					DismPackageFeatureState.NotAvailableOnSystem,
+					DismPackageFeatureState.DismStateStaged // DISM.exe also shows staged as "Disabled" when we query a feature state. This means the payload of the package exists on the system but isn't turned on in the running image.
+					];
+
+	/// <summary>
+	/// Acceptable states of a feature or capability that should be enabled on the system.
+	/// </summary>
+	private static readonly List<DismPackageFeatureState> ValidStatesForEnablement = [
+					DismPackageFeatureState.DismStateInstalled,
+					DismPackageFeatureState.DismStateInstallPending,
+					DismPackageFeatureState.NotAvailableOnSystem
+					];
+
+	/// <summary>
+	/// Predefined configurations for this hardening category that needs to run to provide a secure system state.
+	/// </summary>
+	private static readonly List<OptionalFeatureConfig> SecurityHardeningConfigs = [
 
 			#region FEATURES
 
@@ -1712,48 +1908,42 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				type:                   DISMResultType.Feature,
 				applyStrategy:          ApplyOperation.Disable,  // Apply = Disable
 				removeStrategy:         ApplyOperation.Enable,   // Remove = Enable (restore)
-				validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
-				 DismPackageFeatureState.DismStateNotPresent]
+				validVerificationStates: ValidStatesForRemoval
 			),
 			new OptionalFeatureConfig(
 				name:                   "MicrosoftWindowsPowerShellV2Root",
 				type:                   DISMResultType.Feature,
 				applyStrategy:          ApplyOperation.Disable,
 				removeStrategy:         ApplyOperation.Enable,
-				validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
-				DismPackageFeatureState.DismStateNotPresent]
+				validVerificationStates:ValidStatesForRemoval
 			),
 			new OptionalFeatureConfig(
 				name:                   "WorkFolders-Client",
 				type:                   DISMResultType.Feature,
 				applyStrategy:          ApplyOperation.Disable,
 				removeStrategy:         ApplyOperation.Enable,
-				validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
-				DismPackageFeatureState.DismStateNotPresent]
+				validVerificationStates:ValidStatesForRemoval
 			),
 			new OptionalFeatureConfig(
 				name:                   "Printing-Foundation-InternetPrinting-Client",
 				type:                   DISMResultType.Feature,
 				applyStrategy:          ApplyOperation.Disable,
 				removeStrategy:         ApplyOperation.Enable,
-				validVerificationStates:[DismPackageFeatureState.DismStateRemoved,
-				DismPackageFeatureState.DismStateNotPresent]
+				validVerificationStates:ValidStatesForRemoval
 			),
 			new OptionalFeatureConfig(
 				name:                   "Containers-DisposableClientVM",
 				type:                   DISMResultType.Feature,
 				applyStrategy:          ApplyOperation.Enable,   // Apply = Enable
 				removeStrategy:         ApplyOperation.Disable,  // Remove = Disable (undo)
-				validVerificationStates:[DismPackageFeatureState.DismStateInstalled,
-				DismPackageFeatureState.DismStateInstallPending]
+				validVerificationStates:ValidStatesForEnablement
 			),
 			new OptionalFeatureConfig(
 				name:                   "Microsoft-Hyper-V-All",
 				type:                   DISMResultType.Feature,
 				applyStrategy:          ApplyOperation.Enable,
 				removeStrategy:         ApplyOperation.Disable,
-				validVerificationStates:[DismPackageFeatureState.DismStateInstalled,
-				DismPackageFeatureState.DismStateInstallPending]
+				validVerificationStates:ValidStatesForEnablement
 			),
 
 			#endregion
@@ -1765,89 +1955,67 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				type:                   DISMResultType.Capability,
 				applyStrategy:          ApplyOperation.Disable,  // Apply = Remove (disable for capabilities)
 				removeStrategy:         ApplyOperation.Enable,   // Remove = Add (restore)
-				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-				DismPackageFeatureState.DismStateRemoved]
+				validVerificationStates:ValidStatesForRemoval
 			),
 			new OptionalFeatureConfig(
 				name:                   "WMIC~~~~",
 				type:                   DISMResultType.Capability,
 				applyStrategy:          ApplyOperation.Disable,
 				removeStrategy:         ApplyOperation.Enable,
-				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-				DismPackageFeatureState.DismStateRemoved]
+				validVerificationStates:ValidStatesForRemoval
 			),
 			new OptionalFeatureConfig(
 				name:                   "Microsoft.Windows.Notepad.System~~~~0.0.1.0",
 				type:                   DISMResultType.Capability,
 				applyStrategy:          ApplyOperation.Disable,
 				removeStrategy:         ApplyOperation.Enable,
-				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-				DismPackageFeatureState.DismStateRemoved]
+				validVerificationStates:ValidStatesForRemoval
 			),
 			new OptionalFeatureConfig(
 				name:                   "Microsoft.Windows.WordPad~~~~0.0.1.0",
 				type:                   DISMResultType.Capability,
 				applyStrategy:          ApplyOperation.Disable,
 				removeStrategy:         ApplyOperation.Enable,
-				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-				DismPackageFeatureState.DismStateRemoved]
+				validVerificationStates:ValidStatesForRemoval
 			),
 			new OptionalFeatureConfig(
 				name:                   "Microsoft.Windows.PowerShell.ISE~~~~0.0.1.0",
 				type:                   DISMResultType.Capability,
 				applyStrategy:          ApplyOperation.Disable,
 				removeStrategy:         ApplyOperation.Enable,
-				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-				DismPackageFeatureState.DismStateRemoved]
+				validVerificationStates:ValidStatesForRemoval
 			),
 			new OptionalFeatureConfig(
 				name:                   "App.StepsRecorder~~~~0.0.1.0",
 				type:                   DISMResultType.Capability,
 				applyStrategy:          ApplyOperation.Disable,
 				removeStrategy:         ApplyOperation.Enable,
-				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-				DismPackageFeatureState.DismStateRemoved]
+				validVerificationStates:ValidStatesForRemoval
 			),
 			new OptionalFeatureConfig(
 				name:                   "VBSCRIPT~~~~",
 				type:                   DISMResultType.Capability,
 				applyStrategy:          ApplyOperation.Disable,
 				removeStrategy:         ApplyOperation.Enable,
-				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-				DismPackageFeatureState.DismStateRemoved]
+				validVerificationStates:ValidStatesForRemoval
 			),
 			new OptionalFeatureConfig(
 				name:                   "Browser.InternetExplorer~~~~0.0.11.0",
 				type:                   DISMResultType.Capability,
 				applyStrategy:          ApplyOperation.Disable,
 				removeStrategy:         ApplyOperation.Enable,
-				validVerificationStates:[DismPackageFeatureState.DismStateNotPresent,
-				DismPackageFeatureState.DismStateRemoved]
-			)
-
-			#endregion
-		];
-
-		// Only add this if OS is older than 24H2 since it doesn't exist in newer versions.
-		if (GlobalVars.IsOlderThan24H2)
-		{
-			output.Add(new OptionalFeatureConfig(
+				validVerificationStates:ValidStatesForRemoval
+			),
+			new OptionalFeatureConfig(
 				name: "Windows-Defender-ApplicationGuard",
 				type: DISMResultType.Feature,
 				applyStrategy: ApplyOperation.Disable,
 				removeStrategy: ApplyOperation.Disable, // It's deprecated, don't enable it since it's not even enabled in 24H2 and later.
-				validVerificationStates: [DismPackageFeatureState.DismStateRemoved,
-				DismPackageFeatureState.DismStateNotPresent]
-			));
-		}
+				validVerificationStates:ValidStatesForRemoval
+			)
 
-		return output;
-	}
-
-	/// <summary>
-	/// Predefined configurations for this hardening category that needs to run to provide a secure system state.
-	/// </summary>
-	private static List<OptionalFeatureConfig> SecurityHardeningConfigs { get; set; } = [];
+			#endregion
+		];
 
 	/// <summary>
 	/// Execute the specified operation on a feature or capability
@@ -1899,6 +2067,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			}
 
 			ApplyCancellableButton.Begin();
+
+			await Dispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
 
 			// Set operation type for progress logging
 			_currentOperationType = "Applying Recommended Configurations";
@@ -1988,6 +2158,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			{
 				ElementsAreEnabled = true;
 				ApplyCancellableButton.End();
+				UpdateCancellableButtonsEnabledStates();
 				_currentOperationType = null;
 			});
 		}
@@ -2002,6 +2173,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		bool errorsOccurred = false;
 
 		VerifyCancellableButton.Begin();
+		await Dispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
 
 		try
 		{
@@ -2145,6 +2317,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			{
 				ElementsAreEnabled = true;
 				VerifyCancellableButton.End();
+				UpdateCancellableButtonsEnabledStates();
 				_currentOperationType = null;
 			});
 		}
@@ -2159,6 +2332,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		bool errorsOccurred = false;
 
 		RemoveCancellableButton.Begin();
+		await Dispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
 
 		try
 		{
@@ -2260,6 +2434,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			{
 				ElementsAreEnabled = true;
 				RemoveCancellableButton.End();
+				UpdateCancellableButtonsEnabledStates();
 				_currentOperationType = null;
 			});
 		}
@@ -2270,6 +2445,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// </summary>
 	internal async void ApplySecurityHardeningUI()
 	{
+		// Ensure only recommended items are retrieved and grouped before applying
+		await EnsureRecommendedItemsRetrievedAndGroupAsync();
 		await ApplySecurityHardening();
 	}
 
@@ -2278,6 +2455,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// </summary>
 	internal async void VerifySecurityHardeningUI()
 	{
+		// Ensure only recommended items are retrieved and grouped before removing
+		await EnsureRecommendedItemsRetrievedAndGroupAsync();
 		_ = await VerifySecurityHardening();
 	}
 
@@ -2286,11 +2465,12 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// </summary>
 	internal async void RemoveSecurityHardeningUI()
 	{
+		// Ensure only recommended items are retrieved and grouped before removing
+		await EnsureRecommendedItemsRetrievedAndGroupAsync();
 		await RemoveSecurityHardening();
 	}
 
 	#endregion
-
 
 	/// <summary>
 	/// Clean up resources when the ViewModel is disposed
@@ -2306,36 +2486,4 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			Logger.Write(string.Format(GlobalVars.GetStr("ErrorDisposingDISMServiceClient"), ex.Message), LogTypeIntel.Error);
 		}
 	}
-}
-
-internal sealed class DISMOutput
-{
-	internal string Name { get; }
-	internal DismPackageFeatureState State { get; }
-	internal DISMResultType Type { get; }
-
-	internal DISMOutput(string name, DismPackageFeatureState state, DISMResultType type)
-	{
-		Name = name;
-		State = state;
-		Type = type;
-	}
-}
-
-internal enum DismPackageFeatureState
-{
-	DismStateNotPresent = 0,
-	DismStateUninstallPending = 1,
-	DismStateStaged = 2,
-	DismStateRemoved = 3,
-	DismStateInstalled = 4,
-	DismStateInstallPending = 5,
-	DismStateSuperseded = 6,
-	DismStatePartiallyInstalled = 7
-}
-
-internal enum DISMResultType
-{
-	Capability,
-	Feature
 }

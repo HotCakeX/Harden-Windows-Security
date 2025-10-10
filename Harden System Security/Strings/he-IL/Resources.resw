@@ -3951,4 +3951,152 @@
   <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>פותח את תיבת הדו-שיח לבחירת קבצים, המאפשרת לך לבחור קובץ/קבצים</value>
   </data>
+    <data name="RetrieveRecommendedOnlyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>שלוף רק את המומלצים</value>
+  </data>
+  <data name="RetrieveRecommendedOnlyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+      <value>שלוף רק את הפריטים המומלצים.</value>
+  </data>
+  <data name="RetrieveRecommendedOnlyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שלוף רק את הפריטים המומלצים.</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>אמצעי אבטחה</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ניהול אמצעי אבטחה הקשורים ל-Microsoft Defender.</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ניהול אמצעי אבטחה הקשורים ל-Microsoft Defender.</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.Header" xml:space="preserve">
+    <value>החרגה</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף, הסר, הצג ונהל קבצים מוחרגים ב-Microsoft Defender Antivirus, בגישה מבוקרת לתיקיות ובכללי צמצום שטח התקיפה</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף, הסר, הצג ונהל קבצים מוחרגים ב-Microsoft Defender Antivirus, בגישה מבוקרת לתיקיות ובכללי צמצום שטח התקיפה</value>
+  </data>
+   <!--Microsoft Defender Exclusions ListView Headers Start-->
+  <data name="TargetHeader.Text" xml:space="preserve">
+    <value>יעד</value>
+  </data>
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>מקור</value>
+  </data>
+  <!--Microsoft Defender Exclusions ListView Headers End-->
+  <!--Microsoft Defender Exclusions ListView Headers Buttons Start-->
+  <data name="TargetColumnHeaderBtn.Content" xml:space="preserve">
+    <value>יעד</value>
+  </data>
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מקור</value>
+  </data>
+  <!--Microsoft Defender Exclusions ListView Headers Buttons End-->
+  <data name="RetrieveAllExclusionsButton.Content" xml:space="preserve">
+    <value>שלוף הכול</value>
+  </data>
+  <data name="RetrieveAllExclusionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שלוף את כל ההחרגות מכל הרכיבים של Microsoft Defender.</value>
+  </data>
+  <data name="RetrieveAllExclusionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שלוף את כל ההחרגות מכל הרכיבים של Microsoft Defender.</value>
+  </data>
+  <data name="AddExclusionsButton.Content" xml:space="preserve">
+    <value>הוסף החרגות</value>
+  </data>
+  <data name="AddExclusionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף החרגות לרכיבים שונים של Microsoft Defender</value>
+  </data>
+  <data name="AddExclusionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף החרגות לרכיבים שונים של Microsoft Defender</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>נתיב קובץ</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף החרגות עבור נתיב קובץ</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף החרגות עבור נתיב קובץ</value>
+  </data>
+    <data name="AddExclusionsForFolderPathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>נתיב תיקייה</value>
+  </data>
+  <data name="AddExclusionsForFolderPathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף החרגות עבור נתיב תיקייה</value>
+  </data>
+  <data name="AddExclusionsForFolderPathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף החרגות עבור נתיב תיקייה</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.Text" xml:space="preserve">
+    <value>סיומת</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף החרגות עבור סיומת קובץ</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף החרגות עבור סיומת קובץ</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.Text" xml:space="preserve">
+    <value>תהליך</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף החרגות עבור תהליך</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף החרגות עבור תהליך</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.Text" xml:space="preserve">
+    <value>גישה מבוקרת לתיקיות</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף החרגות עבור גישה מבוקרת לתיקיות</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף החרגות עבור גישה מבוקרת לתיקיות</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.Text" xml:space="preserve">
+    <value>צמצום שטח התקיפה</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הוסף החרגות עבור צמצום שטח התקיפה</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הוסף החרגות עבור צמצום שטח התקיפה</value>
+  </data>
+  <data name="AddedExclusionMsg" xml:space="preserve">
+    <value>נוספה החרגה עבור: {0}</value>
+  </data>
+  <data name="RetrievedExclusionsSuccessfullyMsg" xml:space="preserve">
+    <value>כל ההחרגות של Microsoft Defender נשלפו בהצלחה.</value>
+  </data>
+  <data name="AddToExclusionsText" xml:space="preserve">
+    <value>הוסף להחרגות</value>
+  </data>
+  <data name="AddProcessExclusionText" xml:space="preserve">
+    <value>הוסף החרגת תהליך</value>
+  </data>
+  <data name="AddExtensionExclusionText" xml:space="preserve">
+    <value>הוסף החרגת סיומת</value>
+  </data>
+  <data name="EnterFileExtensionText" xml:space="preserve">
+    <value>נא להזין סיומת קובץ.</value>
+  </data>
+  <data name="FileExtensionInvalidMsg" xml:space="preserve">
+    <value>סיומת הקובץ אינה תקינה.</value>
+  </data>
+  <data name="FileExtensionHasInvalidCharsMsg" xml:space="preserve">
+    <value>סיומת הקובץ מכילה תווים לא תקינים.</value>
+  </data>
+  <data name="EnterProcessNameText" xml:space="preserve">
+    <value>נא להזין שם תהליך.</value>
+  </data>
+  <data name="ProcessNameInvalidMsg" xml:space="preserve">
+    <value>שם התהליך אינו תקין.</value>
+  </data>
+  <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
+    <value>שם התהליך מכיל תווים לא תקינים.</value>
+  </data>
 </root>

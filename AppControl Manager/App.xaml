@@ -19,6 +19,29 @@
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
 
+            <!-- Themed brush -->
+            <ResourceDictionary.ThemeDictionaries>
+                <!-- Default is used as fallback -->
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="AppOverlayBackgroundBrush" Color="{ThemeResource LayerFillColorDefault}" />
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Light">
+                    <!-- Light theme -->
+                    <SolidColorBrush x:Key="AppOverlayBackgroundBrush" Color="{ThemeResource LayerFillColorDefault}" />
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Dark">
+                    <!-- Dark theme -->
+                    <SolidColorBrush x:Key="AppOverlayBackgroundBrush" Color="{ThemeResource SmokeFillColorDefault}" />
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="HighContrast">
+                    <!-- High Contrast: use system window color to respect accessibility settings -->
+                    <SolidColorBrush x:Key="AppOverlayBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
 
             <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
             <!--  Spacing between cards  -->

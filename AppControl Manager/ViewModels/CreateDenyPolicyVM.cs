@@ -36,11 +36,8 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 {
-	public void Dispose()
-	{
-		// Dispose the controller
-		LVController.Dispose();
-	}
+	// Dispose the controller
+	public void Dispose() => LVController.Dispose();
 
 	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;
 

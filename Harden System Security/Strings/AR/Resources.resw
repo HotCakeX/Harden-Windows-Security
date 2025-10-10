@@ -3951,4 +3951,152 @@
   <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>يفتح مربع حوار منتقي الملفات مما يتيح لك تحديد ملف/ملفات</value>
   </data>
+    <data name="RetrieveRecommendedOnlyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>استرداد العناصر الموصى بها فقط</value>
+  </data>
+  <data name="RetrieveRecommendedOnlyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+      <value>استرداد العناصر الموصى بها فقط.</value>
+  </data>
+  <data name="RetrieveRecommendedOnlyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد العناصر الموصى بها فقط.</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>إجراءات الأمان</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إدارة إجراءات الأمان المتعلقة بـ Microsoft Defender.</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إدارة إجراءات الأمان المتعلقة بـ Microsoft Defender.</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.Header" xml:space="preserve">
+    <value>استثناء</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة الملفات المستبعدة وإزالتها وعرضها وإدارتها في Microsoft Defender Antivirus، والوصول المتحكم به إلى المجلدات، وقواعد تقليل سطح الهجوم</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة الملفات المستبعدة وإزالتها وعرضها وإدارتها في Microsoft Defender Antivirus، والوصول المتحكم به إلى المجلدات، وقواعد تقليل سطح الهجوم</value>
+  </data>
+   <!--Microsoft Defender Exclusions ListView Headers Start-->
+  <data name="TargetHeader.Text" xml:space="preserve">
+    <value>الهدف</value>
+  </data>
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>المصدر</value>
+  </data>
+  <!--Microsoft Defender Exclusions ListView Headers End-->
+  <!--Microsoft Defender Exclusions ListView Headers Buttons Start-->
+  <data name="TargetColumnHeaderBtn.Content" xml:space="preserve">
+    <value>الهدف</value>
+  </data>
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>المصدر</value>
+  </data>
+  <!--Microsoft Defender Exclusions ListView Headers Buttons End-->
+  <data name="RetrieveAllExclusionsButton.Content" xml:space="preserve">
+    <value>استرداد الكل</value>
+  </data>
+  <data name="RetrieveAllExclusionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد جميع الاستثناءات من جميع مكونات Microsoft Defender.</value>
+  </data>
+  <data name="RetrieveAllExclusionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد جميع الاستثناءات من جميع مكونات Microsoft Defender.</value>
+  </data>
+  <data name="AddExclusionsButton.Content" xml:space="preserve">
+    <value>إضافة استثناءات</value>
+  </data>
+  <data name="AddExclusionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة استثناءات إلى مكونات متعددة في Microsoft Defender</value>
+  </data>
+  <data name="AddExclusionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة استثناءات إلى مكونات متعددة في Microsoft Defender</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>مسار الملف</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة استثناءات لمسار ملف</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة استثناءات لمسار ملف</value>
+  </data>
+    <data name="AddExclusionsForFolderPathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>مسار المجلد</value>
+  </data>
+  <data name="AddExclusionsForFolderPathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة استثناءات لمسار مجلد</value>
+  </data>
+  <data name="AddExclusionsForFolderPathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة استثناءات لمسار مجلد</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.Text" xml:space="preserve">
+    <value>امتداد</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة استثناءات لامتداد</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة استثناءات لامتداد</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.Text" xml:space="preserve">
+    <value>عملية</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة استثناءات لعملية</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة استثناءات لعملية</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.Text" xml:space="preserve">
+    <value>الوصول المتحكم به إلى المجلدات</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة استثناءات للوصول المتحكم به إلى المجلدات</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة استثناءات للوصول المتحكم به إلى المجلدات</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تقليل سطح الهجوم</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إضافة استثناءات لتقليل سطح الهجوم</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إضافة استثناءات لتقليل سطح الهجوم</value>
+  </data>
+  <data name="AddedExclusionMsg" xml:space="preserve">
+    <value>تمت إضافة استثناء لـ: {0}</value>
+  </data>
+  <data name="RetrievedExclusionsSuccessfullyMsg" xml:space="preserve">
+    <value>تم استرداد جميع استثناءات Microsoft Defender بنجاح.</value>
+  </data>
+  <data name="AddToExclusionsText" xml:space="preserve">
+    <value>إضافة إلى الاستثناءات</value>
+  </data>
+  <data name="AddProcessExclusionText" xml:space="preserve">
+    <value>إضافة استثناء عملية</value>
+  </data>
+  <data name="AddExtensionExclusionText" xml:space="preserve">
+    <value>إضافة استثناء امتداد</value>
+  </data>
+  <data name="EnterFileExtensionText" xml:space="preserve">
+    <value>يرجى إدخال امتداد ملف.</value>
+  </data>
+  <data name="FileExtensionInvalidMsg" xml:space="preserve">
+    <value>امتداد الملف غير صالح.</value>
+  </data>
+  <data name="FileExtensionHasInvalidCharsMsg" xml:space="preserve">
+    <value>امتداد الملف يحتوي على أحرف غير صالحة.</value>
+  </data>
+  <data name="EnterProcessNameText" xml:space="preserve">
+    <value>يرجى إدخال اسم العملية.</value>
+  </data>
+  <data name="ProcessNameInvalidMsg" xml:space="preserve">
+    <value>اسم العملية غير صالح.</value>
+  </data>
+  <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
+    <value>اسم العملية يحتوي على أحرف غير صالحة.</value>
+  </data>
 </root>

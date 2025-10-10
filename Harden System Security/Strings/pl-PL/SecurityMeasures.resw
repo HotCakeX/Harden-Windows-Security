@@ -130,7 +130,7 @@
     <value>Poziom blokowania w chmurze ustawiony na wartość maksymalną: tolerancja zerowa.</value>
 </data>
 <data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
-    <value>Rozszerzony limit czasu sprawdzania w chmurze ustawiony na wartość maksymalną."</value>
+    <value>Rozszerzony limit czasu sprawdzania w chmurze ustawiony na wartość maksymalną.</value>
 </data>
 <data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
     <value>Włącz obliczanie wartości hash plików.</value>

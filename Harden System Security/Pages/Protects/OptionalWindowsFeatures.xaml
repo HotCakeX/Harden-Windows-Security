@@ -22,9 +22,10 @@
         </Grid.RowDefinitions>
 
         <Grid.Resources>
+
             <!-- Defines a single DISMOutputEntry that is displayed in the ListView -->
-            <DataTemplate x:Key="DISMOutputListViewTemplate"
-                  x:DataType="viewModels:DISMOutputEntry">
+            <DataTemplate x:Key="DISMOutputListViewTemplate"                                      
+                          x:DataType="viewModels:DISMOutputEntry">
                 <Border BorderThickness="2"
                         BorderBrush="{x:Bind BorderBrush, Mode=OneWay}"
                         CornerRadius="8"
@@ -40,7 +41,7 @@
                         </Grid.RowDefinitions>
 
                         <!-- Name and Type -->
-                        <Grid Grid.Row="0" Margin="0,0,0,8">
+                        <Grid Grid.Row="0" Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -54,64 +55,57 @@
                                        x:Phase="1"
                                        Style="{ThemeResource SubtitleTextBlockStyle}"/>
 
-                            <!-- Type Label with different colors -->
+                            <!-- Type Label -->
                             <Border Grid.Column="1"
-                                    BorderThickness="1"
-                                    CornerRadius="12"
-                                    Padding="8,4"
+                                    CornerRadius="14"
+                                    Padding="10,6"
                                     VerticalAlignment="Center"
-                                    Background="{x:Bind TypeColor, Mode=OneWay}">
+                                    Background="{ThemeResource AppOverlayBackgroundBrush}"
+                                    BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
+                                    BorderThickness="1">
                                 <TextBlock Text="{x:Bind TypeDisplayName, Mode=OneWay}"
                                            FontSize="11"
-                                           FontWeight="SemiBold"
-                                           Foreground="White"/>
+                                           FontWeight="SemiBold"/>
                             </Border>
                         </Grid>
 
-                        <!-- State Display -->
-                        <Grid Grid.Row="1" Margin="0,0,0,12">
+                        <!-- State -->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10" Spacing="10">
+
+                            <TextBlock Text="State:"			                           	                          
+			                           Style="{ThemeResource BodyTextBlockStyle}"/>
+
+                            <!-- State pill -->
+                            <Border Background="{x:Bind StateBadgeBrush, Mode=OneWay}"
+			                        Padding="10,4"
+			                        CornerRadius="12"
+			                        HorizontalAlignment="Left">
+                                <TextBlock Text="{x:Bind StateDisplayName, Mode=OneWay}"
+				                           Foreground="White"
+				                           FontSize="12"
+				                           FontWeight="SemiBold"/>
+                            </Border>
+
+                        </StackPanel>
+
+                        <!-- Description -->
+                        <Grid Grid.Row="2" Margin="0,0,0,6">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0"
-                                       Text="State:"
-                                       VerticalAlignment="Center"
-                                       Margin="0,0,12,0"
-                                       Style="{ThemeResource BodyTextBlockStyle}"/>
+			                           Text="Description:"
+			                           Style="{ThemeResource BodyTextBlockStyle}"
+			                           VerticalAlignment="Top"
+			                           Margin="0,0,10,0"/>
 
                             <TextBlock Grid.Column="1"
-                                       Text="{x:Bind StateDisplayName, Mode=OneWay}"
-                                       VerticalAlignment="Center"
-                                       FontWeight="SemiBold"
-                                       Style="{ThemeResource BodyTextBlockStyle}"/>
-                        </Grid>
-
-                        <!-- Progress Bar -->
-                        <Grid Grid.Row="2" Margin="0,0,0,8" Visibility="{x:Bind ProgressBarVisibility, Mode=OneWay}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Grid.Row="0"
-                                       HorizontalAlignment="Center"
-                                       FontSize="12"
-                                       Margin="0,0,0,4">
-                                <Run Text="{x:Bind ProgressCurrent, Mode=OneWay}"/>
-                                <Run Text="/"/>
-                                <Run Text="{x:Bind ProgressTotal, Mode=OneWay}"/>
-                                <Run Text=" ("/>
-                                <Run Text="{x:Bind ProgressPercentageFormatted, Mode=OneWay}"/>
-                                <Run Text="%)"/>
-                            </TextBlock>
-
-                            <ProgressBar Grid.Row="1"
-                                         Value="{x:Bind ProgressPercentage, Mode=OneWay}"
-                                         Maximum="100"
-                                         Height="8"
-                                         CornerRadius="4"/>
+			                           Text="{x:Bind Description, Mode=OneWay}"
+			                           TextWrapping="WrapWholeWords"
+			                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+			                           Style="{ThemeResource BodyTextBlockStyle}"/>
                         </Grid>
 
                         <!-- Action Buttons -->
@@ -150,6 +144,11 @@
                     </Grid>
                 </Border>
             </DataTemplate>
+
+            <!-- Grouped CollectionViewSource for DISM items -->
+            <CollectionViewSource x:Name="DISMItemsCollectionViewSource"
+                                  Source="{x:Bind ViewModel.GroupedFilteredDISMItems, Mode=OneWay}"
+                                  IsSourceGrouped="True"/>
         </Grid.Resources>
 
         <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
@@ -203,23 +202,36 @@
                               Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
                               VerticalAlignment="Center" />
 
-                <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.LoadAll}">
+                <SplitButton IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                             Click="{x:Bind ViewModel.LoadAll}">
 
-                    <StackPanel Orientation="Horizontal" Spacing="4">
-                        <AnimatedIcon Height="18" Width="18">
-                            <AnimatedIcon.Source>
-                                <animatedvisuals:MindMap/>
-                            </AnimatedIcon.Source>
-                        </AnimatedIcon>
-                        <TextBlock x:Uid="RetrieveAllOptionalsButtonText"
-                                   FontWeight="SemiBold"
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
+                    <SplitButton.Content>
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <AnimatedIcon Height="18" Width="18">
+                                <AnimatedIcon.Source>
+                                    <animatedvisuals:MindMap/>
+                                </AnimatedIcon.Source>
+                            </AnimatedIcon>
+                            <TextBlock x:Uid="RetrieveAllOptionalsButtonText"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </SplitButton.Content>
 
-                </Button>
+                    <SplitButton.Flyout>
+                        <MenuFlyout Placement="RightEdgeAlignedBottom">
+                            <MenuFlyout.SystemBackdrop>
+                                <MicaBackdrop Kind="BaseAlt"/>
+                            </MenuFlyout.SystemBackdrop>
+                            <MenuFlyoutItem x:Uid="RetrieveRecommendedOnlyMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.EnsureRecommendedItemsRetrievedAndGroupAsync_Click}"/>
+                        </MenuFlyout>
+
+                    </SplitButton.Flyout>
+                </SplitButton>
 
                 <customUI:AnimatedCancellableButton
+                    IsEnabled="{x:Bind ViewModel.IsApplyButtonEnabled, Mode=OneWay}"
                     CancelMethod="{x:Bind ViewModel.ApplyCancellableButton.Cancel, Mode=OneWay}"
                     ExternalOperationInProgress="{x:Bind ViewModel.ApplyCancellableButton.IsOperationInProgress, Mode=OneWay}"
                     ExternalIsCancelState="{x:Bind ViewModel.ApplyCancellableButton.IsCancelState, Mode=OneWay}"
@@ -248,6 +260,7 @@
                 </customUI:AnimatedCancellableButton>
 
                 <customUI:AnimatedCancellableButton
+                    IsEnabled="{x:Bind ViewModel.IsVerifyButtonEnabled, Mode=OneWay}"
                     CancelMethod="{x:Bind ViewModel.VerifyCancellableButton.Cancel, Mode=OneWay}"
                     ExternalOperationInProgress="{x:Bind ViewModel.VerifyCancellableButton.IsOperationInProgress, Mode=OneWay}"
                     ExternalIsCancelState="{x:Bind ViewModel.VerifyCancellableButton.IsCancelState, Mode=OneWay}"
@@ -276,6 +289,7 @@
                 </customUI:AnimatedCancellableButton>
 
                 <customUI:AnimatedCancellableButton
+                    IsEnabled="{x:Bind ViewModel.IsRemoveButtonEnabled, Mode=OneWay}"
                     CancelMethod="{x:Bind ViewModel.RemoveCancellableButton.Cancel, Mode=OneWay}"
                     ExternalOperationInProgress="{x:Bind ViewModel.RemoveCancellableButton.IsOperationInProgress, Mode=OneWay}"
                     ExternalIsCancelState="{x:Bind ViewModel.RemoveCancellableButton.IsCancelState, Mode=OneWay}"
@@ -354,11 +368,9 @@
         </Border>
 
         <RefreshContainer Grid.Row="3"
-                          IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                           RefreshRequested="{x:Bind ViewModel.LoadAll}">
 
-            <ListView x:Name="MainListView"
-                      Loaded="{x:Bind ViewModel.MainListView_Loaded}"
+            <ListView Loaded="{x:Bind ViewModel.MainListView_Loaded}"
                       CornerRadius="10"
                       BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -367,9 +379,20 @@
                       ScrollViewer.VerticalScrollMode="Enabled"
                       SelectionChanged="{x:Bind ViewModel.MainListView_SelectionChanged}"
                       ItemTemplate="{StaticResource DISMOutputListViewTemplate}"
-                      ItemsSource="{x:Bind ViewModel.FilteredDISMItems, Mode=OneWay}"
+                      ItemsSource="{x:Bind DISMItemsCollectionViewSource.View, Mode=OneWay}"
                       SelectionMode="Multiple">
-
+                <ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate x:DataType="viewModels:GroupInfoListForDISMItems">
+                                <Border AutomationProperties.AccessibilityView="Raw">
+                                    <TextBlock Text="{x:Bind Key}"                                               
+                                               AutomationProperties.AccessibilityView="Raw"/>
+                                </Border>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>
             </ListView>
 
         </RefreshContainer>

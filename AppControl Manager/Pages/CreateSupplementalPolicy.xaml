@@ -393,6 +393,7 @@
 
                 <Border Height="60"
                         BorderThickness="0"
+                        Background="{ThemeResource AppOverlayBackgroundBrush}"
                         CornerRadius="18">
 
                     <Grid Margin="10,0,0,0">

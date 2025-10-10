@@ -130,7 +130,7 @@
     <value>Ορισμός του Επιπέδου Αποκλεισμού Cloud στη μέγιστη τιμή: Μηδενική Ανοχή.</value>
 </data>
 <data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
-    <value>Εκτεταμένο χρονικό όριο ελέγχου cloud ορισμένο στη μέγιστη τιμή."</value>
+    <value>Εκτεταμένο χρονικό όριο ελέγχου cloud ορισμένο στη μέγιστη τιμή.</value>
 </data>
 <data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
     <value>Ενεργοποίηση υπολογισμού κατακερματισμών αρχείων.</value>

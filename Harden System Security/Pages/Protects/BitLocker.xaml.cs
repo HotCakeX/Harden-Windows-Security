@@ -47,7 +47,7 @@ internal sealed partial class BitLocker : Page
 		base.OnNavigatedFrom(e);
 
 		// Dispose all descendants that explicitly opted out of automatic disposal.
-		BitLockerVM.DisposeExplicitOptInDescendants(SecurityMeasuresList);
+		AppControlManager.ViewModels.ViewModelBase.DisposeExplicitOptInDescendants(SecurityMeasuresList);
 
 		// Finally dispose the list control itself.
 		SecurityMeasuresList.Dispose();

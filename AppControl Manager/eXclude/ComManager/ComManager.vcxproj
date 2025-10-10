@@ -69,7 +69,6 @@
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <GuardSignedReturns>true</GuardSignedReturns>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <EnableEnhancedInstructionSet>CPUExtensionRequirementsARMv81</EnableEnhancedInstructionSet>
       <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <Link>
@@ -89,7 +88,6 @@
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <GuardSignedReturns>true</GuardSignedReturns>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <EnableEnhancedInstructionSet>CPUExtensionRequirementsARMv81</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <GuardEHContMetadata>true</GuardEHContMetadata>
       <StringPooling>true</StringPooling>
@@ -112,7 +110,6 @@
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <IntelJCCErratum>true</IntelJCCErratum>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <Link>
@@ -133,7 +130,6 @@
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <IntelJCCErratum>true</IntelJCCErratum>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <GuardEHContMetadata>true</GuardEHContMetadata>
       <StringPooling>true</StringPooling>

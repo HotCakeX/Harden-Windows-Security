@@ -57,8 +57,6 @@ When signing and deploying App Control Policies, a dialog will be displayed aski
 
 * **Certificate Common Name**: The Common Name (CN) of the same certificate file you select.
 
-* **SignTool Path**: The path to the `SignTool.exe`. If you don't have it, you can toggle the **Auto Acquire** switch. Auto Acquire will try to first find it on the system by checking for installed Windows SDK, if it cannot find it, it will download it from the official Microsoft server.
-
 Once you've provided all 3 items, press the **Verify** button. It will verify your inputs and then the **Submit** button will be enabled, allowing you to proceed with policy signing and deployment.
 
 All of the information you submit will be saved in app settings so that the next time they will be automatically populated for you.

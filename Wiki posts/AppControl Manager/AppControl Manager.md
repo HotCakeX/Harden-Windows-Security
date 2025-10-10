@@ -151,7 +151,7 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 * Any file(s) the AppControl Manager ever produces, uses or expects is only from an Administrator-protected location in `C:\Program Files\AppControl Manager`.
 
-* The AppControl Manager supports [process mitigations / Exploit Protections](https://learn.microsoft.com/defender-endpoint/exploit-protection-reference) such as: `Blocking low integrity images`, `Blocking remote images`, `Blocking untrusted fonts`, `Strict Control Flow Guard`, `Disabling extension points`, `Export Address Filtering`, `Hardware enforced stack protection`, `Import Address Filtering`, `Validate handle usage`, `Validate stack integrity`.
+* The AppControl Manager supports [process mitigations / Exploit Protections](https://learn.microsoft.com/defender-endpoint/exploit-protection-reference) such as: `Blocking low integrity images`, `Blocking remote images`, `Blocking untrusted fonts`, `Strict Control Flow Guard`, `Disabling extension points`, `Export Address Filtering`, `Hardware enforced stack protection`, `Import Address Filtering`, `Validate handle usage`, `Validate stack integrity`, `Code integrity guard`.
 
 * The AppControl Manager always uses the latest .NET SDK and NuGet package versions, ensuring all the security patches released by Microsoft will be included.
 
@@ -200,7 +200,6 @@ Everything the AppControl Manager creates/generates will be saved in that direct
 * XML policy files
 * CIP files
 * Generated certificates
-* Automatically acquired SignTool.exe
 * Logs
 * User Configurations JSON file
 * Temporary files (Staging Areas)
@@ -219,7 +218,6 @@ Here is the complete list of all of the URLs the AppControl Manager application 
 
 | URL | Justification                   |
 |:--------:|:-----------------------------:|
-| https://api.nuget.org/v3-flatcontainer/ | To access Microsoft NuGet repository to download SignTool.exe |
 | https://aka.ms/VulnerableDriverBlockList | To download the Microsoft Recommended Drivers Block List |
 | https://api.github.com/repos/MicrosoftDocs/windows-itpro-docs/commits | To check the latest commit details of the Microsoft Recommended Drivers Block List and display them to the user on the UI |
 | https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md | Source for the Microsoft Recommended User-Mode Block Rules |

@@ -18,16 +18,18 @@ Each security measure has the following details:
 
 <br>
 
-You can change the download URL of the Microsoft Security Baselines in this page too if you need. This can come handy if you want to apply an older baseline on your system or to just change the URL to point to another address such as an alternative mirror.
+* You can use the Baseline selector Dropdown button to select an older or newer baseline to be applied, removed or verified on your system.
+
+* Use the `Browse` button to browse for a Microsoft Security baseline ZIP file that you've already downloaded on your device, this way you can use it on systems that have no Internet connectivity.
 
 <br>
 
 > [!NOTE]
-> When applying the Microsoft Security Baseline, Harden System Security app will **automatically download the latest version directly from Microsoft's servers** or from the URL you provided, process it entirely **in memory**, and apply it without writing any temporary files to disk. The same is true for verification or removal processes.
+> Either when downloading the Security Baseline from Microsoft Servers or when browsing for the zip file manually, the Harden System Security app will process it entirely **in memory**, and apply it without writing any temporary files to disk. The same is true for verification or removal processes.
 >
 > While this approach increases development complexity, it significantly improves security by preventing malicious interference with temporary files before application.
 >
-> The app caches the baseline in memory to avoid unnecessary re-downloads. The cache expires every **2 hours**, after which it is refreshed with the latest data from the Microsoft Server/Custom URL you provided, and this only happens if the app is open. The cache is compressed to minimize memory usage.
+> The app caches the baseline in memory to avoid unnecessary re-downloads and/or re-reads. The cache expires every **2 hours**, after which it is refreshed with the latest data from the Microsoft Server/File path you provided, and this only happens if the app is open. The cache is compressed to minimize memory usage.
 
 <br>
 

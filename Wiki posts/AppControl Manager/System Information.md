@@ -68,8 +68,6 @@ Signed Base policies require additional information during the removal process. 
 
 * **Certificate Common Name**: The Common Name (CN) of the same certificate file you select.
 
-* **SignTool Path**: The path to the `SignTool.exe`. If you don't have it, you can toggle the **Auto Acquire** switch. Auto Acquire will try to first find it on the system by checking for installed Windows SDK, if it cannot find it, it will download it from the official Microsoft server.
-
 * **XML File**: The path to the XML policy file of the same policy you're trying to remove from the system.
 
 Once all four fields are populated, press the **Verify** button. This action validates your inputs and enables the **Submit** button, allowing you to proceed with the removal process. All of the information you submit will be saved in app settings so that the next time they will be automatically populated for you.
@@ -85,7 +83,7 @@ Following this step, the policy will be re-signed and redeployed on the system w
 > **About the Automatic Policies filter option**
 >
 > Enabling this checkbox includes supplemental policies named `AppControlManagerSupplementalPolicy` in the displayed results. Each base policy created and deployed via the AppControl Manager automatically deploys a corresponding supplemental policy with this name. This supplemental policy is essential for the operation of the AppControl Manager application itself.
-> In addition, it contains a FilePublisher rule for `SignTool.exe`, allowing signing operations to be performed. If you intentionally remove this policy, you will no longer be able to launch the AppControl Manager or use `SignTool.exe` when certain base policies are active.
+> If you intentionally remove this policy, you will no longer be able to launch the AppControl Manager when certain base policies are active.
 >
 > **Note that these supplemental policies are automatically removed when their associated base policy is removed from the system, so no additional action is required on your part.**
 >

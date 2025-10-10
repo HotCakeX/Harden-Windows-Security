@@ -103,7 +103,7 @@ Leveraging GitHub's native automation (including Dependabot) alongside Microsoft
 
 ### Exploit Protection
 
-The application avoids dynamic code generation, enhancing security posture and reducing vulnerability exposure. This design ensures compatibility with advanced OS-level exploit mitigation. The Harden System Security supports [process mitigations / Exploit Protections](https://learn.microsoft.com/defender-endpoint/exploit-protection-reference) such as: `Blocking low integrity images`, `Blocking remote images`, `Blocking untrusted fonts`, `Strict Control Flow Guard`, `Disabling extension points`, `Export Address Filtering`, `Hardware enforced stack protection`, `Import Address Filtering`, `Validate handle usage`, `Validate stack integrity`.
+The application avoids dynamic code generation, enhancing security posture and reducing vulnerability exposure. This design ensures compatibility with advanced OS-level exploit mitigation. The Harden System Security supports [process mitigations / Exploit Protections](https://learn.microsoft.com/defender-endpoint/exploit-protection-reference) such as: `Blocking low integrity images`, `Blocking remote images`, `Blocking untrusted fonts`, `Strict Control Flow Guard`, `Disabling extension points`, `Export Address Filtering`, `Hardware enforced stack protection`, `Import Address Filtering`, `Validate handle usage`, `Validate stack integrity`, `Code integrity guard`.
 
 This disciplined approach bolsters resistance against memory corruption, injection, and tampering techniques frequently leveraged by sophisticated adversaries.
 

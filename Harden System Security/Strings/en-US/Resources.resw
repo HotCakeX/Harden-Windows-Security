@@ -2526,24 +2526,6 @@
 <data name="VerifyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
   <value>Verifying Microsoft 365 Apps Security Baseline...</value>
 </data>
-<data name="ResetURLButton.Content" xml:space="preserve">
-    <value>Reset</value>
-  </data>
-  <data name="ResetURLButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Reset the download URL back to the default value.</value>
-  </data>
-  <data name="ResetURLButton.AutomationProperties.HelpText" xml:space="preserve">
-   <value>Reset the download URL back to the default value.</value>
-  </data>
-  <data name="DownloadURLButtonText.Text" xml:space="preserve">
-    <value>Download URL</value>
-  </data>
-  <data name="DownloadURLButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>View and manage the download URL of the baseline.</value>
-  </data>
-  <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
-   <value>View and manage the download URL of the baseline.</value>
-  </data>
   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
     <value>Add</value>
   </data>
@@ -3731,5 +3713,242 @@ Thumbprint: {3}</value>
   </data>
   <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Attempt to reduce memory usage by collecting and compacting unused managed memory (including large objects). The OS may release RAM gradually, so changes might not show immediately. Check Logs after pressing this button for more details.</value>
+  </data>
+  <data name="SecurityBaselinesComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select the Microsoft Security Baseline that you want to use.</value>
+  </data>
+  <data name="SecurityBaselinesComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select the Microsoft Security Baseline that you want to use.</value>
+  </data>
+  <data name="RetrieveButton.Content" xml:space="preserve">
+    <value>Retrieve</value>
+  </data>
+<data name="CryptoAlgorithmsTab.Header" xml:space="preserve">
+  <value>Algorithms</value>
+</data>
+<data name="CngCurvesTab.Header" xml:space="preserve">
+  <value>CNG Curves</value>
+</data>
+<data name="SslProviderCurvesTab.Header" xml:space="preserve">
+  <value>SSL Provider Curves</value>
+</data>
+<data name="TlsCipherSuitesTab.Header" xml:space="preserve">
+  <value>TLS Cipher Suites</value>
+</data>
+<data name="RegisteredProvidersTab.Header" xml:space="preserve">
+  <value>Registered Providers</value>
+</data>
+<data name="ConfiguredOnlyToggleSwitch.OnContent" xml:space="preserve">
+  <value>Configured Only</value>
+</data>
+<data name="ConfiguredOnlyToggleSwitch.OffContent" xml:space="preserve">
+  <value>All</value>
+</data>
+<data name="CA_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Name</value>
+</data>
+<data name="CA_TypeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Type</value>
+</data>
+<data name="CA_FlagsColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Flags</value>
+</data>
+<data name="CA_IsOpenableColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Openable</value>
+</data>
+<data name="CA_IsPQColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Post-Quantum</value>
+</data>
+<data name="CA_KeyGenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Key Generation</value>
+</data>
+<data name="CA_ParamSetsColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Parameter Sets</value>
+</data>
+<data name="CNG_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Name</value>
+</data>
+<data name="CNG_OidColumnHeaderBtn.Content" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="CNG_LengthColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Public Key Bits</value>
+</data>
+<data name="SSL_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Name</value>
+</data>
+<data name="SSL_OidColumnHeaderBtn.Content" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="SSL_LengthColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Public Key Bits</value>
+</data>
+<data name="SSL_TypeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Curve Type</value>
+</data>
+<data name="SSL_FlagsColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Flags</value>
+</data>
+<data name="TLS_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Name</value>
+</data>
+<data name="TLS_CipherColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Cipher</value>
+</data>
+<data name="TLS_CSColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Cipher Suite</value>
+</data>
+<data name="TLS_BaseCSColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Base Cipher Suite</value>
+</data>
+<data name="TLS_HashColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Hash</value>
+</data>
+<data name="TLS_ExchangeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Exchange</value>
+</data>
+<data name="TLS_CertColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Certificate</value>
+</data>
+<data name="TLS_CLenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Cipher Len</value>
+</data>
+<data name="TLS_CBLenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Block Len</value>
+</data>
+<data name="TLS_HLenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Hash Len</value>
+</data>
+<data name="TLS_MinExColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Min Exch Len</value>
+</data>
+<data name="TLS_MaxExColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Max Exch Len</value>
+</data>
+<data name="TLS_KeyTypeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Key Type</value>
+</data>
+<data name="REG_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Name</value>
+</data>
+  <data name="CBOMNavItem.Content" xml:space="preserve">
+    <value>Cryptographic Bill of Materials</value>
+  </data>
+    <data name="CBOMNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>The Cryptographic Bill of Materials (CBOM) provides a system-level inventory of OS cryptography—algorithms, curves, cipher suites, and providers—capturing the platform's cryptographic posture.</value>
+  </data>
+  <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>The Cryptographic Bill of Materials (CBOM) provides a system-level inventory of OS cryptography—algorithms, curves, cipher suites, and providers—capturing the platform's cryptographic posture.</value>
+  </data>
+  <data name="CBOMPageTitle.Text" xml:space="preserve">
+    <value>The Cryptographic Bill of Materials (CBOM) offers a system-level inventory and introspection of the operating system cryptography, surfacing the algorithms, curves, cipher suites, and providers that define the platform's cryptographic posture. By normalizing what the OS exposes, it delivers SBOM-like transparency for crypto: enabling evidence-based audits, baseline conformance checks, drift detection across updates, identification of legacy/weak primitives, and planning for post-quantum transitions.</value>
+  </data>
+<data name="CA_NameHeader.Text" xml:space="preserve">
+  <value>Name</value>
+</data>
+<data name="CA_TypeHeader.Text" xml:space="preserve">
+  <value>Type</value>
+</data>
+<data name="CA_FlagsHeader.Text" xml:space="preserve">
+  <value>Flags</value>
+</data>
+<data name="CA_IsOpenableHeader.Text" xml:space="preserve">
+  <value>Openable</value>
+</data>
+<data name="CA_IsPQHeader.Text" xml:space="preserve">
+  <value>Post-Quantum</value>
+</data>
+<data name="CA_KeyGenHeader.Text" xml:space="preserve">
+  <value>Key Generation</value>
+</data>
+<data name="CA_ParamSetsHeader.Text" xml:space="preserve">
+  <value>Parameter Sets</value>
+</data>
+<data name="CNG_NameHeader.Text" xml:space="preserve">
+  <value>Name</value>
+</data>
+<data name="CNG_OidHeader.Text" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="CNG_LengthHeader.Text" xml:space="preserve">
+  <value>Public Key Bits</value>
+</data>
+<data name="SSL_NameHeader.Text" xml:space="preserve">
+  <value>Name</value>
+</data>
+<data name="SSL_OidHeader.Text" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="SSL_LengthHeader.Text" xml:space="preserve">
+  <value>Public Key Bits</value>
+</data>
+<data name="SSL_TypeHeader.Text" xml:space="preserve">
+  <value>Curve Type</value>
+</data>
+<data name="SSL_FlagsHeader.Text" xml:space="preserve">
+  <value>Flags</value>
+</data>
+<data name="TLS_NameHeader.Text" xml:space="preserve">
+  <value>Name</value>
+</data>
+<data name="TLS_CipherHeader.Text" xml:space="preserve">
+  <value>Cipher</value>
+</data>
+<data name="TLS_CSHeader.Text" xml:space="preserve">
+  <value>Cipher Suite</value>
+</data>
+<data name="TLS_BaseCSHeader.Text" xml:space="preserve">
+  <value>Base Cipher Suite</value>
+</data>
+<data name="TLS_HashHeader.Text" xml:space="preserve">
+  <value>Hash</value>
+</data>
+<data name="TLS_ExchangeHeader.Text" xml:space="preserve">
+  <value>Exchange</value>
+</data>
+<data name="TLS_CertHeader.Text" xml:space="preserve">
+  <value>Certificate</value>
+</data>
+<data name="TLS_CLenHeader.Text" xml:space="preserve">
+  <value>Cipher Len</value>
+</data>
+<data name="TLS_CBLenHeader.Text" xml:space="preserve">
+  <value>Block Len</value>
+</data>
+<data name="TLS_HLenHeader.Text" xml:space="preserve">
+  <value>Hash Len</value>
+</data>
+<data name="TLS_MinExHeader.Text" xml:space="preserve">
+  <value>Min Exch Len</value>
+</data>
+<data name="TLS_MaxExHeader.Text" xml:space="preserve">
+  <value>Max Exch Len</value>
+</data>
+<data name="TLS_KeyTypeHeader.Text" xml:space="preserve">
+  <value>Key Type</value>
+</data>
+<data name="REG_NameHeader.Text" xml:space="preserve">
+  <value>Name</value>
+</data>
+  <data name="GenerateCBOMButton.Content" xml:space="preserve">
+    <value>Generate CBOM</value>
+  </data>
+  <data name="GenerateCBOMButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Generate the Cryptographic Bill of Material for the current system.</value>
+  </data>
+  <data name="GenerateCBOMButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Generate the Cryptographic Bill of Material for the current system.</value>
+  </data>
+  <data name="ViewSelectedFilesTextBlock.Text" xml:space="preserve">
+    <value>View the files you selected.</value>
+  </data>
+  <data name="FileBrowseButton.Content" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="FileBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opens the File picker dialog allowing you select file(s)</value>
+  </data>
+  <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opens the File picker dialog allowing you select file(s)</value>
   </data>
 </root>

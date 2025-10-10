@@ -298,6 +298,6 @@ internal static partial class OptimizeMDECSVData
 	// The regex will fail if the field that is not quoted contains a comma(s), space(s) or double quote(s)
 	// in it before the comma that marks the end of the field.
 	// This is because the regex is designed to match unquoted fields that are single words/digits.
-	[GeneratedRegex(@"(?<=:)\s*(?!\"")([^\"",\s]+)(?=\s*,|\s*})", RegexOptions.Compiled)]
+	[GeneratedRegex(@"(?<=:)\s*(?!\"")([^\"",\s]+)(?=\s*,|\s*})")]
 	private static partial Regex JsonFixerRegex();
 }

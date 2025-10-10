@@ -2529,25 +2529,7 @@
 <data name="VerifyingMicrosoft365AppsSecurityBaseline" xml:space="preserve">
   <value>Επαλήθευση γραμμής βάσης ασφαλείας Microsoft 365 Apps...</value>
 </data>
-<data name="ResetURLButton.Content" xml:space="preserve">
-    <value>Επαναφορά</value>
-  </data>
-  <data name="ResetURLButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Επαναφορά της διεύθυνσης URL λήψης στην προεπιλεγμένη τιμή.</value>
-  </data>
-  <data name="ResetURLButton.AutomationProperties.HelpText" xml:space="preserve">
-   <value>Επαναφορά της διεύθυνσης URL λήψης στην προεπιλεγμένη τιμή.</value>
-  </data>
-  <data name="DownloadURLButtonText.Text" xml:space="preserve">
-    <value>Διεύθυνση URL Λήψης</value>
-  </data>
-  <data name="DownloadURLButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Προβολή και διαχείριση της διεύθυνσης URL λήψης της γραμμής βάσης.</value>
-  </data>
-  <data name="DownloadURLButton.AutomationProperties.HelpText" xml:space="preserve">
-   <value>Προβολή και διαχείριση της διεύθυνσης URL λήψης της γραμμής βάσης.</value>
-  </data>
-   <data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
+<data name="AddCountryFirewallRulesButton.Content" xml:space="preserve">
     <value>Προσθήκη</value>
   </data>
   <data name="AddCountryFirewallRulesButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -3731,5 +3713,242 @@
   </data>
   <data name="OptimizeMemoryButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Προσπάθεια μείωσης της χρήσης μνήμης μέσω συλλογής και συμπίεσης μη χρησιμοποιούμενης διαχειριζόμενης μνήμης (συμπεριλαμβανομένων μεγάλων αντικειμένων). Το λειτουργικό σύστημα ενδέχεται να αποδεσμεύει τη RAM σταδιακά, οπότε οι αλλαγές ίσως να μην εμφανιστούν αμέσως. Ελέγξτε τα αρχεία καταγραφής μετά το πάτημα αυτού του κουμπιού για περισσότερες λεπτομέρειες.</value>
+  </data>
+    <data name="SecurityBaselinesComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε τη βασική γραμμή ασφαλείας της Microsoft που θέλετε να χρησιμοποιήσετε.</value>
+  </data>
+  <data name="SecurityBaselinesComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε τη βασική γραμμή ασφαλείας της Microsoft που θέλετε να χρησιμοποιήσετε.</value>
+  </data>
+  <data name="RetrieveButton.Content" xml:space="preserve">
+    <value>Ανάκτηση</value>
+  </data>
+<data name="CryptoAlgorithmsTab.Header" xml:space="preserve">
+  <value>Αλγόριθμοι</value>
+</data>
+<data name="CngCurvesTab.Header" xml:space="preserve">
+  <value>Καμπύλες CNG</value>
+</data>
+<data name="SslProviderCurvesTab.Header" xml:space="preserve">
+  <value>Καμπύλες παρόχων SSL</value>
+</data>
+<data name="TlsCipherSuitesTab.Header" xml:space="preserve">
+  <value>Σουίτες κρυπτογράφησης TLS</value>
+</data>
+<data name="RegisteredProvidersTab.Header" xml:space="preserve">
+  <value>Καταχωρημένοι πάροχοι</value>
+</data>
+<data name="ConfiguredOnlyToggleSwitch.OnContent" xml:space="preserve">
+  <value>Μόνο ρυθμισμένα</value>
+</data>
+<data name="ConfiguredOnlyToggleSwitch.OffContent" xml:space="preserve">
+  <value>Όλα</value>
+</data>
+<data name="CA_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Όνομα</value>
+</data>
+<data name="CA_TypeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Τύπος</value>
+</data>
+<data name="CA_FlagsColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Σημαίες</value>
+</data>
+<data name="CA_IsOpenableColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Δυνατότητα ανοίγματος</value>
+</data>
+<data name="CA_IsPQColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Μετακβαντικό</value>
+</data>
+<data name="CA_KeyGenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Δημιουργία κλειδιών</value>
+</data>
+<data name="CA_ParamSetsColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Σύνολα παραμέτρων</value>
+</data>
+<data name="CNG_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Όνομα</value>
+</data>
+<data name="CNG_OidColumnHeaderBtn.Content" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="CNG_LengthColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Bits δημόσιου κλειδιού</value>
+</data>
+<data name="SSL_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Όνομα</value>
+</data>
+<data name="SSL_OidColumnHeaderBtn.Content" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="SSL_LengthColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Bits δημόσιου κλειδιού</value>
+</data>
+<data name="SSL_TypeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Τύπος καμπύλης</value>
+</data>
+<data name="SSL_FlagsColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Σημαίες</value>
+</data>
+<data name="TLS_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Όνομα</value>
+</data>
+<data name="TLS_CipherColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Κρυπτογράφηση</value>
+</data>
+<data name="TLS_CSColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Σουίτα κρυπτογράφησης</value>
+</data>
+<data name="TLS_BaseCSColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Βασική σουίτα κρυπτογράφησης</value>
+</data>
+<data name="TLS_HashColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Κατακερματισμός</value>
+</data>
+<data name="TLS_ExchangeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Ανταλλαγή κλειδιών</value>
+</data>
+<data name="TLS_CertColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Πιστοποιητικό</value>
+</data>
+<data name="TLS_CLenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Μήκος κρυπτογράφησης</value>
+</data>
+<data name="TLS_CBLenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Μήκος μπλοκ</value>
+</data>
+<data name="TLS_HLenColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Μήκος κατακερματισμού</value>
+</data>
+<data name="TLS_MinExColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Ελάχιστο μήκος ανταλλαγής</value>
+</data>
+<data name="TLS_MaxExColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Μέγιστο μήκος ανταλλαγής</value>
+</data>
+<data name="TLS_KeyTypeColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Τύπος κλειδιού</value>
+</data>
+<data name="REG_NameColumnHeaderBtn.Content" xml:space="preserve">
+  <value>Όνομα</value>
+</data>
+  <data name="CBOMNavItem.Content" xml:space="preserve">
+    <value>Κατάλογος κρυπτογραφικών στοιχείων</value>
+  </data>
+    <data name="CBOMNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ο Κατάλογος Κρυπτογραφικών Στοιχείων (CBOM) παρέχει απογραφή σε επίπεδο συστήματος της κρυπτογραφίας του λειτουργικού συστήματος — αλγόριθμοι, καμπύλες, σουίτες κρυπτογράφησης και πάροχοι — αποτυπώνοντας τη κρυπτογραφική στάση της πλατφόρμας.</value>
+  </data>
+  <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ο Κατάλογος Κρυπτογραφικών Στοιχείων (CBOM) παρέχει απογραφή σε επίπεδο συστήματος της κρυπτογραφίας του λειτουργικού συστήματος — αλγόριθμοι, καμπύλες, σουίτες κρυπτογράφησης και πάροχοι — αποτυπώνοντας τη κρυπτογραφική στάση της πλατφόρμας.</value>
+  </data>
+  <data name="CBOMPageTitle.Text" xml:space="preserve">
+    <value>Ο Κατάλογος Κρυπτογραφικών Στοιχείων (CBOM) προσφέρει απογραφή και ενδοσκόπηση της κρυπτογραφίας του λειτουργικού συστήματος σε επίπεδο συστήματος, αναδεικνύοντας τους αλγόριθμους, τις καμπύλες, τις σουίτες κρυπτογράφησης και τους παρόχους που καθορίζουν την κρυπτογραφική στάση της πλατφόρμας. Με την κανονικοποίηση όσων εκθέτει το λειτουργικό σύστημα, παρέχει διαφάνεια τύπου SBOM για την κρυπτογραφία: επιτρέποντας ελέγχους βάσει τεκμηρίων, ελέγχους συμμόρφωσης προς γραμμές βάσης, εντοπισμό απόκλισης σε ενημερώσεις, αναγνώριση παλαιών/αδύναμων primitive και προγραμματισμό για μετακβαντικές μεταβάσεις.</value>
+  </data>
+<data name="CA_NameHeader.Text" xml:space="preserve">
+  <value>Όνομα</value>
+</data>
+<data name="CA_TypeHeader.Text" xml:space="preserve">
+  <value>Τύπος</value>
+</data>
+<data name="CA_FlagsHeader.Text" xml:space="preserve">
+  <value>Σημαίες</value>
+</data>
+<data name="CA_IsOpenableHeader.Text" xml:space="preserve">
+  <value>Δυνατότητα ανοίγματος</value>
+</data>
+<data name="CA_IsPQHeader.Text" xml:space="preserve">
+  <value>Μετακβαντικό</value>
+</data>
+<data name="CA_KeyGenHeader.Text" xml:space="preserve">
+  <value>Δημιουργία κλειδιών</value>
+</data>
+<data name="CA_ParamSetsHeader.Text" xml:space="preserve">
+  <value>Σύνολα παραμέτρων</value>
+</data>
+<data name="CNG_NameHeader.Text" xml:space="preserve">
+  <value>Όνομα</value>
+</data>
+<data name="CNG_OidHeader.Text" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="CNG_LengthHeader.Text" xml:space="preserve">
+  <value>Bits δημόσιου κλειδιού</value>
+</data>
+<data name="SSL_NameHeader.Text" xml:space="preserve">
+  <value>Όνομα</value>
+</data>
+<data name="SSL_OidHeader.Text" xml:space="preserve">
+  <value>OID</value>
+</data>
+<data name="SSL_LengthHeader.Text" xml:space="preserve">
+  <value>Bits δημόσιου κλειδιού</value>
+</data>
+<data name="SSL_TypeHeader.Text" xml:space="preserve">
+  <value>Τύπος καμπύλης</value>
+</data>
+<data name="SSL_FlagsHeader.Text" xml:space="preserve">
+  <value>Σημαίες</value>
+</data>
+<data name="TLS_NameHeader.Text" xml:space="preserve">
+  <value>Όνομα</value>
+</data>
+<data name="TLS_CipherHeader.Text" xml:space="preserve">
+  <value>Κρυπτογράφηση</value>
+</data>
+<data name="TLS_CSHeader.Text" xml:space="preserve">
+  <value>Σουίτα κρυπτογράφησης</value>
+</data>
+<data name="TLS_BaseCSHeader.Text" xml:space="preserve">
+  <value>Βασική σουίτα κρυπτογράφησης</value>
+</data>
+<data name="TLS_HashHeader.Text" xml:space="preserve">
+  <value>Κατακερματισμός</value>
+</data>
+<data name="TLS_ExchangeHeader.Text" xml:space="preserve">
+  <value>Ανταλλαγή κλειδιών</value>
+</data>
+<data name="TLS_CertHeader.Text" xml:space="preserve">
+  <value>Πιστοποιητικό</value>
+</data>
+<data name="TLS_CLenHeader.Text" xml:space="preserve">
+  <value>Μήκος κρυπτογράφησης</value>
+</data>
+<data name="TLS_CBLenHeader.Text" xml:space="preserve">
+  <value>Μήκος μπλοκ</value>
+</data>
+<data name="TLS_HLenHeader.Text" xml:space="preserve">
+  <value>Μήκος κατακερματισμού</value>
+</data>
+<data name="TLS_MinExHeader.Text" xml:space="preserve">
+  <value>Ελάχιστο μήκος ανταλλαγής</value>
+</data>
+<data name="TLS_MaxExHeader.Text" xml:space="preserve">
+  <value>Μέγιστο μήκος ανταλλαγής</value>
+</data>
+<data name="TLS_KeyTypeHeader.Text" xml:space="preserve">
+  <value>Τύπος κλειδιού</value>
+</data>
+<data name="REG_NameHeader.Text" xml:space="preserve">
+  <value>Όνομα</value>
+</data>
+  <data name="GenerateCBOMButton.Content" xml:space="preserve">
+    <value>Δημιουργία CBOM</value>
+  </data>
+  <data name="GenerateCBOMButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε τον Κατάλογο Κρυπτογραφικών Στοιχείων για το τρέχον σύστημα.</value>
+  </data>
+  <data name="GenerateCBOMButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργήστε τον Κατάλογο Κρυπτογραφικών Στοιχείων για το τρέχον σύστημα.</value>
+  </data>
+  <data name="ViewSelectedFilesTextBlock.Text" xml:space="preserve">
+    <value>Προβάλετε τα αρχεία που επιλέξατε.</value>
+  </data>
+  <data name="FileBrowseButton.Content" xml:space="preserve">
+    <value>Περιήγηση</value>
+  </data>
+  <data name="FileBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίγει το παράθυρο επιλογής αρχείων που σας επιτρέπει να επιλέξετε αρχείο(α)</value>
+  </data>
+  <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίγει το παράθυρο επιλογής αρχείων που σας επιτρέπει να επιλέξετε αρχείο(α)</value>
   </data>
 </root>

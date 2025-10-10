@@ -84,7 +84,7 @@
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
 		<ErrorReport>send</ErrorReport>
-		<FileVersion>1.0.14.0</FileVersion>
+		<FileVersion>1.0.15.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<StartupObject>HardenSystemSecurity.Program</StartupObject>
@@ -159,20 +159,6 @@
 		<DirectPInvoke Include="OLE32" />
 		<DirectPInvoke Include="NTDLL" />
 		<DirectPInvoke Include="BCRYPT" />
-
-		<!--
-        <DirectPInvoke Include="MSSIGN32" />
-        <DirectPInvoke Include="CRYPT32" />
-        <DirectPInvoke Include="psapi" />
-        <DirectPInvoke Include="Wldp" />
-        <DirectPInvoke Include="Version" />
-        <DirectPInvoke Include="DbgHelp" />
-        <DirectPInvoke Include="userenv" />
-        <DirectPInvoke Include="netapi32" />
-        <DirectPInvoke Include="samlib" />
-        <DirectPInvoke Include="secur32" />
-        <DirectPInvoke Include="bcd" />
-        -->
 
 	</ItemGroup>
 

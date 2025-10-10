@@ -73,7 +73,12 @@ internal static partial class ListViewHelper
 		Microsoft365AppsSecurityBaseline = 10003,
 		CertificateChecking_NonStlCerts = 10004,
 		AuditPolicies = 10005,
-		BitLockerVolumes = 10006
+		BitLockerVolumes = 10006,
+		CBOM_CryptoAlgorithms = 10007,
+		CBOM_CNGCurves = 10008,
+		CBOM_SSLProviderCurves = 10009,
+		CBOM_TlsCipherSuites = 10010,
+		CBOM_RegisteredProviders = 10011
 	}
 
 	/// <summary>

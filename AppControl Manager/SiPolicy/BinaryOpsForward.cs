@@ -30,7 +30,7 @@ internal static partial class BinaryOpsForward
 	private static BinaryWriter BodyWriter = null!;
 	private static BinaryWriter HeaderWriter = null!;
 
-	[GeneratedRegex(@"\$\(([^()]+)\)", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace)]
+	[GeneratedRegex(@"\$\(([^()]+)\)", RegexOptions.CultureInvariant | RegexOptions.IgnorePatternWhitespace)]
 	private static partial Regex MacroRegex();
 
 	/// <summary>

@@ -87,7 +87,7 @@
                                         <AppBarButton Icon="Clear" x:Uid="ClearAppBarButton" Click="{x:Bind ViewModel.ClearButton_UnsignedPolicyPath_Click}"/>
                                         <AppBarButton Icon="Folder" x:Uid="BrowseAppBarButton" Click="{x:Bind ViewModel.BrowseButton_UnsignedPolicyPath_Click}"/>
                                     </CommandBar>
-                                </controls:WrapPanel>                             
+                                </controls:WrapPanel>
 
                                 <!-- Certificate Common Name -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">

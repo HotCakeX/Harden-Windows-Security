@@ -421,7 +421,7 @@
                                 <Button HorizontalAlignment="Center"
                                         VerticalAlignment="Bottom"
                                         x:Uid="OptimizeMemoryButton"
-                                        IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"                                        
+                                        IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
                                         Click="{x:Bind ViewModel.OptimizeMemory}">
                                     <Button.ContentTemplate>
                                         <DataTemplate x:DataType="x:String">

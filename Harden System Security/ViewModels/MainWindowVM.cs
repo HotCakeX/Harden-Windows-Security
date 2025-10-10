@@ -224,6 +224,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("HomeNavItem/Content")],
 			pages: [typeof(AppControlManager.Pages.Home)]
 		);
+
+		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.CryptographicBillOfMaterials)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("CBOMNavItem/Content")],
+			pages: [typeof(HardenSystemSecurity.Pages.CryptographicBillOfMaterials)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -264,7 +270,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "Microsoft365AppsSecurityBaseline", typeof(Pages.Protects.Microsoft365AppsSecurityBaseline) },
 		{ "MicrosoftBaseLinesOverrides", typeof(Pages.Protects.MicrosoftBaseLinesOverrides) },
 		{ "AuditPolicies", typeof(Pages.AuditPolicies) },
-		{ "Home", typeof(AppControlManager.Pages.Home) }
+		{ "Home", typeof(AppControlManager.Pages.Home) },
+		{ "CBOM", typeof(Pages.CryptographicBillOfMaterials) }
 	};
 
 
@@ -307,6 +314,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content")] = typeof(Pages.Protects.MicrosoftBaseLinesOverrides);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("AuditPoliciesNavItem/Content")] = typeof(Pages.AuditPolicies);
 		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("HomeNavItem/Content")] = typeof(AppControlManager.Pages.Home);
+		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CBOMNavItem/Content")] = typeof(Pages.CryptographicBillOfMaterials);
 	}
 
 	/// <summary>
@@ -372,6 +380,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the Home navigation item.
 	/// </summary>
 	internal IconElement? HomeIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the CBOM navigation item.
+	/// </summary>
+	internal IconElement? CBOMIcon { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -455,6 +468,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Home()
 					};
 
+					CBOMIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -13, -13, -13),
+						Source = new CBOM()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -516,6 +535,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					CBOMIcon = new FontIcon
+					{
+						Glyph = "\uE705",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -530,6 +555,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					InstalledAppsManagementIcon = new FontIcon { Glyph = "\uE71D" };
 					AuditPoliciesIcon = new FontIcon { Glyph = "\uE9D5" };
 					HomeIcon = new FontIcon { Glyph = "\uE80F" };
+					CBOMIcon = new FontIcon { Glyph = "\uE705" };
 					break;
 				}
 		}

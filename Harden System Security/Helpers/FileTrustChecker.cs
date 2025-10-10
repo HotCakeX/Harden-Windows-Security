@@ -67,9 +67,6 @@ internal static class FileTrustChecker
 				throw new InvalidOperationException(GlobalVars.GetStr("MpQueryFileTrustByHandle2NotFound"));
 			}
 
-			// Create a delegate for the function from the address
-			NativeMethods.MpQueryFileTrustByHandle2Delegate mpQueryFileTrust = Marshal.GetDelegateForFunctionPointer<NativeMethods.MpQueryFileTrustByHandle2Delegate>(procAddress);
-
 			// Open the file and get its handle
 			fileHandle = NativeMethods.CreateFileW(filePath, 0x80000000, 0x00000001, IntPtr.Zero, 0x00000003, 0, IntPtr.Zero);
 
@@ -81,7 +78,14 @@ internal static class FileTrustChecker
 			}
 
 			// Query the file's trust score using the function pointer and the file handle
-			long result = mpQueryFileTrust(fileHandle, IntPtr.Zero, IntPtr.Zero, &parameters, &MpFileTrustExtraInfoCOUNT, &extraInfoPtr);
+			long result = MpQueryFileTrustByHandle2_Invoke(
+				procAddress,
+				hFile: fileHandle,
+				a2: IntPtr.Zero,
+				a3: IntPtr.Zero,
+				pParams: &parameters,
+				pExtraInfoCount: &MpFileTrustExtraInfoCOUNT,
+				pExtraInfo: &extraInfoPtr);
 
 			// If query is successful
 			if (result is 0)
@@ -110,12 +114,28 @@ internal static class FileTrustChecker
 			);
 
 		}
-
 		finally
 		{
 			// Close the file handle after operation
 			_ = NativeMethods.CloseHandle(fileHandle);
 		}
+	}
+
+	// Wrapper with helpful parameter names for the MpQueryFileTrustByHandle2 export.
+	// It casts the resolved export address to an unmanaged (cdecl) function pointer and invokes it directly.
+	private static unsafe long MpQueryFileTrustByHandle2_Invoke(
+		IntPtr pfn,
+		IntPtr hFile,
+		IntPtr a2,
+		IntPtr a3,
+		Params* pParams,
+		ulong* pExtraInfoCount,
+		IntPtr* pExtraInfo)
+	{
+		delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, Params*, ulong*, IntPtr*, long> fn =
+			(delegate* unmanaged[Cdecl]<IntPtr, IntPtr, IntPtr, Params*, ulong*, IntPtr*, long>)pfn;
+
+		return fn(hFile, a2, a3, pParams, pExtraInfoCount, pExtraInfo);
 	}
 
 	// Map the trust score to a reputation string

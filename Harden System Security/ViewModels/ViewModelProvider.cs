@@ -127,6 +127,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<HomeVM> _homeVM = new(() =>
 		new HomeVM(), false);
 
+	private static readonly Lazy<CryptographicBillOfMaterialsVM> _cryptographicBillOfMaterialsVM = new(() =>
+		new CryptographicBillOfMaterialsVM(), false);
+
 	// Internal Properties - Core Dependencies \\
 	internal static AppSettings.Main AppSettings => _appSettings.Value;
 
@@ -161,6 +164,7 @@ internal static class ViewModelProvider
 	internal static MicrosoftBaseLinesOverridesVM MicrosoftBaseLinesOverridesVM => _microsoftBaseLinesOverridesVM.Value;
 	internal static AuditPoliciesVM AuditPoliciesVM => _auditPoliciesVM.Value;
 	internal static HomeVM HomeVM => _homeVM.Value;
+	internal static CryptographicBillOfMaterialsVM CryptographicBillOfMaterialsVM => _cryptographicBillOfMaterialsVM.Value;
 
 
 	/// <summary>

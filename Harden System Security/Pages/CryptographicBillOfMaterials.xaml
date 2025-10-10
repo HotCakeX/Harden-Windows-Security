@@ -1,0 +1,936 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="HardenSystemSecurity.Pages.CryptographicBillOfMaterials"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:Arcane="using:HardenSystemSecurity.Arcane"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <Grid>
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
+
+                <TextBlock x:Uid="CBOMPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
+
+                <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Cryptographic-Bill-of-Materials" />
+
+            </controls:WrapPanel>
+
+            <customUI:InfoBarV2 Grid.Row="1"
+                                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+
+            <TabView VerticalAlignment="Stretch"
+                     IsAddTabButtonVisible="False"
+                     Grid.Row="2"
+                     TabWidthMode="Equal"
+                     CanReorderTabs="{x:Bind ViewModel.IsNotElevated}">
+
+                <TabView.TabStripFooter>
+                    <Button Click="{x:Bind ViewModel.GenerateCBOM}"
+                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                            VerticalAlignment="Bottom"
+                            x:Uid="GenerateCBOMButton" />
+                </TabView.TabStripFooter>
+
+                <!-- Crypto Algorithms -->
+                <TabViewItem x:Uid="CryptoAlgorithmsTab" IsClosable="False" MinHeight="40">
+                    <TabViewItem.IconSource>
+                        <BitmapIconSource UriSource="/Assets/External/Algorithm.png" ShowAsMonochrome="False" />
+                    </TabViewItem.IconSource>
+                    <TabViewItem.Content>
+                        <Grid>
+                            <win:Grid.ChildrenTransitions>
+                                <win:EntranceThemeTransition FromVerticalOffset="50" />
+                                <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+                            </win:Grid.ChildrenTransitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Actions -->
+                            <Border Margin="0,10,0,10" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
+                                <controls:WrapPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalSpacing="10"
+                                                    VerticalSpacing="10">
+
+                                    <Button x:Uid="RetrieveButton"
+                                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                            Click="{x:Bind ViewModel.RetrieveCryptoAlgorithms}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <!-- Total chip -->
+                                    <Border CornerRadius="8"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Padding="10,6"
+                                            BorderThickness="1"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                            <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                            <TextBlock VerticalAlignment="Center">
+                                                <Run x:Uid="TotalText" />
+                                                <Run Text="{x:Bind ViewModel.CryptoAlgorithms.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Search -->
+                                    <TextBox Width="300"
+                                             IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                             x:Uid="SearchBoxTextBox"
+                                             Text="{x:Bind ViewModel.CryptoAlgorithmsSearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             VerticalAlignment="Center"
+                                             VerticalContentAlignment="Center" />
+
+                                </controls:WrapPanel>
+                            </Border>
+
+                            <!-- ListView -->
+                            <customUI:ListViewV2 Grid.Row="1"
+                                                 RegistryKey="CBOM_CryptoAlgorithms"
+                                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                 ItemsSource="{x:Bind ViewModel.CryptoAlgorithms, Mode=OneWay}"
+                                                 SelectionMode="Extended">
+
+                                <customUI:ListViewV2.Header>
+                                    <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind ViewModel.CA_ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.CA_ColumnWidth2, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.CA_ColumnWidth3, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.CA_ColumnWidth4, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.CA_ColumnWidth5, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.CA_ColumnWidth6, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.CA_ColumnWidth7, Mode=TwoWay}" MinWidth="50" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button x:Uid="CA_NameColumnHeaderBtn" Tag="Name" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CA_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="CA_TypeColumnHeaderBtn" Tag="AlgorithmType" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CA_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="CA_FlagsColumnHeaderBtn" Tag="Flags" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CA_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="CA_IsOpenableColumnHeaderBtn" Tag="IsOpenable" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CA_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="CA_IsPQColumnHeaderBtn" Tag="IsPostQuantum" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CA_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="CA_KeyGenColumnHeaderBtn" Tag="SupportsKeyGeneration" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CA_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="CA_ParamSetsColumnHeaderBtn" Tag="SupportedParameterSets" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CA_HeaderColumnSortingButton_Click}" />
+
+                                            <controls:GridSplitter Grid.Column="1" />
+                                            <controls:GridSplitter Grid.Column="2" />
+                                            <controls:GridSplitter Grid.Column="3" />
+                                            <controls:GridSplitter Grid.Column="4" />
+                                            <controls:GridSplitter Grid.Column="5" />
+                                            <controls:GridSplitter Grid.Column="6" />
+                                        </Grid>
+                                    </Border>
+                                </customUI:ListViewV2.Header>
+
+                                <customUI:ListViewV2.ItemTemplate>
+                                    <DataTemplate x:DataType="Arcane:CryptoAlgorithm" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
+                                        <Grid Background="Transparent">
+                                            <Grid.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySelectedCryptoAlgorithms_Click}">
+                                                        <MenuFlyoutItem.KeyboardAccelerators>
+                                                            <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySelectedCryptoAlgorithms_Click}"/>
+                                                        </MenuFlyoutItem.KeyboardAccelerators>
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="&#xE8C8;" />
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+
+                                                    <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
+                                                        <MenuFlyoutSubItem.Icon>
+                                                            <FontIcon Glyph="&#xE8C8;" />
+                                                        </MenuFlyoutSubItem.Icon>
+
+                                                        <MenuFlyoutSubItem.Items>
+                                                            <MenuFlyoutItem x:Uid="CA_NameHeader" Tag="Name" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyCryptoAlgorithmProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="CA_TypeHeader" Tag="AlgorithmType" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyCryptoAlgorithmProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="CA_FlagsHeader" Tag="Flags" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyCryptoAlgorithmProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="CA_IsOpenableHeader" Tag="IsOpenable" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyCryptoAlgorithmProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="CA_IsPQHeader" Tag="IsPostQuantum" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyCryptoAlgorithmProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="CA_KeyGenHeader" Tag="SupportsKeyGeneration" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyCryptoAlgorithmProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="CA_ParamSetsHeader" Tag="SupportedParameterSets" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyCryptoAlgorithmProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                        </MenuFlyoutSubItem.Items>
+                                                    </MenuFlyoutSubItem>
+                                                </MenuFlyout>
+                                            </Grid.ContextFlyout>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CA_ColumnWidth1, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CA_ColumnWidth2, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CA_ColumnWidth3, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CA_ColumnWidth4, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CA_ColumnWidth5, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CA_ColumnWidth6, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CA_ColumnWidth7, Mode=OneWay}" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                            <TextBlock Text="{x:Bind AlgorithmType}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                                            <TextBlock Text="{x:Bind Flags}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                            <TextBlock Text="{x:Bind IsOpenable}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                                            <TextBlock Text="{x:Bind IsPostQuantum}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                                            <TextBlock Text="{x:Bind SupportsKeyGeneration}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                                            <TextBlock Text="{x:Bind SupportedParameterSets.Count}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </customUI:ListViewV2.ItemTemplate>
+                            </customUI:ListViewV2>
+                        </Grid>
+                    </TabViewItem.Content>
+                </TabViewItem>
+
+                <!-- CNG Curves -->
+                <TabViewItem x:Uid="CngCurvesTab" IsClosable="False" MinHeight="40">
+                    <TabViewItem.IconSource>
+                        <BitmapIconSource UriSource="/Assets/External/Curve.png" ShowAsMonochrome="False" />
+                    </TabViewItem.IconSource>
+                    <TabViewItem.Content>
+                        <Grid>
+                            <win:Grid.ChildrenTransitions>
+                                <win:EntranceThemeTransition FromVerticalOffset="50" />
+                                <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+                            </win:Grid.ChildrenTransitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Border Margin="0,10,0,10" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
+                                <controls:WrapPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalSpacing="10"
+                                                    VerticalSpacing="10">
+
+                                    <Button x:Uid="RetrieveButton"
+                                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                            Click="{x:Bind ViewModel.RetrieveCngCurves}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <!-- Total chip -->
+                                    <Border CornerRadius="8"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Padding="10,6"
+                                            BorderThickness="1"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                            <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                            <TextBlock VerticalAlignment="Center">
+                                                <Run x:Uid="TotalText" />
+                                                <Run Text="{x:Bind ViewModel.CngCurves.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Search -->
+                                    <TextBox Width="300"
+                                             IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                             x:Uid="SearchBoxTextBox"
+                                             Text="{x:Bind ViewModel.CngCurvesSearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             VerticalAlignment="Center"
+                                             VerticalContentAlignment="Center" />
+
+                                </controls:WrapPanel>
+                            </Border>
+
+                            <customUI:ListViewV2 Grid.Row="1"
+                                                 RegistryKey="CBOM_CNGCurves"
+                                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                 ItemsSource="{x:Bind ViewModel.CngCurves, Mode=OneWay}"
+                                                 SelectionMode="Extended">
+
+                                <customUI:ListViewV2.Header>
+                                    <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind ViewModel.CNG_ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.CNG_ColumnWidth2, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.CNG_ColumnWidth3, Mode=TwoWay}" MinWidth="50" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button x:Uid="CNG_NameColumnHeaderBtn" Tag="Name" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CNG_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="CNG_OidColumnHeaderBtn" Tag="Oid" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CNG_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="CNG_LengthColumnHeaderBtn" Tag="PublicKeyLengthBits" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.CNG_HeaderColumnSortingButton_Click}" />
+
+                                            <controls:GridSplitter Grid.Column="1" />
+                                            <controls:GridSplitter Grid.Column="2" />
+                                        </Grid>
+                                    </Border>
+                                </customUI:ListViewV2.Header>
+
+                                <customUI:ListViewV2.ItemTemplate>
+                                    <DataTemplate x:DataType="Arcane:EccCurveCng" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
+                                        <Grid Background="Transparent">
+                                            <Grid.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySelectedCngCurves_Click}">
+                                                        <MenuFlyoutItem.KeyboardAccelerators>
+                                                            <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySelectedCngCurves_Click}"/>
+                                                        </MenuFlyoutItem.KeyboardAccelerators>
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="&#xE8C8;" />
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+
+                                                    <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
+                                                        <MenuFlyoutSubItem.Icon>
+                                                            <FontIcon Glyph="&#xE8C8;" />
+                                                        </MenuFlyoutSubItem.Icon>
+
+                                                        <MenuFlyoutSubItem.Items>
+                                                            <MenuFlyoutItem x:Uid="CNG_NameHeader" Tag="Name" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyCngCurveProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="CNG_OidHeader" Tag="Oid" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyCngCurveProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="CNG_LengthHeader" Tag="PublicKeyLengthBits" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyCngCurveProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                        </MenuFlyoutSubItem.Items>
+                                                    </MenuFlyoutSubItem>
+                                                </MenuFlyout>
+                                            </Grid.ContextFlyout>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CNG_ColumnWidth1, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CNG_ColumnWidth2, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CNG_ColumnWidth3, Mode=OneWay}" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                            <TextBlock Text="{x:Bind Oid}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                                            <TextBlock Text="{x:Bind PublicKeyLengthBits}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </customUI:ListViewV2.ItemTemplate>
+
+                            </customUI:ListViewV2>
+                        </Grid>
+                    </TabViewItem.Content>
+                </TabViewItem>
+
+                <!-- SSL Provider Curves -->
+                <TabViewItem x:Uid="SslProviderCurvesTab" IsClosable="False" MinHeight="40">
+                    <TabViewItem.IconSource>
+                        <BitmapIconSource UriSource="/Assets/External/SSL.png" ShowAsMonochrome="False" />
+                    </TabViewItem.IconSource>
+                    <TabViewItem.Content>
+                        <Grid>
+                            <win:Grid.ChildrenTransitions>
+                                <win:EntranceThemeTransition FromVerticalOffset="50" />
+                                <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+                            </win:Grid.ChildrenTransitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Border Margin="0,10,0,10" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
+                                <controls:WrapPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalSpacing="10"
+                                                    VerticalSpacing="10">
+
+                                    <Button x:Uid="RetrieveButton"
+                                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                            Click="{x:Bind ViewModel.RetrieveSslProviderCurves}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <!-- Total chip -->
+                                    <Border CornerRadius="8"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Padding="10,6"
+                                            BorderThickness="1"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                            <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                            <TextBlock VerticalAlignment="Center">
+                                                <Run x:Uid="TotalText" />
+                                                <Run Text="{x:Bind ViewModel.SslProviderCurves.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Search -->
+                                    <TextBox Width="300"
+                                             IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                             x:Uid="SearchBoxTextBox"
+                                             Text="{x:Bind ViewModel.SslProviderCurvesSearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             VerticalAlignment="Center"
+                                             VerticalContentAlignment="Center" />
+
+                                </controls:WrapPanel>
+                            </Border>
+
+                            <customUI:ListViewV2 Grid.Row="1"
+                                                 RegistryKey="CBOM_SSLProviderCurves"
+                                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                 ItemsSource="{x:Bind ViewModel.SslProviderCurves, Mode=OneWay}"
+                                                 SelectionMode="Extended">
+
+                                <customUI:ListViewV2.Header>
+                                    <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind ViewModel.SSL_ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.SSL_ColumnWidth2, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.SSL_ColumnWidth3, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.SSL_ColumnWidth4, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.SSL_ColumnWidth5, Mode=TwoWay}" MinWidth="50" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button x:Uid="SSL_NameColumnHeaderBtn" Tag="Name" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SSL_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="SSL_OidColumnHeaderBtn" Tag="Oid" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SSL_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="SSL_LengthColumnHeaderBtn" Tag="PublicKeyLengthBits" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SSL_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="SSL_TypeColumnHeaderBtn" Tag="CurveType" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SSL_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="SSL_FlagsColumnHeaderBtn" Tag="Flags" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.SSL_HeaderColumnSortingButton_Click}" />
+
+                                            <controls:GridSplitter Grid.Column="1" />
+                                            <controls:GridSplitter Grid.Column="2" />
+                                            <controls:GridSplitter Grid.Column="3" />
+                                            <controls:GridSplitter Grid.Column="4" />
+                                        </Grid>
+                                    </Border>
+                                </customUI:ListViewV2.Header>
+
+                                <customUI:ListViewV2.ItemTemplate>
+                                    <DataTemplate x:DataType="Arcane:EccCurveSslProvider" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
+                                        <Grid Background="Transparent">
+                                            <Grid.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySelectedSslProviderCurves_Click}">
+                                                        <MenuFlyoutItem.KeyboardAccelerators>
+                                                            <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySelectedSslProviderCurves_Click}"/>
+                                                        </MenuFlyoutItem.KeyboardAccelerators>
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="&#xE8C8;" />
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+
+                                                    <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
+                                                        <MenuFlyoutSubItem.Icon>
+                                                            <FontIcon Glyph="&#xE8C8;" />
+                                                        </MenuFlyoutSubItem.Icon>
+
+                                                        <MenuFlyoutSubItem.Items>
+                                                            <MenuFlyoutItem x:Uid="SSL_NameHeader" Tag="Name" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySslProviderCurveProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="SSL_OidHeader" Tag="Oid" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySslProviderCurveProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="SSL_LengthHeader" Tag="PublicKeyLengthBits" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySslProviderCurveProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="SSL_TypeHeader" Tag="CurveType" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySslProviderCurveProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="SSL_FlagsHeader" Tag="Flags" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySslProviderCurveProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                        </MenuFlyoutSubItem.Items>
+                                                    </MenuFlyoutSubItem>
+                                                </MenuFlyout>
+                                            </Grid.ContextFlyout>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.SSL_ColumnWidth1, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.SSL_ColumnWidth2, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.SSL_ColumnWidth3, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.SSL_ColumnWidth4, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.SSL_ColumnWidth5, Mode=OneWay}" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                            <TextBlock Text="{x:Bind Oid}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                                            <TextBlock Text="{x:Bind PublicKeyLengthBits}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                            <TextBlock Text="{x:Bind CurveType}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                                            <TextBlock Text="{x:Bind Flags}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </customUI:ListViewV2.ItemTemplate>
+
+                            </customUI:ListViewV2>
+                        </Grid>
+                    </TabViewItem.Content>
+                </TabViewItem>
+
+                <!-- TLS Cipher Suites -->
+                <TabViewItem x:Uid="TlsCipherSuitesTab" IsClosable="False" MinHeight="40">
+                    <TabViewItem.IconSource>
+                        <BitmapIconSource UriSource="/Assets/External/TLS.png" ShowAsMonochrome="False" />
+                    </TabViewItem.IconSource>
+                    <TabViewItem.Content>
+                        <Grid>
+                            <win:Grid.ChildrenTransitions>
+                                <win:EntranceThemeTransition FromVerticalOffset="50" />
+                                <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+                            </win:Grid.ChildrenTransitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Border Margin="0,10,0,10" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
+                                <controls:WrapPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalSpacing="10"
+                                                    VerticalSpacing="10">
+
+                                    <!-- Configured only toggle -->
+                                    <ToggleSwitch x:Uid="ConfiguredOnlyToggleSwitch"
+                                                  IsOn="{x:Bind ViewModel.TlsConfiguredOnly, Mode=TwoWay}"
+                                                  VerticalAlignment="Center" />
+
+                                    <Button x:Uid="RetrieveButton"
+                                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                            Click="{x:Bind ViewModel.RetrieveTlsCipherSuites}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <!-- Total chip -->
+                                    <Border CornerRadius="8"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Padding="10,6"
+                                            BorderThickness="1"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                            <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                            <TextBlock VerticalAlignment="Center">
+                                                <Run x:Uid="TotalText" />
+                                                <Run Text="{x:Bind ViewModel.TlsCipherSuites.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Search -->
+                                    <TextBox Width="400"
+                                             IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                             x:Uid="SearchBoxTextBox"
+                                             Text="{x:Bind ViewModel.TlsCipherSuitesSearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             VerticalAlignment="Center"
+                                             VerticalContentAlignment="Center" />
+
+                                </controls:WrapPanel>
+                            </Border>
+
+                            <customUI:ListViewV2 Grid.Row="1"
+                                                 RegistryKey="CBOM_TlsCipherSuites"
+                                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                 ItemsSource="{x:Bind ViewModel.TlsCipherSuites, Mode=OneWay}"
+                                                 SelectionMode="Extended">
+
+                                <customUI:ListViewV2.Header>
+                                    <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth2, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth3, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth4, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth5, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth6, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth7, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth8, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth9, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth10, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth11, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth12, Mode=TwoWay}" MinWidth="50" />
+                                                <ColumnDefinition Width="{x:Bind ViewModel.TLS_ColumnWidth13, Mode=TwoWay}" MinWidth="50" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button x:Uid="TLS_NameColumnHeaderBtn" Tag="Name" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_CipherColumnHeaderBtn" Tag="Cipher" Grid.Column="1" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_CSColumnHeaderBtn" Tag="CipherSuiteHex" Grid.Column="2" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_BaseCSColumnHeaderBtn" Tag="BaseCipherSuiteHex" Grid.Column="3" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_HashColumnHeaderBtn" Tag="Hash" Grid.Column="4" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_ExchangeColumnHeaderBtn" Tag="Exchange" Grid.Column="5" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_CertColumnHeaderBtn" Tag="Certificate" Grid.Column="6" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_CLenColumnHeaderBtn" Tag="CipherLength" Grid.Column="7" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_CBLenColumnHeaderBtn" Tag="CipherBlockLength" Grid.Column="8" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_HLenColumnHeaderBtn" Tag="HashLength" Grid.Column="9" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_MinExColumnHeaderBtn" Tag="MinimumExchangeLength" Grid.Column="10" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_MaxExColumnHeaderBtn" Tag="MaximumExchangeLength" Grid.Column="11" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+                                            <Button x:Uid="TLS_KeyTypeColumnHeaderBtn" Tag="KeyType" Grid.Column="12" Margin="0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.TLS_HeaderColumnSortingButton_Click}" />
+
+                                            <controls:GridSplitter Grid.Column="1" />
+                                            <controls:GridSplitter Grid.Column="2" />
+                                            <controls:GridSplitter Grid.Column="3" />
+                                            <controls:GridSplitter Grid.Column="4" />
+                                            <controls:GridSplitter Grid.Column="5" />
+                                            <controls:GridSplitter Grid.Column="6" />
+                                            <controls:GridSplitter Grid.Column="7" />
+                                            <controls:GridSplitter Grid.Column="8" />
+                                            <controls:GridSplitter Grid.Column="9" />
+                                            <controls:GridSplitter Grid.Column="10" />
+                                            <controls:GridSplitter Grid.Column="11" />
+                                            <controls:GridSplitter Grid.Column="12" />
+                                        </Grid>
+                                    </Border>
+                                </customUI:ListViewV2.Header>
+
+                                <customUI:ListViewV2.ItemTemplate>
+                                    <DataTemplate x:DataType="Arcane:TlsCipherSuite" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
+                                        <Grid Background="Transparent">
+                                            <Grid.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySelectedTlsCipherSuites_Click}">
+                                                        <MenuFlyoutItem.KeyboardAccelerators>
+                                                            <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySelectedTlsCipherSuites_Click}"/>
+                                                        </MenuFlyoutItem.KeyboardAccelerators>
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="&#xE8C8;" />
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+
+                                                    <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
+                                                        <MenuFlyoutSubItem.Icon>
+                                                            <FontIcon Glyph="&#xE8C8;" />
+                                                        </MenuFlyoutSubItem.Icon>
+
+                                                        <MenuFlyoutSubItem.Items>
+                                                            <MenuFlyoutItem x:Uid="TLS_NameHeader" Tag="Name" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_CipherHeader" Tag="Cipher" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_CSHeader" Tag="CipherSuiteHex" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_BaseCSHeader" Tag="BaseCipherSuiteHex" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_HashHeader" Tag="Hash" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_ExchangeHeader" Tag="Exchange" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_CertHeader" Tag="Certificate" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_CLenHeader" Tag="CipherLength" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_CBLenHeader" Tag="CipherBlockLength" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_HLenHeader" Tag="HashLength" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_MinExHeader" Tag="MinimumExchangeLength" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_MaxExHeader" Tag="MaximumExchangeLength" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                            <MenuFlyoutItem x:Uid="TLS_KeyTypeHeader" Tag="KeyType" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyTlsCipherSuiteProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                        </MenuFlyoutSubItem.Items>
+                                                    </MenuFlyoutSubItem>
+                                                </MenuFlyout>
+                                            </Grid.ContextFlyout>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth1, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth2, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth3, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth4, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth5, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth6, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth7, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth8, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth9, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth10, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth11, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth12, Mode=OneWay}" />
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.TLS_ColumnWidth13, Mode=OneWay}" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                            <TextBlock Text="{x:Bind Cipher}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                                            <TextBlock Text="{x:Bind CipherSuiteHex}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                                            <TextBlock Text="{x:Bind BaseCipherSuiteHex}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                                            <TextBlock Text="{x:Bind Hash}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                                            <TextBlock Text="{x:Bind Exchange}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                                            <TextBlock Text="{x:Bind Certificate}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                                            <TextBlock Text="{x:Bind CipherLength}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
+                                            <TextBlock Text="{x:Bind CipherBlockLength}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="8"/>
+                                            <TextBlock Text="{x:Bind HashLength}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="9"/>
+                                            <TextBlock Text="{x:Bind MinimumExchangeLength}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="10"/>
+                                            <TextBlock Text="{x:Bind MaximumExchangeLength}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="11"/>
+                                            <TextBlock Text="{x:Bind KeyType}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="12"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </customUI:ListViewV2.ItemTemplate>
+
+                            </customUI:ListViewV2>
+                        </Grid>
+                    </TabViewItem.Content>
+                </TabViewItem>
+
+                <!-- Registered Providers -->
+                <TabViewItem x:Uid="RegisteredProvidersTab" IsClosable="False" MinHeight="40">
+                    <TabViewItem.IconSource>
+                        <BitmapIconSource UriSource="/Assets/External/Provider.png" ShowAsMonochrome="False" />
+                    </TabViewItem.IconSource>
+                    <TabViewItem.Content>
+                        <Grid>
+                            <win:Grid.ChildrenTransitions>
+                                <win:EntranceThemeTransition FromVerticalOffset="50" />
+                                <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+                            </win:Grid.ChildrenTransitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Border Margin="0,10,0,10" Grid.Row="0" Style="{StaticResource GridCardStyle}" Padding="8">
+                                <controls:WrapPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalSpacing="10"
+                                                    VerticalSpacing="10">
+
+                                    <Button x:Uid="RetrieveButton"
+                                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                            Click="{x:Bind ViewModel.RetrieveRegisteredProviders}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <!-- Total chip -->
+                                    <Border CornerRadius="8"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Padding="10,6"
+                                            BorderThickness="1"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                            <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                            <TextBlock VerticalAlignment="Center">
+                                                <Run x:Uid="TotalText" />
+                                                <Run Text="{x:Bind ViewModel.RegisteredProviders.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Search -->
+                                    <TextBox Width="300"
+                                             IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                             x:Uid="SearchBoxTextBox"
+                                             Text="{x:Bind ViewModel.RegisteredProvidersSearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             VerticalAlignment="Center"
+                                             VerticalContentAlignment="Center" />
+
+                                </controls:WrapPanel>
+                            </Border>
+
+                            <customUI:ListViewV2 Grid.Row="1"
+                                                 RegistryKey="CBOM_RegisteredProviders"
+                                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                 ItemsSource="{x:Bind ViewModel.RegisteredProviders, Mode=OneWay}"
+                                                 SelectionMode="Extended">
+
+                                <customUI:ListViewV2.Header>
+                                    <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind ViewModel.REG_ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button x:Uid="REG_NameColumnHeaderBtn" Tag="Name" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" Click="{x:Bind ViewModel.REG_HeaderColumnSortingButton_Click}" />
+
+                                        </Grid>
+                                    </Border>
+                                </customUI:ListViewV2.Header>
+
+                                <customUI:ListViewV2.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
+                                        <Grid Background="Transparent">
+                                            <Grid.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySelectedRegisteredProviders_Click}">
+                                                        <MenuFlyoutItem.KeyboardAccelerators>
+                                                            <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopySelectedRegisteredProviders_Click}"/>
+                                                        </MenuFlyoutItem.KeyboardAccelerators>
+                                                        <MenuFlyoutItem.Icon>
+                                                            <FontIcon Glyph="&#xE8C8;" />
+                                                        </MenuFlyoutItem.Icon>
+                                                    </MenuFlyoutItem>
+
+                                                    <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
+                                                        <MenuFlyoutSubItem.Icon>
+                                                            <FontIcon Glyph="&#xE8C8;" />
+                                                        </MenuFlyoutSubItem.Icon>
+
+                                                        <MenuFlyoutSubItem.Items>
+                                                            <MenuFlyoutItem x:Uid="REG_NameHeader" Tag="Name" Click="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.CopyRegisteredProviderProperty_Click}">
+                                                                <MenuFlyoutItem.Icon>
+                                                                    <FontIcon Glyph="&#xE8C8;" />
+                                                                </MenuFlyoutItem.Icon>
+                                                            </MenuFlyoutItem>
+                                                        </MenuFlyoutSubItem.Items>
+                                                    </MenuFlyoutSubItem>
+                                                </MenuFlyout>
+                                            </Grid.ContextFlyout>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.CryptographicBillOfMaterialsVM.REG_ColumnWidth1, Mode=OneWay}" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{x:Bind}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </customUI:ListViewV2.ItemTemplate>
+
+                            </customUI:ListViewV2>
+                        </Grid>
+                    </TabViewItem.Content>
+                </TabViewItem>
+
+            </TabView>
+
+        </Grid>
+
+    </Grid>
+</Page>

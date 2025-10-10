@@ -552,6 +552,10 @@ internal sealed partial class MainWindow : Window
 			AutomationProperties.SetHelpText(AuditPoliciesNavItem, GlobalVars.GetStr("AuditPoliciesNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(AuditPoliciesNavItem, GlobalVars.GetStr("AuditPoliciesNavItem/ToolTipService/ToolTip"));
 
+			CBOMNavItem.Content = GlobalVars.GetStr("CBOMNavItem/Content");
+			AutomationProperties.SetHelpText(CBOMNavItem, GlobalVars.GetStr("CBOMNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CBOMNavItem, GlobalVars.GetStr("CBOMNavItem/ToolTipService/ToolTip"));
+
 #endif
 
 #if APP_CONTROL_MANAGER

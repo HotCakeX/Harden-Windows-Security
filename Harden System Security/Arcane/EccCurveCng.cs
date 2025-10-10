@@ -15,29 +15,33 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.IO;
-using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace AppControlManager.XMLOps;
+namespace HardenSystemSecurity.Arcane;
 
-internal static partial class CheckForAllowAll
+internal sealed class EccCurveCng(
+	string name,
+	string oid,
+	uint publicKeyLengthBits
+)
 {
-	/// <summary>
-	/// Takes a XML file path and checks whether it has an allow all rule
-	/// </summary>
-	/// <param name="xmlFilePath"></param>
-	/// <returns></returns>
-	internal static bool Check(string xmlFilePath)
-	{
-		// Read the content of the XML file into a string
-		string xmlContent = File.ReadAllText(xmlFilePath);
+	[JsonInclude]
+	internal string Name => name;
+	[JsonInclude]
+	internal string Oid => oid;
+	[JsonInclude]
+	internal uint PublicKeyLengthBits => publicKeyLengthBits;
+}
 
-		Regex allowAllRegex = MyRegex();
-
-		// Check if the pattern matches the XML content
-		return allowAllRegex.IsMatch(xmlContent);
-	}
-
-	[GeneratedRegex(@"<Allow ID=""ID_ALLOW_.*"" FriendlyName="".*"" FileName=""\*"".*/>")]
-	private static partial Regex MyRegex();
+/// <summary>
+/// JSON source generated context for <see cref="EccCurveCng"/> type.
+/// </summary>
+[JsonSourceGenerationOptions(
+	WriteIndented = true
+)]
+[JsonSerializable(typeof(EccCurveCng))]
+[JsonSerializable(typeof(List<EccCurveCng>))]
+internal sealed partial class EccCurveCngJsonSerializationContext : JsonSerializerContext
+{
 }

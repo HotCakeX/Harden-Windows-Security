@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -288,10 +289,14 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 			MainInfoBar.IsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("ApplyingMicrosoft365AppsSecurityBaseline"));
 
+			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
+			Uri sourceUri = !string.IsNullOrEmpty(CustomBaselineFilePath)
+				? new Uri(CustomBaselineFilePath)
+				: new Uri(DownloadURLs[SecurityBaselinesComboBoxSelectedItem]);
+
 			List<VerificationResult>? results = await MSBaseline.DownloadAndProcessSecurityBaseline(
-				new Uri(DownloadURL),
+				sourceUri,
 				MSBaseline.Action.Apply,
-				microsoft365AppsSecurityBaselineVMRef: this,
 				cancellationToken: ApplyAllCancellableButton.Cts?.Token);
 
 			MainInfoBar.WriteSuccess(GlobalVars.GetStr("Microsoft365AppsSecurityBaselineAppliedSuccessfully"));
@@ -335,10 +340,14 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 			MainInfoBar.IsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("RemovingMicrosoft365AppsSecurityBaseline"));
 
+			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
+			Uri sourceUri = !string.IsNullOrEmpty(CustomBaselineFilePath)
+				? new Uri(CustomBaselineFilePath)
+				: new Uri(DownloadURLs[SecurityBaselinesComboBoxSelectedItem]);
+
 			List<VerificationResult>? results = await MSBaseline.DownloadAndProcessSecurityBaseline(
-				new Uri(DownloadURL),
+				sourceUri,
 				MSBaseline.Action.Remove,
-				microsoft365AppsSecurityBaselineVMRef: this,
 				cancellationToken: RemoveAllCancellableButton.Cts?.Token);
 
 			MainInfoBar.WriteSuccess(GlobalVars.GetStr("Microsoft365AppsSecurityBaselineRemovedSuccessfully"));
@@ -382,10 +391,14 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 			MainInfoBar.IsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("VerifyingMicrosoft365AppsSecurityBaseline"));
 
+			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
+			Uri sourceUri = !string.IsNullOrEmpty(CustomBaselineFilePath)
+				? new Uri(CustomBaselineFilePath)
+				: new Uri(DownloadURLs[SecurityBaselinesComboBoxSelectedItem]);
+
 			List<VerificationResult>? results = await MSBaseline.DownloadAndProcessSecurityBaseline(
-				new Uri(DownloadURL),
+				sourceUri,
 				MSBaseline.Action.Verify,
-				microsoft365AppsSecurityBaselineVMRef: this,
 				cancellationToken: VerifyAllCancellableButton.Cts?.Token) ?? throw new InvalidOperationException(GlobalVars.GetStr("NoResultsReturnedFromVerificationProcess"));
 
 			// Clear existing results
@@ -475,17 +488,52 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Custom URL input for the baseline download
+	/// Mapping of security baseline names to their download URLs.
 	/// </summary>
-	internal string DownloadURL { get; set => SP(ref field, value); } = DefaultDownloadUrl;
+	private static readonly FrozenDictionary<string, string> DownloadURLs = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+	{
+		{"Microsoft 365 Apps for Enterprise 2412", @"https://download.microsoft.com/download/8/5/c/85c25433-a1b0-4ffa-9429-7e023e7da8d8/Microsoft%20365%20Apps%20for%20Enterprise%202412.zip"}
+	}.ToFrozenDictionary<string, string>();
+
+	internal List<string> SecurityBaselinesComboBoxItemsSource => DownloadURLs.Keys.ToList();
+
+	internal string SecurityBaselinesComboBoxSelectedItem { get; set => SP(ref field, value); } = "Microsoft 365 Apps for Enterprise 2412";
 
 	/// <summary>
-	/// Default URL.
+	/// The path to the custom baseline file, if any.
 	/// </summary>
-	internal const string DefaultDownloadUrl = @"https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202412.zip";
+	internal string? CustomBaselineFilePath
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				IsMultiBaselineComboBoxEnabled = string.IsNullOrEmpty(value);
+			}
+		}
+	}
 
 	/// <summary>
-	/// Resets to the default URL
+	/// Clears the CustomBaselineFilePath
 	/// </summary>
-	internal void ResetToDefaultUrl() => DownloadURL = DefaultDownloadUrl;
+	internal void ClearCustomBaselineFilePath() => CustomBaselineFilePath = null;
+
+	/// <summary>
+	/// Event handler for the browse button.
+	/// </summary>
+	internal void CustomBaselineFilePathButton_Click()
+	{
+		string? selectedFile = FileDialogHelper.ShowFilePickerDialog(GlobalVars.ZIPFilePickerFilter);
+
+		if (!string.IsNullOrEmpty(selectedFile))
+		{
+			// Store the selected file path
+			CustomBaselineFilePath = selectedFile;
+		}
+	}
+
+	/// <summary>
+	/// If user selects a custom baseline file, disable the multi-baseline ComboBox.
+	/// </summary>
+	internal bool IsMultiBaselineComboBoxEnabled { get; set => SP(ref field, value); } = true;
 }

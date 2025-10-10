@@ -32,8 +32,8 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial nint show_file_picker(
-					[MarshalAs(UnmanagedType.LPUTF8Str)] string filter,
-					[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
+					string filter,
+					string? initialDir,
 					out int lastError);
 
 #if DEBUG
@@ -44,8 +44,8 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial StringArrayForFileDialogHelper show_files_picker(
-			[MarshalAs(UnmanagedType.LPUTF8Str)] string filter,
-			[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
+			string filter,
+			string? initialDir,
 			out int lastError);
 
 #if DEBUG
@@ -56,7 +56,7 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial nint show_folder_picker(
-			[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
+			string? initialDir,
 			out int lastError);
 
 #if DEBUG
@@ -67,7 +67,7 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial StringArrayForFileDialogHelper show_folders_picker(
-			[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
+			string? initialDir,
 			out int lastError);
 
 #if DEBUG
@@ -89,15 +89,15 @@ internal static unsafe partial class NativeMethods
 	internal static partial void free_string_array(StringArrayForFileDialogHelper arr);
 
 #if DEBUG
-	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf16)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf16)]
 #endif
 	internal static partial int relaunch_app_elevated(
-			[MarshalAs(UnmanagedType.LPWStr)] string aumid,
-			[MarshalAs(UnmanagedType.LPWStr)] string? arguments,
+			string aumid,
+			string? arguments,
 			uint* processId);
 
 #if DEBUG
@@ -122,9 +122,9 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial nint show_save_file_dialog(
-			[MarshalAs(UnmanagedType.LPUTF8Str)] string filter,
-			[MarshalAs(UnmanagedType.LPUTF8Str)] string? initialDir,
-			[MarshalAs(UnmanagedType.LPUTF8Str)] string? defaultFilename,
+			string filter,
+			string? initialDir,
+			string? defaultFilename,
 			out int lastError);
 
 #if DEBUG

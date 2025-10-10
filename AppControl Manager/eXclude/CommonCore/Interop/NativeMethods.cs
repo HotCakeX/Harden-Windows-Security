@@ -26,6 +26,8 @@ namespace CommonCore.Interop;
 /// `GetLastSystemError` is basically a direct call of `GetLastError` or read of `errno`
 /// where-as `SetLastError=true` adds marshalling logic which calls `GetLastSystemError` and then caches it via `SetLastPInvokeError`
 /// that way it is preserved and no other call can overwrite it unless someone explicitly calls `SetLastPInvokeError` (which the next p/invoke labeled `SetLastError=true` would do).
+///
+/// Do not use "SetLastError = true" unless you need to get the last error via "Marshal.GetLastPInvokeError".
 /// </summary>
 internal static unsafe partial class NativeMethods
 {
@@ -154,7 +156,7 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool GetVolumePathNamesForVolumeNameW(
-		[MarshalAs(UnmanagedType.LPWStr)] string lpszVolumeName,
+		string lpszVolumeName,
 		[MarshalUsing(CountElementName = "cchBufferLength")][Out] char[] lpszVolumeNamePaths,
 		uint cchBufferLength,
 		ref uint lpcchReturnLength);
@@ -441,7 +443,7 @@ internal static unsafe partial class NativeMethods
 	IntPtr pProviderInfo,
 	uint dwTimestampFlags,
 	[MarshalAs(UnmanagedType.LPStr)] string? pszTimestampAlgorithmOid,
-	[MarshalAs(UnmanagedType.LPWStr)] string? pwszHttpTimeStamp,
+	string? pwszHttpTimeStamp,
 	IntPtr psRequest,
 	IntPtr pSipData,
 	IntPtr ppSignerContext,
@@ -500,7 +502,7 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("WinTrust.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr CryptCATOpen(
-		[MarshalAs(UnmanagedType.LPWStr)] string FileName, // The name of the catalog file.
+		string FileName, // The name of the catalog file.
 		uint OpenFlags, // Flags to control the function behavior.
 		IntPtr MainCryptProviderHandle, // Handle to the cryptographic service provider.
 		uint PublicVersion, // The public version number.
@@ -1169,19 +1171,6 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
-	/// Delegate for the function signature of 'MpQueryFileTrustByHandle2'
-	/// </summary>
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	internal unsafe delegate long MpQueryFileTrustByHandle2Delegate(
-	IntPtr hFile,
-	IntPtr a2,
-	IntPtr a3,
-	Params* pParams,
-	ulong* pExtraInfoCount,
-	IntPtr* pExtraInfo);
-
-
-	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/psapi/nf-psapi-getperformanceinfo
 	/// </summary>
 	[LibraryImport("psapi.dll", SetLastError = true)]
@@ -1374,14 +1363,6 @@ internal static unsafe partial class NativeMethods
 	internal const uint SERVICE_CONTROL_SHUTDOWN = 0x00000005;
 
 
-	[UnmanagedFunctionPointer(CallingConvention.Winapi)]
-	internal delegate void ServiceMainFunction(uint dwNumServicesArgs, IntPtr lpServiceArgVectors); // LPWSTR* marshalled as IntPtr
-
-
-	[UnmanagedFunctionPointer(CallingConvention.Winapi)]
-	internal delegate uint HandlerEx(uint dwControl, uint dwEventType, IntPtr lpEventData, IntPtr lpContext);
-
-
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-startservicectrldispatcherw
 	/// </summary>
@@ -1396,7 +1377,7 @@ internal static unsafe partial class NativeMethods
 	/// </summary>
 	[LibraryImport("ADVAPI32", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static partial IntPtr RegisterServiceCtrlHandlerExW(string lpServiceName, HandlerEx lpHandlerProc, IntPtr lpContext);
+	internal static partial IntPtr RegisterServiceCtrlHandlerExW(string lpServiceName, IntPtr lpHandlerProc, IntPtr lpContext);
 
 
 	/// <summary>
@@ -1467,7 +1448,7 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int RegSetValueExW(
 		IntPtr hKey,
-		[MarshalAs(UnmanagedType.LPWStr)] string lpValueName,
+		string lpValueName,
 		uint Reserved,
 		uint dwType,
 		[In] byte[] lpData,
@@ -1519,5 +1500,181 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool CheckTokenMembership(IntPtr TokenHandle, IntPtr SidToCheck, [MarshalAs(UnmanagedType.Bool)] out bool IsMember);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptenumcontextfunctions
+	/// </summary>
+	[LibraryImport("BCRYPT", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptEnumContextFunctions(
+	uint dwTable,
+	string pszContext,
+	uint dwInterface,
+	ref uint pcFunctions,
+	ref IntPtr ppBuffer);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptresolveproviders
+	/// </summary>
+	[LibraryImport("BCRYPT", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptResolveProviders(
+		string pszContext,
+		uint dwInterface,
+		string? pszFunction,
+		string? pszProvider,
+		uint dwMode,
+		uint dwFlags,
+		ref uint pcbBuffer,
+		ref IntPtr ppBuffer);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptfreebuffer
+	/// </summary>
+	[LibraryImport("BCRYPT")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial void BCryptFreeBuffer(IntPtr pvBuffer);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptsetproperty
+	/// </summary>
+	[LibraryImport("BCRYPT", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptSetProperty(
+		IntPtr hObject,
+		string pszProperty,
+		IntPtr pbInput,
+		int cbInput,
+		uint dwFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccng/sslopenprovider
+	/// </summary>
+	[LibraryImport("ncrypt.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SslOpenProvider(
+		ref ulong phSslProvider,
+		IntPtr pszProviderName,
+		uint dwFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccng/sslenumciphersuites
+	/// </summary>
+	[LibraryImport("ncrypt.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SslEnumCipherSuites(
+		ulong hSslProvider,
+		ulong hPrivateKey,
+		ref IntPtr ppCipherSuite,
+		ref IntPtr ppEnumState,
+		uint dwFlags);
+
+
+	/// <summary>
+	/// https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/Cryptography/fn.SslEnumEccCurves.html
+	/// </summary>
+	[LibraryImport("ncrypt.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SslEnumEccCurves(
+		ulong hSslProvider,
+		ref uint pcCurves,
+		ref IntPtr ppCurves,
+		uint dwFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccng/sslfreebuffer
+	/// </summary>
+	[LibraryImport("ncrypt.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SslFreeBuffer(IntPtr pvInput);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccng/sslfreeobject
+	/// </summary>
+	[LibraryImport("ncrypt.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SslFreeObject(
+		ulong hObject,
+		uint dwFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wincrypt/nf-wincrypt-cryptfindoidinfo
+	/// </summary>
+	[LibraryImport("crypt32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr CryptFindOIDInfo(
+		uint dwKeyType,
+		IntPtr pvKey,
+		uint dwGroupId);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptenumalgorithms
+	/// </summary>
+	[LibraryImport("BCRYPT")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptEnumAlgorithms(
+		uint dwAlgOperations,
+		out uint pAlgCount,
+		out IntPtr ppAlgList,
+		uint dwFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptenumregisteredproviders
+	/// </summary>
+	[LibraryImport("BCRYPT")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptEnumRegisteredProviders(
+		ref uint pcbBuffer,
+		ref IntPtr ppBuffer);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptgeneratekeypair
+	/// </summary>
+	[LibraryImport("BCRYPT")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptGenerateKeyPair(
+		IntPtr hAlgorithm,
+		out IntPtr phKey,
+		uint dwLength,
+		uint dwFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptdestroykey
+	/// </summary>
+	[LibraryImport("BCRYPT")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptDestroyKey(
+		IntPtr hKey);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptfinalizekeypair
+	/// </summary>
+	[LibraryImport("BCRYPT")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptFinalizeKeyPair(
+	IntPtr hKey,
+	uint dwFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/bcrypt/nf-bcrypt-bcryptgetfipsalgorithmmode
+	/// </summary>
+	[LibraryImport("BCRYPT")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int BCryptGetFipsAlgorithmMode(out byte pfEnabled);
 
 }

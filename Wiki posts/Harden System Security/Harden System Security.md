@@ -28,6 +28,7 @@ Please feel free to open a discussion if you have any questions about the build 
 
 ### Supported Operation Systems
 
+* Windows 11 25H2
 * Windows 11 24H2
 * Windows 11 23H2
 * Windows 11 22H2
@@ -62,6 +63,7 @@ Please feel free to open a discussion if you have any questions about the build 
 * 100% open-source and free to use.
 * Natively supports X64 and ARM64 architectures.
 * Full [Trimming](https://learn.microsoft.com/dotnet/core/deploying/trimming/trim-self-contained) and [Native AOT](https://learn.microsoft.com/dotnet/core/deploying/native-aot) support.
+* Never uses runtime marshaling.
 
 <br>
 
@@ -156,6 +158,7 @@ The following chart explains various symbols you will see throughout the documen
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/Toolbox.gif" alt="Harden System Security Menu Item" width="30"> [Manage Installed Apps](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/kawaii.gif" alt="Harden System Security Menu Item" width="30"> [File Reputation](https://github.com/HotCakeX/Harden-Windows-Security/wiki/File-Reputation)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/be5b79427cba6546ece58984428841a4d1a31789/Pictures/Gifs/Harden%20System%20Security%20Menu/ChocolateBar.gif" alt="Harden System Security Menu Item" width="30"> [Audit Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Audit-Policies)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/d186f4e5b83d5097099d6ce05573bf1844d7a7b3/Pictures/Gifs/Harden%20System%20Security%20Menu/CBOM.gif" alt="Harden System Security Menu Item" width="30"> [Cryptographic Bill of Materials](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Cryptographic-Bill-of-Materials)
 
 <br>
 
@@ -171,6 +174,18 @@ The Harden System Security fully supports the following languages.
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/saudi-arabia.svg" width="25" alt="Country flag"> Arabic
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/mexico.svg" width="25" alt="Country flag"> Spanish
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/poland.svg" width="25" alt="Country flag"> Polish
+
+<br>
+
+## Windows Service
+
+The Harden System Security app utilizes a Windows Service that is responsible for performing tasks that require SYSTEM privilege such as Intune configurations detection during verification jobs so that even when you applied the security measures via Intune, they will be detected and verifiable by the app. The service is very compact (2MBs only), highly optimized and runs only when needed. It does not consume any resources when idle. The service is designed to automatically shut itself down when idle for 120 seconds. 
+
+It can only be used by elevated Administrators and SYSTEM account. It is automatically installed when the Harden System Security app is installed and removed when the Harden System Security app is uninstalled, not leaving any leftovers on the system. It has 0 dependency other than the .NET SDK itself and its executable is inside the app's package.
+
+The service source code [can be found here](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager/eXclude/QuantumRelayHSS). The service name is `QuantumRelayHSS` and it is designed to write verbose logs in the Windows Event log if you add a System environment variable to your OS named `QUANTUMRELAYHSS_DEBUG` with a value of `1` or `true`.
+
+The service supports Arbitrary Code Guard exploit protection as well as many others, all of which can be applied to it in the [Microsoft Defender category](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender).
 
 <br>
 

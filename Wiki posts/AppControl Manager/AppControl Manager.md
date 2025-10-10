@@ -49,6 +49,7 @@ Please feel free to open a discussion if you have any questions about the build 
 
 ### Supported Operation Systems
 
+* Windows 11 25H2
 * Windows 11 24H2
 * Windows 11 23H2
 * Windows 11 22H2
@@ -88,6 +89,7 @@ Please feel free to open a discussion if you have any questions about the build 
 * 100% open-source and free to use.
 * Natively supports X64 and ARM64 architectures.
 * Full [Trimming](https://learn.microsoft.com/dotnet/core/deploying/trimming/trim-self-contained) and [Native AOT](https://learn.microsoft.com/dotnet/core/deploying/native-aot) support.
+* Never uses runtime marshaling.
 
 <br>
 

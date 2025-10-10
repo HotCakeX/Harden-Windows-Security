@@ -58,7 +58,7 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/Toolbox.gif" alt="Harden System Security Menu Item" width="30"> [Manage Installed Apps](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/649f2b7c8e8c381722d3a3d95af16407d5187d94/Pictures/Gifs/Harden%20System%20Security%20Menu/kawaii.gif" alt="Harden System Security Menu Item" width="30"> [File Reputation](https://github.com/HotCakeX/Harden-Windows-Security/wiki/File-Reputation)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/be5b79427cba6546ece58984428841a4d1a31789/Pictures/Gifs/Harden%20System%20Security%20Menu/ChocolateBar.gif" alt="Harden System Security Menu Item" width="30"> [Audit Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Audit-Policies)
-
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/d186f4e5b83d5097099d6ce05573bf1844d7a7b3/Pictures/Gifs/Harden%20System%20Security%20Menu/CBOM.gif" alt="Harden System Security Menu Item" width="30"> [Cryptographic Bill of Materials](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Cryptographic-Bill-of-Materials)
 
 <br>
 

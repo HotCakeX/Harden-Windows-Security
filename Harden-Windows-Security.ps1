@@ -105,30 +105,8 @@ Function AppControl {
         Write-Verbose -Message "Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only. This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else."
         $null = Import-Certificate -FilePath $CertificateOutputPath -CertStoreLocation 'Cert:\LocalMachine\Root'
 
-        try {
-            Write-Verbose -Message 'Removing any possible ASR Rules exclusions that belong to the previous app version.'
-            [string[]]$PossiblePreviousASRExclusions = (Get-MpPreference).AttackSurfaceReductionOnlyExclusions | Where-Object -FilterScript { $_ -like '*__sadt7br7jpt02\AppControlManager*' }
-            if ($null -ne $PossiblePreviousASRExclusions -and $PossiblePreviousASRExclusions.Length -gt 0) { Remove-MpPreference -AttackSurfaceReductionOnlyExclusions $PossiblePreviousASRExclusions }
-
-            [string]$ValidateAdminCodeSignaturesRegName = 'ValidateAdminCodeSignatures'
-            $ValidateAdminCodeSignaturesRegValue = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System' -Name $ValidateAdminCodeSignaturesRegName -ErrorAction SilentlyContinue
-            # This will cause the "A referral was returned from the server." error to show up when AppControl Manager tries to start.
-            if ($ValidateAdminCodeSignaturesRegValue.$ValidateAdminCodeSignaturesRegName -eq 1) {
-                Write-Warning -Message "A policy named 'Only elevate executables that are signed and validated' is conflicting with the AppControl Manager app and won't let it start because it's self-signed with your on-device keys. Please disable the policy. It can be found in Group Policy Editor -> Computer Configuration -> Windows Settings -> Security Settings -> Local Policies -> Security Options -> 'User Account Control: Only elevate executable files that are signed and validated'"
-            }
-        }
-        catch { Write-Verbose -Message "You can safely ignore this error: $_" } # If this section fails for some reason such as running the script in Windows Sandbox, no error should be thrown
-
         Write-Verbose -Message 'Installing the AppControl Manager'
         Add-AppPackage -Path $_Package -ForceUpdateFromAnyVersion -DeferRegistrationWhenPackagesAreInUse
-
-        try {
-            [string]$InstallingAppLocationToAdd = (Get-AppxPackage -Name AppControlManager).InstallLocation
-            Write-Verbose -Message "Adding the new app's dll and exe (2 files) To the ASR Rules exclusions."
-            # The cmdlet won't add duplicates
-            Add-MpPreference -AttackSurfaceReductionOnlyExclusions (Join-Path -Path $InstallingAppLocationToAdd -ChildPath 'AppControlManager.exe'), (Join-Path -Path $InstallingAppLocationToAdd -ChildPath 'AppControlManager.dll') -ErrorAction Stop
-        }
-        catch { Write-Verbose -Message "You can safely ignore this error: $_" }
     }
     finally { Remove-Item -Path $WorkingDir -Recurse -Force } # Cleaning up the working directory in the TEMP directory
 }

@@ -1,5 +1,20 @@
 # Microsoft Defender | Harden System Security
 
+## Exclusions Tab
+
+A unified view that aggregates Microsoft Defender exclusions from multiple branches:
+   1. File and folder path exclusions
+   2. Process exclusions
+   3. Extension exclusions
+   4. Controlled Folder Access exclusions
+   5. Attack Surface Reduction (ASR) rules exclusions
+
+You can retrieve, filter, sort, and search exclusions across these branches. Adding and removing exclusions is supported directly from the UI.
+
+<br>
+
+## Security Measures Tab
+
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Microsoft%20Defender/Microsoft%20Defender.svg" alt="Microsoft Defender Cloud Protection features and abilities" width="450"></p>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Extends the [Cloud Security Scan](https://support.microsoft.com/en-us/topic/what-is-a-cloud-security-scan-75112696-7660-4450-9194-d717f72a8ad8) time to the maximum amount of 60 seconds, by default it is 10 seconds. You need to be aware that this means actions like downloading and opening an unknown file **will** make Microsoft Defender send samples of it to the Cloud for more advanced analysis and it can take a maximum of 60 seconds from the time you try to open that unknown file to the time when it will be opened (if deemed safe). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#cloudextendedtimeout)

@@ -26,4 +26,6 @@ By default, the Sidebar displays the XML policy path specified in the App settin
 
 * **Open User Config Directory**: Use this button to open the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) in File Explorer.
 
+* Use the **Optimize Memory** button to optimize memory usage of the app and try to reduce it. AppControl Manager is already highly optimized but this gives users more control over its memory usage. The app will generate a detailed report in the Logs page that you can check out, showing the type and amount of memory changes.
+
 <br>

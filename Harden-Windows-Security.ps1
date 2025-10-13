@@ -1,28 +1,5 @@
 Function P {
-    [CmdletBinding()]
-    param()
-    $ErrorActionPreference = 'Stop'
-    Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
-    if ($PSVersionTable.PSEdition -eq 'Desktop' -and !(Get-Command -Name 'pwsh.exe' -ErrorAction Ignore)) {
-        Write-Verbose -Message 'Trying to Install PowerShell (Core) because it could not be found on the system' -Verbose
-        if (Get-Command -Name 'winget.exe' -ErrorAction Ignore) {
-            # https://apps.microsoft.com/detail/9mz1snwt0n5d
-            Write-Verbose -Message 'Installing PowerShell through Winget'
-            $null = Winget install --id 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements --source msstore
-            if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to Install PowerShell using Winget: $LASTEXITCODE") }
-        }
-        else {
-            throw [System.InvalidOperationException]::New('PowerShell (Core) is not installed on the system and Winget is not available to install it. Please install PowerShell (Core) manually.')
-        }
-    }
-    pwsh.exe -NoProfile -NoLogo -NoExit -Command {
-        Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
-        if (!(Get-Module -ListAvailable -Name 'Harden-Windows-Security-Module' -ErrorAction Ignore)) {
-            Write-Verbose -Message 'Installing the Harden Windows Security Module because it could not be found' -Verbose
-            Install-Module -Name 'Harden-Windows-Security-Module' -Force
-        }
-        Protect-WindowsSecurity -GUI
-    }
+    Write-Warning -Message "The module you're trying to install has been deprecated; Please install the new Harden System Security app from the Microsoft Store: https://apps.microsoft.com/detail/9P7GGFL7DX57"
 }
 Function AppControl {
     <#

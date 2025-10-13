@@ -169,4 +169,53 @@ internal static class ComJsonDeserializer
 
 		return element.GetRawText();
 	}
+
+	/// <summary>
+	/// Normalizes an arbitrary object from <see cref="ComJsonDeserializer"/> into a list of strings.
+	/// </summary>
+	internal static List<string> CoerceToStringList(object? value)
+	{
+		List<string> result = [];
+
+		if (value is null)
+		{
+			return result;
+		}
+
+		// Single string
+		if (value is string s)
+		{
+			result.Add(s);
+			return result;
+		}
+
+		// List<object?> coming from ComJsonDeserializer for JSON arrays
+		if (value is List<object?> objectList)
+		{
+			for (int i = 0; i < objectList.Count; i++)
+			{
+				object? elem = objectList[i];
+				if (elem is string elemStr && !string.IsNullOrWhiteSpace(elemStr))
+				{
+					result.Add(elemStr);
+				}
+			}
+			return result;
+		}
+
+		if (value is List<string> stringList)
+		{
+			for (int i = 0; i < stringList.Count; i++)
+			{
+				string elemStr = stringList[i];
+				if (!string.IsNullOrWhiteSpace(elemStr))
+				{
+					result.Add(elemStr);
+				}
+			}
+			return result;
+		}
+
+		return result;
+	}
 }

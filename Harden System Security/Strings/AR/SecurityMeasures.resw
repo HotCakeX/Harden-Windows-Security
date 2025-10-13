@@ -130,7 +130,7 @@
     <value>تعيين مستوى حظر السحابة إلى القيمة القصوى: عدم التسامح.</value>
 </data>
 <data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
-    <value>تم تعيين مهلة فحص السحابة الممتدة إلى القيمة القصوى."</value>
+    <value>تم تعيين مهلة فحص السحابة الممتدة إلى القيمة القصوى.</value>
 </data>
 <data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
     <value>تفعيل حساب تجزئة الملفات.</value>

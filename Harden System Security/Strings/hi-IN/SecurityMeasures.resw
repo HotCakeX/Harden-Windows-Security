@@ -130,7 +130,7 @@
     <value>क्लाउड ब्लॉक स्तर को अधिकतम मूल्य पर सेट करें: शून्य सहनशीलता।</value>
 </data>
 <data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
-    <value>विस्तारित क्लाउड चेक टाइमआउट अधिकतम मूल्य पर सेट किया गया।"</value>
+    <value>विस्तारित क्लाउड चेक टाइमआउट अधिकतम मूल्य पर सेट किया गया।</value>
 </data>
 <data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
     <value>फ़ाइल हैश गणना सक्षम करें।</value>

@@ -6,10 +6,9 @@
 		<FileVersion>1.0.0.0</FileVersion>
 		<Title>DISMService</Title>
 		<Copyright>Violet Hansen</Copyright>
-		<Description>DISM Service Component</Description>
+		<Description>DISM Service Component of the Harden System Security app.</Description>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 		<PublishAot>True</PublishAot>
-		<OptimizationPreference>Size</OptimizationPreference>
 		<PublishTrimmed>True</PublishTrimmed>
 		<TrimMode>full</TrimMode>
 		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
@@ -24,6 +23,8 @@
 		<DebugType>none</DebugType>
 		<DisableRuntimeMarshalling>True</DisableRuntimeMarshalling>
 	</PropertyGroup>
+
+	<Import Project="..\CommonCore\CommonCore.projitems" Label="Shared" />
 
 	<ItemGroup>
 		<IlcArg Include="--debug" />

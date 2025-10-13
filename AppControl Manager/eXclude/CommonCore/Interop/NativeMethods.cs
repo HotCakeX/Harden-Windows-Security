@@ -1677,4 +1677,165 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int BCryptGetFipsAlgorithmMode(out byte pfEnabled);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/disminitialize-function
+	/// </summary>
+	[LibraryImport("DismApi.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismInitialize(
+		DISM.DismLogLevel LogLevel,
+		string? LogFilePath,
+		string? ScratchDirectory);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismopensession-function
+	/// </summary>
+	[LibraryImport("DismApi.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismOpenSession(
+		string ImagePath,
+		string? WindowsDirectory,
+		string? SystemDrive,
+		out IntPtr Session);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismgetcapabilities
+	/// </summary>
+	[LibraryImport("DismApi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismGetCapabilities(
+	IntPtr Session,
+	out IntPtr Capability,
+	out uint Count);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismgetfeatures-function
+	/// </summary>
+	[LibraryImport("DismApi.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismGetFeatures(
+		IntPtr Session,
+		string? PackageName,
+		DISM.DismPackageIdentifier PackageIdentifier,
+		out IntPtr FeatureList,
+		out uint FeatureCount);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismgetfeatureinfo-function
+	/// </summary>
+	[LibraryImport("DismApi.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismGetFeatureInfo(
+		IntPtr Session,
+		string FeatureName,
+		string? Identifier,
+		DISM.DismPackageIdentifier PackageIdentifier,
+		out IntPtr FeatureInfo);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismenablefeature-function
+	/// </summary>
+	[LibraryImport("DismApi.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismEnableFeature(
+		IntPtr Session,
+		string FeatureName,
+		string? Identifier,
+		DISM.DismPackageIdentifier PackageIdentifier,
+		[MarshalAs(UnmanagedType.Bool)] bool LimitAccess,
+		IntPtr SourcePaths,
+		uint SourcePathCount,
+		[MarshalAs(UnmanagedType.Bool)] bool EnableAll,
+		IntPtr CancelEvent,
+		nint ProgressCallback,
+		IntPtr UserData);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismdisablefeature-function
+	/// </summary>
+	[LibraryImport("DismApi.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismDisableFeature(
+		IntPtr Session,
+		string FeatureName,
+		string? PackageName,
+		[MarshalAs(UnmanagedType.Bool)] bool RemovePayload,
+		IntPtr CancelEvent,
+		nint ProgressCallback,
+		IntPtr UserData);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismdelete-function
+	/// </summary>
+	[LibraryImport("DismApi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismDelete(IntPtr ptr);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismclosesession-function
+	/// </summary>
+	[LibraryImport("DismApi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismCloseSession(IntPtr Session);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismshutdown-function
+	/// </summary>
+	/// <returns></returns>
+	[LibraryImport("DismApi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismShutdown();
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismremovecapability
+	/// </summary>
+	[LibraryImport("DismApi.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismRemoveCapability(
+	IntPtr Session,
+	string Name,
+	IntPtr CancelEvent,
+	nint ProgressCallback,
+	IntPtr UserData
+	);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismaddcapability
+	/// </summary>
+	[LibraryImport("DismApi.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismAddCapability(
+		IntPtr Session,
+		string Name,
+		[MarshalAs(UnmanagedType.Bool)] bool LimitAccess,
+		IntPtr SourcePaths, // PCWSTR* (pointer to array of strings)
+		uint SourcePathCount,
+		IntPtr CancelEvent,
+		nint ProgressCallback,
+		IntPtr UserData
+	);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismgetcapabilityinfo
+	/// </summary>
+	[LibraryImport("DismApi.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DismGetCapabilityInfo(
+		IntPtr Session,
+		string CapabilityName,
+		out IntPtr CapabilityInfo);
+
 }

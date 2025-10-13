@@ -3951,4 +3951,152 @@
   <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ഫയൽ പിക്കർ ഡയലോഗ് തുറക്കുന്നു, ഇത് നിങ്ങൾക്ക് file(s) തിരഞ്ഞെടുക്കാൻ അനുവദിക്കുന്നു</value>
   </data>
+    <data name="RetrieveRecommendedOnlyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ശുപാർശ ചെയ്തവ മാത്രം വീണ്ടെടുക്കുക</value>
+  </data>
+  <data name="RetrieveRecommendedOnlyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+      <value>ശുപാർശ ചെയ്ത ഇനങ്ങൾ മാത്രം വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="RetrieveRecommendedOnlyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ശുപാർശ ചെയ്ത ഇനങ്ങൾ മാത്രം വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>സുരക്ഷാ നടപടികൾ</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Defender-നുമായി ബന്ധപ്പെട്ട സുരക്ഷാ നടപടികൾ നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Defender-നുമായി ബന്ധപ്പെട്ട സുരക്ഷാ നടപടികൾ നിയന്ത്രിക്കുക.</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.Header" xml:space="preserve">
+    <value>ഒഴിവാക്കൽ</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Defender Antivirus, Controlled Folder Access, Attack Surface Reduction നിയമങ്ങളിൽ ഒഴിവാക്കിയ ഫയലുകൾ ചേർക്കുക, നീക്കുക, കാണുക, നിയന്ത്രിക്കുക</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Defender Antivirus, Controlled Folder Access, Attack Surface Reduction നിയമങ്ങളിൽ ഒഴിവാക്കിയ ഫയലുകൾ ചേർക്കുക, നീക്കുക, കാണുക, നിയന്ത്രിക്കുക</value>
+  </data>
+   <!--Microsoft Defender Exclusions ListView Headers Start-->
+  <data name="TargetHeader.Text" xml:space="preserve">
+    <value>ലക്ഷ്യം</value>
+  </data>
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>ഉറവിടം</value>
+  </data>
+  <!--Microsoft Defender Exclusions ListView Headers End-->
+  <!--Microsoft Defender Exclusions ListView Headers Buttons Start-->
+  <data name="TargetColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ലക്ഷ്യം</value>
+  </data>
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ഉറവിടം</value>
+  </data>
+  <!--Microsoft Defender Exclusions ListView Headers Buttons End-->
+  <data name="RetrieveAllExclusionsButton.Content" xml:space="preserve">
+    <value>എല്ലാം വീണ്ടെടുക്കുക</value>
+  </data>
+  <data name="RetrieveAllExclusionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Defender-ന്റെ എല്ലാ ഘടകങ്ങളിലെയും എല്ലാ ഒഴിവാക്കലുകളും വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="RetrieveAllExclusionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Defender-ന്റെ എല്ലാ ഘടകങ്ങളിലെയും എല്ലാ ഒഴിവാക്കലുകളും വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="AddExclusionsButton.Content" xml:space="preserve">
+    <value>ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Defender-ന്റെ വിവിധ ഘടകങ്ങളിൽ ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Defender-ന്റെ വിവിധ ഘടകങ്ങളിൽ ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഫയൽ പാത</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫയൽ പാതയ്ക്ക് ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫയൽ പാതയ്ക്ക് ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+    <data name="AddExclusionsForFolderPathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഫോൾഡർ പാത</value>
+  </data>
+  <data name="AddExclusionsForFolderPathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഫോൾഡർ പാതയ്ക്ക് ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsForFolderPathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഫോൾഡർ പാതയ്ക്ക് ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എക്സ്റ്റൻഷൻ</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു എക്സ്റ്റൻഷൻക്ക് ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു എക്സ്റ്റൻഷൻക്ക് ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.Text" xml:space="preserve">
+    <value>പ്രക്രിയ</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഒരു പ്രക്രിയയ്ക്കായി ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഒരു പ്രക്രിയയ്ക്കായി ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Controlled Folder Access</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Controlled Folder Access-നായി ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Controlled Folder Access-നായി ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Attack Surface Reduction</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Attack Surface Reduction-നായി ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Attack Surface Reduction-നായി ഒഴിവാക്കലുകൾ ചേർക്കുക</value>
+  </data>
+  <data name="AddedExclusionMsg" xml:space="preserve">
+    <value>ഇതിനായി ഒഴിവാക്കൽ ചേർത്തു: {0}</value>
+  </data>
+  <data name="RetrievedExclusionsSuccessfullyMsg" xml:space="preserve">
+    <value>എല്ലാ Microsoft Defender ഒഴിവാക്കലുകളും വിജയകരമായി വീണ്ടെടുത്തു.</value>
+  </data>
+  <data name="AddToExclusionsText" xml:space="preserve">
+    <value>ഒഴിവാക്കലുകളിൽ ചേർക്കുക</value>
+  </data>
+  <data name="AddProcessExclusionText" xml:space="preserve">
+    <value>പ്രക്രിയ ഒഴിവാക്കൽ ചേർക്കുക</value>
+  </data>
+  <data name="AddExtensionExclusionText" xml:space="preserve">
+    <value>എക്സ്റ്റൻഷൻ ഒഴിവാക്കൽ ചേർക്കുക</value>
+  </data>
+  <data name="EnterFileExtensionText" xml:space="preserve">
+    <value>ദയവായി ഒരു ഫയൽ എക്സ്റ്റൻഷൻ നൽകുക.</value>
+  </data>
+  <data name="FileExtensionInvalidMsg" xml:space="preserve">
+    <value>ഫയൽ എക്സ്റ്റൻഷൻ അസാധുവാണ്.</value>
+  </data>
+  <data name="FileExtensionHasInvalidCharsMsg" xml:space="preserve">
+    <value>ഫയൽ എക്സ്റ്റൻഷനിൽ അസാധുവായ അക്ഷരങ്ങൾ ഉണ്ട്.</value>
+  </data>
+  <data name="EnterProcessNameText" xml:space="preserve">
+    <value>ദയവായി ഒരു പ്രക്രിയയുടെ പേര് നൽകുക.</value>
+  </data>
+  <data name="ProcessNameInvalidMsg" xml:space="preserve">
+    <value>പ്രക്രിയയുടെ പേര് അസാധുവാണ്.</value>
+  </data>
+  <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
+    <value>പ്രക്രിയയുടെ പേരിൽ അസാധുവായ അക്ഷരങ്ങൾ ഉണ്ട്.</value>
+  </data>
 </root>

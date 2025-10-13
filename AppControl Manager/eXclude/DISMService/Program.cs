@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
@@ -32,6 +31,8 @@ internal sealed class Program
 	private static BinaryWriter? _writer;
 	private static BinaryReader? _reader;
 	private static string? _currentItemName;
+
+	internal const string OnlineImage = "DISM_{53BFAE52-B167-4E2F-A258-0A37B57FF845}";
 
 	internal static void SendProgressCallback(uint current, uint total)
 	{
@@ -182,7 +183,7 @@ internal sealed class Program
 	{
 		try
 		{
-			List<DISMOutput> results = Methods.GetAllAvailableResults();
+			List<CommonCore.DISM.DISMOutput> results = Methods.GetAllAvailableResults();
 
 			// Need to send results in chunks to avoid pipe buffer overflow
 			const int chunkSize = 100; // Send 100 items at a time
@@ -207,11 +208,11 @@ internal sealed class Program
 					WriteString(results[i].Name);
 					_writer.Write((int)results[i].State);
 					_writer.Write((int)results[i].Type);
+					WriteString(results[i].Description);
 				}
 
 				// Flush after each chunk to ensure data is sent
 				_writer.Flush();
-				_pipeServer!.Flush();
 			}
 		}
 		catch (Exception ex)
@@ -231,7 +232,7 @@ internal sealed class Program
 				names[i] = ReadString();
 			}
 
-			List<DISMOutput> results = Methods.GetSpecificCapabilities(names);
+			List<CommonCore.DISM.DISMOutput> results = Methods.GetSpecificCapabilities(names);
 
 			SendResponse(Response.ResultsData);
 			_writer!.Write(1); // Only one chunk for specific results
@@ -241,15 +242,15 @@ internal sealed class Program
 			_writer.Write(0); // Chunk index 0
 			_writer.Write(results.Count); // Items in chunk
 
-			foreach (DISMOutput result in results)
+			foreach (CommonCore.DISM.DISMOutput result in results)
 			{
 				WriteString(result.Name);
 				_writer.Write((int)result.State);
 				_writer.Write((int)result.Type);
+				WriteString(result.Description);
 			}
 
 			_writer.Flush();
-			_pipeServer!.Flush();
 		}
 		catch (Exception ex)
 		{
@@ -268,7 +269,7 @@ internal sealed class Program
 				names[i] = ReadString();
 			}
 
-			List<DISMOutput> results = Methods.GetSpecificFeatures(names);
+			List<CommonCore.DISM.DISMOutput> results = Methods.GetSpecificFeatures(names);
 
 			SendResponse(Response.ResultsData);
 			_writer!.Write(1); // Only one chunk for specific results
@@ -278,15 +279,15 @@ internal sealed class Program
 			_writer.Write(0); // Chunk index 0
 			_writer.Write(results.Count); // Items in chunk
 
-			foreach (DISMOutput result in results)
+			foreach (CommonCore.DISM.DISMOutput result in results)
 			{
 				WriteString(result.Name);
 				_writer.Write((int)result.State);
 				_writer.Write((int)result.Type);
+				WriteString(result.Description);
 			}
 
 			_writer.Flush();
-			_pipeServer!.Flush();
 		}
 		catch (Exception ex)
 		{
@@ -420,7 +421,6 @@ internal sealed class Program
 	{
 		_writer!.Write((byte)response);
 		_writer.Flush();
-		_pipeServer!.Flush();
 	}
 
 	private static void SendError(string message)
@@ -428,7 +428,6 @@ internal sealed class Program
 		_writer!.Write((byte)Response.Error);
 		WriteString(message);
 		_writer.Flush();
-		_pipeServer!.Flush();
 	}
 
 	private static void SendItemProgress(string itemName, uint current, uint total)
@@ -442,7 +441,6 @@ internal sealed class Program
 				_writer.Write(current);
 				_writer.Write(total);
 				_writer.Flush();
-				_pipeServer.Flush();
 			}
 		}
 		catch
@@ -461,7 +459,6 @@ internal sealed class Program
 				WriteString(message);
 				_writer.Write((int)logType);
 				_writer.Flush();
-				_pipeServer.Flush();
 			}
 		}
 		catch

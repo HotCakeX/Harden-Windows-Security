@@ -78,7 +78,8 @@ internal static partial class ListViewHelper
 		CBOM_CNGCurves = 10008,
 		CBOM_SSLProviderCurves = 10009,
 		CBOM_TlsCipherSuites = 10010,
-		CBOM_RegisteredProviders = 10011
+		CBOM_RegisteredProviders = 10011,
+		MD_Exclusions = 10012
 	}
 
 	/// <summary>

@@ -131,6 +131,7 @@
 
             <Border BorderThickness="0"
                     Padding="5"
+                    Background="{ThemeResource AppOverlayBackgroundBrush}"
                     CornerRadius="18">
 
                 <controls:WrapPanel Orientation="Horizontal"

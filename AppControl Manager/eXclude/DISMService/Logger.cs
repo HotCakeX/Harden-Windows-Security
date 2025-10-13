@@ -15,23 +15,17 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
-
 namespace DISMService;
 
 internal static class Logger
 {
 	private static Action<string, LogTypeIntel>? _logHandler;
 
-	internal static void SetLogHandler(Action<string, LogTypeIntel> handler)
-	{
-		_logHandler = handler;
-	}
+	internal static void SetLogHandler(Action<string, LogTypeIntel> handler) =>
+			_logHandler = handler;
 
-	internal static void Write(string message, LogTypeIntel logType)
-	{
+	internal static void Write(string message, LogTypeIntel logType) =>
 		_logHandler?.Invoke(message, logType);
-	}
 }
 
 internal enum LogTypeIntel

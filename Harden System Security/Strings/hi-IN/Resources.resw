@@ -3951,4 +3951,152 @@
   <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>फ़ाइल पिकर डायलॉग खोलता है जो आपको file(s) चुनने की अनुमति देता है</value>
   </data>
+    <data name="RetrieveRecommendedOnlyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>केवल अनुशंसित प्राप्त करें</value>
+  </data>
+  <data name="RetrieveRecommendedOnlyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+      <value>केवल अनुशंसित आइटम प्राप्त करें.</value>
+  </data>
+  <data name="RetrieveRecommendedOnlyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>केवल अनुशंसित आइटम प्राप्त करें.</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>सुरक्षा उपाय</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Defender से संबंधित सुरक्षा उपायों का प्रबंधन करें.</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Defender से संबंधित सुरक्षा उपायों का प्रबंधन करें.</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.Header" xml:space="preserve">
+    <value>बहिष्करण</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Defender Antivirus, Controlled Folder Access और Attack Surface Reduction नियमों में बहिष्कृत फ़ाइलें जोड़ें, हटाएँ, देखें और प्रबंधित करें</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Defender Antivirus, Controlled Folder Access और Attack Surface Reduction नियमों में बहिष्कृत फ़ाइलें जोड़ें, हटाएँ, देखें और प्रबंधित करें</value>
+  </data>
+   <!--Microsoft Defender Exclusions ListView Headers Start-->
+  <data name="TargetHeader.Text" xml:space="preserve">
+    <value>लक्ष्य</value>
+  </data>
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>स्रोत</value>
+  </data>
+  <!--Microsoft Defender Exclusions ListView Headers End-->
+  <!--Microsoft Defender Exclusions ListView Headers Buttons Start-->
+  <data name="TargetColumnHeaderBtn.Content" xml:space="preserve">
+    <value>लक्ष्य</value>
+  </data>
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>स्रोत</value>
+  </data>
+  <!--Microsoft Defender Exclusions ListView Headers Buttons End-->
+  <data name="RetrieveAllExclusionsButton.Content" xml:space="preserve">
+    <value>सभी प्राप्त करें</value>
+  </data>
+  <data name="RetrieveAllExclusionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Defender के सभी घटकों से सभी बहिष्करण प्राप्त करें.</value>
+  </data>
+  <data name="RetrieveAllExclusionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Defender के सभी घटकों से सभी बहिष्करण प्राप्त करें.</value>
+  </data>
+  <data name="AddExclusionsButton.Content" xml:space="preserve">
+    <value>बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Defender के विभिन्न घटकों में बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Defender के विभिन्न घटकों में बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>फ़ाइल पथ</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फ़ाइल पथ के लिए बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>फ़ाइल पथ के लिए बहिष्करण जोड़ें</value>
+  </data>
+    <data name="AddExclusionsForFolderPathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>फ़ोल्डर पथ</value>
+  </data>
+  <data name="AddExclusionsForFolderPathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>फ़ोल्डर पथ के लिए बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsForFolderPathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>फ़ोल्डर पथ के लिए बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.Text" xml:space="preserve">
+    <value>एक्सटेंशन</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>एक्सटेंशन के लिए बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>एक्सटेंशन के लिए बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.Text" xml:space="preserve">
+    <value>प्रक्रिया</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>प्रक्रिया के लिए बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>प्रक्रिया के लिए बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Controlled Folder Access</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Controlled Folder Access के लिए बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Controlled Folder Access के लिए बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Attack Surface Reduction</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Attack Surface Reduction के लिए बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Attack Surface Reduction के लिए बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddedExclusionMsg" xml:space="preserve">
+    <value>इसके लिए बहिष्करण जोड़ा गया: {0}</value>
+  </data>
+  <data name="RetrievedExclusionsSuccessfullyMsg" xml:space="preserve">
+    <value>सभी Microsoft Defender बहिष्करण सफलतापूर्वक प्राप्त किए गए.</value>
+  </data>
+  <data name="AddToExclusionsText" xml:space="preserve">
+    <value>बहिष्करण में जोड़ें</value>
+  </data>
+  <data name="AddProcessExclusionText" xml:space="preserve">
+    <value>प्रक्रिया बहिष्करण जोड़ें</value>
+  </data>
+  <data name="AddExtensionExclusionText" xml:space="preserve">
+    <value>एक्सटेंशन बहिष्करण जोड़ें</value>
+  </data>
+  <data name="EnterFileExtensionText" xml:space="preserve">
+    <value>कृपया फ़ाइल एक्सटेंशन दर्ज करें.</value>
+  </data>
+  <data name="FileExtensionInvalidMsg" xml:space="preserve">
+    <value>फ़ाइल एक्सटेंशन अमान्य है.</value>
+  </data>
+  <data name="FileExtensionHasInvalidCharsMsg" xml:space="preserve">
+    <value>फ़ाइल एक्सटेंशन में अमान्य वर्ण हैं.</value>
+  </data>
+  <data name="EnterProcessNameText" xml:space="preserve">
+    <value>कृपया प्रक्रिया का नाम दर्ज करें.</value>
+  </data>
+  <data name="ProcessNameInvalidMsg" xml:space="preserve">
+    <value>प्रक्रिया का नाम अमान्य है.</value>
+  </data>
+  <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
+    <value>प्रक्रिया के नाम में अमान्य वर्ण हैं.</value>
+  </data>
 </root>

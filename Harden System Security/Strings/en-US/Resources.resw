@@ -3951,4 +3951,152 @@ Thumbprint: {3}</value>
   <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Opens the File picker dialog allowing you select file(s)</value>
   </data>
+  <data name="RetrieveRecommendedOnlyMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Retrieve Recommended Only</value>
+  </data>
+  <data name="RetrieveRecommendedOnlyMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+      <value>Only retrieve the recommended items.</value>
+  </data>
+  <data name="RetrieveRecommendedOnlyMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Only retrieve the recommended items.</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.Header" xml:space="preserve">
+    <value>Security Measures</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Manage Security Measures related to Microsoft Defender.</value>
+  </data>
+  <data name="MicrosoftDefenderSecurityMeasuresTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Manage Security Measures related to Microsoft Defender.</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.Header" xml:space="preserve">
+    <value>Exclusion</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add, Remove, View and manage excluded files in Microsoft Defender Antivirus, Controlled Folder Access and Attack Surface Reduction rules</value>
+  </data>
+  <data name="ExclusionMSDefenderTab.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add, Remove, View and manage excluded files in Microsoft Defender Antivirus, Controlled Folder Access and Attack Surface Reduction rules</value>
+  </data>
+   <!--Microsoft Defender Exclusions ListView Headers Start-->
+  <data name="TargetHeader.Text" xml:space="preserve">
+    <value>Target</value>
+  </data>
+  <data name="SourceHeader.Text" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <!--Microsoft Defender Exclusions ListView Headers End-->
+  <!--Microsoft Defender Exclusions ListView Headers Buttons Start-->
+  <data name="TargetColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Target</value>
+  </data>
+  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <!--Microsoft Defender Exclusions ListView Headers Buttons End-->
+  <data name="RetrieveAllExclusionsButton.Content" xml:space="preserve">
+    <value>Retrieve All</value>
+  </data>
+  <data name="RetrieveAllExclusionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve all exclusions from all branches of the Microsoft Defender.</value>
+  </data>
+  <data name="RetrieveAllExclusionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve all exclusions from all branches of the Microsoft Defender.</value>
+  </data>
+  <data name="AddExclusionsButton.Content" xml:space="preserve">
+    <value>Add Exclusions</value>
+  </data>
+  <data name="AddExclusionsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add exclusions to various branches of the Microsoft Defender</value>
+  </data>
+  <data name="AddExclusionsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add exclusions to various branches of the Microsoft Defender</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>File Path</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add exclusions for a file path</value>
+  </data>
+  <data name="AddExclusionsForFilePathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add exclusions for a file path</value>
+  </data>
+    <data name="AddExclusionsForFolderPathMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Folder Path</value>
+  </data>
+  <data name="AddExclusionsForFolderPathMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add exclusions for a folder path</value>
+  </data>
+  <data name="AddExclusionsForFolderPathMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add exclusions for a folder path</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Extension</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add exclusions for an extension</value>
+  </data>
+  <data name="AddExclusionsForExtensionMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add exclusions for an extension</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Process</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add exclusions for a process</value>
+  </data>
+  <data name="AddExclusionsForProcessMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add exclusions for a process</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Controlled Folder Access</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add exclusions for Controlled Folder Access</value>
+  </data>
+  <data name="AddExclusionsForCFAMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add exclusions for Controlled Folder Access</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Attack Surface Reduction</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add exclusions for Attack Surface Reduction</value>
+  </data>
+  <data name="AddExclusionsForASRMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Add exclusions for Attack Surface Reduction</value>
+  </data>
+  <data name="AddedExclusionMsg" xml:space="preserve">
+    <value>Added exclusion for: {0}</value>
+  </data>
+  <data name="RetrievedExclusionsSuccessfullyMsg" xml:space="preserve">
+    <value>Successfully retrieved all Microsoft Defender exclusions.</value>
+  </data>
+  <data name="AddToExclusionsText" xml:space="preserve">
+    <value>Add to Exclusions</value>
+  </data>
+  <data name="AddProcessExclusionText" xml:space="preserve">
+    <value>Add process exclusion</value>
+  </data>
+  <data name="AddExtensionExclusionText" xml:space="preserve">
+    <value>Add extension exclusion</value>
+  </data>
+  <data name="EnterFileExtensionText" xml:space="preserve">
+    <value>Please enter a file extension.</value>
+  </data>
+  <data name="FileExtensionInvalidMsg" xml:space="preserve">
+    <value>The file extension is invalid.</value>
+  </data>
+  <data name="FileExtensionHasInvalidCharsMsg" xml:space="preserve">
+    <value>The file extension contains invalid characters.</value>
+  </data>
+  <data name="EnterProcessNameText" xml:space="preserve">
+    <value>Please enter a process name.</value>
+  </data>
+  <data name="ProcessNameInvalidMsg" xml:space="preserve">
+    <value>The process name is invalid.</value>
+  </data>
+  <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
+    <value>The process name contains invalid characters.</value>
+  </data>
 </root>

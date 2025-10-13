@@ -130,7 +130,7 @@
     <value>ക്ലൗഡ് ബ്ലോക്ക് ലെവൽ പരമാവധി മൂല്യത്തിലേക്ക് സജ്ജമാക്കുക: സീറോ ടോളറൻസ്.</value>
 </data>
 <data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
-    <value>വിപുലീകരിച്ച ക്ലൗഡ് പരിശോധന സമയപരിധി പരമാവധി മൂല്യത്തിലേക്ക് സജ്ജമാക്കി."</value>
+    <value>വിപുലീകരിച്ച ക്ലൗഡ് പരിശോധന സമയപരിധി പരമാവധി മൂല്യത്തിലേക്ക് സജ്ജമാക്കി.</value>
 </data>
 <data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
     <value>ഫയൽ ഹാഷ് കണക്കുകൂട്ടൽ പ്രവർത്തനക്ഷമമാക്കുക.</value>

@@ -130,7 +130,7 @@
     <value>הגדרת רמת חסימת ענן לערך המקסימלי: אפס סובלנות.</value>
 </data>
 <data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
-    <value>זמן קצוב מורחב לבדיקת ענן הוגדר לערך המקסימלי."</value>
+    <value>זמן קצוב מורחב לבדיקת ענן הוגדר לערך המקסימלי.</value>
 </data>
 <data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
     <value>הפעלת חישוב גיבובי קבצים.</value>

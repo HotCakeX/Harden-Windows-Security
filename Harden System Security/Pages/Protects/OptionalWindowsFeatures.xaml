@@ -24,7 +24,7 @@
         <Grid.Resources>
 
             <!-- Defines a single DISMOutputEntry that is displayed in the ListView -->
-            <DataTemplate x:Key="DISMOutputListViewTemplate"                                      
+            <DataTemplate x:Key="DISMOutputListViewTemplate"
                           x:DataType="viewModels:DISMOutputEntry">
                 <Border BorderThickness="2"
                         BorderBrush="{x:Bind BorderBrush, Mode=OneWay}"
@@ -72,7 +72,7 @@
                         <!-- State -->
                         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10" Spacing="10">
 
-                            <TextBlock Text="State:"			                           	                          
+                            <TextBlock Text="State:"
 			                           Style="{ThemeResource BodyTextBlockStyle}"/>
 
                             <!-- State pill -->
@@ -386,7 +386,7 @@
                         <GroupStyle.HeaderTemplate>
                             <DataTemplate x:DataType="viewModels:GroupInfoListForDISMItems">
                                 <Border AutomationProperties.AccessibilityView="Raw">
-                                    <TextBlock Text="{x:Bind Key}"                                               
+                                    <TextBlock Text="{x:Bind Key}"
                                                AutomationProperties.AccessibilityView="Raw"/>
                                 </Border>
                             </DataTemplate>

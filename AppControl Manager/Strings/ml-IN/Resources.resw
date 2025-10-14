@@ -4807,9 +4807,6 @@
 <data name="AppStartupMessage" xml:space="preserve">
   <value>ആപ്പ് സ്റ്റാർട്ടപ്പ്, .NET റൺടൈം പതിപ്പ്: {0}</value>
 </data>
-<data name="AnotherInstanceRunningMessage" xml:space="preserve">
-  <value>AppControl Manager-ന്റെ മറ്റൊരു ഇൻസ്റ്റൻസ് പ്രവർത്തിക്കുന്നുണ്ട്. ഇതൊരു വിവരദായക ലോഗ് മാത്രമാണ്.</value>
-</data>
 <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>ഫയൽ ആക്ടിവേഷൻ കണ്ടെത്തി</value>
 </data>

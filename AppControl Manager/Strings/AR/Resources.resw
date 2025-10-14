@@ -4807,9 +4807,6 @@
 <data name="AppStartupMessage" xml:space="preserve">
   <value>بدء تشغيل التطبيق، إصدار وقت تشغيل .NET: {0}</value>
 </data>
-<data name="AnotherInstanceRunningMessage" xml:space="preserve">
-  <value>يوجد مثيل آخر من مدير AppControl قيد التشغيل. هذا مجرد سجل معلوماتي.</value>
-</data>
 <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>تم الكشف عن تنشيط الملف</value>
 </data>

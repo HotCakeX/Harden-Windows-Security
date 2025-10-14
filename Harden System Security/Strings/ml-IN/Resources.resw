@@ -109,10 +109,7 @@
   <data name="AppStartupMessage" xml:space="preserve">
     <value>ആപ്ലിക്കേഷൻ സ്റ്റാർട്ടപ്പ്, .NET റൺടൈം പതിപ്പ്: {0}</value>
   </data>
-  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
-    <value>Harden System Security-യുടെ മറ്റൊരു ഇൻസ്റ്റൻസ് പ്രവർത്തിക്കുന്നുണ്ട്. ഇത് ഒരു വിവരപരമായ ലോഗ് മാത്രമാണ്.</value>
-</data>
-<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>ഫയൽ ആക്ടിവേഷൻ കണ്ടെത്തി</value>
 </data>
 <data name="FileActivationNoObjectsMessage" xml:space="preserve">
@@ -902,16 +899,7 @@
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
     <value>നിങ്ങൾ തിരഞ്ഞെടുത്ത പോളിസി ഫയലിന്റെ പാത്ത് അല്ലെങ്കിൽ പാത്തുകൾ കാണുക.</value>
   </data>
-    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
-    <value>ആകെ നയങ്ങൾ: 0</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>നയങ്ങളുടെ ആകെ എണ്ണം</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>നയങ്ങളുടെ ആകെ എണ്ണം</value>
-  </data>
-  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>ഡാറ്റയിൽ തിരയുക...</value>
   </data>
   <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -3523,9 +3511,6 @@
   <data name="EnterARecoveryPassword.Text" xml:space="preserve">
     <value>റിക്കവറി പാസ്‌വേഡ് നൽകുക</value>
   </data>
-  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>ആകെ സർട്ടിഫിക്കറ്റുകൾ</value>
-  </data>
   <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
     <value>സർട്ടിഫിക്കറ്റ് ഇല്ലാതാക്കുക</value>
   </data>
@@ -4098,5 +4083,13 @@
   </data>
   <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
     <value>പ്രക്രിയയുടെ പേരിൽ അസാധുവായ അക്ഷരങ്ങൾ ഉണ്ട്.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Microsoft സുരക്ഷാ ബേസ്ലൈനിനുള്ള ഓവർറൈഡുകൾ</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Microsoft സുരക്ഷാ ബേസ്ലൈനുകൾക്കായി ശുപാർശ ചെയ്ത ഓവർറൈഡുകൾ പ്രയോഗിക്കുക, അവ വഴി പ്രവർത്തനരഹിതമാക്കിയ ചില പ്രധാന പ്രവർത്തനങ്ങൾ പുനഃസ്ഥാപിക്കാൻ.</value>
   </data>
 </root>

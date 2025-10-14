@@ -179,13 +179,47 @@ The Harden System Security fully supports the following languages.
 
 ## Windows Service
 
-The Harden System Security app utilizes a Windows Service that is responsible for performing tasks that require SYSTEM privilege such as Intune configurations detection during verification jobs so that even when you applied the security measures via Intune, they will be detected and verifiable by the app. The service is very compact (2MBs only), highly optimized and runs only when needed. It does not consume any resources when idle. The service is designed to automatically shut itself down when idle for 120 seconds. 
+The Harden System Security app utilizes a Windows Service that is responsible for performing tasks that require SYSTEM privilege such as Intune configurations detection during verification jobs so that even when you applied the security measures via Intune, they will be detected and verifiable by the app. The service is very compact (2MBs only), highly optimized and runs only when needed. It does not consume any resources when idle. The service is designed to automatically shut itself down when idle for 120 seconds.
 
 It can only be used by elevated Administrators and SYSTEM account. It is automatically installed when the Harden System Security app is installed and removed when the Harden System Security app is uninstalled, not leaving any leftovers on the system. It has 0 dependency other than the .NET SDK itself and its executable is inside the app's package.
 
 The service source code [can be found here](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager/eXclude/QuantumRelayHSS). The service name is `QuantumRelayHSS` and it is designed to write verbose logs in the Windows Event log if you add a System environment variable to your OS named `QUANTUMRELAYHSS_DEBUG` with a value of `1` or `true`.
 
 The service supports Arbitrary Code Guard exploit protection as well as many others, all of which can be applied to it in the [Microsoft Defender category](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender).
+
+<br>
+
+## CommandLine Interface (CLI) Support
+
+The Harden System Security app can be launched via command line for advanced users and automation scenarios. Below are the supported commands and their usage:
+
+### Via Execution Alias
+
+* #### Open a Group Policy (.POL) file in the Group Policy Editor
+
+```
+HSS.exe --file="C:\Path\Policy.pol"
+```
+
+<br>
+
+### Via File Activation (Supported File Types Only)
+
+* #### Opens a POL file in the Group Policy Editor, same as double-clicking/tapping on the file in File Explorer.
+
+```powershell
+Invoke-Item -Path "C:\Path\Policy.pol"
+```
+
+<br>
+
+### Via AUMID (Application User Model ID) Activation
+
+* #### Simply launches Harden System Security
+
+```
+explorer.exe shell:AppsFolder\VioletHansen.HardenSystemSecurity_ea7andspwdn10!App
+```
 
 <br>
 
@@ -322,11 +356,15 @@ function Build_HSS {
         # https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-build-tools
         # https://learn.microsoft.com/visualstudio/install/use-command-line-parameters-to-install-visual-studio
         # https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-community
-        winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
+        # winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
+
+        # Using this until version 18 build tools are added to Winget
+        Invoke-RestMethod -Uri "https://aka.ms/vs/18/insiders/vs_BuildTools.exe" -OutFile "vs_BuildTools.exe"
+        .\vs_BuildTools.exe --force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64
 
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install Visual Studio Build Tools') }
 
-        winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+        # winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
     }
 
     # Refresh the environment variables so the current session detects the new dotnet installation
@@ -845,7 +883,6 @@ function Build_HSS {
 # Build_HSS -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Upload $true
 # Local - ARM64 + X64
 Build_HSS -DownloadRepo $true -InstallDeps $true -Workflow $false -UpdateWorkLoads $false -Upload $false
-
 
 ```
 

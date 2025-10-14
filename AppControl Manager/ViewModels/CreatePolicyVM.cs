@@ -772,10 +772,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to prepare the RMM Blocking policy
 	/// </summary>
-	internal async void RMMBlockingPolicyCreateButton_Click()
-	{
-		await RMMBlockingPolicyCreateButton_Private();
-	}
+	internal async void RMMBlockingPolicyCreateButton_Click() => await RMMBlockingPolicyCreateButton_Private();
+
 
 	private async Task RMMBlockingPolicyCreateButton_Private()
 	{

@@ -113,7 +113,6 @@ This section provides the justification and objective of this GitHub repository 
 This repository currently has 3 ***main*** products. <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif" alt="head shaking girl">
 
 1. [**The Harden System Security App**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security)
-2. [The Harden Windows Security module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) <- Will be deprecated soon in favor of the new Harden System Security App.
 2. [**The AppControl Manager**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
 
 <br>

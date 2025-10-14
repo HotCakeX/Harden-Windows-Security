@@ -26,13 +26,13 @@ namespace AppControlManager.Others;
 internal static unsafe class Relaunch
 {
 	/// <summary>
-	/// Relaunches the application with Administrator privileges using Rust implementation
+	/// Relaunches the application with Administrator privileges using Rust implementation.
 	/// </summary>
 	/// <param name="aumid">Application User Model ID of the app to relaunch</param>
 	/// <param name="arguments">Optional command line arguments for the app</param>
 	/// <returns>True if elevation was successful and user accepted the UAC prompt</returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	private static bool RelaunchAppElevated(string aumid, string? arguments = null)
+	internal static bool RelaunchAppElevated(string aumid, string? arguments = null)
 	{
 		uint processId = 0;
 		int hr = NativeMethods.relaunch_app_elevated(aumid, arguments, &processId);
@@ -64,10 +64,5 @@ internal static unsafe class Relaunch
 		}
 
 		return true;
-	}
-
-	internal static bool Action()
-	{
-		return RelaunchAppElevated(App.AUMID);
 	}
 }

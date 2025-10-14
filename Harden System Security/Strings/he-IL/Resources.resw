@@ -109,10 +109,7 @@
   <data name="AppStartupMessage" xml:space="preserve">
     <value>הפעלת אפליקציה, גרסת סביבת הריצה .NET: {0}</value>
   </data>
-  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
-    <value>יש מופע נוסף של Harden System Security שפועל. זהו רק יומן רישום אינפורמטיבי.</value>
-</data>
-<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>זוהתה הפעלה באמצעות קובץ</value>
 </data>
 <data name="FileActivationNoObjectsMessage" xml:space="preserve">
@@ -902,16 +899,7 @@
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
     <value>צפה בנתיב(י) קובץ המדיניות שבחרת.</value>
   </data>
-    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
-    <value>סך כל המדיניות: 0</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>המספר הכולל של המדיניות</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>המספר הכולל של המדיניות</value>
-  </data>
-  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>חפש בנתונים...</value>
   </data>
   <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -3523,9 +3511,6 @@
   <data name="EnterARecoveryPassword.Text" xml:space="preserve">
     <value>הזן סיסמת שחזור</value>
   </data>
-  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>סה״כ תעודות</value>
-  </data>
   <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
     <value>מחק תעודה</value>
   </data>
@@ -4098,5 +4083,13 @@
   </data>
   <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
     <value>שם התהליך מכיל תווים לא תקינים.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>עקיפות עבור קו הבסיס לאבטחה של Microsoft</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>החילו את העקיפות המומלצות עבור קווי הבסיס לאבטחה של Microsoft כדי לשחזר חלק מהיכולות החשובות שנוטרלו על-ידם.</value>
   </data>
 </root>

@@ -1,17 +1,9 @@
-* AppControl Manager no longer requires SignTool.exe to sign the Code Integrity policies, the required logic has been implemented in it.
+🩵 Updated major dependencies, including the .NET SDK, Windows App SDK, C++ platform tools and Rust toolchain, to the latest versions released just hours ago. These releases contain important security and reliability updates. AppControl Manager proactively stays current so users stay protected.
 
-* Completely removed SignTool.exe related elements from the UI such as areas where user was asked to provide its path or ability to download it from the NuGet repository.
+🩵 Improved the visual design of the policy-creation mode selector on the Create Supplemental Policy and Create Deny Policy pages in the AppControl Manager.
 
-* This makes AppControl Manager easier to use in completely offline environments.
+🩵 Updated the GitHub wiki documentation of the AppControl Manager and added details regarding the CommandLine Interface (CLI) support and usage.
 
-* Disabled Runtime marshaling, improving performance and code quality.
+🩵 Fixed an issue that was preventing specific type of hardware from running one of the components of the AppControl Manager: https://github.com/HotCakeX/Harden-Windows-Security/issues/886
 
-* Added a new button to the sidebar that allows you to optimize memory usage of the app and try to reduce it. AppControl Manager is already highly optimized but this gives users more control over its memory usage.
-
-* In Scan results, for the Signing Scenario column, the status is now displayed as "UserMode" or "KernelMode". Previously, they would show up as 0 and 1, indicating Kernel Mode and User mode respectively. This change improves readability and user experience.
-
-* Updated dependencies to the latest versions.
-
-* The "View File Certificates" page now displays a lot more information about each signer and has the ability to export the results to JSON for backup.
-
-* The "System Information" page now lets you easily open the selected deployed policy in Policy Editor where you can view all of its details, modify it and save it to a file. This is very useful to know what rules are included in the deployed policies. It also supports System policies that come by default with the OS.
+🩵 Added CommandLine support for deploying the RMM (Remote Monitoring and Management) software blocking policy in Audit and Enforce mode. Please see the Wiki documentation for usage guide: https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager

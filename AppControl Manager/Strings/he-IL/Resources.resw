@@ -4808,9 +4808,6 @@
 <data name="AppStartupMessage" xml:space="preserve">
   <value>אתחול יישום, גרסת זמן ריצה .NET: {0}</value>
 </data>
-<data name="AnotherInstanceRunningMessage" xml:space="preserve">
-  <value>קיימת מופע נוסף של מנהל AppControl פועל. זהו יומן מידע בלבד.</value>
-</data>
 <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>זוהתה הפעלת קובץ</value>
 </data>

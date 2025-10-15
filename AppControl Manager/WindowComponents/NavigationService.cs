@@ -253,7 +253,7 @@ internal sealed class NavigationService
 
 					*/
 
-					if (Relaunch.Action())
+					if (Relaunch.RelaunchAppElevated(App.AUMID))
 					{
 						Application.Current.Exit();
 					}

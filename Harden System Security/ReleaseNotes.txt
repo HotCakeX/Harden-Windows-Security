@@ -1,19 +1,5 @@
-🩵 Improved the visual design for the app's Protect page.
+🩵 Updated major dependencies, including the .NET SDK, Windows App SDK, C++ platform tools and Rust toolchain, to the latest versions released just hours ago. These releases contain important security and reliability updates. Harden System Security proactively stays current so users stay protected.
 
-🩵 Optional Windows Features improvements:
+🩵 Added the "Overrides for Microsoft Security Baselines" category to the Protect page so that you can easily select it to apply when applying the Microsoft Security Baselines.
 
-   ❤️ ListView stays scrollable while background activities run.
-
-   ❤️ Verify / Apply / Remove buttons disable during other activities; the button that started the activity remains enabled so you can cancel it.
-
-   ❤️ ListView split into Recommended (the wiki-documented features/capabilities the app manages) and Others.
-
-   ❤️ DISM component is now compatible with Arbitrary Code Guard (ACG) and many DISM operations (especially listing features/capabilities) are faster.
-
-   ❤️ New Retrieve Recommended Only button returns only the features the app verifies/applies/removes (much faster than Retrieve All).
-
-   ❤️ The ListView now displays feature descriptions (and recommended capability descriptions) for easier understanding.
-
-   ❤️ Removing optional features now also deletes the feature payload from disk to free space (reinstall requires download from Windows Update).
-
-🩵 Microsoft Defender — Exclusion: New unified Exclusion section that aggregates File/Folder, Process, Extension, Controlled Folder Access, and Attack Surface Reduction rules (ASR) exclusions. You can retrieve, filter, sort, search, add, and remove exclusions — added in response to a community feature request.
+🩵 Updated the GitHub wiki documentation of the Harden System Security app and added details regarding the CommandLine Interface (CLI) support and usage.

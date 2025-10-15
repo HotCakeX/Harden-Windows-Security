@@ -109,10 +109,7 @@
   <data name="AppStartupMessage" xml:space="preserve">
     <value>Uruchomienie aplikacji, wersja środowiska .NET Runtime: {0}</value>
   </data>
-  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
-    <value>Inna instancja Harden System Security jest uruchomiona. To tylko log informacyjny.</value>
-</data>
-<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>Wykryto aktywację pliku</value>
 </data>
 <data name="FileActivationNoObjectsMessage" xml:space="preserve">
@@ -902,16 +899,7 @@
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
     <value>Wyświetl ścieżkę lub ścieżki wybranego pliku zasad.</value>
   </data>
-    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
-    <value>Całkowita liczba zasad: 0</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Całkowita liczba zasad</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Całkowita liczba zasad</value>
-  </data>
-  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>Przeszukaj dane...</value>
   </data>
   <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -3523,9 +3511,6 @@ Odcisk Palca: {3}</value>
   <data name="EnterARecoveryPassword.Text" xml:space="preserve">
     <value>Wprowadź hasło odzyskiwania</value>
   </data>
-  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>Łączna liczba certyfikatów</value>
-  </data>
   <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
     <value>Usuń certyfikat</value>
   </data>
@@ -4098,5 +4083,13 @@ Odcisk Palca: {3}</value>
   </data>
   <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
     <value>Nazwa procesu zawiera niedozwolone znaki.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Nadpisania dla bazowego poziomu zabezpieczeń Microsoft</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Zastosuj zalecane nadpisania dla bazowych poziomów zabezpieczeń Microsoft, aby przywrócić część istotnych funkcji, które zostały przez nie wyłączone.</value>
   </data>
 </root>

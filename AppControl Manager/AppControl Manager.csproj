@@ -12,10 +12,14 @@
 		<!-- https://learn.microsoft.com/en-us/microsoft-edge/webview2/how-to/static -->
 		<WebView2LoaderPreference>Static</WebView2LoaderPreference>
 
-		<!-- Defined by CsWinRT https://github.com/microsoft/CsWinRT
+		<!-- CsWinRT has certain requirements for it: https://github.com/microsoft/CsWinRT
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
 
         https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
+
+        Note about CsWinRT: It is bundled by default with WinAppSDK but it's usually older version there, it's used to generate the WinUI C# projections.
+        By installing it ourselves as a NuGet package, we guarantee we use the latest and most up to date version, especailly the perview versions.
+        If we don't install it as NuGet package ourselves, WinAppSDK's CsWinRT will be used during compilation.
         -->
 		<WindowsSdkPackageVersion>10.0.26100.78</WindowsSdkPackageVersion>
 
@@ -57,7 +61,7 @@
 		<AssemblyName>AppControlManager</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>2.0.45.0</FileVersion>
+		<FileVersion>2.0.46.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
 		<StartupObject>AppControlManager.Program</StartupObject>
@@ -261,10 +265,10 @@
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.77.1" />
 		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.77.1" />
-		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.250720.1" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250916003" />
-		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0-rc.1.25451.107" />
-		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0-rc.1.25451.107" />
+        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.250720.1" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251003001" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0-rc.2.25502.107" />
+		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0-rc.2.25502.107" />
 
 		<!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
 		<PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250402" />
@@ -273,17 +277,18 @@
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.14.0" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
-		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
-		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.1.25451.107" />
+		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.2.25502.107" />
+		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.2.25502.107" />
 		<PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.4" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="1.8.38" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="1.8.250831001" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="1.8.25090401" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.250906002" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.8.250906004" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.250916003" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.251003001" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="1.8.250904007" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.250906003" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2095" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.20250829.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

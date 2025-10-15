@@ -4807,9 +4807,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="AppStartupMessage" xml:space="preserve">
     <value>Uruchomienie aplikacji, wersja środowiska .NET: {0}</value>
   </data>
-  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
-    <value>Działa inna instancja AppControl Manager. To jest tylko log informacyjny.</value>
-  </data>
   <data name="FileActivationDetectedMessage" xml:space="preserve">
     <value>Wykryto aktywację plikiem</value>
   </data>

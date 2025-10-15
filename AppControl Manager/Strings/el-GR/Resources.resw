@@ -4807,9 +4807,6 @@
 <data name="AppStartupMessage" xml:space="preserve">
   <value>Εκκίνηση εφαρμογής, έκδοση χρόνου εκτέλεσης .NET: {0}</value>
 </data>
-<data name="AnotherInstanceRunningMessage" xml:space="preserve">
-  <value>Εκτελείται άλλη παρουσία του AppControl Manager. Αυτό είναι απλώς ένα ενημερωτικό αρχείο καταγραφής.</value>
-</data>
 <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>Εντοπίστηκε ενεργοποίηση αρχείου</value>
 </data>

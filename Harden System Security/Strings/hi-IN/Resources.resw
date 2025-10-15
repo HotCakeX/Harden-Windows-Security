@@ -109,10 +109,7 @@
   <data name="AppStartupMessage" xml:space="preserve">
     <value>एप्लिकेशन स्टार्टअप, .NET रनटाइम संस्करण: {0}</value>
   </data>
-  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
-    <value>Harden System Security का दूसरा इंस्टेंस चल रहा है। यह केवल एक सूचनात्मक लॉग है।</value>
-</data>
-<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>फ़ाइल सक्रियण का पता चला</value>
 </data>
 <data name="FileActivationNoObjectsMessage" xml:space="preserve">
@@ -902,16 +899,7 @@
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
     <value>आपके द्वारा चुनी गई नीति फ़ाइल का पथ या पथ देखें।</value>
   </data>
-    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
-    <value>कुल नीतियां: 0</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>नीतियों की कुल संख्या</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>नीतियों की कुल संख्या</value>
-  </data>
-  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>डेटा में खोजें...</value>
   </data>
   <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -3523,9 +3511,6 @@
   <data name="EnterARecoveryPassword.Text" xml:space="preserve">
     <value>रिकवरी पासवर्ड दर्ज करें</value>
   </data>
-  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>कुल प्रमाणपत्र</value>
-  </data>
   <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
     <value>प्रमाणपत्र हटाएँ</value>
   </data>
@@ -4098,5 +4083,13 @@
   </data>
   <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
     <value>प्रक्रिया के नाम में अमान्य वर्ण हैं.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Microsoft सुरक्षा बेसलाइन के लिए ओवरराइड्स</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Microsoft सुरक्षा बेसलाइनों के लिए अनुशंसित ओवरराइड्स लागू करें ताकि उनके द्वारा निष्क्रिय की गई कुछ महत्वपूर्ण कार्यक्षमताएँ बहाल की जा सकें.</value>
   </data>
 </root>

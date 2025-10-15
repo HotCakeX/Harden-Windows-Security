@@ -15,37 +15,27 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using AppControlManager.Taskbar;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.ApplicationModel.WindowsAppRuntime;
-using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.Globalization;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
 using Windows.Graphics;
-using Windows.Storage;
 using Microsoft.UI.Dispatching;
 
 // To learn more about WinUI abd the WinUI project structure see: http://aka.ms/winui-project-info
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/windows/apps/windows-app-sdk/applifecycle/applifecycle
 
 #if HARDEN_SYSTEM_SECURITY
-using HardenSystemSecurity.Others;
 using HardenSystemSecurity.ViewModels;
-using HardenSystemSecurity.WindowComponents;
 namespace HardenSystemSecurity;
 #endif
 #if APP_CONTROL_MANAGER
-using AppControlManager.WindowComponents;
 using AppControlManager.ViewModels;
 namespace AppControlManager;
 #endif
@@ -104,27 +94,16 @@ public partial class App : Application
 	/// </summary>
 	internal static DispatcherQueue AppDispatcher { get; private set; } = null!;
 
-	// Semaphore to ensure only one error dialog is shown at a time
-	// Exceptions will stack up and wait in line to be shown to the user
-	private static readonly SemaphoreSlim _dialogSemaphore = new(1, 1);
-
 	/// <summary>
-	/// Get the current app's version
+	/// Semaphore to ensure only one error dialog is shown at a time.
+	/// Exceptions will stack up and wait in line to be shown to the user.
 	/// </summary>
-	private static readonly PackageVersion packageVersion = Package.Current.Id.Version;
+	private static readonly SemaphoreSlim _dialogSemaphore = new(1, 1);
 
 	/// <summary>
 	/// Convert it to a normal Version object
 	/// </summary>
-	internal static readonly Version currentAppVersion = new(packageVersion.Major, packageVersion.Minor, packageVersion.Build, packageVersion.Revision);
-
-	/// <summary>
-	/// Check if another instance of AppControl Manager is running
-	/// </summary>
-	private static bool IsUniqueAppInstance;
-
-	private static Mutex? _mutex;
-	private const string MutexName = $"{AppName}Running";
+	internal static readonly Version currentAppVersion = new(Package.Current.Id.Version.Major, Package.Current.Id.Version.Minor, Package.Current.Id.Version.Build, Package.Current.Id.Version.Revision);
 
 #if APP_CONTROL_MANAGER
 	/// <summary>
@@ -223,373 +202,6 @@ public partial class App : Application
 		await ShowErrorDialogAsync(e.Exception);
 	}
 
-	/// <summary>
-	/// Invoked when the application is launched.
-	/// </summary>
-	/// <param name="args">Details about the launch request and process.</param>
-	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-
-	{
-		// Register the Jump List tasks
-		/*
-		_ = Task.Run(async () =>
-		{
-			try
-			{
-				await Taskbar.JumpListMgr.RegisterJumpListTasksAsync();
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-			}
-		});
-		*/
-
-		// About single instancing: https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#single-instanced-apps
-
-		// Creates a named Mutex with the specified unique name
-		// The first parameter specifies that this instance initially owns the Mutex if created successfully
-		// The third parameter indicates whether this application instance is the first/unique one
-		// If "IsUniqueAppInstance" is true, it means no other instance of the app is running; otherwise, another instance exists and it will be false
-		_mutex = new Mutex(true, MutexName, out IsUniqueAppInstance);
-
-		if (!IsUniqueAppInstance)
-		{
-			Logger.Write(GlobalVars.GetStr("AnotherInstanceRunningMessage"));
-		}
-
-		// Determines whether the session must prompt for UAC to elevate or not
-		bool requireAdminPrivilege = false;
-
-		try
-		{
-
-			// https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#file-type-association
-			AppActivationArguments activatedEventArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
-
-			if (activatedEventArgs.Kind is ExtendedActivationKind.File)
-			{
-				Logger.Write(GlobalVars.GetStr("FileActivationDetectedMessage"));
-
-				IFileActivatedEventArgs? fileActivatedArgs = activatedEventArgs.Data as IFileActivatedEventArgs;
-
-				if (fileActivatedArgs is not null)
-				{
-					IReadOnlyList<IStorageItem>? incomingStorageItems = fileActivatedArgs.Files;
-
-					if (incomingStorageItems is not null && incomingStorageItems.Count > 0)
-					{
-						foreach (IStorageItem item in incomingStorageItems)
-						{
-							if (item.Path is not null && File.Exists(item.Path))
-							{
-								// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-								requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(item.Path);
-
-								Settings.FileActivatedLaunchArg = item.Path;
-
-								// We can only process one XML file for now
-								break;
-							}
-						}
-					}
-					else
-					{
-						Logger.Write(GlobalVars.GetStr("FileActivationNoObjectsMessage"));
-					}
-				}
-				else
-				{
-					Logger.Write(GlobalVars.GetStr("FileActivationNoArgumentsMessage"));
-				}
-			}
-			else if (activatedEventArgs.Kind is ExtendedActivationKind.Protocol)
-			{
-				ProtocolActivatedEventArgs? eventArgs = activatedEventArgs.Data as ProtocolActivatedEventArgs;
-
-				string? protocolName = eventArgs?.Uri?.OriginalString;
-
-				if (protocolName is not null)
-				{
-
-					Logger.Write($"Protocol Activation Detected: {protocolName}");
-
-
-					Match match = ProtocolDetailsExtraction.Match(protocolName);
-
-					string? action = null;
-					string? filePath = null;
-
-					if (match.Success)
-					{
-						action = match.Groups[1].Value;
-						filePath = match.Groups[2].Value;
-
-						Logger.Write($"Action: {action}");
-						Logger.Write($"File Path: {filePath}");
-					}
-
-					if (filePath is not null && action is not null)
-					{
-
-						Settings.LaunchActivationFilePath = filePath;
-						Settings.LaunchActivationAction = action;
-					}
-				}
-			}
-			else
-			{
-				Logger.Write($"ExtendedActivationKind: {activatedEventArgs.Kind}");
-
-				/*
-				Windows.ApplicationModel.Activation.LaunchActivatedEventArgs launchArgs = (Windows.ApplicationModel.Activation.LaunchActivatedEventArgs)activatedEventArgs.Data;
-				string passed = launchArgs.Arguments;
-
-				Logger.Write($"Arguments: {passed}");
-				*/
-
-				string[] possibleArgs = Environment.GetCommandLineArgs();
-
-				// Look for our two keys
-				string? actionArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--action=", StringComparison.OrdinalIgnoreCase));
-				string? fileArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
-
-				if (actionArg is not null && fileArg is not null)
-				{
-					// Extract values past the '=' and trim any quotes
-					string action = actionArg["--action=".Length..];
-
-					string filePath = fileArg["--file=".Length..].Trim('"');
-
-					Logger.Write($"Parsed Action: {action}");
-					Logger.Write($"Parsed File: {filePath}");
-
-					// Save file path and action for later navigation
-					if (!string.IsNullOrWhiteSpace(filePath) && !string.IsNullOrWhiteSpace(action))
-					{
-						Settings.LaunchActivationFilePath = filePath;
-						Settings.LaunchActivationAction = action;
-
-						// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-						requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(filePath);
-					}
-				}
-			}
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
-
-		// If the current session is not elevated and user configured the app to ask for elevation on startup
-		// if (!IsElevated && _localSettings.Values.TryGetValue("PromptForElevationOnStartup", out object? value) && value is bool typedValue && typedValue)
-		// Also prompt for elevation whether or not prompt for elevation setting is on when user selects a file to open from file explorer that requires elevated permissions
-		if (!IsElevated && Settings.PromptForElevationOnStartup || !IsElevated && requireAdminPrivilege)
-		{
-			/*
-			ProcessStartInfo processInfo = new()
-			{
-				FileName = Environment.ProcessPath,
-				Verb = "runas",
-				UseShellExecute = true
-			};
-
-			Process? processStartResult = null;
-
-			try
-			{
-				processStartResult = Process.Start(processInfo);
-			}
-
-			// Error code 1223: The operation was canceled by the user.
-			catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
-			{
-				// Do nothing if the user cancels the UAC prompt.
-				Logger.Write(GlobalVars.GetStr("UserCanceledUACMessage"));
-			}
-			catch (System.ComponentModel.Win32Exception ex)
-			{
-				Logger.Write(ex);
-				Logger.Write($"Win32Exception.NativeErrorCode: {ex.NativeErrorCode}");
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-			}
-			finally
-			{
-				processStartResult?.Dispose();
-			}
-
-			// Explicitly exit the current instance only after launching the elevated instance
-			if (processStartResult is not null)
-			{
-				// Current.Exit(); doesn't work here
-
-				// Exit the process
-				Environment.Exit(0);
-			}
-			*/
-
-			if (Relaunch.Action())
-			{
-				// Exit the process
-				Environment.Exit(0);
-			}
-			else if (requireAdminPrivilege)
-			{
-				Logger.Write(GlobalVars.GetStr("ElevationRequiredButDeniedMessage"));
-
-				// Exit the process anyway since admin privileges were required but user didn't successfully elevate
-				Environment.Exit(0);
-			}
-			else
-			{
-				Logger.Write(GlobalVars.GetStr("ElevationDeniedMessage"));
-			}
-		}
-
-		m_window = new MainWindow();
-
-		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase) ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
-
-		NavigationService.RestoreWindowSize(m_window.AppWindow); // Restore window size on startup
-		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
-		m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
-		m_window.Activate();
-
-		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
-		Badge.ClearBadge();
-
-		#region Initial navigation and file activation processing
-
-		if (!string.IsNullOrWhiteSpace(Settings.FileActivatedLaunchArg))
-		{
-
-			Logger.Write(string.Format(GlobalVars.GetStr("FileActivationLaunchMessage"), Settings.FileActivatedLaunchArg));
-
-#if APP_CONTROL_MANAGER
-			try
-			{
-				await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(Settings.FileActivatedLaunchArg);
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(string.Format(GlobalVars.GetStr("PolicyEditorLaunchErrorMessage"), ex.Message));
-
-				// Continue doing the normal navigation if there was a problem
-				InitialNav();
-			}
-			finally
-			{
-				// Clear the file activated launch args after it's been used
-				Settings.FileActivatedLaunchArg = string.Empty;
-			}
-		}
-		// If there is/was activation through context menu
-		else if (!string.IsNullOrWhiteSpace(Settings.LaunchActivationAction))
-		{
-			try
-			{
-				if (Enum.TryParse(Settings.LaunchActivationAction, true, out ViewModelBase.LaunchProtocolActions parsedAction))
-				{
-					// TODO: Remove this suppression after implementing policy deployment through CLI properly.
-#pragma warning disable IDE0010
-					switch (parsedAction)
-					{
-						case ViewModelBase.LaunchProtocolActions.PolicyEditor:
-							{
-								await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(Settings.LaunchActivationFilePath);
-								break;
-							}
-						case ViewModelBase.LaunchProtocolActions.FileSignature:
-							{
-								ViewFileCertificatesVM vm = ViewModelProvider.ViewFileCertificatesVM;
-
-								await vm.OpenInViewFileCertificatesVM(Settings.LaunchActivationFilePath);
-								break;
-							}
-						case ViewModelBase.LaunchProtocolActions.FileHashes:
-							{
-								GetCIHashesVM vm = ViewModelProvider.GetCIHashesVM;
-
-								await vm.OpenInGetCIHashes(Settings.LaunchActivationFilePath);
-								break;
-							}
-						default:
-							{
-								InitialNav();
-								break;
-							}
-					}
-				}
-				else
-				{
-					InitialNav();
-				}
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-
-				// Continue doing the normal navigation if there was a problem
-				InitialNav();
-			}
-			finally
-			{
-				// Clear the launch activation args after they've been used
-				Settings.LaunchActivationFilePath = string.Empty;
-				Settings.LaunchActivationAction = string.Empty;
-			}
-#endif
-
-
-#if HARDEN_SYSTEM_SECURITY
-
-			try
-			{
-				await ViewModelProvider.GroupPolicyEditorVM.OpenInGroupPolicyEditor(Settings.FileActivatedLaunchArg);
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-
-				// Continue doing the normal navigation if there was a problem
-				InitialNav();
-			}
-			finally
-			{
-				// Clear the file activated launch args after it's been used
-				Settings.FileActivatedLaunchArg = string.Empty;
-			}
-
-#endif
-
-
-		}
-		else
-		{
-			InitialNav();
-		}
-
-		#endregion
-
-		// If the user has enabled animated rainbow border for the app window, start it
-		if (Settings.IsAnimatedRainbowEnabled)
-		{
-			CustomUIElements.AppWindowBorderCustomization.StartAnimatedFrame();
-		}
-		// If the user has set a custom color for the app window border, apply it
-		else if (!string.IsNullOrEmpty(Settings.CustomAppWindowsBorder))
-		{
-			if (RGBHEX.ToRGB(Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
-				CustomUIElements.AppWindowBorderCustomization.SetBorderColor(r, g, b);
-		}
-
-		// Startup update check
-		AppUpdate.CheckAtStartup();
-	}
-
 	private Window? m_window;
 
 	/// <summary>
@@ -682,9 +294,6 @@ public partial class App : Application
 			ViewModelProvider.DisposeCreatedViewModels();
 		}
 		catch { }
-
-		// Release the Mutex
-		_mutex?.Dispose();
 	}
 
 	/// <summary>
@@ -731,13 +340,5 @@ public partial class App : Application
 			}
 		}
 	}
-
-
-	private const string Pattern = @"^appcontrol-manager:--action=([^-]+(?:--(?!file=).*?)*)--file=(.+)$";
-
-	private static readonly Regex ProtocolDetailsExtraction = Regex1();
-
-	[GeneratedRegex(Pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
-	private static partial Regex Regex1();
 
 }

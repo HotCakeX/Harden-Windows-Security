@@ -4807,9 +4807,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 <data name="AppStartupMessage" xml:space="preserve">
   <value>ऐप स्टार्टअप, .NET रनटाइम संस्करण: {0}</value>
 </data>
-<data name="AnotherInstanceRunningMessage" xml:space="preserve">
-  <value>AppControl प्रबंधक का एक और उदाहरण चल रहा है। यह केवल एक सूचनात्मक लॉग है।</value>
-</data>
 <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>फ़ाइल सक्रियण का पता चला</value>
 </data>

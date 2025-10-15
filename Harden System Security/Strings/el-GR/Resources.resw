@@ -109,10 +109,7 @@
   <data name="AppStartupMessage" xml:space="preserve">
     <value>Εκκίνηση εφαρμογής, έκδοση περιβάλλοντος εκτέλεσης .NET: {0}</value>
   </data>
-  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
-    <value>Υπάρχει άλλη παρουσία του Harden System Security που εκτελείται. Αυτό είναι απλώς ένα πληροφοριακό αρχείο καταγραφής.</value>
-</data>
-<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>Ανιχνεύθηκε ενεργοποίηση αρχείου</value>
 </data>
 <data name="FileActivationNoObjectsMessage" xml:space="preserve">
@@ -902,16 +899,7 @@
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
     <value>Προβολή της διαδρομής/διαδρομών του αρχείου πολιτικής που επιλέξατε.</value>
   </data>
-    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
-    <value>Συνολικές πολιτικές: 0</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ο συνολικός αριθμός πολιτικών</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ο συνολικός αριθμός πολιτικών</value>
-  </data>
-  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>Αναζήτηση στα δεδομένα...</value>
   </data>
   <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -3523,9 +3511,6 @@
   <data name="EnterARecoveryPassword.Text" xml:space="preserve">
     <value>Εισαγάγετε κωδικό ανάκτησης</value>
   </data>
-  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>Σύνολο πιστοποιητικών</value>
-  </data>
   <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
     <value>Διαγραφή πιστοποιητικού</value>
   </data>
@@ -4098,5 +4083,13 @@
   </data>
   <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
     <value>Το όνομα της διεργασίας περιέχει μη έγκυρους χαρακτήρες.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Παρακάμψεις για τη βασική γραμμή ασφαλείας της Microsoft</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Εφαρμόστε τις προτεινόμενες παρακάμψεις για τις βασικές γραμμές ασφαλείας της Microsoft, ώστε να αποκατασταθούν ορισμένες από τις σημαντικές λειτουργίες που έχουν απενεργοποιηθεί από αυτές.</value>
   </data>
 </root>

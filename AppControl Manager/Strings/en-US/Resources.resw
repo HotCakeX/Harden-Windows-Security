@@ -4807,9 +4807,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 <data name="AppStartupMessage" xml:space="preserve">
   <value>App Startup, .NET runtime version: {0}</value>
 </data>
-<data name="AnotherInstanceRunningMessage" xml:space="preserve">
-  <value>There is another instance of the AppControl Manager running. This is just an informational log.</value>
-</data>
 <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>File Activation detected</value>
 </data>

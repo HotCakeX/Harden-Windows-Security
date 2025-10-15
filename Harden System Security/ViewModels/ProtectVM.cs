@@ -82,7 +82,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/EdgeBrowser.png")), // 14
 		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/Certificate.png")), // 15
 		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/CountryIPBlocking.png")), // 16
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/NonAdmin.png")) // 17
+		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/NonAdmin.png")), // 17
+		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/MicrosoftBaseLinesOverrides.png")) // 18
 	];
 
 	/// <summary>
@@ -285,7 +286,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 		{
 			case 0:
 				{
-					// 1
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftSecurityBaseline,
 						title: GlobalVars.GetStr("ProtectCategory_MSFTSecBaseline"),
@@ -294,7 +294,14 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 2
+					output.Add(new ProtectionCategoryListViewItem(
+						category: Categories.MSFTSecBaselines_OptionalOverrides,
+						title: GlobalVars.GetStr("ProtectCategory_MSFTSecBaselineOverrides"),
+						subTitle: GlobalVars.GetStr("ProtectCategory_Description_MSFTSecBaselineOverrides"),
+						logo: CategoryImages[(int)Categories.MSFTSecBaselines_OptionalOverrides],
+						subCategories: []
+						));
+
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.Microsoft365AppsSecurityBaseline,
 						title: GlobalVars.GetStr("ProtectCategory_MSFT365AppsSecBaseline"),
@@ -303,7 +310,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 3
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftDefender,
 						title: GlobalVars.GetStr("ProtectCategory_MSFTDefender"),
@@ -312,7 +318,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 9
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.DeviceGuard,
 						title: GlobalVars.GetStr("ProtectCategory_DeviceGuard"),
@@ -321,7 +326,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 11
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.OptionalWindowsFeatures,
 						title: GlobalVars.GetStr("ProtectCategory_OptionalWinFeatures"),
@@ -330,7 +334,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 18
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.NonAdminCommands,
 						title: GlobalVars.GetStr("ProtectCategory_NonAdmin"),
@@ -344,7 +347,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 			case 1:
 				{
 
-					// 1
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftSecurityBaseline,
 						title: GlobalVars.GetStr("ProtectCategory_MSFTSecBaseline"),
@@ -353,7 +355,14 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 2
+					output.Add(new ProtectionCategoryListViewItem(
+						category: Categories.MSFTSecBaselines_OptionalOverrides,
+						title: GlobalVars.GetStr("ProtectCategory_MSFTSecBaselineOverrides"),
+						subTitle: GlobalVars.GetStr("ProtectCategory_Description_MSFTSecBaselineOverrides"),
+						logo: CategoryImages[(int)Categories.MSFTSecBaselines_OptionalOverrides],
+						subCategories: []
+						));
+
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.Microsoft365AppsSecurityBaseline,
 						title: GlobalVars.GetStr("ProtectCategory_MSFT365AppsSecBaseline"),
@@ -362,7 +371,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 3
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftDefender,
 						title: GlobalVars.GetStr("ProtectCategory_MSFTDefender"),
@@ -371,7 +379,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 4
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.AttackSurfaceReductionRules,
 						title: GlobalVars.GetStr("ProtectCategory_ASRRules"),
@@ -380,7 +387,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 5
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.BitLockerSettings,
 						title: GlobalVars.GetStr("ProtectCategory_BitLocker"),
@@ -389,7 +395,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 6
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.TLSSecurity,
 						title: GlobalVars.GetStr("ProtectCategory_TLS"),
@@ -403,7 +408,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 							]
 						));
 
-					// 7
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.LockScreen,
 						title: GlobalVars.GetStr("ProtectCategory_LockScreen"),
@@ -412,7 +416,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 8
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.UserAccountControl,
 						title: GlobalVars.GetStr("ProtectCategory_UAC"),
@@ -421,7 +424,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 9
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.DeviceGuard,
 						title: GlobalVars.GetStr("ProtectCategory_DeviceGuard"),
@@ -430,7 +432,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 10
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.WindowsFirewall,
 						title: GlobalVars.GetStr("ProtectCategory_WindowsFirewall"),
@@ -439,7 +440,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 11
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.OptionalWindowsFeatures,
 						title: GlobalVars.GetStr("ProtectCategory_OptionalWinFeatures"),
@@ -448,7 +448,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 12
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.WindowsNetworking,
 						title: GlobalVars.GetStr("ProtectCategory_WindowsNetworking"),
@@ -462,7 +461,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 							]
 						));
 
-					// 13
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MiscellaneousConfigurations,
 						title: GlobalVars.GetStr("ProtectCategory_MiscellaneousConfig"),
@@ -480,7 +478,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 							]
 						));
 
-					// 14
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.WindowsUpdateConfigurations,
 						title: GlobalVars.GetStr("ProtectCategory_WindowsUpdate"),
@@ -489,7 +486,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 15
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.EdgeBrowserConfigurations,
 						title: GlobalVars.GetStr("ProtectCategory_Edge"),
@@ -498,7 +494,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 18
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.NonAdminCommands,
 						title: GlobalVars.GetStr("ProtectCategory_NonAdmin"),
@@ -512,7 +507,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 			case 2:
 				{
 
-					// 1
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftSecurityBaseline,
 						title: GlobalVars.GetStr("ProtectCategory_MSFTSecBaseline"),
@@ -521,7 +515,14 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 2
+					output.Add(new ProtectionCategoryListViewItem(
+						category: Categories.MSFTSecBaselines_OptionalOverrides,
+						title: GlobalVars.GetStr("ProtectCategory_MSFTSecBaselineOverrides"),
+						subTitle: GlobalVars.GetStr("ProtectCategory_Description_MSFTSecBaselineOverrides"),
+						logo: CategoryImages[(int)Categories.MSFTSecBaselines_OptionalOverrides],
+						subCategories: []
+						));
+
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.Microsoft365AppsSecurityBaseline,
 						title: GlobalVars.GetStr("ProtectCategory_MSFT365AppsSecBaseline"),
@@ -530,7 +531,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 3
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MicrosoftDefender,
 						title: GlobalVars.GetStr("ProtectCategory_MSFTDefender"),
@@ -547,7 +547,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 							]
 						));
 
-					// 4
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.AttackSurfaceReductionRules,
 						title: GlobalVars.GetStr("ProtectCategory_ASRRules"),
@@ -556,7 +555,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 5
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.BitLockerSettings,
 						title: GlobalVars.GetStr("ProtectCategory_BitLocker"),
@@ -565,7 +563,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 6
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.TLSSecurity,
 						title: GlobalVars.GetStr("ProtectCategory_TLS"),
@@ -579,7 +576,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 							]
 						));
 
-					// 7
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.LockScreen,
 						title: GlobalVars.GetStr("ProtectCategory_LockScreen"),
@@ -597,7 +593,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 							]
 						));
 
-					// 8
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.UserAccountControl,
 						title: GlobalVars.GetStr("ProtectCategory_UAC"),
@@ -615,7 +610,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 							]
 						));
 
-					// 9
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.DeviceGuard,
 						title: GlobalVars.GetStr("ProtectCategory_DeviceGuard"),
@@ -628,7 +622,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 							]
 						));
 
-					// 10
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.WindowsFirewall,
 						title: GlobalVars.GetStr("ProtectCategory_WindowsFirewall"),
@@ -637,7 +630,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 11
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.OptionalWindowsFeatures,
 						title: GlobalVars.GetStr("ProtectCategory_OptionalWinFeatures"),
@@ -646,7 +638,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 12
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.WindowsNetworking,
 						title: GlobalVars.GetStr("ProtectCategory_WindowsNetworking"),
@@ -659,7 +650,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 							]
 						));
 
-					// 13
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.MiscellaneousConfigurations,
 						title: GlobalVars.GetStr("ProtectCategory_MiscellaneousConfig"),
@@ -685,7 +675,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 							]
 						));
 
-					// 14
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.WindowsUpdateConfigurations,
 						title: GlobalVars.GetStr("ProtectCategory_WindowsUpdate"),
@@ -694,7 +683,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 15
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.EdgeBrowserConfigurations,
 						title: GlobalVars.GetStr("ProtectCategory_Edge"),
@@ -703,7 +691,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 						subCategories: []
 						));
 
-					// 18
 					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.NonAdminCommands,
 						title: GlobalVars.GetStr("ProtectCategory_NonAdmin"),

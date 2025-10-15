@@ -1076,6 +1076,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1116,6 +1117,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1181,6 +1183,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1288,6 +1291,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1378,6 +1382,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1418,6 +1423,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
+			MainInfoBar.IsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1462,7 +1468,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			// Refresh the list
 			await RetrieveAllExclusionsInternal();
 
-			MainInfoBar.WriteInfo($"Removed exclusion: '{target}' from {exclusion.SourceFriendlyName}");
+			MainInfoBar.WriteSuccess($"Removed exclusion: '{target}' from {exclusion.SourceFriendlyName}");
 		}
 		catch (Exception ex)
 		{

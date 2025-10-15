@@ -155,9 +155,11 @@ AppControl Manager is engineered with a security-first approach from the ground 
 
 * The AppControl Manager always uses the latest .NET SDK and NuGet package versions, ensuring all the security patches released by Microsoft will be included.
 
-* The entire codebase is thoroughly commented, allowing code reviewers to effortlessly examine and verify every aspect of AppControl Manager's source code.
-
 * AppControl Manager leverages [MSAL from Microsoft](https://learn.microsoft.com/entra/identity-platform/msal-overview) to manage Microsoft 365 authentications. This industry-standard library adheres to best practices for secure authentication token management.
+
+### Code Review
+
+The codebase is extensively and thoughtfully documented, enabling reviewers to trace logic, validate control flows, and assess security-relevant decisions with minimal friction. I remain fully available to clarify design rationale, threat assumptions, or implementation details whenever deeper scrutiny is desired.
 
 <br>
 
@@ -241,6 +243,104 @@ Here is the complete list of all of the URLs the AppControl Manager application 
 
 <br>
 
+## CommandLine Interface (CLI) Support
+
+The AppControl Manager can be launched via command line for advanced users and automation scenarios. Below are the supported commands and their usage:
+
+### Via Execution Alias
+
+* #### Open an App Control policy in the Policy Editor
+
+```
+AppControl.exe --action=PolicyEditor --file="C:\Path\Policy.xml"
+```
+```
+AppControl.exe --action=PolicyEditor --file="C:\Path\Policy.cip"
+```
+
+* #### View File Signature
+
+```
+AppControl.exe --action=FileSignature --file="C:\Path\SomeFile.exe"
+```
+
+* #### Get Code Integrity Hashes
+
+```
+AppControl.exe --action=FileHashes --file="C:\Path\SomeFile.exe"
+```
+
+* #### Deploy the RMM (Remote Monitoring and Management) Software Blocking Policy In Audit Mode
+
+```
+AppControl.exe --action=DeployRMMAuditPolicy
+```
+
+* #### Deploy the RMM (Remote Monitoring and Management) Software Blocking Policy In Enforced Mode
+
+```
+AppControl.exe --action=DeployRMMBlockPolicy
+```
+
+<br>
+
+### Via Protocol Activation (URI scheme)
+
+* #### Open an App Control policy in the Policy Editor
+
+```powershell
+Start-Process "appcontrol-manager:--action=PolicyEditor--file=C:\Program Files\AppControl Manager\AllowMicrosoft.CIP"
+```
+```powershell
+Start-Process "appcontrol-manager:--action=PolicyEditor--file=C:\Program Files\AppControl Manager\AllowMicrosoft.xml"
+```
+
+* #### View File Signature
+
+```powershell
+Start-Process "appcontrol-manager:--action=FileSignature--file=C:\Path\SomeFile.exe"
+```
+
+* #### Get Code Integrity Hashes
+
+```powershell
+Start-Process "appcontrol-manager:--action=FileHashes--file=C:\Path\SomeFile.exe"
+```
+
+* #### Deploy the RMM (Remote Monitoring and Management) Software Blocking Policy In Audit Mode
+
+```powershell
+Start-Process "appcontrol-manager:--action=DeployRMMAuditPolicy"
+```
+
+* #### Deploy the RMM (Remote Monitoring and Management) Software Blocking Policy In Enforced Mode
+
+```powershell
+Start-Process "appcontrol-manager:--action=DeployRMMBlockPolicy"
+```
+
+<br>
+
+### Via File Activation (Supported File Types Only)
+
+* #### Opens a CIP file in the Policy Editor, same as double-clicking/tapping on the file in File Explorer.
+
+```powershell
+Invoke-Item -Path "C:\Program Files\AppControl Manager\AllowMicrosoft.CIP"
+```
+
+<br>
+
+### Via AUMID (Application User Model ID) Activation
+
+* #### Simply launches the AppControl Manager
+
+```
+explorer.exe shell:AppsFolder\VioletHansen.AppControlManager_ea7andspwdn10!App
+```
+
+<br>
+
 ## How To Install AppControl Manager Completely Offline?
 
 1. Download [this PowerShell script](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1).
@@ -275,8 +375,6 @@ The installation process for AppControl Manager is uniquely streamlined. When yo
 * The private key of the certificate is non-exportable, never written on the disk and is securely discarded once signing is complete, leaving only the public key on the device to allow AppControl Manager to function properly on the system and prevent the certificate from being able to sign anything else.
 
 * The entire process is designed to leave no residual files. Each time the script runs, any certificates from previous executions are detected and removed, ensuring a clean system.
-
-* Finally, the `AppControlManager.dll` and `AppControlManager.exe` files are added to the Attack Surface Reduction (ASR) exclusions to prevent ASR rules from blocking these newly released binaries. Previous version exclusions are also removed from the ASRs exclusions list to maintain a clean, streamlined setup for the user.
 
 <br>
 
@@ -423,11 +521,15 @@ function Build_ACM {
         # https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-build-tools
         # https://learn.microsoft.com/visualstudio/install/use-command-line-parameters-to-install-visual-studio
         # https://learn.microsoft.com/visualstudio/install/workload-component-id-vs-community
-        winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
+        # winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
+
+        # Using this until version 18 build tools are added to Winget
+        Invoke-RestMethod -Uri "https://aka.ms/vs/18/insiders/vs_BuildTools.exe" -OutFile "vs_BuildTools.exe"
+        .\vs_BuildTools.exe --force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64
 
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install Visual Studio Build Tools') }
 
-        winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+        # winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
 
     }
 

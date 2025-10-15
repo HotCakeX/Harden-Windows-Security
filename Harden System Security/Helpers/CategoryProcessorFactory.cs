@@ -39,6 +39,7 @@ internal static class CategoryProcessorFactory
 		return category switch
 		{
 			Categories.MicrosoftSecurityBaseline => new MicrosoftSecurityBaselineProcessor(),
+			Categories.MSFTSecBaselines_OptionalOverrides => new MicrosoftSecurityBaselineOverridesProcessor(),
 			Categories.Microsoft365AppsSecurityBaseline => new Microsoft365AppsSecurityBaselineProcessor(),
 			Categories.MicrosoftDefender => new MicrosoftDefenderProcessor(),
 			Categories.AttackSurfaceReductionRules => new AttackSurfaceReductionRulesProcessor(),
@@ -61,6 +62,13 @@ internal static class CategoryProcessorFactory
 	}
 
 	#region Concrete processor implementations for MUnit-based categories
+
+	private sealed class MicrosoftSecurityBaselineOverridesProcessor : MUnitCategoryProcessor
+	{
+		public override Categories Category => Categories.MSFTSecBaselines_OptionalOverrides;
+		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFTSecBaselineOverrides");
+		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.MSFTSecBaselines_OptionalOverrides);
+	}
 
 	private sealed class MicrosoftDefenderProcessor : MUnitCategoryProcessor
 	{

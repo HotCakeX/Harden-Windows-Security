@@ -109,10 +109,7 @@
   <data name="AppStartupMessage" xml:space="preserve">
     <value>بدء تشغيل التطبيق، إصدار بيئة تشغيل .NET: {0}</value>
   </data>
-  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
-    <value>يوجد مثيل آخر من Harden System Security قيد التشغيل. هذا مجرد سجل معلوماتي.</value>
-</data>
-<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>تم اكتشاف تفعيل ملف</value>
 </data>
 <data name="FileActivationNoObjectsMessage" xml:space="preserve">
@@ -902,16 +899,7 @@
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
     <value>عرض مسار(مسارات) ملف السياسة الذي حددته.</value>
   </data>
-    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
-    <value>إجمالي السياسات: 0</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>العدد الإجمالي للسياسات</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>العدد الإجمالي للسياسات</value>
-  </data>
-  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>البحث في البيانات...</value>
   </data>
   <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -3523,9 +3511,6 @@
   <data name="EnterARecoveryPassword.Text" xml:space="preserve">
     <value>أدخل كلمة مرور الاسترداد</value>
   </data>
-  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>إجمالي الشهادات</value>
-  </data>
   <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
     <value>حذف الشهادة</value>
   </data>
@@ -4098,5 +4083,13 @@
   </data>
   <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
     <value>اسم العملية يحتوي على أحرف غير صالحة.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>تجاوزات لخط الأساس للأمان من Microsoft</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>طبّق التجاوزات الموصى بها لخطوط الأساس للأمان من Microsoft لاستعادة بعض الوظائف المهمة التي تم تعطيلها بواسطتها.</value>
   </data>
 </root>

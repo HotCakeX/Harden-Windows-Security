@@ -15,7 +15,7 @@ homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
 repository = "https://github.com/HotCakeX/Harden-Windows-Security"
 documentation = "https://github.com/HotCakeX/Harden-Windows-Security"
 publish = false
-rust-version = "1.91"
+rust-version = "1.92"
 
 [profile.release]
 codegen-units = 1

@@ -109,10 +109,7 @@
   <data name="AppStartupMessage" xml:space="preserve">
     <value>Inicio de aplicación, versión de runtime .NET: {0}</value>
   </data>
-  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
-    <value>Hay otra instancia de Harden System Security ejecutándose. Esto es solo un registro informativo.</value>
-</data>
-<data name="FileActivationDetectedMessage" xml:space="preserve">
+  <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>Se detectó activación de archivo</value>
 </data>
 <data name="FileActivationNoObjectsMessage" xml:space="preserve">
@@ -902,16 +899,7 @@
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
     <value>Ver la ruta o rutas del archivo de directiva que seleccionó.</value>
   </data>
-    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
-    <value>Directivas totales: 0</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>El número total de directivas</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>El número total de directivas</value>
-  </data>
-  <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
+    <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>Buscar en los datos...</value>
   </data>
   <data name="SearchBoxTextBox.ToolTipService.ToolTip" xml:space="preserve">
@@ -3523,9 +3511,6 @@ Huella Digital: {3}</value>
   <data name="EnterARecoveryPassword.Text" xml:space="preserve">
     <value>Escriba una contraseña de recuperación</value>
   </data>
-  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>Total de certificados</value>
-  </data>
   <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
     <value>Eliminar certificado</value>
   </data>
@@ -4098,5 +4083,13 @@ Huella Digital: {3}</value>
   </data>
   <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
     <value>El nombre del proceso contiene caracteres no válidos.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Anulaciones para la línea base de seguridad de Microsoft</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Aplica las anulaciones recomendadas para las líneas base de seguridad de Microsoft para restaurar algunas de las funcionalidades importantes que fueron deshabilitadas por ellas.</value>
   </data>
 </root>

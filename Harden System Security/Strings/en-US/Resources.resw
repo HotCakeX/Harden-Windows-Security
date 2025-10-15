@@ -109,9 +109,6 @@
   <data name="AppStartupMessage" xml:space="preserve">
     <value>App Startup, .NET runtime version: {0}</value>
   </data>
-  <data name="AnotherInstanceRunningMessage" xml:space="preserve">
-    <value>There is another instance of the Harden System Security running. This is just an informational log.</value>
-</data>
 <data name="FileActivationDetectedMessage" xml:space="preserve">
   <value>File Activation detected</value>
 </data>
@@ -901,15 +898,6 @@
   </data>
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
     <value>View the policy file path(s) you selected.</value>
-  </data>
-    <data name="TotalPoliciesTextBlock.PlaceholderText" xml:space="preserve">
-    <value>Total policies: 0</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The total number of the policies</value>
-  </data>
-  <data name="TotalPoliciesTextBlock.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The total number of the policies</value>
   </data>
   <data name="SearchBoxTextBox.PlaceholderText" xml:space="preserve">
     <value>Search the data...</value>
@@ -3523,9 +3511,6 @@ Thumbprint: {3}</value>
   <data name="EnterARecoveryPassword.Text" xml:space="preserve">
     <value>Enter a Recovery Password</value>
   </data>
-  <data name="TotalCertsPlaceHolder.PlaceholderText" xml:space="preserve">
-    <value>Total Certificates</value>
-  </data>
   <data name="DeleteCertMenuFlyoutItem.Text" xml:space="preserve">
     <value>Delete Certificate</value>
   </data>
@@ -4098,5 +4083,13 @@ Thumbprint: {3}</value>
   </data>
   <data name="ProcessNameHasInvalidCharsMsg" xml:space="preserve">
     <value>The process name contains invalid characters.</value>
+  </data>
+  <data name="ProtectCategory_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Title</comment>
+    <value>Overrides for Microsoft Security Baseline</value>
+  </data>
+  <data name="ProtectCategory_Description_MSFTSecBaselineOverrides" xml:space="preserve">
+    <comment>Protection Category Description</comment>
+    <value>Apply the recommended overrides for the Microsoft Security Baselines to restore some of the important functionalities disabled by them.</value>
   </data>
 </root>

@@ -41,5 +41,4 @@ internal enum Categories : uint
 	CountryIPBlocking = 16,
 	NonAdminCommands = 17,
 	MSFTSecBaselines_OptionalOverrides = 18
-
 }

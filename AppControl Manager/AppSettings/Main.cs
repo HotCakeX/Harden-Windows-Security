@@ -63,10 +63,7 @@ internal sealed partial class Main : ViewModelBase
 		AutoCheckForUpdateAtStartup = ReadValue(nameof(AutoCheckForUpdateAtStartup), AutoCheckForUpdateAtStartup);
 		ApplicationGlobalLanguage = ReadValue(nameof(ApplicationGlobalLanguage), ApplicationGlobalLanguage);
 		ApplicationGlobalFlowDirection = ReadValue(nameof(ApplicationGlobalFlowDirection), ApplicationGlobalFlowDirection);
-		FileActivatedLaunchArg = ReadValue(nameof(FileActivatedLaunchArg), FileActivatedLaunchArg);
 		CiPolicySchemaPath = ReadValue(nameof(CiPolicySchemaPath), CiPolicySchemaPath);
-		LaunchActivationFilePath = ReadValue(nameof(LaunchActivationFilePath), LaunchActivationFilePath);
-		LaunchActivationAction = ReadValue(nameof(LaunchActivationAction), LaunchActivationAction);
 		ScreenShield = ReadValue(nameof(ScreenShield), ScreenShield);
 		PublishUserActivityInTheOS = ReadValue(nameof(PublishUserActivityInTheOS), PublishUserActivityInTheOS);
 		LinkPreviewsForSecurityMeasure = ReadValue(nameof(LinkPreviewsForSecurityMeasure), LinkPreviewsForSecurityMeasure);
@@ -380,22 +377,6 @@ internal sealed partial class Main : ViewModelBase
 	} = "LeftToRight";
 
 	/// <summary>
-	/// The argument received if the app is launched via file activation.
-	/// This allows us to have access to this after app has been relaunched with Admin privileges.
-	/// </summary>
-	internal string FileActivatedLaunchArg
-	{
-		get;
-		set
-		{
-			if (SP(ref field, value))
-			{
-				SaveValue(nameof(FileActivatedLaunchArg), field);
-			}
-		}
-	} = string.Empty;
-
-	/// <summary>
 	/// The path to the Code Integrity Schema XSD file.
 	/// User can optionally provide a custom path to it. E.g., on Home edition where this file doesn't exist by default.
 	/// </summary>
@@ -410,37 +391,6 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = string.Empty;
-
-	/// <summary>
-	/// File path retrieved from the Launch args received from Context Menu activation.
-	/// </summary>
-	internal string LaunchActivationFilePath
-	{
-		get;
-		set
-		{
-			if (SP(ref field, value))
-			{
-				SaveValue(nameof(LaunchActivationFilePath), field);
-			}
-		}
-	} = string.Empty;
-
-	/// <summary>
-	/// Action retrieved from the Launch args received from Context Menu activation.
-	/// </summary>
-	internal string LaunchActivationAction
-	{
-		get;
-		set
-		{
-			if (SP(ref field, value))
-			{
-				SaveValue(nameof(LaunchActivationAction), field);
-			}
-		}
-	} = string.Empty;
-
 
 	/// <summary>
 	/// Prevent screen recorders and other apps from recording or taking screenshot of the app's window.

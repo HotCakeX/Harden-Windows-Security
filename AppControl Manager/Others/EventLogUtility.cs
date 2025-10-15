@@ -169,12 +169,31 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 
 	public void Dispose()
 	{
+		// Prevent callback logic during teardown.
 		_suppressRegistryCallback = true;
-		_ = _waitHandle?.Unregister(_notificationEvent);
-		_notificationEvent?.Dispose();
-		_regKey?.Dispose();
-		_regHandle?.Dispose();
-		GC.SuppressFinalize(this);
+
+		try
+		{
+			// Ensures the registered wait is fully unregistered before disposing the wait object.
+			RegisteredWaitHandle? waitHandleLocal = Interlocked.Exchange(ref _waitHandle, null);
+			if (waitHandleLocal is not null)
+			{
+				// Using a dedicated event to be signaled when unregistration actually completes.
+				using ManualResetEvent unregisterDone = new(false);
+
+				// If Unregister returns false, completion will be signaled asynchronously.
+				bool completedSynchronously = waitHandleLocal.Unregister(unregisterDone);
+				if (!completedSynchronously)
+				{
+					// Wait until the ThreadPool signals that no more callbacks will run.
+					_ = unregisterDone.WaitOne();
+				}
+			}
+		}
+		catch { }
+
+		try { _notificationEvent?.Dispose(); } catch { }
+		try { _regKey?.Dispose(); } catch { }
 	}
 
 	private const string logName = "Microsoft-Windows-CodeIntegrity/Operational";

@@ -110,7 +110,7 @@
 
 This section provides the justification and objective of this GitHub repository and its contents. It outlines how it addresses various threats and how to adjust your expectations for different scenarios and environments. It also supplies lots of useful additional resources.
 
-This repository currently has 3 ***main*** products. <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif" alt="head shaking girl">
+This repository currently has 2 ***main*** products. <img width="30" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/animebop.gif" alt="head shaking girl">
 
 1. [**The Harden System Security App**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security)
 2. [**The AppControl Manager**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)

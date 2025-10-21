@@ -90,8 +90,8 @@ internal static class NewCertificateSignerRules
 
 				// Kernel-Mode signers don't need CI Signers
 			}
-
-			CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 		}
+
+		CodeIntegrityPolicy.Save(codeIntegrityPolicy.XmlDocument, xmlFilePath);
 	}
 }

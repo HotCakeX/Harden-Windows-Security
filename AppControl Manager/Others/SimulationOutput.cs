@@ -21,12 +21,12 @@ using System.Text.Json.Serialization;
 namespace AppControlManager.Others;
 
 /// <summary>
-/// Used by AppControl Simulations, the output of the comparer function/method
-/// This class holds the details of the current file in the App Control Simulation comparer
+/// Used by AppControl Simulations, the output of the <see cref="SimulationMethods.Arbitrator"/>.
+/// This class holds the details of the current file in the App Control Simulation arbitrator.
 /// </summary>
 internal sealed class SimulationOutput(
 	string? path,
-	string source,
+	SimulationMethods.SimulationOutputSource source,
 	bool isAuthorized,
 	string? signerID,
 	string? signerName,
@@ -50,10 +50,12 @@ internal sealed class SimulationOutput(
 	internal string? Path => path;
 
 	/// <summary>
-	/// Source from the Comparer function is always 'Signer'
+	/// Values from the <see cref="SimulationMethods.SimulationOutputSource"/> enum.
+	/// Using <see cref="JsonConverter"/> exports the actual strings of enums instead of their numbers.
 	/// </summary>
 	[JsonInclude]
-	internal string Source => source;
+	[JsonConverter(typeof(JsonStringEnumConverter<SimulationMethods.SimulationOutputSource>))]
+	internal SimulationMethods.SimulationOutputSource Source => source;
 
 	/// <summary>
 	/// Whether the file is authorized or not

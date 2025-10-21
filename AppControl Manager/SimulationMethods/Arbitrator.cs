@@ -227,7 +227,7 @@ internal static class Arbitrator
 
 													return new SimulationOutput(
 														Path.GetFileName(simulationInput.FilePath.ToString()),
-														"Signer",
+														SimulationOutputSource.Signer,
 														true,
 														signer.ID,
 														signer.Name,
@@ -264,7 +264,7 @@ internal static class Arbitrator
 								{
 									return new SimulationOutput(
 										Path.GetFileName(simulationInput.FilePath.ToString()),
-										"Signer",
+										SimulationOutputSource.Signer,
 										true,
 										signer.ID,
 										signer.Name,
@@ -301,7 +301,7 @@ internal static class Arbitrator
 
 									return new SimulationOutput(
 										Path.GetFileName(simulationInput.FilePath.ToString()),
-										"Signer",
+										SimulationOutputSource.Signer,
 										true,
 										signer.ID,
 										signer.Name,
@@ -413,7 +413,7 @@ internal static class Arbitrator
 										{
 											return new SimulationOutput(
 											Path.GetFileName(simulationInput.FilePath.ToString()),
-											"Signer",
+											SimulationOutputSource.Signer,
 											true,
 											signer.ID,
 											signer.Name,
@@ -456,7 +456,7 @@ internal static class Arbitrator
 												// And break out of the loop by validating the signer as suitable for FilePublisher level
 												return new SimulationOutput(
 												Path.GetFileName(simulationInput.FilePath.ToString()),
-												"Signer",
+												SimulationOutputSource.Signer,
 												true,
 												signer.ID,
 												signer.Name,
@@ -490,7 +490,7 @@ internal static class Arbitrator
 
 								return new SimulationOutput(
 									 Path.GetFileName(simulationInput.FilePath.ToString()),
-									 "Signer",
+									 SimulationOutputSource.Signer,
 									 true,
 									 signer.ID,
 									 signer.Name,
@@ -529,7 +529,7 @@ internal static class Arbitrator
 
 							return new SimulationOutput(
 									Path.GetFileName(simulationInput.FilePath.ToString()),
-									"Signer",
+									SimulationOutputSource.Signer,
 									true,
 									signer.ID,
 									signer.Name,
@@ -570,7 +570,7 @@ internal static class Arbitrator
 
 					return new SimulationOutput(
 							Path.GetFileName(simulationInput.FilePath.ToString()),
-							"Signer",
+							SimulationOutputSource.Signer,
 							true,
 							signer.ID,
 							signer.Name,
@@ -647,7 +647,7 @@ internal static class Arbitrator
 
 									return new SimulationOutput(
 									   Path.GetFileName(simulationInput.FilePath.ToString()),
-									   "Signer",
+									   SimulationOutputSource.Signer,
 									   true,
 									   signer.ID,
 									   signer.Name,
@@ -690,7 +690,7 @@ internal static class Arbitrator
 
 										return new SimulationOutput(
 											Path.GetFileName(simulationInput.FilePath.ToString()),
-											"Signer",
+											SimulationOutputSource.Signer,
 											true,
 											signer.ID,
 											signer.Name,
@@ -723,7 +723,7 @@ internal static class Arbitrator
 
 						return new SimulationOutput(
 									 Path.GetFileName(simulationInput.FilePath.ToString()),
-									 "Signer",
+									 SimulationOutputSource.Signer,
 									 true,
 									 signer.ID,
 									 signer.Name,
@@ -762,7 +762,7 @@ internal static class Arbitrator
 
 					return new SimulationOutput(
 							 Path.GetFileName(simulationInput.FilePath.ToString()),
-							 "Signer",
+							 SimulationOutputSource.Signer,
 							 true,
 							 signer.ID,
 							 signer.Name,
@@ -786,7 +786,7 @@ internal static class Arbitrator
 		// The file is signed but the signer wasn't found in the policy file that allows it
 		return new SimulationOutput(
 			Path.GetFileName(simulationInput.FilePath.ToString()),
-			"Signer",
+			SimulationOutputSource.Signer,
 			false,
 			null,
 			null,

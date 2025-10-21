@@ -99,12 +99,11 @@ internal static class Helper
 					bool isCodeSigning = false;
 					foreach (X509Extension extension in cert.Extensions)
 					{
-						if (string.Equals(extension.Oid?.FriendlyName, "Enhanced Key Usage", StringComparison.OrdinalIgnoreCase))
+						if (extension is X509EnhancedKeyUsageExtension eku)
 						{
-							X509EnhancedKeyUsageExtension eku = (X509EnhancedKeyUsageExtension)extension;
 							foreach (Oid oid in eku.EnhancedKeyUsages)
 							{
-								if (oid.Value == Structure.CodeSigningOID)
+								if (string.Equals(oid.Value, Structure.CodeSigningOID, StringComparison.OrdinalIgnoreCase))
 								{
 									isCodeSigning = true;
 									Logger.Write(GlobalVars.GetStr("CertificateHasCodeSigningEKU"));
@@ -112,6 +111,7 @@ internal static class Helper
 								}
 							}
 						}
+
 						if (isCodeSigning) break;
 					}
 

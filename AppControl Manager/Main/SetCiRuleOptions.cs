@@ -273,13 +273,7 @@ internal static class CiRuleOptions
 		// Make sure Supplemental policies only contain rule options that are applicable to them
 		if (template is PolicyTemplate.Supplemental || policyObj.PolicyType is PolicyType.SupplementalPolicy)
 		{
-			foreach (OptionType rule in RuleOptionsToImplement)
-			{
-				if (!SupplementalPolicyAllowedRuleOptions.Contains(rule))
-				{
-					_ = RuleOptionsToImplement.Remove(rule);
-				}
-			}
+			_ = RuleOptionsToImplement.RemoveWhere(rule => !SupplementalPolicyAllowedRuleOptions.Contains(rule));
 		}
 
 		#region Compare the existing rule options in the policy XML file with the rule options to implement

@@ -173,7 +173,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 		foreach (SimulationOutput item in SimulationOutputs)
 		{
 			maxWidth1 = ListViewHelper.MeasureText(item.Path, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.Source, maxWidth2);
+			maxWidth2 = ListViewHelper.MeasureText(item.Source.ToString(), maxWidth2);
 			maxWidth3 = ListViewHelper.MeasureText(item.IsAuthorized.ToString(), maxWidth3);
 			maxWidth4 = ListViewHelper.MeasureText(item.MatchCriteria?.ToString(), maxWidth4);
 			maxWidth5 = ListViewHelper.MeasureText(item.SpecificFileNameLevelMatchCriteria, maxWidth5);
@@ -231,7 +231,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 		// Perform a case-insensitive search in all relevant fields
 		List<SimulationOutput> filteredResults = AllSimulationOutputs.Where(output =>
 			(output.Path is not null && output.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(output.Source is not null && output.Source.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			output.Source.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			(output.MatchCriteria is not null && output.MatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.SpecificFileNameLevelMatchCriteria is not null && output.SpecificFileNameLevelMatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(output.CertSubjectCN is not null && output.CertSubjectCN.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||

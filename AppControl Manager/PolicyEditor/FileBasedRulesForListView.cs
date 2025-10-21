@@ -36,7 +36,6 @@ namespace AppControlManager.PolicyEditor;
 /// <param name="type"></param>
 /// <param name="sourceType"></param>
 /// <param name="source"></param>
-/// <param name="parentViewModel"></param>
 internal sealed class FileBasedRulesForListView(
 	string? id,
 	string? friendlyName,

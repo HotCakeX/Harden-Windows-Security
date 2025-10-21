@@ -10,6 +10,9 @@ namespace Firewall {
 	static constexpr const wchar_t* HWS_WMI_NS_STANDARDCIMV2 = L"root\\StandardCimv2";
 	static constexpr const wchar_t* HWS_WMI_FIREWALL_RULE = L"MSFT_NetFirewallRule";
 
+	// Forward declaration so DeleteFirewallRulesInPolicyStore can use it.
+	static inline bool IsTransientHresult(HRESULT hr);
+
 	/// <summary>
 	/// Downloads content from a URL and parses it into a vector of IP address strings
 	/// by splitting on newlines and filtering out comments and empty lines.
@@ -370,10 +373,37 @@ namespace Firewall {
 				if (SUCCEEDED(pObj->Get(_bstr_t(L"__PATH"), 0, &vPath, nullptr, nullptr)) &&
 					vPath.vt == VT_BSTR && vPath.bstrVal != nullptr)
 				{
-					HRESULT hrDel = pSvc->DeleteInstance(vPath.bstrVal, 0, pCtx, nullptr);
+					// Retry only on transient HRESULTs determined by IsTransientHresult; otherwise fail fast.
+					const int kMaxAttempts = 8;     // modest window to ride out brief provider/policy contention (~12.7s worst-case)
+					DWORD delayMs = 100;
+					HRESULT hrDel = E_FAIL;
+
+					for (int attempt = 1; attempt <= kMaxAttempts; ++attempt)
+					{
+						hrDel = pSvc->DeleteInstance(vPath.bstrVal, 0, pCtx, nullptr);
+
+						// Success -> break
+						if (SUCCEEDED(hrDel))
+							break;
+
+						// Only retry if transient per helper; otherwise break and fail below
+						if (!IsTransientHresult(hrDel))
+							break;
+
+						::Sleep(delayMs);
+						if (delayMs < 2000) delayMs <<= 1; // exponential backoff up to ~2s cap
+					}
+
 					if (FAILED(hrDel))
 					{
 						ok = false;  // Mark as failed but continue deleting other matches
+
+						// Record a detailed error message so callers don't see a blank "Error:".
+						string hex = ErrorCodeHexString(hrDel);
+						wstring whex = Utf8ToWide(hex);
+						wstringstream wss;
+						wss << L"DeleteInstance (firewall rule) failed. HRESULT=" << whex;
+						SetLastErrorMsg(wss.str());
 					}
 				}
 				VariantClear(&vPath);
@@ -385,6 +415,24 @@ namespace Firewall {
 		pEnum->Release();
 		pCtx->Release();
 		return ok;
+	}
+
+	// Helper to detect transient HRESULTs worth retrying for the PutInstance operation.
+	// These are known to occur under provider/RPC load and during short policy/store contention windows.
+	static inline bool IsTransientHresult(HRESULT hr)
+	{
+		switch (static_cast<unsigned long>(hr))
+		{
+		case 0x8001010A: // RPC_E_SERVERCALL_RETRYLATER
+		case 0x8001010B: // RPC_E_SERVERCALL_REJECTED
+		case 0x800706BA: // RPC_S_SERVER_UNAVAILABLE (HRESULT_FROM_WIN32)
+		case 0x800706BE: // RPC_S_CALL_FAILED (HRESULT_FROM_WIN32)
+		case 0x80041015: // WBEM_E_TRANSPORT_FAILURE
+		case 0x80041003: // WBEM_E_ACCESS_DENIED (transient in this provider/store under system load)
+			return true;
+		default:
+			return false;
+		}
 	}
 
 	/// <summary>
@@ -569,8 +617,28 @@ namespace Firewall {
 		}
 
 		// Create the firewall rule instance with the configured context
-		hr = pSvc->PutInstance(pInst, 0, pCtx, nullptr);
-		if (FAILED(hr))
+		// Retry only on transient HRESULTs determined by IsTransientHresult; otherwise fail fast.
+		const int kMaxAttempts = 8;     // modest window to ride out brief provider/policy contention (~12.7s worst-case)
+		DWORD delayMs = 100;
+		HRESULT hrPut = E_FAIL;
+
+		for (int attempt = 1; attempt <= kMaxAttempts; ++attempt)
+		{
+			hrPut = pSvc->PutInstance(pInst, 0, pCtx, nullptr);
+
+			// Success -> break
+			if (SUCCEEDED(hrPut))
+				break;
+
+			// Only retry if transient per helper; otherwise break and fail below
+			if (!IsTransientHresult(hrPut))
+				break;
+
+			::Sleep(delayMs);
+			if (delayMs < 2000) delayMs <<= 1; // exponential backoff up to ~2s cap
+		}
+
+		if (FAILED(hrPut))
 		{
 			pInst->Release();
 			pClass->Release();

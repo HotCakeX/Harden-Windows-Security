@@ -222,9 +222,10 @@ internal static class KernelModeDrivers
 
 			}
 
-			if (OpenFileError == 183)
+			// https://learn.microsoft.com/windows/win32/debug/system-error-codes--0-499-
+			if (fileMappingHandleError == 183)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("CreateFileMappingAlreadyExistsMessage"), filePath, OpenFileError));
+				Logger.Write(string.Format(GlobalVars.GetStr("CreateFileMappingAlreadyExistsMessage"), filePath, fileMappingHandleError));
 
 				return new KernelUserVerdict
 				(

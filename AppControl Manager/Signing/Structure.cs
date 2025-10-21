@@ -310,7 +310,7 @@ internal static class Structure
 	internal static readonly Guid FLAT_SIP_GUID = new("C689AAB8-8E78-11D0-8C47-00C04C324A2E");
 
 	/// <summary>
-	/// We'er signing special data for Code Integrity policy and it needs the following OID present in its signature.
+	/// We're signing special data for Code Integrity policy and it needs the following OID present in its signature.
 	/// </summary>
 	internal const string CodeIntegrityOID = "1.3.6.1.4.1.311.79.1";
 

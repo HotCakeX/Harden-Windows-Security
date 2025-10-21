@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
 		<Version>$(FileVersion)</Version>
 		<FileVersion>1.0.0.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
@@ -21,14 +20,7 @@
 		<Description>Partner Center</Description>
 		<DebugType>none</DebugType>
 		<PackageTags>Partner Center, Microsoft</PackageTags>
-		<DisableRuntimeMarshalling>True</DisableRuntimeMarshalling>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<IlcArg Include="--debug" />
-		<IlcArg Include="--verbose" />
-		<LinkerArg Include="/DEPENDENTLOADFLAG:0x800" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.2.25502.107" />

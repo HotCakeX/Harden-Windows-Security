@@ -84,7 +84,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 				}
 
 
-				// Extract values using XPath
+				// // Assign fields from MDE Advanced Hunting record properties
 				FileIdentity eventData = new()
 				{
 
@@ -141,7 +141,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 							continue;
 						}
 
-						// Extract values using XPath
+						// // Assign fields from MDE Advanced Hunting record properties
 						FileSignerInfo signerInfo = new(
 							totalSignatureCount: correlatedEvent.TotalSignatureCount,
 							signature: correlatedEvent.Signature,
@@ -187,7 +187,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 				}
 
 
-				// Extract values using XPath
+				// // Assign fields from MDE Advanced Hunting record properties
 				FileIdentity eventData = new()
 				{
 
@@ -244,7 +244,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 							continue;
 						}
 
-						// Extract values using XPath
+						// // Assign fields from MDE Advanced Hunting record properties
 						FileSignerInfo signerInfo = new(
 							totalSignatureCount: correlatedEvent.TotalSignatureCount,
 							signature: correlatedEvent.Signature,
@@ -292,7 +292,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 				}
 
 
-				// Extract values using XPath
+				// // Assign fields from MDE Advanced Hunting record properties
 				FileIdentity eventData = new()
 				{
 
@@ -349,7 +349,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 							continue;
 						}
 
-						// Extract values using XPath
+						// // Assign fields from MDE Advanced Hunting record properties
 						FileSignerInfo signerInfo = new(
 							totalSignatureCount: correlatedEvent.TotalSignatureCount,
 							signature: correlatedEvent.Signature,
@@ -395,7 +395,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 				}
 
 
-				// Extract values using XPath
+				// // Assign fields from MDE Advanced Hunting record properties
 				FileIdentity eventData = new()
 				{
 
@@ -452,7 +452,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 							continue;
 						}
 
-						// Extract values using XPath
+						// // Assign fields from MDE Advanced Hunting record properties
 						FileSignerInfo signerInfo = new(
 							totalSignatureCount: correlatedEvent.TotalSignatureCount,
 							signature: correlatedEvent.Signature,

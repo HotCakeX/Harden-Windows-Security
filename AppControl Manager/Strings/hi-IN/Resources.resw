@@ -3730,9 +3730,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="ReplacingUnsignedItemMessage" xml:space="preserve">
     <value>{0} नाम वाले फ़ाइल के लिए unsigned FileIdentity आइटम को signed आइटम से बदल रहे हैं, SHA256 हैश {1} के साथ।</value>
   </data>
-  <data name="ReplacingOlderFileIdentityItemMessage" xml:space="preserve">
-    <value>{0} नाम वाले फ़ाइल के लिए लॉग में पुराने FileIdentity आइटम को नए से बदल रहे हैं, SHA256 हैश {1} के साथ।</value>
-  </data>
   <data name="NoCodeIntegrityLogsFoundMessage" xml:space="preserve">
     <value>कोई Code Integrity लॉग नहीं मिला</value>
   </data>

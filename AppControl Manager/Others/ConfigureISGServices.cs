@@ -23,8 +23,14 @@ namespace AppControlManager.Others;
 internal static class ConfigureISGServices
 {
 
-	// Access rights
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/services/service-security-and-access-rights#access-rights-for-the-service-control-manager
+	/// </summary>
 	private const uint SC_MANAGER_ALL_ACCESS = 0xF003F;
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winsvc/nf-winsvc-changeserviceconfigw
+	/// </summary>
 	private const uint SERVICE_NO_CHANGE = 0xFFFFFFFF;
 
 

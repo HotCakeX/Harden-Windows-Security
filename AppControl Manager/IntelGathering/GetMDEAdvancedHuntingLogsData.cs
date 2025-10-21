@@ -84,7 +84,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 				}
 
 
-				// // Assign fields from MDE Advanced Hunting record properties
+				// Assign fields from MDE Advanced Hunting record properties
 				FileIdentity eventData = new()
 				{
 

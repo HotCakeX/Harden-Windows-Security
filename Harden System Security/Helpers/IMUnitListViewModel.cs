@@ -121,11 +121,11 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 	int NotAppliedItemsCount { get; set; }
 
 	/// <summary>
-	/// Creates all MUnits for this specific ViewModel.
-	/// Each ViewModel implements this to provide its specific MUnit creation logic.
+	/// Gets the current catalog of all MUnits for this ViewModel.
+	/// Contract: the implementation should return the value of a single, shared Lazy<List<MUnit>>.
+	/// The returned list instance should be treated as read-only by convention.
 	/// </summary>
-	/// <returns>List of all MUnits for this ViewModel</returns>
-	List<MUnit> CreateAllMUnits();
+	List<MUnit> AllMUnits { get; }
 
 	/// <summary>
 	/// Static helper method to create UI values categories for ViewModels that implement IMUnitListViewModel. It is only run once in ViewModel's ctor.
@@ -137,7 +137,6 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 	{
 		_ = Task.Run(() =>
 		{
-			List<MUnit> allResults = [];
 			IEnumerable<GroupInfoListForMUnit> query = [];
 
 			try
@@ -147,13 +146,10 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 					viewModel.ElementsAreEnabled = false;
 				});
 
-				// Call the ViewModel-specific method to create MUnits
-				allResults = viewModel.CreateAllMUnits();
-
 				// Grab Protection Categories objects
-				query = from item in allResults
+				query = from item in viewModel.AllMUnits
 							// Group the items returned from the query, sort and select the ones you want to keep
-						group item by item.Name![..1].ToUpper() into g
+						group item by item.Name![..1].ToUpperInvariant() into g
 						orderby g.Key
 						// GroupInfoListForMUnit is a simple custom class that has an IEnumerable type attribute, and
 						// a key attribute. The IGrouping-typed variable g now holds the App objects,
@@ -178,12 +174,12 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 					viewModel.FilteredItemsCount = totalCount;
 					viewModel.SelectedItemsCount = 0;
 
-					// Compute initial status counts from allResults.
+					// Compute initial status counts from AllMUnits.
 					int undetermined = 0;
 					int applied = 0;
 					int notApplied = 0;
 
-					foreach (MUnit m in allResults)
+					foreach (MUnit m in viewModel.AllMUnits)
 					{
 						StatusState status = m.StatusState;
 						switch (status)

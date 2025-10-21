@@ -47,12 +47,28 @@
                                    Style="{ThemeResource SubtitleTextBlockStyle}"
                                    Margin="0,0,0,8"/>
 
-                        <!-- Link Button -->
-                        <customUI:LinkButtonV2 Grid.Row="1"
-                                               LinkUrl="{x:Bind PolicyEntry.URL, Mode=OneWay}"
-                                               HorizontalAlignment="Left"
-                                               Margin="0,0,0,12"
-                                               Visibility="{x:Bind HasURL, Mode=OneWay}"/>
+                        <!-- Link + Intents row -->
+                        <Grid Grid.Row="1" Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Link Button -->
+                            <customUI:LinkButtonV2
+                                Grid.Column="0"
+                                LinkUrl="{x:Bind PolicyEntry.URL, Mode=OneWay}"
+                                HorizontalAlignment="Left"
+                                Visibility="{x:Bind HasURL, Mode=OneWay}"/>
+
+                            <!-- Device Intents circles (auto-collapses when no intents) -->
+                            <customUI:IntentCircles
+                                Grid.Column="1"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Margin="12,0,0,0"
+                                ItemsSource="{x:Bind PolicyEntry.DeviceIntents, Mode=OneWay}"/>
+                        </Grid>
 
                         <!-- State Selection -->
                         <Grid Grid.Row="2">

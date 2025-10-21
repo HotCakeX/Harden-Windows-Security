@@ -26,7 +26,6 @@ namespace HardenSystemSecurity.RegistryManager;
 
 internal static class Manager
 {
-
 	private const char Separator = ';';
 
 	/// <summary>
@@ -38,14 +37,8 @@ internal static class Manager
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void EditRegistry(RegistryPolicyEntry package)
 	{
-
-		RegistryKey baseRegistryKey = package.hive switch
-		{
-			Hive.HKLM => Registry.LocalMachine,
-			Hive.HKCU => Registry.CurrentUser,
-			Hive.HKCR => Registry.ClassesRoot,
-			_ => throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidRegistryBaseKey"), package.hive))
-		};
+		// Determine base hive
+		RegistryKey baseRegistryKey = GetBaseRegistryKey(package.hive);
 
 		using RegistryKey subKey = baseRegistryKey.OpenSubKey(package.KeyName, true) ?? baseRegistryKey.CreateSubKey(package.KeyName);
 
@@ -54,59 +47,7 @@ internal static class Manager
 
 		if (package.policyAction is PolicyAction.Apply)
 		{
-			RegistryValueKind valueType;
-			object convertedValue;
-
-			switch (package.Type)
-			{
-				case RegistryValueType.REG_SZ:
-					{
-						valueType = RegistryValueKind.String;
-						convertedValue = package.RegValue;
-						break;
-					}
-				case RegistryValueType.REG_DWORD:
-					{
-						valueType = RegistryValueKind.DWord;
-						convertedValue = int.Parse(package.RegValue, NumberStyles.Integer, CultureInfo.InvariantCulture);
-						break;
-					}
-				case RegistryValueType.REG_QWORD:
-					{
-						valueType = RegistryValueKind.QWord;
-						convertedValue = long.Parse(package.RegValue, NumberStyles.Integer, CultureInfo.InvariantCulture);
-						break;
-					}
-				case RegistryValueType.REG_BINARY:
-					{
-						valueType = RegistryValueKind.Binary;
-						convertedValue = Convert.FromBase64String(package.RegValue);
-						break;
-					}
-				case RegistryValueType.REG_MULTI_SZ:
-					{
-						valueType = RegistryValueKind.MultiString;
-						convertedValue = package.RegValue.Split(Separator, StringSplitOptions.None);
-						break;
-					}
-				case RegistryValueType.REG_EXPAND_SZ:
-					{
-						valueType = RegistryValueKind.ExpandString;
-						convertedValue = package.RegValue;
-						break;
-					}
-				case RegistryValueType.REG_NONE:
-				case RegistryValueType.REG_DWORD_BIG_ENDIAN:
-				case RegistryValueType.REG_LINK:
-				case RegistryValueType.REG_RESOURCE_LIST:
-				case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:
-				case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
-				default:
-					{
-						throw new ArgumentException(GlobalVars.GetStr("InvalidRegistryValueType"));
-					}
-			}
-
+			(RegistryValueKind valueType, object convertedValue) = ConvertStringToRegistryData(package.Type, package.RegValue);
 			subKey.SetValue(package.ValueName, convertedValue, valueType);
 		}
 		else if (package.policyAction is PolicyAction.Remove)
@@ -122,59 +63,7 @@ internal static class Manager
 			else
 			{
 				// DefaultRegValue is not null, so set the registry value to the default value
-				RegistryValueKind valueType;
-				object convertedValue;
-
-				switch (package.Type)
-				{
-					case RegistryValueType.REG_SZ:
-						{
-							valueType = RegistryValueKind.String;
-							convertedValue = package.DefaultRegValue;
-							break;
-						}
-					case RegistryValueType.REG_DWORD:
-						{
-							valueType = RegistryValueKind.DWord;
-							convertedValue = int.Parse(package.DefaultRegValue, NumberStyles.Integer, CultureInfo.InvariantCulture);
-							break;
-						}
-					case RegistryValueType.REG_QWORD:
-						{
-							valueType = RegistryValueKind.QWord;
-							convertedValue = long.Parse(package.DefaultRegValue, NumberStyles.Integer, CultureInfo.InvariantCulture);
-							break;
-						}
-					case RegistryValueType.REG_BINARY:
-						{
-							valueType = RegistryValueKind.Binary;
-							convertedValue = Convert.FromBase64String(package.DefaultRegValue);
-							break;
-						}
-					case RegistryValueType.REG_MULTI_SZ:
-						{
-							valueType = RegistryValueKind.MultiString;
-							convertedValue = package.DefaultRegValue.Split(Separator, StringSplitOptions.None);
-							break;
-						}
-					case RegistryValueType.REG_EXPAND_SZ:
-						{
-							valueType = RegistryValueKind.ExpandString;
-							convertedValue = package.DefaultRegValue;
-							break;
-						}
-					case RegistryValueType.REG_NONE:
-					case RegistryValueType.REG_DWORD_BIG_ENDIAN:
-					case RegistryValueType.REG_LINK:
-					case RegistryValueType.REG_RESOURCE_LIST:
-					case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:
-					case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
-					default:
-						{
-							throw new ArgumentException(GlobalVars.GetStr("InvalidRegistryValueType"));
-						}
-				}
-
+				(RegistryValueKind valueType, object convertedValue) = ConvertStringToRegistryData(package.Type, package.DefaultRegValue);
 				subKey.SetValue(package.ValueName, convertedValue, valueType);
 			}
 		}
@@ -183,7 +72,6 @@ internal static class Manager
 			throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidActionSpecified"), package.policyAction));
 		}
 	}
-
 
 	/// <summary>
 	/// Reads the registry value for the given <see cref="RegistryPolicyEntry"/>.
@@ -198,13 +86,7 @@ internal static class Manager
 	internal static string? ReadRegistry(RegistryPolicyEntry package)
 	{
 		// Determine base hive
-		RegistryKey baseRegistryKey = package.hive switch
-		{
-			Hive.HKLM => Registry.LocalMachine,
-			Hive.HKCU => Registry.CurrentUser,
-			Hive.HKCR => Registry.ClassesRoot,
-			_ => throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidRegistryBaseKey"), package.hive))
-		};
+		RegistryKey baseRegistryKey = GetBaseRegistryKey(package.hive);
 
 		// Open subkey readonly
 		using RegistryKey? subKey = baseRegistryKey.OpenSubKey(package.KeyName, writable: false);
@@ -411,5 +293,71 @@ internal static class Manager
 
 		return actualArray.Length == expectedArray.Length &&
 			   actualArray.SequenceEqual(expectedArray, StringComparer.OrdinalIgnoreCase);
+	}
+
+	/// <summary>
+	/// Maps <see cref="Hive"/> to its base <see cref="RegistryKey"/>.
+	/// </summary>
+	private static RegistryKey GetBaseRegistryKey(Hive? hive)
+	{
+		return hive switch
+		{
+			Hive.HKLM => Registry.LocalMachine,
+			Hive.HKCU => Registry.CurrentUser,
+			Hive.HKCR => Registry.ClassesRoot,
+			_ => throw new ArgumentException(string.Format(GlobalVars.GetStr("InvalidRegistryBaseKey"), hive))
+		};
+	}
+
+	/// <summary>
+	/// Centralized conversion from string to registry data and kind for SetValue.
+	/// </summary>
+	/// <param name="type">Registry value type descriptor</param>
+	/// <param name="value">String value to convert</param>
+	/// <returns>Tuple of (RegistryValueKind, converted object)</returns>
+	/// <exception cref="ArgumentException">Thrown for invalid registry value types.</exception>
+	private static (RegistryValueKind kind, object converted) ConvertStringToRegistryData(RegistryValueType type, string value)
+	{
+		switch (type)
+		{
+			case RegistryValueType.REG_SZ:
+				{
+					return (RegistryValueKind.String, value);
+				}
+			case RegistryValueType.REG_DWORD:
+				{
+					int convertedValue = int.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
+					return (RegistryValueKind.DWord, convertedValue);
+				}
+			case RegistryValueType.REG_QWORD:
+				{
+					long convertedValue = long.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
+					return (RegistryValueKind.QWord, convertedValue);
+				}
+			case RegistryValueType.REG_BINARY:
+				{
+					byte[] convertedValue = Convert.FromBase64String(value);
+					return (RegistryValueKind.Binary, convertedValue);
+				}
+			case RegistryValueType.REG_MULTI_SZ:
+				{
+					string[] convertedValue = value.Split(Separator, StringSplitOptions.None);
+					return (RegistryValueKind.MultiString, convertedValue);
+				}
+			case RegistryValueType.REG_EXPAND_SZ:
+				{
+					return (RegistryValueKind.ExpandString, value);
+				}
+			case RegistryValueType.REG_NONE:
+			case RegistryValueType.REG_DWORD_BIG_ENDIAN:
+			case RegistryValueType.REG_LINK:
+			case RegistryValueType.REG_RESOURCE_LIST:
+			case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:
+			case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
+			default:
+				{
+					throw new ArgumentException(GlobalVars.GetStr("InvalidRegistryValueType"));
+				}
+		}
 	}
 }

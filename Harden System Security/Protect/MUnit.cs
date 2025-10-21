@@ -568,13 +568,13 @@ internal static class SpecializedStrategiesRegistry
 internal sealed partial class MUnit(
 	Categories category,
 	string? name,
+	List<DeviceIntents.Intent> deviceIntents,
 	IApplyStrategy applyStrategy,
 	IVerifyStrategy? verifyStrategy = null,
 	IRemoveStrategy? removeStrategy = null,
 	SubCategories? subCategory = null,
 	string? url = null) : ViewModelBase
 {
-
 	/// <summary>
 	/// The category this unit belongs to.
 	/// </summary>
@@ -630,6 +630,11 @@ internal sealed partial class MUnit(
 	/// Used to point the ListView in the UI to a web location for more info or documentation.
 	/// </summary>
 	internal string? URL => url;
+
+	/// <summary>
+	/// Device Intents this MUnit belongs to.
+	/// </summary>
+	internal List<DeviceIntents.Intent> DeviceIntents => deviceIntents;
 
 	/// <summary>
 	/// Reference to the user control that contains this MUnit. Set by the user control when the ViewModel is assigned.
@@ -1513,7 +1518,7 @@ internal sealed partial class MUnit(
 	/// <param name="mUnits"></param>
 	/// <param name="operation"></param>
 	/// <param name="cancellationToken">Optional cancellation token for the operation</param>
-	internal async static Task ProcessMUnitsWithBulkOperations(IMUnitListViewModel? viewModel, List<MUnit> mUnits, MUnitOperation operation, CancellationToken? cancellationToken = null)
+	internal async static Task ProcessMUnitsWithBulkOperations(IMUnitListViewModel viewModel, List<MUnit> mUnits, MUnitOperation operation, CancellationToken? cancellationToken = null)
 	{
 		await Task.Run(async () =>
 		{
@@ -1523,9 +1528,9 @@ internal sealed partial class MUnit(
 
 				await App.AppDispatcher.EnqueueAsync(() =>
 				{
-					_ = (viewModel?.ElementsAreEnabled = false);
+					viewModel.ElementsAreEnabled = false;
 
-					_ = (viewModel?.MainInfoBar.IsClosable = false);
+					viewModel.MainInfoBar.IsClosable = false;
 
 					string operationText = operation switch
 					{
@@ -1534,14 +1539,17 @@ internal sealed partial class MUnit(
 						MUnitOperation.Verify => GlobalVars.GetStr("VerifyingSecurityMeasures"),
 						_ => GlobalVars.GetStr("ProcessingSecurityMeasures")
 					};
-					viewModel?.MainInfoBar.WriteInfo(string.Format(operationText, mUnits.Count));
+					viewModel.MainInfoBar.WriteInfo(string.Format(operationText, mUnits.Count));
 				});
 
 				// Get all available MUnits for dependency resolution (same category as the first MUnit)
+				// Mixed category inputs are not applicable, processors run per category, and this code builds the catalog for mUnits[0].Category, so it's safe.
 				List<MUnit> allAvailableMUnits = [];
-				if (mUnits.Count > 0 && viewModel != null)
+
+				// JSON dependency resolution needs the full list of MUnits for the category to look up dependent JsonPolicyId values.
+				if (mUnits.Count > 0)
 				{
-					allAvailableMUnits = viewModel.CreateAllMUnits()
+					allAvailableMUnits = viewModel.AllMUnits
 						.Where(m => m.Category == mUnits[0].Category)
 						.ToList();
 				}
@@ -1609,15 +1617,15 @@ internal sealed partial class MUnit(
 						MUnitOperation.Verify => GlobalVars.GetStr("SuccessfullyVerifiedSecurityMeasures"),
 						_ => GlobalVars.GetStr("SuccessfullyProcessedSecurityMeasures")
 					};
-					viewModel?.MainInfoBar.WriteSuccess(string.Format(operationText, mUnits.Count));
+					viewModel.MainInfoBar.WriteSuccess(string.Format(operationText, mUnits.Count));
 				});
 			}
 			finally
 			{
 				await App.AppDispatcher.EnqueueAsync(() =>
 				{
-					_ = (viewModel?.ElementsAreEnabled = true);
-					_ = (viewModel?.MainInfoBar.IsClosable = true);
+					viewModel.ElementsAreEnabled = true;
+					viewModel.MainInfoBar.IsClosable = true;
 				});
 			}
 		}, cancellationToken ?? CancellationToken.None);
@@ -1644,6 +1652,10 @@ internal sealed partial class MUnit(
 			foreach (RegistryPolicyEntry entry in policies)
 			{
 
+				// All security measures in JSON files must have Intents.
+				if (entry.DeviceIntents is null)
+					throw new InvalidOperationException($"The JSON file '{jsonConfigPath}' doesn't have device intents for all of its policies.");
+
 				MUnit mUnit;
 
 				if (entry.Source == Source.GroupPolicy)
@@ -1656,7 +1668,8 @@ internal sealed partial class MUnit(
 						verifyStrategy: new GroupPolicyVerify([entry]),
 						removeStrategy: new GroupPolicyRemove([entry]),
 						subCategory: entry.SubCategory,
-						url: entry.URL);
+						url: entry.URL,
+						deviceIntents: entry.DeviceIntents);
 				}
 				else if (entry.Source == Source.Registry)
 				{
@@ -1668,7 +1681,8 @@ internal sealed partial class MUnit(
 						verifyStrategy: new RegistryVerify([entry]),
 						removeStrategy: new RegistryRemove([entry]),
 						subCategory: entry.SubCategory,
-						url: entry.URL);
+						url: entry.URL,
+						deviceIntents: entry.DeviceIntents);
 				}
 				else if (entry.Source == Source.SecurityPolicyRegistry)
 				{
@@ -1686,7 +1700,8 @@ internal sealed partial class MUnit(
 						verifyStrategy: new SecurityPolicyRegistryVerify([entry]),
 						removeStrategy: new SecurityPolicyRegistryRemove([entry]),
 						subCategory: entry.SubCategory,
-						url: entry.URL);
+						url: entry.URL,
+						deviceIntents: entry.DeviceIntents);
 				}
 				else
 				{

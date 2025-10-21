@@ -4092,4 +4092,67 @@
     <comment>Protection Category Description</comment>
     <value>Microsoft സുരക്ഷാ ബേസ്ലൈനുകൾക്കായി ശുപാർശ ചെയ്ത ഓവർറൈഡുകൾ പ്രയോഗിക്കുക, അവ വഴി പ്രവർത്തനരഹിതമാക്കിയ ചില പ്രധാന പ്രവർത്തനങ്ങൾ പുനഃസ്ഥാപിക്കാൻ.</value>
   </data>
+  <data name="DeviceUsageIntent-Development-Title" xml:space="preserve">
+    <value>വികസനം</value>
+  </data>
+  <data name="DeviceUsageIntent-Development-Description" xml:space="preserve">
+    <value>സോഫ്റ്റ്വെയർ എഴുതാനും ടെസ്റ്റുചെയ്യാനും നിർമ്മിച്ചത്. സുരക്ഷിത ഡീഫോൾട്ടുകൾ ഉപയോഗിക്കുന്നു, അതേസമയം സാധാരണ ഡെവലപ്പർ ഉപകരണങ്ങളും ലോക്കൽ ബിൽഡുകളും അനാവശ്യ നിയന്ത്രണങ്ങൾ ഇല്ലാതെ അനുവദിക്കുന്നു.</value>
+  </data>
+  <data name="DeviceUsageIntent-Gaming-Title" xml:space="preserve">
+    <value>ഗെയിമിംഗ്</value>
+  </data>
+  <data name="DeviceUsageIntent-Gaming-Description" xml:space="preserve">
+    <value>കളികളുമായി പ്രകടനത്തിനും അനുയോജ്യതയ്ക്കും വിധേയമായി ട്യൂൺ ചെയ്തിരിക്കുന്നു. ഗെയിംപ്ലേയെ ബാധിക്കാൻ സാധ്യതയുള്ള ക്രമീകരണങ്ങൾ ഒഴിവാക്കി, അത്യാവശ്യ സംരക്ഷണങ്ങൾ നിലനിർത്തുന്നു.</value>
+  </data>
+  <data name="DeviceUsageIntent-School-Title" xml:space="preserve">
+    <value>സ്കൂൾ</value>
+  </data>
+  <data name="DeviceUsageIntent-School-Description" xml:space="preserve">
+    <value>വിദ്യാർത്ഥികൾക്ക് അനുയോജ്യം, ലേണിംഗ് ആപ്പുകളുമായി അനുയോജ്യത നിലനിർത്തുന്നു, ഭാരമേറിയ എന്റർപ്രൈസ് നിയന്ത്രണങ്ങൾ ഒഴിവാക്കുന്നു.</value>
+  </data>
+  <data name="DeviceUsageIntent-Business-Title" xml:space="preserve">
+    <value>ബിസിനസ്</value>
+  </data>
+  <data name="DeviceUsageIntent-Business-Description" xml:space="preserve">
+    <value>ദൈനംദിന കോർപ്പറേറ്റ് ഉപയോഗത്തിനുള്ള ഉപകരണം, ജോലി ഡാറ്റയുടെയും അക്കൗണ്ടുകളുടെയും ശക്തമായ സംരക്ഷണങ്ങളോടെ. വിവേചനബുദ്ധിയുള്ള ആക്സസ്, ലോഗിംഗ്, അപ്‌ഡേറ്റ് പെരുമാറ്റം എന്നിവയോടെ ഉൽപ്പാദനക്ഷമതയ്ക്കായി സന്തുലിതമാക്കിയിരിക്കുന്നു.</value>
+  </data>
+  <data name="DeviceUsageIntent-SpecializedAccessWorkstation-Title" xml:space="preserve">
+    <value>വിശിഷ്ട ആക്സസ് വർക്ക്‌സ്റ്റേഷൻ</value>
+  </data>
+  <data name="DeviceUsageIntent-SpecializedAccessWorkstation-Description" xml:space="preserve">
+    <value>വിശിഷ്ട സുരക്ഷാ ഉപയോക്താവ് കൂടുതൽ നിയന്ത്രിതമായ പരിസരം ആവശ്യപ്പെടുന്നു, അതേ സമയം ഇമെയിൽ, വെബ് ബ്രൗസിംഗ് പോലുള്ള പ്രവർത്തനങ്ങൾ എളുപ്പത്തിൽ ഉപയോഗിക്കാവുന്ന അനുഭവത്തിൽ ചെയ്യാനും കഴിയണം.</value>
+  </data>
+  <data name="DeviceUsageIntent-PrivilegedAccessWorkstation-Title" xml:space="preserve">
+    <value>പ്രത്യേക അവകാശ പ്രവേശന വർക്ക്‌സ്റ്റേഷൻ</value>
+  </data>
+  <data name="DeviceUsageIntent-PrivilegedAccessWorkstation-Description" xml:space="preserve">
+    <value>ഇത് ഏറ്റവും ഉയർന്ന സുരക്ഷാ കോൺഫിഗറേഷനാണ്, അത്യന്തം സെൻസിറ്റീവ് സ്ഥാനങ്ങൾക്ക് രൂപകൽപ്പന ചെയ്തത്; അവരുടെ അക്കൗണ്ട് ലംഘിക്കപ്പെടുകയാണെങ്കിൽ സംഘടനയ്ക്ക് ഗണ്യമായ അല്ലെങ്കിൽ വസ്തുതാപരമായ സ്വാധീനം ഉണ്ടാകാം.</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.Content" xml:space="preserve">
+    <value>പ്രയോഗിക്കുക</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>താങ്കൾ തെരഞ്ഞെടുത്ത ഉപകരണ ഉപയോഗ ഉദ്ദേശങ്ങളെ അടിസ്ഥാനമാക്കി താഴെ കാണിക്കുന്ന എല്ലാ സുരക്ഷാ നടപടികളും പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>താങ്കൾ തെരഞ്ഞെടുത്ത ഉപകരണ ഉപയോഗ ഉദ്ദേശങ്ങളെ അടിസ്ഥാനമാക്കി താഴെ കാണിക്കുന്ന എല്ലാ സുരക്ഷാ നടപടികളും പ്രയോഗിക്കുക.</value>
+  </data>
+  <data name="ResultingSecurityMeasures.Text" xml:space="preserve">
+    <value>ഫലമായ സുരക്ഷാ നടപടികൾ</value>
+  </data>
+  <data name="ResultingSecurityMeasuresCaption.Text" xml:space="preserve">
+    <value>പ്രയോഗിക്കുക അമർത്തുമ്പോൾ ഇവ പ്രയോഗിക്കപ്പെടും.</value>
+  </data>
+  <data name="SelectDeviceIntents.Text" xml:space="preserve">
+    <value>ഉപകരണ ഉപയോഗ ഉദ്ദേശങ്ങൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="SelectDeviceIntentsCaption.Text" xml:space="preserve">
+    <value>പ്രയോഗിക്കുന്ന സുരക്ഷാ കോൺഫിഗറേഷൻ ക്രമീകരിക്കാൻ ഒന്നോ അതിലധികമോ ഉദ്ദേശങ്ങൾ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="Presets.Text" xml:space="preserve">
+    <value>മുൻക്രമീകരണങ്ങൾ</value>
+  </data>
+    <data name="DeviceIntents.Text" xml:space="preserve">
+    <value>ഉപകരണ ഇന്റെന്റുകൾ</value>
+  </data>
 </root>

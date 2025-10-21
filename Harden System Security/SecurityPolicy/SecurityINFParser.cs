@@ -212,7 +212,7 @@ internal static class SecurityINFParser
 		if (commaIndex == -1)
 		{
 			// No comma found, treat as type only with empty value
-			if (uint.TryParse(typeAndValue, out uint typeValue))
+			if (uint.TryParse(typeAndValue, CultureInfo.InvariantCulture, out uint typeValue))
 			{
 				registryType = (RegistryValueType)typeValue;
 				regValue = "";
@@ -227,7 +227,7 @@ internal static class SecurityINFParser
 		string valueString = typeAndValue[(commaIndex + 1)..].Trim();
 
 		// Parse the type
-		if (!uint.TryParse(typeString, out uint typeNum))
+		if (!uint.TryParse(typeString, CultureInfo.InvariantCulture, out uint typeNum))
 			return false;
 
 		registryType = (RegistryValueType)typeNum;
@@ -249,7 +249,7 @@ internal static class SecurityINFParser
 
 			case RegistryValueType.REG_DWORD:
 				// DWORD value
-				if (uint.TryParse(valueString, out uint dwordValue))
+				if (uint.TryParse(valueString, CultureInfo.InvariantCulture, out uint dwordValue))
 				{
 					regValue = dwordValue.ToString(CultureInfo.InvariantCulture);
 					data = BitConverter.GetBytes(dwordValue);
@@ -263,7 +263,7 @@ internal static class SecurityINFParser
 
 			case RegistryValueType.REG_QWORD:
 				// QWORD value
-				if (ulong.TryParse(valueString, out ulong qwordValue))
+				if (ulong.TryParse(valueString, CultureInfo.InvariantCulture, out ulong qwordValue))
 				{
 					regValue = qwordValue.ToString(CultureInfo.InvariantCulture);
 					data = BitConverter.GetBytes(qwordValue);
@@ -333,7 +333,7 @@ internal static class SecurityINFParser
 				byte[] bytes = new byte[byteStrings.Length];
 				for (int i = 0; i < byteStrings.Length; i++)
 				{
-					if (!byte.TryParse(byteStrings[i].Trim(), out bytes[i]))
+					if (!byte.TryParse(byteStrings[i].Trim(), CultureInfo.InvariantCulture, out bytes[i]))
 					{
 						// If parsing fails, return the string as UTF-8 bytes
 						return Encoding.UTF8.GetBytes(binaryString);
@@ -349,7 +349,7 @@ internal static class SecurityINFParser
 					byte[] bytes = new byte[binaryString.Length / 2];
 					for (int i = 0; i < bytes.Length; i++)
 					{
-						if (!byte.TryParse(binaryString.AsSpan(i * 2, 2), NumberStyles.HexNumber, null, out bytes[i]))
+						if (!byte.TryParse(binaryString.AsSpan(i * 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out bytes[i]))
 						{
 							// If hex parsing fails, return the string as UTF-8 bytes
 							return Encoding.UTF8.GetBytes(binaryString);

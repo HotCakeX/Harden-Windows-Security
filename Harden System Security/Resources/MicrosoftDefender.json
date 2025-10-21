@@ -13,7 +13,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-webthreatdefense#automaticdatacollection",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -29,7 +32,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-webthreatdefense#notifymalicious",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -45,7 +51,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-webthreatdefense#notifypasswordreuse",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -61,7 +70,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-webthreatdefense#notifyunsafeapp",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -77,7 +89,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-webthreatdefense#serviceenabled",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -93,7 +108,10 @@
         "URL": "",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -109,7 +127,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#cloudblocklevel",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -125,7 +149,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#cloudextendedtimeout",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -141,7 +171,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#mpengine_enablefilehashcomputation",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -157,7 +193,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#quarantine_purgeitemsafterdelay",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -173,7 +215,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/microsoft-defender-endpoint-antivirus-performance-mode",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -189,7 +234,10 @@
         "URL": "",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -205,7 +253,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#realtimeprotection_ioavmaxsize",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -221,7 +272,10 @@
         "URL": "",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -237,7 +291,13 @@
         "URL": "",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -253,7 +313,10 @@
         "URL": "",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -269,7 +332,13 @@
         "URL": "",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -285,7 +354,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#scan_archivemaxdepth",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -301,7 +376,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#allowfullscanremovabledrivescanning",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -317,7 +395,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#scan_disablereparsepointscanning",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -333,7 +414,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#allowfullscanonmappednetworkdrives",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -349,7 +436,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#allowscanningnetworkfiles",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -365,7 +458,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#allowemailscanning",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -381,7 +477,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#disablecatchupquickscan",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -397,7 +496,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#checkforsignaturesbeforerunningscan",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -413,7 +515,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#signatureupdateinterval",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -429,7 +537,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#signatureupdate_updateonstartup",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -445,7 +556,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/defender-csp#configurationmeteredconnectionupdates",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -461,7 +578,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#signatureupdate_assignaturedue",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -477,7 +597,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#signatureupdate_avsignaturedue",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -493,7 +616,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#disableblockatfirstseen",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -509,7 +638,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#allowcloudprotection",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -525,7 +657,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#submitsamplesconsent",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -541,7 +676,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -557,7 +695,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -573,7 +714,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -589,7 +733,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -605,7 +752,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -621,7 +771,13 @@
         "URL": "",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -637,7 +793,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#enablenetworkprotection",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -653,7 +812,13 @@
         "URL": "",
         "Category": 2,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -669,7 +834,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-system#allowtelemetry",
         "Category": 2,
         "SubCategory": 2,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -685,7 +856,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-system#configuretelemetryoptinsettingsux",
         "Category": 2,
         "SubCategory": 2,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 1,
@@ -701,6 +878,11 @@
         "URL": "https://learn.microsoft.com/windows/apps/develop/smart-app-control/overview",
         "Category": 2,
         "SubCategory": 0,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     }
 ]

@@ -114,6 +114,15 @@ internal sealed class RegistryPolicyEntry(
 	internal string? DefaultRegValue { get; set; }
 
 	/// <summary>
+	/// This property is only used to retrieve the intents from the JSON file and relay it to <see cref="MUnit"/> instances that are created based on it.
+	/// The <see cref="MUnit"/> is the actual and intended recipient of this value.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyOrder(14)]
+	[JsonPropertyName("DeviceIntents")]
+	internal List<DeviceIntents.Intent>? DeviceIntents { get; set; }
+
+	/// <summary>
 	/// Calculated once, returns the parsed value based on the type and data.
 	/// </summary>
 	[JsonIgnore]

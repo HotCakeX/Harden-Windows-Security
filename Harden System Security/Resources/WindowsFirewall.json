@@ -13,7 +13,10 @@
         "URL": "",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -29,7 +32,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofileenablefirewall",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -45,7 +51,11 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofiledefaultoutboundaction",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -61,7 +71,11 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofiledefaultinboundaction",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -77,7 +91,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofiledisableinboundnotifications",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -93,7 +110,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofilelogfilepath",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -109,7 +129,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofilelogmaxfilesize",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -125,7 +148,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofileenablelogdroppedpackets",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -141,7 +167,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoredomainprofileenablelogsuccessconnections",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -157,7 +186,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofileenablefirewall",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -173,7 +205,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofiledisableinboundnotifications",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -189,7 +224,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofilelogmaxfilesize",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -205,7 +243,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofileenablelogdroppedpackets",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -221,7 +262,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofilelogfilepath",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -237,7 +281,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstorepublicprofileenablefirewall",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -253,7 +300,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstorepublicprofiledisableinboundnotifications",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -269,7 +319,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstorepublicprofilelogmaxfilesize",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -285,7 +338,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstorepublicprofileenablelogdroppedpackets",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -301,6 +357,9 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/firewall-csp#mdmstorepublicprofilelogfilepath",
         "Category": 9,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     }
 ]

@@ -125,7 +125,7 @@ public partial class App : Application
 			Logger.Write(ex);
 		}
 
-		// If the current session is not elevated and user configured the app to ask for elevation on startup		
+		// If the current session is not elevated and user configured the app to ask for elevation on startup
 		// Also prompt for elevation whether or not prompt for elevation setting is on when user selects a file to open from file explorer that requires elevated permissions
 		if (!IsElevated && Settings.PromptForElevationOnStartup || !IsElevated && requireAdminPrivilege)
 		{

@@ -4092,4 +4092,67 @@ Huella Digital: {3}</value>
     <comment>Protection Category Description</comment>
     <value>Aplica las anulaciones recomendadas para las líneas base de seguridad de Microsoft para restaurar algunas de las funcionalidades importantes que fueron deshabilitadas por ellas.</value>
   </data>
+  <data name="DeviceUsageIntent-Development-Title" xml:space="preserve">
+    <value>Desarrollo</value>
+  </data>
+  <data name="DeviceUsageIntent-Development-Description" xml:space="preserve">
+    <value>Diseñado para escribir y probar software. Usa valores predeterminados seguros, a la vez que permite herramientas de desarrollo comunes y compilaciones locales sin restricciones innecesarias.</value>
+  </data>
+  <data name="DeviceUsageIntent-Gaming-Title" xml:space="preserve">
+    <value>Juegos</value>
+  </data>
+  <data name="DeviceUsageIntent-Gaming-Description" xml:space="preserve">
+    <value>Ajustado para el rendimiento y la compatibilidad con juegos. Mantiene protecciones esenciales evitando configuraciones que puedan afectar la jugabilidad.</value>
+  </data>
+  <data name="DeviceUsageIntent-School-Title" xml:space="preserve">
+    <value>Escuela</value>
+  </data>
+  <data name="DeviceUsageIntent-School-Description" xml:space="preserve">
+    <value>Adecuado para estudiantes, mantiene la compatibilidad con aplicaciones de aprendizaje y evita controles empresariales pesados.</value>
+  </data>
+  <data name="DeviceUsageIntent-Business-Title" xml:space="preserve">
+    <value>Empresarial</value>
+  </data>
+  <data name="DeviceUsageIntent-Business-Description" xml:space="preserve">
+    <value>Dispositivo corporativo de uso cotidiano con sólidas protecciones para los datos y cuentas de trabajo. Equilibrado para la productividad con acceso sensato, registro y un comportamiento de actualización adecuado.</value>
+  </data>
+  <data name="DeviceUsageIntent-SpecializedAccessWorkstation-Title" xml:space="preserve">
+    <value>Estación de trabajo de acceso especializado</value>
+  </data>
+  <data name="DeviceUsageIntent-SpecializedAccessWorkstation-Description" xml:space="preserve">
+    <value>El usuario de seguridad especializado requiere un entorno más controlado, y aun así poder realizar actividades como correo electrónico y navegación web en una experiencia fácil de usar.</value>
+  </data>
+  <data name="DeviceUsageIntent-PrivilegedAccessWorkstation-Title" xml:space="preserve">
+    <value>Estación de trabajo de acceso privilegiado</value>
+  </data>
+  <data name="DeviceUsageIntent-PrivilegedAccessWorkstation-Description" xml:space="preserve">
+    <value>Esta es la configuración de seguridad más alta, diseñada para funciones sumamente sensibles que tendrían un impacto significativo o material en la organización si su cuenta se viera comprometida.</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.Content" xml:space="preserve">
+    <value>Aplicar</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Aplicar todas las medidas de seguridad que se muestran a continuación, basadas en las intenciones de uso del dispositivo que seleccionó.</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aplicar todas las medidas de seguridad que se muestran a continuación, basadas en las intenciones de uso del dispositivo que seleccionó.</value>
+  </data>
+  <data name="ResultingSecurityMeasures.Text" xml:space="preserve">
+    <value>Medidas de seguridad resultantes</value>
+  </data>
+  <data name="ResultingSecurityMeasuresCaption.Text" xml:space="preserve">
+    <value>Se aplicarán cuando presione Aplicar.</value>
+  </data>
+  <data name="SelectDeviceIntents.Text" xml:space="preserve">
+    <value>Seleccionar intenciones de uso del dispositivo</value>
+  </data>
+  <data name="SelectDeviceIntentsCaption.Text" xml:space="preserve">
+    <value>Elija una o más intenciones para adaptar la configuración de seguridad aplicada.</value>
+  </data>
+  <data name="Presets.Text" xml:space="preserve">
+    <value>Ajustes predefinidos</value>
+  </data>
+    <data name="DeviceIntents.Text" xml:space="preserve">
+    <value>Intents del dispositivo</value>
+  </data>
 </root>

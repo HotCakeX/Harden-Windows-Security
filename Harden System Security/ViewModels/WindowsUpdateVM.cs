@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using AppControlManager.Others;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
@@ -46,28 +47,27 @@ internal sealed partial class WindowsUpdateVM : MUnitListViewModelBase
 	/// <summary>
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
-	/// <returns>List of all MUnits for this ViewModel</returns>
-	public override List<MUnit> CreateAllMUnits()
-	{
-		// Register specialized strategies and dependencies.
-		RegisterSpecializedStrategies();
+	private static readonly Lazy<List<MUnit>> LazyCatalog =
+		new(() =>
+		{
+			#region Registers specialized strategies for specific policies.
 
-		return MUnit.CreateMUnitsFromPolicies(Categories.WindowsUpdateConfigurations);
-	}
+			// Register specialized verification strategy for "Allow updates to be downloaded automatically over metered connections"
+			// so its status can be detected via COM too.
+			SpecializedStrategiesRegistry.RegisterSpecializedVerification(
+				"Software\\Policies\\Microsoft\\Windows\\WindowsUpdate|AllowAutoWindowsUpdateDownloadOverMeteredNetwork",
+				new AllowAutoWindowsUpdateDownloadOverMeteredNetworkSpecVerify()
+			);
+
+			#endregion
+
+			return MUnit.CreateMUnitsFromPolicies(Categories.WindowsUpdateConfigurations);
+		}, LazyThreadSafetyMode.ExecutionAndPublication);
 
 	/// <summary>
-	/// Registers specialized strategies for specific policies.
+	/// Gets the current catalog of all MUnits for this ViewModel.
 	/// </summary>
-	private void RegisterSpecializedStrategies()
-	{
-		// Register specialized verification strategy for "Allow updates to be downloaded automatically over metered connections"
-		// so its status can be detected via COM too.
-		SpecializedStrategiesRegistry.RegisterSpecializedVerification(
-			"Software\\Policies\\Microsoft\\Windows\\WindowsUpdate|AllowAutoWindowsUpdateDownloadOverMeteredNetwork",
-			new AllowAutoWindowsUpdateDownloadOverMeteredNetworkSpecVerify()
-		);
-
-	}
+	public override List<MUnit> AllMUnits => LazyCatalog.Value;
 
 	/// <summary>
 	/// Specialized verification for AllowAutoWindowsUpdateDownloadOverMeteredNetwork.

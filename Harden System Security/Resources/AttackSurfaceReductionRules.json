@@ -13,7 +13,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -29,7 +32,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -45,7 +51,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -61,7 +70,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -77,7 +89,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -93,7 +108,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -109,7 +127,12 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -125,7 +148,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -141,7 +167,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -157,7 +186,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -173,7 +205,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -189,7 +224,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -205,7 +243,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -221,7 +262,13 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -237,7 +284,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -253,7 +303,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -269,7 +322,10 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -285,7 +341,11 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -301,7 +361,13 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -317,6 +383,9 @@
         "URL": "https://learn.microsoft.com/defender-endpoint/attack-surface-reduction-rules-reference",
         "Category": 3,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     }
 ]

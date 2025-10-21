@@ -13,7 +13,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#enablevirtualizationbasedsecurity",
         "Category": 8,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -29,7 +32,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#requireplatformsecurityfeatures",
         "Category": 8,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -45,7 +51,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-VirtualizationBasedTechnology?WT.mc_id=Portal-fx#hypervisorenforcedcodeintegrity",
         "Category": 8,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -61,7 +70,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-VirtualizationBasedTechnology?WT.mc_id=Portal-fx#requireuefimemoryattributestable",
         "Category": 8,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -77,7 +89,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#lsacfgflags",
         "Category": 8,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -93,7 +108,12 @@
         "URL": "",
         "Category": 8,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -109,7 +129,12 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#configuresystemguardlaunch",
         "Category": 8,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -125,7 +150,13 @@
         "URL": "",
         "Category": 8,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -141,7 +172,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-lsa#configurelsaprotectedprocess",
         "Category": 8,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 1,
@@ -157,6 +194,10 @@
         "URL": "https://learn.microsoft.com/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity?tabs=reg",
         "Category": 8,
         "SubCategory": 3,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            4,
+            5
+        ]
     }
 ]

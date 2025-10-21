@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using AppControlManager.Others;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
@@ -46,17 +47,14 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// <summary>
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
-	/// <returns>List of all MUnits for this ViewModel</returns>
-	public override List<MUnit> CreateAllMUnits()
-	{
-		return CreateMUnitsFromPolicies();
-	}
+	private static readonly Lazy<List<MUnit>> LazyCatalog =
+		new(() =>
+		{
+			return MUnit.CreateMUnitsFromPolicies(Categories.WindowsFirewall);
+		}, LazyThreadSafetyMode.ExecutionAndPublication);
 
 	/// <summary>
-	/// Create MUnits from JSON policies, handling both Group Policy and Registry sources.
+	/// Gets the current catalog of all MUnits for this ViewModel.
 	/// </summary>
-	internal List<MUnit> CreateMUnitsFromPolicies()
-	{
-		return MUnit.CreateMUnitsFromPolicies(Categories.WindowsFirewall);
-	}
+	public override List<MUnit> AllMUnits => LazyCatalog.Value;
 }

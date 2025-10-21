@@ -286,7 +286,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBar.IsClosable = false;
+			MainInfoBarIsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("ApplyingMicrosoft365AppsSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
@@ -316,7 +316,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 			ApplyAllCancellableButton.End();
 			ElementsAreEnabled = true;
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			// Re-enable all three buttons
 			CurrentRunningOperation = RunningOperation.None;
 		}
@@ -337,7 +337,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBar.IsClosable = false;
+			MainInfoBarIsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("RemovingMicrosoft365AppsSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
@@ -367,7 +367,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 			RemoveAllCancellableButton.End();
 			ElementsAreEnabled = true;
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			// Re-enable all three buttons
 			CurrentRunningOperation = RunningOperation.None;
 		}
@@ -388,7 +388,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBar.IsClosable = false;
+			MainInfoBarIsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("VerifyingMicrosoft365AppsSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
@@ -431,7 +431,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 			VerifyAllCancellableButton.End();
 			ElementsAreEnabled = true;
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			// Re-enable all three buttons
 			CurrentRunningOperation = RunningOperation.None;
 		}

@@ -93,8 +93,9 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 	/// <summary>
 	/// To store the selected items.
+	/// Using a HashSet with a StableIdentity-based comparer to deduplicate and allow value-based lookups across reloads/filters.
 	/// </summary>
-	private readonly List<PackagedAppView> AppsListItemsSourceSelectedItems = [];
+	private readonly HashSet<PackagedAppView> AppsListItemsSourceSelectedItems = new(new PackagedAppViewIdentityComparer());
 
 	/// <summary>
 	/// Total number of items loaded (all apps)
@@ -122,6 +123,13 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	private volatile bool _isRestoringSelection;
 
 	/// <summary>
+	/// Flag to suppress SelectionChanged handling while ItemsSource is being programmatically updated
+	/// (e.g., during refresh or filtering). Prevents clearing the persisted selection set when the ListView
+	/// raises SelectionChanged due to ItemsSource replacement.
+	/// </summary>
+	private volatile bool _isUpdatingItemsSource;
+
+	/// <summary>
 	/// Event handler for the Refresh button to get the apps list
 	/// </summary>
 	internal async void RefreshAppsListButton_Click()
@@ -141,11 +149,24 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			AppsListItemsSource = await GetAppsList.GetContactsGroupedAsync(this);
-			AppsListItemsSourceBackingList = AppsListItemsSource.ToList();
 
-			// Update counts after loading apps
-			UpdateCounts();
+			// Get the new data first
+			ObservableCollection<GroupInfoListForPackagedAppView> newItems = await GetAppsList.GetContactsGroupedAsync(this);
+
+			// Suppress selection change side effects while replacing ItemsSource to preserve persisted selection
+			_isUpdatingItemsSource = true;
+			try
+			{
+				AppsListItemsSource = newItems;
+				AppsListItemsSourceBackingList = AppsListItemsSource.ToList();
+
+				// Update counts after loading apps
+				UpdateCounts();
+			}
+			finally
+			{
+				_isUpdatingItemsSource = false;
+			}
 
 			// Restore selection after loading new data
 			RestoreSelectionFromViewModel();
@@ -157,8 +178,6 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			AppsListItemsSourceSelectedItems.Clear();
-			SelectedItemsCount = 0;
 		}
 	}
 
@@ -225,8 +244,8 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			// Clearing the current ListView selection without triggering selection changed events
 			UIListView.SelectedItems.Clear();
 
-			// A flat list of all currently visible PackagedAppView items for faster lookup
-			HashSet<PackagedAppView> visibleApps = [];
+			// Building a HashSet of all currently visible PackagedAppView items with the identity comparer.
+			HashSet<PackagedAppView> visibleApps = new(new PackagedAppViewIdentityComparer());
 			foreach (GroupInfoListForPackagedAppView group in AppsListItemsSource)
 			{
 				foreach (PackagedAppView app in group)
@@ -238,9 +257,9 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			// Restore selection for items that are in the ViewModel's selection list and currently visible
 			foreach (PackagedAppView selectedApp in AppsListItemsSourceSelectedItems)
 			{
-				if (visibleApps.Contains(selectedApp))
+				if (visibleApps.TryGetValue(selectedApp, out PackagedAppView? currentInstance))
 				{
-					UIListView.SelectedItems.Add(selectedApp);
+					UIListView.SelectedItems.Add(currentInstance);
 				}
 			}
 		}
@@ -287,12 +306,13 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	internal void MainListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		// Skip processing if we're currently restoring selection to prevent recursion
-		if (_isRestoringSelection)
+		// Also skip while ItemsSource is being updated to avoid clearing persisted selection on ItemsSource replacement
+		if (_isRestoringSelection || _isUpdatingItemsSource)
 			return;
 
 		foreach (PackagedAppView item in e.AddedItems.Cast<PackagedAppView>())
 		{
-			AppsListItemsSourceSelectedItems.Add(item);
+			_ = AppsListItemsSourceSelectedItems.Add(item);
 		}
 
 		foreach (PackagedAppView item in e.RemovedItems.Cast<PackagedAppView>())
@@ -311,9 +331,18 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	{
 		if (string.IsNullOrWhiteSpace(SearchKeyword))
 		{
-			// If the filter is cleared, restore the original collection
-			AppsListItemsSource = new(AppsListItemsSourceBackingList);
-			UpdateCounts();
+			_isUpdatingItemsSource = true;
+			try
+			{
+				// If the filter is cleared, restore the original collection
+				AppsListItemsSource = new(AppsListItemsSourceBackingList);
+				UpdateCounts();
+			}
+			finally
+			{
+				_isUpdatingItemsSource = false;
+			}
+
 			// Restore selection after clearing search
 			RestoreSelectionFromViewModel();
 			return;
@@ -336,9 +365,18 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				),
 				key: group.Key)).Where(group => group.Any()).ToList();
 
-		// Update the ListView source with the filtered data
-		AppsListItemsSource = new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
-		UpdateCounts();
+		_isUpdatingItemsSource = true;
+		try
+		{
+			// Update the ListView source with the filtered data
+			AppsListItemsSource = new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
+			UpdateCounts();
+		}
+		finally
+		{
+			_isUpdatingItemsSource = false;
+		}
+
 		// Restore selection after filtering (only items that match search will be selected)
 		RestoreSelectionFromViewModel();
 	}
@@ -353,7 +391,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBar.IsClosable = false;
+			MainInfoBarIsClosable = false;
 
 			if (sender is not MenuFlyoutItem menuItem)
 			{
@@ -393,7 +431,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 		}
 	}
 
@@ -401,7 +439,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// Event handler for uninstalling multiple selected apps from the toolbar button.
 	/// </summary>
 	/// <param name="sender">The Button that was clicked</param>
-	/// <param name="e">Event arguments</param>
+	/// <param name="e"></param>
 	internal async void UninstallSelectedApps_Click(object sender, RoutedEventArgs e)
 	{
 		if (AppsListItemsSourceSelectedItems.Count == 0)
@@ -416,7 +454,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBar.IsClosable = false;
+			MainInfoBarIsClosable = false;
 
 			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("StartingUninstallationOfMultipleApps"), appsToUninstall.Count));
 
@@ -440,7 +478,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 		}
 	}
 
@@ -594,7 +632,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	{
 		try
 		{
-			MainInfoBar.IsClosable = false;
+			MainInfoBarIsClosable = false;
 
 			if (sender is not MenuFlyoutItem menuItem)
 			{
@@ -645,7 +683,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		}
 		finally
 		{
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 		}
 	}
 
@@ -658,7 +696,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	{
 		try
 		{
-			MainInfoBar.IsClosable = false;
+			MainInfoBarIsClosable = false;
 
 			if (sender is not MenuFlyoutItem menuItem)
 			{
@@ -693,7 +731,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		}
 		finally
 		{
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 		}
 	}
 

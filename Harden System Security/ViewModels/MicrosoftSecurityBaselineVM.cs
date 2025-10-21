@@ -326,7 +326,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBar.IsClosable = false;
+			MainInfoBarIsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("ApplyingMicrosoftSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
@@ -356,7 +356,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 
 			ApplyAllCancellableButton.End();
 			ElementsAreEnabled = true;
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			// Re-enable all three buttons
 			CurrentRunningOperation = RunningOperation.None;
 		}
@@ -377,7 +377,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBar.IsClosable = false;
+			MainInfoBarIsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("RemovingMicrosoftSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
@@ -407,7 +407,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 
 			RemoveAllCancellableButton.End();
 			ElementsAreEnabled = true;
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			// Re-enable all three buttons
 			CurrentRunningOperation = RunningOperation.None;
 		}
@@ -428,7 +428,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
-			MainInfoBar.IsClosable = false;
+			MainInfoBarIsClosable = false;
 			MainInfoBar.WriteInfo(GlobalVars.GetStr("VerifyingMicrosoftSecurityBaseline"));
 
 			// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
@@ -471,7 +471,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 
 			VerifyAllCancellableButton.End();
 			ElementsAreEnabled = true;
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			// Re-enable all three buttons
 			CurrentRunningOperation = RunningOperation.None;
 		}

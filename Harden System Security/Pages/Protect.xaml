@@ -8,6 +8,7 @@
     xmlns:others="using:AppControlManager.Others"
     xmlns:Protect="using:HardenSystemSecurity.Protect"
     xmlns:ani="using:CommunityToolkit.WinUI.Animations"
+    xmlns:DI="using:HardenSystemSecurity.DeviceIntents"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -22,12 +23,22 @@
 
         <Grid.Resources>
 
-            <!-- For the Protection ListView Grouping -->
-            <CollectionViewSource x:Name="ProtectionCategoriesCollectionViewSource"
-                                  Source="{x:Bind ViewModel.ProtectionCategoriesListItemsSource, Mode=OneWay}"
-                                  IsSourceGrouped="True"/>
+            <!-- Styles used by the Device Intents GridView -->
+            <Style
+                x:Key="GridViewItemStyle"
+                BasedOn="{StaticResource DefaultGridViewItemStyle}"
+                TargetType="GridViewItem">
+                <Setter Property="Margin" Value="0,0,12,12" />
+            </Style>
 
-            <!-- Defines a single Protection category that is displayed in the ListView -->
+            <Style
+                x:Key="GridViewItemStyleSpaced"
+                BasedOn="{StaticResource DefaultGridViewItemStyle}"
+                TargetType="GridViewItem">
+                <Setter Property="Margin" Value="12,0,0,12" />
+            </Style>
+
+            <!-- Defines a single Protection category displayed in the ListView -->
             <DataTemplate x:Key="ProtectionCategoryListViewTemplate"
                           x:DataType="Protect:ProtectionCategoryListViewItem">
                 <Grid>
@@ -81,11 +92,10 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="Protect:SubCategoryDefinition">
                                 <StackPanel Orientation="Vertical" Spacing="4" Margin="6">
-                                    <!--By default the sub-categories are not checked/selected-->
                                     <CheckBox Content="{x:Bind Description}"
-                                          IsChecked="False"
-                                          ToolTipService.ToolTip="{x:Bind Description}"
-                                          AutomationProperties.HelpText="{x:Bind Description}" />
+                                              IsChecked="{x:Bind IsChecked, Mode=TwoWay}"
+                                              ToolTipService.ToolTip="{x:Bind Description}"
+                                              AutomationProperties.HelpText="{x:Bind Description}" />
 
                                     <TextBlock Text="{x:Bind Tip}"
                                                ToolTipService.ToolTip="{x:Bind Tip}"
@@ -100,6 +110,126 @@
                 </Grid>
             </DataTemplate>
 
+            <!-- For the listview that shows security measures that will be applied based on selected device usage intents. -->
+            <DataTemplate x:Key="DeviceIntentMUnitPreviewTemplate" x:DataType="Protect:MUnit">
+
+                <Grid ColumnSpacing="12" Padding="8"
+                      Margin="0,4,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Name -->
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="{x:Bind Name}"
+                       ToolTipService.ToolTip="{x:Bind Name}"
+                       AutomationProperties.HelpText="{x:Bind Name}"
+                       TextWrapping="Wrap"
+                       x:Phase="1"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Style="{ThemeResource BodyTextBlockStyle}"
+                       Margin="0,0,0,4"/>
+
+                    <!-- Compact SubCategory tag; constrained and ellipsized so it won't stretch horizontally -->
+                    <Border Grid.Row="1"
+                    Grid.Column="0"
+                    Visibility="{x:Bind SubCategoryVisibility, Mode=OneWay}"
+                    CornerRadius="12"
+                    Padding="8,2"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    MaxWidth="320">
+                        <TextBlock Text="{x:Bind SubCategoryName, Mode=OneWay}"
+                           FontSize="10"
+                           FontWeight="SemiBold"
+                           Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                           TextWrapping="NoWrap"
+                           TextTrimming="CharacterEllipsis"/>
+                    </Border>
+
+                    <!-- Link -->
+                    <customUI:LinkButtonV2 Grid.Row="1" Grid.Column="1"
+                                   LinkUrl="{x:Bind URL}"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   Visibility="{x:Bind URLVisibility, Mode=OneWay}"/>
+                </Grid>
+
+            </DataTemplate>
+
+            <!-- ItemTemplateForIntentItems for DI:IntentItem (no fixed size so GridView can wrap/stretch) -->
+            <DataTemplate x:Key="ItemTemplateForIntentItems" x:DataType="DI:IntentItem">
+                <Grid
+                    Padding="8"
+                    HorizontalAlignment="Stretch"
+                    Background="{ThemeResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    ColumnSpacing="16"
+                    CornerRadius="{StaticResource OverlayCornerRadius}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Image
+                            Grid.RowSpan="2"
+                            Width="32"
+                            Margin="8,12,16,0"
+                            VerticalAlignment="Top"
+                            AutomationProperties.Name="{x:Bind Title}"
+                            Stretch="Uniform">
+                            <Image.Source>
+                                <BitmapImage UriSource="{x:Bind Image}" />
+                            </Image.Source>
+                        </Image>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="0,12,0,0"
+                            VerticalAlignment="Bottom"
+                            Style="{ThemeResource BodyStrongTextBlockStyle}"
+                            Text="{x:Bind Title}"
+                            TextLineBounds="TrimToCapHeight"
+                            TextWrapping="NoWrap" />
+
+                        <ScrollViewer Grid.Row="1"
+                                      ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                      Grid.Column="1">
+                            <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Style="{ThemeResource BodyTextBlockStyle}"
+                            Text="{x:Bind Description}"/>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+
+            <!-- A responsive container style for GridView (spacing + wrapping) -->
+            <Style x:Key="GridViewItemStyleSpacedResponsive"
+                   TargetType="GridViewItem"
+                   BasedOn="{StaticResource GridViewItemStyleSpaced}">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                <Setter Property="MinWidth" Value="260"/>
+                <Setter Property="MaxWidth" Value="420"/>
+            </Style>
+
         </Grid.Resources>
 
         <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
@@ -110,153 +240,300 @@
 
         </controls:WrapPanel>
 
-        <Border x:Name="AnimatedBorder"
-                Grid.Row="1"
-                ui:Effects.Shadow="{StaticResource BorderShadow}"
-                Background="Transparent"
-                BorderThickness="0"
-                Margin="15,0,15,0"
-                PointerEntered="{x:Bind OnBorderPointerEntered}"
-                PointerExited="{x:Bind OnBorderPointerExited}">
+        <SelectorBar
+            Grid.Row="1"
+            Margin="0,-7,0,10"            
+            HorizontalAlignment="Center"
+            SelectionChanged="{x:Bind ViewModel.SelectorBar_SelectionChanged}"
+            Style="{StaticResource TokenViewSelectorBarStyle}">
+            <SelectorBarItem
+                IsSelected="True"
+                Style="{StaticResource TokenViewSelectorBarItemStyle}"
+                Tag="Presets"
+                x:Uid="Presets">
+                <SelectorBarItem.Icon>
+                    <FontIcon Glyph="&#xF5EE;" />
+                </SelectorBarItem.Icon>
+            </SelectorBarItem>
+            <SelectorBarItem
+                Style="{StaticResource TokenViewSelectorBarItemStyle}"
+                Tag="DeviceIntents"
+                x:Uid="DeviceIntents">
+                <SelectorBarItem.Icon>
+                    <FontIcon Glyph="&#xF133;" />
+                </SelectorBarItem.Icon>
+            </SelectorBarItem>
 
-            <ani:Explicit.Animations>
-                <ani:AnimationSet x:Name="ShadowEnterAnimation">
-                    <ani:BlurRadiusDropShadowAnimation To="20"/>
-                </ani:AnimationSet>
+        </SelectorBar>
 
-                <ani:AnimationSet x:Name="ShadowExitAnimation">
-                    <ani:BlurRadiusDropShadowAnimation To="10"/>
-                </ani:AnimationSet>
-            </ani:Explicit.Animations>
+        <customUI:InfoBarV2 Grid.Row="2"
+          Margin="15,0,15,10"
+          IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+          Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+          Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+          IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
 
-            <Border BorderThickness="0"
-                    Padding="5"
-                    Background="{ThemeResource AppOverlayBackgroundBrush}"
-                    CornerRadius="18">
+        <ScrollViewer Grid.Row="3"
+                      Margin="5,0,5,5">
 
-                <controls:WrapPanel Orientation="Horizontal"
-                            Margin="10"
-                            HorizontalSpacing="15"
-                            VerticalSpacing="12"
+            <!-- Device Intents section -->
+            <Grid ui:Effects.Shadow="{StaticResource BorderShadow}"
+                  CornerRadius="18"
+                  HorizontalAlignment="Center"
+                  Visibility="{x:Bind ViewModel.IsDeviceIntentSectionVisible, Mode=OneWay}">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Vertical"
+                            Spacing="3"
+                            Grid.Row="0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
+                    <TextBlock x:Uid="SelectDeviceIntents"
+                               Style="{ThemeResource TitleTextBlockStyle}" />
+                    <TextBlock x:Uid="SelectDeviceIntentsCaption"
+                               Style="{ThemeResource BodyTextBlockStyle}"
+                               Opacity="0.8"/>
+                </StackPanel>
 
-                    <TextBlock x:Uid="ProtectionPresets" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,4,0" FontWeight="Bold" />
+                <!-- GridView: default visuals, only spacing + wrapping -->
+                <GridView Grid.Row="1"
+                          Margin="0,10,0,0"
+                          MaxHeight="320"
+                          IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                          SelectionMode="Multiple"
+                          IsMultiSelectCheckBoxEnabled="False"
+                          HorizontalAlignment="Stretch"
+                          Loaded="{x:Bind ViewModel.DeviceIntentsGridViewLoaded}"
+                          SelectionChanged="{x:Bind ViewModel.DeviceIntentsSelectionChanged}"
+                          ItemsSource="{x:Bind ViewModel.DeviceIntents}"
+                          ItemContainerStyle="{StaticResource GridViewItemStyleSpacedResponsive}"
+                          ItemTemplate="{StaticResource ItemTemplateForIntentItems}">
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <!-- Wrap across width; presenter uses container width -->
+                            <ItemsWrapGrid Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
 
-                    <ComboBox x:Uid="ProtectionPresetsComboBox"
-                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                              ItemsSource="{x:Bind ViewModel.ProtectionPresetsSource}"
-                              SelectedIndex="{x:Bind ViewModel.ProtectionPresetsSelectedIndex, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="Protect:ProtectionPresetComboBoxType">
-                                <StackPanel Orientation="Horizontal" Spacing="5">
-                                    <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
-                                    <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
+                <Expander Grid.Row="2" Margin="0,0,0,10" HorizontalAlignment="Stretch">
+                    <Expander.Header>
+
+                        <controls:WrapPanel Orientation="Horizontal"
+                                            Padding="8"
+                                            HorizontalSpacing="10"
+                                            VerticalSpacing="6"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock x:Uid="ResultingSecurityMeasures"
+                                           Style="{ThemeResource SubtitleTextBlockStyle}"/>
+
+                                <TextBlock x:Uid="ResultingSecurityMeasuresCaption"
+                                           Style="{ThemeResource BodyTextBlockStyle}"
+                                           Opacity="0.8"/>
+                            </StackPanel>
+
+                            <!-- Total chip -->
+                            <Border CornerRadius="8"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Padding="10,6"
+                                    BorderThickness="1"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                    <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                    <TextBlock VerticalAlignment="Center">
+                                             <Run x:Uid="TotalText" />
+                                             <Run Text="{x:Bind ViewModel.DeviceIntentMUnitsPreview.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                                    </TextBlock>
                                 </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                            </Border>
 
-                    <!-- Apply Selected Button -->
-                    <customUI:AnimatedCancellableButton x:Uid="ProtectPageApplySelectedButton"
-									IsEnabled="{x:Bind ViewModel.IsApplyButtonEnabled, Mode=OneWay}"
-									CancelMethod="{x:Bind ViewModel.ApplySelectedCancellableButton.Cancel, Mode=OneWay}"
-									ExternalOperationInProgress="{x:Bind ViewModel.ApplySelectedCancellableButton.IsOperationInProgress, Mode=OneWay}"
-									ExternalIsCancelState="{x:Bind ViewModel.ApplySelectedCancellableButton.IsCancelState, Mode=OneWay}"
-									ExternalIsCancellingState="{x:Bind ViewModel.ApplySelectedCancellableButton.IsCancellingState, Mode=OneWay}"
-									ExternalIsAnimating="{x:Bind ViewModel.ApplySelectedCancellableButton.IsAnimating, Mode=OneWay}"
-									ExternalButtonContent="{x:Bind ViewModel.ApplySelectedCancellableButton.ButtonContent, Mode=OneWay}"
-									ExternalOriginalText="{x:Bind ViewModel.ApplySelectedCancellableButton.OriginalText, Mode=OneWay}"
-									ExternalInternalIsCancelState="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsCancelState, Mode=OneWay}"
-									ExternalInternalIsCancellingState="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsCancellingState, Mode=OneWay}"
-									ExternalInternalIsAnimating="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsAnimating, Mode=OneWay}"
-									ExternalInternalIsOperationInProgress="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
-									ExternalInternalSuppressExternalClick="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
-									ExternalShadowAnimationRunning="{x:Bind ViewModel.ApplySelectedCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
-									ExternalOperationStarted="{x:Bind ViewModel.ApplySelectedCancellableButton.OperationStarted, Mode=OneWay}"
-									Click="{x:Bind ViewModel.ApplySelectedCategories}"/>
+                            <TextBox IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                     x:Uid="SearchBoxTextBox"
+                                     Text="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     VerticalAlignment="Center"
+                                     VerticalContentAlignment="Center" />
 
-                    <!-- Verify Selected Button -->
-                    <customUI:AnimatedCancellableButton x:Uid="ProtectPageVerifySelectedButton"
-									IsEnabled="{x:Bind ViewModel.IsVerifyButtonEnabled, Mode=OneWay}"
-									CancelMethod="{x:Bind ViewModel.VerifySelectedCancellableButton.Cancel, Mode=OneWay}"
-									ExternalOperationInProgress="{x:Bind ViewModel.VerifySelectedCancellableButton.IsOperationInProgress, Mode=OneWay}"
-									ExternalIsCancelState="{x:Bind ViewModel.VerifySelectedCancellableButton.IsCancelState, Mode=OneWay}"
-									ExternalIsCancellingState="{x:Bind ViewModel.VerifySelectedCancellableButton.IsCancellingState, Mode=OneWay}"
-									ExternalIsAnimating="{x:Bind ViewModel.VerifySelectedCancellableButton.IsAnimating, Mode=OneWay}"
-									ExternalButtonContent="{x:Bind ViewModel.VerifySelectedCancellableButton.ButtonContent, Mode=OneWay}"
-									ExternalOriginalText="{x:Bind ViewModel.VerifySelectedCancellableButton.OriginalText, Mode=OneWay}"
-									ExternalInternalIsCancelState="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsCancelState, Mode=OneWay}"
-									ExternalInternalIsCancellingState="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsCancellingState, Mode=OneWay}"
-									ExternalInternalIsAnimating="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsAnimating, Mode=OneWay}"
-									ExternalInternalIsOperationInProgress="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
-									ExternalInternalSuppressExternalClick="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
-									ExternalShadowAnimationRunning="{x:Bind ViewModel.VerifySelectedCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
-									ExternalOperationStarted="{x:Bind ViewModel.VerifySelectedCancellableButton.OperationStarted, Mode=OneWay}"
-									Click="{x:Bind ViewModel.VerifySelectedCategories}"/>
+                            <customUI:AnimatedCancellableButton
+                                    x:Uid="ApplyIntentBasedSecurityMeasuresButton"
+                                    Margin="5,0,0,0"
+                                    IsEnabled="{x:Bind ViewModel.IsApplyIntentsButtonEnabled, Mode=OneWay}"
+                                    CancelMethod="{x:Bind ViewModel.ApplyIntentsCancellableButton.Cancel, Mode=OneWay}"
+                                    ExternalOperationInProgress="{x:Bind ViewModel.ApplyIntentsCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                                    ExternalIsCancelState="{x:Bind ViewModel.ApplyIntentsCancellableButton.IsCancelState, Mode=OneWay}"
+                                    ExternalIsCancellingState="{x:Bind ViewModel.ApplyIntentsCancellableButton.IsCancellingState, Mode=OneWay}"
+                                    ExternalIsAnimating="{x:Bind ViewModel.ApplyIntentsCancellableButton.IsAnimating, Mode=OneWay}"
+                                    ExternalButtonContent="{x:Bind ViewModel.ApplyIntentsCancellableButton.ButtonContent, Mode=OneWay}"
+                                    ExternalOriginalText="{x:Bind ViewModel.ApplyIntentsCancellableButton.OriginalText, Mode=OneWay}"
+                                    ExternalInternalIsCancelState="{x:Bind ViewModel.ApplyIntentsCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                                    ExternalInternalIsCancellingState="{x:Bind ViewModel.ApplyIntentsCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                                    ExternalInternalIsAnimating="{x:Bind ViewModel.ApplyIntentsCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                                    ExternalInternalIsOperationInProgress="{x:Bind ViewModel.ApplyIntentsCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                                    ExternalInternalSuppressExternalClick="{x:Bind ViewModel.ApplyIntentsCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+                                    ExternalShadowAnimationRunning="{x:Bind ViewModel.ApplyIntentsCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+                                    ExternalOperationStarted="{x:Bind ViewModel.ApplyIntentsCancellableButton.OperationStarted, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.ApplySelectedDeviceIntents}" />
 
-                    <!-- Remove Selected Button -->
-                    <customUI:AnimatedCancellableButton x:Uid="ProtectPageRemoveSelectedButton"
-									IsEnabled="{x:Bind ViewModel.IsRemoveButtonEnabled, Mode=OneWay}"
-									CancelMethod="{x:Bind ViewModel.RemoveSelectedCancellableButton.Cancel, Mode=OneWay}"
-									ExternalOperationInProgress="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsOperationInProgress, Mode=OneWay}"
-									ExternalIsCancelState="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsCancelState, Mode=OneWay}"
-									ExternalIsCancellingState="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsCancellingState, Mode=OneWay}"
-									ExternalIsAnimating="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsAnimating, Mode=OneWay}"
-									ExternalButtonContent="{x:Bind ViewModel.RemoveSelectedCancellableButton.ButtonContent, Mode=OneWay}"
-									ExternalOriginalText="{x:Bind ViewModel.RemoveSelectedCancellableButton.OriginalText, Mode=OneWay}"
-									ExternalInternalIsCancelState="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsCancelState, Mode=OneWay}"
-									ExternalInternalIsCancellingState="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsCancellingState, Mode=OneWay}"
-									ExternalInternalIsAnimating="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsAnimating, Mode=OneWay}"
-									ExternalInternalIsOperationInProgress="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
-									ExternalInternalSuppressExternalClick="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
-									ExternalShadowAnimationRunning="{x:Bind ViewModel.RemoveSelectedCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
-									ExternalOperationStarted="{x:Bind ViewModel.RemoveSelectedCancellableButton.OperationStarted, Mode=OneWay}"
-									Click="{x:Bind ViewModel.RemoveSelectedCategories}"/>
+                        </controls:WrapPanel>
 
-                </controls:WrapPanel>
+                    </Expander.Header>
+
+                    <Expander.Content>
+
+                        <ListView HorizontalAlignment="Stretch"
+                                  Height="400"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  ScrollViewer.VerticalScrollMode="Auto"
+                                  ItemsSource="{x:Bind ViewModel.DeviceIntentMUnitsPreview}"
+                                  ItemTemplate="{StaticResource DeviceIntentMUnitPreviewTemplate}"/>
+
+                    </Expander.Content>
+
+                </Expander>
+            </Grid>
+
+        </ScrollViewer>
+
+        <!-- Presets section -->
+        <Grid Grid.Row="3"
+              Visibility="{x:Bind ViewModel.IsPresetsSectionVisible, Mode=OneWay}">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border x:Name="AnimatedBorder"
+                    Grid.Row="0"
+                    ui:Effects.Shadow="{StaticResource BorderShadow}"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Margin="15,0,15,0"
+                    PointerEntered="{x:Bind OnBorderPointerEntered}"
+                    PointerExited="{x:Bind OnBorderPointerExited}">
+
+                <ani:Explicit.Animations>
+                    <ani:AnimationSet x:Name="ShadowEnterAnimation">
+                        <ani:BlurRadiusDropShadowAnimation To="20"/>
+                    </ani:AnimationSet>
+
+                    <ani:AnimationSet x:Name="ShadowExitAnimation">
+                        <ani:BlurRadiusDropShadowAnimation To="10"/>
+                    </ani:AnimationSet>
+                </ani:Explicit.Animations>
+
+                <Border BorderThickness="0"
+                        Padding="5"
+                        Background="{ThemeResource AppOverlayBackgroundBrush}"
+                        CornerRadius="18">
+
+                    <controls:WrapPanel Orientation="Horizontal"
+                                        Margin="10"
+                                        HorizontalSpacing="15"
+                                        VerticalSpacing="12"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+
+                        <TextBlock x:Uid="ProtectionPresets" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,4,0" FontWeight="Bold" />
+
+                        <ComboBox x:Uid="ProtectionPresetsComboBox"
+                                  IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                  ItemsSource="{x:Bind ViewModel.ProtectionPresetsSource}"
+                                  SelectedIndex="{x:Bind ViewModel.ProtectionPresetsSelectedIndex, Mode=TwoWay}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="Protect:ProtectionPresetComboBoxType">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <TextBlock Text="{x:Bind FriendlyName}" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                        <RatingControl IsReadOnly="True" Value="{x:Bind Rating}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <!-- Apply Selected Button -->
+                        <customUI:AnimatedCancellableButton x:Uid="ProtectPageApplySelectedButton"
+                                                            IsEnabled="{x:Bind ViewModel.IsApplyButtonEnabled, Mode=OneWay}"
+                                                            CancelMethod="{x:Bind ViewModel.ApplySelectedCancellableButton.Cancel, Mode=OneWay}"
+                                                            ExternalOperationInProgress="{x:Bind ViewModel.ApplySelectedCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                                                            ExternalIsCancelState="{x:Bind ViewModel.ApplySelectedCancellableButton.IsCancelState, Mode=OneWay}"
+                                                            ExternalIsCancellingState="{x:Bind ViewModel.ApplySelectedCancellableButton.IsCancellingState, Mode=OneWay}"
+                                                            ExternalIsAnimating="{x:Bind ViewModel.ApplySelectedCancellableButton.IsAnimating, Mode=OneWay}"
+                                                            ExternalButtonContent="{x:Bind ViewModel.ApplySelectedCancellableButton.ButtonContent, Mode=OneWay}"
+                                                            ExternalOriginalText="{x:Bind ViewModel.ApplySelectedCancellableButton.OriginalText, Mode=OneWay}"
+                                                            ExternalInternalIsCancelState="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                                                            ExternalInternalIsCancellingState="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                                                            ExternalInternalIsAnimating="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                                                            ExternalInternalIsOperationInProgress="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                                                            ExternalInternalSuppressExternalClick="{x:Bind ViewModel.ApplySelectedCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+                                                            ExternalShadowAnimationRunning="{x:Bind ViewModel.ApplySelectedCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+                                                            ExternalOperationStarted="{x:Bind ViewModel.ApplySelectedCancellableButton.OperationStarted, Mode=OneWay}"
+                                                            Click="{x:Bind ViewModel.ApplySelectedCategories}"/>
+
+                        <!-- Verify Selected Button -->
+                        <customUI:AnimatedCancellableButton x:Uid="ProtectPageVerifySelectedButton"
+                                                            IsEnabled="{x:Bind ViewModel.IsVerifyButtonEnabled, Mode=OneWay}"
+                                                            CancelMethod="{x:Bind ViewModel.VerifySelectedCancellableButton.Cancel, Mode=OneWay}"
+                                                            ExternalOperationInProgress="{x:Bind ViewModel.VerifySelectedCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                                                            ExternalIsCancelState="{x:Bind ViewModel.VerifySelectedCancellableButton.IsCancelState, Mode=OneWay}"
+                                                            ExternalIsCancellingState="{x:Bind ViewModel.VerifySelectedCancellableButton.IsCancellingState, Mode=OneWay}"
+                                                            ExternalIsAnimating="{x:Bind ViewModel.VerifySelectedCancellableButton.IsAnimating, Mode=OneWay}"
+                                                            ExternalButtonContent="{x:Bind ViewModel.VerifySelectedCancellableButton.ButtonContent, Mode=OneWay}"
+                                                            ExternalOriginalText="{x:Bind ViewModel.VerifySelectedCancellableButton.OriginalText, Mode=OneWay}"
+                                                            ExternalInternalIsCancelState="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                                                            ExternalInternalIsCancellingState="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                                                            ExternalInternalIsAnimating="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                                                            ExternalInternalIsOperationInProgress="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                                                            ExternalInternalSuppressExternalClick="{x:Bind ViewModel.VerifySelectedCancellableButton.InternalSuppressExternalClick, Mode=OneWay}"
+                                                            ExternalShadowAnimationRunning="{x:Bind ViewModel.VerifySelectedCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
+                                                            ExternalOperationStarted="{x:Bind ViewModel.VerifySelectedCancellableButton.OperationStarted, Mode=OneWay}"
+                                                            Click="{x:Bind ViewModel.VerifySelectedCategories}"/>
+
+                        <!-- Remove Selected Button -->
+                        <customUI:AnimatedCancellableButton x:Uid="ProtectPageRemoveSelectedButton"
+                                                            IsEnabled="{x:Bind ViewModel.IsRemoveButtonEnabled, Mode=OneWay}"
+                                                            CancelMethod="{x:Bind ViewModel.RemoveSelectedCancellableButton.Cancel, Mode=OneWay}"
+                                                            ExternalOperationInProgress="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsOperationInProgress, Mode=OneWay}"
+                                                            ExternalIsCancelState="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsCancelState, Mode=OneWay}"
+                                                            ExternalIsCancellingState="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsCancellingState, Mode=OneWay}"
+                                                            ExternalIsAnimating="{x:Bind ViewModel.RemoveSelectedCancellableButton.IsAnimating, Mode=OneWay}"
+                                                            ExternalButtonContent="{x:Bind ViewModel.RemoveSelectedCancellableButton.ButtonContent, Mode=OneWay}"
+                                                            ExternalOriginalText="{x:Bind ViewModel.RemoveSelectedCancellableButton.OriginalText, Mode=OneWay}"
+                                                            ExternalInternalIsCancelState="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsCancelState, Mode=OneWay}"
+                                                            ExternalInternalIsCancellingState="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsCancellingState, Mode=OneWay}"
+                                                            ExternalInternalIsAnimating="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsAnimating, Mode=OneWay}"
+                                                            ExternalInternalIsOperationInProgress="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
+                                                            ExternalOperationStarted="{x:Bind ViewModel.RemoveSelectedCancellableButton.OperationStarted, Mode=OneWay}"
+                                                            Click="{x:Bind ViewModel.RemoveSelectedCategories}"/>
+
+                    </controls:WrapPanel>
+
+                </Border>
 
             </Border>
 
-        </Border>
-
-        <customUI:InfoBarV2 Grid.Row="2"
-                     Margin="15"
-                     IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                     Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                     Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                     IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
-
-        <ListView Grid.Row="3"
-                  BorderThickness="1"
-                  IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                  x:Name="ProtectionCategoriesListView"
-                  Margin="0,20,0,10"
-                  CornerRadius="10"
-                  Loaded="{x:Bind ViewModel.ProtectionCategoriesListView_Loaded}"
-                  ItemsSource="{x:Bind ProtectionCategoriesCollectionViewSource.View, Mode=OneWay}"
-                  BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
-                  HorizontalAlignment="Center"
-                  SelectionMode="Multiple"
-                  SelectionChanged="{x:Bind ViewModel.ListView_SelectionChanged}"
-                  ItemTemplate="{StaticResource ProtectionCategoryListViewTemplate}">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsStackPanel AreStickyGroupHeadersEnabled="False"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.GroupStyle>
-                <GroupStyle>
-                    <GroupStyle.HeaderTemplate>
-                        <DataTemplate x:DataType="Protect:GroupInfoListForProtectionCategories">
-                            <Border AutomationProperties.AccessibilityView="Raw">
-                                <TextBlock Text="{x:Bind Key}" Style="{ThemeResource TitleTextBlockStyle}" AutomationProperties.AccessibilityView="Raw"/>
-                            </Border>
-                        </DataTemplate>
-                    </GroupStyle.HeaderTemplate>
-                </GroupStyle>
-            </ListView.GroupStyle>
-        </ListView>
-
+            <ListView Grid.Row="1"
+                      BorderThickness="1"
+                      IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                      x:Name="ProtectionCategoriesListView"
+                      Margin="0,20,0,10"
+                      CornerRadius="10"
+                      Loaded="{x:Bind ViewModel.ProtectionCategoriesListView_Loaded}"
+                      ItemsSource="{x:Bind ViewModel.ProtectionCategoriesListItemsSource, Mode=OneWay}"
+                      BorderBrush="{StaticResource RoseGradientBrush}"
+                      HorizontalAlignment="Center"
+                      SelectionMode="Multiple"
+                      SelectionChanged="{x:Bind ViewModel.ListView_SelectionChanged}"
+                      ItemTemplate="{StaticResource ProtectionCategoryListViewTemplate}"/>
+        </Grid>
     </Grid>
 </Page>

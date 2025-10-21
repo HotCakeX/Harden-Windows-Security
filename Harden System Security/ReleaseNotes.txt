@@ -1,5 +1,10 @@
-🩵 Updated major dependencies, including the .NET SDK, Windows App SDK, C++ platform tools and Rust toolchain, to the latest versions released just hours ago. These releases contain important security and reliability updates. Harden System Security proactively stays current so users stay protected.
+Introducing Device Usage Intents
 
-🩵 Added the "Overrides for Microsoft Security Baselines" category to the Protect page so that you can easily select it to apply when applying the Microsoft Security Baselines.
+Harden and secure your devices according to how you use them. Device Usage Intents work like the OS's Out-of-Box Experience (OOBE): during initial Windows setup you're asked how you'll use the device. Intents provide an easy, complementary way (in addition to the existing Presets) to configure your entire system. The currently available Device Usage Intents are:
 
-🩵 Updated the GitHub wiki documentation of the Harden System Security app and added details regarding the CommandLine Interface (CLI) support and usage.
+* Development: Built for writing and testing software. Uses secure defaults while allowing common developer tools and local builds without unnecessary restrictions.
+* Gaming: Tuned for performance and compatibility with games. Keeps essential protections while avoiding settings that can impact gameplay.
+* School: Suitable for students, keeps compatibility with learning apps, avoids heavy enterprise controls.
+* Business: Everyday corporate device with strong protections for work data and accounts. Balanced for productivity with sensible access, logging, and update behavior.
+* Specialized Access Workstation: The Specialized security user demands a more controlled environment while still being able to do activities such as email and web browsing in a simple-to-use experience.
+* Privileged Access Workstation: This is the highest security configuration designed for extremely sensitive roles that would have a significant or material impact on the organization if their account was compromised.

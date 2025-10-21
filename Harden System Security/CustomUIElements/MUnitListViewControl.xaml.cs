@@ -213,6 +213,9 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		set => SetValue(ListViewItemsSourceProperty, value);
 	}
 
+	/// <summary>
+	/// Needs to stay nullable due to x:Bind.
+	/// </summary>
 	public IMUnitListViewModel? ViewModel
 	{
 		get => (IMUnitListViewModel?)GetValue(ViewModelProperty);
@@ -476,7 +479,8 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// <param name="mUnit">The MUnit to apply</param>
 	internal async void ApplyMUnit(MUnit mUnit)
 	{
-		if (_isDisposed) return;
+		// If the UI is loading the ViewModel will be null initially due to x:Bind usage, so this check ensures ProcessMUnitsWithBulkOperations method always receives a valid ViewModel reference.
+		if (ViewModel is null || _isDisposed) return;
 
 		try
 		{
@@ -502,7 +506,8 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// <param name="mUnit">The MUnit to remove</param>
 	internal async void RemoveMUnit(MUnit mUnit)
 	{
-		if (_isDisposed) return;
+		// If the UI is loading the ViewModel will be null initially due to x:Bind usage, so this check ensures ProcessMUnitsWithBulkOperations method always receives a valid ViewModel reference.
+		if (ViewModel is null || _isDisposed) return;
 
 		try
 		{
@@ -531,7 +536,8 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// <param name="mUnit">The MUnit to verify</param>
 	internal async void VerifyMUnit(MUnit mUnit)
 	{
-		if (_isDisposed) return;
+		// If the UI is loading the ViewModel will be null initially due to x:Bind usage, so this check ensures ProcessMUnitsWithBulkOperations method always receives a valid ViewModel reference.
+		if (ViewModel is null || _isDisposed) return;
 
 		try
 		{

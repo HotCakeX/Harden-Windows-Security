@@ -59,11 +59,16 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// <summary>
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
-	/// <returns>List of all MUnits for this ViewModel</returns>
-	public override List<MUnit> CreateAllMUnits()
-	{
-		return MUnit.CreateMUnitsFromPolicies(Categories.BitLockerSettings);
-	}
+	private static readonly Lazy<List<MUnit>> LazyCatalog =
+		new(() =>
+		{
+			return MUnit.CreateMUnitsFromPolicies(Categories.BitLockerSettings);
+		}, LazyThreadSafetyMode.ExecutionAndPublication);
+
+	/// <summary>
+	/// Gets the current catalog of all MUnits for this ViewModel.
+	/// </summary>
+	public override List<MUnit> AllMUnits => LazyCatalog.Value;
 
 	/// <summary>
 	/// This is used to apply the BitLocker category before enabling BitLocker encryption for any drive.

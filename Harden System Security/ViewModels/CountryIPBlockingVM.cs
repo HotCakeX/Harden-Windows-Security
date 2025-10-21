@@ -24,6 +24,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -135,6 +136,8 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 			}
 		}
 	}
+
+	private const string RuleNameForSSOT = "State Sponsors of Terrorism IP range blocking";
 
 	internal List<ComboBoxItemModelForCountryIPBlocking> TargetedLists =
 	[
@@ -258,12 +261,11 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				{
 					case 0:
 						{
-							const string ruleName = "State Sponsors of Terrorism IP range blocking";
 							_ = App.AppDispatcher.TryEnqueue(() =>
 							{
-								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), ruleName));
+								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), RuleNameForSSOT));
 							});
-							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt true"));
+							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt true"));
 							break;
 						}
 					case 1:
@@ -307,12 +309,11 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				{
 					case 0:
 						{
-							const string ruleName = "State Sponsors of Terrorism IP range blocking";
 							_ = App.AppDispatcher.TryEnqueue(() =>
 							{
-								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), ruleName));
+								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), RuleNameForSSOT));
 							});
-							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt false"));
+							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt false"));
 							break;
 						}
 					case 1:
@@ -441,5 +442,31 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		{
 			ElementsAreEnabled = true;
 		}
+	}
+
+	internal async Task AddSSOT()
+	{
+		await App.AppDispatcher.EnqueueAsync(() =>
+		{
+			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), RuleNameForSSOT));
+		});
+
+		await Task.Run(() =>
+		{
+			Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt true"));
+		});
+	}
+
+	internal async Task RemoveSSOT()
+	{
+		await App.AppDispatcher.EnqueueAsync(() =>
+		{
+			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), RuleNameForSSOT));
+		});
+
+		await Task.Run(() =>
+		{
+			Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt false"));
+		});
 	}
 }

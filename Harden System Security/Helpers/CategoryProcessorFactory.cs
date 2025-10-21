@@ -16,16 +16,19 @@
 //
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
+using HardenSystemSecurity.DeviceIntents;
+using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.ViewModels;
 
 namespace HardenSystemSecurity.Helpers;
 
 /// <summary>
-/// Factory for creating category processors. Used by the main Protect page.
+/// Factory for creating category processors. Used by the <see cref="Pages.Protect"/>.
 /// </summary>
 internal static class CategoryProcessorFactory
 {
@@ -54,10 +57,30 @@ internal static class CategoryProcessorFactory
 			Categories.MiscellaneousConfigurations => new MiscellaneousConfigurationsProcessor(),
 			Categories.WindowsUpdateConfigurations => new WindowsUpdateConfigurationsProcessor(),
 			Categories.EdgeBrowserConfigurations => new EdgeBrowserConfigurationsProcessor(),
-			Categories.CertificateChecking => new CertificateCheckingProcessor(),
+			Categories.CertificateChecking => throw new InvalidOperationException("Certificate Checking must be interacted with manually."),
 			Categories.CountryIPBlocking => new CountryIPBlockingProcessor(),
 			Categories.NonAdminCommands => new NonAdminCommandsProcessor(),
 			_ => throw new ArgumentException($"Unknown category: {category}", nameof(category))
+		};
+	}
+
+	/// <summary>
+	/// Helper to make sure in the ProtectVM's Intents and Presets flows:
+	/// - <see cref="Categories.MicrosoftSecurityBaseline"/> runs first
+	/// - <see cref="Categories.Microsoft365AppsSecurityBaseline"/> runs right after
+	/// - <see cref="Categories.MSFTSecBaselines_OptionalOverrides"/> runs last
+	/// Lower numbers run earlier; higher numbers run later.
+	/// Default priority for all others is 0.
+	/// </summary>
+	internal static int GetExecutionPriority(Categories category)
+	{
+		// Maintain deterministic ordering among the "first" group by using distinct negative priorities.
+		return category switch
+		{
+			Categories.MicrosoftSecurityBaseline => -1000,                // Apply first
+			Categories.Microsoft365AppsSecurityBaseline => -900,          // Apply second
+			Categories.MSFTSecBaselines_OptionalOverrides => 1000,        // Apply last
+			_ => 0                                                        // Default priority
 		};
 	}
 
@@ -67,105 +90,143 @@ internal static class CategoryProcessorFactory
 	{
 		public override Categories Category => Categories.MSFTSecBaselines_OptionalOverrides;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFTSecBaselineOverrides");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.MSFTSecBaselines_OptionalOverrides);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.MicrosoftBaseLinesOverridesVM;
+
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.MicrosoftBaseLinesOverridesVM.AllMUnits;
 	}
 
 	private sealed class MicrosoftDefenderProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.MicrosoftDefender;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFTDefender");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.MicrosoftDefender);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.MicrosoftDefenderVM;
+
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.MicrosoftDefenderVM.AllMUnits;
 	}
 
 	private sealed class BitLockerSettingsProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.BitLockerSettings;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_BitLocker");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.BitLockerSettings);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.BitLockerVM;
+
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.BitLockerVM.AllMUnits;
 	}
 
 	private sealed class TLSSecurityProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.TLSSecurity;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_TLS");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.TLSSecurity);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.TLSVM;
+
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.TLSVM.AllMUnits;
 	}
 
 	private sealed class LockScreenProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.LockScreen;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_LockScreen");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.LockScreen);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.LockScreenVM;
+
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.LockScreenVM.AllMUnits;
 	}
 
 	private sealed class UserAccountControlProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.UserAccountControl;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_UAC");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.UserAccountControl);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.UACVM;
+
+		// Use the ViewModel's CreateAllMUnits so both JSON and programmatic MUnits
+		// and all specialized registrations/dependencies are included for Protect flows.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.UACVM.AllMUnits;
 	}
 
 	private sealed class DeviceGuardProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.DeviceGuard;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_DeviceGuard");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.DeviceGuard);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.DeviceGuardVM;
+
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.DeviceGuardVM.AllMUnits;
 	}
 
 	private sealed class WindowsFirewallProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.WindowsFirewall;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_WindowsFirewall");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.WindowsFirewall);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.WindowsFirewallVM;
+
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.WindowsFirewallVM.AllMUnits;
 	}
 
 	private sealed class WindowsNetworkingProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.WindowsNetworking;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_WindowsNetworking");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.WindowsNetworking);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.WindowsNetworkingVM;
+
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.WindowsNetworkingVM.AllMUnits;
 	}
 
 	private sealed class MiscellaneousConfigurationsProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.MiscellaneousConfigurations;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MiscellaneousConfig");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.MiscellaneousConfigurations);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.MiscellaneousConfigsVM;
+
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.MiscellaneousConfigsVM.AllMUnits;
 	}
 
 	private sealed class WindowsUpdateConfigurationsProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.WindowsUpdateConfigurations;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_WindowsUpdate");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.WindowsUpdateConfigurations);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.WindowsUpdateVM;
+
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.WindowsUpdateVM.AllMUnits;
 	}
 
 	private sealed class EdgeBrowserConfigurationsProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.EdgeBrowserConfigurations;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_Edge");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.EdgeBrowserConfigurations);
-	}
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.EdgeVM;
 
-	private sealed class CertificateCheckingProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.CertificateChecking;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_CertificateCheck");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.CertificateChecking);
-	}
-
-	private sealed class CountryIPBlockingProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.CountryIPBlocking;
-		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_CountryIPBlock");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.CountryIPBlocking);
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.EdgeVM.AllMUnits;
 	}
 
 	private sealed class NonAdminCommandsProcessor : MUnitCategoryProcessor
 	{
 		public override Categories Category => Categories.NonAdminCommands;
 		public override string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_NonAdmin");
-		protected override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.NonAdminCommands);
+		protected override IMUnitListViewModel ViewModel => ViewModelProvider.NonAdminVM;
+
+		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+		// and also benefit from any specialized registrations/dependencies the VM wires.
+		protected override List<MUnit> AllMUnits => ViewModelProvider.NonAdminVM.AllMUnits;
 	}
 
 	#endregion
@@ -177,46 +238,40 @@ internal static class CategoryProcessorFactory
 		public Categories Category => Categories.MicrosoftSecurityBaseline;
 		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFTSecBaseline");
 
-		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			MicrosoftSecurityBaselineVM vm = ViewModelProvider.MicrosoftSecurityBaselineVM;
-			await vm.ApplyInternal();
+			await ViewModelProvider.MicrosoftSecurityBaselineVM.ApplyInternal();
 		}
 
-		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			MicrosoftSecurityBaselineVM vm = ViewModelProvider.MicrosoftSecurityBaselineVM;
-			await vm.RemoveInternal();
+			await ViewModelProvider.MicrosoftSecurityBaselineVM.RemoveInternal();
 		}
 
-		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			MicrosoftSecurityBaselineVM vm = ViewModelProvider.MicrosoftSecurityBaselineVM;
-			await vm.VerifyInternal();
+			await ViewModelProvider.MicrosoftSecurityBaselineVM.VerifyInternal();
 		}
 	}
 
 	private sealed class Microsoft365AppsSecurityBaselineProcessor : ICategoryProcessor
 	{
-		public Categories Category => Categories.MicrosoftSecurityBaseline;
+		public Categories Category => Categories.Microsoft365AppsSecurityBaseline;
 		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFT365AppsSecBaseline");
 
-		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			Microsoft365AppsSecurityBaselineVM vm = ViewModelProvider.Microsoft365AppsSecurityBaselineVM;
-			await vm.ApplyInternal();
+			await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.ApplyInternal();
 		}
 
-		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			Microsoft365AppsSecurityBaselineVM vm = ViewModelProvider.Microsoft365AppsSecurityBaselineVM;
-			await vm.RemoveInternal();
+			await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.RemoveInternal();
 		}
 
-		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			Microsoft365AppsSecurityBaselineVM vm = ViewModelProvider.Microsoft365AppsSecurityBaselineVM;
-			await vm.VerifyInternal();
+			await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.VerifyInternal();
 		}
 	}
 
@@ -227,22 +282,19 @@ internal static class CategoryProcessorFactory
 		public Categories Category => Categories.OptionalWindowsFeatures;
 		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_OptionalWinFeatures");
 
-		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			OptionalWindowsFeaturesVM optionalVM = ViewModelProvider.OptionalWindowsFeaturesVM;
-			await optionalVM.ApplySecurityHardening();
+			await ViewModelProvider.OptionalWindowsFeaturesVM.ApplySecurityHardening();
 		}
 
-		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			OptionalWindowsFeaturesVM optionalVM = ViewModelProvider.OptionalWindowsFeaturesVM;
-			await optionalVM.RemoveSecurityHardening();
+			await ViewModelProvider.OptionalWindowsFeaturesVM.RemoveSecurityHardening();
 		}
 
-		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			OptionalWindowsFeaturesVM optionalVM = ViewModelProvider.OptionalWindowsFeaturesVM;
-			_ = await optionalVM.VerifySecurityHardening();
+			_ = await ViewModelProvider.OptionalWindowsFeaturesVM.VerifySecurityHardening();
 		}
 	}
 
@@ -251,25 +303,171 @@ internal static class CategoryProcessorFactory
 		public Categories Category => Categories.AttackSurfaceReductionRules;
 		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_ASRRules");
 
-		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			ASRVM asrVM = ViewModelProvider.ASRVM;
-			await Task.Run(asrVM.ApplyRecommended, cancellationToken ?? CancellationToken.None);
+			CancellationToken token = cancellationToken ?? CancellationToken.None;
+
+			// If no intent filter is provided, use the VM's built-in "Apply Recommended" flow.
+			if (selectedIntents == null || selectedIntents.Count == 0)
+			{
+				await ViewModelProvider.ASRVM.ApplyRecommendedCore();
+				return;
+			}
+
+			// Intent-aware subset application:
+			// - include Parent policy "ExploitGuard_ASR_Rules"
+			// - include entries whose DeviceIntents contains Intent.All (when any selected)
+			// - include entries intersecting with selected intents
+			List<RegistryPolicyEntry> all = ViewModelProvider.ASRVM.ASRPolicyFromJSON;
+			if (all == null || all.Count == 0)
+			{
+				return;
+			}
+
+			bool anySelected = selectedIntents.Count > 0;
+
+			List<RegistryPolicyEntry> subset = new(capacity: all.Count);
+
+			// Parent policy must always be included for apply
+			foreach (RegistryPolicyEntry entry in all)
+			{
+				if (entry.ValueName != null &&
+					entry.ValueName.Equals("ExploitGuard_ASR_Rules", StringComparison.OrdinalIgnoreCase))
+				{
+					subset.Add(entry);
+					break;
+				}
+			}
+
+			foreach (RegistryPolicyEntry entry in all)
+			{
+				// Skip parent (already added)
+				if (entry.ValueName != null &&
+					entry.ValueName.Equals("ExploitGuard_ASR_Rules", StringComparison.OrdinalIgnoreCase))
+				{
+					continue;
+				}
+
+				// Require intents
+				if (entry.DeviceIntents == null || entry.DeviceIntents.Count == 0)
+				{
+					continue;
+				}
+
+				// Include Intent.All when any selection exists
+				if (anySelected && entry.DeviceIntents.Any(di => di == Intent.All))
+				{
+					subset.Add(entry);
+					continue;
+				}
+
+				// Include if intersects
+				bool intersects = entry.DeviceIntents.Any(selectedIntents.Contains);
+				if (intersects)
+				{
+					subset.Add(entry);
+				}
+			}
+
+			if (subset.Count == 0)
+			{
+				return;
+			}
+
+			await Task.Run(() =>
+			{
+				RegistryPolicyParser.AddPoliciesToSystem(subset, GroupPolicyContext.Machine);
+			}, token);
 		}
 
-		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			ASRVM asrVM = ViewModelProvider.ASRVM;
-			await Task.Run(asrVM.RemoveAllRules, cancellationToken ?? CancellationToken.None);
+			CancellationToken token = cancellationToken ?? CancellationToken.None;
+
+			// If no intent filter is provided, remove everything through the VM flow.
+			if (selectedIntents == null || selectedIntents.Count == 0)
+			{
+				await Task.Run(ViewModelProvider.ASRVM.RemoveAllRules, token);
+				return;
+			}
+
+			List<RegistryPolicyEntry> all = ViewModelProvider.ASRVM.ASRPolicyFromJSON;
+			if (all == null || all.Count == 0)
+			{
+				return;
+			}
+
+			bool anySelected = selectedIntents.Count > 0;
+
+			// Build a subset of rules to remove, excluding the parent policy key.
+			List<RegistryPolicyEntry> subset = new(capacity: all.Count);
+
+			foreach (RegistryPolicyEntry entry in all)
+			{
+				// Skip parent (only remove rules subset)
+				if (entry.ValueName != null &&
+					entry.ValueName.Equals("ExploitGuard_ASR_Rules", StringComparison.OrdinalIgnoreCase))
+				{
+					continue;
+				}
+
+				if (entry.DeviceIntents == null || entry.DeviceIntents.Count == 0)
+				{
+					continue;
+				}
+
+				if (anySelected && entry.DeviceIntents.Any(di => di == Intent.All))
+				{
+					subset.Add(entry);
+					continue;
+				}
+
+				bool intersects = entry.DeviceIntents.Any(selectedIntents.Contains);
+				if (intersects)
+				{
+					subset.Add(entry);
+				}
+			}
+
+			if (subset.Count == 0)
+			{
+				return;
+			}
+
+			await Task.Run(() =>
+			{
+				RegistryPolicyParser.RemovePoliciesFromSystem(subset, GroupPolicyContext.Machine);
+			}, token);
 		}
 
-		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, CancellationToken? cancellationToken = null)
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
 		{
-			ASRVM asrVM = ViewModelProvider.ASRVM;
-			await Task.Run(asrVM.RetrieveLatest, cancellationToken ?? CancellationToken.None);
+			// For verification, reuse the VM's "retrieve latest" which updates the UI state.
+			CancellationToken token = cancellationToken ?? CancellationToken.None;
+			await Task.Run(ViewModelProvider.ASRVM.RetrieveLatest, token);
+		}
+	}
+
+	private sealed class CountryIPBlockingProcessor : ICategoryProcessor
+	{
+		public Categories Category => Categories.CountryIPBlocking;
+		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_CountryIPBlock");
+
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		{
+			await ViewModelProvider.CountryIPBlockingVM.AddSSOT();
+		}
+
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		{
+			await ViewModelProvider.CountryIPBlockingVM.RemoveSSOT();
+		}
+
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		{
+			// Will have to implement verification.
 		}
 	}
 
 	#endregion
-
 }

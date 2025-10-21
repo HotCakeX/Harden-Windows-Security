@@ -729,7 +729,7 @@ internal static class AuditPolicyManager
 
 		// Parse GUID - remove curly braces if present
 		guidString = guidString.Trim('{', '}');
-		if (!Guid.TryParse(guidString, out Guid subcategoryGuid))
+		if (!Guid.TryParse(guidString, CultureInfo.InvariantCulture, out Guid subcategoryGuid))
 		{
 			throw new InvalidDataException(string.Format(GlobalVars.GetStr("CsvLineInvalidGuidFormatError"), lineNumber, guidString));
 		}

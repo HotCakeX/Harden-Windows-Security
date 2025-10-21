@@ -13,7 +13,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#allowautowindowsupdatedownloadovermeterednetwork",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -29,7 +32,14 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#allowtemporaryenterprisefeaturecontrol",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ]
     },
     {
         "Source": 0,
@@ -45,7 +55,12 @@
         "URL": "",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -61,7 +76,12 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#configuredeadlineforfeatureupdates",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -77,7 +97,12 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiodforfeatureupdates",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -93,7 +118,12 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#configuredeadlinenoautorebootforfeatureupdates",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -109,7 +139,12 @@
         "URL": "",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -125,7 +160,12 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#configuredeadlineforqualityupdates",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -141,7 +181,12 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiod",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -157,7 +202,12 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#configuredeadlinenoautorebootforqualityupdates",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -173,7 +223,12 @@
         "URL": "https://learn.microsoft.com/windows/deployment/update/waas-wu-settings#configuring-automatic-updates-by-editing-the-registry",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -189,7 +244,12 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#allowautoupdate",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -205,7 +265,10 @@
         "URL": "",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -221,7 +284,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#scheduledinstallday",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -237,7 +303,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#scheduledinstalltime",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -253,7 +322,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#scheduledinstalleveryweek",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -269,7 +341,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#scheduledinstallfirstweek",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -285,7 +360,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#scheduledinstallsecondweek",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -301,7 +379,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#scheduledinstallthirdweek",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -317,7 +398,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-update#scheduledinstallfourthweek",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -333,7 +417,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-Update?WT.mc_id=Portal-fx#allowmuupdateservice",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -349,6 +436,9 @@
         "URL": "",
         "Category": 13,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     }
 ]

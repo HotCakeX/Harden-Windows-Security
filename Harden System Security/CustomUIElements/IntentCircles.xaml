@@ -1,0 +1,18 @@
+<UserControl
+    x:Class="AppControlManager.CustomUIElements.IntentCircles"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    MinHeight="24"
+    Background="Transparent">
+
+    <!--
+        A lightweight container to position children on using Canvas.Left for
+        compact "stacked" layout, and animate Canvas.Left on hover to expand.
+    -->
+    <Canvas x:Name="PART_Canvas"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Height="24"
+            Background="Transparent"/>
+</UserControl>

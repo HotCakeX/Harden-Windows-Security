@@ -15,18 +15,24 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 
 namespace HardenSystemSecurity.Protect;
 
-internal sealed class SubCategoryDefinition(
+internal sealed partial class SubCategoryDefinition(
 	SubCategories subCategory,
 	string description,
-	string? tip = null)
+	string? tip = null) : ViewModelBase
 {
 	internal SubCategories SubCategory => subCategory;
 	internal string Description => description;
 	internal string? Tip => tip;
+
+	/// <summary>
+	/// Whether the checkbox for this sub-category is checked or not.
+	/// </summary>
+	internal bool IsChecked { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Used by XAML Compiled Binding.

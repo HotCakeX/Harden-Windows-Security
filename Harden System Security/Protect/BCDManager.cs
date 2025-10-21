@@ -16,6 +16,7 @@
 //
 
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using AppControlManager.Others;
 
@@ -61,7 +62,7 @@ internal static class BCDManager
 			}
 
 			// Parse the current entry GUID
-			if (!Guid.TryParse(CURRENT_ENTRY_GUID, out Guid currentGuid))
+			if (!Guid.TryParse(CURRENT_ENTRY_GUID, CultureInfo.InvariantCulture, out Guid currentGuid))
 			{
 				throw new InvalidOperationException(GlobalVars.GetStr("FailedToParseCurrent EntryGUID"));
 			}
@@ -133,7 +134,7 @@ internal static class BCDManager
 				return null;
 			}
 
-			if (!Guid.TryParse(CURRENT_ENTRY_GUID, out Guid currentGuid))
+			if (!Guid.TryParse(CURRENT_ENTRY_GUID, CultureInfo.InvariantCulture, out Guid currentGuid))
 			{
 				return null;
 			}

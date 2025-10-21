@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using CommunityToolkit.WinUI;
@@ -59,86 +60,84 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	/// <returns>List of all MUnits for this ViewModel</returns>
-	public override List<MUnit> CreateAllMUnits()
-	{
-		// Register specialized strategies and dependencies.
-		RegisterSpecializedStrategies();
-		RegisterMUnitDependencies();
+	private static readonly Lazy<List<MUnit>> LazyCatalog =
+		new(() =>
+		{
+			#region One-time global registrations for this category - Registers specialized strategies for specific policies.
 
-		List<MUnit> allResults = CreateMUnitsFromPolicies();
-		allResults.AddRange(CreateUnits());
-		return allResults;
-	}
+			// Register specialized verification strategy for Smart App Control so its status can be detected via COM too.
+			SpecializedStrategiesRegistry.RegisterSpecializedVerification(
+				"SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState",
+				new SACSpecVerify()
+			);
+
+			// Register specialized verification strategy for Intel TDT so its status can be detected via COM too.
+			SpecializedStrategiesRegistry.RegisterSpecializedVerification(
+				"Software\\Policies\\Microsoft\\Windows Defender\\Features|TDTFeatureEnabled",
+				new IntelTDTSpecVerify()
+			);
+
+			// SEE THE END OF THE FILE FOR MOAR EXAMPLES
+			/*
+			// E.g., registering specialized apply strategy that runs before the main operation
+			SpecializedStrategiesRegistry.RegisterSpecializedApply(
+				"Software\\Policies\\Microsoft\\Windows Defender\\Features|TDTFeatureEnabled",
+				new TDTPreApplyCheck()
+			);
+
+			// E.g., registering specialized remove strategy that runs after the main operation
+			SpecializedStrategiesRegistry.RegisterSpecializedRemove(
+				"Software\\Policies\\Microsoft\\Windows Defender\\Features|TDTFeatureEnabled",
+				new TDTPostRemoveCleanup()
+			);
+			*/
+
+			#endregion
+
+			#region Register Dependencies
+
+			/// Registers MUnit dependencies to define relationships between security measures.
+			/// This allows automatic application or removal of related policies.
+
+
+			// Apply/Remove Diagnostic data when Smart App Control gets enabled/disabled.
+			MUnitDependencyRegistry.RegisterDependency(
+				primaryMUnitId: "SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState", // Primary MUnit (KeyName|ValueName)
+				dependentMUnitId: "Software\\Policies\\Microsoft\\Windows\\DataCollection|AllowTelemetry",  // Dependent MUnit (KeyName|ValueName)
+				type: DependencyType.Both,
+				timing: ExecutionTiming.After
+			);
+
+			MUnitDependencyRegistry.RegisterDependency(
+				primaryMUnitId: "SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState", // Primary MUnit (KeyName|ValueName)
+				dependentMUnitId: "Software\\Policies\\Microsoft\\Windows\\DataCollection|DisableTelemetryOptInSettingsUx",  // Dependent MUnit (KeyName|ValueName)
+				type: DependencyType.Both,
+				timing: ExecutionTiming.After
+			);
+
+
+			#endregion
+
+			// Create MUnits from JSON policies using the centralized method.
+			List<MUnit> allResults = MUnit.CreateMUnitsFromPolicies(Categories.MicrosoftDefender);
+
+			// Create programatic MUnits that are not from Group Policies.
+			allResults.AddRange(CreateUnits());
+
+			return allResults;
+
+		}, LazyThreadSafetyMode.ExecutionAndPublication);
 
 	/// <summary>
-	/// Create MUnits from JSON policies using the centralized method.
+	/// Gets the current catalog of all MUnits for this ViewModel.
 	/// </summary>
-	internal List<MUnit> CreateMUnitsFromPolicies()
-	{
-		return MUnit.CreateMUnitsFromPolicies(Categories.MicrosoftDefender);
-	}
-
-	/// <summary>
-	/// Registers specialized strategies for specific policies.
-	/// </summary>
-	private void RegisterSpecializedStrategies()
-	{
-		// Register specialized verification strategy for Smart App Control so its status can be detected via COM too.
-		SpecializedStrategiesRegistry.RegisterSpecializedVerification(
-			"SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState",
-			new SACSpecVerify()
-		);
-
-		// Register specialized verification strategy for Intel TDT so its status can be detected via COM too.
-		SpecializedStrategiesRegistry.RegisterSpecializedVerification(
-			"Software\\Policies\\Microsoft\\Windows Defender\\Features|TDTFeatureEnabled",
-			new IntelTDTSpecVerify()
-		);
-
-		// SEE THE END OF THE FILE FOR MOAR EXAMPLES
-		/*
-		// E.g., registering specialized apply strategy that runs before the main operation
-		SpecializedStrategiesRegistry.RegisterSpecializedApply(
-			"Software\\Policies\\Microsoft\\Windows Defender\\Features|TDTFeatureEnabled",
-			new TDTPreApplyCheck()
-		);
-
-		// E.g., registering specialized remove strategy that runs after the main operation
-		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
-			"Software\\Policies\\Microsoft\\Windows Defender\\Features|TDTFeatureEnabled",
-			new TDTPostRemoveCleanup()
-		);
-		*/
-	}
-
-	/// <summary>
-	/// Registers MUnit dependencies to define relationships between security measures.
-	/// This allows automatic application or removal of related policies.
-	/// </summary>
-	private void RegisterMUnitDependencies()
-	{
-		// Apply/Remove Diagnostic data when Smart App Control gets enabled/disabled.
-		MUnitDependencyRegistry.RegisterDependency(
-			primaryMUnitId: "SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState", // Primary MUnit (KeyName|ValueName)
-			dependentMUnitId: "Software\\Policies\\Microsoft\\Windows\\DataCollection|AllowTelemetry",  // Dependent MUnit (KeyName|ValueName)
-			type: DependencyType.Both,
-			timing: ExecutionTiming.After
-		);
-
-		MUnitDependencyRegistry.RegisterDependency(
-			primaryMUnitId: "SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState", // Primary MUnit (KeyName|ValueName)
-			dependentMUnitId: "Software\\Policies\\Microsoft\\Windows\\DataCollection|DisableTelemetryOptInSettingsUx",  // Dependent MUnit (KeyName|ValueName)
-			type: DependencyType.Both,
-			timing: ExecutionTiming.After
-		);
-
-	}
+	public override List<MUnit> AllMUnits => LazyCatalog.Value;
 
 	/// <summary>
 	/// Create <see cref="MUnit"/> that is not for Group Policies.
 	/// </summary>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal List<MUnit> CreateUnits()
+	private static List<MUnit> CreateUnits()
 	{
 		List<MUnit> temp = [];
 
@@ -182,7 +181,14 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				}
 
 				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set DisableRestorePoint true");
-			})
+			}),
+
+			deviceIntents: [
+				DeviceIntents.Intent.Business,
+				DeviceIntents.Intent.SpecializedAccessWorkstation,
+				DeviceIntents.Intent.PrivilegedAccessWorkstation,
+				DeviceIntents.Intent.School
+			]
 			));
 
 		// AllowSwitchToAsyncInspection
@@ -225,7 +231,11 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				}
 
 				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AllowSwitchToAsyncInspection false");
-			})
+			}),
+
+			deviceIntents: [
+				DeviceIntents.Intent.All
+			]
 			));
 
 		// EnableConvertWarnToBlock
@@ -268,7 +278,14 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				}
 
 				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EnableConvertWarnToBlock false");
-			})
+			}),
+
+			deviceIntents: [
+				DeviceIntents.Intent.Business,
+				DeviceIntents.Intent.SpecializedAccessWorkstation,
+				DeviceIntents.Intent.PrivilegedAccessWorkstation,
+				DeviceIntents.Intent.School
+			]
 			));
 
 		// BruteForceProtectionLocalNetworkBlocking
@@ -311,7 +328,14 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				}
 
 				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set BruteForceProtectionLocalNetworkBlocking false");
-			})
+			}),
+
+			deviceIntents: [
+				DeviceIntents.Intent.Business,
+				DeviceIntents.Intent.SpecializedAccessWorkstation,
+				DeviceIntents.Intent.PrivilegedAccessWorkstation,
+				DeviceIntents.Intent.School
+			]
 			));
 
 		// Adding OneDrive directories to Controlled Folder Access
@@ -335,7 +359,10 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 					_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Add ControlledFolderAccessProtectedFolders {oneDriveDirsFinal}");
 				}
-			})
+			}),
+			deviceIntents: [
+				DeviceIntents.Intent.All
+			]
 			));
 
 
@@ -387,7 +414,14 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					throw new InvalidOperationException(systemResult.Error);
 				}
 			}),
-			url: "https://support.microsoft.com/office/how-onedrive-safeguards-your-data-in-the-cloud-23c6ea94-3608-48d7-8bf0-80e142edd1e1"
+			url: "https://support.microsoft.com/office/how-onedrive-safeguards-your-data-in-the-cloud-23c6ea94-3608-48d7-8bf0-80e142edd1e1",
+
+			deviceIntents: [
+				DeviceIntents.Intent.Business,
+				DeviceIntents.Intent.SpecializedAccessWorkstation,
+				DeviceIntents.Intent.PrivilegedAccessWorkstation,
+				DeviceIntents.Intent.School
+			]
 
 			));
 
@@ -432,7 +466,10 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				{
 					throw new InvalidOperationException(GlobalVars.GetStr("SetNXBitError-MSDefender"));
 				}
-			})
+			}),
+			deviceIntents: [
+				DeviceIntents.Intent.All
+			]
 			));
 
 
@@ -467,7 +504,11 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					}
 				}
 
-			})
+			}),
+
+			deviceIntents: [
+				DeviceIntents.Intent.Development
+			]
 			));
 
 
@@ -527,7 +568,11 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set PlatformUpdatesChannel 0");
 			}),
 
-			subCategory: SubCategories.MSDefender_BetaUpdateChannelsForDefender
+			subCategory: SubCategories.MSDefender_BetaUpdateChannelsForDefender,
+
+			deviceIntents: [
+				DeviceIntents.Intent.SpecializedAccessWorkstation
+			]
 			));
 
 
@@ -555,7 +600,15 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					Environment.SetEnvironmentVariable(Name, null, EnvironmentVariableTarget.Machine);
 				}),
 
-				url: "https://learn.microsoft.com/defender-endpoint/sandbox-mdav"
+				url: "https://learn.microsoft.com/defender-endpoint/sandbox-mdav",
+
+				deviceIntents: [
+					DeviceIntents.Intent.Development,
+					DeviceIntents.Intent.School,
+					DeviceIntents.Intent.Business,
+					DeviceIntents.Intent.SpecializedAccessWorkstation,
+					DeviceIntents.Intent.PrivilegedAccessWorkstation
+				]
 				));
 
 
@@ -1076,7 +1129,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1117,7 +1170,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1183,7 +1236,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1291,7 +1344,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1382,7 +1435,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}
@@ -1423,7 +1476,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 		finally
 		{
-			MainInfoBar.IsClosable = true;
+			MainInfoBarIsClosable = true;
 			ExclusionsUIIsEnabled = true;
 		}
 	}

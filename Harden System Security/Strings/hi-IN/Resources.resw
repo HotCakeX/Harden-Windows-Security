@@ -4092,4 +4092,67 @@
     <comment>Protection Category Description</comment>
     <value>Microsoft सुरक्षा बेसलाइनों के लिए अनुशंसित ओवरराइड्स लागू करें ताकि उनके द्वारा निष्क्रिय की गई कुछ महत्वपूर्ण कार्यक्षमताएँ बहाल की जा सकें.</value>
   </data>
+  <data name="DeviceUsageIntent-Development-Title" xml:space="preserve">
+    <value>विकास</value>
+  </data>
+  <data name="DeviceUsageIntent-Development-Description" xml:space="preserve">
+    <value>सॉफ़्टवेयर लिखने और परीक्षण करने के लिए निर्मित। सुरक्षित डिफ़ॉल्ट्स का उपयोग करता है, साथ ही आम डेवलपर टूल्स और लोकल बिल्ड्स की अनुमति देता है, बिना अनावश्यक प्रतिबंधों के.</value>
+  </data>
+  <data name="DeviceUsageIntent-Gaming-Title" xml:space="preserve">
+    <value>गेमिंग</value>
+  </data>
+  <data name="DeviceUsageIntent-Gaming-Description" xml:space="preserve">
+    <value>गेम्स के साथ प्रदर्शन और अनुकूलता के लिए ट्यून किया गया। आवश्यक सुरक्षा उपाय बनाए रखता है और ऐसी सेटिंग्स से बचता है जो गेमप्ले को प्रभावित कर सकती हैं.</value>
+  </data>
+  <data name="DeviceUsageIntent-School-Title" xml:space="preserve">
+    <value>स्कूल</value>
+  </data>
+  <data name="DeviceUsageIntent-School-Description" xml:space="preserve">
+    <value>छात्रों के लिए उपयुक्त, लर्निंग ऐप्स के साथ अनुकूलता बनाए रखता है, और भारी एंटरप्राइज़ नियंत्रणों से बचता है.</value>
+  </data>
+  <data name="DeviceUsageIntent-Business-Title" xml:space="preserve">
+    <value>व्यवसाय</value>
+  </data>
+  <data name="DeviceUsageIntent-Business-Description" xml:space="preserve">
+    <value>दैनिक कॉर्पोरेट उपयोग के लिए डिवाइस, कार्य डेटा और खातों के लिए मजबूत सुरक्षा के साथ। उत्पादकता के लिए संतुलित, विवेकपूर्ण एक्सेस, लॉगिंग और अपडेट व्यवहार के साथ.</value>
+  </data>
+  <data name="DeviceUsageIntent-SpecializedAccessWorkstation-Title" xml:space="preserve">
+    <value>विशेषीकृत अभिगम कार्यस्थान</value>
+  </data>
+  <data name="DeviceUsageIntent-SpecializedAccessWorkstation-Description" xml:space="preserve">
+    <value>विशेषीकृत सुरक्षा वाला उपयोगकर्ता अधिक नियंत्रित परिवेश चाहता है, जबकि ईमेल और वेब ब्राउज़िंग जैसी गतिविधियाँ सरल उपयोग अनुभव में करने में सक्षम भी रहता है.</value>
+  </data>
+  <data name="DeviceUsageIntent-PrivilegedAccessWorkstation-Title" xml:space="preserve">
+    <value>विशेषाधिकार प्राप्त पहुँच वाला कार्यस्थल</value>
+  </data>
+  <data name="DeviceUsageIntent-PrivilegedAccessWorkstation-Description" xml:space="preserve">
+    <value>यह सर्वोच्च सुरक्षा कॉन्फ़िगरेशन है, अत्यंत संवेदनशील भूमिकाओं के लिए डिज़ाइन किया गया है, जिनका खाता समझौता होने पर संगठन पर महत्वपूर्ण या ठोस प्रभाव पड़ सकता है.</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.Content" xml:space="preserve">
+    <value>लागू करें</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>आपके द्वारा चुनी गई डिवाइस उपयोग इरादों के आधार पर नीचे दिखाए गए सभी सुरक्षा उपाय लागू करें.</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>आपके द्वारा चुनी गई डिवाइस उपयोग इरादों के आधार पर नीचे दिखाए गए सभी सुरक्षा उपाय लागू करें.</value>
+  </data>
+  <data name="ResultingSecurityMeasures.Text" xml:space="preserve">
+    <value>परिणामी सुरक्षा उपाय</value>
+  </data>
+  <data name="ResultingSecurityMeasuresCaption.Text" xml:space="preserve">
+    <value>लागू करें दबाने पर ये लागू होंगे.</value>
+  </data>
+  <data name="SelectDeviceIntents.Text" xml:space="preserve">
+    <value>डिवाइस उपयोग इरादे चुनें</value>
+  </data>
+  <data name="SelectDeviceIntentsCaption.Text" xml:space="preserve">
+    <value>लागू होने वाली सुरक्षा कॉन्फ़िगरेशन को अनुकूलित करने के लिए एक या अधिक इरादे चुनें.</value>
+  </data>
+  <data name="Presets.Text" xml:space="preserve">
+    <value>पूर्वनिर्धारित सेटिंग्स</value>
+  </data>
+    <data name="DeviceIntents.Text" xml:space="preserve">
+    <value>डिवाइस इंटेंट्स</value>
+  </data>
 </root>

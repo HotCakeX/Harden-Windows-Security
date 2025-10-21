@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -313,7 +314,7 @@ internal sealed partial class ASRVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Event handler for the AppyAll button
+	/// Event handler for the ApplyAll button
 	/// </summary>
 	internal async void ApplyAllRules()
 	{
@@ -445,9 +446,14 @@ internal sealed partial class ASRVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Event handler for the Apply Recommended button.
+	/// Bound to the UI for button event handler.
 	/// </summary>
-	internal async void ApplyRecommended()
+	internal async void ApplyRecommended() => await ApplyRecommendedCore();
+
+	/// <summary>
+	/// To Apply Recommended configurations for the ASR Rules.
+	/// </summary>
+	internal async Task ApplyRecommendedCore()
 	{
 		try
 		{
@@ -466,7 +472,7 @@ internal sealed partial class ASRVM : ViewModelBase
 					uint recommendedValue = entry.PolicyEntry.ParsedValue switch
 					{
 						// ASR values are stored as strings in JSON and have Type 1 so they are not int by default. This is how Group policy and system stores their information.
-						string strValue when uint.TryParse(strValue, out uint parsedUint) => parsedUint,
+						string strValue when uint.TryParse(strValue, CultureInfo.InvariantCulture, out uint parsedUint) => parsedUint,
 						uint uintValue => uintValue,
 						_ => 0
 					};

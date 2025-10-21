@@ -15,7 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
+
 namespace AppControlManager.Others;
+
+#pragma warning disable CA1812
 
 internal sealed class PackagedAppView(
 	string displayName,
@@ -43,4 +47,29 @@ internal sealed class PackagedAppView(
 	internal string InstallLocation => installLocation;
 	internal string InstalledDate => installedDate;
 	internal object? VMRef => vmRef;
+
+	/// <summary>
+	/// A stable identity for equality and hashing.
+	/// </summary>
+	internal string StableIdentity { get; } = string.Concat(packageFamilyName, "|", architecture);
+}
+
+/// <summary>
+/// Equality comparer for PackagedAppView that uses <see cref="PackagedAppView.StableIdentity"/>.
+/// </summary>
+internal sealed class PackagedAppViewIdentityComparer : IEqualityComparer<PackagedAppView>
+{
+	public bool Equals(PackagedAppView? x, PackagedAppView? y)
+	{
+		if (ReferenceEquals(x, y)) return true;
+		if (x is null || y is null) return false;
+
+		return string.Equals(x.StableIdentity, y.StableIdentity, StringComparison.OrdinalIgnoreCase);
+	}
+
+	public int GetHashCode(PackagedAppView? obj)
+	{
+		if (obj is null) return 0;
+		return StringComparer.OrdinalIgnoreCase.GetHashCode(obj.StableIdentity);
+	}
 }

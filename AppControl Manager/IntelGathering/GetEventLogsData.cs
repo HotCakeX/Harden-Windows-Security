@@ -76,168 +76,166 @@ internal static class GetEventLogsData
 		// Use EventLogReader to read the events
 		List<EventRecord> rawEvents = [];
 
-		// Read the events from the system based on the query
-		using (EventLogReader logReader = new(eventQuery))
+		try
 		{
-			EventRecord eventRecord;
 
-			// Read each event that matches the query
-			while ((eventRecord = logReader.ReadEvent()) is not null)
+			// Read the events from the system based on the query
+			using (EventLogReader logReader = new(eventQuery))
 			{
-				// Add the event to the list
-				rawEvents.Add(eventRecord);
-			}
-		}
+				EventRecord eventRecord;
 
-		// Make sure there are events to process
-		if (rawEvents.Count is 0)
-		{
-			Logger.Write(GlobalVars.GetStr("NoCodeIntegrityLogsFoundMessage"));
-			return fileIdentities.FileIdentitiesInternal;
-		}
-
-		// Group all events based on their ActivityId property
-		IEnumerable<IGrouping<Guid?, EventRecord>> groupedEvents = rawEvents.GroupBy(e => e.ActivityId);
-
-		// Iterate over each group of events
-		foreach (IGrouping<Guid?, EventRecord> group in groupedEvents)
-		{
-			// Access the ActivityId for the group (key)
-			Guid? activityId = group.Key;
-
-			if (activityId is null)
-			{
-				continue;
-			}
-
-			// There are either blocked or audit events in each group
-			// If there are more than 1 of either block or audit events, selecting the first one because that means the same event was triggered by multiple deployed policies
-
-			// Get the possible audit event in the group
-			EventRecord? possibleAuditEvent = group.FirstOrDefault(g => g.Id == 3076);
-			// Get the possible blocked event
-			EventRecord? possibleBlockEvent = group.FirstOrDefault(g => g.Id == 3077);
-			// Get the possible correlated data
-			IEnumerable<EventRecord>? correlatedEvents = group.Where(g => g.Id == 3089);
-
-
-			// If the current group belongs to an Audit event
-			if (possibleAuditEvent is not null)
-			{
-				// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
-				string xmlString = possibleAuditEvent.ToXml();
-
-				// Create an XmlDocument and load the XML string, convert it to XML document
-				XmlDocument xmlDocument = new();
-				xmlDocument.LoadXml(xmlString);
-
-				// Create a namespace manager for the XML document
-				XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
-				namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
-
-				#region Get File name and fix file path
-				string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='File Name']");
-
-				string? FileName = null;
-
-				if (FilePath is not null)
+				// Read each event that matches the query
+				while ((eventRecord = logReader.ReadEvent()) is not null)
 				{
-
-					// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
-					if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
-					{
-						FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
-					}
-					else
-					{
-						// Only attempt to resolve path using current system's drives if EVTX files are not being used since they can be from other systems
-						if (EvtxFilePath is null)
-						{
-							FilePath = ResolvePath(FilePath);
-						}
-					}
-
-					// Doesn't matter if the file exists or not
-					FileName = Path.GetFileName(FilePath);
+					// Add the event to the list
+					rawEvents.Add(eventRecord);
 				}
-				#endregion
+			}
 
+			// Make sure there are events to process
+			if (rawEvents.Count is 0)
+			{
+				Logger.Write(GlobalVars.GetStr("NoCodeIntegrityLogsFoundMessage"));
+				return fileIdentities.FileIdentitiesInternal;
+			}
 
-				// This increases the processing time a LOT
-				/*
-                    #region Resolve UserID
-                    string? UserIDString = null;
+			// Group all events based on their ActivityId property
+			IEnumerable<IGrouping<Guid?, EventRecord>> groupedEvents = rawEvents.GroupBy(e => e.ActivityId);
 
-                    if (possibleAuditEvent.UserId is not null)
-                    {
-                        try
-                        {
-                            // If the user account SID doesn't exist on the system it'll throw error
-                            UserIDString = possibleAuditEvent.UserId.Translate(typeof(NTAccount)).Value;
-                        }
-                        catch
-                        {
-                            UserIDString = possibleAuditEvent.UserId?.ToString();
-                        }
-                    }
-                    #endregion
-                    */
+			// Iterate over each group of events
+			foreach (IGrouping<Guid?, EventRecord> group in groupedEvents)
+			{
+				// Access the ActivityId for the group (key)
+				Guid? activityId = group.Key;
 
-
-				// Make sure the file has SHA256 Hash
-				string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
-
-				if (SHA256Hash is null)
+				if (activityId is null)
 				{
 					continue;
 				}
 
-				// Extract values using XPath
-				FileIdentity eventData = new()
+				// There are either blocked or audit events in each group
+				// If there are more than 1 of either block or audit events, selecting the first one because that means the same event was triggered by multiple deployed policies
+
+				// Get the possible audit event in the group
+				EventRecord? possibleAuditEvent = group.FirstOrDefault(g => g.Id == 3076);
+				// Get the possible blocked event
+				EventRecord? possibleBlockEvent = group.FirstOrDefault(g => g.Id == 3077);
+				// Get the possible correlated data
+				IEnumerable<EventRecord> correlatedEvents = group.Where(g => g.Id == 3089);
+
+
+				// If the current group belongs to an Audit event
+				if (possibleAuditEvent is not null)
 				{
-					// These don't require to be retrieved from XML, they are part of the <System> node/section
-					Origin = FileIdentityOrigin.EventLog,
-					Action = EventAction.Audit,
-					EventID = possibleAuditEvent.Id,
-					TimeCreated = possibleAuditEvent.TimeCreated,
-					ComputerName = possibleAuditEvent.MachineName,
-					UserID = possibleAuditEvent.UserId?.ToString(),
+					// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+					string xmlString = possibleAuditEvent.ToXml();
 
-					// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
-					FilePath = FilePath,
-					FileName = FileName,
-					ProcessName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Process Name']"),
-					RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Requested Signing Level']")),
-					ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Validated Signing Level']")),
-					Status = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Status']"),
-					SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Hash']"),
-					SHA256Hash = SHA256Hash,
-					SHA1FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Flat Hash']"),
-					SHA256FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Flat Hash']"),
-					USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
-					SISigningScenario = (SiPolicyIntel.SSType)(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SI Signing Scenario']") ?? 1),
-					PolicyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyName']"),
-					PolicyID = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyID']"),
-					PolicyHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyHash']"),
-					OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFileName']"),
-					InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
-					FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
-					ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
-					PolicyGUID = GetGuidValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyGUID']"),
-					UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']"),
-					PackageFamilyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PackageFamilyName']")
-				};
+					// Create an XmlDocument and load the XML string, convert it to XML document
+					XmlDocument xmlDocument = new();
+					xmlDocument.LoadXml(xmlString);
 
-				// Set the FileVersion using helper method
-				string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
-				eventData.FileVersion = SetFileVersion(fileVersionString);
+					// Create a namespace manager for the XML document
+					XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
+					namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
+
+					#region Get File name and fix file path
+					string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='File Name']");
+
+					string? FileName = null;
+
+					if (FilePath is not null)
+					{
+
+						// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
+						if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
+						{
+							FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
+						}
+						else
+						{
+							// Only attempt to resolve path using current system's drives if EVTX files are not being used since they can be from other systems
+							if (EvtxFilePath is null)
+							{
+								FilePath = ResolvePath(FilePath);
+							}
+						}
+
+						// Doesn't matter if the file exists or not
+						FileName = Path.GetFileName(FilePath);
+					}
+					#endregion
 
 
-				// If there are correlated events - for signer information of the file
-				if (correlatedEvents is not null)
-				{
+					// This increases the processing time a LOT
+					/*
+						#region Resolve UserID
+						string? UserIDString = null;
 
-					// Iterate over each correlated event - files can have multiple signers
+						if (possibleAuditEvent.UserId is not null)
+						{
+							try
+							{
+								// If the user account SID doesn't exist on the system it'll throw error
+								UserIDString = possibleAuditEvent.UserId.Translate(typeof(NTAccount)).Value;
+							}
+							catch
+							{
+								UserIDString = possibleAuditEvent.UserId?.ToString();
+							}
+						}
+						#endregion
+						*/
+
+
+					// Make sure the file has SHA256 Hash
+					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
+
+					if (SHA256Hash is null)
+					{
+						continue;
+					}
+
+					// Extract values using XPath
+					FileIdentity eventData = new()
+					{
+						// These don't require to be retrieved from XML, they are part of the <System> node/section
+						Origin = FileIdentityOrigin.EventLog,
+						Action = EventAction.Audit,
+						EventID = possibleAuditEvent.Id,
+						TimeCreated = possibleAuditEvent.TimeCreated,
+						ComputerName = possibleAuditEvent.MachineName,
+						UserID = possibleAuditEvent.UserId?.ToString(),
+
+						// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
+						FilePath = FilePath,
+						FileName = FileName,
+						ProcessName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Process Name']"),
+						RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Requested Signing Level']")),
+						ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Validated Signing Level']")),
+						Status = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Status']"),
+						SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Hash']"),
+						SHA256Hash = SHA256Hash,
+						SHA1FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Flat Hash']"),
+						SHA256FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Flat Hash']"),
+						USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
+						SISigningScenario = (SiPolicyIntel.SSType)(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SI Signing Scenario']") ?? 1),
+						PolicyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyName']"),
+						PolicyID = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyID']"),
+						PolicyHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyHash']"),
+						OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFileName']"),
+						InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
+						FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
+						ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
+						PolicyGUID = GetGuidValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyGUID']"),
+						UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']"),
+						PackageFamilyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PackageFamilyName']")
+					};
+
+					// Safely set the FileVersion using helper method
+					string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
+					eventData.FileVersion = SetFileVersion(fileVersionString);
+
+					// Iterate over each correlated event (if any) - files can have multiple signers
 					foreach (EventRecord correlatedEvent in correlatedEvents)
 					{
 						// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
@@ -293,141 +291,133 @@ internal static class GetEventLogsData
 						// Add the current signer info/correlated event data to the main event package
 						_ = eventData.FileSignerInfos.Add(signerInfo);
 					}
-				}
+
+					// Set the SignatureStatus based on the number of signers
+					eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
 
-				// Set the SignatureStatus based on the number of signers
-				eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
+					// Add the entire event package to the output list
+					_ = fileIdentities.Add(eventData);
 
 
-				// Add the entire event package to the output list
-				_ = fileIdentities.Add(eventData);
-
-
-				continue;
-			}
-
-			// If the current group belongs to an Audit event
-			if (possibleBlockEvent is not null)
-			{
-
-				// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
-				string xmlString = possibleBlockEvent.ToXml();
-
-				// Create an XmlDocument and load the XML string, convert it to XML document
-				XmlDocument xmlDocument = new();
-				xmlDocument.LoadXml(xmlString);
-
-				// Create a namespace manager for the XML document
-				XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
-				namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
-
-				#region Get File name and fix file path
-				string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='File Name']");
-
-				string? FileName = null;
-
-				if (FilePath is not null)
-				{
-
-					// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
-					if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
-					{
-						FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
-					}
-					else
-					{
-						// Only attempt to resolve path using current system's drives if EVTX files are not being used since they can be from other systems
-						if (EvtxFilePath is null)
-						{
-							FilePath = ResolvePath(FilePath);
-						}
-					}
-
-					// Doesn't matter if the file exists or not
-					FileName = Path.GetFileName(FilePath);
-				}
-				#endregion
-
-
-				/*
-                    #region Resolve UserID
-                    string? UserIDString = null;
-
-                    if (possibleBlockEvent.UserId is not null)
-                    {
-                        try
-                        {
-                            // If the user account SID doesn't exist on the system it'll throw error
-                            UserIDString = possibleBlockEvent.UserId.Translate(typeof(NTAccount)).Value;
-                        }
-                        catch
-                        {
-                            UserIDString = possibleBlockEvent.UserId?.ToString();
-                        }
-                    }
-                    #endregion
-                    */
-
-
-				// Make sure the file has SHA256 Hash
-				string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
-
-				if (SHA256Hash is null)
-				{
 					continue;
 				}
 
-
-				// Extract values using XPath
-				FileIdentity eventData = new()
-				{
-					// These don't require to be retrieved from XML, they are part of the <System> node/section
-					Origin = FileIdentityOrigin.EventLog,
-					Action = EventAction.Block,
-					EventID = possibleBlockEvent.Id,
-					TimeCreated = possibleBlockEvent.TimeCreated,
-					ComputerName = possibleBlockEvent.MachineName,
-					UserID = possibleBlockEvent.UserId?.ToString(),
-
-					// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
-					FilePath = FilePath,
-					FileName = FileName,
-					ProcessName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Process Name']"),
-					RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Requested Signing Level']")),
-					ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Validated Signing Level']")),
-					Status = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Status']"),
-					SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Hash']"),
-					SHA256Hash = SHA256Hash,
-					SHA1FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Flat Hash']"),
-					SHA256FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Flat Hash']"),
-					USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
-					SISigningScenario = (SiPolicyIntel.SSType)(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SI Signing Scenario']") ?? 1),
-					PolicyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyName']"),
-					PolicyID = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyID']"),
-					PolicyHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyHash']"),
-					OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFileName']"),
-					InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
-					FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
-					ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
-					PolicyGUID = GetGuidValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyGUID']"),
-					UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']"),
-					PackageFamilyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PackageFamilyName']")
-				};
-
-				// Safely set the FileVersion using helper method
-				string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
-				eventData.FileVersion = SetFileVersion(fileVersionString);
-
-
-				// If there are correlated events - for signer information of the file
-				if (correlatedEvents is not null)
+				// If the current group belongs to a blocked event
+				if (possibleBlockEvent is not null)
 				{
 
-					// Iterate over each correlated event - files can have multiple signers
-					foreach (EventRecord correlatedEvent in correlatedEvents)
+					// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+					string xmlString = possibleBlockEvent.ToXml();
+
+					// Create an XmlDocument and load the XML string, convert it to XML document
+					XmlDocument xmlDocument = new();
+					xmlDocument.LoadXml(xmlString);
+
+					// Create a namespace manager for the XML document
+					XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
+					namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
+
+					#region Get File name and fix file path
+					string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='File Name']");
+
+					string? FileName = null;
+
+					if (FilePath is not null)
 					{
 
+						// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
+						if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
+						{
+							FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
+						}
+						else
+						{
+							// Only attempt to resolve path using current system's drives if EVTX files are not being used since they can be from other systems
+							if (EvtxFilePath is null)
+							{
+								FilePath = ResolvePath(FilePath);
+							}
+						}
+
+						// Doesn't matter if the file exists or not
+						FileName = Path.GetFileName(FilePath);
+					}
+					#endregion
+
+
+					/*
+						#region Resolve UserID
+						string? UserIDString = null;
+
+						if (possibleBlockEvent.UserId is not null)
+						{
+							try
+							{
+								// If the user account SID doesn't exist on the system it'll throw error
+								UserIDString = possibleBlockEvent.UserId.Translate(typeof(NTAccount)).Value;
+							}
+							catch
+							{
+								UserIDString = possibleBlockEvent.UserId?.ToString();
+							}
+						}
+						#endregion
+						*/
+
+
+					// Make sure the file has SHA256 Hash
+					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
+
+					if (SHA256Hash is null)
+					{
+						continue;
+					}
+
+
+					// Extract values using XPath
+					FileIdentity eventData = new()
+					{
+						// These don't require to be retrieved from XML, they are part of the <System> node/section
+						Origin = FileIdentityOrigin.EventLog,
+						Action = EventAction.Block,
+						EventID = possibleBlockEvent.Id,
+						TimeCreated = possibleBlockEvent.TimeCreated,
+						ComputerName = possibleBlockEvent.MachineName,
+						UserID = possibleBlockEvent.UserId?.ToString(),
+
+						// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
+						FilePath = FilePath,
+						FileName = FileName,
+						ProcessName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Process Name']"),
+						RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Requested Signing Level']")),
+						ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Validated Signing Level']")),
+						Status = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Status']"),
+						SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Hash']"),
+						SHA256Hash = SHA256Hash,
+						SHA1FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Flat Hash']"),
+						SHA256FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Flat Hash']"),
+						USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
+						SISigningScenario = (SiPolicyIntel.SSType)(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SI Signing Scenario']") ?? 1),
+						PolicyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyName']"),
+						PolicyID = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyID']"),
+						PolicyHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyHash']"),
+						OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFileName']"),
+						InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
+						FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
+						ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
+						PolicyGUID = GetGuidValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyGUID']"),
+						UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']"),
+						PackageFamilyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PackageFamilyName']")
+					};
+
+					// Safely set the FileVersion using helper method
+					string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
+					eventData.FileVersion = SetFileVersion(fileVersionString);
+
+					// Iterate over each correlated event (if any) - files can have multiple signers
+					foreach (EventRecord correlatedEvent in correlatedEvents)
+					{
 						// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
 						string xmlStringCore = correlatedEvent.ToXml();
 
@@ -483,25 +473,32 @@ internal static class GetEventLogsData
 						_ = eventData.FileSignerInfos.Add(signerInfo);
 
 					}
+
+					// Set the SignatureStatus based on the number of signers
+					eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
+
+					// Add the populated EventData instance to the list
+					_ = fileIdentities.Add(eventData);
+
+
+					continue;
 				}
+			}
 
-				// Set the SignatureStatus based on the number of signers
-				eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
+			Logger.Write(string.Format(
+				GlobalVars.GetStr("TotalCodeIntegrityLogsMessage"),
+				fileIdentities.Count));
 
-				// Add the populated EventData instance to the list
-				_ = fileIdentities.Add(eventData);
-
-
-				continue;
+			// Return the output
+			return fileIdentities.FileIdentitiesInternal;
+		}
+		finally
+		{
+			foreach (EventRecord item in rawEvents)
+			{
+				item.Dispose();
 			}
 		}
-
-		Logger.Write(string.Format(
-			GlobalVars.GetStr("TotalCodeIntegrityLogsMessage"),
-			fileIdentities.Count));
-
-		// Return the output
-		return fileIdentities.FileIdentitiesInternal;
 	}
 
 
@@ -540,373 +537,369 @@ internal static class GetEventLogsData
 		// Use EventLogReader to read the events
 		List<EventRecord> rawEvents = [];
 
-		// Read the events from the system based on the query
-		using (EventLogReader logReader = new(eventQuery))
+		try
 		{
-			EventRecord eventRecord;
 
-			// Read each event that matches the query
-			while ((eventRecord = logReader.ReadEvent()) is not null)
+			// Read the events from the system based on the query
+			using (EventLogReader logReader = new(eventQuery))
 			{
-				// Add the event to the list
-				rawEvents.Add(eventRecord);
-			}
-		}
+				EventRecord eventRecord;
 
-		// Make sure there are events to process
-		if (rawEvents.Count == 0)
-		{
-			Logger.Write(GlobalVars.GetStr("NoAppLockerEventsFoundMessage"));
+				// Read each event that matches the query
+				while ((eventRecord = logReader.ReadEvent()) is not null)
+				{
+					// Add the event to the list
+					rawEvents.Add(eventRecord);
+				}
+			}
+
+			// Make sure there are events to process
+			if (rawEvents.Count == 0)
+			{
+				Logger.Write(GlobalVars.GetStr("NoAppLockerEventsFoundMessage"));
+				return fileIdentities.FileIdentitiesInternal;
+			}
+
+			// Group all events based on their ActivityId property
+			IEnumerable<IGrouping<Guid?, EventRecord>> groupedEvents = rawEvents.GroupBy(e => e.ActivityId);
+
+			// Iterate over each group of events
+			foreach (IGrouping<Guid?, EventRecord> group in groupedEvents)
+			{
+				// Access the ActivityId for the group (key)
+				Guid? activityId = group.Key;
+
+				if (activityId is null)
+				{
+					continue;
+				}
+
+				// There are either blocked or audit events in each group
+				// If there are more than 1 of either block or audit events, selecting the first one because that means the same event was triggered by multiple deployed policies
+
+				// Get the possible audit event in the group
+				EventRecord? possibleAuditEvent = group.FirstOrDefault(g => g.Id == 8028);
+				// Get the possible blocked event
+				EventRecord? possibleBlockEvent = group.FirstOrDefault(g => g.Id == 8029);
+				// Get the possible correlated data
+				IEnumerable<EventRecord> correlatedEvents = group.Where(g => g.Id == 8038);
+
+
+				// If the current group belongs to an Audit event
+				if (possibleAuditEvent is not null)
+				{
+					// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+					string xmlString = possibleAuditEvent.ToXml();
+
+					// Create an XmlDocument and load the XML string, convert it to XML document
+					XmlDocument xmlDocument = new();
+					xmlDocument.LoadXml(xmlString);
+
+					// Create a namespace manager for the XML document
+					XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
+					namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
+
+
+					#region Get File name - the file path doesn't need fixing like Code integrity ones
+					string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FilePath']");
+
+					string? FileName = null;
+
+					if (FilePath is not null)
+					{
+
+						// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
+						if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
+						{
+							FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
+						}
+
+						// Doesn't matter if the file exists or not
+						FileName = Path.GetFileName(FilePath);
+					}
+					#endregion
+
+
+					/*
+						#region Resolve UserID
+						string? UserIDString = null;
+
+						if (possibleAuditEvent.UserId is not null)
+						{
+							try
+							{
+								// If the user account SID doesn't exist on the system it'll throw error
+								UserIDString = possibleAuditEvent.UserId.Translate(typeof(NTAccount)).Value;
+							}
+							catch
+							{
+								UserIDString = possibleAuditEvent.UserId?.ToString();
+							}
+						}
+						#endregion
+						*/
+
+
+					// Make sure the file has SHA256 Hash
+					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
+
+					if (SHA256Hash is null)
+					{
+						continue;
+					}
+
+
+					// Extract values using XPath
+					FileIdentity eventData = new()
+					{
+						// These don't require to be retrieved from XML, they are part of the <System> node/section
+						Origin = FileIdentityOrigin.EventLog,
+						Action = EventAction.Audit,
+						EventID = possibleAuditEvent.Id,
+						TimeCreated = possibleAuditEvent.TimeCreated,
+						ComputerName = possibleAuditEvent.MachineName,
+						UserID = possibleAuditEvent.UserId?.ToString(),
+
+						// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
+						FilePath = FilePath,
+						FileName = FileName,
+						SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Sha1Hash']"),
+						SHA256Hash = SHA256Hash,
+						USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
+						SISigningScenario = SiPolicyIntel.SSType.UserMode, // AppLocker doesn't apply to Kernel mode files, so all of these logs have User-Mode Signing Scenario
+						OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFilename']"),
+						InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
+						FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
+						ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
+						UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']")
+					};
+
+					// Safely set the FileVersion using helper method
+					string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
+					eventData.FileVersion = SetFileVersion(fileVersionString);
+
+					// Iterate over each correlated event (if any) - files can have multiple signers
+					foreach (EventRecord correlatedEvent in correlatedEvents)
+					{
+						// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+						string xmlStringCore = correlatedEvent.ToXml();
+
+						// Create an XmlDocument and load the XML string, convert it to XML document
+						XmlDocument xmlDocumentCore = new();
+						xmlDocumentCore.LoadXml(xmlStringCore);
+
+						// Create a namespace manager for the XML document
+						XmlNamespaceManager namespaceManagerCore = new(xmlDocumentCore.NameTable);
+						namespaceManagerCore.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
+
+
+						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash)
+						// They have "Unknown" as their IssuerName and PublisherName too
+						// Leaf certificate is a must have for signed files
+						string? PublisherTBSHash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherTBSHash']");
+
+						string? PublisherName = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherName']");
+
+						if (PublisherTBSHash is null || PublisherName is null)
+						{
+							continue;
+						}
+
+						// Extract values using XPath
+						FileSignerInfo signerInfo = new(
+							totalSignatureCount: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='TotalSignatureCount']"),
+							signature: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Signature']"),
+							publisherName: PublisherName,
+							issuerName: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerName']"),
+							publisherTBSHash: PublisherTBSHash,
+							issuerTBSHash: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerTBSHash']")
+						);
+
+						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+						_ = eventData.FilePublishers.Add(PublisherName);
+
+						// Add the current signer info/correlated event data to the main event package
+						_ = eventData.FileSignerInfos.Add(signerInfo);
+
+					}
+
+					// Set the SignatureStatus based on the number of signers
+					eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
+
+
+					// Add the entire event package to the output list
+					_ = fileIdentities.Add(eventData);
+
+
+					continue;
+				}
+
+				// If the current group belongs to a blocked event
+				if (possibleBlockEvent is not null)
+				{
+
+					// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+					string xmlString = possibleBlockEvent.ToXml();
+
+					// Create an XmlDocument and load the XML string, convert it to XML document
+					XmlDocument xmlDocument = new();
+					xmlDocument.LoadXml(xmlString);
+
+					// Create a namespace manager for the XML document
+					XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
+					namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
+
+
+					#region Get File name - the file path doesn't need fixing like Code integrity ones
+					string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FilePath']");
+
+					string? FileName = null;
+
+					if (FilePath is not null)
+					{
+
+						// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
+						if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
+						{
+							FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
+						}
+
+						// Doesn't matter if the file exists or not
+						FileName = Path.GetFileName(FilePath);
+					}
+					#endregion
+
+
+					/*
+						#region Resolve UserID
+						string? UserIDString = null;
+
+						if (possibleBlockEvent.UserId is not null)
+						{
+							try
+							{
+								// If the user account SID doesn't exist on the system it'll throw error
+								UserIDString = possibleBlockEvent.UserId.Translate(typeof(NTAccount)).Value;
+							}
+							catch
+							{
+								UserIDString = possibleBlockEvent.UserId?.ToString();
+							}
+						}
+						#endregion
+						*/
+
+
+					// Make sure the file has SHA256 Hash
+					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
+
+					if (SHA256Hash is null)
+					{
+						continue;
+					}
+
+
+					// Extract values using XPath
+					FileIdentity eventData = new()
+					{
+						// These don't require to be retrieved from XML, they are part of the <System> node/section
+						Origin = FileIdentityOrigin.EventLog,
+						Action = EventAction.Block,
+						EventID = possibleBlockEvent.Id,
+						TimeCreated = possibleBlockEvent.TimeCreated,
+						ComputerName = possibleBlockEvent.MachineName,
+						UserID = possibleBlockEvent.UserId?.ToString(),
+
+						// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
+						FilePath = FilePath,
+						FileName = FileName,
+						SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Sha1Hash']"),
+						SHA256Hash = SHA256Hash,
+						USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
+						SISigningScenario = SiPolicyIntel.SSType.UserMode, // AppLocker doesn't apply to Kernel mode files, so all of these logs have User-Mode Signing Scenario
+						OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFilename']"),
+						InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
+						FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
+						ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
+						UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']")
+					};
+
+					// Safely set the FileVersion using helper method
+					string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
+					eventData.FileVersion = SetFileVersion(fileVersionString);
+
+					// Iterate over each correlated event (if any) - files can have multiple signers
+					foreach (EventRecord correlatedEvent in correlatedEvents)
+					{
+						// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+						string xmlStringCore = correlatedEvent.ToXml();
+
+						// Create an XmlDocument and load the XML string, convert it to XML document
+						XmlDocument xmlDocumentCore = new();
+						xmlDocumentCore.LoadXml(xmlStringCore);
+
+						// Create a namespace manager for the XML document
+						XmlNamespaceManager namespaceManagerCore = new(xmlDocumentCore.NameTable);
+						namespaceManagerCore.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
+
+
+						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash)
+						// They have "Unknown" as their IssuerName and PublisherName too
+						// Leaf certificate is a must have for signed files
+						string? PublisherTBSHash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherTBSHash']");
+
+						string? PublisherName = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherName']");
+
+						if (PublisherTBSHash is null || PublisherName is null)
+						{
+							continue;
+						}
+
+						// Extract values using XPath
+						FileSignerInfo signerInfo = new(
+							totalSignatureCount: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='TotalSignatureCount']"),
+							signature: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Signature']"),
+							publisherName: PublisherName,
+							issuerName: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerName']"),
+							publisherTBSHash: PublisherTBSHash,
+							issuerTBSHash: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerTBSHash']")
+						);
+
+
+						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+						_ = eventData.FilePublishers.Add(PublisherName);
+
+
+						// Add the current signer info/correlated event data to the main event package
+						_ = eventData.FileSignerInfos.Add(signerInfo);
+
+					}
+
+					// Set the SignatureStatus based on the number of signers
+					eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
+
+					// Add the populated EventData instance to the list
+					_ = fileIdentities.Add(eventData);
+
+
+					continue;
+				}
+			}
+
+			Logger.Write(string.Format(
+				GlobalVars.GetStr("TotalAppLockerLogsMessage"),
+				fileIdentities.Count));
+
+			// Return the output
 			return fileIdentities.FileIdentitiesInternal;
 		}
-
-		// Group all events based on their ActivityId property
-		IEnumerable<IGrouping<Guid?, EventRecord>> groupedEvents = rawEvents.GroupBy(e => e.ActivityId);
-
-		// Iterate over each group of events
-		foreach (IGrouping<Guid?, EventRecord> group in groupedEvents)
+		finally
 		{
-			// Access the ActivityId for the group (key)
-			Guid? activityId = group.Key;
-
-			if (activityId is null)
+			foreach (EventRecord item in rawEvents)
 			{
-				continue;
-			}
-
-			// There are either blocked or audit events in each group
-			// If there are more than 1 of either block or audit events, selecting the first one because that means the same event was triggered by multiple deployed policies
-
-			// Get the possible audit event in the group
-			EventRecord? possibleAuditEvent = group.FirstOrDefault(g => g.Id == 8028);
-			// Get the possible blocked event
-			EventRecord? possibleBlockEvent = group.FirstOrDefault(g => g.Id == 8029);
-			// Get the possible correlated data
-			IEnumerable<EventRecord>? correlatedEvents = group.Where(g => g.Id == 8038);
-
-
-			// If the current group belongs to an Audit event
-			if (possibleAuditEvent is not null)
-			{
-				// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
-				string xmlString = possibleAuditEvent.ToXml();
-
-				// Create an XmlDocument and load the XML string, convert it to XML document
-				XmlDocument xmlDocument = new();
-				xmlDocument.LoadXml(xmlString);
-
-				// Create a namespace manager for the XML document
-				XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
-				namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
-
-
-				#region Get File name - the file path doesn't need fixing like Code integrity ones
-				string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FilePath']");
-
-				string? FileName = null;
-
-				if (FilePath is not null)
-				{
-
-					// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
-					if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
-					{
-						FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
-					}
-
-					// Doesn't matter if the file exists or not
-					FileName = Path.GetFileName(FilePath);
-				}
-				#endregion
-
-
-				/*
-                    #region Resolve UserID
-                    string? UserIDString = null;
-
-                    if (possibleAuditEvent.UserId is not null)
-                    {
-                        try
-                        {
-                            // If the user account SID doesn't exist on the system it'll throw error
-                            UserIDString = possibleAuditEvent.UserId.Translate(typeof(NTAccount)).Value;
-                        }
-                        catch
-                        {
-                            UserIDString = possibleAuditEvent.UserId?.ToString();
-                        }
-                    }
-                    #endregion
-                    */
-
-
-				// Make sure the file has SHA256 Hash
-				string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
-
-				if (SHA256Hash is null)
-				{
-					continue;
-				}
-
-
-				// Extract values using XPath
-				FileIdentity eventData = new()
-				{
-					// These don't require to be retrieved from XML, they are part of the <System> node/section
-					Origin = FileIdentityOrigin.EventLog,
-					Action = EventAction.Block,
-					EventID = possibleAuditEvent.Id,
-					TimeCreated = possibleAuditEvent.TimeCreated,
-					ComputerName = possibleAuditEvent.MachineName,
-					UserID = possibleAuditEvent.UserId?.ToString(),
-
-					// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
-					FilePath = FilePath,
-					FileName = FileName,
-					SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Sha1Hash']"),
-					SHA256Hash = SHA256Hash,
-					USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
-					SISigningScenario = SiPolicyIntel.SSType.UserMode, // AppLocker doesn't apply to Kernel mode files, so all of these logs have User-Mode Signing Scenario
-					OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFilename']"),
-					InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
-					FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
-					ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
-					UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']")
-				};
-
-				// Safely set the FileVersion using helper method
-				string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
-				eventData.FileVersion = SetFileVersion(fileVersionString);
-
-
-				// If there are correlated events - for signer information of the file
-				if (correlatedEvents is not null)
-				{
-
-					// Iterate over each correlated event - files can have multiple signers
-					foreach (EventRecord correlatedEvent in correlatedEvents)
-					{
-						// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
-						string xmlStringCore = correlatedEvent.ToXml();
-
-						// Create an XmlDocument and load the XML string, convert it to XML document
-						XmlDocument xmlDocumentCore = new();
-						xmlDocumentCore.LoadXml(xmlStringCore);
-
-						// Create a namespace manager for the XML document
-						XmlNamespaceManager namespaceManagerCore = new(xmlDocumentCore.NameTable);
-						namespaceManagerCore.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
-
-
-						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash)
-						// They have "Unknown" as their IssuerName and PublisherName too
-						// Leaf certificate is a must have for signed files
-						string? PublisherTBSHash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherTBSHash']");
-
-						string? PublisherName = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherName']");
-
-						if (PublisherTBSHash is null || PublisherName is null)
-						{
-							continue;
-						}
-
-						// Extract values using XPath
-						FileSignerInfo signerInfo = new(
-							totalSignatureCount: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='TotalSignatureCount']"),
-							signature: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Signature']"),
-							publisherName: PublisherName,
-							issuerName: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerName']"),
-							publisherTBSHash: PublisherTBSHash,
-							issuerTBSHash: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerTBSHash']")
-						);
-
-						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
-						_ = eventData.FilePublishers.Add(PublisherName);
-
-						// Add the current signer info/correlated event data to the main event package
-						_ = eventData.FileSignerInfos.Add(signerInfo);
-
-					}
-				}
-
-
-				// Set the SignatureStatus based on the number of signers
-				eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
-
-
-				// Add the entire event package to the output list
-				_ = fileIdentities.Add(eventData);
-
-
-				continue;
-			}
-
-			// If the current group belongs to an Audit event
-			if (possibleBlockEvent is not null)
-			{
-
-				// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
-				string xmlString = possibleBlockEvent.ToXml();
-
-				// Create an XmlDocument and load the XML string, convert it to XML document
-				XmlDocument xmlDocument = new();
-				xmlDocument.LoadXml(xmlString);
-
-				// Create a namespace manager for the XML document
-				XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
-				namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
-
-
-				#region Get File name - the file path doesn't need fixing like Code integrity ones
-				string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FilePath']");
-
-				string? FileName = null;
-
-				if (FilePath is not null)
-				{
-
-					// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
-					if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
-					{
-						FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
-					}
-
-					// Doesn't matter if the file exists or not
-					FileName = Path.GetFileName(FilePath);
-				}
-				#endregion
-
-
-				/*
-                    #region Resolve UserID
-                    string? UserIDString = null;
-
-                    if (possibleBlockEvent.UserId is not null)
-                    {
-                        try
-                        {
-                            // If the user account SID doesn't exist on the system it'll throw error
-                            UserIDString = possibleBlockEvent.UserId.Translate(typeof(NTAccount)).Value;
-                        }
-                        catch
-                        {
-                            UserIDString = possibleBlockEvent.UserId?.ToString();
-                        }
-                    }
-                    #endregion
-                    */
-
-
-				// Make sure the file has SHA256 Hash
-				string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
-
-				if (SHA256Hash is null)
-				{
-					continue;
-				}
-
-
-				// Extract values using XPath
-				FileIdentity eventData = new()
-				{
-					// These don't require to be retrieved from XML, they are part of the <System> node/section
-					Origin = FileIdentityOrigin.EventLog,
-					Action = EventAction.Block,
-					EventID = possibleBlockEvent.Id,
-					TimeCreated = possibleBlockEvent.TimeCreated,
-					ComputerName = possibleBlockEvent.MachineName,
-					UserID = possibleBlockEvent.UserId?.ToString(),
-
-					// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
-					FilePath = FilePath,
-					FileName = FileName,
-					SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Sha1Hash']"),
-					SHA256Hash = SHA256Hash,
-					USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
-					SISigningScenario = SiPolicyIntel.SSType.UserMode, // AppLocker doesn't apply to Kernel mode files, so all of these logs have User-Mode Signing Scenario
-					OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFilename']"),
-					InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
-					FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
-					ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
-					UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']")
-				};
-
-				// Safely set the FileVersion using helper method
-				string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
-				eventData.FileVersion = SetFileVersion(fileVersionString);
-
-
-				// If there are correlated events - for signer information of the file
-				if (correlatedEvents is not null)
-				{
-
-					// Iterate over each correlated event - files can have multiple signers
-					foreach (EventRecord correlatedEvent in correlatedEvents)
-					{
-
-						// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
-						string xmlStringCore = correlatedEvent.ToXml();
-
-						// Create an XmlDocument and load the XML string, convert it to XML document
-						XmlDocument xmlDocumentCore = new();
-						xmlDocumentCore.LoadXml(xmlStringCore);
-
-						// Create a namespace manager for the XML document
-						XmlNamespaceManager namespaceManagerCore = new(xmlDocumentCore.NameTable);
-						namespaceManagerCore.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
-
-
-						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash)
-						// They have "Unknown" as their IssuerName and PublisherName too
-						// Leaf certificate is a must have for signed files
-						string? PublisherTBSHash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherTBSHash']");
-
-						string? PublisherName = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherName']");
-
-						if (PublisherTBSHash is null || PublisherName is null)
-						{
-							continue;
-						}
-
-						// Extract values using XPath
-						FileSignerInfo signerInfo = new(
-							totalSignatureCount: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='TotalSignatureCount']"),
-							signature: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Signature']"),
-							publisherName: PublisherName,
-							issuerName: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerName']"),
-							publisherTBSHash: PublisherTBSHash,
-							issuerTBSHash: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerTBSHash']")
-						);
-
-
-						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
-						_ = eventData.FilePublishers.Add(PublisherName);
-
-
-						// Add the current signer info/correlated event data to the main event package
-						_ = eventData.FileSignerInfos.Add(signerInfo);
-
-
-					}
-				}
-
-				// Set the SignatureStatus based on the number of signers
-				eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
-
-				// Add the populated EventData instance to the list
-				_ = fileIdentities.Add(eventData);
-
-
-				continue;
+				item.Dispose();
 			}
 		}
-
-		Logger.Write(string.Format(
-			GlobalVars.GetStr("TotalAppLockerLogsMessage"),
-			fileIdentities.Count));
-
-		// Return the output
-		return fileIdentities.FileIdentitiesInternal;
 	}
 
 

@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
 		<Version>$(FileVersion)</Version>
 		<FileVersion>1.0.0.0</FileVersion>
 		<Title>DISMService</Title>
@@ -21,16 +20,9 @@
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 		<DebugType>none</DebugType>
-		<DisableRuntimeMarshalling>True</DisableRuntimeMarshalling>
 	</PropertyGroup>
 
 	<Import Project="..\CommonCore\CommonCore.projitems" Label="Shared" />
-
-	<ItemGroup>
-		<IlcArg Include="--debug" />
-		<IlcArg Include="--verbose" />
-		<LinkerArg Include="/DEPENDENTLOADFLAG:0x800" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.2.25502.107" />

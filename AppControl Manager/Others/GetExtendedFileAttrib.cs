@@ -36,6 +36,7 @@ internal static partial class GetExtendedFileAttrib
 	/// <summary>
 	/// Constant representing the neutral file version, set to 2. Used for identifying a specific version in file
 	/// operations.
+	/// https://learn.microsoft.com/windows/win32/api/winver/nf-winver-getfileversioninfoexw#parameters
 	/// </summary>
 	private const int FILE_VER_GET_NEUTRAL = 2;
 

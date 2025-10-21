@@ -827,9 +827,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		// path of the policy in the app's resources directory
 		string policyPathInResourcesDir = Path.Combine(AppContext.BaseDirectory, "Resources", $"{fileName}.xml");
 
-		// path of the policy in user configurations directory
-		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{fileName}.xml");
-
 		// Copy the policy from app's directory to the staging area
 		File.Copy(policyPathInResourcesDir, policyPath, true);
 
@@ -838,9 +835,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			// Add the audit mode rule option to the policy
 			CiRuleOptions.Set(filePath: policyPath, rulesToAdd: [SiPolicy.OptionType.EnabledAuditMode]);
 		}
-
-		// Copy the policy to the user configurations directory
-		File.Copy(policyPath, finalPolicyPath, true);
 
 		IntPtr pathPtr = IntPtr.Zero;
 
@@ -876,10 +870,10 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			}
 		}
 
-		string pathToUse = downloadsPath + @"\" + '*';
+		string pathToUse = Path.Combine(downloadsPath, "*");
 
 		XmlDocument doc = new();
-		doc.Load(finalPolicyPath);
+		doc.Load(policyPath);
 
 		XmlNamespaceManager nsmgr = new(doc.NameTable);
 		nsmgr.AddNamespace("sip", "urn:schemas-microsoft-com:sipolicy");
@@ -896,7 +890,13 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			}
 		}
 
-		doc.Save(finalPolicyPath);
+		doc.Save(policyPath);
+
+		// path of the policy in user configurations directory
+		string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{fileName}.xml");
+
+		// Copy the policy to the user configurations directory
+		File.Copy(policyPath, finalPolicyPath, true);
 
 		// If it is to be deployed
 		if (deploy)
@@ -904,7 +904,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			string cipPath = Path.Combine(StagingArea, $"{fileName}.cip");
 
 			// Convert the XML to CiP
-			SiPolicy.Management.ConvertXMLToBinary(policyPath, null, cipPath);
+			SiPolicy.Management.ConvertXMLToBinary(finalPolicyPath, null, cipPath);
 
 			// Deploy the CiP file
 			CiToolHelper.UpdatePolicy(cipPath);

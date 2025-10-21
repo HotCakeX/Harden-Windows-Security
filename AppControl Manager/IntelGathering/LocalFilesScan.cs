@@ -151,7 +151,7 @@ internal static class LocalFilesScan
 							}
 
 							// If the file doesn't have certificates in itself, check for catalog signers
-							else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHa1Authenticode!, out string? CurrentFilePathHashSHA1CatResult))
+							else if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHA1Authenticode!, out string? CurrentFilePathHashSHA1CatResult))
 							{
 								try
 								{
@@ -192,7 +192,7 @@ internal static class LocalFilesScan
 								SignatureStatus = fileIsSigned ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned,
 								FilePath = file,
 								FileName = Path.GetFileName(file),
-								SHA1Hash = fileHashes.SHa1Authenticode,
+								SHA1Hash = fileHashes.SHA1Authenticode,
 								SHA256Hash = fileHashes.SHA256Authenticode,
 								SHA1PageHash = fileHashes.SHA1Page,
 								SHA256PageHash = fileHashes.SHA256Page,
@@ -461,7 +461,7 @@ internal static class LocalFilesScan
 			{
 				foreach (Oid oid in eku.EnhancedKeyUsages)
 				{
-					if (oid.Value is not null && oid.Value.Contains(WHQLOid, StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(oid.Value, WHQLOid, StringComparison.OrdinalIgnoreCase))
 					{
 						return true;
 					}

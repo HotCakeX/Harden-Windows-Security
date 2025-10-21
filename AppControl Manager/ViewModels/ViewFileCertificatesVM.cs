@@ -606,7 +606,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 							// Grab the file's Code Integrity hashes
 							CodeIntegrityHashes fileHashes = CiFileHash.GetCiFileHashes(selectedFile);
 
-							if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHa1Authenticode!, out string? CurrentFilePathHashSHA1CatResult))
+							if (AllSecurityCatalogHashes.TryGetValue(fileHashes.SHA1Authenticode!, out string? CurrentFilePathHashSHA1CatResult))
 							{
 								try
 								{

@@ -165,7 +165,7 @@ internal static class AppControlSimulation
 
 			_ = FinalSimulationResults.TryAdd(xmlFilePath, new SimulationOutput(
 				null,
-				"AllowAllRule",
+				SimulationOutputSource.AllowAllRule,
 				true,
 				null,
 				null,
@@ -239,7 +239,7 @@ internal static class AppControlSimulation
 							_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 								new SimulationOutput(
 									CurrentFilePathObj.Name,
-									"FilePath",
+									SimulationOutputSource.FilePath,
 									true,
 									null,
 									null,
@@ -268,14 +268,14 @@ internal static class AppControlSimulation
 							CodeIntegrityHashes CurrentFileHashResult = CiFileHash.GetCiFileHashes(CurrentFilePathObj.FullName);
 
 							CurrentFilePathHashSHA256 = CurrentFileHashResult.SHA256Authenticode!;
-							CurrentFilePathHashSHA1 = CurrentFileHashResult.SHa1Authenticode!;
+							CurrentFilePathHashSHA1 = CurrentFileHashResult.SHA1Authenticode!;
 						}
 						catch
 						{
 							_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 								new SimulationOutput(
 									CurrentFilePathObj.Name,
-									"Signer",
+									SimulationOutputSource.Signer,
 									false,
 									null,
 									null,
@@ -302,7 +302,7 @@ internal static class AppControlSimulation
 							_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 								new SimulationOutput(
 									CurrentFilePathObj.Name,
-									"Hash",
+									SimulationOutputSource.Hash,
 									true,
 									null,
 									null,
@@ -329,7 +329,7 @@ internal static class AppControlSimulation
 							_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 								new SimulationOutput(
 									CurrentFilePathObj.Name,
-									"Unsigned",
+									SimulationOutputSource.Unsigned,
 									false,
 									null,
 									null,
@@ -381,7 +381,7 @@ internal static class AppControlSimulation
 										_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 											new SimulationOutput(
 												CurrentFilePathObj.Name,
-												"Catalog Signed",
+												SimulationOutputSource.CatalogSigned,
 												true,
 												null,
 												null,
@@ -410,7 +410,7 @@ internal static class AppControlSimulation
 										_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 											new SimulationOutput(
 												CurrentFilePathObj.Name,
-												"Unsigned",
+												SimulationOutputSource.Unsigned,
 												false,
 												null,
 												null,
@@ -454,7 +454,7 @@ internal static class AppControlSimulation
 								_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 									new SimulationOutput(
 										CurrentFilePathObj.Name,
-										"Signer",
+										SimulationOutputSource.Signer,
 										false,
 										null,
 										null,
@@ -482,7 +482,7 @@ internal static class AppControlSimulation
 								_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
 									new SimulationOutput(
 										CurrentFilePathObj.Name,
-										"Signer",
+										SimulationOutputSource.Signer,
 										false,
 										null,
 										null,

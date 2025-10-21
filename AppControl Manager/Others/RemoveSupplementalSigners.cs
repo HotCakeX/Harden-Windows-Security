@@ -41,7 +41,7 @@ internal static class CiPolicyHandler
 			);
 
 			// Store SignerIds to remove
-			HashSet<string> signerIdsToRemove = [];
+			HashSet<string> signerIdsToRemove = new(StringComparer.OrdinalIgnoreCase);
 
 			// Loop through each SupplementalPolicySigner
 			foreach (SiPolicy.SupplementalPolicySigner supplementalPolicySigner in policyObj.SupplementalPolicySigners)
@@ -49,20 +49,18 @@ internal static class CiPolicyHandler
 				_ = signerIdsToRemove.Add(supplementalPolicySigner.SignerId);
 			}
 
-			// Remove the corresponding signers for the SupplementalPolicySigners
-			if (policyObj.Signers.Length < 0)
+			if (policyObj.Signers.Length > 0)
 			{
 				List<SiPolicy.Signer> signers = [.. policyObj.Signers];
 
-				foreach (SiPolicy.Signer signer in signers)
-				{
-					if (signerIdsToRemove.Contains(signer.ID))
-					{
-						_ = signers.Remove(signer);
-					}
-				}
+				// Remove the corresponding signers for the SupplementalPolicySigners
+				_ = signers.RemoveAll(signer => signerIdsToRemove.Contains(signer.ID));
+
 				policyObj.Signers = [.. signers];
 			}
+
+			// Remove the entire SupplementalPolicySigners block by clearing its array.
+			policyObj.SupplementalPolicySigners = [];
 		}
 
 		// Save the updated policy

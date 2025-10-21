@@ -134,7 +134,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	}
 
 	internal bool AllowMicrosoftRequireEVSigners { get; set => SP(ref field, value); }
-	internal bool AllowMicrosoftEnableScriptEnforcement { get; set => SP(ref field, value); }
+	internal bool AllowMicrosoftEnableScriptEnforcement { get; set => SP(ref field, value); } = true;
 	internal bool AllowMicrosoftTestMode { get; set => SP(ref field, value); }
 	internal bool AllowMicrosoftCreateAndDeploy { get; set => SP(ref field, value); }
 	internal bool AllowMicrosoftNoBlockRules { get; set => SP(ref field, value); }
@@ -257,7 +257,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	}
 
 	internal bool DefaultWindowsRequireEVSigners { get; set => SP(ref field, value); }
-	internal bool DefaultWindowsEnableScriptEnforcement { get; set => SP(ref field, value); }
+	internal bool DefaultWindowsEnableScriptEnforcement { get; set => SP(ref field, value); } = true;
 	internal bool DefaultWindowsTestMode { get; set => SP(ref field, value); }
 	internal bool DefaultWindowsCreateAndDeploy { get; set => SP(ref field, value); }
 	internal bool DefaultWindowsNoBlockRules { get; set => SP(ref field, value); }
@@ -379,7 +379,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	}
 
 	internal bool SignedAndReputableRequireEVSigners { get; set => SP(ref field, value); }
-	internal bool SignedAndReputableEnableScriptEnforcement { get; set => SP(ref field, value); }
+	internal bool SignedAndReputableEnableScriptEnforcement { get; set => SP(ref field, value); } = true;
 	internal bool SignedAndReputableTestMode { get; set => SP(ref field, value); }
 	internal bool SignedAndReputableCreateAndDeploy { get; set => SP(ref field, value); }
 	internal bool SignedAndReputableNoBlockRules { get; set => SP(ref field, value); }

@@ -15,25 +15,15 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace AppControlManager.Others;
+namespace AppControlManager.SimulationMethods;
 
-/// <summary>
-/// Gets the Code Integrity hashes of a file.
-/// Used primarily by the internal methods.
-/// Use CodeIntegrityHashesV2 for more hash algorithms.
-/// </summary>
-/// <param name="sha1Page"></param>
-/// <param name="sha256Page"></param>
-/// <param name="sha1Authenticode"></param>
-/// <param name="sha256Authenticode"></param>
-internal sealed class CodeIntegrityHashes(
-	string? sha1Page,
-	string? sha256Page,
-	string? sha1Authenticode,
-	string? sha256Authenticode)
+internal enum SimulationOutputSource
 {
-	internal string? SHA1Page => sha1Page;
-	internal string? SHA256Page => sha256Page;
-	internal string? SHA1Authenticode => sha1Authenticode;
-	internal string? SHA256Authenticode => sha256Authenticode;
+	None,
+	Signer,
+	AllowAllRule,
+	Unsigned,
+	CatalogSigned,
+	Hash,
+	FilePath
 }

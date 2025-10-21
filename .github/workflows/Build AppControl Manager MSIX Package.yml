@@ -72,29 +72,6 @@ jobs:
 #
 #          Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
 #
-      - name: Installing the necessary programs # Builds the AppControl Manager application securely with 0 usage of 3rd party tools, workflows and such.
-        shell: pwsh
-        run: |
-          Write-Host -Object "The version of the Winget currently in use:"
-          Write-Host -Object (winget --version)
-
-          winget source update
-
-          Write-Host -Object "`nInstalling Rust toolchain" -ForegroundColor Magenta
-          $null = winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
-          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install the Rust toolchain: $LASTEXITCODE") }
-
-          Write-Host -Object "`nInstalling .NET SDK" -ForegroundColor Magenta
-          $null = winget install --id Microsoft.DotNet.SDK.Preview --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
-          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install .NET SDK: $LASTEXITCODE") }
-
-          Write-Host -Object "`nInstalling Visual Studio Build Tools" -ForegroundColor Magenta
-          $null = winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget --override '--force --wait --passive --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.UniversalBuildTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows11SDK.26100 --includeRecommended --add Microsoft.VisualStudio.Component.VC.Tools.ARM64'
-          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install Visual Studio Build Tools: $LASTEXITCODE") }
-
-          Write-Host -Object "`nInstalling Visual C++ Redistributable" -ForegroundColor Magenta
-          $null = winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
-          if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install Microsoft.VCRedist: $LASTEXITCODE") }
 
       - name: Check out the repository code
         uses: actions/checkout@v5
@@ -244,6 +221,7 @@ jobs:
                   if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New('Failed to install Visual Studio Build Tools') }
 
                   # winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+
               }
 
               # Refresh the environment variables so the current session detects the new dotnet installation
@@ -346,13 +324,13 @@ jobs:
 
               . $MSBuildPath 'eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
 
-              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for X64. Exit Code: $LASTEXITCODE") }
+              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ComManager solution for X64. Exit Code: $LASTEXITCODE") }
 
               if (!$X64ONLY) {
 
                   . $MSBuildPath 'eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
 
-                  if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for ARM64. Exit Code: $LASTEXITCODE") }
+                  if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ComManager solution for ARM64. Exit Code: $LASTEXITCODE") }
               }
 
               ### Shell
@@ -513,7 +491,7 @@ jobs:
 
               Copy-Item -Path '.\eXclude\ComManager\x64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
-               # Generate for X64 architecture
+              # Generate for X64 architecture
               dotnet clean 'AppControl Manager.csproj' --configuration Release
               dotnet build 'AppControl Manager.csproj' --configuration Release --verbosity minimal /p:Platform=x64 /p:RuntimeIdentifier=win-x64
 
@@ -801,9 +779,9 @@ jobs:
           }
 
           # For GitHub workflow 1
-          Build_ACM -Type Self -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $false -X64ONLY $false
+          Build_ACM -Type Self -DownloadRepo $false -InstallDeps $true -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $false -X64ONLY $false
           # For GitHub workflow 2
-          # Build_ACM -Type Store -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $true -X64ONLY $false
+          # Build_ACM -Type Store -DownloadRepo $false -InstallDeps $true -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $true -X64ONLY $false
           # Example of building the app from the source code and installing it on a clean system with self-signed certificate
           # Build_ACM -Type Self -DownloadRepo $true -InstallDeps $true -Workflow $false -UpdateWorkLoads $false -Install $true -Upload $false -X64ONLY $false
           # Example of building the app from the source code on a clean system and uploading it to the Partner Center

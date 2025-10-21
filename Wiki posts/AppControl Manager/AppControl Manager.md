@@ -633,13 +633,13 @@ function Build_ACM {
 
     . $MSBuildPath 'eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
 
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for X64. Exit Code: $LASTEXITCODE") }
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ComManager solution for X64. Exit Code: $LASTEXITCODE") }
 
     if (!$X64ONLY) {
 
         . $MSBuildPath 'eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
 
-        if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for ARM64. Exit Code: $LASTEXITCODE") }
+        if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ComManager solution for ARM64. Exit Code: $LASTEXITCODE") }
     }
 
     ### Shell
@@ -1088,9 +1088,9 @@ Milliseconds : $($Elapsed.Milliseconds)
 }
 
 # For GitHub workflow 1
-# Build_ACM -Type Self -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $false -X64ONLY $false
+# Build_ACM -Type Self -DownloadRepo $false -InstallDeps $true -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $false -X64ONLY $false
 # For GitHub workflow 2
-# Build_ACM -Type Store -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $true -X64ONLY $false
+# Build_ACM -Type Store -DownloadRepo $false -InstallDeps $true -Workflow $true -UpdateWorkLoads $false -Install $false -Upload $true -X64ONLY $false
 # Example of building the app from the source code and installing it on a clean system with self-signed certificate
 # Build_ACM -Type Self -DownloadRepo $true -InstallDeps $true -Workflow $false -UpdateWorkLoads $false -Install $true -Upload $false -X64ONLY $false
 # Example of building the app from the source code on a clean system and uploading it to the Partner Center

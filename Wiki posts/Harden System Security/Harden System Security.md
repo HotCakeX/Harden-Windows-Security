@@ -467,11 +467,11 @@ function Build_HSS {
 
     . $MSBuildPath '..\AppControl Manager\eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=x64 /target:"clean;Rebuild"
 
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for X64. Exit Code: $LASTEXITCODE") }
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ComManager solution for X64. Exit Code: $LASTEXITCODE") }
 
     . $MSBuildPath '..\AppControl Manager\eXclude\ComManager\ComManager.slnx' /p:Configuration=Release /p:Platform=arm64 /target:"clean;Rebuild"
 
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building MS Defender solution for ARM64. Exit Code: $LASTEXITCODE") }
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ComManager solution for ARM64. Exit Code: $LASTEXITCODE") }
 
     #region --- RUST projects ---
 
@@ -880,7 +880,7 @@ function Build_HSS {
 }
 
 # For GitHub workflow
-# Build_HSS -DownloadRepo $false -InstallDeps $false -Workflow $true -UpdateWorkLoads $false -Upload $true
+# Build_HSS -DownloadRepo $false -InstallDeps $true -Workflow $true -UpdateWorkLoads $false -Upload $true
 # Local - ARM64 + X64
 Build_HSS -DownloadRepo $true -InstallDeps $true -Workflow $false -UpdateWorkLoads $false -Upload $false
 

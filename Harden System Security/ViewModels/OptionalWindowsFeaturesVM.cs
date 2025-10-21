@@ -644,9 +644,6 @@ internal sealed partial class DismServiceClient : IDisposable
 /// <summary>
 /// Used as ListView data to display Features and Capabilities to manage.
 /// </summary>
-/// <summary>
-/// Used as ListView data to display Features and Capabilities to manage.
-/// </summary>
 internal sealed partial class DISMOutputEntry : ViewModelBase
 {
 	internal string Description { get; }
@@ -1163,7 +1160,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					// Update UI with item progress
 					await Dispatcher.EnqueueAsync(() =>
 					{
-						DISMOutputEntry? entry = AllItems.FirstOrDefault(x => x.Name == itemName);
+						DISMOutputEntry? entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, itemName, StringComparison.OrdinalIgnoreCase));
 						entry?.UpdateProgress(current, total);
 
 						// Also show progress in InfoBar with feature name and action
@@ -2152,7 +2149,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			if (ApplyCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("RemoveOperationCancelledByUser"));
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("ApplyOperationCancelledByUser"));
 			}
 			await Dispatcher.EnqueueAsync(() =>
 			{
@@ -2311,7 +2308,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			if (VerifyCancellableButton.wasCancelled)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("RemoveOperationCancelledByUser"));
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("VerifyOperationCancelledByUser"));
 			}
 			await Dispatcher.EnqueueAsync(() =>
 			{

@@ -13,7 +13,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-windowslogon#hidefastuserswitching",
         "Category": 7,
         "SubCategory": 7,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 2,
@@ -29,7 +32,13 @@
         "URL": "",
         "Category": 7,
         "SubCategory": null,
-        "DefaultRegValue": "5"
+        "DefaultRegValue": "5",
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 2,
@@ -45,7 +54,13 @@
         "URL": "",
         "Category": 7,
         "SubCategory": null,
-        "DefaultRegValue": "3"
+        "DefaultRegValue": "3",
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 2,
@@ -61,7 +76,12 @@
         "URL": "",
         "Category": 7,
         "SubCategory": 8,
-        "DefaultRegValue": "0"
+        "DefaultRegValue": "0",
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 2,
@@ -77,7 +97,10 @@
         "URL": "",
         "Category": 7,
         "SubCategory": null,
-        "DefaultRegValue": "1"
+        "DefaultRegValue": "1",
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 2,
@@ -93,6 +116,9 @@
         "URL": "",
         "Category": 7,
         "SubCategory": null,
-        "DefaultRegValue": "1"
+        "DefaultRegValue": "1",
+        "DeviceIntents": [
+            99
+        ]
     }
 ]

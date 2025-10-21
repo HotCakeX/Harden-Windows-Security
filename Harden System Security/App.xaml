@@ -15,6 +15,8 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <ResourceDictionary Source="/CustomUIElements/HomePageCarousel/OpacityMask.xaml" />
                 <ResourceDictionary Source="/CustomUIElements/HomePageCarousel/HeaderTile.xaml" />
+
+                <ResourceDictionary Source="/Styles/SelectorBar.xaml" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
@@ -151,6 +153,13 @@
                 <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
                 <Setter Property="Spacing" Value="10"/>
             </Style>
+
+            <LinearGradientBrush x:Key="RoseGradientBrush"
+                         StartPoint="0,0"
+                         EndPoint="1,1">
+                <GradientStop Color="#FFEE9CA7" Offset="0"/>
+                <GradientStop Color="#FFFFDDE1" Offset="1"/>
+            </LinearGradientBrush>
 
         </ResourceDictionary>
     </Application.Resources>

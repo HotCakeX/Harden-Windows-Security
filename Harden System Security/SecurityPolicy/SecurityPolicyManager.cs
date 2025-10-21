@@ -156,8 +156,7 @@ Revision=1
 	/// - Users (Built-in Users group): Read & Execute (no write / delete)
 	/// Inheritance is enabled for child objects.
 	/// </summary>
-	/// <param name="directoryPath">Target directory path</param>
-	/// <param name="createdDirectory">Reference flag set to true if the directory was newly created</param>
+	/// <param name="directoryPath">Target directory path</param>	
 	private static void EnsureSecureDirectory(string directoryPath)
 	{
 		if (Directory.Exists(directoryPath))

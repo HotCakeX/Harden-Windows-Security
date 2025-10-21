@@ -21,11 +21,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using HardenSystemSecurity.DeviceIntents;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace HardenSystemSecurity.ViewModels;
@@ -41,13 +41,16 @@ internal sealed partial class ProtectVM : ViewModelBase
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			null, null);
 
-		// Initialize cancellable buttons
+		// Initialize cancellable buttons for Presets section
 		ApplySelectedCancellableButton = new(GlobalVars.GetStr("ApplySelectedMenuFlyoutItem/Text"));
 		RemoveSelectedCancellableButton = new(GlobalVars.GetStr("RemoveSelectedMenuFlyoutItem/Text"));
 		VerifySelectedCancellableButton = new(GlobalVars.GetStr("VerifySelectedMenuFlyoutItem/Text"));
 
+		// Initialize cancellable buttons for Device Usage Intents section
+		ApplyIntentsCancellableButton = new(GlobalVars.GetStr("ApplyText/Text"));
+
 		// Initial protections category population
-		ProtectionCategoriesListItemsSource = CreateProtectionCategories();
+		ProtectionCategoriesListItemsSource = new(GenerateCategories(ProtectionPresetsSelectedIndex));
 		SelectAllItemsInListView();
 	}
 
@@ -87,6 +90,411 @@ internal sealed partial class ProtectVM : ViewModelBase
 	];
 
 	/// <summary>
+	/// The MUnits that match currently selected device intents and used as ItemsSource of the ListView that displays them.
+	/// Items in this collection are just for displaying purposes and the <see cref="MUnit"/>s displayed there are not actually used anywhere except for getting their distinct list of categories.
+	/// The <see cref="MUnitCategoryProcessor"/> and <see cref="CategoryProcessorFactory"/> are responsible for identifying, filtering and applying the applicable MUnits/Non-MUnit security measures.
+	/// </summary>
+	internal readonly ObservableCollection<MUnit> DeviceIntentMUnitsPreview = [];
+
+	/// <summary>
+	/// Backing list field for <see cref="DeviceIntentMUnitsPreview"/>.
+	/// </summary>
+	private readonly List<MUnit> AllDeviceIntentMUnitsPreview = [];
+
+	/// <summary>
+	/// Search keyword for <see cref="DeviceIntentMUnitsPreview"/> items.
+	/// </summary>
+	internal string? SearchKeyword
+	{
+		get; set
+		{
+			if (SPT(ref field, value))
+				SearchBox_TextChanged();
+		}
+	}
+
+	/// <summary>
+	/// Selected Device Intents.
+	/// </summary>
+	internal readonly List<IntentItem> SelectedDeviceIntents = [];
+
+	/// <summary>
+	/// Cache of all MUnits across categories (built once on first use)
+	/// </summary>
+	private List<MUnit>? _allMUnitsAcrossCategoriesCache;
+
+	/// <summary>
+	/// Reference to the GridView on the UI.
+	/// </summary>
+	private ListViewBase? _GridViewRef;
+
+	/// <summary>
+	/// A flag to make sure only one method is adding/removing items between GridView and the <see cref="DeviceIntentMUnitsPreview"/>.
+	/// </summary>
+	private volatile bool IsAddingIntents;
+
+	internal AnimatedCancellableButtonInitializer ApplyIntentsCancellableButton { get; }
+
+	/// <summary>
+	/// Event handler for when text changes for searching among the <see cref="DeviceIntentMUnitsPreview"/> items.
+	/// </summary>
+	internal void SearchBox_TextChanged()
+	{
+		string? searchTerm = SearchKeyword?.Trim();
+
+		if (searchTerm is null)
+			return;
+
+		// Perform a case-insensitive search across relevant MUnit fields
+		List<MUnit> filteredResults = AllDeviceIntentMUnitsPreview.Where(m =>
+			(m.Name is not null && m.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(m.SubCategoryName is not null && m.SubCategoryName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			((m.Category.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ?? false) ||
+			(m.URL is not null && m.URL.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+		).ToList();
+
+		DeviceIntentMUnitsPreview.Clear();
+
+		for (int i = 0; i < filteredResults.Count; i++)
+		{
+			DeviceIntentMUnitsPreview.Add(filteredResults[i]);
+		}
+	}
+
+	/// <summary>
+	/// Captures reference to the GridView and restores selected items.
+	/// Runs when the GridView is loaded in XAML.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void DeviceIntentsGridViewLoaded(object sender, RoutedEventArgs e)
+	{
+		if (IsAddingIntents) return;
+
+		try
+		{
+			IsAddingIntents = true;
+
+			_GridViewRef = (ListViewBase)sender;
+
+			// Add all of the selected items back to the GridView when user navigates back to the page since we don't use navigation cache for the page.
+			foreach (IntentItem item in SelectedDeviceIntents)
+			{
+				_GridViewRef.SelectedItems.Add(item);
+			}
+		}
+		finally
+		{
+			IsAddingIntents = false;
+		}
+	}
+
+	/// <summary>
+	/// Updates the selected items of the Device Intents GridView.
+	/// Triggered by the 'SelectionChanged' event of the GridView.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	internal void DeviceIntentsSelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		if (IsAddingIntents) return;
+
+		try
+		{
+			IsAddingIntents = true;
+
+			// Add newly selected intents
+			foreach (IntentItem item in e.AddedItems.Cast<IntentItem>())
+			{
+				SelectedDeviceIntents.Add(item);
+			}
+
+			// Remove unselected intents (remove all entries with the same Intent)
+			foreach (IntentItem item in e.RemovedItems.Cast<IntentItem>())
+			{
+				for (int i = SelectedDeviceIntents.Count - 1; i >= 0; i--)
+				{
+					if (SelectedDeviceIntents[i].Intent == item.Intent)
+					{
+						SelectedDeviceIntents.RemoveAt(i);
+					}
+				}
+			}
+
+			// Recompute the preview once from the authoritative SelectedDeviceIntents list
+			RecomputeDeviceIntentsPreview();
+		}
+		finally
+		{
+			IsAddingIntents = false;
+		}
+	}
+
+	/// <summary>
+	/// Apply all previewed MUnits grouped by category, using category processors and passing selected intents.
+	/// No cancellation implemented yet.
+	/// i.e.,: this method collects distinct categories from the preview, then calls <see cref="CategoryProcessorFactory.GetProcessor"/> for each category and passes selectedIntents.
+	/// </summary>
+	internal async void ApplySelectedDeviceIntents()
+	{
+		// Nothing to apply if the preview is empty
+		if (DeviceIntentMUnitsPreview.Count == 0)
+		{
+			MainInfoBar.WriteWarning("No device intents selected, or no matching items to apply.");
+			return;
+		}
+
+		// Build selected intents list (authoritative source)
+		List<Intent> selectedIntents = SelectedDeviceIntents.Select(x => x.Intent).ToList();
+
+		// If no intents selected, warn and bail
+		if (selectedIntents.Count == 0)
+		{
+			MainInfoBar.WriteWarning("No device intents selected, or no matching items to apply.");
+			return;
+		}
+
+		// Begin animated button lifecycle
+		ApplyIntentsCancellableButton.Begin();
+
+		try
+		{
+			// Disable non-cancellable UI while the operation runs
+			ElementsAreEnabled = false;
+
+			// Gate other animated buttons and enable only this one
+			CurrentRunningOperation = RunningOperation.ApplyIntents;
+
+			// Get distinct categories present in the unfiltered backing preview and enforce execution order
+			List<Categories> categories = AllDeviceIntentMUnitsPreview
+				.Select(m => m.Category)
+				.Distinct()
+				.OrderBy(CategoryProcessorFactory.GetExecutionPriority)
+				.ToList();
+
+			int totalCategoriesProcessed = 0;
+
+			MainInfoBar.WriteInfo($"Applying {AllDeviceIntentMUnitsPreview.Count} security measures for selected device intents...");
+
+			// Process each category with cancellation support
+			for (int i = 0; i < categories.Count; i++)
+			{
+				ApplyIntentsCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
+				Categories cat = categories[i];
+				ICategoryProcessor processor = CategoryProcessorFactory.GetProcessor(cat);
+
+				MainInfoBar.WriteInfo($"Applying category {i + 1}/{categories.Count}: {processor.CategoryDisplayName}");
+
+				// Using the category processor like Presets, but we pass the selected intents.
+				await processor.ApplyAllAsync(
+					selectedSubCategories: null,
+					selectedIntents: selectedIntents,
+					cancellationToken: ApplyIntentsCancellableButton.Cts?.Token);
+
+				totalCategoriesProcessed++;
+			}
+
+			MainInfoBar.WriteSuccess($"Successfully applied security measures for {totalCategoriesProcessed} categories.");
+		}
+		catch (OperationCanceledException)
+		{
+			// Mark cancellation and inform the user
+			ApplyIntentsCancellableButton.wasCancelled = true;
+			MainInfoBar.WriteWarning("Apply operation was cancelled by user.");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			// End animated button lifecycle and re-enable UI
+			ApplyIntentsCancellableButton.End();
+
+			// Clear gating state and re-enable other buttons
+			CurrentRunningOperation = RunningOperation.None;
+
+			ElementsAreEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Recompute the preview list from the <see cref="SelectedDeviceIntents"/>.
+	/// - Includes items with <see cref="HardenSystemSecurity.DeviceIntents.Intent.All"/> whenever at least one intent is selected.
+	/// - Includes any MUnit intersecting the selected intents.
+	/// </summary>
+	internal void RecomputeDeviceIntentsPreview()
+	{
+		// Ensure cache is built
+		if (_allMUnitsAcrossCategoriesCache is null)
+		{
+			_allMUnitsAcrossCategoriesCache = BuildAllMUnitsAcrossCategories();
+		}
+
+		// Build selected intents list.
+		List<Intent> selectedIntents = SelectedDeviceIntents.Select(x => x.Intent).ToList();
+
+		// If nothing selected, clear both the backing list and the UI-bound collection, then return
+		if (selectedIntents.Count == 0)
+		{
+			AllDeviceIntentMUnitsPreview.Clear();
+			DeviceIntentMUnitsPreview.Clear();
+			return;
+		}
+
+		bool anySelected = selectedIntents.Count > 0;
+
+		// Build a new preview from the cache
+		List<MUnit> newPreview = new(_allMUnitsAcrossCategoriesCache.Count);
+
+		for (int i = 0; i < _allMUnitsAcrossCategoriesCache.Count; i++)
+		{
+			MUnit m = _allMUnitsAcrossCategoriesCache[i];
+
+			// Include Intent.All whenever any selection exists
+			bool include = anySelected && m.DeviceIntents.Contains(Intent.All);
+
+			// Or include if intersects with any selected intent
+			if (!include)
+			{
+				for (int j = 0; j < m.DeviceIntents.Count; j++)
+				{
+					if (selectedIntents.Contains(m.DeviceIntents[j]))
+					{
+						include = true;
+						break;
+					}
+				}
+			}
+
+			if (include)
+			{
+				newPreview.Add(m);
+			}
+		}
+
+		// Populate backing list first
+		AllDeviceIntentMUnitsPreview.Clear();
+		for (int i = 0; i < newPreview.Count; i++)
+		{
+			AllDeviceIntentMUnitsPreview.Add(newPreview[i]);
+		}
+
+		// If there's no active search, show all items; otherwise, apply the filter
+		if (string.IsNullOrEmpty(SearchKeyword))
+		{
+			DeviceIntentMUnitsPreview.Clear();
+			for (int i = 0; i < AllDeviceIntentMUnitsPreview.Count; i++)
+			{
+				DeviceIntentMUnitsPreview.Add(AllDeviceIntentMUnitsPreview[i]);
+			}
+		}
+		else
+		{
+			SearchBox_TextChanged();
+		}
+	}
+
+	// Builds a one-time cache of all MUnits across categories for device-intents preview.
+	// - Uses proxies for non-MUnit-based categories/VMs so they appear in the preview.
+	private List<MUnit> BuildAllMUnitsAcrossCategories()
+	{
+		List<MUnit> result = new(capacity: 512);
+
+		// The preview matches what processors apply
+		result.AddRange(ViewModelProvider.MicrosoftBaseLinesOverridesVM.AllMUnits);
+		result.AddRange(ViewModelProvider.MicrosoftDefenderVM.AllMUnits);
+		result.AddRange(ViewModelProvider.BitLockerVM.AllMUnits);
+		result.AddRange(ViewModelProvider.TLSVM.AllMUnits);
+		result.AddRange(ViewModelProvider.LockScreenVM.AllMUnits);
+		result.AddRange(ViewModelProvider.UACVM.AllMUnits);
+		result.AddRange(ViewModelProvider.DeviceGuardVM.AllMUnits);
+		result.AddRange(ViewModelProvider.WindowsFirewallVM.AllMUnits);
+		result.AddRange(ViewModelProvider.WindowsNetworkingVM.AllMUnits);
+		result.AddRange(ViewModelProvider.MiscellaneousConfigsVM.AllMUnits);
+		result.AddRange(ViewModelProvider.WindowsUpdateVM.AllMUnits);
+		result.AddRange(ViewModelProvider.EdgeVM.AllMUnits);
+		result.AddRange(ViewModelProvider.NonAdminVM.AllMUnits);
+
+		List<Intent> intentsForBaselinesAndOptional = [
+			Intent.Business,
+			Intent.SpecializedAccessWorkstation,
+			Intent.PrivilegedAccessWorkstation
+		];
+
+		// Microsoft Security Baseline proxy
+		// - Appears in preview when any of the three intents defined above is selected.
+		// - Real application is performed via CategoryProcessorFactory (by category),
+		//   so the strategy here is intentionally a no-op.
+		MUnit msSecurityBaselineProxy = new(
+			category: Categories.MicrosoftSecurityBaseline,
+			name: GlobalVars.GetStr("ProtectCategory_MSFTSecBaseline"),
+			deviceIntents: intentsForBaselinesAndOptional,
+			applyStrategy: new DefaultApply(() => { /* no-op: applied via category processor in intents flow */ }),
+			verifyStrategy: null,
+			removeStrategy: null,
+			subCategory: null,
+			url: "https://www.microsoft.com/en-us/download/details.aspx?id=55319");
+
+		result.Add(msSecurityBaselineProxy);
+
+		// Microsoft 365 Apps Security Baseline proxy (applied via its processor)
+		MUnit m365AppsBaselineProxy = new(
+			category: Categories.Microsoft365AppsSecurityBaseline,
+			name: GlobalVars.GetStr("ProtectCategory_MSFT365AppsSecBaseline"),
+			deviceIntents: intentsForBaselinesAndOptional,
+			applyStrategy: new DefaultApply(() => { /* no-op: applied via category processor in intents flow */ }),
+			verifyStrategy: null,
+			removeStrategy: null,
+			subCategory: null,
+			url: "https://www.microsoft.com/en-us/download/details.aspx?id=55319");
+
+		result.Add(m365AppsBaselineProxy);
+
+		// Optional Windows Features proxy (applied via its processor)
+		MUnit optionalWindowsFeaturesProxy = new(
+			category: Categories.OptionalWindowsFeatures,
+			name: GlobalVars.GetStr("ProtectCategory_OptionalWinFeatures"),
+			deviceIntents: intentsForBaselinesAndOptional,
+			applyStrategy: new DefaultApply(() => { /* no-op: applied via category processor in intents flow */ }),
+			verifyStrategy: null,
+			removeStrategy: null,
+			subCategory: null,
+			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features");
+
+		result.Add(optionalWindowsFeaturesProxy);
+
+		// Attack Surface Reduction (ASR) proxy (applied via its processor)		
+		MUnit asrProxy = new(
+			category: Categories.AttackSurfaceReductionRules,
+			name: GlobalVars.GetStr("ProtectCategory_ASRRules"),
+			deviceIntents: intentsForBaselinesAndOptional,
+			applyStrategy: new DefaultApply(() => { /* no-op: applied via category processor in intents flow */ }),
+			verifyStrategy: null,
+			removeStrategy: null,
+			subCategory: null,
+			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction");
+
+		result.Add(asrProxy);
+
+		// Country IP Blocking proxy (applied via its processor)
+		MUnit countryIPBlockingProxy = new(
+			category: Categories.CountryIPBlocking,
+			name: GlobalVars.GetStr("ProtectCategory_CountryIPBlock"),
+			deviceIntents: [Intent.All],
+			applyStrategy: new DefaultApply(() => { /* no-op: applied via category processor in intents flow */ }),
+			verifyStrategy: null,
+			removeStrategy: null,
+			subCategory: null,
+			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking");
+
+		result.Add(countryIPBlockingProxy);
+
+		return result;
+	}
+
+	/// <summary>
 	/// The main InfoBar for the Protect VM.
 	/// </summary>
 	internal readonly InfoBarSettings MainInfoBar;
@@ -124,7 +532,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 		None,
 		Apply,
 		Remove,
-		Verify
+		Verify,
+		ApplyIntents
 	}
 
 	/// <summary>
@@ -141,6 +550,9 @@ internal sealed partial class ProtectVM : ViewModelBase
 				IsApplyButtonEnabled = value == RunningOperation.None || value == RunningOperation.Apply;
 				IsRemoveButtonEnabled = value == RunningOperation.None || value == RunningOperation.Remove;
 				IsVerifyButtonEnabled = value == RunningOperation.None || value == RunningOperation.Verify;
+
+				// Gate the Device Intents animated Apply button the same way as other animated buttons in the Protect page.
+				IsApplyIntentsButtonEnabled = value == RunningOperation.None || value == RunningOperation.ApplyIntents;
 			}
 		}
 	} = RunningOperation.None;
@@ -161,6 +573,11 @@ internal sealed partial class ProtectVM : ViewModelBase
 	internal bool IsVerifyButtonEnabled { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
+	/// Whether the Apply button for the Device Intents section should be enabled
+	/// </summary>
+	internal bool IsApplyIntentsButtonEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
 	/// Selected index for the preset comboBox.
 	/// </summary>
 	internal int ProtectionPresetsSelectedIndex
@@ -169,16 +586,74 @@ internal sealed partial class ProtectVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				ProtectionCategoriesListItemsSource = CreateProtectionCategories();
+				ProtectionCategoriesListItemsSource = new(GenerateCategories(ProtectionPresetsSelectedIndex));
 				SelectAllItemsInListView();
 			}
 		}
 	} = 1;
 
+	#region SelectorBar Navigation
+	internal Visibility IsPresetsSectionVisible { get; set => SP(ref field, value); } = Visibility.Visible;
+	internal Visibility IsDeviceIntentSectionVisible { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	internal void SelectorBar_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
+	{
+		SelectorBarItem selectedItem = sender.SelectedItem;
+
+		string selectedTag = (string)selectedItem.Tag;
+		bool isPresets = string.Equals(selectedTag, "Presets", StringComparison.OrdinalIgnoreCase);
+
+		IsPresetsSectionVisible = isPresets ? Visibility.Visible : Visibility.Collapsed;
+		IsDeviceIntentSectionVisible = isPresets ? Visibility.Collapsed : Visibility.Visible;
+	}
+	#endregion
+
+	/// <summary>
+	/// All of the Device intents with their details for the UI GridView.
+	/// </summary>
+	internal readonly List<DeviceIntents.IntentItem> DeviceIntents = [
+			new(
+				intent: Intent.Development,
+				title: GlobalVars.GetStr("DeviceUsageIntent-Development-Title"),
+				description: GlobalVars.GetStr("DeviceUsageIntent-Development-Description"),
+				image: new Uri("ms-appx:///Assets/DeviceIntents/Development.png")
+			),
+			new (
+				intent: Intent.Gaming,
+				title: GlobalVars.GetStr("DeviceUsageIntent-Gaming-Title"),
+				description: GlobalVars.GetStr("DeviceUsageIntent-Gaming-Description"),
+				image: new Uri("ms-appx:///Assets/DeviceIntents/Gaming.png")
+			),
+			new (
+				intent: Intent.School,
+				title: GlobalVars.GetStr("DeviceUsageIntent-School-Title"),
+				description: GlobalVars.GetStr("DeviceUsageIntent-School-Description"),
+				image: new Uri("ms-appx:///Assets/DeviceIntents/School.png")
+			),
+			new (
+				intent: Intent.Business,
+				title: GlobalVars.GetStr("DeviceUsageIntent-Business-Title"),
+				description: GlobalVars.GetStr("DeviceUsageIntent-Business-Description"),
+				image: new Uri("ms-appx:///Assets/DeviceIntents/Business.png")
+			),
+			new (
+				intent: Intent.SpecializedAccessWorkstation,
+				title: GlobalVars.GetStr("DeviceUsageIntent-SpecializedAccessWorkstation-Title"),
+				description: GlobalVars.GetStr("DeviceUsageIntent-SpecializedAccessWorkstation-Description"),
+				image: new Uri("ms-appx:///Assets/DeviceIntents/Specialized.png")
+			),
+			new (
+				intent: Intent.PrivilegedAccessWorkstation,
+				title: GlobalVars.GetStr("DeviceUsageIntent-PrivilegedAccessWorkstation-Title"),
+				description: GlobalVars.GetStr("DeviceUsageIntent-PrivilegedAccessWorkstation-Description"),
+				image: new Uri("ms-appx:///Assets/DeviceIntents/Privileged.png")
+			),
+		];
+
 	/// <summary>
 	/// Items Source of the ListView that displays the list of Protection Categories.
 	/// </summary>
-	internal ObservableCollection<GroupInfoListForProtectionCategories> ProtectionCategoriesListItemsSource { get; set => SP(ref field, value); } = [];
+	internal ObservableCollection<ProtectionCategoryListViewItem> ProtectionCategoriesListItemsSource { get; set => SP(ref field, value); } = [];
 
 	/// <summary>
 	/// Selected Items list in the ListView.
@@ -495,6 +970,14 @@ internal sealed partial class ProtectVM : ViewModelBase
 						));
 
 					output.Add(new ProtectionCategoryListViewItem(
+						category: Categories.CountryIPBlocking,
+						title: GlobalVars.GetStr("ProtectCategory_CountryIPBlock"),
+						subTitle: GlobalVars.GetStr("CountryIPBlockingNavItem/ToolTipService/ToolTip"),
+						logo: CategoryImages[(int)Categories.CountryIPBlocking],
+						subCategories: []
+						));
+
+					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.NonAdminCommands,
 						title: GlobalVars.GetStr("ProtectCategory_NonAdmin"),
 						subTitle: GlobalVars.GetStr("ProtectCategory_Description_NonAdmin"),
@@ -692,6 +1175,14 @@ internal sealed partial class ProtectVM : ViewModelBase
 						));
 
 					output.Add(new ProtectionCategoryListViewItem(
+						category: Categories.CountryIPBlocking,
+						title: GlobalVars.GetStr("ProtectCategory_CountryIPBlock"),
+						subTitle: GlobalVars.GetStr("CountryIPBlockingNavItem/ToolTipService/ToolTip"),
+						logo: CategoryImages[(int)Categories.CountryIPBlocking],
+						subCategories: []
+						));
+
+					output.Add(new ProtectionCategoryListViewItem(
 						category: Categories.NonAdminCommands,
 						title: GlobalVars.GetStr("ProtectCategory_NonAdmin"),
 						subTitle: GlobalVars.GetStr("ProtectCategory_Description_NonAdmin"),
@@ -709,26 +1200,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 		ProtectionCategoriesListItemsSourceSelectedItems = output;
 
 		return output;
-	}
-
-	// To create a collection of grouped items, create a query that groups
-	// an existing list, or returns a grouped collection from a database.
-	// The following method is used to create the ItemsSource for our CollectionViewSource that is defined in XAML
-	internal ObservableCollection<GroupInfoListForProtectionCategories> CreateProtectionCategories()
-	{
-		// Grab Protection Categories objects
-		IEnumerable<GroupInfoListForProtectionCategories> query = from item in GenerateCategories(ProtectionPresetsSelectedIndex)
-
-																	  // Group the items returned from the query, sort and select the ones you want to keep
-																  group item by item.Title[..1].ToUpper() into g
-																  orderby g.Key
-
-																  // GroupInfoListForProtectionCategories is a simple custom class that has an IEnumerable type attribute, and
-																  // a key attribute. The IGrouping-typed variable g now holds the App objects,
-																  // and these objects will be used to create a new GroupInfoListForProtectionCategories object.
-																  select new GroupInfoListForProtectionCategories(items: g, key: g.Key);
-
-		return new(query);
 	}
 
 	/// <summary>
@@ -816,10 +1287,14 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 			MainInfoBar.WriteInfo($"{operationText} {ProtectionCategoriesListItemsSourceSelectedItems.Count} selected categories...");
 
-			int processedCategories = 0;
-			int totalCategories = ProtectionCategoriesListItemsSourceSelectedItems.Count;
+			// Ensure categories are processed in the correct order based on their execution priority.
+			List<ProtectionCategoryListViewItem> orderedSelection = ProtectionCategoriesListItemsSourceSelectedItems
+					.OrderBy(item => CategoryProcessorFactory.GetExecutionPriority(item.Category)).ToList();
 
-			foreach (ProtectionCategoryListViewItem selectedCategory in ProtectionCategoriesListItemsSourceSelectedItems)
+			int processedCategories = 0;
+			int totalCategories = orderedSelection.Count;
+
+			foreach (ProtectionCategoryListViewItem selectedCategory in orderedSelection)
 			{
 				button.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -830,34 +1305,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 					MainInfoBar.WriteInfo($"{operationText} category {processedCategories}/{totalCategories}: {selectedCategory.Title}");
 
 					// Get selected sub-categories for this category (only checked ones)
-					List<SubCategories> selectedSubCategories = [];
-
-					// Find the corresponding UI element to check which sub-categories are actually checked
-					if (UIListView != null)
-					{
-						// Find the UI representation of this category in the ListView
-						foreach (object? item in UIListView.Items)
-						{
-							if (item is ProtectionCategoryListViewItem uiItem && uiItem.Category == selectedCategory.Category)
-							{
-								// Get the ItemContainer for this item
-								if (UIListView.ContainerFromItem(item) is ListViewItem container)
-								{
-									// Find all CheckBox controls in the container
-									List<CheckBox> checkBoxes = FindVisualChildren<CheckBox>(container);
-
-									for (int i = 0; i < checkBoxes.Count && i < selectedCategory.SubCategories.Count; i++)
-									{
-										if (checkBoxes[i].IsChecked == true)
-										{
-											selectedSubCategories.Add(selectedCategory.SubCategories[i].SubCategory);
-										}
-									}
-								}
-								break;
-							}
-						}
-					}
+					List<SubCategories> selectedSubCategories = GetSelectedSubCategoriesFromData(selectedCategory);
 
 					// Get processor for this category
 					ICategoryProcessor processor = CategoryProcessorFactory.GetProcessor(selectedCategory.Category);
@@ -866,13 +1314,22 @@ internal sealed partial class ProtectVM : ViewModelBase
 					switch (operation)
 					{
 						case MUnitOperation.Apply:
-							await processor.ApplyAllAsync(selectedSubCategories.Count > 0 ? selectedSubCategories : null, button.Cts?.Token);
+							await processor.ApplyAllAsync(
+								selectedSubCategories: selectedSubCategories.Count > 0 ? selectedSubCategories : null,
+								selectedIntents: null,
+								cancellationToken: button.Cts?.Token);
 							break;
 						case MUnitOperation.Remove:
-							await processor.RemoveAllAsync(selectedSubCategories.Count > 0 ? selectedSubCategories : null, button.Cts?.Token);
+							await processor.RemoveAllAsync(
+								selectedSubCategories: selectedSubCategories.Count > 0 ? selectedSubCategories : null,
+								selectedIntents: null,
+								cancellationToken: button.Cts?.Token);
 							break;
 						case MUnitOperation.Verify:
-							await processor.VerifyAllAsync(selectedSubCategories.Count > 0 ? selectedSubCategories : null, button.Cts?.Token);
+							await processor.VerifyAllAsync(
+								selectedSubCategories: selectedSubCategories.Count > 0 ? selectedSubCategories : null,
+								selectedIntents: null,
+								cancellationToken: button.Cts?.Token);
 							break;
 						default:
 							break;
@@ -906,7 +1363,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 		catch (OperationCanceledException)
 		{
 			button.wasCancelled = true;
-			MainInfoBar.WriteWarning($"{operation} operation was cancelled by user");
 		}
 		catch (Exception ex)
 		{
@@ -924,7 +1380,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 					MUnitOperation.Verify => "Verify",
 					_ => "Process"
 				};
-				MainInfoBar.WriteWarning($"{operationText} operation was cancelled by user");
+				MainInfoBar.WriteWarning($"{operationText} operation was cancelled by user.");
 			}
 
 			button.End();
@@ -934,31 +1390,18 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 	}
 
-	/// <summary>
-	/// Helper method to find visual children of a specific type
-	/// </summary>
-	/// <typeparam name="T">The type of children to find</typeparam>
-	/// <param name="parent">The parent element</param>
-	/// <returns>List of children of the specified type</returns>
-	private static List<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
+	private static List<SubCategories> GetSelectedSubCategoriesFromData(ProtectionCategoryListViewItem categoryItem)
 	{
-		List<T> children = [];
+		List<SubCategories> output = [];
 
-		if (parent == null) return children;
-
-		int childCount = VisualTreeHelper.GetChildrenCount(parent);
-		for (int i = 0; i < childCount; i++)
+		foreach (SubCategoryDefinition sc in categoryItem.SubCategories)
 		{
-			DependencyObject child = VisualTreeHelper.GetChild(parent, i);
-
-			if (child is T typedChild)
+			if (sc.IsChecked)
 			{
-				children.Add(typedChild);
+				output.Add(sc.SubCategory);
 			}
-
-			children.AddRange(FindVisualChildren<T>(child));
 		}
 
-		return children;
+		return output;
 	}
 }

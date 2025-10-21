@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using AppControlManager.Others;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
@@ -46,18 +47,23 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 	/// <summary>
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
-	/// <returns>List of all MUnits for this ViewModel</returns>
-	public override List<MUnit> CreateAllMUnits()
-	{
-		List<MUnit> temp = MUnit.CreateMUnitsFromPolicies(Categories.LockScreen);
-		temp.AddRange(CreateUnits());
-		return temp;
-	}
+	private static readonly Lazy<List<MUnit>> LazyCatalog =
+		new(() =>
+		{
+			List<MUnit> temp = MUnit.CreateMUnitsFromPolicies(Categories.LockScreen);
+			temp.AddRange(CreateUnits());
+			return temp;
+		}, LazyThreadSafetyMode.ExecutionAndPublication);
+
+	/// <summary>
+	/// Gets the current catalog of all MUnits for this ViewModel.
+	/// </summary>
+	public override List<MUnit> AllMUnits => LazyCatalog.Value;
 
 	/// <summary>
 	/// Create <see cref="MUnit"/> that is not for Group Policies.
 	/// </summary>
-	internal List<MUnit> CreateUnits()
+	internal static List<MUnit> CreateUnits()
 	{
 		List<MUnit> temp = [];
 
@@ -83,7 +89,14 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 				SecurityPolicy.SecurityPolicyWriter.SetLockoutBadCount(10);
 			}),
 
-			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-threshold"
+			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-threshold",
+
+			deviceIntents: [
+				DeviceIntents.Intent.Business,
+				DeviceIntents.Intent.SpecializedAccessWorkstation,
+				DeviceIntents.Intent.PrivilegedAccessWorkstation,
+				DeviceIntents.Intent.School
+			]
 		));
 
 
@@ -110,7 +123,14 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 				SecurityPolicy.SecurityPolicyWriter.SetResetLockoutCount(10);
 			}),
 
-			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/reset-account-lockout-counter-after"
+			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/reset-account-lockout-counter-after",
+
+			deviceIntents: [
+				DeviceIntents.Intent.Business,
+				DeviceIntents.Intent.SpecializedAccessWorkstation,
+				DeviceIntents.Intent.PrivilegedAccessWorkstation,
+				DeviceIntents.Intent.School
+			]
 		));
 
 		temp.Add(new(
@@ -134,10 +154,16 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 				SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(10);
 			}),
 
-			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration"
+			url: "https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration",
+
+			deviceIntents: [
+				DeviceIntents.Intent.Business,
+				DeviceIntents.Intent.SpecializedAccessWorkstation,
+				DeviceIntents.Intent.PrivilegedAccessWorkstation,
+				DeviceIntents.Intent.School
+			]
 		));
 
 		return temp;
 	}
-
 }

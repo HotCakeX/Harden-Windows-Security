@@ -113,7 +113,7 @@
                                 </StackPanel>
                             </DataTemplate>
                         </Button.ContentTemplate>
-                    </Button>                  
+                    </Button>
 
                     <ComboBox ItemsSource="{x:Bind ViewModel.SecurityBaselinesComboBoxItemsSource}"
                               x:Uid="SecurityBaselinesComboBox"

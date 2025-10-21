@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using AppControlManager.Others;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
@@ -47,7 +48,14 @@ internal sealed partial class EdgeVM : MUnitListViewModelBase
 	/// <summary>
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
-	/// <returns>List of all MUnits for this ViewModel</returns>
-	public override List<MUnit> CreateAllMUnits() => MUnit.CreateMUnitsFromPolicies(Categories.EdgeBrowserConfigurations);
+	private static readonly Lazy<List<MUnit>> LazyCatalog =
+		new(() =>
+		{
+			return MUnit.CreateMUnitsFromPolicies(Categories.EdgeBrowserConfigurations);
+		}, LazyThreadSafetyMode.ExecutionAndPublication);
 
+	/// <summary>
+	/// Gets the current catalog of all MUnits for this ViewModel.
+	/// </summary>
+	public override List<MUnit> AllMUnits => LazyCatalog.Value;
 }

@@ -13,7 +13,12 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexitydigits",
         "Category": 6,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -29,7 +34,12 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexitylowercaseletters",
         "Category": 6,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -45,7 +55,11 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexityexpiration",
         "Category": 6,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -61,7 +75,11 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexityhistory",
         "Category": 6,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -77,7 +95,12 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-windowslogon#dontdisplaynetworkselectionui",
         "Category": 6,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 2,
@@ -93,7 +116,12 @@
         "URL": "",
         "Category": 6,
         "SubCategory": null,
-        "DefaultRegValue": "0"
+        "DefaultRegValue": "0",
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 2,
@@ -109,7 +137,10 @@
         "URL": "",
         "Category": 6,
         "SubCategory": 5,
-        "DefaultRegValue": "1"
+        "DefaultRegValue": "1",
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 2,
@@ -125,7 +156,10 @@
         "URL": "",
         "Category": 6,
         "SubCategory": null,
-        "DefaultRegValue": "0"
+        "DefaultRegValue": "0",
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 2,
@@ -141,7 +175,12 @@
         "URL": "",
         "Category": 6,
         "SubCategory": null,
-        "DefaultRegValue": "0"
+        "DefaultRegValue": "0",
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 2,
@@ -157,7 +196,12 @@
         "URL": "",
         "Category": 6,
         "SubCategory": null,
-        "DefaultRegValue": "0"
+        "DefaultRegValue": "0",
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 2,
@@ -173,6 +217,9 @@
         "URL": "",
         "Category": 6,
         "SubCategory": 6,
-        "DefaultRegValue": "0"
+        "DefaultRegValue": "0",
+        "DeviceIntents": [
+            5
+        ]
     }
 ]

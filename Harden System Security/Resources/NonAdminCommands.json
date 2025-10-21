@@ -13,7 +13,10 @@
         "URL": "https://learn.microsoft.com/openspecs/windows_protocols/ms-gppref/3c837e92-016e-4148-86e5-b4f0381a757f",
         "Category": 17,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -29,7 +32,10 @@
         "URL": "",
         "Category": 17,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -45,7 +51,10 @@
         "URL": "",
         "Category": 17,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -61,7 +70,14 @@
         "URL": "",
         "Category": 17,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ]
     },
     {
         "Source": 1,
@@ -77,7 +93,10 @@
         "URL": "https://learn.microsoft.com/windows/apps/develop/settings/settings-windows-11#typing",
         "Category": 17,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -93,7 +112,10 @@
         "URL": "https://learn.microsoft.com/windows/apps/develop/settings/settings-windows-11#registry-values-under-hkcusoftwaremicrosoftinputsettings",
         "Category": 17,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -109,7 +131,10 @@
         "URL": "",
         "Category": 17,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -125,7 +150,10 @@
         "URL": "",
         "Category": 17,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -141,6 +169,12 @@
         "URL": "",
         "Category": 17,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            0,
+            1,
+            2,
+            3
+        ]
     }
 ]

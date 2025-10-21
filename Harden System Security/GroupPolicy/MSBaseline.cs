@@ -1274,7 +1274,7 @@ internal static class MSBaseline
 	{
 		return directoryName.StartsWith('{') &&
 			   directoryName.EndsWith('}') &&
-			   Guid.TryParse(directoryName, out _);
+			   Guid.TryParse(directoryName, CultureInfo.InvariantCulture, out _);
 	}
 
 	/// <summary>

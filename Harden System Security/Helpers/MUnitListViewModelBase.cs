@@ -123,9 +123,8 @@ internal abstract partial class MUnitListViewModelBase : ViewModelBase, IMUnitLi
 	public bool ShowUndetermined { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
-	/// Creates all MUnits for this ViewModel.
-	/// Derived classes should override to return the actual list and logic for their category.
+	/// Gets the current catalog of all MUnits for this ViewModel.
+	/// Default is empty list. VMs must override.
 	/// </summary>
-	/// <returns>List of all MUnits for this ViewModel</returns>
-	public virtual List<MUnit> CreateAllMUnits() => [];
+	public virtual List<MUnit> AllMUnits => [];
 }

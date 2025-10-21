@@ -13,7 +13,11 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-cryptography#tlsciphersuites",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -29,7 +33,11 @@
         "URL": "https://learn.microsoft.com/windows/win32/secauthn/tls-elliptic-curves-in-windows-10-1607-and-later",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            4,
+            5
+        ]
     },
     {
         "Source": 1,
@@ -45,7 +53,10 @@
         "URL": "https://techcommunity.microsoft.com/blog/coreinfrastructureandsecurityblog/demystifying-schannel/259233",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -61,7 +72,10 @@
         "URL": "https://techcommunity.microsoft.com/blog/coreinfrastructureandsecurityblog/demystifying-schannel/259233",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -77,7 +91,10 @@
         "URL": "https://techcommunity.microsoft.com/blog/coreinfrastructureandsecurityblog/demystifying-schannel/259233",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -93,7 +110,10 @@
         "URL": "https://techcommunity.microsoft.com/blog/coreinfrastructureandsecurityblog/demystifying-schannel/259233",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -109,7 +129,10 @@
         "URL": "https://techcommunity.microsoft.com/blog/coreinfrastructureandsecurityblog/demystifying-schannel/259233",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -125,7 +148,10 @@
         "URL": "https://techcommunity.microsoft.com/blog/coreinfrastructureandsecurityblog/demystifying-schannel/259233",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -141,7 +167,10 @@
         "URL": "https://techcommunity.microsoft.com/blog/coreinfrastructureandsecurityblog/demystifying-schannel/259233",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -157,7 +186,10 @@
         "URL": "https://techcommunity.microsoft.com/blog/coreinfrastructureandsecurityblog/demystifying-schannel/259233",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -173,7 +205,10 @@
         "URL": "",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -189,7 +224,10 @@
         "URL": "",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -205,7 +243,10 @@
         "URL": "",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -221,7 +262,10 @@
         "URL": "",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -237,7 +281,10 @@
         "URL": "",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -253,7 +300,10 @@
         "URL": "",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -269,7 +319,10 @@
         "URL": "",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -285,7 +338,10 @@
         "URL": "",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -301,7 +357,10 @@
         "URL": "",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -317,7 +376,10 @@
         "URL": "",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 1,
@@ -333,7 +395,10 @@
         "URL": "",
         "Category": 5,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -349,6 +414,9 @@
         "URL": "",
         "Category": 5,
         "SubCategory": 4,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            1
+        ]
     }
 ]

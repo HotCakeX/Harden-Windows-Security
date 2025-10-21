@@ -83,7 +83,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		// Measure header text widths first.
 		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("CategoryHeader/Text"));
 		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SubcategoryHeader/Text"));
-		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("AuditSettingHeader/Text")) + 50; // ComboBox item + Apply button
+		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("AuditSettingHeader/Text"));
 		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("CategoryGUIDHeader/Text"));
 		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("SubcategoryGUIDHeader/Text"));
 
@@ -93,7 +93,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 			maxWidth1 = ListViewHelper.MeasureText(item.CategoryName, maxWidth1);
 			maxWidth2 = ListViewHelper.MeasureText(item.SubcategoryName, maxWidth2);
 			// Column 3 is ComboBox + Apply button, so we add extra space
-			maxWidth4 = ListViewHelper.MeasureText(item.CategoryGuid.ToString(), maxWidth5);
+			maxWidth4 = ListViewHelper.MeasureText(item.CategoryGuid.ToString(), maxWidth4);
 			maxWidth5 = ListViewHelper.MeasureText(item.SubcategoryGuid.ToString(), maxWidth5);
 		}
 

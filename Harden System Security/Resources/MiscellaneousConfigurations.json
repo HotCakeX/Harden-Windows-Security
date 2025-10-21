@@ -13,7 +13,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-auditsettings#includecmdline",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -29,7 +32,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-kerberos#kerberosclientsupportsclaimscompoundarmor",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -45,7 +54,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-System?WT.mc_id=Portal-fx#allowlocation",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -61,7 +73,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-sensors#disablelocationscripting_2",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            1,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -77,7 +95,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-locationprovideradm#disablewindowslocationprovider_1",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            1,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -93,7 +117,13 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-servicecontrolmanager#svchostprocessmitigation",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            1,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -109,7 +139,14 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-system#bootstartdriverinitialization",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -125,7 +162,10 @@
         "URL": "https://learn.microsoft.com/windows/win32/fileio/maximum-file-path-limitation",
         "Category": 12,
         "SubCategory": 11,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ]
     },
     {
         "Source": 0,
@@ -141,7 +181,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-printers#configurewindowsprotectedprint",
         "Category": 12,
         "SubCategory": 10,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -157,7 +200,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-settings#allowonlinetips",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -173,7 +219,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-experience#allowfindmydevice",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -189,7 +238,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-speech#allowspeechmodelupdate",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -205,7 +257,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-privacy#disableadvertisingid",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -221,7 +276,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-experience#allowwindowstips",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -237,7 +295,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-experience#disablecloudoptimizedcontent",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -253,7 +314,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-experience#donotshowfeedbacknotifications",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -269,7 +333,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-maps#enableofflinemapsautoupdate",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -285,7 +352,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-messaging#allowmessagesync",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -301,7 +371,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-system#allowfontproviders",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -317,7 +390,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-grouppolicy#enablecdp",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -333,7 +409,11 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-applicationdefaults#enableappurihandlers",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            4,
+            5
+        ]
     },
     {
         "Source": 0,
@@ -349,7 +429,10 @@
         "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-search#donotusewebresults",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 0,
@@ -365,7 +448,10 @@
         "URL": "https://learn.microsoft.com/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services#21-cortana-and-search-group-policies",
         "Category": 12,
         "SubCategory": 13,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 1,
@@ -381,7 +467,10 @@
         "URL": "",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            5
+        ]
     },
     {
         "Source": 1,
@@ -397,7 +486,12 @@
         "URL": "",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 1,
@@ -413,7 +507,12 @@
         "URL": "",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 1,
@@ -429,7 +528,12 @@
         "URL": "",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 1,
@@ -445,7 +549,12 @@
         "URL": "",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 1,
@@ -461,7 +570,12 @@
         "URL": "",
         "Category": 12,
         "SubCategory": null,
-        "DefaultRegValue": null
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ]
     },
     {
         "Source": 2,
@@ -477,6 +591,10 @@
         "URL": "",
         "Category": 12,
         "SubCategory": 12,
-        "DefaultRegValue": "0"
+        "DefaultRegValue": "0",
+        "DeviceIntents": [
+            4,
+            5
+        ]
     }
 ]

@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Threading;
 using AppControlManager.Others;
 using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Helpers;
@@ -49,23 +50,28 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 	/// <summary>
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
-	/// <returns>List of all MUnits for this ViewModel</returns>
-	public override List<MUnit> CreateAllMUnits()
-	{
-		// Register specialized strategies.
-		RegisterSpecializedStrategies();
+	private static readonly Lazy<List<MUnit>> LazyCatalog =
+		new(() =>
+		{
+			// Register specialized strategies.
+			RegisterSpecializedStrategies();
 
-		List<MUnit> units = CreateUnits();
+			List<MUnit> units = CreateUnits();
 
-		units.AddRange(MUnit.CreateMUnitsFromPolicies(Categories.MiscellaneousConfigurations));
+			units.AddRange(MUnit.CreateMUnitsFromPolicies(Categories.MiscellaneousConfigurations));
 
-		return units;
-	}
+			return units;
+		}, LazyThreadSafetyMode.ExecutionAndPublication);
+
+	/// <summary>
+	/// Gets the current catalog of all MUnits for this ViewModel.
+	/// </summary>
+	public override List<MUnit> AllMUnits => LazyCatalog.Value;
 
 	/// <summary>
 	/// Create <see cref="MUnit"/> that is not for Group Policies.
 	/// </summary>
-	internal List<MUnit> CreateUnits()
+	internal static List<MUnit> CreateUnits()
 	{
 		List<MUnit> output = [];
 
@@ -126,7 +132,11 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 					{
 						Directory.Delete(NewCustomEventViewsPath, true);
 					}
-				})
+				}),
+
+				deviceIntents: [
+					DeviceIntents.Intent.All
+				]
 			));
 		}
 
@@ -137,7 +147,13 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				applyStrategy: new DefaultApply(SSHConfigurations.SecureMACs),
 				verifyStrategy: new DefaultVerify(SSHConfigurations.TestSecureMACs),
 				removeStrategy: new DefaultRemove(SSHConfigurations.RemoveSecureMACs),
-				url: @"https://learn.microsoft.com/windows-server/administration/OpenSSH/openssh-server-configuration#openssh-configuration-files"
+				url: @"https://learn.microsoft.com/windows-server/administration/OpenSSH/openssh-server-configuration#openssh-configuration-files",
+				deviceIntents: [
+					DeviceIntents.Intent.SpecializedAccessWorkstation,
+					DeviceIntents.Intent.PrivilegedAccessWorkstation,
+					DeviceIntents.Intent.School,
+					DeviceIntents.Intent.Business
+				]
 			));
 
 		{
@@ -195,18 +211,24 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 
 					AUDIT_POLICY_INFORMATION[] policies = [policy];
 					AuditPolicyManager.SetAuditPolicies(policies);
-				})
+				}),
+
+				deviceIntents: [
+					DeviceIntents.Intent.SpecializedAccessWorkstation,
+					DeviceIntents.Intent.PrivilegedAccessWorkstation,
+					DeviceIntents.Intent.School,
+					DeviceIntents.Intent.Business
+				]
 			));
 		}
 
 		return output;
 	}
 
-
 	/// <summary>
 	/// Registers specialized strategies for specific policies.
 	/// </summary>
-	private void RegisterSpecializedStrategies()
+	private static void RegisterSpecializedStrategies()
 	{
 		// Register specialized remove strategy for EnableSvchostMitigationPolicy.
 		SpecializedStrategiesRegistry.RegisterSpecializedRemove(
@@ -224,7 +246,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 	/// <summary>
 	/// Specialized remove strategy that runs after the main remove operation.
 	/// Because the original policy is Group Policy, defined in JSON, and it's a tattooed policy so setting the policy to Not-Configured state won't automatically reset the registry key associated with the policy.
-	/// This cleanup step ensures the registry key is removed after the main removal operation.
+	/// This cleanup step ensures the registry key is removed (which is setting it to 0 in this case) after the main removal operation.
 	/// </summary>
 	private sealed class EnableSvchostMitigationPolicyPostRemoveCleanup : ISpecializedRemoveStrategy
 	{
@@ -233,10 +255,10 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		public void Remove()
 		{
 			RegistryManager.Manager.EditRegistry(new(
-				source: GroupPolicy.Source.Registry,
+				source: Source.Registry,
 				keyName: "System\\CurrentControlSet\\Control\\SCMConfig",
 				valueName: "EnableSvchostMitigationPolicy",
-				type: GroupPolicy.RegistryValueType.REG_DWORD,
+				type: RegistryValueType.REG_DWORD,
 				size: 4,
 				data: [])
 			{
@@ -259,10 +281,10 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		public void Remove()
 		{
 			RegistryManager.Manager.EditRegistry(new(
-				source: GroupPolicy.Source.Registry,
+				source: Source.Registry,
 				keyName: "System\\CurrentControlSet\\Control\\FileSystem",
 				valueName: "LongPathsEnabled",
-				type: GroupPolicy.RegistryValueType.REG_DWORD,
+				type: RegistryValueType.REG_DWORD,
 				size: 4,
 				data: [])
 			{

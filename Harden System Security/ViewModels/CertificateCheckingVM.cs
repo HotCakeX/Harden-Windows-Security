@@ -427,7 +427,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	/// <returns></returns>
 	private async Task DeleteCertificateFromStore(string thumbprint, string storeName, StoreLocation storeLocation)
 	{
-		await Task.Run(() =>
+		await Task.Run(async () =>
 		{
 			using X509Store store = new(storeName, storeLocation);
 			store.Open(OpenFlags.OpenExistingOnly | OpenFlags.IncludeArchived | OpenFlags.MaxAllowed);
@@ -437,7 +437,11 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 			if (certificates.Count == 0)
 			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("CertificateNotFoundInStoreWarning"));
+				await Dispatcher.EnqueueAsync(() =>
+				{
+					MainInfoBar.WriteWarning(GlobalVars.GetStr("CertificateNotFoundInStoreWarning"));
+				});
+
 				return;
 			}
 
@@ -498,7 +502,10 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 				DateTime end = DateTime.UtcNow;
 
-				MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("StlFileParsedMessage"), parseResult.Subjects.Count.ToString(CultureInfo.InvariantCulture), (end - start).TotalMilliseconds.ToString("F2", CultureInfo.InvariantCulture)));
+				await Dispatcher.EnqueueAsync(() =>
+				{
+					MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("StlFileParsedMessage"), parseResult.Subjects.Count.ToString(CultureInfo.InvariantCulture), (end - start).TotalMilliseconds.ToString("F2", CultureInfo.InvariantCulture)));
+				});
 
 				// Build a lookup set of STL root SHA256 fingerprints
 				HashSet<string> stlRootSha256 = AuthRootProcessor.BuildStlRootSha256Set(parseResult.Subjects);

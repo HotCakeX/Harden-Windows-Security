@@ -4092,4 +4092,67 @@
     <comment>Protection Category Description</comment>
     <value>طبّق التجاوزات الموصى بها لخطوط الأساس للأمان من Microsoft لاستعادة بعض الوظائف المهمة التي تم تعطيلها بواسطتها.</value>
   </data>
+  <data name="DeviceUsageIntent-Development-Title" xml:space="preserve">
+    <value>التطوير</value>
+  </data>
+  <data name="DeviceUsageIntent-Development-Description" xml:space="preserve">
+    <value>مُصمَّم لكتابة البرمجيات واختبارها. يستخدم الإعدادات الافتراضية الآمنة مع السماح بأدوات المطورين الشائعة وعمليات البناء المحلية دون قيود غير ضرورية.</value>
+  </data>
+  <data name="DeviceUsageIntent-Gaming-Title" xml:space="preserve">
+    <value>الألعاب</value>
+  </data>
+  <data name="DeviceUsageIntent-Gaming-Description" xml:space="preserve">
+    <value>مُعدّل للأداء والتوافق مع الألعاب. يحافظ على الحمايات الأساسية مع تجنّب الإعدادات التي قد تؤثر في تجربة اللعب.</value>
+  </data>
+  <data name="DeviceUsageIntent-School-Title" xml:space="preserve">
+    <value>المدرسة</value>
+  </data>
+  <data name="DeviceUsageIntent-School-Description" xml:space="preserve">
+    <value>مناسب للطلاب، يحافظ على التوافق مع تطبيقات التعلّم، ويتجنب ضوابط المؤسسات الثقيلة.</value>
+  </data>
+  <data name="DeviceUsageIntent-Business-Title" xml:space="preserve">
+    <value>الأعمال</value>
+  </data>
+  <data name="DeviceUsageIntent-Business-Description" xml:space="preserve">
+    <value>جهاز مؤسسي للاستخدام اليومي مع حماية قوية لبيانات العمل والحسابات. متوازن للإنتاجية مع وصول مدروس وتسجيل ملائم وسلوك تحديث منطقي.</value>
+  </data>
+  <data name="DeviceUsageIntent-SpecializedAccessWorkstation-Title" xml:space="preserve">
+    <value>محطة عمل وصول متخصص</value>
+  </data>
+  <data name="DeviceUsageIntent-SpecializedAccessWorkstation-Description" xml:space="preserve">
+    <value>يحتاج مستخدم الأمان المتخصص إلى بيئة أكثر تحكماً، مع الاستمرار في القدرة على تنفيذ أنشطة مثل البريد الإلكتروني وتصفح الويب ضمن تجربة سهلة الاستخدام.</value>
+  </data>
+  <data name="DeviceUsageIntent-PrivilegedAccessWorkstation-Title" xml:space="preserve">
+    <value>محطة عمل للوصول بامتيازات</value>
+  </data>
+  <data name="DeviceUsageIntent-PrivilegedAccessWorkstation-Description" xml:space="preserve">
+    <value>هذه هي أعلى تهيئة أمنية، مصممة لأدوار شديدة الحساسية قد يترتب على اختراق حسابها تأثير كبير أو جوهري على المؤسسة.</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.Content" xml:space="preserve">
+    <value>تطبيق</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>طبّق جميع تدابير الأمان الموضّحة أدناه والمستندة إلى سيناريوهات استخدام الجهاز التي حدّدتها.</value>
+  </data>
+  <data name="ApplyIntentBasedSecurityMeasuresButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>طبّق جميع تدابير الأمان الموضّحة أدناه والمستندة إلى سيناريوهات استخدام الجهاز التي حدّدتها.</value>
+  </data>
+  <data name="ResultingSecurityMeasures.Text" xml:space="preserve">
+    <value>التدابير الأمنية الناتجة</value>
+  </data>
+  <data name="ResultingSecurityMeasuresCaption.Text" xml:space="preserve">
+    <value>سيتم تطبيق هذه عند الضغط على تطبيق.</value>
+  </data>
+  <data name="SelectDeviceIntents.Text" xml:space="preserve">
+    <value>اختيار سيناريوهات استخدام الجهاز</value>
+  </data>
+  <data name="SelectDeviceIntentsCaption.Text" xml:space="preserve">
+    <value>اختر سيناريوًّا واحدًا أو أكثر لتخصيص تهيئة الأمان المطبقة.</value>
+  </data>
+  <data name="Presets.Text" xml:space="preserve">
+    <value>الإعدادات المسبقة</value>
+  </data>
+    <data name="DeviceIntents.Text" xml:space="preserve">
+    <value>Intents الجهاز</value>
+  </data>
 </root>

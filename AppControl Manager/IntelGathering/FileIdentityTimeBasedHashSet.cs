@@ -34,8 +34,10 @@ namespace AppControlManager.IntelGathering;
 /// </summary>
 internal sealed class FileIdentityTimeBasedHashSet
 {
-	// A HashSet to store FileIdentity objects with a custom comparer.
-	// This comparer defines equality based on selected properties in that comparer, ignoring TimeCreated for now.
+	/// <summary>
+	/// A HashSet to store FileIdentity objects with a custom comparer.
+	/// This comparer defines equality based on selected properties in that comparer, ignoring TimeCreated for now.
+	/// </summary>
 	private readonly HashSet<FileIdentity> _set;
 
 	/// <summary>
@@ -61,26 +63,32 @@ internal sealed class FileIdentityTimeBasedHashSet
 		// Check if an equivalent item (based on FileIdentityComparer) already exists in the set
 		if (_set.TryGetValue(item, out FileIdentity? existingItem))
 		{
-			// If an equivalent older item exists, replace it with the newer item
-			if (existingItem.TimeCreated.HasValue && item.TimeCreated.HasValue &&
-				existingItem.TimeCreated < item.TimeCreated)
+			// Prefer items that have TimeCreated over those that don't.
+			// If both have TimeCreated, prefer the newer one. If equal or older, keep existing.
+			DateTime? existingTime = existingItem.TimeCreated;
+			DateTime? newTime = item.TimeCreated;
+
+			// Both have timestamps: replace only if the new item is newer
+			if (existingTime.HasValue && newTime.HasValue)
 			{
-
-				// Excessive logging
-				/*
-				Logger.Write(string.Format(
-					GlobalVars.GetStr("ReplacingOlderFileIdentityItemMessage"),
-					existingItem.FileName,
-					existingItem.SHA256Hash));
-				*/
-
-				// Remove the existing older item and add the newer one
-				_ = _set.Remove(existingItem);
-				_ = _set.Add(item);
-				return true; // Indicate that an item was replaced
+				if (existingTime < newTime)
+				{
+					_ = _set.Remove(existingItem);
+					_ = _set.Add(item);
+					return true; // Replaced older with newer
+				}
+				return false; // Existing is newer or equal; keep it
 			}
 
-			// If an equivalent newer item already exists, do not add the older item
+			// Existing has no timestamp but new has one: prefer the one with a timestamp
+			if (!existingTime.HasValue && newTime.HasValue)
+			{
+				_ = _set.Remove(existingItem);
+				_ = _set.Add(item);
+				return true; // Replaced non-timestamped with timestamped
+			}
+
+			// Existing has a timestamp and new does not, or both lack timestamps: keep existing
 			return false;
 		}
 

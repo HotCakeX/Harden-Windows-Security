@@ -3730,9 +3730,6 @@
   <data name="ReplacingUnsignedItemMessage" xml:space="preserve">
     <value>{0} പേരും {1} SHA256 ഹാഷുമുള്ള ഫയലിനായി ഒപ്പിടാത്ത ഒരു FileIdentity ഇനം ഒപ്പിട്ട ഒരെണ്ണം ഉപയോഗിച്ച് മാറ്റിസ്ഥാപിക്കുന്നു.</value>
   </data>
-  <data name="ReplacingOlderFileIdentityItemMessage" xml:space="preserve">
-    <value>{0} പേരും {1} SHA256 ഹാഷുമുള്ള ഫയലിനായി ലോഗുകളിലെ ഒരു പഴയ FileIdentity ഇനം ഒരു പുതിയത് ഉപയോഗിച്ച് മാറ്റിസ്ഥാപിക്കുന്നു.</value>
-  </data>
   <data name="NoCodeIntegrityLogsFoundMessage" xml:space="preserve">
     <value>കോഡ് ഇന്റഗ്രിറ്റി ലോഗുകളൊന്നും കണ്ടെത്തിയില്ല</value>
   </data>

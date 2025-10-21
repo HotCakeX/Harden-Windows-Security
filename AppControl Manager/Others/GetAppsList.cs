@@ -318,7 +318,7 @@ internal static class GetAppsList
 															 where !string.IsNullOrWhiteSpace(item.DisplayName)
 
 															 // Group the items returned from the query, sort and select the ones you want to keep
-															 group item by item.DisplayName[..1].ToUpper() into g
+															 group item by item.DisplayName[..1].ToUpperInvariant() into g
 															 orderby g.Key
 
 															 // GroupInfoListForPackagedAppView is a simple custom class that has an IEnumerable type attribute, and

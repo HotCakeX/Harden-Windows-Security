@@ -3731,9 +3731,6 @@
 <data name="ReplacingUnsignedItemMessage" xml:space="preserve">
     <value>מחליף פריט FileIdentity לא חתום בפריט חתום עבור הקובץ בשם {0} וב-hash SHA256 {1}.</value>
 </data>
-<data name="ReplacingOlderFileIdentityItemMessage" xml:space="preserve">
-    <value>מחליף פריט FileIdentity ישן בפריט חדש ביומנים עבור הקובץ בשם {0} וב-hash SHA256 {1}.</value>
-</data>
 <data name="NoCodeIntegrityLogsFoundMessage" xml:space="preserve">
     <value>לא נמצאו יומני שלמות קוד</value>
 </data>

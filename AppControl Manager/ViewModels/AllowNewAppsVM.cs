@@ -1234,13 +1234,11 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					// Create Enforced mode CIP
 					CiRuleOptions.Set(filePath: tempBasePolicyPath, rulesToRemove: [OptionType.EnabledAuditMode, OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
-					string tempEnforcedModeCIPPath = Path.Combine(stagingArea.FullName, "BaseAuditTemp.cip");
-
 					// Convert the XML file to CIP
-					Management.ConvertXMLToBinary(tempBasePolicyPath, null, tempEnforcedModeCIPPath);
+					Management.ConvertXMLToBinary(tempBasePolicyPath, null, EnforcedModeCIP);
 
 					// Sign the CIP
-					Signing.Main.SignCIP(tempEnforcedModeCIPPath, _CertCN);
+					Signing.Main.SignCIP(EnforcedModeCIP, _CertCN);
 				}
 
 				Logger.Write(GlobalVars.GetStr("CreatingSnapBackGuarantee"));
@@ -1559,7 +1557,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// Clears the text box and the list of selected directories when the button is clicked.
 	/// </summary>
 	internal void ClearSelectedDirectoriesButton_Click() => selectedDirectoriesToScan.Clear();
-
 
 	/// <summary>
 	/// CTRL + C shortcuts event handler

@@ -250,7 +250,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 
 			HashItems[0].HashValue = hashes.SHA1Page ?? string.Empty;
 			HashItems[1].HashValue = hashes.SHA256Page ?? string.Empty;
-			HashItems[2].HashValue = hashes.SHa1Authenticode ?? string.Empty;
+			HashItems[2].HashValue = hashes.SHA1Authenticode ?? string.Empty;
 			HashItems[3].HashValue = hashes.SHA256Authenticode ?? string.Empty;
 			HashItems[4].HashValue = hashes.SHA384Authenticode ?? string.Empty;
 			HashItems[5].HashValue = hashes.SHA512Authenticode ?? string.Empty;

@@ -3730,9 +3730,6 @@
   <data name="ReplacingUnsignedItemMessage" xml:space="preserve">
     <value>استبدال عنصر هوية ملف غير موقع بآخر موقع للملف بالاسم {0} وتجزئة SHA256 {1}.</value>
   </data>
-  <data name="ReplacingOlderFileIdentityItemMessage" xml:space="preserve">
-    <value>استبدال عنصر هوية ملف أقدم بآخر أحدث في السجلات للملف بالاسم {0} وتجزئة SHA256 {1}.</value>
-  </data>
   <data name="NoCodeIntegrityLogsFoundMessage" xml:space="preserve">
     <value>لم يتم العثور على سجلات تكامل التعليمات البرمجية</value>
   </data>

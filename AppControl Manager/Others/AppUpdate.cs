@@ -56,7 +56,7 @@ internal static class AppUpdate
 	{
 		using HttpClient client = new SecHttpClient();
 
-		string versionsResponse = client.GetStringAsync(GlobalVars.AppVersionLinkURL).GetAwaiter().GetResult();
+		string versionsResponse = client.GetStringAsync(GlobalVars.AppVersionLinkURL).GetAwaiter().GetResult().Trim();
 
 		Version onlineAvailableVersion = new(versionsResponse);
 		bool isUpdateAvailable = onlineAvailableVersion > App.currentAppVersion;
@@ -101,6 +101,8 @@ internal static class AppUpdate
 		IReadOnlyList<StorePackageUpdate> updates = await _StoreContext.GetAppAndOptionalStorePackageUpdatesAsync();
 
 		bool isUpdateAvailable = false;
+
+		// This is a dummy value for now until we can get the actual latest version from the Store available update.
 		Version latestVersion = new(0, 0, 0, 0);
 
 		if (updates.Count is 0)

@@ -3730,9 +3730,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="ReplacingUnsignedItemMessage" xml:space="preserve">
     <value>Zastępowanie niepodpisanego elementu FileIdentity podpisanym dla pliku o nazwie {0} i skrócie SHA256 {1}.</value>
   </data>
-  <data name="ReplacingOlderFileIdentityItemMessage" xml:space="preserve">
-    <value>Zastępowanie starszego elementu FileIdentity nowszym w dziennikach dla pliku o nazwie {0} i skrócie SHA256 {1}.</value>
-  </data>
   <data name="NoCodeIntegrityLogsFoundMessage" xml:space="preserve">
     <value>Nie znaleziono dzienników integralności kodu</value>
   </data>

@@ -231,7 +231,7 @@ internal static class Main
 	}
 
 	/// <summary>
-	/// Method for signings regular PE files
+	/// Method for signing regular PE files.
 	/// </summary>
 	/// <param name="FilePath"></param>
 	/// <param name="signingCertificate"></param>

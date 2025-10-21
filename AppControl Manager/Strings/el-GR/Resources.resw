@@ -3730,9 +3730,6 @@
   <data name="ReplacingUnsignedItemMessage" xml:space="preserve">
     <value>Αντικατάσταση μη υπογεγραμμένου αντικειμένου FileIdentity με υπογεγραμμένο για το αρχείο με όνομα {0} και SHA256 κατακερματισμό {1}.</value>
   </data>
-  <data name="ReplacingOlderFileIdentityItemMessage" xml:space="preserve">
-    <value>Αντικατάσταση παλαιότερου αντικειμένου FileIdentity με νεότερο στα αρχεία για το αρχείο με όνομα {0} και SHA256 κατακερματισμό {1}.</value>
-  </data>
   <data name="NoCodeIntegrityLogsFoundMessage" xml:space="preserve">
     <value>Δεν βρέθηκαν αρχεία καταγραφής Ακεραιότητας Κώδικα</value>
   </data>

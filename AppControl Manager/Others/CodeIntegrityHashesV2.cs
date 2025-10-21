@@ -32,7 +32,7 @@ internal sealed class CodeIntegrityHashesV2(
 {
 	internal string? SHA1Page => sha1Page;
 	internal string? SHA256Page => sha256Page;
-	internal string? SHa1Authenticode => sha1Authenticode;
+	internal string? SHA1Authenticode => sha1Authenticode;
 	internal string? SHA256Authenticode => sha256Authenticode;
 	internal string? SHA384Authenticode => sha384Authenticode;
 	internal string? SHA512Authenticode => sha512Authenticode;

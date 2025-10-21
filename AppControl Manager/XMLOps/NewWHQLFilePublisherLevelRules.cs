@@ -44,7 +44,7 @@ internal static class NewWHQLFilePublisherLevelRules
 
 	/// <summary>
 	/// Creates new Allow WHQLFilePublisher level rules in an XML file
-	/// Each rules includes the FileAttribs, Signers, AllowedSigners, and CiSigners(depending on kernel/user mode), EKU.
+	/// Each rule includes the FileAttribs, Signers, AllowedSigners, and CiSigners(depending on kernel/user mode), EKU.
 	/// </summary>
 	/// <param name="xmlFilePath"></param>
 	/// <param name="whqlFilePublisherSigners"> The WHQLFilePublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method.</param>
@@ -135,7 +135,7 @@ internal static class NewWHQLFilePublisherLevelRules
 
 				// Create the CertEKU element and add it to the Signer element
 				XmlElement newCertEKUNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertEKU", GlobalVars.SiPolicyNamespace);
-				newCertEKUNode.SetAttribute("ID", "ID_EKU_E_MSFTWHQL");
+				newCertEKUNode.SetAttribute("ID", EKUID);
 				_ = newSignerNode.AppendChild(newCertEKUNode);
 
 				// Create the CertOemID element and add it to the Signer element
@@ -295,7 +295,7 @@ internal static class NewWHQLFilePublisherLevelRules
 
 				// Create the CertEKU element and add it to the Signer element
 				XmlElement newCertEKUNode = codeIntegrityPolicy.XmlDocument.CreateElement("CertEKU", GlobalVars.SiPolicyNamespace);
-				newCertEKUNode.SetAttribute("ID", "ID_EKU_E_MSFTWHQL");
+				newCertEKUNode.SetAttribute("ID", EKUID);
 				_ = newSignerNode.AppendChild(newCertEKUNode);
 
 				// Create the CertOemID element and add it to the Signer element

@@ -45,7 +45,8 @@ internal sealed class FileSignerInfoComparer : IEqualityComparer<FileSignerInfo>
 			return false;
 
 		// Compare the PublisherTBSHash and IssuerTBSHash properties for equality
-		return x.PublisherTBSHash == y.PublisherTBSHash && x.IssuerTBSHash == y.IssuerTBSHash;
+		return string.Equals(x.PublisherTBSHash, y.PublisherTBSHash, StringComparison.OrdinalIgnoreCase) &&
+			   string.Equals(x.IssuerTBSHash, y.IssuerTBSHash, StringComparison.OrdinalIgnoreCase);
 	}
 
 	/// <summary>

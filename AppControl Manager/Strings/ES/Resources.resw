@@ -3730,9 +3730,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="ReplacingUnsignedItemMessage" xml:space="preserve">
     <value>Reemplazando un elemento FileIdentity sin firmar por uno firmado para el archivo con nombre {0} y hash SHA256 {1}.</value>
   </data>
-  <data name="ReplacingOlderFileIdentityItemMessage" xml:space="preserve">
-    <value>Reemplazando un elemento FileIdentity más antiguo por uno más nuevo en los Registros para el archivo con nombre {0} y hash SHA256 {1}.</value>
-  </data>
   <data name="NoCodeIntegrityLogsFoundMessage" xml:space="preserve">
     <value>No se encontraron registros de Integridad de Código</value>
   </data>

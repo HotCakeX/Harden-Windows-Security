@@ -3730,9 +3730,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ReplacingUnsignedItemMessage" xml:space="preserve">
     <value>Replacing an unsigned FileIdentity item with a signed one for the file with name {0} and SHA256 hash {1}.</value>
   </data>
-  <data name="ReplacingOlderFileIdentityItemMessage" xml:space="preserve">
-    <value>Replacing an older FileIdentity item with a newer one in the Logs for the file with name {0} and SHA256 hash {1}.</value>
-  </data>
   <data name="NoCodeIntegrityLogsFoundMessage" xml:space="preserve">
     <value>No Code Integrity logs found</value>
   </data>

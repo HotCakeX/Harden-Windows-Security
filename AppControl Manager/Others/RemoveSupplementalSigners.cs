@@ -59,7 +59,7 @@ internal static class CiPolicyHandler
 				policyObj.Signers = [.. signers];
 			}
 
-			// Remove the entire SupplementalPolicySigners block by cleaing its array.
+			// Remove the entire SupplementalPolicySigners block by clearing its array.
 			policyObj.SupplementalPolicySigners = [];
 		}
 

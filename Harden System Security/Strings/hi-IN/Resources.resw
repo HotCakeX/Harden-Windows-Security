@@ -724,10 +724,6 @@
     <comment>Protection Category Description</comment>
     <value>Edge ब्राउज़र को अधिक सुरक्षित बनाने और आपके द्वारा देखी जाने वाली वेबसाइटों के साथ कम डेटा साझा करने के लिए कॉन्फ़िगर करें।</value>
   </data>
-  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Title</comment>
-    <value>प्रमाणपत्र जांच</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>देश द्वारा IP अवरोधन</value>
@@ -1474,12 +1470,6 @@
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>{0} Windows सुविधाएं और क्षमताएं सफलतापूर्वक लोड की गईं।</value>
-</data>
-<data name="ProgressInfo" xml:space="preserve">
-  <value>प्रगति: {0}/{1} ({2}%)</value>
-</data>
-<data name="ProgressUnknownInfo" xml:space="preserve">
-  <value>प्रगति: {0}/अज्ञात</value>
 </data>
 <data name="SuccessfullyEnabledItem" xml:space="preserve">
   <value>सफलतापूर्वक सक्षम किया गया {0}: {1}</value>
@@ -2304,9 +2294,6 @@
     <value>इस पृष्ठ में Microsoft 365 ऐप्स सुरक्षा आधारभूत लागू करें। आप सिस्टम अनुपालन को भी सत्यापित कर सकते हैं जो एक सटीक रिपोर्ट प्राप्त करने के लिए दिखाता है कि कौन सी सेटिंग्स लागू हैं और कौन सी नहीं। आप आधारभूत द्वारा लागू की गई नीतियों को भी हटा सकते हैं।</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
-  <data name="SourceHeader.Text" xml:space="preserve">
-    <value>स्रोत</value>
-  </data>
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>स्थिति</value>
   </data>
@@ -2318,9 +2305,6 @@
   </data>
   <!--Security Baselines ListView Headers End-->
   <!--Security Baselines ListView Headers Buttons Start-->
-  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
-    <value>स्रोत</value>
-  </data>
     <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
     <value>स्थिति</value>
   </data>
@@ -4154,5 +4138,26 @@
   </data>
     <data name="DeviceIntents.Text" xml:space="preserve">
     <value>डिवाइस इंटेंट्स</value>
+  </data>
+    <data name="NetworkAdapters.Text" xml:space="preserve">
+    <value>नेटवर्क एडेप्टर</value>
+  </data>
+  <data name="Select.Text" xml:space="preserve">
+    <value>चयन करें</value>
+  </data>
+  <data name="Unselect.Text" xml:space="preserve">
+    <value>चयन रद्द करें</value>
+  </data>
+  <data name="Applying" xml:space="preserve">
+    <value>लागू किया जा रहा है</value>
+  </data>
+  <data name="Verifying" xml:space="preserve">
+    <value>सत्यापन किया जा रहा है</value>
+  </data>
+  <data name="Removing" xml:space="preserve">
+    <value>हटाया जा रहा है</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>प्रसंस्करण किया जा रहा है</value>
   </data>
 </root>

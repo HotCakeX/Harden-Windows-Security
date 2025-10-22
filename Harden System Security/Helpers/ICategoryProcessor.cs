@@ -32,36 +32,36 @@ internal interface ICategoryProcessor
 	/// Apply security measures for this category with optional sub-category filtering and optional device-intent filtering
 	/// </summary>
 	/// <param name="selectedSubCategories">Selected sub-categories to include (null or empty means include only MUnits without sub-category)</param>
-	/// <param name="selectedIntents">Selected device intents to include (null or empty means ignore intents)</param>
+	/// <param name="selectedIntent">Selected device intent to include (null means ignore intents)</param>
 	/// <param name="cancellationToken">Cancellation token</param>
 	/// <returns>Task representing the operation</returns>
 	Task ApplyAllAsync(
 		List<SubCategories>? selectedSubCategories = null,
-		List<Intent>? selectedIntents = null,
+		Intent? selectedIntent = null,
 		CancellationToken? cancellationToken = null);
 
 	/// <summary>
 	/// Remove security measures for this category with optional sub-category filtering and optional device-intent filtering
 	/// </summary>
 	/// <param name="selectedSubCategories">Selected sub-categories to include (null or empty means include only MUnits without sub-category)</param>
-	/// <param name="selectedIntents">Selected device intents to include (null or empty means ignore intents)</param>
+	/// <param name="selectedIntent">Selected device intent to include (null means ignore intents)</param>
 	/// <param name="cancellationToken">Cancellation token</param>
 	/// <returns>Task representing the operation</returns>
 	Task RemoveAllAsync(
 		List<SubCategories>? selectedSubCategories = null,
-		List<Intent>? selectedIntents = null,
+		Intent? selectedIntent = null,
 		CancellationToken? cancellationToken = null);
 
 	/// <summary>
 	/// Verify security measures for this category with optional sub-category filtering and optional device-intent filtering
 	/// </summary>
 	/// <param name="selectedSubCategories">Selected sub-categories to include (null or empty means include only MUnits without sub-category)</param>
-	/// <param name="selectedIntents">Selected device intents to include (null or empty means ignore intents)</param>
+	/// <param name="selectedIntent">Selected device intent to include (null means ignore intents)</param>
 	/// <param name="cancellationToken">Cancellation token</param>
 	/// <returns>Task representing the operation</returns>
 	Task VerifyAllAsync(
 		List<SubCategories>? selectedSubCategories = null,
-		List<Intent>? selectedIntents = null,
+		Intent? selectedIntent = null,
 		CancellationToken? cancellationToken = null);
 
 	/// <summary>

@@ -26,7 +26,6 @@ using AppControlManager.Pages;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -275,10 +274,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 					string CIPFilePath = Path.Combine(stagingArea.FullName, $"{xmlFileName}-{randomString}.cip");
 
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFile") + file + "'");
-					});
+					MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingXMLFile") + file + "'");
 
 					// Convert the XML file to CIP
 					Management.ConvertXMLToBinary(file, null, CIPFilePath);
@@ -449,11 +445,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 				// Convert and then deploy each XML file
 				foreach (string file in SignedXMLFiles)
 				{
-
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteInfo((SignOnlyNoDeployToggleSwitch ? GlobalVars.GetStr("CurrentlySigningXMLFile") : GlobalVars.GetStr("DeployingXMLFile")) + file + "'");
-					});
+					MainInfoBar.WriteInfo((SignOnlyNoDeployToggleSwitch ? GlobalVars.GetStr("CurrentlySigningXMLFile") : GlobalVars.GetStr("DeployingXMLFile")) + file + "'");
 
 					// Add certificate's details to the policy
 					SiPolicy.SiPolicy policyObject = AddSigningDetails.Add(file, CertPath);
@@ -558,10 +550,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			{
 				foreach (string file in CIPFiles)
 				{
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingCIPFile") + file + "'");
-					});
+					MainInfoBar.WriteInfo(GlobalVars.GetStr("DeployingCIPFile") + file + "'");
 
 					string randomPolicyID = Guid.CreateVersion7().ToString().ToUpperInvariant();
 
@@ -634,14 +623,10 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			{
 				foreach (string file in XMLFilesToConvertToCIP)
 				{
-
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteInfo(string.Format(
-							GlobalVars.GetStr("ConvertingFileToCIPMessage"),
-							file
-						));
-					});
+					MainInfoBar.WriteInfo(string.Format(
+						GlobalVars.GetStr("ConvertingFileToCIPMessage"),
+						file
+					));
 
 					string XMLSavePath = Path.Combine(GlobalVars.UserConfigDir, $"{Path.GetFileNameWithoutExtension(file)}.CIP");
 

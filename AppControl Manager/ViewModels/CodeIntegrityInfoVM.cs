@@ -20,7 +20,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
@@ -95,11 +94,8 @@ internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 				Dictionary<string, object?>? processedData = deserializedData.FirstOrDefault();
 				if (processedData is not null)
 				{
-					await App.AppDispatcher.EnqueueAsync(() =>
-					{
-						UMCI = GetPolicyStatus(processedData["UsermodeCodeIntegrityPolicyEnforcementStatus"]);
-						KMCI = GetPolicyStatus(processedData["CodeIntegrityPolicyEnforcementStatus"]);
-					});
+					UMCI = GetPolicyStatus(processedData["UsermodeCodeIntegrityPolicyEnforcementStatus"]);
+					KMCI = GetPolicyStatus(processedData["CodeIntegrityPolicyEnforcementStatus"]);
 				}
 			});
 		}

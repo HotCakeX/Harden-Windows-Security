@@ -675,19 +675,39 @@ internal static class MSBaseline
 
 			if (machinePolicies.Count > 0)
 			{
-				Dictionary<RegistryPolicyEntry, bool> verificationResults = RegistryPolicyParser.VerifyPoliciesInSystem(machinePolicies, GroupPolicyContext.Machine);
+				// Use the verification results that return the matched system entry for accurate current-value display.
+				Dictionary<RegistryPolicyEntry, (bool IsCompliant, RegistryPolicyEntry? SystemEntry)> verificationResults =
+					RegistryPolicyParser.VerifyPoliciesInSystem(machinePolicies, GroupPolicyContext.Machine);
 
-				foreach (KeyValuePair<RegistryPolicyEntry, bool> result in verificationResults)
+				foreach (KeyValuePair<RegistryPolicyEntry, (bool IsCompliant, RegistryPolicyEntry? SystemEntry)> result in verificationResults)
 				{
 					// Friendly Name is a combination of KeyName and ValueName for the time being.
 					string friendlyName = $"{result.Key.KeyName}\\{result.Key.ValueName}";
-					string currentValue = GetCurrentGroupPolicyValue(result.Key);
+
+					// Expected value is the baseline entry's parsed value.
 					string expectedValue = GetCurrentGroupPolicyValue(result.Key);
+
+					// Current value comes from the matched system entry (if any).
+					string currentValue;
+					RegistryPolicyEntry? systemEntry = result.Value.SystemEntry;
+					if (systemEntry is null)
+					{
+						currentValue = "Not Found";
+					}
+					else if (systemEntry.ParsedValue is null)
+					{
+						// Match the display convention used elsewhere
+						currentValue = systemEntry.Type == RegistryValueType.REG_MULTI_SZ ? "" : "0";
+					}
+					else
+					{
+						currentValue = FormatRegistryValueForDisplay(systemEntry.ParsedValue, systemEntry.Type);
+					}
 
 					results.Add(new VerificationResult(
 						friendlyName: friendlyName,
 						source: SecurityMeasureSource.GroupPolicy,
-						isCompliant: result.Value,
+						isCompliant: result.Value.IsCompliant,
 						currentValue: currentValue,
 						expectedValue: expectedValue
 					));
@@ -708,18 +728,38 @@ internal static class MSBaseline
 
 			if (userPolicies.Count > 0)
 			{
-				Dictionary<RegistryPolicyEntry, bool> verificationResults = RegistryPolicyParser.VerifyPoliciesInSystem(userPolicies, GroupPolicyContext.User);
+				// Use the verification results that return the matched system entry for accurate current-value display.
+				Dictionary<RegistryPolicyEntry, (bool IsCompliant, RegistryPolicyEntry? SystemEntry)> verificationResults =
+					RegistryPolicyParser.VerifyPoliciesInSystem(userPolicies, GroupPolicyContext.User);
 
-				foreach (KeyValuePair<RegistryPolicyEntry, bool> result in verificationResults)
+				foreach (KeyValuePair<RegistryPolicyEntry, (bool IsCompliant, RegistryPolicyEntry? SystemEntry)> result in verificationResults)
 				{
 					string friendlyName = $"{result.Key.KeyName}\\{result.Key.ValueName}";
-					string currentValue = GetCurrentGroupPolicyValue(result.Key);
+
+					// Expected value is the baseline entry's parsed value.
 					string expectedValue = GetCurrentGroupPolicyValue(result.Key);
+
+					// Current value comes from the matched system entry (if any).
+					string currentValue;
+					RegistryPolicyEntry? systemEntry = result.Value.SystemEntry;
+					if (systemEntry is null)
+					{
+						currentValue = "Not Found";
+					}
+					else if (systemEntry.ParsedValue is null)
+					{
+						// Match the display convention used elsewhere
+						currentValue = systemEntry.Type == RegistryValueType.REG_MULTI_SZ ? "" : "0";
+					}
+					else
+					{
+						currentValue = FormatRegistryValueForDisplay(systemEntry.ParsedValue, systemEntry.Type);
+					}
 
 					results.Add(new VerificationResult(
 						friendlyName: friendlyName,
 						source: SecurityMeasureSource.GroupPolicy,
-						isCompliant: result.Value,
+						isCompliant: result.Value.IsCompliant,
 						currentValue: currentValue,
 						expectedValue: expectedValue
 					));
@@ -965,7 +1005,7 @@ internal static class MSBaseline
 			string expectedValue = policy.RegValue ?? "Unknown";
 
 			// Getting the root key based on the hive stored in the policy
-			RegistryKey rootKey = GetRegistryRootKey(policy.hive);
+			RegistryKey rootKey = GetRegistryRootKey(policy.Hive);
 
 			// Using the KeyName directly as the subkey (it doesn't include the hive prefix)
 			using RegistryKey? key = rootKey.OpenSubKey(policy.KeyName);
@@ -1187,7 +1227,7 @@ internal static class MSBaseline
 	/// </summary>
 	/// <param name="hive">The hive enum value</param>
 	/// <returns>The corresponding RegistryKey</returns>
-	private static RegistryKey GetRegistryRootKey(Hive? hive)
+	private static RegistryKey GetRegistryRootKey(Hive hive)
 	{
 		return hive switch
 		{

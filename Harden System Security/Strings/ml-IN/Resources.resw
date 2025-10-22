@@ -724,10 +724,6 @@
     <comment>Protection Category Description</comment>
     <value>Edge ബ്രൗസർ കൂടുതൽ സുരക്ഷിതമാക്കാനും നിങ്ങൾ സന്ദർശിക്കുന്ന വെബ്‌സൈറ്റുകളുമായി കുറച്ച് ഡാറ്റ പങ്കിടാനും കോൺഫിഗർ ചെയ്യുക.</value>
   </data>
-  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Title</comment>
-    <value>സർട്ടിഫിക്കറ്റ് പരിശോധന</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>രാജ്യം അനുസരിച്ച് IP ബ്ലോക്കിംഗ്</value>
@@ -1474,12 +1470,6 @@
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>{0} Windows ഫീച്ചറുകളും കഴിവുകളും വിജയകരമായി ലോഡ് ചെയ്തു.</value>
-</data>
-<data name="ProgressInfo" xml:space="preserve">
-  <value>പുരോഗതി: {0}/{1} ({2}%)</value>
-</data>
-<data name="ProgressUnknownInfo" xml:space="preserve">
-  <value>പുരോഗതി: {0}/അജ്ഞാതം</value>
 </data>
 <data name="SuccessfullyEnabledItem" xml:space="preserve">
   <value>വിജയകരമായി പ്രാപ്തമാക്കി {0}: {1}</value>
@@ -2304,9 +2294,6 @@
     <value>ഈ പേജിൽ Microsoft 365 ആപ്പുകളുടെ സുരക്ഷാ അടിസ്ഥാനം പ്രയോഗിക്കുക. ഏതു സജ്ജീകരണങ്ങൾ പ്രയോഗിച്ചിട്ടുണ്ടെന്നും ഏതുവ അല്ലെന്നും കാണിക്കുന്ന കൃത്യമായ റിപ്പോർട്ട് ലഭിക്കാൻ സിസ്റ്റം പാലിക്കൽ സ്ഥിരീകരിക്കാനും നിങ്ങൾക്ക് കഴിയും. അടിസ്ഥാനം പ്രയോഗിച്ച നയങ്ങൾ നീക്കം ചെയ്യാനും നിങ്ങൾക്ക് കഴിയും.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
-  <data name="SourceHeader.Text" xml:space="preserve">
-    <value>ഉറവിടം</value>
-  </data>
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>അവസ്ഥ</value>
   </data>
@@ -2318,9 +2305,6 @@
   </data>
   <!--Security Baselines ListView Headers End-->
   <!--Security Baselines ListView Headers Buttons Start-->
-  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
-    <value>ഉറവിടം</value>
-  </data>
     <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
     <value>അവസ്ഥ</value>
   </data>
@@ -4154,5 +4138,26 @@
   </data>
     <data name="DeviceIntents.Text" xml:space="preserve">
     <value>ഉപകരണ ഇന്റെന്റുകൾ</value>
+  </data>
+    <data name="NetworkAdapters.Text" xml:space="preserve">
+    <value>നെറ്റ്‌വർക്ക് അഡാപ്റ്ററുകൾ</value>
+  </data>
+  <data name="Select.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="Unselect.Text" xml:space="preserve">
+    <value>തിരഞ്ഞെടുപ്പ് നീക്കുക</value>
+  </data>
+  <data name="Applying" xml:space="preserve">
+    <value>പ്രയോഗിക്കുന്നു</value>
+  </data>
+  <data name="Verifying" xml:space="preserve">
+    <value>സ്ഥിരീകരിക്കുന്നു</value>
+  </data>
+  <data name="Removing" xml:space="preserve">
+    <value>നീക്കം ചെയ്യുന്നു</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>പ്രോസസ്സ് ചെയ്യുന്നു</value>
   </data>
 </root>

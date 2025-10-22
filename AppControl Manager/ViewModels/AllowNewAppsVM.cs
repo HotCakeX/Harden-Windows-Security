@@ -1200,10 +1200,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				// Make sure it stays unique because it's being put outside of the StagingArea and we don't want any other command to remove or overwrite it
 				EnforcedModeCIP = Path.Combine(GlobalVars.UserConfigDir, $"BaseEnforced-{Guid.CreateVersion7().ToString("N")}.cip");
 
-				_ = Dispatcher.TryEnqueue(() =>
-				{
-					Step1InfoBar.WriteInfo(GlobalVars.GetStr("DeployingInAuditWait"));
-				});
+				Step1InfoBar.WriteInfo(GlobalVars.GetStr("DeployingInAuditWait"));
 
 				// Creating a copy of the original policy in the Staging Area so that the original one will be unaffected
 				File.Copy(selectedXMLFilePath, tempBasePolicyPath, true);
@@ -1317,10 +1314,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					throw new InvalidOperationException(GlobalVars.GetStr("ErrorEnforcedModeCIPNotFound"));
 				}
 
-				_ = Dispatcher.TryEnqueue(() =>
-				{
-					Step2InfoBar.WriteInfo(GlobalVars.GetStr("DeployingEnforceMode"));
-				});
+				Step2InfoBar.WriteInfo(GlobalVars.GetStr("DeployingEnforceMode"));
 
 #if !DEBUG
 				Logger.Write(GlobalVars.GetStr("DeployingEnforceMode"));
@@ -1336,14 +1330,10 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				// Check if user selected directories to be scanned
 				if (selectedDirectoriesToScan.Count > 0)
 				{
+					Step2InfoBar.WriteInfo(GlobalVars.GetStr("ScanningSelectedDirectories"));
 
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						Step2InfoBar.WriteInfo(GlobalVars.GetStr("ScanningSelectedDirectories"));
-
-						// Set the progress ring to no longer be indeterminate since file scan will take control of its value
-						Step2ProgressRingIsIndeterminate = false;
-					});
+					// Set the progress ring to no longer be indeterminate since file scan will take control of its value
+					Step2ProgressRingIsIndeterminate = false;
 
 					// Get all of the AppControl compatible files from user selected directories
 					(IEnumerable<string>, int) DetectedFilesInSelectedDirectories = FileUtility.GetFilesFast(selectedDirectoriesToScan, null, null);
@@ -1351,14 +1341,10 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					// If any App Control compatible files were found in the user selected directories
 					if (DetectedFilesInSelectedDirectories.Item2 > 0)
 					{
+						Step2InfoBar.WriteInfo(string.Format(GlobalVars.GetStr("ScanningNFilesFoundInSelectedDirectories"), DetectedFilesInSelectedDirectories.Item2));
 
-						_ = Dispatcher.TryEnqueue(() =>
-						{
-							Step2InfoBar.WriteInfo(string.Format(GlobalVars.GetStr("ScanningNFilesFoundInSelectedDirectories"), DetectedFilesInSelectedDirectories.Item2));
-
-							// Set the progress ring to no longer be indeterminate since file scan will take control of its value
-							Step2ProgressRingIsIndeterminate = false;
-						});
+						// Set the progress ring to no longer be indeterminate since file scan will take control of its value
+						Step2ProgressRingIsIndeterminate = false;
 
 						// Scan all of the detected files from the user selected directories
 						IEnumerable<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(

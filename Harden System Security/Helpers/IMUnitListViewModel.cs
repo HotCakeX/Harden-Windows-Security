@@ -141,10 +141,7 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 
 			try
 			{
-				_ = App.AppDispatcher.TryEnqueue(() =>
-				{
-					viewModel.ElementsAreEnabled = false;
-				});
+				viewModel.ElementsAreEnabled = false;
 
 				// Grab Protection Categories objects
 				query = from item in viewModel.AllMUnits
@@ -205,17 +202,11 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 			}
 			catch (Exception ex)
 			{
-				_ = App.AppDispatcher.TryEnqueue(() =>
-				{
-					viewModel.MainInfoBar.WriteError(ex);
-				});
+				viewModel.MainInfoBar.WriteError(ex);
 			}
 			finally
 			{
-				_ = App.AppDispatcher.TryEnqueue(() =>
-				{
-					viewModel.ElementsAreEnabled = true;
-				});
+				viewModel.ElementsAreEnabled = true;
 			}
 		});
 	}

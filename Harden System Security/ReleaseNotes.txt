@@ -1,10 +1,11 @@
-Introducing Device Usage Intents
+* The verification results page for the Microsoft Security Baseline and Microsoft 365 Apps Security Baselines now displays the correct current value when a setting is non-compliant, so you can see exactly why it's non-compliant and which existing value causes the issue.
 
-Harden and secure your devices according to how you use them. Device Usage Intents work like the OS's Out-of-Box Experience (OOBE): during initial Windows setup you're asked how you'll use the device. Intents provide an easy, complementary way (in addition to the existing Presets) to configure your entire system. The currently available Device Usage Intents are:
+* The Protect page → Device Usage Intents section now permits only one intent to be selected at a time, matching the intended usage and removing ambiguity.
 
-* Development: Built for writing and testing software. Uses secure defaults while allowing common developer tools and local builds without unnecessary restrictions.
-* Gaming: Tuned for performance and compatibility with games. Keeps essential protections while avoiding settings that can impact gameplay.
-* School: Suitable for students, keeps compatibility with learning apps, avoids heavy enterprise controls.
-* Business: Everyday corporate device with strong protections for work data and accounts. Balanced for productivity with sensible access, logging, and update behavior.
-* Specialized Access Workstation: The Specialized security user demands a more controlled environment while still being able to do activities such as email and web browsing in a simple-to-use experience.
-* Privileged Access Workstation: This is the highest security configuration designed for extremely sensitive roles that would have a significant or material impact on the organization if their account was compromised.
+* The Device Usage Intents preview ListView on the Protect page now lets you remove individual security measures from the preview before pressing Apply, giving you finer control over what gets applied.
+
+* On the Optional Windows Features page, each feature/capability now shows a per-item progress bar while verifying, removing, or applying, so you can see realtime progress for that specific item. Realtime progress is no longer written to the logs as text, avoiding many unnecessary log entries.
+
+* Also on the Optional Windows Features page, the app automatically scrolls the ListView to the currently active item during removal or apply operations, making it easy to track that item's realtime progress without manual scrolling.
+
+* Again on the Optional Windows Features page, added a new group to the ListView called "Network Adapters", it groups and displays all currently installed network adapter drivers that come by default with the operating system.

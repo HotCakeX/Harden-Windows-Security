@@ -25,15 +25,16 @@
 
             <!-- Defines a single DISMOutputEntry that is displayed in the ListView -->
             <DataTemplate x:Key="DISMOutputListViewTemplate"
-                          x:DataType="viewModels:DISMOutputEntry">
+              x:DataType="viewModels:DISMOutputEntry">
                 <Border BorderThickness="2"
-                        BorderBrush="{x:Bind BorderBrush, Mode=OneWay}"
-                        CornerRadius="8"
-                        Padding="16"
-                        Margin="0,4,0,4"
-                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+            BorderBrush="{x:Bind BorderBrush, Mode=OneWay}"
+            CornerRadius="8"
+            Padding="16"
+            Margin="0,4,0,4"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -48,44 +49,42 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0"
-                                       Text="{x:Bind Name, Mode=OneWay}"
-                                       ToolTipService.ToolTip="{x:Bind Name, Mode=OneWay}"
-                                       AutomationProperties.HelpText="{x:Bind Name, Mode=OneWay}"
-                                       TextWrapping="WrapWholeWords"
-                                       x:Phase="1"
-                                       Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                           Text="{x:Bind Name, Mode=OneWay}"
+                           ToolTipService.ToolTip="{x:Bind Name, Mode=OneWay}"
+                           AutomationProperties.HelpText="{x:Bind Name, Mode=OneWay}"
+                           TextWrapping="WrapWholeWords"
+                           x:Phase="1"
+                           Style="{ThemeResource SubtitleTextBlockStyle}"/>
 
                             <!-- Type Label -->
                             <Border Grid.Column="1"
-                                    CornerRadius="14"
-                                    Padding="10,6"
-                                    VerticalAlignment="Center"
-                                    Background="{ThemeResource AppOverlayBackgroundBrush}"
-                                    BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
-                                    BorderThickness="1">
+                        CornerRadius="14"
+                        Padding="10,6"
+                        VerticalAlignment="Center"
+                        Background="{ThemeResource AppOverlayBackgroundBrush}"
+                        BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
+                        BorderThickness="1">
                                 <TextBlock Text="{x:Bind TypeDisplayName, Mode=OneWay}"
-                                           FontSize="11"
-                                           FontWeight="SemiBold"/>
+                               FontSize="11"
+                               FontWeight="SemiBold"/>
                             </Border>
                         </Grid>
 
                         <!-- State -->
                         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10" Spacing="10">
-
                             <TextBlock Text="State:"
-			                           Style="{ThemeResource BodyTextBlockStyle}"/>
+                           Style="{ThemeResource BodyTextBlockStyle}"/>
 
                             <!-- State pill -->
                             <Border Background="{x:Bind StateBadgeBrush, Mode=OneWay}"
-			                        Padding="10,4"
-			                        CornerRadius="12"
-			                        HorizontalAlignment="Left">
+                        Padding="10,4"
+                        CornerRadius="12"
+                        HorizontalAlignment="Left">
                                 <TextBlock Text="{x:Bind StateDisplayName, Mode=OneWay}"
-				                           Foreground="White"
-				                           FontSize="12"
-				                           FontWeight="SemiBold"/>
+                               Foreground="White"
+                               FontSize="12"
+                               FontWeight="SemiBold"/>
                             </Border>
-
                         </StackPanel>
 
                         <!-- Description -->
@@ -96,47 +95,64 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0"
-			                           Text="Description:"
-			                           Style="{ThemeResource BodyTextBlockStyle}"
-			                           VerticalAlignment="Top"
-			                           Margin="0,0,10,0"/>
+                           Text="Description:"
+                           Style="{ThemeResource BodyTextBlockStyle}"
+                           VerticalAlignment="Top"
+                           Margin="0,0,10,0"/>
 
                             <TextBlock Grid.Column="1"
-			                           Text="{x:Bind Description, Mode=OneWay}"
-			                           TextWrapping="WrapWholeWords"
-			                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-			                           Style="{ThemeResource BodyTextBlockStyle}"/>
+                           Text="{x:Bind Description, Mode=OneWay}"
+                           TextWrapping="WrapWholeWords"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           Style="{ThemeResource BodyTextBlockStyle}"/>
                         </Grid>
 
-                        <!-- Action Buttons -->
+                        <!-- Per-item progress -->
                         <StackPanel Grid.Row="3"
-                                    Orientation="Horizontal"
-                                    Spacing="8"
-                                    HorizontalAlignment="Right">
+                        Orientation="Horizontal"
+                        Spacing="8"
+                        VerticalAlignment="Center"
+                        Visibility="{x:Bind ProgressBarVisibility, Mode=OneWay}">
+                            <ProgressBar Width="200"
+                             Height="12"
+                             Minimum="0"
+                             Maximum="100"
+                             IsIndeterminate="{x:Bind IsProgressIndeterminate, Mode=OneWay}"
+                             Value="{x:Bind ProgressPercentage, Mode=OneWay}"/>
+                            <TextBlock Text="{x:Bind ProgressPercentageFormatted, Mode=OneWay}"
+                           VerticalAlignment="Center"
+                           Style="{ThemeResource CaptionTextBlockStyle}"
+                           Visibility="{x:Bind ProgressTextVisibility, Mode=OneWay}"/>
+                        </StackPanel>
 
+                        <!-- Action Buttons -->
+                        <StackPanel Grid.Row="4"
+                        Orientation="Horizontal"
+                        Spacing="8"
+                        HorizontalAlignment="Right">
                             <Button Click="{x:Bind EnableItem}"
-                                    IsEnabled="{x:Bind ButtonsEnabled, Mode=OneWay}">
+                        IsEnabled="{x:Bind ButtonsEnabled, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal" Spacing="4">
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                              Glyph="&#xE73E;"
-                                              FontSize="14"/>
+                                  Glyph="&#xE73E;"
+                                  FontSize="14"/>
                                     <TextBlock Text="Enable"
-                                               FontSize="12"
-                                               FontWeight="SemiBold"
-                                               VerticalAlignment="Center"/>
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
 
                             <Button Click="{x:Bind DisableItem}"
-                                    IsEnabled="{x:Bind ButtonsEnabled, Mode=OneWay}">
+                        IsEnabled="{x:Bind ButtonsEnabled, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal" Spacing="4">
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                              Glyph="&#xE74D;"
-                                              FontSize="14"/>
+                                  Glyph="&#xE74D;"
+                                  FontSize="14"/>
                                     <TextBlock Text="Disable"
-                                               FontSize="12"
-                                               FontWeight="SemiBold"
-                                               VerticalAlignment="Center"/>
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -144,7 +160,6 @@
                     </Grid>
                 </Border>
             </DataTemplate>
-
             <!-- Grouped CollectionViewSource for DISM items -->
             <CollectionViewSource x:Name="DISMItemsCollectionViewSource"
                                   Source="{x:Bind ViewModel.GroupedFilteredDISMItems, Mode=OneWay}"
@@ -346,6 +361,41 @@
                                     <FontIcon Glyph="&#xE710;"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
+
+                            <MenuFlyoutSeparator/>
+
+                            <MenuFlyoutSubItem x:Uid="NetworkAdapters" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+
+                                <MenuFlyoutSubItem Text="Intel">
+                                    <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Intel"/>
+                                    <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Intel"/>
+                                </MenuFlyoutSubItem>
+
+                                <MenuFlyoutSubItem Text="Broadcom">
+                                    <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Broadcom"/>
+                                    <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Broadcom"/>
+                                </MenuFlyoutSubItem>
+
+                                <MenuFlyoutSubItem Text="Marvel">
+                                    <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Marvel"/>
+                                    <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Marvel"/>
+                                </MenuFlyoutSubItem>
+
+                                <MenuFlyoutSubItem Text="Qualcomm">
+                                    <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Qualcomm"/>
+                                    <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Qualcomm"/>
+                                </MenuFlyoutSubItem>
+
+                                <MenuFlyoutSubItem Text="Ralink">
+                                    <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Ralink"/>
+                                    <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Ralink"/>
+                                </MenuFlyoutSubItem>
+
+                                <MenuFlyoutSubItem Text="Realtek">
+                                    <MenuFlyoutItem x:Uid="Select"   Click="{x:Bind ViewModel.SelectVendor_Click}"   Tag="Realtek"/>
+                                    <MenuFlyoutItem x:Uid="Unselect" Click="{x:Bind ViewModel.UnselectVendor_Click}" Tag="Realtek"/>
+                                </MenuFlyoutSubItem>
+                            </MenuFlyoutSubItem>
 
                         </MenuFlyout>
                     </DropDownButton.Flyout>

@@ -238,17 +238,17 @@ internal static class CategoryProcessorFactory
 		public Categories Category => Categories.MicrosoftSecurityBaseline;
 		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFTSecBaseline");
 
-		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			await ViewModelProvider.MicrosoftSecurityBaselineVM.ApplyInternal();
 		}
 
-		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			await ViewModelProvider.MicrosoftSecurityBaselineVM.RemoveInternal();
 		}
 
-		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			await ViewModelProvider.MicrosoftSecurityBaselineVM.VerifyInternal();
 		}
@@ -259,17 +259,17 @@ internal static class CategoryProcessorFactory
 		public Categories Category => Categories.Microsoft365AppsSecurityBaseline;
 		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_MSFT365AppsSecBaseline");
 
-		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.ApplyInternal();
 		}
 
-		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.RemoveInternal();
 		}
 
-		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.VerifyInternal();
 		}
@@ -282,18 +282,27 @@ internal static class CategoryProcessorFactory
 		public Categories Category => Categories.OptionalWindowsFeatures;
 		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_OptionalWinFeatures");
 
-		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
+			// Ensure the ListView's collection is loaded first. Not strictly needed for the other method
+			// But improves user experience.
+			await ViewModelProvider.OptionalWindowsFeaturesVM.EnsureRecommendedItemsRetrievedAndGroupAsync();
 			await ViewModelProvider.OptionalWindowsFeaturesVM.ApplySecurityHardening();
 		}
 
-		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
+			// Ensure the ListView's collection is loaded first. Not strictly needed for the other method
+			// But improves user experience.
+			await ViewModelProvider.OptionalWindowsFeaturesVM.EnsureRecommendedItemsRetrievedAndGroupAsync();
 			await ViewModelProvider.OptionalWindowsFeaturesVM.RemoveSecurityHardening();
 		}
 
-		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
+			// Ensure the ListView's collection is loaded first. Not strictly needed for the other method
+			// But improves user experience.
+			await ViewModelProvider.OptionalWindowsFeaturesVM.EnsureRecommendedItemsRetrievedAndGroupAsync();
 			_ = await ViewModelProvider.OptionalWindowsFeaturesVM.VerifySecurityHardening();
 		}
 	}
@@ -303,12 +312,12 @@ internal static class CategoryProcessorFactory
 		public Categories Category => Categories.AttackSurfaceReductionRules;
 		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_ASRRules");
 
-		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			CancellationToken token = cancellationToken ?? CancellationToken.None;
 
 			// If no intent filter is provided, use the VM's built-in "Apply Recommended" flow.
-			if (selectedIntents == null || selectedIntents.Count == 0)
+			if (selectedIntent == null)
 			{
 				await ViewModelProvider.ASRVM.ApplyRecommendedCore();
 				return;
@@ -323,8 +332,6 @@ internal static class CategoryProcessorFactory
 			{
 				return;
 			}
-
-			bool anySelected = selectedIntents.Count > 0;
 
 			List<RegistryPolicyEntry> subset = new(capacity: all.Count);
 
@@ -355,14 +362,14 @@ internal static class CategoryProcessorFactory
 				}
 
 				// Include Intent.All when any selection exists
-				if (anySelected && entry.DeviceIntents.Any(di => di == Intent.All))
+				if (entry.DeviceIntents.Any(di => di == Intent.All))
 				{
 					subset.Add(entry);
 					continue;
 				}
 
 				// Include if intersects
-				bool intersects = entry.DeviceIntents.Any(selectedIntents.Contains);
+				bool intersects = entry.DeviceIntents.Any(s => s == selectedIntent);
 				if (intersects)
 				{
 					subset.Add(entry);
@@ -380,12 +387,12 @@ internal static class CategoryProcessorFactory
 			}, token);
 		}
 
-		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			CancellationToken token = cancellationToken ?? CancellationToken.None;
 
 			// If no intent filter is provided, remove everything through the VM flow.
-			if (selectedIntents == null || selectedIntents.Count == 0)
+			if (selectedIntent == null)
 			{
 				await Task.Run(ViewModelProvider.ASRVM.RemoveAllRules, token);
 				return;
@@ -396,8 +403,6 @@ internal static class CategoryProcessorFactory
 			{
 				return;
 			}
-
-			bool anySelected = selectedIntents.Count > 0;
 
 			// Build a subset of rules to remove, excluding the parent policy key.
 			List<RegistryPolicyEntry> subset = new(capacity: all.Count);
@@ -416,13 +421,13 @@ internal static class CategoryProcessorFactory
 					continue;
 				}
 
-				if (anySelected && entry.DeviceIntents.Any(di => di == Intent.All))
+				if (entry.DeviceIntents.Any(di => di == Intent.All))
 				{
 					subset.Add(entry);
 					continue;
 				}
 
-				bool intersects = entry.DeviceIntents.Any(selectedIntents.Contains);
+				bool intersects = entry.DeviceIntents.Any(s => s == selectedIntent);
 				if (intersects)
 				{
 					subset.Add(entry);
@@ -440,7 +445,7 @@ internal static class CategoryProcessorFactory
 			}, token);
 		}
 
-		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			// For verification, reuse the VM's "retrieve latest" which updates the UI state.
 			CancellationToken token = cancellationToken ?? CancellationToken.None;
@@ -453,17 +458,17 @@ internal static class CategoryProcessorFactory
 		public Categories Category => Categories.CountryIPBlocking;
 		public string CategoryDisplayName => GlobalVars.GetStr("ProtectCategory_CountryIPBlock");
 
-		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			await ViewModelProvider.CountryIPBlockingVM.AddSSOT();
 		}
 
-		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			await ViewModelProvider.CountryIPBlockingVM.RemoveSSOT();
 		}
 
-		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 		{
 			// Will have to implement verification.
 		}

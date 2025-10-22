@@ -15,6 +15,9 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+#if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity;
+#endif
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.Others;
@@ -73,41 +76,98 @@ internal sealed class InfoBarSettings(
 
 	internal void WriteInfo(string Msg, string? title = null)
 	{
-		IsOpen = true;
-		Message = Msg;
-		Title = title ?? GlobalVars.GetStr("Status");
+		if (App.AppDispatcher.HasThreadAccess)
+		{
+			IsOpen = true;
+			Message = Msg;
+			Title = title ?? GlobalVars.GetStr("Status");
+			Severity = InfoBarSeverity.Informational;
+			IsClosable = false;
+		}
+		else
+		{
+			_ = App.AppDispatcher.TryEnqueue(() =>
+			{
+				IsOpen = true;
+				Message = Msg;
+				Title = title ?? GlobalVars.GetStr("Status");
+				Severity = InfoBarSeverity.Informational;
+				IsClosable = false;
+			});
+		}
 		Logger.Write(title is not null ? title + ": " + Msg : Msg);
-		Severity = InfoBarSeverity.Informational;
-		IsClosable = false;
 	}
 
 	internal void WriteWarning(string Msg, string? title = null)
 	{
-		IsOpen = true;
-		Message = Msg;
-		Title = title ?? GlobalVars.GetStr("WarningTitle");
+		if (App.AppDispatcher.HasThreadAccess)
+		{
+			IsOpen = true;
+			Message = Msg;
+			Title = title ?? GlobalVars.GetStr("WarningTitle");
+			Severity = InfoBarSeverity.Warning;
+			IsClosable = true;
+		}
+		else
+		{
+			_ = App.AppDispatcher.TryEnqueue(() =>
+			{
+				IsOpen = true;
+				Message = Msg;
+				Title = title ?? GlobalVars.GetStr("WarningTitle");
+				Severity = InfoBarSeverity.Warning;
+				IsClosable = true;
+			});
+		}
+
 		Logger.Write(title is not null ? title + ": " + Msg : Msg);
-		Severity = InfoBarSeverity.Warning;
-		IsClosable = true;
 	}
 
 	internal void WriteError(Exception ex, string? Msg = null, string? title = null)
 	{
-		IsOpen = true;
-		Message = Msg is not null ? Msg + ex.Message : ex.Message;
-		Title = title ?? GlobalVars.GetStr("ErrorTitle");
+		if (App.AppDispatcher.HasThreadAccess)
+		{
+			IsOpen = true;
+			Message = Msg is not null ? Msg + ex.Message : ex.Message;
+			Title = title ?? GlobalVars.GetStr("ErrorTitle");
+			Severity = InfoBarSeverity.Error;
+			IsClosable = true;
+		}
+		else
+		{
+			_ = App.AppDispatcher.TryEnqueue(() =>
+			{
+				IsOpen = true;
+				Message = Msg is not null ? Msg + ex.Message : ex.Message;
+				Title = title ?? GlobalVars.GetStr("ErrorTitle");
+				Severity = InfoBarSeverity.Error;
+				IsClosable = true;
+			});
+		}
 		Logger.Write(ex);
-		Severity = InfoBarSeverity.Error;
-		IsClosable = true;
 	}
 
 	internal void WriteSuccess(string Msg, string? title = null)
 	{
-		IsOpen = true;
-		Message = Msg;
-		Title = title ?? GlobalVars.GetStr("SuccessText");
+		if (App.AppDispatcher.HasThreadAccess)
+		{
+			IsOpen = true;
+			Message = Msg;
+			Title = title ?? GlobalVars.GetStr("SuccessText");
+			Severity = InfoBarSeverity.Success;
+			IsClosable = true;
+		}
+		else
+		{
+			_ = App.AppDispatcher.TryEnqueue(() =>
+			{
+				IsOpen = true;
+				Message = Msg;
+				Title = title ?? GlobalVars.GetStr("SuccessText");
+				Severity = InfoBarSeverity.Success;
+				IsClosable = true;
+			});
+		}
 		Logger.Write(title is not null ? title + ": " + Msg : Msg);
-		Severity = InfoBarSeverity.Success;
-		IsClosable = true;
 	}
 }

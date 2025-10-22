@@ -260,9 +260,9 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				valueName: "EnableSvchostMitigationPolicy",
 				type: RegistryValueType.REG_DWORD,
 				size: 4,
-				data: [])
+				data: [],
+				hive: Hive.HKLM)
 			{
-				hive = Hive.HKLM,
 				RegValue = "0",
 				policyAction = PolicyAction.Apply
 			});
@@ -286,9 +286,9 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				valueName: "LongPathsEnabled",
 				type: RegistryValueType.REG_DWORD,
 				size: 4,
-				data: [])
+				data: [],
+				hive: Hive.HKLM)
 			{
-				hive = Hive.HKLM,
 				RegValue = "0",
 				policyAction = PolicyAction.Apply
 			});

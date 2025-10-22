@@ -800,10 +800,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		catch (Exception ex)
 		{
 			error = true;
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorLoadingPolicyFileMessage"));
-			});
+			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorLoadingPolicyFileMessage"));
 		}
 		finally
 		{
@@ -1286,31 +1283,21 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 				if (!policyIDCheckResult.Item1)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						MainInfoBar.WriteWarning($"{policyIDCheckResult.Item2} is not valid for Policy ID");
-					});
+					MainInfoBar.WriteWarning($"{policyIDCheckResult.Item2} is not valid for Policy ID");
 					return;
 				}
-
 
 				(bool, string) basePolicyIDCheckResult = SetCiPolicyInfo.ValidatePolicyID(PolicyBaseIDTextBox);
 
 				if (!basePolicyIDCheckResult.Item1)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						MainInfoBar.WriteWarning($"{basePolicyIDCheckResult.Item2} is not valid for Base Policy ID");
-					});
+					MainInfoBar.WriteWarning($"{basePolicyIDCheckResult.Item2} is not valid for Base Policy ID");
 					return;
 				}
 
 				if (string.IsNullOrWhiteSpace(PolicyVersionTextBox))
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						MainInfoBar.WriteWarning(GlobalVars.GetStr("EnterPolicyVersion"));
-					});
+					MainInfoBar.WriteWarning(GlobalVars.GetStr("EnterPolicyVersion"));
 					return;
 				}
 
@@ -1399,7 +1386,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							PolicySettingsCollection.Add(item);
 						}
 					}
-
 
 					MainInfoBar.WriteSuccess(GlobalVars.GetStr("PolicyEditorSuccessfulSaveMessage"));
 

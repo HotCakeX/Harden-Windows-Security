@@ -176,6 +176,8 @@ internal static class SecurityPolicyRegistryManager
 
 	/// <summary>
 	/// Parses the registry path from the KeyName to extract the actual registry path.
+	/// The reason "MACHINE" is prepended is because the INF file exported by Secedit uses "MACHINE" to denote HKEY_LOCAL_MACHINE and it doesn't write to any other HIVE.
+	/// If that changes in the future, we'll have to change this logic accordingly.
 	/// </summary>
 	/// <param name="keyName">The key name from the policy entry</param>
 	/// <returns>The parsed registry path</returns>
@@ -193,21 +195,225 @@ internal static class SecurityPolicyRegistryManager
 
 	/// <summary>
 	/// Converts a string RegValue to the appropriate object type based on the registry type.
+	/// Robust for both INF (Secedit outputs) and JSON sources (The App's resources):
+	/// - REG_BINARY: accepts base64 (from JSON file) or textual INF (Secedit) forms (comma-separated decimal bytes, tokens as hex, contiguous hex pairs, single decimal).
+	/// - REG_MULTI_SZ: accepts newline, semicolon, or comma-delimited lists; empty => zero-length array.
 	/// </summary>
 	/// <param name="regValue">The string value to convert</param>
 	/// <param name="type">The registry value type</param>
 	/// <returns>The converted object</returns>
 	private static object ConvertRegValueToObject(string regValue, RegistryValueType type)
 	{
-		return type switch
+		switch (type)
 		{
-			RegistryValueType.REG_SZ or RegistryValueType.REG_EXPAND_SZ => regValue,
-			RegistryValueType.REG_DWORD => int.Parse(regValue, NumberStyles.Integer, CultureInfo.InvariantCulture),
-			RegistryValueType.REG_QWORD => long.Parse(regValue, NumberStyles.Integer, CultureInfo.InvariantCulture),
-			RegistryValueType.REG_BINARY => Convert.FromBase64String(regValue),
-			RegistryValueType.REG_MULTI_SZ => regValue.Split(',', StringSplitOptions.None),
-			_ => regValue
-		};
+			case RegistryValueType.REG_SZ:
+			case RegistryValueType.REG_EXPAND_SZ:
+				{
+					return regValue;
+				}
+
+			case RegistryValueType.REG_DWORD:
+				{
+					int parsed = int.Parse(regValue, NumberStyles.Integer, CultureInfo.InvariantCulture);
+					return parsed;
+				}
+
+			case RegistryValueType.REG_QWORD:
+				{
+					long parsed = long.Parse(regValue, NumberStyles.Integer, CultureInfo.InvariantCulture);
+					return parsed;
+				}
+
+			case RegistryValueType.REG_BINARY:
+				{
+					if (!TryParseBinaryFlexible(regValue, out byte[] bytes))
+					{
+						throw new InvalidOperationException($"Could not parse REG_BINARY value from \"{regValue}\".");
+					}
+					return bytes;
+				}
+
+			case RegistryValueType.REG_MULTI_SZ:
+				{
+					string[] items = SplitMultiStringFlexible(regValue);
+					return items;
+				}
+
+			case RegistryValueType.REG_NONE:
+			case RegistryValueType.REG_DWORD_BIG_ENDIAN:
+			case RegistryValueType.REG_LINK:
+			case RegistryValueType.REG_RESOURCE_LIST:
+			case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:
+			case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
+				return regValue;
+			default:
+				{
+					return regValue;
+				}
+		}
+	}
+
+	/// <summary>
+	/// Attempts to parse a binary string value in multiple formats:
+	/// - Comma-separated decimals: "1,2,255"
+	/// - Comma-separated hex tokens: "0A,FF" (with optional 0x prefix per token)
+	/// - Single decimal: "0"
+	/// - Contiguous hex string (even length): "0001FF"
+	/// - Base64: From the app's JSON files
+	/// Returns true if parsing succeeded.
+	/// </summary>
+	private static bool TryParseBinaryFlexible(string input, out byte[] bytes)
+	{
+		string s = input is null ? string.Empty : input.Trim();
+		if (s.Length == 0)
+		{
+			bytes = [];
+			return true;
+		}
+
+		// Comma-separated tokens (decimal or hex)
+		if (s.Contains(',', StringComparison.OrdinalIgnoreCase))
+		{
+			string[] tokens = s.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+			if (tokens.Length == 0)
+			{
+				bytes = [];
+				return true;
+			}
+
+			// Detect if any token is hex-like (has A-F or starts with 0x)
+			bool anyHex = false;
+			for (int i = 0; i < tokens.Length; i++)
+			{
+				string tk = tokens[i];
+				if (tk.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+				{
+					anyHex = true;
+					break;
+				}
+				for (int j = 0; j < tk.Length; j++)
+				{
+					char c = tk[j];
+					if ((c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))
+					{
+						anyHex = true;
+						break;
+					}
+				}
+				if (anyHex) break;
+			}
+
+			byte[] result = new byte[tokens.Length];
+			for (int i = 0; i < tokens.Length; i++)
+			{
+				string tk = tokens[i];
+				if (tk.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+				{
+					tk = tk[2..];
+				}
+
+				bool ok = anyHex
+					? byte.TryParse(tk, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte b)
+					: byte.TryParse(tk, NumberStyles.Integer, CultureInfo.InvariantCulture, out b);
+
+				if (!ok)
+				{
+					bytes = [];
+					return false;
+				}
+				result[i] = b;
+			}
+
+			bytes = result;
+			return true;
+		}
+
+		// Contiguous even-length hex string?
+		if (IsHexStringEvenLength(s))
+		{
+			int len = s.Length / 2;
+			byte[] result = new byte[len];
+			for (int i = 0; i < len; i++)
+			{
+				ReadOnlySpan<char> pair = s.AsSpan(i * 2, 2);
+				if (!byte.TryParse(pair, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out result[i]))
+				{
+					bytes = [];
+					return false;
+				}
+			}
+			bytes = result;
+			return true;
+		}
+
+		// Single decimal byte?
+		if (byte.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out byte single))
+		{
+			bytes = [single];
+			return true;
+		}
+
+		// Base64 (JSON path)
+		try
+		{
+			byte[] b64 = Convert.FromBase64String(s);
+			bytes = b64;
+			return true;
+		}
+		catch
+		{
+			// Fall through
+		}
+
+		bytes = [];
+		return false;
+	}
+
+	/// <summary>
+	/// Returns true if s is an even-length string of only hex digits 0-9A-Fa-f.
+	/// </summary>
+	private static bool IsHexStringEvenLength(string s)
+	{
+		if ((s.Length & 1) != 0) return false;
+		for (int i = 0; i < s.Length; i++)
+		{
+			char c = s[i];
+			bool isDigit = c >= '0' && c <= '9';
+			bool isUpper = c >= 'A' && c <= 'F';
+			bool isLower = c >= 'a' && c <= 'f';
+			if (!isDigit && !isUpper && !isLower) return false;
+		}
+		return true;
+	}
+
+	/// <summary>
+	/// Splits a multi-string payload accepting newline, semicolon, or comma as delimiters.
+	/// Empty input => zero-length array. Trims entries and drops empties.
+	/// </summary>
+	private static string[] SplitMultiStringFlexible(string input)
+	{
+		if (string.IsNullOrEmpty(input))
+		{
+			return [];
+		}
+
+		// Normalize line endings
+		string normalized = input.Replace("\r\n", "\n", StringComparison.OrdinalIgnoreCase);
+
+		if (normalized.Contains('\n', StringComparison.OrdinalIgnoreCase))
+		{
+			return normalized.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+		}
+		if (normalized.Contains(';', StringComparison.OrdinalIgnoreCase))
+		{
+			return normalized.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+		}
+		if (normalized.Contains(',', StringComparison.OrdinalIgnoreCase))
+		{
+			return normalized.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+		}
+
+		return [normalized.Trim()];
 	}
 
 	/// <summary>

@@ -165,10 +165,10 @@ internal static class FileTrustChecker
 				valueName: "VerifiedAndReputablePolicyState",
 				type: RegistryValueType.REG_DWORD,
 				size: 0,
-				data: [])
+				data: [],
+				hive: Hive.HKLM)
 			{
-				RegValue = "1",
-				hive = Hive.HKLM
+				RegValue = "1"
 			});
 
 		return string.Equals(result, "1", StringComparison.OrdinalIgnoreCase)

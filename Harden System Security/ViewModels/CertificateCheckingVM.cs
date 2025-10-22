@@ -437,11 +437,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 			if (certificates.Count == 0)
 			{
-				await Dispatcher.EnqueueAsync(() =>
-				{
-					MainInfoBar.WriteWarning(GlobalVars.GetStr("CertificateNotFoundInStoreWarning"));
-				});
-
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("CertificateNotFoundInStoreWarning"));
 				return;
 			}
 
@@ -502,10 +498,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 				DateTime end = DateTime.UtcNow;
 
-				await Dispatcher.EnqueueAsync(() =>
-				{
-					MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("StlFileParsedMessage"), parseResult.Subjects.Count.ToString(CultureInfo.InvariantCulture), (end - start).TotalMilliseconds.ToString("F2", CultureInfo.InvariantCulture)));
-				});
+				MainInfoBar.WriteInfo(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("StlFileParsedMessage"), parseResult.Subjects.Count.ToString(CultureInfo.InvariantCulture), (end - start).TotalMilliseconds.ToString("F2", CultureInfo.InvariantCulture)));
 
 				// Build a lookup set of STL root SHA256 fingerprints
 				HashSet<string> stlRootSha256 = AuthRootProcessor.BuildStlRootSha256Set(parseResult.Subjects);

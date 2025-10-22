@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -644,11 +645,11 @@ internal sealed partial class DismServiceClient : IDisposable
 /// <summary>
 /// Used as ListView data to display Features and Capabilities to manage.
 /// </summary>
-internal sealed partial class DISMOutputEntry : ViewModelBase
+internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWindowsFeaturesVM parentVM) : ViewModelBase
 {
-	internal string Description { get; }
+	internal string Description => dismOutput.Description;
 
-	internal SolidColorBrush StateBadgeBrush => State switch
+	private static SolidColorBrush GetStateBadgeBrush(DismPackageFeatureState state) => state switch
 	{
 		DismPackageFeatureState.DismStateInstalled => new SolidColorBrush(Color.FromArgb(255, 16, 137, 62)),         // Green
 		DismPackageFeatureState.DismStateInstallPending => new SolidColorBrush(Color.FromArgb(255, 247, 99, 12)),   // Orange
@@ -662,8 +663,10 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 		_ => new SolidColorBrush(Color.FromArgb(255, 96, 94, 92))                                                   // Default Gray
 	};
 
-	internal string Name { get; }
-	internal DISMResultType Type { get; }
+	internal SolidColorBrush StateBadgeBrush => GetStateBadgeBrush(State);
+
+	internal string Name => dismOutput.Name;
+	internal DISMResultType Type => dismOutput.Type;
 	internal DismPackageFeatureState State
 	{
 		get;
@@ -675,7 +678,11 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 				OnPropertyChanged(nameof(StateBadgeBrush));
 			}
 		}
-	}
+	} = dismOutput.State;
+
+	internal bool IsProgressIndeterminate => IsProcessing && ProgressTotal == 0;
+
+	internal Visibility ProgressTextVisibility => IsProcessing && ProgressTotal > 0 ? Visibility.Visible : Visibility.Collapsed;
 
 	internal bool IsProcessing
 	{
@@ -687,6 +694,8 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 				OnPropertyChanged(nameof(ProgressBarVisibility));
 				OnPropertyChanged(nameof(ButtonsEnabled));
 				OnPropertyChanged(nameof(BorderBrush));
+				OnPropertyChanged(nameof(IsProgressIndeterminate));
+				OnPropertyChanged(nameof(ProgressTextVisibility));
 			}
 		}
 	}
@@ -713,6 +722,9 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 			{
 				OnPropertyChanged(nameof(ProgressPercentage));
 				OnPropertyChanged(nameof(ProgressPercentageFormatted));
+				// Also update derived progress UI properties
+				OnPropertyChanged(nameof(IsProgressIndeterminate));
+				OnPropertyChanged(nameof(ProgressTextVisibility));
 			}
 		}
 	}
@@ -729,7 +741,7 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 		? new SolidColorBrush(Color.FromArgb(255, 255, 20, 147)) // Hot pink
 		: new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)); // Transparent
 
-	internal string StateDisplayName => State switch
+	private static string GetStateDisplayName(DismPackageFeatureState state) => state switch
 	{
 		DismPackageFeatureState.DismStateNotPresent => GlobalVars.GetStr("NotPresentState"),
 		DismPackageFeatureState.DismStateUninstallPending => GlobalVars.GetStr("UninstallPendingState"),
@@ -742,21 +754,11 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 		_ => GlobalVars.GetStr("UnknownState")
 	};
 
+	internal string StateDisplayName => GetStateDisplayName(State);
+
 	internal string TypeDisplayName => Type == DISMResultType.Feature ? GlobalVars.GetStr("FeatureType") : GlobalVars.GetStr("CapabilityType");
 
-	internal OptionalWindowsFeaturesVM ParentVM { get; }
-
-	internal DISMOutputEntry(DISMOutput dismOutput, OptionalWindowsFeaturesVM parentVM)
-	{
-		Name = dismOutput.Name;
-		Type = dismOutput.Type;
-		State = dismOutput.State;
-		ParentVM = parentVM;
-		IsProcessing = false;
-		ProgressCurrent = 0;
-		ProgressTotal = 0;
-		Description = dismOutput.Description;
-	}
+	internal OptionalWindowsFeaturesVM ParentVM => parentVM;
 
 	internal void UpdateProgress(uint current, uint total)
 	{
@@ -767,10 +769,7 @@ internal sealed partial class DISMOutputEntry : ViewModelBase
 	/// <summary>
 	/// Trigger property change notification for ButtonsEnabled
 	/// </summary>
-	internal void NotifyButtonsEnabledChanged()
-	{
-		OnPropertyChanged(nameof(ButtonsEnabled));
-	}
+	internal void NotifyButtonsEnabledChanged() => OnPropertyChanged(nameof(ButtonsEnabled));
 
 	/// <summary>
 	/// Enable this specific feature or capability
@@ -996,6 +995,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
 		List<DISMOutputEntry> RecommendedItems = [];
+		List<DISMOutputEntry> NetworkAdapterItems = [];
 		List<DISMOutputEntry> OtherItems = [];
 
 		foreach (DISMOutputEntry item in filtered)
@@ -1006,17 +1006,27 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			}
 			else
 			{
-				OtherItems.Add(item);
+				// Classify as "Network adapters" if it matches any of the vendor patterns
+				string? vendor = GetNetworkVendor(item.Name);
+				if (!string.IsNullOrEmpty(vendor))
+				{
+					NetworkAdapterItems.Add(item);
+				}
+				else
+				{
+					OtherItems.Add(item);
+				}
 			}
 		}
 
 		// Publish grouped collection for the XAML CollectionViewSource
 		GroupedFilteredDISMItems.Clear();
-		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(RecommendedItems, "Recommended"));
+		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(RecommendedItems, GlobalVars.GetStr("RecommendedProtectionPresetComboBoxItemText")));
+		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(NetworkAdapterItems, GlobalVars.GetStr("NetworkAdapters")));
 		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(OtherItems, "Others"));
 
 		// Update filtered counts
-		FilteredItemsCount = RecommendedItems.Count + OtherItems.Count;
+		FilteredItemsCount = RecommendedItems.Count + NetworkAdapterItems.Count + OtherItems.Count;
 
 		// Sync ListView selection with our selection list after filtering
 		SyncListViewSelection();
@@ -1040,7 +1050,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// Retrieve only the recommended items (features and capabilities) and ensure grouping is up-to-date.
 	/// </summary>
-	private async Task EnsureRecommendedItemsRetrievedAndGroupAsync()
+	internal async Task EnsureRecommendedItemsRetrievedAndGroupAsync()
 	{
 		try
 		{
@@ -1088,9 +1098,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			// Populate list
 			AllItems.Clear();
-			for (int i = 0; i < filteredResults.Count; i++)
+			foreach (DISMOutput item in filteredResults)
 			{
-				AllItems.Add(new DISMOutputEntry(filteredResults[i], this));
+				AllItems.Add(new DISMOutputEntry(item, this));
 			}
 		}
 		finally
@@ -1118,10 +1128,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			UIListView.SelectedItems.Clear();
 
 			// Re-select items that are in our selection list and currently visible in grouped view
-			for (int s = 0; s < ItemsSourceSelectedItems.Count; s++)
+			foreach (DISMOutputEntry selectedItem in ItemsSourceSelectedItems)
 			{
-				DISMOutputEntry selectedItem = ItemsSourceSelectedItems[s];
-
 				bool isVisible = false;
 				for (int g = 0; g < GroupedFilteredDISMItems.Count && !isVisible; g++)
 				{
@@ -1157,54 +1165,36 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				// Subscribe to item-specific progress updates
 				_dismServiceClient.ItemProgressUpdated += async (itemName, current, total) =>
 				{
-					// Update UI with item progress
 					await Dispatcher.EnqueueAsync(() =>
 					{
+						// Update the item's progress
 						DISMOutputEntry? entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, itemName, StringComparison.OrdinalIgnoreCase));
 						entry?.UpdateProgress(current, total);
-
-						// Also show progress in InfoBar with feature name and action
-						string actionText = _currentOperationType ?? "Processing";
-						if (total > 0)
-						{
-							double percentage = current * 100.0 / total;
-							MainInfoBar.WriteInfo($"{string.Format(GlobalVars.GetStr("ProgressInfo"), current, total, percentage.ToString("F1"))} - {actionText}: {itemName}");
-						}
-						else
-						{
-							MainInfoBar.WriteInfo($"{string.Format(GlobalVars.GetStr("ProgressUnknownInfo"), current)} - {actionText}: {itemName}");
-						}
 					});
 				};
 
 				// Subscribe to log messages
-				_dismServiceClient.LogReceived += async (message, logType) =>
+				_dismServiceClient.LogReceived += (message, logType) =>
 				{
-					await Dispatcher.EnqueueAsync(() =>
+					switch (logType)
 					{
-						switch (logType)
-						{
-							case LogTypeIntel.Information:
-								Logger.Write(message, LogTypeIntel.Information);
-								break;
-							case LogTypeIntel.Warning:
-								MainInfoBar.WriteWarning(message);
-								Logger.Write(message, LogTypeIntel.Warning);
-								break;
-							case LogTypeIntel.Error:
-								MainInfoBar.WriteWarning(message);
-								Logger.Write(message, LogTypeIntel.Error);
-								break;
-							case LogTypeIntel.InformationInteractionRequired:
-								break;
-							case LogTypeIntel.WarningInteractionRequired:
-								break;
-							case LogTypeIntel.ErrorInteractionRequired:
-								break;
-							default:
-								break;
-						}
-					});
+						case LogTypeIntel.Information:
+						case LogTypeIntel.InformationInteractionRequired:
+							Logger.Write(message, LogTypeIntel.Information);
+							break;
+						case LogTypeIntel.Warning:
+						case LogTypeIntel.WarningInteractionRequired:
+							MainInfoBar.WriteWarning(message);
+							Logger.Write(message, LogTypeIntel.Warning);
+							break;
+						case LogTypeIntel.Error:
+						case LogTypeIntel.ErrorInteractionRequired:
+							MainInfoBar.WriteWarning(message);
+							Logger.Write(message, LogTypeIntel.Error);
+							break;
+						default:
+							break;
+					}
 				};
 
 				_dismServiceClient.SecureCopyFile();
@@ -1212,10 +1202,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				// Start the service
 				if (!await _dismServiceClient.StartServiceAsync(DismServiceClient.SecureDISMServicePath))
 				{
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteWarning(GlobalVars.GetStr("FailedToStartDISMServiceAdministrator"));
-					});
+					MainInfoBar.WriteWarning(GlobalVars.GetStr("FailedToStartDISMServiceAdministrator"));
 					return false;
 				}
 			}
@@ -1224,11 +1211,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		}
 		catch (Exception ex)
 		{
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				MainInfoBar.WriteError(ex, GlobalVars.GetStr("FailedToInitializeDISMService"));
-				Logger.Write(string.Format(GlobalVars.GetStr("FailedToInitializeDISMService"), ex.Message), LogTypeIntel.Error);
-			});
+			MainInfoBar.WriteError(ex, GlobalVars.GetStr("FailedToInitializeDISMService"));
+			Logger.Write(string.Format(GlobalVars.GetStr("FailedToInitializeDISMService"), ex.Message), LogTypeIntel.Error);
 			return false;
 		}
 	}
@@ -1301,6 +1285,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				entry.ProgressTotal = 0;
 			});
 
+			MainInfoBar.WriteInfo($"{_currentOperationType} {entry.TypeDisplayName.ToLowerInvariant()}: {entry.Name}");
+
 			// Initialize DISM service if not already done
 			if (!await InitializeDismServiceAsync())
 			{
@@ -1351,18 +1337,12 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			}
 			else
 			{
-				await Dispatcher.EnqueueAsync(() =>
-				{
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToEnableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
-				});
+				MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToEnableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 			}
 		}
 		catch (Exception ex)
 		{
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				MainInfoBar.WriteError(ex, string.Format(GlobalVars.GetStr("ErrorEnablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
-			});
+			MainInfoBar.WriteError(ex, string.Format(GlobalVars.GetStr("ErrorEnablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 		}
 		finally
 		{
@@ -1397,6 +1377,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				entry.ProgressCurrent = 0;
 				entry.ProgressTotal = 0;
 			});
+
+			MainInfoBar.WriteInfo($"{_currentOperationType} {entry.TypeDisplayName.ToLowerInvariant()}: {entry.Name}");
 
 			// Initialize DISM service if not already done
 			if (!await InitializeDismServiceAsync())
@@ -1448,18 +1430,12 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			}
 			else
 			{
-				await Dispatcher.EnqueueAsync(() =>
-				{
-					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToDisableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
-				});
+				MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToDisableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 			}
 		}
 		catch (Exception ex)
 		{
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				MainInfoBar.WriteError(ex, string.Format(GlobalVars.GetStr("ErrorDisablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
-			});
+			MainInfoBar.WriteError(ex, string.Format(GlobalVars.GetStr("ErrorDisablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 		}
 		finally
 		{
@@ -1516,6 +1492,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							entry.IsProcessing = true;
 							entry.ProgressCurrent = 0;
 							entry.ProgressTotal = 0;
+
+							// Scroll the ListView to the currently active item
+							UIListView?.ScrollIntoView(entry, ScrollIntoViewAlignment.Leading);
 						});
 
 						bool result = false;
@@ -1551,20 +1530,20 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							});
 
 							successCount++;
-							Logger.Write(string.Format(GlobalVars.GetStr("SuccessfullyEnabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name), LogTypeIntel.Information);
+							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("SuccessfullyEnabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 						}
 						else
 						{
 							failureCount++;
 							failedItems.Add($"{entry.TypeDisplayName}: {entry.Name}");
-							Logger.Write(string.Format(GlobalVars.GetStr("FailedToEnableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name), LogTypeIntel.Warning);
+							MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToEnableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 						}
 					}
 					catch (Exception ex)
 					{
 						failureCount++;
 						failedItems.Add($"{entry.TypeDisplayName}: {entry.Name}");
-						Logger.Write(string.Format(GlobalVars.GetStr("ErrorEnablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name) + $": {ex.Message}", LogTypeIntel.Error);
+						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorEnablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name) + $": {ex.Message}");
 					}
 					finally
 					{
@@ -1601,24 +1580,18 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					{
 						failedItemsList += $" and {failedItems.Count - 5} more...";
 					}
-					Logger.Write(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList), LogTypeIntel.Warning);
+					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList));
 				}
 			});
 		}
 		catch (Exception ex)
 		{
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringBulkEnableOperation"));
-			});
+			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringBulkEnableOperation"));
 		}
 		finally
 		{
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				ElementsAreEnabled = true;
-				_currentOperationType = null;
-			});
+			ElementsAreEnabled = true;
+			_currentOperationType = null;
 		}
 	}
 
@@ -1663,6 +1636,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							entry.IsProcessing = true;
 							entry.ProgressCurrent = 0;
 							entry.ProgressTotal = 0;
+
+							// Scroll the ListView to the currently active item
+							UIListView?.ScrollIntoView(entry, ScrollIntoViewAlignment.Leading);
 						});
 
 						bool result = false;
@@ -1698,20 +1674,20 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 							});
 
 							successCount++;
-							Logger.Write(string.Format(GlobalVars.GetStr("SuccessfullyDisabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name), LogTypeIntel.Information);
+							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("SuccessfullyDisabledItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 						}
 						else
 						{
 							failureCount++;
 							failedItems.Add($"{entry.TypeDisplayName}: {entry.Name}");
-							Logger.Write(string.Format(GlobalVars.GetStr("FailedToDisableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name), LogTypeIntel.Warning);
+							MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToDisableItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name));
 						}
 					}
 					catch (Exception ex)
 					{
 						failureCount++;
 						failedItems.Add($"{entry.TypeDisplayName}: {entry.Name}");
-						Logger.Write(string.Format(GlobalVars.GetStr("ErrorDisablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name) + $": {ex.Message}", LogTypeIntel.Error);
+						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorDisablingItem"), entry.TypeDisplayName.ToLowerInvariant(), entry.Name) + $": {ex.Message}");
 					}
 					finally
 					{
@@ -1748,24 +1724,18 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					{
 						failedItemsList += $" and {failedItems.Count - 5} more...";
 					}
-					Logger.Write(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList), LogTypeIntel.Warning);
+					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList));
 				}
 			});
 		}
 		catch (Exception ex)
 		{
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringBulkDisableOperation"));
-			});
+			MainInfoBar.WriteError(ex, GlobalVars.GetStr("ErrorDuringBulkDisableOperation"));
 		}
 		finally
 		{
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				ElementsAreEnabled = true;
-				_currentOperationType = null;
-			});
+			ElementsAreEnabled = true;
+			_currentOperationType = null;
 		}
 	}
 
@@ -1781,9 +1751,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	{
 		if (_isUpdatingSelection) return;
 
-		for (int g = 0; g < GroupedFilteredDISMItems.Count; g++)
+		foreach (GroupInfoListForDISMItems group in GroupedFilteredDISMItems)
 		{
-			GroupInfoListForDISMItems group = GroupedFilteredDISMItems[g];
 			for (int i = 0; i < group.Count; i++)
 			{
 				UIListView?.SelectedItems.Add(group[i]);
@@ -2082,6 +2051,27 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				{
 					ApplyCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
+					// Display a per-item "currently doing" message
+					string actionText = config.ApplyStrategy == ApplyOperation.Enable ? "Enabling" : "Disabling";
+					MainInfoBar.WriteInfo($"{actionText} {config.Type.ToString().ToLowerInvariant()}: {config.Name}");
+
+					// Try to find the corresponding list item (if present) and show its progress (initially indeterminate)
+					DISMOutputEntry? entry = null;
+					await Dispatcher.EnqueueAsync(() =>
+					{
+						entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, config.Name, StringComparison.OrdinalIgnoreCase));
+						if (entry != null)
+						{
+							// Mark active and scroll it into view at the top
+							entry.IsProcessing = true;
+							entry.ProgressCurrent = 0;
+							entry.ProgressTotal = 0; // Unknown total => indeterminate bar shows
+
+							// Scroll to currently active item on the ListView
+							UIListView?.ScrollIntoView(entry, ScrollIntoViewAlignment.Leading);
+						}
+					});
+
 					try
 					{
 						bool result = await ExecuteOperationAsync(config, config.ApplyStrategy);
@@ -2090,14 +2080,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						{
 							successCount++;
 							string operationName = config.ApplyStrategy == ApplyOperation.Enable ? "enabled" : "disabled";
-							Logger.Write(string.Format(GlobalVars.GetStr("SuccessfullyEnabledItem"), config.Type.ToString().ToLowerInvariant(), config.Name), LogTypeIntel.Information);
+							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("SuccessfullyEnabledItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 						else
 						{
 							failureCount++;
 							string operationName = config.ApplyStrategy == ApplyOperation.Enable ? "enable" : "disable";
 							failedItems.Add($"{config.Type}: {config.Name}");
-							Logger.Write(string.Format(GlobalVars.GetStr("FailedToEnableItem"), config.Type.ToString().ToLowerInvariant(), config.Name), LogTypeIntel.Warning);
+							MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToEnableItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 					}
 					catch (Exception ex)
@@ -2105,7 +2095,20 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						failureCount++;
 						string operationName = config.ApplyStrategy == ApplyOperation.Enable ? "enabling" : "disabling";
 						failedItems.Add($"{config.Type}: {config.Name}");
-						Logger.Write(string.Format(GlobalVars.GetStr("ErrorEnablingItem"), config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}", LogTypeIntel.Error);
+						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorEnablingItem"), config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}");
+					}
+					finally
+					{
+						// Always collapse the item's progress once this config is done
+						if (entry != null)
+						{
+							await Dispatcher.EnqueueAsync(() =>
+							{
+								entry.IsProcessing = false;
+								entry.ProgressCurrent = 0;
+								entry.ProgressTotal = 0;
+							});
+						}
 					}
 				}
 			});
@@ -2134,7 +2137,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					{
 						failedItemsList += $" and {failedItems.Count - 5} more...";
 					}
-					Logger.Write(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList), LogTypeIntel.Warning);
+					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList));
 				}
 			});
 		}
@@ -2172,6 +2175,11 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		VerifyCancellableButton.Begin();
 		await Dispatcher.EnqueueAsync(UpdateCancellableButtonsEnabledStates);
 
+		// Track which UI entries we mark as "processing" so we can reliably unmark them
+		HashSet<string> targetNames = SecurityHardeningConfigs
+			.Select(c => c.Name)
+			.ToHashSet(StringComparer.OrdinalIgnoreCase);
+
 		try
 		{
 			ElementsAreEnabled = false;
@@ -2191,6 +2199,20 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			List<string> incorrectItems = [];
 
 			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("VerifyingSecurityHardeningState"), SecurityHardeningConfigs.Count));
+
+			// Mark all recommended items present in the ListView as "in progress" with indeterminate bars
+			await Dispatcher.EnqueueAsync(() =>
+			{
+				foreach (DISMOutputEntry entry in AllItems)
+				{
+					if (targetNames.Contains(entry.Name))
+					{
+						entry.IsProcessing = true;
+						entry.ProgressCurrent = 0;
+						entry.ProgressTotal = 0; // Unknown total => indeterminate
+					}
+				}
+			});
 
 			Dictionary<string, DismPackageFeatureState> actualStates = [];
 
@@ -2234,19 +2256,21 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				{
 					VerifyCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
+					MainInfoBar.WriteInfo($"Verifying {config.Type.ToString().ToLowerInvariant()}: {config.Name}");
+
 					if (actualStates.TryGetValue(config.Name, out DismPackageFeatureState actualState))
 					{
 						if (config.ValidVerificationStates.Contains(actualState))
 						{
 							correctCount++;
-							Logger.Write($"Correct state for {config.Name}: {actualState}", LogTypeIntel.Information);
+							MainInfoBar.WriteInfo($"Correct state for {config.Name}: {actualState}");
 						}
 						else
 						{
 							incorrectCount++;
 							string validStates = string.Join(", ", config.ValidVerificationStates);
 							incorrectItems.Add($"{config.Name} (Expected: {validStates}, Actual: {actualState})");
-							Logger.Write($"Incorrect state for {config.Name}: Expected one of [{validStates}], Actual {actualState}", LogTypeIntel.Warning);
+							MainInfoBar.WriteWarning($"Incorrect state for {config.Name}: Expected one of [{validStates}], Actual {actualState}");
 						}
 					}
 					else
@@ -2255,14 +2279,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						if (config.ValidVerificationStates.Contains(DismPackageFeatureState.DismStateNotPresent))
 						{
 							correctCount++;
-							Logger.Write($"Correct state for {config.Name}: Not Present (as expected)", LogTypeIntel.Information);
+							MainInfoBar.WriteInfo($"Correct state for {config.Name}: Not Present (as expected)");
 						}
 						else
 						{
 							incorrectCount++;
 							string validStates = string.Join(", ", config.ValidVerificationStates);
 							incorrectItems.Add($"{config.Name} (Expected: {validStates}, Actual: Not Found)");
-							Logger.Write($"Item not found during verification: {config.Name}", LogTypeIntel.Warning);
+							MainInfoBar.WriteWarning($"Item not found during verification: {config.Name}");
 						}
 					}
 				}
@@ -2289,7 +2313,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						{
 							incorrectItemsList += $" and {incorrectItems.Count - 3} more...";
 						}
-						Logger.Write(string.Format(GlobalVars.GetStr("IncorrectItems"), incorrectItemsList), LogTypeIntel.Warning);
+						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("IncorrectItems"), incorrectItemsList));
 					}
 				}
 			});
@@ -2306,6 +2330,20 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		}
 		finally
 		{
+			// Unmark all recommended items as "processing"
+			await Dispatcher.EnqueueAsync(() =>
+			{
+				foreach (DISMOutputEntry entry in AllItems)
+				{
+					if (targetNames.Contains(entry.Name))
+					{
+						entry.IsProcessing = false;
+						entry.ProgressCurrent = 0;
+						entry.ProgressTotal = 0;
+					}
+				}
+			});
+
 			if (VerifyCancellableButton.wasCancelled)
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("VerifyOperationCancelledByUser"));
@@ -2357,6 +2395,27 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				{
 					RemoveCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
+					// Display a per-item "currently doing" message for removal phase
+					string actionText = config.RemoveStrategy == ApplyOperation.Enable ? "Enabling" : "Disabling";
+					MainInfoBar.WriteInfo($"{actionText} {config.Type.ToString().ToLowerInvariant()}: {config.Name}");
+
+					// Try to find the corresponding list item (if present) and show its progress (initially indeterminate)
+					DISMOutputEntry? entry = null;
+					await Dispatcher.EnqueueAsync(() =>
+					{
+						entry = AllItems.FirstOrDefault(x => string.Equals(x.Name, config.Name, StringComparison.OrdinalIgnoreCase));
+						if (entry != null)
+						{
+							// Mark active and scroll it into view at the top
+							entry.IsProcessing = true;
+							entry.ProgressCurrent = 0;
+							entry.ProgressTotal = 0; // Unknown total => indeterminate bar shows
+
+							// Scroll to currently active item on the ListView
+							UIListView?.ScrollIntoView(entry, ScrollIntoViewAlignment.Leading);
+						}
+					});
+
 					try
 					{
 						bool result = await ExecuteOperationAsync(config, config.RemoveStrategy);
@@ -2365,14 +2424,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						{
 							successCount++;
 							string operationName = config.RemoveStrategy == ApplyOperation.Enable ? "restored" : "removed";
-							Logger.Write(string.Format(GlobalVars.GetStr("SuccessfullyEnabledItem"), config.Type.ToString().ToLowerInvariant(), config.Name), LogTypeIntel.Information);
+							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("SuccessfullyEnabledItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 						else
 						{
 							failureCount++;
 							string operationName = config.RemoveStrategy == ApplyOperation.Enable ? "restore" : "remove";
 							failedItems.Add($"{config.Type}: {config.Name}");
-							Logger.Write(string.Format(GlobalVars.GetStr("FailedToEnableItem"), config.Type.ToString().ToLowerInvariant(), config.Name), LogTypeIntel.Warning);
+							MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedToEnableItem"), config.Type.ToString().ToLowerInvariant(), config.Name));
 						}
 					}
 					catch (Exception ex)
@@ -2380,7 +2439,20 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						failureCount++;
 						string operationName = config.RemoveStrategy == ApplyOperation.Enable ? "restoring" : "removing";
 						failedItems.Add($"{config.Type}: {config.Name}");
-						Logger.Write(string.Format(GlobalVars.GetStr("ErrorEnablingItem"), config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}", LogTypeIntel.Error);
+						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorEnablingItem"), config.Type.ToString().ToLowerInvariant(), config.Name) + $": {ex.Message}");
+					}
+					finally
+					{
+						// Always collapse the item's progress once this config is done
+						if (entry != null)
+						{
+							await Dispatcher.EnqueueAsync(() =>
+							{
+								entry.IsProcessing = false;
+								entry.ProgressCurrent = 0;
+								entry.ProgressTotal = 0;
+							});
+						}
 					}
 				}
 			});
@@ -2410,16 +2482,13 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 					{
 						failedItemsList += $" and {failedItems.Count - 5} more...";
 					}
-					Logger.Write(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList), LogTypeIntel.Warning);
+					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("FailedItems"), failedItemsList));
 				}
 			});
 		}
 		catch (Exception ex)
 		{
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				HandleExceptions(ex, ref errorsOccurred, ref RemoveCancellableButton.wasCancelled, MainInfoBar);
-			});
+			HandleExceptions(ex, ref errorsOccurred, ref RemoveCancellableButton.wasCancelled, MainInfoBar);
 		}
 		finally
 		{
@@ -2482,5 +2551,159 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			Logger.Write(string.Format(GlobalVars.GetStr("ErrorDisposingDISMServiceClient"), ex.Message), LogTypeIntel.Error);
 		}
+	}
+
+	/// <summary>
+	/// Wildcard-based patterns for network adapter vendors
+	/// </summary>
+	private static readonly FrozenDictionary<string, string> NetworkVendorPatterns = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+	{
+		{ "Intel",     "Microsoft.Windows.*.Client.Intel*"     },
+		{ "Broadcom",  "Microsoft.Windows.Wifi.Client.Broadcom*" },
+		{ "Marvel",    "Microsoft.Windows.Wifi.Client.Marvel*"   },
+		{ "Qualcomm",  "Microsoft.Windows.Wifi.Client.Qualcomm*" },
+		{ "Ralink",    "Microsoft.Windows.Wifi.Client.Ralink*"   },
+		{ "Realtek",   "Microsoft.Windows.*.Client.Realtek*"     }
+	}.ToFrozenDictionary<string, string>();
+
+	/// <summary>
+	/// Simple wildcard matcher supporting '*' anywhere in the pattern (case-insensitive).
+	/// '*' matches zero or more of any characters.
+	/// </summary>
+	private static bool WildcardMatch(string text, string pattern)
+	{
+		if (text == null) return false;
+		if (pattern == null) return false;
+
+		string[] parts = pattern.Split('*');
+		int index = 0;
+
+		// If pattern does not start with '*', the first part must be at the beginning
+		bool mustStart = !pattern.StartsWith('*');
+		// If pattern does not end with '*', the last part must be at the end
+		bool mustEnd = !pattern.EndsWith('*');
+
+		for (int i = 0; i < parts.Length; i++)
+		{
+			string part = parts[i];
+			if (part.Length == 0)
+			{
+				continue;
+			}
+
+			int pos = text.IndexOf(part, index, StringComparison.OrdinalIgnoreCase);
+			if (pos < 0)
+			{
+				return false;
+			}
+
+			if (i == 0 && mustStart && pos != 0)
+			{
+				return false;
+			}
+
+			index = pos + part.Length;
+
+			if (i == parts.Length - 1 && mustEnd)
+			{
+				// If the last part must align to the end, ensure we ended exactly at the end
+				return index == text.Length;
+			}
+		}
+
+		// If mustEnd is true but last non-empty part ended before text end, fail
+		if (mustEnd)
+		{
+			return index == text.Length;
+		}
+
+		return true;
+	}
+
+	/// <summary>
+	/// Returns the vendor name ("Intel", "Broadcom", etc.) if the item name matches any of the network vendor patterns; otherwise null.
+	/// </summary>
+	private static string? GetNetworkVendor(string itemName)
+	{
+		foreach (KeyValuePair<string, string> kvp in NetworkVendorPatterns)
+		{
+			if (WildcardMatch(itemName, kvp.Value))
+			{
+				return kvp.Key;
+			}
+		}
+		return null;
+	}
+
+	/// <summary>
+	/// Select or unselect items of a specific network adapter vendor in the current (filtered) view.
+	/// This works via the ListView <see cref="UIListView"/> so SelectionChanged keeps <see cref="ItemsSourceSelectedItems"/> in sync.
+	/// </summary>
+	internal void SetVendorSelection(string vendor, bool select)
+	{
+		if (_isUpdatingSelection) return;
+		if (UIListView == null) return;
+
+		// Operate only on the items currently visible in the grouped, filtered view
+		if (select)
+		{
+			for (int g = 0; g < GroupedFilteredDISMItems.Count; g++)
+			{
+				GroupInfoListForDISMItems group = GroupedFilteredDISMItems[g];
+				for (int i = 0; i < group.Count; i++)
+				{
+					DISMOutputEntry entry = group[i];
+					string? matchVendor = GetNetworkVendor(entry.Name);
+					if (string.Equals(vendor, matchVendor, StringComparison.OrdinalIgnoreCase))
+					{
+						UIListView.SelectedItems.Add(entry);
+					}
+				}
+			}
+		}
+		else
+		{
+			// Remove from current selection those entries that match the vendor
+			List<object> toRemove = [];
+			for (int s = 0; s < UIListView.SelectedItems.Count; s++)
+			{
+				if (UIListView.SelectedItems[s] is DISMOutputEntry entry)
+				{
+					string? matchVendor = GetNetworkVendor(entry.Name);
+					if (string.Equals(vendor, matchVendor, StringComparison.OrdinalIgnoreCase))
+					{
+						toRemove.Add(entry);
+					}
+				}
+			}
+			for (int r = 0; r < toRemove.Count; r++)
+			{
+				_ = UIListView.SelectedItems.Remove(toRemove[r]);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Event handler for "Select" vendor menu items (sender.Tag must be the vendor string)
+	/// </summary>
+	internal void SelectVendor_Click(object sender, RoutedEventArgs e)
+	{
+		MenuFlyoutItem? mi = sender as MenuFlyoutItem;
+		string? vendor = mi?.Tag as string;
+		if (string.IsNullOrEmpty(vendor)) return;
+
+		SetVendorSelection(vendor, true);
+	}
+
+	/// <summary>
+	/// Event handler for "Unselect" vendor menu items (sender.Tag must be the vendor string)
+	/// </summary>
+	internal void UnselectVendor_Click(object sender, RoutedEventArgs e)
+	{
+		MenuFlyoutItem? mi = sender as MenuFlyoutItem;
+		string? vendor = mi?.Tag as string;
+		if (string.IsNullOrEmpty(vendor)) return;
+
+		SetVendorSelection(vendor, false);
 	}
 }

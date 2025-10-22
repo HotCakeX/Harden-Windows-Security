@@ -423,6 +423,21 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 				{
 					List<RegistryPolicyEntry> policy = RegistryPolicyEntry.Load(SelectedFile);
 
+					// Ensures the JSON file that is loaded has correct "RegValue".
+					foreach (RegistryPolicyEntry item in policy)
+					{
+						if (item.Source == Source.GroupPolicy)
+						{
+							item.RegValue = RegistryManager.Manager.BuildRegValueFromParsedValue(item);
+						}
+					}
+
+					// Persist the updated RegValue(s) back to disk
+					RegistryPolicyEntry.Save(SelectedFile, policy);
+
+					// Load again
+					policy = RegistryPolicyEntry.Load(SelectedFile);
+
 					// Retrieve friendly names
 					AdmxAdmlParser.PopulateFriendlyNames(policy);
 
@@ -668,12 +683,18 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 							Path.GetFileNameWithoutExtension(item) + ".json");
 					}
 
+					// Populate RegValue for Group Policy entries at save time so the generated JSON includes it.
+					foreach (RegistryPolicyEntry entry in policy.Entries)
+					{
+						if (entry.Source == Source.GroupPolicy)
+						{
+							entry.RegValue = RegistryManager.Manager.BuildRegValueFromParsedValue(entry);
+						}
+					}
+
 					RegistryPolicyEntry.Save(saveLoc, policy.Entries);
 
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("POLFilesConvertedToJSONSuccess"), saveLoc));
-					});
+					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("POLFilesConvertedToJSONSuccess"), saveLoc));
 				}
 			});
 		}
@@ -762,10 +783,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 					RegistryPolicyParser.WriteFile(saveLoc, newPolicyFile);
 
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("JSONFileConvertedToPOLSuccess"), saveLoc));
-					});
+					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("JSONFileConvertedToPOLSuccess"), saveLoc));
 				}
 			});
 		}
@@ -849,10 +867,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 					RegistryPolicyEntry.Save(saveLoc, policies);
 
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SecurityINFFileConvertedToJSONSuccess"), saveLoc));
-					});
+					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SecurityINFFileConvertedToJSONSuccess"), saveLoc));
 				}
 			});
 		}

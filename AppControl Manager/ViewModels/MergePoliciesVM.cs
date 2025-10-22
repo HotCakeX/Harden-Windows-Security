@@ -100,10 +100,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 				// If user chose to deploy the policy after merge
 				if (ShouldDeploy)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						MainInfoBar.WriteInfo(GlobalVars.GetStr("MergePolicies_DeployingMessage"));
-					});
+					MainInfoBar.WriteInfo(GlobalVars.GetStr("MergePolicies_DeployingMessage"));
 
 					string stagingArea = StagingArea.NewStagingArea(GlobalVars.GetStr("MergePolicies_StagingAreaName")).FullName;
 

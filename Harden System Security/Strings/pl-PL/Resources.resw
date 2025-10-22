@@ -724,10 +724,6 @@
     <comment>Protection Category Description</comment>
     <value>Skonfiguruj przeglądarkę Edge, aby była bezpieczniejsza i udostępniała mniej danych odwiedzanym stronom internetowym.</value>
   </data>
-  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Title</comment>
-    <value>Sprawdzanie certyfikatów</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>Blokowanie IP według kraju</value>
@@ -1474,12 +1470,6 @@
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>Pomyślnie załadowano {0} funkcji i możliwości Windows.</value>
-</data>
-<data name="ProgressInfo" xml:space="preserve">
-  <value>Postęp: {0}/{1} ({2}%)</value>
-</data>
-<data name="ProgressUnknownInfo" xml:space="preserve">
-  <value>Postęp: {0}/nieznany</value>
 </data>
 <data name="SuccessfullyEnabledItem" xml:space="preserve">
   <value>Pomyślnie włączono {0}: {1}</value>
@@ -2304,9 +2294,6 @@
     <value>Zastosuj podstawę zabezpieczeń aplikacji Microsoft 365 na tej stronie. Możesz również zweryfikować zgodność systemu, aby uzyskać precyzyjny raport pokazujący, które ustawienia są zastosowane, a które nie. Możesz również usunąć zasady zastosowane przez podstawę.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
-  <data name="SourceHeader.Text" xml:space="preserve">
-    <value>Źródło</value>
-  </data>
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>Status</value>
   </data>
@@ -2318,9 +2305,6 @@
   </data>
   <!--Security Baselines ListView Headers End-->
   <!--Security Baselines ListView Headers Buttons Start-->
-  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
-    <value>Źródło</value>
-  </data>
     <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
     <value>Status</value>
   </data>
@@ -4154,5 +4138,26 @@ Odcisk Palca: {3}</value>
   </data>
     <data name="DeviceIntents.Text" xml:space="preserve">
     <value>Intenty urządzenia</value>
+  </data>
+    <data name="NetworkAdapters.Text" xml:space="preserve">
+    <value>Karty sieciowe</value>
+  </data>
+  <data name="Select.Text" xml:space="preserve">
+    <value>Wybierz</value>
+  </data>
+  <data name="Unselect.Text" xml:space="preserve">
+    <value>Odznacz</value>
+  </data>
+  <data name="Applying" xml:space="preserve">
+    <value>Trwa stosowanie</value>
+  </data>
+  <data name="Verifying" xml:space="preserve">
+    <value>Trwa weryfikacja</value>
+  </data>
+  <data name="Removing" xml:space="preserve">
+    <value>Trwa usuwanie</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Trwa przetwarzanie</value>
   </data>
 </root>

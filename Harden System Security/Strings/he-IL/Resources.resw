@@ -724,10 +724,6 @@
     <comment>Protection Category Description</comment>
     <value>הגדר את דפדפן Edge להיות בטוח יותר ולשתף פחות נתונים עם האתרים שאתה מבקר בהם.</value>
   </data>
-  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Title</comment>
-    <value>בדיקת אישורים</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>חסימת IP לפי מדינה</value>
@@ -1474,12 +1470,6 @@
   </data>
   <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
     <value>נטענו בהצלחה {0} תכונות ויכולות Windows.</value>
-  </data>
-  <data name="ProgressInfo" xml:space="preserve">
-    <value>התקדמות: {0}/{1} ({2}%)</value>
-  </data>
-  <data name="ProgressUnknownInfo" xml:space="preserve">
-    <value>התקדמות: {0}/לא ידוע</value>
   </data>
   <data name="SuccessfullyEnabledItem" xml:space="preserve">
     <value>הופעל בהצלחה {0}: {1}</value>
@@ -2304,9 +2294,6 @@
     <value>יישם את בסיס האבטחה ליישומי Microsoft 365 בעמוד זה. תוכל גם לאמת תאימות המערכת כדי לקבל דוח מדויק המציג אילו הגדרות מיושמות ואילו לא. תוכל להסיר את המדיניות שיושמה על ידי הבסיס גם כן.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
-  <data name="SourceHeader.Text" xml:space="preserve">
-    <value>מקור</value>
-  </data>
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>סטטוס</value>
   </data>
@@ -2318,9 +2305,6 @@
   </data>
   <!--Security Baselines ListView Headers End-->
   <!--Security Baselines ListView Headers Buttons Start-->
-  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
-    <value>מקור</value>
-  </data>
     <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
     <value>סטטוס</value>
   </data>
@@ -4154,5 +4138,26 @@
   </data>
     <data name="DeviceIntents.Text" xml:space="preserve">
     <value>אינטנטים של המכשיר</value>
+  </data>
+    <data name="NetworkAdapters.Text" xml:space="preserve">
+    <value>מתאמי רשת</value>
+  </data>
+  <data name="Select.Text" xml:space="preserve">
+    <value>בחר</value>
+  </data>
+  <data name="Unselect.Text" xml:space="preserve">
+    <value>בטל בחירה</value>
+  </data>
+  <data name="Applying" xml:space="preserve">
+    <value>מיישם</value>
+  </data>
+  <data name="Verifying" xml:space="preserve">
+    <value>מאמת</value>
+  </data>
+  <data name="Removing" xml:space="preserve">
+    <value>מסיר</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>מעבד</value>
   </data>
 </root>

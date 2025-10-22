@@ -17,8 +17,11 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using AppControlManager.Others;
+using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 
@@ -50,6 +53,17 @@ internal sealed partial class TLSVM : MUnitListViewModelBase
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
 		new(() =>
 		{
+
+			#region One-time global registrations for this category - Registers specialized strategies for specific policies.
+
+			// Register specialized verification strategy for TLS Cipher Suites so its details can be detected via Native API call too.
+			SpecializedStrategiesRegistry.RegisterSpecializedVerification(
+				"SOFTWARE\\Policies\\Microsoft\\Cryptography\\Configuration\\SSL\\00010002|Functions",
+				new TLSCipherSuites()
+			);
+
+			#endregion
+
 			return MUnit.CreateMUnitsFromPolicies(Categories.TLSSecurity);
 		}, LazyThreadSafetyMode.ExecutionAndPublication);
 
@@ -57,4 +71,53 @@ internal sealed partial class TLSVM : MUnitListViewModelBase
 	/// Gets the current catalog of all MUnits for this ViewModel.
 	/// </summary>
 	public override List<MUnit> AllMUnits => LazyCatalog.Value;
+
+
+	/// <summary>
+	/// Specialized verification for TLS Cipher Suites.
+	/// </summary>
+	private sealed class TLSCipherSuites : ISpecializedVerificationStrategy
+	{
+		public bool Verify()
+		{
+			try
+			{
+				// Build the full path to the JSON file
+				string jsonConfigPath = Path.Combine(AppContext.BaseDirectory, "Resources", "TLSSecurity.json");
+
+				// Load the policies from the JSON file
+				List<RegistryPolicyEntry> policies = RegistryPolicyEntry.LoadWithFriendlyNameKeyResolve(jsonConfigPath) ?? throw new InvalidOperationException(string.Format(GlobalVars.GetStr("CouldNotLoadPoliciesFromPath"), jsonConfigPath));
+
+				// Find the specific policy for TLS Cipher Suites
+				string? cipherSuitesValue = policies.Find(x => string.Equals(x.KeyName, "SOFTWARE\\Policies\\Microsoft\\Cryptography\\Configuration\\SSL\\00010002", StringComparison.OrdinalIgnoreCase) && string.Equals(x.ValueName, "Functions", StringComparison.OrdinalIgnoreCase))?.RegValue;
+
+				if (cipherSuitesValue is null)
+					return false;
+
+				// Parse the configured cipher suites into a HashSet for easy lookup
+				HashSet<string> configuredCipherSuites = cipherSuitesValue.Split([','], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet();
+
+				// Get the list of currently configured cipher suites via Arcane library
+				List<Arcane.TlsCipherSuite> results = Arcane.CipherSuiteManager.EnumerateConfiguredCipherSuites();
+
+				// Verify that all configured cipher suites are in the policy
+				foreach (Arcane.TlsCipherSuite item in results)
+				{
+					if (!configuredCipherSuites.Contains(item.Name))
+					{
+						// A configured cipher suite is missing from the policy
+						return false;
+					}
+				}
+
+				// All configured cipher suites are present in the policy
+				return true;
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+				return false;
+			}
+		}
+	}
 }

@@ -12,6 +12,14 @@ Use the `Retrieve Recommended Only` option under the `Retrieve All` button to on
 
 <br>
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/c22418f6d2605c77ea4c05dfd42f2c85ef0191eb/Pictures/APNGs/Harden%20System%20Security/HardenSystemSecurity_OptionalWindowsFeaturesDemo.apng" alt="Optional Windows Features Page Demo of the Harden System Security App" />
+
+</div>
+
+<br>
+
 ## Recommended Configurations
 
 Use the 3 apply, remove or verify buttons in this page to apply the security configurations states explained below. They enable/disable only specific Windows Features and capabilities to provide optimal security for your system:
@@ -53,5 +61,13 @@ Use the 3 apply, remove or verify buttons in this page to apply the security con
     - [Windows Sandbox](https://learn.microsoft.com/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview): install, test and use programs in a disposable virtual operating system, completely separate from your  main OS
 
     - Hyper-V: a great hybrid hypervisor (Type 1 and Type 2) to run virtual machines on. [check out this Hyper-V Wiki page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Hyper-V)
+
+<br>
+
+## Network Adapters
+
+Windows includes pre-loaded Ethernet and Wi-Fi network adapter drivers to enable internet connectivity during the Out-of-Box Experience (OOBE) without requiring manual driver installation. These drivers support hardware from manufacturers such as Intel, Qualcomm, Broadcom, Marvell, Realtek, Ralink, and others.
+
+Using the Harden System Security app, you can remove unnecessary drivers or those associated with OEM hardware you do not own. This process helps freeing up disk space and reduce the overall attack surface.
 
 <br>

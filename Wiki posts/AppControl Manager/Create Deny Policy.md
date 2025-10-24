@@ -54,7 +54,7 @@ You can create Deny policies for the installed packaged apps. This is useful for
 
 * **Policy Name**: Enter a name for the Deny policy.
 
-* **Package Family Names**: In this section, you can view the list of all installed apps. Use the search bar to looking for a specific app and after finding them, click/tap on them to select them.
+* **Package Family Names**: In this section, you can view the list of all installed apps. Use the search bar to look for a specific app and after finding them, click/tap on them to select them.
 
    * Use the "Select All" and "Remove Selections" buttons to select/deselect all apps currently available in the list.
 

@@ -124,7 +124,7 @@ Pluton addresses security needs like booting an operating system securely even a
 
 ## Conclusion
 
-We learned how important it is to use BitLocker and protect our data at rest. The [Harden Windows Security repository](https://github.com/HotCakeX/Harden-Windows-Security) employs BitLocker to encrypt the operation system drive and optionally any other drives that user chooses to. It utilizes the most secure configuration and military grade encryption algorithm, XTS-AES-256, TPM 2.0 and Start-up PIN.
+We learned how important it is to use BitLocker and protect our data at rest. The [Harden Windows Security repository](https://github.com/HotCakeX/Harden-Windows-Security) employs BitLocker to encrypt the operating system drive and optionally any other drives that user chooses to. It utilizes the most secure configuration and military grade encryption algorithm, XTS-AES-256, TPM 2.0 and Start-up PIN.
 
 <br>
 

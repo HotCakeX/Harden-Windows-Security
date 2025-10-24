@@ -116,7 +116,7 @@ You can create Supplemental policies for the installed packaged apps. These are 
 
 * **Base Policy File**: Browse for the path to the base policy XML file that this Supplemental policy will be expanding.
 
-* **Package Family Names**: In this section, you can view the list of all installed apps. Use the search bar to looking for a specific app and after finding them, click/tap on them to select them.
+* **Package Family Names**: In this section, you can view the list of all installed apps. Use the search bar to look for a specific app and after finding them, click/tap on them to select them.
 
    * Use the "Select All" and "Remove Selections" buttons to select/deselect all apps currently available in the list.
 

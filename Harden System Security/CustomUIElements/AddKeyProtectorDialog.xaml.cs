@@ -104,7 +104,7 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 	private bool ElementsAreEnabled { get; set => this.SP(ref field, value); } = true;
 
 	/// <summary>
-	/// Whether Key Protectors that are only usable for the Operation System Volume are enabled.
+	/// Whether Key Protectors that are only usable for the Operating System Volume are enabled.
 	/// </summary>
 	private bool OSOnlyKeyProtectorsAreEnabled { get; set => this.SP(ref field, value); } = true;
 

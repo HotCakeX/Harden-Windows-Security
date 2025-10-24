@@ -417,7 +417,7 @@ namespace BitLocker {
 		}
 		if (!osProtected)
 		{
-			LogErr(L"Operation System drive must be encrypted first before encrypting Non-OS drives.");
+			LogErr(L"Operating System drive must be encrypted first before encrypting Non-OS drives.");
 			SetLastErrorMsg(L"OS drive not protected.");
 			return false;
 		}

@@ -5474,10 +5474,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Open The File</value>
   </data>
   <data name="OpenTheFileMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Open the file that was created using the default file handler configured in the operation system.</value>
+    <value>Open the file that was created using the default file handler configured in the operating system.</value>
   </data>
   <data name="OpenTheFileMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Open the file that was created using the default file handler configured in the operation system.</value>
+    <value>Open the file that was created using the default file handler configured in the operating system.</value>
   </data>
   <data name="AdditionalActionsTextBlock.Text" xml:space="preserve">
     <value>Additional Actions</value>

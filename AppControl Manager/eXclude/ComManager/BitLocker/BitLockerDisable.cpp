@@ -55,8 +55,8 @@ namespace BitLocker {
 		// If OS drive: check for stored auto-unlock keys (IsAutoUnlockKeyStored)
 		if (vol.volumeType == VolumeType::OperationSystem)
 		{
-			LogOut(L"Operation system drive detected during BitLocker disablement");
-			LogOut(L"Checking whether the Operation System drive has auto-unlock keys that belong to other data drives.");
+			LogOut(L"Operating system drive detected during BitLocker disablement");
+			LogOut(L"Checking whether the Operating System drive has auto-unlock keys that belong to other data drives.");
 
 			WmiConnection conn;
 			if (!conn.ok)

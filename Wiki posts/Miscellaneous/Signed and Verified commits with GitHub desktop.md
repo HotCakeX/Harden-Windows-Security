@@ -133,7 +133,7 @@ and add this to the `[user]` section to define your SSH public key, it's a direc
 signingkey = "Path/To/SSH/SSHKey.pub"
 ```
 
-**You must replace all of the normal backward slashes `\` to forward slash `/` in your path, otherwise GitHub desktop throws an error.**
+**You must replace all of the backslashes `\` with forward slashes `/` in your path, otherwise GitHub desktop throws an error.**
 
 Now every time you commit using GitHub desktop, your commits will be signed. If your SSH key has a passphrase, you will be asked to enter it before committing and pushing in GitHub desktop, otherwise signing will happen automatically. Your repository commit history on GitHub website will show verified badge next to them.
 

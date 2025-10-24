@@ -236,7 +236,7 @@ There are three different identifiers: The chosen default OS has identifier {def
 
 ## Some Hyper-v Nested Virtualization Screenshots
 
-To display how optimized and powerful Hyper-V hypervisor is (including any feature that runs on it such as Windows Sandbox, WSL, WSA, MDAG and more), here are some screenshots taken on a very old hardware, hardware that is not even officially supported by Windows 11, yet you can virtualize 5 operation systems nested in each other, and the last nested virtualized OS still has full functionality including direct file copy from host to guest, full Internet connectivity, ability to listen to music, do tasks and so on.
+To display how optimized and powerful Hyper-V hypervisor is (including any feature that runs on it such as Windows Sandbox, WSL, WSA, MDAG and more), here are some screenshots taken on a very old hardware, hardware that is not even officially supported by Windows 11, yet you can virtualize 5 operating systems nested in each other, and the last nested virtualized OS still has full functionality including direct file copy from host to guest, full Internet connectivity, ability to listen to music, do tasks and so on.
 
 #### Hardware specs - All from 2016-2017, couldn't find any older to test
 

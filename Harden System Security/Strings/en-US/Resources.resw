@@ -1292,7 +1292,7 @@
     <value>Apply security and privacy related policies to the Microsoft Edge to make it more secure and private when browsing the web.</value>
   </data>
   <data name="LockScreenPageTitle.Text" xml:space="preserve">
-    <value>Harden the Lock Screen of the operation system against possible exploits and reduce the amount of information that is exposed to unauthorized individuals when the device is locked.</value>
+    <value>Harden the Lock Screen of the operating system against possible exploits and reduce the amount of information that is exposed to unauthorized individuals when the device is locked.</value>
   </data>
   <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
     <value>This page contains important security measures that don't fall into more specific categories. Applying them can enhance and augment the security of your system and device.</value>
@@ -1301,7 +1301,7 @@
     <value>The policies in this page only apply to the current user and are not applied system-wide to all users. For this reason, you do not require Administrator privilege to apply them.</value>
   </data>
   <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
-    <value>Fetch, List, View, Enable and Disable all of the optional features and capabilities that the operation system offers in a unified manner.</value>
+    <value>Fetch, List, View, Enable and Disable all of the optional features and capabilities that the operating system offers in a unified manner.</value>
   </data>
   <data name="TLSPageTitle.Text" xml:space="preserve">
     <value>Harden the SChannel (Secure Channel) in the OS. It is a security support provider (SSP) developed by Microsoft that implements security protocols such as Transport Layer Security (TLS).</value>
@@ -2328,7 +2328,7 @@
     <value>Microsoft Baselines Overrides</value>
   </data>
   <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
-    <value>Restore Operation System features that have been disabled after applying Microsoft Security Baselines.</value>
+    <value>Restore Operating System features that have been disabled after applying Microsoft Security Baselines.</value>
   </data>
   <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Exports the data being displayed to a JSON file. You will be able to pick the location where it will be saved.</value>
@@ -3250,7 +3250,7 @@ Thumbprint: {3}</value>
     <value>Auto Unlock</value>
   </data>
   <data name="AutoUnlockSectionDescription.Text" xml:space="preserve">
-    <value>Enables automatic unlocking for a Non-operation system volume protected by BitLocker Disk Encryption.</value>
+    <value>Enables automatic unlocking for a Non-operating system volume protected by BitLocker Disk Encryption.</value>
   </data>
   <data name="AutoUnlockSectionBody.Text" xml:space="preserve">
     <value>BitLocker can be configured to automatically unlock data volumes that don't host the operating system. After a user unlocks the OS volume, BitLocker uses encrypted credentials stored in the registry together with volume metadata to automatically unlock any data volumes that are set for automatic unlocking.</value>
@@ -3352,10 +3352,10 @@ Thumbprint: {3}</value>
     <value>Enable BitLocker encryption for the Removable Drive.</value>
   </data>
   <data name="OSDriveEncryptionSectionTitle.Text" xml:space="preserve">
-    <value>Operation System Drive Encryption</value>
+    <value>Operating System Drive Encryption</value>
   </data>
   <data name="OSDriveEncryptionSectionDescription.Text" xml:space="preserve">
-    <value>Encrypt the Operation System Drive with BitLocker.</value>
+    <value>Encrypt the Operating System Drive with BitLocker.</value>
   </data>
   <data name="OSDriveEncryptionLevelSelectionRadioButtons.Header" xml:space="preserve">
     <value>Encryption Level</value>
@@ -3397,16 +3397,16 @@ Thumbprint: {3}</value>
     <value>Deny Downgrade</value>
   </data>
   <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
-    <value>If downgrade is allowed, the operation system is already encrypted with Enhanced level, and you selected Normal level for encryption, it will downgrade the encryption level. However, if downgrade is denied, the operation will not complete and there will be an error, preventing downgrade of the operation system drive's encryption level.</value>
+    <value>If downgrade is allowed, the operating system is already encrypted with Enhanced level, and you selected Normal level for encryption, it will downgrade the encryption level. However, if downgrade is denied, the operation will not complete and there will be an error, preventing downgrade of the operating system drive's encryption level.</value>
   </data>
   <data name="AllowDowngradeOSDriveEncryptionLevelToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
-    <value>If downgrade is allowed, the operation system is already encrypted with Enhanced level, and you selected Normal level for encryption, it will downgrade the encryption level. However, if downgrade is denied, the operation will not complete and there will be an error, preventing downgrade of the operation system drive's encryption level.</value>
+    <value>If downgrade is allowed, the operating system is already encrypted with Enhanced level, and you selected Normal level for encryption, it will downgrade the encryption level. However, if downgrade is denied, the operation will not complete and there will be an error, preventing downgrade of the operating system drive's encryption level.</value>
   </data>
   <data name="FixedDriveEncryptionSectionTitle.Text" xml:space="preserve">
     <value>Fixed Drive Encryption</value>
   </data>
   <data name="FixedDriveEncryptionSectionDescription.Text" xml:space="preserve">
-    <value>Encrypt the selected Fixed Drive. It will have a 48-characters Recovery Password and will be auto-unlocked via the already-encrypted Operation System Drive.</value>
+    <value>Encrypt the selected Fixed Drive. It will have a 48-characters Recovery Password and will be auto-unlocked via the already-encrypted Operating System Drive.</value>
   </data>
   <data name="RemovableDriveEncryptionSectionTitle.Text" xml:space="preserve">
     <value>Removable Drive Encryption</value>
@@ -3460,7 +3460,7 @@ Thumbprint: {3}</value>
     <value>No password was provided. Please provide one and try again.</value>
   </data>
   <data name="OSDriveNotEncryptedForFixedDriveEncryptionError" xml:space="preserve">
-    <value>The Operation System drive must be fully Encrypted first before you can encrypt the fixed drives, but it's currently {0} at {1} encryption percentage.</value>
+    <value>The Operating System drive must be fully Encrypted first before you can encrypt the fixed drives, but it's currently {0} at {1} encryption percentage.</value>
   </data>
   <data name="AddingItemToAnotherMsg" xml:space="preserve">
     <value>Adding {0} to the {1}</value>

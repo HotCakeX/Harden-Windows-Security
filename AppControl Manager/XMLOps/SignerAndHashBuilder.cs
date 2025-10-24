@@ -553,7 +553,7 @@ internal static class SignerAndHashBuilder
 		foreach (string item in wildCardFilePathData)
 		{
 
-			// Create wildcard path - If user selected a root of a drive then do not add the extra backward slash otherwise we'd create an invalid path such as "D:\\*" in the policy
+			// Create wildcard path - If user selected a root of a drive then do not add the extra backslash otherwise we'd create an invalid path such as "D:\\*" in the policy
 			string wildcardPath = DriveLetters.Any(x => string.Equals(x, item[..^1], StringComparison.OrdinalIgnoreCase)) ? item + "*" : item + @"\" + "*";
 
 			// FilePath rules can only be used for User-Mode files only

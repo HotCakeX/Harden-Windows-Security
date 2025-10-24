@@ -218,7 +218,7 @@ internal static class Methods
 	{
 		if (CurrentDISMSession != IntPtr.Zero) return;
 
-		// This is what the DISM API will write to the defualt file path, doesn't affect the errors from API calls at all.
+		// This is what the DISM API will write to the default file path, doesn't affect the errors from API calls at all.
 		int hr = NativeMethods.DismInitialize(DismLogLevel.DismLogErrors, null, null);
 		if (hr != 0)
 		{

@@ -26,7 +26,7 @@ Please feel free to open a discussion if you have any questions about the build 
 
 <br>
 
-### Supported Operation Systems
+### Supported Operating Systems
 
 * Windows 11 25H2
 * Windows 11 24H2

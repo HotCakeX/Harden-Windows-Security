@@ -61,7 +61,7 @@
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Allow network connectivity during connected-modern-standby (only when plugged in). Keeps the Operation System and Microsoft Defender up to date while the device Modern Standby capable and is plugged in (meaning it's not on battery). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-power#acconnectivityinstandby_2)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Allow network connectivity during connected-modern-standby (only when plugged in). Keeps the Operating System and Microsoft Defender up to date while the device Modern Standby capable and is plugged in (meaning it's not on battery). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-power#acconnectivityinstandby_2)
 
 <br>
 

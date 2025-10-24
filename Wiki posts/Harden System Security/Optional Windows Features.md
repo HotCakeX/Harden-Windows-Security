@@ -50,7 +50,7 @@ Use the 3 apply, remove or verify buttons in this page to apply the security con
 
 - [Enables](https://learn.microsoft.com/powershell/module/dism/enable-windowsoptionalfeature) these optional features (Control Panel):
 
-    - [Windows Sandbox](https://learn.microsoft.com/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview): install, test and use programs in a disposable virtual operation system, completely separate from your  main OS
+    - [Windows Sandbox](https://learn.microsoft.com/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview): install, test and use programs in a disposable virtual operating system, completely separate from your  main OS
 
     - Hyper-V: a great hybrid hypervisor (Type 1 and Type 2) to run virtual machines on. [check out this Hyper-V Wiki page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Hyper-V)
 

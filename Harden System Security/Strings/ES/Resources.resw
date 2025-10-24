@@ -724,10 +724,6 @@
     <comment>Protection Category Description</comment>
     <value>Configurar el navegador Edge para ser más seguro y compartir menos datos con los sitios web que visita.</value>
   </data>
-  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Title</comment>
-    <value>Verificación de certificados</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>Bloqueo de IP por país</value>
@@ -1474,12 +1470,6 @@
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>Se cargaron exitosamente {0} características y capacidades de Windows.</value>
-</data>
-<data name="ProgressInfo" xml:space="preserve">
-  <value>Progreso: {0}/{1} ({2}%)</value>
-</data>
-<data name="ProgressUnknownInfo" xml:space="preserve">
-  <value>Progreso: {0}/desconocido</value>
 </data>
 <data name="SuccessfullyEnabledItem" xml:space="preserve">
   <value>Se habilitó exitosamente {0}: {1}</value>
@@ -2304,9 +2294,6 @@
     <value>Aplique la Línea Base de Seguridad de Aplicaciones de Microsoft 365 en esta página. También puede verificar el cumplimiento del sistema para obtener un reporte preciso que muestre qué configuraciones están aplicadas y cuáles no. También puede remover las políticas aplicadas por la línea base.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
-  <data name="SourceHeader.Text" xml:space="preserve">
-    <value>Origen</value>
-  </data>
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>Estado</value>
   </data>
@@ -2318,9 +2305,6 @@
   </data>
   <!--Security Baselines ListView Headers End-->
   <!--Security Baselines ListView Headers Buttons Start-->
-  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
-    <value>Origen</value>
-  </data>
     <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
     <value>Estado</value>
   </data>
@@ -4154,5 +4138,26 @@ Huella Digital: {3}</value>
   </data>
     <data name="DeviceIntents.Text" xml:space="preserve">
     <value>Intents del dispositivo</value>
+  </data>
+    <data name="NetworkAdapters.Text" xml:space="preserve">
+    <value>Adaptadores de red</value>
+  </data>
+  <data name="Select.Text" xml:space="preserve">
+    <value>Seleccionar</value>
+  </data>
+  <data name="Unselect.Text" xml:space="preserve">
+    <value>Deseleccionar</value>
+  </data>
+  <data name="Applying" xml:space="preserve">
+    <value>Aplicando</value>
+  </data>
+  <data name="Verifying" xml:space="preserve">
+    <value>Verificando</value>
+  </data>
+  <data name="Removing" xml:space="preserve">
+    <value>Eliminando</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Procesando</value>
   </data>
 </root>

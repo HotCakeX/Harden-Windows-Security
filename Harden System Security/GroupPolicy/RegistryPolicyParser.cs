@@ -210,7 +210,7 @@ internal static class RegistryPolicyParser
 		if (closingBracket != 0x005D) // ']' in Unicode
 			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedClosingBracketAfterData"), closingBracket));
 
-		return new RegistryPolicyEntry(source: Source.GroupPolicy, keyName: keyName, valueName: valueName, type: type, size: size, data: data);
+		return new RegistryPolicyEntry(source: Source.GroupPolicy, keyName: keyName, valueName: valueName, type: type, size: size, data: data, hive: Hive.HKLM);
 	}
 
 	private static string ReadUnicodeString(BinaryReader reader)
@@ -538,10 +538,13 @@ internal static class RegistryPolicyParser
 	/// Returns false for all policies if the policy file doesn't exist.
 	/// </summary>
 	/// <param name="policies">Policies to verify in the system.</param>
-	/// <returns>A dictionary with policy entries as keys and their verification status (true if applied, false if not applied or different) as values</returns>
-	internal static Dictionary<RegistryPolicyEntry, bool> VerifyPoliciesInSystem(List<RegistryPolicyEntry> policies, GroupPolicyContext context)
+	/// <returns>
+	/// A dictionary with policy entries as keys and their verification status (true if applied, false if not applied or different) as values,
+	/// and also returns the matched system entry (if found) so callers can display the actual current value without reparsing the file.
+	/// </returns>
+	internal static Dictionary<RegistryPolicyEntry, (bool IsCompliant, RegistryPolicyEntry? SystemEntry)> VerifyPoliciesInSystem(List<RegistryPolicyEntry> policies, GroupPolicyContext context)
 	{
-		Dictionary<RegistryPolicyEntry, bool> verificationResults = [];
+		Dictionary<RegistryPolicyEntry, (bool IsCompliant, RegistryPolicyEntry? SystemEntry)> verificationResults = [];
 
 		try
 		{
@@ -555,7 +558,7 @@ internal static class RegistryPolicyParser
 				// Mark all policies as unverified since the file doesn't exist
 				foreach (RegistryPolicyEntry policy in policies)
 				{
-					verificationResults[policy] = false;
+					verificationResults[policy] = (false, null);
 				}
 
 				Logger.Write(string.Format(GlobalVars.GetStr("VerificationCompletePolicyFileDoesNotExist"), policies.Count));
@@ -582,7 +585,7 @@ internal static class RegistryPolicyParser
 				{
 					// Policy exists, check if values match
 					bool isEquivalent = EntriesAreEquivalent(policy, systemPolicy);
-					verificationResults[policy] = isEquivalent;
+					verificationResults[policy] = (isEquivalent, systemPolicy);
 
 					Logger.Write(isEquivalent ?
 						string.Format(GlobalVars.GetStr("VerifyPolicyMatch"), policy.KeyName, policy.ValueName) :
@@ -591,12 +594,12 @@ internal static class RegistryPolicyParser
 				else
 				{
 					// Policy doesn't exist in system
-					verificationResults[policy] = false;
+					verificationResults[policy] = (false, null);
 					Logger.Write(string.Format(GlobalVars.GetStr("VerifyPolicyNotFound"), policy.KeyName, policy.ValueName));
 				}
 			}
 
-			Logger.Write(string.Format(GlobalVars.GetStr("VerificationCompletePoliciesMatch"), verificationResults.Count(kvp => kvp.Value), policies.Count));
+			Logger.Write(string.Format(GlobalVars.GetStr("VerificationCompletePoliciesMatch"), verificationResults.Count(kvp => kvp.Value.IsCompliant), policies.Count));
 		}
 		catch (Exception ex)
 		{
@@ -605,7 +608,7 @@ internal static class RegistryPolicyParser
 			// Mark all policies as unverified on error
 			foreach (RegistryPolicyEntry policy in policies)
 			{
-				verificationResults[policy] = false;
+				verificationResults[policy] = (false, null);
 			}
 		}
 

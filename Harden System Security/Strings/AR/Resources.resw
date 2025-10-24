@@ -724,10 +724,6 @@
     <comment>Protection Category Description</comment>
     <value>تكوين متصفح Edge ليكون أكثر أماناً ويشارك بيانات أقل مع المواقع التي تزورها.</value>
   </data>
-  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Title</comment>
-    <value>فحص الشهادات</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>حظر IP حسب البلد</value>
@@ -1474,12 +1470,6 @@
   </data>
   <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
     <value>تم تحميل {0} ميزة وقدرة Windows بنجاح.</value>
-  </data>
-  <data name="ProgressInfo" xml:space="preserve">
-    <value>التقدم: {0}/{1} ({2}%)</value>
-  </data>
-  <data name="ProgressUnknownInfo" xml:space="preserve">
-    <value>التقدم: {0}/غير معروف</value>
   </data>
   <data name="SuccessfullyEnabledItem" xml:space="preserve">
     <value>تم تمكين {0} بنجاح: {1}</value>
@@ -2304,9 +2294,6 @@
     <value>طبق خط الأساس الأمني لتطبيقات Microsoft 365 في هذه الصفحة. يمكنك أيضاً التحقق من امتثال النظام للحصول على تقرير دقيق يوضح الإعدادات المطبقة والغير مطبقة. يمكنك إزالة السياسات المطبقة بواسطة خط الأساس أيضاً.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
-  <data name="SourceHeader.Text" xml:space="preserve">
-    <value>المصدر</value>
-  </data>
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>الحالة</value>
   </data>
@@ -2318,9 +2305,6 @@
   </data>
   <!--Security Baselines ListView Headers End-->
   <!--Security Baselines ListView Headers Buttons Start-->
-  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
-    <value>المصدر</value>
-  </data>
     <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
     <value>الحالة</value>
   </data>
@@ -4154,5 +4138,26 @@
   </data>
     <data name="DeviceIntents.Text" xml:space="preserve">
     <value>Intents الجهاز</value>
+  </data>
+    <data name="NetworkAdapters.Text" xml:space="preserve">
+    <value>مهايئات الشبكة</value>
+  </data>
+  <data name="Select.Text" xml:space="preserve">
+    <value>تحديد</value>
+  </data>
+  <data name="Unselect.Text" xml:space="preserve">
+    <value>إلغاء التحديد</value>
+  </data>
+  <data name="Applying" xml:space="preserve">
+    <value>جارٍ التطبيق</value>
+  </data>
+  <data name="Verifying" xml:space="preserve">
+    <value>جارٍ التحقق</value>
+  </data>
+  <data name="Removing" xml:space="preserve">
+    <value>جارٍ الإزالة</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>جارٍ المعالجة</value>
   </data>
 </root>

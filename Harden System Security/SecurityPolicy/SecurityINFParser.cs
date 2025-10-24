@@ -113,10 +113,10 @@ internal static class SecurityINFParser
 				valueName: valueName,
 				type: registryType,
 				size: size,
-				data: data)
+				data: data,
+				hive: hive)
 			{
 				RegValue = regValue,
-				hive = hive,
 				policyAction = PolicyAction.Apply,
 				FriendlyName = "",
 				URL = "",

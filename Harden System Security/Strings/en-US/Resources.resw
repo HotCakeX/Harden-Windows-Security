@@ -724,10 +724,6 @@
     <comment>Protection Category Description</comment>
     <value>Configure the Edge browser to be more secure and share less data with the websites you visit.</value>
   </data>
-  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Title</comment>
-    <value>Certificate Checking</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>Country IP Blocking</value>
@@ -1475,12 +1471,6 @@
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>Successfully loaded {0} Windows features and capabilities.</value>
 </data>
-<data name="ProgressInfo" xml:space="preserve">
-  <value>Progress: {0}/{1} ({2}%)</value>
-</data>
-<data name="ProgressUnknownInfo" xml:space="preserve">
-  <value>Progress: {0}/unknown</value>
-</data>
 <data name="SuccessfullyEnabledItem" xml:space="preserve">
   <value>Successfully enabled {0}: {1}</value>
 </data>
@@ -2138,7 +2128,7 @@
     <data name="ApplyText.Text" xml:space="preserve">
     <value>Apply</value>
   </data>
-      <data name="VerifyText.Text" xml:space="preserve">
+  <data name="VerifyText.Text" xml:space="preserve">
     <value>Verify</value>
   </data>
       <data name="RemoveText.Text" xml:space="preserve">
@@ -2304,9 +2294,6 @@
     <value>Apply Microsoft 365 Apps Security Baseline in this page. You can also verify system compliance to get a precise report showing which settings are applied and which are not. You can remove the policies applied by the baseline as well.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
-  <data name="SourceHeader.Text" xml:space="preserve">
-    <value>Source</value>
-  </data>
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>Status</value>
   </data>
@@ -2318,9 +2305,6 @@
   </data>
   <!--Security Baselines ListView Headers End-->
   <!--Security Baselines ListView Headers Buttons Start-->
-  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
-    <value>Source</value>
-  </data>
     <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
     <value>Status</value>
   </data>
@@ -4154,5 +4138,26 @@ Thumbprint: {3}</value>
   </data>
     <data name="DeviceIntents.Text" xml:space="preserve">
     <value>Device Intents</value>
+  </data>
+  <data name="NetworkAdapters.Text" xml:space="preserve">
+    <value>Network adapters</value>
+  </data>
+  <data name="Select.Text" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Unselect.Text" xml:space="preserve">
+    <value>Unselect</value>
+  </data>
+  <data name="Applying" xml:space="preserve">
+    <value>Applying</value>
+  </data>
+  <data name="Verifying" xml:space="preserve">
+    <value>Verifying</value>
+  </data>
+  <data name="Removing" xml:space="preserve">
+    <value>Removing</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Processing</value>
   </data>
 </root>

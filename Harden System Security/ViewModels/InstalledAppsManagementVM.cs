@@ -23,7 +23,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
@@ -514,10 +513,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 					error = true;
 
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorCodeAndText"), deploymentOperation.ErrorCode, deploymentResult.ErrorText));
-					});
+					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorCodeAndText"), deploymentOperation.ErrorCode, deploymentResult.ErrorText));
 
 					if (deploymentOperation.ErrorCode is UnauthorizedAccessException)
 					{
@@ -527,38 +523,23 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				else if (deploymentOperation.Status is AsyncStatus.Canceled)
 				{
 					error = true;
-
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalCanceled"));
-					});
+					MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalCanceled"));
 				}
 				else if (deploymentOperation.Status is AsyncStatus.Completed)
 				{
 					error = false;
-
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AppSuccessfullyRemoved"), package.FullName));
-					});
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AppSuccessfullyRemoved"), package.FullName));
 				}
 				else
 				{
 					error = true;
-
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalStatusUnknown"));
-					});
+					MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalStatusUnknown"));
 				}
 			});
 		}
 		catch (UnauthorizedAccessException)
 		{
-			await Dispatcher.EnqueueAsync(() =>
-			{
-				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("TryingToRemoveAppForCurrentUserOnly"), package.FullName));
-			});
+			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("TryingToRemoveAppForCurrentUserOnly"), package.FullName));
 
 			await Task.Run(async () =>
 			{
@@ -580,38 +561,22 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 					DeploymentResult deploymentResult = deploymentOperation.GetResults();
 
 					error = true;
-
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorCodeAndText"), deploymentOperation.ErrorCode, deploymentResult.ErrorText));
-					});
+					MainInfoBar.WriteWarning(string.Format(GlobalVars.GetStr("ErrorCodeAndText"), deploymentOperation.ErrorCode, deploymentResult.ErrorText));
 				}
 				else if (deploymentOperation.Status is AsyncStatus.Canceled)
 				{
 					error = true;
-
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalCanceled"));
-					});
+					MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalCanceled"));
 				}
 				else if (deploymentOperation.Status is AsyncStatus.Completed)
 				{
 					error = false;
-
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AppSuccessfullyRemoved"), package.FullName));
-					});
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AppSuccessfullyRemoved"), package.FullName));
 				}
 				else
 				{
 					error = true;
-
-					await Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalStatusUnknown"));
-					});
+					MainInfoBar.WriteWarning(GlobalVars.GetStr("RemovalStatusUnknown"));
 				}
 			});
 		}

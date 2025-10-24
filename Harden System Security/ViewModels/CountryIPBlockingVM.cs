@@ -24,7 +24,6 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -194,15 +193,19 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				.ToList();
 		}
 
-		// Update the observable collection
-		CountryLists.Clear();
-		foreach (CountryData country in filteredCountries)
+		// Update UI on the dispatcher thread
+		_ = App.AppDispatcher.TryEnqueue(() =>
 		{
-			CountryLists.Add(country);
-		}
+			// Update the observable collection
+			CountryLists.Clear();
+			foreach (CountryData country in filteredCountries)
+			{
+				CountryLists.Add(country);
+			}
 
-		// Set selected index to 0 if search yields results, otherwise clear selection
-		CountrySelectedIndex = CountryLists.Count > 0 ? 0 : -1;
+			// Set selected index to 0 if search yields results, otherwise clear selection
+			CountrySelectedIndex = CountryLists.Count > 0 ? 0 : -1;
+		});
 	}
 
 	/// <summary>
@@ -226,12 +229,9 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 					.OrderBy(item => item.FriendlyName, StringComparer.OrdinalIgnoreCase)
 					.ToList();
 
-				// Update UI on the dispatcher thread
-				_ = App.AppDispatcher.TryEnqueue(() =>
-				{
-					_allCountries = countryItems;
-					FilterCountries(); // Initial population
-				});
+				_allCountries = countryItems;
+
+				FilterCountries(); // Initial population
 			});
 
 			Logger.Write(string.Format(GlobalVars.GetStr("CountriesLoadedSuccessMessage"), _allCountries.Count));
@@ -247,9 +247,14 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 	}
 
 	/// <summary>
+	/// Event handler for the UI.
+	/// </summary>
+	internal async void TargetedListAdd() => await TargetedListAddInternal();
+
+	/// <summary>
 	/// Method for adding rules for targeted lists.
 	/// </summary>
-	internal async void TargetedListAdd()
+	internal async Task TargetedListAddInternal()
 	{
 		try
 		{
@@ -261,20 +266,17 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				{
 					case 0:
 						{
-							_ = App.AppDispatcher.TryEnqueue(() =>
-							{
-								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), RuleNameForSSOT));
-							});
+							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), RuleNameForSSOT));
+
 							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt true"));
 							break;
 						}
 					case 1:
 						{
 							const string ruleName = "OFAC Sanctioned Countries IP range blocking";
-							_ = App.AppDispatcher.TryEnqueue(() =>
-							{
-								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), ruleName));
-							});
+
+							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), ruleName));
+
 							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt true"));
 							break;
 						}
@@ -295,9 +297,14 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 	}
 
 	/// <summary>
+	/// Event handler for the UI.
+	/// </summary>
+	internal async void TargetedListRemove() => await TargetedListRemoveInternal();
+
+	/// <summary>
 	/// Method for removing rules for targeted lists.
 	/// </summary>
-	internal async void TargetedListRemove()
+	internal async Task TargetedListRemoveInternal()
 	{
 		try
 		{
@@ -309,20 +316,17 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				{
 					case 0:
 						{
-							_ = App.AppDispatcher.TryEnqueue(() =>
-							{
-								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), RuleNameForSSOT));
-							});
+							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), RuleNameForSSOT));
+
 							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt false"));
 							break;
 						}
 					case 1:
 						{
 							const string ruleName = "OFAC Sanctioned Countries IP range blocking";
-							_ = App.AppDispatcher.TryEnqueue(() =>
-							{
-								MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), ruleName));
-							});
+
+							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), ruleName));
+
 							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt false"));
 							break;
 						}
@@ -364,18 +368,12 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				string ruleNameIPv4 = $"{selectedCountry.FriendlyName} IPv4 IP range blocking";
 				string ruleNameIPv6 = $"{selectedCountry.FriendlyName} IPv6 IP range blocking";
 
-				_ = App.AppDispatcher.TryEnqueue(() =>
-				{
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingIPv4RulesMessage"), selectedCountry.FriendlyName));
-				});
+				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingIPv4RulesMessage"), selectedCountry.FriendlyName));
 
 				// Add IPv4 rules
 				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv4}\" {selectedCountry.IPv4Link} true"));
 
-				_ = App.AppDispatcher.TryEnqueue(() =>
-				{
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingIPv6RulesMessage"), selectedCountry.FriendlyName));
-				});
+				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingIPv6RulesMessage"), selectedCountry.FriendlyName));
 
 				// Add IPv6 rules
 				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} true"));
@@ -415,18 +413,12 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				string ruleNameIPv4 = $"{selectedCountry.FriendlyName} IPv4 IP range blocking";
 				string ruleNameIPv6 = $"{selectedCountry.FriendlyName} IPv6 IP range blocking";
 
-				_ = App.AppDispatcher.TryEnqueue(() =>
-				{
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingIPv4RulesMessage"), selectedCountry.FriendlyName));
-				});
+				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingIPv4RulesMessage"), selectedCountry.FriendlyName));
 
 				// Remove IPv4 rules
 				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv4}\" {selectedCountry.IPv4Link} false"));
 
-				_ = App.AppDispatcher.TryEnqueue(() =>
-				{
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingIPv6RulesMessage"), selectedCountry.FriendlyName));
-				});
+				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingIPv6RulesMessage"), selectedCountry.FriendlyName));
 
 				// Remove IPv6 rules
 				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} false"));
@@ -446,27 +438,14 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 
 	internal async Task AddSSOT()
 	{
-		await App.AppDispatcher.EnqueueAsync(() =>
-		{
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), RuleNameForSSOT));
-		});
-
-		await Task.Run(() =>
-		{
-			Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt true"));
-		});
+		TargetedListSelectedIndex = 0;
+		await TargetedListAddInternal();
 	}
 
 	internal async Task RemoveSSOT()
 	{
-		await App.AppDispatcher.EnqueueAsync(() =>
-		{
-			MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), RuleNameForSSOT));
-		});
-
-		await Task.Run(() =>
-		{
-			Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt false"));
-		});
+		TargetedListSelectedIndex = 0;
+		await TargetedListRemoveInternal();
 	}
+
 }

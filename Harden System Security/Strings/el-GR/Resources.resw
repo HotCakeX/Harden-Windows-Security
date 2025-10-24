@@ -724,10 +724,6 @@
     <comment>Protection Category Description</comment>
     <value>Διαμόρφωση του προγράμματος περιήγησης Edge να είναι πιο ασφαλές και να μοιράζεται λιγότερα δεδομένα με τους ιστότοπους που επισκέπτεστε.</value>
   </data>
-  <data name="ProtectCategory_CertificateCheck" xml:space="preserve">
-    <comment>Protection Category Title</comment>
-    <value>Έλεγχος πιστοποιητικών</value>
-  </data>
   <data name="ProtectCategory_CountryIPBlock" xml:space="preserve">
     <comment>Protection Category Title</comment>
     <value>Αποκλεισμός IP ανά χώρα</value>
@@ -1474,12 +1470,6 @@
 </data>
 <data name="SuccessfullyLoadedWindowsFeaturesCapabilities" xml:space="preserve">
   <value>Φορτώθηκαν επιτυχώς {0} χαρακτηριστικά και δυνατότητες Windows.</value>
-</data>
-<data name="ProgressInfo" xml:space="preserve">
-  <value>Πρόοδος: {0}/{1} ({2}%)</value>
-</data>
-<data name="ProgressUnknownInfo" xml:space="preserve">
-  <value>Πρόοδος: {0}/άγνωστο</value>
 </data>
 <data name="SuccessfullyEnabledItem" xml:space="preserve">
   <value>Ενεργοποιήθηκε επιτυχώς {0}: {1}</value>
@@ -2304,9 +2294,6 @@
     <value>Εφαρμόστε την βασική γραμμή ασφάλειας εφαρμογών Microsoft 365 σε αυτή τη σελίδα. Μπορείτε επίσης να επαληθεύσετε τη συμμόρφωση του συστήματος για να λάβετε μια ακριβή αναφορά που δείχνει ποιες ρυθμίσεις εφαρμόζονται και ποιες όχι. Μπορείτε να αφαιρέσετε τις πολιτικές που εφαρμόζονται από την βασική γραμμή επίσης.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
-  <data name="SourceHeader.Text" xml:space="preserve">
-    <value>Πηγή</value>
-  </data>
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>Κατάσταση</value>
   </data>
@@ -2318,9 +2305,6 @@
   </data>
   <!--Security Baselines ListView Headers End-->
   <!--Security Baselines ListView Headers Buttons Start-->
-  <data name="SourceColumnHeaderBtn.Content" xml:space="preserve">
-    <value>Πηγή</value>
-  </data>
     <data name="StatusColumnHeaderBtn.Content" xml:space="preserve">
     <value>Κατάσταση</value>
   </data>
@@ -4154,5 +4138,26 @@
   </data>
     <data name="DeviceIntents.Text" xml:space="preserve">
     <value>Intents συσκευής</value>
+  </data>
+    <data name="NetworkAdapters.Text" xml:space="preserve">
+    <value>Προσαρμογείς δικτύου</value>
+  </data>
+  <data name="Select.Text" xml:space="preserve">
+    <value>Επιλογή</value>
+  </data>
+  <data name="Unselect.Text" xml:space="preserve">
+    <value>Κατάργηση επιλογής</value>
+  </data>
+  <data name="Applying" xml:space="preserve">
+    <value>Εφαρμόζεται</value>
+  </data>
+  <data name="Verifying" xml:space="preserve">
+    <value>Επαληθεύεται</value>
+  </data>
+  <data name="Removing" xml:space="preserve">
+    <value>Καταργείται</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Επεξεργάζεται</value>
   </data>
 </root>

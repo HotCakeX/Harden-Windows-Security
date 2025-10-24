@@ -24,7 +24,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
-using CommunityToolkit.WinUI;
 using HardenSystemSecurity.ExploitMitigation;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
@@ -77,7 +76,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				new IntelTDTSpecVerify()
 			);
 
-			// SEE THE END OF THE FILE FOR MOAR EXAMPLES
+			// SEE THE END OF THE FILE FOR MORE EXAMPLES
 			/*
 			// E.g., registering specialized apply strategy that runs before the main operation
 			SpecializedStrategiesRegistry.RegisterSpecializedApply(
@@ -1014,7 +1013,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 				List<Dictionary<string, object?>> DeserializedResults = ComJsonDeserializer.DeserializeInstances(results);
 
-				if (DeserializedResults.Count < 0)
+				if (DeserializedResults.Count <= 0)
 					return;
 
 				// Microsoft Defender - File and Folder paths exclusions
@@ -1113,10 +1112,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				{
 					_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionPath \"{item}\"");
 
-					_ = Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
-					});
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
 				}
 			});
 
@@ -1154,15 +1150,11 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				{
 					_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionPath \"{item}\"");
 
-					_ = Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
-					});
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
 				}
 			});
 
 			await RetrieveAllExclusionsInternal();
-
 		}
 		catch (Exception ex)
 		{
@@ -1221,10 +1213,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					GlobalVars.ComManagerProcessPath,
 					$"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionExtension \"{normalizedExtension}\"");
 
-				_ = Dispatcher.EnqueueAsync(() =>
-				{
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), normalizedExtension));
-				});
+				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), normalizedExtension));
 			});
 
 			await RetrieveAllExclusionsInternal();
@@ -1329,14 +1318,10 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					GlobalVars.ComManagerProcessPath,
 					$"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ExclusionProcess \"{normalizedProcessName}\"");
 
-				_ = Dispatcher.EnqueueAsync(() =>
-				{
-					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), normalizedProcessName));
-				});
+				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), normalizedProcessName));
 			});
 
 			await RetrieveAllExclusionsInternal();
-
 		}
 		catch (Exception ex)
 		{
@@ -1419,10 +1404,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				{
 					_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add ControlledFolderAccessAllowedApplications \"{item}\"");
 
-					_ = Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
-					});
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
 				}
 			});
 
@@ -1460,10 +1442,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				{
 					_ = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference add AttackSurfaceReductionOnlyExclusions \"{item}\"");
 
-					_ = Dispatcher.EnqueueAsync(() =>
-					{
-						MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
-					});
+					MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("AddedExclusionMsg"), item));
 				}
 			});
 

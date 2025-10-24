@@ -90,7 +90,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	];
 
 	/// <summary>
-	/// The MUnits that match currently selected device intents and used as ItemsSource of the ListView that displays them.
+	/// The MUnits that match currently selected device intent and used as ItemsSource of the ListView that displays them.
 	/// Items in this collection are just for displaying purposes and the <see cref="MUnit"/>s displayed there are not actually used anywhere except for getting their distinct list of categories.
 	/// The <see cref="MUnitCategoryProcessor"/> and <see cref="CategoryProcessorFactory"/> are responsible for identifying, filtering and applying the applicable MUnits/Non-MUnit security measures.
 	/// </summary>
@@ -114,24 +114,21 @@ internal sealed partial class ProtectVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Selected Device Intents.
+	/// Selected Device Intent on the GridView.
 	/// </summary>
-	internal readonly List<IntentItem> SelectedDeviceIntents = [];
+	internal IntentItem? SelectedDeviceIntent
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+				RecomputeDeviceIntentsPreview();
+		}
+	}
 
 	/// <summary>
 	/// Cache of all MUnits across categories (built once on first use)
 	/// </summary>
 	private List<MUnit>? _allMUnitsAcrossCategoriesCache;
-
-	/// <summary>
-	/// Reference to the GridView on the UI.
-	/// </summary>
-	private ListViewBase? _GridViewRef;
-
-	/// <summary>
-	/// A flag to make sure only one method is adding/removing items between GridView and the <see cref="DeviceIntentMUnitsPreview"/>.
-	/// </summary>
-	private volatile bool IsAddingIntents;
 
 	internal AnimatedCancellableButtonInitializer ApplyIntentsCancellableButton { get; }
 
@@ -162,95 +159,56 @@ internal sealed partial class ProtectVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Captures reference to the GridView and restores selected items.
-	/// Runs when the GridView is loaded in XAML.
+	/// This is invoked from the ListView item's context menu (Tag carries the bound MUnit).
+	/// Deletes a single MUnit from both the preview ObservableCollection and its backing list.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	internal void DeviceIntentsGridViewLoaded(object sender, RoutedEventArgs e)
+	internal void DeleteDeviceIntentPreviewItem_Click(object sender, RoutedEventArgs e)
 	{
-		if (IsAddingIntents) return;
+		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
+		MUnit mUnit = (MUnit)menuItem.Tag;
 
-		try
-		{
-			IsAddingIntents = true;
+		// Remove from UI-bound collection
+		_ = DeviceIntentMUnitsPreview.Remove(mUnit);
 
-			_GridViewRef = (ListViewBase)sender;
-
-			// Add all of the selected items back to the GridView when user navigates back to the page since we don't use navigation cache for the page.
-			foreach (IntentItem item in SelectedDeviceIntents)
-			{
-				_GridViewRef.SelectedItems.Add(item);
-			}
-		}
-		finally
-		{
-			IsAddingIntents = false;
-		}
+		// Remove from backing list so the item won't reappear due to filter changes
+		_ = AllDeviceIntentMUnitsPreview.Remove(mUnit);
 	}
 
 	/// <summary>
-	/// Updates the selected items of the Device Intents GridView.
-	/// Triggered by the 'SelectionChanged' event of the GridView.
+	/// Swipe Control's delete action event handler to delete an item from the ListView.
 	/// </summary>
 	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	internal void DeviceIntentsSelectionChanged(object sender, SelectionChangedEventArgs e)
+	/// <param name="args"></param>
+	internal void DeleteDeviceIntentPreviewItem_SwipeInvoked(SwipeItem sender, SwipeItemInvokedEventArgs args)
 	{
-		if (IsAddingIntents) return;
+		// Resolve the bound item (MUnit) from the SwipeControl that raised the event
+		FrameworkElement contentElement = (FrameworkElement)args.SwipeControl.Content;
+		MUnit mUnit = (MUnit)contentElement.DataContext;
 
-		try
-		{
-			IsAddingIntents = true;
-
-			// Add newly selected intents
-			foreach (IntentItem item in e.AddedItems.Cast<IntentItem>())
-			{
-				SelectedDeviceIntents.Add(item);
-			}
-
-			// Remove unselected intents (remove all entries with the same Intent)
-			foreach (IntentItem item in e.RemovedItems.Cast<IntentItem>())
-			{
-				for (int i = SelectedDeviceIntents.Count - 1; i >= 0; i--)
-				{
-					if (SelectedDeviceIntents[i].Intent == item.Intent)
-					{
-						SelectedDeviceIntents.RemoveAt(i);
-					}
-				}
-			}
-
-			// Recompute the preview once from the authoritative SelectedDeviceIntents list
-			RecomputeDeviceIntentsPreview();
-		}
-		finally
-		{
-			IsAddingIntents = false;
-		}
+		_ = DeviceIntentMUnitsPreview.Remove(mUnit);
+		_ = AllDeviceIntentMUnitsPreview.Remove(mUnit);
 	}
 
 	/// <summary>
-	/// Apply all previewed MUnits grouped by category, using category processors and passing selected intents.
+	/// Apply all previewed MUnits grouped by category, using category processors and passing selected intent.
 	/// No cancellation implemented yet.
-	/// i.e.,: this method collects distinct categories from the preview, then calls <see cref="CategoryProcessorFactory.GetProcessor"/> for each category and passes selectedIntents.
+	/// i.e.,: this method collects distinct categories from the previews, then calls <see cref="CategoryProcessorFactory.GetProcessor"/> for each category and passes selectedIntent.
 	/// </summary>
 	internal async void ApplySelectedDeviceIntents()
 	{
 		// Nothing to apply if the preview is empty
 		if (DeviceIntentMUnitsPreview.Count == 0)
 		{
-			MainInfoBar.WriteWarning("No device intents selected, or no matching items to apply.");
+			MainInfoBar.WriteWarning("No device intent selected, or no matching items to apply.");
 			return;
 		}
 
-		// Build selected intents list (authoritative source)
-		List<Intent> selectedIntents = SelectedDeviceIntents.Select(x => x.Intent).ToList();
-
-		// If no intents selected, warn and bail
-		if (selectedIntents.Count == 0)
+		// If no intent selected, warn and bail
+		if (SelectedDeviceIntent is null)
 		{
-			MainInfoBar.WriteWarning("No device intents selected, or no matching items to apply.");
+			MainInfoBar.WriteWarning("No device intent selected, or no matching items to apply.");
 			return;
 		}
 
@@ -274,7 +232,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 			int totalCategoriesProcessed = 0;
 
-			MainInfoBar.WriteInfo($"Applying {AllDeviceIntentMUnitsPreview.Count} security measures for selected device intents...");
+			MainInfoBar.WriteInfo($"Applying {AllDeviceIntentMUnitsPreview.Count} security measures for selected device intent...");
 
 			// Process each category with cancellation support
 			for (int i = 0; i < categories.Count; i++)
@@ -289,7 +247,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 				// Using the category processor like Presets, but we pass the selected intents.
 				await processor.ApplyAllAsync(
 					selectedSubCategories: null,
-					selectedIntents: selectedIntents,
+					selectedIntent: SelectedDeviceIntent.Intent,
 					cancellationToken: ApplyIntentsCancellableButton.Cts?.Token);
 
 				totalCategoriesProcessed++;
@@ -320,8 +278,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Recompute the preview list from the <see cref="SelectedDeviceIntents"/>.
-	/// - Includes items with <see cref="HardenSystemSecurity.DeviceIntents.Intent.All"/> whenever at least one intent is selected.
+	/// Recompute the preview list from the <see cref="SelectedDeviceIntent"/>.
+	/// - Includes items with <see cref="HardenSystemSecurity.DeviceIntents.Intent.All"/> whenever an intent is selected.
 	/// - Includes any MUnit intersecting the selected intents.
 	/// </summary>
 	internal void RecomputeDeviceIntentsPreview()
@@ -332,18 +290,13 @@ internal sealed partial class ProtectVM : ViewModelBase
 			_allMUnitsAcrossCategoriesCache = BuildAllMUnitsAcrossCategories();
 		}
 
-		// Build selected intents list.
-		List<Intent> selectedIntents = SelectedDeviceIntents.Select(x => x.Intent).ToList();
-
 		// If nothing selected, clear both the backing list and the UI-bound collection, then return
-		if (selectedIntents.Count == 0)
+		if (SelectedDeviceIntent is null)
 		{
 			AllDeviceIntentMUnitsPreview.Clear();
 			DeviceIntentMUnitsPreview.Clear();
 			return;
 		}
-
-		bool anySelected = selectedIntents.Count > 0;
 
 		// Build a new preview from the cache
 		List<MUnit> newPreview = new(_allMUnitsAcrossCategoriesCache.Count);
@@ -352,15 +305,15 @@ internal sealed partial class ProtectVM : ViewModelBase
 		{
 			MUnit m = _allMUnitsAcrossCategoriesCache[i];
 
-			// Include Intent.All whenever any selection exists
-			bool include = anySelected && m.DeviceIntents.Contains(Intent.All);
+			// Include Intent.All
+			bool include = m.DeviceIntents.Contains(Intent.All);
 
 			// Or include if intersects with any selected intent
 			if (!include)
 			{
 				for (int j = 0; j < m.DeviceIntents.Count; j++)
 				{
-					if (selectedIntents.Contains(m.DeviceIntents[j]))
+					if (SelectedDeviceIntent.Intent == m.DeviceIntents[j])
 					{
 						include = true;
 						break;
@@ -465,7 +418,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 		result.Add(optionalWindowsFeaturesProxy);
 
-		// Attack Surface Reduction (ASR) proxy (applied via its processor)		
+		// Attack Surface Reduction (ASR) proxy (applied via its processor)
 		MUnit asrProxy = new(
 			category: Categories.AttackSurfaceReductionRules,
 			name: GlobalVars.GetStr("ProtectCategory_ASRRules"),
@@ -1279,10 +1232,10 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 			string operationText = operation switch
 			{
-				MUnitOperation.Apply => "Applying",
-				MUnitOperation.Remove => "Removing",
-				MUnitOperation.Verify => "Verifying",
-				_ => "Processing"
+				MUnitOperation.Apply => GlobalVars.GetStr("Applying"),
+				MUnitOperation.Remove => GlobalVars.GetStr("Removing"),
+				MUnitOperation.Verify => GlobalVars.GetStr("Verifying"),
+				_ => GlobalVars.GetStr("Processing")
 			};
 
 			MainInfoBar.WriteInfo($"{operationText} {ProtectionCategoriesListItemsSourceSelectedItems.Count} selected categories...");
@@ -1316,19 +1269,19 @@ internal sealed partial class ProtectVM : ViewModelBase
 						case MUnitOperation.Apply:
 							await processor.ApplyAllAsync(
 								selectedSubCategories: selectedSubCategories.Count > 0 ? selectedSubCategories : null,
-								selectedIntents: null,
+								selectedIntent: null,
 								cancellationToken: button.Cts?.Token);
 							break;
 						case MUnitOperation.Remove:
 							await processor.RemoveAllAsync(
 								selectedSubCategories: selectedSubCategories.Count > 0 ? selectedSubCategories : null,
-								selectedIntents: null,
+								selectedIntent: null,
 								cancellationToken: button.Cts?.Token);
 							break;
 						case MUnitOperation.Verify:
 							await processor.VerifyAllAsync(
 								selectedSubCategories: selectedSubCategories.Count > 0 ? selectedSubCategories : null,
-								selectedIntents: null,
+								selectedIntent: null,
 								cancellationToken: button.Cts?.Token);
 							break;
 						default:
@@ -1375,10 +1328,10 @@ internal sealed partial class ProtectVM : ViewModelBase
 			{
 				string operationText = operation switch
 				{
-					MUnitOperation.Apply => "Apply",
-					MUnitOperation.Remove => "Remove",
-					MUnitOperation.Verify => "Verify",
-					_ => "Process"
+					MUnitOperation.Apply => GlobalVars.GetStr("ApplyText/Text"),
+					MUnitOperation.Remove => GlobalVars.GetStr("RemoveText/Text"),
+					MUnitOperation.Verify => GlobalVars.GetStr("VerifyText/Text"),
+					_ => GlobalVars.GetStr("AddExclusionsForProcessMenuFlyoutItem/Text")
 				};
 				MainInfoBar.WriteWarning($"{operationText} operation was cancelled by user.");
 			}

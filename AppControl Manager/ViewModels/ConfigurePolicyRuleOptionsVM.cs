@@ -200,11 +200,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 					if (!policyObj.Rules.Any(x => x.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
 					{
-						_ = Dispatcher.TryEnqueue(() =>
-						{
-							MainInfoBar.WriteWarning(GlobalVars.GetStr("TeachingTipSubtitlePolicyRequiresSigning"));
-						});
-
+						MainInfoBar.WriteWarning(GlobalVars.GetStr("TeachingTipSubtitlePolicyRequiresSigning"));
 						return;
 					}
 

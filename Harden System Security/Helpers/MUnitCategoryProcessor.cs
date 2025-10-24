@@ -64,34 +64,32 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 	}
 
 	/// <summary>
-	/// Filter MUnits by selected device intents.
+	/// Filter MUnits by selected device intent.
 	/// Rules:
-	/// - If selectedIntents is null/empty => do not filter by intents.
-	/// - Include MUnits containing Intent.All when at least one intent is selected.
-	/// - Otherwise include if any MUnit.DeviceIntents intersects selectedIntents.
+	/// - If selectedIntent is null => do not filter by intent.
+	/// - Include MUnits containing Intent.All when an intent is selected.
+	/// - Otherwise include if any MUnit.DeviceIntents equals the selectedIntent.
 	/// </summary>
-	protected virtual List<MUnit> FilterMUnitsByIntents(List<MUnit> mUnits, List<Intent>? selectedIntents)
+	protected virtual List<MUnit> FilterMUnitsByIntents(List<MUnit> mUnits, Intent? selectedIntent)
 	{
-		// If no intents selected, do not filter and return the collection immediately.
-		if (selectedIntents == null || selectedIntents.Count == 0)
+		// If no intent selected, do not filter and return the collection immediately.
+		if (selectedIntent is null)
 		{
 			return mUnits;
 		}
-
-		bool anySelected = selectedIntents.Count > 0;
 
 		List<MUnit> filtered = new(mUnits.Count);
 		foreach (MUnit m in mUnits)
 		{
 			// Include Intent.All when any selection exists
-			if (anySelected && m.DeviceIntents.Any(di => di == Intent.All))
+			if (m.DeviceIntents.Any(di => di == Intent.All))
 			{
 				filtered.Add(m);
 				continue;
 			}
 
 			// Include if intersects
-			if (m.DeviceIntents.Any(selectedIntents.Contains))
+			if (m.DeviceIntents.Any(s => s == selectedIntent))
 			{
 				filtered.Add(m);
 			}
@@ -100,53 +98,53 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 		return filtered;
 	}
 
-	public virtual async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+	public virtual async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 	{
-		// When applying based on intent (selectedIntents provided and non-empty), do not use sub-category filtering.
+		// When applying based on intent (selectedIntent provided), do not use sub-category filtering.
 		// Otherwise (no intent filter), apply sub-category filter.
-		bool hasIntentFilter = selectedIntents != null && selectedIntents.Count > 0;
+		bool hasIntentFilter = selectedIntent != null;
 
 		List<MUnit> baseList = hasIntentFilter
 			? AllMUnits
 			: FilterMUnitsBySubCategories(AllMUnits, selectedSubCategories);
 
 		// Apply any possible Intent-based filtration.
-		List<MUnit> filteredMUnits = FilterMUnitsByIntents(baseList, selectedIntents);
+		List<MUnit> filteredMUnits = FilterMUnitsByIntents(baseList, selectedIntent);
 
 		// Calling the core method as if we called it from each VM's UI.
 		await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, filteredMUnits, MUnitOperation.Apply, cancellationToken);
 	}
 
-	public virtual async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+	public virtual async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 	{
-		// When applying based on intent (selectedIntents provided and non-empty), do not use sub-category filtering.
+		// When removing based on intent (selectedIntent provided), do not use sub-category filtering.
 		// Otherwise (no intent filter), apply sub-category filter.
-		bool hasIntentFilter = selectedIntents != null && selectedIntents.Count > 0;
+		bool hasIntentFilter = selectedIntent != null;
 
 		List<MUnit> baseList = hasIntentFilter
 			? AllMUnits
 			: FilterMUnitsBySubCategories(AllMUnits, selectedSubCategories);
 
 		// Apply any possible Intent-based filtration.
-		List<MUnit> filteredMUnits = FilterMUnitsByIntents(baseList, selectedIntents);
+		List<MUnit> filteredMUnits = FilterMUnitsByIntents(baseList, selectedIntent);
 
 		// Include all MUnits regardless of whether they have a remove strategy
 		// The MUnit processing logic will handle cases where remove strategy is null
 		await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, filteredMUnits, MUnitOperation.Remove, cancellationToken);
 	}
 
-	public virtual async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, List<Intent>? selectedIntents = null, CancellationToken? cancellationToken = null)
+	public virtual async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
 	{
-		// When applying based on intent (selectedIntents provided and non-empty), do not use sub-category filtering.
+		// When verifying based on intent (selectedIntent provided), do not use sub-category filtering.
 		// Otherwise (no intent filter), apply sub-category filter.
-		bool hasIntentFilter = selectedIntents != null && selectedIntents.Count > 0;
+		bool hasIntentFilter = selectedIntent != null;
 
 		List<MUnit> baseList = hasIntentFilter
 			? AllMUnits
 			: FilterMUnitsBySubCategories(AllMUnits, selectedSubCategories);
 
 		// Apply any possible Intent-based filtration.
-		List<MUnit> filteredMUnits = FilterMUnitsByIntents(baseList, selectedIntents);
+		List<MUnit> filteredMUnits = FilterMUnitsByIntents(baseList, selectedIntent);
 
 		// Include all MUnits regardless of whether they have a verify strategy
 		// The MUnit processing logic will handle cases where verify strategy is null

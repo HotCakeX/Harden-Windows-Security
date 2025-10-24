@@ -283,7 +283,8 @@ internal sealed partial class ASRVM : ViewModelBase
 					valueName: entry.PolicyEntry.ValueName,
 					type: entry.PolicyEntry.Type,
 					size: (uint)stateBytes.Length,
-					data: stateBytes)
+					data: stateBytes,
+					hive: entry.PolicyEntry.Hive)
 				{
 					RegValue = ((uint)entry.State).ToString(),
 					policyAction = entry.PolicyEntry.policyAction,
@@ -339,12 +340,13 @@ internal sealed partial class ASRVM : ViewModelBase
 
 					// Create updated policy entry
 					RegistryPolicyEntry updatedEntry = new(
-						entry.PolicyEntry.Source,
-						entry.PolicyEntry.KeyName,
-						entry.PolicyEntry.ValueName,
-						entry.PolicyEntry.Type,
-						(uint)stateBytes.Length,
-						stateBytes)
+						source: entry.PolicyEntry.Source,
+						keyName: entry.PolicyEntry.KeyName,
+						valueName: entry.PolicyEntry.ValueName,
+						type: entry.PolicyEntry.Type,
+						size: (uint)stateBytes.Length,
+						data: stateBytes,
+						hive: entry.PolicyEntry.Hive)
 					{
 						RegValue = ((uint)entry.State).ToString(),
 						policyAction = entry.PolicyEntry.policyAction,

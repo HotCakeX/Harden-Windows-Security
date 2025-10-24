@@ -24,7 +24,6 @@ using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using CommunityToolkit.WinUI;
 using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.SecurityPolicy;
@@ -770,7 +769,7 @@ internal sealed partial class MUnit(
 
 		List<MUnit> dependentMUnits = [];
 		HashSet<string> processedJsonIds = new(StringComparer.OrdinalIgnoreCase);
-		HashSet<string> visitedForCycleDetection = [];
+		HashSet<string> visitedForCycleDetection = new(StringComparer.OrdinalIgnoreCase);
 
 		// First, collect all JSON-based policy IDs from original MUnits to avoid duplicates
 		foreach (MUnit mUnit in originalMUnits)
@@ -1015,37 +1014,112 @@ internal sealed partial class MUnit(
 						break;
 
 					case MUnitOperation.Verify:
+						// Primary verification: check via POL file for the selected Group Policy context.
+						// If any MUnit fails, fall back to direct registry verification (treat as Source = Registry).
+						// Fallback hive selection: HKLM for Machine, HKCU for User.
+						GroupPolicyContext contextForVerification = GroupPolicyContext.Machine;
+
 						cancellationToken?.ThrowIfCancellationRequested();
 
-						Dictionary<RegistryPolicyEntry, bool> verificationResults = RegistryPolicyParser.VerifyPoliciesInSystem(allPolicies, GroupPolicyContext.Machine);
+						// 1) Verify against the POL file for the chosen context
+						Dictionary<RegistryPolicyEntry, (bool IsCompliant, RegistryPolicyEntry? SystemEntry)> verificationResults =
+									RegistryPolicyParser.VerifyPoliciesInSystem(allPolicies, contextForVerification);
 
-						// Update status based on verification results, with fallback support
+						// 2) Per‑MUnit evaluation with fallback to direct Registry verification when needed
 						foreach (MUnit mUnit in groupPolicyMUnits)
 						{
 							cancellationToken?.ThrowIfCancellationRequested();
 
 							if (mUnit.VerifyStrategy is IVerifyGroupPolicy verifyStrategy)
 							{
-								bool allPoliciesApplied = true;
+								// Determine if all of this MUnit's policies are compliant via POL
+								bool allPoliciesAppliedViaPol = true;
 								foreach (RegistryPolicyEntry policy in verifyStrategy.Policies)
 								{
-									if (!verificationResults.TryGetValue(policy, out bool isApplied) || !isApplied)
+									if (!verificationResults.TryGetValue(policy, out (bool IsCompliant, RegistryPolicyEntry? SystemEntry) resultTuple) || !resultTuple.IsCompliant)
 									{
-										allPoliciesApplied = false;
+										allPoliciesAppliedViaPol = false;
 										break;
 									}
 								}
 
-								// If primary verification is false, try fallback verification
-								if (!allPoliciesApplied)
-								{
-									bool fallbackResult = TryFallbackVerification(verifyStrategy.Policies, cancellationToken);
-									mUnit.IsApplied = fallbackResult;
-								}
-								else
+								if (allPoliciesAppliedViaPol)
 								{
 									mUnit.IsApplied = true;
+									continue;
 								}
+
+								// 3) Fallback: verify via Registry (treat as Source = Registry)
+								List<RegistryPolicyEntry> fallbackRegistryPolicies = new(verifyStrategy.Policies.Count);
+								foreach (RegistryPolicyEntry policy in verifyStrategy.Policies)
+								{
+									cancellationToken?.ThrowIfCancellationRequested();
+
+									// Clone as a Registry entry and set hive + RegValue (compute if missing)
+									RegistryPolicyEntry fallbackEntry = new(
+										source: Source.Registry,
+										keyName: policy.KeyName,
+										valueName: policy.ValueName,
+										type: policy.Type,
+										size: policy.Size,
+										data: policy.Data,
+										hive: policy.Hive)
+									{
+										// Ensure we have the string form expected by Registry verification if it's missing
+										RegValue = policy.RegValue ?? RegistryManager.Manager.BuildRegValueFromParsedValue(policy)
+									};
+
+									fallbackRegistryPolicies.Add(fallbackEntry);
+								}
+
+								Dictionary<RegistryPolicyEntry, bool> fallbackResults = RegistryManager.Manager.VerifyPoliciesInSystem(fallbackRegistryPolicies);
+
+#if DEBUG
+								// Log policies that failed POL verification but passed Registry fallback
+								for (int i = 0; i < verifyStrategy.Policies.Count && i < fallbackRegistryPolicies.Count; i++)
+								{
+									RegistryPolicyEntry originalPolicy = verifyStrategy.Policies[i];
+									RegistryPolicyEntry fallbackEntry = fallbackRegistryPolicies[i];
+
+									bool polCompliant = false;
+									if (verificationResults.TryGetValue(originalPolicy, out (bool IsCompliant, RegistryPolicyEntry? SystemEntry) polTuple) && polTuple.IsCompliant)
+									{
+										polCompliant = true;
+									}
+
+									bool registryCompliant = false;
+									if (fallbackResults.TryGetValue(fallbackEntry, out bool ok) && ok)
+									{
+										registryCompliant = true;
+									}
+
+									if (!polCompliant && registryCompliant)
+									{
+										Logger.Write($"Verified via Registry fallback (GroupPolicy=>Registry): {originalPolicy.KeyName}\\{originalPolicy.ValueName} (Context: {contextForVerification})");
+									}
+								}
+#endif
+
+								bool allPoliciesAppliedViaRegistry = true;
+								foreach (KeyValuePair<RegistryPolicyEntry, bool> kvp in fallbackResults)
+								{
+									if (!kvp.Value)
+									{
+										allPoliciesAppliedViaRegistry = false;
+										break;
+									}
+								}
+
+								if (allPoliciesAppliedViaRegistry)
+								{
+									Logger.Write($"MUnit '{mUnit.Name}' verified via Registry fallback for all policies (Context: {contextForVerification}).");
+									mUnit.IsApplied = true;
+									continue;
+								}
+
+								// 4) Final fallback: specialized verification
+								bool specializedFallback = TryFallbackVerification(verifyStrategy.Policies, cancellationToken);
+								mUnit.IsApplied = specializedFallback;
 							}
 						}
 						break;
@@ -1526,21 +1600,18 @@ internal sealed partial class MUnit(
 			{
 				cancellationToken?.ThrowIfCancellationRequested();
 
-				await App.AppDispatcher.EnqueueAsync(() =>
+				viewModel.ElementsAreEnabled = false;
+
+				viewModel.MainInfoBar.IsClosable = false;
+
+				string operationText = operation switch
 				{
-					viewModel.ElementsAreEnabled = false;
-
-					viewModel.MainInfoBar.IsClosable = false;
-
-					string operationText = operation switch
-					{
-						MUnitOperation.Apply => GlobalVars.GetStr("ApplyingSecurityMeasures"),
-						MUnitOperation.Remove => GlobalVars.GetStr("RemovingSecurityMeasures"),
-						MUnitOperation.Verify => GlobalVars.GetStr("VerifyingSecurityMeasures"),
-						_ => GlobalVars.GetStr("ProcessingSecurityMeasures")
-					};
-					viewModel.MainInfoBar.WriteInfo(string.Format(operationText, mUnits.Count));
-				});
+					MUnitOperation.Apply => GlobalVars.GetStr("ApplyingSecurityMeasures"),
+					MUnitOperation.Remove => GlobalVars.GetStr("RemovingSecurityMeasures"),
+					MUnitOperation.Verify => GlobalVars.GetStr("VerifyingSecurityMeasures"),
+					_ => GlobalVars.GetStr("ProcessingSecurityMeasures")
+				};
+				viewModel.MainInfoBar.WriteInfo(string.Format(operationText, mUnits.Count));
 
 				// Get all available MUnits for dependency resolution (same category as the first MUnit)
 				// Mixed category inputs are not applicable, processors run per category, and this code builds the catalog for mUnits[0].Category, so it's safe.
@@ -1608,25 +1679,19 @@ internal sealed partial class MUnit(
 					ProcessRegularMUnit(mUnit, operation, cancellationToken);
 				}
 
-				await App.AppDispatcher.EnqueueAsync(() =>
+				string operationText2 = operation switch
 				{
-					string operationText = operation switch
-					{
-						MUnitOperation.Apply => GlobalVars.GetStr("SuccessfullyAppliedSecurityMeasures"),
-						MUnitOperation.Remove => GlobalVars.GetStr("SuccessfullyRemovedSecurityMeasures"),
-						MUnitOperation.Verify => GlobalVars.GetStr("SuccessfullyVerifiedSecurityMeasures"),
-						_ => GlobalVars.GetStr("SuccessfullyProcessedSecurityMeasures")
-					};
-					viewModel.MainInfoBar.WriteSuccess(string.Format(operationText, mUnits.Count));
-				});
+					MUnitOperation.Apply => GlobalVars.GetStr("SuccessfullyAppliedSecurityMeasures"),
+					MUnitOperation.Remove => GlobalVars.GetStr("SuccessfullyRemovedSecurityMeasures"),
+					MUnitOperation.Verify => GlobalVars.GetStr("SuccessfullyVerifiedSecurityMeasures"),
+					_ => GlobalVars.GetStr("SuccessfullyProcessedSecurityMeasures")
+				};
+				viewModel.MainInfoBar.WriteSuccess(string.Format(operationText2, mUnits.Count));
 			}
 			finally
 			{
-				await App.AppDispatcher.EnqueueAsync(() =>
-				{
-					viewModel.ElementsAreEnabled = true;
-					viewModel.MainInfoBar.IsClosable = true;
-				});
+				viewModel.ElementsAreEnabled = true;
+				viewModel.MainInfoBar.IsClosable = true;
 			}
 		}, cancellationToken ?? CancellationToken.None);
 	}

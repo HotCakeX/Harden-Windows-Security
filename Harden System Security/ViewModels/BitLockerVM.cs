@@ -695,7 +695,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			else
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
-
 				return;
 			}
 		}
@@ -812,7 +811,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			else
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
-
 				return;
 			}
 		}
@@ -860,7 +858,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			if (result is not ContentDialogResult.Primary)
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
-
 				return;
 			}
 
@@ -923,7 +920,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			else
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
-
 				return;
 			}
 		}
@@ -971,7 +967,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			if (result is not ContentDialogResult.Primary)
 			{
 				MainInfoBar.WriteWarning(GlobalVars.GetStr("OperationCancelledMsg"));
-
 				return;
 			}
 

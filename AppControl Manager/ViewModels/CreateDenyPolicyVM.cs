@@ -313,19 +313,13 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 					// Make sure there are AppControl compatible files
 					if (DetectedFilesInSelectedDirectories.Item2 is 0)
 					{
-						await Dispatcher.EnqueueAsync(() =>
-						{
-							errorsOccurred = true;
-							FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("NoCompatibleFilesDetected"),
-								GlobalVars.GetStr("NoCompatibleFilesTitle"));
-						});
+						errorsOccurred = true;
+						FilesAndFoldersInfoBar.WriteWarning(GlobalVars.GetStr("NoCompatibleFilesDetected"),
+							GlobalVars.GetStr("NoCompatibleFilesTitle"));
 						return;
 					}
 
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("ScanningFiles") + DetectedFilesInSelectedDirectories.Item2 + GlobalVars.GetStr("AppControlCompatibleFiles"));
-					});
+					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("ScanningFiles") + DetectedFilesInSelectedDirectories.Item2 + GlobalVars.GetStr("AppControlCompatibleFiles"));
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -364,10 +358,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 						LVController.NotifyFullSourceChanged();
 					});
 
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("ScanCompleted"));
-					});
+					FilesAndFoldersInfoBar.WriteInfo(GlobalVars.GetStr("ScanCompleted"));
 				}
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();

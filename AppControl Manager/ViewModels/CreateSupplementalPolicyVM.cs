@@ -423,25 +423,19 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					// Make sure there are AppControl compatible files
 					if (DetectedFilesInSelectedDirectories.Item2 is 0)
 					{
-						_ = Dispatcher.TryEnqueue(() =>
-						{
-							FilesAndFoldersInfoBar.WriteInfo(
-								GlobalVars.GetStr("NoCompatibleFilesDetectedSubtitle"),
-								GlobalVars.GetStr("NoCompatibleFilesTitle"));
-							errorsOccurred = true;
-						});
+						FilesAndFoldersInfoBar.WriteInfo(
+							GlobalVars.GetStr("NoCompatibleFilesDetectedSubtitle"),
+							GlobalVars.GetStr("NoCompatibleFilesTitle"));
 
+						errorsOccurred = true;
 						return;
 					}
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						FilesAndFoldersInfoBar.WriteInfo(string.Format(
-						GlobalVars.GetStr("ScanningTotalAppControlFilesMessage"),
-						DetectedFilesInSelectedDirectories.Item2));
-					});
+					FilesAndFoldersInfoBar.WriteInfo(string.Format(
+					GlobalVars.GetStr("ScanningTotalAppControlFilesMessage"),
+					DetectedFilesInSelectedDirectories.Item2));
 
 					// Scan all of the detected files from the user selected directories
 					LocalFilesResults = LocalFilesScan.Scan(
@@ -835,11 +829,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				}
 				else
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("NoCertificateDetailsFoundCreatingPolicy"));
-					});
-
+					CertificatesBasedInfoBar.WriteWarning(GlobalVars.GetStr("NoCertificateDetailsFoundCreatingPolicy"));
 					errorsOccurred = true;
 					return;
 				}
@@ -1065,10 +1055,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// If the policy is to be deployed
 				if (ISGBasedDeployButton)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						ISGInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
-					});
+					ISGInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
 					// Prepare the ISG services
 					ConfigureISGServices.Configure();
@@ -1497,10 +1484,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				// If user selected to deploy the policy
 				if (StrictKernelModeShouldDeploy)
 				{
-					_ = Dispatcher.TryEnqueue(() =>
-					{
-						StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
-					});
+					StrictKernelModeInfoBar.WriteInfo(GlobalVars.GetStr("DeployingThePolicy"));
 
 					CiToolHelper.UpdatePolicy(CIPPath);
 				}

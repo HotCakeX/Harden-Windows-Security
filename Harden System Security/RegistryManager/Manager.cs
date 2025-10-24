@@ -38,7 +38,7 @@ internal static class Manager
 	internal static void EditRegistry(RegistryPolicyEntry package)
 	{
 		// Determine base hive
-		RegistryKey baseRegistryKey = GetBaseRegistryKey(package.hive);
+		RegistryKey baseRegistryKey = GetBaseRegistryKey(package.Hive);
 
 		using RegistryKey subKey = baseRegistryKey.OpenSubKey(package.KeyName, true) ?? baseRegistryKey.CreateSubKey(package.KeyName);
 
@@ -86,7 +86,7 @@ internal static class Manager
 	internal static string? ReadRegistry(RegistryPolicyEntry package)
 	{
 		// Determine base hive
-		RegistryKey baseRegistryKey = GetBaseRegistryKey(package.hive);
+		RegistryKey baseRegistryKey = GetBaseRegistryKey(package.Hive);
 
 		// Open subkey readonly
 		using RegistryKey? subKey = baseRegistryKey.OpenSubKey(package.KeyName, writable: false);
@@ -108,10 +108,25 @@ internal static class Manager
 				=> rawValue as string,
 
 			RegistryValueType.REG_DWORD
-				=> ((int)rawValue).ToString(CultureInfo.InvariantCulture),
+				=> rawValue switch
+				{
+					int i => unchecked((uint)i).ToString(CultureInfo.InvariantCulture),
+					uint ui => ui.ToString(CultureInfo.InvariantCulture),
+					long l => unchecked((uint)l).ToString(CultureInfo.InvariantCulture),
+					byte[] bytes when bytes.Length == 4 => BitConverter.ToUInt32(bytes, 0).ToString(CultureInfo.InvariantCulture),
+					string s when uint.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint parsed) => parsed.ToString(CultureInfo.InvariantCulture),
+					_ => Convert.ToUInt32(rawValue, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture)
+				},
 
 			RegistryValueType.REG_QWORD
-				=> ((long)rawValue).ToString(CultureInfo.InvariantCulture),
+				=> rawValue switch
+				{
+					long l => unchecked((ulong)l).ToString(CultureInfo.InvariantCulture),
+					ulong ul => ul.ToString(CultureInfo.InvariantCulture),
+					byte[] bytes when bytes.Length == 8 => BitConverter.ToUInt64(bytes, 0).ToString(CultureInfo.InvariantCulture),
+					string s when ulong.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out ulong parsed) => parsed.ToString(CultureInfo.InvariantCulture),
+					_ => Convert.ToUInt64(rawValue, CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture)
+				},
 
 			RegistryValueType.REG_BINARY
 				=> Convert.ToBase64String((byte[])rawValue),
@@ -136,11 +151,11 @@ internal static class Manager
 			try
 			{
 				EditRegistry(policy);
-				appliedEntries.Add(string.Format(GlobalVars.GetStr("AppliedRegistryEntry"), policy.hive, policy.KeyName, policy.ValueName));
+				appliedEntries.Add(string.Format(GlobalVars.GetStr("AppliedRegistryEntry"), policy.Hive, policy.KeyName, policy.ValueName));
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("ErrorApplyingRegistryPolicy"), policy.hive, policy.KeyName, policy.ValueName, ex.Message));
+				Logger.Write(string.Format(GlobalVars.GetStr("ErrorApplyingRegistryPolicy"), policy.Hive, policy.KeyName, policy.ValueName, ex.Message));
 			}
 		}
 
@@ -171,10 +186,10 @@ internal static class Manager
 					valueName: policy.ValueName,
 					type: policy.Type,
 					size: policy.Size,
-					data: policy.Data)
+					data: policy.Data,
+					hive: policy.Hive)
 				{
 					RegValue = policy.RegValue,
-					hive = policy.hive,
 					policyAction = PolicyAction.Remove,
 					FriendlyName = policy.FriendlyName,
 					URL = policy.URL,
@@ -186,11 +201,11 @@ internal static class Manager
 				EditRegistry(removePolicy);
 
 				string action = policy.DefaultRegValue is null ? GlobalVars.GetStr("RemovedRegistryEntry") : GlobalVars.GetStr("ResetToDefaultRegistryEntry");
-				removedEntries.Add(string.Format(GlobalVars.GetStr("RemovedRegistryEntryFormat"), action, policy.hive, policy.KeyName, policy.ValueName));
+				removedEntries.Add(string.Format(GlobalVars.GetStr("RemovedRegistryEntryFormat"), action, policy.Hive, policy.KeyName, policy.ValueName));
 			}
 			catch (Exception ex)
 			{
-				Logger.Write(string.Format(GlobalVars.GetStr("ErrorRemovingRegistryPolicy"), policy.hive, policy.KeyName, policy.ValueName, ex.Message));
+				Logger.Write(string.Format(GlobalVars.GetStr("ErrorRemovingRegistryPolicy"), policy.Hive, policy.KeyName, policy.ValueName, ex.Message));
 			}
 		}
 
@@ -225,13 +240,13 @@ internal static class Manager
 
 				verificationResults[policy] = isVerified;
 				Logger.Write(isVerified ?
-					string.Format(GlobalVars.GetStr("VerifyRegistryMatch"), policy.hive, policy.KeyName, policy.ValueName) :
-					string.Format(GlobalVars.GetStr("VerifyRegistryMismatch"), policy.hive, policy.KeyName, policy.ValueName));
+					string.Format(GlobalVars.GetStr("VerifyRegistryMatch"), policy.Hive, policy.KeyName, policy.ValueName) :
+					string.Format(GlobalVars.GetStr("VerifyRegistryMismatch"), policy.Hive, policy.KeyName, policy.ValueName));
 			}
 			catch (Exception ex)
 			{
 				verificationResults[policy] = false;
-				Logger.Write(string.Format(GlobalVars.GetStr("ErrorVerifyingRegistryPolicy"), policy.hive, policy.KeyName, policy.ValueName, ex.Message));
+				Logger.Write(string.Format(GlobalVars.GetStr("ErrorVerifyingRegistryPolicy"), policy.Hive, policy.KeyName, policy.ValueName, ex.Message));
 			}
 		}
 
@@ -298,7 +313,7 @@ internal static class Manager
 	/// <summary>
 	/// Maps <see cref="Hive"/> to its base <see cref="RegistryKey"/>.
 	/// </summary>
-	private static RegistryKey GetBaseRegistryKey(Hive? hive)
+	private static RegistryKey GetBaseRegistryKey(Hive hive)
 	{
 		return hive switch
 		{
@@ -357,6 +372,87 @@ internal static class Manager
 			default:
 				{
 					throw new ArgumentException(GlobalVars.GetStr("InvalidRegistryValueType"));
+				}
+		}
+	}
+
+	/// <summary>
+	/// Formats an already-parsed Group Policy value (entry.ParsedValue) into the exact string form
+	/// Expected by Registry verification => <see cref="RegistryManager.Manager.VerifyPoliciesInSystem(List{RegistryPolicyEntry})"/>.
+	/// This method is used by <see cref="ViewModels.GroupPolicyEditorVM"/> and is run when user loads a JSON or POL file and then saves it to JSON file.
+	/// - REG_SZ, REG_EXPAND_SZ: plain string (REG_EXPAND_SZ is environment-expanded)
+	/// - REG_DWORD: decimal string
+	/// - REG_QWORD: decimal string
+	/// - REG_BINARY: Base64
+	/// - REG_MULTI_SZ: semicolon-separated
+	/// </summary>
+	/// <param name="entry"></param>
+	/// <returns></returns>
+	internal static string? BuildRegValueFromParsedValue(RegistryPolicyEntry entry)
+	{
+		object? parsed = entry.ParsedValue;
+		if (parsed is null)
+		{
+			// Leave as null when policy carries "no value" (Size == 0).
+			// If we want registry-fallback to treat "absent value" as compliant, we should handle that in the verifier.
+			return null;
+		}
+
+		switch (entry.Type)
+		{
+			case RegistryValueType.REG_SZ:
+				{
+					string? s = parsed as string;
+					return s ?? parsed.ToString();
+				}
+
+			case RegistryValueType.REG_EXPAND_SZ:
+				{
+					// Expand env vars to match RegistryKey.GetValue default expansion in RegistryManager.Manager.ReadRegistry
+					string? s = parsed as string ?? parsed.ToString();
+					return Environment.ExpandEnvironmentVariables(s ?? string.Empty);
+				}
+
+			case RegistryValueType.REG_DWORD:
+				{
+					// ParsedValue is UInt32 for DWORD
+					if (parsed is uint u) return u.ToString(CultureInfo.InvariantCulture);
+					if (parsed is int i && i >= 0) return ((uint)i).ToString(CultureInfo.InvariantCulture);
+					if (parsed is long l && l >= 0 && l <= uint.MaxValue) return ((uint)l).ToString(CultureInfo.InvariantCulture);
+					return null;
+				}
+
+			case RegistryValueType.REG_QWORD:
+				{
+					// ParsedValue is UInt64 for QWORD
+					if (parsed is ulong ul) return ul.ToString(CultureInfo.InvariantCulture);
+					if (parsed is long ll && ll >= 0) return ((ulong)ll).ToString(CultureInfo.InvariantCulture);
+					if (parsed is uint ui) return ((ulong)ui).ToString(CultureInfo.InvariantCulture);
+					if (parsed is int ii && ii >= 0) return ((ulong)ii).ToString(CultureInfo.InvariantCulture);
+					return null;
+				}
+
+			case RegistryValueType.REG_BINARY:
+				{
+					return parsed is not byte[] bytes ? null : Convert.ToBase64String(bytes);
+				}
+
+			case RegistryValueType.REG_MULTI_SZ:
+				{
+					if (parsed is not string[] arr) return null;
+					return string.Join(";", arr);
+				}
+
+			case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:
+			case RegistryValueType.REG_NONE:
+			case RegistryValueType.REG_DWORD_BIG_ENDIAN:
+			case RegistryValueType.REG_LINK:
+			case RegistryValueType.REG_RESOURCE_LIST:
+			case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
+			default:
+				{
+					// Fallback stringification
+					return parsed.ToString();
 				}
 		}
 	}

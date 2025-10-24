@@ -22,7 +22,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using CommunityToolkit.WinUI;
 using HardenSystemSecurity.GroupPolicy;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -475,10 +474,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 				VerificationResult.Save(savePath, resultsToExport);
 
-				await Dispatcher.EnqueueAsync(() =>
-				{
-					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedVerificationResults"), resultsToExport.Count, savePath));
-				});
+				MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedVerificationResults"), resultsToExport.Count, savePath));
 			});
 		}
 		catch (Exception ex)

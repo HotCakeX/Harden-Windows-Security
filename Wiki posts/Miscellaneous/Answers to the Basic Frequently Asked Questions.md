@@ -4,41 +4,22 @@ This document has answers to the most basic frequently asked questions about thi
 
 <br>
 
-## From 1 to 10 How Difficult Is It to Use the Harden Windows Security Module?
+## From 1 to 10 How Difficult Is It to Use the Harden System Security App?
 
 1 - **Very Easy**
 
 <br>
 
-## What Do I Need to Do to Use Harden Windows Security Module?
+## What Do I Need to Do to Use Harden System Security App?
 
-1. Press Start button.
-2. Type `PowerShell`, find it and open it.
-3. Copy & Paste the following line in the PowerShell command line that is opened and press enter.
-4. Wait for the App to start.
-
-```powershell
-(irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'P'|iex
-```
+1. Open Microsoft Store.
+2. Type [`Harden System Security`](https://apps.microsoft.com/detail/9P7GGFL7DX57), find it and press the Install button.
 
 <br>
 
-## How to Install PowerShell?
+## Do I Need to Use the Harden System Security App Only on New Windows Installation?
 
-* [Install PowerShell from Microsoft Store](https://www.microsoft.com/store/productid/9MZ1SNWT0N5D) (easiest way)
-* [Installing PowerShell on Windows](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows)
-
-<br>
-
-## But I Never Used PowerShell Before
-
-Then let this be your initiation. You don't need to know anything about PowerShell to use the Harden Windows Security application/module.
-
-<br>
-
-## Do I Need to Use the Harden Windows Security Module Only on New Windows Installation?
-
-No, you can use it any time.
+No, you can **use it any time**.
 
 <br>
 
@@ -46,7 +27,7 @@ No, you can use it any time.
 
 Absolutely not.
 
-Every security feature needed is already available in Windows. After Installing the Harden Windows Security Module, run PowerShell as Admin and use the command `Protect-WindowsSecurity` to activate them.
+Every security feature needed is already available in Windows. Use the Harden System Security app to activate and enable them.
 
 [Here is a more technical explanation](https://github.com/HotCakeX/Harden-Windows-Security/issues/103#issuecomment-1707940307)
 
@@ -62,13 +43,13 @@ Uninstall it by going to Windows Settings -> Apps -> Installed Apps -> Search fo
 
 * Check and install any updates from Windows Update
 * Check and install any updates in Microsoft Store
-* Install and run the Harden Windows Security Module
+* Install and run the [Harden System Security App](https://apps.microsoft.com/detail/9P7GGFL7DX57)
 
 <br>
 
 ## I Have Windows Home Edition, How to Upgrade to Pro?
 
-* [Refer to this article](https://support.microsoft.com/en-us/windows/upgrade-windows-home-to-windows-pro-ef34d520-e73f-3198-c525-d1a218cc2818)
+* [Please refer to this article](https://support.microsoft.com/en-us/windows/upgrade-windows-home-to-windows-pro-ef34d520-e73f-3198-c525-d1a218cc2818)
 
 <br>
 
@@ -82,8 +63,7 @@ Uninstall it by going to Windows Settings -> Apps -> Installed Apps -> Search fo
 
 ## What Categories Do You Recommend to Run?
 
-Use the default predefined preset in the Harden Windows Security GUI, it is tuned for optimal and balanced security.
-Presets allow for easy and quick selection of categories and sub-categories.
+Use the default predefined preset in the Harden System Security app, it is tuned for optimal and balanced security. You can also use [the device usage intents](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect) to tune the protections. They allow for easy and quick selection of categories and sub-categories.
 
 <br>
 
@@ -109,13 +89,7 @@ Only very old and unsupported hardware *might* experience degraded performance w
 
 ## What If I Want to Revert the Changes?
 
-Use the Unprotect tab in the Harden Windows Security GUI (Graphical User Interface) to undo all the protections.
-
-<br>
-
-## Can You Alter The Requirements?
-
-No. The [requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-) are very basic and minimum, they are even less than what's required by Windows 11 minimum hardware.
+Every single security measure can be easily reverted back to default via the options available in the UI.
 
 <br>
 
@@ -125,13 +99,13 @@ Modern devices receive firmware updates as capsules through Windows Update, simi
 
 ### Backup Your BitLocker Recovery Keys
 
-It's crucial to back up your BitLocker recovery keys before updating the firmware. Use the Harden Windows Security Module to simplify this process. The 48-character recovery key for your OS drive will be required to boot your system after the firmware update is applied.
+It's crucial to back up your BitLocker recovery keys before updating the firmware. Use the Harden System Security App to simplify this process. The 48-character recovery key for your OS drive will be required to boot your system after the firmware update is applied.
 
 ### Ensure Internet Connectivity After the Update
 
 Once the firmware update is installed, you will need an active Internet connection to reset your Windows Hello credentials. This process involves signing into your Microsoft account and authorizing the login using the Microsoft Authenticator app.
 
-The Harden Windows Security Module's Lock Screen category does not allow unauthorized people to change network settings on lock screen before logging in. Ensure your current Wi-Fi network is saved on the device and accessible post-update.
+The Harden System Security app's Lock Screen category does not allow unauthorized people to change network settings on lock screen before logging in. Ensure your current Wi-Fi network is saved on the device and accessible post-update.
 
 ### Manage VPN Configurations
 

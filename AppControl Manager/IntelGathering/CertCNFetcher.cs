@@ -42,7 +42,7 @@ internal static class CertCNFetcher
 			// Loop through each certificate in the current user's personal store
 			foreach (X509Certificate2 cert in store.Certificates)
 			{
-				// Make sure it uses RSA algorithm (Because ECDSA is not supported for signing App Control policies)
+				// Make sure it uses the RSA algorithm (Because ECDSA is not supported for signing App Control policies)
 				if (string.Equals(cert.PublicKey.Oid.FriendlyName, "RSA", StringComparison.OrdinalIgnoreCase))
 				{
 					// Get its Subject Common Name (CN) using the GetNameString method from CryptoAPI

@@ -30,7 +30,7 @@
 2. Use the Enterprise CA's code signing template to create a customized certificate template for App Control Signing (≈5 minutes)
 3. Generate the certificate and use it to sign the App Control Policy (≈3 minutes)
 
-That's essentially everything we have to do. So, if you are already familiar with the concepts, you can go straight to the bottom of this page and use the resources section to refer to Microsoft guides to create and deploy the Signed App Control policy.
+That's essentially everything we have to do. So, if you are already familiar with the concepts, you can go straight to the bottom of this page and use the resources section to refer to Microsoft's guides to create and deploy the Signed App Control policy.
 
 But if you aren't familiar, keep reading as I've thoroughly explained every step to set up Windows Server, generate signing certificate and sign the App Control policy. It takes about 20 minutes for me and depending on the hardware, it can even take less time.
 
@@ -46,7 +46,7 @@ Latest Windows Server, it's free for 180 days for evaluation and comes in ISO an
 
 * [Download Windows Server 2025](https://www.microsoft.com/en-us/evalcenter/download-windows-server-2025) from [Microsoft Evaluation Center](https://www.microsoft.com/en-us/evalcenter).
 
-Once we have our Windows installation media (ISO or VHDX), we need to set up a Hyper-V VM on our host. For this guide, our host is a Windows 11 pro for workstations machine.
+Once we have our Windows installation media (ISO or VHDX), we need to set up a Hyper-V VM on our host. For this guide, our host is a Windows 11 Pro for workstations machine.
 
 Create a Hyper-V VM with these specifications:
 
@@ -155,7 +155,7 @@ Add-WindowsFeature Adcs-Cert-Authority -IncludeManagementTools
 
 ### Configure the Validity period of the issued certificates on the server
 
-[Microsoft guide for this](https://learn.microsoft.com/en-us/troubleshoot/windows-server/identity/change-certificates-expiration-date)
+[Microsoft's guide for this](https://learn.microsoft.com/en-us/troubleshoot/windows-server/identity/change-certificates-expiration-date)
 
 We Increase the validity period of the certificates issued by the CA to 30 years:
 
@@ -250,7 +250,7 @@ After the client machine restarted, use `Other user` option on the lock screen a
 
 Since you are using Administrator account, you can by default use Enhanced session in Hyper-V too.
 
-To request the certificate and enroll it, you can follow <a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol">the Microsoft guide</a>.
+To request the certificate and enroll it, you can follow <a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol">the Microsoft's guide</a>.
 
 <br>
 

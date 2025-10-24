@@ -53,7 +53,7 @@
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [sets Hibernate to full](https://learn.microsoft.com/windows/win32/power/system-power-states#hibernation-file-types)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Sets Hibernate to full](https://learn.microsoft.com/windows/win32/power/system-power-states#hibernation-file-types)
 
 <br>
 

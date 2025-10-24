@@ -493,7 +493,7 @@ Sometimes there are files that are signed by 2 or more certificates, aka double 
 
 When a level such as FilePublisher is used, ConfigCI cmdlets create signer rules for one of the intermediate certificates of each of the signers of those files.
 
-Depending on Kernel or use mode, 2 Allowed Signers are created for the file in either UMCI or KMCI Signing scenario sections.
+Depending on Kernel or user mode, 2 Allowed Signers are created for the file in either UMCI or KMCI Signing scenario sections.
 
 However, if the file is a kernel mode driver and user mode driver, then 4 signers are created for it, 2 Allowed Signers in the UMCI Signing Scenario and 2 in the KMCI Signing scenario.
 

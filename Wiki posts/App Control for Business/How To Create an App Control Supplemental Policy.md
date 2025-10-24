@@ -16,7 +16,7 @@ You can have as many supplemental policies as you need, but each supplemental po
 > Use the [System Information page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information) in the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) to view all of the deployed policies and see which ones are base or supplemental.
 >
 
-When it comes to signing, if the base policy is signed, then the supplemental policy must be signed too and vise versa.
+When it comes to signing, if the base policy is signed, then the supplemental policy must be signed too and vice versa.
 
 <br>
 
@@ -24,7 +24,7 @@ When it comes to signing, if the base policy is signed, then the supplemental po
 
 Assuming you've already deployed a base policy, you can create a supplemental policy by navigating to the [**Create Supplemental Policy Page**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy).
 
-In the **Files and Folders section**, browse for your base policy's XML file. Enter a descriptive name for the supplemental policy that will be created and browse for files and/or folder to scan. If you select folders, they will be scanned recursively, meaning any file(s) in the sub-folder(s) will also be included in the scan.
+In the **Files and Folders section**, browse for your base policy's XML file. Enter a descriptive name for the supplemental policy that will be created and browse for files and/or folders to scan. If you select folders, they will be scanned recursively, meaning any file(s) in the sub-folder(s) will also be included in the scan.
 
 The default [level](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide) is set to `File Publisher` but you can change it to another level that meets your needs. This level will create signature-based rules for signed files and hash based rules for unsigned files.
 
@@ -80,7 +80,7 @@ Finally press the `Create Supplemental Policy` button to create the supplemental
 
 ## Create a Supplemental Policy That Allows an Entire Folder
 
-You can create a supplemental policy that will allow everything inside of a folder to be authorized to run. It is based on wildcard file path. This type of supplemental policy is less secure than ones that are based on file signature, publisher or hash so use it with caution.
+You can create a supplemental policy that will allow everything inside of a folder to be authorized to run. It is based on a wildcard file path. This type of supplemental policy is less secure than ones that are based on file signature, publisher or hash so use it with caution.
 
 Navigate to the [**Create Supplemental Policy Page**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy) page in the AppControl Manager and select the **Files and Folders** section.
 

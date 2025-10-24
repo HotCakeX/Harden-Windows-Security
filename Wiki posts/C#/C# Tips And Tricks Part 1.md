@@ -6,7 +6,7 @@ This is part 1 of the **C# Tips And Tricks series**. These are not tutorials, bu
 
 ## Do Not Manually Reference Assemblies or DLLs
 
-When working in the modern IDE, Visual Studio 2022 and with .NET, you do not need to reference .NET dlls manually, they will be available to your project automatically.
+When working in the modern IDE, Visual Studio 2025 and with .NET, you do not need to reference .NET dlls manually, they will be available to your project automatically.
 
 If you need to reference a DLL that is not part of the .NET by default, then use the [Nuget](https://www.nuget.org/) package manager to add it.
 
@@ -30,7 +30,7 @@ Nuget Package references look like this
 ```xml
 <ItemGroup>
     <PackageReference Include="System.Management" Version="9.0.0" />
-    <PackageReference Include="System.Management.Automation" Version="7.5." />
+    <PackageReference Include="System.Management.Automation" Version="7.5.0" />
 </ItemGroup>
 ```
 

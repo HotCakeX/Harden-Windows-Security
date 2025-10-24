@@ -4,7 +4,7 @@
 
 <br>
 
-You don't need Admin privileges to run this category, because no system-wide changes is made. Changes in this category only apply to the current user account that is running the [Harden System Security App](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security).
+You don't need Admin privileges to run this category, because no system-wide changes are made. Changes in this category only apply to the current user account that is running the [Harden System Security App](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security).
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Shows known file extensions in File explorer
 

@@ -350,7 +350,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal async void OpenInDefaultFileHandler_FilesAndFolders() => await OpenInDefaultFileHandler(_FilesAndFoldersSupplementalPolicyPath);
 
 	/// <summary>
-	/// Main button's event handler for files and folder Supplemental policy creation
+	/// Main button's event handler for files and folders Supplemental policy creation
 	/// </summary>
 	internal async void CreateFilesAndFoldersSupplementalPolicyButton_Click()
 	{

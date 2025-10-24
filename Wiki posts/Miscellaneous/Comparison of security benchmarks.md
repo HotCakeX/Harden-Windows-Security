@@ -2,7 +2,7 @@
 
 I conducted a thorough analysis of some of the prominent security benchmarks/guidelines for my GitHub repository and I discovered some fascinating insights. By analysis, I mean that I examined every single recommendation in them and compared them with my own suggestions and Microsoft Security Baselines.
 
-The majority of the recommendations in the security benchmarks align with the Microsoft Security Baselines, which are a set of best practices for securing various products and services. Only a small fraction of the recommendations deviate from the baselines, and they are either additional enhancements (rarely), redundant suggestions or erroneous advice that undermine security!
+The majority of the recommendations in the security benchmarks align with the Microsoft Security Baselines, which are a set of best practices for securing various products and services. Only a small fraction of the recommendations deviate from the baselines, and they are either additional enhancements (rarely), redundant suggestions or erroneous advice that undermines security!
 
 For my reviews I used the latest available version of each benchmark.
 

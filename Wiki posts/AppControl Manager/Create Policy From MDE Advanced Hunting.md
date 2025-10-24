@@ -40,7 +40,7 @@ Performing Advanced Hunting queries requires `ThreatHunting.Read.All` [permissio
 
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730bc82a790f56a61e301b6663dfc9d5a/Pictures/Gifs/AppControl%20Manager%20Menu/Microsoft%20Graph.gif" alt="AppControl Manager Menu Item" width="30"> [**Microsoft Graph Button**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph).
 
-* **Device Name**: Use this button to display a text box where you can enter a name of a device to filter the logs by before retrieving them. The device name will be included as part of the query that will be forwarded to the MDE Advanced Hunting API and the filtering will happen on the MDE side.
+* **Device Name**: Use this button to display a text box where you can enter the name of a device to filter the logs by before retrieving them. The device name will be included as part of the query that will be forwarded to the MDE Advanced Hunting API and the filtering will happen on the MDE side.
 
 * **Retrieve The Logs**: Use this button to retrieve the Advanced Hunting logs that are related to Application Control policies. The logs will be displayed in the data grid.
 

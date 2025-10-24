@@ -225,7 +225,7 @@ explorer.exe shell:AppsFolder\VioletHansen.HardenSystemSecurity_ea7andspwdn10!Ap
 
 ## Under the Hood: Files and Directories Structures Explained
 
-Here are the breakdown of some of the directories and files used by the Harden System Security app.
+Here is the breakdown of some of the directories and files used by the Harden System Security app.
 
 * [Animated Icon Sources](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Animated%20Icon%20Sources) is the location hosting JSON content of the Lottie animations used for the animated buttons.
 

@@ -40,7 +40,7 @@ The TPM is used to deter side channel attacks while login screen is to deter bru
 
 BitLocker is to prevent offline attacks primarily, secondarily it is to prevent data loss. If you can alter the Windows operating system files while it is offline, it has no means to protect itself. That is why BitLocker exists to impede tampering while the system is offline. Most people assume it is used for data loss prevention; in reality the primary defense capability is tampering with OS files.
 
-I can guarantee breach into any operating system that has an unencrypted disk, and I don’t have to use any zero days or exploit code.
+I can guarantee breaching into any operating system that has an unencrypted disk, and I don’t have to use any zero days or exploit code.
 
 BitLocker is a transparent drive encryption technology operating below the file system level and BitLocker encrypted disks always remain encrypted even after Windows Hello authentication and unlocking the OS.
 
@@ -86,7 +86,7 @@ The same settings can be found in Intune as well
 
 <br>
 
-Few seconds after enrolling the device in Intune, you will see a notification
+A few seconds after enrolling the device in Intune, you will see a notification
 
 <div align="center">
 

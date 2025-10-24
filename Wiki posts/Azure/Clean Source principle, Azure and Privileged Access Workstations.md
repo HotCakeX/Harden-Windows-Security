@@ -88,7 +88,7 @@ The guest has to abide by the rules of its host, and the host has to conform to 
 
 ## So, What Is the Solution?
 
-What you desire is to create something that can remain protected in most hostile environment and preserve its integrity.
+What you desire is to create something that can remain protected in most hostile environments and preserve its integrity.
 
 <br>
 
@@ -100,7 +100,7 @@ PAW is the highest security configuration designed for extremely sensitive roles
 
 Often, the servers are considerably less secure than the PAW itself. Likewise with intermediaries, they are usually less secure than the PAW itself. Consequently, the session host and/or client is not the weakest chain link. Which also implies that the clean source principle is kept at least on the start of the chain.
 
-For more of a do-it-your-self experience, check out my harden windows security repository over at [GitHub](https://github.com/HotCakeX/Harden-Windows-Security).
+For more of a do-it-yourself experience, check out my harden windows security repository over at [GitHub](https://github.com/HotCakeX/Harden-Windows-Security).
 
 <br>
 

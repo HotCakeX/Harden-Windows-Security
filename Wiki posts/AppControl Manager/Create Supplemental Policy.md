@@ -19,7 +19,7 @@ Use [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wik
 
 <br>
 
-This page has 2 modes of operations:
+This page has 2 modes of operation:
 
 1. **Create New Policy**: In this mode, whenever you create a Supplemental policy, a new policy XML file will be created in the `AppControl Manager` directory.
 
@@ -138,7 +138,7 @@ Keep in mind that file rules are only supported for user-mode files. Using file 
 
 * **Base Policy File**: Browse for the path to the base policy XML file that this Supplemental policy will be expanding.
 
-* **Custom Pattern-based File Rule**: Enter your pattern in here. It will be used as is without any further modifications to it. What you enter here will be what you see in the XML file.
+* **Custom Pattern-based File Rule**: Enter your pattern here. It will be used as is without any further modifications to it. What you enter here will be what you see in the XML file.
 
 * **Deploy After Creation**: If toggled, only the Supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
 

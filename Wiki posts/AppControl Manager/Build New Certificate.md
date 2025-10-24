@@ -24,7 +24,7 @@ After building the certificate, 2 files will be created in the `C:\Program Files
 
 ## Configuration Details
 
-* **Key Size**: The cryptographic key's length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate. It uses RSA algorithm. App Control only supports key sizes up to `4096`.
+* **Key Size**: The cryptographic key's length, measured in bits, defines the strength and security of private key encryption. Bigger key sizes take more time and processing power to generate. It uses the RSA algorithm. App Control only supports key sizes up to `4096`.
 
 * **Common Name**: The Common Name (CN) is a field in a certificate that specifies the fully qualified domain name (FQDN) or identifier the certificate is issued for.
 

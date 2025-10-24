@@ -78,7 +78,7 @@ Keep in mind that if you deploy a signed CIP file with `CMS V3` certificate, the
 
 ## Signing via SignTool.exe
 
-If you prefer to use the `SignTool.exe` program, you can download it form [NuGet](https://www.nuget.org/packages/Microsoft.Windows.SDK.BuildTools/) or the [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/).
+If you prefer to use the `SignTool.exe` program, you can download it from [NuGet](https://www.nuget.org/packages/Microsoft.Windows.SDK.BuildTools/) or the [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/).
 
 The following [command](https://learn.microsoft.com/en-us/dotnet/framework/tools/signtool-exe#sign-command-options) can be used to sign a CIP file with `SignTool.exe`:
 

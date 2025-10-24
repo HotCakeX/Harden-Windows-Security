@@ -48,7 +48,7 @@
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Policy](https://learn.microsoft.com/DeployEdge/microsoft-edge-policies#dynamiccodesettings) that will disable dynamic code in Edge browser which is a security feature that prevents the browser process from creating dynamic code. The default value of this policy is not explicitly defined, it could be enable or could be disabled. Setting it explicitly to enabled via this policy ensures that no dynamic code is created by the browser process.
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Policy](https://learn.microsoft.com/DeployEdge/microsoft-edge-policies#dynamiccodesettings) that will disable dynamic code in Edge browser which is a security feature that prevents the browser process from creating dynamic code. The default value of this policy is not explicitly defined, it could be enabled or could be disabled. Setting it explicitly to enabled via this policy ensures that no dynamic code is created by the browser process.
 
 <br>
 

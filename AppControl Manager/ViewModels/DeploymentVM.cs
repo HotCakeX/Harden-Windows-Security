@@ -149,7 +149,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	}
 
 	/// <summary>
-	/// Event handler for Browser button - CIP files
+	/// Event handler for Browse button - CIP files
 	/// </summary>
 	internal void BrowseForCIPBinaryFilesButton_Click()
 	{

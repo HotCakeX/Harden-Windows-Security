@@ -20,7 +20,7 @@ This page offers a data grid that has search functionality, sorting, removal of 
 
 * **Scan Logs**: Click this button to initiate a scan of the system for relevant Code Integrity and AppLocker events and display them in the page.
 
-* **Browse for EVTX**: Use this option to browse for Code Integrity and/or AppLocker exported EVTX log files. When EVTX log file are selected, pressing the **Scan Logs** button will scan those instead of the system logs.
+* **Browse for EVTX**: Use this option to browse for Code Integrity and/or AppLocker exported EVTX log files. When EVTX log files are selected, pressing the **Scan Logs** button will scan those instead of the system logs.
 
 * **Create Policy -> Add to policy**: Use this option to select an existing Application Control XML policy file. The events you choose will be added directly to this file, expanding its coverage.
 

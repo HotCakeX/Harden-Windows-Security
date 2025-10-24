@@ -242,7 +242,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	internal readonly AnimatedCancellableButtonInitializer FilesAndFoldersCancellableButton;
 
 	/// <summary>
-	/// Main button's event handler for files and folder Deny policy creation
+	/// Main button's event handler for files and folders Deny policy creation
 	/// </summary>
 	internal async void CreateFilesAndFoldersDenyPolicyButton_Click()
 	{

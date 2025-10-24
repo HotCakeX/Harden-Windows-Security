@@ -101,7 +101,7 @@ Yes, it's a very capable automated AI-driven security feature.
 
 ## Does It Affect My Gaming Performance or FPS?
 
-No. Because Modern hardware are built for Windows security features such as Virtualization Based Security, BitLocker etc. They expect these advanced security features to be turned on and running on a secure system.
+No. Because Modern hardware is built for Windows security features such as Virtualization Based Security, BitLocker etc. They expect these advanced security features to be turned on and running on a secure system.
 
 Only very old and unsupported hardware *might* experience degraded performance when using modern security features.
 

@@ -298,7 +298,7 @@ Screenshots <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pi
 ### Run on Azure Cloud PowerShell
 
 ```powershell
-# get all of the available location for Azure resources
+# get all of the available locations for Azure resources
 Get-AzLocation | Format-Table -Property Location, DisplayName
 
 # Create a new Resource Group

@@ -4160,4 +4160,82 @@
   <data name="Processing" xml:space="preserve">
     <value>جارٍ المعالجة</value>
   </data>
+    <data name="ConfigureHyperVMNestedVirtualizationButton.Content" xml:space="preserve">
+    <value>تكوين المحاكاة الافتراضية المتداخلة للآلات الافتراضية</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تكوين ميزة المحاكاة الافتراضية المتداخلة لجميع آلات Hyper-V الافتراضية على النظام. عند تمكينها، تسمح هذه الميزة للآلات الافتراضية بتشغيل آلات افتراضية أخرى داخلها أو استخدام ميزات أمان نظام التشغيل التي تعتمد على المحاكاة الافتراضية، مما يعزز قدرات الاختبار والتطوير. يُرجى ملاحظة أنه يجب إيقاف تشغيل جميع الآلات الافتراضية لكي تنجح هذه العملية.</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تكوين ميزة المحاكاة الافتراضية المتداخلة لجميع آلات Hyper-V الافتراضية على النظام. عند تمكينها، تسمح هذه الميزة للآلات الافتراضية بتشغيل آلات افتراضية أخرى داخلها أو استخدام ميزات أمان نظام التشغيل التي تعتمد على المحاكاة الافتراضية، مما يعزز قدرات الاختبار والتطوير. يُرجى ملاحظة أنه يجب إيقاف تشغيل جميع الآلات الافتراضية لكي تنجح هذه العملية.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تمكين لجميع الآلات الافتراضية</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تمكين المحاكاة الافتراضية المتداخلة لجميع آلات Hyper-V الافتراضية على النظام.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تمكين المحاكاة الافتراضية المتداخلة لجميع آلات Hyper-V الافتراضية على النظام.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تعطيل لجميع الآلات الافتراضية</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تعطيل المحاكاة الافتراضية المتداخلة لجميع آلات Hyper-V الافتراضية على النظام.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تعطيل المحاكاة الافتراضية المتداخلة لجميع آلات Hyper-V الافتراضية على النظام.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.Content" xml:space="preserve">
+    <value>خطة طاقة الأداء المطلق</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تكوين خطة طاقة الأداء المطلق. تم تصميم هذه الخطة لتقديم أقصى أداء عن طريق تقليل ميزات توفير الطاقة وتقليل حالات الكمون الدقيقة التي قد تؤثر على الاستجابة.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تكوين خطة طاقة الأداء المطلق. تم تصميم هذه الخطة لتقديم أقصى أداء عن طريق تقليل ميزات توفير الطاقة وتقليل حالات الكمون الدقيقة التي قد تؤثر على الاستجابة.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تمكين وتفعيل</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تمكين وتفعيل خطة طاقة الأداء المطلق.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تمكين وتفعيل خطة طاقة الأداء المطلق.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>تعطيل وإلغاء التفعيل</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تعطيل وإلغاء تفعيل خطة طاقة الأداء المطلق.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تعطيل وإلغاء تفعيل خطة طاقة الأداء المطلق.</value>
+  </data>
+  <data name="ConfiguringNestedVirtualizationForAllHyperVVMs" xml:space="preserve">
+  <value>جارٍ تكوين المحاكاة الافتراضية المتداخلة لجميع آلات Hyper-V الافتراضية.</value>
+</data>
+<data name="NestedVirtSuccessFormat" xml:space="preserve">
+  <value>تم {0} المحاكاة الافتراضية المتداخلة بنجاح لجميع آلات Hyper-V الافتراضية.</value>
+</data>
+<data name="EnabledLowercase" xml:space="preserve">
+  <value>تم تمكين</value>
+</data>
+<data name="DisabledLowercase" xml:space="preserve">
+  <value>تم تعطيل</value>
+</data>
+<data name="ErrorConfiguringNestedVirtualizationForAllHyperVVMsSeeLogs" xml:space="preserve">
+  <value>حدثت مشكلة أثناء تكوين المحاكاة الافتراضية المتداخلة لجميع آلات Hyper-V الافتراضية. يُرجى مراجعة السجلات لمزيد من المعلومات.</value>
+</data>
+<data name="UltimatePerfPlanEnabledAndActive" xml:space="preserve">
+  <value>تم تمكين خطة طاقة الأداء المطلق وتعيينها كخطة نشطة.</value>
+</data>
+<data name="UltimatePerfPlanDisabledAndRemoved" xml:space="preserve">
+  <value>تم تعطيل خطة طاقة الأداء المطلق وإزالتها.</value>
+</data>
+<data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
+  <value>لم يتم تحديد نية جهاز، أو لا توجد عناصر مطابقة للتطبيق.</value>
+</data>
 </root>

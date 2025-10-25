@@ -139,7 +139,7 @@
     <value>Disable Dev Drive's lax security around file scanning.</value>
 </data>
 <data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
-    <value>Enable Rtp And Signature Update during OOBE mode.</value>
+    <value>Enable RTP And Signature Update during OOBE mode.</value>
 </data>
 <data name="BruteForceProtectionConfiguredState-MSDefender" xml:space="preserve">
     <value>Enable BruteForce Protection feature.</value>
@@ -386,7 +386,7 @@
     <value>Credential Guard Configuration - UEFI Lock</value>
 </data>
 <data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
-    <value>Enable System Guard Secure Launch if hardware support exist</value>
+    <value>Enable System Guard Secure Launch if hardware support exists</value>
 </data>
 <data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
     <value>Configure Kernel Shadow Stacks Launch</value>
@@ -458,7 +458,7 @@
     <value>Configure the Windows Firewall Policy Version</value>
 </data>
 <data name="EnableNetbios-WindowsNetworking" xml:space="preserve">
-    <value>Disable Netbios</value>
+    <value>Disable NetBIOS</value>
 </data>
 <data name="DisableSmartNameResolution-WindowsNetworking" xml:space="preserve">
     <value>Disable Smart Name Resolution</value>
@@ -524,7 +524,7 @@
     <value>Boot-Start Driver Initialization Policy set to Good only</value>
 </data>
 <data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
-    <value>Enable enhanced search in Window</value>
+    <value>Enable enhanced search in Windows</value>
 </data>
 <data name="allowautoupdatesmeteredStable-Miscellaneous" xml:space="preserve">
     <value>Set Microsoft Edge (Stable) to update over Metered connections</value>
@@ -617,7 +617,7 @@
     <value>Number of grace period days before feature updates are installed on devices automatically</value>
 </data>
 <data name="NoAutoUpdate-WindowsUpdate" xml:space="preserve">
-    <value>Set the computer to receive security updates and other important downloads through Windows update</value>
+    <value>Set the computer to receive security updates and other important downloads through Windows Update</value>
 </data>
 <data name="AUOptions-WindowsUpdate" xml:space="preserve">
     <value>Automatically download updates and install them on maintenance day</value>
@@ -650,7 +650,7 @@
     <value>Block 3rd party cookies</value>
 </data>
 <data name="DnsOverHttpsMode-Edge" xml:space="preserve">
-    <value>Set Dns Over Https Mode to use system DoH settings</value>
+    <value>Set DNS Over HTTPS Mode to use system DoH settings</value>
 </data>
 <data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
     <value>Enable Encrypted Client Hello</value>
@@ -704,7 +704,7 @@
     <value>Enable showing hidden files in File Explorer</value>
 </data>
 <data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
-    <value>Disable websites accessing local language list</value>
+    <value>Disable websites from accessing local language list</value>
 </data>
 <data name="SafeSearchMode-NonAdmin" xml:space="preserve">
     <value>Turn off safe search in Windows search</value>
@@ -863,16 +863,16 @@
     <value>Set the Machine inactivity limit policy so the device will automatically lock after 120 seconds of inactivity.</value>
   </data>
       <data name="DisableCAD-LockScreen" xml:space="preserve">
-    <value>Set an Interactive logon policy to require CTRL+ALT+DEL key combinations on Lock Screen before you can enter your credentials. This can mitigate certain attacks that utilize fake lock screens in order to capture the user credentials in clear text such as passwords.</value>
+    <value>Set an Interactive logon policy to require CTRL+ALT+DEL key combination on Lock Screen before you can enter your credentials. This can mitigate certain attacks that utilize fake lock screens in order to capture the user credentials in clear text such as passwords.</value>
   </data>
       <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
-    <value>Set an Interactive logon policy for Machine account lockout threshold so that the BitLocker encrypted device will be locked after 5 failed attempts to login. You will require to enter BitLocker recovery key for the OS drive to login again.</value>
+    <value>Set an Interactive logon policy for Machine account lockout threshold so that the BitLocker encrypted device will be locked after 5 failed attempts to login. You will be required to enter BitLocker recovery key for the OS drive to login again.</value>
   </data>
       <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
     <value>Set an Interactive logon policy to stop displaying user information when the session is locked.</value>
   </data>
       <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
-    <value>Set an Interactive logon policy to stop displaying username at Lock Screen.</value>
+    <value>Set an Interactive logon policy to stop displaying the username at Lock Screen.</value>
   </data>
       <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
     <value>Set an Interactive logon policy to stop displaying last signed-in details at Lock Screen.</value>
@@ -899,19 +899,19 @@
     <value>Remove remotely accessible registry paths and subpaths.</value>
 </data>
   <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
-    <value>Deny incoming NTLM connection for all accounts.</value>
+    <value>Deny incoming NTLM connections for all accounts.</value>
 </data>
   <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
     <value>Deny outgoing NTLM connections.</value>
 </data>
 <data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
-    <value>Force strong key protection for user keys stored on the computer. You will be able to securely save private keys of the certificates you install on the computer and also the same credential will be required when accessing the private key such as for signing operations.</value>
+    <value>Force strong key protection for user keys stored on the computer. You will be able to securely save private keys of the certificates you install on the computer and the same credentials will be required when accessing the private key such as for signing operations.</value>
 </data>
 <data name="LockoutBadCount-LockScreen" xml:space="preserve">
-    <value>Set the number of allowed failed sign-in attempts to 5. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, system will be restarted and 48-digit Bitlocker code will be asked. This policy greatly prevents brute force attempts.</value>
+    <value>Set the number of allowed failed sign-in attempts to 5. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, the system will restart and 48-digit Bitlocker code will be required. This policy greatly prevents brute force attempts.</value>
 </data>
 <data name="ResetLockoutCount-LockScreen" xml:space="preserve">
-    <value>Set the account lockout duration to 1440 minutes or 1 day. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, system will be restarted and 48-digit Bitlocker code will be asked.</value>
+    <value>Set the account lockout duration to 1440 minutes or 1 day. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, the system will restart and 48-digit Bitlocker code will be required.</value>
 </data>
 <data name="LockoutDuration-LockScreen" xml:space="preserve">
     <value>Set the reset account lockout counter to 1440 minutes or 1 day.</value>

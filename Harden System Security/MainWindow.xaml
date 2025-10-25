@@ -6,6 +6,7 @@
     xmlns:local="using:HardenSystemSecurity"
     xmlns:WindowComponents="using:AppControlManager.WindowComponents"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
@@ -365,7 +366,8 @@
             </NavigationView.FooterMenuItems>
 
             <!-- Split view to create the sidebar -->
-            <SplitView PaneBackground="Transparent"
+            <SplitView x:Name="SidebarSplitView"
+                       PaneBackground="Transparent"
                        IsPaneOpen="{x:Bind ViewModel.SidebarPaneIsOpen, Mode=TwoWay}"
                        OpenPaneLength="256"
                        CompactPaneLength="48"
@@ -375,67 +377,188 @@
                        AutomationProperties.LocalizedLandmarkType="Sidebar">
 
                 <SplitView.Pane>
-                    <Border BorderThickness="1"
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            CornerRadius="5">
+                    <!-- Wrap pane content in a Grid so we can overlay a left-edge sizer -->
+                    <Grid>
+                        <Border BorderThickness="1"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                CornerRadius="5">
 
-                        <ScrollViewer>
+                            <ScrollViewer>
 
-                            <controls:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Vertical" Margin="10,0,10,0" HorizontalAlignment="Center">
+                                <controls:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Vertical" Margin="10,0,10,0" HorizontalAlignment="Center">
 
-                                <TextBlock x:Name="SidebarTextBlock" x:Uid="SidebarTextBlock" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarTextBlock" x:Uid="SidebarTextBlock" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
 
-                                <TextBlock x:Name="SidebarMainCaptionTextBlock" x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarMainCaptionTextBlock" x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
 
-                                <HyperlinkButton x:Name="SidebarHelpHyperlinkButton"
-                                                 HorizontalAlignment="Center"
-                                                 NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/discussions"
-                                                 Padding="12,8"
-                                                 CornerRadius="6"
-                                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                 BorderThickness="1">
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <FontIcon Glyph="&#xE9CE;"
-                                                  Foreground="Gold"
-                                                  FontSize="16"/>
-                                        <TextBlock x:Uid="SidebarHelpHyperlinkTextBlock"
-                                                   x:Name="SidebarHelpHyperlinkTextBlock"
-                                                   VerticalAlignment="Center"
-                                                   FontWeight="SemiBold"/>
-                                    </StackPanel>
-                                </HyperlinkButton>
+                                    <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                                                        Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                                                        Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                                                        IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-                                <HyperlinkButton Content="AppControl Manager"
-                                                 HorizontalAlignment="Center"
-                                                 NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"
-                                                 Padding="12,8"
-                                                 CornerRadius="6"
-                                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                 BorderThickness="1"/>
+                                    <HyperlinkButton x:Name="SidebarHelpHyperlinkButton"
+                                                     HorizontalAlignment="Center"
+                                                     HorizontalContentAlignment="Stretch"                                        
+                                                     NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/discussions"
+                                                     Padding="12,8"
+                                                     CornerRadius="6"
+                                                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                     BorderThickness="1">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
 
-                                <Button HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
-                                        x:Uid="OptimizeMemoryButton"
-                                        IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
-                                        Click="{x:Bind ViewModel.OptimizeMemory}">
-                                    <Button.ContentTemplate>
-                                        <DataTemplate x:DataType="x:String">
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <FontIcon Glyph="&#xEEA0;" FontFamily="Segoe Fluent Icons" FontSize="16"/>
-                                                <TextBlock Text="{x:Bind}"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </Button.ContentTemplate>
-                                </Button>
+                                            <FontIcon Grid.Column="0"
+                                                      Glyph="&#xE9CE;"
+                                                      Foreground="Gold"
+                                                      FontSize="16"/>
 
-                            </controls:WrapPanel>
+                                            <TextBlock Grid.Column="1"
+                                                       x:Uid="SidebarHelpHyperlinkTextBlock"
+                                                       x:Name="SidebarHelpHyperlinkTextBlock"
+                                                       Margin="8,0,0,0"
+                                                       VerticalAlignment="Center"
+                                                       FontWeight="SemiBold"
+                                                       TextWrapping="WrapWholeWords"/>
+                                        </Grid>
+                                    </HyperlinkButton>
 
-                        </ScrollViewer>
+                                    <HyperlinkButton Content="AppControl Manager"
+                                                     HorizontalAlignment="Center"
+                                                     NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager"
+                                                     Padding="12,8"
+                                                     CornerRadius="6"
+                                                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                     BorderThickness="1"/>
 
-                    </Border>
+                                    <Button HorizontalAlignment="Center"                                       
+                                            x:Uid="OptimizeMemoryButton"
+                                            IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
+                                            Click="{x:Bind ViewModel.OptimizeMemory}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <FontIcon Grid.Column="0"
+                                                              Glyph="&#xEEA0;"
+                                                              FontFamily="Segoe Fluent Icons"
+                                                              FontSize="16"/>
+
+                                                    <TextBlock Grid.Column="1"
+                                                               Margin="8,0,0,0"
+                                                               HorizontalTextAlignment="Center"
+                                                               HorizontalAlignment="Center"
+                                                               TextWrapping="WrapWholeWords"
+                                                               Text="{x:Bind}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
+                                    <DropDownButton x:Uid="ConfigureHyperVMNestedVirtualizationButton"
+                                                    HorizontalAlignment="Center"
+                                                    IsEnabled="{x:Bind ViewModel.IsHyperVNestedVirtualizationButtonEnabled, Mode=OneWay}">
+                                        <DropDownButton.Flyout>
+                                            <MenuFlyout Placement="Bottom">
+                                                <MenuFlyoutItem x:Uid="EnableHyperVMNestedVirtualizationMenuFlyoutItem"
+                                                                Click="{x:Bind ViewModel.EnableNestedVirtualizationForVMs}"/>
+                                                <MenuFlyoutItem x:Uid="DisableHyperVMNestedVirtualizationMenuFlyoutItem"
+                                                                Click="{x:Bind ViewModel.DisableNestedVirtualizationForVMs}"/>
+                                            </MenuFlyout>
+                                        </DropDownButton.Flyout>
+
+                                        <DropDownButton.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <FontIcon Grid.Column="0"
+                                                              Glyph="&#xEEA3;"
+                                                              FontFamily="Segoe Fluent Icons"
+                                                              FontSize="16"/>
+
+                                                    <TextBlock Grid.Column="1"
+                                                               Margin="8,0,0,0"
+                                                               HorizontalAlignment="Center"
+                                                               HorizontalTextAlignment="Center"
+                                                               TextWrapping="WrapWholeWords"
+                                                               Text="{x:Bind}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </DropDownButton.ContentTemplate>
+
+                                    </DropDownButton>
+
+                                    <DropDownButton x:Uid="ConfigureUltimatePerformancePowerPlanButton"
+                                                    HorizontalAlignment="Center"
+                                                    IsEnabled="{x:Bind ViewModel.IsPowerPlanConfigButtonEnabled, Mode=OneWay}">
+                                        <DropDownButton.Flyout>
+                                            <MenuFlyout Placement="Bottom">
+                                                <MenuFlyoutItem x:Uid="EnableUltimatePerformancePowerPlanMenuFlyoutItem"
+                                                                Click="{x:Bind ViewModel.EnableUltimatePerformancePowerPlan}"/>
+                                                <MenuFlyoutItem x:Uid="DisableUltimatePerformancePowerPlanMenuFlyoutItem"
+                                                                Click="{x:Bind ViewModel.DisableUltimatePerformancePowerPlan}"/>
+                                            </MenuFlyout>
+                                        </DropDownButton.Flyout>
+
+                                        <DropDownButton.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <FontIcon Grid.Column="0"
+                                                              Glyph="&#xE7E8;"
+                                                              FontFamily="Segoe Fluent Icons"
+                                                              FontSize="16"/>
+
+                                                    <TextBlock Grid.Column="1"
+                                                               Margin="8,0,0,0"
+                                                               HorizontalAlignment="Center"
+                                                               HorizontalTextAlignment="Center"
+                                                               TextWrapping="WrapWholeWords"
+                                                               Text="{x:Bind}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </DropDownButton.ContentTemplate>
+
+                                    </DropDownButton>
+
+                                </controls:WrapPanel>
+
+                            </ScrollViewer>
+
+                        </Border>
+
+                        <!-- Invisible sizer along the left edge of the right-hand pane -->
+                        <controls:PropertySizer Width="8"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Stretch"
+                                                Binding="{x:Bind SidebarSplitView.OpenPaneLength, Mode=TwoWay}"
+                                                Orientation="Vertical"
+                                                IsDragInverted="True"
+                                                IsThumbVisible="False"
+                                                Background="Transparent"
+                                                Cursor="SizeWestEast"
+                                                Minimum="200"
+                                                Maximum="1200"
+                                                IsTabStop="False"
+                                                Margin="0"/>
+                    </Grid>
                 </SplitView.Pane>
 
                 <!-- The area where the main window content are displayed -->

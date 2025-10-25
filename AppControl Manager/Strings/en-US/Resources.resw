@@ -356,19 +356,19 @@
     <value>Browse</value>
   </data>
   <data name="FileBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Opens the File picker dialog allowing you select file(s)</value>
+    <value>Opens the File picker dialog allowing you to select file(s)</value>
   </data>
   <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Opens the File picker dialog allowing you select file(s)</value>
+    <value>Opens the File picker dialog allowing you to select file(s)</value>
   </data>
   <data name="FolderBrowseButton.Content" xml:space="preserve">
     <value>Browse</value>
   </data>
   <data name="FolderBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Opens the Folder picker dialog allowing you select folder(s)</value>
+    <value>Opens the Folder picker dialog allowing you to select folder(s)</value>
   </data>
   <data name="FolderBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Opens the Folder picker dialog allowing you select folder(s)</value>
+    <value>Opens the Folder picker dialog allowing you to select folder(s)</value>
   </data>
   <data name="SupplementalPolicyNameTextBox.PlaceholderText" xml:space="preserve">
     <value>Supplemental Policy Name</value>
@@ -2013,7 +2013,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>The following are the logs that the AppControl Manager automatically generates and stores in the &quot;AppControl Manager&quot; folder in Program Files (if running elevated, otherwise they will be saved in the TEMP directory). The total size of the logs folder will never exceed 1GB.</value>
   </data>
   <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
-    <value>Leverage the Microsoft Defender for Endpoint Advanced Hunting logs to build Application Control Policies. You can either browser for exported log files or retrieve them from the cloud by signing into your Microsoft account.</value>
+    <value>Leverage the Microsoft Defender for Endpoint Advanced Hunting logs to build Application Control Policies. You can either browse for exported log files or retrieve them from the cloud by signing into your Microsoft account.</value>
   </data>
   <data name="MergePoliciesPageTitle.Text" xml:space="preserve">
     <value>Merge App Control for Business policies and deduplicate them. You can select the same policy twice in order to deduplicate its rules.</value>
@@ -2025,7 +2025,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Customize your app settings here. Your preferences will be saved so they're ready for you every time you start the AppControl Manager.</value>
   </data>
   <data name="SimulationPageTitle.Text" xml:space="preserve">
-    <value>Perform App Control for Business Simulation by selecting files or folders, and a XML policy file, then use the Begin Simulation button to populate the data grid. The results will show you whether the selected files would be allowed or blocked by your App Control policy if it was actually deployed on a system and those files were running.</value>
+    <value>Perform App Control for Business Simulation by selecting files or folders, and an XML policy file, then use the Begin Simulation button to populate the data grid. The results will show you whether the selected files would be allowed or blocked by your App Control policy if it was actually deployed on a system and those files were running.</value>
   </data>
   <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
     <value>View the detected Kernel-mode files that will be used to create the enforced mode policy. Remove items you don't want to be included in the final Strict Kernel-mode policy from the list.</value>
@@ -3005,7 +3005,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>You need to select a name for the Supplemental Policy</value>
   </data>
   <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
-    <value>You need to select a XML policy file path</value>
+    <value>You need to select an XML policy file path</value>
   </data>
   <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
     <value>The selected XML file path doesn't exist</value>
@@ -3698,7 +3698,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>The selected XML policy file path does not exist</value>
   </data>
   <data name="XmlPolicyExtensionInvalidMessage" xml:space="preserve">
-    <value>You need to select a XML file path with (.xml) extension.</value>
+    <value>You need to select an XML file path with (.xml) extension.</value>
   </data>
   <data name="XmlPolicyNotDeployedMessage" xml:space="preserve">
     <value>The selected XML policy file is not deployed on the system.</value>
@@ -3776,7 +3776,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Running App Control Simulation with {0} threads count</value>
   </data>
     <data name="CheckingFilePathRulesMessage" xml:space="preserve">
-    <value>Checking see if the XML policy has any FilePath rules</value>
+    <value>Checking to see if the XML policy has any FilePath rules</value>
   </data>
   <data name="SkippingSecurityCatalogsMessage" xml:space="preserve">
     <value>Skipping Security Catalogs in the Simulation.</value>
@@ -4163,7 +4163,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Please select a policy file and load it before using the save feature.</value>
   </data>
   <data name="EnterPolicyVersion" xml:space="preserve">
-    <value>please enter a policy version, it cannot be empty.</value>
+    <value>Please enter a policy version, it cannot be empty.</value>
   </data>
   <data name="AlgorithmSettingsCard.Header" xml:space="preserve">
     <value>Algorithm</value>
@@ -4829,7 +4829,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <value>There was an error launching the Policy Editor with the selected file: {0}</value>
 </data>
 <data name="WindowSizeSaveErrorMessage" xml:space="preserve">
-  <value>There was a program saving the window size when closing the app: {0}</value>
+  <value>There was a problem saving the window size when closing the app: {0}</value>
 </data>
 <data name="ErrorDialogTitle" xml:space="preserve">
   <value>An error occurred</value>
@@ -5180,10 +5180,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Scan for Kernel-mode Logs Since Last Reboot</value>
   </data>
   <data name="ScanForKernelModeLogsSinceReboot.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Scan for Kernel-mode Logs Since the system was last reboot.</value>
+    <value>Scan for Kernel-mode Logs Since the system was last rebooted.</value>
   </data>
   <data name="ScanForKernelModeLogsSinceReboot.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Scan for Kernel-mode Logs Since the system was last reboot.</value>
+    <value>Scan for Kernel-mode Logs Since the system was last rebooted.</value>
   </data>
   <data name="TextSelectionStateToggleSwitch.OnContent" xml:space="preserve">
     <value>Text Selection is Enabled</value>
@@ -5192,10 +5192,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Text Selection is Disabled</value>
   </data>
     <data name="TextSelectionStateToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Enable or Disable the ability to be able to select texts in the List View rows.</value>
+    <value>Enable or Disable the ability to select texts in the List View rows.</value>
   </data>
   <data name="TextSelectionStateToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Enable or Disable the ability to be able to select texts in the List View rows.</value>
+    <value>Enable or Disable the ability to select texts in the List View rows.</value>
   </data>
   <data name="PolicyEditorClearAllData.ToolTipService.ToolTip" xml:space="preserve">
     <value>Clears all of the data loaded on the user interface from the selected policy.</value>
@@ -5660,7 +5660,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
      <value>or drag and drop files here</value>
   </data>
   <data name="DragAndDropHintGetHashesCaption" xml:space="preserve">
-     <value>Drop file to retrieve hashes</value>
+     <value>Drop a file to retrieve its hashes</value>
   </data>
   <data name="SelectedText" xml:space="preserve">
      <value>Selected</value>
@@ -5886,10 +5886,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Reset property, property search and date filters</value>
   </data>
   <data name="PickPolicyFileButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Click/Tap to choose a XML policy file from your device</value>
+    <value>Click/Tap to choose an XML policy file from your device</value>
   </data>
   <data name="PickPolicyFileButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Click/Tap to choose a XML policy file from your device</value>
+    <value>Click/Tap to choose an XML policy file from your device</value>
   </data>
   <data name="AppWindowBorderColorSettingsCard.Description" xml:space="preserve">
     <value>Customize the color of the app's window border. You can choose a color from the palette or select the rainbow option that will cycle through all available colors in an animated way.</value>
@@ -5952,7 +5952,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <comment>Main Navigation</comment>
   </data>
   <data name="DragAndDropHintViewFileCertificatesCaption" xml:space="preserve">
-     <value>Drop file to view their certificates</value>
+     <value>Drop a file to view its certificates</value>
   </data>
   <data name="DownloadsDefenseMeasureSection.Header" xml:space="preserve">
     <value>Downloads Defense Measures Policy</value>

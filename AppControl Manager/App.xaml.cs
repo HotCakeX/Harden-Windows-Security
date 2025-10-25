@@ -28,7 +28,7 @@ using Windows.ApplicationModel;
 using Windows.Graphics;
 using Microsoft.UI.Dispatching;
 
-// To learn more about WinUI abd the WinUI project structure see: http://aka.ms/winui-project-info
+// To learn more about WinUI and the WinUI project structure see: http://aka.ms/winui-project-info
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/windows/apps/windows-app-sdk/applifecycle/applifecycle
 
 #if HARDEN_SYSTEM_SECURITY

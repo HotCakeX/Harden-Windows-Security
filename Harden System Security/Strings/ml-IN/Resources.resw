@@ -4160,4 +4160,82 @@
   <data name="Processing" xml:space="preserve">
     <value>പ്രോസസ്സ് ചെയ്യുന്നു</value>
   </data>
+    <data name="ConfigureHyperVMNestedVirtualizationButton.Content" xml:space="preserve">
+    <value>VM-കൾക്കായി നെസ്റ്റഡ് വർച്വലൈസേഷൻ ക്രമീകരിക്കുക</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ എല്ലാ Hyper-V വർച്വൽ മെഷീനുകൾക്കായി നെസ്റ്റഡ് വർച്വലൈസേഷൻ സവിശേഷത ക്രമീകരിക്കുക. സജീവമാക്കിയാൽ, ഈ സവിശേഷത വർച്വൽ മെഷീനുകൾക്ക് അവയിൽ തന്നെ മറ്റ് വർച്വൽ മെഷീനുകൾ പ്രവർത്തിപ്പിക്കുകയോ വർച്വലൈസേഷനിൽ ആശ്രയിക്കുന്ന ഓ‌എസ് സുരക്ഷാ സവിശേഷതകൾ പ്രയോജനപ്പെടുത്തുകയോ ചെയ്യാൻ അനുവദിക്കുന്നു, ഇതിലൂടെ ടെസ്റ്റിംഗും ഡെവലപ്‌മെന്റും മെച്ചപ്പെടുത്തുന്നു. ദയവായി ശ്രദ്ധിക്കുക: ഈ പ്രവർത്തനം വിജയിക്കാൻ എല്ലാ VM-ങ്ങളും ഓഫ് ചെയ്തിരിക്കണം.</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ എല്ലാ Hyper-V വർച്വൽ മെഷീനുകൾക്കായി നെസ്റ്റഡ് വർച്വലൈസേഷൻ സവിശേഷത ക്രമീകരിക്കുക. സജീവമാക്കിയാൽ, ഈ സവിശേഷത വർച്വൽ മെഷീനുകൾക്ക് അവയിൽ തന്നെ മറ്റ് വർച്വൽ മെഷീനുകൾ പ്രവർത്തിപ്പിക്കുകയോ വർച്വലൈസേഷനിൽ ആശ്രയിക്കുന്ന ഓ‌എസ് സുരക്ഷാ സവിശേഷതകൾ പ്രയോജനപ്പെടുത്തുകയോ ചെയ്യാൻ അനുവദിക്കുന്നു, ഇതിലൂടെ ടെസ്റ്റിംഗും ഡെവലപ്‌മെന്റും മെച്ചപ്പെടുത്തുന്നു. ദയവായി ശ്രദ്ധിക്കുക: ഈ പ്രവർത്തനം വിജയിക്കാൻ എല്ലാ VM-ങ്ങളും ഓഫ് ചെയ്തിരിക്കണം.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എല്ലാ VM-കൾക്കും പ്രവർത്തനക്ഷമമാക്കുക</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ എല്ലാ Hyper-V വർച്വൽ മെഷീനുകൾക്കും നെസ്റ്റഡ് വർച്വലൈസേഷൻ പ്രവർത്തനക്ഷമമാക്കുക.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ എല്ലാ Hyper-V വർച്വൽ മെഷീനുകൾക്കും നെസ്റ്റഡ് വർച്വലൈസേഷൻ പ്രവർത്തനക്ഷമമാക്കുക.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>എല്ലാ VM-കൾക്കും പ്രവർത്തനരഹിതമാക്കുക</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിലെ എല്ലാ Hyper-V വർച്വൽ മെഷീനുകൾക്കും നെസ്റ്റഡ് വർച്വലൈസേഷൻ പ്രവർത്തനരഹിതമാക്കുക.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റിലെ എല്ലാ Hyper-V വർച്വൽ മെഷീനുകൾക്കും നെസ്റ്റഡ് വർച്വലൈസേഷൻ പ്രവർത്തനരഹിതമാക്കുക.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.Content" xml:space="preserve">
+    <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ ക്രമീകരിക്കുക. ഊർജസംരക്ഷണ സവിശേഷതകൾ കുറയ്ക്കുകയും പ്രതികരണശേഷിയെ ബാധിക്കാവുന്ന മൈക്രോ-ലാറ്റൻസികൾ പരമാവധി കുറച്ചുകൊണ്ട് പരമാവധി പ്രകടനം നൽകാൻ ഈ പ്ലാൻ രൂപകൽപ്പന ചെയ്തതാണ്.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ ക്രമീകരിക്കുക. ഊർജസംരക്ഷണ സവിശേഷതകൾ കുറയ്ക്കുകയും പ്രതികരണശേഷിയെ ബാധിക്കാവുന്ന മൈക്രോ-ലാറ്റൻസികൾ പരമാവധി കുറച്ചുകൊണ്ട് പരമാവധി പ്രകടനം നൽകാൻ ഈ പ്ലാൻ രൂപകൽപ്പന ചെയ്തതാണ്.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>പ്രവർത്തനക്ഷമമാക്കുകയും സജീവമാക്കുകയും ചെയ്യുക</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ പ്രവർത്തനക്ഷമമാക്കുകയും സജീവമാക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ പ്രവർത്തനക്ഷമമാക്കുകയും സജീവമാക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>പ്രവർത്തനരഹിതമാക്കുകയും നിർജീവമാക്കുകയും ചെയ്യുക</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ പ്രവർത്തനരഹിതമാക്കുകയും നിർജീവമാക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ പ്രവർത്തനരഹിതമാക്കുകയും നിർജീവമാക്കുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="ConfiguringNestedVirtualizationForAllHyperVVMs" xml:space="preserve">
+  <value>എല്ലാ Hyper-V VM-കൾക്കായി നെസ്റ്റഡ് വർച്വലൈസേഷൻ ക്രമീകരിക്കുന്നു.</value>
+</data>
+<data name="NestedVirtSuccessFormat" xml:space="preserve">
+  <value>എല്ലാ Hyper-V VM-കൾക്കായി നെസ്റ്റഡ് വർച്വലൈസേഷൻ വിജയകരമായി {0}.</value>
+</data>
+<data name="EnabledLowercase" xml:space="preserve">
+  <value>പ്രവർത്തനക്ഷമമാക്കി</value>
+</data>
+<data name="DisabledLowercase" xml:space="preserve">
+  <value>പ്രവർത്തനരഹിതമാക്കി</value>
+</data>
+<data name="ErrorConfiguringNestedVirtualizationForAllHyperVVMsSeeLogs" xml:space="preserve">
+  <value>എല്ലാ Hyper-V VM-കൾക്കായി നെസ്റ്റഡ് വർച്വലൈസേഷൻ ക്രമീകരിക്കുന്നതിനിടെ ഒരു പ്രശ്നം സംഭവിച്ചു. കൂടുതൽ വിവരങ്ങൾക്ക് ലോഗുകൾ കാണുക.</value>
+</data>
+<data name="UltimatePerfPlanEnabledAndActive" xml:space="preserve">
+  <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ പ്രവർത്തനക്ഷമമാക്കി സജീവമായി ക്രമീകരിച്ചു.</value>
+</data>
+<data name="UltimatePerfPlanDisabledAndRemoved" xml:space="preserve">
+  <value>അൾട്ടിമേറ്റ് പെർഫോർമൻസ് പവർ പ്ലാൻ പ്രവർത്തനരഹിതമാക്കി നീക്കം ചെയ്തു.</value>
+</data>
+<data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
+  <value>ഏതെങ്കിലും ഉപകരണ ഉദ്ദേശ്യം തിരഞ്ഞെടുക്കപ്പെട്ടിട്ടില്ല, അല്ലെങ്കിൽ പ്രയോഗിക്കാൻ പൊരുത്തപ്പെടുന്ന ഇനങ്ങൾ ഒന്നുമില്ല.</value>
+</data>
 </root>

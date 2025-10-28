@@ -43,12 +43,17 @@ public partial class App : Application
 	private static bool _activationIsFileActivation;
 
 	// CLI state carried across elevation
-	internal static bool CliRequested;
 	private static int? _cliPresetIndex;
 	private static string? _cliOperation;
 
+	// CLI action token (single-word subcommand parsed after --cli)
+	private static string? _cliAction;
+
 	// Device usage intent requested via CLI
 	private static Intent? _cliDeviceIntent;
+
+	// Determines whether the session must prompt for UAC to elevate or not
+	private static bool requireAdminPrivilege;
 
 	/// <summary>
 	/// Invoked when the application is launched.
@@ -56,129 +61,72 @@ public partial class App : Application
 	/// <param name="args">Details about the launch request and process.</param>
 	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 	{
-		// Determines whether the session must prompt for UAC to elevate or not
-		bool requireAdminPrivilege = false;
+		string[] possibleArgs = Environment.GetCommandLineArgs();
 
 		try
 		{
-			// https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#file-type-association
-			AppActivationArguments activatedEventArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+			AppActivationArguments? activatedEventArgs = null;
 
-			if (activatedEventArgs.Kind is ExtendedActivationKind.File)
-			{
-				Logger.Write(GlobalVars.GetStr("FileActivationDetectedMessage"));
-
-				IFileActivatedEventArgs? fileActivatedArgs = activatedEventArgs.Data as IFileActivatedEventArgs;
-
-				if (fileActivatedArgs is not null)
-				{
-					IReadOnlyList<IStorageItem>? incomingStorageItems = fileActivatedArgs.Files;
-
-					if (incomingStorageItems is not null && incomingStorageItems.Count > 0)
-					{
-						foreach (IStorageItem item in incomingStorageItems)
-						{
-							if (item.Path is not null && File.Exists(item.Path))
-							{
-								// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-								requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(item.Path);
-
-								// Store ephemeral activation context
-								_activationFilePath = item.Path;
-								_activationIsFileActivation = true;
-
-								break;
-							}
-						}
-					}
-					else
-					{
-						Logger.Write(GlobalVars.GetStr("FileActivationNoObjectsMessage"));
-					}
-				}
-				else
-				{
-					Logger.Write(GlobalVars.GetStr("FileActivationNoArgumentsMessage"));
-				}
+			try
+			{   // This won't work if the app is installed for a user with Standard privileges and then launched as Admin (another user that has Admin privilege).
+				// https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#file-type-association
+				activatedEventArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
 			}
-			else
+#if DEBUG
+			catch (Exception ex) { Logger.Write(ex); }
+#else
+			catch { }
+#endif
+
+			if (activatedEventArgs is not null)
 			{
 				Logger.Write($"ExtendedActivationKind: {activatedEventArgs.Kind}");
 
-				string[] possibleArgs = Environment.GetCommandLineArgs();
-
-				// Detect console request and attach/allocate a console.
-				CliRequested = possibleArgs.Any(a => string.Equals(a, "--cli", StringComparison.OrdinalIgnoreCase));
-				if (CliRequested)
+				if (activatedEventArgs.Kind is ExtendedActivationKind.File)
 				{
-					ConsoleHelper.AttachOrAllocate();
-					Logger.Write("Harden System Security - CLI mode");
-				}
+					Logger.Write(GlobalVars.GetStr("FileActivationDetectedMessage"));
 
-				// Parse CLI: preset index (0,1,2)
-				string? presetArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--preset=", StringComparison.OrdinalIgnoreCase));
-				if (presetArg is not null)
-				{
-					string raw = presetArg["--preset=".Length..].Trim();
-					if (int.TryParse(raw, out int idx) && idx >= 0 && idx <= 2)
+					IFileActivatedEventArgs? fileActivatedArgs = activatedEventArgs.Data as IFileActivatedEventArgs;
+
+					if (fileActivatedArgs is not null)
 					{
-						_cliPresetIndex = idx;
-					}
-					else
-					{
-						Logger.Write("--preset must be 0 (Basic), 1 (Recommended), or 2 (Complete).");
-						Environment.Exit(2);
-						return;
-					}
-				}
+						IReadOnlyList<IStorageItem>? incomingStorageItems = fileActivatedArgs.Files;
 
-				// Parse CLI: device usage intent
-				string? intentArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--intent=", StringComparison.OrdinalIgnoreCase));
-				if (intentArg is not null)
-				{
-					string rawIntent = intentArg["--intent=".Length..].Trim();
-					if (Enum.TryParse(rawIntent, true, out Intent parsedIntent))
-					{
-						_cliDeviceIntent = parsedIntent;
-					}
-					else
-					{
-						Logger.Write("Error: --intent value was not valid.");
-						Environment.Exit(2);
-						return;
-					}
-				}
-
-				string? opArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--op=", StringComparison.OrdinalIgnoreCase));
-				if (opArg is not null)
-				{
-					// Store raw operation text; validation is done via enum parsing below.
-					_cliOperation = opArg["--op=".Length..].Trim();
-				}
-
-				// Look for our key
-				string? fileArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
-
-				if (fileArg is not null)
-				{
-					string filePath = fileArg["--file=".Length..].Trim('"');
-
-					if (!string.IsNullOrWhiteSpace(filePath))
-					{
-						if (File.Exists(filePath))
+						if (incomingStorageItems is not null && incomingStorageItems.Count > 0)
 						{
-							Logger.Write($"Parsed File: {filePath}");
-							_activationFilePath = filePath;
+							foreach (IStorageItem item in incomingStorageItems)
+							{
+								if (item.Path is not null && File.Exists(item.Path))
+								{
+									// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
+									requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(item.Path);
 
-							// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-							requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(filePath);
+									// Store ephemeral activation context
+									_activationFilePath = item.Path;
+									_activationIsFileActivation = true;
+
+									break;
+								}
+							}
 						}
 						else
 						{
 							Logger.Write(GlobalVars.GetStr("FileActivationNoObjectsMessage"));
 						}
 					}
+					else
+					{
+						Logger.Write(GlobalVars.GetStr("FileActivationNoArgumentsMessage"));
+					}
 				}
+				else
+				{
+					ParseArgs(possibleArgs, null);
+				}
+			}
+			else
+			{
+				ParseArgs(possibleArgs, null);
 			}
 		}
 		catch (Exception ex)
@@ -187,7 +135,7 @@ public partial class App : Application
 		}
 
 		// If a CLI preset or a device intent is requested, require elevation unless already elevated.
-		if (_cliPresetIndex.HasValue || _cliDeviceIntent.HasValue)
+		if (_cliPresetIndex.HasValue || _cliDeviceIntent.HasValue || _cliAction is not null)
 		{
 			if (!IsElevated)
 			{
@@ -219,7 +167,7 @@ public partial class App : Application
 		}
 
 		// If CLI was requested.
-		if (CliRequested)
+		if (Logger.CliRequested)
 		{
 			try
 			{
@@ -268,6 +216,21 @@ public partial class App : Application
 					await ViewModelProvider.ProtectVM.RunIntentFromCliAsync(_cliDeviceIntent.Value);
 
 					Logger.Write("Intent-based protections applied successfully.");
+				}
+
+				// If a standalone CLI action was requested, execute it headlessly.
+				else if (!string.IsNullOrWhiteSpace(_cliAction))
+				{
+					if (string.Equals(_cliAction, "CheckMSStoreAppUpdate", StringComparison.OrdinalIgnoreCase))
+					{
+						await ViewModelProvider.MainWindowVM.CheckForAllAppUpdates_Internal();
+					}
+					else
+					{
+						Logger.Write($"Error: Unknown CLI action '{_cliAction}'.");
+						Environment.Exit(2);
+						return;
+					}
 				}
 
 				// When CLI was requested, the GUI should not be loaded. If no valid CLI operation was requested, just exit.
@@ -372,7 +335,7 @@ public partial class App : Application
 		List<string> parts = new(capacity: 6);
 
 		// Preserve console across elevation if requested
-		if (CliRequested)
+		if (Logger.CliRequested)
 		{
 			parts.Add("--cli");
 		}
@@ -391,6 +354,12 @@ public partial class App : Application
 		if (_cliDeviceIntent.HasValue)
 		{
 			parts.Add($"--intent={_cliDeviceIntent.Value}");
+		}
+
+		// Preserve single-token CLI action across elevation
+		if (!string.IsNullOrWhiteSpace(_cliAction))
+		{
+			parts.Add(_cliAction);
 		}
 
 		if (!string.IsNullOrWhiteSpace(_activationFilePath))
@@ -415,5 +384,97 @@ public partial class App : Application
 			_ = builder.Append(parts[i]);
 		}
 		return builder.ToString();
+	}
+
+	private static void ParseArgs(string[]? ArgsLines, string? ArgLine)
+	{
+		if (ArgsLines is not null)
+		{
+			// Detect console request and attach/allocate a console.
+			Logger.CliRequested = ArgsLines.Any(a => string.Equals(a, "--cli", StringComparison.OrdinalIgnoreCase));
+			if (Logger.CliRequested)
+			{
+				ConsoleHelper.AttachOrAllocate();
+				Logger.Write("Harden System Security - CLI mode");
+
+				// Extract a single-token action right after --cli if provided
+				int cliIndex = Array.FindIndex(ArgsLines, a => string.Equals(a, "--cli", StringComparison.OrdinalIgnoreCase));
+				if (cliIndex >= 0 && cliIndex + 1 < ArgsLines.Length)
+				{
+					string possibleAction = ArgsLines[cliIndex + 1];
+					// Action token must not be another flag (must not begin with "--")
+					if (!string.IsNullOrWhiteSpace(possibleAction) && !possibleAction.StartsWith("--", StringComparison.Ordinal))
+					{
+						_cliAction = possibleAction;
+					}
+				}
+			}
+
+			// Parse CLI: preset index (0,1,2)
+			string? presetArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--preset=", StringComparison.OrdinalIgnoreCase));
+			if (presetArg is not null)
+			{
+				string raw = presetArg["--preset=".Length..].Trim();
+				if (int.TryParse(raw, out int idx) && idx >= 0 && idx <= 2)
+				{
+					_cliPresetIndex = idx;
+				}
+				else
+				{
+					Logger.Write("--preset must be 0 (Basic), 1 (Recommended), or 2 (Complete).");
+					Environment.Exit(2);
+					return;
+				}
+			}
+
+			// Parse CLI: device usage intent
+			string? intentArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--intent=", StringComparison.OrdinalIgnoreCase));
+			if (intentArg is not null)
+			{
+				string rawIntent = intentArg["--intent=".Length..].Trim();
+				if (Enum.TryParse(rawIntent, true, out Intent parsedIntent))
+				{
+					_cliDeviceIntent = parsedIntent;
+				}
+				else
+				{
+					Logger.Write("Error: --intent value was not valid.");
+					Environment.Exit(2);
+					return;
+				}
+			}
+
+			string? opArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--op=", StringComparison.OrdinalIgnoreCase));
+			if (opArg is not null)
+			{
+				// Store raw operation text; validation is done via enum parsing below.
+				_cliOperation = opArg["--op=".Length..].Trim();
+			}
+
+			// Look for our key
+			string? fileArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
+
+			if (fileArg is not null)
+			{
+				string filePath = fileArg["--file=".Length..].Trim('"');
+
+				if (!string.IsNullOrWhiteSpace(filePath))
+				{
+					if (File.Exists(filePath))
+					{
+						Logger.Write($"Parsed File: {filePath}");
+						_activationFilePath = filePath;
+
+						// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
+						requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(filePath);
+					}
+					else
+					{
+						Logger.Write(GlobalVars.GetStr("FileActivationNoObjectsMessage"));
+					}
+				}
+			}
+
+		}
 	}
 }

@@ -59,7 +59,6 @@ namespace AppControlManager.CustomUIElements.HomePageCarousel;
 
 internal sealed partial class HeaderCarousel : UserControl
 {
-	private readonly Random random = new();
 	private readonly DispatcherTimer selectionTimer = new() { Interval = TimeSpan.FromMilliseconds(4000) };
 	private readonly DispatcherTimer deselectionTimer = new() { Interval = TimeSpan.FromMilliseconds(3000) };
 	private readonly List<int> numbers = [];
@@ -177,9 +176,7 @@ internal sealed partial class HeaderCarousel : UserControl
 		// Shuffle the list
 		for (int i = numbers.Count - 1; i > 0; i--)
 		{
-#pragma warning disable CA5394 // Do not use insecure randomness
-			int j = random.Next(i + 1);
-#pragma warning restore
+			int j = System.Security.Cryptography.RandomNumberGenerator.GetInt32(i + 1);
 			(numbers[j], numbers[i]) = (numbers[i], numbers[j]);
 		}
 

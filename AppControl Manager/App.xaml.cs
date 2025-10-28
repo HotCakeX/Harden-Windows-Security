@@ -139,8 +139,8 @@ public partial class App : Application
 		// Set the language of the application to the user's preferred language
 		ApplicationLanguages.PrimaryLanguageOverride = Settings.ApplicationGlobalLanguage;
 
-		// Create the Logs directory if it doesn't exist, won't do anything if it exists
-		_ = Directory.CreateDirectory(LogsDirectory);
+		// Initialize logging system
+		Logger.Configure(logsDirectory: LogsDirectory, appName: AppName);
 
 		// to handle unhandled exceptions
 		this.UnhandledException += App_UnhandledException;

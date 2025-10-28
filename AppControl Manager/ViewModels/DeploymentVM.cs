@@ -40,13 +40,14 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value), AuthenticationContext.Intune);
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			Dispatcher), AuthenticationContext.Intune);
 
 		if (GlobalVars.IsOlderThan24H2)
 		{

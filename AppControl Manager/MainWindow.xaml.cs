@@ -47,13 +47,11 @@ namespace HardenSystemSecurity;
 internal sealed partial class MainWindow : Window
 {
 
-#pragma warning disable CA1822
 	private MainWindowVM ViewModel => ViewModelProvider.MainWindowVM;
 	private AppSettings.Main AppSettings => App.Settings;
 #if APP_CONTROL_MANAGER
 	private SidebarVM sidebarVM => ViewModelProvider.SidebarVM;
 #endif
-#pragma warning restore CA1822
 
 	internal static Grid? RootGridPub { get; private set; }
 

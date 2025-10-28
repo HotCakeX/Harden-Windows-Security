@@ -18,8 +18,6 @@
 using System.IO;
 using System.Text;
 
-#pragma warning disable IDE0130
-
 namespace CommonCore.QuantumRelay;
 
 internal static class Helpers

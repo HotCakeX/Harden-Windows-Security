@@ -35,6 +35,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 		() => StatusInfoBarMessage, value => StatusInfoBarMessage = value,
 		() => StatusInfoBarSeverity, value => StatusInfoBarSeverity = value,
 		() => StatusInfoBarIsClosable, value => StatusInfoBarIsClosable = value,
+		Dispatcher,
 		() => StatusInfoBarTitle, value => StatusInfoBarTitle = value);
 	}
 

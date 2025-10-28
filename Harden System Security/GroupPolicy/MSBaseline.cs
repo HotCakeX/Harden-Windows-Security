@@ -28,13 +28,12 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
-using AppControlManager.Others;
 using HardenSystemSecurity.SecurityPolicy;
 using Microsoft.Win32;
 
-namespace HardenSystemSecurity.GroupPolicy;
-
 #pragma warning disable CA1819
+
+namespace HardenSystemSecurity.GroupPolicy;
 
 /// <summary>
 /// Enum representing the source type of a security measure

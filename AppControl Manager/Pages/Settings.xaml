@@ -3,7 +3,7 @@
     x:Class="AppControlManager.Pages.Settings"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:others="using:AppControlManager.Others"
+    xmlns:CC="using:CommonCore.Others"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
@@ -293,7 +293,7 @@
                                       SelectedIndex="{x:Bind ViewModel.LanguageComboBoxSelectedIndex, Mode=TwoWay}">
 
                                 <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="others:LanguageOption">
+                                    <DataTemplate x:DataType="CC:LanguageOption">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                             <Ellipse Width="24" Height="24">
                                                 <Ellipse.Fill>

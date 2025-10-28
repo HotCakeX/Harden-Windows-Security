@@ -90,7 +90,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		// Load countries data
 		_ = LoadCountriesDataAsync();
@@ -194,7 +194,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 		}
 
 		// Update UI on the dispatcher thread
-		_ = App.AppDispatcher.TryEnqueue(() =>
+		_ = Dispatcher.TryEnqueue(() =>
 		{
 			// Update the observable collection
 			CountryLists.Clear();

@@ -18,8 +18,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-#if HARDEN_SYSTEM_SECURITY
-#endif
 
 namespace AppControlManager.Others;
 

@@ -828,7 +828,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		UpdateFilteredItems();
 
@@ -1972,13 +1972,6 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				removeStrategy:         ApplyOperation.Enable,
 				validVerificationStates:ValidStatesForRemoval
 			),
-			new OptionalFeatureConfig(
-				name: "Windows-Defender-ApplicationGuard",
-				type: DISMResultType.Feature,
-				applyStrategy: ApplyOperation.Disable,
-				removeStrategy: ApplyOperation.Disable, // It's deprecated, don't enable it since it's not even enabled in 24H2 and later.
-				validVerificationStates:ValidStatesForRemoval
-			)
 
 			#endregion
 		];

@@ -21,7 +21,7 @@
         By installing it ourselves as a NuGet package, we guarantee we use the latest and most up to date version, especailly the perview versions.
         If we don't install it as NuGet package ourselves, WinAppSDK's CsWinRT will be used during compilation.
         -->
-		<WindowsSdkPackageVersion>10.0.26100.78</WindowsSdkPackageVersion>
+		<WindowsSdkPackageVersion>10.0.26100.81</WindowsSdkPackageVersion>
 
 		<!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -61,7 +61,7 @@
 		<AssemblyName>AppControlManager</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>2.0.47.0</FileVersion>
+		<FileVersion>2.0.48.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
 		<StartupObject>AppControlManager.Program</StartupObject>

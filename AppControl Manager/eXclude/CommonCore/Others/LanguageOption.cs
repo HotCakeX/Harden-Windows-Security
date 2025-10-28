@@ -15,19 +15,15 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Net;
-using System.Net.Http;
-
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 /// <summary>
-/// This class enforces minimum HTTP version of 2.0 and is future proof since it tries the highest available HTTP version by default
+/// Used by the ComboBox Items in the Settings page to display the language options.
 /// </summary>
-internal sealed partial class SecHttpClient : HttpClient
+/// <param name="name">Name of the language.</param>
+/// <param name="image">Path to the picture file of the country flag.</param>
+internal sealed class LanguageOption(string name, string image)
 {
-	internal SecHttpClient() : base()
-	{
-		DefaultRequestVersion = HttpVersion.Version20;
-		DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
-	}
+	internal string Name => name;
+	internal string Image => image;
 }

@@ -35,6 +35,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 			() => PolicyMergerInfoBarMessage, value => PolicyMergerInfoBarMessage = value,
 			() => PolicyMergerInfoBarSeverity, value => PolicyMergerInfoBarSeverity = value,
 			() => PolicyMergerInfoBarIsClosable, value => PolicyMergerInfoBarIsClosable = value,
+			Dispatcher,
 			() => PolicyMergerInfoBarTitle, value => PolicyMergerInfoBarTitle = value);
 	}
 

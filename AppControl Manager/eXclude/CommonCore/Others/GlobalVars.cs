@@ -16,11 +16,10 @@
 //
 
 using System.IO;
-#if HARDEN_SYSTEM_SECURITY
-#endif
+
 using Microsoft.Windows.ApplicationModel.Resources;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 /// <summary>
 /// This class defines constants and other variables used by the entire application
@@ -181,7 +180,7 @@ internal static class GlobalVars
 
 	static GlobalVars()
 	{
-		if (!App.IsElevated)
+		if (!Environment.IsPrivilegedProcess)
 			return;
 
 		// Ensure the directory exists

@@ -15,15 +15,12 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 /// <summary>
-/// Used by the ComboBox Items in the Settings page to display the language options.
+/// Represents one log line.
 /// </summary>
-/// <param name="name">Name of the language.</param>
-/// <param name="image">Path to the picture file of the country flag.</param>
-internal sealed class LanguageOption(string name, string image)
+internal sealed class LogLine(string text)
 {
-	internal string Name => name;
-	internal string Image => image;
+	internal string Text => text;
 }

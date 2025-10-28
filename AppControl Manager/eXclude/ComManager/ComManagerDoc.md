@@ -27,6 +27,8 @@ All examples assume the executable is named `ComManager.exe`.
 | `WMI` | Apply WMI preferences of typed values |
 | `SCHEDULEDTASKS` | Manage Scheduled Tasks |
 | `GetAvailability` | Check if a WMI class contains a given property (prints true/false) |
+| `Do` | Invoke a parameterless WMI class method |
+| `VIRTUALIZATION` | Manage Hyper‑V nested virtualization CPU setting |
 
 Minimal invocation pattern:
 ```
@@ -412,3 +414,31 @@ ComManager.exe Virtualization ExposeVirtualizationExtensions --VMName "Win 11 25
 ComManager.exe Virtualization ExposeVirtualizationExtensions --VMName "Win 11 25H2" --enable false
 ComManager.exe Virtualization ExposeVirtualizationExtensions --all --enable true
 ```
+
+---
+
+## 8. DO
+
+Invoke a parameterless WMI class method.
+
+Primary pattern:
+```
+ComManager.exe do <namespace> <className> <methodName>
+```
+
+Behavior:
+- Executes the specified method on the WMI class (static or instance).
+- Intended for parameterless methods. If the method requires input parameters, it will fail.
+- If the provider returns an output parameter `ReturnValue`, the program logs it. A non-zero `ReturnValue` does not automatically change the process exit code; the call is considered successful if the underlying ExecMethod call succeeds.
+
+Notes:
+- Arguments are case-insensitive for the primary command.
+- `<namespace>`, `<className>`, and `<methodName>` must be provided and non-empty; otherwise exit code `2` is returned.
+
+### 8.1 Example
+
+```
+ComManager.exe do root\cimv2\mdm\dmmap MDM_EnterpriseModernAppManagement_AppManagement01 UpdateScanMethod
+```
+
+If the provider supplies a `ReturnValue`, it will be printed to stdout (informational).

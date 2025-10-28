@@ -37,7 +37,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 	}
 
 	internal readonly InfoBarSettings MainInfoBar;

@@ -17,11 +17,7 @@
 
 using System.Runtime.InteropServices;
 
-#if HARDEN_SYSTEM_SECURITY
-using HardenSystemSecurity;
-#endif
-
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 internal static unsafe class Relaunch
 {

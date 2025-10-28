@@ -1801,7 +1801,7 @@
 <data name="FailedToOpenBCDSystemStore" xml:space="preserve">
   <value>Αποτυχία ανοίγματος καταστήματος συστήματος BCD</value>
 </data>
-<data name="FailedToParseCurrent EntryGUID" xml:space="preserve">
+<data name="FailedToParseCurrentEntryGUID" xml:space="preserve">
   <value>Αποτυχία ανάλυσης τρέχοντος GUID καταχώρησης</value>
 </data>
 <data name="CurrentBootEntryNotFoundAdministrator" xml:space="preserve">
@@ -4238,4 +4238,19 @@
 <data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
   <value>Δεν έχει επιλεγεί πρόθεση συσκευής ή δεν υπάρχουν αντίστοιχα στοιχεία προς εφαρμογή.</value>
 </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.Content" xml:space="preserve">
+    <value>Έλεγχος ενημερώσεων εφαρμογών Microsoft Store</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ελέγχει για ενημερώσεις των εφαρμογών του Microsoft Store και ξεκινά την εγκατάστασή τους. Εκτελεί την ίδια εργασία με το κουμπί "Έλεγχος για ενημερώσεις" στην εφαρμογή Microsoft Store.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ελέγχει για ενημερώσεις των εφαρμογών του Microsoft Store και ξεκινά την εγκατάστασή τους. Εκτελεί την ίδια εργασία με το κουμπί "Έλεγχος για ενημερώσεις" στην εφαρμογή Microsoft Store.</value>
+  </data>
+  <data name="CheckingForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Γίνεται έλεγχος για ενημερώσεις των εφαρμογών του Microsoft Store...</value>
+  </data>
+  <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Ο έλεγχος για ενημερώσεις των εφαρμογών του Microsoft Store ολοκληρώθηκε με επιτυχία. Για να δείτε τυχόν λήψεις που ξεκίνησαν, ανοίξτε την εφαρμογή Microsoft Store.</value>
+  </data>
 </root>

@@ -15,8 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-#pragma warning disable IDE0130
-
 namespace CommonCore.QuantumRelay;
 
 internal enum RequestCommand : byte

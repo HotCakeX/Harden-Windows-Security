@@ -45,13 +45,14 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		AuthCompanionCLS = new(UpdateButtonsStates, new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
-			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value), AuthenticationContext.MDEAdvancedHunting);
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			Dispatcher), AuthenticationContext.MDEAdvancedHunting);
 
 		// To adjust the initial width of the columns, giving them nice paddings.
 		CalculateColumnWidths();

@@ -27,7 +27,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-#pragma warning disable CA1303, CS0162, CA1819
+#pragma warning disable CA1303, CS0162
 
 // https://learn.microsoft.com/windows/uwp/monetize/manage-app-submissions#listing-object
 // https://learn.microsoft.com/windows/uwp/monetize/update-an-app-submission

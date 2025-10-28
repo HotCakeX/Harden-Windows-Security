@@ -1801,7 +1801,7 @@
   <data name="FailedToOpenBCDSystemStore" xml:space="preserve">
     <value>BCD സിസ്റ്റം സ്റ്റോർ തുറക്കുന്നതിൽ പരാജയപ്പെട്ടു</value>
   </data>
-  <data name="FailedToParseCurrent EntryGUID" xml:space="preserve">
+  <data name="FailedToParseCurrentEntryGUID" xml:space="preserve">
     <value>നിലവിലെ എൻട്രി GUID പാഴ്സ് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു</value>
   </data>
   <data name="CurrentBootEntryNotFoundAdministrator" xml:space="preserve">
@@ -4238,4 +4238,19 @@
 <data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
   <value>ഏതെങ്കിലും ഉപകരണ ഉദ്ദേശ്യം തിരഞ്ഞെടുക്കപ്പെട്ടിട്ടില്ല, അല്ലെങ്കിൽ പ്രയോഗിക്കാൻ പൊരുത്തപ്പെടുന്ന ഇനങ്ങൾ ഒന്നുമില്ല.</value>
 </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.Content" xml:space="preserve">
+    <value>Microsoft Store അപ്‌ഡേറ്റ് പരിശോധന</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Store ആപ്പുകളുടെ അപ്‌ഡേറ്റുകൾക്കായി പരിശോധിക്കുകയും അവയുടെ ഇൻസ്റ്റാളേഷൻ ആരംഭിക്കുകയും ചെയ്യുന്നു. Microsoft Store ആപ്പിലെ "അപ്‌ഡേറ്റുകൾ പരിശോധിക്കുക" ബട്ടൺ ചെയ്യുന്ന അതേ പ്രവർത്തനമാണ് ഇത് നിർവഹിക്കുന്നത്.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Store ആപ്പുകളുടെ അപ്‌ഡേറ്റുകൾക്കായി പരിശോധിക്കുകയും അവയുടെ ഇൻസ്റ്റാളേഷൻ ആരംഭിക്കുകയും ചെയ്യുന്നു. Microsoft Store ആപ്പിലെ "അപ്‌ഡേറ്റുകൾ പരിശോധിക്കുക" ബട്ടൺ ചെയ്യുന്ന അതേ പ്രവർത്തനമാണ് ഇത് നിർവഹിക്കുന്നത്.</value>
+  </data>
+  <data name="CheckingForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Microsoft Store ആപ്പുകളുടെ അപ്‌ഡേറ്റുകൾക്കായി പരിശോധിക്കുന്നു...</value>
+  </data>
+  <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Microsoft Store ആപ്പുകളുടെ അപ്‌ഡേറ്റുകൾക്കായി വിജയകരമായി പരിശോധിച്ചു. ആരംഭിച്ചിട്ടുള്ള ഏതാനും ഡൗൺലോഡുകൾ കാണാൻ, ദയവായി Microsoft Store ആപ്പ് തുറക്കുക.</value>
+  </data>
 </root>

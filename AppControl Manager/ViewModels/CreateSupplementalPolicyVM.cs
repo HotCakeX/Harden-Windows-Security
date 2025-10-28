@@ -53,6 +53,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			() => FilesAndFoldersInfoBarMessage, value => FilesAndFoldersInfoBarMessage = value,
 			() => FilesAndFoldersInfoBarSeverity, value => FilesAndFoldersInfoBarSeverity = value,
 			() => FilesAndFoldersInfoBarIsClosable, value => FilesAndFoldersInfoBarIsClosable = value,
+			Dispatcher,
 			() => FilesAndFoldersInfoBarTitle, value => FilesAndFoldersInfoBarTitle = value);
 
 		LVController = new(
@@ -105,6 +106,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			() => CertificatesBasedInfoBarMessage, value => CertificatesBasedInfoBarMessage = value,
 			() => CertificatesBasedInfoBarSeverity, value => CertificatesBasedInfoBarSeverity = value,
 			() => CertificatesBasedInfoBarIsClosable, value => CertificatesBasedInfoBarIsClosable = value,
+			Dispatcher,
 			() => CertificatesBasedInfoBarTitle, value => CertificatesBasedInfoBarTitle = value);
 
 		// InfoBar manager for the ISGInfoBar section
@@ -113,6 +115,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			() => ISGInfoBarMessage, value => ISGInfoBarMessage = value,
 			() => ISGInfoBarSeverity, value => ISGInfoBarSeverity = value,
 			() => ISGInfoBarIsClosable, value => ISGInfoBarIsClosable = value,
+			Dispatcher,
 			() => ISGInfoBarTitle, value => ISGInfoBarTitle = value);
 
 		// InfoBar manager for the StrictKernelMode section
@@ -121,6 +124,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			() => StrictKernelModeInfoBarMessage, value => StrictKernelModeInfoBarMessage = value,
 			() => StrictKernelModeInfoBarSeverity, value => StrictKernelModeInfoBarSeverity = value,
 			() => StrictKernelModeInfoBarIsClosable, value => StrictKernelModeInfoBarIsClosable = value,
+			Dispatcher,
 			() => StrictKernelModeInfoBarTitle, value => StrictKernelModeInfoBarTitle = value);
 
 		// InfoBar manager for the PFN section
@@ -129,6 +133,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			() => PFNInfoBarMessage, value => PFNInfoBarMessage = value,
 			() => PFNInfoBarSeverity, value => PFNInfoBarSeverity = value,
 			() => PFNInfoBarIsClosable, value => PFNInfoBarIsClosable = value,
+			Dispatcher,
 			() => PFNInfoBarTitle, value => PFNInfoBarTitle = value);
 
 		PFNBasedCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));
@@ -139,6 +144,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			() => CustomFilePathRulesInfoBarMessage, value => CustomFilePathRulesInfoBarMessage = value,
 			() => CustomFilePathRulesInfoBarSeverity, value => CustomFilePathRulesInfoBarSeverity = value,
 			() => CustomFilePathRulesInfoBarIsClosable, value => CustomFilePathRulesInfoBarIsClosable = value,
+			Dispatcher,
 			() => CustomFilePathRulesInfoBarTitle, value => CustomFilePathRulesInfoBarTitle = value);
 
 		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateSupplementalPolicyButton/Content"));

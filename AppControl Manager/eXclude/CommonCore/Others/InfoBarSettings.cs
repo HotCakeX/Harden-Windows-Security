@@ -15,12 +15,10 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-#if HARDEN_SYSTEM_SECURITY
-using HardenSystemSecurity;
-#endif
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 /// <summary>
 /// Used to pass ViewModel based properties of an InfoBar element to a class constructor
@@ -41,6 +39,7 @@ internal sealed class InfoBarSettings(
 	Func<string?> getMessage, Action<string?> setMessage,
 	Func<InfoBarSeverity> getSeverity, Action<InfoBarSeverity> setSeverity,
 	Func<bool> getIsClosable, Action<bool> setIsClosable,
+	DispatcherQueue DQ,
 	Func<string?>? getTitle = null, Action<string?>? setTitle = null)
 {
 	internal bool IsOpen
@@ -76,7 +75,7 @@ internal sealed class InfoBarSettings(
 
 	internal void WriteInfo(string Msg, string? title = null)
 	{
-		if (App.AppDispatcher.HasThreadAccess)
+		if (DQ.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg;
@@ -86,7 +85,7 @@ internal sealed class InfoBarSettings(
 		}
 		else
 		{
-			_ = App.AppDispatcher.TryEnqueue(() =>
+			_ = DQ.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg;
@@ -100,7 +99,7 @@ internal sealed class InfoBarSettings(
 
 	internal void WriteWarning(string Msg, string? title = null)
 	{
-		if (App.AppDispatcher.HasThreadAccess)
+		if (DQ.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg;
@@ -110,7 +109,7 @@ internal sealed class InfoBarSettings(
 		}
 		else
 		{
-			_ = App.AppDispatcher.TryEnqueue(() =>
+			_ = DQ.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg;
@@ -125,7 +124,7 @@ internal sealed class InfoBarSettings(
 
 	internal void WriteError(Exception ex, string? Msg = null, string? title = null)
 	{
-		if (App.AppDispatcher.HasThreadAccess)
+		if (DQ.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg is not null ? Msg + ex.Message : ex.Message;
@@ -135,7 +134,7 @@ internal sealed class InfoBarSettings(
 		}
 		else
 		{
-			_ = App.AppDispatcher.TryEnqueue(() =>
+			_ = DQ.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg is not null ? Msg + ex.Message : ex.Message;
@@ -149,7 +148,7 @@ internal sealed class InfoBarSettings(
 
 	internal void WriteSuccess(string Msg, string? title = null)
 	{
-		if (App.AppDispatcher.HasThreadAccess)
+		if (DQ.HasThreadAccess)
 		{
 			IsOpen = true;
 			Message = Msg;
@@ -159,7 +158,7 @@ internal sealed class InfoBarSettings(
 		}
 		else
 		{
-			_ = App.AppDispatcher.TryEnqueue(() =>
+			_ = DQ.TryEnqueue(() =>
 			{
 				IsOpen = true;
 				Message = Msg;

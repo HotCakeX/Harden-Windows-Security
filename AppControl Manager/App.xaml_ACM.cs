@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,19 +34,20 @@ namespace AppControlManager;
 
 #pragma warning disable CA1515
 
-// Any App Setting that is related to OnLaunched event is only used in this file.
 public partial class App : Application
 {
 	private static string? _activationAction;
 	private static string? _activationFilePath;
 	private static bool _activationIsFileActivation;
 
+	// Determines whether the session must prompt for UAC to elevate or not
+	private static bool requireAdminPrivilege;
+
 	/// <summary>
 	/// Invoked when the application is launched.
 	/// </summary>
 	/// <param name="args">Details about the launch request and process.</param>
 	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-
 	{
 		// Register the Jump List tasks
 		/*
@@ -64,103 +66,24 @@ public partial class App : Application
 
 		// About single instancing: https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#single-instanced-apps
 
-		// Determines whether the session must prompt for UAC to elevate or not
-		bool requireAdminPrivilege = false;
+		string[] possibleArgs = Environment.GetCommandLineArgs();
 
 		try
 		{
+			AppActivationArguments? activatedEventArgs = null;
 
-			// https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#file-type-association
-			AppActivationArguments activatedEventArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
-
-			if (activatedEventArgs.Kind is ExtendedActivationKind.File)
-			{
-				Logger.Write(GlobalVars.GetStr("FileActivationDetectedMessage"));
-
-				IFileActivatedEventArgs? fileActivatedArgs = activatedEventArgs.Data as IFileActivatedEventArgs;
-
-				if (fileActivatedArgs is not null)
-				{
-					IReadOnlyList<IStorageItem>? incomingStorageItems = fileActivatedArgs.Files;
-
-					if (incomingStorageItems is not null && incomingStorageItems.Count > 0)
-					{
-						foreach (IStorageItem item in incomingStorageItems)
-						{
-							if (item.Path is not null && File.Exists(item.Path))
-							{
-								// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-								requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(item.Path);
-
-								// Store ephemeral activation context
-								_activationFilePath = item.Path;
-								_activationIsFileActivation = true;
-
-								// We can only process one XML/CIP file for now
-								break;
-							}
-						}
-					}
-					else
-					{
-						Logger.Write(GlobalVars.GetStr("FileActivationNoObjectsMessage"));
-					}
-				}
-				else
-				{
-					Logger.Write(GlobalVars.GetStr("FileActivationNoArgumentsMessage"));
-				}
+			try
+			{   // This won't work if the app is installed for a user with Standard privileges and then launched as Admin (another user that has Admin privilege).
+				// https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#file-type-association
+				activatedEventArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
 			}
-			else if (activatedEventArgs.Kind is ExtendedActivationKind.Protocol)
-			{
-				ProtocolActivatedEventArgs? eventArgs = activatedEventArgs.Data as ProtocolActivatedEventArgs;
+#if DEBUG
+			catch (Exception ex) { Logger.Write(ex); }
+#else
+			catch { }
+#endif
 
-				string? protocolName = eventArgs?.Uri?.OriginalString;
-
-				if (protocolName is not null)
-				{
-
-					Logger.Write($"Protocol Activation Detected: {protocolName}");
-
-					Match match = Regex1().Match(protocolName);
-
-					string? action = null;
-					string? filePath = null;
-
-					// Allow action-only or action+file.
-					if (match.Success)
-					{
-						if (match.Groups[1].Success)
-						{
-							action = match.Groups[1].Value.Trim();
-							if (!string.IsNullOrWhiteSpace(action))
-							{
-								Logger.Write($"Action: {action}");
-								_activationAction = action;
-
-								// Elevation policy for action-only operations
-								if (!IsElevated &&
-									(string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.DeployRMMAuditPolicy), StringComparison.OrdinalIgnoreCase) ||
-									 string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.DeployRMMBlockPolicy), StringComparison.OrdinalIgnoreCase)))
-								{
-									requireAdminPrivilege = true;
-								}
-							}
-						}
-
-						if (match.Groups[2].Success)
-						{
-							filePath = match.Groups[2].Value;
-							if (!string.IsNullOrWhiteSpace(filePath))
-							{
-								Logger.Write($"File Path: {filePath}");
-								_activationFilePath = filePath;
-							}
-						}
-					}
-				}
-			}
-			else
+			if (activatedEventArgs is not null)
 			{
 				Logger.Write($"ExtendedActivationKind: {activatedEventArgs.Kind}");
 
@@ -171,48 +94,58 @@ public partial class App : Application
 				Logger.Write($"Arguments: {passed}");
 				*/
 
-				string[] possibleArgs = Environment.GetCommandLineArgs();
-
-				// Look for our two keys
-				string? actionArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--action=", StringComparison.OrdinalIgnoreCase));
-				string? fileArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
-
-				// Action is mandatory
-				if (actionArg is not null)
+				if (activatedEventArgs.Kind is ExtendedActivationKind.File)
 				{
-					// Extract the action
-					string action = actionArg["--action=".Length..].Trim();
+					Logger.Write(GlobalVars.GetStr("FileActivationDetectedMessage"));
 
-					if (!string.IsNullOrWhiteSpace(action))
+					IFileActivatedEventArgs? fileActivatedArgs = activatedEventArgs.Data as IFileActivatedEventArgs;
+
+					if (fileActivatedArgs is not null)
 					{
-						Logger.Write($"Parsed Action: {action}");
-						_activationAction = action;
-					}
+						IReadOnlyList<IStorageItem>? incomingStorageItems = fileActivatedArgs.Files;
 
-					// File is optional
-					if (fileArg is not null)
-					{
-						string filePath = fileArg["--file=".Length..].Trim('"');
-
-						if (!string.IsNullOrWhiteSpace(filePath))
+						if (incomingStorageItems is not null && incomingStorageItems.Count > 0)
 						{
-							Logger.Write($"Parsed File: {filePath}");
-							_activationFilePath = filePath;
+							foreach (IStorageItem item in incomingStorageItems)
+							{
+								if (item.Path is not null && File.Exists(item.Path))
+								{
+									// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
+									requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(item.Path);
 
-							// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-							requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(filePath);
+									// Store ephemeral activation context
+									_activationFilePath = item.Path;
+									_activationIsFileActivation = true;
+
+									// We can only process one XML/CIP file for now
+									break;
+								}
+							}
+						}
+						else
+						{
+							Logger.Write(GlobalVars.GetStr("FileActivationNoObjectsMessage"));
 						}
 					}
-
-					// Elevation policy for action-only operations
-					if (!IsElevated &&
-						(string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.DeployRMMAuditPolicy), StringComparison.OrdinalIgnoreCase) ||
-						 string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.DeployRMMBlockPolicy), StringComparison.OrdinalIgnoreCase)))
+					else
 					{
-						requireAdminPrivilege = true;
+						Logger.Write(GlobalVars.GetStr("FileActivationNoArgumentsMessage"));
 					}
-
 				}
+				else if (activatedEventArgs.Kind is ExtendedActivationKind.Protocol)
+				{
+					ProtocolActivatedEventArgs? eventArgs = activatedEventArgs.Data as ProtocolActivatedEventArgs;
+					Logger.Write($"Protocol Activation Detected: {eventArgs?.Uri?.OriginalString}");
+					ParseArgs(possibleArgs, eventArgs?.Uri?.OriginalString);
+				}
+				else
+				{
+					ParseArgs(possibleArgs, null);
+				}
+			}
+			else
+			{
+				ParseArgs(possibleArgs, null);
 			}
 		}
 		catch (Exception ex)
@@ -369,7 +302,7 @@ public partial class App : Application
 	/// Group 2 (optional) = file path.
 	/// </summary>
 	/// <returns></returns>
-	[GeneratedRegex(@"^appcontrol-manager:--action=([A-Za-z0-9]+)(?:--file=(.+))?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+	[GeneratedRegex(@"^appcontrol-manager:\s*(--action=[^\s]+)(?:\s+(--file=(?:""[^""]*""|[^\s]+)))?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
 	private static partial Regex Regex1();
 
 	/// <summary>
@@ -412,5 +345,71 @@ public partial class App : Application
 			_ = builder.Append(parts[i]);
 		}
 		return builder.ToString();
+	}
+
+	private static void ParseArgs(string[]? ArgsLines, string? ArgLine)
+	{
+		string? actionArg = null;
+		string? fileArg = null;
+
+		// Look for our two keys
+		if (!string.IsNullOrWhiteSpace(ArgLine))
+		{
+			Match match = Regex1().Match(ArgLine);
+
+			if (match.Success)
+			{
+				if (match.Groups[1].Success)
+				{
+					actionArg = match.Groups[1].Value.Trim();
+				}
+
+				if (match.Groups[2].Success)
+				{
+					fileArg = match.Groups[2].Value;
+				}
+			}
+		}
+		else if (ArgsLines is not null)
+		{
+			actionArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--action=", StringComparison.OrdinalIgnoreCase));
+			fileArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
+		}
+
+		// Action is mandatory
+		if (actionArg is not null)
+		{
+			// Extract the action
+			string action = actionArg["--action=".Length..].Trim();
+
+			if (!string.IsNullOrWhiteSpace(action))
+			{
+				Logger.Write($"Parsed Action: {action}");
+				_activationAction = action;
+			}
+
+			// File is optional
+			if (fileArg is not null)
+			{
+				string filePath = fileArg["--file=".Length..].Trim('"');
+
+				if (!string.IsNullOrWhiteSpace(filePath))
+				{
+					Logger.Write($"Parsed File: {filePath}");
+					_activationFilePath = filePath;
+
+					// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
+					requireAdminPrivilege = !FileAccessCheck.IsFileAccessibleForWrite(filePath);
+				}
+			}
+
+			// Elevation policy for action-only operations
+			if (!IsElevated &&
+				(string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.DeployRMMAuditPolicy), StringComparison.OrdinalIgnoreCase) ||
+				 string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.DeployRMMBlockPolicy), StringComparison.OrdinalIgnoreCase)))
+			{
+				requireAdminPrivilege = true;
+			}
+		}
 	}
 }

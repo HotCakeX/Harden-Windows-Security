@@ -42,7 +42,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		// Initializing the cancellable buttons
 		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));

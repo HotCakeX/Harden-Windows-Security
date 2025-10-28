@@ -37,7 +37,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		// Initialize cancellable buttons
 		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));

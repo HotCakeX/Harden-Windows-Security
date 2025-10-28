@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using CommunityToolkit.Common.Collections;
 
-#pragma warning disable CA1812, CS1998
+#pragma warning disable CS1998
 
 namespace AppControlManager.IncrementalCollection;
 

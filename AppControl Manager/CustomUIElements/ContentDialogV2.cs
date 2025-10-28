@@ -16,7 +16,6 @@
 //
 
 using System.Threading.Tasks;
-using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Media;
 using Microsoft.UI;

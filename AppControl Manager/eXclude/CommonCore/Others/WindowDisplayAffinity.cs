@@ -18,7 +18,7 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 /// <summary>
 /// Provides methods to control window display affinity for screen protection

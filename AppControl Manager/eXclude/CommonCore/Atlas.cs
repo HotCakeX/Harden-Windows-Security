@@ -18,8 +18,7 @@
 global using System;
 global using CommonCore;
 global using CommonCore.Interop;
-
-#pragma warning disable IDE0130
+global using CommonCore.Others;
 
 namespace CommonCore;
 

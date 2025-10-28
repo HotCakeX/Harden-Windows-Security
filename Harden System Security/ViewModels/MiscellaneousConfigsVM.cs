@@ -37,7 +37,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		// Initializing the cancellable buttons
 		ApplyAllCancellableButton = new(GlobalVars.GetStr("ApplyAllButtonText/Text"));
@@ -260,7 +260,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				valueName: "EnableSvchostMitigationPolicy",
 				type: RegistryValueType.REG_DWORD,
 				size: 4,
-				data: [],
+				data: ReadOnlyMemory<byte>.Empty,
 				hive: Hive.HKLM)
 			{
 				RegValue = "0",
@@ -286,7 +286,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				valueName: "LongPathsEnabled",
 				type: RegistryValueType.REG_DWORD,
 				size: 4,
-				data: [],
+				data: ReadOnlyMemory<byte>.Empty,
 				hive: Hive.HKLM)
 			{
 				RegValue = "0",

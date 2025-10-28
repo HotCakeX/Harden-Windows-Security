@@ -16,7 +16,6 @@
 //
 
 using System.Runtime.InteropServices;
-using AppControlManager.Others;
 
 namespace AppControlManager.Taskbar;
 

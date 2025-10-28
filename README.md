@@ -616,6 +616,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Understanding the Microsoft Pluton security processor](https://techcommunity.microsoft.com/blog/windows-itpro-blog/understanding-the-microsoft-pluton-security-processor/4370413)
 - [Important Security Topics from Azure and Security MVPs](https://techcommunity.microsoft.com/blog/mvp-blog/mvp%E2%80%99s-favorite-content-important-security-topics-from-azure-and-security-mvps/4382196)
 - [Security leadership in the age of constant disruption](https://blogs.windows.com/windowsexperience/2025/08/05/security-leadership-in-the-age-of-constant-disruption/)
+- [Microsoft Edge security for your business](https://learn.microsoft.com/deployedge/ms-edge-security-for-business)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

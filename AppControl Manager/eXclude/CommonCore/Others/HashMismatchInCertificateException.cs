@@ -15,7 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 /// <summary>
 /// a class to throw a custom exception when the certificate has HashMismatch

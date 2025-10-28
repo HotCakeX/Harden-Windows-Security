@@ -64,7 +64,7 @@ internal static class BCDManager
 			// Parse the current entry GUID
 			if (!Guid.TryParse(CURRENT_ENTRY_GUID, CultureInfo.InvariantCulture, out Guid currentGuid))
 			{
-				throw new InvalidOperationException(GlobalVars.GetStr("FailedToParseCurrent EntryGUID"));
+				throw new InvalidOperationException(GlobalVars.GetStr("FailedToParseCurrentEntryGUID"));
 			}
 
 			// Open the current BCD object

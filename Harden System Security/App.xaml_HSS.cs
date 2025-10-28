@@ -261,7 +261,6 @@ public partial class App : Application
 					{
 						Logger.Write("Error: --intent=All is not supported.");
 						Environment.Exit(2);
-						return;
 					}
 
 					Logger.Write($"Applying device usage intent '{_cliDeviceIntent.Value}'...");

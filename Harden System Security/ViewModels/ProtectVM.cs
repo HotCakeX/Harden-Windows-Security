@@ -192,23 +192,28 @@ internal sealed partial class ProtectVM : ViewModelBase
 	}
 
 	/// <summary>
+	/// Event handler for the UI button.
+	/// </summary>
+	internal async void ApplySelectedDeviceIntents() => await ApplySelectedDeviceIntents_Internal();
+
+	/// <summary>
 	/// Apply all previewed MUnits grouped by category, using category processors and passing selected intent.
 	/// No cancellation implemented yet.
 	/// i.e.,: this method collects distinct categories from the previews, then calls <see cref="CategoryProcessorFactory.GetProcessor"/> for each category and passes selectedIntent.
 	/// </summary>
-	internal async void ApplySelectedDeviceIntents()
+	private async Task ApplySelectedDeviceIntents_Internal()
 	{
 		// Nothing to apply if the preview is empty
 		if (DeviceIntentMUnitsPreview.Count == 0)
 		{
-			MainInfoBar.WriteWarning("No device intent selected, or no matching items to apply.");
+			MainInfoBar.WriteWarning(GlobalVars.GetStr("NoDeviceIntentSelectedOrNoMatchingItemsToApply"));
 			return;
 		}
 
 		// If no intent selected, warn and bail
 		if (SelectedDeviceIntent is null)
 		{
-			MainInfoBar.WriteWarning("No device intent selected, or no matching items to apply.");
+			MainInfoBar.WriteWarning(GlobalVars.GetStr("NoDeviceIntentSelectedOrNoMatchingItemsToApply"));
 			return;
 		}
 
@@ -259,7 +264,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 		{
 			// Mark cancellation and inform the user
 			ApplyIntentsCancellableButton.wasCancelled = true;
-			MainInfoBar.WriteWarning("Apply operation was cancelled by user.");
+			MainInfoBar.WriteWarning(GlobalVars.GetStr("ApplyOperationCancelledByUser"));
 		}
 		catch (Exception ex)
 		{
@@ -1357,4 +1362,31 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 		return output;
 	}
+
+	/// <summary>
+	/// Programmatically runs the same pipeline as the UI for a given preset index and operation.
+	/// </summary>
+	internal async Task RunPresetFromCliAsync(int presetIndex, HardenSystemSecurity.Helpers.MUnitOperation operation)
+	{
+		// This setter triggers GenerateCategories and the same selection logic the UI uses.
+		ProtectionPresetsSelectedIndex = presetIndex;
+
+		// Run the exact same pipeline as the UI buttons.
+		// Passing ApplySelectedCancellableButton just to satisfy the method signature, it has no effect on CLI operation.
+		await ExecuteSelectedCategoriesOperation(operation, ApplySelectedCancellableButton);
+	}
+
+	/// <summary>
+	/// Programmatically applies security measures for a given device usage intent using the same
+	/// category processor pipeline as the UI.
+	/// </summary>
+	/// <param name="selectedIntent">Device usage intent to apply.</param>
+	internal async Task RunIntentFromCliAsync(HardenSystemSecurity.DeviceIntents.Intent selectedIntent)
+	{
+		// Set the selected intent; this triggers RecomputeDeviceIntentsPreview() via the property setter.
+		SelectedDeviceIntent = DeviceIntents.First(i => i.Intent == selectedIntent);
+
+		await ApplySelectedDeviceIntents_Internal();
+	}
+
 }

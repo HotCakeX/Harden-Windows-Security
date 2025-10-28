@@ -10,6 +10,7 @@
 #include "BitLocker/BitLockerDisable.h"
 #include "BitLocker/BitLockerSuspend.h"
 #include "ScheduledTasks/ScheduledTasks.h"
+#include "Virtualization/Virtualization.h"
 
 #pragma comment(lib, "wbemuuid.lib")
 #pragma comment(lib, "winhttp.lib")
@@ -601,6 +602,102 @@ int wmain(int argc, wchar_t* argv[])
 			LogErr(L"Failed to set preference via command line.");
 			return 1;
 		}
+	}
+
+	// Primary: VIRTUALIZATION
+	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"virtualization"))
+	{
+		// Syntax: ComManager.exe virtualization
+		if (argc < 3)
+		{
+			return 2; // invalid args
+		}
+
+		wstring sub = argv[2];
+
+		// Require explicit "list" subcommand
+		if (EqualsOrdinalIgnoreCase(sub.c_str(), L"list"))
+		{
+			if (argc != 3)
+			{
+				return 2;
+			}
+			if (!Virtualization::PrintVmProcessorExposeVirtualizationExtensionsJson())
+			{
+				LogErr(L"Failed to enumerate Hyper-V VM processor settings. Error: ", GetLastErrorMessage());
+				return 1;
+			}
+			return 0;
+		}
+
+		if (EqualsOrdinalIgnoreCase(sub.c_str(), L"ExposeVirtualizationExtensions"))
+		{
+			bool hasAll = false;
+			bool hasName = false;
+			wstring vmName;
+			bool enable = false;
+			bool hasEnable = false;
+
+			for (int i = 3; i < argc; ++i)
+			{
+				wstring a = argv[i];
+
+				if (EqualsOrdinalIgnoreCase(a.c_str(), L"--all"))
+				{
+					if (hasName) return 2; // cannot combine --all and --VMName
+					hasAll = true;
+					continue;
+				}
+
+				if (EqualsOrdinalIgnoreCase(a.c_str(), L"--VMName"))
+				{
+					if (hasAll) return 2; // cannot combine --all and --VMName
+					if (i + 1 >= argc) return 2;
+					vmName = argv[++i];
+					if (vmName.empty()) return 2;
+					hasName = true;
+					continue;
+				}
+
+				if (EqualsOrdinalIgnoreCase(a.c_str(), L"--enable"))
+				{
+					if (i + 1 >= argc) return 2;
+					bool val = false;
+					if (!TryParseBool(argv[i + 1], val)) return 2;
+					enable = val;
+					hasEnable = true;
+					++i;
+					continue;
+				}
+
+				// Unknown token
+				return 2;
+			}
+
+			// Validate combination
+			if (!hasEnable) return 2;
+			if (hasAll == hasName) return 2; // exactly one of them must be set
+
+			bool ok = false;
+			if (hasAll)
+			{
+				ok = Virtualization::SetExposeVirtualizationExtensions_All(enable);
+			}
+			else
+			{
+				ok = Virtualization::SetExposeVirtualizationExtensions_ByName(vmName, enable);
+			}
+
+			if (!ok)
+			{
+				LogErr(L"Failed to set ExposeVirtualizationExtensions. Error: ", GetLastErrorMessage());
+				return 1;
+			}
+			return 0;
+		}
+
+		// Unknown subcommand
+		return 2;
 	}
 
 	// If we reached here, the primary command is unrecognized.

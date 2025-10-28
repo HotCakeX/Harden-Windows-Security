@@ -1838,4 +1838,98 @@ internal static unsafe partial class NativeMethods
 		string CapabilityName,
 		out IntPtr CapabilityInfo);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/powrprof/nf-powrprof-powerenumerate
+	/// </summary>
+	[LibraryImport("powrprof.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PowerEnumerate(
+	IntPtr RootPowerKey,
+	IntPtr SchemeGuid,
+	IntPtr SubGroupOfPowerSettingsGuid,
+	uint AccessFlags,
+	uint Index,
+	IntPtr Buffer,
+	ref uint BufferSize);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/powrprof/nf-powrprof-powerreadfriendlyname
+	/// </summary>
+	[LibraryImport("powrprof.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PowerReadFriendlyName(
+		IntPtr RootPowerKey,
+		ref Guid SchemeGuid,
+		IntPtr SubGroupOfPowerSettingsGuid,
+		IntPtr PowerSettingGuid,
+		IntPtr Buffer,
+		ref uint BufferSize);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/powrprof/nf-powrprof-powerduplicatescheme
+	/// </summary>
+	[LibraryImport("powrprof.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PowerDuplicateScheme(
+		IntPtr RootPowerKey,
+		ref Guid SourceSchemeGuid,
+		out IntPtr DestinationSchemeGuid);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/powersetting/nf-powersetting-powersetactivescheme
+	/// </summary>
+	[LibraryImport("powrprof.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PowerSetActiveScheme(
+		IntPtr RootPowerKey,
+		ref Guid SchemeGuid);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/powersetting/nf-powersetting-powergetactivescheme
+	/// </summary>
+	[LibraryImport("powrprof.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PowerGetActiveScheme(
+		IntPtr UserRootPowerKey,
+		out IntPtr ActivePolicyGuid);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/powrprof/nf-powrprof-powerdeletescheme
+	/// </summary>
+	[LibraryImport("powrprof.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PowerDeleteScheme(
+		IntPtr RootPowerKey,
+		ref Guid SchemeGuid);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winbase/nf-winbase-localfree
+	/// </summary>
+	[LibraryImport("kernel32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr LocalFree(IntPtr hMem);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/console/attachconsole
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int AttachConsole(int dwProcessId);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/console/allocconsole
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int AllocConsole();
+
 }

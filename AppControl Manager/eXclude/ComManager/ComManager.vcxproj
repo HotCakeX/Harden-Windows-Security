@@ -160,6 +160,7 @@
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="ScheduledTasks\ScheduledTasks.cpp" />
     <ClCompile Include="StringUtilities.cpp" />
+    <ClCompile Include="Virtualization\Virtualization.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitLocker/BitLockerDisable.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="ScheduledTasks\ScheduledTasks.h" />
     <ClInclude Include="StringUtilities.h" />
+    <ClInclude Include="Virtualization\Virtualization.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

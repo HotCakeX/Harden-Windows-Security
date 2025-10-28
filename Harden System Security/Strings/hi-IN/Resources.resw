@@ -4160,4 +4160,82 @@
   <data name="Processing" xml:space="preserve">
     <value>प्रसंस्करण किया जा रहा है</value>
   </data>
+    <data name="ConfigureHyperVMNestedVirtualizationButton.Content" xml:space="preserve">
+    <value>VMs के लिए नेस्टेड वर्चुअलाइज़ेशन कॉन्फ़िगर करें</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम की सभी Hyper-V वर्चुअल मशीनों के लिए नेस्टेड वर्चुअलाइज़ेशन फ़ीचर कॉन्फ़िगर करें। सक्षम होने पर, यह फ़ीचर वर्चुअल मशीनों को अपने भीतर अन्य वर्चुअल मशीनें चलाने या वर्चुअलाइज़ेशन पर निर्भर OS सुरक्षा सुविधाओं का उपयोग करने की अनुमति देता है, जिससे परीक्षण और विकास क्षमताएँ बेहतर होती हैं। कृपया ध्यान दें कि इस प्रक्रिया के सफल होने के लिए सभी VMs बंद होनी चाहिए.</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम की सभी Hyper-V वर्चुअल मशीनों के लिए नेस्टेड वर्चुअलाइज़ेशन फ़ीचर कॉन्फ़िगर करें। सक्षम होने पर, यह फ़ीचर वर्चुअल मशीनों को अपने भीतर अन्य वर्चुअल मशीनें चलाने या वर्चुअलाइज़ेशन पर निर्भर OS सुरक्षा सुविधाओं का उपयोग करने की अनुमति देता है, जिससे परीक्षण और विकास क्षमताएँ बेहतर होती हैं। कृपया ध्यान दें कि इस प्रक्रिया के सफल होने के लिए सभी VMs बंद होनी चाहिए.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सभी VMs के लिए सक्षम करें</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम की सभी Hyper-V वर्चुअल मशीनों के लिए नेस्टेड वर्चुअलाइज़ेशन सक्षम करें.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम की सभी Hyper-V वर्चुअल मशीनों के लिए नेस्टेड वर्चुअलाइज़ेशन सक्षम करें.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सभी VMs के लिए अक्षम करें</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम की सभी Hyper-V वर्चुअल मशीनों के लिए नेस्टेड वर्चुअलाइज़ेशन अक्षम करें.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम की सभी Hyper-V वर्चुअल मशीनों के लिए नेस्टेड वर्चुअलाइज़ेशन अक्षम करें.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.Content" xml:space="preserve">
+    <value>अल्टिमेट परफॉर्मेंस पावर प्लान</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अल्टिमेट परफॉर्मेंस पावर प्लान को कॉन्फ़िगर करें। यह प्लान ऊर्जा-बचत सुविधाओं को कम करके और प्रतिक्रिया क्षमता को प्रभावित करने वाली माइक्रो-लेटेंसी को न्यूनतम करके अधिकतम प्रदर्शन प्रदान करने के लिए डिज़ाइन किया गया है.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अल्टिमेट परफॉर्मेंस पावर प्लान को कॉन्फ़िगर करें। यह प्लान ऊर्जा-बचत सुविधाओं को कम करके और प्रतिक्रिया क्षमता को प्रभावित करने वाली माइक्रो-लेटेंसी को न्यूनतम करके अधिकतम प्रदर्शन प्रदान करने के लिए डिज़ाइन किया गया है.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>सक्षम करें और सक्रिय करें</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अल्टिमेट परफॉर्मेंस पावर प्लान को सक्षम करें और सक्रिय करें.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अल्टिमेट परफॉर्मेंस पावर प्लान को सक्षम करें और सक्रिय करें.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>अक्षम करें और निष्क्रिय करें</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अल्टिमेट परफॉर्मेंस पावर प्लान को अक्षम करें और निष्क्रिय करें.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अल्टिमेट परफॉर्मेंस पावर प्लान को अक्षम करें और निष्क्रिय करें.</value>
+  </data>
+  <data name="ConfiguringNestedVirtualizationForAllHyperVVMs" xml:space="preserve">
+  <value>सभी Hyper-V VMs के लिए नेस्टेड वर्चुअलाइज़ेशन कॉन्फ़िगर किया जा रहा है.</value>
+</data>
+<data name="NestedVirtSuccessFormat" xml:space="preserve">
+  <value>सभी Hyper-V VMs के लिए नेस्टेड वर्चुअलाइज़ेशन सफलतापूर्वक {0}.</value>
+</data>
+<data name="EnabledLowercase" xml:space="preserve">
+  <value>सक्षम किया गया</value>
+</data>
+<data name="DisabledLowercase" xml:space="preserve">
+  <value>अक्षम किया गया</value>
+</data>
+<data name="ErrorConfiguringNestedVirtualizationForAllHyperVVMsSeeLogs" xml:space="preserve">
+  <value>सभी Hyper-V VMs के लिए नेस्टेड वर्चुअलाइज़ेशन कॉन्फ़िगर करने में समस्या हुई। अधिक जानकारी के लिए कृपया लॉग देखें.</value>
+</data>
+<data name="UltimatePerfPlanEnabledAndActive" xml:space="preserve">
+  <value>अल्टिमेट परफॉर्मेंस पावर प्लान सक्षम कर दिया गया है और सक्रिय के रूप में सेट कर दिया गया है.</value>
+</data>
+<data name="UltimatePerfPlanDisabledAndRemoved" xml:space="preserve">
+  <value>अल्टिमेट परफॉर्मेंस पावर प्लान अक्षम कर दिया गया है और हटा दिया गया है.</value>
+</data>
+<data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
+  <value>कोई डिवाइस इंटेंट चयनित नहीं है, या लागू करने के लिए कोई मेल खाते आइटम नहीं हैं.</value>
+</data>
 </root>

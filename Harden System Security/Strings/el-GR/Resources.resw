@@ -4160,4 +4160,82 @@
   <data name="Processing" xml:space="preserve">
     <value>Επεξεργάζεται</value>
   </data>
+    <data name="ConfigureHyperVMNestedVirtualizationButton.Content" xml:space="preserve">
+    <value>Διαμόρφωση εμφωλευμένης εικονικοποίησης για εικονικές μηχανές</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαμορφώστε τη λειτουργία εμφωλευμένης εικονικοποίησης για όλες τις εικονικές μηχανές Hyper-V στο σύστημα. Όταν είναι ενεργοποιημένη, η λειτουργία αυτή επιτρέπει στις εικονικές μηχανές να εκτελούν άλλες εικονικές μηχανές εντός τους ή να αξιοποιούν λειτουργίες ασφάλειας του λειτουργικού συστήματος που βασίζονται στην εικονικοποίηση, ενισχύοντας τις δυνατότητες δοκιμών και ανάπτυξης. Σημείωση: όλες οι εικονικές μηχανές πρέπει να είναι απενεργοποιημένες ώστε να ολοκληρωθεί επιτυχώς αυτή η ενέργεια.</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαμορφώστε τη λειτουργία εμφωλευμένης εικονικοποίησης για όλες τις εικονικές μηχανές Hyper-V στο σύστημα. Όταν είναι ενεργοποιημένη, η λειτουργία αυτή επιτρέπει στις εικονικές μηχανές να εκτελούν άλλες εικονικές μηχανές εντός τους ή να αξιοποιούν λειτουργίες ασφάλειας του λειτουργικού συστήματος που βασίζονται στην εικονικοποίηση, ενισχύοντας τις δυνατότητες δοκιμών και ανάπτυξης. Σημείωση: όλες οι εικονικές μηχανές πρέπει να είναι απενεργοποιημένες ώστε να ολοκληρωθεί επιτυχώς αυτή η ενέργεια.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ενεργοποίηση για όλες τις εικονικές μηχανές</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποιήστε την εμφωλευμένη εικονικοποίηση για όλες τις εικονικές μηχανές Hyper-V στο σύστημα.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενεργοποιήστε την εμφωλευμένη εικονικοποίηση για όλες τις εικονικές μηχανές Hyper-V στο σύστημα.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Απενεργοποίηση για όλες τις εικονικές μηχανές</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Απενεργοποιήστε την εμφωλευμένη εικονικοποίηση για όλες τις εικονικές μηχανές Hyper-V στο σύστημα.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Απενεργοποιήστε την εμφωλευμένη εικονικοποίηση για όλες τις εικονικές μηχανές Hyper-V στο σύστημα.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.Content" xml:space="preserve">
+    <value>Σχέδιο ενέργειας Υπέρτατης Απόδοσης</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαμορφώστε το σχέδιο ενέργειας Υπέρτατης Απόδοσης. Αυτό το σχέδιο έχει σχεδιαστεί για να προσφέρει μέγιστη απόδοση, μειώνοντας τις λειτουργίες εξοικονόμησης ενέργειας και ελαχιστοποιώντας τις μικροκαθυστερήσεις που μπορεί να επηρεάσουν την απόκριση.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαμορφώστε το σχέδιο ενέργειας Υπέρτατης Απόδοσης. Αυτό το σχέδιο έχει σχεδιαστεί για να προσφέρει μέγιστη απόδοση, μειώνοντας τις λειτουργίες εξοικονόμησης ενέργειας και ελαχιστοποιώντας τις μικροκαθυστερήσεις που μπορεί να επηρεάσουν την απόκριση.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Ενεργοποίηση και ορισμός ως ενεργό</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποιήστε και ορίστε ως ενεργό το σχέδιο ενέργειας Υπέρτατης Απόδοσης.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενεργοποιήστε και ορίστε ως ενεργό το σχέδιο ενέργειας Υπέρτατης Απόδοσης.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Απενεργοποίηση και κατάργηση ενεργοποίησης</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Απενεργοποιήστε και καταργήστε την ενεργοποίηση του σχεδίου ενέργειας Υπέρτατης Απόδοσης.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Απενεργοποιήστε και καταργήστε την ενεργοποίηση του σχεδίου ενέργειας Υπέρτατης Απόδοσης.</value>
+  </data>
+  <data name="ConfiguringNestedVirtualizationForAllHyperVVMs" xml:space="preserve">
+  <value>Γίνεται διαμόρφωση εμφωλευμένης εικονικοποίησης για όλες τις εικονικές μηχανές Hyper-V.</value>
+</data>
+<data name="NestedVirtSuccessFormat" xml:space="preserve">
+  <value>Η εμφωλευμένη εικονικοποίηση {0} με επιτυχία για όλες τις εικονικές μηχανές Hyper-V.</value>
+</data>
+<data name="EnabledLowercase" xml:space="preserve">
+  <value>ενεργοποιήθηκε</value>
+</data>
+<data name="DisabledLowercase" xml:space="preserve">
+  <value>απενεργοποιήθηκε</value>
+</data>
+<data name="ErrorConfiguringNestedVirtualizationForAllHyperVVMsSeeLogs" xml:space="preserve">
+  <value>Παρουσιάστηκε πρόβλημα κατά τη διαμόρφωση εμφωλευμένης εικονικοποίησης για όλες τις εικονικές μηχανές Hyper-V. Δείτε τα αρχεία καταγραφής για περισσότερες πληροφορίες.</value>
+</data>
+<data name="UltimatePerfPlanEnabledAndActive" xml:space="preserve">
+  <value>Το σχέδιο ενέργειας Υπέρτατης Απόδοσης έχει ενεργοποιηθεί και οριστεί ως ενεργό.</value>
+</data>
+<data name="UltimatePerfPlanDisabledAndRemoved" xml:space="preserve">
+  <value>Το σχέδιο ενέργειας Υπέρτατης Απόδοσης έχει απενεργοποιηθεί και καταργηθεί.</value>
+</data>
+<data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
+  <value>Δεν έχει επιλεγεί πρόθεση συσκευής ή δεν υπάρχουν αντίστοιχα στοιχεία προς εφαρμογή.</value>
+</data>
 </root>

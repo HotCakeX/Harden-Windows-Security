@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using AnimatedVisuals;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -330,6 +331,13 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		// Apply the BackDrop when the ViewModel is instantiated
 		UpdateSystemBackDrop();
+
+		MainInfoBar = new InfoBarSettings(
+			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
+			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
+			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
+			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			null, null);
 	}
 
 	#region UI-Bound Properties
@@ -560,4 +568,106 @@ internal sealed partial class MainWindowVM : ViewModelBase
 				}
 		}
 	}
+
+	/// <summary>
+	/// The main InfoBar for the Sidebar.
+	/// </summary>
+	internal readonly InfoBarSettings MainInfoBar;
+	internal bool MainInfoBarIsOpen { get; set => SP(ref field, value); }
+	internal string? MainInfoBarMessage { get; set => SP(ref field, value); }
+	internal InfoBarSeverity MainInfoBarSeverity { get; set => SP(ref field, value); } = InfoBarSeverity.Informational;
+	internal bool MainInfoBarIsClosable { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Whether the button for configuring nested virtualizations on Sidebar is enabled.
+	/// </summary>
+	internal bool IsHyperVNestedVirtualizationButtonEnabled { get; set => SP(ref field, value); } = true;
+
+	internal async void EnableNestedVirtualizationForVMs() => await SetNestedVirtualizationForVMs(true);
+	internal async void DisableNestedVirtualizationForVMs() => await SetNestedVirtualizationForVMs(false);
+
+	/// <summary>
+	/// Configures nested virtualization for all Hyper-V VMs on the system.
+	/// </summary>
+	internal async Task SetNestedVirtualizationForVMs(bool enable)
+	{
+		try
+		{
+			IsHyperVNestedVirtualizationButtonEnabled = false;
+
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("ConfiguringNestedVirtualizationForAllHyperVVMs"));
+
+			await Task.Run(() =>
+			{
+				string command = enable
+					? "Virtualization ExposeVirtualizationExtensions --all --enable true"
+					: "Virtualization ExposeVirtualizationExtensions --all --enable false";
+
+				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, command));
+			});
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("NestedVirtSuccessFormat"), enable ? GlobalVars.GetStr("EnabledLowercase") : GlobalVars.GetStr("DisabledLowercase")));
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			MainInfoBar.WriteWarning(GlobalVars.GetStr("ErrorConfiguringNestedVirtualizationForAllHyperVVMsSeeLogs"));
+		}
+		finally
+		{
+			IsHyperVNestedVirtualizationButtonEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Whether the button for configuring Power Plan on Sidebar is enabled.
+	/// </summary>
+	internal bool IsPowerPlanConfigButtonEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// Enables and activates the Ultimate Performance power plan on the system.
+	/// </summary>
+	internal async void EnableUltimatePerformancePowerPlan()
+	{
+		try
+		{
+			IsPowerPlanConfigButtonEnabled = false;
+
+			await Task.Run(Power.PowerPlan.EnableUltimateScheme);
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("UltimatePerfPlanEnabledAndActive"));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsPowerPlanConfigButtonEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Disables and removes the Ultimate Performance power plan from the system.
+	/// </summary>
+	internal async void DisableUltimatePerformancePowerPlan()
+	{
+		try
+		{
+			IsPowerPlanConfigButtonEnabled = false;
+
+			await Task.Run(Power.PowerPlan.DeleteUltimateSchemes);
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("UltimatePerfPlanDisabledAndRemoved"));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsPowerPlanConfigButtonEnabled = true;
+		}
+	}
+
 }

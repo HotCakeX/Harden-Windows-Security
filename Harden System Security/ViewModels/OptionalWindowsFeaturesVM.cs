@@ -1022,7 +1022,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		// Publish grouped collection for the XAML CollectionViewSource
 		GroupedFilteredDISMItems.Clear();
 		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(RecommendedItems, GlobalVars.GetStr("RecommendedProtectionPresetComboBoxItemText")));
-		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(NetworkAdapterItems, GlobalVars.GetStr("NetworkAdapters")));
+		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(NetworkAdapterItems, GlobalVars.GetStr("NetworkAdapters/Text")));
 		GroupedFilteredDISMItems.Add(new GroupInfoListForDISMItems(OtherItems, "Others"));
 
 		// Update filtered counts

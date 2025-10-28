@@ -97,6 +97,11 @@ internal static class Logger
 	{
 		string logEntry = $"{DateTime.Now}: {message}";
 
+#if HARDEN_SYSTEM_SECURITY
+		if (App.CliRequested)
+			Console.WriteLine(logEntry);
+#endif
+
 		// Enqueue the log message for asynchronous writing
 		if (!_logChannel.Writer.TryWrite(logEntry))
 		{
@@ -109,6 +114,11 @@ internal static class Logger
 	internal static void Write(Exception ex, LogTypeIntel logType = LogTypeIntel.Error)
 	{
 		string logEntry = $"{DateTime.Now}: {FormatException(ex)}";
+
+#if HARDEN_SYSTEM_SECURITY
+		if (App.CliRequested)
+			Console.Error.WriteLine(logEntry);
+#endif
 
 		// Enqueue the log message for asynchronous writing
 		if (!_logChannel.Writer.TryWrite(logEntry))

@@ -27,11 +27,11 @@ using Microsoft.UI.Xaml;
 
 namespace HardenSystemSecurity.Helpers;
 
-internal enum MUnitOperation
+internal enum MUnitOperation : uint
 {
-	Apply,
-	Remove,
-	Verify
+	Apply = 0,
+	Remove = 1,
+	Verify = 2
 }
 
 /// <summary>

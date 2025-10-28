@@ -4160,4 +4160,82 @@ Huella Digital: {3}</value>
   <data name="Processing" xml:space="preserve">
     <value>Procesando</value>
   </data>
+    <data name="ConfigureHyperVMNestedVirtualizationButton.Content" xml:space="preserve">
+    <value>Configurar virtualización anidada para las máquinas virtuales</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configura la función de virtualización anidada para todas las máquinas virtuales de Hyper-V en el sistema. Al habilitarse, esta función permite que las máquinas virtuales ejecuten otras máquinas virtuales dentro de ellas o utilicen funciones de seguridad del sistema operativo que dependen de la virtualización, lo que mejora las capacidades de prueba y desarrollo. Ten en cuenta que todas las VMs deben estar apagadas para que esta operación se realice correctamente.</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Configura la función de virtualización anidada para todas las máquinas virtuales de Hyper-V en el sistema. Al habilitarse, esta función permite que las máquinas virtuales ejecuten otras máquinas virtuales dentro de ellas o utilicen funciones de seguridad del sistema operativo que dependen de la virtualización, lo que mejora las capacidades de prueba y desarrollo. Ten en cuenta que todas las VMs deben estar apagadas para que esta operación se realice correctamente.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Habilitar para todas las VMs</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Habilitar la virtualización anidada para todas las máquinas virtuales de Hyper-V en el sistema.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Habilitar la virtualización anidada para todas las máquinas virtuales de Hyper-V en el sistema.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Deshabilitar para todas las VMs</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Deshabilitar la virtualización anidada para todas las máquinas virtuales de Hyper-V en el sistema.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Deshabilitar la virtualización anidada para todas las máquinas virtuales de Hyper-V en el sistema.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.Content" xml:space="preserve">
+    <value>Plan de energía Rendimiento máximo</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configura el plan de energía Rendimiento máximo. Este plan está diseñado para ofrecer el máximo rendimiento al reducir las funciones de ahorro de energía y minimizar las micro-latencias que pueden afectar la capacidad de respuesta.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Configura el plan de energía Rendimiento máximo. Este plan está diseñado para ofrecer el máximo rendimiento al reducir las funciones de ahorro de energía y minimizar las micro-latencias que pueden afectar la capacidad de respuesta.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Habilitar y activar</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Habilitar y activar el plan de energía Rendimiento máximo.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Habilitar y activar el plan de energía Rendimiento máximo.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Deshabilitar y desactivar</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Deshabilitar y desactivar el plan de energía Rendimiento máximo.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Deshabilitar y desactivar el plan de energía Rendimiento máximo.</value>
+  </data>
+  <data name="ConfiguringNestedVirtualizationForAllHyperVVMs" xml:space="preserve">
+  <value>Configurando la virtualización anidada para todas las VMs de Hyper-V.</value>
+</data>
+<data name="NestedVirtSuccessFormat" xml:space="preserve">
+  <value>Se {0} correctamente la virtualización anidada para todas las VMs de Hyper-V.</value>
+</data>
+<data name="EnabledLowercase" xml:space="preserve">
+  <value>habilitó</value>
+</data>
+<data name="DisabledLowercase" xml:space="preserve">
+  <value>deshabilitó</value>
+</data>
+<data name="ErrorConfiguringNestedVirtualizationForAllHyperVVMsSeeLogs" xml:space="preserve">
+  <value>Se produjo un problema al configurar la virtualización anidada para todas las VMs de Hyper-V. Consulta los registros para obtener más información.</value>
+</data>
+<data name="UltimatePerfPlanEnabledAndActive" xml:space="preserve">
+  <value>El plan de energía Rendimiento máximo se habilitó y se estableció como activo.</value>
+</data>
+<data name="UltimatePerfPlanDisabledAndRemoved" xml:space="preserve">
+  <value>El plan de energía Rendimiento máximo se deshabilitó y se eliminó.</value>
+</data>
+<data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
+  <value>No se seleccionó ninguna intención de dispositivo o no hay elementos coincidentes para aplicar.</value>
+</data>
 </root>

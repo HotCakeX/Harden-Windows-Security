@@ -362,3 +362,53 @@ Examples:
 ComManager.exe getavailability root\Microsoft\Windows\DeviceGuard Win32_DeviceGuard RequiredSecurityProperties
 ComManager.exe getavailability root\cimv2 Win32_OperatingSystem NonExistentProperty
 ```
+
+---
+
+## 7. VIRTUALIZATION
+
+Manage Hyper‑V VM CPU setting `ExposeVirtualizationExtensions` (nested virtualization).
+
+Primary pattern:
+```
+ComManager.exe Virtualization <subcommand> [parameters]
+```
+
+### 7.1 Subcommands
+
+- list
+  - Outputs a JSON array of VMs with their current status and details.
+  - Usage:
+    ```
+    ComManager.exe Virtualization list
+    ```
+
+- ExposeVirtualizationExtensions
+  - Enable or disable ExposeVirtualizationExtensions for a specific VM by name, or for all VMs.
+  - Exactly one of `--VMName` or `--all` must be provided.
+  - `--enable` accepts `true/false` or `1/0` (case-insensitive).
+  - Usages:
+    ```
+    ComManager.exe Virtualization ExposeVirtualizationExtensions --VMName "<VM Name>" --enable true|false
+    ComManager.exe Virtualization ExposeVirtualizationExtensions --all --enable true|false
+    ```
+
+### 7.2 Notes
+
+- VM state requirement: Target VM must be Off (EnabledState = 3) for set operations.
+- Name matching uses Ordinal Ignore Case.
+- Host support: If the host does not expose the property on `Msvm_ProcessorSettingData`, the operation fails.
+- Permissions: Run as Administrator,
+- Exit codes follow the global “Exit Codes” section:
+  - 0 on success.
+  - 1 on runtime/provider errors. For `--all`, exit code is 1 if any VM fails; a summary is printed.
+  - 2 on invalid arguments (e.g., missing `--enable`, or both/neither of `--VMName` and `--all`).
+
+### 7.3 Examples
+
+```
+ComManager.exe Virtualization list
+ComManager.exe Virtualization ExposeVirtualizationExtensions --VMName "Win 11 25H2" --enable true
+ComManager.exe Virtualization ExposeVirtualizationExtensions --VMName "Win 11 25H2" --enable false
+ComManager.exe Virtualization ExposeVirtualizationExtensions --all --enable true
+```

@@ -16,10 +16,14 @@
 //
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using AppControlManager.Others;
 using AppControlManager.Taskbar;
+using HardenSystemSecurity.DeviceIntents;
+using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Others;
 using HardenSystemSecurity.ViewModels;
 using HardenSystemSecurity.WindowComponents;
@@ -37,6 +41,14 @@ public partial class App : Application
 	// Ephemeral activation context used only during this launch session
 	private static string? _activationFilePath;
 	private static bool _activationIsFileActivation;
+
+	// CLI state carried across elevation
+	internal static bool CliRequested;
+	private static int? _cliPresetIndex;
+	private static string? _cliOperation;
+
+	// Device usage intent requested via CLI
+	private static Intent? _cliDeviceIntent;
 
 	/// <summary>
 	/// Invoked when the application is launched.
@@ -95,6 +107,55 @@ public partial class App : Application
 
 				string[] possibleArgs = Environment.GetCommandLineArgs();
 
+				// Detect console request and attach/allocate a console.
+				CliRequested = possibleArgs.Any(a => string.Equals(a, "--cli", StringComparison.OrdinalIgnoreCase));
+				if (CliRequested)
+				{
+					ConsoleHelper.AttachOrAllocate();
+					Logger.Write("Harden System Security - CLI mode");
+				}
+
+				// Parse CLI: preset index (0,1,2)
+				string? presetArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--preset=", StringComparison.OrdinalIgnoreCase));
+				if (presetArg is not null)
+				{
+					string raw = presetArg["--preset=".Length..].Trim();
+					if (int.TryParse(raw, out int idx) && idx >= 0 && idx <= 2)
+					{
+						_cliPresetIndex = idx;
+					}
+					else
+					{
+						Logger.Write("--preset must be 0 (Basic), 1 (Recommended), or 2 (Complete).");
+						Environment.Exit(2);
+						return;
+					}
+				}
+
+				// Parse CLI: device usage intent
+				string? intentArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--intent=", StringComparison.OrdinalIgnoreCase));
+				if (intentArg is not null)
+				{
+					string rawIntent = intentArg["--intent=".Length..].Trim();
+					if (Enum.TryParse(rawIntent, true, out Intent parsedIntent))
+					{
+						_cliDeviceIntent = parsedIntent;
+					}
+					else
+					{
+						Logger.Write("Error: --intent value was not valid.");
+						Environment.Exit(2);
+						return;
+					}
+				}
+
+				string? opArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--op=", StringComparison.OrdinalIgnoreCase));
+				if (opArg is not null)
+				{
+					// Store raw operation text; validation is done via enum parsing below.
+					_cliOperation = opArg["--op=".Length..].Trim();
+				}
+
 				// Look for our key
 				string? fileArg = possibleArgs.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
 
@@ -125,6 +186,15 @@ public partial class App : Application
 			Logger.Write(ex);
 		}
 
+		// If a CLI preset or a device intent is requested, require elevation unless already elevated.
+		if (_cliPresetIndex.HasValue || _cliDeviceIntent.HasValue)
+		{
+			if (!IsElevated)
+			{
+				requireAdminPrivilege = true;
+			}
+		}
+
 		// If the current session is not elevated and user configured the app to ask for elevation on startup
 		// Also prompt for elevation whether or not prompt for elevation setting is on when user selects a file to open from file explorer that requires elevated permissions
 		if (!IsElevated && Settings.PromptForElevationOnStartup || !IsElevated && requireAdminPrivilege)
@@ -148,6 +218,70 @@ public partial class App : Application
 			}
 		}
 
+		// If CLI was requested.
+		if (CliRequested)
+		{
+			try
+			{
+				// If a CLI preset operation is requested, execute it headlessly.
+				if (_cliPresetIndex.HasValue)
+				{
+					int presetIndex = _cliPresetIndex.Value;
+
+					// Validate the operation
+					if (!Enum.TryParse(_cliOperation, true, out MUnitOperation opEnum))
+					{
+						Logger.Write("Error: --op value was not valid.");
+						Environment.Exit(2);
+						return;
+					}
+
+					Logger.Write($"Running preset {presetIndex} with operation '{opEnum}'...");
+
+					// Run the command
+					await ViewModelProvider.ProtectVM.RunPresetFromCliAsync(presetIndex, opEnum);
+
+					Logger.Write("Operation completed successfully.");
+				}
+
+				// If a device usage intent is requested, execute it headlessly.
+				else if (_cliDeviceIntent.HasValue)
+				{
+					// Require --op and only support Apply for intents for now
+					if (string.IsNullOrWhiteSpace(_cliOperation) ||
+						!Enum.TryParse(_cliOperation, true, out MUnitOperation opEnum) ||
+						opEnum != MUnitOperation.Apply)
+					{
+						Logger.Write("Error: --intent requires '--op=Apply'.");
+						Environment.Exit(2);
+						return;
+					}
+
+					if (_cliDeviceIntent.Value == Intent.All)
+					{
+						Logger.Write("Error: --intent=All is not supported.");
+						Environment.Exit(2);
+					}
+
+					Logger.Write($"Applying device usage intent '{_cliDeviceIntent.Value}'...");
+
+					await ViewModelProvider.ProtectVM.RunIntentFromCliAsync(_cliDeviceIntent.Value);
+
+					Logger.Write("Intent-based protections applied successfully.");
+				}
+
+				// When CLI was requested, the GUI should not be loaded. If no valid CLI operation was requested, just exit.
+				Environment.Exit(0);
+				return;
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+				Environment.Exit(1);
+				return;
+			}
+		}
+
 		m_window = new MainWindow();
 
 		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase) ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
@@ -165,7 +299,7 @@ public partial class App : Application
 		// File activation path (opened via File Explorer or protocol that yielded File activation)
 		if (_activationIsFileActivation && !string.IsNullOrWhiteSpace(_activationFilePath))
 		{
-			Logger.Write(string.Format(GlobalVars.GetStr("FileActivationLaunchMessage"), _activationFilePath));
+			Logger.Write(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("FileActivationLaunchMessage"), _activationFilePath));
 
 			try
 			{
@@ -188,7 +322,7 @@ public partial class App : Application
 		// CLI handoff path: elevated relaunch or direct CLI launch with --file=
 		else if (!string.IsNullOrWhiteSpace(_activationFilePath))
 		{
-			Logger.Write(string.Format(GlobalVars.GetStr("FileActivationLaunchMessage"), _activationFilePath));
+			Logger.Write(string.Format(CultureInfo.InvariantCulture, GlobalVars.GetStr("FileActivationLaunchMessage"), _activationFilePath));
 
 			try
 			{
@@ -232,17 +366,54 @@ public partial class App : Application
 
 	/// <summary>
 	/// Builds the argument string to pass to the elevated instance so that it can re-create the original launch intent.
-	/// For Harden System Security app, this currently means passing only the file path if present.
 	/// </summary>
 	private static string? BuildRelaunchArguments()
 	{
+		List<string> parts = new(capacity: 6);
+
+		// Preserve console across elevation if requested
+		if (CliRequested)
+		{
+			parts.Add("--cli");
+		}
+
+		// Preserve preset and operation across elevation
+		if (_cliPresetIndex.HasValue)
+		{
+			parts.Add($"--preset={_cliPresetIndex.Value}");
+		}
+		if (!string.IsNullOrWhiteSpace(_cliOperation))
+		{
+			parts.Add($"--op={_cliOperation}");
+		}
+
+		// Preserve device usage intent across elevation
+		if (_cliDeviceIntent.HasValue)
+		{
+			parts.Add($"--intent={_cliDeviceIntent.Value}");
+		}
+
 		if (!string.IsNullOrWhiteSpace(_activationFilePath))
 		{
 			// Properly quote the file path for command line parsing (double embedded quotes if any).
-			string safePath = _activationFilePath.Replace("\"", "\"\"");
-			return $"--file=\"{safePath}\"";
+			string safePath = _activationFilePath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase);
+			parts.Add($"--file=\"{safePath}\"");
 		}
 
-		return null;
+		if (parts.Count == 0)
+		{
+			return null;
+		}
+
+		StringBuilder builder = new();
+		for (int i = 0; i < parts.Count; i++)
+		{
+			if (i > 0)
+			{
+				_ = builder.Append(' ');
+			}
+			_ = builder.Append(parts[i]);
+		}
+		return builder.ToString();
 	}
 }

@@ -1,5 +1,8 @@
 # https://github.com/dotnet/roslyn-analyzers/blob/main/src/NetAnalyzers/Microsoft.CodeAnalysis.NetAnalyzers.md
 
+# top most EditorConfig file
+root = true
+
 # Applies to All files
 [*]
 charset = utf-8

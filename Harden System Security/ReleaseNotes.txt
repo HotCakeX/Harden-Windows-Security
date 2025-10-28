@@ -1,11 +1,15 @@
-* The verification results page for the Microsoft Security Baseline and Microsoft 365 Apps Security Baselines now displays the correct current value when a setting is non-compliant, so you can see exactly why it's non-compliant and which existing value causes the issue.
+* Updated dependencies to the latest versions.
 
-* The Protect page → Device Usage Intents section now permits only one intent to be selected at a time, matching the intended usage and removing ambiguity.
+* Added a new dropdown button to the Sidebar, responsible for enabling or disabling Nested Virtualization for all Hyper-V virtual machines on the system. This feature allows virtual machines to run other virtual machines within them or utilize OS security features that rely on virtualization, enhancing testing and development capabilities. Note that all VMs need to be turned off for this operation to succeed.
 
-* The Device Usage Intents preview ListView on the Protect page now lets you remove individual security measures from the preview before pressing Apply, giving you finer control over what gets applied.
+* The Sidebar's pane is now resizable and no longer has a fixed width.
 
-* On the Optional Windows Features page, each feature/capability now shows a per-item progress bar while verifying, removing, or applying, so you can see realtime progress for that specific item. Realtime progress is no longer written to the logs as text, avoiding many unnecessary log entries.
+* Improved localizations.
 
-* Also on the Optional Windows Features page, the app automatically scrolls the ListView to the currently active item during removal or apply operations, making it easy to track that item's realtime progress without manual scrolling.
+* Added a new dropdown button to the Sidebar, responsible for enabling/activating or disabling/deactivating the Ultimate Performance power plan on the system. This power plan is designed to provide the highest level of performance for demanding workloads by minimizing power-saving features. It is particularly beneficial for high-performance computing tasks, gaming, and other resource-intensive applications.
 
-* Again on the Optional Windows Features page, added a new group to the ListView called "Network Adapters", it groups and displays all currently installed network adapter drivers that come by default with the operating system.
+* Added full German language localization resources for the Harden System Security app to the repository. However, it will be available in the GUI and Microsoft Store in the next version because it needs to go through reviews first.
+
+* Added CLI support for applying and removing the security measures based on Presets in the Protect page.
+
+* Added CLI support for applying the security measures based on device usage intents in the Protect page.

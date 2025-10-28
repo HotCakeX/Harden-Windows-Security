@@ -223,6 +223,74 @@ explorer.exe shell:AppsFolder\VioletHansen.HardenSystemSecurity_ea7andspwdn10!Ap
 
 <br>
 
+### Headless CLI Mode
+
+Use `--cli` to run headless (no GUI). All CLI arguments are case-insensitive.
+
+- If an operation requires elevation, the app will relaunch itself elevated and preserve all CLI arguments.
+- If elevation is denied when required, no changes are performed.
+
+#### Preset-based Operations
+
+Run a full preset across selected categories.
+
+```
+HSS.exe --cli --preset=0|1|2 --op=Apply|Remove|Verify
+```
+
+- Presets
+  - 0 = Basic
+  - 1 = Recommended
+  - 2 = Complete
+
+- Examples
+  - Apply the Recommended preset:
+    ```
+    HSS.exe --cli --preset=1 --op=Apply
+    ```
+  - Verify the Complete preset:
+    ```
+    HSS.exe --cli --preset=2 --op=Verify
+    ```
+  - Remove the Basic preset:
+    ```
+    HSS.exe --cli --preset=0 --op=Remove
+    ```
+
+<br>
+
+#### Device Usage Intent Operations
+
+Apply protections tailored to a specific [device usage intent](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect#device-usage-intents). Only Apply is supported for intents at this time.
+
+```
+HSS.exe --cli --intent=<IntentName> --op=Apply
+```
+
+- Supported intents
+  - Development
+  - Gaming
+  - School
+  - Business
+  - SpecializedAccessWorkstation
+  - PrivilegedAccessWorkstation
+
+- Example (Business intent):
+
+```
+HSS.exe --cli --intent=Business --op=Apply
+```
+
+<br>
+
+#### Exit Codes
+
+- 0: Success or no-op (including cases where elevation was required but not granted; no changes performed)
+- 1: Unexpected failure during execution
+- 2: Invalid arguments (e.g., unsupported `--preset`, invalid `--op`, invalid `--intent`)
+
+<br>
+
 ## Under the Hood: Files and Directories Structures Explained
 
 Here is the breakdown of some of the directories and files used by the Harden System Security app.

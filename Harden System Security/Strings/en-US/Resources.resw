@@ -125,7 +125,7 @@
   <value>Elevation request was denied by the user</value>
 </data>
 <data name="WindowSizeSaveErrorMessage" xml:space="preserve">
-  <value>There was a program saving the window size when closing the app: {0}</value>
+  <value>There was a problem saving the window size when closing the app: {0}</value>
 </data>
 <data name="ErrorDialogTitle" xml:space="preserve">
   <value>An error occurred</value>
@@ -974,7 +974,7 @@
     <value>Starting merging the selected Group Policy POL files.</value>
   </data>
   <data name="StartPOLFileMergeButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Starting merging the selected Group Policy POL files.</value>
+    <value>Starting to merge the selected Group Policy POL files.</value>
   </data>
   <data name="OpenSidebarMenuFlyoutItem.Text" xml:space="preserve">
     <value>Open Sidebar</value>
@@ -1193,10 +1193,10 @@
     <value>Remove Selected</value>
   </data>
   <data name="RemoveSelectedMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Only Remove the security measures that you have selected.</value>
+    <value>Only remove the security measures that you have selected.</value>
   </data>
   <data name="RemoveSelectedMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-   <value>Only Remove the security measures that you have selected.</value>
+   <value>Only remove the security measures that you have selected.</value>
   </data>
   <data name="ManageSelectionsDropDownButton.Content" xml:space="preserve">
     <value>Manage Selections</value>
@@ -1412,7 +1412,7 @@
   <value>POL files merged successfully. Check the logs for details.</value>
 </data>
 <data name="SelectAtLeastOnePOLFileWarning" xml:space="preserve">
-  <value>Please at least one POL file to convert.</value>
+  <value>Please select at least one POL file to convert.</value>
 </data>
 <data name="POLFilesConvertedToJSONSuccess" xml:space="preserve">
   <value>POL files converted to JSON successfully. The output file is: {0}</value>
@@ -1823,7 +1823,7 @@
   <value>Error opening a handle to the file '{0}': {1}</value>
 </data>
 <data name="ExtraInfoFileReputationCheck" xml:space="preserve">
-  <value>There were extra info regarding file reputation check: {0}, {1}, {2}, {3}</value>
+  <value>There was extra info regarding file reputation check: {0}, {1}, {2}, {3}</value>
 </data>
 <data name="FailedToQueryReputation" xml:space="preserve">
   <value>Failed to query the reputation: {0}</value>
@@ -2135,7 +2135,7 @@
     <value>Remove</value>
   </data>
   <data name="OpenTheFollowingLinkInBrowser" xml:space="preserve">
-    <value>Open the following link in browser: {0}</value>
+    <value>Open the following link in the browser: {0}</value>
   </data>
   <data name="StatusOverviewText.Text" xml:space="preserve">
     <value>Status Overview</value>
@@ -2526,7 +2526,7 @@
    <value>Individual Country IP Blocking</value>
   </data>
   <data name="IndividualCountryIPBlockingDescriptionText.Text" xml:space="preserve">
-   <value>Use daily updated country IP address ranges to block specific countries on you system via Windows Firewall rules.</value>
+   <value>Use daily updated country IP address ranges to block specific countries on your system via Windows Firewall rules.</value>
   </data>
   <data name="LearnMoreHyperLinkButton.Content" xml:space="preserve">
     <value>Learn More</value>
@@ -3163,7 +3163,7 @@ Thumbprint: {3}</value>
     <value>Trusted Platform Module</value>
   </data>
   <data name="TPMSectionDescription.Text" xml:space="preserve">
-    <value>BitLocker uses the devices's TPM to protect the encryption key.</value>
+    <value>BitLocker uses the device's TPM to protect the encryption key.</value>
   </data>
   <data name="TPMSectionBody.Text" xml:space="preserve">
     <value>With this protector, the encrypted drive is accessible only when attached to a TPM-equipped motherboard and the system's boot integrity remains intact. TPM-based protectors typically apply only to OS volumes.</value>
@@ -3184,7 +3184,7 @@ Thumbprint: {3}</value>
     <value>TPM, PIN, and startup key</value>
   </data>
   <data name="TPMPINStartupKeySectionDescription.Text" xml:space="preserve">
-    <value>BitLocker uses a combination of the TPM, Startup PIN, and input from of a USB flash drive that contains an external key. This is the most secure configuration of BitLocker and provides multi-factor authentication.</value>
+    <value>BitLocker uses a combination of the TPM, Startup PIN, and input from a USB flash drive that contains an external key. This is the most secure configuration of BitLocker and provides multi-factor authentication.</value>
   </data>
   <data name="StartupKeySectionTitle.Text" xml:space="preserve">
     <value>Startup key</value>
@@ -3199,7 +3199,7 @@ Thumbprint: {3}</value>
   <value>Loaded {0} BitLocker volumes.</value>
 </data>
 <data name="NoOutputReturnedFromPath" xml:space="preserve">
-  <value>No output were returned from {0}</value>
+  <value>No output was returned from {0}</value>
 </data>
 <data name="NoBitLockerVolumesDetected" xml:space="preserve">
   <value>No BitLocker volumes detected.</value>
@@ -3469,10 +3469,10 @@ Thumbprint: {3}</value>
     <value>Successfully exported {0} BitLocker volume(s) to: {1}</value>
   </data>
   <data name="WindowsNetworking_BlockNTLMTIP" xml:space="preserve">
-    <value>This can prevent you from using RDP (Remote Desktop) remotely via IP address which is insecure as it needs public exposed ports and uses NTLM. You can use Quick Assist or Bastion for Azure VMs which are more secure alternatives. Local RDP such as for Hyper-V enhanced session is not affected.</value>
+    <value>This can prevent you from using RDP (Remote Desktop) remotely via IP address which is insecure as it needs publicly exposed ports and uses NTLM. You can use Quick Assist or Bastion for Azure VMs which are more secure alternatives. Local RDP such as for Hyper-V enhanced session is not affected.</value>
   </data>
   <data name="UAC_NoFastUserSwitchingTIP" xml:space="preserve">
-    <value>This policy will prevent you from using "Forgot my PIN" feature in lock screen or logon screen. If you forget your PIN, you won't be able to recover it.</value>
+    <value>This policy will prevent you from using the "Forgot my PIN" feature in lock screen or logon screen. If you forget your PIN, you won't be able to recover it.</value>
   </data>
   <data name="SelectARemovableDriveText.Text" xml:space="preserve">
     <value>Select a Removable Drive</value>
@@ -3915,10 +3915,10 @@ Thumbprint: {3}</value>
     <value>Browse</value>
   </data>
   <data name="FileBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Opens the File picker dialog allowing you select file(s)</value>
+    <value>Opens the File picker dialog allowing you to select file(s)</value>
   </data>
   <data name="FileBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Opens the File picker dialog allowing you select file(s)</value>
+    <value>Opens the File picker dialog allowing you to select file(s)</value>
   </data>
   <data name="RetrieveRecommendedOnlyMenuFlyoutItem.Text" xml:space="preserve">
     <value>Retrieve Recommended Only</value>
@@ -4160,4 +4160,82 @@ Thumbprint: {3}</value>
   <data name="Processing" xml:space="preserve">
     <value>Processing</value>
   </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.Content" xml:space="preserve">
+    <value>Configure Nested Virtualization for VMs</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configure Nested Virtualization feature for all of the Hyper-V virtual machines on the system. When enabled, this feature allows virtual machines to run other virtual machines within them or utilize OS security features that rely on virtualization, enhancing testing and development capabilities. Note that all VMs need to be turned off for this operation to succeed.</value>
+  </data>
+  <data name="ConfigureHyperVMNestedVirtualizationButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Configure Nested Virtualization feature for all of the Hyper-V virtual machines on the system. When enabled, this feature allows virtual machines to run other virtual machines within them or utilize OS security features that rely on virtualization, enhancing testing and development capabilities. Note that all VMs need to be turned off for this operation to succeed.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Enable for All VMs</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enable Nested Virtualization for all of the Hyper-V virtual machines on the system.</value>
+  </data>
+  <data name="EnableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enable Nested Virtualization for all of the Hyper-V virtual machines on the system.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Disable for All VMs</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Disable Nested Virtualization for all of the Hyper-V virtual machines on the system.</value>
+  </data>
+  <data name="DisableHyperVMNestedVirtualizationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Disable Nested Virtualization for all of the Hyper-V virtual machines on the system.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.Content" xml:space="preserve">
+    <value>Ultimate Performance Power Plan</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configure the Ultimate Performance power plan. This plan is designed to deliver maximum performance by reducing power-saving features and minimizing micro-latencies that can affect responsiveness.</value>
+  </data>
+  <data name="ConfigureUltimatePerformancePowerPlanButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Configure the Ultimate Performance power plan. This plan is designed to deliver maximum performance by reducing power-saving features and minimizing micro-latencies that can affect responsiveness.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Enable and Activate</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enable and activate the Ultimate Performance power plan.</value>
+  </data>
+  <data name="EnableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enable and activate the Ultimate Performance power plan.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Disable and Deactivate</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Disable and deactivate the Ultimate Performance power plan.</value>
+  </data>
+  <data name="DisableUltimatePerformancePowerPlanMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Disable and deactivate the Ultimate Performance power plan.</value>
+  </data>
+  <data name="ConfiguringNestedVirtualizationForAllHyperVVMs" xml:space="preserve">
+  <value>Configuring nested virtualization for all of the Hyper-V VMs.</value>
+</data>
+<data name="NestedVirtSuccessFormat" xml:space="preserve">
+  <value>Successfully {0} nested virtualization for all of the Hyper-V VMs.</value>
+</data>
+<data name="EnabledLowercase" xml:space="preserve">
+  <value>enabled</value>
+</data>
+<data name="DisabledLowercase" xml:space="preserve">
+  <value>disabled</value>
+</data>
+<data name="ErrorConfiguringNestedVirtualizationForAllHyperVVMsSeeLogs" xml:space="preserve">
+  <value>There was a problem configuring nested virtualization for all of the Hyper-V VMs. Please see the logs for more info.</value>
+</data>
+<data name="UltimatePerfPlanEnabledAndActive" xml:space="preserve">
+  <value>Ultimate Performance power plan has been enabled and set as active.</value>
+</data>
+<data name="UltimatePerfPlanDisabledAndRemoved" xml:space="preserve">
+  <value>Ultimate Performance power plan has been disabled and removed.</value>
+</data>
+<data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
+  <value>No device intent selected, or no matching items to apply.</value>
+</data>
 </root>

@@ -261,7 +261,8 @@
             </NavigationView.FooterMenuItems>
 
             <!-- Split view to create the sidebar -->
-            <SplitView PaneBackground="Transparent"
+            <SplitView x:Name="SidebarSplitView"
+                       PaneBackground="Transparent"
                        IsPaneOpen="{x:Bind ViewModel.SidebarPaneIsOpen, Mode=TwoWay}"
                        OpenPaneLength="256"
                        CompactPaneLength="48"
@@ -271,173 +272,191 @@
                        AutomationProperties.LocalizedLandmarkType="Sidebar">
 
                 <SplitView.Pane>
-                    <Border BorderThickness="1"
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            CornerRadius="5">
+                    <!-- Wrap pane content in a Grid so we can overlay a left-edge sizer -->
+                    <Grid>
+                        <Border BorderThickness="1"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                CornerRadius="5">
 
-                        <ScrollViewer>
+                            <ScrollViewer>
 
-                            <controls:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Vertical" Margin="10,0,10,0" HorizontalAlignment="Center">
+                                <controls:WrapPanel HorizontalSpacing="20" VerticalSpacing="20" Orientation="Vertical" Margin="10,0,10,0" HorizontalAlignment="Center">
 
-                                <TextBlock x:Name="SidebarTextBlock" x:Uid="SidebarTextBlock" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarTextBlock" x:Uid="SidebarTextBlock" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,15,0,0" HorizontalTextAlignment="Center"/>
 
-                                <TextBlock x:Name="SidebarMainCaptionTextBlock" x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
+                                    <TextBlock x:Name="SidebarMainCaptionTextBlock" x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
 
-                                <Border Translation="{x:Bind ViewModel.BorderTranslation, Mode=OneWay}" BorderThickness="1" CornerRadius="15" Shadow="{StaticResource SharedShadow}">
+                                    <Border Translation="{x:Bind ViewModel.BorderTranslation, Mode=OneWay}" BorderThickness="1" CornerRadius="15" Shadow="{StaticResource SharedShadow}">
 
-                                    <Border.BorderBrush>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="HotPink" Offset="0" />
-                                            <GradientStop Color="Wheat" Offset="1" />
-                                        </LinearGradientBrush>
-                                    </Border.BorderBrush>
+                                        <Border.BorderBrush>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="HotPink" Offset="0" />
+                                                <GradientStop Color="Wheat" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </Border.BorderBrush>
 
-                                    <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="15" Orientation="Vertical" Padding="20" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="15" Orientation="Vertical" Padding="20" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-                                        <TextBlock TextWrapping="WrapWholeWords" HorizontalAlignment="Center" x:Name="SidebarPinnedPolicyPathTextBlock" x:Uid="SidebarPinnedPolicyPathTextBlock" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                                            <TextBlock TextWrapping="WrapWholeWords" HorizontalAlignment="Center" x:Name="SidebarPinnedPolicyPathTextBlock" x:Uid="SidebarPinnedPolicyPathTextBlock" Style="{ThemeResource BodyStrongTextBlockStyle}" />
 
-                                        <TextBox IsReadOnly="True"
-                                                 Text="{x:Bind ViewModel.SidebarBasePolicyPathTextBoxText, Mode=OneWay}"
-                                                 x:Name="SidebarPolicyPathPlaceHolder" x:Uid="SidebarPolicyPathPlaceHolder" TextWrapping="Wrap"
-                                                 Width="150" />
+                                            <TextBox IsReadOnly="True"
+                                                     Text="{x:Bind ViewModel.SidebarBasePolicyPathTextBoxText, Mode=OneWay}"
+                                                     x:Name="SidebarPolicyPathPlaceHolder" x:Uid="SidebarPolicyPathPlaceHolder" TextWrapping="Wrap"
+                                                     Width="150" />
 
-                                        <Button x:Name="SidebarBrowseButton" x:Uid="SidebarBrowseButton" HorizontalAlignment="Center" Click="{x:Bind Nav.SidebarBasePolicyBrowseButton_Click}" Style="{ThemeResource AccentButtonStyle}">
-                                            <Button.Content>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                        <FontIcon Glyph="&#xEC50;" Margin="0,0,8,0" />
-                                                        <TextBlock x:Name="BrowseTextBlock" x:Uid="BrowseTextBlock"/>
+                                            <Button x:Name="SidebarBrowseButton" x:Uid="SidebarBrowseButton" HorizontalAlignment="Center" Click="{x:Bind Nav.SidebarBasePolicyBrowseButton_Click}" Style="{ThemeResource AccentButtonStyle}">
+                                                <Button.Content>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                            <FontIcon Glyph="&#xEC50;" Margin="0,0,8,0" />
+                                                            <TextBlock x:Name="BrowseTextBlock" x:Uid="BrowseTextBlock"/>
+                                                        </StackPanel>
                                                     </StackPanel>
-                                                </StackPanel>
-                                            </Button.Content>
-                                        </Button>
+                                                </Button.Content>
+                                            </Button>
 
-                                        <Button x:Name="SidebarClearButton" x:Uid="SidebarClearButton" HorizontalAlignment="Center" Click="{x:Bind Nav.SidebarBasePolicyClearButton_Click}" Style="{ThemeResource AccentButtonStyle}">
-                                            <Button.Content>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                        <FontIcon Glyph="&#xE8E6;" Margin="0,0,8,0" />
-                                                        <TextBlock x:Name="ClearTextBlock" x:Uid="ClearTextBlock"/>
+                                            <Button x:Name="SidebarClearButton" x:Uid="SidebarClearButton" HorizontalAlignment="Center" Click="{x:Bind Nav.SidebarBasePolicyClearButton_Click}" Style="{ThemeResource AccentButtonStyle}">
+                                                <Button.Content>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                            <FontIcon Glyph="&#xE8E6;" Margin="0,0,8,0" />
+                                                            <TextBlock x:Name="ClearTextBlock" x:Uid="ClearTextBlock"/>
+                                                        </StackPanel>
                                                     </StackPanel>
-                                                </StackPanel>
-                                            </Button.Content>
-                                        </Button>
+                                                </Button.Content>
+                                            </Button>
 
-                                        <Button x:Name="SidebarPolicySelectAssignmentButton" x:Uid="SidebarPolicySelectAssignmentButton" HorizontalAlignment="Center">
-                                            <Button.Content>
-                                                <controls:WrapPanel Orientation="Horizontal">
+                                            <Button x:Name="SidebarPolicySelectAssignmentButton" x:Uid="SidebarPolicySelectAssignmentButton" HorizontalAlignment="Center">
+                                                <Button.Content>
+                                                    <controls:WrapPanel Orientation="Horizontal">
 
-                                                    <AnimatedIcon Height="20" Margin="0,0,5,0" Width="20" Visibility="{x:Bind sidebarVM.SidebarBasePolicySelectButtonLightAnimatedIconVisibility, Mode=OneWay}">
-                                                        <AnimatedIcon.Source>
-                                                            <animatedvisuals:Light/>
-                                                        </AnimatedIcon.Source>
-                                                    </AnimatedIcon>
+                                                        <AnimatedIcon Height="20" Margin="0,0,5,0" Width="20" Visibility="{x:Bind sidebarVM.SidebarBasePolicySelectButtonLightAnimatedIconVisibility, Mode=OneWay}">
+                                                            <AnimatedIcon.Source>
+                                                                <animatedvisuals:Light/>
+                                                            </AnimatedIcon.Source>
+                                                        </AnimatedIcon>
 
-                                                    <TextBlock x:Name="SelectTextBlock" x:Uid="SelectTextBlock" />
+                                                        <TextBlock x:Name="SelectTextBlock" x:Uid="SelectTextBlock" />
 
-                                                </controls:WrapPanel>
-                                            </Button.Content>
+                                                    </controls:WrapPanel>
+                                                </Button.Content>
 
-                                            <Button.Flyout>
-                                                <Flyout Placement="Bottom">
-                                                    <StackPanel Orientation="Vertical" Spacing="10">
-                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect1Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect1Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect1Command, Mode=OneWay}" />
-                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect2Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect2Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect2Command, Mode=OneWay}" />
-                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect3Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect3Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect3Command, Mode=OneWay}" />
-                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect4Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect4Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect4Command, Mode=OneWay}" />
-                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect5Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect5Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect5Command, Mode=OneWay}" />
-                                                        <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect6Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect6Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect6Command, Mode=OneWay}" />
-                                                    </StackPanel>
-                                                </Flyout>
-                                            </Button.Flyout>
-                                        </Button>
+                                                <Button.Flyout>
+                                                    <Flyout Placement="Bottom">
+                                                        <StackPanel Orientation="Vertical" Spacing="10">
+                                                            <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect1Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect1Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect1Command, Mode=OneWay}" />
+                                                            <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect2Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect2Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect2Command, Mode=OneWay}" />
+                                                            <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect3Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect3Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect3Command, Mode=OneWay}" />
+                                                            <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect4Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect4Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect4Command, Mode=OneWay}" />
+                                                            <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect5Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect5Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect5Command, Mode=OneWay}" />
+                                                            <Button HorizontalAlignment="Stretch" Content="{x:Bind sidebarVM.SidebarPolicyConnect6Content, Mode=OneWay}" Visibility="{x:Bind sidebarVM.SidebarPolicyConnect6Visibility, Mode=OneWay}" Command="{x:Bind sidebarVM.SidebarPolicyConnect6Command, Mode=OneWay}" />
+                                                        </StackPanel>
+                                                    </Flyout>
+                                                </Button.Flyout>
+                                            </Button>
 
-                                    </controls:WrapPanel>
+                                        </controls:WrapPanel>
 
-                                </Border>
+                                    </Border>
 
-                                <controls:SettingsCard HorizontalContentAlignment="Center"
-                                                       x:Name="SidebarAutomaticAssignmentSettingsCard"
-                                                       x:Uid="SidebarAutomaticAssignmentSettingsCard"
-                                                       Click="{x:Bind ViewModel.AutomaticAssignmentSidebarSettingsCard_Click}"
-                                                       HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}"
-                                                       IsClickEnabled="True"
-                                                       IsActionIconVisible="False">
+                                    <controls:SettingsCard HorizontalContentAlignment="Center"
+                                                           x:Name="SidebarAutomaticAssignmentSettingsCard"
+                                                           x:Uid="SidebarAutomaticAssignmentSettingsCard"
+                                                           Click="{x:Bind ViewModel.AutomaticAssignmentSidebarSettingsCard_Click}"
+                                                           HeaderIcon="{ui:FontIcon Glyph=&#xF32A;}"
+                                                           IsClickEnabled="True"
+                                                           IsActionIconVisible="False">
 
-                                    <ToggleSwitch Toggled="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitch_Toggled}"
-                                                  x:Uid="ToggleSwitchGeneral"
-                                                  x:Name="AutomaticAssignmentSidebarToggleSwitch"
-                                                  IsOn="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitchToggledState, Mode=TwoWay}"/>
-                                </controls:SettingsCard>
+                                        <ToggleSwitch Toggled="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitch_Toggled}"
+                                                      x:Uid="ToggleSwitchGeneral"
+                                                      x:Name="AutomaticAssignmentSidebarToggleSwitch"
+                                                      IsOn="{x:Bind ViewModel.AutomaticAssignmentSidebarToggleSwitchToggledState, Mode=TwoWay}"/>
+                                    </controls:SettingsCard>
 
-                                <HyperlinkButton x:Name="SidebarGuideHyperlinkButton"
-                                                 x:Uid="SidebarGuideHyperlinkButton"
-                                                 HorizontalAlignment="Center"
-                                                 NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar"
-                                                 Padding="12,8"
-                                                 CornerRadius="6"
-                                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                 BorderThickness="1"/>
+                                    <HyperlinkButton x:Name="SidebarGuideHyperlinkButton"
+                                                     x:Uid="SidebarGuideHyperlinkButton"
+                                                     HorizontalAlignment="Center"
+                                                     NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar"
+                                                     Padding="12,8"
+                                                     CornerRadius="6"
+                                                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                     BorderThickness="1"/>
 
-                                <HyperlinkButton x:Name="SidebarHelpHyperlinkButton"
-                                                 HorizontalAlignment="Center"
-                                                 NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/discussions"
-                                                 Padding="12,8"
-                                                 CornerRadius="6"
-                                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                                 BorderThickness="1">
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <FontIcon Glyph="&#xE9CE;"
-                                                  Foreground="Gold"
-                                                  FontSize="16"/>
-                                        <TextBlock x:Uid="SidebarHelpHyperlinkTextBlock"
-                                                   x:Name="SidebarHelpHyperlinkTextBlock"
-                                                   VerticalAlignment="Center"
-                                                   FontWeight="SemiBold"/>
-                                    </StackPanel>
-                                </HyperlinkButton>
-
-                                <Button HorizontalAlignment="Center"
-                                        x:Name="OpenConfigDirectoryButton"
-                                        x:Uid="OpenConfigDirectoryButton"
-                                        IsEnabled="{x:Bind ViewModel.OpenConfigDirectoryButtonState, Mode=OneWay}"
-                                        Click="{x:Bind ViewModel.OpenConfigDirectoryButton_Click}">
-                                    <Button.Content>
-                                        <StackPanel Orientation="Horizontal">
-                                            <StackPanel Orientation="Horizontal"
-                                                        VerticalAlignment="Center"
-                                                        HorizontalAlignment="Center">
-                                                <FontIcon Glyph="&#xE8A7;" Margin="0,0,8,0" />
-                                                <TextBlock x:Name="OpenConfigDirectoryButtonText"
-                                                           x:Uid="OpenConfigDirectoryButtonText"/>
-                                            </StackPanel>
+                                    <HyperlinkButton x:Name="SidebarHelpHyperlinkButton"
+                                                      HorizontalAlignment="Center"
+                                                      NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/discussions"
+                                                      Padding="12,8"
+                                                      CornerRadius="6"
+                                                      Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                                      BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                      BorderThickness="1">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9CE;"
+                                                      Foreground="Gold"
+                                                      FontSize="16"/>
+                                            <TextBlock x:Uid="SidebarHelpHyperlinkTextBlock"
+                                           x:Name="SidebarHelpHyperlinkTextBlock"
+                                           VerticalAlignment="Center"
+                                           FontWeight="SemiBold"/>
                                         </StackPanel>
-                                    </Button.Content>
-                                </Button>
+                                    </HyperlinkButton>
 
-                                <Button HorizontalAlignment="Center"
-                                        VerticalAlignment="Bottom"
-                                        x:Uid="OptimizeMemoryButton"
-                                        IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
-                                        Click="{x:Bind ViewModel.OptimizeMemory}">
-                                    <Button.ContentTemplate>
-                                        <DataTemplate x:DataType="x:String">
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <FontIcon Glyph="&#xEEA0;" FontFamily="Segoe Fluent Icons" FontSize="16"/>
-                                                <TextBlock Text="{x:Bind}"/>
+                                    <Button HorizontalAlignment="Center"
+                                            x:Name="OpenConfigDirectoryButton"
+                                            x:Uid="OpenConfigDirectoryButton"
+                                            IsEnabled="{x:Bind ViewModel.OpenConfigDirectoryButtonState, Mode=OneWay}"
+                                            Click="{x:Bind ViewModel.OpenConfigDirectoryButton_Click}">
+                                        <Button.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
+                                                    <FontIcon Glyph="&#xE8A7;" Margin="0,0,8,0" />
+                                                    <TextBlock x:Name="OpenConfigDirectoryButtonText"
+                                                   x:Uid="OpenConfigDirectoryButtonText"/>
+                                                </StackPanel>
                                             </StackPanel>
-                                        </DataTemplate>
-                                    </Button.ContentTemplate>
-                                </Button>
+                                        </Button.Content>
+                                    </Button>
 
-                            </controls:WrapPanel>
+                                    <Button HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                x:Uid="OptimizeMemoryButton"
+                                IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.OptimizeMemory}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xEEA0;" FontFamily="Segoe Fluent Icons" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
 
-                        </ScrollViewer>
+                                </controls:WrapPanel>
 
-                    </Border>
+                            </ScrollViewer>
+
+                        </Border>
+
+                        <!-- Invisible sizer along the left edge of the right-hand pane -->
+                        <controls:PropertySizer Width="8"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Stretch"
+                                    Binding="{x:Bind SidebarSplitView.OpenPaneLength, Mode=TwoWay}"
+                                    Orientation="Vertical"
+                                    IsDragInverted="True"
+                                    IsThumbVisible="False"
+                                    Background="Transparent"
+                                    Cursor="SizeWestEast"
+                                    Minimum="200"
+                                    Maximum="1200"
+                                    IsTabStop="False"
+                                    Margin="0"/>
+                    </Grid>
                 </SplitView.Pane>
 
                 <!-- The area where the main window content are displayed -->
@@ -461,8 +480,8 @@
                         <BreadcrumbBar.ItemTemplate>
                             <DataTemplate x:DataType="WindowComponents:Crumb">
                                 <TextBlock Text="{x:Bind Label}"
-                                           TextWrapping="Wrap"
-                                           Style="{StaticResource TitleTextBlockStyle}" />
+                               TextWrapping="Wrap"
+                               Style="{StaticResource TitleTextBlockStyle}" />
                             </DataTemplate>
                         </BreadcrumbBar.ItemTemplate>
 
@@ -470,11 +489,11 @@
 
                     <!--  Note the use of a TwoWay binding here, this is required for this control to work.  -->
                     <controls:PropertySizer HorizontalAlignment="Left"
-                                            Grid.Row="1"
-                                            Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
-                                            Maximum="640"
-                                            Minimum="60"
-                                            Visibility="{x:Bind MainNavigation.IsPaneOpen, Mode=OneWay}" />
+                                Grid.Row="1"
+                                Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
+                                Maximum="640"
+                                Minimum="60"
+                                Visibility="{x:Bind MainNavigation.IsPaneOpen, Mode=OneWay}" />
 
                     <!-- Global margin settings for every page's content -->
                     <Frame x:Name="ContentFrame"

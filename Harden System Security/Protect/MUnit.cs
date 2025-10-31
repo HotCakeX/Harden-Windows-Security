@@ -1016,7 +1016,6 @@ internal sealed partial class MUnit(
 					case MUnitOperation.Verify:
 						// Primary verification: check via POL file for the selected Group Policy context.
 						// If any MUnit fails, fall back to direct registry verification (treat as Source = Registry).
-						// Fallback hive selection: HKLM for Machine, HKCU for User.
 						GroupPolicyContext contextForVerification = GroupPolicyContext.Machine;
 
 						cancellationToken?.ThrowIfCancellationRequested();
@@ -1594,7 +1593,7 @@ internal sealed partial class MUnit(
 	/// <param name="cancellationToken">Optional cancellation token for the operation</param>
 	internal async static Task ProcessMUnitsWithBulkOperations(IMUnitListViewModel viewModel, List<MUnit> mUnits, MUnitOperation operation, CancellationToken? cancellationToken = null)
 	{
-		await Task.Run(async () =>
+		await Task.Run(() =>
 		{
 			try
 			{

@@ -198,12 +198,6 @@ internal static class ViewModelProvider
 
 		try
 		{
-			if (_eventLogUtility.IsValueCreated) _eventLogUtility.Value.Dispose();
-		}
-		catch { }
-
-		try
-		{
 			if (_createSupplementalPolicyVM.IsValueCreated) _createSupplementalPolicyVM.Value.Dispose();
 		}
 		catch { }

@@ -22,10 +22,6 @@ using AppControlManager.ViewModels;
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 
-#if HARDEN_SYSTEM_SECURITY
-#pragma warning disable CA1812
-#endif
-
 namespace AppControlManager.Others;
 
 /// <summary>

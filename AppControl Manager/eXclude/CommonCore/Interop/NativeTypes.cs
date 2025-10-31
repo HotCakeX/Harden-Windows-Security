@@ -17,8 +17,6 @@
 
 using System.Runtime.InteropServices;
 
-#pragma warning disable IDE0130
-
 namespace CommonCore.Interop;
 
 
@@ -115,7 +113,7 @@ internal struct PROCESS_MEMORY_COUNTERS_EX2
 /// Represents a Unicode string with a specified length and a pointer to the string's buffer. It includes fields for the
 /// string's current length and maximum length.
 /// </summary>
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+[StructLayout(LayoutKind.Sequential)]
 internal struct UNICODE_STRING
 {
 	internal ushort Length;
@@ -150,7 +148,7 @@ internal struct PerformanceInformation
 /// MIB_IFROW: IPv4-era per-interface stats with 32-bit octet counters.
 /// Using unsafe fixed buffers to match native layout; only fields we need are read.
 /// </summary>
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+[StructLayout(LayoutKind.Sequential)]
 internal unsafe struct MIB_IFROW
 {
 	// MAX_INTERFACE_NAME_LEN is 256 WCHARs
@@ -330,7 +328,7 @@ internal struct USER_INFO_1
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/lsalookup/ns-lsalookup-lsa_unicode_string
 /// </summary>
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+[StructLayout(LayoutKind.Sequential)]
 internal struct LSA_UNICODE_STRING
 {
 	internal ushort Length;
@@ -356,7 +354,7 @@ internal struct LSA_UNICODE_STRING
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/lsalookup/ns-lsalookup-lsa_string
 /// </summary>
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+[StructLayout(LayoutKind.Sequential)]
 internal struct LSA_STRING
 {
 	internal ushort Length;
@@ -405,7 +403,7 @@ internal struct LSA_ENUMERATION_INFORMATION
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/ntsecapi/ns-ntsecapi-audit_policy_information
 /// </summary>
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+[StructLayout(LayoutKind.Sequential)]
 internal struct AUDIT_POLICY_INFORMATION
 {
 	internal Guid AuditSubCategoryGuid;
@@ -499,7 +497,7 @@ internal struct OpusInfoObj
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/mscat/ns-mscat-cryptcatmember
 /// </summary>
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+[StructLayout(LayoutKind.Sequential)]
 internal readonly struct MeowMemberCrypt
 {
 	public readonly uint StructureSize;

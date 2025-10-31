@@ -875,3 +875,285 @@ extern "C" __declspec(dllexport) bool __stdcall GetAllWmiData(const wchar_t* wmi
 	// Found the property.
 	return true;
 }
+
+// Execute a parameterless WMI method on a class or instances automatically.
+// - Detects the "Static" qualifier on the method:
+//   - If static: invokes ExecMethod on the class.
+//   - If instance method: enumerates instances and invokes ExecMethod on each instance (__RELPATH).
+// Returns true on success (all calls succeed), false on failure (and sets last error).
+[[nodiscard]] bool ExecuteWmiClassMethodNoParams(const wchar_t* wmiNamespace, const wchar_t* wmiClassName, const wchar_t* customMethodName)
+{
+	// Clear last error message first.
+	ClearLastErrorMsg();
+
+	// Basic validation
+	if (!wmiNamespace || !wmiClassName || !customMethodName)
+	{
+		SetLastErrorMsg(L"Namespace, class name, and method name must not be null.");
+		return false;
+	}
+
+	// Connect to the namespace (handles COM init/security internally).
+	IWbemLocator* pLoc = nullptr;
+	IWbemServices* pSvc = nullptr;
+	bool didInitCOM = false;
+	if (!ConnectToWmiNamespace(wmiNamespace, &pLoc, &pSvc, didInitCOM) || !pSvc)
+	{
+		if (pLoc) pLoc->Release();
+		if (pSvc) pSvc->Release();
+		return false; // error already set
+	}
+
+	// Retrieve the class object.
+	IWbemClassObject* pClass = nullptr;
+	HRESULT hr = pSvc->GetObject(_bstr_t(wmiClassName), 0, nullptr, &pClass, nullptr);
+	if (FAILED(hr) || !pClass)
+	{
+		SetLastErrorMsg(wstring(L"Failed to get ") + wmiClassName + L" object. Error code = 0x" + to_wstring(hr));
+		if (pSvc) pSvc->Release();
+		if (pLoc) pLoc->Release();
+		if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+		return false;
+	}
+
+	// Determine if method is Static via its qualifier set
+	bool isStatic = false;
+	{
+		IWbemQualifierSet* pMethQuals = nullptr;
+		HRESULT hrQ = pClass->GetMethodQualifierSet(_bstr_t(customMethodName), &pMethQuals);
+		if (SUCCEEDED(hrQ) && pMethQuals)
+		{
+			VARIANT v; VariantInit(&v);
+			// If "Static" qualifier exists and is VARIANT_TRUE -> static method
+			if (SUCCEEDED(pMethQuals->Get(_bstr_t(L"Static"), 0, &v, nullptr)) && v.vt == VT_BOOL)
+			{
+				isStatic = (v.boolVal == VARIANT_TRUE);
+			}
+			VariantClear(&v);
+			pMethQuals->Release();
+		}
+		// If qualifier set isn't available, we'll still try to execute; failures will be reported normally.
+	}
+
+	// Retrieve method parameter definitions (so we can spawn InParams if defined)
+	IWbemClassObject* pInDef = nullptr;
+	IWbemClassObject* pOutDef = nullptr;
+	hr = pClass->GetMethod(_bstr_t(customMethodName), 0, &pInDef, &pOutDef);
+	if (FAILED(hr))
+	{
+		SetLastErrorMsg(wstring(L"Failed to get method definition for ") + customMethodName + L". Error code = 0x" + to_wstring(hr));
+		if (pOutDef) pOutDef->Release();
+		pClass->Release();
+		pSvc->Release();
+		pLoc->Release();
+		if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+		return false;
+	}
+
+	// Prepare (possibly empty) InParams if definition exists
+	IWbemClassObject* pIn = nullptr;
+	if (pInDef)
+	{
+		hr = pInDef->SpawnInstance(0, &pIn);
+		if (FAILED(hr))
+		{
+			SetLastErrorMsg(wstring(L"Failed to spawn instance for method parameters. Error code = 0x") + to_wstring(hr));
+			if (pOutDef) pOutDef->Release();
+			if (pInDef) pInDef->Release();
+			pClass->Release();
+			pSvc->Release();
+			pLoc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+	}
+
+	bool overallOk = false;
+
+	if (isStatic)
+	{
+		// Static method: call on class path
+		IWbemClassObject* pOut = nullptr;
+		hr = pSvc->ExecMethod(_bstr_t(wmiClassName), _bstr_t(customMethodName), 0, nullptr, pIn, &pOut, nullptr);
+
+		if (FAILED(hr) || !pOut)
+		{
+			SetLastErrorMsg(wstring(L"ExecMethod for ") + customMethodName + L" failed. Error code = 0x" + to_wstring(hr));
+			if (pOut) pOut->Release();
+			if (pIn) pIn->Release();
+			if (pOutDef) pOutDef->Release();
+			if (pInDef) pInDef->Release();
+			pClass->Release();
+			pSvc->Release();
+			pLoc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+
+		// Log ReturnValue if present
+		VARIANT vRet; VariantInit(&vRet);
+		HRESULT hrRet = pOut->Get(_bstr_t(L"ReturnValue"), 0, &vRet, nullptr, nullptr);
+		if (SUCCEEDED(hrRet))
+		{
+			if (vRet.vt == VT_I4 || vRet.vt == VT_UI4)
+			{
+				LogOut(L"Method ", customMethodName, L" returned: ", (vRet.vt == VT_I4 ? vRet.intVal : static_cast<int>(vRet.ulVal)));
+			}
+			else
+			{
+				LogOut(L"Method ", customMethodName, L" executed; ReturnValue present with non-integer type.");
+			}
+		}
+		else
+		{
+			LogOut(L"Method ", customMethodName, L" executed, but no return value provided.");
+		}
+		VariantClear(&vRet);
+		pOut->Release();
+
+		overallOk = true;
+	}
+	else
+	{
+		// Instance method: enumerate instances and call for each instance path
+		wstringstream wql;
+		wql << L"SELECT __RELPATH FROM " << wmiClassName;
+
+		IEnumWbemClassObject* pEnum = nullptr;
+		hr = pSvc->ExecQuery(
+			_bstr_t(L"WQL"),
+			_bstr_t(wql.str().c_str()),
+			WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+			nullptr,
+			&pEnum);
+
+		if (FAILED(hr) || !pEnum)
+		{
+			SetLastErrorMsg(wstring(L"ExecQuery failed for ") + wmiClassName + L". Error code = 0x" + to_wstring(hr));
+			if (pEnum) pEnum->Release();
+			if (pIn) pIn->Release();
+			if (pOutDef) pOutDef->Release();
+			if (pInDef) pInDef->Release();
+			pClass->Release();
+			pSvc->Release();
+			pLoc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+
+		size_t total = 0;
+		size_t successCount = 0;
+		size_t failCount = 0;
+
+		for (;;)
+		{
+			IWbemClassObject* pInst = nullptr;
+			ULONG uRet = 0;
+			HRESULT hrNext = pEnum->Next(WBEM_INFINITE, 1, &pInst, &uRet);
+			if (hrNext != S_OK || uRet == 0 || !pInst)
+				break;
+
+			++total;
+
+			// Get instance path (prefer __RELPATH; fallback to __PATH if needed)
+			wstring instPath;
+			{
+				VARIANT v; VariantInit(&v);
+				if (SUCCEEDED(pInst->Get(_bstr_t(L"__RELPATH"), 0, &v, nullptr, nullptr)) && v.vt == VT_BSTR && v.bstrVal)
+				{
+					instPath.assign(v.bstrVal, SysStringLen(v.bstrVal));
+				}
+				VariantClear(&v);
+			}
+			if (instPath.empty())
+			{
+				VARIANT v; VariantInit(&v);
+				if (SUCCEEDED(pInst->Get(_bstr_t(L"__PATH"), 0, &v, nullptr, nullptr)) && v.vt == VT_BSTR && v.bstrVal)
+				{
+					instPath.assign(v.bstrVal, SysStringLen(v.bstrVal));
+				}
+				VariantClear(&v);
+			}
+
+			pInst->Release();
+
+			if (instPath.empty())
+			{
+				++failCount;
+				continue;
+			}
+
+			IWbemClassObject* pOut = nullptr;
+			HRESULT hrCall = pSvc->ExecMethod(_bstr_t(instPath.c_str()), _bstr_t(customMethodName), 0, nullptr, pIn, &pOut, nullptr);
+			if (FAILED(hrCall) || !pOut)
+			{
+				++failCount;
+			}
+			else
+			{
+				// Log ReturnValue (if present) for each instance
+				VARIANT vRet; VariantInit(&vRet);
+				HRESULT hrRet = pOut->Get(_bstr_t(L"ReturnValue"), 0, &vRet, nullptr, nullptr);
+				if (SUCCEEDED(hrRet))
+				{
+					if (vRet.vt == VT_I4 || vRet.vt == VT_UI4)
+					{
+						LogOut(L"Method ", customMethodName, L" on instance ", instPath.c_str(), L" returned: ",
+							(vRet.vt == VT_I4 ? vRet.intVal : static_cast<int>(vRet.ulVal)));
+					}
+					else
+					{
+						LogOut(L"Method ", customMethodName, L" on instance ", instPath.c_str(),
+							L" executed; ReturnValue present with non-integer type.");
+					}
+				}
+				else
+				{
+					LogOut(L"Method ", customMethodName, L" on instance ", instPath.c_str(), L" executed, but no return value provided.");
+				}
+				VariantClear(&vRet);
+				pOut->Release();
+
+				++successCount;
+			}
+		}
+
+		pEnum->Release();
+
+		if (total == 0)
+		{
+			SetLastErrorMsg(L"No instances were found for the specified class to execute the instance method.");
+			if (pIn) pIn->Release();
+			if (pOutDef) pOutDef->Release();
+			if (pInDef) pInDef->Release();
+			pClass->Release();
+			pSvc->Release();
+			pLoc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+
+		if (failCount == 0)
+		{
+			overallOk = true;
+		}
+		else
+		{
+			wstringstream ss;
+			ss << L"Method execution completed with failures. Succeeded: " << successCount << L", Failed: " << failCount << L".";
+			SetLastErrorMsg(ss.str());
+			overallOk = false;
+		}
+	}
+
+	// Cleanup common objects
+	if (pIn) pIn->Release();
+	if (pOutDef) pOutDef->Release();
+	if (pInDef) pInDef->Release();
+	pClass->Release();
+	pSvc->Release();
+	pLoc->Release();
+	if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+
+	return overallOk;
+}

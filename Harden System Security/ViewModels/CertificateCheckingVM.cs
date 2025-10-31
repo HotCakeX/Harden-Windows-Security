@@ -44,7 +44,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		// Calculate initial column widths
 		CalculateColumnWidths();
@@ -182,7 +182,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		for (int i = 0; i < CurrentCtlHeader.DigestAlgorithmParameters.Length; i++)
 		{
 			if (i > 0) _ = sb.Append(' ');
-			_ = sb.Append(CurrentCtlHeader.DigestAlgorithmParameters[i].ToString("X2", CultureInfo.InvariantCulture));
+			_ = sb.Append(CurrentCtlHeader.DigestAlgorithmParameters.Span[i].ToString("X2", CultureInfo.InvariantCulture));
 		}
 		return sb.ToString();
 	}

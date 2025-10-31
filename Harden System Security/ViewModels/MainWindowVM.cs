@@ -337,7 +337,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 	}
 
 	#region UI-Bound Properties
@@ -667,6 +667,42 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		finally
 		{
 			IsPowerPlanConfigButtonEnabled = true;
+		}
+	}
+
+	internal bool IsCheckForAllAppUpdatesButtonEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// Event handler for the UI button.
+	/// </summary>
+	internal async void CheckForAllAppUpdates() => await CheckForAllAppUpdates_Internal();
+
+	/// <summary>
+	/// Called by the UI's event handler and when the app is started via CLI/ScheduledTask
+	/// </summary>
+	/// <returns></returns>
+	internal async Task CheckForAllAppUpdates_Internal()
+	{
+		try
+		{
+			IsCheckForAllAppUpdatesButtonEnabled = false;
+
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("CheckingForMicrosoftStoreAppUpdates"));
+
+			await Task.Run(() =>
+			{
+				MainInfoBar.WriteInfo(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "do root\\cimv2\\mdm\\dmmap MDM_EnterpriseModernAppManagement_AppManagement01 UpdateScanMethod"));
+			});
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyCheckedForMicrosoftStoreAppUpdates"));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsCheckForAllAppUpdatesButtonEnabled = true;
 		}
 	}
 

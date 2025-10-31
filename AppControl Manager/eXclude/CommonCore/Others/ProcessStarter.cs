@@ -18,7 +18,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 internal static class ProcessStarter
 {

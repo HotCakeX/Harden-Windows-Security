@@ -174,6 +174,7 @@ The Harden System Security fully supports the following languages.
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/saudi-arabia.svg" width="25" alt="Country flag"> Arabic
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/mexico.svg" width="25" alt="Country flag"> Spanish
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/poland.svg" width="25" alt="Country flag"> Polish
+* <img src="https://raw.githubusercontent.com/HotCakeX/.github/2f006adff77201f244cacdbe7c3ad8ac34f50199/Pictures/Country%20Flags/icons8-germany.svg" width="25" alt="Country flag"> German
 
 <br>
 

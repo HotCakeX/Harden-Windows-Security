@@ -292,9 +292,9 @@ internal static class RegistryPolicyParser
 		writer.Write((ushort)0x003B); // ';'
 
 		// Write data
-		if (entry.Data != null && entry.Data.Length > 0)
+		if (!entry.Data.IsEmpty)
 		{
-			writer.Write(entry.Data);
+			writer.Write(entry.Data.Span);
 		}
 
 		// Write closing bracket
@@ -317,20 +317,6 @@ internal static class RegistryPolicyParser
 	}
 
 	/// <summary>
-	/// Compares two byte arrays for equality
-	/// </summary>
-	/// <param name="array1">First byte array</param>
-	/// <param name="array2">Second byte array</param>
-	/// <returns>True if arrays are equal, false otherwise</returns>
-	private static bool ByteArraysEqual(byte[] array1, byte[] array2)
-	{
-		if (array1.Length != array2.Length)
-			return false;
-
-		return array1.SequenceEqual(array2);
-	}
-
-	/// <summary>
 	/// Determines if two registry policy entries are equivalent based on type, size, and data
 	/// </summary>
 	/// <param name="entry1">First entry</param>
@@ -340,7 +326,7 @@ internal static class RegistryPolicyParser
 	{
 		return entry1.Type == entry2.Type &&
 			   entry1.Size == entry2.Size &&
-			   ByteArraysEqual(entry1.Data, entry2.Data);
+			   entry1.Data.Span.SequenceEqual(entry2.Data.Span);
 	}
 
 	/// <summary>

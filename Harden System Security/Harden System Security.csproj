@@ -26,7 +26,7 @@
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
 
         https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref -->
-		<WindowsSdkPackageVersion>10.0.26100.78</WindowsSdkPackageVersion>
+		<WindowsSdkPackageVersion>10.0.26100.81</WindowsSdkPackageVersion>
 
 		<!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -64,7 +64,7 @@
 		<AssemblyName>HardenSystemSecurity</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>1.0.20.0</FileVersion>
+		<FileVersion>1.0.21.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 		<StartupObject>HardenSystemSecurity.Program</StartupObject>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -170,12 +170,6 @@
 
 	<!-- Code reuse from other projects -->
 	<ItemGroup>
-		<Compile Include="..\AppControl Manager\Animated Icons\GitHub.cs" Link="Animated Icons\GitHub.cs" />
-		<Compile Include="..\AppControl Manager\Animated Icons\Heart.cs" Link="Animated Icons\Heart.cs" />
-		<Compile Include="..\AppControl Manager\Animated Icons\HeartPulse.cs" Link="Animated Icons\HeartPulse.cs" />
-		<Compile Include="..\AppControl Manager\Animated Icons\Home.cs" Link="Animated Icons\Home.cs" />
-		<Compile Include="..\AppControl Manager\Animated Icons\Sidebar.cs" Link="Animated Icons\Sidebar.cs" />
-		<Compile Include="..\AppControl Manager\Animated Icons\Timeline.cs" Link="Animated Icons\Timeline.cs" />
 		<Compile Include="..\AppControl Manager\App.xaml.cs" Link="App.xaml.cs" />
 		<Compile Include="..\AppControl Manager\AppSettings\AppThemeManager.cs" Link="AppSettings\AppThemeManager.cs" />
 		<Compile Include="..\AppControl Manager\AppSettings\Main.cs" Link="AppSettings\Main.cs" />
@@ -200,19 +194,10 @@
 		<Compile Include="..\AppControl Manager\Others\EventLogUtility.cs" Link="Others\EventLogUtility.cs" />
 		<Compile Include="..\AppControl Manager\Others\FileAccessCheck.cs" Link="Others\FileAccessCheck.cs" />
 		<Compile Include="..\AppControl Manager\Others\FileDialogHelper.cs" Link="Others\FileDialogHelper.cs" />
-		<Compile Include="..\AppControl Manager\Others\GlobalVars.cs" Link="Others\GlobalVars.cs" />
-		<Compile Include="..\AppControl Manager\Others\InfoBarSettings.cs" Link="Others\InfoBarSettings.cs" />
-		<Compile Include="..\AppControl Manager\Others\LanguageOption.cs" Link="Others\LanguageOption.cs" />
 		<Compile Include="..\AppControl Manager\Others\ListViewHelper-Shared.cs" Link="Others\ListViewHelper-Shared.cs" />
-		<Compile Include="..\AppControl Manager\Others\Logger.cs" Link="Others\Logger.cs" />
-		<Compile Include="..\AppControl Manager\Others\LogLine.cs" Link="Others\LogLine.cs" />
-		<Compile Include="..\AppControl Manager\Others\ProcessStarter.cs" Link="Others\ProcessStarter.cs" />
-		<Compile Include="..\AppControl Manager\Others\ReLaunch.cs" Link="Others\ReLaunch.cs" />
-		<Compile Include="..\AppControl Manager\Others\SecHttpClient.cs" Link="Others\SecHttpClient.cs" />
 		<Compile Include="..\AppControl Manager\Others\UniqueStringObservableCollection.cs" Link="Others\UniqueStringObservableCollection.cs" />
 		<Compile Include="..\AppControl Manager\Others\UpdateAvailableEventArgs.cs" Link="Others\UpdateAvailableEventArgs.cs" />
 		<Compile Include="..\AppControl Manager\Others\UpdateCheckResponse.cs" Link="Others\UpdateCheckResponse.cs" />
-		<Compile Include="..\AppControl Manager\Others\WindowDisplayAffinity.cs" Link="Others\WindowDisplayAffinity.cs" />
 		<Compile Include="..\AppControl Manager\Others\AnimatedCancellableButtonInitializer.cs" Link="Others\AnimatedCancellableButtonInitializer.cs" />
 		<Compile Include="..\AppControl Manager\Pages\GitHubDocumentation.xaml.cs" Link="Pages\GitHubDocumentation.xaml.cs" />
 		<Compile Include="..\AppControl Manager\Pages\Home.xaml.cs" Link="Pages\Home.xaml.cs" />
@@ -232,12 +217,8 @@
 		<Compile Include="..\AppControl Manager\WindowComponents\IAnimatedIconsManager.cs" Link="WindowComponents\IAnimatedIconsManager.cs" />
 		<Compile Include="..\AppControl Manager\WindowComponents\NavigationService.cs" Link="WindowComponents\NavigationService.cs" />
 		<Compile Include="..\AppControl Manager\WindowComponents\PageTitleMap.cs" Link="WindowComponents\PageTitleMap.cs" />
-		<Compile Include="..\AppControl Manager\Others\PackagedAppView.cs" Link="Others\PackagedAppView.cs" />
-		<Compile Include="..\AppControl Manager\Others\GroupInfoListForPackagedAppView.cs" Link="Others\GroupInfoListForPackagedAppView.cs" />
 		<Compile Include="..\AppControl Manager\Others\GetAppsList.cs" Link="Others\GetAppsList.cs" />
-		<Compile Include="..\AppControl Manager\Others\ComJsonDeserializer.cs" Link="Others\ComJsonDeserializer.cs" />
 		<Compile Include="..\AppControl Manager\Others\IExplicitDisposeOptIn.cs" Link="Others\IExplicitDisposeOptIn.cs" />
-		<Compile Include="..\AppControl Manager\Others\RGBHEX.cs" Link="Others\RGBHEX.cs" />
 	</ItemGroup>
 
 	<!-- Nuget packages

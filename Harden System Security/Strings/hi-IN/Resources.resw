@@ -1801,7 +1801,7 @@
 <data name="FailedToOpenBCDSystemStore" xml:space="preserve">
   <value>BCD सिस्टम स्टोर खोलने में विफल</value>
 </data>
-<data name="FailedToParseCurrent EntryGUID" xml:space="preserve">
+<data name="FailedToParseCurrentEntryGUID" xml:space="preserve">
   <value>वर्तमान एंट्री GUID पार्स करने में विफल</value>
 </data>
 <data name="CurrentBootEntryNotFoundAdministrator" xml:space="preserve">
@@ -4238,4 +4238,19 @@
 <data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
   <value>कोई डिवाइस इंटेंट चयनित नहीं है, या लागू करने के लिए कोई मेल खाते आइटम नहीं हैं.</value>
 </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.Content" xml:space="preserve">
+    <value>Microsoft Store ऐप्स के अपडेट की जाँच</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Store ऐप्स के अपडेट की जाँच करता है और उनकी स्थापना प्रारंभ करता है. Microsoft Store ऐप में "अपडेट्स की जाँच करें" बटन के समान कार्य करता है.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Microsoft Store ऐप्स के अपडेट की जाँच करता है और उनकी स्थापना प्रारंभ करता है. Microsoft Store ऐप में "अपडेट्स की जाँच करें" बटन के समान कार्य करता है.</value>
+  </data>
+  <data name="CheckingForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Microsoft Store ऐप्स के अपडेट की जाँच की जा रही है...</value>
+  </data>
+  <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Microsoft Store ऐप्स के अपडेट की जाँच सफलतापूर्वक पूर्ण हुई. जिन डाउनलोड्स की शुरुआत हुई है, उन्हें देखने के लिए कृपया Microsoft Store ऐप खोलें.</value>
+  </data>
 </root>

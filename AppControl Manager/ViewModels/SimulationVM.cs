@@ -40,7 +40,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		ProgressRingValueProgress = new Progress<double>(p => ProgressRingValue = p);
 

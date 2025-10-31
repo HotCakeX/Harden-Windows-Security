@@ -39,7 +39,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		// Initialize cancellable buttons for Presets section
 		ApplySelectedCancellableButton = new(GlobalVars.GetStr("ApplySelectedMenuFlyoutItem/Text"));

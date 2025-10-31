@@ -15,22 +15,19 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 /// <summary>
-/// GroupInfoListForPackagedAppView class definition
+/// This class enforces minimum HTTP version of 2.0 and is future proof since it tries the highest available HTTP version by default
 /// </summary>
-/// <param name="items">All of the <see cref="PackagedAppView"/> items in this group.</param>
-/// <param name="key">The key for this group, which is based on the first character of the DisplayName of the <see cref="PackagedAppView"/> items.</param>
-internal sealed partial class GroupInfoListForPackagedAppView(IEnumerable<PackagedAppView> items, string key) : List<PackagedAppView>(items)
+internal sealed partial class SecHttpClient : HttpClient
 {
-	// string is the type for Key since it's based on DisplayName[..1] and will always be a string
-	internal string Key => key;
-
-	public override string ToString()
+	internal SecHttpClient() : base()
 	{
-		return "Group " + Key;
+		DefaultRequestVersion = HttpVersion.Version20;
+		DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
 	}
 }

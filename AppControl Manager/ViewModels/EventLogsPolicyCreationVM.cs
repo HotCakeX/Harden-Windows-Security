@@ -42,7 +42,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		// To adjust the initial width of the columns, giving them nice paddings.
 		CalculateColumnWidths();

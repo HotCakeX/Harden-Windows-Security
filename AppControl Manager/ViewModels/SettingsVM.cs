@@ -51,7 +51,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		// Populate the ComboBoxes' ItemsSource collections
 		LoadLanguages();
@@ -73,6 +73,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		LanguageOptions.Add(new LanguageOption("العربية", "ms-appx:///Assets/CountryFlags/saudi-arabia-240.png"));
 		LanguageOptions.Add(new LanguageOption("Español", "ms-appx:///Assets/CountryFlags/mexico-240.png"));
 		LanguageOptions.Add(new LanguageOption("മലയാളം", "ms-appx:///Assets/CountryFlags/india-240.png"));
+		LanguageOptions.Add(new LanguageOption("Deutsch", "ms-appx:///Assets/CountryFlags/germany-240.png"));
 	}
 
 	/// <summary>
@@ -129,7 +130,8 @@ internal sealed partial class SettingsVM : ViewModelBase
 		{ "pl", 4 },
 		{ "ar", 5 },
 		{ "es", 6 },
-		{ "ml", 7 }
+		{ "ml", 7 },
+		{ "de", 8 }
 	};
 
 	private static readonly string[] SupportedLanguagesReverse = [
@@ -140,7 +142,8 @@ internal sealed partial class SettingsVM : ViewModelBase
 		 "pl",
 		 "ar",
 		 "es",
-		 "ml"
+		 "ml",
+		 "de"
 	];
 
 	internal int LanguageComboBoxSelectedIndex

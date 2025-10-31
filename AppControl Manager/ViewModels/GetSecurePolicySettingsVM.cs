@@ -32,7 +32,7 @@ internal sealed partial class GetSecurePolicySettingsVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 	}
 
 	private readonly InfoBarSettings MainInfoBar;

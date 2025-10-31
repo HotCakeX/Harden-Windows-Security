@@ -35,63 +35,63 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			() => AllowMicrosoftSettingsInfoBarMessage, value => AllowMicrosoftSettingsInfoBarMessage = value,
 			() => AllowMicrosoftSettingsInfoBarSeverity, value => AllowMicrosoftSettingsInfoBarSeverity = value,
 			() => AllowMicrosoftSettingsInfoBarIsClosable, value => AllowMicrosoftSettingsInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		DefaultWinInfoBar = new InfoBarSettings(
 			() => DefaultWindowsSettingsInfoBarIsOpen, value => DefaultWindowsSettingsInfoBarIsOpen = value,
 			() => DefaultWindowsSettingsInfoBarMessage, value => DefaultWindowsSettingsInfoBarMessage = value,
 			() => DefaultWindowsSettingsInfoBarSeverity, value => DefaultWindowsSettingsInfoBarSeverity = value,
 			() => DefaultWindowsSettingsInfoBarIsClosable, value => DefaultWindowsSettingsInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		SignedAndRepInfoBar = new InfoBarSettings(
 			() => SignedAndReputableSettingsInfoBarIsOpen, value => SignedAndReputableSettingsInfoBarIsOpen = value,
 			() => SignedAndReputableSettingsInfoBarMessage, value => SignedAndReputableSettingsInfoBarMessage = value,
 			() => SignedAndReputableSettingsInfoBarSeverity, value => SignedAndReputableSettingsInfoBarSeverity = value,
 			() => SignedAndReputableSettingsInfoBarIsClosable, value => SignedAndReputableSettingsInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		KernelModeBlockListInfoBar = new InfoBarSettings(
 			() => RecommendedDriverBlockRulesSettingsInfoBarIsOpen, value => RecommendedDriverBlockRulesSettingsInfoBarIsOpen = value,
 			() => RecommendedDriverBlockRulesSettingsInfoBarMessage, value => RecommendedDriverBlockRulesSettingsInfoBarMessage = value,
 			() => RecommendedDriverBlockRulesSettingsInfoBarSeverity, value => RecommendedDriverBlockRulesSettingsInfoBarSeverity = value,
 			() => RecommendedDriverBlockRulesSettingsInfoBarIsClosable, value => RecommendedDriverBlockRulesSettingsInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		UserModeBlockListInfoBar = new InfoBarSettings(
 			() => RecommendedUserModeBlockRulesSettingsInfoBarIsOpen, value => RecommendedUserModeBlockRulesSettingsInfoBarIsOpen = value,
 			() => RecommendedUserModeBlockRulesSettingsInfoBarMessage, value => RecommendedUserModeBlockRulesSettingsInfoBarMessage = value,
 			() => RecommendedUserModeBlockRulesSettingsInfoBarSeverity, value => RecommendedUserModeBlockRulesSettingsInfoBarSeverity = value,
 			() => RecommendedUserModeBlockRulesSettingsInfoBarIsClosable, value => RecommendedUserModeBlockRulesSettingsInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		StrictKernelInfoBar = new InfoBarSettings(
 			() => StrictKernelModesSettingsInfoBarIsOpen, value => StrictKernelModesSettingsInfoBarIsOpen = value,
 			() => StrictKernelModesSettingsInfoBarMessage, value => StrictKernelModesSettingsInfoBarMessage = value,
 			() => StrictKernelModesSettingsInfoBarSeverity, value => StrictKernelModesSettingsInfoBarSeverity = value,
 			() => StrictKernelModesSettingsInfoBarIsClosable, value => StrictKernelModesSettingsInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		RMMBlockingInfoBar = new InfoBarSettings(
 			() => RMMBlockingSettingsInfoBarIsOpen, value => RMMBlockingSettingsInfoBarIsOpen = value,
 			() => RMMBlockingSettingsInfoBarMessage, value => RMMBlockingSettingsInfoBarMessage = value,
 			() => RMMBlockingSettingsInfoBarSeverity, value => RMMBlockingSettingsInfoBarSeverity = value,
 			() => RMMBlockingSettingsInfoBarIsClosable, value => RMMBlockingSettingsInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		DownloadsDefenseMeasureInfoBar = new InfoBarSettings(
 			() => DownloadsDefenseMeasureSettingsInfoBarIsOpen, value => DownloadsDefenseMeasureSettingsInfoBarIsOpen = value,
 			() => DownloadsDefenseMeasureSettingsInfoBarMessage, value => DownloadsDefenseMeasureSettingsInfoBarMessage = value,
 			() => DownloadsDefenseMeasureSettingsInfoBarSeverity, value => DownloadsDefenseMeasureSettingsInfoBarSeverity = value,
 			() => DownloadsDefenseMeasureSettingsInfoBarIsClosable, value => DownloadsDefenseMeasureSettingsInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		DangerousScriptHostsBlockingInfoBar = new InfoBarSettings(
 			() => DangerousScriptHostsBlockingSettingsInfoBarIsOpen, value => DangerousScriptHostsBlockingSettingsInfoBarIsOpen = value,
 			() => DangerousScriptHostsBlockingSettingsInfoBarMessage, value => DangerousScriptHostsBlockingSettingsInfoBarMessage = value,
 			() => DangerousScriptHostsBlockingSettingsInfoBarSeverity, value => DangerousScriptHostsBlockingSettingsInfoBarSeverity = value,
 			() => DangerousScriptHostsBlockingSettingsInfoBarIsClosable, value => DangerousScriptHostsBlockingSettingsInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 	}
 
 	private PolicyEditorVM PolicyEditorViewModel { get; } = ViewModelProvider.PolicyEditorVM;

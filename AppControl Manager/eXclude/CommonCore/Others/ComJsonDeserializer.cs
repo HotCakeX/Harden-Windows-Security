@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 internal static class ComJsonDeserializer
 {

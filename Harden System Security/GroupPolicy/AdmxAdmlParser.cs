@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using AppControlManager.Others;
 
 namespace HardenSystemSecurity.GroupPolicy;
 

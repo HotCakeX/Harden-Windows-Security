@@ -58,7 +58,7 @@ internal static class Main
 	/// <summary>
 	/// Initialize the Public Client Application
 	/// </summary>
-	private static readonly IPublicClientApplication App = PublicClientApplicationBuilder.Create(ClientId)
+	private static readonly IPublicClientApplication PublicApp = PublicClientApplicationBuilder.Create(ClientId)
 			.WithAuthority(AzureCloudInstance.AzurePublic, "common")
 			.WithRedirectUri("http://localhost")
 			.WithLegacyCacheCompatibility(false)
@@ -131,7 +131,7 @@ internal static class Main
 		}
 
 		// Select correct application based on original sign-in method
-		IPublicClientApplication selectedApp = account.MethodUsed == SignInMethods.WebAccountManager ? AppWAMBased : App;
+		IPublicClientApplication selectedApp = account.MethodUsed == SignInMethods.WebAccountManager ? AppWAMBased : PublicApp;
 
 		// Perform silent acquisition using the original scopes for this authentication context
 		AuthenticationResult refreshedResult = await selectedApp
@@ -349,7 +349,7 @@ DeviceEvents
 				case SignInMethods.WebBrowser:
 					{
 						// Perform the interactive token acquisition with the cancellation token
-						authResult = await App.AcquireTokenInteractive(Scopes[context])
+						authResult = await PublicApp.AcquireTokenInteractive(Scopes[context])
 							.WithPrompt(Prompt.SelectAccount)
 							.WithUseEmbeddedWebView(false)
 							.ExecuteAsync(cancellationToken);
@@ -424,7 +424,7 @@ DeviceEvents
 	/// <returns></returns>
 	internal static async Task SignOut(AuthenticatedAccounts account)
 	{
-		await App.RemoveAsync(account.Account);
+		await PublicApp.RemoveAsync(account.Account);
 		_ = ViewModelMSGraph.AuthenticatedAccounts.Remove(account);
 		Logger.Write(string.Format(
 			GlobalVars.GetStr("SignedOutAccountMessage"),

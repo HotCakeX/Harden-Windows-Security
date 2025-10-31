@@ -7,7 +7,7 @@
     xmlns:intelgathering="using:AppControlManager.IntelGathering"
     xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
-    xmlns:others="using:AppControlManager.Others"
+    xmlns:CC="using:CommonCore.Others"
     xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -30,7 +30,7 @@
                            IsSourceGrouped="True"/>
 
                 <!-- Defines a single App that is displayed in the ListView -->
-                <DataTemplate x:Key="PackagedAppsListViewTemplate" x:DataType="others:PackagedAppView">
+                <DataTemplate x:Key="PackagedAppsListViewTemplate" x:DataType="CC:PackagedAppView">
                     <Border Background="{ThemeResource LayerFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
@@ -870,7 +870,7 @@
                                         <customUI:ListViewV3.GroupStyle>
                                             <GroupStyle>
                                                 <GroupStyle.HeaderTemplate>
-                                                    <DataTemplate x:DataType="others:GroupInfoListForPackagedAppView">
+                                                    <DataTemplate x:DataType="CC:GroupInfoListForPackagedAppView">
                                                         <Border AutomationProperties.AccessibilityView="Raw">
                                                             <TextBlock Text="{x:Bind Key}" Style="{ThemeResource TitleTextBlockStyle}" AutomationProperties.AccessibilityView="Raw"/>
                                                         </Border>

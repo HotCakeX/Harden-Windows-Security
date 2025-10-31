@@ -24,8 +24,6 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Foundation;
 using Windows.UI;
 
-#pragma warning disable CA1812
-
 namespace AppControlManager.CustomUIElements;
 
 /// <summary>

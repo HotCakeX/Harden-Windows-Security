@@ -7,6 +7,7 @@
 #include <iomanip>
 #include "Globals.h"
 
+[[nodiscard]] bool ExecuteWmiClassMethodNoParams(const wchar_t* wmiNamespace, const wchar_t* wmiClassName, const wchar_t* customMethodName);
 [[nodiscard]] bool ConnectToWmiNamespace(const wchar_t* wmiNamespace, IWbemLocator** ppLoc, IWbemServices** ppSvc, bool& didInitCOM);
 [[nodiscard]] bool GetWmiValue(const wchar_t* wmiNamespace, const wchar_t* wmiClassName, const wchar_t* preferenceName);
 [[nodiscard]] bool GetAllWmiProperties(const wchar_t* wmiNamespace, const wchar_t* wmiClassName);

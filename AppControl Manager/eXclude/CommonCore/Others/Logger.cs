@@ -21,11 +21,7 @@ using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-#if HARDEN_SYSTEM_SECURITY
-using HardenSystemSecurity;
-#endif
-
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 /// <summary>
 /// Determines the type of log that was received and if it needs additional actions taken.
@@ -42,39 +38,51 @@ internal enum LogTypeIntel
 
 internal static class Logger
 {
-	// The Logs file path
-	internal static readonly string LogFileName = Path.Combine(App.LogsDirectory, $"{App.AppName}_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
+	private static string LogsDirectory = null!;
+	private static string AppName = null!;
 
-	// The log channel for high-performance asynchronous logging
-	private static readonly Channel<string> _logChannel = Channel.CreateUnbounded<string>(new UnboundedChannelOptions
-	{
-		SingleReader = true,
-		AllowSynchronousContinuations = false
-	});
+#pragma warning disable CS0649
+	/// <summary>
+	/// Used to determine if the app is running in CLI mode.
+	/// </summary>
+	internal static bool CliRequested;
+#pragma warning restore CS0649
 
-	// The StreamWriter used for writing to the log file
-	private static readonly StreamWriter _streamWriter = new(
-		new FileStream(
-			path: LogFileName,
-			mode: FileMode.Append,
-			access: FileAccess.Write,
-			share: FileShare.Read,
-			bufferSize: 4096,
-			useAsync: true))
+	/// <summary>
+	/// Called from the App class during app initialization to set up the logging system.
+	/// </summary>
+	/// <param name="logsDirectory"></param>
+	/// <param name="appName"></param>
+	internal static void Configure(string logsDirectory, string appName)
 	{
-		// Ensures log messages are written to disk right away, reducing the risk of data loss in case of a crash or unexpected termination.
-		AutoFlush = true
-	};
+		LogsDirectory = logsDirectory;
+		AppName = appName;
 
-	static Logger()
-	{
+		// Create the Logs directory if it doesn't exist, won't do anything if it exists
+		_ = Directory.CreateDirectory(LogsDirectory);
+
 		// Check the size of the directory and clear it if it exceeds 1000 MB
 		// To ensure the logs directory doesn't get too big
-		if (GetDirectorySize(App.LogsDirectory) > 1000 * 1024 * 1024) // 1000 MB in bytes
+		if (GetDirectorySize(LogsDirectory) > 1000 * 1024 * 1024) // 1000 MB in bytes
 		{
 			// Empty the directory while retaining the most recent file
-			EmptyDirectory(App.LogsDirectory);
+			EmptyDirectory(LogsDirectory);
 		}
+
+		LogFileName = Path.Combine(LogsDirectory, $"{AppName}_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
+
+		_streamWriter = new(
+			new FileStream(
+				path: LogFileName,
+				mode: FileMode.Append,
+				access: FileAccess.Write,
+				share: FileShare.Read,
+				bufferSize: 4096,
+				useAsync: true))
+		{
+			// Ensures log messages are written to disk right away, reducing the risk of data loss in case of a crash or unexpected termination.
+			AutoFlush = true
+		};
 
 		// Start the background log processing task
 		// allowing the log processing to run concurrently without blocking the main thread.
@@ -90,6 +98,25 @@ internal static class Logger
 	}
 
 	/// <summary>
+	/// The Logs file path
+	/// </summary>
+	internal static string LogFileName { get; private set; } = null!;
+
+	/// <summary>
+	/// The log channel for high-performance asynchronous logging
+	/// </summary>
+	private static readonly Channel<string> _logChannel = Channel.CreateUnbounded<string>(new UnboundedChannelOptions
+	{
+		SingleReader = true,
+		AllowSynchronousContinuations = false
+	});
+
+	/// <summary>
+	/// The StreamWriter used for writing to the log file
+	/// </summary>
+	private static StreamWriter _streamWriter = null!;
+
+	/// <summary>
 	/// Write the log to the file
 	/// </summary>
 	/// <param name="message"></param>
@@ -97,10 +124,8 @@ internal static class Logger
 	{
 		string logEntry = $"{DateTime.Now}: {message}";
 
-#if HARDEN_SYSTEM_SECURITY
-		if (App.CliRequested)
+		if (CliRequested)
 			Console.WriteLine(logEntry);
-#endif
 
 		// Enqueue the log message for asynchronous writing
 		if (!_logChannel.Writer.TryWrite(logEntry))
@@ -115,10 +140,8 @@ internal static class Logger
 	{
 		string logEntry = $"{DateTime.Now}: {FormatException(ex)}";
 
-#if HARDEN_SYSTEM_SECURITY
-		if (App.CliRequested)
+		if (CliRequested)
 			Console.Error.WriteLine(logEntry);
-#endif
 
 		// Enqueue the log message for asynchronous writing
 		if (!_logChannel.Writer.TryWrite(logEntry))

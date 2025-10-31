@@ -23,7 +23,6 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
-using AppControlManager.Others;
 using Microsoft.Win32;
 
 namespace HardenSystemSecurity.SecurityPolicy;

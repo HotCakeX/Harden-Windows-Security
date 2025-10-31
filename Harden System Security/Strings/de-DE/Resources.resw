@@ -1801,7 +1801,7 @@
 <data name="FailedToOpenBCDSystemStore" xml:space="preserve">
   <value>Öffnen des BCD-Systemspeichers fehlgeschlagen</value>
 </data>
-<data name="FailedToParseCurrent EntryGUID" xml:space="preserve">
+<data name="FailedToParseCurrentEntryGUID" xml:space="preserve">
   <value>Parsen der aktuellen Eintrags-GUID fehlgeschlagen</value>
 </data>
 <data name="CurrentBootEntryNotFoundAdministrator" xml:space="preserve">
@@ -4238,4 +4238,19 @@ Fingerabdruck: {3}</value>
 <data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
   <value>Keine Nutzungsabsicht ausgewählt oder keine passenden Elemente zum Anwenden.</value>
 </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.Content" xml:space="preserve">
+    <value>Updateprüfung für Microsoft Store-Apps</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Prüft, ob Updates für Microsoft Store-Apps verfügbar sind, und startet deren Installation. Führt dieselbe Aufgabe aus wie die Schaltfläche "Nach Updates suchen" in der Microsoft Store-App.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Prüft, ob Updates für Microsoft Store-Apps verfügbar sind, und startet deren Installation. Führt dieselbe Aufgabe aus wie die Schaltfläche "Nach Updates suchen" in der Microsoft Store-App.</value>
+  </data>
+  <data name="CheckingForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Es wird nach Updates für Microsoft Store-Apps gesucht...</value>
+  </data>
+  <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Die Überprüfung auf Updates für Microsoft Store-Apps wurde erfolgreich abgeschlossen. Um gestartete Downloads anzuzeigen, öffnen Sie bitte die Microsoft Store-App.</value>
+  </data>
 </root>

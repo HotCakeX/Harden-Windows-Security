@@ -1801,7 +1801,7 @@
   <data name="FailedToOpenBCDSystemStore" xml:space="preserve">
     <value>فشل في فتح متجر نظام BCD</value>
   </data>
-  <data name="FailedToParseCurrent EntryGUID" xml:space="preserve">
+  <data name="FailedToParseCurrentEntryGUID" xml:space="preserve">
     <value>فشل في تحليل GUID المدخل الحالي</value>
   </data>
   <data name="CurrentBootEntryNotFoundAdministrator" xml:space="preserve">
@@ -4238,4 +4238,19 @@
 <data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
   <value>لم يتم تحديد نية جهاز، أو لا توجد عناصر مطابقة للتطبيق.</value>
 </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.Content" xml:space="preserve">
+    <value>فحص تحديثات تطبيقات متجر Microsoft</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يفحص ما إذا كانت هناك تحديثات لتطبيقات متجر Microsoft ويبدأ تثبيتها. ينفّذ نفس المهمة مثل الزر "التحقق من وجود تحديثات" في تطبيق متجر Microsoft.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يفحص ما إذا كانت هناك تحديثات لتطبيقات متجر Microsoft ويبدأ تثبيتها. ينفّذ نفس المهمة مثل الزر "التحقق من وجود تحديثات" في تطبيق متجر Microsoft.</value>
+  </data>
+  <data name="CheckingForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>جارٍ التحقق من وجود تحديثات لتطبيقات متجر Microsoft...</value>
+  </data>
+  <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>اكتمل التحقق من وجود تحديثات لتطبيقات متجر Microsoft بنجاح. لعرض أي تنزيلات تم البدء بها، يُرجى فتح تطبيق متجر Microsoft.</value>
+  </data>
 </root>

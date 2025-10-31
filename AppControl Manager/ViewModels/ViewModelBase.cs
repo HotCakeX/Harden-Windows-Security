@@ -28,7 +28,6 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 
-
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.AppSettings;
 using HardenSystemSecurity;

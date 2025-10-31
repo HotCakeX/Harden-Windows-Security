@@ -538,6 +538,34 @@
 
                                     </DropDownButton>
 
+                                    <Button x:Uid="MicrosoftStoreAppUpdatesCheckButton"
+                                                 HorizontalAlignment="Center"
+                                                 Click="{x:Bind ViewModel.CheckForAllAppUpdates}"
+                                                 IsEnabled="{x:Bind ViewModel.IsCheckForAllAppUpdatesButtonEnabled, Mode=OneWay}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <FontIcon Grid.Column="0"
+                                                              Glyph="&#xECC5;"
+                                                              FontFamily="Segoe Fluent Icons"
+                                                              FontSize="16"/>
+
+                                                    <TextBlock Grid.Column="1"
+                                                               Margin="8,0,0,0"
+                                                               HorizontalAlignment="Center"
+                                                               HorizontalTextAlignment="Center"
+                                                               TextWrapping="WrapWholeWords"
+                                                               Text="{x:Bind}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+
                                 </controls:WrapPanel>
 
                             </ScrollViewer>

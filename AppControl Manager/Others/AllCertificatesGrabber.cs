@@ -33,7 +33,7 @@ internal static class AllCertificatesGrabber
 
 	// Structure defining signer information for cryptographic providers
 	// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-crypt_provider_sgnr
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	[StructLayout(LayoutKind.Sequential)]
 	internal struct CryptProviderSigner
 	{
 		private readonly uint cbStruct;   // Size of structure
@@ -50,7 +50,7 @@ internal static class AllCertificatesGrabber
 
 	// Structure defining provider data for cryptographic operations
 	// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-crypt_provider_data
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	[StructLayout(LayoutKind.Sequential)]
 	internal struct CryptProviderData
 	{
 		private readonly uint cbStruct;   // Size of structure
@@ -74,7 +74,7 @@ internal static class AllCertificatesGrabber
 	}
 
 	// Structure defining signature settings for WinTrust
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	[StructLayout(LayoutKind.Sequential)]
 	internal unsafe struct WinTrustSignatureSettings
 	{
 		internal uint cbStruct;   // Size of structure
@@ -108,7 +108,7 @@ internal static class AllCertificatesGrabber
 	}
 
 	// Structure defining file information for WinTrust
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	[StructLayout(LayoutKind.Sequential)]
 	internal unsafe struct FileInfoForWinTrust
 	{
 		internal uint StructSize;   // Size of structure
@@ -137,7 +137,7 @@ internal static class AllCertificatesGrabber
 
 	// Structure defining overall trust data for WinTrust
 	// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-wintrust_data
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	[StructLayout(LayoutKind.Sequential)]
 	internal unsafe struct WinTrustData
 	{
 		internal uint StructSize;   // Size of structure

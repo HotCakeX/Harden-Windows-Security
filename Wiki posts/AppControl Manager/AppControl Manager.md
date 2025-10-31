@@ -132,6 +132,7 @@ The AppControl Manager fully supports the following languages. You can request f
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/saudi-arabia.svg" width="25" alt="Country flag"> Arabic
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/mexico.svg" width="25" alt="Country flag"> Spanish
 * <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/poland.svg" width="25" alt="Country flag"> Polish
+* <img src="https://raw.githubusercontent.com/HotCakeX/.github/2f006adff77201f244cacdbe7c3ad8ac34f50199/Pictures/Country%20Flags/icons8-germany.svg" width="25" alt="Country flag"> German
 
 <br>
 
@@ -289,34 +290,34 @@ AppControl.exe --action=DeployRMMBlockPolicy
 * #### Open an App Control policy in the Policy Editor
 
 ```powershell
-Start-Process "appcontrol-manager:--action=PolicyEditor--file=C:\Program Files\AppControl Manager\AllowMicrosoft.CIP"
+Start-Process 'appcontrol-manager: --action=PolicyEditor --file="C:\Program Files\AppControl Manager\AllowMicrosoft.CIP"'
 ```
 ```powershell
-Start-Process "appcontrol-manager:--action=PolicyEditor--file=C:\Program Files\AppControl Manager\AllowMicrosoft.xml"
+Start-Process 'appcontrol-manager: --action=PolicyEditor --file="C:\Program Files\AppControl Manager\AllowMicrosoft.xml"'
 ```
 
 * #### View File Signature
 
 ```powershell
-Start-Process "appcontrol-manager:--action=FileSignature--file=C:\Path\SomeFile.exe"
+Start-Process "appcontrol-manager: --action=FileSignature --file=C:\Path\SomeFile.exe"
 ```
 
 * #### Get Code Integrity Hashes
 
 ```powershell
-Start-Process "appcontrol-manager:--action=FileHashes--file=C:\Path\SomeFile.exe"
+Start-Process "appcontrol-manager: --action=FileHashes --file=C:\Path\SomeFile.exe"
 ```
 
 * #### Deploy the RMM (Remote Monitoring and Management) Software Blocking Policy In Audit Mode
 
 ```powershell
-Start-Process "appcontrol-manager:--action=DeployRMMAuditPolicy"
+Start-Process "appcontrol-manager: --action=DeployRMMAuditPolicy"
 ```
 
 * #### Deploy the RMM (Remote Monitoring and Management) Software Blocking Policy In Enforced Mode
 
 ```powershell
-Start-Process "appcontrol-manager:--action=DeployRMMBlockPolicy"
+Start-Process "appcontrol-manager: --action=DeployRMMBlockPolicy"
 ```
 
 <br>

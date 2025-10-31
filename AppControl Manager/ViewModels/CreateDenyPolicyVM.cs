@@ -51,6 +51,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 			() => FilesAndFoldersInfoBarMessage, value => FilesAndFoldersInfoBarMessage = value,
 			() => FilesAndFoldersInfoBarSeverity, value => FilesAndFoldersInfoBarSeverity = value,
 			() => FilesAndFoldersInfoBarIsClosable, value => FilesAndFoldersInfoBarIsClosable = value,
+			Dispatcher,
 			() => FilesAndFoldersInfoBarTitle, value => FilesAndFoldersInfoBarTitle = value);
 
 		FilesAndFoldersCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));
@@ -61,6 +62,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 			() => PFNInfoBarMessage, value => PFNInfoBarMessage = value,
 			() => PFNInfoBarSeverity, value => PFNInfoBarSeverity = value,
 			() => PFNInfoBarIsClosable, value => PFNInfoBarIsClosable = value,
+			Dispatcher,
 			() => PFNInfoBarTitle, value => PFNInfoBarTitle = value);
 
 		PFNBasedCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));
@@ -71,6 +73,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 			() => CustomFilePathRulesInfoBarMessage, value => CustomFilePathRulesInfoBarMessage = value,
 			() => CustomFilePathRulesInfoBarSeverity, value => CustomFilePathRulesInfoBarSeverity = value,
 			() => CustomFilePathRulesInfoBarIsClosable, value => CustomFilePathRulesInfoBarIsClosable = value,
+			Dispatcher,
 			() => CustomFilePathRulesInfoBarTitle, value => CustomFilePathRulesInfoBarTitle = value);
 
 		PatternBasedFileRuleCancellableButton = new(GlobalVars.GetStr("CreateDenyPolicyButton/Content"));

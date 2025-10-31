@@ -40,7 +40,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		// Give column widths paddings to look better
 		CA_CalculateColumnWidths();

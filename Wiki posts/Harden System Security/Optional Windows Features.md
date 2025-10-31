@@ -34,8 +34,6 @@ Use the 3 apply, remove or verify buttons in this page to apply the security con
 
     - Windows Media Player (legacy): isn't needed anymore, [Windows 11 has a modern media player app](https://blogs.windows.com/windows-insider/2021/11/16/new-media-player-for-windows-11-begins-rolling-out-to-windows-insiders/).
 
-    - [Microsoft Defender Application Guard](https://learn.microsoft.com/windows/security/application-security/application-isolation/microsoft-defender-application-guard/md-app-guard-overview), it's [deprecated](https://learn.microsoft.com/windows/whats-new/deprecated-features#deprecated-features). Learn more about [Microsoft Edge Security Features here](https://learn.microsoft.com/deployedge/ms-edge-security-for-business).
-
 <br>
 
 - [Uninstalls](https://learn.microsoft.com/powershell/module/dism/remove-windowscapability) these optional features (Windows Settings -> Apps -> Optional Features):

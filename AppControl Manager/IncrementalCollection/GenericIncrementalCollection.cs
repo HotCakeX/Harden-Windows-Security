@@ -26,8 +26,6 @@ using CommunityToolkit.Common.Collections;
 using Microsoft.UI.Xaml.Data;
 using Windows.Foundation;
 
-#pragma warning disable CA1812
-
 namespace AppControlManager.IncrementalCollection;
 
 /// <summary>

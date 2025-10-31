@@ -17,9 +17,7 @@
 
 using System.Collections.Generic;
 
-namespace AppControlManager.Others;
-
-#pragma warning disable CA1812
+namespace CommonCore.Others;
 
 internal sealed class PackagedAppView(
 	string displayName,

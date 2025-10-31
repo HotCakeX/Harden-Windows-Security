@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Formats.Asn1;
@@ -29,8 +30,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json.Serialization;
 using AppControlManager.Others;
-
-#pragma warning disable CA1819
 
 namespace HardenSystemSecurity.Vyre;
 
@@ -119,7 +118,7 @@ internal sealed class CtlHeader(
 	DateTime? nextUpdateUtc,
 	string algorithmOid,
 	string algorithmOidFriendlyName,
-	byte[]? digestAlgorithmParameters,
+	ReadOnlyMemory<byte> digestAlgorithmParameters,
 	int entryCount)
 {
 	/// <summary>
@@ -169,9 +168,9 @@ internal sealed class CtlHeader(
 
 	/// <summary>
 	/// Raw encoded AlgorithmIdentifier parameters (often NULL 05 00 or absent).
-	/// Null or empty when no parameters are present.
+	/// Empty when no parameters are present.
 	/// </summary>
-	internal byte[]? DigestAlgorithmParameters => digestAlgorithmParameters;
+	internal ReadOnlyMemory<byte> DigestAlgorithmParameters => digestAlgorithmParameters;
 
 	/// <summary>
 	/// Number of TrustedSubject entries parsed from the CTL.
@@ -383,9 +382,9 @@ internal static class AuthRootProcessor
 
 			// Check if this looks like an STL file by checking the file extension or content
 			if (cabinetEntry.Name.EndsWith(".stl", StringComparison.OrdinalIgnoreCase) ||
-				(cabinetEntry.Data != null && cabinetEntry.Data.Length > 2 && cabinetEntry.Data[0] == 0x30))
+				(cabinetEntry.Data.Length > 2 && cabinetEntry.Data.Span[0] == 0x30))
 			{
-				extractedStlBytes = cabinetEntry.Data ?? [];
+				extractedStlBytes = cabinetEntry.Data.ToArray();
 			}
 			else
 			{
@@ -636,7 +635,7 @@ internal static class AuthRootProcessor
 		string? sequenceNumberHexLowerLocal = null;
 		DateTime thisUpdateUtcLocal;
 		DateTime? nextUpdateUtcLocal = null;
-		byte[]? algorithmParametersRawLocal = null;
+		ReadOnlyMemory<byte> algorithmParametersRawLocal = ReadOnlyMemory<byte>.Empty;
 
 		// Version (optional) – only 0 or 1 accepted in real AuthRoot CTLs.
 		if (ctlSeq.HasData &&
@@ -727,7 +726,7 @@ internal static class AuthRootProcessor
 				ReadOnlyMemory<byte> enc = algSeq.ReadEncodedValue();
 				ms.Write(enc.Span);
 			}
-			algorithmParametersRawLocal = ms.Length > 0 ? ms.ToArray() : null;
+			algorithmParametersRawLocal = ms.Length > 0 ? new ReadOnlyMemory<byte>(ms.ToArray()) : ReadOnlyMemory<byte>.Empty;
 		}
 
 		// Validate CTL temporal coherence relative to signer certificate validity.
@@ -1336,7 +1335,7 @@ internal static partial class CabinetArchiveExtractor
 				_ = Directory.CreateDirectory(destinationDirectoryPath);
 			}
 
-			File.WriteAllBytes(destinationFilePath, cabinetEntry.Data ?? []);
+			File.WriteAllBytes(destinationFilePath, cabinetEntry.Data.ToArray());
 			try
 			{
 				File.SetLastWriteTime(destinationFilePath, cabinetEntry.LastWriteTime);
@@ -1842,7 +1841,7 @@ internal static partial class CabinetArchiveExtractor
 		internal string Name { get; private set; }
 		internal int Size { get; private set; }
 		internal DateTime LastWriteTime { get; private set; }
-		internal byte[]? Data { get; set; }
+		internal ReadOnlyMemory<byte> Data { get; set; }
 
 		internal CabinetFileEntry(FdiNotificationRecord notificationRecord)
 		{

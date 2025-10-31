@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using AppControlManager.Others;
 
 namespace HardenSystemSecurity.Power;
 

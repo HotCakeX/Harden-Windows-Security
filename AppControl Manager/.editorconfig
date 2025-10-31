@@ -73,7 +73,7 @@ dotnet_diagnostic.CA1508.severity = error
 dotnet_diagnostic.CA1200.severity = error
 
 # CA1812: Avoid uninstantiated internal classes
-dotnet_diagnostic.CA1812.severity = error
+dotnet_diagnostic.CA1812.severity = none
 
 # CA1825: Avoid zero-length array allocations
 dotnet_diagnostic.CA1825.severity = error
@@ -1115,7 +1115,7 @@ dotnet_diagnostic.CA1002.severity = error
 dotnet_diagnostic.CA1034.severity = error
 
 # IDE0130: Namespace does not match folder structure
-dotnet_diagnostic.IDE0130.severity = error
+dotnet_diagnostic.IDE0130.severity = none
 
 # IDE0320: Make anonymous function static
 dotnet_diagnostic.IDE0320.severity = error

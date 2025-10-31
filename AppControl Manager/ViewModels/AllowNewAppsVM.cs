@@ -58,6 +58,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			() => Step1InfoBar_Message, value => Step1InfoBar_Message = value,
 			() => Step1InfoBar_Severity, value => Step1InfoBar_Severity = value,
 			() => Step1InfoBar_IsClosable, value => Step1InfoBar_IsClosable = value,
+			Dispatcher,
 			() => Step1InfoBar_Title, value => Step1InfoBar_Title = value);
 
 		Step2InfoBar = new InfoBarSettings(
@@ -65,6 +66,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			() => Step2InfoBar_Message, value => Step2InfoBar_Message = value,
 			() => Step2InfoBar_Severity, value => Step2InfoBar_Severity = value,
 			() => Step2InfoBar_IsClosable, value => Step2InfoBar_IsClosable = value,
+			Dispatcher,
 			() => Step2InfoBar_Title, value => Step2InfoBar_Title = value);
 
 		Step3InfoBar = new InfoBarSettings(
@@ -72,6 +74,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			() => Step3InfoBar_Message, value => Step3InfoBar_Message = value,
 			() => Step3InfoBar_Severity, value => Step3InfoBar_Severity = value,
 			() => Step3InfoBar_IsClosable, value => Step3InfoBar_IsClosable = value,
+			Dispatcher,
 			() => Step3InfoBar_Title, value => Step3InfoBar_Title = value);
 
 		// To adjust the initial width of the columns, giving them nice paddings.

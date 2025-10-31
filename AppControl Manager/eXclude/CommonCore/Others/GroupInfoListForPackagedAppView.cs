@@ -15,12 +15,22 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace AppControlManager.Others;
+using System.Collections.Generic;
+
+namespace CommonCore.Others;
 
 /// <summary>
-/// Represents one log line.
+/// GroupInfoListForPackagedAppView class definition
 /// </summary>
-internal sealed class LogLine(string text)
+/// <param name="items">All of the <see cref="PackagedAppView"/> items in this group.</param>
+/// <param name="key">The key for this group, which is based on the first character of the DisplayName of the <see cref="PackagedAppView"/> items.</param>
+internal sealed partial class GroupInfoListForPackagedAppView(IEnumerable<PackagedAppView> items, string key) : List<PackagedAppView>(items)
 {
-	internal string Text => text;
+	// string is the type for Key since it's based on DisplayName[..1] and will always be a string
+	internal string Key => key;
+
+	public override string ToString()
+	{
+		return "Group " + Key;
+	}
 }

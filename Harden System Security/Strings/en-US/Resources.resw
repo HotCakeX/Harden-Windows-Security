@@ -1801,7 +1801,7 @@
 <data name="FailedToOpenBCDSystemStore" xml:space="preserve">
   <value>Failed to open BCD system store</value>
 </data>
-<data name="FailedToParseCurrent EntryGUID" xml:space="preserve">
+<data name="FailedToParseCurrentEntryGUID" xml:space="preserve">
   <value>Failed to parse current entry GUID</value>
 </data>
 <data name="CurrentBootEntryNotFoundAdministrator" xml:space="preserve">
@@ -4238,4 +4238,19 @@ Thumbprint: {3}</value>
 <data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
   <value>No device intent selected, or no matching items to apply.</value>
 </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.Content" xml:space="preserve">
+    <value>Microsoft Store Update Check</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Checks for updates to Microsoft Store apps and starts their installation. Performs the same task as the "Check for Updates" button in the Microsoft Store app.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Checks for updates to Microsoft Store apps and starts their installation. Performs the same task as the "Check for Updates" button in the Microsoft Store app.</value>
+  </data>
+  <data name="CheckingForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Checking for updates to Microsoft Store apps...</value>
+  </data>
+  <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Successfully checked for updates to Microsoft Store apps. To view any downloads that were started, please open the Microsoft Store app.</value>
+  </data>
 </root>

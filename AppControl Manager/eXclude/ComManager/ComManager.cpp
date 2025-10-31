@@ -203,6 +203,44 @@ int wmain(int argc, wchar_t* argv[])
 		return 0;
 	}
 
+	// Primary: DO
+	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"do"))
+	{
+		// Exactly 5 arguments expected.
+		if (argc != 5)
+		{
+			return 2;
+		}
+
+		const wchar_t* wmiNamespace = argv[2];
+		const wchar_t* wmiClassName = argv[3];
+		const wchar_t* methodName = argv[4];
+
+		// Validate non-empty (not just whitespace).
+		auto isBlank = [](const wchar_t* s) -> bool
+			{
+				if (!s || *s == L'\0') return true;
+				wstring tmp(s);
+				return tmp.find_first_not_of(L" \t\n\r") == wstring::npos;
+			};
+		if (isBlank(wmiNamespace) || isBlank(wmiClassName) || isBlank(methodName))
+		{
+			return 2;
+		}
+
+		const bool ok = ExecuteWmiClassMethodNoParams(wmiNamespace, wmiClassName, methodName);
+		if (!ok)
+		{
+			const wchar_t* err = GetLastErrorMessage();
+			if (err && *err)
+				LogErr(L"Failed to execute WMI method. Error: ", err);
+			else
+				LogErr(L"Failed to execute WMI method.");
+			return 1;
+		}
+		return 0;
+	}
+
 	// Primary: FIREWALL
 	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"firewall"))
 	{

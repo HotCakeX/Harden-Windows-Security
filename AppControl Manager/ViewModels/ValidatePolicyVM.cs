@@ -35,6 +35,7 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
+			Dispatcher,
 			() => MainInfoBarTitle, value => MainInfoBarTitle = value);
 	}
 

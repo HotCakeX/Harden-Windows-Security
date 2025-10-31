@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using AppControlManager.Others;
 using HardenSystemSecurity.GroupPolicy;
 using Microsoft.Win32;
 

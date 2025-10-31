@@ -114,7 +114,7 @@ internal sealed partial class ASRVM : ViewModelBase
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
-			null, null);
+			Dispatcher, null, null);
 
 		CreateJSONData();
 	}
@@ -174,9 +174,9 @@ internal sealed partial class ASRVM : ViewModelBase
 				asrVMRef: this);
 
 			// Initialize the state based on the current data in the policy entry
-			if (item.Data is not null && item.Data.Length >= 4)
+			if (item.Data.Length >= 4)
 			{
-				uint currentValue = BitConverter.ToUInt32(item.Data, 0);
+				uint currentValue = BitConverter.ToUInt32(item.Data.Span);
 				entry.State = currentValue switch
 				{
 					0 => ASRRuleState.NotConfigured,

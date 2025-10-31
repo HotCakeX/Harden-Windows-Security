@@ -1801,7 +1801,7 @@
 <data name="FailedToOpenBCDSystemStore" xml:space="preserve">
   <value>Nie udało się otworzyć magazynu systemu BCD</value>
 </data>
-<data name="FailedToParseCurrent EntryGUID" xml:space="preserve">
+<data name="FailedToParseCurrentEntryGUID" xml:space="preserve">
   <value>Nie udało się przeanalizować bieżącego GUID wpisu</value>
 </data>
 <data name="CurrentBootEntryNotFoundAdministrator" xml:space="preserve">
@@ -4238,4 +4238,19 @@ Odcisk Palca: {3}</value>
 <data name="NoDeviceIntentSelectedOrNoMatchingItemsToApply" xml:space="preserve">
   <value>Nie wybrano intencji urządzenia ani nie ma pasujących elementów do zastosowania.</value>
 </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.Content" xml:space="preserve">
+    <value>Sprawdzanie aktualizacji aplikacji Microsoft Store</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sprawdza dostępność aktualizacji dla aplikacji Microsoft Store i rozpoczyna ich instalację. Wykonuje to samo zadanie co przycisk "Sprawdź aktualizacje" w aplikacji Microsoft Store.</value>
+  </data>
+  <data name="MicrosoftStoreAppUpdatesCheckButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sprawdza dostępność aktualizacji dla aplikacji Microsoft Store i rozpoczyna ich instalację. Wykonuje to samo zadanie co przycisk "Sprawdź aktualizacje" w aplikacji Microsoft Store.</value>
+  </data>
+  <data name="CheckingForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Trwa sprawdzanie dostępności aktualizacji aplikacji Microsoft Store...</value>
+  </data>
+  <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
+    <value>Pomyślnie sprawdzono dostępność aktualizacji dla aplikacji Microsoft Store. Aby wyświetlić rozpoczęte pobierania, otwórz aplikację Microsoft Store.</value>
+  </data>
 </root>

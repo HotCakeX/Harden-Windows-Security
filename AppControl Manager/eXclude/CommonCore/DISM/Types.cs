@@ -17,8 +17,6 @@
 
 using System.Runtime.InteropServices;
 
-#pragma warning disable IDE0130, CA1812
-
 namespace CommonCore.DISM;
 
 /// <summary>
@@ -78,7 +76,7 @@ internal enum DismRestartType
 	Required = 2
 }
 
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Pack = 4)]
+[StructLayout(LayoutKind.Sequential, Pack = 4)]
 internal struct DismFeature
 {
 	internal IntPtr FeatureName;
@@ -88,7 +86,7 @@ internal struct DismFeature
 /// <summary>
 /// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismfeatureinfo-structure
 /// </summary>
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Pack = 4)]
+[StructLayout(LayoutKind.Sequential, Pack = 4)]
 internal struct DismFeatureInfo
 {
 	internal IntPtr FeatureName;
@@ -104,7 +102,7 @@ internal struct DismFeatureInfo
 /// Structure representing capability info returned by DismGetCapabilityInfo.
 /// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismcapabilityinfo
 /// </summary>
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Pack = 4)]
+[StructLayout(LayoutKind.Sequential, Pack = 4)]
 internal struct DismCapabilityInfo
 {
 	internal IntPtr Name;                     // Capability name (PCWSTR)

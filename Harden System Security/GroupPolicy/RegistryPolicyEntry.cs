@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -24,8 +25,6 @@ using System.Text.Json.Serialization;
 using AppControlManager.Others;
 using HardenSystemSecurity.Protect;
 
-#pragma warning disable CA1819
-
 namespace HardenSystemSecurity.GroupPolicy;
 
 internal sealed class RegistryPolicyEntry(
@@ -34,7 +33,7 @@ internal sealed class RegistryPolicyEntry(
 	string valueName,
 	RegistryValueType type,
 	uint size,
-	byte[] data,
+	ReadOnlyMemory<byte> data,
 	Hive hive)
 {
 	[JsonInclude]
@@ -65,7 +64,7 @@ internal sealed class RegistryPolicyEntry(
 	[JsonInclude]
 	[JsonPropertyOrder(5)]
 	[JsonPropertyName("Data")]
-	internal byte[] Data { get; set; } = data;
+	internal ReadOnlyMemory<byte> Data { get; set; } = data;
 
 	[JsonInclude]
 	[JsonPropertyOrder(6)]
@@ -127,38 +126,38 @@ internal sealed class RegistryPolicyEntry(
 	[JsonIgnore]
 	internal object? ParsedValue { get; } = GetValue(data, type);
 
-	private static object? GetValue(byte[] data, RegistryValueType type)
+	private static object? GetValue(ReadOnlyMemory<byte> data, RegistryValueType type)
 	{
-		if (data == null || data.Length == 0)
+		if (data.IsEmpty)
 			return null;
 		return type switch
 		{
 			// Unicode string value - decode from UTF-16 and remove null terminator
-			RegistryValueType.REG_SZ => Encoding.Unicode.GetString(data).TrimEnd('\0'),
+			RegistryValueType.REG_SZ => Encoding.Unicode.GetString(data.Span).TrimEnd('\0'),
 
 			// Expandable unicode string value - decode from UTF-16 and remove null terminator
-			RegistryValueType.REG_EXPAND_SZ => Encoding.Unicode.GetString(data).TrimEnd('\0'),
+			RegistryValueType.REG_EXPAND_SZ => Encoding.Unicode.GetString(data.Span).TrimEnd('\0'),
 
-			// 32-bit unsigned integer value - convert from byte array
-			RegistryValueType.REG_DWORD => BitConverter.ToUInt32(data, 0),
+			// 32-bit unsigned integer value - convert from byte span
+			RegistryValueType.REG_DWORD => BitConverter.ToUInt32(data.Span),
 
-			// 64-bit unsigned integer value - convert from byte array
-			RegistryValueType.REG_QWORD => BitConverter.ToUInt64(data, 0),
+			// 64-bit unsigned integer value - convert from byte span
+			RegistryValueType.REG_QWORD => BitConverter.ToUInt64(data.Span),
 
-			// Binary data - return raw byte array as-is
+			// Binary data - return raw read-only memory as-is
 			RegistryValueType.REG_BINARY => data,
 
 			// Multi-string value - parse null-separated unicode strings
-			RegistryValueType.REG_MULTI_SZ => ParseMultiString(data),
+			RegistryValueType.REG_MULTI_SZ => ParseMultiString(data.Span),
 
-			// Unknown or unsupported registry value type - return raw byte array
+			// Unknown or unsupported registry value type - return raw read-only memory
 			_ => data
 		};
 	}
 
-	private static string[] ParseMultiString(byte[] data)
+	private static string[] ParseMultiString(ReadOnlySpan<byte> data)
 	{
-		string? unicodeString = Encoding.Unicode.GetString(data);
+		string unicodeString = Encoding.Unicode.GetString(data);
 		string[] strings = unicodeString.Split('\0', StringSplitOptions.RemoveEmptyEntries);
 		return strings;
 	}

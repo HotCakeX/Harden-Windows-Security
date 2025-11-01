@@ -1,7 +1,0 @@
-/.vs
-/bin
-/obj
-/OutputARM64
-/OutputX64
-DISMService.csproj.user
-win-x64.pubxml.user

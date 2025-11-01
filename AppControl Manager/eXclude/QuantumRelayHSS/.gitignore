@@ -1,8 +1,0 @@
-/bin
-/obj
-/.vs
-/OutputX64
-/OutputARM64
-Properties/PublishProfiles/win-x64.pubxml.user
-Properties/PublishProfiles/win-arm64.pubxml.user
-QuantumRelayHSS.csproj.user

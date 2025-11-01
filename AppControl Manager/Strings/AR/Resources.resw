@@ -1015,9 +1015,6 @@
   <data name="DeployingXMLFile" xml:space="preserve">
     <value>جارٍ نشر ملف XML الحالي: '</value>
   </data>
-  <data name="SignedPolicyError" xml:space="preserve">
-    <value>ملف XML '</value>
-  </data>
   <data name="DeploymentError" xml:space="preserve">
     <value>حدث خطأ أثناء نشر ملفات XML المحددة</value>
   </data>
@@ -1284,7 +1281,7 @@
     <value>إنشاء نهج وضع النواة الصارم</value>
   </data>
   <data name="PolicyCreationError" xml:space="preserve">
-    <value>حدث خطأ أثناء إنشاء نهج وضع النواة الصارم: </value>
+    <value>حدث خطأ أثناء إنشاء نهج وضع النواة الصارم:</value>
   </data>
   <data name="PolicyCreatedSuccessfully" xml:space="preserve">
     <value>تم إنشاء نهج وضع النواة الصارم بنجاح</value>
@@ -2730,7 +2727,7 @@
     <value>معطل/غير قيد التشغيل</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_ENABLED" xml:space="preserve">
-    <comment>Enforcement of kernel‑mode Code Integrity is enabled</comment>
+    <comment>Enforcement of kernel-mode Code Integrity is enabled</comment>
     <value>تم تمكين فرض تكامل التعليمات البرمجية لوضع النواة.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_TESTSIGN" xml:space="preserve">
@@ -2738,15 +2735,15 @@
     <value>يسمح تكامل التعليمات البرمجية بالمحتوى الموقع للاختبار.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_ENABLED" xml:space="preserve">
-    <comment>Enforcement of user‑mode Code Integrity is enabled</comment>
+    <comment>Enforcement of user-mode Code Integrity is enabled</comment>
     <value>تم تمكين فرض تكامل التعليمات البرمجية لوضع المستخدم.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED" xml:space="preserve">
-    <comment>User‑mode Code Integrity is enabled in audit mode</comment>
+    <comment>User-mode Code Integrity is enabled in audit mode</comment>
     <value>تم تمكين فرض تكامل التعليمات البرمجية لوضع المستخدم في وضع التدقيق.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED" xml:space="preserve">
-    <comment>User‑mode binaries from certain paths can bypass CI checks</comment>
+    <comment>User-mode binaries from certain paths can bypass CI checks</comment>
     <value>يمكن تشغيل ثنائيات وضع المستخدم من مسارات معينة حتى لو فشلت في فحوصات تكامل التعليمات البرمجية.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_TEST_BUILD" xml:space="preserve">
@@ -2754,7 +2751,7 @@
     <value>إصدار تكامل التعليمات البرمجية من إصدار اختباري.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD" xml:space="preserve">
-    <comment>The Code Integrity component is from a pre‑production build</comment>
+    <comment>The Code Integrity component is from a pre-production build</comment>
     <value>إصدار تكامل التعليمات البرمجية من إصدار ما قبل الإنتاج.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED" xml:space="preserve">
@@ -2766,11 +2763,11 @@
     <value>إصدار تكامل التعليمات البرمجية من إصدار تجريبي.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_FLIGHTING_ENABLED" xml:space="preserve">
-    <comment>Flight‑signed content is allowed by Code Integrity</comment>
+    <comment>Flight-signed content is allowed by Code Integrity</comment>
     <value>يسمح تكامل التعليمات البرمجية بالمحتوى الموقع تجريبيًا.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode</comment>
     <value>تم تمكين تكامل التعليمات البرمجية المفروض بواسطة برنامج مراقبة الأجهزة الافتراضية لمكونات وضع النواة.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED" xml:space="preserve">
@@ -2778,7 +2775,7 @@
     <value>تم تمكين تكامل التعليمات البرمجية المفروض بواسطة برنامج مراقبة الأجهزة الافتراضية في وضع التدقيق.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode in strict mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode in strict mode</comment>
     <value>تم تمكين تكامل التعليمات البرمجية المفروض بواسطة برنامج مراقبة الأجهزة الافتراضية لوضع النواة في الوضع الصارم.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED" xml:space="preserve">
@@ -3341,7 +3338,7 @@
     <value>تم إنشاء {0} سجل (سجلات) أثناء مرحلة التدقيق</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>حدث خطأ أثناء فحص النظام: </value>
+    <value>حدث خطأ أثناء فحص النظام:</value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>تم فحص النظام بحثًا عن الأحداث بنجاح</value>
@@ -3368,7 +3365,7 @@
     <value>جارٍ فحص {0} ملفًا</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>حدث خطأ: </value>
+    <value>حدث خطأ:</value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>تم فحص النظام بحثًا عن برامج التشغيل بنجاح</value>
@@ -3419,7 +3416,7 @@
     <value>جارٍ تحويل {0} إلى CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>حدثت مشكلة أثناء تحويل ملفات XML إلى CIP: </value>
+    <value>حدثت مشكلة أثناء تحويل ملفات XML إلى CIP:</value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>تم تحويل جميع ملفات XML المحددة بنجاح إلى ملفات CIP ثنائية</value>
@@ -3428,7 +3425,7 @@
     <value>جارٍ فحص سجلات الأحداث...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>حدث خطأ أثناء فحص السجلات: </value>
+    <value>حدث خطأ أثناء فحص السجلات:</value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>اكتمل الفحص. تم العثور على {0} سجل.</value>
@@ -3470,7 +3467,7 @@
     <value>لم يتم توفير معرف GUID للسياسة الأساسية لاستخدامه كـ BasePolicyID للسياسة التكميلية.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>حدث خطأ أثناء معالجة السجلات: </value>
+    <value>حدث خطأ أثناء معالجة السجلات:</value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>تمت معالجة السجلات بنجاح وتضمينها في السياسة.</value>
@@ -3488,7 +3485,7 @@
     <value>جارٍ إجراء المحاكاة</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>حدثت مشكلة أثناء المحاكاة: </value>
+    <value>حدثت مشكلة أثناء المحاكاة:</value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>اكتملت المحاكاة بنجاح.</value>
@@ -3503,7 +3500,7 @@
     <value>جارٍ تحميل السياسة</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>حدثت مشكلة أثناء تحميل ملف السياسة المحدد: </value>
+    <value>حدثت مشكلة أثناء تحميل ملف السياسة المحدد:</value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>تم تحميل السياسة المحددة بنجاح</value>
@@ -3899,7 +3896,7 @@
     <value>تم إلغاء تسجيل الدخول إلى MSGraph بواسطة المستخدم</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>حدث خطأ أثناء تسجيل الدخول إلى MSGraph: </value>
+    <value>حدث خطأ أثناء تسجيل الدخول إلى MSGraph:</value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>تم تنفيذ استعلام MDE Advanced Hunting بنجاح.</value>
@@ -3949,10 +3946,7 @@
   <data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
     <value>فشل في إنشاء السياسة المخصصة. رمز الحالة: {0}</value>
   </data>
-  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
-    <value>يتجاوز حجم ملف سياسة CIP الحد المسموح به وهو {0} بايت.</value>
-  </data>
-    <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
+  <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
     <value>تم استرداد تكوينات الجهاز بنجاح.</value>
   </data>
   <data name="FailedToRetrieveDeviceConfigurationsMessage" xml:space="preserve">
@@ -4094,7 +4088,7 @@
     <value>لم يتم الكشف عن أي نتائج في سجلات CSV المتقدمة لـ MDE المحددة.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>حدث خطأ أثناء مسح سجلات CSV المتقدمة لـ MDE المحددة: </value>
+    <value>حدث خطأ أثناء مسح سجلات CSV المتقدمة لـ MDE المحددة:</value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>اكتمل مسح سجلات CSV المتقدمة لـ MDE المحددة بنجاح.</value>
@@ -4115,7 +4109,7 @@
     <value>لم يتم تحديد ملف سياسة لربط السياسة التكميلية به.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>حدث خطأ أثناء إنشاء السياسة التكميلية: </value>
+    <value>حدث خطأ أثناء إنشاء السياسة التكميلية:</value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>استرداد بيانات Microsoft Defender for Endpoint Advanced Hunting</value>
@@ -4136,7 +4130,7 @@
     <value>لم يتم العثور على سجلات قابلة للتنفيذ بين البيانات المستردة لإنشاء سياسة تكميلية بها.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>حدث خطأ أثناء استرداد سجلات MDE Advanced Hunting من MSGraph: </value>
+    <value>حدث خطأ أثناء استرداد سجلات MDE Advanced Hunting من MSGraph:</value>
   </data>
     <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>إضافة سجلات إلى السياسة المحددة</value>
@@ -4479,9 +4473,6 @@
 </data>
 <data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
   <value>كان متوقعًا علامة نهاية النهج '{0}'، ولكن تم الحصول على '{1}'.</value>
-</data>
-<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
-  <value>ملف XML '{0}' غير متوافق مع مخطط نهج CI</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>نوع النهج هو {0} ويحتوي على خيار القاعدة {1} وهو غير صالح. فقط {2} يمكن أن يحتوي على ذلك.</value>
@@ -6122,4 +6113,37 @@
   <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>افتح السياسة المحددة في محرر السياسات حيث يمكنك الاطلاع على نظرة عامة مفصلة على السياسة ولديك خيار تخصيصها بشكل إضافي داخل هذا التطبيق.</value>
   </data>
-  </root>
+    <data name="SignedPolicyError" xml:space="preserve">
+    <value>ملف النهج '{0}' لا يحتوي على خيار القاعدة EnabledUnsignedSystemIntegrityPolicy. لا يمكن نشره في الوضع غير الموقّع.</value>
+  </data>
+  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>ملف النهج الثنائي '{0}' يتجاوز حد الحجم البالغ {1} بايت. حجمه هو {2} بايت.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.Header" xml:space="preserve">
+    <value>توفر القواعد غير المدعومة</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يحدد ما إذا كانت خيارات قواعد النهج غير المدعومة أو غير الموثقة ممكّنة أم معطّلة.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يحدد ما إذا كانت خيارات قواعد النهج غير المدعومة أو غير الموثقة ممكّنة أم معطّلة.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OnContent" xml:space="preserve">
+    <value>متاح</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OffContent" xml:space="preserve">
+    <value>غير متاح</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Description" xml:space="preserve">
+    <value>قم بتمكين هذه الميزة لإتاحة طرق بديلة لنشر وإزالة نهج App Control. هذه الطرق لا تعتمد على الملف التنفيذي CiTool ويمكن استخدامها إذا كان CiTool محجوباً أو غير متاح.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Header" xml:space="preserve">
+    <value>استخدام إدارة تكامل الشفرة V2</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قم بتمكين هذه الميزة لإتاحة طرق بديلة لنشر وإزالة نهج App Control. هذه الطرق لا تعتمد على الملف التنفيذي CiTool ويمكن استخدامها إذا كان CiTool محجوباً أو غير متاح.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قم بتمكين هذه الميزة لإتاحة طرق بديلة لنشر وإزالة نهج App Control. هذه الطرق لا تعتمد على الملف التنفيذي CiTool ويمكن استخدامها إذا كان CiTool محجوباً أو غير متاح.</value>
+  </data>
+</root>

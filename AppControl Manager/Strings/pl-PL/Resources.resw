@@ -1015,9 +1015,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="DeployingXMLFile" xml:space="preserve">
     <value>Obecnie wdrażany plik XML: '</value>
   </data>
-  <data name="SignedPolicyError" xml:space="preserve">
-    <value>Plik XML '</value>
-  </data>
   <data name="DeploymentError" xml:space="preserve">
     <value>Wystąpił błąd podczas wdrażania wybranych plików XML</value>
   </data>
@@ -1284,7 +1281,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Tworzenie zasad trybu ścisłego jądra</value>
   </data>
   <data name="PolicyCreationError" xml:space="preserve">
-    <value>Wystąpił błąd podczas tworzenia zasad trybu ścisłego jądra: </value>
+    <value>Wystąpił błąd podczas tworzenia zasad trybu ścisłego jądra:</value>
   </data>
   <data name="PolicyCreatedSuccessfully" xml:space="preserve">
     <value>Pomyślnie utworzono zasady trybu ścisłego jądra</value>
@@ -2730,7 +2727,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Wyłączone/Nie działa</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_ENABLED" xml:space="preserve">
-    <comment>Enforcement of kernel‑mode Code Integrity is enabled</comment>
+    <comment>Enforcement of kernel-mode Code Integrity is enabled</comment>
     <value>Wymuszanie integralności kodu w trybie jądra jest włączone.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_TESTSIGN" xml:space="preserve">
@@ -2738,15 +2735,15 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Zawartość podpisana testowo jest dozwolona przez integralność kodu.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_ENABLED" xml:space="preserve">
-    <comment>Enforcement of user‑mode Code Integrity is enabled</comment>
+    <comment>Enforcement of user-mode Code Integrity is enabled</comment>
     <value>Wymuszanie integralności kodu w trybie użytkownika jest włączone.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED" xml:space="preserve">
-    <comment>User‑mode Code Integrity is enabled in audit mode</comment>
+    <comment>User-mode Code Integrity is enabled in audit mode</comment>
     <value>Wymuszanie integralności kodu w trybie użytkownika jest włączone w trybie inspekcji.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED" xml:space="preserve">
-    <comment>User‑mode binaries from certain paths can bypass CI checks</comment>
+    <comment>User-mode binaries from certain paths can bypass CI checks</comment>
     <value>Pliki binarne trybu użytkownika z określonych ścieżek mogą być uruchamiane, nawet jeśli nie przejdą kontroli integralności kodu.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_TEST_BUILD" xml:space="preserve">
@@ -2754,7 +2751,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Kompilacja integralności kodu pochodzi z kompilacji testowej.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD" xml:space="preserve">
-    <comment>The Code Integrity component is from a pre‑production build</comment>
+    <comment>The Code Integrity component is from a pre-production build</comment>
     <value>Kompilacja integralności kodu pochodzi z kompilacji przedprodukcyjnej.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED" xml:space="preserve">
@@ -2766,11 +2763,11 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Kompilacja integralności kodu pochodzi z kompilacji flight.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_FLIGHTING_ENABLED" xml:space="preserve">
-    <comment>Flight‑signed content is allowed by Code Integrity</comment>
+    <comment>Flight-signed content is allowed by Code Integrity</comment>
     <value>Zawartość podpisana flight jest dozwolona przez integralność kodu.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode</comment>
     <value>Integralność kodu wymuszana przez hipernadzorcę jest włączona dla komponentów trybu jądra.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED" xml:space="preserve">
@@ -2778,7 +2775,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Integralność kodu wymuszana przez hipernadzorcę jest włączona w trybie inspekcji.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode in strict mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode in strict mode</comment>
     <value>Integralność kodu wymuszana przez hipernadzorcę jest włączona dla trybu jądra w trybie ścisłym.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED" xml:space="preserve">
@@ -3341,7 +3338,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Podczas fazy inspekcji wygenerowano {0} dziennik(ów)</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>Wystąpił błąd podczas skanowania systemu: </value>
+    <value>Wystąpił błąd podczas skanowania systemu:</value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>Pomyślnie przeskanowano system w poszukiwaniu zdarzeń</value>
@@ -3368,7 +3365,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Skanowanie {0} plików</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>Wystąpił błąd: </value>
+    <value>Wystąpił błąd:</value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>Pomyślnie przeskanowano system w poszukiwaniu sterowników</value>
@@ -3419,7 +3416,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Konwertowanie {0} na CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>Wystąpił problem podczas konwertowania plików XML na CIP: </value>
+    <value>Wystąpił problem podczas konwertowania plików XML na CIP:</value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>Pomyślnie przekonwertowano wszystkie wybrane pliki XML na pliki binarne CIP</value>
@@ -3428,7 +3425,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Skanowanie dzienników zdarzeń...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>Wystąpił błąd podczas skanowania dzienników: </value>
+    <value>Wystąpił błąd podczas skanowania dzienników:</value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>Skanowanie zakończone. Znaleziono {0} dzienników.</value>
@@ -3470,7 +3467,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Nie podano identyfikatora GUID zasad podstawowych do użycia jako BasePolicyID zasad uzupełniających.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>Wystąpił błąd podczas przetwarzania dzienników: </value>
+    <value>Wystąpił błąd podczas przetwarzania dzienników:</value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>Pomyślnie przetworzono dzienniki i uwzględniono je w zasadach.</value>
@@ -3488,7 +3485,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Wykonywanie symulacji</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>Wystąpił problem podczas symulacji: </value>
+    <value>Wystąpił problem podczas symulacji:</value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>Symulacja zakończona pomyślnie.</value>
@@ -3503,7 +3500,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Ładowanie zasad</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>Wystąpił problem podczas ładowania wybranego pliku zasad: </value>
+    <value>Wystąpił problem podczas ładowania wybranego pliku zasad:</value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>Pomyślnie załadowano wybrane zasady</value>
@@ -3899,7 +3896,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Logowanie do MSGraph zostało anulowane przez użytkownika</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>Wystąpił błąd podczas logowania do MSGraph: </value>
+    <value>Wystąpił błąd podczas logowania do MSGraph:</value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>Zapytanie zaawansowanego wyszukiwania MDE zakończyło się pomyślnie.</value>
@@ -3949,10 +3946,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
     <value>Nie udało się utworzyć niestandardowych zasad. Kod stanu: {0}</value>
   </data>
-  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
-    <value>Rozmiar pliku zasad CIP przekracza limit {0} bajtów.</value>
-  </data>
-    <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
+  <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
     <value>Konfiguracje urządzeń pobrane pomyślnie.</value>
   </data>
   <data name="FailedToRetrieveDeviceConfigurationsMessage" xml:space="preserve">
@@ -4094,7 +4088,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Nie wykryto żadnych wyników w wybranych dziennikach CSV zaawansowanego wyszukiwania MDE.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>Wystąpił błąd podczas skanowania wybranych dzienników CSV zaawansowanego wyszukiwania MDE: </value>
+    <value>Wystąpił błąd podczas skanowania wybranych dzienników CSV zaawansowanego wyszukiwania MDE:</value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>Pomyślnie zakończono skanowanie wybranych dzienników CSV zaawansowanego wyszukiwania MDE.</value>
@@ -4115,7 +4109,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Nie wybrano pliku zasad do powiązania z zasadami uzupełniającymi.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>Wystąpił błąd podczas tworzenia zasad uzupełniających: </value>
+    <value>Wystąpił błąd podczas tworzenia zasad uzupełniających:</value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>Pobieranie danych zaawansowanego wyszukiwania Microsoft Defender for Endpoint</value>
@@ -4136,7 +4130,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Nie znaleziono żadnych dzienników umożliwiających podjęcie działań wśród pobranych danych w celu utworzenia zasad uzupełniających.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>Wystąpił błąd podczas pobierania dzienników zaawansowanego wyszukiwania MDE z MSGraph: </value>
+    <value>Wystąpił błąd podczas pobierania dzienników zaawansowanego wyszukiwania MDE z MSGraph:</value>
   </data>
     <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>Dodaj dzienniki do wybranych zasad</value>
@@ -4479,9 +4473,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
 </data>
 <data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
   <value>Oczekiwano końcowego znacznika polityki '{0}', otrzymano '{1}'.</value>
-</data>
-<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
-  <value>Plik XML '{0}' nie jest zgodny ze schematem polityki CI</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>Typ polityki to {0} i zawiera opcję reguły {1}, która jest nieprawidłowa. Tylko {2} może ją posiadać.</value>
@@ -6122,4 +6113,37 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Otwórz wybraną zasadę w Edytorze Zasad, gdzie możesz zobaczyć szczegółowy przegląd zasad oraz masz możliwość dalszej personalizacji bezpośrednio w tej aplikacji.</value>
   </data>
-  </root>
+    <data name="SignedPolicyError" xml:space="preserve">
+    <value>Plik zasad '{0}' nie zawiera opcji reguły EnabledUnsignedSystemIntegrityPolicy. Nie można go wdrożyć w trybie niepodpisanym.</value>
+  </data>
+  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>Plik binarny zasad '{0}' przekracza limit rozmiaru {1} bajtów. Jego rozmiar to {2} bajtów.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.Header" xml:space="preserve">
+    <value>Dostępność nieobsługiwanych reguł</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Określa, czy opcje reguł zasad, które są nieobsługiwane lub nieudokumentowane, są włączone czy wyłączone.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Określa, czy opcje reguł zasad, które są nieobsługiwane lub nieudokumentowane, są włączone czy wyłączone.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OnContent" xml:space="preserve">
+    <value>Dostępne</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OffContent" xml:space="preserve">
+    <value>Niedostępne</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Description" xml:space="preserve">
+    <value>Włącz tę funkcję, aby udostępnić alternatywne metody wdrażania i usuwania zasad App Control. Metody te nie zależą od pliku wykonywalnego CiTool i można ich użyć, jeśli CiTool jest zablokowany lub niedostępny.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Header" xml:space="preserve">
+    <value>Użyj zarządzania Code Integrity w wersji 2</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Włącz tę funkcję, aby udostępnić alternatywne metody wdrażania i usuwania zasad App Control. Metody te nie zależą od pliku wykonywalnego CiTool i można ich użyć, jeśli CiTool jest zablokowany lub niedostępny.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Włącz tę funkcję, aby udostępnić alternatywne metody wdrażania i usuwania zasad App Control. Metody te nie zależą od pliku wykonywalnego CiTool i można ich użyć, jeśli CiTool jest zablokowany lub niedostępny.</value>
+  </data>
+</root>

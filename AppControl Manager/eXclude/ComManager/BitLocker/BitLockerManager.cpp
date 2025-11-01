@@ -232,7 +232,7 @@ namespace BitLocker {
 			return true;
 		}
 
-		// Fallback attempt: VT_I4 (signed 32-bit) — some provider builds accept only this, such as the PrepareVolumeEx method.
+		// Fallback attempt: VT_I4 (signed 32-bit) - some provider builds accept only this, such as the PrepareVolumeEx method.
 		VARIANT v2; VariantInit(&v2);
 		v2.vt = VT_I4;
 		v2.lVal = static_cast<LONG>(val);

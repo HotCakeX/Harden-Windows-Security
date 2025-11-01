@@ -74,6 +74,7 @@ internal sealed partial class Main : ViewModelBase
 #endif
 		IsAnimatedRainbowEnabled = ReadValue(nameof(IsAnimatedRainbowEnabled), IsAnimatedRainbowEnabled);
 		CustomAppWindowsBorder = ReadValue(nameof(CustomAppWindowsBorder), CustomAppWindowsBorder);
+		UseV2CIManagement = ReadValue(nameof(UseV2CIManagement), UseV2CIManagement);
 	}
 
 	/// <summary>
@@ -516,4 +517,19 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = string.Empty;
+
+	/// <summary>
+	/// Whether to use the new mechanisms for Code Integrity policy management on the system.
+	/// </summary>
+	internal bool UseV2CIManagement
+	{
+		get;
+		set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(UseV2CIManagement), field);
+			}
+		}
+	}
 }

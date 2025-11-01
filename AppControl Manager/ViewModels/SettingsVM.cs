@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using AppControlManager.AppSettings;
-using AppControlManager.Others;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.Globalization;
 using Microsoft.UI.Xaml;

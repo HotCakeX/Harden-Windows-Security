@@ -399,7 +399,7 @@
 
                                     <HyperlinkButton x:Name="SidebarHelpHyperlinkButton"
                                                      HorizontalAlignment="Center"
-                                                     HorizontalContentAlignment="Stretch"                                        
+                                                     HorizontalContentAlignment="Stretch"
                                                      NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/discussions"
                                                      Padding="12,8"
                                                      CornerRadius="6"
@@ -436,7 +436,7 @@
                                                      BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                                      BorderThickness="1"/>
 
-                                    <Button HorizontalAlignment="Center"                                       
+                                    <Button HorizontalAlignment="Center"
                                             x:Uid="OptimizeMemoryButton"
                                             IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
                                             Click="{x:Bind ViewModel.OptimizeMemory}">

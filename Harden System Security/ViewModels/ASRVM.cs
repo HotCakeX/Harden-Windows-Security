@@ -23,7 +23,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.GroupPolicy;
 using Microsoft.UI.Xaml;

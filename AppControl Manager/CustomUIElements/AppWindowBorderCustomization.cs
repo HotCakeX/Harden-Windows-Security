@@ -16,7 +16,6 @@
 //
 
 using System.Diagnostics;
-using AppControlManager.Others;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Windows.Foundation;
@@ -50,7 +49,7 @@ internal static class AppWindowBorderCustomization
 	private static OverlappedPresenterState? LastPresenterState;
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
+	/// https://learn.microsoft.com/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
 	/// </summary>
 	private const int DWMWA_BORDER_COLOR = 34;
 

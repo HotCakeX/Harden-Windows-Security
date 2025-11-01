@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
-using AppControlManager.Others;
 
 namespace HardenSystemSecurity.GroupPolicy;
 

@@ -162,12 +162,12 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			{
 
 				// Only keep App Control policies
-				IEnumerable<DeviceConfigurationPolicy> filteredResults = result.Value.Where(policy =>
+				IEnumerable<Windows10CustomConfiguration> filteredResults = result.Value.Where(policy =>
 					policy.OmaSettings != null
 					&& policy.OmaSettings.Any(setting => setting.OmaUri?.Contains(@"Vendor/MSFT/ApplicationControl", StringComparison.OrdinalIgnoreCase) == true
 					));
 
-				foreach (DeviceConfigurationPolicy item in filteredResults)
+				foreach (Windows10CustomConfiguration item in filteredResults)
 				{
 
 					(bool, CiPolicyInfo?) policyResult = CiPolicyInfo.FromJson(item.Description);

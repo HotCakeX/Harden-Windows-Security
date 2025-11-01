@@ -57,7 +57,7 @@ When signing and deploying App Control Policies, a dialog will be displayed aski
 
 * **Certificate Common Name**: The Common Name (CN) of the same certificate file you select.
 
-Once you've provided all 3 items, press the **Verify** button. It will verify your inputs and then the **Submit** button will be enabled, allowing you to proceed with policy signing and deployment.
+Once you've provided both items, press the **Verify** button. It will verify your inputs and then the **Submit** button will be enabled, allowing you to proceed with policy signing and deployment.
 
 All of the information you submit will be saved in app settings so that the next time they will be automatically populated for you.
 

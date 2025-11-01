@@ -42,7 +42,7 @@
        <!--
             Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
             Explorer "Package and Publish" context menu entry to be enabled for this project even if
-            the Windows App SDK Nuget package has not yet been restored.
+            the Windows App SDK NuGet package has not yet been restored.
         -->
        <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
        <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
@@ -66,10 +66,10 @@
        <HighEntropyVA>true</HighEntropyVA>
        <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->
 	   <OptimizeImplicitlyTriggeredBuild>True</OptimizeImplicitlyTriggeredBuild>
-	   <!-- https://learn.microsoft.com/en-us/dotnet/standard/native-interop/disabled-marshalling -->
-	   <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#disableruntimemarshalling -->
+	   <!-- https://learn.microsoft.com/dotnet/standard/native-interop/disabled-marshalling -->
+	   <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#disableruntimemarshalling -->
 	   <!-- https://github.com/dotnet/runtime/blob/main/docs/design/libraries/LibraryImportGenerator/Compatibility.md#bool-marshalling -->
-	   <!-- https://learn.microsoft.com/en-us/dotnet/standard/native-interop/type-marshalling -->
+	   <!-- https://learn.microsoft.com/dotnet/standard/native-interop/type-marshalling -->
 	   <!-- Disabling runtime marshaling is better because of predictability, and problems arise during compilation rather than runtime. -->
 	   <!-- It's also a best practice to disable runtime marshaling so we will be explicit rather than relying on implicit details. -->
 	   <DisableRuntimeMarshalling>True</DisableRuntimeMarshalling>

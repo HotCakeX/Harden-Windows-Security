@@ -266,7 +266,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 					if (!policyObject.Rules.Any(rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
 					{
-						throw new InvalidOperationException(GlobalVars.GetStr("SignedPolicyError") + file + "'");
+						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SignedPolicyError"), file));
 					}
 
 					string randomString = Guid.CreateVersion7().ToString("N");
@@ -335,56 +335,47 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	/// <returns>This method does not return a value.</returns>
 	private async Task DeployToIntunePrivate(string file, string policyID, string? xmlFile = null)
 	{
-
 		if (AuthCompanionCLS.CurrentActiveAccount is null)
 		{
 			MainInfoBar.WriteWarning(GlobalVars.GetStr("SignInAuthenticationRequiredMsg"));
 			return;
 		}
 
-		try
+		// Name of the policy that will be uploaded
+		string? policyName = null;
+
+		// The description text for the Intune portal
+		// It will contain all of the information related to the policy
+		string descriptionText = null!;
+
+		await Task.Run(() =>
 		{
-			// Name of the policy that will be uploaded
-			string? policyName = null;
-
-			// The description text for the Intune portal
-			// It will contain all of the information related to the policy
-			string descriptionText = null!;
-
-			await Task.Run(() =>
+			if (xmlFile is not null)
 			{
-				if (xmlFile is not null)
-				{
-					SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFile, null);
+				SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFile, null);
 
-					policyName = PolicySettingsManager.GetPolicyName(policyObj, null);
+				policyName = PolicySettingsManager.GetPolicyName(policyObj, null);
 
-					// Construct an instance of the class in order to serialize it into JSON string for upload to Intune
-					CiPolicyInfo policy = new(
-						policyID: policyObj.PolicyID,
-						basePolicyID: policyObj.BasePolicyID,
-						friendlyName: policyName,
-						version: null,
-						versionString: policyObj.VersionEx,
-						isSystemPolicy: false,
-						isSignedPolicy: !policyObj.Rules.Any(x => x.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy),
-						isOnDisk: false,
-						isEnforced: true,
-						isAuthorized: true,
-						policyOptions: policyObj.Rules.Select(x => ((int)x.Item).ToString()).ToList() // Only use the numbers of each rule to save characters since the string limit is 1000 characters for the Description section of Custom policies
-					);
+				// Construct an instance of the class in order to serialize it into JSON string for upload to Intune
+				CiPolicyInfo policy = new(
+					policyID: policyObj.PolicyID,
+					basePolicyID: policyObj.BasePolicyID,
+					friendlyName: policyName,
+					version: null,
+					versionString: policyObj.VersionEx,
+					isSystemPolicy: false,
+					isSignedPolicy: !policyObj.Rules.Any(x => x.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy),
+					isOnDisk: false,
+					isEnforced: true,
+					isAuthorized: true,
+					policyOptions: policyObj.Rules.Select(x => ((int)x.Item).ToString()).ToList() // Only use the numbers of each rule to save characters since the string limit is 1000 characters for the Description section of Custom policies
+				);
 
-					descriptionText = CiPolicyInfo.ToJson(policy);
-				}
+				descriptionText = CiPolicyInfo.ToJson(policy);
+			}
+		});
 
-			});
-
-			await MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, SelectedIntuneGroups.Select(x => x.GroupID).ToList(), policyName, policyID, descriptionText);
-		}
-		catch (Exception ex)
-		{
-			MainInfoBar.WriteError(ex);
-		}
+		await MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, SelectedIntuneGroups.Select(x => x.GroupID).ToList(), policyName, policyID, descriptionText);
 	}
 
 

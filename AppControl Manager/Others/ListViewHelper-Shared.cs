@@ -284,10 +284,10 @@ internal static partial class ListViewHelper
 	/// An object that holds the current sort key and direction.
 	/// </param>
 	/// <param name="newKey">
-	/// The key for the column being sorted (from the button’s Tag).
+	/// The key for the column being sorted (from the button's Tag).
 	/// </param>
 	/// <param name="regKey">
-	/// Used to find the ListView’s ScrollViewer in the cache.
+	/// Used to find the ListView's ScrollViewer in the cache.
 	/// </param>
 	internal static void SortColumn<TElement>(
 		Func<TElement, object?> keySelector,

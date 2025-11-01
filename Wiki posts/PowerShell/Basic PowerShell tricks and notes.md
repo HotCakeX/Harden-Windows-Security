@@ -240,7 +240,7 @@ Start-Sleep -Milliseconds 25
 
 <br>
 
-## How to Stop/Kill a a Process or (.exe) Executable in Powershell
+## How to Stop/Kill a Process or (.exe) Executable in Powershell
 
 Using native PowerShell cmdlet
 

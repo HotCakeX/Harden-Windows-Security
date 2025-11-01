@@ -187,7 +187,7 @@ In Policy Analyzer, there is an option called `Compare to Effective State`. Quot
 
 1. Use folder options in Control Panel or File Explorer to show hidden files and folder.
 
-2. Open Policy Analyzer program, Navigate to Add -> File -> Add files from GPO(s)... -> Browser for this folder "C:\Windows\System32\GroupPolicy", Select the folder -> Import -> save the Policy Rules file in `\Documents\PolicyAnalyzer\`
+2. Open Policy Analyzer program, Navigate to Add -> File -> Add files from GPO(s)... -> Browse for this folder "C:\Windows\System32\GroupPolicy", Select the folder -> Import -> save the Policy Rules file in `\Documents\PolicyAnalyzer\`
 
 3. Back at the main window, use View/Compare button to view applied Group Policies. The result that you will see is all of the Group Policies that are applied to your system.
 
@@ -206,7 +206,7 @@ Note: At first, when we clean install Windows, the Group Policy folder `C:\Windo
 ## How to verify Security-Baselines-X directory and 100% trust it?
 
 1. Download [the files from here](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X).
-2. Open the Policy Analyzer, Navigate to Add -> File -> Select either `Add User Configuration (registry.pol)` or `Add Security Template (*.inf)` -> Browser for the `Security-Baselines-X` directory, navigate to the category you want.
+2. Open the Policy Analyzer, Navigate to Add -> File -> Select either `Add User Configuration (registry.pol)` or `Add Security Template (*.inf)` -> Browse for the `Security-Baselines-X` directory, navigate to the category you want.
 3. Select either `.pol` or `.inf` file, Import it, give it a name, save it in `\Documents\PolicyAnalyzer\`
 
 4. Back at the main window, use "Compare to Effective State" button to view what policies are included in the file.

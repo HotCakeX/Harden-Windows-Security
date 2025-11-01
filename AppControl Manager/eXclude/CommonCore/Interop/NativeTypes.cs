@@ -21,7 +21,7 @@ namespace CommonCore.Interop;
 
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_privileges
+/// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-token_privileges
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct TOKEN_PRIVILEGES
@@ -31,7 +31,7 @@ internal struct TOKEN_PRIVILEGES
 }
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-luid
+/// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-luid
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct LUID
@@ -41,7 +41,7 @@ internal struct LUID
 }
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-luid_and_attributes
+/// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-luid_and_attributes
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct LUID_AND_ATTRIBUTES
@@ -75,7 +75,7 @@ internal struct STARTUPINFO
 }
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information
+/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct PROCESS_INFORMATION
@@ -87,7 +87,7 @@ internal struct PROCESS_INFORMATION
 }
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/windows/win32/api/psapi/ns-psapi-process_memory_counters_ex2
+/// https://learn.microsoft.com/windows/win32/api/psapi/ns-psapi-process_memory_counters_ex2
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct PROCESS_MEMORY_COUNTERS_EX2
@@ -109,7 +109,7 @@ internal struct PROCESS_MEMORY_COUNTERS_EX2
 }
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-_unicode_string
+/// https://learn.microsoft.com/windows/win32/api/ntdef/ns-ntdef-_unicode_string
 /// Represents a Unicode string with a specified length and a pointer to the string's buffer. It includes fields for the
 /// string's current length and maximum length.
 /// </summary>
@@ -144,7 +144,7 @@ internal struct PerformanceInformation
 }
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/windows/win32/api/ifmib/ns-ifmib-mib_ifrow
+/// https://learn.microsoft.com/windows/win32/api/ifmib/ns-ifmib-mib_ifrow
 /// MIB_IFROW: IPv4-era per-interface stats with 32-bit octet counters.
 /// Using unsafe fixed buffers to match native layout; only fields we need are read.
 /// </summary>
@@ -203,7 +203,7 @@ internal enum WLDP_SECURE_SETTING_VALUE_TYPE
 }
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowplacement
+/// https://learn.microsoft.com/windows/win32/api/winuser/ns-winuser-windowplacement
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct WINDOWPLACEMENT
@@ -217,7 +217,7 @@ internal struct WINDOWPLACEMENT
 }
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow#parameters
+/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-showwindow#parameters
 /// </summary>
 internal enum ShowWindowCommands
 {
@@ -236,7 +236,7 @@ internal enum ShowWindowCommands
 }
 
 /// <summary>
-/// https://learn.microsoft.com/en-us/dotnet/api/system.drawing.point?view=net-9.0
+/// https://learn.microsoft.com/dotnet/api/system.drawing.point?view=net-9.0
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct POINT

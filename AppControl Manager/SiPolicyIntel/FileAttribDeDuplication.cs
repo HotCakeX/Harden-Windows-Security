@@ -175,7 +175,7 @@ internal static class FileAttribDeDuplication
 			During the processing in ProcessDuplicateGroup,
 			for each duplicate FileAttrib (that is marked for removal),
 			the code iterates over all signers in the corresponding dictionary
-			and updates every FileAttribRef that points to the duplicate by setting its RuleID to the kept FileAttrib’s ID.
+			and updates every FileAttribRef that points to the duplicate by setting its RuleID to the kept FileAttrib's ID.
 
 			So in the following scenario:
 

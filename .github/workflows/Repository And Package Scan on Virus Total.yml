@@ -1,4 +1,4 @@
-name: Repository And Package Scan on Virus Total
+name: Repository And Package Scan on VirusTotal
 
 permissions:
   contents: read
@@ -129,7 +129,7 @@ jobs:
               $Headers.Add('accept', 'application/json')
               $Headers.Add('x-apikey', $ApiKey)
 
-              # Upload the file to virus total
+              # Upload the file to virusTotal
               $AnalysisData = Invoke-VTFileUpload -filePath $FilePath -apiKey $ApiKey
 
               # Fetch the report from VirusTotal

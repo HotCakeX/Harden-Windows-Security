@@ -49,7 +49,7 @@ internal static class CustomDeserialization
 					   GlobalVars.GetStr("InvalidXmlMissingRootElementValidationError"));
 
 			// Make sure the policy file is valid
-			_ = CiPolicyTest.TestCiPolicy(filePath);
+			CiPolicyTest.TestCiPolicy(filePath);
 		}
 		else if (Xml is not null)
 		{

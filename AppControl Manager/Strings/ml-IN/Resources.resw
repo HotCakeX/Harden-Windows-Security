@@ -1015,9 +1015,6 @@
   <data name="DeployingXMLFile" xml:space="preserve">
     <value>നിലവിൽ XML ഫയൽ വിന്യസിക്കുന്നു: '</value>
   </data>
-  <data name="SignedPolicyError" xml:space="preserve">
-    <value>XML ഫയൽ '</value>
-  </data>
   <data name="DeploymentError" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത XML ഫയലുകൾ വിന്യസിക്കുന്നതിൽ ഒരു പിശകുണ്ടായി</value>
   </data>
@@ -1284,7 +1281,7 @@
     <value>കർശനമായ കേർണൽ-മോഡ് നയം സൃഷ്ടിക്കുന്നു</value>
   </data>
   <data name="PolicyCreationError" xml:space="preserve">
-    <value>കർശനമായ കേർണൽ-മോഡ് നയം സൃഷ്ടിക്കുന്നതിൽ ഒരു പിശകുണ്ടായി: </value>
+    <value>കർശനമായ കേർണൽ-മോഡ് നയം സൃഷ്ടിക്കുന്നതിൽ ഒരു പിശകുണ്ടായി:</value>
   </data>
   <data name="PolicyCreatedSuccessfully" xml:space="preserve">
     <value>കർശനമായ കേർണൽ-മോഡ് നയം വിജയകരമായി സൃഷ്ടിച്ചു</value>
@@ -3341,7 +3338,7 @@
     <value>ഓഡിറ്റ് ഘട്ടത്തിൽ {0} ലോഗ്(കൾ) സൃഷ്ടിക്കപ്പെട്ടു</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>സിസ്റ്റം സ്കാൻ ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: </value>
+    <value>സിസ്റ്റം സ്കാൻ ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു:</value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>ഇവന്റുകൾക്കായി സിസ്റ്റം വിജയകരമായി സ്കാൻ ചെയ്തു</value>
@@ -3368,7 +3365,7 @@
     <value>{0} ഫയലുകൾ സ്കാൻ ചെയ്യുന്നു</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>ഒരു പിശക് സംഭവിച്ചു: </value>
+    <value>ഒരു പിശക് സംഭവിച്ചു:</value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>ഡ്രൈവറുകൾക്കായി സിസ്റ്റം വിജയകരമായി സ്കാൻ ചെയ്തു</value>
@@ -3419,7 +3416,7 @@
     <value>{0} CIP-ലേക്ക് പരിവർത്തനം ചെയ്യുന്നു</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>XML ഫയലുകൾ CIP-ലേക്ക് പരിവർത്തനം ചെയ്യുന്നതിൽ ഒരു പ്രശ്നമുണ്ടായി: </value>
+    <value>XML ഫയലുകൾ CIP-ലേക്ക് പരിവർത്തനം ചെയ്യുന്നതിൽ ഒരു പ്രശ്നമുണ്ടായി:</value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത എല്ലാ XML ഫയലുകളും CIP ബൈനറികളിലേക്ക് വിജയകരമായി പരിവർത്തനം ചെയ്തു</value>
@@ -3428,7 +3425,7 @@
     <value>ഇവന്റ് ലോഗുകൾ സ്കാൻ ചെയ്യുന്നു...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>ലോഗ് സ്കാൻ സമയത്ത് ഒരു പിശക് സംഭവിച്ചു: </value>
+    <value>ലോഗ് സ്കാൻ സമയത്ത് ഒരു പിശക് സംഭവിച്ചു:</value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>സ്കാൻ പൂർത്തിയായി. {0} ലോഗുകൾ കണ്ടെത്തി.</value>
@@ -3470,7 +3467,7 @@
     <value>അനുബന്ധ നയത്തിന്റെ BasePolicyID ആയി ഉപയോഗിക്കുന്നതിന് ഒരു അടിസ്ഥാന നയ GUID നൽകിയിട്ടില്ല.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>ലോഗുകൾ പ്രോസസ്സ് ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: </value>
+    <value>ലോഗുകൾ പ്രോസസ്സ് ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു:</value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>ലോഗുകൾ വിജയകരമായി പ്രോസസ്സ് ചെയ്യുകയും നയത്തിൽ ഉൾപ്പെടുത്തുകയും ചെയ്തു.</value>
@@ -3488,7 +3485,7 @@
     <value>സിമുലേഷൻ നടത്തുന്നു</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>സിമുലേഷൻ സമയത്ത് ഒരു പ്രശ്നമുണ്ടായി: </value>
+    <value>സിമുലേഷൻ സമയത്ത് ഒരു പ്രശ്നമുണ്ടായി:</value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>സിമുലേഷൻ വിജയകരമായി പൂർത്തിയായി.</value>
@@ -3503,7 +3500,7 @@
     <value>നയം ലോഡ് ചെയ്യുന്നു</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത നയ ഫയൽ ലോഡ് ചെയ്യുന്നതിൽ ഒരു പ്രശ്നമുണ്ടായി: </value>
+    <value>തിരഞ്ഞെടുത്ത നയ ഫയൽ ലോഡ് ചെയ്യുന്നതിൽ ഒരു പ്രശ്നമുണ്ടായി:</value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത നയം വിജയകരമായി ലോഡ് ചെയ്തു</value>
@@ -3899,7 +3896,7 @@
     <value>MSGraph-ലേക്കുള്ള സൈൻ ഇൻ ഉപയോക്താവ് റദ്ദാക്കി</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>MSGraph-ലേക്ക് സൈൻ ഇൻ ചെയ്യുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു: </value>
+    <value>MSGraph-ലേക്ക് സൈൻ ഇൻ ചെയ്യുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു:</value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ക്വറി വിജയകരമായിരുന്നു.</value>
@@ -3948,9 +3945,6 @@
   </data>
   <data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
     <value>ഇഷ്ടാനുസൃത നയം സൃഷ്ടിക്കുന്നതിൽ പരാജയപ്പെട്ടു. സ്റ്റാറ്റസ് കോഡ്: {0}</value>
-  </data>
-  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
-    <value>CIP നയ ഫയൽ വലുപ്പം {0} ബൈറ്റുകളുടെ പരിധി കവിയുന്നു.</value>
   </data>
   <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
     <value>ഉപകരണ കോൺഫിഗറേഷനുകൾ വിജയകരമായി വീണ്ടെടുത്തു.</value>
@@ -4094,7 +4088,7 @@
     <value>തിരഞ്ഞെടുത്ത MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് CSV ലോഗുകളിൽ ഫലങ്ങളൊന്നും കണ്ടെത്തിയില്ല.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>തിരഞ്ഞെടുത്ത MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് CSV ലോഗുകൾ സ്കാൻ ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: </value>
+    <value>തിരഞ്ഞെടുത്ത MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് CSV ലോഗുകൾ സ്കാൻ ചെയ്യുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു:</value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് CSV ലോഗുകൾ സ്കാൻ ചെയ്യുന്നത് വിജയകരമായി പൂർത്തിയാക്കി.</value>
@@ -4115,7 +4109,7 @@
     <value>അനുബന്ധ നയവുമായി ബന്ധിപ്പിക്കുന്നതിന് ഒരു നയ ഫയലും തിരഞ്ഞെടുത്തിട്ടില്ല.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>അനുബന്ധ നയം സൃഷ്ടിക്കുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു: </value>
+    <value>അനുബന്ധ നയം സൃഷ്ടിക്കുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു:</value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>മൈക്രോസോഫ്റ്റ് ഡിഫൻഡർ ഫോർ എൻഡ്‌പോയിന്റ് അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ഡാറ്റ വീണ്ടെടുക്കുന്നു</value>
@@ -4136,7 +4130,7 @@
     <value>അനുബന്ധ നയം സൃഷ്ടിക്കുന്നതിന് വീണ്ടെടുത്ത ഡാറ്റയിൽ പ്രവർത്തനക്ഷമമായ ലോഗുകളൊന്നും കണ്ടെത്തിയില്ല.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>MSGraph-ൽ നിന്ന് MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ലോഗുകൾ വീണ്ടെടുക്കുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു: </value>
+    <value>MSGraph-ൽ നിന്ന് MDE അഡ്വാൻസ്ഡ് ഹണ്ടിംഗ് ലോഗുകൾ വീണ്ടെടുക്കുമ്പോൾ ഒരു പിശക് സംഭവിച്ചു:</value>
   </data>
   <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത നയത്തിലേക്ക് ലോഗുകൾ ചേർക്കുക</value>
@@ -4479,9 +4473,6 @@
 </data>
 <data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
   <value>പ്രതീക്ഷിച്ച പോളിസി എൻഡ് ടാഗ് '{0}', ലഭിച്ചത് '{1}'.</value>
-</data>
-<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
-  <value>'{0}' എന്ന XML ഫയൽ CI പോളിസി സ്കീമയുമായി പൊരുത്തപ്പെടുന്നില്ല</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>പോളിസി ടൈപ്പ് {0} ആണ്, അതിന് {1} റൂൾ ഓപ്ഷൻ ഉണ്ട്, അത് അസാധുവാണ്. {2}-ന് മാത്രമേ അത് ഉണ്ടാകാൻ കഴിയൂ.</value>
@@ -6122,4 +6113,37 @@
   <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>തിരഞ്ഞെടുത്ത പോളിസി പോളിസി എഡിറ്ററിൽ തുറക്കുക, അവിടെ നിങ്ങൾക്ക് പോളിസിയുടെ വിശദമായ അവലോകനം കാണാനും ഈ ആപ്പിനുള്ളിൽ തന്നെ അത് കൂടുതൽ ഇഷ്ടാനുസൃതമാക്കാനും കഴിയും.</value>
   </data>
-  </root>
+    <data name="SignedPolicyError" xml:space="preserve">
+    <value>നയം ഫയൽ '{0}' ന് EnabledUnsignedSystemIntegrityPolicy റൂൾ ഓപ്ഷൻ ഇല്ല. ഇത് ഒപ്പിടാത്ത മോഡിൽ വിന്യസിക്കാൻ കഴിയില്ല.</value>
+  </data>
+  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>നയത്തിന്റെ ബൈനറി ഫയൽ '{0}' {1} ബൈറ്റ് വലുപ്പപരിധി കവിയുന്നു. ഇതിന്റെ വലുപ്പം {2} ബൈറ്റ് ആണ്.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.Header" xml:space="preserve">
+    <value>പിന്തുണയില്ലാത്ത റൂളുകളുടെ ലഭ്യത</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പിന്തുണയില്ലാത്തതോ രേഖപ്പെടുത്തിയിട്ടില്ലാത്തതോ ആയ നയ റൂൾ ഓപ്ഷനുകൾ സജീവമാണോ പ്രവർത്തനരഹിതമാണോ എന്ന് നിർണയിക്കുന്നു.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>പിന്തുണയില്ലാത്തതോ രേഖപ്പെടുത്തിയിട്ടില്ലാത്തതോ ആയ നയ റൂൾ ഓപ്ഷനുകൾ സജീവമാണോ പ്രവർത്തനരഹിതമാണോ എന്ന് നിർണയിക്കുന്നു.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OnContent" xml:space="preserve">
+    <value>ലഭ്യം</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OffContent" xml:space="preserve">
+    <value>ലഭ്യമല്ല</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Description" xml:space="preserve">
+    <value>App Control നയങ്ങൾ വിന്യസിക്കാൻയും നീക്കം ചെയ്യാനും ബദൽ രീതികൾ ലഭ്യമാക്കാൻ ഈ സവിശേഷത സജീവമാക്കുക. ഈ രീതികൾ CiTool എക്സിക്യൂട്ടബിളിനെ ആശ്രയിക്കുന്നതല്ല, CiTool തടഞ്ഞിട്ടുണ്ടെങ്കിൽ അല്ലെങ്കിൽ ലഭ്യമല്ലെങ്കിൽ അവ ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Header" xml:space="preserve">
+    <value>Code Integrity മാനേജ്മെന്റ് V2 ഉപയോഗിക്കുക</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>App Control നയങ്ങൾ വിന്യസിക്കാൻയും നീക്കം ചെയ്യാനും ബദൽ രീതികൾ ലഭ്യമാക്കാൻ ഈ സവിശേഷത സജീവമാക്കുക. ഈ രീതികൾ CiTool എക്സിക്യൂട്ടബിളിനെ ആശ്രയിക്കുന്നതല്ല, CiTool തടഞ്ഞിട്ടുണ്ടെങ്കിൽ അല്ലെങ്കിൽ ലഭ്യമല്ലെങ്കിൽ അവ ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>App Control നയങ്ങൾ വിന്യസിക്കാൻയും നീക്കം ചെയ്യാനും ബദൽ രീതികൾ ലഭ്യമാക്കാൻ ഈ സവിശേഷത സജീവമാക്കുക. ഈ രീതികൾ CiTool എക്സിക്യൂട്ടബിളിനെ ആശ്രയിക്കുന്നതല്ല, CiTool തടഞ്ഞിട്ടുണ്ടെങ്കിൽ അല്ലെങ്കിൽ ലഭ്യമല്ലെങ്കിൽ അവ ഉപയോഗിക്കാം.</value>
+  </data>
+</root>

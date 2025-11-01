@@ -18,7 +18,6 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using AppControlManager.Others;
 
 namespace HardenSystemSecurity.Protect;
 

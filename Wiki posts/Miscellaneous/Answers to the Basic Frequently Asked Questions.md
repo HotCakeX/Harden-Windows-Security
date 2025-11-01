@@ -47,7 +47,7 @@ Uninstall it by going to Windows Settings -> Apps -> Installed Apps -> Search fo
 
 <br>
 
-## I Have Windows Home Edition, How to Upgrade to Pro?
+## I Have Windows Home Edition; How Do I Upgrade to Pro?
 
 * [Please refer to this article](https://support.microsoft.com/en-us/windows/upgrade-windows-home-to-windows-pro-ef34d520-e73f-3198-c525-d1a218cc2818)
 

@@ -253,7 +253,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Transforms a UIElement’s RenderSize to a pixel-based RectInt32.
+	/// Transforms a UIElement's RenderSize to a pixel-based RectInt32.
 	/// </summary>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static RectInt32 CalculatePixelRect(UIElement element, double scale)

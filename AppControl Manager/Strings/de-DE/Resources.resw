@@ -1015,9 +1015,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="DeployingXMLFile" xml:space="preserve">
     <value>Aktuell wird folgende XML-Datei bereitgestellt: '</value>
   </data>
-  <data name="SignedPolicyError" xml:space="preserve">
-    <value>Die XML-Datei '</value>
-  </data>
   <data name="DeploymentError" xml:space="preserve">
     <value>Beim Bereitstellen der ausgewählten XML-Dateien ist ein Fehler aufgetreten</value>
   </data>
@@ -1284,7 +1281,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Erstellen der strikten Kernelmodus-Richtlinie</value>
   </data>
   <data name="PolicyCreationError" xml:space="preserve">
-    <value>Beim Erstellen der strikten Kernelmodus-Richtlinie ist ein Fehler aufgetreten: </value>
+    <value>Beim Erstellen der strikten Kernelmodus-Richtlinie ist ein Fehler aufgetreten:</value>
   </data>
   <data name="PolicyCreatedSuccessfully" xml:space="preserve">
     <value>Die strikte Kernelmodus-Richtlinie wurde erfolgreich erstellt</value>
@@ -2738,15 +2735,15 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Von der Codeintegrität sind testsignierte Inhalte zugelassen.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_ENABLED" xml:space="preserve">
-    <comment>Enforcement of user‑mode Code Integrity is enabled</comment>
+    <comment>Enforcement of user-mode Code Integrity is enabled</comment>
     <value>Die Erzwingung der Codeintegrität im Benutzermodus ist aktiviert.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED" xml:space="preserve">
-    <comment>User‑mode Code Integrity is enabled in audit mode</comment>
+    <comment>User-mode Code Integrity is enabled in audit mode</comment>
     <value>Die Erzwingung der Codeintegrität im Benutzermodus ist im Überwachungsmodus aktiviert.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED" xml:space="preserve">
-    <comment>User‑mode binaries from certain paths can bypass CI checks</comment>
+    <comment>User-mode binaries from certain paths can bypass CI checks</comment>
     <value>Benutzermodus-Binärdateien aus bestimmten Pfaden können ausgeführt werden, selbst wenn sie die Codeintegritätsprüfungen nicht bestehen.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_TEST_BUILD" xml:space="preserve">
@@ -2754,7 +2751,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Die Buildversion der Codeintegrität stammt aus einem Testbuild.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD" xml:space="preserve">
-    <comment>The Code Integrity component is from a pre‑production build</comment>
+    <comment>The Code Integrity component is from a pre-production build</comment>
     <value>Die Buildversion der Codeintegrität stammt aus einem Vorabproduktionsbuild.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED" xml:space="preserve">
@@ -2763,14 +2760,14 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="CODEINTEGRITY_OPTION_FLIGHT_BUILD" xml:space="preserve">
     <comment>The Code Integrity component is from a flight build</comment>
-    <value>Die Buildversion der Codeintegrität stammt aus einem Flight‑Build.</value>
+    <value>Die Buildversion der Codeintegrität stammt aus einem Flight-Build.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_FLIGHTING_ENABLED" xml:space="preserve">
-    <comment>Flight‑signed content is allowed by Code Integrity</comment>
+    <comment>Flight-signed content is allowed by Code Integrity</comment>
     <value>Von der Codeintegrität sind flight-signierte Inhalte zugelassen.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode</comment>
     <value>Vom Hypervisor erzwungene Codeintegrität ist für Kernelmoduskomponenten aktiviert.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED" xml:space="preserve">
@@ -2778,7 +2775,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Vom Hypervisor erzwungene Codeintegrität ist im Überwachungsmodus aktiviert.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode in strict mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode in strict mode</comment>
     <value>Vom Hypervisor erzwungene Codeintegrität ist im strikten Modus für den Kernelmodus aktiviert.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED" xml:space="preserve">
@@ -2822,10 +2819,10 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Richtlinie austauschen</value>
   </data>
   <data name="SwapPolicyComboBox.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Mit dieser Funktion können Sie nahtlos jede der zutreffenden, bereitgestellten Nichtsystem‑Basisrichtlinien durch eine andere Richtlinie aus der Liste austauschen.</value>
+    <value>Mit dieser Funktion können Sie nahtlos jede der zutreffenden, bereitgestellten Nichtsystem-Basisrichtlinien durch eine andere Richtlinie aus der Liste austauschen.</value>
   </data>
   <data name="SwapPolicyComboBox.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Mit dieser Funktion können Sie nahtlos jede der zutreffenden, bereitgestellten Nichtsystem‑Basisrichtlinien durch eine andere Richtlinie aus der Liste austauschen.</value>
+    <value>Mit dieser Funktion können Sie nahtlos jede der zutreffenden, bereitgestellten Nichtsystem-Basisrichtlinien durch eine andere Richtlinie aus der Liste austauschen.</value>
   </data>
   <data name="RemovePolicyTextBlock.Text" xml:space="preserve">
     <value>Richtlinie entfernen</value>
@@ -2960,37 +2957,37 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Leitfaden zur Seitenleiste</value>
   </data>
   <data name="SidebarGuideHyperlinkButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Eine Anleitung zur Seitenleiste finden Sie auf der GitHub‑Wiki‑Seite, indem Sie hier klicken/tippen.</value>
+    <value>Eine Anleitung zur Seitenleiste finden Sie auf der GitHub-Wiki-Seite, indem Sie hier klicken/tippen.</value>
   </data>
   <data name="SidebarGuideHyperlinkButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Eine Anleitung zur Seitenleiste finden Sie auf der GitHub‑Wiki‑Seite, indem Sie hier klicken/tippen.</value>
+    <value>Eine Anleitung zur Seitenleiste finden Sie auf der GitHub-Wiki-Seite, indem Sie hier klicken/tippen.</value>
   </data>
   <data name="SelectTextBlock.Text" xml:space="preserve">
     <value>Auswählen</value>
   </data>
   <data name="SidebarPolicySelectAssignmentButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Ordnet die in der Seitenleiste ausgewählte XML‑Richtliniendatei dem Basisrichtlinienpfad des zutreffenden Abschnitts auf der aktuell sichtbaren Seite zu.</value>
+    <value>Ordnet die in der Seitenleiste ausgewählte XML-Richtliniendatei dem Basisrichtlinienpfad des zutreffenden Abschnitts auf der aktuell sichtbaren Seite zu.</value>
   </data>
   <data name="SidebarPolicySelectAssignmentButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Ordnet die in der Seitenleiste ausgewählte XML‑Richtliniendatei dem Basisrichtlinienpfad des zutreffenden Abschnitts auf der aktuell sichtbaren Seite zu.</value>
+    <value>Ordnet die in der Seitenleiste ausgewählte XML-Richtliniendatei dem Basisrichtlinienpfad des zutreffenden Abschnitts auf der aktuell sichtbaren Seite zu.</value>
   </data>
   <data name="ClearTextBlock.Text" xml:space="preserve">
     <value>Leeren</value>
   </data>
   <data name="SidebarClearButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Löscht das Textfeld für den ausgewählten XML‑Dateipfad.</value>
+    <value>Löscht das Textfeld für den ausgewählten XML-Dateipfad.</value>
   </data>
   <data name="SidebarClearButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Löscht das Textfeld für den ausgewählten XML‑Dateipfad.</value>
+    <value>Löscht das Textfeld für den ausgewählten XML-Dateipfad.</value>
   </data>
   <data name="SidebarBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Nach einer XML‑Richtliniendatei suchen</value>
+    <value>Nach einer XML-Richtliniendatei suchen</value>
   </data>
   <data name="SidebarBrowseButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Nach einer XML‑Richtliniendatei suchen</value>
+    <value>Nach einer XML-Richtliniendatei suchen</value>
   </data>
   <data name="SidebarMainCaptionTextBlock.Text" xml:space="preserve">
-    <value>Verwenden Sie die Seitenleiste, um XML‑Dateipfade anzupinnen und in verschiedenen Bereichen des AppControl Manager wiederzuverwenden.</value>
+    <value>Verwenden Sie die Seitenleiste, um XML-Dateipfade anzupinnen und in verschiedenen Bereichen des AppControl Manager wiederzuverwenden.</value>
   </data>
   <data name="SidebarTextBlock.Text" xml:space="preserve">
     <value>Seitenleiste</value>
@@ -3005,16 +3002,16 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Sie müssen einen Namen für die Ergänzungsrichtlinie auswählen</value>
   </data>
   <data name="ErrorSelectXMLPolicyFile" xml:space="preserve">
-    <value>Sie müssen einen XML‑Richtliniendateipfad auswählen</value>
+    <value>Sie müssen einen XML-Richtliniendateipfad auswählen</value>
   </data>
   <data name="ErrorXMLFileDoesNotExist" xml:space="preserve">
-    <value>Der ausgewählte XML‑Dateipfad ist nicht vorhanden</value>
+    <value>Der ausgewählte XML-Dateipfad ist nicht vorhanden</value>
   </data>
   <data name="Starting" xml:space="preserve">
     <value>Starten...</value>
   </data>
   <data name="ErrorPolicyMustBeBase" xml:space="preserve">
-    <value>Die ausgewählte XML‑Richtliniendatei muss vom Typ Basisrichtlinie sein, ihr Typ ist jedoch: </value>
+    <value>Die ausgewählte XML-Richtliniendatei muss vom Typ Basisrichtlinie sein, ihr Typ ist jedoch: </value>
   </data>
   <data name="ErrorPolicyNotDeployed" xml:space="preserve">
     <value>Die ausgewählte Richtliniendatei ist auf dem System nicht bereitgestellt.</value>
@@ -3026,7 +3023,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Bereitstellen der ausgewählten Richtlinie im Überwachungsmodus, bitte warten</value>
   </data>
   <data name="CreatingSnapBackGuarantee" xml:space="preserve">
-    <value>Erstellen der SnapBack‑Garantie für den Erzwingungsmodus</value>
+    <value>Erstellen der SnapBack-Garantie für den Erzwingungsmodus</value>
   </data>
   <data name="ScanningSelectedDirectories" xml:space="preserve">
     <value>Scannen der ausgewählten Verzeichnisse</value>
@@ -3044,10 +3041,10 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Bereitstellen der Richtlinie im Erzwingungsmodus.</value>
   </data>
   <data name="ErrorEnforcedModeCIPNotFound" xml:space="preserve">
-    <value>CIP‑Datei für den Erzwingungsmodus konnte nicht gefunden werden</value>
+    <value>CIP-Datei für den Erzwingungsmodus konnte nicht gefunden werden</value>
   </data>
   <data name="BrowseForAppControlPolicy" xml:space="preserve">
-    <value>Nach einer App‑Control‑XML‑Richtliniendatei suchen</value>
+    <value>Nach einer App-Control-XML-Richtliniendatei suchen</value>
   </data>
   <data name="Validating" xml:space="preserve">
     <value>Validierung wird ausgeführt</value>
@@ -3071,7 +3068,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Die ausgewählte Richtliniendatei hat die Validierungen nicht bestanden.</value>
   </data>
   <data name="CIPFileSize" xml:space="preserve">
-    <value>Die Größe der CIP‑Binärdatei beträgt</value>
+    <value>Die Größe der CIP-Binärdatei beträgt</value>
   </data>
   <data name="SchemaValidationSettingsCard.Header" xml:space="preserve">
     <value>Stufe 1 - Erforderlich und immer verwendet</value>
@@ -3126,15 +3123,15 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <comment>Policy Validation Page</comment>
   </data>
     <data name="BinaryValidationSettingsCard.Description" xml:space="preserve">
-    <value>Führt abschließende Tests durch und versucht, basierend auf der Richtlinie eine temporäre CIP‑Binärdatei zu erzeugen, um sicherzustellen, dass dies erfolgreich möglich ist.</value>
+    <value>Führt abschließende Tests durch und versucht, basierend auf der Richtlinie eine temporäre CIP-Binärdatei zu erzeugen, um sicherzustellen, dass dies erfolgreich möglich ist.</value>
     <comment>Policy Validation Page</comment>
   </data>
   <data name="BinaryValidationSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Führt abschließende Tests durch und versucht, basierend auf der Richtlinie eine temporäre CIP‑Binärdatei zu erzeugen, um sicherzustellen, dass dies erfolgreich möglich ist.</value>
+    <value>Führt abschließende Tests durch und versucht, basierend auf der Richtlinie eine temporäre CIP-Binärdatei zu erzeugen, um sicherzustellen, dass dies erfolgreich möglich ist.</value>
     <comment>Policy Validation Page</comment>
   </data>
   <data name="BinaryValidationSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Führt abschließende Tests durch und versucht, basierend auf der Richtlinie eine temporäre CIP‑Binärdatei zu erzeugen, um sicherzustellen, dass dies erfolgreich möglich ist.</value>
+    <value>Führt abschließende Tests durch und versucht, basierend auf der Richtlinie eine temporäre CIP-Binärdatei zu erzeugen, um sicherzustellen, dass dies erfolgreich möglich ist.</value>
     <comment>Policy Validation Page</comment>
   </data>
   <data name="NeedBothIDsValidationError" xml:space="preserve">
@@ -3162,23 +3159,23 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <comment>Policy validation error</comment>
   </data>
   <data name="AllowRuleNoIDValidationError" xml:space="preserve">
-    <value>Es gibt eine Allow‑Regel ohne ID!</value>
+    <value>Es gibt eine Allow-Regel ohne ID!</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="AllowRuleDupIDValidationError" xml:space="preserve">
-    <value>Es gibt mehr als eine Allow‑Regel mit derselben ID</value>
+    <value>Es gibt mehr als eine Allow-Regel mit derselben ID</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="DenyRuleDupIDValidationError" xml:space="preserve">
-    <value>Es gibt mehr als eine Deny‑Regel mit derselben ID</value>
+    <value>Es gibt mehr als eine Deny-Regel mit derselben ID</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="FileAttribNoIDValidationError" xml:space="preserve">
-    <value>Es gibt eine FileAttrib‑Regel ohne ID!</value>
+    <value>Es gibt eine FileAttrib-Regel ohne ID!</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="FileAttribDupIDValidationError" xml:space="preserve">
-    <value>Es gibt mehr als eine FileAttrib‑Regel mit derselben ID</value>
+    <value>Es gibt mehr als eine FileAttrib-Regel mit derselben ID</value>
     <comment>Policy validation error</comment>
   </data>
   <data name="FileRuleNoIDValidationError" xml:space="preserve">
@@ -3223,7 +3220,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Ein neues Update ist verfügbar. Der Microsoft Store wird geöffnet, damit Sie die App dort aktualisieren können.</value>
   </data>
   <data name="ProblemOpeningMSStore" xml:space="preserve">
-    <value>Beim Öffnen der Microsoft‑Store‑Seite des AppControl Manager ist ein Problem aufgetreten.</value>
+    <value>Beim Öffnen der Microsoft-Store-Seite des AppControl Manager ist ein Problem aufgetreten.</value>
   </data>
   <data name="InstallLatestVer" xml:space="preserve">
     <value>Neueste Version installieren</value>
@@ -3232,7 +3229,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Die Datei ist nicht vorhanden.</value>
   </data>
   <data name="CISchemaNotFound" xml:space="preserve">
-    <value>Die Datei des Codeintegritätsschemas konnte auf dem System nicht gefunden werden, vermutlich weil es sich um die Home‑Edition des Betriebssystems handelt. Navigieren Sie bitte zur Einstellungsseite, um manuell danach zu suchen.</value>
+    <value>Die Datei des Codeintegritätsschemas konnte auf dem System nicht gefunden werden, vermutlich weil es sich um die Home-Edition des Betriebssystems handelt. Navigieren Sie bitte zur Einstellungsseite, um manuell danach zu suchen.</value>
   </data>
   <data name="InvalidXmlMissingRootElementValidationError" xml:space="preserve">
     <value>Ungültiges XML: Stammelement fehlt.</value>
@@ -3279,7 +3276,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <comment>App Manifest Validation</comment>
   </data>
   <data name="SettingDefinitionArrayNullElementValidationError" xml:space="preserve">
-    <value>Das Array SettingDefinition enthält ein null‑Element.</value>
+    <value>Das Array SettingDefinition enthält ein null-Element.</value>
     <comment>App Manifest Validation</comment>
   </data>
   <data name="SettingDefinitionPropertyNameNullOrEmptyValidationError" xml:space="preserve">
@@ -3290,7 +3287,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Ungültige Dateiregel festgestellt</value>
   </data>
   <data name="InvalidUrlDetectedForAppManifest" xml:space="preserve">
-    <value>Ungültige URL für das App‑Manifest erkannt: {0}</value>
+    <value>Ungültige URL für das App-Manifest erkannt: {0}</value>
   </data>
   <data name="MalformedVersionDetected" xml:space="preserve">
     <value>Fehlerhaft formatierte Version erkannt: {0}.</value>
@@ -3299,10 +3296,10 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Das Zeichenfolgenformat war nicht korrekt: '{0}'.</value>
   </data>
     <data name="FindingAllAppControlFilesMessage" xml:space="preserve">
-    <value>Es werden alle App‑Control‑kompatiblen Dateien unter den {0} von Ihnen ausgewählten Dateien und {1} Ordnern gesucht...</value>
+    <value>Es werden alle App-Control-kompatiblen Dateien unter den {0} von Ihnen ausgewählten Dateien und {1} Ordnern gesucht...</value>
   </data>
   <data name="ScanningTotalAppControlFilesMessage" xml:space="preserve">
-    <value>Es werden insgesamt {0} AppControl‑kompatible Dateien gescannt...</value>
+    <value>Es werden insgesamt {0} AppControl-kompatible Dateien gescannt...</value>
   </data>
   <data name="SelectedScanLevelMessage" xml:space="preserve">
     <value>Der ausgewählte Scanlevel ist {0}, die Regeloption 'Disabled: Runtime FilePath Rule Protection' wird der Ergänzungsrichtlinie hinzugefügt, damit geschützte Dateipfade ohne Administratorrechte funktionieren.'</value>
@@ -3326,10 +3323,10 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Erfolgreich eine zertifikatsbasierte Ergänzungsrichtlinie mit dem Namen {0} erstellt.</value>
   </data>
   <data name="CreatingISGBasedSupplementalPolicyMessage" xml:space="preserve">
-    <value>Erstellen der ISG‑basierten Ergänzungsrichtlinie.</value>
+    <value>Erstellen der ISG-basierten Ergänzungsrichtlinie.</value>
   </data>
   <data name="SuccessfullyCreatedISGBasedSupplementalPolicyMessage" xml:space="preserve">
-    <value>Erfolgreich eine ISG‑basierte Ergänzungsrichtlinie erstellt.</value>
+    <value>Erfolgreich eine ISG-basierte Ergänzungsrichtlinie erstellt.</value>
   </data>
     <data name="ScanningSystemForEvents" xml:space="preserve">
     <value>System wird nach Ereignissen durchsucht</value>
@@ -3341,7 +3338,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Während der Überwachungsphase wurden {0} Protokoll(e) generiert</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>Beim Durchsuchen des Systems ist ein Fehler aufgetreten: </value>
+    <value>Beim Durchsuchen des Systems ist ein Fehler aufgetreten:</value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>Das System wurde erfolgreich nach Ereignissen durchsucht</value>
@@ -3350,7 +3347,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Strikte Ergänzungsrichtlinie für den Kernelmodus</value>
   </data>
   <data name="StrictKernelModeTeachingTipSubtitleNoItems" xml:space="preserve">
-    <value>Im erkannten Raster für Kernelmodus‑Dateien ist kein Element vorhanden</value>
+    <value>Im erkannten Raster für Kernelmodus-Dateien ist kein Element vorhanden</value>
   </data>
   <data name="CreatingStrictKernelModePolicyMessage" xml:space="preserve">
     <value>Erstellen einer strikten Ergänzungsrichtlinie für den Kernelmodus für {0} Dateien</value>
@@ -3362,19 +3359,19 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>System wird nach Treibern durchsucht</value>
   </data>
   <data name="NoKernelModeDriversDetected" xml:space="preserve">
-    <value>Es konnten keine Kernelmodus‑Treiber erkannt werden</value>
+    <value>Es konnten keine Kernelmodus-Treiber erkannt werden</value>
   </data>
   <data name="ScanningKernelModeFilesCount" xml:space="preserve">
     <value>Scannen von {0} Dateien</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>Es ist ein Fehler aufgetreten: </value>
+    <value>Es ist ein Fehler aufgetreten:</value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>Das System wurde erfolgreich nach Treibern durchsucht</value>
   </data>
     <data name="PFNBasedSupplementalPolicyTitle" xml:space="preserve">
-    <value>PFN‑basierte Ergänzungsrichtlinie</value>
+    <value>PFN-basierte Ergänzungsrichtlinie</value>
   </data>
   <data name="PFNBasedSupplementalPolicySubtitle" xml:space="preserve">
     <value>Es wurde keine App ausgewählt, für die eine Ergänzungsrichtlinie erstellt werden soll</value>
@@ -3407,37 +3404,37 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Ergänzungsrichtlinie für Zertifikate</value>
   </data>
   <data name="ISGSupplementalPolicyLabel" xml:space="preserve">
-    <value>ISG‑Ergänzungsrichtlinie</value>
+    <value>ISG-Ergänzungsrichtlinie</value>
   </data>
   <data name="StrictKernelModeSupplementalPolicyLabel" xml:space="preserve">
     <value>Strikte Ergänzungsrichtlinie für den Kernelmodus</value>
   </data>
   <data name="PFNSupplementalPolicyLabel" xml:space="preserve">
-    <value>PFN‑Ergänzungsrichtlinie</value>
+    <value>PFN-Ergänzungsrichtlinie</value>
   </data>
   <data name="ConvertingFileToCIPMessage" xml:space="preserve">
     <value>Konvertieren von {0} in CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>Beim Konvertieren der XML‑Dateien in CIP ist ein Problem aufgetreten: </value>
+    <value>Beim Konvertieren der XML-Dateien in CIP ist ein Problem aufgetreten:</value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
-    <value>Alle ausgewählten XML‑Dateien wurden erfolgreich in CIP‑Binärdateien konvertiert</value>
+    <value>Alle ausgewählten XML-Dateien wurden erfolgreich in CIP-Binärdateien konvertiert</value>
   </data>
     <data name="ScanningEventLogsMessage" xml:space="preserve">
     <value>Ereignisprotokolle werden gescannt...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>Beim Scannen der Protokolle ist ein Fehler aufgetreten: </value>
+    <value>Beim Scannen der Protokolle ist ein Fehler aufgetreten:</value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>Scan abgeschlossen. Es wurden {0} Protokolle gefunden.</value>
   </data>
   <data name="SelectedCodeIntegrityEvtxForScanning" xml:space="preserve">
-    <value>Ausgewählt: {0} für das Scannen der Codeintegrität‑EVTX‑Protokolle</value>
+    <value>Ausgewählt: {0} für das Scannen der Codeintegrität-EVTX-Protokolle</value>
   </data>
   <data name="SelectedAppLockerEvtxForScanning" xml:space="preserve">
-    <value>Ausgewählt: {0} für das Scannen der AppLocker‑EVTX‑Protokolle</value>
+    <value>Ausgewählt: {0} für das Scannen der AppLocker-EVTX-Protokolle</value>
   </data>
   <data name="TotalLogsCountMessage" xml:space="preserve">
     <value>Gesamtzahl der Protokolle: {0}</value>
@@ -3455,7 +3452,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Protokolle werden verarbeitet...</value>
   </data>
   <data name="NoLogsUseScanButtonMessage" xml:space="preserve">
-    <value>Es sind keine Protokolle vorhanden. Verwenden Sie zuerst die Scannen‑Schaltfläche.</value>
+    <value>Es sind keine Protokolle vorhanden. Verwenden Sie zuerst die Scannen-Schaltfläche.</value>
   </data>
   <data name="MustSelectOptionMessage" xml:space="preserve">
     <value>Sie müssen eine Option aus der Liste zur Richtlinienerstellung auswählen</value>
@@ -3470,7 +3467,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Es wurde keine GUID der Basisrichtlinie angegeben, die als BasePolicyID der Ergänzungsrichtlinie verwendet werden kann.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>Beim Verarbeiten der Protokolle ist ein Fehler aufgetreten: </value>
+    <value>Beim Verarbeiten der Protokolle ist ein Fehler aufgetreten:</value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>Die Protokolle wurden erfolgreich verarbeitet und in die Richtlinie aufgenommen.</value>
@@ -3482,28 +3479,28 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Richtlinie erstellen</value>
   </data>
   <data name="SelectExistingXmlPolicyFileMessage" xml:space="preserve">
-    <value>Sie müssen eine vorhandene XML‑Richtliniendatei auswählen</value>
+    <value>Sie müssen eine vorhandene XML-Richtliniendatei auswählen</value>
   </data>
   <data name="PerformingSimulationMessage" xml:space="preserve">
     <value>Simulation wird ausgeführt</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>Während der Simulation ist ein Problem aufgetreten: </value>
+    <value>Während der Simulation ist ein Problem aufgetreten:</value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>Simulation erfolgreich abgeschlossen.</value>
   </data>
     <data name="SelectAppControlPolicyFirstMessage" xml:space="preserve">
-    <value>Sie müssen zuerst eine App‑Control‑Richtliniendatei auswählen.</value>
+    <value>Sie müssen zuerst eine App-Control-Richtliniendatei auswählen.</value>
   </data>
   <data name="OnlyXmlCipSupportedMessage" xml:space="preserve">
-    <value>Derzeit werden nur XML‑ und CIP‑Binärdateien unterstützt.</value>
+    <value>Derzeit werden nur XML- und CIP-Binärdateien unterstützt.</value>
   </data>
   <data name="LoadingPolicyMessage" xml:space="preserve">
     <value>Richtlinie wird geladen</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>Beim Laden der ausgewählten Richtliniendatei ist ein Problem aufgetreten: </value>
+    <value>Beim Laden der ausgewählten Richtliniendatei ist ein Problem aufgetreten:</value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>Ausgewählte Richtlinie erfolgreich geladen</value>
@@ -3515,40 +3512,40 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Signaturregel mit der ID {0} konnte nicht entfernt werden</value>
   </data>
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
-    <value>Intune‑Richtlinie wurde erfolgreich deserialisiert, aber das relevante Objekt ist leer.</value>
+    <value>Intune-Richtlinie wurde erfolgreich deserialisiert, aber das relevante Objekt ist leer.</value>
   </data>
   <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
     <value>Beim Analysieren der Regeloptionsnummer {0} in ihren Zeichenfolgenwert ist ein Fehler aufgetreten: {1}</value>
   </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
-    <value>Die Objekt-ID der Intune‑Richtlinie war null für die ausgewählte zu löschende Richtlinie</value>
+    <value>Die Objekt-ID der Intune-Richtlinie war null für die ausgewählte zu löschende Richtlinie</value>
   </data>
   <data name="FilePathOrXmlRequiredMessage" xml:space="preserve">
-    <value>Für die Deserialisierung muss ein Dateipfad oder ein XML‑Dokument angegeben werden</value>
+    <value>Für die Deserialisierung muss ein Dateipfad oder ein XML-Dokument angegeben werden</value>
   </data>
   <data name="DenyRuleNoIDValidationError" xml:space="preserve">
-    <value>Die Deny‑Regel muss eine ID haben.</value>
+    <value>Die Deny-Regel muss eine ID haben.</value>
   </data>
   <data name="DenyRuleHashWithOtherPropsError" xml:space="preserve">
-    <value>Die Deny‑Regel mit der ID {0} besitzt eine Hash‑Eigenschaft, hat jedoch auch andere Dateieigenschaften und ist daher ungültig.</value>
+    <value>Die Deny-Regel mit der ID {0} besitzt eine Hash-Eigenschaft, hat jedoch auch andere Dateieigenschaften und ist daher ungültig.</value>
   </data>
   <data name="DenyRuleNoPropsError" xml:space="preserve">
-    <value>Die Deny‑Regel mit der ID {0} besitzt weder eine Hash‑Eigenschaft noch andere Dateieigenschaften und ist daher ungültig.</value>
+    <value>Die Deny-Regel mit der ID {0} besitzt weder eine Hash-Eigenschaft noch andere Dateieigenschaften und ist daher ungültig.</value>
   </data>
   <data name="FileAttribHashWithOtherPropsError" xml:space="preserve">
-    <value>Die FileAttrib‑Regel mit der ID {0} besitzt eine Hash‑Eigenschaft, hat jedoch auch andere Dateieigenschaften und ist daher ungültig.</value>
+    <value>Die FileAttrib-Regel mit der ID {0} besitzt eine Hash-Eigenschaft, hat jedoch auch andere Dateieigenschaften und ist daher ungültig.</value>
   </data>
   <data name="FileAttribNoPropsError" xml:space="preserve">
-    <value>Die FileAttrib‑Regel mit der ID {0} besitzt weder eine Hash‑Eigenschaft noch andere Dateieigenschaften und ist daher ungültig.</value>
+    <value>Die FileAttrib-Regel mit der ID {0} besitzt weder eine Hash-Eigenschaft noch andere Dateieigenschaften und ist daher ungültig.</value>
   </data>
     <data name="InvalidCertRootTypeError" xml:space="preserve">
     <value>Es wurde eine Zertifizierungsstelle (Cert Root) festgestellt, die weder den Typ TBS noch WellKnown hat und daher ungültig ist.</value>
   </data>
   <data name="SignerNoCertRootError" xml:space="preserve">
-    <value>Der Signer mit der ID {0} weist kein Cert‑Root‑Element auf und ist daher ungültig.</value>
+    <value>Der Signer mit der ID {0} weist kein Cert-Root-Element auf und ist daher ungültig.</value>
   </data>
     <data name="PolicySettingInvalidValueElementMessage" xml:space="preserve">
-    <value>Es wurde eine Richtlinieneinstellung ohne gültiges Value‑Element festgestellt.</value>
+    <value>Es wurde eine Richtlinieneinstellung ohne gültiges Value-Element festgestellt.</value>
   </data>
   <data name="PolicySettingMissingProviderKeyValueNameMessage" xml:space="preserve">
     <value>Es wurde eine Richtlinieneinstellung festgestellt, der die erforderlichen Elemente Provider, Key oder ValueName fehlen.</value>
@@ -3575,37 +3572,37 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Der Signer mit der ID {0} hat eine CertEKU mit der ID {1}, die auf keine in der Richtlinie angegebene EKU verweist.</value>
   </data>
   <data name="SignerFileAttribRefNotFoundError" xml:space="preserve">
-    <value>Der Signer mit der ID {0} verweist auf eine nicht vorhandene FileAttribRef mit der Regel‑ID {1}.</value>
+    <value>Der Signer mit der ID {0} verweist auf eine nicht vorhandene FileAttribRef mit der Regel-ID {1}.</value>
   </data>
   <data name="FileAttribRefTypeInvalidError" xml:space="preserve">
     <value>Die FileAttribRef mit der RuleID {0} ist ungültig. Eine FileAttribRef muss auf 'fileattrib' oder 'attribute' verweisen.</value>
   </data>
   <data name="AllowedSignersSignerIdNotFoundMessage" xml:space="preserve">
-    <value>Signer‑ID '{0}' an Position {1} wurde in der Signer‑Indexzuordnung nicht gefunden.</value>
+    <value>Signer-ID '{0}' an Position {1} wurde in der Signer-Indexzuordnung nicht gefunden.</value>
   </data>
   <data name="AllowedSignersDenyRuleNotFoundMessage" xml:space="preserve">
-    <value>Deny‑Regel‑ID '{0}' für die Ausnahme des Signers '{1}' an Index {2} wurde in der Dateiregel‑Indexzuordnung nicht gefunden.</value>
+    <value>Deny-Regel-ID '{0}' für die Ausnahme des Signers '{1}' an Index {2} wurde in der Dateiregel-Indexzuordnung nicht gefunden.</value>
   </data>
   <data name="AllowedSignersExceptDenyRuleTypeInvalidMessage" xml:space="preserve">
-    <value>Die referenzierte Regel an Index {0} (DenyRuleID '{1}') ist keine Deny‑Regel. Jeder ExceptDenyRule‑Eintrag muss auf eine gültige Deny‑Regel verweisen.</value>
+    <value>Die referenzierte Regel an Index {0} (DenyRuleID '{1}') ist keine Deny-Regel. Jeder ExceptDenyRule-Eintrag muss auf eine gültige Deny-Regel verweisen.</value>
   </data>
   <data name="DeniedSignersSignerIdNotFoundMessage" xml:space="preserve">
-    <value>Signer‑ID '{0}' bei deniedSigners.DeniedSigner[{1}] wurde in der Signer‑Indexzuordnung nicht gefunden.</value>
+    <value>Signer-ID '{0}' bei deniedSigners.DeniedSigner[{1}] wurde in der Signer-Indexzuordnung nicht gefunden.</value>
   </data>
   <data name="DeniedSignersExceptAllowRuleNotFoundMessage" xml:space="preserve">
-    <value>ExceptAllowRule‑ID '{0}' für den abgelehnten Signer '{1}' bei ExceptAllowRule[{2}] wurde in der Dateiregel‑Indexzuordnung nicht gefunden.</value>
+    <value>ExceptAllowRule-ID '{0}' für den abgelehnten Signer '{1}' bei ExceptAllowRule[{2}] wurde in der Dateiregel-Indexzuordnung nicht gefunden.</value>
   </data>
   <data name="DeniedSignersExceptAllowRuleTypeInvalidMessage" xml:space="preserve">
-    <value>Die referenzierte Regel in fileRuleArray[{0}] für AllowRuleID '{1}' hat den Typ '{2}' und ist keine Allow‑Regel. Jeder ExceptAllowRule‑Eintrag muss auf eine gültige Allow‑Regel verweisen.</value>
+    <value>Die referenzierte Regel in fileRuleArray[{0}] für AllowRuleID '{1}' hat den Typ '{2}' und ist keine Allow-Regel. Jeder ExceptAllowRule-Eintrag muss auf eine gültige Allow-Regel verweisen.</value>
   </data>
   <data name="BoolAppSettingMultipleValuesError" xml:space="preserve">
-    <value>Für den bool‑Einstellungstyp wurde mehr als ein Wert festgestellt.</value>
+    <value>Für den bool-Einstellungstyp wurde mehr als ein Wert festgestellt.</value>
   </data>
   <data name="StringAppSettingMultipleValuesError" xml:space="preserve">
-    <value>Für den string‑Einstellungstyp wurde mehr als ein Wert festgestellt.</value>
+    <value>Für den string-Einstellungstyp wurde mehr als ein Wert festgestellt.</value>
   </data>
   <data name="AppSettingsMissingDefinitionsMessage" xml:space="preserve">
-    <value>Es fehlen Definitionen für die App‑Manifest‑Einstellungen: {0}</value>
+    <value>Es fehlen Definitionen für die App-Manifest-Einstellungen: {0}</value>
   </data>
   <data name="AppSettingsUnknownSettingTypeMessage" xml:space="preserve">
     <value>Es wurde ein unbekannter Typ für die Anwendungseinstellung festgestellt: {0}</value>
@@ -3623,46 +3620,46 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>{0} konnte nicht mit {1} gehasht werden</value>
   </data>
   <data name="DeployDriversBlockRulesRefreshPoliciesMessage" xml:space="preserve">
-    <value>App‑Control‑Richtlinien des Systems werden aktualisiert</value>
+    <value>App-Control-Richtlinien des Systems werden aktualisiert</value>
   </data>
   <data name="DeployDriversBlockRulesDeployedMessage" xml:space="preserve">
     <value>SiPolicy.p7b wurde bereitgestellt und die Richtlinien wurden aktualisiert.</value>
   </data>
   <data name="BrowseForCISchemaButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Nach der XSD‑Datei des Codeintegritätsschemas suchen.</value>
+    <value>Nach der XSD-Datei des Codeintegritätsschemas suchen.</value>
   </data>
   <data name="BrowseForCISchemaButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Nach der XSD‑Datei des Codeintegritätsschemas suchen.</value>
+    <value>Nach der XSD-Datei des Codeintegritätsschemas suchen.</value>
   </data>
   <data name="BrowseForCISchemaButton.Content" xml:space="preserve">
     <value>Durchsuchen</value>
   </data>
   <data name="BrowseForCISchemaSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Nach der XSD‑Datei des Codeintegritätsschemas suchen.</value>
+    <value>Nach der XSD-Datei des Codeintegritätsschemas suchen.</value>
   </data>
   <data name="BrowseForCISchemaSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Nach der XSD‑Datei des Codeintegritätsschemas suchen.</value>
+    <value>Nach der XSD-Datei des Codeintegritätsschemas suchen.</value>
   </data>
   <data name="BrowseForCISchemaSettingsCard.Header" xml:space="preserve">
     <value>Benutzerdefinierter Schemapfad</value>
   </data>
     <data name="BrowseForCISchemaSettingsCard.Description" xml:space="preserve">
-    <value>Nach einem benutzerdefinierten Speicherort für die XSD‑Datei des Codeintegritätsschemas suchen.</value>
+    <value>Nach einem benutzerdefinierten Speicherort für die XSD-Datei des Codeintegritätsschemas suchen.</value>
   </data>
   <data name="CustomCISchemaPathTextBox.PlaceholderText" xml:space="preserve">
     <value>Codeintegritätsschema – Pfadüberschreibung</value>
   </data>
   <data name="RateAndReviewSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Öffnet die Mini‑Seite im Microsoft Store, auf der Sie den AppControl Manager bewerten und optional eine Rezension schreiben können.</value>
+    <value>Öffnet die Mini-Seite im Microsoft Store, auf der Sie den AppControl Manager bewerten und optional eine Rezension schreiben können.</value>
   </data>
   <data name="RateAndReviewSettingsCard.Header" xml:space="preserve">
     <value>Bewerten und rezensieren</value>
   </data>
     <data name="RateAndReviewSettingsCard.Description" xml:space="preserve">
-    <value>Öffnet die Mini‑Seite im Microsoft Store, auf der Sie den AppControl Manager bewerten und optional eine Rezension schreiben können.</value>
+    <value>Öffnet die Mini-Seite im Microsoft Store, auf der Sie den AppControl Manager bewerten und optional eine Rezension schreiben können.</value>
   </data>
   <data name="RateAndReviewSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Öffnet die Mini‑Seite im Microsoft Store, auf der Sie den AppControl Manager bewerten und optional eine Rezension schreiben können.</value>
+    <value>Öffnet die Mini-Seite im Microsoft Store, auf der Sie den AppControl Manager bewerten und optional eine Rezension schreiben können.</value>
   </data>
   <data name="VerifyButtonText" xml:space="preserve">
     <value>Überprüfen</value>
@@ -3686,34 +3683,34 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Im persönlichen Speicher des aktuellen Benutzers wurde kein Zertifikat mit dem ausgewählten Common Name gefunden.</value>
   </data>
   <data name="CertificateNotInPolicyMessage" xml:space="preserve">
-    <value>Das ausgewählte Zertifikat ist in der XML‑Richtliniendatei nicht als UpdatePolicySigner vorhanden oder der ausgewählte allgemeine Name stimmt nicht mit dem allgemeinen Namen des ausgewählten Zertifikats überein, daher kann es nicht zum erneuten Signieren der Richtlinie verwendet werden. Bitte wählen Sie das richtige Zertifikat aus.</value>
+    <value>Das ausgewählte Zertifikat ist in der XML-Richtliniendatei nicht als UpdatePolicySigner vorhanden oder der ausgewählte allgemeine Name stimmt nicht mit dem allgemeinen Namen des ausgewählten Zertifikats überein, daher kann es nicht zum erneuten Signieren der Richtlinie verwendet werden. Bitte wählen Sie das richtige Zertifikat aus.</value>
   </data>
   <data name="CertificateFileAndCommonNameMismatchMessage" xml:space="preserve">
     <value>Die ausgewählte Zertifikatsdatei und der allgemeine Name stimmen nicht überein.</value>
   </data>
   <data name="PleaseSelectXmlPolicyFileMessage" xml:space="preserve">
-    <value>Bitte wählen Sie die XML‑Richtliniendatei der zu entfernenden Richtlinie aus.</value>
+    <value>Bitte wählen Sie die XML-Richtliniendatei der zu entfernenden Richtlinie aus.</value>
   </data>
   <data name="XmlPolicyFilePathNotExistMessage" xml:space="preserve">
-    <value>Der ausgewählte XML‑Richtliniendateipfad ist nicht vorhanden</value>
+    <value>Der ausgewählte XML-Richtliniendateipfad ist nicht vorhanden</value>
   </data>
   <data name="XmlPolicyExtensionInvalidMessage" xml:space="preserve">
-    <value>Sie müssen einen XML‑Dateipfad mit der Erweiterung (.xml) auswählen.</value>
+    <value>Sie müssen einen XML-Dateipfad mit der Erweiterung (.xml) auswählen.</value>
   </data>
   <data name="XmlPolicyNotDeployedMessage" xml:space="preserve">
-    <value>Die ausgewählte XML‑Richtliniendatei ist auf dem System nicht bereitgestellt.</value>
+    <value>Die ausgewählte XML-Richtliniendatei ist auf dem System nicht bereitgestellt.</value>
   </data>
   <data name="XmlPolicyNotBeingRemovedMessage" xml:space="preserve">
-    <value>Die ausgewählte XML‑Richtliniendatei ist nicht diejenige, die entfernt wird.</value>
+    <value>Die ausgewählte XML-Richtliniendatei ist nicht diejenige, die entfernt wird.</value>
   </data>
   <data name="SupplementalPoliciesRemovalMessage" xml:space="preserve">
     <value>Ergänzungsrichtlinien können regulär entfernt werden, ohne ein erneutes Signieren zu erfordern.</value>
   </data>
   <data name="CertificateNotInPolicyRemovalMessage" xml:space="preserve">
-    <value>Das ausgewählte Zertifikat ist in der XML‑Richtliniendatei nicht als UpdatePolicySigner vorhanden oder der ausgewählte allgemeine Name stimmt nicht mit dem allgemeinen Namen des ausgewählten Zertifikats überein, daher kann es für den Entfernungsprozess nicht zum erneuten Signieren der Richtlinie verwendet werden. Bitte wählen Sie das richtige Zertifikat aus.</value>
+    <value>Das ausgewählte Zertifikat ist in der XML-Richtliniendatei nicht als UpdatePolicySigner vorhanden oder der ausgewählte allgemeine Name stimmt nicht mit dem allgemeinen Namen des ausgewählten Zertifikats überein, daher kann es für den Entfernungsprozess nicht zum erneuten Signieren der Richtlinie verwendet werden. Bitte wählen Sie das richtige Zertifikat aus.</value>
   </data>
   <data name="ReturningCachedSecurityCatalogScanResult" xml:space="preserve">
-    <value>Zwischengespeichertes Ergebnis des Sicherheitskatalog‑Scans wird zurückgegeben</value>
+    <value>Zwischengespeichertes Ergebnis des Sicherheitskatalog-Scans wird zurückgegeben</value>
   </data>
   <data name="IncludingSecurityCatalogsScanCountMessage" xml:space="preserve">
     <value>{0} Sicherheitskataloge werden in den Scanprozess einbezogen</value>
@@ -3725,10 +3722,10 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Kein Einhängepunkt gefunden</value>
   </data>
   <data name="ReplacingECCSignedItemMessage" xml:space="preserve">
-    <value>Ersetzen eines FileIdentity‑Elements mit IsECCSigned == false/null durch ein neues Element mit IsECCSigned == true für die Datei mit dem Namen {0} und dem SHA256‑Hash {1}.</value>
+    <value>Ersetzen eines FileIdentity-Elements mit IsECCSigned == false/null durch ein neues Element mit IsECCSigned == true für die Datei mit dem Namen {0} und dem SHA256-Hash {1}.</value>
   </data>
   <data name="ReplacingUnsignedItemMessage" xml:space="preserve">
-    <value>Ersetzen eines unsignierten FileIdentity‑Elements durch ein signiertes für die Datei mit dem Namen {0} und dem SHA256‑Hash {1}.</value>
+    <value>Ersetzen eines unsignierten FileIdentity-Elements durch ein signiertes für die Datei mit dem Namen {0} und dem SHA256-Hash {1}.</value>
   </data>
   <data name="NoCodeIntegrityLogsFoundMessage" xml:space="preserve">
     <value>Keine Codeintegritätsprotokolle gefunden</value>
@@ -3737,10 +3734,10 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Gesamtzahl der Codeintegritätsprotokolle: {0}</value>
   </data>
   <data name="NoAppLockerEventsFoundMessage" xml:space="preserve">
-    <value>Keine AppLocker‑Ereignisse gefunden.</value>
+    <value>Keine AppLocker-Ereignisse gefunden.</value>
   </data>
   <data name="TotalAppLockerLogsMessage" xml:space="preserve">
-    <value>Gesamtzahl der AppLocker‑Protokolle: {0}</value>
+    <value>Gesamtzahl der AppLocker-Protokolle: {0}</value>
   </data>
   <data name="SelectedCertCommonNameMismatchMessage" xml:space="preserve">
     <value>Der ausgewählte Common Name ist {0}, der Common Name des von Ihnen ausgewählten Zertifikats ist jedoch {1} und stimmt nicht überein.</value>
@@ -3788,7 +3785,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Ermitteln aller Dateipfade der von App Control unterstützten Dateien aus dem vom Benutzer angegebenen Verzeichnis</value>
   </data>
   <data name="NoValidFilesSelectedMessage" xml:space="preserve">
-    <value>Im ausgewählten Verzeichnis befinden sich keine Dateien, die von der App‑Control-Engine unterstützt werden.</value>
+    <value>Im ausgewählten Verzeichnis befinden sich keine Dateien, die von der App-Control-Engine unterstützt werden.</value>
   </data>
   <data name="LoopingThroughSupportedFilesMessage" xml:space="preserve">
     <value>Durchlauf aller unterstützten Dateien</value>
@@ -3899,7 +3896,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Die Anmeldung bei MSGraph wurde vom Benutzer abgebrochen</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>Fehler bei der Anmeldung bei MSGraph: </value>
+    <value>Fehler bei der Anmeldung bei MSGraph:</value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>MDE Advanced Hunting-Abfrage war erfolgreich.</value>
@@ -3949,10 +3946,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
     <value>Erstellen der benutzerdefinierten Richtlinie fehlgeschlagen. Statuscode: {0}</value>
   </data>
-  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
-    <value>Die Größe der CIP-Richtliniendatei überschreitet das Limit von {0} Bytes.</value>
-  </data>
-    <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
+  <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
     <value>Gerätekonfigurationen erfolgreich abgerufen.</value>
   </data>
   <data name="FailedToRetrieveDeviceConfigurationsMessage" xml:space="preserve">
@@ -4094,7 +4088,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>In den ausgewählten MDE Advanced Hunting-CSV-Protokollen wurden keine Ergebnisse erkannt.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>Beim Scannen der ausgewählten MDE Advanced Hunting-CSV-Protokolle ist ein Fehler aufgetreten: </value>
+    <value>Beim Scannen der ausgewählten MDE Advanced Hunting-CSV-Protokolle ist ein Fehler aufgetreten:</value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>Das Scannen der ausgewählten MDE Advanced Hunting-CSV-Protokolle wurde erfolgreich abgeschlossen.</value>
@@ -4115,7 +4109,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Es wurde keine Richtliniendatei ausgewählt, der die zusätzliche Richtlinie zugeordnet werden soll.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>Beim Erstellen der zusätzlichen Richtlinie ist ein Fehler aufgetreten: </value>
+    <value>Beim Erstellen der zusätzlichen Richtlinie ist ein Fehler aufgetreten:</value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>Abrufen der Microsoft Defender for Endpoint Advanced Hunting-Daten</value>
@@ -4136,7 +4130,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Unter den abgerufenen Daten wurden keine verwertbaren Protokolle gefunden, mit denen eine zusätzliche Richtlinie erstellt werden kann.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>Beim Abrufen der MDE Advanced Hunting-Protokolle von MSGraph ist ein Fehler aufgetreten: </value>
+    <value>Beim Abrufen der MDE Advanced Hunting-Protokolle von MSGraph ist ein Fehler aufgetreten:</value>
   </data>
     <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>Protokolle zur ausgewählten Richtlinie hinzufügen</value>
@@ -4479,9 +4473,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
 </data>
 <data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
   <value>Erwartetes Richtlinien-Endtag '{0}', erhalten: '{1}'.</value>
-</data>
-<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
-  <value>Die XML-Datei '{0}' entspricht nicht dem CI-Richtlinienschema</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>Der Richtlinientyp ist {0} und besitzt die Regeloption {1}, die ungültig ist. Nur {2} dürfen diese haben.</value>
@@ -6121,5 +6112,38 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   </data>
   <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Öffnen Sie die ausgewählte Richtlinie im Richtlinien-Editor, wo Sie eine detaillierte Übersicht der Richtlinie sehen und sie direkt in dieser App weiter anpassen können.</value>
+  </data>
+    <data name="SignedPolicyError" xml:space="preserve">
+    <value>Die Richtliniendatei '{0}' verfügt nicht über die Regeloption EnabledUnsignedSystemIntegrityPolicy. Sie kann nicht im unsignierten Modus bereitgestellt werden.</value>
+  </data>
+  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>Die Binärdatei der Richtlinie '{0}' überschreitet das Größelimit von {1} Bytes. Ihre Größe beträgt {2} Bytes.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.Header" xml:space="preserve">
+    <value>Verfügbarkeit nicht unterstützter Regeln</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Legt fest, ob Richtlinienregeloptionen, die nicht unterstützt oder nicht dokumentiert sind, aktiviert oder deaktiviert sind.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Legt fest, ob Richtlinienregeloptionen, die nicht unterstützt oder nicht dokumentiert sind, aktiviert oder deaktiviert sind.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OnContent" xml:space="preserve">
+    <value>Verfügbar</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OffContent" xml:space="preserve">
+    <value>Nicht verfügbar</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Description" xml:space="preserve">
+    <value>Aktivieren Sie diese Funktion, um alternative Methoden zum Bereitstellen und Entfernen von App-Control-Richtlinien verfügbar zu machen. Diese Methoden sind nicht vom CiTool-Programm abhängig und können verwendet werden, wenn CiTool blockiert oder nicht verfügbar ist.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Header" xml:space="preserve">
+    <value>Code Integrity-Verwaltung V2 verwenden</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aktivieren Sie diese Funktion, um alternative Methoden zum Bereitstellen und Entfernen von App-Control-Richtlinien verfügbar zu machen. Diese Methoden sind nicht vom CiTool-Programm abhängig und können verwendet werden, wenn CiTool blockiert oder nicht verfügbar ist.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aktivieren Sie diese Funktion, um alternative Methoden zum Bereitstellen und Entfernen von App-Control-Richtlinien verfügbar zu machen. Diese Methoden sind nicht vom CiTool-Programm abhängig und können verwendet werden, wenn CiTool blockiert oder nicht verfügbar ist.</value>
   </data>
 </root>

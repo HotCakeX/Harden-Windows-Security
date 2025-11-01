@@ -21,7 +21,7 @@ namespace ScheduledTasks {
 #define CHECK_HR(hr, msg) \
     if (FAILED(hr)) { \
         _com_error err(hr); \
-        LogErr(L"[Error] ", msg, L": 0x", hex, hr, L" — ", err.ErrorMessage()); \
+        LogErr(L"[Error] ", msg, L": 0x", hex, hr, L" - ", err.ErrorMessage()); \
         return 1; \
     }
 #endif
@@ -30,7 +30,7 @@ namespace ScheduledTasks {
 #define CHECK_HR_VOID(hr, msg) \
     if (FAILED(hr)) { \
         _com_error err(hr); \
-        LogErr(L"[Error] ", msg, L": 0x", hex, hr, L" — ", err.ErrorMessage()); \
+        LogErr(L"[Error] ", msg, L": 0x", hex, hr, L" - ", err.ErrorMessage()); \
         return; \
     }
 #endif
@@ -189,7 +189,7 @@ namespace ScheduledTasks {
 			HRESULT hr = pService->GetFolder(_bstr_t(L"\\"), ppFolder);
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] GetFolder(root) failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] GetFolder(root) failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			}
 			return hr;
 		}
@@ -211,7 +211,7 @@ namespace ScheduledTasks {
 		HRESULT hr = pService->GetFolder(_bstr_t(L"\\"), &pCurrentFolder);
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] GetFolder(root) failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] GetFolder(root) failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			return hr;
 		}
 
@@ -222,12 +222,12 @@ namespace ScheduledTasks {
 			hr = pCurrentFolder->GetFolder(_bstr_t(component.c_str()), &pSubFolder);
 			if (FAILED(hr))
 			{
-				// Folder doesn’t exist, create it
+				// Folder doesn't exist, create it
 				hr = pCurrentFolder->CreateFolder(_bstr_t(component.c_str()), _variant_t(), &pSubFolder);
 				if (FAILED(hr))
 				{
 					_com_error err(hr);
-					LogErr(L"[Error] CreateFolder failed for: ", component, L" HRESULT=0x", hex, hr, L" — ", err.ErrorMessage());
+					LogErr(L"[Error] CreateFolder failed for: ", component, L" HRESULT=0x", hex, hr, L" - ", err.ErrorMessage());
 					pCurrentFolder->Release();
 					return hr;
 				}
@@ -265,7 +265,7 @@ namespace ScheduledTasks {
 		HRESULT hr = pTriggers->Create(ttype, &pBaseTrig);
 		if (FAILED(hr) || !pBaseTrig) {
 			_com_error err(hr);
-			LogErr(L"[Error] Trigger Create failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] Trigger Create failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			return hr;
 		}
 
@@ -280,7 +280,7 @@ namespace ScheduledTasks {
 				hr = pBaseTrig->put_StartBoundary(_bstr_t(s.c_str()));
 				if (FAILED(hr)) {
 					_com_error err(hr);
-					LogErr(L"[Error] put_StartBoundary failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+					LogErr(L"[Error] put_StartBoundary failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 					pBaseTrig->Release();
 					return hr;
 				}
@@ -291,7 +291,7 @@ namespace ScheduledTasks {
 				hr = pBaseTrig->put_StartBoundary(_bstr_t(trig.kv.at(L"start").c_str()));
 				if (FAILED(hr)) {
 					_com_error err(hr);
-					LogErr(L"[Error] put_StartBoundary failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+					LogErr(L"[Error] put_StartBoundary failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 					pBaseTrig->Release();
 					return hr;
 				}
@@ -313,7 +313,7 @@ namespace ScheduledTasks {
 				hr = pRep->put_Interval(_bstr_t(trig.kv.at(L"repeat_interval").c_str()));
 				if (FAILED(hr)) {
 					_com_error err(hr);
-					LogErr(L"[Error] put_Interval failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+					LogErr(L"[Error] put_Interval failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 					pRep->Release();
 					pBaseTrig->Release();
 					return hr;
@@ -326,7 +326,7 @@ namespace ScheduledTasks {
 				hr = pRep->put_Duration(_bstr_t(trig.kv.at(L"repeat_duration").c_str()));
 				if (FAILED(hr)) {
 					_com_error err(hr);
-					LogErr(L"[Error] put_Duration failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+					LogErr(L"[Error] put_Duration failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 					pRep->Release();
 					pBaseTrig->Release();
 					return hr;
@@ -341,7 +341,7 @@ namespace ScheduledTasks {
 				hr = pRep->put_StopAtDurationEnd(val);
 				if (FAILED(hr)) {
 					_com_error err(hr);
-					LogErr(L"[Error] put_StopAtDurationEnd failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+					LogErr(L"[Error] put_StopAtDurationEnd failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 					pRep->Release();
 					pBaseTrig->Release();
 					return hr;
@@ -356,7 +356,7 @@ namespace ScheduledTasks {
 			hr = pBaseTrig->put_ExecutionTimeLimit(_bstr_t(trig.kv.at(L"execution_time_limit").c_str()));
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] put_ExecutionTimeLimit failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] put_ExecutionTimeLimit failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pBaseTrig->Release();
 				return hr;
 			}
@@ -373,7 +373,7 @@ namespace ScheduledTasks {
 					hr = pDaily->put_DaysInterval(static_cast<short>(_wtoi(trig.kv.at(L"interval").c_str())));
 					if (FAILED(hr)) {
 						_com_error err(hr);
-						LogErr(L"[Error] put_DaysInterval failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+						LogErr(L"[Error] put_DaysInterval failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 						pDaily->Release();
 						pBaseTrig->Release();
 						return hr;
@@ -392,7 +392,7 @@ namespace ScheduledTasks {
 					hr = pWeekly->put_WeeksInterval(static_cast<short>(_wtoi(trig.kv.at(L"interval").c_str())));
 					if (FAILED(hr)) {
 						_com_error err(hr);
-						LogErr(L"[Error] put_WeeksInterval failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+						LogErr(L"[Error] put_WeeksInterval failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 						pWeekly->Release();
 						pBaseTrig->Release();
 						return hr;
@@ -402,7 +402,7 @@ namespace ScheduledTasks {
 					hr = pWeekly->put_DaysOfWeek(ParseDaysOfWeek(trig.kv.at(L"days_of_week")));
 					if (FAILED(hr)) {
 						_com_error err(hr);
-						LogErr(L"[Error] put_DaysOfWeek failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+						LogErr(L"[Error] put_DaysOfWeek failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 						pWeekly->Release();
 						pBaseTrig->Release();
 						return hr;
@@ -422,7 +422,7 @@ namespace ScheduledTasks {
 					hr = pMonthly->put_MonthsOfYear(static_cast<short>(monthsValue));
 					if (FAILED(hr)) {
 						_com_error err(hr);
-						LogErr(L"[Error] put_MonthsOfYear failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+						LogErr(L"[Error] put_MonthsOfYear failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 						pMonthly->Release();
 						pBaseTrig->Release();
 						return hr;
@@ -439,7 +439,7 @@ namespace ScheduledTasks {
 					hr = pMonthly->put_DaysOfMonth(mask);
 					if (FAILED(hr)) {
 						_com_error err(hr);
-						LogErr(L"[Error] put_DaysOfMonth failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+						LogErr(L"[Error] put_DaysOfMonth failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 						pMonthly->Release();
 						pBaseTrig->Release();
 						return hr;
@@ -467,7 +467,7 @@ namespace ScheduledTasks {
 		HRESULT hr = pFolder->GetTasks(TASK_ENUM_HIDDEN, &pTasks);
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] GetTasks failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] GetTasks failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			return;
 		}
 		if (pTasks)
@@ -476,7 +476,7 @@ namespace ScheduledTasks {
 			hr = pTasks->get_Count(&count);
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] get_Count failed on tasks: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] get_Count failed on tasks: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pTasks->Release();
 				return;
 			}
@@ -486,7 +486,7 @@ namespace ScheduledTasks {
 				hr = pTasks->get_Item(_variant_t(i), &pTask);
 				if (FAILED(hr)) {
 					_com_error err(hr);
-					LogErr(L"[Error] get_Item failed on tasks: 0x", hex, hr, L" — ", err.ErrorMessage());
+					LogErr(L"[Error] get_Item failed on tasks: 0x", hex, hr, L" - ", err.ErrorMessage());
 					continue;
 				}
 				if (pTask)
@@ -495,7 +495,7 @@ namespace ScheduledTasks {
 					hr = pTask->get_Name(&bstrTaskName);
 					if (FAILED(hr)) {
 						_com_error err(hr);
-						LogErr(L"[Error] get_Name failed on task: 0x", hex, hr, L" — ", err.ErrorMessage());
+						LogErr(L"[Error] get_Name failed on task: 0x", hex, hr, L" - ", err.ErrorMessage());
 					}
 					else if (bstrTaskName)
 					{
@@ -512,7 +512,7 @@ namespace ScheduledTasks {
 							else
 							{
 								_com_error err(delHr);
-								LogErr(L"[Error] Failed to delete task: ", bstrTaskName, L" HRESULT=0x", hex, delHr, L" — ", err.ErrorMessage());
+								LogErr(L"[Error] Failed to delete task: ", bstrTaskName, L" HRESULT=0x", hex, delHr, L" - ", err.ErrorMessage());
 							}
 						}
 						SysFreeString(bstrTaskName);
@@ -528,7 +528,7 @@ namespace ScheduledTasks {
 		hr = pFolder->GetFolders(0, &pFolders);
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] GetFolders failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] GetFolders failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			return;
 		}
 		if (pFolders)
@@ -537,7 +537,7 @@ namespace ScheduledTasks {
 			hr = pFolders->get_Count(&count);
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] get_Count failed on folders: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] get_Count failed on folders: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pFolders->Release();
 				return;
 			}
@@ -547,7 +547,7 @@ namespace ScheduledTasks {
 				hr = pFolders->get_Item(_variant_t(i), &pSubFolder);
 				if (FAILED(hr)) {
 					_com_error err(hr);
-					LogErr(L"[Error] get_Item failed on folders: 0x", hex, hr, L" — ", err.ErrorMessage());
+					LogErr(L"[Error] get_Item failed on folders: 0x", hex, hr, L" - ", err.ErrorMessage());
 					continue;
 				}
 				if (pSubFolder)
@@ -587,7 +587,7 @@ namespace ScheduledTasks {
 			{
 				if (pCurr != pRoot) pCurr->Release();
 				_com_error err(hr);
-				LogErr(L"[Error] GetFolder failed for: ", comp, L" HRESULT=0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] GetFolder failed for: ", comp, L" HRESULT=0x", hex, hr, L" - ", err.ErrorMessage());
 				return nullptr;
 			}
 			if (pCurr != pRoot) pCurr->Release();
@@ -788,7 +788,7 @@ namespace ScheduledTasks {
 			if (FAILED(hr) || !pRootFolder)
 			{
 				_com_error err(hr);
-				LogErr(L"[Error] Cannot get root folder: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] Cannot get root folder: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pService->Release();
 				CoUninitialize();
 				return 1;
@@ -850,7 +850,7 @@ namespace ScheduledTasks {
 			else
 			{
 				_com_error err(delHr);
-				LogErr(L"[Error] Failed to delete folder: ", fullPath, L" HRESULT=0x", hex, delHr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] Failed to delete folder: ", fullPath, L" HRESULT=0x", hex, delHr, L" - ", err.ErrorMessage());
 			}
 			pParent->Release();
 			pRootFolder->Release();
@@ -888,7 +888,7 @@ namespace ScheduledTasks {
 			if (FAILED(hr) || !pRootFolder)
 			{
 				_com_error err(hr);
-				LogErr(L"[Error] Cannot get root folder: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] Cannot get root folder: 0x", hex, hr, L" - ", err.ErrorMessage());
 				if (pService) pService->Release();
 				CoUninitialize();
 				return 1;
@@ -962,7 +962,7 @@ namespace ScheduledTasks {
 		if (FAILED(hr))
 		{
 			_com_error err(hr);
-			LogErr(L"[Error] NewTask failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] NewTask failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pTargetFolder->Release();
 			pService->Release();
 			CoUninitialize();
@@ -974,7 +974,7 @@ namespace ScheduledTasks {
 		hr = pTaskDef->get_RegistrationInfo(&pReg);
 		if (FAILED(hr) || !pReg) {
 			_com_error err(hr);
-			LogErr(L"[Error] get_RegistrationInfo failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] get_RegistrationInfo failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pTaskDef->Release();
 			pTargetFolder->Release();
 			pService->Release();
@@ -986,7 +986,7 @@ namespace ScheduledTasks {
 		hr = pReg->put_Author(_bstr_t(author.c_str()));
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] put_Author failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] put_Author failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pReg->Release();
 			pTaskDef->Release();
 			pTargetFolder->Release();
@@ -999,7 +999,7 @@ namespace ScheduledTasks {
 		hr = pReg->put_Description(_bstr_t(description.c_str()));
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] put_Description failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] put_Description failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pReg->Release();
 			pTaskDef->Release();
 			pTargetFolder->Release();
@@ -1015,7 +1015,7 @@ namespace ScheduledTasks {
 		hr = pTaskDef->get_Settings(&pSettings);
 		if (FAILED(hr) || !pSettings) {
 			_com_error err(hr);
-			LogErr(L"[Error] get_Settings failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] get_Settings failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pTaskDef->Release();
 			pTargetFolder->Release();
 			pService->Release();
@@ -1025,7 +1025,7 @@ namespace ScheduledTasks {
 		hr = pSettings->put_Compatibility(TASK_COMPATIBILITY_V2_4); // Windows 11
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] put_Compatibility failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] put_Compatibility failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pSettings->Release();
 			pTaskDef->Release();
 			pTargetFolder->Release();
@@ -1036,7 +1036,7 @@ namespace ScheduledTasks {
 		hr = pSettings->put_Hidden(hidden ? VARIANT_TRUE : VARIANT_FALSE);
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] put_Hidden failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] put_Hidden failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pSettings->Release();
 			pTaskDef->Release();
 			pTargetFolder->Release();
@@ -1049,7 +1049,7 @@ namespace ScheduledTasks {
 		hr = pSettings->put_DisallowStartIfOnBatteries(allowStartIfOnBatteries ? VARIANT_FALSE : VARIANT_TRUE);
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] put_DisallowStartIfOnBatteries failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] put_DisallowStartIfOnBatteries failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pSettings->Release();
 			pTaskDef->Release();
 			pTargetFolder->Release();
@@ -1062,7 +1062,7 @@ namespace ScheduledTasks {
 		hr = pSettings->put_StopIfGoingOnBatteries(dontStopIfGoingOnBatteries ? VARIANT_FALSE : VARIANT_TRUE);
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] put_StopIfGoingOnBatteries failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] put_StopIfGoingOnBatteries failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pSettings->Release();
 			pTaskDef->Release();
 			pTargetFolder->Release();
@@ -1074,7 +1074,7 @@ namespace ScheduledTasks {
 		hr = pSettings->put_StartWhenAvailable(startWhenAvailable ? VARIANT_TRUE : VARIANT_FALSE);
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] put_StartWhenAvailable failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] put_StartWhenAvailable failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pSettings->Release();
 			pTaskDef->Release();
 			pTargetFolder->Release();
@@ -1088,7 +1088,7 @@ namespace ScheduledTasks {
 			hr = pSettings->put_RestartCount(restartCount);
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] put_RestartCount failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] put_RestartCount failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pSettings->Release();
 				pTaskDef->Release();
 				pTargetFolder->Release();
@@ -1103,7 +1103,7 @@ namespace ScheduledTasks {
 			hr = pSettings->put_RestartInterval(_bstr_t(restartInterval.c_str()));
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] put_RestartInterval failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] put_RestartInterval failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pSettings->Release();
 				pTaskDef->Release();
 				pTargetFolder->Release();
@@ -1119,7 +1119,7 @@ namespace ScheduledTasks {
 			hr = pSettings->put_Priority(priority);
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] put_Priority failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] put_Priority failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pSettings->Release();
 				pTaskDef->Release();
 				pTargetFolder->Release();
@@ -1133,7 +1133,7 @@ namespace ScheduledTasks {
 		hr = pSettings->put_RunOnlyIfNetworkAvailable(runOnlyIfNetworkAvailable ? VARIANT_TRUE : VARIANT_FALSE);
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] put_RunOnlyIfNetworkAvailable failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] put_RunOnlyIfNetworkAvailable failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pSettings->Release();
 			pTaskDef->Release();
 			pTargetFolder->Release();
@@ -1153,7 +1153,7 @@ namespace ScheduledTasks {
 				hr = pSettings2->put_UseUnifiedSchedulingEngine(useUnifiedSchedulingEngine ? VARIANT_TRUE : VARIANT_FALSE);
 				if (FAILED(hr)) {
 					_com_error err(hr);
-					LogErr(L"[Error] put_UseUnifiedSchedulingEngine failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+					LogErr(L"[Error] put_UseUnifiedSchedulingEngine failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 					pSettings2->Release();
 					pSettings->Release();
 					pTaskDef->Release();
@@ -1172,7 +1172,7 @@ namespace ScheduledTasks {
 			hr = pSettings->put_ExecutionTimeLimit(_bstr_t(taskExecutionTimeLimit.c_str()));
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] put_ExecutionTimeLimit failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] put_ExecutionTimeLimit failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pSettings->Release();
 				pTaskDef->Release();
 				pTargetFolder->Release();
@@ -1188,7 +1188,7 @@ namespace ScheduledTasks {
 			hr = pSettings->put_WakeToRun(wakeToRun ? VARIANT_TRUE : VARIANT_FALSE);
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] put_WakeToRun failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] put_WakeToRun failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pSettings->Release();
 				pTaskDef->Release();
 				pTargetFolder->Release();
@@ -1204,7 +1204,7 @@ namespace ScheduledTasks {
 			hr = pSettings->put_MultipleInstances(static_cast<TASK_INSTANCES_POLICY>(multipleInstancesPolicy));
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] put_MultipleInstances failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] put_MultipleInstances failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pSettings->Release();
 				pTaskDef->Release();
 				pTargetFolder->Release();
@@ -1219,7 +1219,7 @@ namespace ScheduledTasks {
 			hr = pSettings->put_AllowHardTerminate(allowHardTerminate ? VARIANT_TRUE : VARIANT_FALSE);
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] put_AllowHardTerminate failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] put_AllowHardTerminate failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pSettings->Release();
 				pTaskDef->Release();
 				pTargetFolder->Release();
@@ -1234,7 +1234,7 @@ namespace ScheduledTasks {
 			hr = pSettings->put_AllowDemandStart(allowDemandStart ? VARIANT_TRUE : VARIANT_FALSE);
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] put_AllowDemandStart failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] put_AllowDemandStart failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pSettings->Release();
 				pTaskDef->Release();
 				pTargetFolder->Release();
@@ -1251,7 +1251,7 @@ namespace ScheduledTasks {
 		hr = pTaskDef->get_Triggers(&pTriggers);
 		if (FAILED(hr) || !pTriggers) {
 			_com_error err(hr);
-			LogErr(L"[Error] get_Triggers failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] get_Triggers failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pTaskDef->Release();
 			pTargetFolder->Release();
 			pService->Release();
@@ -1291,7 +1291,7 @@ namespace ScheduledTasks {
 		hr = pTaskDef->get_Actions(&pActions);
 		if (FAILED(hr) || !pActions) {
 			_com_error err(hr);
-			LogErr(L"[Error] get_Actions failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] get_Actions failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pTaskDef->Release();
 			pTargetFolder->Release();
 			pService->Release();
@@ -1302,7 +1302,7 @@ namespace ScheduledTasks {
 		hr = pActions->Create(TASK_ACTION_EXEC, reinterpret_cast<IAction**>(&pExec));
 		if (FAILED(hr) || !pExec) {
 			_com_error err(hr);
-			LogErr(L"[Error] Actions::Create(TASK_ACTION_EXEC) failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] Actions::Create(TASK_ACTION_EXEC) failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pActions->Release();
 			pTaskDef->Release();
 			pTargetFolder->Release();
@@ -1313,7 +1313,7 @@ namespace ScheduledTasks {
 		hr = pExec->put_Path(_bstr_t(exePath.c_str()));
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] put_Path failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] put_Path failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pExec->Release();
 			pActions->Release();
 			pTaskDef->Release();
@@ -1326,7 +1326,7 @@ namespace ScheduledTasks {
 			hr = pExec->put_Arguments(_bstr_t(exeArgs.c_str()));
 			if (FAILED(hr)) {
 				_com_error err(hr);
-				LogErr(L"[Error] put_Arguments failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+				LogErr(L"[Error] put_Arguments failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 				pExec->Release();
 				pActions->Release();
 				pTaskDef->Release();
@@ -1344,7 +1344,7 @@ namespace ScheduledTasks {
 		hr = pTaskDef->get_Principal(&pPrincipal);
 		if (FAILED(hr) || !pPrincipal) {
 			_com_error err(hr);
-			LogErr(L"[Error] get_Principal failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] get_Principal failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pTaskDef->Release();
 			pTargetFolder->Release();
 			pService->Release();
@@ -1354,7 +1354,7 @@ namespace ScheduledTasks {
 		hr = pPrincipal->put_RunLevel(static_cast<TASK_RUNLEVEL_TYPE>(runLevel));
 		if (FAILED(hr)) {
 			_com_error err(hr);
-			LogErr(L"[Error] put_RunLevel failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] put_RunLevel failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pPrincipal->Release();
 			pTaskDef->Release();
 			pTargetFolder->Release();
@@ -1386,7 +1386,7 @@ namespace ScheduledTasks {
 		else
 		{
 			_com_error err(hr);
-			LogErr(L"[Error] RegisterTaskDefinition failed: 0x", hex, hr, L" — ", err.ErrorMessage());
+			LogErr(L"[Error] RegisterTaskDefinition failed: 0x", hex, hr, L" - ", err.ErrorMessage());
 			pTaskDef->Release();
 			pTargetFolder->Release();
 			pService->Release();

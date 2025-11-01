@@ -61,13 +61,13 @@ You can find more information about the Group-Object cmdlet and its parameters i
 
 <br>
 
-## Install Big Powershell Modules System Wide
+## Install Big Powershell Modules System-Wide
 
 Modules such as [Az](https://www.powershellgallery.com/packages/AZ/) or [Microsoft.Graph.Beta](https://www.powershellgallery.com/packages/Microsoft.Graph.Beta/) are big, can have thousands of files and take more than 1GB space after installation.
 
 By default modules are installed in the Documents directory and when you use OneDrive, everything in there is synced automatically.
 
-You can install such modules system wide so that they won't be stored in the `Documents\PowerShell` directory and instead will be stored in `C:\Program Files\PowerShell\Modules` (for PowerShell core). This will also improve security since Administrator privileges will be required to change module files in that directory.
+You can install such modules system-wide so that they won't be stored in the `Documents\PowerShell` directory and instead will be stored in `C:\Program Files\PowerShell\Modules` (for PowerShell core). This will also improve security since Administrator privileges will be required to change module files in that directory.
 
 To do this, you need to use the `-Scope AllUsers` parameter.
 

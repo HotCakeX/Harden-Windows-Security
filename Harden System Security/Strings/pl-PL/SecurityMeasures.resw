@@ -908,10 +908,10 @@
     <value>Wymuś silną ochronę kluczy użytkownika przechowywanych na komputerze. Będziesz mógł bezpiecznie przechowywać klucze prywatne certyfikatów instalowanych na komputerze i dostęp do klucza prywatnego będzie wymagał tych samych poświadczeń jak operacje podpisywania.</value>
 </data>
 <data name="LockoutBadCount-LockScreen" xml:space="preserve">
-    <value>Ustaw dozwoloną liczbę nieudanych prób logowania na 5. W połączeniu z innymi zasadami z tej kategorii oznacza to, że na każde 5 nieudanych prób logowania musi minąć pełny dzień, zanim zostanie dozwolonych kolejnych 5 prób, w przeciwnym razie Bitlocker zostanie aktywowany, system uruchomi się ponownie i poprosi o 48-cyfrowy kod Bitlocker. Ta zasada w dużym stopniu zapobiega atakom siłowym.</value>
+    <value>Ustaw dozwoloną liczbę nieudanych prób logowania na 5. W połączeniu z innymi zasadami z tej kategorii oznacza to, że na każde 5 nieudanych prób logowania musi minąć pełny dzień, zanim zostanie dozwolonych kolejnych 5 prób, w przeciwnym razie BitLocker zostanie aktywowany, system uruchomi się ponownie i poprosi o 48-cyfrowy kod Bitlocker. Ta zasada w dużym stopniu zapobiega atakom siłowym.</value>
 </data>
 <data name="ResetLockoutCount-LockScreen" xml:space="preserve">
-    <value>Ustaw czas trwania blokady konta na 1440 minut lub 1 dzień. W połączeniu z innymi zasadami z tej kategorii oznacza to, że na każde 5 nieudanych prób logowania musi minąć pełny dzień, zanim zostanie dozwolonych kolejnych 5 prób, w przeciwnym razie Bitlocker zostanie aktywowany, system uruchomi się ponownie i poprosi o 48-cyfrowy kod Bitlocker.</value>
+    <value>Ustaw czas trwania blokady konta na 1440 minut lub 1 dzień. W połączeniu z innymi zasadami z tej kategorii oznacza to, że na każde 5 nieudanych prób logowania musi minąć pełny dzień, zanim zostanie dozwolonych kolejnych 5 prób, w przeciwnym razie BitLocker zostanie aktywowany, system uruchomi się ponownie i poprosi o 48-cyfrowy kod Bitlocker.</value>
 </data>
 <data name="LockoutDuration-LockScreen" xml:space="preserve">
     <value>Ustaw reset licznika blokady konta na 1440 minut lub 1 dzień.</value>

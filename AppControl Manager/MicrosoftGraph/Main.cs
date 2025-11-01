@@ -445,15 +445,8 @@ DeviceEvents
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task UploadPolicyToIntune(AuthenticatedAccounts account, string policyPath, List<string> groupIds, string? policyName, string policyID, string descriptionText)
 	{
-
-		DirectoryInfo stagingArea = StagingArea.NewStagingArea("IntuneCIPUpload");
-
-		string tempPolicyPath = Path.Combine(stagingArea.FullName, "policy.bin");
-
-		File.Copy(policyPath, tempPolicyPath, true);
-
 		// https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune#deploy-app-control-policies-with-custom-oma-uri
-		string base64String = ConvertBinFileToBase64(tempPolicyPath, 350000);
+		string base64String = ConvertBinFileToBase64(policyPath, 350000);
 
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
@@ -567,19 +560,24 @@ DeviceEvents
 			oDataType: "#microsoft.graph.windows10CustomConfiguration",
 			displayName: displayNameText,
 			description: descriptionText,
+			id: null, // Automatically set by Intune
+			createdDateTime: null, // Automatically set by Intune
+			lastModifiedDateTime: null, // Automatically set by Intune
+			roleScopeTagIds: null,  // Automatically set by Intune
+			supportsScopeTags: true,
+			version: 1,
 			omaSettings:
 			[
 				new OmaSettingBase64
 				(
-					oDataType: "microsoft.graph.omaSettingBase64",
+					oDataType: "#microsoft.graph.omaSettingBase64",
 					displayName: displayNameText,
 					description: descriptionText,
 					omaUri: $"./Vendor/MSFT/ApplicationControl/Policies/{policyID}/Policy",
 					fileName: "Policy.bin",
 					value: policyData
 				)
-			],
-			platforms: ["windows10AndLater"]
+			]
 		);
 
 		// Serialize the policy object to JSON
@@ -718,7 +716,9 @@ DeviceEvents
 		{
 			throw new InvalidOperationException(string.Format(
 				GlobalVars.GetStr("CipPolicyFileSizeExceedsLimitMessage"),
-				maxSizeInBytes));
+				filePath,
+				maxSizeInBytes,
+				fileInfo.Length));
 		}
 
 		// Read the file and convert to Base64
@@ -753,7 +753,7 @@ DeviceEvents
 		string nextLink = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations?$filter=isof('microsoft.graph.windows10CustomConfiguration')";
 
 		// Accumulators for all pages.
-		List<DeviceConfigurationPolicy> allPolicies = [];
+		List<Windows10CustomConfiguration> allPolicies = [];
 
 		// Capture these from the first successful page (if present).
 		string? oDataContext = null;
@@ -784,16 +784,26 @@ DeviceEvents
 
 			string jsonResponse = await response.Content.ReadAsStringAsync();
 
-			// Root element for pagination handling.
-			JsonElement root = JsonSerializer.Deserialize(
-				jsonResponse,
-				MSGraphJsonContext.Default.JsonElement);
+			JsonElement root;
+			DeviceConfigurationPoliciesResponse? page;
 
-			// Deserialize the page into the existing strongly typed response model to reuse mapping.
-			DeviceConfigurationPoliciesResponse? page =
-				JsonSerializer.Deserialize(
+			try
+			{
+				// Root element for pagination handling.
+				root = JsonSerializer.Deserialize(
 					jsonResponse,
-					MSGraphJsonContext.Default.DeviceConfigurationPoliciesResponse);
+					MSGraphJsonContext.Default.JsonElement);
+
+				// Deserialize the page into the existing strongly typed response model to reuse mapping.
+				page = JsonSerializer.Deserialize(
+						jsonResponse,
+						MSGraphJsonContext.Default.DeviceConfigurationPoliciesResponse);
+			}
+			catch
+			{
+				Logger.Write($"Failed to deserialize the following JSON response: {jsonResponse}");
+				throw;
+			}
 
 			// Capture context / tips only once (from first page that provides them).
 			if (oDataContext is null && root.TryGetProperty("@odata.context", out JsonElement ctxEl))
@@ -928,7 +938,7 @@ DeviceEvents
 		// Prepare payload according to group type.
 		// Security group: mailEnabled = false, securityEnabled = true, groupTypes = []
 		// Unified (M365) group: mailEnabled = true, securityEnabled = false, groupTypes = ["Unified"]
-		GroupCreatePayload payload = new(
+		Group payload = new(
 			displayName: displayName,
 			description: string.IsNullOrWhiteSpace(description) ? null : description,
 			mailEnabled: unifiedGroup,
@@ -939,7 +949,7 @@ DeviceEvents
 
 		string jsonPayload = JsonSerializer.Serialize(
 			payload,
-			MSGraphJsonContext.Default.GroupCreatePayload);
+			MSGraphJsonContext.Default.Group);
 
 		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"CreateGroup",

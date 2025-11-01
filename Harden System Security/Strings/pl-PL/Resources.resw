@@ -3804,10 +3804,10 @@ Odcisk Palca: {3}</value>
     <value>Kryptograficzny wykaz materiałów</value>
   </data>
     <data name="CBOMNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Kryptograficzny wykaz materiałów (CBOM) zapewnia inwentaryzację na poziomie systemu w zakresie kryptografii systemu operacyjnego — algorytmów, krzywych, zestawów szyfrów i dostawców — odwzorowując kryptograficzną postawę platformy.</value>
+    <value>Kryptograficzny wykaz materiałów (CBOM) zapewnia inwentaryzację na poziomie systemu w zakresie kryptografii systemu operacyjnego - algorytmów, krzywych, zestawów szyfrów i dostawców - odwzorowując kryptograficzną postawę platformy.</value>
   </data>
   <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Kryptograficzny wykaz materiałów (CBOM) zapewnia inwentaryzację na poziomie systemu w zakresie kryptografii systemu operacyjnego — algorytmów, krzywych, zestawów szyfrów i dostawców — odwzorowując kryptograficzną postawę platformy.</value>
+    <value>Kryptograficzny wykaz materiałów (CBOM) zapewnia inwentaryzację na poziomie systemu w zakresie kryptografii systemu operacyjnego - algorytmów, krzywych, zestawów szyfrów i dostawców - odwzorowując kryptograficzną postawę platformy.</value>
   </data>
   <data name="CBOMPageTitle.Text" xml:space="preserve">
     <value>Kryptograficzny wykaz materiałów (CBOM) oferuje inwentaryzację i wgląd na poziomie systemu w kryptografię systemu operacyjnego, ujawniając algorytmy, krzywe, zestawy szyfrów i dostawców, które definiują kryptograficzną postawę platformy. Standaryzując to, co eksponuje system operacyjny, zapewnia przejrzystość podobną do SBOM w obszarze kryptografii: umożliwia audyty oparte na dowodach, kontrole zgodności z liniami bazowymi, wykrywanie dryfu w kolejnych aktualizacjach, identyfikację przestarzałych/słabych prymitywów oraz planowanie przejść postkwantowych.</value>

@@ -2,7 +2,7 @@
 
 In this article, we will learn how to asynchronously access all stream outputs from background jobs in PowerShell. We will use the `Start-Job` cmdlet to start a job for each animal in the list. We will then use the `Register-ObjectEvent` cmdlet to create an event subscriber for the job to automatically receive the job output for all streams and discard itself and the job. We will also use the `Unregister-Event` cmdlet to remove the event itself and the `Remove-Job` cmdlet to remove the event subscriber's job.
 
-We will also properly communicate any terminating or non-terminating error that ocurred inside of each job to the console.
+We will also properly communicate any terminating or non-terminating error that occurred inside of each job to the console.
 
 ```powershell
 [System.String[]]$JobNames = 'cat', 'dog', 'Zebra', 'kangaroo'
@@ -49,7 +49,7 @@ foreach ($JobName in $JobNames) {
             }
         }
 
-        # Check if a terminating error ocurred in the job
+        # Check if a terminating error occurred in the job
         if ($EventSubscriber.SourceObject.State -eq 'Failed') {
             Write-Host -Object "The Job $($EventSubscriber.SourceObject.Name) Failed" -ForegroundColor Red
         }
@@ -68,7 +68,7 @@ foreach ($JobName in $JobNames) {
             }
         }
 
-        # Receive the job output except for Wire-Output and error stream
+        # Receive the job output except for Write-Output and error stream
         Receive-Job -Job $EventSubscriber.SourceObject
 
         # Unregister the event itself

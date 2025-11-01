@@ -55,7 +55,7 @@
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/.github/9b2e88aad5ba54000a24c904e1f473b039202691/Pictures/Harden%20System%20Security%20Icons/ICON-SVG-SIMPLIFIED.svg" alt="GitHub logo pink SVG"> [Install the Harden System Security From Microsoft Store](https://apps.microsoft.com/detail/9p7ggfl7dx57)
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/.github/9b2e88aad5ba54000a24c904e1f473b039202691/Pictures/Harden%20System%20Security%20Icons/ICON-SVG-SIMPLIFIED.svg" alt="GitHub logo pink SVG"> [Install the Harden System Security From the Microsoft Store](https://apps.microsoft.com/detail/9p7ggfl7dx57)
 
 <a href="https://apps.microsoft.com/detail/9p7ggfl7dx57?referrer=appbadge&mode=direct">
 	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="300"/>
@@ -196,7 +196,7 @@ Also, zero-day vulnerabilities are patched quickly, so keeping your device and O
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png" alt="Stonks up"> What About More Advanced Security at Scale ?
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/StonkUp.png" alt="Stonks up"> What About More Advanced Security at Scale?
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/534534.png" width="650" alt="AI generated image of a girl"></p>
 
@@ -293,7 +293,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 ### <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/9935-catkeyboard.gif" alt="BYOVD device gif animated"> [Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks](#-protection-against-byovd-bring-your-own-vulnerable-driver-attacks)
 
-* Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include App Control for Business, ASR (Attack Surface Reduction) rules, Dynamic/static root of trust and [firmware](https://learn.microsoft.com/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers. They are specially useful for drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things.
+* Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include App Control for Business, ASR (Attack Surface Reduction) rules, Dynamic/static root of trust and [firmware](https://learn.microsoft.com/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers. They are especially useful for drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things.
 
 * Use [Strict Kernel-mode App Control policy for complete BYOVD protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
@@ -399,7 +399,7 @@ Please open a new [issue](https://github.com/HotCakeX/Harden-Windows-Security/is
 
 This repository uses effective methods that make it easy to verify:
 
-- [Artifact attestations](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) are used to establish provenance for builds. It [guarantees](https://github.com/HotCakeX/Harden-Windows-Security/attestations) that the package are 100% created from the source code that exist in this repository.
+- [Artifact attestations](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) are used to establish provenance for builds. They [guarantee](https://github.com/HotCakeX/Harden-Windows-Security/attestations) that the packages are 100% created from the source code that exist in this repository.
 
 - [SBOMs](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/exporting-a-software-bill-of-materials-for-your-repository) (Software Bill of Materials) are generated for the entire repository to comply with data protection standards and providing transparency. Together with attestation and isolation they provide [SLSA L3 security level](https://slsa.dev/spec/v1.0/levels) for the build process.
 
@@ -414,10 +414,10 @@ This repository uses effective methods that make it easy to verify:
 <br>
 
 > [!TIP]\
-> All files in this repository are zipped and automatically submitted to VirusTotal for scanning. Any available packages in the last release is also directly uploaded for scanning. It is done through a [GitHub Action](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) that is triggered every time a release is made or a PR is merged. Find the history of the uploaded files in [my Virus Total profile](https://www.virustotal.com/gui/user/SpyNetGirl).
+> All files in this repository are zipped and automatically submitted to VirusTotal for scanning. Any available packages in the last release is also directly uploaded for scanning. It is done through a [GitHub Action](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) that is triggered every time a release is made or a PR is merged. Find the history of the uploaded files in [my VirusTotal profile](https://www.virustotal.com/gui/user/SpyNetGirl).
 
 * [![PSScriptAnalyzer](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml)
-* [![Repository And Package Scan on Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Repository%20And%20Package%20Scan%20on%20Virus%20Total.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Repository%20And%20Package%20Scan%20on%20Virus%20Total.yml)
+* [![Repository And Package Scan on VirusTotal](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Repository%20And%20Package%20Scan%20on%20Virus%20Total.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Repository%20And%20Package%20Scan%20on%20Virus%20Total.yml)
 * [![CodeQL Advanced - Quality](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/CodeQL%20Advanced%20-%20Quality.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/CodeQL%20Advanced%20-%20Quality.yml)
 * [![Sync to Azure DevOps](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Sync%20to%20Azure%20DevOps.yaml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Sync%20to%20Azure%20DevOps.yaml)
 * [![Build AppControl Manager MSIX Package](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml)
@@ -537,7 +537,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 <br>
 
-* <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="30" alt="Red Star denoting Security Recommendation"> Enable [***Random Hardware Addresses***](https://support.microsoft.com/en-us/windows/how-to-use-random-hardware-addresses-in-windows-ac58de34-35fc-31ff-c650-823fc48eb1bc) In Windows Settings -> Network & Internet -> WIFI. Currently, there is no Group Policy or associated registry key to automatically turn it on, that is why it is mentioned here in the security recommendations section. It has various security and privacy benefits such as your device cannot be uniquely identified by its hardware Mac address and the routers your connect to cannot uniquely identify you. You can set it to change daily in your WIFI network adapter's settings in Windows settings for even more benefits.
+* <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="30" alt="Red Star denoting Security Recommendation"> Enable [***Random Hardware Addresses***](https://support.microsoft.com/en-us/windows/how-to-use-random-hardware-addresses-in-windows-ac58de34-35fc-31ff-c650-823fc48eb1bc) In Windows Settings -> Network & Internet -> WIFI. Currently, there is no Group Policy or associated registry key to automatically turn it on, that is why it is mentioned here in the security recommendations section. It has various security and privacy benefits such as your device cannot be uniquely identified by its hardware MAC address and the routers you connect to cannot uniquely identify you. You can set it to change daily in your WIFI network adapter's settings in Windows settings for even more benefits.
 
 <br>
 

@@ -297,7 +297,7 @@ The policy must be in multiple policy format, which can be achieved by using the
 
 * Sometimes [New-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) Cmdlet creates 2 file rules for each driver file, such as `.sys` files. One of them is stored in **Driver signing scenarios** section under SigningScenario with the value `131` and the other one is stored in **User mode signing scenarios** section under SigningScenario with the value `12`. [More info here](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#why-does-scan-create-eight-hash-rules-for-certain-files)
 
-* [File rule levels](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-2-app-control-for-business-policy---file-rule-levels) and Cmdlets like [New-CiPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) only create rules for files with supported extensions. The [table in this page](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/feature-availability) lists all of the support file extensions.
+* [File rule levels](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-2-app-control-for-business-policy---file-rule-levels) and Cmdlets like [New-CiPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) only create rules for files with supported extensions. The [table on this page](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/feature-availability) lists all of the support file extensions.
 
 <br>
 
@@ -487,7 +487,7 @@ When you use `-Audit` parameter of ConfigCI cmdlets such as [Get-SystemDriver](h
 
 <br>
 
-## About Double-Signed Files and Filepublisher Level
+## About Double-Signed Files and FilePublisher Level
 
 Sometimes there are files that are signed by 2 or more certificates, aka double signed files.
 
@@ -536,7 +536,7 @@ In the signer below
 
 [HVCI](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity) stands for **Hypervisor-protected Code Integrity** and it is a feature that uses virtualization-based security (VBS) to protect the Windows kernel from memory attacks. HVCI can be set to different options in an App Control policy, such as Enabled, DebugMode, or Strict.
 
-Setting [HVCI to Strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) in an WDApp ControlAC policy provides the highest level of protection for kernel mode code integrity, as it enforces these additional restrictions:
+Setting [HVCI to Strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) in an App Control policy provides the highest level of protection for kernel mode code integrity, as it enforces these additional restrictions:
 
 * It prevents unsigned drivers from loading, even if they are allowed by the App Control policy.
 It prevents drivers that are not compatible with HVCI from loading, even if they are signed and allowed by the App Control policy.

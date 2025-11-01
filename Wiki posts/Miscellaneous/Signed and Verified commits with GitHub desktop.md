@@ -18,7 +18,7 @@ After installation, open Kleopatra and create a new GPG key pair by selecting "N
 
 ![image](https://user-images.githubusercontent.com/118815227/233190420-c3583888-c3e5-4684-9422-21025ac055da.png)
 
-Enter your real name and the email address that is added as one your verified email addresses [in your GitHub account settings.](https://github.com/settings/emails)
+Enter your real name and the email address that is added as one of your verified email addresses [in your GitHub account settings.](https://github.com/settings/emails)
 
 Select advanced settings and here you can optionally check the box next to "Authentication" and also increase the validity period of your GPG key.
 

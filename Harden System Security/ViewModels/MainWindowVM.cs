@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AnimatedVisuals;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
@@ -581,7 +580,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Whether the button for configuring nested virtualizations on Sidebar is enabled.
 	/// </summary>
-	internal bool IsHyperVNestedVirtualizationButtonEnabled { get; set => SP(ref field, value); } = true;
+	internal bool IsHyperVNestedVirtualizationButtonEnabled { get; set => SP(ref field, value); } = App.IsElevated;
 
 	internal async void EnableNestedVirtualizationForVMs() => await SetNestedVirtualizationForVMs(true);
 	internal async void DisableNestedVirtualizationForVMs() => await SetNestedVirtualizationForVMs(false);
@@ -670,7 +669,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		}
 	}
 
-	internal bool IsCheckForAllAppUpdatesButtonEnabled { get; set => SP(ref field, value); } = true;
+	internal bool IsCheckForAllAppUpdatesButtonEnabled { get; set => SP(ref field, value); } = App.IsElevated;
 
 	/// <summary>
 	/// Event handler for the UI button.

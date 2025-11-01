@@ -1015,9 +1015,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="DeployingXMLFile" xml:space="preserve">
     <value>Currently Deploying XML file: '</value>
   </data>
-  <data name="SignedPolicyError" xml:space="preserve">
-    <value>The XML file '</value>
-  </data>
   <data name="DeploymentError" xml:space="preserve">
     <value>There was an error deploying the selected XML files</value>
   </data>
@@ -1284,7 +1281,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Creating the Strict Kernel-mode policy</value>
   </data>
   <data name="PolicyCreationError" xml:space="preserve">
-    <value>There was an error creating Strict Kernel-mode policy: </value>
+    <value>There was an error creating Strict Kernel-mode policy:</value>
   </data>
   <data name="PolicyCreatedSuccessfully" xml:space="preserve">
     <value>Successfully created the Strict Kernel-mode policy</value>
@@ -1776,10 +1773,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>UserName</value>
   </data>
   <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The Username of the account that is currently selected to perform the tasks in this page.</value>
+    <value>The Username of the account that is currently selected to perform the tasks on this page.</value>
   </data>
   <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The Username of the account that is currently selected to perform the tasks in this page.</value>
+    <value>The Username of the account that is currently selected to perform the tasks on this page.</value>
   </data>
   <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
     <value>The selected account's Username will appear here</value>
@@ -1788,10 +1785,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Tenant ID</value>
   </data>
   <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The Tenant ID of the account that is currently selected to perform the tasks in this page.</value>
+    <value>The Tenant ID of the account that is currently selected to perform the tasks on this page.</value>
   </data>
   <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The Tenant ID of the account that is currently selected to perform the tasks in this page.</value>
+    <value>The Tenant ID of the account that is currently selected to perform the tasks on this page.</value>
   </data>
   <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
     <value>The selected account's Tenant ID will appear here</value>
@@ -1800,10 +1797,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Account Identifier</value>
   </data>
   <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The Account Identifier of the account that is currently selected to perform the tasks in this page.</value>
+    <value>The Account Identifier of the account that is currently selected to perform the tasks on this page.</value>
   </data>
   <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The Account Identifier of the account that is currently selected to perform the tasks in this page.</value>
+    <value>The Account Identifier of the account that is currently selected to perform the tasks on this page.</value>
   </data>
   <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
     <value>The selected account's Identifier will appear here</value>
@@ -1812,10 +1809,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Permissions</value>
   </data>
   <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The Permissions of the account that is currently selected to perform the tasks in this page.</value>
+    <value>The Permissions of the account that is currently selected to perform the tasks on this page.</value>
   </data>
   <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The Permissions of the account that is currently selected to perform the tasks in this page.</value>
+    <value>The Permissions of the account that is currently selected to perform the tasks on this page.</value>
   </data>
   <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
     <value>The selected account's Permissions will appear here</value>
@@ -2031,7 +2028,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>View the detected Kernel-mode files that will be used to create the enforced mode policy. Remove items you don't want to be included in the final Strict Kernel-mode policy from the list.</value>
   </data>
   <data name="UpdatePageTitle.Text" xml:space="preserve">
-    <value>Check for updates in this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available.</value>
+    <value>Check for updates on this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">
     <value>Validate App Control Policies to ensure they are compliant with the official schema. If you manually modified XML policy files and want to ensure your modifications are correct, use this feature to validate them.</value>
@@ -2730,7 +2727,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Disabled/Not Running</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_ENABLED" xml:space="preserve">
-    <comment>Enforcement of kernel‑mode Code Integrity is enabled</comment>
+    <comment>Enforcement of kernel-mode Code Integrity is enabled</comment>
     <value>Enforcement of kernel mode Code Integrity is enabled.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_TESTSIGN" xml:space="preserve">
@@ -2738,15 +2735,15 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Test signed content is allowed by Code Integrity.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_ENABLED" xml:space="preserve">
-    <comment>Enforcement of user‑mode Code Integrity is enabled</comment>
+    <comment>Enforcement of user-mode Code Integrity is enabled</comment>
     <value>Enforcement of user mode Code Integrity is enabled.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED" xml:space="preserve">
-    <comment>User‑mode Code Integrity is enabled in audit mode</comment>
+    <comment>User-mode Code Integrity is enabled in audit mode</comment>
     <value>Enforcement of user mode Code Integrity is enabled in audit mode.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED" xml:space="preserve">
-    <comment>User‑mode binaries from certain paths can bypass CI checks</comment>
+    <comment>User-mode binaries from certain paths can bypass CI checks</comment>
     <value>User mode binaries from certain paths can run even if they fail code integrity checks.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_TEST_BUILD" xml:space="preserve">
@@ -2754,7 +2751,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>The build of Code Integrity is from a test build.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD" xml:space="preserve">
-    <comment>The Code Integrity component is from a pre‑production build</comment>
+    <comment>The Code Integrity component is from a pre-production build</comment>
     <value>The build of Code Integrity is from a pre-production build.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED" xml:space="preserve">
@@ -2766,11 +2763,11 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>The build of Code Integrity is from a flight build.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_FLIGHTING_ENABLED" xml:space="preserve">
-    <comment>Flight‑signed content is allowed by Code Integrity</comment>
+    <comment>Flight-signed content is allowed by Code Integrity</comment>
     <value>Flight signed content is allowed by Code Integrity.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode</comment>
     <value>Hypervisor enforced Code Integrity is enabled for kernel mode components.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED" xml:space="preserve">
@@ -2778,7 +2775,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Hypervisor enforced Code Integrity is enabled in audit mode.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode in strict mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode in strict mode</comment>
     <value>Hypervisor enforced Code Integrity is enabled for kernel mode in strict mode.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED" xml:space="preserve">
@@ -3341,7 +3338,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>{0} log(s) were generated during the Audit phase</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>An error occurred while scanning the system: </value>
+    <value>An error occurred while scanning the system:</value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>Successfully scanned the system for events</value>
@@ -3368,7 +3365,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Scanning {0} files</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>There was an error: </value>
+    <value>There was an error:</value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>Successfully scanned the system for drivers</value>
@@ -3419,7 +3416,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Converting {0} to CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>There was a problem converting the XML files to CIP: </value>
+    <value>There was a problem converting the XML files to CIP:</value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>Successfully converted all of the selected XML files to CIP binaries</value>
@@ -3428,7 +3425,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Scanning the event logs...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>There was an error during logs scan: </value>
+    <value>There was an error during logs scan:</value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>Scan complete. {0} logs were found.</value>
@@ -3470,7 +3467,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>No Base Policy GUID was provided to use as the BasePolicyID of the supplemental policy.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>There was an error while processing the logs: </value>
+    <value>There was an error while processing the logs:</value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>Successfully processed the logs and included them in the policy.</value>
@@ -3488,7 +3485,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Performing the Simulation</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>There was a problem during the simulation: </value>
+    <value>There was a problem during the simulation:</value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>Simulation completed successfully.</value>
@@ -3503,7 +3500,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Loading the policy</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>There was a problem loading the selected policy file: </value>
+    <value>There was a problem loading the selected policy file:</value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>Successfully loaded the selected policy</value>
@@ -3899,7 +3896,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Sign in to MSGraph was cancelled by the user</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>There was an error signing into MSGraph: </value>
+    <value>There was an error signing into MSGraph:</value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>MDE Advanced Hunting Query has been Successful.</value>
@@ -3949,10 +3946,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
     <value>Failed to create custom policy. Status code: {0}</value>
   </data>
-  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
-    <value>The CIP policy file size exceeds the limit of {0} bytes.</value>
-  </data>
-    <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
+  <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
     <value>Device configurations retrieved successfully.</value>
   </data>
   <data name="FailedToRetrieveDeviceConfigurationsMessage" xml:space="preserve">
@@ -4094,7 +4088,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>No results detected in the selected MDE Advanced Hunting CSV logs.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>There was an error while scanning the selected MDE Advanced Hunting CSV Logs: </value>
+    <value>There was an error while scanning the selected MDE Advanced Hunting CSV Logs:</value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>Successfully completed scanning the selected MDE Advanced Hunting CSV Logs.</value>
@@ -4115,7 +4109,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>No policy file was selected to associate the Supplemental policy with.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>There was an error creating the Supplemental policy: </value>
+    <value>There was an error creating the Supplemental policy:</value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>Retrieving the Microsoft Defender for Endpoint Advanced Hunting data</value>
@@ -4136,7 +4130,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>No actionable logs were found among the retrieved data to create a Supplemental policy with.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>There was an error retrieving the MDE Advanced Hunting logs from MSGraph: </value>
+    <value>There was an error retrieving the MDE Advanced Hunting logs from MSGraph:</value>
   </data>
     <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>Add logs to the selected policy</value>
@@ -4322,10 +4316,10 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Select a policy file</value>
   </data>
   <data name="SelectPolicyFileToAddRulesToButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Browse for an App Control policy to add all of the rules you created in this page to it.</value>
+    <value>Browse for an App Control policy to add all of the rules you created on this page to it.</value>
   </data>
   <data name="SelectPolicyFileToAddRulesToButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Browse for an App Control policy to add all of the rules you created in this page to it.</value>
+    <value>Browse for an App Control policy to add all of the rules you created on this page to it.</value>
   </data>
   <data name="PolicyCreationOperationModeComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Choose between creating a new supplemental policy or adding the rules that will be created to an existing policy</value>
@@ -4479,9 +4473,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
 </data>
 <data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
   <value>Expected policy end tag '{0}', got '{1}'.</value>
-</data>
-<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
-  <value>The XML file '{0}' is not compliant with the CI policy schema</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>The policy type is {0} and it has {1} rule option which is invalid. Only {2} can have that.</value>
@@ -6121,5 +6112,38 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   </data>
   <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Open the selected policy in the Policy Editor where you can see detailed overview of the policy and have the option to customize it further right inside of this app.</value>
+  </data>
+  <data name="SignedPolicyError" xml:space="preserve">
+    <value>The policy file '{0}' does not have the EnabledUnsignedSystemIntegrityPolicy rule option. It cannot be deployed in unsigned mode.</value>
+  </data>
+  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>The policy binary file '{0}' exceeds the size limit of {1} bytes. Its size is {2} bytes.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.Header" xml:space="preserve">
+    <value>Unsupported Rules Availability</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Whether the policy rule options that are either unsupported or undocumented are enabled or disabled.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Whether the policy rule options that are either unsupported or undocumented are enabled or disabled.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OnContent" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OffContent" xml:space="preserve">
+    <value>Unavailable</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Description" xml:space="preserve">
+    <value>Enable this feature to make alternative methods available for deploying and removing App Control policies. These methods do not depend on the CiTool executable and can be used if CiTool is blocked or unavailable.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Header" xml:space="preserve">
+    <value>Use Code Integrity management V2</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enable this feature to make alternative methods available for deploying and removing App Control policies. These methods do not depend on the CiTool executable and can be used if CiTool is blocked or unavailable.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enable this feature to make alternative methods available for deploying and removing App Control policies. These methods do not depend on the CiTool executable and can be used if CiTool is blocked or unavailable.</value>
   </data>
 </root>

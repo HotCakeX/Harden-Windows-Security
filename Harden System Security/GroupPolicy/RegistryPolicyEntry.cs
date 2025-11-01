@@ -15,14 +15,12 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using AppControlManager.Others;
 using HardenSystemSecurity.Protect;
 
 namespace HardenSystemSecurity.GroupPolicy;

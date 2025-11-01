@@ -16,7 +16,6 @@
 //
 
 using AppControlManager.AppSettings;
-using AppControlManager.Others;
 using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
@@ -109,7 +108,7 @@ internal sealed partial class MainWindow : Window
 	}
 
 	/// <summary>
-	/// Specifies the interactive (passthrough) regions of the title bar—including proper RTL mirroring.
+	/// Specifies the interactive (passthrough) regions of the title bar-including proper RTL mirroring.
 	/// </summary>
 	internal void SetRegionsForCustomTitleBar()
 	{

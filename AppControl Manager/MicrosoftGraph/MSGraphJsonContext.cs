@@ -30,10 +30,9 @@ namespace AppControlManager.MicrosoftGraph;
 [JsonSerializable(typeof(QueryPayload))]
 [JsonSerializable(typeof(Windows10CustomConfiguration))]
 [JsonSerializable(typeof(OmaSettingBase64))]
-[JsonSerializable(typeof(DeviceConfigurationPolicy))]
 [JsonSerializable(typeof(DeviceConfigurationPoliciesResponse))]
 [JsonSerializable(typeof(Others.CiPolicyInfo))]
-[JsonSerializable(typeof(GroupCreatePayload))]
+[JsonSerializable(typeof(Group))]
 [JsonSerializable(typeof(string[]))] // Used to deserialize MS Defender results
 internal sealed partial class MSGraphJsonContext : JsonSerializerContext
 {

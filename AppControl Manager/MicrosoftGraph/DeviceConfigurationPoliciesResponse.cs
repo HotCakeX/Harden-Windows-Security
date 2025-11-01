@@ -15,18 +15,37 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace AppControlManager.Others;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+namespace AppControlManager.MicrosoftGraph;
 
 /// <summary>
-/// Marker interface for controls that support deferring disposal (skipping disposal on transient Unloaded events
-/// such as those triggered by TabView template churn). The hosting control (e.g., MUnitListViewControl) sets
-/// <see cref="DisposeOnlyOnExplicitCall"/> = true when the parent is configured to manage disposal explicitly
-/// (e.g., in Page.OnNavigatedFrom).
+/// Represents the response from the Graph API that contains a list of device configuration policies.
 /// </summary>
-internal interface IExplicitDisposalOptIn
+internal sealed class DeviceConfigurationPoliciesResponse(
+	string? oDataContext,
+	string? microsoftGraphTips,
+	List<Windows10CustomConfiguration>? value
+)
 {
 	/// <summary>
-	/// When true, the control must not dispose itself on Unloaded; the host will call Dispose() explicitly.
+	/// OData context information.
 	/// </summary>
-	bool DisposeOnlyOnExplicitCall { get; set; }
+	[JsonInclude]
+	[JsonPropertyName("@odata.context")]
+	internal string? ODataContext => oDataContext;
+
+	/// <summary>
+	/// Additional Microsoft Graph tips.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("@microsoft.graph.tips")]
+	internal string? MicrosoftGraphTips => microsoftGraphTips;
+
+	/// <summary>
+	/// The list of device configuration policies.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("value")]
+	internal List<Windows10CustomConfiguration>? Value => value;
 }

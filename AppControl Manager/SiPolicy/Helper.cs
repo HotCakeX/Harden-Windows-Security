@@ -304,7 +304,7 @@ internal static class Helper
 		// How many valid segments we've successfully parsed so far
 		int segmentsParsed = 0;
 
-		// Pin the string’s character buffer in memory so we can use unmanaged pointers safely
+		// Pin the string's character buffer in memory so we can use unmanaged pointers safely
 		fixed (char* pStart = version)
 		{
 			// Compute the end pointer (one past the last character)

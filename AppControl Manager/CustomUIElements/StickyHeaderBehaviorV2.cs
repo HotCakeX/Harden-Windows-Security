@@ -18,7 +18,7 @@
 
 /*
 
-The code in this page is MODIFIED version of the MIT licensed code in the following repository: https://github.com/CommunityToolkit/Windows
+The code in this file is MODIFIED version of the MIT licensed code in the following repository: https://github.com/CommunityToolkit/Windows
 Taken from this URL: https://github.com/CommunityToolkit/Windows/tree/321f5ddc8f3bf07865c8f51d992febb25fd7859a/components/Behaviors/src/Headers
 
 It's removed the "ScrollViewer_GotFocus" from the base class to prevent scroll positions from changing when clicking on the header which is an unwanted behavior.

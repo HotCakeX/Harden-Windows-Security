@@ -17,59 +17,13 @@
 
 using System.IO;
 
-using Microsoft.Windows.ApplicationModel.Resources;
-
 namespace CommonCore.Others;
 
 /// <summary>
 /// This class defines constants and other variables used by the entire application
 /// </summary>
-internal static class GlobalVars
+internal static partial class GlobalVars
 {
-	// Instantiate the ResourceLoader object to access the strings in the Resource.resw file
-	internal static ResourceLoader Rizz = new();
-
-#if HARDEN_SYSTEM_SECURITY
-
-	internal static Windows.ApplicationModel.Resources.ResourceLoader SecurityMeasuresRizzLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse("SecurityMeasures");
-
-	/// <summary>
-	/// This method is responsible for retrieving localized strings from the SecurityMeasures for Security measures' friendly name field based on a key.
-	/// </summary>
-	/// <param name="key"></param>
-	/// <returns></returns>
-	internal static string GetSecurityStr(string key)
-	{
-		try
-		{
-			return SecurityMeasuresRizzLoader.GetString(key);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write($"Error retrieving localized string for key: {key}: {ex.Message}");
-			return key;
-		}
-	}
-#endif
-
-	/// <summary>
-	/// This method is responsible for retrieving localized strings from the resource files based on a key.
-	/// </summary>
-	/// <param name="key"></param>
-	/// <returns></returns>
-	internal static string GetStr(string key)
-	{
-		try
-		{
-			return Rizz.GetString(key);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write($"Error retrieving localized string for key: {key}: {ex.Message}");
-			return key;
-		}
-	}
-
 	// User Mode block rules
 	//internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");
 	internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol");
@@ -82,30 +36,11 @@ internal static class GlobalVars
 		Environment.GetEnvironmentVariable("SystemDrive") + @"\",
 		"Windows", "schemas", "CodeIntegrity", "cipolicy.xsd");
 
-#if HARDEN_SYSTEM_SECURITY
-	// Storing the path to the app's folder in the Program Files
-	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Harden System Security");
-#endif
-#if APP_CONTROL_MANAGER
-	// Storing the path to the app's folder in the Program Files
-	internal static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "AppControl Manager");
-#endif
-
-	// Storing the path to User Config JSON file in the app's folder in the Program Files
-	internal static readonly string UserConfigJson = Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
-
-	// Storing the path to the StagingArea folder in the AppControl Manager folder in the Program Files
-	// Each instance of the App (in case there are more than one at a time) has a unique staging area
-	internal static readonly string StagingArea = Path.Combine(UserConfigDir, $"StagingArea-{DateTime.UtcNow:yyyyMMddHHmmssfffffff}");
-
 	// The link to the file that contains the download link for the latest version of the AppControl Manager
 	internal static readonly Uri AppUpdateDownloadLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/MSIXBundleDownloadURL.txt");
 
 	// The link to the file that contains the version number of the latest available version of the app
 	internal static readonly Uri AppVersionLinkURL = new("https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/version.txt");
-
-	// Handle of the main Window - acquired in the MainWindow.xaml.cs
-	internal static nint hWnd;
 
 	// Product ID of the application when installed from the Microsoft Store
 #if HARDEN_SYSTEM_SECURITY

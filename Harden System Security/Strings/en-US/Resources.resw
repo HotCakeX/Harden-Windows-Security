@@ -440,7 +440,7 @@
     <value>Source Code</value>
   </data>
     <data name="UpdatePageTitle.Text" xml:space="preserve">
-    <value>Check for updates in this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available.</value>
+    <value>Check for updates on this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available.</value>
   </data>
     <data name="GuideButtonAtTop.Content" xml:space="preserve">
     <value>Guide</value>
@@ -890,7 +890,7 @@
     <value>Clear</value>
   </data>
   <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
-    <value>Open and read Group Policy files in this page. You can search through the data and remove individual policies from the file. You can also view the effective policies on the system.</value>
+    <value>Open and read Group Policy files on this page. You can search through the data and remove individual policies from the file. You can also view the effective policies on the system.</value>
   </data>
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
     <value>View the policy file path(s) you selected.</value>
@@ -1274,10 +1274,10 @@
     <value>Configure all aspects of the Microsoft Defender and enable many of its features that are disabled by default.</value>
   </data>
   <data name="ASRRulesPageTitle.Text" xml:space="preserve">
-    <value>Configure each and every single Attack Surface Reduction rule in this page. They can prevent malware infection and exploitation of vulnerabilities.</value>
+    <value>Configure each and every single Attack Surface Reduction rule on this page. They can prevent malware infection and exploitation of vulnerabilities.</value>
   </data>
   <data name="BitLockerPageTitle.Text" xml:space="preserve">
-    <value>In this page you can apply policies that will make BitLocker more robust than it is by default and protect your data at rest.</value>
+    <value>On this page you can apply policies that will make BitLocker more robust than it is by default and protect your data at rest.</value>
   </data>
   <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
     <value>Find all certificates in your system that are not rooted to any certificate on the trusted Microsoft root certificates list.</value>
@@ -1298,7 +1298,7 @@
     <value>This page contains important security measures that don't fall into more specific categories. Applying them can enhance and augment the security of your system and device.</value>
   </data>
   <data name="NonAdminPageTitle.Text" xml:space="preserve">
-    <value>The policies in this page only apply to the current user and are not applied system-wide to all users. For this reason, you do not require Administrator privilege to apply them.</value>
+    <value>The policies on this page only apply to the current user and are not applied system-wide to all users. For this reason, you do not require Administrator privilege to apply them.</value>
   </data>
   <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
     <value>Fetch, List, View, Enable and Disable all of the optional features and capabilities that the operating system offers in a unified manner.</value>
@@ -2288,10 +2288,10 @@
     <value>Microsoft 365 Apps Security Baseline</value>
   </data>
     <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
-    <value>Apply Microsoft Security Baseline in this page. You can also verify system compliance to get a precise report showing which settings are applied and which are not. You can remove the policies applied by the baseline as well.</value>
+    <value>Apply Microsoft Security Baseline on this page. You can also verify system compliance to get a precise report showing which settings are applied and which are not. You can remove the policies applied by the baseline as well.</value>
   </data>
     <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
-    <value>Apply Microsoft 365 Apps Security Baseline in this page. You can also verify system compliance to get a precise report showing which settings are applied and which are not. You can remove the policies applied by the baseline as well.</value>
+    <value>Apply Microsoft 365 Apps Security Baseline on this page. You can also verify system compliance to get a precise report showing which settings are applied and which are not. You can remove the policies applied by the baseline as well.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
     <data name="StatusHeader.Text" xml:space="preserve">
@@ -2421,16 +2421,16 @@
   <value>Success and Failure</value>
 </data>
   <data name="MicrosoftSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Apply, Verify and Remove Microsoft Security Baseline in this page.</value>
+    <value>Apply, Verify and Remove Microsoft Security Baseline on this page.</value>
   </data>
     <data name="MicrosoftSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Apply, Verify and Remove Microsoft Security Baseline in this page.</value>
+    <value>Apply, Verify and Remove Microsoft Security Baseline on this page.</value>
   </data>
   <data name="Microsoft365AppsSecurityBaselineNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Apply, Verify and Remove Microsoft 365 Apps Security Baseline in this page.</value>
+    <value>Apply, Verify and Remove Microsoft 365 Apps Security Baseline on this page.</value>
   </data>
   <data name="Microsoft365AppsSecurityBaselineNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Apply, Verify and Remove Microsoft 365 Apps Security Baseline in this page.</value>
+    <value>Apply, Verify and Remove Microsoft 365 Apps Security Baseline on this page.</value>
   </data>
   <data name="MicrosoftBaseLinesOverridesNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Apply, Verify and Remove optional overrides for Microsoft Baselines.</value>
@@ -3804,10 +3804,10 @@ Thumbprint: {3}</value>
     <value>Cryptographic Bill of Materials</value>
   </data>
     <data name="CBOMNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>The Cryptographic Bill of Materials (CBOM) provides a system-level inventory of OS cryptography—algorithms, curves, cipher suites, and providers—capturing the platform's cryptographic posture.</value>
+    <value>The Cryptographic Bill of Materials (CBOM) provides a system-level inventory of OS cryptography-algorithms, curves, cipher suites, and providers-capturing the platform's cryptographic posture.</value>
   </data>
   <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>The Cryptographic Bill of Materials (CBOM) provides a system-level inventory of OS cryptography—algorithms, curves, cipher suites, and providers—capturing the platform's cryptographic posture.</value>
+    <value>The Cryptographic Bill of Materials (CBOM) provides a system-level inventory of OS cryptography-algorithms, curves, cipher suites, and providers-capturing the platform's cryptographic posture.</value>
   </data>
   <data name="CBOMPageTitle.Text" xml:space="preserve">
     <value>The Cryptographic Bill of Materials (CBOM) offers a system-level inventory and introspection of the operating system cryptography, surfacing the algorithms, curves, cipher suites, and providers that define the platform's cryptographic posture. By normalizing what the OS exposes, it delivers SBOM-like transparency for crypto: enabling evidence-based audits, baseline conformance checks, drift detection across updates, identification of legacy/weak primitives, and planning for post-quantum transitions.</value>

@@ -33,52 +33,76 @@
                                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-            <customUI:ButtonV2 Grid.Row="2"
-                               Margin="0,0,0,20"
-                               x:Name="PickPolicyFileButton"
-                               ObservedData="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
-                               IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                               Click="{x:Bind ViewModel.PickPolicyFileButton_Click}"
-                               HorizontalAlignment="Center"
-                               x:Uid="SelectAppControlPolicyFileButton">
+            <controls:WrapPanel Orientation="Horizontal"
+                                HorizontalSpacing="20"
+                                VerticalSpacing="10"
+                                HorizontalAlignment="Center"
+                                Margin="0,0,0,20"
+                                Grid.Row="2">
 
-                <Button.ContentTemplate>
-                    <DataTemplate x:DataType="x:String" xmlns:VMs="using:AppControlManager.ViewModels">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <AnimatedIcon Visibility="{x:Bind VMs:ViewModelProvider.ConfigurePolicyRuleOptionsVM.BrowseForXMLPolicyButtonLightAnimatedIconVisibility, Mode=OneWay}"
+                <customUI:ButtonV2 x:Name="PickPolicyFileButton"
+                                   ObservedData="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
+                                   IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                   Click="{x:Bind ViewModel.PickPolicyFileButton_Click}"                               
+                                   x:Uid="SelectAppControlPolicyFileButton">
+
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String" xmlns:VMs="using:AppControlManager.ViewModels">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <AnimatedIcon Visibility="{x:Bind VMs:ViewModelProvider.ConfigurePolicyRuleOptionsVM.BrowseForXMLPolicyButtonLightAnimatedIconVisibility, Mode=OneWay}"
                                           Height="20"
                                           Margin="0,0,5,0"
                                           Width="20">
-                                <AnimatedIcon.Source>
-                                    <animatedvisuals:Light/>
-                                </AnimatedIcon.Source>
-                            </AnimatedIcon>
-                            <TextBlock Text="{x:Bind}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </Button.ContentTemplate>
+                                    <AnimatedIcon.Source>
+                                        <animatedvisuals:Light/>
+                                    </AnimatedIcon.Source>
+                                </AnimatedIcon>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
 
-                <customUI:ButtonV2.Flyout>
-                    <Flyout x:Name="PickPolicyFileButton_FlyOut">
+                    <customUI:ButtonV2.Flyout>
+                        <Flyout x:Name="PickPolicyFileButton_FlyOut">
 
-                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                            <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.PickPolicyFileButton_FlyOut_Clear_Click}" />
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.PickPolicyFileButton_FlyOut_Clear_Click}" />
 
-                            <TextBlock x:Uid="ViewSelectedPolicyPathsTextBlock" TextWrapping="WrapWholeWords" />
+                                <TextBlock x:Uid="ViewSelectedPolicyPathsTextBlock" TextWrapping="WrapWholeWords" />
 
-                            <TextBox Text="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
-                                     TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
-                                     MinWidth="400" IsReadOnly="True" />
+                                <TextBox Text="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
+                                         TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
+                                         MinWidth="400" IsReadOnly="True" />
 
-                        </controls:WrapPanel>
+                            </controls:WrapPanel>
 
-                    </Flyout>
-                </customUI:ButtonV2.Flyout>
+                        </Flyout>
+                    </customUI:ButtonV2.Flyout>
 
-            </customUI:ButtonV2>
+                </customUI:ButtonV2>
 
-            <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="3" Margin="0,20,0,0">
+                <Border CornerRadius="10"
+                        Padding="7"
+                        BorderThickness="1"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                    <Border.BorderBrush>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#66FFFFFF" Offset="0.0"/>
+                            <GradientStop Color="#33FFFFFF" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </Border.BorderBrush>
+
+                    <ToggleSwitch x:Uid="EnableUnsupportedPolicyRuleOptionsToggleSwitch"
+                                  IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                  IsOn="{x:Bind ViewModel.AreUnsupportedRuleOptionsEnabled, Mode=TwoWay}"/>
+                </Border>
+
+            </controls:WrapPanel>
+
+            <StackPanel HorizontalAlignment="Stretch"
+                        Spacing="{StaticResource SettingsCardSpacing}"
+                        Grid.Row="3">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
@@ -86,6 +110,7 @@
                 </win:StackPanel.ChildrenTransitions>
 
                 <controls:SettingsExpander x:Uid="PolicyRuleExpander"
+                                           IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                            IsExpanded="{x:Bind ViewModel.SettingsExpanderIsExpanded, Mode=TwoWay}"
                                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
@@ -123,6 +148,7 @@
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 Header="Enabled:Boot Menu Protection"
+                                                 IsEnabled="{x:Bind ViewModel.AreUnsupportedRuleOptionsEnabled, Mode=OneWay}"
                                                  ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Boot Menu Protection'], Mode=OneTime}"
                                                  Description="{x:Bind ViewModel.RuleOptions['Enabled:Boot Menu Protection'], Mode=OneTime}">
                             <CheckBox IsChecked="{x:Bind ViewModel.EnabledBootMenuProtectionCheckBox, Mode=TwoWay}"
@@ -151,6 +177,7 @@
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 Header="Enabled:Inherit Default Policy"
+                                                 IsEnabled="{x:Bind ViewModel.AreUnsupportedRuleOptionsEnabled, Mode=OneWay}"
                                                  ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Inherit Default Policy'], Mode=OneTime}"
                                                  Description="{x:Bind ViewModel.RuleOptions['Enabled:Inherit Default Policy'], Mode=OneTime}">
                             <CheckBox IsChecked="{x:Bind ViewModel.EnabledInheritDefaultPolicyCheckBox, Mode=TwoWay}"
@@ -165,6 +192,7 @@
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 Header="Required:EV Signers"
+                                                 IsEnabled="{x:Bind ViewModel.AreUnsupportedRuleOptionsEnabled, Mode=OneWay}"
                                                  ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Required:EV Signers'], Mode=OneTime}"
                                                  Description="{x:Bind ViewModel.RuleOptions['Required:EV Signers'], Mode=OneTime}">
                             <CheckBox IsChecked="{x:Bind ViewModel.RequiredEVSignersCheckBox, Mode=TwoWay}"
@@ -263,6 +291,7 @@
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 Header="Enabled:Secure Setting Policy"
+                                                 IsEnabled="{x:Bind ViewModel.AreUnsupportedRuleOptionsEnabled, Mode=OneWay}"
                                                  ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Secure Setting Policy'], Mode=OneTime}"
                                                  Description="{x:Bind ViewModel.RuleOptions['Enabled:Secure Setting Policy'], Mode=OneTime}">
                             <CheckBox IsChecked="{x:Bind ViewModel.EnabledSecureSettingPolicyCheckBox, Mode=TwoWay}"
@@ -270,6 +299,7 @@
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 Header="Enabled:Conditional Windows Lockdown Policy"
+                                                 IsEnabled="{x:Bind ViewModel.AreUnsupportedRuleOptionsEnabled, Mode=OneWay}"
                                                  ToolTipService.ToolTip="{x:Bind ViewModel.RuleOptions['Enabled:Conditional Windows Lockdown Policy'], Mode=OneTime}"
                                                  Description="{x:Bind ViewModel.RuleOptions['Enabled:Conditional Windows Lockdown Policy'], Mode=OneTime}">
                             <CheckBox IsChecked="{x:Bind ViewModel.EnabledConditionalWindowsLockdownPolicyCheckBox, Mode=TwoWay}"

@@ -177,8 +177,14 @@ internal static class CiToolHelper
 
 		// Remove any curly brackets or double quotes from the policy ID
 		// They will be added automatically later by the method
-		policyId = policyId.Trim('"', '"');
-		policyId = policyId.Trim('{', '}');
+		policyId = policyId.Trim('"', '{', '}');
+
+		if (App.Settings.UseV2CIManagement)
+		{
+			Logger.Write("Using alternative method for removing policy");
+			CIManager.RemovePolicyByID(policyId);
+			return;
+		}
 
 		// Set up the process start info to run CiTool.exe with necessary arguments
 		ProcessStartInfo processStartInfo = new()
@@ -228,8 +234,14 @@ internal static class CiToolHelper
 
 			// Remove any curly brackets or double quotes from the policy ID
 			// They will be added automatically later by the method
-			string ID = policyId.Trim('"', '"');
-			ID = ID.Trim('{', '}');
+			string ID = policyId.Trim('"', '{', '}');
+
+			if (App.Settings.UseV2CIManagement)
+			{
+				Logger.Write("Using alternative method for removing policy");
+				CIManager.RemovePolicyByID(policyId);
+				continue;
+			}
 
 			// Set up the process start info to run CiTool.exe with necessary arguments
 			ProcessStartInfo processStartInfo = new()
@@ -293,6 +305,13 @@ internal static class CiToolHelper
 			string.Format(
 				GlobalVars.GetStr("DeployingCipFileMessage"),
 				CipPath));
+
+		if (App.Settings.UseV2CIManagement)
+		{
+			Logger.Write("Using alternative method for deploying policy");
+			CIManager.Add(File.ReadAllBytes(CipPath));
+			return;
+		}
 
 		// Set up the process start info to run CiTool.exe with necessary arguments
 		ProcessStartInfo processStartInfo = new()

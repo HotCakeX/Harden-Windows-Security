@@ -1015,9 +1015,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="DeployingXMLFile" xml:space="preserve">
     <value>Implementando actualmente el archivo XML: '</value>
   </data>
-  <data name="SignedPolicyError" xml:space="preserve">
-    <value>El archivo XML '</value>
-  </data>
   <data name="DeploymentError" xml:space="preserve">
     <value>Hubo un error al implementar los archivos XML seleccionados</value>
   </data>
@@ -1284,7 +1281,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Creando la directiva de modo Kernel Estricto</value>
   </data>
   <data name="PolicyCreationError" xml:space="preserve">
-    <value>Hubo un error al crear la directiva de modo Kernel Estricto: </value>
+    <value>Hubo un error al crear la directiva de modo Kernel Estricto:</value>
   </data>
   <data name="PolicyCreatedSuccessfully" xml:space="preserve">
     <value>Se creó correctamente la directiva de modo Kernel Estricto</value>
@@ -2730,7 +2727,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Deshabilitado/No en ejecución</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_ENABLED" xml:space="preserve">
-    <comment>Enforcement of kernel‑mode Code Integrity is enabled</comment>
+    <comment>Enforcement of kernel-mode Code Integrity is enabled</comment>
     <value>La aplicación de la Integridad de Código en modo kernel está habilitada.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_TESTSIGN" xml:space="preserve">
@@ -2738,15 +2735,15 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>El contenido firmado de prueba está permitido por la Integridad de Código.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_ENABLED" xml:space="preserve">
-    <comment>Enforcement of user‑mode Code Integrity is enabled</comment>
+    <comment>Enforcement of user-mode Code Integrity is enabled</comment>
     <value>La aplicación de la Integridad de Código en modo usuario está habilitada.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED" xml:space="preserve">
-    <comment>User‑mode Code Integrity is enabled in audit mode</comment>
+    <comment>User-mode Code Integrity is enabled in audit mode</comment>
     <value>La aplicación de la Integridad de Código en modo usuario está habilitada en modo auditoría.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED" xml:space="preserve">
-    <comment>User‑mode binaries from certain paths can bypass CI checks</comment>
+    <comment>User-mode binaries from certain paths can bypass CI checks</comment>
     <value>Los binarios en modo usuario de ciertas rutas pueden ejecutarse incluso si fallan las comprobaciones de integridad de código.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_TEST_BUILD" xml:space="preserve">
@@ -2754,7 +2751,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>La compilación de Integridad de Código es de una compilación de prueba.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD" xml:space="preserve">
-    <comment>The Code Integrity component is from a pre‑production build</comment>
+    <comment>The Code Integrity component is from a pre-production build</comment>
     <value>La compilación de Integridad de Código es de una compilación de preproducción.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED" xml:space="preserve">
@@ -2766,11 +2763,11 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>La compilación de Integridad de Código es de una compilación de prueba (flight).</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_FLIGHTING_ENABLED" xml:space="preserve">
-    <comment>Flight‑signed content is allowed by Code Integrity</comment>
+    <comment>Flight-signed content is allowed by Code Integrity</comment>
     <value>El contenido firmado de prueba (flight) está permitido por la Integridad de Código.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode</comment>
     <value>La Integridad de Código aplicada por hipervisor está habilitada para los componentes en modo kernel.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED" xml:space="preserve">
@@ -2778,7 +2775,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>La Integridad de Código aplicada por hipervisor está habilitada en modo auditoría.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode in strict mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode in strict mode</comment>
     <value>La Integridad de Código aplicada por hipervisor está habilitada para el modo kernel en modo estricto.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED" xml:space="preserve">
@@ -3341,7 +3338,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Se generaron {0} registro(s) durante la fase de Auditoría</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>Ocurrió un error al escanear el sistema: </value>
+    <value>Ocurrió un error al escanear el sistema:</value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>Se escaneó el sistema en busca de eventos correctamente</value>
@@ -3368,7 +3365,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Escaneando {0} archivos</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>Hubo un error: </value>
+    <value>Hubo un error:</value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>Se escaneó el sistema en busca de controladores correctamente</value>
@@ -3419,7 +3416,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Convirtiendo {0} a CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>Hubo un problema al convertir los archivos XML a CIP: </value>
+    <value>Hubo un problema al convertir los archivos XML a CIP:</value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>Se convirtieron correctamente todos los archivos XML seleccionados a binarios CIP</value>
@@ -3428,7 +3425,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Escaneando los registros de eventos...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>Hubo un error durante el escaneo de registros: </value>
+    <value>Hubo un error durante el escaneo de registros:</value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>Escaneo completo. Se encontraron {0} registros.</value>
@@ -3470,7 +3467,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>No se proporcionó ningún GUID de Directiva Base para usar como BasePolicyID de la directiva suplementaria.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>Hubo un error al procesar los registros: </value>
+    <value>Hubo un error al procesar los registros:</value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>Se procesaron los registros correctamente y se incluyeron en la directiva.</value>
@@ -3488,7 +3485,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Realizando la Simulación</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>Hubo un problema durante la simulación: </value>
+    <value>Hubo un problema durante la simulación:</value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>La simulación se completó correctamente.</value>
@@ -3503,7 +3500,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>Cargando la directiva</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>Hubo un problema al cargar el archivo de directiva seleccionado: </value>
+    <value>Hubo un problema al cargar el archivo de directiva seleccionado:</value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>Se cargó correctamente la directiva seleccionada</value>
@@ -3899,7 +3896,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>El usuario canceló el inicio de sesión en MSGraph</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>Hubo un error al iniciar sesión en MSGraph: </value>
+    <value>Hubo un error al iniciar sesión en MSGraph:</value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>La Consulta de Búsqueda Avanzada de MDE ha sido Exitosa.</value>
@@ -3949,10 +3946,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
     <value>Error al crear la directiva personalizada. Código de estado: {0}</value>
   </data>
-  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
-    <value>El tamaño del archivo de directiva CIP excede el límite de {0} bytes.</value>
-  </data>
-    <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
+  <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
     <value>Configuraciones del dispositivo recuperadas correctamente.</value>
   </data>
   <data name="FailedToRetrieveDeviceConfigurationsMessage" xml:space="preserve">
@@ -4094,7 +4088,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>No se detectaron resultados en los registros CSV de Búsqueda Avanzada de MDE seleccionados.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>Hubo un error al escanear los Registros CSV de Búsqueda Avanzada de MDE seleccionados: </value>
+    <value>Hubo un error al escanear los Registros CSV de Búsqueda Avanzada de MDE seleccionados:</value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>Se completó correctamente el escaneo de los Registros CSV de Búsqueda Avanzada de MDE seleccionados.</value>
@@ -4115,7 +4109,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>No se seleccionó ningún archivo de directiva para asociar la directiva Suplementaria.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>Hubo un error al crear la directiva Suplementaria: </value>
+    <value>Hubo un error al crear la directiva Suplementaria:</value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>Recuperando los datos de Búsqueda Avanzada de Microsoft Defender para Endpoint</value>
@@ -4136,7 +4130,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
     <value>No se encontraron registros procesables entre los datos recuperados para crear una directiva Suplementaria.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>Hubo un error al recuperar los registros de Búsqueda Avanzada de MDE desde MSGraph: </value>
+    <value>Hubo un error al recuperar los registros de Búsqueda Avanzada de MDE desde MSGraph:</value>
   </data>
     <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>Agregar registros a la directiva seleccionada</value>
@@ -4479,9 +4473,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 </data>
 <data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
   <value>Se esperaba la etiqueta de fin de directiva '{0}', se obtuvo '{1}'.</value>
-</data>
-<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
-  <value>El archivo XML '{0}' no es compatible con el esquema de directiva CI</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>El tipo de directiva es {0} y tiene la opción de regla {1} que no es válida. Solo {2} puede tenerla.</value>
@@ -6122,4 +6113,37 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Abrir la política seleccionada en el Editor de Políticas, donde puedes ver una vista general detallada de la política y tienes la opción de personalizarla más dentro de esta aplicación.</value>
   </data>
-  </root>
+    <data name="SignedPolicyError" xml:space="preserve">
+    <value>El archivo de directiva '{0}' no tiene la opción de regla EnabledUnsignedSystemIntegrityPolicy. No se puede implementar en modo sin firma.</value>
+  </data>
+  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>El archivo binario de la directiva '{0}' supera el límite de tamaño de {1} bytes. Su tamaño es de {2} bytes.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.Header" xml:space="preserve">
+    <value>Disponibilidad de reglas no compatibles</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Indica si las opciones de reglas de la directiva que no están compatibles o no están documentadas están habilitadas o deshabilitadas.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Indica si las opciones de reglas de la directiva que no están compatibles o no están documentadas están habilitadas o deshabilitadas.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OnContent" xml:space="preserve">
+    <value>Disponible</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OffContent" xml:space="preserve">
+    <value>No disponible</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Description" xml:space="preserve">
+    <value>Habilite esta característica para poner a disposición métodos alternativos para implementar y quitar directivas de App Control. Estos métodos no dependen del ejecutable CiTool y pueden usarse si CiTool está bloqueado o no está disponible.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Header" xml:space="preserve">
+    <value>Usar administración de Code Integrity V2</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Habilite esta característica para poner a disposición métodos alternativos para implementar y quitar directivas de App Control. Estos métodos no dependen del ejecutable CiTool y pueden usarse si CiTool está bloqueado o no está disponible.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Habilite esta característica para poner a disposición métodos alternativos para implementar y quitar directivas de App Control. Estos métodos no dependen del ejecutable CiTool y pueden usarse si CiTool está bloqueado o no está disponible.</value>
+  </data>
+</root>

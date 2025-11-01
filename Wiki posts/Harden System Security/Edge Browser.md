@@ -44,7 +44,7 @@
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Policy](https://learn.microsoft.com/DeployEdge/microsoft-edge-policies#defaultwebusbguardsetting) that will prevent websites to even request access to the local connected USB devices.
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Policy](https://learn.microsoft.com/DeployEdge/microsoft-edge-policies#defaultwebusbguardsetting) that will prevent websites from even requesting access to the local connected USB devices.
 
 <br>
 

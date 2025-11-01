@@ -82,7 +82,7 @@ Depending on your organization's or personal needs you can disallow the rest of 
 
 The same settings can be found in Intune as well
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Secure%20Bitlocker%20key%20protector%20policies%20in%20Intune%20portal.png" alt="Secure Bitlocker key protector policies in Intune portal">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Secure%20Bitlocker%20key%20protector%20policies%20in%20Intune%20portal.png" alt="Secure BitLocker key protector policies in Intune portal">
 
 <br>
 
@@ -90,13 +90,13 @@ A few seconds after enrolling the device in Intune, you will see a notification
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Intune%20encrolled%20device%20Bitlocker%20notification%20for%20encryotion.png" alt="Intune encrolled device Bitlocker notification for encryption">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Intune%20encrolled%20device%20Bitlocker%20notification%20for%20encryotion.png" alt="Intune encrolled device BitLocker notification for encryption">
 
 </div>
 
 <br>
 
-After clicking on the notification and accepting the next prompt, you will see this window allowing you to choose a key protector. As you can see, the `Let Bitlocker Automatically Unlock My Drive` option is grayed out because it would use only the TPM key protector and we disabled that in Intune/Group Policy.
+After clicking on the notification and accepting the next prompt, you will see this window allowing you to choose a key protector. As you can see, the `Let BitLocker Automatically Unlock My Drive` option is grayed out because it would use only the TPM key protector and we disabled that in Intune/Group Policy.
 
 <br>
 

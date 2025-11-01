@@ -8,7 +8,7 @@ This is part 1 of the **C# Tips And Tricks series**. These are not tutorials, bu
 
 When working in the modern IDE, Visual Studio 2025 and with .NET, you do not need to reference .NET dlls manually, they will be available to your project automatically.
 
-If you need to reference a DLL that is not part of the .NET by default, then use the [Nuget](https://www.nuget.org/) package manager to add it.
+If you need to reference a DLL that is not part of the .NET by default, then use the [NuGet](https://www.nuget.org/) package manager to add it.
 
 So if you have lines like this in your `.csproj` file, remove them completely.
 
@@ -25,7 +25,7 @@ So if you have lines like this in your `.csproj` file, remove them completely.
 
 <br>
 
-Nuget Package references look like this
+NuGet Package references look like this
 
 ```xml
 <ItemGroup>
@@ -257,10 +257,10 @@ If your WPF GUI only uses the Window object, then the Hot Reload feature will no
 
 ## Define The Size of the Collections Whenever You Can
 
-When creating a collection such as `List<T>`, `ObservableCollection<T>` and so on, define the capacity of them in the constructor in order to pre-size them to the number of items you know you will be adding. That produces the least growths and the most efficient additions.
+When creating a collection such as `List<T>`, `ObservableCollection<T>` and so on, define their capacity in the constructor in order to pre-size them to the number of items you know you will be adding. That produces the least growths and the most efficient additions.
 
 ## Use `IEnumerable<T>` Between Methods As Much As Possible
 
-The standard and most basic way to represent a "collection" is an `IEnumerable<T>`. If you require something more specific you force your users to allocate a copy before passing the collection to your method. You don't want to force your users into giving you a specific collection type as input. Just make sure you don't iterate over it twice because the item must not be materialized more than once or else performance will be degraded. E.g., if we are looping over the data more than 1 time, convert `IEnumerable` to a `list`.
+The standard and most basic way to represent a "collection" is an `IEnumerable<T>`. If you require something more specific you force your users to allocate a copy before passing the collection to your method. You don't want to force your users into giving you a specific collection type as input. Just make sure you don't iterate over it twice because the item must not be materialized more than once or else performance will be degraded. E.g., if we are looping over the data more than once, convert `IEnumerable` to a `list`.
 
 <br>

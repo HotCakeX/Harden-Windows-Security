@@ -9,7 +9,7 @@ Function AppControl {
     .PARAMETER MSIXBundlePath
         The path to the AppControlManager MSIXBundle file. If not provided, the latest MSIXBundle file will be downloaded from the GitHub.
     .PARAMETER SignTool
-       The path to the Microsoft's Signtool.exe; If not provided, the function automatically downloads the latest SignTool.exe from the Microsoft's Nuget repository and will use it for the signing operation.
+       The path to the Microsoft's Signtool.exe; If not provided, the function automatically downloads the latest SignTool.exe from the Microsoft's NuGet repository and will use it for the signing operation.
     #>
     [CmdletBinding()]
     param ([Parameter(Mandatory = $false)][string]$MSIXBundlePath, [Parameter(Mandatory = $False)][string]$SignTool)

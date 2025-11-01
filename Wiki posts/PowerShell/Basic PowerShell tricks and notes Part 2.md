@@ -135,7 +135,7 @@ Use PowerShell Preview if you want to test new features and don't need to call P
 
 Use cases for it are when you need to use `pwsh.exe` in Windows Task Scheduler.
 
-PowerShell Preview by default doesn't set its `pwsh.exe` available system wide, the path to that file isn't added to the system environment variables, only PowerShell stable does that, but of course if you want to use PowerShell preview you can manually modify the PATH environment variable to have `pwsh.exe` of PowerShell Preview be available system wide.
+PowerShell Preview by default doesn't set its `pwsh.exe` available system-wide, the path to that file isn't added to the system environment variables, only PowerShell stable does that, but of course if you want to use PowerShell preview you can manually modify the PATH environment variable to have `pwsh.exe` of PowerShell Preview be available system-wide.
 
 <br>
 

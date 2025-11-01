@@ -258,7 +258,7 @@ BitLocker is a Windows security feature that provides encryption for entire volu
 
 ### Startup Key (USB Flash Drive)
 
-Requires a USB flash drive to be inserted into the computer to start the computer. The USB flash drive must contain the startup key for the encrypted drive. **This key is only a portion of the complete key required to perform a successful authentication. The other portion of of the key is provided by the Startup PIN.**
+Requires a USB flash drive to be inserted into the computer to start the computer. The USB flash drive must contain the startup key for the encrypted drive. **This key is only a portion of the complete key required to perform a successful authentication. The other portion of the key is provided by the Startup PIN.**
 
 * [Read More](https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/faq#what-is-the-difference-between-a-tpm-owner-password--recovery-password--recovery-key--pin--enhanced-pin--and-startup-key)
 
@@ -515,6 +515,6 @@ This feature is constantly learning from phishing attacks seen throughout the en
 
 ## Continue Reading
 
-Head over to [the main page of the GitHub repository](https://github.com/HotCakeX/Harden-Windows-Security) to learn more about Windows Security and how to automate a lot of the features talked about in this page.
+Head over to [the main page of the GitHub repository](https://github.com/HotCakeX/Harden-Windows-Security) to learn more about Windows Security and how to automate a lot of the features talked about on this page.
 
 <br>

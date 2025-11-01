@@ -1,18 +1,42 @@
-AppControl Manager/.vs/
-AppControl Manager/bin/
-AppControl Manager/obj/
-AppControl Manager/MSIXOutputX64
-AppControl Manager/MSIXOutputARM64
-AppControl Manager/MSIXBundleOutput
-AppControl Manager/Generated Files/
-AppControl Manager/AppControl Manager.csproj.user
-AppControl Manager/Cargo.lock
-AppControl Manager/target
-Harden System Security/.vs/
-Harden System Security/bin/
-Harden System Security/obj/
-Harden System Security/MSIXOutputX64
-Harden System Security/MSIXOutputARM64
-Harden System Security/MSIXBundleOutput
-Harden System Security/Generated Files/
-Harden System Security/Harden System Security.csproj.user
+# Visual Studio cache
+.[vV][sS]/
+
+# .NET build outputs
+[bB][iI][nN]/
+[oO][bB][jJ]/
+
+# MSIX outputs (ignore these directories anywhere)
+[mM]SIXOutputX64/
+[mM]SIXOutputARM64/
+[mM]SIXBundleOutput/
+
+# Project-specific output folders
+[oO]utputX64/
+[oO]utputARM64/
+[aA][rR][mM]64/
+[xX]64/
+
+# Generated code folders
+[gG]enerated Files/
+
+# User-specific project files
+*.csproj.user
+
+# Rust artifacts
+[cC]argo.lock
+[tT]arget/
+
+# Visual Studio Publish Profile user files (match anywhere)
+*.[pP]ubxml.[uU]ser
+*.vcxproj.user
+
+# .NET log files
+*.[bB]inlog
+
+# App Packages
+*.[mM][sS][iI][xX]
+*.[mM][sS][iI][xX][bB][uU][nN][dD][lL][eE]
+*.[aA][pP][pP][xX]
+
+# Temp Files
+*.[tT][mM][pP]

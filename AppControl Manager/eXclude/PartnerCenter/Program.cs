@@ -80,15 +80,15 @@ internal sealed class ApplicationPackage
 
 	[JsonInclude]
 	[JsonPropertyName("languages")]
-	internal string[]? Languages { get; init; }
+	internal List<string>? Languages { get; init; }
 
 	[JsonInclude]
 	[JsonPropertyName("capabilities")]
-	internal string[]? Capabilities { get; init; }
+	internal List<string>? Capabilities { get; init; }
 
 	[JsonInclude]
 	[JsonPropertyName("targetDeviceFamilies")]
-	internal string[]? TargetDeviceFamilies { get; init; }
+	internal List<string>? TargetDeviceFamilies { get; init; }
 
 	/// <summary>
 	/// Validates that the JSON object contains exactly the expected properties.

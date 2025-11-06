@@ -27,7 +27,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-#pragma warning disable CA1303, CS0162
+#pragma warning disable CA1303, CS0162, CA1819
 
 // https://learn.microsoft.com/windows/uwp/monetize/manage-app-submissions#listing-object
 // https://learn.microsoft.com/windows/uwp/monetize/update-an-app-submission
@@ -80,15 +80,15 @@ internal sealed class ApplicationPackage
 
 	[JsonInclude]
 	[JsonPropertyName("languages")]
-	internal List<string>? Languages { get; init; }
+	internal string[]? Languages { get; init; }
 
 	[JsonInclude]
 	[JsonPropertyName("capabilities")]
-	internal List<string>? Capabilities { get; init; }
+	internal string[]? Capabilities { get; init; }
 
 	[JsonInclude]
 	[JsonPropertyName("targetDeviceFamilies")]
-	internal List<string>? TargetDeviceFamilies { get; init; }
+	internal string[]? TargetDeviceFamilies { get; init; }
 
 	/// <summary>
 	/// Validates that the JSON object contains exactly the expected properties.

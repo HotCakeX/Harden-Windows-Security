@@ -18,6 +18,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Atlas.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CIManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DISM\Types.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeMethods.cs" />
@@ -25,9 +26,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes_ExploitMitigation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\ComJsonDeserializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\GlobalVars.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\GroupInfoListForPackagedAppView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\HashMismatchInCertificateException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\HTTPHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\IExplicitDisposalOptIn.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\Logger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\PackagedAppView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\RgbHex.cs" />
@@ -35,12 +38,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Others\WindowDisplayAffinity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\LogLine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\LanguageOption.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\NoValidFilesSelectedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\BinaryProtocol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\Helpers.cs" />
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
-    <Compile Include="$(MSBuildThisFileDirectory)Others\GlobalVars.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\GetFilesFast.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\MeowOpener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\FileAccessCheck.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\FileDialogHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Others\GlobalVars_WINUI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\ReLaunch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\InfoBarSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\ProcessStarter.cs" />

@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Formats.Asn1;
@@ -29,7 +28,6 @@ using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json.Serialization;
-using AppControlManager.Others;
 
 namespace HardenSystemSecurity.Vyre;
 

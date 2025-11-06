@@ -149,7 +149,10 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 			{
 				await Task.Run(() =>
 				{
-					IsValid = CiPolicyTest.TestCiPolicy(selectedFile);
+					// Throws if the policy is invalid.
+					CiPolicyTest.TestCiPolicy(selectedFile);
+
+					IsValid = true;
 
 					if (IsValid && Level2Test)
 					{

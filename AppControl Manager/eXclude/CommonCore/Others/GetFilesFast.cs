@@ -24,7 +24,7 @@ using System.IO.Enumeration;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 internal static class FileUtility
 {

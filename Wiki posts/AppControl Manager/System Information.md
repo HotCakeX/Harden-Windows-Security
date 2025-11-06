@@ -31,7 +31,7 @@ Use this section in [AppControl Manager](https://github.com/HotCakeX/Harden-Wind
 <br>
 
 > [!TIP]\
-> You can view the version of the Microsoft Vulnerable Driver Block List in this page by checking the box for including System policies in the list.
+> You can view the version of the Microsoft Vulnerable Driver Block List on this page by checking the box for including System policies in the list.
 
 <br>
 
@@ -72,7 +72,7 @@ Signed Base policies require additional information during the removal process. 
 
 * **XML File**: The path to the XML policy file of the same policy you're trying to remove from the system.
 
-Once all four fields are populated, press the **Verify** button. This action validates your inputs and enables the **Submit** button, allowing you to proceed with the removal process. All of the information you submit will be saved in app settings so that the next time they will be automatically populated for you.
+Once all three fields are populated, press the **Verify** button. This action validates your inputs and enables the **Submit** button, allowing you to proceed with the removal process. All of the information you submit will be saved in app settings so that the next time they will be automatically populated for you.
 
 Following this step, the policy will be re-signed and redeployed on the system with a new [rule option](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-1-app-control-for-business-policy---policy-rule-options) labeled **Enabled: Unsigned System Integrity Policy**.
 

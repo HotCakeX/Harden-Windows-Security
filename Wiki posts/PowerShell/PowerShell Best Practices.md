@@ -1,6 +1,6 @@
 # PowerShell Best Practices To Follow When Coding
 
-It is important to follow best practices when coding in PowerShell to ensure that your codes are efficient, maintainable, and secure.
+It is important to follow best practices when coding in PowerShell to ensure that your code is efficient, maintainable, and secure.
 
 <br>
 

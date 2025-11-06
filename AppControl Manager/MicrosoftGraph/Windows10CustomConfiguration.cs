@@ -21,14 +21,20 @@ using System.Text.Json.Serialization;
 namespace AppControlManager.MicrosoftGraph;
 
 /// <summary>
-/// Define the class structure for the custom policy
+/// Define the class structure for the custom policy.
+/// https://learn.microsoft.com/graph/api/resources/intune-deviceconfig-windows10customconfiguration?view=graph-rest-beta
 /// </summary>
 internal sealed class Windows10CustomConfiguration(
 	string? oDataType,
 	string? displayName,
 	string? description,
-	List<OmaSettingBase64>? omaSettings,
-	List<string>? platforms
+	string? id,
+	DateTimeOffset? lastModifiedDateTime,
+	List<string>? roleScopeTagIds,
+	bool supportsScopeTags,
+	DateTimeOffset? createdDateTime,
+	int version,
+	List<OmaSettingBase64>? omaSettings
 )
 {
 	/// <summary>
@@ -53,16 +59,51 @@ internal sealed class Windows10CustomConfiguration(
 	internal string? Description => description;
 
 	/// <summary>
+	/// Unique identifier for the policy.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("id")]
+	internal string? Id => id;
+
+	/// <summary>
+	/// Date and time when the policy was last modified.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("lastModifiedDateTime")]
+	internal DateTimeOffset? LastModifiedDateTime => lastModifiedDateTime;
+
+	/// <summary>
+	/// List of role scope tag identifiers.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("roleScopeTagIds")]
+	internal List<string>? RoleScopeTagIds => roleScopeTagIds;
+
+	/// <summary>
+	/// Indicates whether the policy supports scope tags.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("supportsScopeTags")]
+	internal bool SupportsScopeTags => supportsScopeTags;
+
+	/// <summary>
+	/// Date and time when the policy was created.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("createdDateTime")]
+	internal DateTimeOffset? CreatedDateTime => createdDateTime;
+
+	/// <summary>
+	/// Version of the policy.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("version")]
+	internal int Version => version;
+
+	/// <summary>
 	/// The OMA settings associated with the configuration.
 	/// </summary>
 	[JsonInclude]
 	[JsonPropertyName("omaSettings")]
 	internal List<OmaSettingBase64>? OmaSettings => omaSettings;
-
-	/// <summary>
-	/// The platforms applicable to the configuration.
-	/// </summary>
-	[JsonInclude]
-	[JsonPropertyName("platforms")]
-	internal List<string>? Platforms => platforms;
 }

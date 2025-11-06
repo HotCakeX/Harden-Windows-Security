@@ -20,7 +20,10 @@ using System.Text.Json.Serialization;
 
 namespace AppControlManager.MicrosoftGraph;
 
-internal sealed class GroupCreatePayload(
+/// <summary>
+/// https://learn.microsoft.com/graph/api/resources/group?view=graph-rest-beta
+/// </summary>
+internal sealed class Group(
 	string? displayName,
 	string? description,
 	bool mailEnabled,

@@ -18,7 +18,6 @@
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
-using AppControlManager.Others;
 using HardenSystemSecurity.GroupPolicy;
 
 namespace HardenSystemSecurity.Helpers;

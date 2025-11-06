@@ -162,7 +162,7 @@
 	</PropertyGroup>
 
 	<!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
-    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    Tools extension to be activated for this project even if the Windows App SDK NuGet
     package has not yet been restored. -->
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
@@ -192,8 +192,6 @@
 		<Compile Include="..\AppControl Manager\Others\AppUpdate.cs" Link="Others\AppUpdate.cs" />
 		<Compile Include="..\AppControl Manager\Others\ClipboardManagement.cs" Link="Others\ClipboardManagement.cs" />
 		<Compile Include="..\AppControl Manager\Others\EventLogUtility.cs" Link="Others\EventLogUtility.cs" />
-		<Compile Include="..\AppControl Manager\Others\FileAccessCheck.cs" Link="Others\FileAccessCheck.cs" />
-		<Compile Include="..\AppControl Manager\Others\FileDialogHelper.cs" Link="Others\FileDialogHelper.cs" />
 		<Compile Include="..\AppControl Manager\Others\ListViewHelper-Shared.cs" Link="Others\ListViewHelper-Shared.cs" />
 		<Compile Include="..\AppControl Manager\Others\UniqueStringObservableCollection.cs" Link="Others\UniqueStringObservableCollection.cs" />
 		<Compile Include="..\AppControl Manager\Others\UpdateAvailableEventArgs.cs" Link="Others\UpdateAvailableEventArgs.cs" />
@@ -218,10 +216,9 @@
 		<Compile Include="..\AppControl Manager\WindowComponents\NavigationService.cs" Link="WindowComponents\NavigationService.cs" />
 		<Compile Include="..\AppControl Manager\WindowComponents\PageTitleMap.cs" Link="WindowComponents\PageTitleMap.cs" />
 		<Compile Include="..\AppControl Manager\Others\GetAppsList.cs" Link="Others\GetAppsList.cs" />
-		<Compile Include="..\AppControl Manager\Others\IExplicitDisposeOptIn.cs" Link="Others\IExplicitDisposeOptIn.cs" />
 	</ItemGroup>
 
-	<!-- Nuget packages
+	<!-- NuGet packages
         All transitive/nested packages under the main packages are added as well
         so they can be updated separately and receive bug/security vulnerability fixes faster
         https://devblogs.microsoft.com/nuget/introducing-transitive-dependencies-in-visual-studio/
@@ -252,7 +249,7 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
 		<PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.14.0" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3595.46" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6901" />
 		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.2.25502.107" />
 		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.2.25502.107" />

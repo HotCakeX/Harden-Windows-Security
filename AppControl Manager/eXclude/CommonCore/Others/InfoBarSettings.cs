@@ -94,7 +94,7 @@ internal sealed class InfoBarSettings(
 				IsClosable = false;
 			});
 		}
-		Logger.Write(title is not null ? title + ": " + Msg : Msg);
+		Logger.Write(title is not null ? CreateProperString(title) + Msg : Msg);
 	}
 
 	internal void WriteWarning(string Msg, string? title = null)
@@ -119,7 +119,7 @@ internal sealed class InfoBarSettings(
 			});
 		}
 
-		Logger.Write(title is not null ? title + ": " + Msg : Msg);
+		Logger.Write(title is not null ? CreateProperString(title) + Msg : Msg);
 	}
 
 	internal void WriteError(Exception ex, string? Msg = null, string? title = null)
@@ -127,7 +127,7 @@ internal sealed class InfoBarSettings(
 		if (DQ.HasThreadAccess)
 		{
 			IsOpen = true;
-			Message = Msg is not null ? Msg + ex.Message : ex.Message;
+			Message = Msg is not null ? CreateProperString(Msg) + ex.Message : ex.Message;
 			Title = title ?? GlobalVars.GetStr("ErrorTitle");
 			Severity = InfoBarSeverity.Error;
 			IsClosable = true;
@@ -137,7 +137,7 @@ internal sealed class InfoBarSettings(
 			_ = DQ.TryEnqueue(() =>
 			{
 				IsOpen = true;
-				Message = Msg is not null ? Msg + ex.Message : ex.Message;
+				Message = Msg is not null ? CreateProperString(Msg) + ex.Message : ex.Message;
 				Title = title ?? GlobalVars.GetStr("ErrorTitle");
 				Severity = InfoBarSeverity.Error;
 				IsClosable = true;
@@ -167,6 +167,16 @@ internal sealed class InfoBarSettings(
 				IsClosable = true;
 			});
 		}
-		Logger.Write(title is not null ? title + ": " + Msg : Msg);
+		Logger.Write(title is not null ? CreateProperString(title) + Msg : Msg);
 	}
+
+	private static readonly char[] CharsToTrim = [' ', ':', '.'];
+
+	/// <summary>
+	/// Make sure all compound strings end with ": " which form the first part of a message.
+	/// </summary>
+	/// <param name="str"></param>
+	/// <returns></returns>
+	private static string CreateProperString(string str) => str.TrimEnd(CharsToTrim) + ": ";
+
 }

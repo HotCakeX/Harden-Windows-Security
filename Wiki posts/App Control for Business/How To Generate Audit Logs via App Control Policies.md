@@ -103,7 +103,7 @@ AppControl Manager will begin scanning all of the related logs in Code Integrity
 
 <br>
 
-Once you're done with filtering the logs, press the `Create Policy` button's small arrow on the right. It will open a flyout with 3 options. The options are explained [in this page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs#configuration-details). In this case, we need to select the middle option called `Base Policy File` and then select the `Browse` Button. A file picker dialog will open, allowing you to select the base policy XML file that you created and deployed earlier.
+Once you're done with filtering the logs, press the `Create Policy` button's small arrow on the right. It will open a flyout with 3 options. The options are explained [on this page](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs#configuration-details). In this case, we need to select the middle option called `Base Policy File` and then select the `Browse` Button. A file picker dialog will open, allowing you to select the base policy XML file that you created and deployed earlier.
 
 <br>
 

@@ -116,7 +116,7 @@ You can use the [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-
 > A manual way to get the TBS Hash value of a certificate is using the following command, which also works for signed files and will show the details of the certificates in the chain as well.
 >
 > ```powershell
-> certutil.exe –v <Path To .cer file>
+> certutil.exe -v <Path To .cer file>
 > ```
 >
 

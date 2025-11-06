@@ -279,6 +279,11 @@
                                       SelectedItem="{x:Bind ViewModel.AppSettings.ListViewFontFamily, Mode=TwoWay}" />
                         </customUI:SettingsCardV2>
 
+                        <customUI:SettingsCardV2 x:Uid="UseV2CIManagementSettingsCard" HeaderIcon="{ui:FontIcon Glyph=&#xE794;}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.UseV2CIManagement, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"/>
+                        </customUI:SettingsCardV2>
+
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 

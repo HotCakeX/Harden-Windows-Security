@@ -16,7 +16,6 @@
 //
 
 using System.Threading.Tasks;
-using AppControlManager.Others;
 using Windows.UI.StartScreen;
 
 namespace AppControlManager.Taskbar;

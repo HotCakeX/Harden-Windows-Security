@@ -57,6 +57,8 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 	internal string PolicyTemplatesComboBoxSelectedItem { get; set => SP(ref field, value); } = "Base";
 
+	internal bool AreUnsupportedRuleOptionsEnabled { get; set => SP(ref field, value); }
+
 	/// <summary>
 	/// To store the selected policy path
 	/// </summary>

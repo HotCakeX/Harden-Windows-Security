@@ -28,10 +28,9 @@ internal static class CiPolicyTest
 	/// Gets the path to an App Control XML file and validates it against the schema
 	/// </summary>
 	/// <param name="xmlFilePath"></param>
-	/// <returns></returns>
 	/// <exception cref="FileNotFoundException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static bool TestCiPolicy(string xmlFilePath)
+	internal static void TestCiPolicy(string xmlFilePath)
 	{
 
 		// Get the Code Integrity Schema file path
@@ -89,7 +88,5 @@ internal static class CiPolicyTest
 		using XmlReader reader = XmlReader.Create(new StringReader(xmlDoc.OuterXml), settings);
 		// Validate the XML document
 		while (reader.Read()) { }
-
-		return true;
 	}
 }

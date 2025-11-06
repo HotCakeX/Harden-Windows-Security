@@ -12,7 +12,7 @@
 
 The [clean source principle](https://aka.ms/cleansource) states that all security dependencies must be as trustworthy as the object being secured. The source of the control and/or trust must have an equal or higher level of trustworthiness and/or security than the destination.
 
-This article reveals the significance of the clean source principle, common short comings, and how it radically transforms the security architecture paradigm.
+This article reveals the significance of the clean source principle, common shortcomings, and how it radically transforms the security architecture paradigm.
 
 <br>
 
@@ -28,7 +28,7 @@ Let us assume that you create an Azure VM, which we will refer to as the “Host
 
 ### How to Use BitLocker in Azure
 
-You can utilize Bitlocker in Azure to encrypt the disks of the virtual machines. The service is called [Azure Disk Encryption](https://learn.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-overview), and it employs Key Vault to store the key instead of a TPM.
+You can utilize BitLocker in Azure to encrypt the disks of the virtual machines. The service is called [Azure Disk Encryption](https://learn.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-overview), and it employs Key Vault to store the key instead of a TPM.
 
 Key Vaults are extremely economical, and disk encryption does not incur any licensing fees, only Key Vault hosting, which is negligible.
 

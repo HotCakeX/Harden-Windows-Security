@@ -236,7 +236,7 @@
     <value>Permitir que el sistema operativo requiera autenticación adicional al inicio</value>
 </data>
 <data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
-    <value>No permitir Bitlocker sin TPM</value>
+    <value>No permitir BitLocker sin TPM</value>
 </data>
 <data name="UseTPM-BitLocker" xml:space="preserve">
     <value>No permitir solo TPM</value>
@@ -908,10 +908,10 @@
     <value>Forzar protección de clave fuerte para las claves de usuario almacenadas en la computadora. Podrá guardar de forma segura las claves privadas de los certificados que instale en la computadora y también se requerirán las mismas credenciales al acceder a la clave privada como para operaciones de firma.</value>
 </data>
 <data name="LockoutBadCount-LockScreen" xml:space="preserve">
-    <value>Establecer el número de intentos de inicio de sesión fallidos permitidos en 5. En combinación con otras políticas en esta categoría, esto significa que cada 5 intentos de inicio de sesión fallidos necesitarán que pase un día completo antes de permitir 5 intentos más, de lo contrario Bitlocker se activará, el sistema se reiniciará y se solicitará el código Bitlocker de 48 dígitos. Esta política previene en gran medida los intentos de fuerza bruta.</value>
+    <value>Establecer el número de intentos de inicio de sesión fallidos permitidos en 5. En combinación con otras políticas en esta categoría, esto significa que cada 5 intentos de inicio de sesión fallidos necesitarán que pase un día completo antes de permitir 5 intentos más, de lo contrario BitLocker se activará, el sistema se reiniciará y se solicitará el código BitLocker de 48 dígitos. Esta política previene en gran medida los intentos de fuerza bruta.</value>
 </data>
 <data name="ResetLockoutCount-LockScreen" xml:space="preserve">
-    <value>Establecer la duración del bloqueo de cuenta en 1440 minutos o 1 día. En combinación con otras políticas en esta categoría, esto significa que cada 5 intentos de inicio de sesión fallidos necesitarán que pase un día completo antes de permitir 5 intentos más, de lo contrario Bitlocker se activará, el sistema se reiniciará y se solicitará el código Bitlocker de 48 dígitos.</value>
+    <value>Establecer la duración del bloqueo de cuenta en 1440 minutos o 1 día. En combinación con otras políticas en esta categoría, esto significa que cada 5 intentos de inicio de sesión fallidos necesitarán que pase un día completo antes de permitir 5 intentos más, de lo contrario BitLocker se activará, el sistema se reiniciará y se solicitará el código BitLocker de 48 dígitos.</value>
 </data>
 <data name="LockoutDuration-LockScreen" xml:space="preserve">
     <value>Establecer el reinicio del contador de bloqueo de cuenta en 1440 minutos o 1 día.</value>

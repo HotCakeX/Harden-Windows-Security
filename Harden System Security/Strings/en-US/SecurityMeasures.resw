@@ -236,7 +236,7 @@
     <value>Allow the OS to require additional authentication at startup</value>
 </data>
 <data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
-    <value>Don't allow Bitlocker without TPM</value>
+    <value>Don't allow BitLocker without TPM</value>
 </data>
 <data name="UseTPM-BitLocker" xml:space="preserve">
     <value>Don't Allow using TPM alone</value>
@@ -908,10 +908,10 @@
     <value>Force strong key protection for user keys stored on the computer. You will be able to securely save private keys of the certificates you install on the computer and the same credentials will be required when accessing the private key such as for signing operations.</value>
 </data>
 <data name="LockoutBadCount-LockScreen" xml:space="preserve">
-    <value>Set the number of allowed failed sign-in attempts to 5. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, the system will restart and 48-digit Bitlocker code will be required. This policy greatly prevents brute force attempts.</value>
+    <value>Set the number of allowed failed sign-in attempts to 5. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise BitLocker will engage, the system will restart and 48-digit BitLocker code will be required. This policy greatly prevents brute force attempts.</value>
 </data>
 <data name="ResetLockoutCount-LockScreen" xml:space="preserve">
-    <value>Set the account lockout duration to 1440 minutes or 1 day. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, the system will restart and 48-digit Bitlocker code will be required.</value>
+    <value>Set the account lockout duration to 1440 minutes or 1 day. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise BitLocker will engage, the system will restart and 48-digit BitLocker code will be required.</value>
 </data>
 <data name="LockoutDuration-LockScreen" xml:space="preserve">
     <value>Set the reset account lockout counter to 1440 minutes or 1 day.</value>

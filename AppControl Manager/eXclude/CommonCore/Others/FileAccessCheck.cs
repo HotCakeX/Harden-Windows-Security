@@ -17,7 +17,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 internal static class FileAccessCheck
 {

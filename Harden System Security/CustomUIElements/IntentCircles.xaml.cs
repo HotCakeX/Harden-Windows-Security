@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using System.Numerics;
-using AppControlManager.Others;
 using HardenSystemSecurity.DeviceIntents;
 using Microsoft.UI;
 using Microsoft.UI.Composition;

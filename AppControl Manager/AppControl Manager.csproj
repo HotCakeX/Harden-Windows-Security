@@ -9,7 +9,7 @@
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
 
-		<!-- https://learn.microsoft.com/en-us/microsoft-edge/webview2/how-to/static -->
+		<!-- https://learn.microsoft.com/microsoft-edge/webview2/how-to/static -->
 		<WebView2LoaderPreference>Static</WebView2LoaderPreference>
 
 		<!-- CsWinRT has certain requirements for it: https://github.com/microsoft/CsWinRT
@@ -61,7 +61,7 @@
 		<AssemblyName>AppControlManager</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>2.0.48.0</FileVersion>
+		<FileVersion>2.0.49.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
 		<StartupObject>AppControlManager.Program</StartupObject>
@@ -85,7 +85,7 @@
 	</PropertyGroup>
 
 	<!--
-    https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/interop
+    https://learn.microsoft.com/dotnet/core/deploying/native-aot/interop
 
     If we define a DirectPInvoke, then all DllImport/LibraryImport referencing that library name will be bound by the OS loader and not by the .NET probing mechanism.
     Whatever is specified in DefaultDllImportSearchPaths for that DllImport will be ignored.
@@ -190,13 +190,13 @@
 	</ItemGroup>
 
 	<!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
-    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    Tools extension to be activated for this project even if the Windows App SDK NuGet
     package has not yet been restored. -->
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<ProjectCapability Include="Msix" />
 	</ItemGroup>
 
-	<!-- Nuget packages
+	<!-- NuGet packages
     All transitive/nested packages under the main packages are added as well
     so they can be updated separately and receive bug/security vulnerability fixes faster
     https://devblogs.microsoft.com/nuget/introducing-transitive-dependencies-in-visual-studio/
@@ -227,7 +227,7 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.250402" />
 		<PackageReference Include="CommunityToolkit.Common" Version="8.4.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.14.0" />
-		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3595.46" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6901" />
 		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.2.25502.107" />
 		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.2.25502.107" />

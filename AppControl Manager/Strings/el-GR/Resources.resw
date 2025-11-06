@@ -1015,9 +1015,6 @@
   <data name="DeployingXMLFile" xml:space="preserve">
     <value>Προς το παρόν γίνεται ανάπτυξη του αρχείου XML: '</value>
   </data>
-  <data name="SignedPolicyError" xml:space="preserve">
-    <value>Το αρχείο XML '</value>
-  </data>
   <data name="DeploymentError" xml:space="preserve">
     <value>Παρουσιάστηκε σφάλμα κατά την ανάπτυξη των επιλεγμένων αρχείων XML</value>
   </data>
@@ -1284,7 +1281,7 @@
     <value>Δημιουργία της πολιτικής Strict Kernel-mode</value>
   </data>
   <data name="PolicyCreationError" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά τη δημιουργία της πολιτικής Strict Kernel-mode: </value>
+    <value>Παρουσιάστηκε σφάλμα κατά τη δημιουργία της πολιτικής Strict Kernel-mode:</value>
   </data>
   <data name="PolicyCreatedSuccessfully" xml:space="preserve">
     <value>Επιτυχής δημιουργία της πολιτικής Strict Kernel-mode</value>
@@ -3341,7 +3338,7 @@
     <value>{0} αρχείο(α) καταγραφής δημιουργήθηκαν κατά τη φάση του Ελέγχου</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση του συστήματος: </value>
+    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση του συστήματος:</value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>Επιτυχής σάρωση του συστήματος για συμβάντα</value>
@@ -3368,7 +3365,7 @@
     <value>Σάρωση {0} αρχείων</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα: </value>
+    <value>Παρουσιάστηκε σφάλμα:</value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>Επιτυχής σάρωση του συστήματος για οδηγούς</value>
@@ -3419,7 +3416,7 @@
     <value>Μετατροπή {0} σε CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε πρόβλημα κατά τη μετατροπή των αρχείων XML σε CIP: </value>
+    <value>Παρουσιάστηκε πρόβλημα κατά τη μετατροπή των αρχείων XML σε CIP:</value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>Επιτυχής μετατροπή όλων των επιλεγμένων αρχείων XML σε δυαδικά CIP</value>
@@ -3428,7 +3425,7 @@
     <value>Σάρωση των αρχείων καταγραφής συμβάντων...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση των αρχείων καταγραφής: </value>
+    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση των αρχείων καταγραφής:</value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>Η σάρωση ολοκληρώθηκε. Βρέθηκαν {0} αρχεία καταγραφής.</value>
@@ -3470,7 +3467,7 @@
     <value>Δεν παρέχθηκε GUID Βασικής Πολιτικής για να χρησιμοποιηθεί ως BasePolicyID της Συμπληρωματικής πολιτικής.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά την επεξεργασία των αρχείων καταγραφής: </value>
+    <value>Παρουσιάστηκε σφάλμα κατά την επεξεργασία των αρχείων καταγραφής:</value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>Επιτυχής επεξεργασία των αρχείων καταγραφής και συμπερίληψή τους στην πολιτική.</value>
@@ -3488,7 +3485,7 @@
     <value>Εκτέλεση της Προσομοίωσης</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε πρόβλημα κατά την προσομοίωση: </value>
+    <value>Παρουσιάστηκε πρόβλημα κατά την προσομοίωση:</value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>Η προσομοίωση ολοκληρώθηκε επιτυχώς.</value>
@@ -3503,7 +3500,7 @@
     <value>Φόρτωση της πολιτικής</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε πρόβλημα κατά τη φόρτωση του επιλεγμένου αρχείου πολιτικής: </value>
+    <value>Παρουσιάστηκε πρόβλημα κατά τη φόρτωση του επιλεγμένου αρχείου πολιτικής:</value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>Επιτυχής φόρτωση της επιλεγμένης πολιτικής</value>
@@ -3899,7 +3896,7 @@
     <value>Η σύνδεση στο MSGraph ακυρώθηκε από τον χρήστη</value>
   </data>
   <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά τη σύνδεση στο MSGraph: </value>
+    <value>Παρουσιάστηκε σφάλμα κατά τη σύνδεση στο MSGraph:</value>
   </data>
   <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>Το ερώτημα MDE Advanced Hunting ολοκληρώθηκε με επιτυχία.</value>
@@ -3948,9 +3945,6 @@
   </data>
   <data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
     <value>Αποτυχία δημιουργίας προσαρμοσμένης πολιτικής. Κωδικός κατάστασης: {0}</value>
-  </data>
-  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
-    <value>Το αρχείο πολιτικής CIP υπερβαίνει το όριο των {0} bytes.</value>
   </data>
   <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
     <value>Οι ρυθμίσεις συσκευής ανακτήθηκαν με επιτυχία.</value>
@@ -4094,7 +4088,7 @@
     <value>Δεν εντοπίστηκαν αποτελέσματα στα επιλεγμένα CSV αρχεία καταγραφής MDE Advanced Hunting.</value>
   </data>
   <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση των επιλεγμένων CSV αρχείων καταγραφής MDE Advanced Hunting: </value>
+    <value>Παρουσιάστηκε σφάλμα κατά τη σάρωση των επιλεγμένων CSV αρχείων καταγραφής MDE Advanced Hunting:</value>
   </data>
   <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>Η σάρωση των επιλεγμένων CSV αρχείων καταγραφής MDE Advanced Hunting ολοκληρώθηκε με επιτυχία.</value>
@@ -4115,7 +4109,7 @@
     <value>Δεν επιλέχθηκε αρχείο πολιτικής για σύνδεση της συμπληρωματικής πολιτικής.</value>
   </data>
   <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά τη δημιουργία της συμπληρωματικής πολιτικής: </value>
+    <value>Παρουσιάστηκε σφάλμα κατά τη δημιουργία της συμπληρωματικής πολιτικής:</value>
   </data>
   <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>Ανάκτηση δεδομένων Microsoft Defender for Endpoint Advanced Hunting</value>
@@ -4136,7 +4130,7 @@
     <value>Δεν βρέθηκαν αρχεία καταγραφής που να επιδέχονται ενέργειας μεταξύ των ανακτηθέντων δεδομένων για δημιουργία συμπληρωματικής πολιτικής.</value>
   </data>
   <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά την ανάκτηση των αρχείων καταγραφής MDE Advanced Hunting από το MSGraph: </value>
+    <value>Παρουσιάστηκε σφάλμα κατά την ανάκτηση των αρχείων καταγραφής MDE Advanced Hunting από το MSGraph:</value>
   </data>
   <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>Προσθήκη αρχείων καταγραφής στην επιλεγμένη πολιτική</value>
@@ -4479,9 +4473,6 @@
 </data>
 <data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
   <value>Αναμενόταν ετικέτα τέλους πολιτικής '{0}', λήφθηκε '{1}'.</value>
-</data>
-<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
-  <value>Το αρχείο XML '{0}' δεν είναι συμβατό με το σχήμα πολιτικής CI</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>Ο τύπος πολιτικής είναι {0} και έχει την επιλογή κανόνα {1} η οποία είναι μη έγκυρη. Μόνο το {2} μπορεί να την έχει.</value>
@@ -6122,4 +6113,37 @@
   <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ανοίξτε την επιλεγμένη πολιτική στον Επεξεργαστή Πολιτικών, όπου μπορείτε να δείτε αναλυτική επισκόπηση της πολιτικής και έχετε τη δυνατότητα να την προσαρμόσετε περαιτέρω μέσα στην εφαρμογή.</value>
   </data>
-  </root>
+    <data name="SignedPolicyError" xml:space="preserve">
+    <value>Το αρχείο πολιτικής '{0}' δεν διαθέτει την επιλογή κανόνα EnabledUnsignedSystemIntegrityPolicy. Δεν μπορεί να αναπτυχθεί σε κατάσταση χωρίς υπογραφή.</value>
+  </data>
+  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>Το δυαδικό αρχείο πολιτικής '{0}' υπερβαίνει το όριο μεγέθους των {1} byte. Το μέγεθός του είναι {2} byte.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.Header" xml:space="preserve">
+    <value>Διαθεσιμότητα μη υποστηριζόμενων κανόνων</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καθορίζει αν οι επιλογές κανόνων πολιτικής που είναι μη υποστηριζόμενες ή μη τεκμηριωμένες είναι ενεργοποιημένες ή απενεργοποιημένες.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καθορίζει αν οι επιλογές κανόνων πολιτικής που είναι μη υποστηριζόμενες ή μη τεκμηριωμένες είναι ενεργοποιημένες ή απενεργοποιημένες.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OnContent" xml:space="preserve">
+    <value>Διαθέσιμο</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OffContent" xml:space="preserve">
+    <value>Μη διαθέσιμο</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Description" xml:space="preserve">
+    <value>Ενεργοποιήστε αυτήν τη δυνατότητα για να καταστήσετε διαθέσιμες εναλλακτικές μεθόδους ανάπτυξης και κατάργησης πολιτικών App Control. Αυτές οι μέθοδοι δεν εξαρτώνται από το εκτελέσιμο CiTool και μπορούν να χρησιμοποιηθούν αν το CiTool είναι μπλοκαρισμένο ή μη διαθέσιμο.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Header" xml:space="preserve">
+    <value>Χρήση διαχείρισης Code Integrity έκδοση 2</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ενεργοποιήστε αυτήν τη δυνατότητα για να καταστήσετε διαθέσιμες εναλλακτικές μεθόδους ανάπτυξης και κατάργησης πολιτικών App Control. Αυτές οι μέθοδοι δεν εξαρτώνται από το εκτελέσιμο CiTool και μπορούν να χρησιμοποιηθούν αν το CiTool είναι μπλοκαρισμένο ή μη διαθέσιμο.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ενεργοποιήστε αυτήν τη δυνατότητα για να καταστήσετε διαθέσιμες εναλλακτικές μεθόδους ανάπτυξης και κατάργησης πολιτικών App Control. Αυτές οι μέθοδοι δεν εξαρτώνται από το εκτελέσιμο CiTool και μπορούν να χρησιμοποιηθούν αν το CiTool είναι μπλοκαρισμένο ή μη διαθέσιμο.</value>
+  </data>
+</root>

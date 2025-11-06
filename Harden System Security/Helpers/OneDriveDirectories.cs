@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using AppControlManager.Others;
 
 namespace HardenSystemSecurity.Helpers;
 

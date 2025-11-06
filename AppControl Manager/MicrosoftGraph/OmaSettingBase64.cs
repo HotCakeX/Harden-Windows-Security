@@ -22,6 +22,7 @@ namespace AppControlManager.MicrosoftGraph;
 /// <summary>
 /// Represents a configuration setting with properties for OData type, display name, description, URI, file name, and
 /// value.
+/// https://learn.microsoft.com/graph/api/resources/intune-deviceconfig-omasettingbase64?view=graph-rest-beta
 /// </summary>
 internal sealed class OmaSettingBase64(
 	string? oDataType,

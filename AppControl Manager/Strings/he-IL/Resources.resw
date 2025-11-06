@@ -1015,9 +1015,6 @@
   <data name="DeployingXMLFile" xml:space="preserve">
     <value>כעת מפעיל קובץ XML: '</value>
   </data>
-  <data name="SignedPolicyError" xml:space="preserve">
-    <value>קובץ ה-XML '</value>
-  </data>
   <data name="DeploymentError" xml:space="preserve">
     <value>הייתה שגיאה בהפעלת קבצי ה-XML שנבחרו</value>
   </data>
@@ -2730,7 +2727,7 @@
     <value>מנוטרל/לא בפעולה</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_ENABLED" xml:space="preserve">
-    <comment>Enforcement of kernel‑mode Code Integrity is enabled</comment>
+    <comment>Enforcement of kernel-mode Code Integrity is enabled</comment>
     <value>אכיפת שלמות הקוד במצב Kernel מופעלת.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_TESTSIGN" xml:space="preserve">
@@ -2738,15 +2735,15 @@
     <value>תוכן חתום בבדיקה מותר על ידי מנגנון שלמות הקוד.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_ENABLED" xml:space="preserve">
-    <comment>Enforcement of user‑mode Code Integrity is enabled</comment>
+    <comment>Enforcement of user-mode Code Integrity is enabled</comment>
     <value>אכיפת שלמות הקוד במצב משתמש מופעלת.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_AUDITMODE_ENABLED" xml:space="preserve">
-    <comment>User‑mode Code Integrity is enabled in audit mode</comment>
+    <comment>User-mode Code Integrity is enabled in audit mode</comment>
     <value>אכיפת שלמות הקוד במצב משתמש מופעלת במצב ביקורת.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_UMCI_EXCLUSIONPATHS_ENABLED" xml:space="preserve">
-    <comment>User‑mode binaries from certain paths can bypass CI checks</comment>
+    <comment>User-mode binaries from certain paths can bypass CI checks</comment>
     <value>קבצי בינארי במצב משתמש ממסלולים מסוימים יכולים לפעול גם אם הם נכשלו בבדיקות שלמות הקוד.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_TEST_BUILD" xml:space="preserve">
@@ -2754,8 +2751,8 @@
     <value>גרסת מנגנון שלמות הקוד היא גרסת בדיקה.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_PREPRODUCTION_BUILD" xml:space="preserve">
-    <comment>The Code Integrity component is from a pre‑production build</comment>
-    <value>גרסת מנגנון שלמות הקוד היא מגרסת טרום‑הפקה.</value>
+    <comment>The Code Integrity component is from a pre-production build</comment>
+    <value>גרסת מנגנון שלמות הקוד היא מגרסת טרום-הפקה.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_DEBUGMODE_ENABLED" xml:space="preserve">
     <comment>Kernel debugger attached, unsigned code can load</comment>
@@ -2766,11 +2763,11 @@
     <value>גרסת מנגנון שלמות הקוד היא מגרסת טיסה.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_FLIGHTING_ENABLED" xml:space="preserve">
-    <comment>Flight‑signed content is allowed by Code Integrity</comment>
+    <comment>Flight-signed content is allowed by Code Integrity</comment>
     <value>תוכן עם חתימת טיסה מותר על ידי מנגנון שלמות הקוד.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode</comment>
     <value>אכיפת שלמות הקוד על ידי היפרוויזור מופעלת עבור רכיבי Kernel.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED" xml:space="preserve">
@@ -2778,7 +2775,7 @@
     <value>אכיפת שלמות הקוד על ידי היפרוויזור מופעלת במצב ביקורת.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED" xml:space="preserve">
-    <comment>Hypervisor enforced CI enabled for kernel‑mode in strict mode</comment>
+    <comment>Hypervisor enforced CI enabled for kernel-mode in strict mode</comment>
     <value>אכיפת שלמות הקוד על ידי היפרוויזור מופעלת עבור מצב Kernel במצב מחמיר.</value>
   </data>
   <data name="CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED" xml:space="preserve">
@@ -3345,7 +3342,7 @@
     <value>נוצרו {0} יומנים במהלך שלב הביקורת</value>
   </data>
   <data name="ErrorOccurredWhileScanningSystem" xml:space="preserve">
-    <value>אירעה שגיאה בסריקת המערכת: </value>
+    <value>אירעה שגיאה בסריקת המערכת:</value>
   </data>
   <data name="SuccessfullyScannedSystemForEvents" xml:space="preserve">
     <value>הסריקה של המערכת לאירועים הושלמה בהצלחה</value>
@@ -3372,7 +3369,7 @@
     <value>סורק {0} קבצים</value>
   </data>
   <data name="ErrorOccurredScanningDrivers" xml:space="preserve">
-    <value>אירעה שגיאה: </value>
+    <value>אירעה שגיאה:</value>
   </data>
   <data name="SuccessfullyScannedSystemForDrivers" xml:space="preserve">
     <value>הסריקה של המערכת עבור דרייברים הושלמה בהצלחה</value>
@@ -3423,7 +3420,7 @@
     <value>ממיר {0} ל-CIP</value>
   </data>
   <data name="ErrorConvertingXMLToCIPMessage" xml:space="preserve">
-    <value>אירעה בעיה להמיר את קבצי ה-XML ל-CIP: </value>
+    <value>אירעה בעיה להמיר את קבצי ה-XML ל-CIP:</value>
   </data>
   <data name="SuccessfullyConvertedXMLFilesToCIPMessage" xml:space="preserve">
     <value>כל קבצי ה-XML הנבחרים הומרו בהצלחה לבינרי CIP</value>
@@ -3432,7 +3429,7 @@
     <value>סורק את יומני האירועים...</value>
   </data>
   <data name="ErrorDuringLogsScanMessage" xml:space="preserve">
-    <value>אירעה שגיאה במהלך סריקת היומנים: </value>
+    <value>אירעה שגיאה במהלך סריקת היומנים:</value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
     <value>הסריקה הושלמה. נמצאו {0} יומנים.</value>
@@ -3474,7 +3471,7 @@
     <value>לא סופק GUID של מדיניות בסיס לשימוש כ-BasePolicyID של המדיניות המשנית.</value>
   </data>
   <data name="ErrorProcessingLogsMessage" xml:space="preserve">
-    <value>אירעה שגיאה במהלך עיבוד היומנים: </value>
+    <value>אירעה שגיאה במהלך עיבוד היומנים:</value>
   </data>
   <data name="SuccessProcessedLogsMessage" xml:space="preserve">
     <value>היומנים עובדו בהצלחה וכללו אותם במדיניות.</value>
@@ -3492,7 +3489,7 @@
     <value>מבצע את הסימולציה</value>
   </data>
   <data name="ErrorDuringSimulationMessage" xml:space="preserve">
-    <value>אירעה בעיה במהלך הסימולציה: </value>
+    <value>אירעה בעיה במהלך הסימולציה:</value>
   </data>
   <data name="SimulationCompletedSuccessfullyMessage" xml:space="preserve">
     <value>הסימולציה הושלמה בהצלחה.</value>
@@ -3507,7 +3504,7 @@
     <value>טוען את המדיניות</value>
   </data>
   <data name="ErrorLoadingPolicyFileMessage" xml:space="preserve">
-    <value>אירעה בעיה בטעינת קובץ המדיניות הנבחר: </value>
+    <value>אירעה בעיה בטעינת קובץ המדיניות הנבחר:</value>
   </data>
   <data name="SuccessLoadedPolicyMessage" xml:space="preserve">
     <value>המדיניות הנבחרת נטענה בהצלחה</value>
@@ -3900,7 +3897,7 @@
     <value>תהליך ההתחברות ל-MSGraph בוטל על-ידי המשתמש</value>
 </data>
 <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
-    <value>אירעה שגיאה בהתחברות ל-MSGraph: </value>
+    <value>אירעה שגיאה בהתחברות ל-MSGraph:</value>
 </data>
 <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
     <value>השאילתא של MDE Advanced Hunting הושלמה בהצלחה.</value>
@@ -3949,9 +3946,6 @@
 </data>
 <data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
     <value>לא הצליח ליצור מדיניות מותאמת אישית. קוד סטטוס: {0}</value>
-</data>
-<data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
-    <value>גודל קובץ מדיניות CIP חורג מהמגבלה של {0} בתים.</value>
 </data>
 <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
     <value>הקונפיגורציות של המכשירים הושגו בהצלחה.</value>
@@ -4095,7 +4089,7 @@
     <value>לא זוהו תוצאות ביומני MDE Advanced Hunting CSV שנבחרו.</value>
 </data>
 <data name="ErrorScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
-    <value>אירעה שגיאה במהלך סריקת יומני MDE Advanced Hunting CSV שנבחרו: </value>
+    <value>אירעה שגיאה במהלך סריקת יומני MDE Advanced Hunting CSV שנבחרו:</value>
 </data>
 <data name="SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs" xml:space="preserve">
     <value>הסריקה של יומני MDE Advanced Hunting CSV שנבחרו הושלמה בהצלחה.</value>
@@ -4116,7 +4110,7 @@
     <value>לא נבחר קובץ מדיניות לצורך שיוך המדיניות המשלימה.</value>
 </data>
 <data name="ErrorCreatingSupplementalPolicyMessage" xml:space="preserve">
-    <value>אירעה שגיאה ביצירת המדיניות המשלימה: </value>
+    <value>אירעה שגיאה ביצירת המדיניות המשלימה:</value>
 </data>
 <data name="RetrievingMDEAdvancedHuntingDataMessage" xml:space="preserve">
     <value>מביא את הנתונים של Microsoft Defender for Endpoint Advanced Hunting</value>
@@ -4137,7 +4131,7 @@
     <value>לא נמצאו יומנים ברי פעולה בין הנתונים שהושגו לצורך יצירת מדיניות משלימה.</value>
 </data>
 <data name="ErrorRetrievingMDEAdvancedHuntingLogsMessage" xml:space="preserve">
-    <value>אירעה שגיאה בשליפת יומני MDE Advanced Hunting מ-MSGraph: </value>
+    <value>אירעה שגיאה בשליפת יומני MDE Advanced Hunting מ-MSGraph:</value>
 </data>
 <data name="AddLogsToSelectedPolicyMessage" xml:space="preserve">
     <value>הוסף יומנים למדיניות הנבחרת</value>
@@ -4480,9 +4474,6 @@
 </data>
 <data name="ErrorExpectedPolicyEndTagGot" xml:space="preserve">
   <value>צפויה תגית סיום מדיניות '{0}', התקבלה '{1}'.</value>
-</data>
-<data name="XmlFileNotCompliantWithSchema" xml:space="preserve">
-  <value>קובץ ה-XML '{0}' אינו תואם לסכמת מדיניות CI</value>
 </data>
 <data name="SupplementalPolicyWithInvalidRuleOption" xml:space="preserve">
   <value>סוג המדיניות הוא {0} ויש לה אפשרות כלל {1} שאינה חוקית. רק ל-{2} יכולה להיות אפשרות זו.</value>
@@ -5713,10 +5704,10 @@
     <value>צור קבוצה חדשה</value>
   </data>
   <data name="CreateGroupButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור קבוצה חדשה ב‑Microsoft Entra ID</value>
+    <value>צור קבוצה חדשה ב-Microsoft Entra ID</value>
   </data>
   <data name="CreateGroupButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור קבוצה חדשה ב‑Microsoft Entra ID</value>
+    <value>צור קבוצה חדשה ב-Microsoft Entra ID</value>
   </data>
   <data name="GroupDisplayNameEmptyError" xml:space="preserve">
     <value>שם התצוגה של הקבוצה אינו יכול להיות null או ריק.</value>
@@ -5731,10 +5722,10 @@
   <value>מחק קבוצה</value>
 </data>
   <data name="DeleteGroupButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>מחק את הקבוצות שנבחרו מ‑Entra ID שלך.</value>
+    <value>מחק את הקבוצות שנבחרו מ-Entra ID שלך.</value>
   </data>
   <data name="DeleteGroupButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>מחק את הקבוצות שנבחרו מ‑Entra ID שלך.</value>
+    <value>מחק את הקבוצות שנבחרו מ-Entra ID שלך.</value>
   </data>
 <data name="DeleteGroupDialogTitle" xml:space="preserve">
   <value>אישור מחיקת קבוצה</value>
@@ -5773,13 +5764,13 @@
     <value>צור 50 קבוצות דמה</value>
   </data>
   <data name="CreateDummyGroupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>צור 50 קבוצות דמה ב‑Entra של הדייר שלך עם פרטים אקראיים לצורכי בדיקות.</value>
+    <value>צור 50 קבוצות דמה ב-Entra של הדייר שלך עם פרטים אקראיים לצורכי בדיקות.</value>
   </data>
   <data name="CreateDummyGroupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>צור 50 קבוצות דמה ב‑Entra של הדייר שלך עם פרטים אקראיים לצורכי בדיקות.</value>
+    <value>צור 50 קבוצות דמה ב-Entra של הדייר שלך עם פרטים אקראיים לצורכי בדיקות.</value>
   </data>
   <data name="ConfirmationTextForDummyGroupsCreation" xml:space="preserve">
-    <value>האם אתה בטוח שברצונך ליצור 50 קבוצות דמה ב‑Entra של הדייר שלך עם פרטים אקראיים לצורכי בדיקות?</value>
+    <value>האם אתה בטוח שברצונך ליצור 50 קבוצות דמה ב-Entra של הדייר שלך עם פרטים אקראיים לצורכי בדיקות?</value>
   </data>
   <data name="SignInAuthenticationRequiredMsg" xml:space="preserve">
     <value>נדרשת אימות. אנא היכנס תחילה לדייר Microsoft שלך.</value>
@@ -5809,10 +5800,10 @@
     <value>בחר תיקיות</value>
   </data>
   <data name="SelectFoldersForSimulationButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>עיין ובחר תיקיות שייכללו בסימולציה. התיקיות ייסרקו רקורסיבית עבור קבצים הנתמכים על‑ידי App Control.</value>
+    <value>עיין ובחר תיקיות שייכללו בסימולציה. התיקיות ייסרקו רקורסיבית עבור קבצים הנתמכים על-ידי App Control.</value>
   </data>
   <data name="SelectFoldersForSimulationButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>עיין ובחר תיקיות שייכללו בסימולציה. התיקיות ייסרקו רקורסיבית עבור קבצים הנתמכים על‑ידי App Control.</value>
+    <value>עיין ובחר תיקיות שייכללו בסימולציה. התיקיות ייסרקו רקורסיבית עבור קבצים הנתמכים על-ידי App Control.</value>
   </data>
   <data name="SelectSecurityCatalogsMenuFlyoutItem.Text" xml:space="preserve">
     <value>בחר קטלוגי אבטחה</value>
@@ -5854,10 +5845,10 @@
     <value>סרוק יומני אירועים</value>
   </data>
   <data name="ScanEventLogsButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>סרוק את המערכת או את קובצי ה‑EVTX שנבחרו עבור יומני Code Integrity/AppLocker.</value>
+    <value>סרוק את המערכת או את קובצי ה-EVTX שנבחרו עבור יומני Code Integrity/AppLocker.</value>
   </data>
   <data name="ScanEventLogsButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>סרוק את המערכת או את קובצי ה‑EVTX שנבחרו עבור יומני Code Integrity/AppLocker.</value>
+    <value>סרוק את המערכת או את קובצי ה-EVTX שנבחרו עבור יומני Code Integrity/AppLocker.</value>
   </data>
   <data name="DeviceNameButton.Content" xml:space="preserve">
     <value>שם התקן</value>
@@ -6123,4 +6114,37 @@
   <data name="OpenInPolicyEditorButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>פתח את המדיניות שנבחרה בעורך המדיניות, שבו ניתן לראות סקירה מפורטת של המדיניות ויש אפשרות להתאמה אישית נוספת ישירות בתוך היישום.</value>
   </data>
-  </root>
+    <data name="SignedPolicyError" xml:space="preserve">
+    <value>קובץ המדיניות '{0}' אינו כולל את אפשרות הכלל EnabledUnsignedSystemIntegrityPolicy. לא ניתן לפרוס אותו במצב לא חתום.</value>
+  </data>
+  <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>קובץ הבינרי של המדיניות '{0}' חורג ממגבלת הגודל של {1} בתים. הגודל שלו הוא {2} בתים.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.Header" xml:space="preserve">
+    <value>זמינות כללים שאינם נתמכים</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.ToolTipService.ToolTip" xml:space="preserve">
+    <value>קובע אם אפשרויות כללי המדיניות שאינן נתמכות או אינן מתועדות יופעלו או יושבתו.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>קובע אם אפשרויות כללי המדיניות שאינן נתמכות או אינן מתועדות יופעלו או יושבתו.</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OnContent" xml:space="preserve">
+    <value>זמין</value>
+  </data>
+  <data name="EnableUnsupportedPolicyRuleOptionsToggleSwitch.OffContent" xml:space="preserve">
+    <value>לא זמין</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Description" xml:space="preserve">
+    <value>יש להפעיל תכונה זו כדי להפוך שיטות חלופיות לפריסה ולהסרה של מדיניות App Control לזמינות. שיטות אלה אינן תלויות בקובץ ההפעלה CiTool וניתן להשתמש בהן אם CiTool חסום או אינו זמין.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.Header" xml:space="preserve">
+    <value>השתמש בניהול Code Integrity גרסה 2</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>יש להפעיל תכונה זו כדי להפוך שיטות חלופיות לפריסה ולהסרה של מדיניות App Control לזמינות. שיטות אלה אינן תלויות בקובץ ההפעלה CiTool וניתן להשתמש בהן אם CiTool חסום או אינו זמין.</value>
+  </data>
+  <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>יש להפעיל תכונה זו כדי להפוך שיטות חלופיות לפריסה ולהסרה של מדיניות App Control לזמינות. שיטות אלה אינן תלויות בקובץ ההפעלה CiTool וניתן להשתמש בהן אם CiTool חסום או אינו זמין.</value>
+  </data>
+</root>

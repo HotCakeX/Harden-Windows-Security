@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using AppControlManager.Others;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using System.Threading.Tasks;
@@ -38,6 +37,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics;
 using AppControlManager.IntelGathering;
 using System.Collections.ObjectModel;
+using AppControlManager.Others;
 #endif
 
 namespace AppControlManager.ViewModels;

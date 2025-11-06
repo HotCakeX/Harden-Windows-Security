@@ -7,7 +7,7 @@
 
 ## Introduction
 
-* By deploying a **Signed** App Control for Business policy, a system will be secure and resistant to any form of tampering ([if coupled with Bitlocker and other built-in security features](https://github.com/HotCakeX/Harden-Windows-Security)), in a way that **even the system administrator can't tamper or disable this security policy.**
+* By deploying a **Signed** App Control for Business policy, a system will be secure and resistant to any form of tampering ([if coupled with BitLocker and other built-in security features](https://github.com/HotCakeX/Harden-Windows-Security)), in a way that **even the system administrator can't tamper or disable this security policy.**
 
 * The [**only** way for this security feature](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/disable-appcontrol-policies#removing-app-control-policies) to be turned off, modified, updated or disabled will be to have access to the certificate's private keys used to sign it.
 

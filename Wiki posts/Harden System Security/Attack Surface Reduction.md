@@ -13,6 +13,6 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 [Reducing your attack surface](https://learn.microsoft.com/microsoft-365/security/defender-endpoint/attack-surface-reduction) means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
 
 > [!TIP]\
-> [all 19 available Attack Surface Reduction rules shown in the official chart](https://learn.microsoft.com/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#asr-rule-to-guid-matrix) will be enabled. The [Harden System Security application](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) also allows you to individually configure each Attack Surface Reduction rule.
+> [All 19 available Attack Surface Reduction rules shown in the official chart](https://learn.microsoft.com/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#asr-rule-to-guid-matrix) will be enabled. The [Harden System Security application](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) also allows you to individually configure each Attack Surface Reduction rule.
 
 <br>

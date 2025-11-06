@@ -19,19 +19,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace AppControlManager.Others;
+namespace CommonCore.Others;
 
 internal static class FileDialogHelper
 {
 	// Location where File/Folder picker dialog will be opened
 	// It is only the directory where the first dialog will be opened in, it will then be replaced by the directory
 	// That user browses to to pick a single file/directory
-#if APP_CONTROL_MANAGER
-	private static string DirectoryToOpen = App.IsElevated ? GlobalVars.UserConfigDir : Path.GetPathRoot(Environment.SystemDirectory)!;
-#endif
-#if HARDEN_SYSTEM_SECURITY
-	private static string DirectoryToOpen = Path.GetPathRoot(Environment.SystemDirectory)!;
-#endif
+	internal static string DirectoryToOpen = null!;
 
 	/// <summary>
 	/// Shows a single file picker dialog with filter.

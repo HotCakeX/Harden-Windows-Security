@@ -22,7 +22,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.BitLocker;
 using Microsoft.UI.Xaml.Controls;

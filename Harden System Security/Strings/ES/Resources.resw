@@ -3804,10 +3804,10 @@ Huella Digital: {3}</value>
     <value>Lista de materiales criptográficos</value>
   </data>
     <data name="CBOMNavItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>La lista de materiales criptográficos (CBOM) proporciona un inventario a nivel de sistema de la criptografía del sistema operativo —algoritmos, curvas, conjuntos de cifrado y proveedores— capturando la postura criptográfica de la plataforma.</value>
+    <value>La lista de materiales criptográficos (CBOM) proporciona un inventario a nivel de sistema de la criptografía del sistema operativo -algoritmos, curvas, conjuntos de cifrado y proveedores- capturando la postura criptográfica de la plataforma.</value>
   </data>
   <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
-    <value>La lista de materiales criptográficos (CBOM) proporciona un inventario a nivel de sistema de la criptografía del sistema operativo —algoritmos, curvas, conjuntos de cifrado y proveedores— capturando la postura criptográfica de la plataforma.</value>
+    <value>La lista de materiales criptográficos (CBOM) proporciona un inventario a nivel de sistema de la criptografía del sistema operativo -algoritmos, curvas, conjuntos de cifrado y proveedores- capturando la postura criptográfica de la plataforma.</value>
   </data>
   <data name="CBOMPageTitle.Text" xml:space="preserve">
     <value>La lista de materiales criptográficos (CBOM) ofrece un inventario y una introspección a nivel de sistema de la criptografía del sistema operativo, poniendo a la vista los algoritmos, las curvas, los conjuntos de cifrado y los proveedores que definen la postura criptográfica de la plataforma. Al normalizar lo que expone el sistema operativo, proporciona una transparencia similar a un SBOM para el ámbito criptográfico: habilita auditorías basadas en evidencia, verificaciones de conformidad con la línea base, detección de desviaciones a través de las actualizaciones, identificación de primitivas heredadas/débiles y la planificación de transiciones poscuánticas.</value>

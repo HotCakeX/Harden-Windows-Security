@@ -632,7 +632,7 @@ internal sealed partial class ListViewIncrementalController(
 			bool offDone = s_offModeFullCalcDone.TryGetValue(registryKey, out bool doneFlag) && doneFlag;
 			bool lastWasOn = hadLast && last; // last == true means previously ON
 
-			// If we just transitioned from ON→OFF, or it's not done yet, try to run it — but only if we have data.
+			// If we just transitioned from ON→OFF, or it's not done yet, try to run it - but only if we have data.
 			if ((lastWasOn || !offDone) && FullSource.Count > 0)
 			{
 				RecalculateFullDatasetColumnWidths();

@@ -18,7 +18,6 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.Others;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -132,6 +131,14 @@ public partial class App : Application
 	internal App()
 	{
 		this.InitializeComponent();
+
+		// Location where File/Folder picker dialog will be opened
+#if APP_CONTROL_MANAGER
+		FileDialogHelper.DirectoryToOpen = IsElevated ? GlobalVars.UserConfigDir : Path.GetPathRoot(Environment.SystemDirectory)!;
+#endif
+#if HARDEN_SYSTEM_SECURITY
+	FileDialogHelper.DirectoryToOpen = Path.GetPathRoot(Environment.SystemDirectory)!;
+#endif
 
 		// Capture the dispatcher queue as early as possible.
 		AppDispatcher = DispatcherQueue.GetForCurrentThread();

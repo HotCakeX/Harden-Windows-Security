@@ -50,7 +50,7 @@ With AppControl Manager, you can easily create a supplemental policy by scanning
 * **Deploy After Creation**: If toggled, only the supplemental policy XML file will be available in the [User Configuration directory](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager#where-is-the-user-configurations-directory) at the end of the operation. If it's not toggled, the CIP file will also be made available. Both files will have the same name as the policy name that you choose.
 
 > [!TIP]\
-> Use the ***View Detected File Details*** section to view highly detailed results of the files and folder scans.
+> Use the ***View Detected File Details*** section to view highly detailed results of the files and folders scans.
 
 <br>
 
@@ -128,7 +128,7 @@ You can create Supplemental policies for the installed packaged apps. These are 
 
 ## Create a Supplemental Policy Based on Custom Pattern-based File Rules
 
-Use this section to create custom pattern-based file rules so that if a file or folder's path matches that pattern, it will be blocked. The pattern is based on regex and supports `*` and `?` characters. You can use this feature to create sophisticated file path rules that can dynamically match multiple files or folders.
+Use this section to create custom pattern-based file rules so that if a file or folder's path matches that pattern, it will be allowed. The pattern is based on regex and supports `*` and `?` characters. You can use this feature to create sophisticated file path rules that can dynamically match multiple files or folders.
 
 Keep in mind that file rules are only supported for user-mode files. Using file rules for kernel-mode files simply has no effect.
 

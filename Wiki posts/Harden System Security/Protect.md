@@ -8,9 +8,9 @@
 
 <br>
 
-The Protect page in the [Harden System Security App](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) is a central hub for Apply, Verifying or Removing the security measures. It offers presets with optimal pre-selected categories and sub-categories to streamline the hardening process.
+The Protect page in the [Harden System Security App](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) is a central hub for Applying, Verifying or Removing the security measures. It offers presets with optimal pre-selected categories and sub-categories to streamline the hardening process.
 
-Each Security Measure category in this page has its own dedicated page where you can view and modify the specific settings related to that category in a more detailed manner. When you use the Apply, Verify or Remove buttons in this page, it is as if you are directly interacting with the button on that category's page.
+Each Security Measure category on this page has its own dedicated page where you can view and modify the specific settings related to that category in a more detailed manner. When you use the Apply, Verify or Remove buttons on this page, it is as if you are directly interacting with the button on that category's page.
 
 <br>
 

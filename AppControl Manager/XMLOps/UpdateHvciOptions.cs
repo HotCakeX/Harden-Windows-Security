@@ -15,8 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.Others;
-
 namespace AppControlManager.XMLOps;
 
 internal static class UpdateHvciOptions

@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,6 +41,11 @@ public partial class App : Application
 
 	// Determines whether the session must prompt for UAC to elevate or not
 	private static bool requireAdminPrivilege;
+
+	// For navigation restoration passed via command line
+	private static string? _cliNavTag;
+
+	private static Type? PageTypeToNavTo;
 
 	/// <summary>
 	/// Invoked when the application is launched.
@@ -98,15 +102,11 @@ public partial class App : Application
 				{
 					Logger.Write(GlobalVars.GetStr("FileActivationDetectedMessage"));
 
-					IFileActivatedEventArgs? fileActivatedArgs = activatedEventArgs.Data as IFileActivatedEventArgs;
-
-					if (fileActivatedArgs is not null)
+					if (activatedEventArgs.Data is IFileActivatedEventArgs fileActivatedArgs)
 					{
-						IReadOnlyList<IStorageItem>? incomingStorageItems = fileActivatedArgs.Files;
-
-						if (incomingStorageItems is not null && incomingStorageItems.Count > 0)
+						if (fileActivatedArgs.Files.Count > 0)
 						{
-							foreach (IStorageItem item in incomingStorageItems)
+							foreach (IStorageItem item in fileActivatedArgs.Files)
 							{
 								if (item.Path is not null && File.Exists(item.Path))
 								{
@@ -274,6 +274,18 @@ public partial class App : Application
 				_activationFilePath = null;
 			}
 		}
+		// Navigation restoration path or user asking for specific page to launch.
+		else if (PageTypeToNavTo is not null)
+		{
+			try
+			{
+				ViewModelProvider.NavigationService.Navigate(PageTypeToNavTo, null);
+			}
+			finally
+			{
+				PageTypeToNavTo = null;
+			}
+		}
 		else
 		{
 			InitialNav();
@@ -351,6 +363,7 @@ public partial class App : Application
 	{
 		string? actionArg = null;
 		string? fileArg = null;
+		string? navTagArg = null;
 
 		// Look for our two keys
 		if (!string.IsNullOrWhiteSpace(ArgLine))
@@ -374,6 +387,7 @@ public partial class App : Application
 		{
 			actionArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--action=", StringComparison.OrdinalIgnoreCase));
 			fileArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
+			navTagArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--navtag=", StringComparison.OrdinalIgnoreCase));
 		}
 
 		// Action is mandatory
@@ -409,6 +423,28 @@ public partial class App : Application
 				 string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.DeployRMMBlockPolicy), StringComparison.OrdinalIgnoreCase)))
 			{
 				requireAdminPrivilege = true;
+			}
+		}
+
+		// Parse navigation restoration arguments		
+		if (navTagArg is not null)
+		{
+			string rawTag = navTagArg["--navtag=".Length..].Trim();
+			if (!string.IsNullOrWhiteSpace(rawTag))
+			{
+				_cliNavTag = rawTag;
+				if (!ViewModelProvider.NavigationService.mainWindowVM.NavigationPageToItemContentMap.TryGetValue(_cliNavTag, out PageTypeToNavTo))
+				{
+					Logger.Write($"{rawTag} is not a valid page tag.");
+				}
+				else
+				{
+					// If the page requires elevation, we must ask for it.
+					if (!ViewModelProvider.MainWindowVM.UnelevatedPages.Contains(PageTypeToNavTo))
+					{
+						requireAdminPrivilege = true;
+					}
+				}
 			}
 		}
 	}

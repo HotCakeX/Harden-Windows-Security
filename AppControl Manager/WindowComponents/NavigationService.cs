@@ -175,6 +175,7 @@ internal sealed class NavigationService
 		// If not running as Admin
 		if (!App.IsElevated)
 		{
+			// If the requested page requires elevation
 			if (!mainWindowVM.UnelevatedPages.Contains(nextNavPageType))
 			{
 				// a StackPanel to hold the text and checkbox.
@@ -220,39 +221,17 @@ internal sealed class NavigationService
 						App.Settings.PromptForElevationOnStartup = true;
 					}
 
-					/*
-					ProcessStartInfo processInfo = new()
-					{
-						FileName = Environment.ProcessPath,
-						Verb = "runas",
-						UseShellExecute = true
-					};
+					// Build navigation argument to restore this page after elevation.					
+					string? navArg = null;
 
-					Process? processStartResult = null;
+					// Attempt to find a tag for the page, only top-level pages that have a tab in MainWindow XAML work
+					KeyValuePair<string, Type> taggedEntry = mainWindowVM.NavigationPageToItemContentMap
+						.FirstOrDefault(kv => Equals(kv.Value, nextNavPageType));
 
-					try
-					{
-						processStartResult = Process.Start(processInfo);
-					}
+					navArg = $"--navtag={taggedEntry.Key}";
 
-					// Error code 1223: The operation was canceled by the user.
-					catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
-					{
-						// Do nothing if the user cancels the UAC prompt.
-						Logger.Write(GlobalVars.GetStr("UserCanceledUACMessage"));
-					}
-
-					// Explicitly exit the current instance only after launching the elevated instance
-					if (processStartResult is not null)
-					{
-						Application.Current.Exit();
-					}
-
-					return;
-
-					*/
-
-					if (Relaunch.RelaunchAppElevated(App.AUMID))
+					// Relaunch elevated with the navigation argument
+					if (Relaunch.RelaunchAppElevated(App.AUMID, navArg))
 					{
 						Application.Current.Exit();
 					}

@@ -20,6 +20,7 @@ using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.System;
+using System.Text.Json.Serialization;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.Others;
@@ -48,6 +49,12 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class UpdateVM : ViewModelBase
 {
+
+	[JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
+	[JsonSerializable(typeof(string[]))] // Used to deserialize MS Defender results
+	private sealed partial class MSDefenderJsonContext : JsonSerializerContext
+	{
+	}
 
 	internal UpdateVM()
 	{
@@ -400,7 +407,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 							{
 
 								// Deserialize the JSON string
-								string[]? ASROutputArrayCleaned = JsonSerializer.Deserialize(ASROutput, MicrosoftGraph.MSGraphJsonContext.Default.StringArray) as string[];
+								string[]? ASROutputArrayCleaned = JsonSerializer.Deserialize(ASROutput, MSDefenderJsonContext.Default.StringArray) as string[];
 
 								// If there were ASR rules exceptions
 								if (ASROutputArrayCleaned is not null && ASROutputArrayCleaned.Length > 0)

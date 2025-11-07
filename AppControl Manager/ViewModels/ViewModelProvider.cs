@@ -16,7 +16,6 @@
 //
 
 using System.Threading;
-using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.WindowComponents;
 using Windows.Storage;
@@ -92,9 +91,6 @@ internal static class ViewModelProvider
 	private static readonly Lazy<GetCIHashesVM> _getCIHashesVM = new(() =>
 		new GetCIHashesVM(), false);
 
-	private static readonly Lazy<ViewModelForMSGraph> _viewModelForMSGraph = new(() =>
-		new ViewModelForMSGraph(), false);
-
 	private static readonly Lazy<BuildNewCertificateVM> _buildNewCertificateVM = new(() =>
 		new BuildNewCertificateVM(), false);
 
@@ -151,7 +147,6 @@ internal static class ViewModelProvider
 	internal static CodeIntegrityInfoVM CodeIntegrityInfoVM => _codeIntegrityInfoVM.Value;
 	internal static GetCIHashesVM GetCIHashesVM => _getCIHashesVM.Value;
 	internal static NavigationService NavigationService => _navigationService.Value;
-	internal static ViewModelForMSGraph ViewModelForMSGraph => _viewModelForMSGraph.Value;
 	internal static ViewOnlinePoliciesVM ViewOnlinePoliciesVM => _viewOnlinePoliciesVM.Value;
 	internal static PolicyEditorVM PolicyEditorVM => _policyEditorVM.Value;
 	internal static BuildNewCertificateVM BuildNewCertificateVM => _buildNewCertificateVM.Value;

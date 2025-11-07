@@ -162,8 +162,6 @@ HardenSystemSecurity.exe,EnableRopStackPivot,On,True,Harden System Security hard
 HardenSystemSecurity.exe,EnableRopCallerCheck,On,True,Harden System Security hardening
 HardenSystemSecurity.exe,UserShadowStack,On,True,Harden System Security hardening
 HardenSystemSecurity.exe,UserShadowStackStrictMode,On,True,Harden System Security hardening
-HardenSystemSecurity.exe,MicrosoftSignedOnly,On,True,Harden System Security hardening
-HardenSystemSecurity.exe,AllowStoreSignedBinaries,On,True,Harden System Security hardening
 QuantumRelayHSS.exe,DisableNonSystemFonts,On,True,Harden System Security Quantum Relay Service hardening
 QuantumRelayHSS.exe,BlockRemoteImageLoads,On,True,Harden System Security Quantum Relay Service hardening
 QuantumRelayHSS.exe,BlockLowLabelImageLoads,On,True,Harden System Security Quantum Relay Service hardening

@@ -21,7 +21,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

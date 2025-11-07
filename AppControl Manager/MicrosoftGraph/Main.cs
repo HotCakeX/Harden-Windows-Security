@@ -24,7 +24,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AppControlManager.Others;
 using Microsoft.Identity.Client;
 using Microsoft.Identity.Client.Broker;
 
@@ -32,8 +31,6 @@ namespace AppControlManager.MicrosoftGraph;
 
 internal static class Main
 {
-
-	private static ViewModelForMSGraph ViewModelMSGraph => ViewModels.ViewModelProvider.ViewModelForMSGraph;
 
 	/// <summary>
 	/// For Microsoft Graph Command Line Tools
@@ -392,7 +389,7 @@ DeviceEvents
 				);
 
 				AuthenticatedAccounts? possibleDuplicate =
-					ViewModelMSGraph.AuthenticatedAccounts
+					AuthenticationCompanion.AuthenticatedAccounts
 						.FirstOrDefault(x =>
 							string.Equals(authResult.Account.HomeAccountId.Identifier, x.AccountIdentifier, StringComparison.OrdinalIgnoreCase) &&
 							string.Equals(authResult.Account.Username, x.Username, StringComparison.OrdinalIgnoreCase) &&
@@ -407,10 +404,10 @@ DeviceEvents
 						GlobalVars.GetStr("DuplicateAccountReplacedMessage"),
 						authResult.Account.Username));
 
-					_ = ViewModelMSGraph.AuthenticatedAccounts.Remove(possibleDuplicate);
+					_ = AuthenticationCompanion.AuthenticatedAccounts.Remove(possibleDuplicate);
 				}
 
-				ViewModelMSGraph.AuthenticatedAccounts.Add(newAccount);
+				AuthenticationCompanion.AuthenticatedAccounts.Add(newAccount);
 			}
 		}
 
@@ -425,7 +422,7 @@ DeviceEvents
 	internal static async Task SignOut(AuthenticatedAccounts account)
 	{
 		await PublicApp.RemoveAsync(account.Account);
-		_ = ViewModelMSGraph.AuthenticatedAccounts.Remove(account);
+		_ = AuthenticationCompanion.AuthenticatedAccounts.Remove(account);
 		Logger.Write(string.Format(
 			GlobalVars.GetStr("SignedOutAccountMessage"),
 			account.Username));

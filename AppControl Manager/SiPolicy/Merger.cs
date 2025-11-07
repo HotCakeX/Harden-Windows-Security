@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using AppControlManager.Others;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
 

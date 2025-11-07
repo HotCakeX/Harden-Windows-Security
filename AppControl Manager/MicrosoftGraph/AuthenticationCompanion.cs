@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using Microsoft.Identity.Client;
 using Microsoft.UI.Xaml;
@@ -34,7 +33,10 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	private readonly InfoBarSettings _InfoBar;
 	private readonly AuthenticationContext _AuthContext;
 
-	private ViewModelForMSGraph ViewModelMSGraph => ViewModelProvider.ViewModelForMSGraph;
+	/// <summary>
+	/// Collection bound to the ListViews that display the authenticated accounts in every page
+	/// </summary>
+	internal static readonly ThreadSafeObservableCollection<AuthenticatedAccounts> AuthenticatedAccounts = [];
 
 	/// <summary>
 	/// The constructor needs methods to run when the Active Account is updated
@@ -51,7 +53,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		// Initializing the field using the provided authContext
 		AuthenticationContextComboBoxSelectedItem = _AuthContext;
 
-		ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged += AuthenticatedAccounts_CollectionChanged;
+		AuthenticatedAccounts.CollectionChanged += AuthenticatedAccounts_CollectionChanged;
 
 		// Detect and set the Shimmer/ListView visibility when the class is instantiated in each ViewModel/Page
 		ShimmerListViewVisibilityConfig();
@@ -101,7 +103,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	/// </summary>
 	private void ShimmerListViewVisibilityConfig()
 	{
-		if (ViewModelMSGraph.AuthenticatedAccounts.Count > 0)
+		if (AuthenticatedAccounts.Count > 0)
 		{
 			// Action when there is at least one element.
 			AuthenticatedAccountsShimmerVisibility = Visibility.Collapsed;
@@ -365,7 +367,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		try
 		{
 			// Unsubscribe from the event to avoid leaks.
-			ViewModelMSGraph.AuthenticatedAccounts.CollectionChanged -= AuthenticatedAccounts_CollectionChanged;
+			AuthenticatedAccounts.CollectionChanged -= AuthenticatedAccounts_CollectionChanged;
 		}
 		catch { }
 

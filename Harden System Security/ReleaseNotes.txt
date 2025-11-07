@@ -1,15 +1,3 @@
-* Updated dependencies to the latest versions.
+* When running Harden System Security unelevated and try to navigate to a page that requires elevation, after accepting the elevation prompt, you will no longer be taken to the home page, instead the app will automatically navigate to the same page you were trying to access before the elevation prompt, improving user experience and saving time.
 
-* Added a new dropdown button to the Sidebar, responsible for enabling or disabling Nested Virtualization for all Hyper-V virtual machines on the system. This feature allows virtual machines to run other virtual machines within them or utilize OS security features that rely on virtualization, enhancing testing and development capabilities. Note that all VMs need to be turned off for this operation to succeed.
-
-* The Sidebar's pane is now resizable and no longer has a fixed width.
-
-* Improved localizations.
-
-* Added a new dropdown button to the Sidebar, responsible for enabling/activating or disabling/deactivating the Ultimate Performance power plan on the system. This power plan is designed to provide the highest level of performance for demanding workloads by minimizing power-saving features. It is particularly beneficial for high-performance computing tasks, gaming, and other resource-intensive applications.
-
-* Added full German language localization resources for the Harden System Security app to the repository. However, it will be available in the GUI and Microsoft Store in the next version because it needs to go through reviews first.
-
-* Added CLI support for applying and removing the security measures based on Presets in the Protect page.
-
-* Added CLI support for applying the security measures based on device usage intents in the Protect page.
+* Fixed an incompatibility with Nvidia drivers. In the Microsoft Defender category, there is an item that offers applying exploit protections to the "HardenSystemSecurity.exe" which is the main process of the application. In one of the previous versions, 2 new exploit protections named "MicrosoftSignedOnly" and "AllowStoreSignedBinaries" were added to the list, however Nvidia driver causes compatibility issues because it tries to load into the app's process which is something it isn't supposed to do, however as users reported on GitHub, this is causing inconvenience so in this version those 2 exploit protections are no longer applied when you apply exploit protections to Harden System Security in the Microsoft Defender category. Please see this GitHub issue for more info regarding this change: https://github.com/HotCakeX/Harden-Windows-Security/issues/913

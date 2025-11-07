@@ -23,7 +23,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Xml;
-using AppControlManager.Others;
 
 namespace AppControlManager.IntelGathering;
 

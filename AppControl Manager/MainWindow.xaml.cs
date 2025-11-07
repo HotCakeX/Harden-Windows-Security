@@ -280,19 +280,10 @@ internal sealed partial class MainWindow : Window
 	/// <param name="e"></param>
 	private void OnAppThemeChanged(object? sender, AppThemeChangedEventArgs e)
 	{
-
 		// Get the current system color mode
-		// UISettings uiSettings = new();
-		// ElementTheme currentColorMode = uiSettings.GetColorValue(UIColorType.Background) == Colors.Black
-		//  ? ElementTheme.Dark
-		//  : ElementTheme.Light;
-
-
-		// Better approach that doesn't require instantiating a new UISettings object
 		ElementTheme currentColorMode = Application.Current.RequestedTheme == ApplicationTheme.Dark
 			? ElementTheme.Dark
 			: ElementTheme.Light;
-
 
 		// Set the requested theme based on the event
 		// If "Use System Setting" is used, the current system color mode will be assigned which can be either light/dark

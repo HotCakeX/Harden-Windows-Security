@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -240,7 +241,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Dictionary of all the main pages in the app, used for the main navigation.
 	/// Keys are the Navigation Item tags (non-localized) and values are the page types.
 	/// </summary>
-	internal readonly Dictionary<string, Type> NavigationPageToItemContentMap = new()
+	internal readonly FrozenDictionary<string, Type> NavigationPageToItemContentMap = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
 	{
 		{ "Protect", typeof(Pages.Protect) },
 		{ "Logs", typeof(Pages.Logs) },
@@ -272,8 +273,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "AuditPolicies", typeof(Pages.AuditPolicies) },
 		{ "Home", typeof(AppControlManager.Pages.Home) },
 		{ "CBOM", typeof(Pages.CryptographicBillOfMaterials) }
-	};
-
+	}.ToFrozenDictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// Dictionary of all the pages in the app, used for the search bar.

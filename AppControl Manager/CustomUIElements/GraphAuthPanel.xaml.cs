@@ -16,7 +16,6 @@
 //
 
 using AppControlManager.MicrosoftGraph;
-using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -39,7 +38,7 @@ internal sealed partial class GraphAuthPanel : UserControl
 			typeof(GraphAuthPanel),
 			new PropertyMetadata(null));
 
-	internal ViewModelForMSGraph GraphVM => ViewModelProvider.ViewModelForMSGraph;
+	internal ThreadSafeObservableCollection<AuthenticatedAccounts> AuthenticatedAccounts => AuthenticationCompanion.AuthenticatedAccounts;
 
 	internal GraphAuthPanel()
 	{

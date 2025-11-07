@@ -16,7 +16,6 @@
 //
 
 using System.Linq;
-using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;

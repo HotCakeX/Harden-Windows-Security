@@ -17,7 +17,6 @@
 
 using System.Runtime.CompilerServices;
 using System.Xml;
-using AppControlManager.Others;
 
 namespace AppControlManager.SiPolicy;
 

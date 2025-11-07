@@ -134,7 +134,7 @@ internal sealed class CiPolicyInfo(
 	/// <returns>A JSON string representation of the policy.</returns>
 	internal static string ToJson(CiPolicyInfo policy)
 	{
-		return JsonSerializer.Serialize(policy, MicrosoftGraph.MSGraphJsonContext.Default.CiPolicyInfo);
+		return JsonSerializer.Serialize(policy, CiPolicyInfoJsonContext.Default.CiPolicyInfo);
 	}
 
 	/// <summary>
@@ -152,7 +152,7 @@ internal sealed class CiPolicyInfo(
 		CiPolicyInfo? result;
 		try
 		{
-			result = JsonSerializer.Deserialize(json, MicrosoftGraph.MSGraphJsonContext.Default.CiPolicyInfo);
+			result = JsonSerializer.Deserialize(json, CiPolicyInfoJsonContext.Default.CiPolicyInfo);
 		}
 		catch
 		{
@@ -257,3 +257,11 @@ internal sealed class CiPolicyInfo(
 	}
 }
 
+/// <summary>
+/// Json serialization context for <see cref="CiPolicyInfo"/> type.
+/// </summary>
+[JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
+[JsonSerializable(typeof(Others.CiPolicyInfo))]
+internal sealed partial class CiPolicyInfoJsonContext : JsonSerializerContext
+{
+}

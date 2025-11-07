@@ -19,7 +19,6 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using AppControlManager.Others;
 using AppControlManager.SiPolicyIntel;
 
 #pragma warning disable CS0649

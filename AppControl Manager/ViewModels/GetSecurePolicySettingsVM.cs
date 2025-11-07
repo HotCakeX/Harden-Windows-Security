@@ -18,7 +18,6 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using AppControlManager.Main;
-using AppControlManager.Others;
 using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;

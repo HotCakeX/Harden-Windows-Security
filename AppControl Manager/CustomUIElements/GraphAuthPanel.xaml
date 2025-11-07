@@ -286,13 +286,12 @@
 
                                 </StackPanel>
 
-
                                 <ListView HorizontalAlignment="Center"
                                           Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsListViewVisibility, Mode=OneWay}"
                                           x:Name="AuthenticatedAccountsListView"
                                           BorderThickness="0"
                                           CornerRadius="5"
-                                          ItemsSource="{x:Bind GraphVM.AuthenticatedAccounts, Mode=OneWay}"
+                                          ItemsSource="{x:Bind AuthenticatedAccounts, Mode=OneWay}"
                                           SelectedItem="{x:Bind Host.AuthCompanionCLS.ListViewSelectedAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           Height="300"
                                           SelectionMode="Single">

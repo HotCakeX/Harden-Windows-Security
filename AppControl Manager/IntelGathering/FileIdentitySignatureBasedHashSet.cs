@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using AppControlManager.Others;
 
 namespace AppControlManager.IntelGathering;
 

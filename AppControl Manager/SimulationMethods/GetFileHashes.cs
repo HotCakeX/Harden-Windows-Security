@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SimulationMethods;

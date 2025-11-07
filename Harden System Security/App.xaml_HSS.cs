@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using AppControlManager.Others;
 using AppControlManager.Taskbar;
+using AppControlManager.WindowComponents;
 using HardenSystemSecurity.DeviceIntents;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Others;
@@ -55,6 +56,11 @@ public partial class App : Application
 	// Determines whether the session must prompt for UAC to elevate or not
 	private static bool requireAdminPrivilege;
 
+	// For navigation restoration passed via command line
+	private static string? _cliNavTag;
+
+	private static Type? PageTypeToNavTo;
+
 	/// <summary>
 	/// Invoked when the application is launched.
 	/// </summary>
@@ -86,15 +92,11 @@ public partial class App : Application
 				{
 					Logger.Write(GlobalVars.GetStr("FileActivationDetectedMessage"));
 
-					IFileActivatedEventArgs? fileActivatedArgs = activatedEventArgs.Data as IFileActivatedEventArgs;
-
-					if (fileActivatedArgs is not null)
+					if (activatedEventArgs.Data is IFileActivatedEventArgs fileActivatedArgs)
 					{
-						IReadOnlyList<IStorageItem>? incomingStorageItems = fileActivatedArgs.Files;
-
-						if (incomingStorageItems is not null && incomingStorageItems.Count > 0)
+						if (fileActivatedArgs.Files.Count > 0)
 						{
-							foreach (IStorageItem item in incomingStorageItems)
+							foreach (IStorageItem item in fileActivatedArgs.Files)
 							{
 								if (item.Path is not null && File.Exists(item.Path))
 								{
@@ -134,18 +136,9 @@ public partial class App : Application
 			Logger.Write(ex);
 		}
 
-		// If a CLI preset or a device intent is requested, require elevation unless already elevated.
-		if (_cliPresetIndex.HasValue || _cliDeviceIntent.HasValue || _cliAction is not null)
-		{
-			if (!IsElevated)
-			{
-				requireAdminPrivilege = true;
-			}
-		}
-
 		// If the current session is not elevated and user configured the app to ask for elevation on startup
 		// Also prompt for elevation whether or not prompt for elevation setting is on when user selects a file to open from file explorer that requires elevated permissions
-		if (!IsElevated && Settings.PromptForElevationOnStartup || !IsElevated && requireAdminPrivilege)
+		if (!IsElevated && (Settings.PromptForElevationOnStartup || requireAdminPrivilege))
 		{
 			// Build passthrough arguments so the elevated instance can reconstruct intent.
 			if (Relaunch.RelaunchAppElevated(AUMID, BuildRelaunchArguments()))
@@ -294,7 +287,6 @@ public partial class App : Application
 			catch (Exception ex)
 			{
 				Logger.Write(ex);
-
 				// Continue doing the normal navigation if there was a problem
 				InitialNav();
 			}
@@ -302,6 +294,18 @@ public partial class App : Application
 			{
 				// Clear after use
 				_activationFilePath = null;
+			}
+		}
+		// Navigation restoration path or user asking for specific page to launch.
+		else if (PageTypeToNavTo is not null)
+		{
+			try
+			{
+				ViewModelProvider.NavigationService.Navigate(PageTypeToNavTo, null);
+			}
+			finally
+			{
+				PageTypeToNavTo = null;
 			}
 		}
 		else
@@ -369,6 +373,12 @@ public partial class App : Application
 			parts.Add($"--file=\"{safePath}\"");
 		}
 
+		// Navigation arguments
+		if (!string.IsNullOrWhiteSpace(_cliNavTag))
+		{
+			parts.Add($"--navtag={_cliNavTag}");
+		}
+
 		if (parts.Count == 0)
 		{
 			return null;
@@ -406,6 +416,7 @@ public partial class App : Application
 					if (!string.IsNullOrWhiteSpace(possibleAction) && !possibleAction.StartsWith("--", StringComparison.Ordinal))
 					{
 						_cliAction = possibleAction;
+						requireAdminPrivilege = true;
 					}
 				}
 			}
@@ -418,6 +429,7 @@ public partial class App : Application
 				if (int.TryParse(raw, out int idx) && idx >= 0 && idx <= 2)
 				{
 					_cliPresetIndex = idx;
+					requireAdminPrivilege = true;
 				}
 				else
 				{
@@ -435,6 +447,7 @@ public partial class App : Application
 				if (Enum.TryParse(rawIntent, true, out Intent parsedIntent))
 				{
 					_cliDeviceIntent = parsedIntent;
+					requireAdminPrivilege = true;
 				}
 				else
 				{
@@ -475,6 +488,28 @@ public partial class App : Application
 				}
 			}
 
+			// Parse navigation restoration arguments
+			string? navTagArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--navtag=", StringComparison.OrdinalIgnoreCase));
+			if (navTagArg is not null)
+			{
+				string rawTag = navTagArg["--navtag=".Length..].Trim();
+				if (!string.IsNullOrWhiteSpace(rawTag))
+				{
+					_cliNavTag = rawTag;
+					if (!ViewModelProvider.NavigationService.mainWindowVM.NavigationPageToItemContentMap.TryGetValue(_cliNavTag, out PageTypeToNavTo))
+					{
+						Logger.Write($"{rawTag} is not a valid page tag.");
+					}
+					else
+					{
+						// If the page requires elevation, we must ask for it.
+						if (!ViewModelProvider.MainWindowVM.UnelevatedPages.Contains(PageTypeToNavTo))
+						{
+							requireAdminPrivilege = true;
+						}
+					}
+				}
+			}
 		}
 	}
 }

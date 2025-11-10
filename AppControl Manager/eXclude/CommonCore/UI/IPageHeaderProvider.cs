@@ -15,11 +15,10 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace AppControlManager.MicrosoftGraph;
+namespace CommonCore.UI;
 
-// Host interface for viewmodels that want to use the GraphAuthPanel user control.
-internal interface IGraphAuthHost
+internal interface IPageHeaderProvider
 {
-	AuthenticationCompanion AuthCompanionCLS { get; }
-	bool AreElementsEnabled { get; }
+	string HeaderTitle { get; }
+	Uri? HeaderGuideUri { get; }
 }

@@ -21,11 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// Initializes the CreatePolicy component, disabling log size inputs and maintaining navigation state.
-/// of various policies.
-/// </summary>
-internal sealed partial class CreatePolicy : Page
+internal sealed partial class CreatePolicy : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private CreatePolicyVM ViewModel { get; } = ViewModelProvider.CreatePolicyVM;
 
@@ -35,4 +31,8 @@ internal sealed partial class CreatePolicy : Page
 		DataContext = ViewModel;
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreatePolicyPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy");
+
 }

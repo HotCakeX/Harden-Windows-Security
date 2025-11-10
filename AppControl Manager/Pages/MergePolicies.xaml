@@ -11,36 +11,20 @@
 
     <ScrollViewer>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" >
 
-            <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
+            <win:StackPanel.ChildrenTransitions>
+                <win:EntranceThemeTransition FromVerticalOffset="50" />
+                <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+            </win:StackPanel.ChildrenTransitions>
 
-                <TextBlock x:Uid="MergePoliciesPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-                <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Merge-App-Control-Policies" />
-
-            </controls:WrapPanel>
-
-            <StackPanel HorizontalAlignment="Stretch"
-                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1" Margin="0,30,0,0">
-
-                <win:StackPanel.ChildrenTransitions>
-                    <win:EntranceThemeTransition FromVerticalOffset="50" />
-                    <win:RepositionThemeTransition IsStaggeringEnabled="False" />
-                </win:StackPanel.ChildrenTransitions>
-
-
-                <controls:SettingsExpander
+            <controls:SettingsExpander
                            x:Uid="MergePoliciesSettingsExpander"
                            IsExpanded="True"
                            HeaderIcon="{ui:FontIcon Glyph=&#xEA3C;}">
 
-                    <controls:SettingsExpander.ItemsHeader>
-                        <customUI:InfoBarV2
+                <controls:SettingsExpander.ItemsHeader>
+                    <customUI:InfoBarV2
                             x:Uid="CurrentStatusInfoBar"
                             BorderThickness="0"
                             CornerRadius="0"
@@ -50,98 +34,97 @@
                             Message="{x:Bind ViewModel.PolicyMergerInfoBarMessage, Mode=OneWay}"
                             IsClosable="{x:Bind ViewModel.PolicyMergerInfoBarIsClosable, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.PolicyMergerInfoBarSeverity, Mode=OneWay}">
-                        </customUI:InfoBarV2>
-                    </controls:SettingsExpander.ItemsHeader>
+                    </customUI:InfoBarV2>
+                </controls:SettingsExpander.ItemsHeader>
 
-                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
+                <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                        <Button x:Uid="MergeButton"
+                    <Button x:Uid="MergeButton"
                                 IsEnabled="{x:Bind ViewModel.MergeButtonState, Mode=OneWay}"
                                 Style="{StaticResource AccentButtonStyle}"
                                 Margin="0,0,15,0"
                                 Click="{x:Bind ViewModel.MergeButton_Click}" />
 
-                        <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}" IsChecked="{x:Bind ViewModel.ShouldDeploy, Mode=TwoWay}" x:Uid="DeployAfterMergeButton" Margin="0,0,15,0" />
+                    <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}" IsChecked="{x:Bind ViewModel.ShouldDeploy, Mode=TwoWay}" x:Uid="DeployAfterMergeButton" Margin="0,0,15,0" />
 
-                        <ProgressRing IsIndeterminate="True" Visibility="{x:Bind ViewModel.MergeProgressRingVisibility, Mode=OneWay}" />
+                    <ProgressRing IsIndeterminate="True" Visibility="{x:Bind ViewModel.MergeProgressRingVisibility, Mode=OneWay}" />
 
-                    </controls:WrapPanel>
+                </controls:WrapPanel>
 
-                    <controls:SettingsExpander.Items>
+                <controls:SettingsExpander.Items>
 
-                        <customUI:SettingsCardV3 x:Uid="BrowseForMainPolicyToMergeSettingsCard">
+                    <customUI:SettingsCardV3 x:Uid="BrowseForMainPolicyToMergeSettingsCard">
 
-                            <Button x:Uid="GenericBrowseButton" Click="{x:Bind ViewModel.MainPolicyBrowseButton_Click}">
+                        <Button x:Uid="GenericBrowseButton" Click="{x:Bind ViewModel.MainPolicyBrowseButton_Click}">
 
-                                <Button.ContentTemplate>
-                                    <DataTemplate x:DataType="x:String">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <FontIcon Glyph="&#xEC50;" FontSize="16"/>
-                                            <TextBlock Text="{x:Bind}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </Button.ContentTemplate>
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
 
-                                <Button.Flyout>
-                                    <Flyout>
+                            <Button.Flyout>
+                                <Flyout>
 
-                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.MainPolicy_Flyout_ClearButton}" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.MainPolicy_Flyout_ClearButton}" />
 
-                                            <TextBlock x:Uid="ViewTheSelectedMainPolicy" TextWrapping="WrapWholeWords" />
+                                        <TextBlock x:Uid="ViewTheSelectedMainPolicy" TextWrapping="WrapWholeWords" />
 
-                                            <TextBox Text="{x:Bind ViewModel.MainPolicy, Mode=OneWay}"
+                                        <TextBox Text="{x:Bind ViewModel.MainPolicy, Mode=OneWay}"
                                                 TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                 MinWidth="400" IsReadOnly="True" />
 
-                                        </controls:WrapPanel>
+                                    </controls:WrapPanel>
 
-                                    </Flyout>
-                                </Button.Flyout>
+                                </Flyout>
+                            </Button.Flyout>
 
-                            </Button>
+                        </Button>
 
-                        </customUI:SettingsCardV3>
+                    </customUI:SettingsCardV3>
 
-                        <customUI:SettingsCardV3 x:Uid="BrowseForOtherPoliciesToMergeSettingsCard">
+                    <customUI:SettingsCardV3 x:Uid="BrowseForOtherPoliciesToMergeSettingsCard">
 
-                            <Button x:Uid="GenericBrowseButton" Click="{x:Bind ViewModel.OtherPoliciesBrowseButton_Click}">
+                        <Button x:Uid="GenericBrowseButton" Click="{x:Bind ViewModel.OtherPoliciesBrowseButton_Click}">
 
-                                <Button.ContentTemplate>
-                                    <DataTemplate x:DataType="x:String">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <FontIcon Glyph="&#xEC50;" FontSize="16"/>
-                                            <TextBlock Text="{x:Bind}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </Button.ContentTemplate>
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
 
-                                <Button.Flyout>
-                                    <Flyout>
+                            <Button.Flyout>
+                                <Flyout>
 
-                                        <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                            <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.OtherPolicies_Flyout_ClearButton}" />
+                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.OtherPolicies_Flyout_ClearButton}" />
 
-                                            <TextBlock x:Uid="ViewTheSelectedOtherPolicies" TextWrapping="WrapWholeWords" />
+                                        <TextBlock x:Uid="ViewTheSelectedOtherPolicies" TextWrapping="WrapWholeWords" />
 
-                                            <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.OtherPolicies, Mode=OneWay}" />
+                                        <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.OtherPolicies, Mode=OneWay}" />
 
-                                        </controls:WrapPanel>
+                                    </controls:WrapPanel>
 
-                                    </Flyout>
-                                </Button.Flyout>
+                                </Flyout>
+                            </Button.Flyout>
 
-                            </Button>
+                        </Button>
 
-                        </customUI:SettingsCardV3>
+                    </customUI:SettingsCardV3>
 
-                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander.Items>
 
-                </controls:SettingsExpander>
+            </controls:SettingsExpander>
 
-            </StackPanel>
-        </Grid>
+        </StackPanel>
     </ScrollViewer>
 </Page>

@@ -10,99 +10,89 @@
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <!-- drag & drop support -->
-    <Grid
-        AllowDrop="{x:Bind ViewModel.IsNotElevated}"
-        DragOver="{x:Bind ViewModel.OnDragOver}"
-        Drop="{x:Bind ViewModel.OnDrop}">
+    <ScrollViewer AllowDrop="{x:Bind ViewModel.IsNotElevated}"
+                      DragOver="{x:Bind ViewModel.OnDragOver}"
+                      Drop="{x:Bind ViewModel.OnDrop}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <ScrollViewer>
-            <Grid>
+            <customUI:InfoBarV2 Grid.Row="0"                    
+                                IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                                Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                                Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                                IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
+
+            <Grid Grid.Row="1" Margin="5">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-                    <TextBlock x:Uid="GetCIHashesPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-                    <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Code-Integrity-Hashes" />
-                </controls:WrapPanel>
+                <!-- Button container for browse and clear buttons -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Margin="0,0,0,15">
 
-                <customUI:InfoBarV2 Grid.Row="1"
-                    Margin="15"
-                    IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
-                    Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
-                    Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                    IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
-
-                <Grid Grid.Row="2" Margin="15">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <!-- Button container for browse and clear buttons -->
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Margin="0,0,0,20">
-
-                        <customUI:ButtonV2 Click="{x:Bind ViewModel.PickFile_Click}"
+                    <customUI:ButtonV2 Click="{x:Bind ViewModel.PickFile_Click}"
                                            ObservedData="{x:Bind ViewModel.selectedFile, Mode=OneWay}"
                                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                            x:Uid="FileBrowseButton"
                                            Style="{StaticResource AccentButtonStyle}">
 
-                            <Button.ContentTemplate>
-                                <DataTemplate x:DataType="x:String">
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <FontIcon Glyph="&#xEC50;" FontSize="16"/>
-                                        <TextBlock Text="{x:Bind}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </Button.ContentTemplate>
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
 
-                            <customUI:ButtonV2.Flyout>
-                                <Flyout>
+                        <customUI:ButtonV2.Flyout>
+                            <Flyout>
 
-                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
-                                        <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedFilePath}" />
+                                    <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedFilePath}" />
 
-                                        <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+                                    <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                        <TextBox Text="{x:Bind ViewModel.selectedFile, Mode=OneWay}"
+                                    <TextBox Text="{x:Bind ViewModel.selectedFile, Mode=OneWay}"
                                                  TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                                  MinWidth="400" IsReadOnly="True" />
 
-                                    </controls:WrapPanel>
+                                </controls:WrapPanel>
 
-                                </Flyout>
-                            </customUI:ButtonV2.Flyout>
+                            </Flyout>
+                        </customUI:ButtonV2.Flyout>
 
-                        </customUI:ButtonV2>
+                    </customUI:ButtonV2>
 
-                        <Button Click="{x:Bind ViewModel.Clear_Click}"
+                    <Button Click="{x:Bind ViewModel.Clear_Click}"
                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
-                            <Button.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
-                                        <AnimatedIcon.Source>
-                                            <animatedvisuals:TrashCan/>
-                                        </AnimatedIcon.Source>
-                                    </AnimatedIcon>
-                                    <TextBlock x:Uid="ClearTheData" Margin="5,0,0,0" />
-                                </StackPanel>
-                            </Button.Content>
-                        </Button>
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
+                                    <AnimatedIcon.Source>
+                                        <animatedvisuals:TrashCan/>
+                                    </AnimatedIcon.Source>
+                                </AnimatedIcon>
+                                <TextBlock x:Uid="ClearTheData" Margin="5,0,0,0" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
 
-                        <!-- Drag and drop hint -->
-                        <TextBlock x:Uid="DragAndDropHint"
+                    <!-- Drag and drop hint -->
+                    <TextBlock x:Uid="DragAndDropHint"
                                    Visibility="{x:Bind ViewModel.IsNotElevated}"
                                    VerticalAlignment="Center"
                                    Opacity="0.7"
                                    FontStyle="Italic" />
-                    </StackPanel>
+                </StackPanel>
 
-                    <!-- Hash Cards GridView -->
-                    <GridView x:Name="hashGridView"
+                <!-- Hash Cards GridView -->
+                <GridView x:Name="hashGridView"
                               Grid.Row="1"
                               ItemsSource="{x:Bind ViewModel.HashItems, Mode=OneWay}"
                               IsItemClickEnabled="True"
@@ -111,19 +101,19 @@
                               SelectionMode="None"
                               ContainerContentChanging="{x:Bind HashGridView_ContainerContentChanging}"
                               Padding="20">
-                        <GridView.ItemContainerStyle>
-                            <Style BasedOn="{StaticResource GridViewItemRevealStyle}" TargetType="GridViewItem">
-                                <Style.Setters>
-                                    <Setter Property="Margin" Value="20" />
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="CornerRadius" Value="8"/>
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Setter Property="BorderThickness" Value="0"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="GridViewItem">
-                                                <ListViewItemPresenter
+                    <GridView.ItemContainerStyle>
+                        <Style BasedOn="{StaticResource GridViewItemRevealStyle}" TargetType="GridViewItem">
+                            <Style.Setters>
+                                <Setter Property="Margin" Value="20" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="CornerRadius" Value="8"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="GridViewItem">
+                                            <ListViewItemPresenter
                                                     ContentTransitions="{TemplateBinding ContentTransitions}"
                                                     SelectionCheckMarkVisualEnabled="{ThemeResource GridViewItemSelectionCheckMarkVisualEnabled}"
                                                     CheckBrush="{ThemeResource GridViewItemCheckBrush}"
@@ -151,43 +141,43 @@
                                                     RevealBorderThickness="0"
                                                     RevealBorderBrush="Transparent"
                                                     CornerRadius="{TemplateBinding CornerRadius}"/>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style.Setters>
-                            </Style>
-                        </GridView.ItemContainerStyle>
-                        <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="local:HashCardItem">
-                                <Grid x:Name="connectedElement"
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style.Setters>
+                        </Style>
+                    </GridView.ItemContainerStyle>
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="local:HashCardItem">
+                            <Grid x:Name="connectedElement"
                                       Height="200"
                                       Width="200"
                                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                       BorderThickness="1"
                                       CornerRadius="8">
-                                    <Grid.BorderBrush>
+                                <Grid.BorderBrush>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#4568DC" Offset="0.0"/>
+                                        <GradientStop Color="#B06AB3" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Grid.BorderBrush>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Header -->
+                                <Grid Grid.Row="0"
+                                          Height="60"
+                                          CornerRadius="8,8,0,0">
+                                    <Grid.Background>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                             <GradientStop Color="#4568DC" Offset="0.0"/>
                                             <GradientStop Color="#B06AB3" Offset="1.0"/>
                                         </LinearGradientBrush>
-                                    </Grid.BorderBrush>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-
-                                    <!-- Header -->
-                                    <Grid Grid.Row="0"
-                                          Height="60"
-                                          CornerRadius="8,8,0,0">
-                                        <Grid.Background>
-                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                <GradientStop Color="#4568DC" Offset="0.0"/>
-                                                <GradientStop Color="#B06AB3" Offset="1.0"/>
-                                            </LinearGradientBrush>
-                                        </Grid.Background>
-                                        <TextBlock HorizontalAlignment="Center"
+                                    </Grid.Background>
+                                    <TextBlock HorizontalAlignment="Center"
                                                    VerticalAlignment="Center"
                                                    Style="{ThemeResource SubtitleTextBlockStyle}"
                                                    Foreground="White"
@@ -195,180 +185,179 @@
                                                    TextAlignment="Center">
                                             <Run Text="{x:Bind AlgorithmName}" Foreground="HotPink"/>
                                             <Run Text="{x:Bind HashTypeName}"/>
-                                        </TextBlock>
-                                    </Grid>
+                                    </TextBlock>
+                                </Grid>
 
-                                    <!-- Content -->
-                                    <Grid Grid.Row="1" Padding="12">
-                                        <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="{x:Bind HashValue, Mode=OneWay}"
+                                <!-- Content -->
+                                <Grid Grid.Row="1" Padding="12">
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="{x:Bind HashValue, Mode=OneWay}"
                                                        Style="{ThemeResource CaptionTextBlockStyle}"
                                                        TextWrapping="Wrap"
                                                        TextAlignment="Center"
                                                        MaxLines="3"
                                                        TextTrimming="CharacterEllipsis"
                                                        Opacity="0.8"/>
-                                        </StackPanel>
-                                    </Grid>
+                                    </StackPanel>
+                                </Grid>
 
-                                    <!-- Progress Ring -->
-                                    <Grid Grid.RowSpan="3"
+                                <!-- Progress Ring -->
+                                <Grid Grid.RowSpan="3"
                                           Visibility="{x:Bind ProgressRingVisibility, Mode=OneWay}"
                                           Background="#99000000">
-                                        <ProgressRing IsActive="True"
+                                    <ProgressRing IsActive="True"
                                                       Width="40"
                                                       Height="40"
                                                       HorizontalAlignment="Center"
                                                       VerticalAlignment="Center"/>
-                                    </Grid>
                                 </Grid>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                    </GridView>
-                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
             </Grid>
-        </ScrollViewer>
 
-        <!-- Modal Overlay -->
-        <Grid x:Name="SmokeGrid"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch"
-              Visibility="Collapsed"
-              Canvas.ZIndex="100"
-              Tapped="{x:Bind SmokeGrid_Tapped}">
-            <Grid.Background>
-                <SolidColorBrush Color="{ThemeResource SystemChromeAltHighColor}" Opacity="0.9" />
-            </Grid.Background>
+            <!-- Modal Overlay -->
+            <Grid x:Name="SmokeGrid"
+           HorizontalAlignment="Stretch"
+           VerticalAlignment="Stretch"
+           Visibility="Collapsed"
+           Canvas.ZIndex="100"
+           Tapped="{x:Bind SmokeGrid_Tapped}">
+                <Grid.Background>
+                    <SolidColorBrush Color="{ThemeResource SystemChromeAltHighColor}" Opacity="0.9" />
+                </Grid.Background>
 
-            <!-- Wrap entire modal in a ScrollViewer to include header in scrolling -->
-            <ScrollViewer x:Name="destinationElement"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          MaxHeight="400"
-                          Width="Auto"
-                          Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
-                          BorderThickness="1"
-                          CornerRadius="12"
-                          Tapped="{x:Bind DestinationElement_Tapped}">
-                <ScrollViewer.BorderBrush>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#4568DC" Offset="0.0"/>
-                        <GradientStop Color="#B06AB3" Offset="1.0"/>
-                    </LinearGradientBrush>
-                </ScrollViewer.BorderBrush>
+                <!-- Wrap entire modal in a ScrollViewer to include header in scrolling -->
+                <ScrollViewer x:Name="destinationElement"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       MaxHeight="400"
+                       Width="Auto"
+                       Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+                       BorderThickness="1"
+                       CornerRadius="12"
+                       Tapped="{x:Bind DestinationElement_Tapped}">
+                    <ScrollViewer.BorderBrush>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#4568DC" Offset="0.0"/>
+                            <GradientStop Color="#B06AB3" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </ScrollViewer.BorderBrush>
 
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                    <!-- Modal Header -->
-                    <Grid Grid.Row="0"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Stretch"
-                          Height="80"
-                          MinWidth="300"
-                          CornerRadius="12,12,0,0">
-                        <Grid.Background>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                <GradientStop Color="#4568DC" Offset="0.0"/>
-                                <GradientStop Color="#B06AB3" Offset="1.0"/>
-                            </LinearGradientBrush>
-                        </Grid.Background>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock x:Name="modalHeaderText"
-                                   Style="{ThemeResource TitleTextBlockStyle}"
-                                   Margin="20"
-                                   HorizontalAlignment="Left"
-                                   TextWrapping="Wrap"
-                                   Grid.Column="0"
-                                   VerticalAlignment="Center"
-                                   Foreground="White"
-                                   FontWeight="SemiBold">
-                            <Run Text="{x:Bind ViewModel.SelectedHashItem.AlgorithmName, Mode=OneWay}"
-                                 FontWeight="Bold" Foreground="HotPink"/>
-                            <Run Text="{x:Bind ViewModel.SelectedHashItem.HashTypeName, Mode=OneWay}"/>
-                        </TextBlock>
-                        <Button Click="{x:Bind BackButton_Click}"
-                                HorizontalAlignment="Right"
+                        <!-- Modal Header -->
+                        <Grid Grid.Row="0"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       Height="80"
+                       MinWidth="300"
+                       CornerRadius="12,12,0,0">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#4568DC" Offset="0.0"/>
+                                    <GradientStop Color="#B06AB3" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="modalHeaderText"
+                                Style="{ThemeResource TitleTextBlockStyle}"
+                                Margin="20"
+                                HorizontalAlignment="Left"
+                                TextWrapping="Wrap"
+                                Grid.Column="0"
                                 VerticalAlignment="Center"
-                                Margin="10"
-                                Grid.Column="1"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                ToolTipService.ToolTip="Close"
-                                AutomationProperties.Name="Close">
-                            <SymbolIcon Symbol="Clear" Foreground="White" />
-                        </Button>
-                    </Grid>
+                                Foreground="White"
+                                FontWeight="SemiBold">
+                         <Run Text="{x:Bind ViewModel.SelectedHashItem.AlgorithmName, Mode=OneWay}"
+                              FontWeight="Bold" Foreground="HotPink"/>
+                         <Run Text="{x:Bind ViewModel.SelectedHashItem.HashTypeName, Mode=OneWay}"/>
+                            </TextBlock>
+                            <Button Click="{x:Bind BackButton_Click}"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Center"
+                             Margin="10"
+                             Grid.Column="1"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             ToolTipService.ToolTip="Close"
+                             AutomationProperties.Name="Close">
+                                <SymbolIcon Symbol="Clear" Foreground="White" />
+                            </Button>
+                        </Grid>
 
-                    <!-- Info Section -->
-                    <Grid Grid.Row="1" Padding="20">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <!-- Key Size -->
-                        <StackPanel Grid.Column="0" Spacing="4">
-                            <TextBlock Text="Key Size:"
-                                       Style="{ThemeResource BaseTextBlockStyle}"
-                                       FontWeight="SemiBold"
-                                       HorizontalAlignment="Center"/>
-                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.KeySize, Mode=OneWay}"
-                                       Style="{ThemeResource CaptionTextBlockStyle}"
-                                       HorizontalAlignment="Center"/>
-                        </StackPanel>
-                        <!-- Algorithm Name -->
-                        <StackPanel Grid.Column="1" Spacing="4">
-                            <TextBlock Text="Algorithm:"
-                                       Style="{ThemeResource BaseTextBlockStyle}"
-                                       FontWeight="SemiBold"
-                                       HorizontalAlignment="Center"/>
-                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.AlgorithmName, Mode=OneWay}"
-                                       Style="{ThemeResource CaptionTextBlockStyle}"
-                                       HorizontalAlignment="Center"/>
-                        </StackPanel>
-                        <!-- Hash Type -->
-                        <StackPanel Grid.Column="2" Spacing="4">
-                            <TextBlock Text="Hash Type:"
-                                       Style="{ThemeResource BaseTextBlockStyle}"
-                                       FontWeight="SemiBold"
-                                       HorizontalAlignment="Center"/>
-                            <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.HashType, Mode=OneWay}"
-                                       Style="{ThemeResource CaptionTextBlockStyle}"
-                                       HorizontalAlignment="Center"/>
+                        <!-- Info Section -->
+                        <Grid Grid.Row="1" Padding="20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Key Size -->
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="Key Size:"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                    FontWeight="SemiBold"
+                                    HorizontalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.KeySize, Mode=OneWay}"
+                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                    HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <!-- Algorithm Name -->
+                            <StackPanel Grid.Column="1" Spacing="4">
+                                <TextBlock Text="Algorithm:"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                    FontWeight="SemiBold"
+                                    HorizontalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.AlgorithmName, Mode=OneWay}"
+                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                    HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <!-- Hash Type -->
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock Text="Hash Type:"
+                                    Style="{ThemeResource BaseTextBlockStyle}"
+                                    FontWeight="SemiBold"
+                                    HorizontalAlignment="Center"/>
+                                <TextBlock Text="{x:Bind ViewModel.SelectedHashItem.HashType, Mode=OneWay}"
+                                    Style="{ThemeResource CaptionTextBlockStyle}"
+                                    HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Modal Content -->
+                        <StackPanel Grid.Row="2"
+                             Padding="20"
+                             VerticalAlignment="Center"
+                             Spacing="15">
+                            <TextBlock Text="Hash Value:"
+                                Style="{ThemeResource BaseTextBlockStyle}"
+                                FontWeight="SemiBold"
+                                HorizontalAlignment="Center"/>
+                            <TextBox Text="{x:Bind ViewModel.SelectedHashItem.HashValue, Mode=OneWay}"
+                              IsReadOnly="True"
+                              TextWrapping="Wrap"
+                              AcceptsReturn="True"
+                              Width="220"
+                              MinWidth="220"
+                              HorizontalAlignment="Center"/>
+                            <Button x:Uid="CopyToClipboard"
+                             Click="{x:Bind ViewModel.CopyButton_Click}"
+                             HorizontalAlignment="Center"
+                             Style="{StaticResource AccentButtonStyle}"/>
                         </StackPanel>
                     </Grid>
-
-                    <!-- Modal Content -->
-                    <StackPanel Grid.Row="2"
-                                Padding="20"
-                                VerticalAlignment="Center"
-                                Spacing="15">
-                        <TextBlock Text="Hash Value:"
-                                   Style="{ThemeResource BaseTextBlockStyle}"
-                                   FontWeight="SemiBold"
-                                   HorizontalAlignment="Center"/>
-                        <TextBox Text="{x:Bind ViewModel.SelectedHashItem.HashValue, Mode=OneWay}"
-                                 IsReadOnly="True"
-                                 TextWrapping="Wrap"
-                                 AcceptsReturn="True"
-                                 Width="220"
-                                 MinWidth="220"
-                                 HorizontalAlignment="Center"/>
-                        <Button x:Uid="CopyToClipboard"
-                                Click="{x:Bind ViewModel.CopyButton_Click}"
-                                HorizontalAlignment="Center"
-                                Style="{StaticResource AccentButtonStyle}"/>
-                    </StackPanel>
-                </Grid>
-            </ScrollViewer>
+                </ScrollViewer>
+            </Grid>
         </Grid>
-    </Grid>
+    </ScrollViewer>
 </Page>

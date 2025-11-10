@@ -25,11 +25,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// Represents a page for displaying strict kernel policy scan results with functionalities for copying, sorting,
-/// filtering, and managing data.
-/// </summary>
-internal sealed partial class StrictKernelPolicyScanResults : Page
+internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private CreateSupplementalPolicyVM ViewModel { get; } = ViewModelProvider.CreateSupplementalPolicyVM;
 
@@ -53,7 +49,6 @@ internal sealed partial class StrictKernelPolicyScanResults : Page
 			ListViewHelper.CopyToClipboard<FileIdentity>(fi => mapping.Getter(fi)?.ToString(), FileIdentitiesListView);
 		}
 	}
-
 
 	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
@@ -84,4 +79,6 @@ internal sealed partial class StrictKernelPolicyScanResults : Page
 		args.Handled = true;
 	}
 
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("StrictKernelModePolicyScanResultsPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
 }

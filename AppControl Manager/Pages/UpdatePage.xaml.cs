@@ -29,7 +29,7 @@ namespace AppControlManager.Pages;
 /// UpdatePage manages the update process for the AppControl Manager, including checking for updates, downloading
 /// packages, and signing them.
 /// </summary>
-internal sealed partial class UpdatePage : Page
+internal sealed partial class UpdatePage : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private ViewModels.UpdateVM ViewModel => ViewModels.ViewModelProvider.UpdateVM;
 
@@ -39,4 +39,7 @@ internal sealed partial class UpdatePage : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("UpdatePageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Update");
 }

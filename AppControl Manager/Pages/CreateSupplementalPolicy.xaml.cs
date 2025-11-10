@@ -24,10 +24,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// Represents a page for creating supplemental policies, managing data display and user interactions.
-/// </summary>
-internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsManager
+internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private CreateSupplementalPolicyVM ViewModel { get; } = ViewModelProvider.CreateSupplementalPolicyVM;
 	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
@@ -126,4 +123,8 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 	{
 		await ShadowExitAnimation.StartAsync((UIElement)sender);
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateSupplementalPolicyPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy");
+
 }

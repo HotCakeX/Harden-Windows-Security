@@ -18,7 +18,8 @@
 namespace HardenSystemSecurity.SecurityPolicy;
 
 /// <summary>
-/// Represents the policies defined in the [System Access]
+/// Represents the policies defined in the [System Access].
+/// Many of them implemented according to the specs defined here: https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/0d94df7c-9752-4b08-84de-bf29e389c074
 /// </summary>
 internal sealed class SystemAccessInfo
 {
@@ -36,7 +37,14 @@ internal sealed class SystemAccessInfo
 	internal string NewAdministratorName { get; set; } = string.Empty;
 	internal string NewGuestName { get; set; } = string.Empty;
 	internal int ClearTextPassword { get; set; }
-	// internal int LSAAnonymousNameLookup { get; set; }  - Not sure how to retrieve this via API yet - reading the value from registry key is not accurate.
+
+	/// <summary>
+	/// Network access: Allow anonymous SID/name translation
+	/// https://learn.microsoft.com/openspecs/windows_protocols/ms-gpsb/0d94df7c-9752-4b08-84de-bf29e389c074
+	/// https://learn.microsoft.com/openspecs/windows_protocols/ms-gpsb/d6eaa54a-f609-48e9-8461-b32738d77a47
+	/// </summary>
+	internal int LSAAnonymousNameLookup { get; set; }
+
 	internal int EnableAdminAccount { get; set; }
 	internal int EnableGuestAccount { get; set; }
 }

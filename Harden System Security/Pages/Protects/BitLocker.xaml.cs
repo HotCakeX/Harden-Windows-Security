@@ -25,7 +25,7 @@ using Windows.UI;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class BitLocker : Page
+internal sealed partial class BitLocker : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private BitLockerVM ViewModel => ViewModelProvider.BitLockerVM;
 
@@ -187,4 +187,6 @@ internal sealed partial class BitLocker : Page
 
 	#endregion
 
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("BitLockerPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/BitLocker");
 }

@@ -17,7 +17,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace AppControlManager.MicrosoftGraph;
+namespace CommonCore.MicrosoftGraph;
 
 /// <summary>
 /// Represents a configuration setting with properties for OData type, display name, description, URI, file name, and

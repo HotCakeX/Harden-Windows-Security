@@ -31,13 +31,8 @@ namespace HardenSystemSecurity.Pages;
 /// </summary>
 internal sealed partial class GitHubDocumentation : Page
 {
-
 	private AppSettings.Main AppSettings => App.Settings;
 
-	/// <summary>
-	/// Initializes the GitHubDocumentation component, sets the background color of the WebView2, and manages navigation
-	/// events. Maintains page state during navigation.
-	/// </summary>
 	internal GitHubDocumentation()
 	{
 		InitializeComponent();

@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class MicrosoftBaseLinesOverrides : Page
+internal sealed partial class MicrosoftBaseLinesOverrides : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private MicrosoftBaseLinesOverridesVM ViewModel => ViewModelProvider.MicrosoftBaseLinesOverridesVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class MicrosoftBaseLinesOverrides : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MicrosoftBaseLinesOverridesPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline");
 }

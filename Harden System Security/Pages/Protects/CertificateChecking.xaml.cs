@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class CertificateChecking : Page
+internal sealed partial class CertificateChecking : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private CertificateCheckingVM ViewModel => ViewModelProvider.CertificateCheckingVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class CertificateChecking : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CertificateCheckingPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Certificate-Checking");
 }

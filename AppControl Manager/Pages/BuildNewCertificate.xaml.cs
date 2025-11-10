@@ -20,11 +20,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// BuildNewCertificate is a page for generating a new certificate. It manages user input, validates fields, and handles
-/// the certificate creation process.
-/// </summary>
-internal sealed partial class BuildNewCertificate : Page
+internal sealed partial class BuildNewCertificate : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private ViewModels.BuildNewCertificateVM ViewModel { get; } = ViewModels.ViewModelProvider.BuildNewCertificateVM;
 
@@ -34,4 +30,7 @@ internal sealed partial class BuildNewCertificate : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("BuildNewCertificatePageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate");
 }

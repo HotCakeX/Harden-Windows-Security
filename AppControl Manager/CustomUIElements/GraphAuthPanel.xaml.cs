@@ -15,7 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.MicrosoftGraph;
+using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 

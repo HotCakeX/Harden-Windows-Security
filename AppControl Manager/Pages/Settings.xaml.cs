@@ -27,7 +27,7 @@ using HardenSystemSecurity.ViewModels;
 namespace HardenSystemSecurity.Pages;
 #endif
 
-internal sealed partial class Settings : Page
+internal sealed partial class Settings : Page, CommonCore.UI.IPageHeaderProvider
 {
 
 	private SettingsVM ViewModel => ViewModelProvider.SettingsVM;
@@ -39,4 +39,7 @@ internal sealed partial class Settings : Page
 		DataContext = this;
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("SettingsPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
 }

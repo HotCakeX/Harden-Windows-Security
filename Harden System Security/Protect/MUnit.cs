@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
@@ -515,7 +516,8 @@ internal static class SpecializedStrategiesRegistry
 	/// <returns>The specialized verification strategy or null if not found</returns>
 	internal static ISpecializedVerificationStrategy? GetSpecializedVerification(string policyKey)
 	{
-		return _verificationStrategies.TryGetValue(policyKey, out ISpecializedVerificationStrategy? strategy) ? strategy : null;
+		_ = _verificationStrategies.TryGetValue(policyKey, out ISpecializedVerificationStrategy? strategy);
+		return strategy;
 	}
 
 	/// <summary>
@@ -556,6 +558,156 @@ internal static class SpecializedStrategiesRegistry
 		_verificationStrategies.Clear();
 		_applyStrategies.Clear();
 		_removeStrategies.Clear();
+	}
+
+	/// <summary>
+	/// One-time guard to avoid duplicate registration attempts.
+	/// 0 = not started
+	/// 1 = in progress
+	/// 2 = completed
+	/// </summary>
+	private static int _wmiJsonRegistrationState;
+
+	/// <summary>
+	/// Signals completion of the registration (success or failure) so that concurrent callers can wait.
+	/// </summary>
+	private static readonly ManualResetEventSlim _wmiRegistrationDone = new(false);
+
+	/// <summary>
+	/// One-time registration from the JSON file.
+	/// All concurrent callers block until initialization finishes (like Lazy<T> ExecutionAndPublication).
+	/// Subsequent calls return immediately.
+	/// </summary>
+	internal static void RegisterWmiSpecializedVerificationsOnceFromFile()
+	{
+		// Fast path for when already completed
+		if (Volatile.Read(ref _wmiJsonRegistrationState) == 2)
+		{
+			return;
+		}
+
+		// Try to become the initializing thread
+		int prior = Interlocked.CompareExchange(ref _wmiJsonRegistrationState, 1, 0);
+
+		// If we were the first, perform initialization
+		if (prior == 0)
+		{
+			try
+			{
+				byte[] json = File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "Resources", "WMI", "WMISettings.json"));
+				List<WmiSpecialVerificationItem>? items =
+					JsonSerializer.Deserialize(json, WmiSpecialVerificationJsonContext.Default.ListWmiSpecialVerificationItem);
+
+				if (items is null || items.Count == 0)
+				{
+					Logger.Write("No WMI specialized verification entries found in JSON.");
+				}
+				else
+				{
+					RegisterWmiSpecializedVerificationsCore(items);
+				}
+			}
+			catch (Exception ex)
+			{
+				// Still mark as completed so waiters are released.
+				Logger.Write(ex);
+			}
+			finally
+			{
+				// Mark completed and release all waiting threads.
+				Volatile.Write(ref _wmiJsonRegistrationState, 2);
+				_wmiRegistrationDone.Set();
+			}
+		}
+		else
+		{
+			// Another thread is performing initialization so wait until it completes.
+			_wmiRegistrationDone.Wait();
+		}
+	}
+
+	/// <summary>
+	/// Core registrar.
+	/// </summary>
+	/// <param name="items">WMI verification items.</param>
+	private static void RegisterWmiSpecializedVerificationsCore(List<WmiSpecialVerificationItem> items)
+	{
+		foreach (WmiSpecialVerificationItem item in items)
+		{
+			ISpecializedVerificationStrategy strategy = new WmiJsonVerificationStrategy(
+				item.Category,
+				item.WMINamespace,
+				item.WMIClass,
+				item.WMIProperty,
+				item.DesiredWMIValues
+			);
+
+			_verificationStrategies[item.PolicyKey] = strategy;
+#if DEBUG
+			Logger.Write($"Created a {typeof(WmiSpecialVerificationItem)} for category '{item.Category}', namespace '{item.WMINamespace}', class '{item.WMIClass}', property '{item.WMIProperty}' and desired values '{string.Join(',', item.DesiredWMIValues.Select(x => x.Value))}'");
+#endif
+		}
+	}
+
+	/// <summary>
+	/// Unified specialized verification strategy derived from JSON specification.
+	/// </summary>
+	private sealed class WmiJsonVerificationStrategy(
+			string category,
+			string wmiNamespace,
+			string wmiClass,
+			string wmiProperty,
+			List<WmiDesiredValue> desiredValues) : ISpecializedVerificationStrategy
+	{
+		public bool Verify()
+		{
+			try
+			{
+				// Availability check
+				if (string.Equals(category, nameof(Categories.MicrosoftDefender), StringComparison.OrdinalIgnoreCase))
+				{
+					if (!ViewModels.MicrosoftDefenderVM.IsWmiPropertyAvailable(wmiNamespace, wmiClass, wmiProperty))
+					{
+						return false;
+					}
+				}
+
+				if (desiredValues.Count == 0)
+					return false;
+
+				string command = $"get {wmiNamespace} {wmiClass} {wmiProperty}"; // Remove double quotes as some like SmartAppControlState get it coming from ComManager service
+				string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, command).Trim('"');
+
+				// If any of the desired values match then it means the security measure is applied on the system.
+				foreach (WmiDesiredValue dv in desiredValues)
+				{
+					if (string.Equals(dv.Type, "string", StringComparison.OrdinalIgnoreCase))
+					{
+						if (string.Equals(result, dv.Value, StringComparison.OrdinalIgnoreCase))
+						{
+							return true;
+						}
+					}
+					else if (string.Equals(dv.Type, "int", StringComparison.OrdinalIgnoreCase))
+					{
+						if (int.TryParse(result, out int actual) && int.TryParse(dv.Value, out int desired))
+						{
+							if (actual == desired)
+							{
+								return true;
+							}
+						}
+					}
+				}
+
+				return false;
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+				return false;
+			}
+		}
 	}
 }
 
@@ -744,16 +896,6 @@ internal sealed partial class MUnit(
 	}
 
 	/// <summary>
-	/// Determines if an MUnit is JSON-based.
-	/// </summary>
-	/// <param name="mUnit">The MUnit to check</param>
-	/// <returns>True if it's a JSON-based MUnit</returns>
-	private static bool IsJsonBasedMUnit(MUnit mUnit)
-	{
-		return mUnit.JsonPolicyId != null;
-	}
-
-	/// <summary>
 	/// Resolves dependencies for JSON-based MUnits and returns additional MUnits (aka dependencies) to process.
 	/// </summary>
 	/// <param name="originalMUnits">The original MUnits requested by the user</param>
@@ -780,7 +922,7 @@ internal sealed partial class MUnit(
 		}
 
 		// Process dependencies only for JSON-based MUnits
-		foreach (MUnit mUnit in originalMUnits.Where(IsJsonBasedMUnit))
+		foreach (MUnit mUnit in originalMUnits)
 		{
 			cancellationToken?.ThrowIfCancellationRequested();
 
@@ -811,7 +953,7 @@ internal sealed partial class MUnit(
 				// Find the dependent MUnit by its JsonPolicyId in the same category
 				MUnit? dependentMUnit = allAvailableMUnits.FirstOrDefault(m =>
 					m.Category == mUnit.Category &&
-					IsJsonBasedMUnit(m) &&
+					m.JsonPolicyId != null &&
 					string.Equals(m.JsonPolicyId, dependencyId, StringComparison.OrdinalIgnoreCase));
 
 				if (dependentMUnit != null)
@@ -1706,6 +1848,9 @@ internal sealed partial class MUnit(
 
 		// Build the full path to the JSON file
 		string jsonConfigPath = Path.Combine(AppContext.BaseDirectory, "Resources", $"{category}.json");
+
+		// Ensure specialized strategies are registered
+		SpecializedStrategiesRegistry.RegisterWmiSpecializedVerificationsOnceFromFile();
 
 		try
 		{

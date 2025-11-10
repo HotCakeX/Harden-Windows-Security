@@ -15,7 +15,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -268,17 +267,9 @@
 
         </Grid.Resources>
 
-        <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-            <TextBlock x:Uid="ProtectPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect" />
-
-        </controls:WrapPanel>
-
         <SelectorBar
-            Grid.Row="1"
-            Margin="0,-7,0,10"
+            Grid.Row="0"
+            Margin="0,-10,0,10"
             HorizontalAlignment="Center"
             SelectionChanged="{x:Bind ViewModel.SelectorBar_SelectionChanged}"
             Style="{StaticResource TokenViewSelectorBarStyle}">
@@ -302,14 +293,14 @@
 
         </SelectorBar>
 
-        <customUI:InfoBarV2 Grid.Row="2"
+        <customUI:InfoBarV2 Grid.Row="1"
           Margin="15,0,15,10"
           IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
           Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
           Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
           IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"/>
 
-        <ScrollViewer Grid.Row="3"
+        <ScrollViewer Grid.Row="2"
                       Visibility="{x:Bind ViewModel.IsDeviceIntentSectionVisible, Mode=OneWay}"
                       Margin="5,0,5,5">
 
@@ -441,7 +432,7 @@
         </ScrollViewer>
 
         <!-- Presets section -->
-        <Grid Grid.Row="3"
+        <Grid Grid.Row="2"
               Visibility="{x:Bind ViewModel.IsPresetsSectionVisible, Mode=OneWay}">
 
             <Grid.RowDefinitions>

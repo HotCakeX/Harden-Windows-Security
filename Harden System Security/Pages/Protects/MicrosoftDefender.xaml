@@ -13,19 +13,10 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-            <TextBlock x:Uid="MicrosoftDefenderPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender" />
-
-        </controls:WrapPanel>
-
-        <customUI:InfoBarV2 Grid.Row="1"
+        <customUI:InfoBarV2 Grid.Row="0"
                             IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                             Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
@@ -33,7 +24,7 @@
 
         <TabView VerticalAlignment="Stretch"
                  IsAddTabButtonVisible="False"
-                 Grid.Row="2"
+                 Grid.Row="1"
                  TabWidthMode="Equal"
                  CanReorderTabs="{x:Bind ViewModel.IsNotElevated}">
 

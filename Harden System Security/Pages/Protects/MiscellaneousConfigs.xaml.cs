@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class MiscellaneousConfigs : Page
+internal sealed partial class MiscellaneousConfigs : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private MiscellaneousConfigsVM ViewModel => ViewModelProvider.MiscellaneousConfigsVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class MiscellaneousConfigs : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MiscellaneousConfigsPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Miscellaneous-Configurations");
 }

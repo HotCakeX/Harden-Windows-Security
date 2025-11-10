@@ -647,3 +647,23 @@ internal readonly struct CRYPT_PROVIDERS
 	internal readonly uint cProviders;
 	internal readonly IntPtr rgpszProviders;
 }
+
+/// <summary>
+/// SAMPR_USER_INFO_BUFFER union; we only model the member we use (UserControlInformation) at offset 0.
+/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/9496c26e-490b-4e76-827f-2695fc216f35
+/// </summary>
+[StructLayout(LayoutKind.Explicit)]
+internal struct SAMPR_USER_INFO_BUFFER
+{
+	[FieldOffset(0)]
+	internal SAMPR_USER_CONTROL_INFORMATION UserControlInformation;
+}
+
+/// <summary>
+/// [MS-SAMR] 2.2.6.28/2.2.6.29
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SAMPR_USER_CONTROL_INFORMATION
+{
+	internal uint Control;
+}

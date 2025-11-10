@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages;
 
-internal sealed partial class FileReputation : Page
+internal sealed partial class FileReputation : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private FileReputationVM ViewModel => ViewModelProvider.FileReputationVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class FileReputation : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("FileReputationPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/File-Reputation");
 }

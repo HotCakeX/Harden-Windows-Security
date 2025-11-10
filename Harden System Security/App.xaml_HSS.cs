@@ -20,9 +20,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using AppControlManager.Others;
 using AppControlManager.Taskbar;
-using AppControlManager.WindowComponents;
 using HardenSystemSecurity.DeviceIntents;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Others;
@@ -238,14 +236,14 @@ public partial class App : Application
 			}
 		}
 
-		m_window = new MainWindow();
+		MainWindow = new MainWindow();
 
 		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase) ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
 
-		NavigationService.RestoreWindowSize(m_window.AppWindow); // Restore window size on startup
+		NavigationService.RestoreWindowSize(MainWindow.AppWindow); // Restore window size on startup
 		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
-		m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
-		m_window.Activate();
+		MainWindow.Closed += Window_Closed;  // Assign event handler for the window closed
+		MainWindow.Activate();
 
 		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
 		Badge.ClearBadge();

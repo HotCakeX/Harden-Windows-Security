@@ -22,7 +22,7 @@ using AppControlManager.ViewModels;
 using Microsoft.Identity.Client;
 using Microsoft.UI.Xaml;
 
-namespace AppControlManager.MicrosoftGraph;
+namespace CommonCore.MicrosoftGraph;
 
 /// <summary>
 /// Encapsulates the logic shared among the pages and ViewModels that implement Microsoft Graph functionality

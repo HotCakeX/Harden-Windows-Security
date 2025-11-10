@@ -952,4 +952,7 @@
 <data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
     <value>Να επιτρέπεται η συνδεσιμότητα δικτύου κατά τη διάρκεια του connected-modern-standby (μόνο όταν είναι συνδεδεμένο στο ρεύμα)</value>
 </data>
+<data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Ορίστε τη μέγιστη διάρκεια για την οποία μια διεύθυνση IP αποκλείεται από την Προστασία Brute Force στη μέγιστη δυνατή τιμή. Μετά από αυτόν τον χρόνο, οι αποκλεισμένες διευθύνσεις IP θα μπορούν να συνδέονται και να εκκινούν συνεδρίες.</value>
+</data>
 </root>

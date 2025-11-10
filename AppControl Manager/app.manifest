@@ -2,7 +2,7 @@
 <!-- INFO: https://learn.microsoft.com/windows/win32/sbscs/application-manifests -->
 <!-- INFO (for legacy UWP but its info can be used for better understanding): https://learn.microsoft.com/uwp/schemas/appxpackage/uapmanifestschema/root-elements -->
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
-	<assemblyIdentity version="2.0.49.0" name="AppControlManager"/>
+	<assemblyIdentity version="2.0.50.0" name="AppControlManager"/>
 
 	<compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
 		<application>

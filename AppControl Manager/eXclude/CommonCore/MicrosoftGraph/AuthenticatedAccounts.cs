@@ -17,7 +17,7 @@
 
 using Microsoft.Identity.Client;
 
-namespace AppControlManager.MicrosoftGraph;
+namespace CommonCore.MicrosoftGraph;
 
 internal sealed class AuthenticatedAccounts(
 	string accountIdentifier,

@@ -17,25 +17,16 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-            <TextBlock x:Uid="Microsoft365AppsSecurityBaselinePageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-365-Apps-Security-Baseline" />
-
-        </controls:WrapPanel>
-
-        <customUI:InfoBarV2 Grid.Row="1"
+        <customUI:InfoBarV2 Grid.Row="0"
                             IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                             Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                             IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-        <Expander Grid.Row="2" Margin="0,0,0,10" Padding="8" HorizontalAlignment="Stretch">
+        <Expander Grid.Row="1" Margin="0,0,0,10" Padding="8" HorizontalAlignment="Stretch">
             <Expander.Header>
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"
@@ -201,7 +192,7 @@
             </Expander.Content>
         </Expander>
 
-        <customUI:ListViewV2 Grid.Row="3"
+        <customUI:ListViewV2 Grid.Row="2"
                              RegistryKey="Microsoft365AppsSecurityBaseline"
                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                              ItemsSource="{x:Bind ViewModel.VerificationResults, Mode=OneWay}"

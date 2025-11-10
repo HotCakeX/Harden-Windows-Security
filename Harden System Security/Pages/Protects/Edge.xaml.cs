@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class Edge : Page
+internal sealed partial class Edge : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private EdgeVM ViewModel => ViewModelProvider.EdgeVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class Edge : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("EdgePageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edge-Browser");
 }

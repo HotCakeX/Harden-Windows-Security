@@ -20,10 +20,6 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// Handles the selection and confirmation of a custom package file path for updates. Updates UI elements based on user
-/// interactions.
-/// </summary>
 internal sealed partial class UpdatePageCustomMSIXPath : Page
 {
 	private ViewModels.UpdateVM ViewModel { get; } = ViewModels.ViewModelProvider.UpdateVM;

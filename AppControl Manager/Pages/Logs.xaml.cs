@@ -22,7 +22,6 @@ using Microsoft.UI.Xaml.Navigation;
 using AppControlManager.ViewModels;
 namespace AppControlManager.Pages;
 #endif
-
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.ViewModels;
 namespace HardenSystemSecurity.Pages;
@@ -32,7 +31,7 @@ namespace HardenSystemSecurity.Pages;
 /// The Logs class manages log files, allowing users to view and filter log content. It initializes with navigation
 /// cache disabled.
 /// </summary>
-internal sealed partial class Logs : Page
+internal sealed partial class Logs : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private LogsVM ViewModel => ViewModelProvider.LogsVM;
 
@@ -42,6 +41,9 @@ internal sealed partial class Logs : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("LogsPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
 
 	/// <summary>
 	/// Called when the page is navigated to.

@@ -1,0 +1,305 @@
+[
+  {
+    "Category": "WindowsUpdateConfigurations",
+    "FriendlyName": "Allow updates to be downloaded automatically over metered connections",
+    "RegistryHive": 0,
+    "RegistryKeyName": "Software\\Policies\\Microsoft\\Windows\\WindowsUpdate",
+    "RegistryValueName": "AllowAutoWindowsUpdateDownloadOverMeteredNetwork",
+    "WMINamespace": "root\\cimv2\\mdm\\dmmap",
+    "WMIClass": "MDM_Policy_Result01_Update02",
+    "WMIProperty": "AllowAutoWindowsUpdateDownloadOverMeteredNetwork",
+    "DesiredWMIValues": [
+      {
+        "Value": "1",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "WindowsUpdateConfigurations",
+    "FriendlyName": "Automatically download updates and install them on maintenance day",
+    "RegistryHive": 0,
+    "RegistryKeyName": "Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU",
+    "RegistryValueName": "AUOptions",
+    "WMINamespace": "root\\cimv2\\mdm\\dmmap",
+    "WMIClass": "MDM_Policy_Result01_Update02",
+    "WMIProperty": "AllowAutoUpdate",
+    "DesiredWMIValues": [
+      {
+        "Value": "1",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "WindowsUpdateConfigurations",
+    "FriendlyName": "Enable Microsoft Update service",
+    "RegistryHive": 0,
+    "RegistryKeyName": "Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU",
+    "RegistryValueName": "AllowMUUpdateService",
+    "WMINamespace": "root\\cimv2\\mdm\\dmmap",
+    "WMIClass": "MDM_Policy_Result01_Update02",
+    "WMIProperty": "AllowMUUpdateService",
+    "DesiredWMIValues": [
+      {
+        "Value": "1",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "DeviceGuard",
+    "FriendlyName": "Enable Virtualization Based Security",
+    "RegistryHive": 0,
+    "RegistryKeyName": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeviceGuard",
+    "RegistryValueName": "EnableVirtualizationBasedSecurity",
+    "WMINamespace": "root\\cimv2\\mdm\\dmmap",
+    "WMIClass": "MDM_Policy_Result01_DeviceGuard02",
+    "WMIProperty": "EnableVirtualizationBasedSecurity",
+    "DesiredWMIValues": [
+      {
+        "Value": "1",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "DeviceGuard",
+    "FriendlyName": "Require Platform Security Features",
+    "RegistryHive": 0,
+    "RegistryKeyName": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeviceGuard",
+    "RegistryValueName": "RequirePlatformSecurityFeatures",
+    "WMINamespace": "root\\cimv2\\mdm\\dmmap",
+    "WMIClass": "MDM_Policy_Result01_DeviceGuard02",
+    "WMIProperty": "RequirePlatformSecurityFeatures",
+    "DesiredWMIValues": [
+      {
+        "Value": "1",
+        "Type": "string"
+      },
+      {
+        "Value": "3",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "DeviceGuard",
+    "FriendlyName": "Hypervisor Enforced Code Integrity - UEFI Lock",
+    "RegistryHive": 0,
+    "RegistryKeyName": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeviceGuard",
+    "RegistryValueName": "HypervisorEnforcedCodeIntegrity",
+    "WMINamespace": "root\\cimv2\\mdm\\dmmap",
+    "WMIClass": "MDM_Policy_Result01_VirtualizationBasedTechnology02",
+    "WMIProperty": "HypervisorEnforcedCodeIntegrity",
+    "DesiredWMIValues": [
+      {
+        "Value": "1",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "DeviceGuard",
+    "FriendlyName": "Require HVCI MAT (Memory Attribute Table)",
+    "RegistryHive": 0,
+    "RegistryKeyName": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeviceGuard",
+    "RegistryValueName": "HVCIMATRequired",
+    "WMINamespace": "root\\cimv2\\mdm\\dmmap",
+    "WMIClass": "MDM_Policy_Result01_VirtualizationBasedTechnology02",
+    "WMIProperty": "RequireUEFIMemoryAttributesTable",
+    "DesiredWMIValues": [
+      {
+        "Value": "1",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "DeviceGuard",
+    "FriendlyName": "Credential Guard Configuration - UEFI Lock",
+    "RegistryHive": 0,
+    "RegistryKeyName": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeviceGuard",
+    "RegistryValueName": "LsaCfgFlags",
+    "WMINamespace": "root\\cimv2\\mdm\\dmmap",
+    "WMIClass": "MDM_Policy_Result01_DeviceGuard02",
+    "WMIProperty": "LsaCfgFlags",
+    "DesiredWMIValues": [
+      {
+        "Value": "1",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "DeviceGuard",
+    "FriendlyName": "System Guard Launch",
+    "RegistryHive": 0,
+    "RegistryKeyName": "SOFTWARE\\Policies\\Microsoft\\Windows\\DeviceGuard",
+    "RegistryValueName": "ConfigureSystemGuardLaunch",
+    "WMINamespace": "root\\cimv2\\mdm\\dmmap",
+    "WMIClass": "MDM_Policy_Result01_DeviceGuard02",
+    "WMIProperty": "ConfigureSystemGuardLaunch",
+    "DesiredWMIValues": [
+      {
+        "Value": "1",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "MicrosoftDefender",
+    "FriendlyName": "Smart App Control",
+    "RegistryHive": 0,
+    "RegistryKeyName": "SYSTEM\\CurrentControlSet\\Control\\CI\\Policy",
+    "RegistryValueName": "VerifiedAndReputablePolicyState",
+    "WMINamespace": "ROOT\\Microsoft\\Windows\\Defender",
+    "WMIClass": "MSFT_MpComputerStatus",
+    "WMIProperty": "SmartAppControlState",
+    "DesiredWMIValues": [
+      {
+        "Value": "on",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "MicrosoftDefender",
+    "FriendlyName": "Intel Threat Detection Technology",
+    "RegistryHive": 0,
+    "RegistryKeyName": "Software\\Policies\\Microsoft\\Windows Defender\\Features",
+    "RegistryValueName": "TDTFeatureEnabled",
+    "WMINamespace": "ROOT\\Microsoft\\Windows\\Defender",
+    "WMIClass": "MSFT_MpComputerStatus",
+    "WMIProperty": "TDTStatus",
+    "DesiredWMIValues": [
+      {
+        "Value": "enabled",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "MiscellaneousConfigurations",
+    "FriendlyName": "Disable Location",
+    "RegistryHive": 0,
+    "RegistryKeyName": "Software\\Policies\\Microsoft\\Windows\\LocationAndSensors",
+    "RegistryValueName": "DisableLocation",
+    "WMINamespace": "root\\cimv2\\mdm\\dmmap",
+    "WMIClass": "MDM_Policy_Result01_System02",
+    "WMIProperty": "AllowLocation",
+    "DesiredWMIValues": [
+      {
+        "Value": "0",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "MicrosoftDefender",
+    "FriendlyName": "OOBE Enable Rtp And Sig Update",
+    "RegistryHive": 0,
+    "RegistryKeyName": "Software\\Policies\\Microsoft\\Windows Defender\\Real-Time Protection",
+    "RegistryValueName": "OobeEnableRtpAndSigUpdate",
+    "WMINamespace": "ROOT\\Microsoft\\Windows\\Defender",
+    "WMIClass": "MSFT_MpPreference",
+    "WMIProperty": "OobeEnableRtpAndSigUpdate",
+    "DesiredWMIValues": [
+      {
+        "Value": "true",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "MicrosoftDefender",
+    "FriendlyName": "Controlled Folder Access",
+    "RegistryHive": 0,
+    "RegistryKeyName": "Software\\Policies\\Microsoft\\Windows Defender\\Windows Defender Exploit Guard\\Controlled Folder Access",
+    "RegistryValueName": "EnableControlledFolderAccess",
+    "WMINamespace": "ROOT\\Microsoft\\Windows\\Defender",
+    "WMIClass": "MSFT_MpPreference",
+    "WMIProperty": "EnableControlledFolderAccess",
+    "DesiredWMIValues": [
+      {
+        "Value": "1",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "MicrosoftDefender",
+    "FriendlyName": "Performance Mode Status",
+    "RegistryHive": 0,
+    "RegistryKeyName": "Software\\Policies\\Microsoft\\Windows Defender\\Real-Time Protection",
+    "RegistryValueName": "DisableAsyncScanOnOpen",
+    "WMINamespace": "ROOT\\Microsoft\\Windows\\Defender",
+    "WMIClass": "MSFT_MpPreference",
+    "WMIProperty": "PerformanceModeStatus",
+    "DesiredWMIValues": [
+      {
+        "Value": "0",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "MicrosoftDefender",
+    "FriendlyName": "BruteForce Protection Aggressiveness",
+    "RegistryHive": 0,
+    "RegistryKeyName": "Software\\Policies\\Microsoft\\Windows Defender\\Remediation\\Behavioral Network Blocks\\Brute Force Protection",
+    "RegistryValueName": "BruteForceProtectionAggressiveness",
+    "WMINamespace": "ROOT\\Microsoft\\Windows\\Defender",
+    "WMIClass": "MSFT_MpPreference",
+    "WMIProperty": "BruteForceProtectionAggressiveness",
+    "DesiredWMIValues": [
+      {
+        "Value": "1",
+        "Type": "string"
+      },
+      {
+        "Value": "2",
+        "Type": "string"
+      }
+    ],
+    "IsSpecialVerification": true
+  },
+  {
+    "Category": "MicrosoftDefender",
+    "FriendlyName": "BruteForce Protection Max Block Time",
+    "RegistryHive": 0,
+    "RegistryKeyName": "software\\policies\\microsoft\\Windows Defender\\Remediation\\Behavioral Network Blocks\\Brute Force Protection",
+    "RegistryValueName": "BruteForceProtectionMaxBlockTime",
+    "WMINamespace": "ROOT\\Microsoft\\Windows\\Defender",
+    "WMIClass": "MSFT_MpPreference",
+    "WMIProperty": "BruteForceProtectionMaxBlockTime",
+    "DesiredWMIValues": [
+      {
+        "Value": "0",
+        "Type": "string",
+        "Comment": "Automatically handled internally"
+      },
+      {
+        "Value": "4294967295",
+        "Type": "string",
+        "Comment": "Max value"
+      }
+    ],
+    "IsSpecialVerification": true
+  }
+]

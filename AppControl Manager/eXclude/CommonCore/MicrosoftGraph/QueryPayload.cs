@@ -15,29 +15,21 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using System.Text.Json.Serialization;
 
-namespace AppControlManager.CustomUIElements;
+namespace CommonCore.MicrosoftGraph;
 
-internal sealed partial class GuideButton : UserControl
+/// <summary>
+/// Represents a payload for a query with an optional query string. The query string can be serialized to JSON.
+/// </summary>
+internal sealed class QueryPayload(
+	string? query
+)
 {
-	internal GuideButton()
-	{
-		InitializeComponent();
-	}
-
-	public Uri? NavigateUri
-	{
-		get => (Uri?)GetValue(NavigateUriProperty);
-		set => SetValue(NavigateUriProperty, value);
-	}
-
-	public static readonly DependencyProperty NavigateUriProperty =
-		DependencyProperty.Register(
-			nameof(NavigateUri),
-			typeof(Uri),
-			typeof(GuideButton),
-			new PropertyMetadata(null)
-		);
+	/// <summary>
+	/// The query string.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("Query")]
+	internal string? Query => query;
 }

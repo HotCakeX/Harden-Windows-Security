@@ -111,7 +111,7 @@ internal static class WindowsServiceHost
 	}
 
 	// Service entry point called by SCM
-	private static void ServiceMain(uint argc, IntPtr argv)
+	private static void ServiceMain()
 	{
 		try
 		{
@@ -197,7 +197,7 @@ internal static class WindowsServiceHost
 	}
 
 	// Service control handler for STOP/SHUTDOWN etc.
-	private static uint ServiceControlHandler(uint control, uint eventType, IntPtr eventData, IntPtr context)
+	private static uint ServiceControlHandler(uint control)
 	{
 		switch (control)
 		{
@@ -390,11 +390,11 @@ internal static class WindowsServiceHost
 
 	// Unmanaged entry point for SCM table
 	[UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-	private static void ServiceMain_Unmanaged(uint argc, IntPtr argv) => ServiceMain(argc, argv);
+	private static void ServiceMain_Unmanaged(uint argc, IntPtr argv) => ServiceMain();
 
 	// Unmanaged control handler for RegisterServiceCtrlHandlerExW
 	[UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
 	private static uint ServiceControlHandler_Unmanaged(uint control, uint eventType, IntPtr eventData, IntPtr context) =>
-		 ServiceControlHandler(control, eventType, eventData, context);
+		 ServiceControlHandler(control);
 
 }

@@ -5,67 +5,62 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
-    <Grid>
-
-        <NavigationView x:Name="AllowNewAppsNavigation"
+    <NavigationView x:Name="AllowNewAppsNavigation"
                  PaneDisplayMode="Top"
-                 IsTabStop="True"
-                 Grid.Row="1"
+                 IsTabStop="True"                
                  SelectionChanged="{x:Bind NavigationView_SelectionChanged}"
                  IsSettingsVisible="False"
                  IsBackButtonVisible="Collapsed">
 
-            <!-- Prevent the NavigationView from setting a default background for the content in the frame -->
-            <NavigationView.Resources>
-                <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
-            </NavigationView.Resources>
+        <!-- Prevent the NavigationView from setting a default background for the content in the frame -->
+        <NavigationView.Resources>
+            <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
+        </NavigationView.Resources>
 
-            <NavigationView.MenuItems>
+        <NavigationView.MenuItems>
 
-                <NavigationViewItem x:Uid="AllowNewAppsInternalMainNavItem" Tag="Start" >
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE83D;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+            <NavigationViewItem x:Uid="AllowNewAppsInternalMainNavItem" Tag="Start" >
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE83D;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
 
-                <NavigationViewItem x:Uid="ReviewLocalFilesNavItem" Tag="LocalFiles" IsEnabled="{x:Bind ViewModel.LocalFilesMenuItemState, Mode=OneWay}" >
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE83D;" />
-                    </NavigationViewItem.Icon>
+            <NavigationViewItem x:Uid="ReviewLocalFilesNavItem" Tag="LocalFiles" IsEnabled="{x:Bind ViewModel.LocalFilesMenuItemState, Mode=OneWay}" >
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE83D;" />
+                </NavigationViewItem.Icon>
 
-                    <NavigationViewItem.InfoBadge>
-                        <InfoBadge x:Name="LocalFilesCountInfoBadge"
+                <NavigationViewItem.InfoBadge>
+                    <InfoBadge x:Name="LocalFilesCountInfoBadge"
                             Value="{x:Bind ViewModel.LocalFilesCountInfoBadgeValue, Mode=OneWay}" Opacity="{x:Bind ViewModel.LocalFilesCountInfoBadgeOpacity, Mode=OneWay}"
                             Style="{ThemeResource AttentionIconInfoBadgeStyle}">
-                            <InfoBadge.IconSource>
-                                <FontIconSource Glyph="&#xEA6A;"/>
-                            </InfoBadge.IconSource>
-                        </InfoBadge>
-                    </NavigationViewItem.InfoBadge>
+                        <InfoBadge.IconSource>
+                            <FontIconSource Glyph="&#xEA6A;"/>
+                        </InfoBadge.IconSource>
+                    </InfoBadge>
+                </NavigationViewItem.InfoBadge>
 
-                </NavigationViewItem>
+            </NavigationViewItem>
 
-                <NavigationViewItem x:Uid="ReviewEventLogsNavItem" Tag="EventLogs" IsEnabled="{x:Bind ViewModel.EventLogsMenuItemState, Mode=OneWay}">
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE964;" />
-                    </NavigationViewItem.Icon>
+            <NavigationViewItem x:Uid="ReviewEventLogsNavItem" Tag="EventLogs" IsEnabled="{x:Bind ViewModel.EventLogsMenuItemState, Mode=OneWay}">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE964;" />
+                </NavigationViewItem.Icon>
 
-                    <NavigationViewItem.InfoBadge>
-                        <InfoBadge x:Name="EventLogsCountInfoBadge"
+                <NavigationViewItem.InfoBadge>
+                    <InfoBadge x:Name="EventLogsCountInfoBadge"
                             Value="{x:Bind ViewModel.EventLogsCountInfoBadgeValue, Mode=OneWay}" Opacity="{x:Bind ViewModel.EventLogsCountInfoBadgeOpacity, Mode=OneWay}"
                             Style="{ThemeResource AttentionIconInfoBadgeStyle}">
-                            <InfoBadge.IconSource>
-                                <FontIconSource Glyph="&#xEA6A;"/>
-                            </InfoBadge.IconSource>
-                        </InfoBadge>
-                    </NavigationViewItem.InfoBadge>
-                </NavigationViewItem>
+                        <InfoBadge.IconSource>
+                            <FontIconSource Glyph="&#xEA6A;"/>
+                        </InfoBadge.IconSource>
+                    </InfoBadge>
+                </NavigationViewItem.InfoBadge>
+            </NavigationViewItem>
 
-            </NavigationView.MenuItems>
+        </NavigationView.MenuItems>
 
-            <!-- Global margin settings for every page -->
-            <Frame x:Name="ContentFrame" Margin="15,15,15,10"/>
-        </NavigationView>
-
-    </Grid>
+        <!-- Global margin settings for every page -->
+        <Frame x:Name="ContentFrame" Margin="10,0,10,0"/>
+    </NavigationView>
 </Page>

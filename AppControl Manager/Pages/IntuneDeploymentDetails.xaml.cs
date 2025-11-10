@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-internal sealed partial class IntuneDeploymentDetails : Page
+internal sealed partial class IntuneDeploymentDetails : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private IntuneDeploymentDetailsVM ViewModel { get; } = ViewModelProvider.IntuneDeploymentDetailsVM;
 
@@ -31,4 +31,8 @@ internal sealed partial class IntuneDeploymentDetails : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = this;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("IntuneDeploymentDetailsPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
+
 }

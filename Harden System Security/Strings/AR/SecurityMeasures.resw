@@ -952,4 +952,7 @@
 <data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
     <value>السماح باتصال الشبكة أثناء connected-modern-standby (فقط عند التوصيل بالطاقة)</value>
 </data>
+<data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>عيّن الحد الأقصى لمدة حظر عنوان IP بواسطة حماية الهجمات بالقوة الغاشمة إلى أعلى قيمة ممكنة. بعد هذه المدة، ستتمكن عناوين IP المحظورة من تسجيل الدخول وبدء الجلسات.</value>
+</data>
 </root>

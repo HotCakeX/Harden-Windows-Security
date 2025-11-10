@@ -8,7 +8,6 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
-    SizeChanged="{x:Bind ViewModel.MainWindow_SizeChanged}"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     SystemBackdrop="{x:Bind ViewModel.SystemBackDropStyle, Mode=OneWay}"
     Title="AppControl Manager">
@@ -251,7 +250,7 @@
                 <NavigationViewItem x:Name="UpdateNavItem" x:Uid="UpdateNavItem" Icon="{x:Bind ViewModel.UpdateIcon, Mode=OneWay}" Tag="Update">
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge Opacity="{x:Bind ViewModel.InfoBadgeOpacity, Mode=OneWay}"
-                               Style="{ThemeResource AttentionIconInfoBadgeStyle}">
+                                   Style="{ThemeResource AttentionIconInfoBadgeStyle}">
                             <InfoBadge.IconSource>
                                 <FontIconSource Glyph="&#xEA6A;"/>
                             </InfoBadge.IconSource>
@@ -422,10 +421,10 @@
                                     </Button>
 
                                     <Button HorizontalAlignment="Center"
-                                VerticalAlignment="Bottom"
-                                x:Uid="OptimizeMemoryButton"
-                                IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.OptimizeMemory}">
+                                            VerticalAlignment="Bottom"
+                                            x:Uid="OptimizeMemoryButton"
+                                            IsEnabled="{x:Bind ViewModel.OptimizeMemoryButtonIsEnabled, Mode=OneWay}"
+                                            Click="{x:Bind ViewModel.OptimizeMemory}">
                                         <Button.ContentTemplate>
                                             <DataTemplate x:DataType="x:String">
                                                 <StackPanel Orientation="Horizontal" Spacing="8">
@@ -464,32 +463,109 @@
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <!-- BreadCrumBar that that also acts as a sticky header -->
-                    <BreadcrumbBar VerticalAlignment="Top"
-                                   Grid.Row="0"
-                                   Padding="10"
-                                   AutomationProperties.LandmarkType="Custom"
-                                   AutomationProperties.LocalizedLandmarkType="Bread Crumb Bar Navigation and Page Title"
-                                   Margin="20,10,0,5"
-                                   ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
-                                   ItemClicked="{x:Bind Nav.BreadcrumbBar_ItemClicked}">
+                    <!-- Breadcrumb + header region -->
+                    <Grid Grid.Row="0" x:Name="BreadcrumbRegionGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                        <BreadcrumbBar.ItemTemplate>
-                            <DataTemplate x:DataType="WindowComponents:Crumb">
-                                <TextBlock Text="{x:Bind Label}"
-                               TextWrapping="Wrap"
-                               Style="{StaticResource TitleTextBlockStyle}" />
-                            </DataTemplate>
-                        </BreadcrumbBar.ItemTemplate>
+                        <!-- BreadCrumbBar -->
+                        <BreadcrumbBar Grid.Row="0"
+                                       Grid.Column="0"
+                                       x:Name="MainBreadcrumbBar"
+                                       Visibility="{x:Bind ViewModel.IsCrumbBarVisible, Mode=OneWay}"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Top"
+                                       Padding="10"
+                                       AutomationProperties.LandmarkType="Custom"
+                                       AutomationProperties.LocalizedLandmarkType="Bread Crumb Bar Navigation and Page Title"
+                                       Margin="20,10,0,0"
+                                       ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
+                                       ItemClicked="{x:Bind Nav.BreadcrumbBar_ItemClicked}">
+                            <BreadcrumbBar.ItemTemplate>
+                                <DataTemplate x:DataType="WindowComponents:Crumb"
+                                              xmlns:vms="using:AppControlManager.ViewModels">
+                                    <TextBlock Text="{x:Bind Label}"                                            
+                                               Style="{x:Bind vms:ViewModelProvider.MainWindowVM.BreadcrumbItemStyle, Mode=OneWay}"
+                                               TextWrapping="NoWrap"/>
+                                </DataTemplate>
+                            </BreadcrumbBar.ItemTemplate>
+                        </BreadcrumbBar>
 
-                    </BreadcrumbBar>
+                        <!-- Header chevron flyout -->
+                        <Button Grid.Row="0"
+                                Grid.Column="1"
+                                x:Name="RulesHeaderFlyoutButton"
+                                Margin="0,10,16,5"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                Visibility="{x:Bind ViewModel.HeaderFlyoutVisibility, Mode=OneWay}"
+                                ToolTipService.ToolTip="Attack Surface Reduction">
+                            <Button.Content>
+                                <FontIcon Glyph="&#xE70D;" />
+                            </Button.Content>
+                            <Button.Flyout>
+                                <Flyout Placement="BottomEdgeAlignedRight">
+                                    <StackPanel Spacing="8" MaxWidth="400">
+                                        <TextBlock Text="{x:Bind ViewModel.PageHeaderTitle, Mode=OneWay}"
+                                                       Style="{StaticResource BodyTextBlockStyle}"
+                                                       TextWrapping="WrapWholeWords"
+                                                       TextAlignment="Start"
+                                                       IsTextSelectionEnabled="True"
+                                                       Margin="0,0,0,4"/>
+
+                                        <HyperlinkButton x:Uid="GuideButtonAtTop"
+                                                             NavigateUri="{x:Bind ViewModel.PageHeaderGuideUri, Mode=OneWay}"
+                                                             Visibility="{x:Bind ViewModel.GuideButtonVisibility, Mode=OneWay}">
+                                            <HyperlinkButton.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE7BE;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </HyperlinkButton.ContentTemplate>
+                                        </HyperlinkButton>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Grid>
+                    <!-- Inline header row (wide widths) -->
+                    <controls:WrapPanel Grid.Row="1"
+                                        Margin="20,10,0,0"
+                                        Visibility="{x:Bind ViewModel.HeaderInlineVisibility, Mode=OneWay}"
+                                        Style="{StaticResource PageHeaderWrapPanelStyle}">
+                        <TextBlock Text="{x:Bind ViewModel.PageHeaderTitle, Mode=OneWay}"
+                                   TextWrapping="WrapWholeWords"
+                                   IsTextSelectionEnabled="True"
+                                   Style="{StaticResource BodyTextBlockStyle}" />
+                        <HyperlinkButton x:Uid="GuideButtonAtTop"
+                                         NavigateUri="{x:Bind ViewModel.PageHeaderGuideUri, Mode=OneWay}"
+                                         Visibility="{x:Bind ViewModel.GuideButtonVisibility, Mode=OneWay}">
+                            <HyperlinkButton.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE7BE;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </HyperlinkButton.ContentTemplate>
+                        </HyperlinkButton>
+                    </controls:WrapPanel>
 
                     <!--  Note the use of a TwoWay binding here, this is required for this control to work.  -->
                     <controls:PropertySizer HorizontalAlignment="Left"
-                                Grid.Row="1"
+                                Grid.Row="2"
                                 Binding="{x:Bind MainNavigation.OpenPaneLength, Mode=TwoWay}"
                                 Maximum="640"
                                 Minimum="60"
@@ -498,7 +574,7 @@
                     <!-- Global margin settings for every page's content -->
                     <Frame x:Name="ContentFrame"
                            Margin="15,10,15,10"
-                           Grid.Row="1"
+                           Grid.Row="2"
                            AutomationProperties.LandmarkType="Main" />
 
                 </Grid>

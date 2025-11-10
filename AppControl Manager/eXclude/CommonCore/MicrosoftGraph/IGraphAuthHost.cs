@@ -15,29 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+namespace CommonCore.MicrosoftGraph;
 
-namespace AppControlManager.CustomUIElements;
-
-internal sealed partial class GuideButton : UserControl
+// Host interface for viewmodels that want to use the GraphAuthPanel user control.
+internal interface IGraphAuthHost
 {
-	internal GuideButton()
-	{
-		InitializeComponent();
-	}
-
-	public Uri? NavigateUri
-	{
-		get => (Uri?)GetValue(NavigateUriProperty);
-		set => SetValue(NavigateUriProperty, value);
-	}
-
-	public static readonly DependencyProperty NavigateUriProperty =
-		DependencyProperty.Register(
-			nameof(NavigateUri),
-			typeof(Uri),
-			typeof(GuideButton),
-			new PropertyMetadata(null)
-		);
+	AuthenticationCompanion AuthCompanionCLS { get; }
+	bool AreElementsEnabled { get; }
 }

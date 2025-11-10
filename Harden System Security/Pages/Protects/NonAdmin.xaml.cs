@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class NonAdmin : Page
+internal sealed partial class NonAdmin : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private NonAdminVM ViewModel => ViewModelProvider.NonAdminVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class NonAdmin : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("NonAdminPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures");
 }

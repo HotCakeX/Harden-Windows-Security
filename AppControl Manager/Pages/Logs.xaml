@@ -11,17 +11,10 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-            <TextBlock x:Uid="LogsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-        </controls:WrapPanel>
-
-        <controls:WrapPanel Orientation="Horizontal" Grid.Row="1" Margin="10" HorizontalSpacing="10" VerticalSpacing="10">
+        <controls:WrapPanel Orientation="Horizontal" Grid.Row="0" Margin="10" HorizontalSpacing="10" VerticalSpacing="10">
             <!-- ComboBox for selecting log files -->
             <ComboBox ItemsSource="{x:Bind ViewModel.LogFiles}"
                       SelectedItem="{x:Bind ViewModel.SelectedLogFile, Mode=TwoWay}">
@@ -84,7 +77,7 @@
 
         </controls:WrapPanel>
 
-        <ListView Grid.Row="2"
+        <ListView Grid.Row="1"
                   ItemsSource="{x:Bind ViewModel.LogCollection, Mode=OneWay}"
                   SelectionMode="Multiple"
                   IsItemClickEnabled="False"

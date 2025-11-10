@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class CountryIPBlocking : Page
+internal sealed partial class CountryIPBlocking : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private CountryIPBlockingVM ViewModel => ViewModelProvider.CountryIPBlockingVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class CountryIPBlocking : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CountryIPBlockingPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking");
 }

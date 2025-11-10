@@ -15,23 +15,38 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Text.Json;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace AppControlManager.MicrosoftGraph;
+namespace CommonCore.MicrosoftGraph;
 
 /// <summary>
-/// Defines a context for JSON serialization with specific options for formatting and ignoring null values. It includes
-/// serialization support for various types.
+/// Represents the response from the Graph API that contains a list of device configuration policies.
 /// </summary>
-[JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
-[JsonSerializable(typeof(JsonElement))]
-[JsonSerializable(typeof(AssignmentPayload))]
-[JsonSerializable(typeof(QueryPayload))]
-[JsonSerializable(typeof(Windows10CustomConfiguration))]
-[JsonSerializable(typeof(OmaSettingBase64))]
-[JsonSerializable(typeof(DeviceConfigurationPoliciesResponse))]
-[JsonSerializable(typeof(Group))]
-internal sealed partial class MSGraphJsonContext : JsonSerializerContext
+internal sealed class DeviceConfigurationPoliciesResponse(
+	string? oDataContext,
+	string? microsoftGraphTips,
+	List<Windows10CustomConfiguration>? value
+)
 {
+	/// <summary>
+	/// OData context information.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("@odata.context")]
+	internal string? ODataContext => oDataContext;
+
+	/// <summary>
+	/// Additional Microsoft Graph tips.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("@microsoft.graph.tips")]
+	internal string? MicrosoftGraphTips => microsoftGraphTips;
+
+	/// <summary>
+	/// The list of device configuration policies.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("value")]
+	internal List<Windows10CustomConfiguration>? Value => value;
 }

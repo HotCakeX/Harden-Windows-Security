@@ -35,7 +35,7 @@
   <Identity
     Name="VioletHansen.AppControlManager"
     Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189"
-    Version="2.0.49.0" />
+    Version="2.0.50.0" />
 
   <mp:PhoneIdentity PhoneProductId="4157a676-f4c2-4a8c-a511-b7fb2255c6f5" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 

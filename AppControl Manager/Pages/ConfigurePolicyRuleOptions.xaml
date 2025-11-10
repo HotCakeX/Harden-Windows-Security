@@ -15,18 +15,9 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-                <TextBlock x:Uid="ConfigurePolicyRuleOptionsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-                <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options" />
-
-            </controls:WrapPanel>
-
-            <customUI:InfoBarV2 Grid.Row="1"
+            <customUI:InfoBarV2 Grid.Row="0"
                                 Margin="10,0,10,5"
                                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
@@ -38,7 +29,7 @@
                                 VerticalSpacing="10"
                                 HorizontalAlignment="Center"
                                 Margin="0,0,0,20"
-                                Grid.Row="2">
+                                Grid.Row="1">
 
                 <customUI:ButtonV2 x:Name="PickPolicyFileButton"
                                    ObservedData="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
@@ -102,7 +93,7 @@
 
             <StackPanel HorizontalAlignment="Stretch"
                         Spacing="{StaticResource SettingsCardSpacing}"
-                        Grid.Row="3">
+                        Grid.Row="2">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />

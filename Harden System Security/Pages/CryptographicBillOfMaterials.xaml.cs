@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages;
 
-internal sealed partial class CryptographicBillOfMaterials : Page
+internal sealed partial class CryptographicBillOfMaterials : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private CryptographicBillOfMaterialsVM ViewModel => ViewModelProvider.CryptographicBillOfMaterialsVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class CryptographicBillOfMaterials : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CBOMPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Cryptographic-Bill-of-Materials");
 }

@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages;
 
-internal sealed partial class AuditPolicies : Page
+internal sealed partial class AuditPolicies : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private AuditPoliciesVM ViewModel => ViewModelProvider.AuditPoliciesVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class AuditPolicies : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("AuditPoliciesPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Audit-Policies");
 }

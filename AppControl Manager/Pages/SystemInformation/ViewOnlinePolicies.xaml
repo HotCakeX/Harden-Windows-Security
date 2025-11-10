@@ -8,7 +8,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:MSGraph="using:AppControlManager.MicrosoftGraph"
+    xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"

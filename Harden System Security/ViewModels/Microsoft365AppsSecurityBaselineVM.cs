@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.GroupPolicy;
+using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -46,6 +47,9 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 		// To adjust the initial width of the columns, giving them nice paddings.
 		CalculateColumnWidths();
+
+		// Enrich the data to improve detection rate by ensuring specialized strategies are registered.
+		SpecializedStrategiesRegistry.RegisterWmiSpecializedVerificationsOnceFromFile();
 	}
 
 	/// <summary>

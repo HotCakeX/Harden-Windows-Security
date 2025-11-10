@@ -17,27 +17,17 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-            <TextBlock x:Uid="PolicyEditorPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/PolicyEditor" />
-
-        </controls:WrapPanel>
-
-        <customUI:InfoBarV2 Grid.Row="1"
+        <customUI:InfoBarV2 Grid.Row="0"
                             Title="{x:Bind ViewModel.MainInfoBarTitle, Mode=OneWay}"
                             IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                             Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
-                            IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
-                            />
+                            IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-        <Border Grid.Row="2"
+        <Border Grid.Row="1"
                 Style="{StaticResource GridCardStyle}"
                 Padding="8">
 
@@ -157,7 +147,7 @@
 
         <TabView VerticalAlignment="Stretch"
                  IsAddTabButtonVisible="False"
-                 Grid.Row="3" TabWidthMode="SizeToContent"
+                 Grid.Row="2" TabWidthMode="SizeToContent"
                  CanReorderTabs="{x:Bind ViewModel.IsNotElevated}">
             <!--
             <TabView.Resources>

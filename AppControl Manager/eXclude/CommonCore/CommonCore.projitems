@@ -10,7 +10,7 @@
   </PropertyGroup>
   <!-- Make WinUI-only items visible under the Shared Project node in Solution Explorer.
        This applies ONLY when the project loaded is the .shproj itself, and does not
-       impact referencing .csproj projects (so non-WinUI builds remain unaffected).       
+       impact referencing .csproj projects (so non-WinUI builds remain unaffected).
        Without this step, we'd have to use the "Show All files" button the VS's Solution Explorer
        and the files would have different icons. -->
   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.shproj' And '$(UseWinUI)' == ''">
@@ -44,6 +44,23 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)UI\IInvisibleCrumbar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\IPageHeaderProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\AuthenticationCompanion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\Main.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\AssignmentPayload.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\AuthenticatedAccounts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\AuthenticationContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\DeviceConfigurationPoliciesResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\Group.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\IGraphAuthHost.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\IntuneGroupItemListView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\MSGraphJsonContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\OmaSettingBase64.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\QueryPayload.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\SignInMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\ThreadSafeObservableCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\Windows10CustomConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\GetFilesFast.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\MeowOpener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\FileAccessCheck.cs" />

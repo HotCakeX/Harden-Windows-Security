@@ -873,6 +873,10 @@ internal static class MSBaseline
 					currentValue = currentSystemAccess.EnableGuestAccount.ToString(CultureInfo.InvariantCulture);
 					isCompliant = int.Parse(expectedSetting.Value, CultureInfo.InvariantCulture) == currentSystemAccess.EnableGuestAccount;
 					break;
+				case "LSAAnonymousNameLookup":
+					currentValue = currentSystemAccess.LSAAnonymousNameLookup.ToString(CultureInfo.InvariantCulture);
+					isCompliant = int.Parse(expectedSetting.Value, CultureInfo.InvariantCulture) == currentSystemAccess.LSAAnonymousNameLookup;
+					break;
 				default:
 					currentValue = "Unknown Setting";
 					isCompliant = false;

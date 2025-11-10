@@ -952,4 +952,7 @@
 <data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
     <value>connected-modern-standby സമയത്ത് നെറ്റ്‌വർക്ക് കണക്റ്റിവിറ്റി അനുവദിക്കുക (പ്ലഗ് ഇൻ ചെയ്തിരിക്കുന്നപ്പോൾ മാത്രം)</value>
 </data>
+<data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>ബ്രൂട്ട്-ഫോഴ്‌സ് സംരക്ഷണം ഒരു IP വിലാസത്തെ തടയുന്ന പരമാവധി ദൈർഘ്യം സാധ്യമായ പരമാവധി മൂല്യമായി ക്രമീകരിക്കുക. ഈ സമയം കഴിഞ്ഞാൽ തടഞ്ഞിരിക്കുന്ന IP വിലാസങ്ങൾ വീണ്ടും സൈൻ ഇൻ ചെയ്യുകയും സെഷനുകൾ ആരംഭിക്കുകയും ചെയ്യും.</value>
+</data>
 </root>

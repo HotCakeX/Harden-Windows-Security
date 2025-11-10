@@ -952,4 +952,7 @@
 <data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
     <value>Zezwól na łączność sieciową podczas connected-modern-standby (tylko po podłączeniu do zasilania)</value>
 </data>
+<data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Ustaw maksymalny czas, przez jaki adres IP jest blokowany przez ochronę przed atakami brute force, na najwyższą możliwą wartość. Po tym czasie zablokowane adresy IP będą mogły ponownie się logować i inicjować sesje.</value>
+</data>
 </root>

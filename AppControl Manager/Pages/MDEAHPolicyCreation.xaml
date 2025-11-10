@@ -10,7 +10,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    xmlns:MSGraph="using:AppControlManager.MicrosoftGraph"
+    xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -20,19 +20,10 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-            <TextBlock x:Uid="MDEAHPolicyCreationPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting" />
-
-        </controls:WrapPanel>
-
-        <customUI:InfoBarV2 Grid.Row="1"
+        <customUI:InfoBarV2 Grid.Row="0"
                  IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                  Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                  Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
@@ -60,7 +51,7 @@
             </customUI:InfoBarV2.ActionButton>
         </customUI:InfoBarV2>
 
-        <controls:WrapPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+        <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
             <ProgressRing Visibility="{x:Bind ViewModel.ScanLogsProgressRingVisibility, Mode=OneWay}"
                           IsActive="{x:Bind ViewModel.ScanLogsProgressRingIsActive, Mode=OneWay}"/>
@@ -101,7 +92,7 @@
 
         </controls:WrapPanel>
 
-        <Expander Grid.Row="3" HorizontalAlignment="Stretch" Margin="0,10,0,10">
+        <Expander Grid.Row="2" HorizontalAlignment="Stretch" Margin="0,10,0,10">
             <Expander.Header>
                 <Grid Padding="8">
 
@@ -542,7 +533,7 @@
         <customUI:ListViewV2 x:Name="FileIdentitiesListView"
           RegistryKey="MDE_AdvancedHunting"
           ItemsSource="{x:Bind ViewModel.FileIdentities, Mode=OneWay}"
-          Grid.Row="4"
+          Grid.Row="3"
           SelectionMode="Extended">
 
             <customUI:ListViewV2.Header>

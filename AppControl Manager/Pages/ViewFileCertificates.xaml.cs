@@ -21,11 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// Represents a page for viewing file certificates, managing their display, and facilitating clipboard
-/// operations.
-/// </summary>
-internal sealed partial class ViewFileCertificates : Page
+internal sealed partial class ViewFileCertificates : Page, CommonCore.UI.IPageHeaderProvider
 {
 
 	private ViewFileCertificatesVM ViewModel { get; } = ViewModelProvider.ViewFileCertificatesVM;
@@ -36,4 +32,7 @@ internal sealed partial class ViewFileCertificates : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ViewFileCertificatesPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/View-File-Certificates");
 }

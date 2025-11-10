@@ -28,7 +28,7 @@ namespace AppControlManager.Pages;
 /// Represents a page for managing app permissions with navigation capabilities. It initializes the view model and
 /// handles navigation events.
 /// </summary>
-internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager
+internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private AllowNewAppsVM ViewModel { get; } = ViewModelProvider.AllowNewAppsVM;
 	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
@@ -116,4 +116,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager
 			nav.AffectPagesAnimatedIconsVisibilities(ContentFrame);
 		}
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("AllowNewAppsPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps");
 }

@@ -12,25 +12,16 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-            <TextBlock x:Uid="NonAdminPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Non-Admin-Measures" />
-
-        </controls:WrapPanel>
-
-        <customUI:InfoBarV2 Grid.Row="1"
+        <customUI:InfoBarV2 Grid.Row="0"
                     IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                     Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                     Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                     IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-        <customUI:MUnitListViewControl Grid.Row="2"
+        <customUI:MUnitListViewControl Grid.Row="1"
                        ViewModel="{x:Bind ViewModel}"
                        ListViewItemsSource="{x:Bind ViewModel.ListViewItemsSource, Mode=OneWay}"/>
 

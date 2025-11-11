@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace AppControlManager.MicrosoftGraph;
+namespace CommonCore.MicrosoftGraph;
 
 /// <summary>
 /// Used to store Intune group Names/ID and is served as a DataType for ListViews that show them

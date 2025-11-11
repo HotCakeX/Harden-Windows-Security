@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 
-namespace AppControlManager.MicrosoftGraph;
+namespace CommonCore.MicrosoftGraph;
 
 internal sealed class ThreadSafeObservableCollection<T> : ObservableCollection<T>, IDisposable
 {

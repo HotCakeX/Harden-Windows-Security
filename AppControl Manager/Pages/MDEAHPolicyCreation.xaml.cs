@@ -25,11 +25,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// MDEAHPolicyCreation is a page for managing MDE Advanced Hunting policies, including scanning logs, filtering data,
-/// and creating policies.
-/// </summary>
-internal sealed partial class MDEAHPolicyCreation : Page
+internal sealed partial class MDEAHPolicyCreation : Page, CommonCore.UI.IPageHeaderProvider
 {
 
 	private MDEAHPolicyCreationVM ViewModel { get; } = ViewModelProvider.MDEAHPolicyCreationVM;
@@ -133,6 +129,9 @@ internal sealed partial class MDEAHPolicyCreation : Page
 			sb.Begin();
 		}
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MDEAHPolicyCreationPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting");
 }
 
 internal sealed class MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage

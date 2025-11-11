@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-internal sealed partial class GetSecurePolicySettings : Page
+internal sealed partial class GetSecurePolicySettings : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private GetSecurePolicySettingsVM ViewModel { get; } = ViewModelProvider.GetSecurePolicySettingsVM;
 
@@ -31,4 +31,8 @@ internal sealed partial class GetSecurePolicySettings : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("GetSecurePolicySettingsPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Secure-Policy-Settings");
+
 }

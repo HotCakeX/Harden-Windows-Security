@@ -100,6 +100,9 @@ internal sealed partial class MainWindow : Window
 		// Subscribe to the global App theme change event
 		AppThemeManager.AppThemeChanged += OnAppThemeChanged;
 
+		// Subscribe to the size changed of the AppWindow
+		AppWindow.Changed += ViewModel.MainWindow_SizeChanged;
+
 		// Set the initial background setting based on the user's settings
 		OnNavigationBackgroundChanged(null, new(App.Settings.NavViewBackground));
 

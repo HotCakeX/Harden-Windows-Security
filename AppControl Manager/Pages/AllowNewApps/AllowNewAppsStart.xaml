@@ -19,31 +19,21 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <controls:WrapPanel Grid.Row="0" VerticalSpacing="15" HorizontalSpacing="15" Orientation="Horizontal" Margin="6,10,6,5">
-
-                <TextBlock x:Uid="AllowNewAppsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-                <customUI:GuideButton Margin="0,-8,0,8" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Allow-New-Apps" />
-
-                <StackPanel Orientation="Horizontal" Spacing="15" Margin="0,-6,0,10">
-                    <Button
-                        Click="{x:Bind ViewModel.ResetStepsButton_Click}"
-                        Style="{StaticResource AccentButtonStyle}"
+            <StackPanel Grid.Row="0" Spacing="15" Orientation="Horizontal" Margin="6,0,6,5">
+                <Button Click="{x:Bind ViewModel.ResetStepsButton_Click}"                        
                         IsEnabled="{x:Bind ViewModel.ResetStepsButtonIsEnabled, Mode=OneWay}"
                         x:Uid="ResetStepsButton">
-                        <Button.ContentTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <FontIcon Glyph="&#xE8EE;" FontSize="16"/>
-                                    <TextBlock Text="{x:Bind}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </Button.ContentTemplate>
-                    </Button>
-                    <ProgressRing IsActive="{x:Bind ViewModel.ResetProgressRingIsActive, Mode=OneWay}"/>
-                </StackPanel>
-
-            </controls:WrapPanel>
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE8EE;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+                <ProgressRing IsActive="{x:Bind ViewModel.ResetProgressRingIsActive, Mode=OneWay}"/>
+            </StackPanel>
 
             <Border BorderBrush="{x:Bind ViewModel.Step1Border_Brush, Mode=OneWay}"
                     BorderThickness="{x:Bind ViewModel.Step1Border_Thickness, Mode=OneWay}"

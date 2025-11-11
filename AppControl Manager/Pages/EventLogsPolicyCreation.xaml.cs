@@ -24,11 +24,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// Handles the creation and management of event logs policies, including scanning logs, filtering, and clipboard
-/// operations.
-/// </summary>
-internal sealed partial class EventLogsPolicyCreation : Page
+internal sealed partial class EventLogsPolicyCreation : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private EventLogsPolicyCreationVM ViewModel { get; } = ViewModelProvider.EventLogsPolicyCreationVM;
 
@@ -52,5 +48,8 @@ internal sealed partial class EventLogsPolicyCreation : Page
 			ListViewHelper.CopyToClipboard<FileIdentity>(fi => mapping.Getter(fi)?.ToString(), FileIdentitiesListView);
 		}
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("EventLogsPolicyCreationPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-Event-Logs");
 
 }

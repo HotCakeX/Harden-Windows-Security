@@ -220,7 +220,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 			await Task.Run(() =>
 			{
 				// Read and deserialize the JSON file
-				string jsonContent = File.ReadAllText(jsonPath);
+				byte[] jsonContent = File.ReadAllBytes(jsonPath);
 				CountryData[]? countries = JsonSerializer.Deserialize(jsonContent, CountryDataJsonContext.Default.CountryDataArray) ?? throw new InvalidOperationException("Failed to deserialize countries data");
 
 				// Sort by friendly name

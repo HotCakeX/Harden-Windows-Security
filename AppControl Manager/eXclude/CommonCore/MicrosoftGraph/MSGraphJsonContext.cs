@@ -15,21 +15,23 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace AppControlManager.MicrosoftGraph;
+namespace CommonCore.MicrosoftGraph;
 
 /// <summary>
-/// Represents a payload for a query with an optional query string. The query string can be serialized to JSON.
+/// Defines a context for JSON serialization with specific options for formatting and ignoring null values. It includes
+/// serialization support for various types.
 /// </summary>
-internal sealed class QueryPayload(
-	string? query
-)
+[JsonSourceGenerationOptions(WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
+[JsonSerializable(typeof(JsonElement))]
+[JsonSerializable(typeof(AssignmentPayload))]
+[JsonSerializable(typeof(QueryPayload))]
+[JsonSerializable(typeof(Windows10CustomConfiguration))]
+[JsonSerializable(typeof(OmaSettingBase64))]
+[JsonSerializable(typeof(DeviceConfigurationPoliciesResponse))]
+[JsonSerializable(typeof(Group))]
+internal sealed partial class MSGraphJsonContext : JsonSerializerContext
 {
-	/// <summary>
-	/// The query string.
-	/// </summary>
-	[JsonInclude]
-	[JsonPropertyName("Query")]
-	internal string? Query => query;
 }

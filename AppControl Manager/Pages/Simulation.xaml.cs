@@ -21,11 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// Represents a simulation page that initializes components, manages file paths, and handles user interactions for
-/// simulations.
-/// </summary>
-internal sealed partial class Simulation : Page
+internal sealed partial class Simulation : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private SimulationVM ViewModel { get; } = ViewModelProvider.SimulationVM;
 
@@ -35,4 +31,7 @@ internal sealed partial class Simulation : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("SimulationPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Simulation");
 }

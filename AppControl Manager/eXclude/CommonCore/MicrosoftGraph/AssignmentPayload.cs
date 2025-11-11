@@ -15,13 +15,23 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace AppControlManager.MicrosoftGraph;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
+namespace CommonCore.MicrosoftGraph;
 
 /// <summary>
-/// Used to determine which scope to use
+/// Represents a payload for assignments containing a dictionary of target properties. The dictionary maps string keys
+/// to object values.
 /// </summary>
-internal enum AuthenticationContext
+internal sealed class AssignmentPayload(
+	Dictionary<string, object>? target
+)
 {
-	Intune,
-	MDEAdvancedHunting
+	/// <summary>
+	/// The target properties dictionary.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("target")]
+	internal Dictionary<string, object>? Target => target;
 }

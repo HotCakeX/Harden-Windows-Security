@@ -137,7 +137,7 @@ public partial class App : Application
 		FileDialogHelper.DirectoryToOpen = IsElevated ? GlobalVars.UserConfigDir : Path.GetPathRoot(Environment.SystemDirectory)!;
 #endif
 #if HARDEN_SYSTEM_SECURITY
-	FileDialogHelper.DirectoryToOpen = Path.GetPathRoot(Environment.SystemDirectory)!;
+		FileDialogHelper.DirectoryToOpen = Path.GetPathRoot(Environment.SystemDirectory)!;
 #endif
 
 		// Capture the dispatcher queue as early as possible.
@@ -209,8 +209,6 @@ public partial class App : Application
 		await ShowErrorDialogAsync(e.Exception);
 	}
 
-	private Window? m_window;
-
 	/// <summary>
 	/// Perform initial navigation.
 	/// </summary>
@@ -220,7 +218,7 @@ public partial class App : Application
 	/// Exposes the main application window as a static property. It retrieves the window from the current application
 	/// instance.
 	/// </summary>
-	internal static Window? MainWindow => ((App)Current).m_window;
+	internal static Window? MainWindow { get; private set; }
 
 	/// <summary>
 	/// Event handler for unhandled exceptions.
@@ -270,12 +268,12 @@ public partial class App : Application
 			Directory.Delete(GlobalVars.StagingArea, true);
 		}
 
-		if (m_window is not null)
+		if (MainWindow is not null)
 		{
 			try
 			{
 				// Get the current size of the window
-				SizeInt32 size = m_window.AppWindow.Size;
+				SizeInt32 size = MainWindow.AppWindow.Size;
 
 				// Save to window width and height to the app settings
 				Settings.MainWindowWidth = size.Width;
@@ -308,7 +306,7 @@ public partial class App : Application
 	/// </summary>
 	private async Task ShowErrorDialogAsync(Exception ex)
 	{
-		if (m_window is not null)
+		if (MainWindow is not null)
 		{
 			// Wait for the semaphore before showing a new error dialog
 			await _dialogSemaphore.WaitAsync();
@@ -316,7 +314,7 @@ public partial class App : Application
 			try
 			{
 				// Ensure we're on the UI thread before showing the dialog
-				await m_window.DispatcherQueue.EnqueueAsync(async () =>
+				await MainWindow.DispatcherQueue.EnqueueAsync(async () =>
 				{
 
 					// Since only 1 content dialog can be displayed at a time, we close any currently active ones before showing the error

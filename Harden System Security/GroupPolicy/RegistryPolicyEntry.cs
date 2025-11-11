@@ -182,7 +182,7 @@ internal sealed class RegistryPolicyEntry(
 		if (!File.Exists(path))
 			throw new FileNotFoundException($"JSON file not found: {path}");
 
-		string json = File.ReadAllText(path);
+		byte[] json = File.ReadAllBytes(path);
 
 		return JsonSerializer.Deserialize(json, PolicyInputJsonContext.Default.ListRegistryPolicyEntry) ?? throw new InvalidOperationException($"Could not load the JSON file: {path}");
 	}
@@ -198,7 +198,7 @@ internal sealed class RegistryPolicyEntry(
 		if (!File.Exists(path))
 			throw new FileNotFoundException($"JSON file not found: {path}");
 
-		string json = File.ReadAllText(path);
+		byte[] json = File.ReadAllBytes(path);
 
 		List<RegistryPolicyEntry> result = JsonSerializer.Deserialize(json, PolicyInputJsonContext.Default.ListRegistryPolicyEntry) ?? throw new InvalidOperationException($"Could not load the JSON file: {path}");
 

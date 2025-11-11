@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class WindowsFirewall : Page
+internal sealed partial class WindowsFirewall : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private WindowsFirewallVM ViewModel => ViewModelProvider.WindowsFirewallVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class WindowsFirewall : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("WindowsFirewallPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Firewall");
 }

@@ -325,7 +325,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 
 			List<AuditPolicyInfo>? importedPolicies = await Task.Run(() =>
 			{
-				string jsonContent = File.ReadAllText(selectedFilePath, Encoding.UTF8);
+				byte[] jsonContent = File.ReadAllBytes(selectedFilePath);
 				return JsonSerializer.Deserialize(jsonContent, AuditPolicyJsonContext.Default.ListAuditPolicyInfo);
 			});
 

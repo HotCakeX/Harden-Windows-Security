@@ -40,17 +40,10 @@ internal sealed partial class HashCardItem : ViewModelBase
 	internal Visibility ProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 }
 
-/// <summary>
-/// Handles the file selection and computes various cryptographic hashes for the selected file. Displays the results in
-/// the UI.
-/// </summary>
-internal sealed partial class GetCIHashes : Page
+internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private GetCIHashesVM ViewModel { get; } = ViewModelProvider.GetCIHashesVM;
 
-	/// <summary>
-	/// Initializes the component and sets the navigation cache mode to required for the GetCIHashes class.
-	/// </summary>
 	internal GetCIHashes()
 	{
 		InitializeComponent();
@@ -291,4 +284,8 @@ internal sealed partial class GetCIHashes : Page
 		// Prevent the tap from bubbling up to the smoke grid
 		e.Handled = true;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("GetCIHashesPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Code-Integrity-Hashes");
+
 }

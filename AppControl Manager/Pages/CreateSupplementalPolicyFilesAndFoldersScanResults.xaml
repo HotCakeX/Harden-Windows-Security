@@ -12,17 +12,10 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-            <TextBlock x:Uid="CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-        </controls:WrapPanel>
-
-        <Expander Grid.Row="1" Margin="0,0,0,10" Padding="8" HorizontalAlignment="Stretch">
+        <Expander Grid.Row="0" Margin="0,0,0,10" Padding="8" HorizontalAlignment="Stretch">
             <Expander.Header>
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
@@ -132,7 +125,7 @@
             </Expander.Content>
         </Expander>
 
-        <customUI:ListViewV2 Grid.Row="2"
+        <customUI:ListViewV2 Grid.Row="1"
                              RegistryKey="SupplementalPolicy_FilesAndFolders_ScanResults"
                              Loaded="{x:Bind ViewModel.LVController.ListView_Loaded}"
                              Unloaded="{x:Bind ViewModel.LVController.ListView_Unloaded}"

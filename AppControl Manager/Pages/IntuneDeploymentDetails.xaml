@@ -7,7 +7,7 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:MSGraph="using:AppControlManager.MicrosoftGraph"
+    xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -15,24 +15,16 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Page Header -->
-        <controls:WrapPanel Grid.Row="0" Style="{StaticResource PageHeaderWrapPanelStyle}">
-            <TextBlock x:Uid="IntuneDeploymentDetailsPageTitle"
-                       TextWrapping="WrapWholeWords"
-                       Style="{StaticResource BodyTextBlockStyle}" />
-        </controls:WrapPanel>
-
-        <customUI:InfoBarV2 Grid.Row="1"
+        <customUI:InfoBarV2 Grid.Row="0"
                       IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                       Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                       Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                       IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-        <Expander Grid.Row="2"
+        <Expander Grid.Row="1"
                   Margin="0,0,0,10"
                   Padding="8"
                   HorizontalAlignment="Stretch">
@@ -181,7 +173,7 @@
         <customUI:ListViewV2 SelectionMode="Multiple"
                              ItemsSource="{x:Bind ViewModel.GroupNamesCollection}"
                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                             Grid.Row="3"
+                             Grid.Row="2"
                              Loaded="{x:Bind ViewModel.MainListView_Loaded}"
                              ScrollViewer.HorizontalScrollMode="Enabled"
                              ScrollViewer.IsHorizontalRailEnabled="True"

@@ -64,18 +64,6 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		{
 			#region One-time global registrations for this category - Registers specialized strategies for specific policies.
 
-			// Register specialized verification strategy for Smart App Control so its status can be detected via COM too.
-			SpecializedStrategiesRegistry.RegisterSpecializedVerification(
-				"SYSTEM\\CurrentControlSet\\Control\\CI\\Policy|VerifiedAndReputablePolicyState",
-				new SACSpecVerify()
-			);
-
-			// Register specialized verification strategy for Intel TDT so its status can be detected via COM too.
-			SpecializedStrategiesRegistry.RegisterSpecializedVerification(
-				"Software\\Policies\\Microsoft\\Windows Defender\\Features|TDTFeatureEnabled",
-				new IntelTDTSpecVerify()
-			);
-
 			// SEE THE END OF THE FILE FOR MORE EXAMPLES
 			/*
 			// E.g., registering specialized apply strategy that runs before the main operation
@@ -692,60 +680,6 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		}
 	}
 
-
-	/// <summary>
-	/// Specialized verification for Smart App Control.
-	/// </summary>
-	private sealed class SACSpecVerify : ISpecializedVerificationStrategy
-	{
-		public bool Verify()
-		{
-			try
-			{
-				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpComputerStatus", "SmartAppControlState"))
-				{
-					return false;
-				}
-
-				string result = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpComputerStatus SmartAppControlState");
-
-				return string.Equals(result, "on", StringComparison.OrdinalIgnoreCase);
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-				return false;
-			}
-		}
-	}
-
-	/// <summary>
-	/// Specialized verification for Intel TDT.
-	/// </summary>
-	private sealed class IntelTDTSpecVerify : ISpecializedVerificationStrategy
-	{
-		public bool Verify()
-		{
-			try
-			{
-				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpComputerStatus", "TDTStatus"))
-				{
-					return false;
-				}
-
-				string result = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpComputerStatus TDTStatus");
-
-				return string.Equals(result, "enabled", StringComparison.OrdinalIgnoreCase);
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-				return false;
-			}
-		}
-	}
-
-
 	/*
 	/// <summary>
 	/// E.g., specialized apply strategy that runs before the main apply operation.
@@ -781,7 +715,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	/// Logs a unified message when the property is not available and returns false in that case.
 	/// Returns true if available; false otherwise.
 	/// </summary>
-	private static bool IsWmiPropertyAvailable(string wmiNamespace, string className, string propertyName)
+	internal static bool IsWmiPropertyAvailable(string wmiNamespace, string className, string propertyName)
 	{
 		try
 		{

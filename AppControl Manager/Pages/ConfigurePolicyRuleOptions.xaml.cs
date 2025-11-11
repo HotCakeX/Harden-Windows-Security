@@ -23,11 +23,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// Configures policy rules and manages UI interactions for policy templates. Initializes components, handles file
-/// selection, and updates settings dynamically.
-/// </summary>
-internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsManager
+internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private ConfigurePolicyRuleOptionsVM ViewModel { get; } = ViewModelProvider.ConfigurePolicyRuleOptionsVM;
 	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
@@ -70,4 +66,6 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 
 	#endregion
 
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ConfigurePolicyRuleOptionsPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configure-Policy-Rule-Options");
 }

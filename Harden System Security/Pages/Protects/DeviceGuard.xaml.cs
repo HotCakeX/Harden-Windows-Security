@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class DeviceGuard : Page
+internal sealed partial class DeviceGuard : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private DeviceGuardVM ViewModel => ViewModelProvider.DeviceGuardVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class DeviceGuard : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("DeviceGuardPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard");
 }

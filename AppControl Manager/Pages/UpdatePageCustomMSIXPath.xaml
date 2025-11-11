@@ -10,45 +10,38 @@
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ScrollViewer>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
 
-            <StackPanel HorizontalAlignment="Stretch"
-                        Spacing="{StaticResource SettingsCardSpacing}"
-                        Grid.Row="1"
-                        Margin="0,40,0,0">
+        <StackPanel HorizontalAlignment="Stretch"
+                    Spacing="{StaticResource SettingsCardSpacing}"
+                    Grid.Row="1"
+                    Margin="0,40,0,0">
 
-                <win:StackPanel.ChildrenTransitions>
-                    <win:EntranceThemeTransition FromVerticalOffset="50" />
-                    <win:RepositionThemeTransition IsStaggeringEnabled="False" />
-                </win:StackPanel.ChildrenTransitions>
+            <win:StackPanel.ChildrenTransitions>
+                <win:EntranceThemeTransition FromVerticalOffset="50" />
+                <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+            </win:StackPanel.ChildrenTransitions>
 
-                <controls:SettingsCard x:Uid="BrowseForCustomMSIXPathSettingsCard"
-                                       HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}"
-                                       IsClickEnabled="True"
-                                       IsActionIconVisible="False"
-                                       Click="{x:Bind ViewModel.BrowseForCustomMSIXPathButton_Click}">
+            <controls:SettingsCard x:Uid="BrowseForCustomMSIXPathSettingsCard"
+                                   HeaderIcon="{ui:FontIcon Glyph=&#xF83E;}"
+                                   IsClickEnabled="True"
+                                   IsActionIconVisible="False"
+                                   Click="{x:Bind ViewModel.BrowseForCustomMSIXPathButton_Click}">
 
-                    <Button Click="{x:Bind ViewModel.BrowseForCustomMSIXPathButton_Click}"
-                            x:Uid="BrowseForCustomMSIXPathButton"
-                            Style="{StaticResource AccentButtonStyle}"
-                            Margin="0,0,15,0" />
+                <Button Click="{x:Bind ViewModel.BrowseForCustomMSIXPathButton_Click}"
+                        x:Uid="BrowseForCustomMSIXPathButton"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Margin="0,0,15,0" />
 
-                </controls:SettingsCard>
+            </controls:SettingsCard>
 
-                <customUI:SettingsCardV2 x:Uid="ConfirmUseOfCustomMSIXPathSettingsCard"
+            <customUI:SettingsCardV2 x:Uid="ConfirmUseOfCustomMSIXPathSettingsCard"
                                          IsEnabled="{x:Bind ViewModel.InstallLocalPackageConfirmationIsEnabled, Mode=OneWay}"
                                          HeaderIcon="{ui:FontIcon Glyph=&#xE774;}">
-                    <ToggleSwitch IsEnabled="{x:Bind ViewModel.InstallLocalPackageConfirmationIsEnabled, Mode=OneWay}"
+                <ToggleSwitch IsEnabled="{x:Bind ViewModel.InstallLocalPackageConfirmationIsEnabled, Mode=OneWay}"
                                   x:Uid="ToggleSwitchGeneral"
                                   IsOn="{x:Bind ViewModel.InstallLocalPackageConfirmation, Mode=TwoWay}" />
-                </customUI:SettingsCardV2>
+            </customUI:SettingsCardV2>
 
-            </StackPanel>
-
-        </Grid>
+        </StackPanel>
     </ScrollViewer>
 </Page>

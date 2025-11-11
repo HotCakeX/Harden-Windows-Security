@@ -1932,4 +1932,71 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int AllocConsole();
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
+	/// </summary>
+	[LibraryImport("ADVAPI32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint LsaNtStatusToWinError(uint Status);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lsad/6b3291a2-1265-498e-8e9d-f7e28962255e
+	/// </summary>
+	[LibraryImport("ADVAPI32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint LsaQuerySecurityObject(
+		IntPtr ObjectHandle,
+		uint SecurityInformation,
+		out IntPtr SecurityDescriptor
+	);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lsad/d4eb7286-5f19-4040-a0c1-d29136e0e58e
+	/// </summary>
+	[LibraryImport("ADVAPI32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint LsaSetSecurityObject(
+		IntPtr ObjectHandle,
+		uint SecurityInformation,
+		IntPtr SecurityDescriptor
+	);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsecuritydescriptorlength
+	/// </summary>
+	[LibraryImport("ADVAPI32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetSecurityDescriptorLength(IntPtr pSecurityDescriptor);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-createwellknownsid
+	/// </summary>
+	[LibraryImport("ADVAPI32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool CreateWellKnownSid(
+		int WellKnownSidType,
+		IntPtr DomainSid,
+		[Out] byte[] pSid,
+		ref uint cbSid
+	);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/538222f7-1b89-4811-949a-0eac62e38dce
+	/// </summary>
+	[LibraryImport("samlib.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint SamSetInformationUser(
+		IntPtr UserHandle,
+		int UserInformationClass,
+		IntPtr Buffer
+	);
+
+
 }

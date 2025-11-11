@@ -23,8 +23,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.2.25502.107" />
-		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0-rc.2.25502.107" />
+		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0" />
+		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0" />
 	</ItemGroup>
 
 </Project>

@@ -20,11 +20,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// Validates an XML policy file selected by the user and displays the result in an info bar. It handles errors and
-/// updates UI elements accordingly.
-/// </summary>
-internal sealed partial class ValidatePolicy : Page
+internal sealed partial class ValidatePolicy : Page, CommonCore.UI.IPageHeaderProvider
 {
 
 	private ViewModels.ValidatePolicyVM ViewModel { get; } = ViewModels.ViewModelProvider.ValidatePolicyVM;
@@ -35,4 +31,7 @@ internal sealed partial class ValidatePolicy : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ValidatePolicyPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Validate-Policies");
 }

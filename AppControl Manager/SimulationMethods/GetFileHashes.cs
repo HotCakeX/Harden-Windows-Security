@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
 using AppControlManager.SiPolicy;
 
@@ -37,17 +36,16 @@ internal static partial class GetFileHashes
 
 		SiPolicy.SiPolicy policyObj = Management.Initialize(null, xml);
 
-		IEnumerable<Allow>? allowRules = policyObj.FileRules?.OfType<Allow>();
-
-		if (allowRules is not null)
+		if (policyObj.FileRules is not null)
 		{
-			// Get the hash from the Allow rules
-			IEnumerable<byte[]> hashesInBytes = allowRules.Select(x => x.Hash);
-
-			// Convert each hash byte array to string
-			foreach (byte[] hash in hashesInBytes)
+			// Get the hash from the Allow rules			
+			foreach (object item in policyObj.FileRules)
 			{
-				_ = outputHashInfoProcessingString.Add(CustomSerialization.ConvertByteArrayToHex(hash));
+				if (item is Allow allowItem)
+				{
+					// Convert each hash byte array to string
+					_ = outputHashInfoProcessingString.Add(CustomSerialization.ConvertByteArrayToHex(allowItem.Hash));
+				}
 			}
 		}
 

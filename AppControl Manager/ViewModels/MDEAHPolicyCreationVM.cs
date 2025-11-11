@@ -23,10 +23,10 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
-using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using AppControlManager.XMLOps;
+using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -874,7 +874,7 @@ DeviceEvents
 			AreElementsEnabled = false;
 
 			// Retrieve the MDE Advanced Hunting data as a JSON string
-			string? result = await MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(DeviceNameTextBox, AuthCompanionCLS.CurrentActiveAccount);
+			string? result = await CommonCore.MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(DeviceNameTextBox, AuthCompanionCLS.CurrentActiveAccount);
 
 			// If there were results
 			if (result is not null)

@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages;
 
-internal sealed partial class GroupPolicyEditor : Page
+internal sealed partial class GroupPolicyEditor : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private GroupPolicyEditorVM ViewModel => ViewModelProvider.GroupPolicyEditorVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class GroupPolicyEditor : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("GroupPolicyEditorPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy-Editor");
 }

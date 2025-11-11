@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class ASR : Page
+internal sealed partial class ASR : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private ASRVM ViewModel => ViewModelProvider.ASRVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class ASR : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ASRRulesPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction");
 }

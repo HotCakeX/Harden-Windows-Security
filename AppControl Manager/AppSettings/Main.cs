@@ -18,6 +18,7 @@
 using System.Threading;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Windows.Storage;
 
@@ -26,7 +27,6 @@ using AppControlManager.AppSettings;
 namespace HardenSystemSecurity.AppSettings;
 #endif
 #if APP_CONTROL_MANAGER
-using AppControlManager.MicrosoftGraph;
 namespace AppControlManager.AppSettings;
 #endif
 
@@ -285,7 +285,7 @@ internal sealed partial class Main : ViewModelBase
 				SaveValue(nameof(StickyHeadersForListViews), field);
 			}
 		}
-	} = true;
+	}
 
 	/// <summary>
 	/// Cache the security catalog scan results to speed up various components of the app that use them.

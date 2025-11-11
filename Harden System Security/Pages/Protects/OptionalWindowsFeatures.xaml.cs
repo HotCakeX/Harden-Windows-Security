@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class OptionalWindowsFeatures : Page
+internal sealed partial class OptionalWindowsFeatures : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private OptionalWindowsFeaturesVM ViewModel => ViewModelProvider.OptionalWindowsFeaturesVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class OptionalWindowsFeatures : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("OptionalWindowsFeaturesPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features");
 }

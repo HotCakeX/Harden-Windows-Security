@@ -19,9 +19,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
+using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -156,7 +156,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			if (AuthCompanionCLS.CurrentActiveAccount is null)
 				return;
 
-			DeviceConfigurationPoliciesResponse? result = await MicrosoftGraph.Main.RetrieveDeviceConfigurations(AuthCompanionCLS.CurrentActiveAccount);
+			DeviceConfigurationPoliciesResponse? result = await CommonCore.MicrosoftGraph.Main.RetrieveDeviceConfigurations(AuthCompanionCLS.CurrentActiveAccount);
 
 			if (result is not null && result.Value is not null)
 			{
@@ -364,7 +364,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 			AreElementsEnabled = false;
 
-			await MicrosoftGraph.Main.DeletePolicy(
+			await CommonCore.MicrosoftGraph.Main.DeletePolicy(
 				AuthCompanionCLS.CurrentActiveAccount,
 				ListViewSelectedPolicy.IntunePolicyObjectID);
 

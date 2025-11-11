@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class MicrosoftDefender : Page
+internal sealed partial class MicrosoftDefender : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private MicrosoftDefenderVM ViewModel => ViewModelProvider.MicrosoftDefenderVM;
 
@@ -47,4 +47,7 @@ internal sealed partial class MicrosoftDefender : Page
 		// Finally dispose the list control itself.
 		SecurityMeasuresList.Dispose();
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MicrosoftDefenderPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender");
 }

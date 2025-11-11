@@ -1,3 +1,7 @@
 * When running Harden System Security unelevated and try to navigate to a page that requires elevation, after accepting the elevation prompt, you will no longer be taken to the home page, instead the app will automatically navigate to the same page you were trying to access before the elevation prompt, improving user experience and saving time.
 
 * Fixed an incompatibility with Nvidia drivers. In the Microsoft Defender category, there is an item that offers applying exploit protections to the "HardenSystemSecurity.exe" which is the main process of the application. In one of the previous versions, 2 new exploit protections named "MicrosoftSignedOnly" and "AllowStoreSignedBinaries" were added to the list, however Nvidia driver causes compatibility issues because it tries to load into the app's process which is something it isn't supposed to do, however as users reported on GitHub, this is causing inconvenience so in this version those 2 exploit protections are no longer applied when you apply exploit protections to Harden System Security in the Microsoft Defender category. Please see this GitHub issue for more info regarding this change: https://github.com/HotCakeX/Harden-Windows-Security/issues/913
+
+* Added a new policy to Microsoft Defender category to set the maximum time an IP address is blocked by Brute-Force Protection to the maximum possible value.
+
+* A lot more at: https://github.com/HotCakeX/Harden-Windows-Security/releases

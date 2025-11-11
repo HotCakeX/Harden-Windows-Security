@@ -23,8 +23,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
+using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -211,7 +211,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 		{
 			AreElementsEnabled = false;
 
-			List<IntuneGroupItemListView> groups = await MicrosoftGraph.Main.FetchGroups(TargetAccount);
+			List<IntuneGroupItemListView> groups = await CommonCore.MicrosoftGraph.Main.FetchGroups(TargetAccount);
 
 			// Clear the observable collection and internal storage.
 			GroupNamesCollection.Clear();
@@ -518,7 +518,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 
 			AreElementsEnabled = false;
 
-			await MicrosoftGraph.Main.CreateGroup(
+			await CommonCore.MicrosoftGraph.Main.CreateGroup(
 				TargetAccount,
 				displayName,
 				description,
@@ -602,7 +602,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 			{
 				try
 				{
-					await MicrosoftGraph.Main.DeleteGroup(TargetAccount, grp.GroupID);
+					await CommonCore.MicrosoftGraph.Main.DeleteGroup(TargetAccount, grp.GroupID);
 
 					MainInfoBar.WriteInfo(string.Format(
 						GlobalVars.GetStr("SuccessfullyDeletedGroupMessage"),
@@ -692,7 +692,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 
 				try
 				{
-					await MicrosoftGraph.Main.CreateGroup(
+					await CommonCore.MicrosoftGraph.Main.CreateGroup(
 						TargetAccount,
 						displayName,
 						description,

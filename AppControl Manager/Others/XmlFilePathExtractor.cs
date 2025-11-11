@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using System.Linq;
 using AppControlManager.SiPolicy;
 
 namespace AppControlManager.Others;
@@ -37,16 +36,14 @@ internal static class XmlFilePathExtractor
 		SiPolicy.SiPolicy policyObj = Management.Initialize(xmlFilePath, null);
 
 		// Select all Allow FileRules
-		IEnumerable<Allow>? allowRules = policyObj.FileRules?.OfType<Allow>();
-
-		if (allowRules is not null)
+		if (policyObj.FileRules is not null)
 		{
-			foreach (Allow item in allowRules)
+			foreach (object item in policyObj.FileRules)
 			{
-				if (!string.IsNullOrEmpty(item.FilePath))
+				if (item is Allow allowItem && !string.IsNullOrEmpty(allowItem.FilePath))
 				{
 					// Add the file path to the HashSet
-					_ = filePaths.Add(item.FilePath);
+					_ = filePaths.Add(allowItem.FilePath);
 				}
 			}
 		}

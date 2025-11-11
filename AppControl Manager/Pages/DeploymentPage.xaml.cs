@@ -23,11 +23,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// DeploymentPage manages the deployment of XML and CIP files, including signing and Intune integration. It handles
-/// user interactions for file selection and deployment status updates.
-/// </summary>
-internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager
+internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, CommonCore.UI.IPageHeaderProvider
 {
 	private DeploymentVM ViewModel { get; } = ViewModelProvider.DeploymentVM;
 	private SidebarVM sideBarVM { get; } = ViewModelProvider.SidebarVM;
@@ -76,5 +72,8 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager
 	}
 
 	#endregion
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("DeploymentPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy");
 
 }

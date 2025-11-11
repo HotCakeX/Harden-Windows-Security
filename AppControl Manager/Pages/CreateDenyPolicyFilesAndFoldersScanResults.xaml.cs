@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
+internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private CreateDenyPolicyVM ViewModel { get; } = ViewModelProvider.CreateDenyPolicyVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateDenyPolicyFilesAndFoldersScanResultsPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
 }

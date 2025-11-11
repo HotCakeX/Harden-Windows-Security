@@ -21,10 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// SystemInformation page
-/// </summary>
-internal sealed partial class SystemInformation : Page
+internal sealed partial class SystemInformation : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private AppSettings.Main AppSettings => App.Settings;
 
@@ -67,4 +64,7 @@ internal sealed partial class SystemInformation : Page
 			}
 		}
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("SystemInformationPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information");
 }

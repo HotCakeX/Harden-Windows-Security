@@ -15,17 +15,10 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-                <TextBlock x:Uid="SettingsPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-            </controls:WrapPanel>
-
-            <customUI:InfoBarV2 Grid.Row="1"
+            <customUI:InfoBarV2 Grid.Row="0"
                                 Margin="15"
                                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
@@ -34,7 +27,7 @@
 
             <StackPanel HorizontalAlignment="Stretch"
                         Spacing="{StaticResource SettingsCardSpacing}"
-                        Grid.Row="2">
+                        Grid.Row="1">
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />

@@ -952,4 +952,7 @@
 <data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
     <value>connected-modern-standby के दौरान नेटवर्क कनेक्टिविटी की अनुमति दें (केवल जब प्लग इन हो)</value>
 </data>
+<data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>ब्रूट-फोर्स सुरक्षा द्वारा किसी IP पते को अवरुद्ध रखने की अधिकतम अवधि को संभव अधिकतम मान पर सेट करें। इस समय के बाद, अवरुद्ध IP पते साइन-इन कर सकेंगे और सत्र आरंभ कर सकेंगे.</value>
+</data>
 </root>

@@ -20,12 +20,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
-using AppControlManager.MicrosoftGraph;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
 using AppControlManager.XMLOps;
+using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -375,7 +375,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			}
 		});
 
-		await MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, SelectedIntuneGroups.Select(x => x.GroupID).ToList(), policyName, policyID, descriptionText);
+		await CommonCore.MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, SelectedIntuneGroups.Select(x => x.GroupID).ToList(), policyName, policyID, descriptionText);
 	}
 
 

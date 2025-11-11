@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class WindowsNetworking : Page
+internal sealed partial class WindowsNetworking : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private WindowsNetworkingVM ViewModel => ViewModelProvider.WindowsNetworkingVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class WindowsNetworking : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("WindowsNetworkingPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Networking");
 }

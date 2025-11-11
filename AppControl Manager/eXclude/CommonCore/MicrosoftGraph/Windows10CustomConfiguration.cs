@@ -18,7 +18,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace AppControlManager.MicrosoftGraph;
+namespace CommonCore.MicrosoftGraph;
 
 /// <summary>
 /// Define the class structure for the custom policy.

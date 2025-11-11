@@ -23,7 +23,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages;
 
-internal sealed partial class Protect : Page
+internal sealed partial class Protect : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private ProtectVM ViewModel => ViewModelProvider.ProtectVM;
 
@@ -34,6 +34,9 @@ internal sealed partial class Protect : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		ViewModel.UIListView = ProtectionCategoriesListView; // Save a reference to the ListView in the ViewModel for direct access.
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ProtectPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect");
 
 	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
 	{

@@ -21,13 +21,8 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// Represents a page for creating supplemental policy files and folders scan results, managing data display and user
-/// interactions.
-/// </summary>
-internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults : Page
+internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults : Page, CommonCore.UI.IPageHeaderProvider
 {
-
 	private CreateSupplementalPolicyVM ViewModel { get; } = ViewModelProvider.CreateSupplementalPolicyVM;
 
 	internal CreateSupplementalPolicyFilesAndFoldersScanResults()
@@ -36,4 +31,7 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;
 }

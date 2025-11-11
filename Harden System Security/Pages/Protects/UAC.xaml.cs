@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class UAC : Page
+internal sealed partial class UAC : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private UACVM ViewModel => ViewModelProvider.UACVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class UAC : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("UACPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/User-Account-Control");
 }

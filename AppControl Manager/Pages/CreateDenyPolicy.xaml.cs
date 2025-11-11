@@ -23,10 +23,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// CreateDenyPolicy is a page for creating deny policies for files and folders.
-/// </summary>
-internal sealed partial class CreateDenyPolicy : Page
+internal sealed partial class CreateDenyPolicy : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private CreateDenyPolicyVM ViewModel { get; } = ViewModelProvider.CreateDenyPolicyVM;
 
@@ -37,7 +34,6 @@ internal sealed partial class CreateDenyPolicy : Page
 		DataContext = ViewModel;
 	}
 
-	// Since using behaviors in XAML is not Native AOT compatible, we use event handlers.
 	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
 	{
 		await ShadowEnterAnimation.StartAsync((UIElement)sender);
@@ -46,4 +42,7 @@ internal sealed partial class CreateDenyPolicy : Page
 	{
 		await ShadowExitAnimation.StartAsync((UIElement)sender);
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CreateDenyPolicyPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Deny-App-Control-Policy");
 }

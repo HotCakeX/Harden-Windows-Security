@@ -5,7 +5,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    xmlns:MSGraph="using:AppControlManager.MicrosoftGraph"
+    xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:AppControlManager.CustomUIElements"
     xmlns:ui="using:CommunityToolkit.WinUI">

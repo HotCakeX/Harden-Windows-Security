@@ -24,11 +24,13 @@ using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.Graphics;
+
 
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.ViewModels;
@@ -200,17 +202,30 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Event handler for when the main app window's size changes
+	/// Event handler for when the main AppWindow size changes.
+	/// Throughout the app the AppWindow's size must be used, nothing else such as frame size, Window size etc.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>
-	internal void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)
+	internal void MainWindow_SizeChanged(AppWindow sender, AppWindowChangedEventArgs args)
 	{
-		double mainWindowWidth = args.Size.Width; // Width of the main window
+		if (!args.DidSizeChange) return;
 
-		// Hide TitleColumn if width is less than 200, Restore the TitleColumn if width is 200 or more
-		TitleColumnWidth = mainWindowWidth < 750 ? new GridLength(0) : GridLength.Auto;
+		double mainWindowWidth = sender.Size.Width; // Width of the main AppWindow
+
+		// Hide TitleColumn if width is less than certain amount, Restore the TitleColumn if width is more
+		TitleColumnWidth = mainWindowWidth < 950 ? new GridLength(0) : GridLength.Auto;
+
+		bool wide = mainWindowWidth >= HeaderThresholdWidth;
+
+		// Update breadcrumb text style based on width threshold
+		BreadcrumbItemStyle = (Style)Application.Current.Resources[wide ? "TitleTextBlockStyle" : "SubtitleTextBlockStyle"];
+
+		HeaderInlineVisibility = (wide && HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
+		HeaderFlyoutVisibility = (!wide && HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
 	}
+
+	internal const double HeaderThresholdWidth = 1300;
 
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/winmsg/extended-window-styles
@@ -353,4 +368,25 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		}
 	}
 
+	// Page header's title
+	internal string? PageHeaderTitle { get; set => SP(ref field, value); }
+	// Page header's URL
+	internal Uri? PageHeaderGuideUri { get; set => SP(ref field, value); }
+
+	// Wether the inline page header is visible.
+	internal Visibility HeaderInlineVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+	// Wether the flyout page header is visible.
+	internal Visibility HeaderFlyoutVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	// Style used by Breadcrumb items
+	internal Style? BreadcrumbItemStyle { get; private set => SP(ref field, value); }
+
+	// Whether the current page supplies a header, aka implements the IPageHeaderProvider interface.
+	internal bool HasPageHeader { get; set => SP(ref field, value); }
+
+	// Guide button visibility (collapsed when PageHeaderGuideUri is null)
+	internal Visibility GuideButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	// Whether the Crumbar is visible
+	internal Visibility IsCrumbBarVisible { get; set => SP(ref field, value); }
 }

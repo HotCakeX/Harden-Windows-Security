@@ -14,21 +14,12 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-                <TextBlock x:Uid="BuildNewCertificatePageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-                <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate" />
-
-            </controls:WrapPanel>
-
-            <Button Grid.Row="1" HorizontalAlignment="Center"
+            <Button Grid.Row="0" HorizontalAlignment="Center"
                     HorizontalContentAlignment="Center"
-                    Margin="15"
+                    Margin="10,5,10,5"
                     IsEnabled="{x:Bind ViewModel.ElementsAreEnabled,Mode=OneWay}"
                     Click="{x:Bind ViewModel.BuildCertificateButton_Click}"
                     x:Uid="BuildCertificateButton">
@@ -56,7 +47,7 @@
                 IsClosable="{x:Bind ViewModel.StatusInfoBarIsClosable, Mode=OneWay}"
                 Message="{x:Bind ViewModel.StatusInfoBarMessage, Mode=OneWay}"
                 Title="{x:Bind ViewModel.StatusInfoBarTitle, Mode=OneWay}"
-                Grid.Row="2">
+                Grid.Row="1">
                 <customUI:InfoBarV2.ActionButton>
                     <Button Visibility="{x:Bind ViewModel.CopyInfoBarToClipboardButtonVisibility, Mode=OneWay}"
                             x:Uid="CopyThumbPrintToClipboardButton"
@@ -64,7 +55,8 @@
                 </customUI:InfoBarV2.ActionButton>
             </customUI:InfoBarV2>
 
-            <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="3" Margin="0,40,0,0">
+            <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}"
+                        Grid.Row="2" Margin="0,5,0,0">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />

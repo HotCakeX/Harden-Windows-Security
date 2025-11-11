@@ -9,57 +9,40 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <NavigationView x:Name="SystemInformationNavigation"
+                    PaneDisplayMode="Top"
+                    IsTabStop="True"
+                    SelectionChanged="{x:Bind NavigationView_SelectionChanged}"
+                    IsSettingsVisible="False"
+                    IsBackButtonVisible="Collapsed">
 
-        <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
+        <!-- Prevent the NavigationView from setting a default background for the content in the frame -->
+        <NavigationView.Resources>
+            <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
+        </NavigationView.Resources>
 
-            <TextBlock x:Uid="SystemInformationPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
+        <NavigationView.MenuItems>
+            <NavigationViewItem x:Uid="CurrentlyDeployedPoliciesNavigationItem" Tag="ViewCurrentPolicies" >
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE83D;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
 
-            <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information" />
+            <NavigationViewItem x:Uid="OnlinePoliciesNavigationItem" Tag="ViewOnlinePolicies" >
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE774;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
 
-        </controls:WrapPanel>
+            <NavigationViewItem x:Uid="CodeIntegrityInformationNavigationItem" Tag="CodeIntegrityInfo" >
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE964;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
 
-        <NavigationView Grid.Row="1"
-                        x:Name="SystemInformationNavigation"
-                        PaneDisplayMode="Top"
-                        IsTabStop="True"
-                        SelectionChanged="{x:Bind NavigationView_SelectionChanged}"
-                        IsSettingsVisible="False"
-                        IsBackButtonVisible="Collapsed">
+        </NavigationView.MenuItems>
 
-            <!-- Prevent the NavigationView from setting a default background for the content in the frame -->
-            <NavigationView.Resources>
-                <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
-            </NavigationView.Resources>
-
-            <NavigationView.MenuItems>
-                <NavigationViewItem x:Uid="CurrentlyDeployedPoliciesNavigationItem" Tag="ViewCurrentPolicies" >
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE83D;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-
-                <NavigationViewItem x:Uid="OnlinePoliciesNavigationItem" Tag="ViewOnlinePolicies" >
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE774;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-
-                <NavigationViewItem x:Uid="CodeIntegrityInformationNavigationItem" Tag="CodeIntegrityInfo" >
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE964;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-
-            </NavigationView.MenuItems>
-
-            <!-- Global margin settings for every page -->
-            <Frame x:Name="ContentFrame" Margin="15,5,15,10"/>
-        </NavigationView>
-
-    </Grid>
+        <!-- Global margin settings for every page -->
+        <Frame x:Name="ContentFrame" Margin="15,5,15,10"/>
+    </NavigationView>
 </Page>

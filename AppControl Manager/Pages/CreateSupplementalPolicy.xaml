@@ -19,7 +19,6 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -364,20 +363,12 @@
 
             </Grid.Resources>
 
-            <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-                <TextBlock x:Uid="CreateSupplementalPolicyPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-                <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy" />
-
-            </controls:WrapPanel>
-
             <Border x:Name="AnimatedBorder"
-                    Grid.Row="1"
+                    Grid.Row="0"
                     ui:Effects.Shadow="{StaticResource BorderShadow}"
                     Background="Transparent"
                     BorderThickness="0"
-                    Margin="15,0,15,0"
+                    Margin="15,15,15,0"
                     PointerEntered="{x:Bind OnBorderPointerEntered}"
                     PointerExited="{x:Bind OnBorderPointerExited}">
 
@@ -471,7 +462,8 @@
 
             </Border>
 
-            <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
+            <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}"
+                        Grid.Row="1" Margin="0,15,0,0">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />

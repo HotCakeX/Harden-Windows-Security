@@ -37,7 +37,7 @@ You can retrieve, filter, sort, and search exclusions across these branches. Add
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables file hash computation; [designed](https://learn.microsoft.com/powershell/module/defender/set-mppreference?view=windowsserver2022-ps#-enablefilehashcomputation) to allow admins to force the anti-malware solution to "compute file hashes for every executable file that is scanned if it wasn't previously computed" to "improve blocking for custom indicators in Microsoft Defender Advanced Threat Protection (Microsoft Defender ATP). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#mpengine_enablefilehashcomputation)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables file hash computation; designed to allow admins to force the anti-malware solution to "compute file hashes for every executable file that is scanned if it wasn't previously computed" to "improve blocking for custom indicators in Microsoft Defender Advanced Threat Protection (Microsoft Defender ATP). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#mpengine_enablefilehashcomputation)
 
 <br>
 
@@ -81,20 +81,13 @@ You can retrieve, filter, sort, and search exclusions across these branches. Add
 
     - [Microsoft Safety Scanner](https://learn.microsoft.com/microsoft-365/security/intelligence/safety-scanner-download?view=o365-worldwide)
 
-    - Paste the following PowerShell code to retrieve the latest available online versions of the Platform, Signatures, and Engine for Microsoft Defender
-  -
-    ```powershell
-    $X = irm "https://www.microsoft.com/security/encyclopedia/adlpackages.aspx?action=info"
-    @{Engine = $X.versions.engine; Signatures = $X.versions.signatures.'#text'; Platform = $X.versions.platform} | ft -AutoSize
-    ```
-
 <br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Forces Microsoft Defender to check for new virus and spyware definitions before it runs a scan. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#checkforsignaturesbeforerunningscan)
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Makes Microsoft Defender run [catch-up scans](https://learn.microsoft.com/powershell/module/defender/set-mppreference?view=windowsserver2022-ps#-disablecatchupquickscan) for scheduled quick scans. A computer can miss a scheduled scan, usually because the computer is off at the scheduled time, but now after the computer misses two scheduled quick scans, Microsoft Defender runs a catch-up scan the next time someone logs onto the computer. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#disablecatchupquickscan)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Makes Microsoft Defender run catch-up scans for scheduled quick scans. A computer can miss a scheduled scan, usually because the computer is off at the scheduled time, but now after the computer misses two scheduled quick scans, Microsoft Defender runs a catch-up scan the next time someone logs onto the computer. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#disablecatchupquickscan)
 
 <br>
 
@@ -102,7 +95,7 @@ You can retrieve, filter, sort, and search exclusions across these branches. Add
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables [scanning of restore points](https://learn.microsoft.com/powershell/module/defender/set-mppreference#-disablerestorepoint) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#scan_disablerestorepoint)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables scanning of restore points <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#scan_disablerestorepoint)
 
 <br>
 
@@ -120,8 +113,6 @@ You can retrieve, filter, sort, and search exclusions across these branches. Add
 
     - Smart App Control enforces the [Microsoft Recommended Driver Block rules](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules) and the [Microsoft Recommended Block Rules](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol)
 
-    - Once you turn Smart App Control off, it can't be turned on without resetting or reinstalling Windows.
-
 <br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Enables ["Send optional diagnostic data"](https://learn.microsoft.com/windows/privacy/windows-diagnostic-data) because [it](https://learn.microsoft.com/windows/privacy/configure-windows-diagnostic-data-in-your-organization) is [required for Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) **to operate when it's in evaluation mode or turned on, and for communication with [Intelligent Security Graph (ISG)](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph).** This setting will be automatically applied if Smart App Control is already turned on or you choose to turn it on. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-system#allowtelemetry)
@@ -130,21 +121,9 @@ You can retrieve, filter, sort, and search exclusions across these branches. Add
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [Controlled Folder Access](https://learn.microsoft.com/microsoft-365/security/defender-endpoint/enable-controlled-folders). It [helps protect your valuable data](https://learn.microsoft.com/microsoft-365/security/defender-endpoint/controlled-folders) from malicious apps and threats, such as ransomware. Controlled folder access protects your data by checking apps against a list of known, trusted apps. Due to the recent wave of global ransomware attacks, it is important to use this feature to protect your valuables files, specially OneDrive folders. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#enablecontrolledfolderaccess)
 
-    - If it blocks a program from accessing one of your folders it protects, and you absolutely trust that program, then you can add it to exclusion list using Microsoft Defender GUI or PowerShell. you can also query the list of allowed apps using PowerShell (commands below). with these commands, you can backup your personalized list of allowed apps, that are relevant to your system, and restore them in case you clean install your Windows.
+    - If it blocks a program from accessing one of your folders it protects, and you absolutely trust that program, then you can add it to exclusion list using Microsoft Defender GUI or the Harden System Security app. You can also query the list of allowed apps using the app in the Defender category, Exclusions tab. You can backup your personalized list of allowed apps, that are relevant to your system, and restore them in case you clean install your Windows.
 
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> The root of the OneDrive folders of all the user accounts will be added to the protected folders list of Controlled Folder Access, to provide Ransomware protection for the entire OneDrive folder. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#controlledfolderaccessprotectedfolders)
-
-  -
-    ```powershell
-    # Add multiple programs to the exclusion list of Controlled Folder Access
-    Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program Files\App2\app2.exe'
-    ```
-
-  -
-    ```powershell
-    # Get the list of all allowed apps
-    (Get-MpPreference).ControlledFolderAccessAllowedApplications
-    ```
 
 <br>
 
@@ -214,7 +193,7 @@ You can retrieve, filter, sort, and search exclusions across these branches. Add
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Set Microsoft [Defender engine](https://learn.microsoft.com/powershell/module/defender/set-mppreference#-engineupdateschannel) and [platform update channel](https://learn.microsoft.com/powershell/module/defender/set-mppreference#-platformupdateschannel) to beta. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/defender-csp?WT.mc_id=Portal-fx#configurationengineupdateschannel) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/defender-csp?WT.mc_id=Portal-fx#configurationplatformupdateschannel)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Set the Microsoft Defender engine and platform update channel to beta. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/defender-csp?WT.mc_id=Portal-fx#configurationengineupdateschannel) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/defender-csp?WT.mc_id=Portal-fx#configurationplatformupdateschannel)
 
 <br>
 
@@ -254,7 +233,7 @@ You can retrieve, filter, sort, and search exclusions across these branches. Add
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the internal feature logic to determine blocking time for the Brute-Force Protections <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksbruteforceprotectionbruteforceprotectionmaxblocktime)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the maximum time an IP address is blocked by Brute-Force Protection to the maximum possible value. After this time, blocked IP addresses will be able to sign-in and initiate sessions. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksbruteforceprotectionbruteforceprotectionmaxblocktime)
 
 <br>
 

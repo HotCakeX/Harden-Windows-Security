@@ -12,19 +12,10 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <controls:WrapPanel Style="{StaticResource PageHeaderWrapPanelStyle}">
-
-                <TextBlock x:Uid="ValidatePolicyPageTitle" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" />
-
-                <customUI:GuideButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Validate-Policies" />
-
-            </controls:WrapPanel>
-
-            <controls:WrapPanel Grid.Row="1" HorizontalAlignment="Center">
+            <controls:WrapPanel Grid.Row="0" HorizontalAlignment="Center" HorizontalSpacing="15" VerticalSpacing="10">
 
                 <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                          IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}"
@@ -34,13 +25,13 @@
                          IsIconVisible="True">
                 </customUI:InfoBarV2>
 
-                <ProgressRing IsIndeterminate="True" Margin="20,0,0,0"
+                <ProgressRing IsIndeterminate="True"
                     Visibility="{x:Bind ViewModel.ProgressRingVisibility, Mode=OneWay}" />
 
             </controls:WrapPanel>
 
             <StackPanel HorizontalAlignment="Stretch"
-                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
+                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1" Margin="0,10,0,0">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />

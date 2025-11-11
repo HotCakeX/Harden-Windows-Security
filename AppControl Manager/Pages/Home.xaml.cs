@@ -30,7 +30,7 @@ using Windows.UI;
 
 namespace AppControlManager.Pages;
 
-internal sealed partial class Home : Page, IDisposable
+internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisibleCrumbar
 {
 #if HARDEN_SYSTEM_SECURITY
 	private ViewModels.HomeVM ViewModel { get; } = HardenSystemSecurity.ViewModels.ViewModelProvider.HomeVM;

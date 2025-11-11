@@ -59,5 +59,4 @@ internal sealed partial class AllowNewAppsStart : Page, IAnimatedIconsManager
 	}
 
 	#endregion
-
 }

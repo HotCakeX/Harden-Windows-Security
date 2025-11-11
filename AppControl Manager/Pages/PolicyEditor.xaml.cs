@@ -21,10 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
-/// <summary>
-/// The PolicyEditor class manages the UI for editing policies.
-/// </summary>
-internal sealed partial class PolicyEditor : Page
+internal sealed partial class PolicyEditor : Page, CommonCore.UI.IPageHeaderProvider
 {
 
 	private PolicyEditorVM ViewModel { get; } = ViewModelProvider.PolicyEditorVM;
@@ -32,9 +29,6 @@ internal sealed partial class PolicyEditor : Page
 	internal static Flyout? _DiamondButtonFlyout { get; private set; }
 	internal static Button? _DiamondButton { get; private set; }
 
-	/// <summary>
-	/// Initializes a new instance of the PolicyEditor class.
-	/// </summary>
 	internal PolicyEditor()
 	{
 		InitializeComponent();
@@ -43,4 +37,7 @@ internal sealed partial class PolicyEditor : Page
 		_DiamondButtonFlyout = DiamondButtonFlyout;
 		_DiamondButton = DiamondButton;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("PolicyEditorPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/PolicyEditor");
 }

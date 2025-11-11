@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
-internal sealed partial class TLS : Page
+internal sealed partial class TLS : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private TLSVM ViewModel => ViewModelProvider.TLSVM;
 
@@ -31,4 +31,7 @@ internal sealed partial class TLS : Page
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("TLSPageTitle/Text");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/TLS-Security");
 }

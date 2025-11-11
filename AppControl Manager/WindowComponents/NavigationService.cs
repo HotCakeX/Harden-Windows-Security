@@ -22,6 +22,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 using Windows.Graphics;
 using WinRT;
 
@@ -72,6 +73,7 @@ internal sealed class NavigationService
 			CollectNavigationItems();
 			NavItemsHaveBeenCollected = true;
 		}
+		_frame.Navigated += UpdateHeaderFromCurrentPage;
 	}
 
 #if APP_CONTROL_MANAGER
@@ -528,5 +530,41 @@ internal sealed class NavigationService
 		Crumb crumb = (Crumb)args.Item;
 
 		Navigate(crumb.Page, null);
+	}
+
+	/// <summary>
+	/// Updates ViewModel header props from the current Frame.Content if it implements IPageHeaderProvider.
+	/// </summary>
+	private void UpdateHeaderFromCurrentPage(object sender, NavigationEventArgs e)
+	{
+		_ = App.AppDispatcher.TryEnqueue(() =>
+		{
+			// Determine provider presence and update header content
+			if (_frame?.Content is CommonCore.UI.IPageHeaderProvider provider)
+			{
+				mainWindowVM.PageHeaderTitle = provider.HeaderTitle;
+				mainWindowVM.PageHeaderGuideUri = provider.HeaderGuideUri;
+				mainWindowVM.HasPageHeader = true;
+			}
+			else
+			{
+				mainWindowVM.PageHeaderTitle = null;
+				mainWindowVM.PageHeaderGuideUri = null;
+				mainWindowVM.HasPageHeader = false;
+			}
+
+			// Compute layout once per navigation using current width
+			bool wide = App.MainWindow?.AppWindow.Size.Width >= MainWindowVM.HeaderThresholdWidth;
+
+			// Inline vs flyout header visibility depends on width and presence of a header
+			mainWindowVM.HeaderInlineVisibility = (wide && mainWindowVM.HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
+			mainWindowVM.HeaderFlyoutVisibility = (!wide && mainWindowVM.HasPageHeader) ? Visibility.Visible : Visibility.Collapsed;
+
+			// Guide button must be invisible when URL is null
+			mainWindowVM.GuideButtonVisibility = mainWindowVM.PageHeaderGuideUri is not null ? Visibility.Visible : Visibility.Collapsed;
+
+			// Determine whether the crumb bar must be visible or not.
+			mainWindowVM.IsCrumbBarVisible = _frame?.Content is CommonCore.UI.IInvisibleCrumbar ? Visibility.Collapsed : Visibility.Visible;
+		});
 	}
 }

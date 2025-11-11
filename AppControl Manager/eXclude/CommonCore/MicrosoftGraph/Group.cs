@@ -18,20 +18,41 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace AppControlManager.MicrosoftGraph;
+namespace CommonCore.MicrosoftGraph;
 
 /// <summary>
-/// Represents a payload for assignments containing a dictionary of target properties. The dictionary maps string keys
-/// to object values.
+/// https://learn.microsoft.com/graph/api/resources/group?view=graph-rest-beta
 /// </summary>
-internal sealed class AssignmentPayload(
-	Dictionary<string, object>? target
+internal sealed class Group(
+	string? displayName,
+	string? description,
+	bool mailEnabled,
+	string mailNickname,
+	bool securityEnabled,
+	List<string> groupTypes
 )
 {
-	/// <summary>
-	/// The target properties dictionary.
-	/// </summary>
 	[JsonInclude]
-	[JsonPropertyName("target")]
-	internal Dictionary<string, object>? Target => target;
+	[JsonPropertyName("displayName")]
+	internal string? DisplayName => displayName;
+
+	[JsonInclude]
+	[JsonPropertyName("description")]
+	internal string? Description => description;
+
+	[JsonInclude]
+	[JsonPropertyName("mailEnabled")]
+	internal bool MailEnabled => mailEnabled;
+
+	[JsonInclude]
+	[JsonPropertyName("mailNickname")]
+	internal string MailNickname => mailNickname;
+
+	[JsonInclude]
+	[JsonPropertyName("securityEnabled")]
+	internal bool SecurityEnabled => securityEnabled;
+
+	[JsonInclude]
+	[JsonPropertyName("groupTypes")]
+	internal List<string> GroupTypes => groupTypes;
 }

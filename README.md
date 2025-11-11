@@ -541,6 +541,10 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 <br>
 
+* <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="30" alt="Red Star denoting Security Recommendation"> Use [**Passkeys**](https://learn.microsoft.com/en-us/windows/security/identity-protection/passkeys/?tabs=windows%2Cintune). Passkeys provide a more [secure and convenient](https://support.microsoft.com/en-us/account-billing/signing-in-with-a-passkey-09a49a86-ca47-406c-8acc-ed0e3c852c6d) method to logging into websites and applications compared to passwords. Unlike passwords, which users must remember and type, passkeys are stored as secrets on a device and can use a device's unlock mechanism (such as biometrics or a PIN). [Passkeys](https://www.microsoft.com/en-us/windows/tips/passkeys) can be used without the need for [other sign-in challenges](https://support.microsoft.com/en-us/windows/manage-your-passkeys-in-windows-6a70599a-25e1-4461-86be-d67d1023c69f), making the authentication process faster, secure, and more convenient.
+
+<br>
+
 * <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="30" alt="Red Star denoting Security Recommendation"> More Security Recommendations coming soon...
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>

@@ -2006,7 +2006,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
     <value>Pobieraj i wysyłaj zapytania dotyczące bezpiecznych ustawień w systemie.</value>
   </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>Poniżej znajdują się dzienniki, które Menedżer AppControl automatycznie generuje i przechowuje w folderze „AppControl Manager” w Program Files (jeśli działa z podniesionymi uprawnieniami, w przeciwnym razie zostaną zapisane w katalogu TEMP). Całkowity rozmiar folderu dzienników nigdy nie przekroczy 1 GB.</value>
   </data>
   <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
@@ -2027,7 +2027,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
     <value>Wyświetl wykryte pliki trybu jądra, które zostaną użyte do utworzenia zasad trybu wymuszonego. Usuń z listy elementy, których nie chcesz uwzględniać w ostatecznych zasadach trybu ścisłego jądra.</value>
   </data>
-  <data name="UpdatePageTitle.Text" xml:space="preserve">
+  <data name="UpdatePageTitle" xml:space="preserve">
     <value>Sprawdź aktualizacje na tej stronie. Możesz również włączyć automatyczne sprawdzanie aktualizacji, które będzie miało miejsce raz podczas uruchamiania, a zostaniesz powiadomiony, gdy dostępna będzie nowa wersja.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">

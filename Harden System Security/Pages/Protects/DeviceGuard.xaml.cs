@@ -32,6 +32,6 @@ internal sealed partial class DeviceGuard : Page, CommonCore.UI.IPageHeaderProvi
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("DeviceGuardPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("DeviceGuardPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard");
 }

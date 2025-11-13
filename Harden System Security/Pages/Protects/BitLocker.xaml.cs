@@ -187,6 +187,6 @@ internal sealed partial class BitLocker : Page, CommonCore.UI.IPageHeaderProvide
 
 	#endregion
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("BitLockerPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("BitLockerPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/BitLocker");
 }

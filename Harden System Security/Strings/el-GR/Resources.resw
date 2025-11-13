@@ -439,7 +439,7 @@
     <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
     <value>Πηγαίος κώδικας</value>
   </data>
-    <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <data name="UpdatePageTitle" xml:space="preserve">
     <value>Ελέγξτε για ενημερώσεις σε αυτή τη σελίδα. Μπορείτε επίσης να ενεργοποιήσετε τον αυτόματο έλεγχο ενημερώσεων που θα συμβεί μία φορά κατά την εκκίνηση και θα ειδοποιηθείτε όποτε είναι διαθέσιμη νέα έκδοση.</value>
   </data>
     <data name="GuideButtonAtTop.Content" xml:space="preserve">
@@ -601,7 +601,7 @@
     <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Πλήρες</value>
   </data>
-  <data name="ProtectPageTitle.Text" xml:space="preserve">
+  <data name="ProtectPageTitle" xml:space="preserve">
     <value>Διαχειριστείτε τις διαμορφώσεις ασφάλειας και επιλέξτε πώς να ασφαλίσετε τη συσκευή σας.</value>
   </data>
   <data name="ProtectCategory_MSFTSecBaseline" xml:space="preserve">
@@ -889,7 +889,7 @@
   <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Εκκαθάριση</value>
   </data>
-  <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="GroupPolicyEditorPageTitle" xml:space="preserve">
     <value>Ανοίξτε και διαβάστε αρχεία πολιτικής ομάδας σε αυτή τη σελίδα. Μπορείτε να αναζητήσετε στα δεδομένα και να αφαιρέσετε μεμονωμένες πολιτικές από το αρχείο. Μπορείτε επίσης να προβάλετε τις ισχύουσες πολιτικές στο σύστημα.</value>
   </data>
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
@@ -1270,58 +1270,58 @@
   <data name="InstalledAppsManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Προβολή και απεγκατάσταση εγκατεστημένων εφαρμογών.</value>
   </data>
-  <data name="MicrosoftDefenderPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftDefenderPageTitle" xml:space="preserve">
     <value>Διαμόρφωση όλων των πτυχών του Microsoft Defender και ενεργοποίηση πολλών από τα χαρακτηριστικά του που είναι απενεργοποιημένα από προεπιλογή.</value>
   </data>
-  <data name="ASRRulesPageTitle.Text" xml:space="preserve">
+  <data name="ASRRulesPageTitle" xml:space="preserve">
     <value>Διαμόρφωση κάθε κανόνα μείωσης επιφάνειας επίθεσης σε αυτή τη σελίδα. Μπορούν να αποτρέψουν μόλυνση από κακόβουλο λογισμικό και εκμετάλλευση τρωτοτήτων.</value>
   </data>
-  <data name="BitLockerPageTitle.Text" xml:space="preserve">
+  <data name="BitLockerPageTitle" xml:space="preserve">
     <value>Σε αυτή τη σελίδα μπορείτε να εφαρμόσετε πολιτικές που θα κάνουν το BitLocker πιο ισχυρό από το προεπιλεγμένο και να προστατεύσετε τα δεδομένα σας εν κατάστασι ηρεμίας.</value>
   </data>
-  <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
+  <data name="CertificateCheckingPageTitle" xml:space="preserve">
     <value>Εύρεση όλων των πιστοποιητικών στο σύστημά σας που δεν έχουν ρίζα σε οποιοδήποτε πιστοποιητικό στη λίστα εμπιστευμένων ριζικών πιστοποιητικών της Microsoft.</value>
   </data>
-  <data name="CountryIPBlockingPageTitle.Text" xml:space="preserve">
+  <data name="CountryIPBlockingPageTitle" xml:space="preserve">
     <value>Αποκλεισμός περιοχών διευθύνσεων IP χωρών στις ακόλουθες λίστες: Κρατικοί χορηγοί τρομοκρατίας - Γραφείο ελέγχου ξένων περιουσιακών στοιχείων (OFAC)</value>
   </data>
-  <data name="DeviceGuardPageTitle.Text" xml:space="preserve">
+  <data name="DeviceGuardPageTitle" xml:space="preserve">
     <value>Αξιοποίηση των χαρακτηριστικών ασφάλειας που παρέχει το υλικό για ενίσχυση του λειτουργικού συστήματος σε διαφορετικά πολλαπλά επίπεδα εκτέλεσης.</value>
   </data>
-  <data name="EdgePageTitle.Text" xml:space="preserve">
+  <data name="EdgePageTitle" xml:space="preserve">
     <value>Εφαρμογή πολιτικών σχετικών με την ασφάλεια και το απόρρητο στο Microsoft Edge για να το κάνετε πιο ασφαλές και ιδιωτικό κατά την περιήγηση στον ιστό.</value>
   </data>
-  <data name="LockScreenPageTitle.Text" xml:space="preserve">
+  <data name="LockScreenPageTitle" xml:space="preserve">
     <value>Ενίσχυση της οθόνης κλειδώματος του λειτουργικού συστήματος κατά πιθανών εκμεταλλεύσεων και μείωση της ποσότητας πληροφοριών που εκτίθενται σε μη εξουσιοδοτημένα άτομα όταν η συσκευή είναι κλειδωμένη.</value>
   </data>
-  <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
+  <data name="MiscellaneousConfigsPageTitle" xml:space="preserve">
     <value>Αυτή η σελίδα περιέχει σημαντικά μέτρα ασφάλειας που δεν εμπίπτουν σε πιο εξειδικευμένες κατηγορίες. Η εφαρμογή τους μπορεί να ενισχύσει και να ενδυναμώσει την ασφάλεια του συστήματός και της συσκευής σας.</value>
   </data>
-  <data name="NonAdminPageTitle.Text" xml:space="preserve">
+  <data name="NonAdminPageTitle" xml:space="preserve">
     <value>Οι πολιτικές σε αυτή τη σελίδα εφαρμόζονται μόνο στον τρέχοντα χρήστη και δεν εφαρμόζονται σε επίπεδο συστήματος για όλους τους χρήστες. Για αυτό τον λόγο, δεν χρειάζεστε δικαιώματα διαχειριστή για να τις εφαρμόσετε.</value>
   </data>
-  <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
+  <data name="OptionalWindowsFeaturesPageTitle" xml:space="preserve">
     <value>Ανάκτηση, προβολή, ενεργοποίηση και απενεργοποίηση όλων των προαιρετικών χαρακτηριστικών και δυνατοτήτων που παρέχει το λειτουργικό σύστημα με ενοποιημένο τρόπο.</value>
   </data>
-  <data name="TLSPageTitle.Text" xml:space="preserve">
+  <data name="TLSPageTitle" xml:space="preserve">
     <value>Ενίσχυση του SChannel (Secure Channel) στο λειτουργικό σύστημα. Είναι ο πάροχος υποστήριξης ασφάλειας (SSP) που αναπτύχθηκε από τη Microsoft που υλοποιεί πρωτόκολλα ασφάλειας όπως το Transport Layer Security (TLS).</value>
   </data>
-  <data name="UACPageTitle.Text" xml:space="preserve">
+  <data name="UACPageTitle" xml:space="preserve">
     <value>Το UAC βοηθάει στην πρόληψη μη εξουσιοδοτημένων αλλαγών στο λειτουργικό σύστημα ζητώντας άδεια ή διαπιστευτήρια διαχειριστή. Αυτή η σελίδα προσφέρει πολιτικές που θα ενισχύσουν αυτή τη ροή εργασίας.</value>
   </data>
-  <data name="WindowsFirewallPageTitle.Text" xml:space="preserve">
+  <data name="WindowsFirewallPageTitle" xml:space="preserve">
     <value>Το τείχος προστασίας των Windows βοηθάει στην προστασία του υπολογιστή σας φιλτράροντας την εισερχόμενη και εξερχόμενη κίνηση. Εδώ μπορείτε να εφαρμόσετε διάφορους κανόνες και διαμορφώσεις για να ενισχύσετε την ασφάλειά του.</value>
   </data>
-  <data name="WindowsNetworkingPageTitle.Text" xml:space="preserve">
+  <data name="WindowsNetworkingPageTitle" xml:space="preserve">
     <value>Οι ρυθμίσεις δικτύωσης των Windows σας επιτρέπουν να διαμορφώσετε διάφορες πτυχές της συνδεσιμότητας δικτύου και της ασφάλειας όπως το πώς η συσκευή σας επικοινωνεί με άλλες συσκευές στο δίκτυο.</value>
   </data>
-  <data name="WindowsUpdatePageTitle.Text" xml:space="preserve">
+  <data name="WindowsUpdatePageTitle" xml:space="preserve">
     <value>Η εγκατάσταση ενημερώσεων Windows το συντομότερο δυνατό μετά την κυκλοφορία τους είναι ζωτικής σημασίας για τη διατήρηση της ασφάλειας και σταθερότητας του συστήματός σας, ειδικά κατά νέων εκμεταλλεύσεων και zero-day. Αυτή η σελίδα σας βοηθάει να επιβάλετε πολιτικές που θα διασφαλίσουν ότι οι ενημερώσεις εγκαθίστανται έγκαιρα.</value>
   </data>
-  <data name="FileReputationPageTitle.Text" xml:space="preserve">
+  <data name="FileReputationPageTitle" xml:space="preserve">
     <value>Επαλήθευση της φήμης εκτελέσιμων αρχείων και άλλων αρχείων χρησιμοποιώντας το Microsoft Defender Smart Screen ή το γράφημα ασφαλείας της Microsoft.</value>
   </data>
-  <data name="InstalledAppsManagementPageTitle.Text" xml:space="preserve">
+  <data name="InstalledAppsManagementPageTitle" xml:space="preserve">
     <value>Προβολή λίστας όλων των εφαρμογών που είναι εγκατεστημένες στο σύστημα και απεγκατάσταση των ανεπιθύμητων.</value>
   </data>
   <data name="PFNVersionLabel.Text" xml:space="preserve">
@@ -1711,9 +1711,6 @@
 <data name="DependencyNotFound" xml:space="preserve">
   <value>Εξάρτηση δεν βρέθηκε: {0} αναφέρεται από {1}</value>
 </data>
-<data name="SecurityPolicyRegistryApplyBulkInvokeError" xml:space="preserve">
-  <value>Το SecurityPolicyRegistryApply πρέπει να κληθεί μαζικά μέσω SecurityPolicyManager</value>
-</data>
 <data name="GroupPolicyApplyBulkInvokeError" xml:space="preserve">
   <value>Το GroupPolicyApply πρέπει να κληθεί μαζικά μέσω ApplyPolicies</value>
 </data>
@@ -1743,9 +1740,6 @@
 </data>
 <data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
   <value>Σφάλμα επεξεργασίας μονάδων M μητρώου μαζικά.</value>
-</data>
-<data name="ErrorProcessingSecurityPolicyRegistryMUnits" xml:space="preserve">
-  <value>Σφάλμα επεξεργασίας μονάδων M μητρώου πολιτικής ασφάλειας μαζικά.</value>
 </data>
 <data name="FallbackVerifyResult" xml:space="preserve">
   <value>Εφεδρική επαλήθευση: {0}\{1} = {2}</value>
@@ -1785,9 +1779,6 @@
 </data>
 <data name="InvalidSource" xml:space="preserve">
   <value>Μη έγκυρη πηγή: {0}</value>
-</data>
-<data name="SecurityPolicyRegistryEntryMustHaveDefaultRegValue" xml:space="preserve">
-  <value>Η καταχώρηση SecurityPolicyRegistry {0}\{1} πρέπει να έχει μη κενό DefaultRegValue</value>
 </data>
 <data name="ErrorCreatingMUnitsForCategory" xml:space="preserve">
   <value>Σφάλμα δημιουργίας μονάδων M για κατηγορία {0}: {1}</value>
@@ -1894,41 +1885,8 @@
 <data name="RegistryVerificationComplete" xml:space="preserve">
   <value>Η επαλήθευση μητρώου ολοκληρώθηκε: {0} από {1} πολιτικές ταιριάζουν</value>
 </data>
-<data name="NoSettingsProvided" xml:space="preserve">
-  <value>Δεν παρασχέθηκαν ρυθμίσεις</value>
-</data>
-<data name="SettingSystemAccessPolicyViaSecedit" xml:space="preserve">
-  <value>Ρύθμιση πολιτικής πρόσβασης συστήματος μέσω secedit...</value>
-</data>
 <data name="CreatedSecurityTemplate" xml:space="preserve">
   <value>Δημιουργήθηκε πρότυπο ασφάλειας: {0}</value>
-</data>
-<data name="TemplateContent" xml:space="preserve">
-  <value>Περιεχόμενο προτύπου: {0}</value>
-</data>
-<data name="FailedToStartSeceditProcess" xml:space="preserve">
-  <value>Αποτυχία εκκίνησης διεργασίας secedit</value>
-</data>
-<data name="SeceditExitCode" xml:space="preserve">
-  <value>Κωδικός εξόδου Secedit: {0}</value>
-</data>
-<data name="SeceditOutput" xml:space="preserve">
-  <value>Έξοδος Secedit: {0}</value>
-</data>
-<data name="SeceditError" xml:space="preserve">
-  <value>Σφάλμα Secedit: {0}</value>
-</data>
-<data name="SeceditCompletedSuccessfully" xml:space="preserve">
-  <value>Το Secedit ολοκληρώθηκε επιτυχώς</value>
-</data>
-<data name="SeceditFailedWithExitCode" xml:space="preserve">
-  <value>Το Secedit απέτυχε με κωδικό εξόδου: {0}</value>
-</data>
-<data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
-  <value>Δεν βρέθηκαν ρυθμίσεις [System Access] στο καθορισμένο αρχείο</value>
-</data>
-<data name="ExtractedSystemAccessSettingsFromFile" xml:space="preserve">
-  <value>Εξήχθησαν {0} ρυθμίσεις System Access από αρχείο: {1}</value>
 </data>
 <data name="FileNotFoundPath" xml:space="preserve">
   <value>Το αρχείο δεν βρέθηκε: {0}</value>
@@ -2248,7 +2206,7 @@
   <data name="AppDescription" xml:space="preserve">
   <value>Το Harden System Security είναι μια εφαρμογή που σας βοηθά να διαμορφώσετε το σύστημά σας ώστε να είναι ασφαλές έναντι πολλών προηγμένων απειλών, χρησιμοποιώντας μόνο εργαλεία και χαρακτηριστικά που είναι διαθέσιμα στο λειτουργικό σύστημα και προσφέρονται από τη Microsoft χωρίς τη χρήση τρίτων εργαλείων ή προγραμμάτων.</value>
 </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>Τα παρακάτω είναι τα αρχεία καταγραφής που το Harden System Security δημιουργεί αυτόματα και αποθηκεύει στον καθορισμένο φάκελο. Το συνολικό μέγεθος του φακέλου αρχείων καταγραφής δεν θα υπερβεί ποτέ το 1GB.</value>
   </data>
     <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
@@ -2287,10 +2245,10 @@
   <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
     <value>Βασική γραμμή ασφάλειας εφαρμογών Microsoft 365</value>
   </data>
-    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="MicrosoftSecurityBaselinePageTitle" xml:space="preserve">
     <value>Εφαρμόστε την βασική γραμμή ασφάλειας Microsoft σε αυτή τη σελίδα. Μπορείτε επίσης να επαληθεύσετε τη συμμόρφωση του συστήματος για να λάβετε μια ακριβή αναφορά που δείχνει ποιες ρυθμίσεις εφαρμόζονται και ποιες όχι. Μπορείτε να αφαιρέσετε τις πολιτικές που εφαρμόζονται από την βασική γραμμή επίσης.</value>
   </data>
-    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="Microsoft365AppsSecurityBaselinePageTitle" xml:space="preserve">
     <value>Εφαρμόστε την βασική γραμμή ασφάλειας εφαρμογών Microsoft 365 σε αυτή τη σελίδα. Μπορείτε επίσης να επαληθεύσετε τη συμμόρφωση του συστήματος για να λάβετε μια ακριβή αναφορά που δείχνει ποιες ρυθμίσεις εφαρμόζονται και ποιες όχι. Μπορείτε να αφαιρέσετε τις πολιτικές που εφαρμόζονται από την βασική γραμμή επίσης.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
@@ -2327,7 +2285,7 @@
   <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
     <value>Παρακάμψεις βασικών γραμμών Microsoft</value>
   </data>
-  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftBaseLinesOverridesPageTitle" xml:space="preserve">
     <value>Επαναφέρετε τα χαρακτηριστικά του λειτουργικού συστήματος που έχουν απενεργοποιηθεί μετά την εφαρμογή των βασικών γραμμών ασφάλειας Microsoft.</value>
   </data>
   <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -2842,7 +2800,7 @@
   <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Προβολή και διαχείριση όλων των Πολιτικών Ελέγχου του συστήματος.</value>
   </data>
-    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <data name="AuditPoliciesPageTitle" xml:space="preserve">
     <value>Προβολή και διαχείριση όλων των Πολιτικών Ελέγχου του συστήματος.</value>
   </data>
   <!--Audit Policies ListView Headers Start-->
@@ -3809,7 +3767,7 @@
   <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ο Κατάλογος Κρυπτογραφικών Στοιχείων (CBOM) παρέχει απογραφή σε επίπεδο συστήματος της κρυπτογραφίας του λειτουργικού συστήματος - αλγόριθμοι, καμπύλες, σουίτες κρυπτογράφησης και πάροχοι - αποτυπώνοντας τη κρυπτογραφική στάση της πλατφόρμας.</value>
   </data>
-  <data name="CBOMPageTitle.Text" xml:space="preserve">
+  <data name="CBOMPageTitle" xml:space="preserve">
     <value>Ο Κατάλογος Κρυπτογραφικών Στοιχείων (CBOM) προσφέρει απογραφή και ενδοσκόπηση της κρυπτογραφίας του λειτουργικού συστήματος σε επίπεδο συστήματος, αναδεικνύοντας τους αλγόριθμους, τις καμπύλες, τις σουίτες κρυπτογράφησης και τους παρόχους που καθορίζουν την κρυπτογραφική στάση της πλατφόρμας. Με την κανονικοποίηση όσων εκθέτει το λειτουργικό σύστημα, παρέχει διαφάνεια τύπου SBOM για την κρυπτογραφία: επιτρέποντας ελέγχους βάσει τεκμηρίων, ελέγχους συμμόρφωσης προς γραμμές βάσης, εντοπισμό απόκλισης σε ενημερώσεις, αναγνώριση παλαιών/αδύναμων primitive και προγραμματισμό για μετακβαντικές μεταβάσεις.</value>
   </data>
 <data name="CA_NameHeader.Text" xml:space="preserve">
@@ -4252,5 +4210,20 @@
   </data>
   <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
     <value>Ο έλεγχος για ενημερώσεις των εφαρμογών του Microsoft Store ολοκληρώθηκε με επιτυχία. Για να δείτε τυχόν λήψεις που ξεκίνησαν, ανοίξτε την εφαρμογή Microsoft Store.</value>
+  </data>
+    <data name="NoOptionalFeaturesAvailableForExport" xml:space="preserve">
+    <value>Δεν υπάρχουν προαιρετικές λειτουργίες ή δυνατότητες για εξαγωγή. Ανακτήστε τις πρώτα.</value>
+  </data>
+  <data name="SuccessfullyExportedOptionalFeatures" xml:space="preserve">
+    <value>Εξήχθησαν με επιτυχία {0} προαιρετικές λειτουργίες και/ή δυνατότητες σε {1}</value>
+  </data>
+  <data name="SuccessfullyExportedASRRules" xml:space="preserve">
+    <value>Εξήχθησαν με επιτυχία {0} κανόνες μείωσης επιφάνειας επίθεσης σε {1}</value>
+  </data>
+  <data name="NoInstalledAppsForExport" xml:space="preserve">
+    <value>Δεν υπάρχουν εγκατεστημένες εφαρμογές για εξαγωγή. Ανακτήστε τις πρώτα.</value>
+  </data>
+  <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
+    <value>Εξήχθησαν με επιτυχία {0} εγκατεστημένες εφαρμογές σε {1}</value>
   </data>
 </root>

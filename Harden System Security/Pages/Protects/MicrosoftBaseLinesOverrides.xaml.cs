@@ -32,6 +32,6 @@ internal sealed partial class MicrosoftBaseLinesOverrides : Page, CommonCore.UI.
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MicrosoftBaseLinesOverridesPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MicrosoftBaseLinesOverridesPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline");
 }

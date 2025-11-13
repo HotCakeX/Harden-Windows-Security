@@ -40,6 +40,6 @@ internal sealed partial class UpdatePage : Page, CommonCore.UI.IPageHeaderProvid
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("UpdatePageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("UpdatePageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Update");
 }

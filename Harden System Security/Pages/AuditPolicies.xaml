@@ -23,7 +23,7 @@
                         Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                         IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-        <Border Grid.Row="1" Margin="0,5,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
+        <Border Grid.Row="1" Margin="0,5,0,5" Style="{StaticResource GridCardStyle}" Padding="8">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
@@ -79,8 +79,7 @@
                     </StackPanel>
                 </Border>
 
-                <TextBox Width="300"
-                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                <TextBox IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                          Text="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          x:Uid="SearchAuditPoliciesPlaceHolder"
                          VerticalAlignment="Center"

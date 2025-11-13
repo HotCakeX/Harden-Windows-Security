@@ -26,13 +26,10 @@
                             Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                             IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-        <Expander Grid.Row="1" Margin="0,0,0,10" Padding="8" HorizontalAlignment="Stretch">
+        <Expander Grid.Row="1" Margin="0,0,0,5" HorizontalAlignment="Stretch">
             <Expander.Header>
 
-                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                HorizontalSpacing="10"
-                                VerticalSpacing="10">
+                <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
 
                     <ProgressRing IsActive="True"
                               Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
@@ -127,7 +124,7 @@
                         </StackPanel>
                     </Border>
 
-                    <TextBox Width="300"
+                    <TextBox
                          IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                          x:Uid="SearchBoxTextBox"
                          Text="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

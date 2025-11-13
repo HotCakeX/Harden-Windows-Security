@@ -32,6 +32,6 @@ internal sealed partial class AuditPolicies : Page, CommonCore.UI.IPageHeaderPro
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("AuditPoliciesPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("AuditPoliciesPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Audit-Policies");
 }

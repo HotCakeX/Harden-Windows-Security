@@ -439,7 +439,7 @@
     <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
     <value>Source Code</value>
   </data>
-    <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <data name="UpdatePageTitle" xml:space="preserve">
     <value>Check for updates on this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available.</value>
   </data>
     <data name="GuideButtonAtTop.Content" xml:space="preserve">
@@ -601,7 +601,7 @@
     <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Complete</value>
   </data>
-  <data name="ProtectPageTitle.Text" xml:space="preserve">
+  <data name="ProtectPageTitle" xml:space="preserve">
     <value>Manage security configurations and choose how to secure your device.</value>
   </data>
   <data name="ProtectCategory_MSFTSecBaseline" xml:space="preserve">
@@ -889,7 +889,7 @@
   <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Clear</value>
   </data>
-  <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="GroupPolicyEditorPageTitle" xml:space="preserve">
     <value>Open and read Group Policy files on this page. You can search through the data and remove individual policies from the file. You can also view the effective policies on the system.</value>
   </data>
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
@@ -1270,58 +1270,58 @@
   <data name="InstalledAppsManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>View and uninstall the installed apps.</value>
   </data>
-  <data name="MicrosoftDefenderPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftDefenderPageTitle" xml:space="preserve">
     <value>Configure all aspects of the Microsoft Defender and enable many of its features that are disabled by default.</value>
   </data>
-  <data name="ASRRulesPageTitle.Text" xml:space="preserve">
+  <data name="ASRRulesPageTitle" xml:space="preserve">
     <value>Configure each and every single Attack Surface Reduction rule on this page. They can prevent malware infection and exploitation of vulnerabilities.</value>
   </data>
-  <data name="BitLockerPageTitle.Text" xml:space="preserve">
+  <data name="BitLockerPageTitle" xml:space="preserve">
     <value>On this page you can apply policies that will make BitLocker more robust than it is by default and protect your data at rest.</value>
   </data>
-  <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
+  <data name="CertificateCheckingPageTitle" xml:space="preserve">
     <value>Find all certificates in your system that are not rooted to any certificate on the trusted Microsoft root certificates list.</value>
   </data>
-  <data name="CountryIPBlockingPageTitle.Text" xml:space="preserve">
+  <data name="CountryIPBlockingPageTitle" xml:space="preserve">
     <value>Block the IP address ranges of countries in the following lists: State Sponsors of Terrorism - Office of Foreign Assets Control (OFAC)</value>
   </data>
-  <data name="DeviceGuardPageTitle.Text" xml:space="preserve">
+  <data name="DeviceGuardPageTitle" xml:space="preserve">
     <value>Utilize the security features offered by hardware to harden the OS in multiple different layers of execution.</value>
   </data>
-  <data name="EdgePageTitle.Text" xml:space="preserve">
+  <data name="EdgePageTitle" xml:space="preserve">
     <value>Apply security and privacy related policies to the Microsoft Edge to make it more secure and private when browsing the web.</value>
   </data>
-  <data name="LockScreenPageTitle.Text" xml:space="preserve">
+  <data name="LockScreenPageTitle" xml:space="preserve">
     <value>Harden the Lock Screen of the operating system against possible exploits and reduce the amount of information that is exposed to unauthorized individuals when the device is locked.</value>
   </data>
-  <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
+  <data name="MiscellaneousConfigsPageTitle" xml:space="preserve">
     <value>This page contains important security measures that don't fall into more specific categories. Applying them can enhance and augment the security of your system and device.</value>
   </data>
-  <data name="NonAdminPageTitle.Text" xml:space="preserve">
+  <data name="NonAdminPageTitle" xml:space="preserve">
     <value>The policies on this page only apply to the current user and are not applied system-wide to all users. For this reason, you do not require Administrator privilege to apply them.</value>
   </data>
-  <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
+  <data name="OptionalWindowsFeaturesPageTitle" xml:space="preserve">
     <value>Fetch, List, View, Enable and Disable all of the optional features and capabilities that the operating system offers in a unified manner.</value>
   </data>
-  <data name="TLSPageTitle.Text" xml:space="preserve">
+  <data name="TLSPageTitle" xml:space="preserve">
     <value>Harden the SChannel (Secure Channel) in the OS. It is a security support provider (SSP) developed by Microsoft that implements security protocols such as Transport Layer Security (TLS).</value>
   </data>
-  <data name="UACPageTitle.Text" xml:space="preserve">
+  <data name="UACPageTitle" xml:space="preserve">
     <value>UAC helps prevent unauthorized changes to the operating system by prompting for permission or an administrator credentials. This page offers policies that will harden that workflow.</value>
   </data>
-  <data name="WindowsFirewallPageTitle.Text" xml:space="preserve">
+  <data name="WindowsFirewallPageTitle" xml:space="preserve">
     <value>Windows Firewall helps protect your computer by filtering incoming and outgoing traffic. Here you can apply various rules and configurations to enhance its security.</value>
   </data>
-  <data name="WindowsNetworkingPageTitle.Text" xml:space="preserve">
+  <data name="WindowsNetworkingPageTitle" xml:space="preserve">
     <value>Windows Networking settings allow you to configure various aspects of network connectivity and security such as how your device communicates with other devices on the network.</value>
   </data>
-  <data name="WindowsUpdatePageTitle.Text" xml:space="preserve">
+  <data name="WindowsUpdatePageTitle" xml:space="preserve">
     <value>Installing Windows Updates as soon as possible after they are released is essential for maintaining the security and stability of your system, especially against novel and zero-day exploits. This page helps you enforce policies that will make sure the updates are installed in a timely manner.</value>
   </data>
-  <data name="FileReputationPageTitle.Text" xml:space="preserve">
+  <data name="FileReputationPageTitle" xml:space="preserve">
     <value>Verify the reputation of executables and other files using Microsoft Defender Smart Screen or Microsoft's Intelligent Security Graph.</value>
   </data>
-  <data name="InstalledAppsManagementPageTitle.Text" xml:space="preserve">
+  <data name="InstalledAppsManagementPageTitle" xml:space="preserve">
     <value>View the list of all installed applications on the system and remove the unwanted ones.</value>
   </data>
   <data name="PFNVersionLabel.Text" xml:space="preserve">
@@ -1711,9 +1711,6 @@
 <data name="DependencyNotFound" xml:space="preserve">
   <value>DEPENDENCY NOT FOUND: {0} referenced by {1}</value>
 </data>
-<data name="SecurityPolicyRegistryApplyBulkInvokeError" xml:space="preserve">
-  <value>SecurityPolicyRegistryApply should be bulk-invoked via SecurityPolicyManager</value>
-</data>
 <data name="GroupPolicyApplyBulkInvokeError" xml:space="preserve">
   <value>GroupPolicyApply should be bulk-invoked via ApplyPolicies</value>
 </data>
@@ -1743,9 +1740,6 @@
 </data>
 <data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
   <value>Error processing Registry MUnits in bulk.</value>
-</data>
-<data name="ErrorProcessingSecurityPolicyRegistryMUnits" xml:space="preserve">
-  <value>Error processing Security Policy Registry MUnits in bulk.</value>
 </data>
 <data name="FallbackVerifyResult" xml:space="preserve">
   <value>FALLBACK VERIFY: {0}\{1} = {2}</value>
@@ -1785,9 +1779,6 @@
 </data>
 <data name="InvalidSource" xml:space="preserve">
   <value>Invalid source: {0}</value>
-</data>
-<data name="SecurityPolicyRegistryEntryMustHaveDefaultRegValue" xml:space="preserve">
-  <value>SecurityPolicyRegistry entry {0}\{1} must have a non-null DefaultRegValue</value>
 </data>
 <data name="ErrorCreatingMUnitsForCategory" xml:space="preserve">
   <value>Error creating MUnits for category {0}: {1}</value>
@@ -1894,41 +1885,8 @@
 <data name="RegistryVerificationComplete" xml:space="preserve">
   <value>Registry verification complete: {0} of {1} policies match</value>
 </data>
-<data name="NoSettingsProvided" xml:space="preserve">
-  <value>No settings provided</value>
-</data>
-<data name="SettingSystemAccessPolicyViaSecedit" xml:space="preserve">
-  <value>Setting system access policy via secedit...</value>
-</data>
 <data name="CreatedSecurityTemplate" xml:space="preserve">
   <value>Created security template: {0}</value>
-</data>
-<data name="TemplateContent" xml:space="preserve">
-  <value>Template content: {0}</value>
-</data>
-<data name="FailedToStartSeceditProcess" xml:space="preserve">
-  <value>Failed to start secedit process</value>
-</data>
-<data name="SeceditExitCode" xml:space="preserve">
-  <value>Secedit exit code: {0}</value>
-</data>
-<data name="SeceditOutput" xml:space="preserve">
-  <value>Secedit output: {0}</value>
-</data>
-<data name="SeceditError" xml:space="preserve">
-  <value>Secedit error: {0}</value>
-</data>
-<data name="SeceditCompletedSuccessfully" xml:space="preserve">
-  <value>Secedit completed successfully</value>
-</data>
-<data name="SeceditFailedWithExitCode" xml:space="preserve">
-  <value>Secedit failed with exit code: {0}</value>
-</data>
-<data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
-  <value>No [System Access] settings found in the specified file</value>
-</data>
-<data name="ExtractedSystemAccessSettingsFromFile" xml:space="preserve">
-  <value>Extracted {0} System Access settings from file: {1}</value>
 </data>
 <data name="FileNotFoundPath" xml:space="preserve">
   <value>File not found: {0}</value>
@@ -2248,7 +2206,7 @@
   <data name="AppDescription" xml:space="preserve">
     <value>Harden System Security is an application that helps you configure your system to be secure against many advanced threats, only using tools and features available in the OS and offered by Microsoft without using any 3rd party tools or programs.</value>
   </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>The following are the logs that the Harden System Security automatically generates and stores in the designated folder. The total size of the logs folder will never exceed 1GB.</value>
   </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
@@ -2287,10 +2245,10 @@
   <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
     <value>Microsoft 365 Apps Security Baseline</value>
   </data>
-    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="MicrosoftSecurityBaselinePageTitle" xml:space="preserve">
     <value>Apply Microsoft Security Baseline on this page. You can also verify system compliance to get a precise report showing which settings are applied and which are not. You can remove the policies applied by the baseline as well.</value>
   </data>
-    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="Microsoft365AppsSecurityBaselinePageTitle" xml:space="preserve">
     <value>Apply Microsoft 365 Apps Security Baseline on this page. You can also verify system compliance to get a precise report showing which settings are applied and which are not. You can remove the policies applied by the baseline as well.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
@@ -2327,7 +2285,7 @@
   <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
     <value>Microsoft Baselines Overrides</value>
   </data>
-  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftBaseLinesOverridesPageTitle" xml:space="preserve">
     <value>Restore Operating System features that have been disabled after applying Microsoft Security Baselines.</value>
   </data>
   <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -2839,7 +2797,7 @@ Thumbprint: {3}</value>
   <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>View and manage all of the Audit Policies on the system.</value>
   </data>
-    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <data name="AuditPoliciesPageTitle" xml:space="preserve">
     <value>View and manage all of the Audit Policies on the system.</value>
   </data>
   <!--Audit Policies ListView Headers Start-->
@@ -3809,7 +3767,7 @@ Thumbprint: {3}</value>
   <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>The Cryptographic Bill of Materials (CBOM) provides a system-level inventory of OS cryptography-algorithms, curves, cipher suites, and providers-capturing the platform's cryptographic posture.</value>
   </data>
-  <data name="CBOMPageTitle.Text" xml:space="preserve">
+  <data name="CBOMPageTitle" xml:space="preserve">
     <value>The Cryptographic Bill of Materials (CBOM) offers a system-level inventory and introspection of the operating system cryptography, surfacing the algorithms, curves, cipher suites, and providers that define the platform's cryptographic posture. By normalizing what the OS exposes, it delivers SBOM-like transparency for crypto: enabling evidence-based audits, baseline conformance checks, drift detection across updates, identification of legacy/weak primitives, and planning for post-quantum transitions.</value>
   </data>
 <data name="CA_NameHeader.Text" xml:space="preserve">
@@ -4252,5 +4210,20 @@ Thumbprint: {3}</value>
   </data>
   <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
     <value>Successfully checked for updates to Microsoft Store apps. To view any downloads that were started, please open the Microsoft Store app.</value>
+  </data>
+  <data name="NoOptionalFeaturesAvailableForExport" xml:space="preserve">
+    <value>No optional features or capabilities to export. Please retrieve them first.</value>
+  </data>
+  <data name="SuccessfullyExportedOptionalFeatures" xml:space="preserve">
+    <value>Successfully exported {0} optional features and/or capabilities to {1}</value>
+  </data>
+  <data name="SuccessfullyExportedASRRules" xml:space="preserve">
+    <value>Successfully exported {0} Attack Surface Reduction rules to {1}</value>
+  </data>
+  <data name="NoInstalledAppsForExport" xml:space="preserve">
+    <value>No installed apps to export. Please retrieve them first.</value>
+  </data>
+  <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
+    <value>Successfully exported {0} installed apps to {1}</value>
   </data>
 </root>

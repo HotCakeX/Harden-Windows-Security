@@ -25,6 +25,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -643,10 +645,21 @@ internal sealed partial class DismServiceClient : IDisposable
 }
 
 /// <summary>
+/// JSON source generation context for <see cref="DISMOutputEntry"/> serialization
+/// </summary>
+[JsonSourceGenerationOptions(WriteIndented = true, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+[JsonSerializable(typeof(DISMOutputEntry))]
+[JsonSerializable(typeof(List<DISMOutputEntry>))]
+internal sealed partial class DISMOutputEntryJsonContext : JsonSerializerContext
+{
+}
+
+/// <summary>
 /// Used as ListView data to display Features and Capabilities to manage.
 /// </summary>
 internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWindowsFeaturesVM parentVM) : ViewModelBase
 {
+	[JsonInclude]
 	internal string Description => dismOutput.Description;
 
 	private static SolidColorBrush GetStateBadgeBrush(DismPackageFeatureState state) => state switch
@@ -663,10 +676,16 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 		_ => new SolidColorBrush(Color.FromArgb(255, 96, 94, 92))                                                   // Default Gray
 	};
 
+	[JsonIgnore]
 	internal SolidColorBrush StateBadgeBrush => GetStateBadgeBrush(State);
 
+	[JsonInclude]
 	internal string Name => dismOutput.Name;
+
+	[JsonIgnore]
 	internal DISMResultType Type => dismOutput.Type;
+
+	[JsonIgnore]
 	internal DismPackageFeatureState State
 	{
 		get;
@@ -680,10 +699,13 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 		}
 	} = dismOutput.State;
 
+	[JsonIgnore]
 	internal bool IsProgressIndeterminate => IsProcessing && ProgressTotal == 0;
 
+	[JsonIgnore]
 	internal Visibility ProgressTextVisibility => IsProcessing && ProgressTotal > 0 ? Visibility.Visible : Visibility.Collapsed;
 
+	[JsonIgnore]
 	internal bool IsProcessing
 	{
 		get;
@@ -700,6 +722,7 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 		}
 	}
 
+	[JsonIgnore]
 	internal uint ProgressCurrent
 	{
 		get;
@@ -713,6 +736,7 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 		}
 	}
 
+	[JsonIgnore]
 	internal uint ProgressTotal
 	{
 		get;
@@ -729,14 +753,19 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 		}
 	}
 
+	[JsonIgnore]
 	internal double ProgressPercentage => ProgressTotal > 0 ? ProgressCurrent * 100.0 / ProgressTotal : 0;
 
+	[JsonIgnore]
 	internal string ProgressPercentageFormatted => ProgressPercentage.ToString("F1");
 
+	[JsonIgnore]
 	internal Visibility ProgressBarVisibility => IsProcessing ? Visibility.Visible : Visibility.Collapsed;
 
+	[JsonIgnore]
 	internal bool ButtonsEnabled => !IsProcessing && ParentVM.ElementsAreEnabled;
 
+	[JsonIgnore]
 	internal SolidColorBrush BorderBrush => IsProcessing
 		? new SolidColorBrush(Color.FromArgb(255, 255, 20, 147)) // Hot pink
 		: new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)); // Transparent
@@ -754,10 +783,13 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 		_ => GlobalVars.GetStr("UnknownState")
 	};
 
+	[JsonInclude]
 	internal string StateDisplayName => GetStateDisplayName(State);
 
+	[JsonInclude]
 	internal string TypeDisplayName => Type == DISMResultType.Feature ? GlobalVars.GetStr("FeatureType") : GlobalVars.GetStr("CapabilityType");
 
+	[JsonIgnore]
 	internal OptionalWindowsFeaturesVM ParentVM => parentVM;
 
 	internal void UpdateProgress(uint current, uint total)
@@ -2698,5 +2730,48 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		if (string.IsNullOrEmpty(vendor)) return;
 
 		SetVendorSelection(vendor, false);
+	}
+
+	/// <summary>
+	/// Exports the optional features and capabilities to a JSON file
+	/// </summary>
+	internal async void ExportToJson_Click()
+	{
+		try
+		{
+			if (AllItems.Count == 0)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoOptionalFeaturesAvailableForExport"));
+				return;
+			}
+
+			ElementsAreEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
+					"OSFeaturesAndCapabilities|*.JSON",
+					"OSFeaturesAndCapabilities.JSON");
+
+			if (saveLocation is null)
+				return;
+
+			await Task.Run(() =>
+			{
+				string jsonString = JsonSerializer.Serialize(AllItems, DISMOutputEntryJsonContext.Default.ListDISMOutputEntry);
+
+				File.WriteAllText(saveLocation, jsonString, Encoding.UTF8);
+			});
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedOptionalFeatures"), AllItems.Count, saveLocation));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
 	}
 }

@@ -439,7 +439,7 @@
     <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
     <value>स्रोत कोड</value>
   </data>
-    <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <data name="UpdatePageTitle" xml:space="preserve">
     <value>इस पेज पर अपडेट की जांच करें। आप स्वचालित अपडेट जांच भी सक्षम कर सकते हैं जो स्टार्टअप पर एक बार होगी और जब नया संस्करण उपलब्ध होगा तो आपको सूचित किया जाएगा।</value>
   </data>
     <data name="GuideButtonAtTop.Content" xml:space="preserve">
@@ -601,7 +601,7 @@
     <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>पूर्ण</value>
   </data>
-  <data name="ProtectPageTitle.Text" xml:space="preserve">
+  <data name="ProtectPageTitle" xml:space="preserve">
     <value>सुरक्षा कॉन्फ़िगरेशन का प्रबंधन करें और चुनें कि अपने डिवाइस को कैसे सुरक्षित करना है।</value>
   </data>
   <data name="ProtectCategory_MSFTSecBaseline" xml:space="preserve">
@@ -889,7 +889,7 @@
   <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>साफ़ करें</value>
   </data>
-  <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="GroupPolicyEditorPageTitle" xml:space="preserve">
     <value>इस पेज पर समूह नीति फ़ाइलें खोलें और पढ़ें। आप डेटा में खोज सकते हैं और फ़ाइल से व्यक्तिगत नीतियों को हटा सकते हैं। आप सिस्टम पर प्रभावी नीतियां भी देख सकते हैं।</value>
   </data>
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
@@ -1270,58 +1270,58 @@
   <data name="InstalledAppsManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>इंस्टॉल किए गए ऐप्स देखें और अनइंस्टॉल करें।</value>
   </data>
-  <data name="MicrosoftDefenderPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftDefenderPageTitle" xml:space="preserve">
     <value>Microsoft Defender के सभी पहलुओं को कॉन्फ़िगर करें और इसकी कई सुविधाओं को सक्षम करें जो डिफ़ॉल्ट रूप से अक्षम हैं।</value>
   </data>
-  <data name="ASRRulesPageTitle.Text" xml:space="preserve">
+  <data name="ASRRulesPageTitle" xml:space="preserve">
     <value>इस पेज पर प्रत्येक हमला सतह कमी नियम को कॉन्फ़िगर करें। वे मैलवेयर संक्रमण और भेद्यता शोषण को रोक सकते हैं।</value>
   </data>
-  <data name="BitLockerPageTitle.Text" xml:space="preserve">
+  <data name="BitLockerPageTitle" xml:space="preserve">
     <value>इस पेज पर आप ऐसी नीतियां लागू कर सकते हैं जो BitLocker को डिफ़ॉल्ट से अधिक मजबूत बनाएंगी और आपके डेटा को रेस्ट में सुरक्षित रखेंगी।</value>
   </data>
-  <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
+  <data name="CertificateCheckingPageTitle" xml:space="preserve">
     <value>अपने सिस्टम में सभी प्रमाणपत्र खोजें जिनका रूट Microsoft की विश्वसनीय रूट प्रमाणपत्र सूची में किसी भी प्रमाणपत्र में नहीं है।</value>
   </data>
-  <data name="CountryIPBlockingPageTitle.Text" xml:space="preserve">
+  <data name="CountryIPBlockingPageTitle" xml:space="preserve">
     <value>निम्नलिखित सूचियों में देशों की IP पता श्रेणियों को अवरुद्ध करें: राज्य आतंकवाद प्रायोजक - विदेशी संपत्ति नियंत्रण कार्यालय (OFAC)</value>
   </data>
-  <data name="DeviceGuardPageTitle.Text" xml:space="preserve">
+  <data name="DeviceGuardPageTitle" xml:space="preserve">
     <value>हार्डवेयर द्वारा प्रदान की गई सुरक्षा सुविधाओं का लाभ उठाकर विभिन्न निष्पादन परतों पर ऑपरेटिंग सिस्टम को कठोर बनाएं।</value>
   </data>
-  <data name="EdgePageTitle.Text" xml:space="preserve">
+  <data name="EdgePageTitle" xml:space="preserve">
     <value>Microsoft Edge में सुरक्षा और गोपनीयता संबंधी नीतियां लागू करके इसे वेब ब्राउज़िंग के दौरान अधिक सुरक्षित और निजी बनाएं।</value>
   </data>
-  <data name="LockScreenPageTitle.Text" xml:space="preserve">
+  <data name="LockScreenPageTitle" xml:space="preserve">
     <value>ऑपरेटिंग सिस्टम के लॉक स्क्रीन को संभावित शोषण के खिलाफ कठोर बनाएं और डिवाइस लॉक होने पर अनधिकृत व्यक्तियों के लिए उजागर जानकारी की मात्रा कम करें।</value>
   </data>
-  <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
+  <data name="MiscellaneousConfigsPageTitle" xml:space="preserve">
     <value>इस पेज में महत्वपूर्ण सुरक्षा उपाय हैं जो अन्य अधिक विशेषीकृत श्रेणियों में फिट नहीं होते। इन्हें लागू करना आपके सिस्टम और डिवाइस की सुरक्षा को बेहतर बना सकता है और मजबूत कर सकता है।</value>
   </data>
-  <data name="NonAdminPageTitle.Text" xml:space="preserve">
+  <data name="NonAdminPageTitle" xml:space="preserve">
     <value>इस पेज की नीतियां केवल वर्तमान उपयोगकर्ता पर लागू होती हैं और सभी उपयोगकर्ताओं के लिए सिस्टम स्तर पर लागू नहीं होतीं। इस कारण से, इन्हें लागू करने के लिए आपको व्यवस्थापक अनुमतियों की आवश्यकता नहीं है।</value>
   </data>
-  <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
+  <data name="OptionalWindowsFeaturesPageTitle" xml:space="preserve">
     <value>ऑपरेटिंग सिस्टम द्वारा प्रदान की गई सभी वैकल्पिक सुविधाओं और क्षमताओं को एकीकृत तरीके से प्राप्त करें, देखें, सक्षम करें और अक्षम करें।</value>
   </data>
-  <data name="TLSPageTitle.Text" xml:space="preserve">
+  <data name="TLSPageTitle" xml:space="preserve">
     <value>ऑपरेटिंग सिस्टम में SChannel (सुरक्षित चैनल) को कठोर बनाएं। यह Microsoft द्वारा विकसित सुरक्षा समर्थन प्रदाता (SSP) है जो Transport Layer Security (TLS) जैसे सुरक्षा प्रोटोकॉल को लागू करता है।</value>
   </data>
-  <data name="UACPageTitle.Text" xml:space="preserve">
+  <data name="UACPageTitle" xml:space="preserve">
     <value>UAC अनुमति या व्यवस्थापक क्रेडेंशियल का अनुरोध करके ऑपरेटिंग सिस्टम में अनधिकृत परिवर्तनों को रोकने में मदद करता है। यह पेज ऐसी नीतियां प्रदान करता है जो इस वर्कफ़्लो को कठोर बनाएंगी।</value>
   </data>
-  <data name="WindowsFirewallPageTitle.Text" xml:space="preserve">
+  <data name="WindowsFirewallPageTitle" xml:space="preserve">
     <value>Windows फ़ायरवॉल आने वाले और जाने वाले ट्रैफिक को फिल्टर करके आपके कंप्यूटर की सुरक्षा में मदद करता है। यहाँ आप इसकी सुरक्षा बढ़ाने के लिए विभिन्न नियम और कॉन्फ़िगरेशन लागू कर सकते हैं।</value>
   </data>
-  <data name="WindowsNetworkingPageTitle.Text" xml:space="preserve">
+  <data name="WindowsNetworkingPageTitle" xml:space="preserve">
     <value>Windows नेटवर्किंग सेटिंग्स आपको नेटवर्क कनेक्टिविटी और सुरक्षा के विभिन्न पहलुओं को कॉन्फ़िगर करने की अनुमति देती हैं जैसे कि आपका डिवाइस नेटवर्क पर अन्य डिवाइस के साथ कैसे संवाद करता है।</value>
   </data>
-  <data name="WindowsUpdatePageTitle.Text" xml:space="preserve">
+  <data name="WindowsUpdatePageTitle" xml:space="preserve">
     <value>Windows अपडेट को रिलीज़ के बाद जल्द से जल्द इंस्टॉल करना आपके सिस्टम की सुरक्षा और स्थिरता बनाए रखने के लिए महत्वपूर्ण है, खासकर नए शोषणों और zero-day के खिलाफ। यह पेज आपको ऐसी नीतियां लागू करने में मदद करता है जो सुनिश्चित करेंगी कि अपडेट समय पर इंस्टॉल हों।</value>
   </data>
-  <data name="FileReputationPageTitle.Text" xml:space="preserve">
+  <data name="FileReputationPageTitle" xml:space="preserve">
     <value>Microsoft Defender Smart Screen या Microsoft की सुरक्षा इंटेलिजेंस ग्राफ का उपयोग करके निष्पादन योग्य फ़ाइलों और अन्य फ़ाइलों की प्रतिष्ठा सत्यापित करें।</value>
   </data>
-  <data name="InstalledAppsManagementPageTitle.Text" xml:space="preserve">
+  <data name="InstalledAppsManagementPageTitle" xml:space="preserve">
     <value>सिस्टम पर इंस्टॉल किए गए सभी ऐप्स की सूची देखें और अवांछित ऐप्स को अनइंस्टॉल करें।</value>
   </data>
   <data name="PFNVersionLabel.Text" xml:space="preserve">
@@ -1711,9 +1711,6 @@
 <data name="DependencyNotFound" xml:space="preserve">
   <value>निर्भरता नहीं मिली: {0} द्वारा संदर्भित {1}</value>
 </data>
-<data name="SecurityPolicyRegistryApplyBulkInvokeError" xml:space="preserve">
-  <value>SecurityPolicyRegistryApply को SecurityPolicyManager के माध्यम से बल्क में आह्वान किया जाना चाहिए</value>
-</data>
 <data name="GroupPolicyApplyBulkInvokeError" xml:space="preserve">
   <value>GroupPolicyApply को ApplyPolicies के माध्यम से बल्क में आह्वान किया जाना चाहिए</value>
 </data>
@@ -1743,9 +1740,6 @@
 </data>
 <data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
   <value>रजिस्ट्री M यूनिट्स को बल्क में प्रसंस्करण करने में त्रुटि।</value>
-</data>
-<data name="ErrorProcessingSecurityPolicyRegistryMUnits" xml:space="preserve">
-  <value>सुरक्षा नीति रजिस्ट्री M यूनिट्स को बल्क में प्रसंस्करण करने में त्रुटि।</value>
 </data>
 <data name="FallbackVerifyResult" xml:space="preserve">
   <value>फॉलबैक सत्यापन: {0}\{1} = {2}</value>
@@ -1785,9 +1779,6 @@
 </data>
 <data name="InvalidSource" xml:space="preserve">
   <value>अमान्य स्रोत: {0}</value>
-</data>
-<data name="SecurityPolicyRegistryEntryMustHaveDefaultRegValue" xml:space="preserve">
-  <value>SecurityPolicyRegistry एंट्री {0}\{1} में गैर-खाली DefaultRegValue होना चाहिए</value>
 </data>
 <data name="ErrorCreatingMUnitsForCategory" xml:space="preserve">
   <value>श्रेणी {0} के लिए M यूनिट्स बनाने में त्रुटि: {1}</value>
@@ -1894,41 +1885,8 @@
 <data name="RegistryVerificationComplete" xml:space="preserve">
   <value>रजिस्ट्री सत्यापन पूर्ण: {1} में से {0} नीतियां मेल खाती हैं</value>
 </data>
-<data name="NoSettingsProvided" xml:space="preserve">
-  <value>कोई सेटिंग्स प्रदान नहीं की गई</value>
-</data>
-<data name="SettingSystemAccessPolicyViaSecedit" xml:space="preserve">
-  <value>secedit के माध्यम से सिस्टम एक्सेस नीति सेट कर रहे हैं...</value>
-</data>
 <data name="CreatedSecurityTemplate" xml:space="preserve">
   <value>सुरक्षा टेम्प्लेट बनाया गया: {0}</value>
-</data>
-<data name="TemplateContent" xml:space="preserve">
-  <value>टेम्प्लेट सामग्री: {0}</value>
-</data>
-<data name="FailedToStartSeceditProcess" xml:space="preserve">
-  <value>secedit प्रक्रिया शुरू करने में विफल</value>
-</data>
-<data name="SeceditExitCode" xml:space="preserve">
-  <value>Secedit एक्जिट कोड: {0}</value>
-</data>
-<data name="SeceditOutput" xml:space="preserve">
-  <value>Secedit आउटपुट: {0}</value>
-</data>
-<data name="SeceditError" xml:space="preserve">
-  <value>Secedit त्रुटि: {0}</value>
-</data>
-<data name="SeceditCompletedSuccessfully" xml:space="preserve">
-  <value>Secedit सफलतापूर्वक पूर्ण</value>
-</data>
-<data name="SeceditFailedWithExitCode" xml:space="preserve">
-  <value>Secedit एक्जिट कोड के साथ विफल: {0}</value>
-</data>
-<data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
-  <value>निर्दिष्ट फ़ाइल में कोई [System Access] सेटिंग्स नहीं मिलीं</value>
-</data>
-<data name="ExtractedSystemAccessSettingsFromFile" xml:space="preserve">
-  <value>फ़ाइल से {0} System Access सेटिंग्स निकाली गईं: {1}</value>
 </data>
 <data name="FileNotFoundPath" xml:space="preserve">
   <value>फ़ाइल नहीं मिली: {0}</value>
@@ -2248,7 +2206,7 @@
   <data name="AppDescription" xml:space="preserve">
   <value>Harden System Security एक एप्लिकेशन है जो आपको अपने सिस्टम को कई उन्नत खतरों के विरुद्ध सुरक्षित करने के लिए कॉन्फ़िगर करने में मदद करती है, केवल उन टूल्स और फीचर्स का उपयोग करके जो ऑपरेटिंग सिस्टम में उपलब्ध हैं और Microsoft द्वारा प्रदान किए गए हैं, बिना किसी तृतीय पक्ष टूल्स या प्रोग्राम का उपयोग किए।</value>
 </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>निम्नलिखित वे लॉग हैं जिन्हें Harden System Security स्वचालित रूप से जेनरेट करता है और निर्दिष्ट फ़ोल्डर में संग्रहीत करता है। लॉग फ़ोल्डर का कुल आकार कभी भी 1GB से अधिक नहीं होगा।</value>
   </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
@@ -2287,10 +2245,10 @@
   <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
     <value>Microsoft 365 ऐप्स सुरक्षा आधारभूत</value>
   </data>
-    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="MicrosoftSecurityBaselinePageTitle" xml:space="preserve">
     <value>इस पृष्ठ में माइक्रोसॉफ्ट सुरक्षा आधारभूत लागू करें। आप सिस्टम अनुपालन को भी सत्यापित कर सकते हैं जो एक सटीक रिपोर्ट प्राप्त करने के लिए दिखाता है कि कौन सी सेटिंग्स लागू हैं और कौन सी नहीं। आप आधारभूत द्वारा लागू की गई नीतियों को भी हटा सकते हैं।</value>
   </data>
-    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="Microsoft365AppsSecurityBaselinePageTitle" xml:space="preserve">
     <value>इस पृष्ठ में Microsoft 365 ऐप्स सुरक्षा आधारभूत लागू करें। आप सिस्टम अनुपालन को भी सत्यापित कर सकते हैं जो एक सटीक रिपोर्ट प्राप्त करने के लिए दिखाता है कि कौन सी सेटिंग्स लागू हैं और कौन सी नहीं। आप आधारभूत द्वारा लागू की गई नीतियों को भी हटा सकते हैं।</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
@@ -2327,7 +2285,7 @@
   <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
     <value>माइक्रोसॉफ्ट आधारभूत ओवरराइड्स</value>
   </data>
-  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftBaseLinesOverridesPageTitle" xml:space="preserve">
     <value>माइक्रोसॉफ्ट सुरक्षा आधारभूत लागू करने के बाद अक्षम किए गए ऑपरेटिंग सिस्टम सुविधाओं को पुनर्स्थापित करें।</value>
   </data>
   <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -2842,7 +2800,7 @@
   <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>सिस्टम की सभी ऑडिट नीतियों को देखें और प्रबंधित करें।</value>
   </data>
-    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <data name="AuditPoliciesPageTitle" xml:space="preserve">
     <value>सिस्टम की सभी ऑडिट नीतियों को देखें और प्रबंधित करें।</value>
   </data>
   <!--Audit Policies ListView Headers Start-->
@@ -3809,7 +3767,7 @@
   <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>क्रिप्टोग्राफ़िक बिल ऑफ़ मैटेरियल्स (CBOM) ऑपरेटिंग सिस्टम की क्रिप्टोग्राफ़ी - एल्गोरिदम, वक्र, सिफर सूट और प्रदाता - का सिस्टम-स्तरीय इन्वेंटरी प्रदान करता है, जिससे प्लेटफ़ॉर्म की क्रिप्टोग्राफ़िक मुद्रा परिलक्षित होती है.</value>
   </data>
-  <data name="CBOMPageTitle.Text" xml:space="preserve">
+  <data name="CBOMPageTitle" xml:space="preserve">
     <value>क्रिप्टोग्राफ़िक बिल ऑफ़ मैटेरियल्स (CBOM) सिस्टम-स्तरीय इन्वेंटरी और ऑपरेटिंग सिस्टम की क्रिप्टोग्राफ़ी का अंतर्दर्शन प्रदान करता है, जिससे वे एल्गोरिदम, वक्र, सिफर सूट और प्रदाता सामने आते हैं जो प्लेटफ़ॉर्म की क्रिप्टोग्राफ़िक मुद्रा को परिभाषित करते हैं. OS जो उजागर करता है उसे सामान्यीकृत करके, यह क्रिप्टो के लिए SBOM-जैसी पारदर्शिता प्रदान करता है: साक्ष्य-आधारित ऑडिट, बेसलाइन अनुपालन जांच, अपडेट्स के दौरान ड्रिफ्ट का पता लगाना, पुरानी/कमज़ोर प्रिमिटिव्स की पहचान, और पोस्ट-क्वांटम संक्रमणों की योजना.</value>
   </data>
 <data name="CA_NameHeader.Text" xml:space="preserve">
@@ -4252,5 +4210,20 @@
   </data>
   <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
     <value>Microsoft Store ऐप्स के अपडेट की जाँच सफलतापूर्वक पूर्ण हुई. जिन डाउनलोड्स की शुरुआत हुई है, उन्हें देखने के लिए कृपया Microsoft Store ऐप खोलें.</value>
+  </data>
+    <data name="NoOptionalFeaturesAvailableForExport" xml:space="preserve">
+    <value>निर्यात करने के लिए कोई वैकल्पिक सुविधाएँ या क्षमताएँ नहीं हैं। कृपया पहले उन्हें प्राप्त करें.</value>
+  </data>
+  <data name="SuccessfullyExportedOptionalFeatures" xml:space="preserve">
+    <value>सफलतापूर्वक {0} वैकल्पिक सुविधाएँ और/या क्षमताएँ {1} में निर्यात की गईं</value>
+  </data>
+  <data name="SuccessfullyExportedASRRules" xml:space="preserve">
+    <value>सफलतापूर्वक {0} आक्रमण सतह न्यूनीकरण नियम {1} में निर्यात किए गए</value>
+  </data>
+  <data name="NoInstalledAppsForExport" xml:space="preserve">
+    <value>निर्यात करने के लिए कोई स्थापित ऐप्स नहीं हैं। कृपया पहले उन्हें प्राप्त करें.</value>
+  </data>
+  <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
+    <value>सफलतापूर्वक {0} स्थापित ऐप्स {1} में निर्यात कर दिए गए</value>
   </data>
 </root>

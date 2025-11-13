@@ -1999,4 +1999,12 @@ internal static unsafe partial class NativeMethods
 	);
 
 
+	[LibraryImport("samlib.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint SamSetInformationDomain(
+		IntPtr DomainHandle,
+		int DomainInformationClass,
+		IntPtr Buffer);
+
+
 }

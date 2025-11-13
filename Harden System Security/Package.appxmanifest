@@ -35,7 +35,7 @@
   <Identity
     Name="VioletHansen.HardenSystemSecurity"
     Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189"
-    Version="1.0.22.0" />
+    Version="1.0.23.0" />
 
   <mp:PhoneIdentity PhoneProductId="74d36aa3-e613-41ec-808e-c5d051224316" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 

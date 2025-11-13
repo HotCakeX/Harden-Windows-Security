@@ -57,7 +57,7 @@
         <Expander Grid.Row="1" Margin="0,5,0,10" HorizontalAlignment="Stretch">
             <Expander.Header>
 
-                <controls:WrapPanel Orientation="Horizontal" Padding="8" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+                <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
 
                     <ProgressRing Visibility="{x:Bind ViewModel.ScanLogsProgressRingVisibility, Mode=OneWay}"
                               IsActive="{x:Bind ViewModel.ScanLogsProgressRingIsActive, Mode=OneWay}" />
@@ -295,8 +295,7 @@
                         </StackPanel>
                     </Border>
 
-                    <TextBox Width="300"
-                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                    <TextBox IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                              x:Uid="SearchBoxTextBox"
                              Text="{x:Bind ViewModel.SearchBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              VerticalAlignment="Center"

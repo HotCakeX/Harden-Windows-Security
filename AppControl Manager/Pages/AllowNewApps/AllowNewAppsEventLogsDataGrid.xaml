@@ -15,10 +15,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Expander Grid.Row="0" Margin="0,0,0,10" Padding="8" HorizontalAlignment="Stretch">
+        <Expander Grid.Row="0" Margin="0,0,0,10" HorizontalAlignment="Stretch">
             <Expander.Header>
 
-                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+                <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
 
                     <ProgressRing Visibility="Collapsed" IsActive="False" />
 
@@ -59,7 +59,6 @@
                     </DropDownButton>
 
                     <TextBox Text="{x:Bind ViewModel.EventLogsAllFileIdentitiesSearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         Width="300"
                          x:Uid="SearchBoxTextBox"
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center" />

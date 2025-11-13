@@ -32,6 +32,6 @@ internal sealed partial class GroupPolicyEditor : Page, CommonCore.UI.IPageHeade
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("GroupPolicyEditorPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("GroupPolicyEditorPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy-Editor");
 }

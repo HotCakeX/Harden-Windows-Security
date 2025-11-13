@@ -29,7 +29,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using HardenSystemSecurity.SecurityPolicy;
-using Microsoft.Win32;
 
 #pragma warning disable CA1819
 
@@ -684,7 +683,7 @@ internal static class MSBaseline
 					string friendlyName = $"{result.Key.KeyName}\\{result.Key.ValueName}";
 
 					// Expected value is the baseline entry's parsed value.
-					string expectedValue = GetCurrentGroupPolicyValue(result.Key);
+					string expectedValue = FormatBaselineGroupPolicyValue(result.Key);
 
 					// Current value comes from the matched system entry (if any).
 					string currentValue;
@@ -736,7 +735,7 @@ internal static class MSBaseline
 					string friendlyName = $"{result.Key.KeyName}\\{result.Key.ValueName}";
 
 					// Expected value is the baseline entry's parsed value.
-					string expectedValue = GetCurrentGroupPolicyValue(result.Key);
+					string expectedValue = FormatBaselineGroupPolicyValue(result.Key);
 
 					// Current value comes from the matched system entry (if any).
 					string currentValue;
@@ -924,18 +923,37 @@ internal static class MSBaseline
 		// Get current privilege rights of the system.
 		Dictionary<string, string[]> currentPrivileges = SecurityPolicyReader.GetPrivilegeRights();
 
-		// Verify each expected privilege
+		// Verify each expected privilege		
 		foreach (KeyValuePair<string, string[]> expectedPrivilege in expectedPrivileges)
 		{
 			bool isCompliant;
 			string currentValue;
-			string expectedValue = expectedPrivilege.Value.Length == 0 ? "(No assignments)" : string.Join(", ", expectedPrivilege.Value);
+
+			// Normalize expected assignments (from INF) to plain SID strings.
+			// This allows INF tokens to be SIDs with or without '*', or account names (e.g., NewGuestNamev5).
+			List<string> normalizedList = [];
+			foreach (string token in expectedPrivilege.Value)
+			{
+				string normalized = SecurityPolicyWriter.GetNormalizedSidString(token);
+				if (string.IsNullOrEmpty(normalized))
+				{
+					Logger.Write($"Privilege SID normalization failed for token '{token}' in privilege '{expectedPrivilege.Key}'.");
+					continue;
+				}
+				normalizedList.Add(normalized);
+			}
+			string[] normalizedExpectedPlain = normalizedList.ToArray();
+
+			// For display, mirror the system's shape ("*SID") while the comparison uses plain SIDs.
+			string expectedValue = normalizedExpectedPlain.Length == 0
+				? "(No assignments)"
+				: string.Join(", ", normalizedExpectedPlain.Select(s => s.StartsWith("S-", StringComparison.OrdinalIgnoreCase) ? "*" + s : s));
 
 			if (currentPrivileges.TryGetValue(expectedPrivilege.Key, out string[]? currentSids))
 			{
 				currentValue = currentSids.Length == 0 ? "(No assignments)" : string.Join(", ", currentSids);
 
-				if (expectedPrivilege.Value.Length == 0)
+				if (normalizedExpectedPlain.Length == 0)
 				{
 					// Expected no assignments - compliant if current also has no assignments
 					isCompliant = currentSids.Length == 0;
@@ -944,8 +962,15 @@ internal static class MSBaseline
 				{
 					// Expected specific assignments - exact match required
 					// But the location of the SIDs in the array does not and should never matter.
-					isCompliant = expectedPrivilege.Value.Length == currentSids.Length &&
-								 expectedPrivilege.Value.All(expected => currentSids.Contains(expected, StringComparer.OrdinalIgnoreCase));
+
+					// Normalize current system SIDs to plain form by stripping the leading '*'
+					string[] normalizedCurrentPlain = currentSids
+						.Select(s => s.StartsWith('*') ? s[1..] : s)
+						.ToArray();
+
+					isCompliant =
+						normalizedExpectedPlain.Length == normalizedCurrentPlain.Length &&
+						normalizedExpectedPlain.All(expected => normalizedCurrentPlain.Contains(expected, StringComparer.OrdinalIgnoreCase));
 				}
 			}
 			else
@@ -953,7 +978,7 @@ internal static class MSBaseline
 				// Privilege not found on system
 				currentValue = "Not Found";
 
-				if (expectedPrivilege.Value.Length == 0)
+				if (normalizedExpectedPlain.Length == 0)
 				{
 					// Expected no assignments and privilege not found - this is compliant
 					isCompliant = true;
@@ -1003,35 +1028,23 @@ internal static class MSBaseline
 		// Verify each policy individually
 		foreach (RegistryPolicyEntry policy in expectedPolicies)
 		{
-			bool isCompliant = false;
-			string currentValue = "Not Found";
 			string expectedValue = policy.RegValue ?? "Unknown";
 
-			// Getting the root key based on the hive stored in the policy
-			RegistryKey rootKey = GetRegistryRootKey(policy.Hive);
+			// Use centralized Manager logic for reading and comparing registry values.
+			bool isCompliant;
+			string currentValue = "Not Found";
 
-			// Using the KeyName directly as the subkey (it doesn't include the hive prefix)
-			using RegistryKey? key = rootKey.OpenSubKey(policy.KeyName);
-			if (key is not null)
+			// Manager returns canonical strings (e.g., Base64 for binary, ";" for multi-sz)
+			string? actual = RegistryManager.Manager.ReadRegistry(policy);
+
+			if (actual is not null && policy.RegValue is not null)
 			{
-				object? value = key.GetValue(policy.ValueName);
-
-				// Comparing the raw values directly using type-specific comparison
-				isCompliant = CompareRegistryValues(value, policy.RegValue, policy.Type);
-
-				// Formatting current value for display
-				if (value is null)
-				{
-					currentValue = policy.Type == RegistryValueType.REG_MULTI_SZ ? "" : "0";
-				}
-				else
-				{
-					currentValue = FormatRegistryValueForDisplay(value, policy.Type);
-				}
+				isCompliant = RegistryManager.Manager.CompareRegistryValues(policy.Type, actual, policy.RegValue);
+				currentValue = actual;
 			}
 			else
 			{
-				currentValue = "Key Not Found";
+				// Keep "Not Found" for missing key/value; no extra key probing to avoid unnecessary changes.
 				isCompliant = false;
 			}
 
@@ -1048,163 +1061,11 @@ internal static class MSBaseline
 	}
 
 	/// <summary>
-	/// Compares registry values based on their type, handling proper type conversion and formatting.
-	/// </summary>
-	/// <param name="actualValue">The actual value from the registry</param>
-	/// <param name="expectedValue">The expected value as string from INF</param>
-	/// <param name="type">The registry value type</param>
-	/// <returns>True if values match, false otherwise</returns>
-	private static bool CompareRegistryValues(object? actualValue, string? expectedValue, RegistryValueType type)
-	{
-		if (expectedValue is null)
-			return actualValue is null;
-
-		if (actualValue is null)
-			return false;
-
-		return type switch
-		{
-			RegistryValueType.REG_SZ or RegistryValueType.REG_EXPAND_SZ =>
-				CompareStringValues(actualValue.ToString(), expectedValue),
-
-			RegistryValueType.REG_DWORD =>
-				CompareDwordValues(actualValue, expectedValue),
-
-			RegistryValueType.REG_QWORD =>
-				CompareQwordValues(actualValue, expectedValue),
-
-			RegistryValueType.REG_BINARY =>
-				CompareBinaryValues(actualValue, expectedValue),
-
-			RegistryValueType.REG_MULTI_SZ =>
-				CompareMultiStringValues(actualValue, expectedValue),
-
-			_ => string.Equals(actualValue.ToString(), expectedValue, StringComparison.OrdinalIgnoreCase)
-		};
-	}
-
-	/// <summary>
-	/// Compares string registry values, handling quoted and unquoted formats.
-	/// </summary>
-	private static bool CompareStringValues(string? actual, string expected)
-	{
-		if (actual is null)
-			return false;
-
-		// Remove quotes from expected value if present
-		string cleanExpected = expected.Trim('"');
-
-		return string.Equals(actual, cleanExpected, StringComparison.OrdinalIgnoreCase);
-	}
-
-	/// <summary>
-	/// Compares DWORD registry values, handling both numeric and string representations.
-	/// </summary>
-	private static bool CompareDwordValues(object actual, string expected)
-	{
-		// Try to parse expected value as uint
-		if (!uint.TryParse(expected, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint expectedDword))
-			return false;
-
-		// Handle different actual value types
-		return actual switch
-		{
-			uint actualUint => actualUint == expectedDword,
-			int actualInt => actualInt >= 0 && (uint)actualInt == expectedDword,
-			long actualLong => actualLong >= 0 && actualLong <= uint.MaxValue && (uint)actualLong == expectedDword,
-			string actualString => uint.TryParse(actualString, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint parsedValue) && parsedValue == expectedDword,
-			_ => false
-		};
-	}
-
-	/// <summary>
-	/// Compares QWORD registry values, handling both numeric and string representations.
-	/// </summary>
-	private static bool CompareQwordValues(object actual, string expected)
-	{
-		// Try to parse expected value as ulong
-		if (!ulong.TryParse(expected, NumberStyles.Integer, CultureInfo.InvariantCulture, out ulong expectedQword))
-			return false;
-
-		// Handle different actual value types
-		return actual switch
-		{
-			ulong actualUlong => actualUlong == expectedQword,
-			long actualLong => actualLong >= 0 && (ulong)actualLong == expectedQword,
-			uint actualUint => actualUint == expectedQword,
-			int actualInt => actualInt >= 0 && (ulong)actualInt == expectedQword,
-			string actualString => ulong.TryParse(actualString, NumberStyles.Integer, CultureInfo.InvariantCulture, out ulong parsedValue) && parsedValue == expectedQword,
-			_ => false
-		};
-	}
-
-	/// <summary>
-	/// Compares binary registry values.
-	/// </summary>
-	private static bool CompareBinaryValues(object actual, string expected)
-	{
-		if (actual is not byte[] actualBytes)
-			return false;
-
-		// Try to parse expected value as comma-separated bytes
-
-		string[] expectedByteStrings = expected.Split(',', StringSplitOptions.RemoveEmptyEntries);
-		if (expectedByteStrings.Length != actualBytes.Length)
-			return false;
-
-		for (int i = 0; i < actualBytes.Length; i++)
-		{
-			if (!byte.TryParse(expectedByteStrings[i].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out byte expectedByte))
-				return false;
-
-			if (actualBytes[i] != expectedByte)
-				return false;
-		}
-
-		return true;
-	}
-
-	/// <summary>
-	/// Compares multi-string registry values.
-	/// </summary>
-	private static bool CompareMultiStringValues(object actual, string expected)
-	{
-		if (actual is not string[] actualStrings)
-			return false;
-
-		// Expected value might be newline-separated or comma-separated
-		string[] expectedStrings;
-		if (expected.Contains('\n'))
-		{
-			expectedStrings = expected.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-		}
-		else if (expected.Contains(','))
-		{
-			expectedStrings = expected.Split(',', StringSplitOptions.RemoveEmptyEntries);
-		}
-		else
-		{
-			expectedStrings = [expected];
-		}
-
-		if (actualStrings.Length != expectedStrings.Length)
-			return false;
-
-		for (int i = 0; i < actualStrings.Length; i++)
-		{
-			if (!string.Equals(actualStrings[i].Trim(), expectedStrings[i].Trim(), StringComparison.OrdinalIgnoreCase))
-				return false;
-		}
-
-		return true;
-	}
-
-	/// <summary>
 	/// Gets the current value of a Group Policy registry entry for display purposes.
 	/// </summary>
 	/// <param name="policy">The policy entry</param>
 	/// <returns>String representation of the current value</returns>
-	private static string GetCurrentGroupPolicyValue(RegistryPolicyEntry policy)
+	private static string FormatBaselineGroupPolicyValue(RegistryPolicyEntry policy)
 	{
 		try
 		{
@@ -1215,6 +1076,7 @@ internal static class MSBaseline
 				null => "No Value",
 				string str => str,
 				byte[] bytes => Convert.ToBase64String(bytes),
+				ReadOnlyMemory<byte> rom => rom.IsEmpty ? string.Empty : Convert.ToBase64String(rom.Span),
 				string[] strings => string.Join(", ", strings),
 				_ => policy.ParsedValue.ToString() ?? "Unknown"
 			};
@@ -1226,22 +1088,6 @@ internal static class MSBaseline
 	}
 
 	/// <summary>
-	/// Gets the registry root key based on the hive enum value.
-	/// </summary>
-	/// <param name="hive">The hive enum value</param>
-	/// <returns>The corresponding RegistryKey</returns>
-	private static RegistryKey GetRegistryRootKey(Hive hive)
-	{
-		return hive switch
-		{
-			Hive.HKLM => Registry.LocalMachine,
-			Hive.HKCU => Registry.CurrentUser,
-			Hive.HKCR => Registry.ClassesRoot,
-			_ => Registry.LocalMachine // Default to HKLM
-		};
-	}
-
-	/// <summary>
 	/// Formats a registry value for display based on its type, matching SecurityPolicyReader formatting.
 	/// </summary>
 	/// <param name="value">The registry value</param>
@@ -1249,14 +1095,50 @@ internal static class MSBaseline
 	/// <returns>Formatted string representation</returns>
 	private static string FormatRegistryValueForDisplay(object value, RegistryValueType type)
 	{
-		return type switch
+		switch (type)
 		{
-			RegistryValueType.REG_SZ => $"\"{value}\"",
-			RegistryValueType.REG_BINARY => value is byte[] bytes ? string.Join(",", bytes) : value.ToString() ?? "",
-			RegistryValueType.REG_DWORD => value.ToString() ?? "0",
-			RegistryValueType.REG_MULTI_SZ => value is string[] strings ? string.Join("\n", strings) : value.ToString() ?? "",
-			_ => value.ToString() ?? ""
-		};
+			case RegistryValueType.REG_SZ:
+				{
+					return $"\"{value}\"";
+				}
+			case RegistryValueType.REG_BINARY:
+				{
+					if (value is byte[] bytes)
+					{
+						return bytes.Length == 0 ? string.Empty : string.Join(",", bytes);
+					}
+					if (value is ReadOnlyMemory<byte> rom)
+					{
+						if (rom.IsEmpty)
+						{
+							return string.Empty;
+						}
+						return string.Join(',', rom.ToArray());
+					}
+					return value?.ToString() ?? string.Empty;
+				}
+			case RegistryValueType.REG_DWORD:
+				{
+					return value.ToString() ?? "0";
+				}
+			case RegistryValueType.REG_MULTI_SZ:
+				{
+					return value is string[] strings ? string.Join("\n", strings) : value.ToString() ?? "";
+				}
+
+			case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:
+			case RegistryValueType.REG_NONE:
+			case RegistryValueType.REG_EXPAND_SZ:
+			case RegistryValueType.REG_DWORD_BIG_ENDIAN:
+			case RegistryValueType.REG_LINK:
+			case RegistryValueType.REG_RESOURCE_LIST:
+			case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
+			case RegistryValueType.REG_QWORD:
+			default:
+				{
+					return value.ToString() ?? "";
+				}
+		}
 	}
 
 	/// <summary>
@@ -1589,7 +1471,7 @@ internal static class MSBaseline
 
 		if (systemAccessSettings.Count > 0)
 		{
-			SecurityPolicyManager.SetSystemAccessPolicy(systemAccessSettings);
+			ApplySystemAccessSettings(systemAccessSettings);
 			Logger.Write($"{systemAccessSettings.Count} System Access policies applied successfully.");
 		}
 
@@ -1608,7 +1490,7 @@ internal static class MSBaseline
 		if (parsedData.RegistryPolicyEntries.Count > 0)
 		{
 			Logger.Write("Applying Registry Policy Entries...");
-			SecurityPolicyRegistryManager.AddPoliciesToSystem(parsedData.RegistryPolicyEntries);
+			RegistryManager.Manager.AddPoliciesToSystem(parsedData.RegistryPolicyEntries);
 			Logger.Write("Registry Policy Entries applied successfully");
 		}
 
@@ -1800,9 +1682,6 @@ internal static class MSBaseline
 
 		foreach (string filePath in filePaths)
 		{
-			if (!File.Exists(filePath))
-				throw new FileNotFoundException($"INF file not found: {filePath}");
-
 			Logger.Write($"Parsing INF file: {filePath}");
 
 			List<RegistryPolicyEntry> fileRegistryEntries = SecurityINFParser.ParseSecurityINFFile(filePath);
@@ -1850,14 +1729,23 @@ internal static class MSBaseline
 	{
 		Logger.Write($"Starting to parse and apply {filePaths.Length} INF file(s)");
 
+		// Apply System Access policies
 		foreach (string filePath in filePaths)
 		{
 			if (!File.Exists(filePath))
 				throw new FileNotFoundException($"INF file not found: {filePath}");
 
 			Logger.Write($"Applying System Access policies from: {filePath}");
-			SecurityPolicyManager.SetSystemAccessPolicy(filePath);
-			Logger.Write("System Access policies applied successfully");
+
+			using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+			using StreamReader reader = new(fileStream, Encoding.UTF8);
+			Dictionary<string, string> settings = SecurityPolicyManager.ExtractSystemAccessSettingsFromReader(reader);
+
+			if (settings.Count > 0)
+			{
+				ApplySystemAccessSettings(settings);
+				Logger.Write("System Access policies applied successfully");
+			}
 		}
 
 		// Parse all INF files and accumulate their data
@@ -1875,11 +1763,191 @@ internal static class MSBaseline
 		if (parsedData.RegistryPolicyEntries.Count > 0)
 		{
 			Logger.Write("Applying Registry Policy Entries...");
-			SecurityPolicyRegistryManager.AddPoliciesToSystem(parsedData.RegistryPolicyEntries);
+			RegistryManager.Manager.AddPoliciesToSystem(parsedData.RegistryPolicyEntries);
 			Logger.Write("Registry Policy Entries applied successfully");
 		}
 
 		Logger.Write("INF files application completed successfully");
+	}
+
+	/// <summary>
+	/// Helper method to apply System Access settings from a dictionary.
+	/// </summary>
+	/// <param name="settings"></param>
+	/// <exception cref="InvalidOperationException"></exception>
+	private static void ApplySystemAccessSettings(Dictionary<string, string> settings)
+	{
+		if (settings is null || settings.Count == 0)
+		{
+			return;
+		}
+
+		// Collectors for settings that require combined application
+		bool hasMinimumPasswordAge = false;
+		bool hasMaximumPasswordAge = false;
+		int minimumPasswordAge = 0;
+		int maximumPasswordAge = 0;
+
+		bool hasLockoutBadCount = false;
+		bool hasResetLockoutCount = false;
+		bool hasLockoutDuration = false;
+		int lockoutBadCount = 0;
+		int resetLockoutCount = 0;
+		int lockoutDuration = 0;
+
+		// Local parsing helpers
+		static int ParseIntStrict(string key, string value)
+		{
+			if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsed))
+			{
+				throw new InvalidOperationException($"Invalid integer value '{value}' for System Access setting '{key}'.");
+			}
+			return parsed;
+		}
+
+		static string Unquote(string s)
+		{
+			if (string.IsNullOrEmpty(s))
+			{
+				return string.Empty;
+			}
+			if (s.Length >= 2 && s.StartsWith('\"') && s.EndsWith('\"'))
+			{
+				return s[1..^1];
+			}
+			return s;
+		}
+
+		// Pass 1: parse and apply independent settings, collect combined ones.
+		foreach (KeyValuePair<string, string> kv in settings)
+		{
+			string key = kv.Key;
+			string rawValue = kv.Value ?? string.Empty;
+
+			if (string.Equals(key, "MinimumPasswordAge", StringComparison.OrdinalIgnoreCase))
+			{
+				minimumPasswordAge = ParseIntStrict(key, rawValue);
+				hasMinimumPasswordAge = true;
+			}
+			else if (string.Equals(key, "MaximumPasswordAge", StringComparison.OrdinalIgnoreCase))
+			{
+				maximumPasswordAge = ParseIntStrict(key, rawValue);
+				hasMaximumPasswordAge = true;
+			}
+			else if (string.Equals(key, "MinimumPasswordLength", StringComparison.OrdinalIgnoreCase))
+			{
+				int val = ParseIntStrict(key, rawValue);
+				SecurityPolicyWriter.SetMinimumPasswordLength(val);
+			}
+			else if (string.Equals(key, "PasswordComplexity", StringComparison.OrdinalIgnoreCase))
+			{
+				int val = ParseIntStrict(key, rawValue);
+				SecurityPolicyReader.SetPasswordComplexity(val);
+			}
+			else if (string.Equals(key, "PasswordHistorySize", StringComparison.OrdinalIgnoreCase))
+			{
+				int val = ParseIntStrict(key, rawValue);
+				SecurityPolicyWriter.SetPasswordHistorySize(val);
+			}
+			else if (string.Equals(key, "LockoutBadCount", StringComparison.OrdinalIgnoreCase))
+			{
+				lockoutBadCount = ParseIntStrict(key, rawValue);
+				hasLockoutBadCount = true;
+			}
+			else if (string.Equals(key, "ResetLockoutCount", StringComparison.OrdinalIgnoreCase))
+			{
+				resetLockoutCount = ParseIntStrict(key, rawValue);
+				hasResetLockoutCount = true;
+			}
+			else if (string.Equals(key, "LockoutDuration", StringComparison.OrdinalIgnoreCase))
+			{
+				lockoutDuration = ParseIntStrict(key, rawValue);
+				hasLockoutDuration = true;
+			}
+			else if (string.Equals(key, "AllowAdministratorLockout", StringComparison.OrdinalIgnoreCase))
+			{
+				int val = ParseIntStrict(key, rawValue);
+				SecurityPolicyReader.SetAllowAdministratorLockout(val);
+			}
+			else if (string.Equals(key, "RequireLogonToChangePassword", StringComparison.OrdinalIgnoreCase))
+			{
+				int val = ParseIntStrict(key, rawValue);
+				SecurityPolicyReader.SetRequireLogonToChangePassword(val);
+			}
+			else if (string.Equals(key, "ForceLogoffWhenHourExpire", StringComparison.OrdinalIgnoreCase))
+			{
+				int val = ParseIntStrict(key, rawValue);
+				SecurityPolicyReader.SetForceLogoffWhenHourExpire(val);
+			}
+			else if (string.Equals(key, "NewAdministratorName", StringComparison.OrdinalIgnoreCase))
+			{
+				string val = Unquote(rawValue);
+				SecurityPolicyReader.SetNewAdministratorName(val);
+			}
+			else if (string.Equals(key, "NewGuestName", StringComparison.OrdinalIgnoreCase))
+			{
+				string val = Unquote(rawValue);
+				SecurityPolicyReader.SetNewGuestName(val);
+			}
+			else if (string.Equals(key, "ClearTextPassword", StringComparison.OrdinalIgnoreCase))
+			{
+				int val = ParseIntStrict(key, rawValue);
+				SecurityPolicyReader.SetClearTextPassword(val);
+			}
+			else if (string.Equals(key, "EnableAdminAccount", StringComparison.OrdinalIgnoreCase))
+			{
+				int val = ParseIntStrict(key, rawValue);
+				SecurityPolicyReader.SetEnableOrDisableAnAccount(SecurityPolicyReader.DOMAIN_USER_RID_ADMIN, val);
+			}
+			else if (string.Equals(key, "EnableGuestAccount", StringComparison.OrdinalIgnoreCase))
+			{
+				int val = ParseIntStrict(key, rawValue);
+				SecurityPolicyReader.SetEnableOrDisableAnAccount(SecurityPolicyReader.DOMAIN_USER_RID_GUEST, val);
+			}
+			else if (string.Equals(key, "LSAAnonymousNameLookup", StringComparison.OrdinalIgnoreCase))
+			{
+				int val = ParseIntStrict(key, rawValue);
+				SecurityPolicyReader.LsaAnonymousNameLookupSetValue(val);
+			}
+			else
+			{
+				throw new InvalidOperationException($"Unknown System Access setting key: '{key}'.");
+			}
+		}
+
+		// Pass 2: apply combined settings, preserving existing values for missing counterparts.
+
+		// Minimum/Maximum Password Age
+		if (hasMinimumPasswordAge || hasMaximumPasswordAge)
+		{
+			SystemAccessInfo current = SecurityPolicyReader.GetSystemAccess();
+			int finalMin = hasMinimumPasswordAge ? minimumPasswordAge : current.MinimumPasswordAge;
+			int finalMax = hasMaximumPasswordAge ? maximumPasswordAge : current.MaximumPasswordAge;
+
+			// Apply: value -1 for MaximumPasswordAge is supported by SetPasswordAge (mapped to FOREVER)
+			SecurityPolicyWriter.SetPasswordAge(finalMin, finalMax);
+		}
+
+		// Lockout policy (use combined setter when possible, otherwise set individual pieces)
+		if (hasLockoutBadCount && hasResetLockoutCount && hasLockoutDuration)
+		{
+			SecurityPolicyWriter.SetLockoutPolicy(lockoutBadCount, resetLockoutCount, lockoutDuration);
+		}
+		else
+		{
+			if (hasLockoutBadCount)
+			{
+				SecurityPolicyWriter.SetLockoutBadCount(lockoutBadCount);
+			}
+			if (hasResetLockoutCount)
+			{
+				SecurityPolicyWriter.SetResetLockoutCount(resetLockoutCount);
+			}
+			if (hasLockoutDuration)
+			{
+				SecurityPolicyWriter.SetLockoutDuration(lockoutDuration);
+			}
+		}
 	}
 
 	/// <summary>

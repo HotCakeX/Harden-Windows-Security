@@ -2006,7 +2006,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
     <value>Rufen Sie die sicheren Einstellungen auf dem System ab und fragen Sie sie ab.</value>
   </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>Die folgenden Protokolle werden vom AppControl Manager automatisch generiert und im Ordner &quot;AppControl Manager&quot; in Program Files gespeichert (bei Ausführung mit erhöhten Rechten, andernfalls werden sie im TEMP-Verzeichnis gespeichert). Die Gesamtgröße des Protokollordners überschreitet niemals 1 GB.</value>
   </data>
   <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
@@ -2027,7 +2027,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
     <value>Zeigen Sie die erkannten Kernelmodus-Dateien an, die zum Erstellen der Erzwingungsmodus-Richtlinie verwendet werden. Entfernen Sie Elemente, die nicht in der endgültigen strikten Kernelmodus-Richtlinie enthalten sein sollen, aus der Liste.</value>
   </data>
-  <data name="UpdatePageTitle.Text" xml:space="preserve">
+  <data name="UpdatePageTitle" xml:space="preserve">
     <value>Suchen Sie auf dieser Seite nach Updates. Sie können auch die automatische Update-Prüfung aktivieren, die einmal beim Start erfolgt, und Sie werden benachrichtigt, sobald eine neue Version verfügbar ist.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">

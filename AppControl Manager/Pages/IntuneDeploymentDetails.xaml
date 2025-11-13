@@ -25,15 +25,10 @@
                       IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
         <Expander Grid.Row="1"
-                  Margin="0,0,0,10"
-                  Padding="8"
+                  Margin="0,0,0,10"                 
                   HorizontalAlignment="Stretch">
             <Expander.Header>
-                <controls:WrapPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    HorizontalSpacing="10"
-                                    VerticalSpacing="10">
+                <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
 
                     <!-- Refresh -->
                     <Button IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"

@@ -304,7 +304,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "System\\CurrentControlSet\\Control\\SecurePipeServers\\Winreg\\AllowedExactPaths",
         "ValueName": "Machine",
         "Type": 7,
@@ -317,13 +317,13 @@
         "URL": "",
         "Category": 11,
         "SubCategory": null,
-        "DefaultRegValue": "System\\CurrentControlSet\\Control\\ProductOptions,System\\CurrentControlSet\\Control\\Server Applications,Software\\Microsoft\\Windows NT\\CurrentVersion",
+        "DefaultRegValue": "System\\CurrentControlSet\\Control\\ProductOptions;System\\CurrentControlSet\\Control\\Server Applications;Software\\Microsoft\\Windows NT\\CurrentVersion",
         "DeviceIntents": [
             99
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "System\\CurrentControlSet\\Control\\SecurePipeServers\\Winreg\\AllowedPaths",
         "ValueName": "Machine",
         "Type": 7,
@@ -336,13 +336,13 @@
         "URL": "",
         "Category": 11,
         "SubCategory": null,
-        "DefaultRegValue": "System\\CurrentControlSet\\Control\\Print\\Printers,System\\CurrentControlSet\\Services\\Eventlog,Software\\Microsoft\\OLAP Server,Software\\Microsoft\\Windows NT\\CurrentVersion\\Print,Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows,System\\CurrentControlSet\\Control\\ContentIndex,System\\CurrentControlSet\\Control\\Terminal Server,System\\CurrentControlSet\\Control\\Terminal Server\\UserConfig,System\\CurrentControlSet\\Control\\Terminal Server\\DefaultUserConfiguration,Software\\Microsoft\\Windows NT\\CurrentVersion\\Perflib,System\\CurrentControlSet\\Services\\SysmonLog",
+        "DefaultRegValue": "System\\CurrentControlSet\\Control\\Print\\Printers;System\\CurrentControlSet\\Services\\Eventlog;Software\\Microsoft\\OLAP Server;Software\\Microsoft\\Windows NT\\CurrentVersion\\Print;Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows;System\\CurrentControlSet\\Control\\ContentIndex;System\\CurrentControlSet\\Control\\Terminal Server;System\\CurrentControlSet\\Control\\Terminal Server\\UserConfig;System\\CurrentControlSet\\Control\\Terminal Server\\DefaultUserConfiguration;Software\\Microsoft\\Windows NT\\CurrentVersion\\Perflib;System\\CurrentControlSet\\Services\\SysmonLog",
         "DeviceIntents": [
             99
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "System\\CurrentControlSet\\Control\\Lsa\\MSV1_0",
         "ValueName": "RestrictReceivingNTLMTraffic",
         "Type": 4,
@@ -361,7 +361,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "System\\CurrentControlSet\\Control\\Lsa\\MSV1_0",
         "ValueName": "RestrictSendingNTLMTraffic",
         "Type": 4,

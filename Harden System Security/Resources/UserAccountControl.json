@@ -19,7 +19,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "ConsentPromptBehaviorAdmin",
         "Type": 4,
@@ -29,7 +29,7 @@
         "Hive": 0,
         "PolicyAction": 0,
         "FriendlyName": "ConsentPromptBehaviorAdmin-UAC",
-        "URL": "",
+        "URL": "https://learn.microsoft.com/openspecs/windows_protocols/ms-gpsb/341747f5-6b5d-4d30-85fc-fa1cc04038d4",
         "Category": 7,
         "SubCategory": null,
         "DefaultRegValue": "5",
@@ -41,7 +41,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "ConsentPromptBehaviorUser",
         "Type": 4,
@@ -51,7 +51,7 @@
         "Hive": 0,
         "PolicyAction": 0,
         "FriendlyName": "ConsentPromptBehaviorUser-UAC",
-        "URL": "",
+        "URL": "https://learn.microsoft.com/openspecs/windows_protocols/ms-gpsb/15f4f7b3-d966-4ff4-8393-cb22ea1c3a63",
         "Category": 7,
         "SubCategory": null,
         "DefaultRegValue": "3",
@@ -63,7 +63,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "ValidateAdminCodeSignatures",
         "Type": 4,
@@ -73,7 +73,7 @@
         "Hive": 0,
         "PolicyAction": 0,
         "FriendlyName": "ValidateAdminCodeSignatures-UAC",
-        "URL": "",
+        "URL": "https://learn.microsoft.com/openspecs/windows_protocols/ms-gpsb/a9b816e0-075b-4674-a1a9-cecd1d9523e7",
         "Category": 7,
         "SubCategory": 8,
         "DefaultRegValue": "0",
@@ -84,7 +84,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "ConsentPromptBehaviorEnhancedAdmin",
         "Type": 4,
@@ -103,7 +103,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "TypeOfAdminApprovalMode",
         "Type": 4,
@@ -113,12 +113,15 @@
         "Hive": 0,
         "PolicyAction": 0,
         "FriendlyName": "TypeOfAdminApprovalMode-UAC",
-        "URL": "",
+        "URL": "https://blogs.windows.com/windowsdeveloper/2025/05/19/enhance-your-application-security-with-administrator-protection/",
         "Category": 7,
         "SubCategory": null,
         "DefaultRegValue": "1",
         "DeviceIntents": [
-            99
+            2,
+            3,
+            4,
+            5
         ]
     }
 ]

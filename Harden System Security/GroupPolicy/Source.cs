@@ -23,6 +23,5 @@ namespace HardenSystemSecurity.GroupPolicy;
 internal enum Source : uint
 {
 	GroupPolicy = 0,
-	Registry = 1,
-	SecurityPolicyRegistry = 2
+	Registry = 1 // Security group policies from INF files' registry sections + regular registry-based security measures.
 }

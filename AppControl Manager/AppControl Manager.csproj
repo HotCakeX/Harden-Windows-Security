@@ -215,10 +215,10 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.250402" />
 		<PackageReference Include="CommunityToolkit.WinUI.Triggers" Version="8.2.250402" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.79.0" />
-		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.79.0" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.79.1" />
+		<PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.79.1" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251015.2" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251003001" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
 		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.0" />
 		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0" />
 
@@ -232,15 +232,15 @@
 		<PackageReference Include="runtime.win-arm64.Microsoft.DotNet.ILCompiler" Version="10.0.0" />
 		<PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.19.4" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="1.8.38" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="1.8.39" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="1.8.250831001" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="1.8.25090401" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.250906002" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.8.250906004" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.251003001" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.8.251104000" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.8.251104001" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="1.8.251106002" />
 		<PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="1.8.250904007" />
-		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.250906003" />
-        <PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2095" />
+		<PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.8.251105000" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.ML" Version="1.8.2109" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.20250829.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

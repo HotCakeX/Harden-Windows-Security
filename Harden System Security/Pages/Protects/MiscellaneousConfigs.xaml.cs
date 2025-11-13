@@ -32,6 +32,6 @@ internal sealed partial class MiscellaneousConfigs : Page, CommonCore.UI.IPageHe
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MiscellaneousConfigsPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MiscellaneousConfigsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Miscellaneous-Configurations");
 }

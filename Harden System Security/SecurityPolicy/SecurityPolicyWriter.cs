@@ -16,80 +16,15 @@
 //
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using Microsoft.Win32;
 
 namespace HardenSystemSecurity.SecurityPolicy;
 
 internal static class SecurityPolicyWriter
 {
-	/// <summary>
-	/// Sets information for the [Registry Values] part.
-	/// </summary>
-	/// <param name="registryPath"></param>
-	/// <param name="valueName"></param>
-	/// <param name="value"></param>
-	/// <param name="valueType"></param>
-	/// <returns></returns>
-	internal static bool SetRegistrySecurityValue(string registryPath, string valueName, object value, RegistryValueKind valueType)
-	{
-		try
-		{
-			// Parse the registry path to extract root key and subkey
-			string[] pathParts = registryPath.Split('\\', 2);
-			if (pathParts.Length < 2)
-				return false;
-
-			// For "MACHINE\" prefix, use the subkey after "MACHINE\"
-			string actualPath;
-			RegistryKey? rootKey;
-
-			if (pathParts[0].Equals("MACHINE", StringComparison.OrdinalIgnoreCase))
-			{
-				rootKey = Registry.LocalMachine;
-				actualPath = pathParts[1];
-			}
-			else
-			{
-				// Handle direct registry root keys
-				rootKey = pathParts[0].ToUpperInvariant() switch
-				{
-					"HKEY_LOCAL_MACHINE" => Registry.LocalMachine,
-					"HKLM" => Registry.LocalMachine,
-					"USER" => Registry.CurrentUser,
-					"HKEY_CURRENT_USER" => Registry.CurrentUser,
-					"HKCU" => Registry.CurrentUser,
-					"USERS" => Registry.Users,
-					"HKEY_USERS" => Registry.Users,
-					"CLASSES_ROOT" => Registry.ClassesRoot,
-					"HKEY_CLASSES_ROOT" => Registry.ClassesRoot,
-					"CURRENT_CONFIG" => Registry.CurrentConfig,
-					"HKEY_CURRENT_CONFIG" => Registry.CurrentConfig,
-					_ => null
-				};
-				actualPath = pathParts[1];
-			}
-
-			if (rootKey is null)
-				return false;
-
-			using RegistryKey key = rootKey.CreateSubKey(actualPath, true);
-			if (key is not null)
-			{
-				key.SetValue(valueName, value, valueType);
-				key.Flush(); // Ensure the value is written immediately
-				return true;
-			}
-			return false;
-		}
-		catch
-		{
-			return false;
-		}
-	}
-
 	/// <summary>
 	/// Sets privilege rights (user rights assignments) for specified privileges.
 	/// This method configures the [Privilege Rights] section equivalent.
@@ -136,7 +71,7 @@ internal static class SecurityPolicyWriter
 		}
 		finally
 		{
-			_ = NativeMethods.LsaClose(policyHandle);
+			SecurityPolicyReader.ClosePolicy(policyHandle);
 		}
 	}
 
@@ -145,7 +80,7 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="status">LSA status code</param>
 	/// <returns>Human-readable error message</returns>
-	private static string GetLsaErrorMessage(uint status)
+	internal static string GetLsaErrorMessage(uint status)
 	{
 		return status switch
 		{
@@ -169,159 +104,166 @@ internal static class SecurityPolicyWriter
 	private unsafe static void SetSinglePrivilegeRight(nint policyHandle, string privilegeName, string[] accountSidsOrNames)
 	{
 		LSA_UNICODE_STRING userRight = new(privilegeName);
-
-		HashSet<string> currentSids = new(StringComparer.OrdinalIgnoreCase);
-		HashSet<string> desiredSids = new(StringComparer.OrdinalIgnoreCase);
-
-		// Open a separate policy handle specifically for enumeration with the correct access rights
-		LSA_OBJECT_ATTRIBUTES enumLsaAttr = new()
+		try
 		{
-			Length = sizeof(LSA_OBJECT_ATTRIBUTES),
-			RootDirectory = IntPtr.Zero,
-			ObjectName = IntPtr.Zero,
-			Attributes = 0,
-			SecurityDescriptor = IntPtr.Zero,
-			SecurityQualityOfService = IntPtr.Zero
-		};
+			HashSet<string> currentSids = new(StringComparer.OrdinalIgnoreCase);
+			HashSet<string> desiredSids = new(StringComparer.OrdinalIgnoreCase);
 
-		LSA_UNICODE_STRING enumSystem = new(null);
-
-		// Specific access rights for enumeration: POLICY_LOOKUP_NAMES | POLICY_VIEW_LOCAL_INFORMATION
-		// Using full access wouldn't work.
-		uint enumDesiredAccess = 0x00000800 | 0x00000001;
-
-		uint enumOpenStatus = NativeMethods.LsaOpenPolicy(ref enumSystem, ref enumLsaAttr, (int)enumDesiredAccess, out nint enumPolicyHandle);
-
-		if (enumOpenStatus == SecurityPolicyReader.STATUS_SUCCESS)
-		{
-			try
+			// Open a separate policy handle specifically for enumeration with the correct access rights
+			LSA_OBJECT_ATTRIBUTES enumLsaAttr = new()
 			{
-				// Get all current accounts with this privilege using the enumeration-specific handle
-				uint enumStatus = NativeMethods.LsaEnumerateAccountsWithUserRight(enumPolicyHandle, ref userRight, out nint enumBuffer, out int countReturned);
+				Length = sizeof(LSA_OBJECT_ATTRIBUTES),
+				RootDirectory = IntPtr.Zero,
+				ObjectName = IntPtr.Zero,
+				Attributes = 0,
+				SecurityDescriptor = IntPtr.Zero,
+				SecurityQualityOfService = IntPtr.Zero
+			};
 
-				if (enumStatus == SecurityPolicyReader.STATUS_SUCCESS)
+			LSA_UNICODE_STRING enumSystem = new(null);
+
+			// Specific access rights for enumeration: POLICY_LOOKUP_NAMES | POLICY_VIEW_LOCAL_INFORMATION
+			// Using full access wouldn't work.
+			uint enumDesiredAccess = 0x00000800 | 0x00000001;
+
+			uint enumOpenStatus = NativeMethods.LsaOpenPolicy(ref enumSystem, ref enumLsaAttr, (int)enumDesiredAccess, out nint enumPolicyHandle);
+
+			if (enumOpenStatus == SecurityPolicyReader.STATUS_SUCCESS)
+			{
+				try
 				{
-					// Collect current SIDs if any exist
-					if (enumBuffer != IntPtr.Zero && countReturned > 0)
-					{
-						try
-						{
-							for (int i = 0; i < countReturned; i++)
-							{
-								LSA_ENUMERATION_INFORMATION info = *(LSA_ENUMERATION_INFORMATION*)IntPtr.Add(enumBuffer, i * sizeof(LSA_ENUMERATION_INFORMATION));
+					// Get all current accounts with this privilege using the enumeration-specific handle
+					uint enumStatus = NativeMethods.LsaEnumerateAccountsWithUserRight(enumPolicyHandle, ref userRight, out nint enumBuffer, out int countReturned);
 
-								try
+					if (enumStatus == SecurityPolicyReader.STATUS_SUCCESS)
+					{
+						// Collect current SIDs if any exist
+						if (enumBuffer != IntPtr.Zero && countReturned > 0)
+						{
+							try
+							{
+								for (int i = 0; i < countReturned; i++)
 								{
-									SecurityIdentifier sid = new(info.PSid);
-									_ = currentSids.Add(sid.Value);
-								}
-								catch
-								{
-									// Skip if we can't convert to SID
+									LSA_ENUMERATION_INFORMATION info = *(LSA_ENUMERATION_INFORMATION*)IntPtr.Add(enumBuffer, i * sizeof(LSA_ENUMERATION_INFORMATION));
+
+									try
+									{
+										SecurityIdentifier sid = new(info.PSid);
+										_ = currentSids.Add(sid.Value);
+									}
+									catch
+									{
+										// Skip if we can't convert to SID
+									}
 								}
 							}
+							finally
+							{
+								SecurityPolicyReader.FreeLSAMemory(enumBuffer);
+							}
 						}
-						finally
-						{
-							_ = NativeMethods.LsaFreeMemory(enumBuffer);
-						}
+						// If enumBuffer is Zero or countReturned is 0, it means no accounts have this privilege (which is valid)
 					}
-					// If enumBuffer is Zero or countReturned is 0, it means no accounts have this privilege (which is valid)
+					// https://learn.microsoft.com/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
+					else if (enumStatus == 0xC0000034) // STATUS_OBJECT_NAME_NOT_FOUND - no accounts have this privilege
+					{
+						Logger.Write($"No accounts currently have privilege {privilegeName}");
+					}
+					else if (enumStatus == 0x8000001A) // STATUS_NO_MORE_ENTRIES - privilege has no assignments.
+					{
+						Logger.Write($"Privilege {privilegeName} has no current assignments");
+					}
+					else
+					{
+						throw new InvalidOperationException($"Could not enumerate current accounts for privilege {privilegeName}. Status: 0x{enumStatus:X8}.");
+					}
 				}
-				// https://learn.microsoft.com/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
-				else if (enumStatus == 0xC0000034) // STATUS_OBJECT_NAME_NOT_FOUND - no accounts have this privilege
+				finally
 				{
-					Logger.Write($"No accounts currently have privilege {privilegeName}");
+					SecurityPolicyReader.ClosePolicy(enumPolicyHandle);
 				}
-				else if (enumStatus == 0x8000001A) // STATUS_NO_MORE_ENTRIES - privilege has no assignments.
-				{
-					Logger.Write($"Privilege {privilegeName} has no current assignments");
-				}
-				else
-				{
-					throw new InvalidOperationException($"Could not enumerate current accounts for privilege {privilegeName}. Status: 0x{enumStatus:X8}.");
-				}
-			}
-			finally
-			{
-				_ = NativeMethods.LsaClose(enumPolicyHandle);
-			}
-		}
-		else
-		{
-			throw new InvalidOperationException($"Could not open LSA policy for enumeration of privilege {privilegeName}. Status: 0x{enumOpenStatus:X8}.");
-		}
-
-		// Converting desired account names/SIDs to normalized SID strings
-		foreach (string accountSidOrName in accountSidsOrNames)
-		{
-			if (string.IsNullOrWhiteSpace(accountSidOrName))
-				continue;
-
-			string normalizedSid = GetNormalizedSidString(accountSidOrName);
-			if (!string.IsNullOrEmpty(normalizedSid))
-			{
-				_ = desiredSids.Add(normalizedSid);
 			}
 			else
 			{
-				Logger.Write($"Could not resolve SID for account: {accountSidOrName}", LogTypeIntel.Warning);
+				throw new InvalidOperationException($"Could not open LSA policy for enumeration of privilege {privilegeName}. Status: 0x{enumOpenStatus:X8}.");
 			}
-		}
 
-		// Remove accounts that shouldn't have the privilege (current - desired)
-		HashSet<string> sidsToRemove = new(currentSids.Except(desiredSids, StringComparer.OrdinalIgnoreCase), StringComparer.OrdinalIgnoreCase);
-		foreach (string sidToRemove in sidsToRemove)
-		{
-			IntPtr sidPtr = GetSidPtrFromString(sidToRemove);
-			if (sidPtr != IntPtr.Zero)
+			// Converting desired account names/SIDs to normalized SID strings
+			foreach (string accountSidOrName in accountSidsOrNames)
 			{
-				try
+				if (string.IsNullOrWhiteSpace(accountSidOrName))
+					continue;
+
+				string normalizedSid = GetNormalizedSidString(accountSidOrName);
+				if (!string.IsNullOrEmpty(normalizedSid))
 				{
-					uint removeStatus = NativeMethods.LsaRemoveAccountRights(policyHandle, sidPtr, false, ref userRight, 1);
-					if (removeStatus != SecurityPolicyReader.STATUS_SUCCESS)
-					{
-						throw new InvalidOperationException($"Could not remove privilege {privilegeName} from SID {sidToRemove}. Status: 0x{removeStatus:X8}");
-					}
-					else
-					{
-						Logger.Write($"Removed privilege {privilegeName} from SID {sidToRemove}");
-					}
+					_ = desiredSids.Add(normalizedSid);
 				}
-				finally
+				else
 				{
-					Marshal.FreeHGlobal(sidPtr);
+					Logger.Write($"Could not resolve SID for account: {accountSidOrName}", LogTypeIntel.Warning);
 				}
 			}
-		}
 
-		// Add accounts that should have the privilege but don't (desired - current)
-		HashSet<string> sidsToAdd = new(desiredSids.Except(currentSids, StringComparer.OrdinalIgnoreCase), StringComparer.OrdinalIgnoreCase);
-		foreach (string sidToAdd in sidsToAdd)
-		{
-			IntPtr sidPtr = GetSidPtrFromString(sidToAdd);
-			if (sidPtr != IntPtr.Zero)
+			// Remove accounts that shouldn't have the privilege (current - desired)
+			HashSet<string> sidsToRemove = new(currentSids.Except(desiredSids, StringComparer.OrdinalIgnoreCase), StringComparer.OrdinalIgnoreCase);
+			foreach (string sidToRemove in sidsToRemove)
 			{
-				try
+				IntPtr sidPtr = GetSidPtrFromString(sidToRemove);
+				if (sidPtr != IntPtr.Zero)
 				{
-					uint addStatus = NativeMethods.LsaAddAccountRights(policyHandle, sidPtr, ref userRight, 1);
-					if (addStatus != SecurityPolicyReader.STATUS_SUCCESS)
+					try
 					{
-						throw new InvalidOperationException($"Failed to add privilege {privilegeName} to SID {sidToAdd}. Status: 0x{addStatus:X8}");
+						uint removeStatus = NativeMethods.LsaRemoveAccountRights(policyHandle, sidPtr, false, ref userRight, 1);
+						if (removeStatus != SecurityPolicyReader.STATUS_SUCCESS)
+						{
+							throw new InvalidOperationException($"Could not remove privilege {privilegeName} from SID {sidToRemove}. Status: 0x{removeStatus:X8}");
+						}
+						else
+						{
+							Logger.Write($"Removed privilege {privilegeName} from SID {sidToRemove}");
+						}
 					}
-					else
+					finally
 					{
-						Logger.Write($"Added privilege {privilegeName} to SID {sidToAdd}");
+						SecurityPolicyReader.FreeGlobalHandle(sidPtr);
 					}
-				}
-				finally
-				{
-					Marshal.FreeHGlobal(sidPtr);
 				}
 			}
-		}
 
-		Logger.Write($"Privilege {privilegeName}: {sidsToRemove.Count} removed, {sidsToAdd.Count} added, {currentSids.Intersect(desiredSids, StringComparer.OrdinalIgnoreCase).Count()} unchanged");
+			// Add accounts that should have the privilege but don't (desired - current)
+			HashSet<string> sidsToAdd = new(desiredSids.Except(currentSids, StringComparer.OrdinalIgnoreCase), StringComparer.OrdinalIgnoreCase);
+			foreach (string sidToAdd in sidsToAdd)
+			{
+				IntPtr sidPtr = GetSidPtrFromString(sidToAdd);
+				if (sidPtr != IntPtr.Zero)
+				{
+					try
+					{
+						uint addStatus = NativeMethods.LsaAddAccountRights(policyHandle, sidPtr, ref userRight, 1);
+						if (addStatus != SecurityPolicyReader.STATUS_SUCCESS)
+						{
+							throw new InvalidOperationException($"Failed to add privilege {privilegeName} to SID {sidToAdd}. Status: 0x{addStatus:X8}");
+						}
+						else
+						{
+							Logger.Write($"Added privilege {privilegeName} to SID {sidToAdd}");
+						}
+					}
+					finally
+					{
+						SecurityPolicyReader.FreeGlobalHandle(sidPtr);
+					}
+				}
+			}
+
+			Logger.Write($"Privilege {privilegeName}: {sidsToRemove.Count} removed, {sidsToAdd.Count} added, {currentSids.Intersect(desiredSids, StringComparer.OrdinalIgnoreCase).Count()} unchanged");
+		}
+		finally
+		{
+			// Free the unmanaged UNICODE_STRING buffer allocated for privilegeName
+			SecurityPolicyReader.FreeLsaUnicodeString(ref userRight);
+		}
 	}
 
 	/// <summary>
@@ -329,7 +271,7 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="sidOrAccountName">SID string (with or without *) or account name</param>
 	/// <returns>Normalized SID string or empty string if resolution failed</returns>
-	private static string GetNormalizedSidString(string sidOrAccountName)
+	internal static string GetNormalizedSidString(string sidOrAccountName)
 	{
 		try
 		{
@@ -361,7 +303,7 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="sidString">SID string to convert</param>
 	/// <returns>Pointer to SID or IntPtr.Zero if conversion failed</returns>
-	private static IntPtr GetSidPtrFromString(string sidString)
+	internal static IntPtr GetSidPtrFromString(string sidString)
 	{
 		try
 		{
@@ -380,81 +322,20 @@ internal static class SecurityPolicyWriter
 	}
 
 	/// <summary>
-	/// Configures the [Registry Values] section with recommended values.
-	/// </summary>
-	/// <returns></returns>
-	internal static bool ConfigureSecurityRegistryValues()
-	{
-		bool allSuccessful = true;
-
-		// Dictionary of security registry values with their recommended secure values
-		Dictionary<(string path, string valueName), (object value, RegistryValueKind type)> securityValues = new()
-		{
-			// UAC Settings
-			{ (@"MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "ConsentPromptBehaviorAdmin"), (2, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "ConsentPromptBehaviorUser"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "EnableLUA"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "PromptOnSecureDesktop"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "EnableSecureUIAPaths"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "EnableVirtualization"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "FilterAdministratorToken"), (1, RegistryValueKind.DWord) },
-
-			// LSA Settings
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Lsa", "RestrictAnonymous"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Lsa", "RestrictAnonymousSAM"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Lsa", "LimitBlankPasswordUse"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Lsa", "NoLMHash"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Lsa", "LmCompatibilityLevel"), (5, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Lsa", "SCENoApplyLegacyAuditPolicy"), (1, RegistryValueKind.DWord) },
-
-			// Network Security
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters", "RequireSecuritySignature"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters", "EnableSecuritySignature"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters", "RequireSecuritySignature"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters", "EnableSecuritySignature"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters", "EnablePlainTextPassword"), (0, RegistryValueKind.DWord) },
-
-			// NTLM Settings
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0", "NTLMMinClientSec"), (537395200, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0", "NTLMMinServerSec"), (537395200, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0", "RestrictSendingNTLMTraffic"), (2, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0", "RestrictReceivingNTLMTraffic"), (2, RegistryValueKind.DWord) },
-
-			// Logon Settings
-			{ (@"MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", "PasswordExpiryWarning"), (14, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", "CachedLogonsCount"), (2, RegistryValueKind.DWord) },
-
-			// Session Settings
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management", "ClearPageFileAtShutdown"), (1, RegistryValueKind.DWord) },
-			{ (@"MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager", "ProtectionMode"), (1, RegistryValueKind.DWord) }
-		};
-
-		foreach (KeyValuePair<(string path, string valueName), (object value, RegistryValueKind type)> setting in securityValues)
-		{
-			bool success = SetRegistrySecurityValue(setting.Key.path, setting.Key.valueName, setting.Value.value, setting.Value.type);
-			if (!success)
-			{
-				allSuccessful = false;
-				Logger.Write($"Failed to set {setting.Key.path}\\{setting.Key.valueName}");
-			}
-		}
-
-		return allSuccessful;
-	}
-
-	/// <summary>
 	/// Sets the minimumPasswordAge and maximumPasswordAge for the [System Access] section.
 	/// </summary>
 	/// <param name="minimumPasswordAge"></param>
 	/// <param name="maximumPasswordAge"></param>
 	/// <returns></returns>
-	internal unsafe static bool SetPasswordAge(int minimumPasswordAge, int maximumPasswordAge)
+	internal unsafe static void SetPasswordAge(int minimumPasswordAge, int maximumPasswordAge)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 0, out nint buffer);
 		if (result != SecurityPolicyReader.NERR_Success || buffer == IntPtr.Zero)
 		{
-			return false;
+			throw new InvalidOperationException(
+				"NetUserModalsGet(level 0) failed. Status=0x" +
+				result.ToString("X8", CultureInfo.InvariantCulture));
 		}
 
 		try
@@ -463,9 +344,11 @@ internal static class SecurityPolicyWriter
 
 			// Allocate new buffer for setting
 			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_0), out nint newBuffer);
-			if (allocResult != SecurityPolicyReader.NERR_Success)
+			if (allocResult != SecurityPolicyReader.NERR_Success || newBuffer == IntPtr.Zero)
 			{
-				return false;
+				throw new InvalidOperationException(
+					"NetApiBufferAllocate failed. Status=0x" +
+					allocResult.ToString("X8", CultureInfo.InvariantCulture));
 			}
 
 			try
@@ -486,7 +369,13 @@ internal static class SecurityPolicyWriter
 				*(USER_MODALS_INFO_0*)newBuffer = newInfo;
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 0, newBuffer, out uint parmErr);
-				return setResult == SecurityPolicyReader.NERR_Success;
+				if (setResult != SecurityPolicyReader.NERR_Success)
+				{
+					throw new InvalidOperationException(
+						"NetUserModalsSet(level 0) failed. Status=0x" +
+						setResult.ToString("X8", CultureInfo.InvariantCulture) +
+						" ParmErr=" + parmErr.ToString(CultureInfo.InvariantCulture));
+				}
 			}
 			finally
 			{
@@ -504,13 +393,15 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="minimumPasswordLength"></param>
 	/// <returns></returns>
-	internal unsafe static bool SetMinimumPasswordLength(int minimumPasswordLength)
+	internal unsafe static void SetMinimumPasswordLength(int minimumPasswordLength)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 0, out nint buffer);
 		if (result != SecurityPolicyReader.NERR_Success || buffer == IntPtr.Zero)
 		{
-			return false;
+			throw new InvalidOperationException(
+				"NetUserModalsGet(level 0) failed. Status=0x" +
+				result.ToString("X8", CultureInfo.InvariantCulture));
 		}
 
 		try
@@ -519,9 +410,11 @@ internal static class SecurityPolicyWriter
 
 			// Allocate new buffer for setting
 			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_0), out nint newBuffer);
-			if (allocResult != SecurityPolicyReader.NERR_Success)
+			if (allocResult != SecurityPolicyReader.NERR_Success || newBuffer == IntPtr.Zero)
 			{
-				return false;
+				throw new InvalidOperationException(
+					"NetApiBufferAllocate failed. Status=0x" +
+					allocResult.ToString("X8", CultureInfo.InvariantCulture));
 			}
 
 			try
@@ -537,7 +430,13 @@ internal static class SecurityPolicyWriter
 				*(USER_MODALS_INFO_0*)newBuffer = newInfo;
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 0, newBuffer, out uint parmErr);
-				return setResult == SecurityPolicyReader.NERR_Success;
+				if (setResult != SecurityPolicyReader.NERR_Success)
+				{
+					throw new InvalidOperationException(
+						"NetUserModalsSet(level 0) failed. Status=0x" +
+						setResult.ToString("X8", CultureInfo.InvariantCulture) +
+						" ParmErr=" + parmErr.ToString(CultureInfo.InvariantCulture));
+				}
 			}
 			finally
 			{
@@ -554,14 +453,16 @@ internal static class SecurityPolicyWriter
 	/// Sets the passwordHistorySize for the [System Access] section.
 	/// </summary>
 	/// <param name="passwordHistorySize"></param>
-	/// <returns></returns>
-	internal unsafe static bool SetPasswordHistorySize(int passwordHistorySize)
+	/// <returns>Throws InvalidOperationException if any underlying API call fails.</returns>
+	internal unsafe static void SetPasswordHistorySize(int passwordHistorySize)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 0, out nint buffer);
 		if (result != SecurityPolicyReader.NERR_Success || buffer == IntPtr.Zero)
 		{
-			return false;
+			throw new InvalidOperationException(
+				"NetUserModalsGet(level 0) failed. Status=0x" +
+				result.ToString("X8", CultureInfo.InvariantCulture));
 		}
 
 		try
@@ -570,9 +471,11 @@ internal static class SecurityPolicyWriter
 
 			// Allocate new buffer for setting
 			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_0), out nint newBuffer);
-			if (allocResult != SecurityPolicyReader.NERR_Success)
+			if (allocResult != SecurityPolicyReader.NERR_Success || newBuffer == IntPtr.Zero)
 			{
-				return false;
+				throw new InvalidOperationException(
+					"NetApiBufferAllocate failed. Status=0x" +
+					allocResult.ToString("X8", CultureInfo.InvariantCulture));
 			}
 
 			try
@@ -588,7 +491,13 @@ internal static class SecurityPolicyWriter
 				*(USER_MODALS_INFO_0*)newBuffer = newInfo;
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 0, newBuffer, out uint parmErr);
-				return setResult == SecurityPolicyReader.NERR_Success;
+				if (setResult != SecurityPolicyReader.NERR_Success)
+				{
+					throw new InvalidOperationException(
+						"NetUserModalsSet(level 0) failed. Status=0x" +
+						setResult.ToString("X8", CultureInfo.InvariantCulture) +
+						" ParmErr=" + parmErr.ToString(CultureInfo.InvariantCulture));
+				}
 			}
 			finally
 			{
@@ -607,14 +516,16 @@ internal static class SecurityPolicyWriter
 	/// <param name="lockoutBadCount"></param>
 	/// <param name="resetLockoutCount"></param>
 	/// <param name="lockoutDuration"></param>
-	/// <returns></returns>
-	internal unsafe static bool SetLockoutPolicy(int lockoutBadCount, int resetLockoutCount, int lockoutDuration)
+	/// <returns>Throws InvalidOperationException if any underlying API call fails.</returns>
+	internal unsafe static void SetLockoutPolicy(int lockoutBadCount, int resetLockoutCount, int lockoutDuration)
 	{
 		// Get current settings first
 		uint result = NativeMethods.NetUserModalsGet(null, 3, out nint buffer);
 		if (result != SecurityPolicyReader.NERR_Success || buffer == IntPtr.Zero)
 		{
-			return false;
+			throw new InvalidOperationException(
+				"NetUserModalsGet(level 3) failed. Status=0x" +
+				result.ToString("X8", CultureInfo.InvariantCulture));
 		}
 
 		try
@@ -623,9 +534,11 @@ internal static class SecurityPolicyWriter
 
 			// Allocate new buffer for setting
 			uint allocResult = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_3), out nint newBuffer);
-			if (allocResult != SecurityPolicyReader.NERR_Success)
+			if (allocResult != SecurityPolicyReader.NERR_Success || newBuffer == IntPtr.Zero)
 			{
-				return false;
+				throw new InvalidOperationException(
+					"NetApiBufferAllocate failed. Status=0x" +
+					allocResult.ToString("X8", CultureInfo.InvariantCulture));
 			}
 
 			try
@@ -643,7 +556,13 @@ internal static class SecurityPolicyWriter
 				*(USER_MODALS_INFO_3*)newBuffer = newInfo;
 
 				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out uint parmErr);
-				return setResult == SecurityPolicyReader.NERR_Success;
+				if (setResult != SecurityPolicyReader.NERR_Success)
+				{
+					throw new InvalidOperationException(
+						"NetUserModalsSet(level 3) failed. Status=0x" +
+						setResult.ToString("X8", CultureInfo.InvariantCulture) +
+						" ParmErr=" + parmErr.ToString(CultureInfo.InvariantCulture));
+				}
 			}
 			finally
 			{

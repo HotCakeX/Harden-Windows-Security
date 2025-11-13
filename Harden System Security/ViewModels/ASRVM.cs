@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -34,9 +35,13 @@ namespace HardenSystemSecurity.ViewModels;
 	PropertyNameCaseInsensitive = true,
 	PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
 	WriteIndented = true,
-	NumberHandling = JsonNumberHandling.AllowReadingFromString)]
+	NumberHandling = JsonNumberHandling.AllowReadingFromString,
+	Converters = [typeof(JsonStringEnumConverter<ASRRuleState>)]
+	)]
 [JsonSerializable(typeof(string[]))]
 [JsonSerializable(typeof(uint[]))]
+[JsonSerializable(typeof(ASRRuleEntry))]
+[JsonSerializable(typeof(List<ASRRuleEntry>))]
 internal sealed partial class ASRArrayJsonContext : JsonSerializerContext
 {
 }
@@ -52,8 +57,11 @@ internal enum ASRRuleState : uint
 
 internal sealed partial class ASRRuleEntry(RegistryPolicyEntry policyEntry, ASRVM asrVMRef) : ViewModelBase
 {
+	[JsonIgnore]
 	internal RegistryPolicyEntry PolicyEntry => policyEntry;
 
+	[JsonPropertyOrder(1)]
+	[JsonInclude]
 	internal ASRRuleState State
 	{
 		get;
@@ -66,6 +74,7 @@ internal sealed partial class ASRRuleEntry(RegistryPolicyEntry policyEntry, ASRV
 		}
 	} = ASRRuleState.NotConfigured;
 
+	[JsonIgnore]
 	internal int StateIndex
 	{
 		get => State switch
@@ -91,9 +100,18 @@ internal sealed partial class ASRRuleEntry(RegistryPolicyEntry policyEntry, ASRV
 		}
 	}
 
+	[JsonIgnore]
 	internal ASRVM ASRVMRef => asrVMRef;
 
+	[JsonIgnore]
 	internal Visibility HasURL => string.IsNullOrEmpty(PolicyEntry.URL) ? Visibility.Collapsed : Visibility.Visible;
+
+	/// <summary>
+	/// Used for JSON export only.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyOrder(0)]
+	internal string? Name => PolicyEntry.FriendlyName;
 
 	/// <summary>
 	/// Apply this specific ASR rule, event handler for individual Apply buttons.
@@ -544,4 +562,42 @@ internal sealed partial class ASRVM : ViewModelBase
 			ASRItemsLVBound.Add(item);
 		}
 	}
+
+	/// <summary>
+	/// Exports the ASR rules to a JSON file
+	/// </summary>
+	internal async void ExportToJson_Click()
+	{
+		try
+		{
+			ElementsAreEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
+					"AttackSurfaceReductionRules|*.JSON",
+					"AttackSurfaceReductionRules.JSON");
+
+			if (saveLocation is null)
+				return;
+
+			await Task.Run(() =>
+			{
+				string jsonString = JsonSerializer.Serialize(AllASRRules, ASRArrayJsonContext.Default.ListASRRuleEntry);
+
+				File.WriteAllText(saveLocation, jsonString, Encoding.UTF8);
+			});
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedASRRules"), AllASRRules.Count, saveLocation));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
 }

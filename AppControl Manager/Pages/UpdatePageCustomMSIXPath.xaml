@@ -14,7 +14,7 @@
         <StackPanel HorizontalAlignment="Stretch"
                     Spacing="{StaticResource SettingsCardSpacing}"
                     Grid.Row="1"
-                    Margin="0,40,0,0">
+                    Margin="0,10,0,0">
 
             <win:StackPanel.ChildrenTransitions>
                 <win:EntranceThemeTransition FromVerticalOffset="50" />

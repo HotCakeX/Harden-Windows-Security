@@ -439,7 +439,7 @@
     <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
     <value>الكود المصدري</value>
   </data>
-    <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <data name="UpdatePageTitle" xml:space="preserve">
     <value>ابحث عن التحديثات في هذه الصفحة. يمكنك أيضاً تمكين فحص التحديث التلقائي الذي سيحدث مرة واحدة عند بدء التشغيل وسيتم إشعارك كلما توفرت نسخة جديدة.</value>
   </data>
     <data name="GuideButtonAtTop.Content" xml:space="preserve">
@@ -601,7 +601,7 @@
     <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>شامل</value>
   </data>
-  <data name="ProtectPageTitle.Text" xml:space="preserve">
+  <data name="ProtectPageTitle" xml:space="preserve">
     <value>إدارة تكوينات الأمان واختيار كيفية تأمين جهازك.</value>
   </data>
   <data name="ProtectCategory_MSFTSecBaseline" xml:space="preserve">
@@ -889,7 +889,7 @@
   <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>مسح</value>
   </data>
-  <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="GroupPolicyEditorPageTitle" xml:space="preserve">
     <value>افتح واقرأ ملفات نهج المجموعة في هذه الصفحة. يمكنك البحث في البيانات وإزالة السياسات الفردية من الملف. يمكنك أيضاً عرض السياسات الفعالة في النظام.</value>
   </data>
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
@@ -1270,58 +1270,58 @@
   <data name="InstalledAppsManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>عرض وإلغاء تثبيت التطبيقات المثبتة.</value>
   </data>
-  <data name="MicrosoftDefenderPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftDefenderPageTitle" xml:space="preserve">
     <value>تكوين جميع جوانب Microsoft Defender وتمكين العديد من ميزاته التي تكون معطلة افتراضياً.</value>
   </data>
-  <data name="ASRRulesPageTitle.Text" xml:space="preserve">
+  <data name="ASRRulesPageTitle" xml:space="preserve">
     <value>تكوين كل قاعدة من قواعد تقليل سطح الهجوم في هذه الصفحة. يمكنها منع عدوى البرامج الضارة واستغلال الثغرات.</value>
   </data>
-  <data name="BitLockerPageTitle.Text" xml:space="preserve">
+  <data name="BitLockerPageTitle" xml:space="preserve">
     <value>في هذه الصفحة يمكنك تطبيق سياسات ستجعل BitLocker أكثر قوة مما هو عليه افتراضياً وحماية بياناتك الثابتة.</value>
   </data>
-  <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
+  <data name="CertificateCheckingPageTitle" xml:space="preserve">
     <value>العثور على جميع الشهادات في نظامك التي لا تتجذر في أي شهادة في قائمة شهادات Microsoft الجذرية الموثوقة.</value>
   </data>
-  <data name="CountryIPBlockingPageTitle.Text" xml:space="preserve">
+  <data name="CountryIPBlockingPageTitle" xml:space="preserve">
     <value>حظر نطاقات عناوين IP للبلدان في القوائم التالية: الرعاة الحكوميون للإرهاب - مكتب مراقبة الأصول الأجنبية (OFAC)</value>
   </data>
-  <data name="DeviceGuardPageTitle.Text" xml:space="preserve">
+  <data name="DeviceGuardPageTitle" xml:space="preserve">
     <value>الاستفادة من ميزات الأمان التي يوفرها الأجهزة لتقوية نظام التشغيل في طبقات تنفيذ متعددة مختلفة.</value>
   </data>
-  <data name="EdgePageTitle.Text" xml:space="preserve">
+  <data name="EdgePageTitle" xml:space="preserve">
     <value>تطبيق سياسات متعلقة بالأمان والخصوصية على Microsoft Edge لجعله أكثر أماناً وخصوصية عند تصفح الويب.</value>
   </data>
-  <data name="LockScreenPageTitle.Text" xml:space="preserve">
+  <data name="LockScreenPageTitle" xml:space="preserve">
     <value>تقوية شاشة القفل لنظام التشغيل ضد الاستغلالات المحتملة وتقليل كمية المعلومات المعروضة للأفراد غير المصرح لهم عندما يكون الجهاز مقفلاً.</value>
   </data>
-  <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
+  <data name="MiscellaneousConfigsPageTitle" xml:space="preserve">
     <value>تحتوي هذه الصفحة على إجراءات أمان مهمة لا تندرج تحت فئات أكثر تخصصاً. تطبيقها يمكن أن يعزز ويقوي أمان نظامك وجهازك.</value>
   </data>
-  <data name="NonAdminPageTitle.Text" xml:space="preserve">
+  <data name="NonAdminPageTitle" xml:space="preserve">
     <value>السياسات في هذه الصفحة تنطبق فقط على المستخدم الحالي ولا تُطبق على مستوى النظام لجميع المستخدمين. لهذا السبب، لا تحتاج صلاحية المسؤول لتطبيقها.</value>
   </data>
-  <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
+  <data name="OptionalWindowsFeaturesPageTitle" xml:space="preserve">
     <value>جلب وعرض وتمكين وتعطيل جميع الميزات والقدرات الاختيارية التي يوفرها نظام التشغيل بطريقة موحدة.</value>
   </data>
-  <data name="TLSPageTitle.Text" xml:space="preserve">
+  <data name="TLSPageTitle" xml:space="preserve">
     <value>تقوية SChannel (القناة الآمنة) في نظام التشغيل. إنه مزود دعم الأمان (SSP) الذي طورته Microsoft والذي ينفذ بروتوكولات الأمان مثل Transport Layer Security (TLS).</value>
   </data>
-  <data name="UACPageTitle.Text" xml:space="preserve">
+  <data name="UACPageTitle" xml:space="preserve">
     <value>UAC يساعد في منع التغييرات غير المصرح بها على نظام التشغيل عن طريق طلب الإذن أو بيانات اعتماد المسؤول. هذه الصفحة تقدم سياسات ستقوي سير العمل هذا.</value>
   </data>
-  <data name="WindowsFirewallPageTitle.Text" xml:space="preserve">
+  <data name="WindowsFirewallPageTitle" xml:space="preserve">
     <value>جدار حماية Windows يساعد في حماية جهاز الكمبيوتر الخاص بك عن طريق ترشيح حركة المرور الواردة والصادرة. هنا يمكنك تطبيق قواعد وتكوينات مختلفة لتعزيز أمانه.</value>
   </data>
-  <data name="WindowsNetworkingPageTitle.Text" xml:space="preserve">
+  <data name="WindowsNetworkingPageTitle" xml:space="preserve">
     <value>إعدادات شبكات Windows تسمح لك بتكوين جوانب مختلفة من اتصال الشبكة والأمان مثل كيفية تواصل جهازك مع الأجهزة الأخرى على الشبكة.</value>
   </data>
-  <data name="WindowsUpdatePageTitle.Text" xml:space="preserve">
+  <data name="WindowsUpdatePageTitle" xml:space="preserve">
     <value>تثبيت تحديثات Windows في أسرع وقت ممكن بعد إصدارها أمر ضروري للحفاظ على أمان واستقرار نظامك، خاصة ضد الاستغلالات الجديدة ويوم الصفر. هذه الصفحة تساعدك على فرض سياسات ستضمن تثبيت التحديثات في الوقت المناسب.</value>
   </data>
-  <data name="FileReputationPageTitle.Text" xml:space="preserve">
+  <data name="FileReputationPageTitle" xml:space="preserve">
     <value>التحقق من سمعة الملفات القابلة للتنفيذ والملفات الأخرى باستخدام Microsoft Defender Smart Screen أو رسم الاستخبارات الأمنية من Microsoft.</value>
   </data>
-  <data name="InstalledAppsManagementPageTitle.Text" xml:space="preserve">
+  <data name="InstalledAppsManagementPageTitle" xml:space="preserve">
     <value>عرض قائمة جميع التطبيقات المثبتة على النظام وإزالة غير المرغوب فيها.</value>
   </data>
   <data name="PFNVersionLabel.Text" xml:space="preserve">
@@ -1711,9 +1711,6 @@
   <data name="DependencyNotFound" xml:space="preserve">
     <value>التبعية غير موجودة: {0} مشار إليها بواسطة {1}</value>
   </data>
-  <data name="SecurityPolicyRegistryApplyBulkInvokeError" xml:space="preserve">
-    <value>يجب استدعاء SecurityPolicyRegistryApply بشكل جماعي عبر SecurityPolicyManager</value>
-  </data>
   <data name="GroupPolicyApplyBulkInvokeError" xml:space="preserve">
     <value>يجب استدعاء GroupPolicyApply بشكل جماعي عبر ApplyPolicies</value>
   </data>
@@ -1743,9 +1740,6 @@
   </data>
   <data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
     <value>خطأ في معالجة وحدات M للسجل بشكل جماعي.</value>
-  </data>
-  <data name="ErrorProcessingSecurityPolicyRegistryMUnits" xml:space="preserve">
-    <value>خطأ في معالجة وحدات M لسجل سياسة الأمان بشكل جماعي.</value>
   </data>
   <data name="FallbackVerifyResult" xml:space="preserve">
     <value>التحقق الاحتياطي: {0}\{1} = {2}</value>
@@ -1785,9 +1779,6 @@
   </data>
   <data name="InvalidSource" xml:space="preserve">
     <value>مصدر غير صالح: {0}</value>
-  </data>
-  <data name="SecurityPolicyRegistryEntryMustHaveDefaultRegValue" xml:space="preserve">
-    <value>يجب أن يحتوي مدخل SecurityPolicyRegistry {0}\{1} على DefaultRegValue غير فارغ</value>
   </data>
   <data name="ErrorCreatingMUnitsForCategory" xml:space="preserve">
     <value>خطأ في إنشاء وحدات M للفئة {0}: {1}</value>
@@ -1894,41 +1885,8 @@
   <data name="RegistryVerificationComplete" xml:space="preserve">
     <value>اكتمل التحقق من السجل: {0} من {1} سياسة متطابقة</value>
   </data>
-  <data name="NoSettingsProvided" xml:space="preserve">
-    <value>لم يتم توفير إعدادات</value>
-  </data>
-  <data name="SettingSystemAccessPolicyViaSecedit" xml:space="preserve">
-    <value>تعيين سياسة وصول النظام عبر secedit...</value>
-  </data>
   <data name="CreatedSecurityTemplate" xml:space="preserve">
     <value>تم إنشاء قالب الأمان: {0}</value>
-  </data>
-  <data name="TemplateContent" xml:space="preserve">
-    <value>محتوى القالب: {0}</value>
-  </data>
-  <data name="FailedToStartSeceditProcess" xml:space="preserve">
-    <value>فشل في بدء عملية secedit</value>
-  </data>
-  <data name="SeceditExitCode" xml:space="preserve">
-    <value>رمز خروج Secedit: {0}</value>
-  </data>
-  <data name="SeceditOutput" xml:space="preserve">
-    <value>مخرجات Secedit: {0}</value>
-  </data>
-  <data name="SeceditError" xml:space="preserve">
-    <value>خطأ Secedit: {0}</value>
-  </data>
-  <data name="SeceditCompletedSuccessfully" xml:space="preserve">
-    <value>اكتمل Secedit بنجاح</value>
-  </data>
-  <data name="SeceditFailedWithExitCode" xml:space="preserve">
-    <value>فشل Secedit برمز خروج: {0}</value>
-  </data>
-  <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
-    <value>لم يتم العثور على إعدادات [System Access] في الملف المحدد</value>
-  </data>
-  <data name="ExtractedSystemAccessSettingsFromFile" xml:space="preserve">
-    <value>تم استخراج {0} إعدادات System Access من الملف: {1}</value>
   </data>
   <data name="FileNotFoundPath" xml:space="preserve">
     <value>الملف غير موجود: {0}</value>
@@ -2248,7 +2206,7 @@
   <data name="AppDescription" xml:space="preserve">
   <value>Harden System Security هو تطبيق يساعدك على تكوين نظامك ليكون آمناً ضد العديد من التهديدات المتقدمة، باستخدام الأدوات والميزات المتاحة في نظام التشغيل والمقدمة من Microsoft فقط دون استخدام أي أدوات أو برامج طرف ثالث.</value>
 </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>فيما يلي السجلات التي ينشئها Harden System Security تلقائياً ويخزنها في المجلد المخصص. لن يتجاوز الحجم الإجمالي لمجلد السجلات 1 جيجابايت أبداً.</value>
   </data>
     <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
@@ -2287,10 +2245,10 @@
   <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
     <value>خط الأساس الأمني لتطبيقات Microsoft 365</value>
   </data>
-    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="MicrosoftSecurityBaselinePageTitle" xml:space="preserve">
     <value>طبق خط الأساس الأمني لمايكروسوفت في هذه الصفحة. يمكنك أيضاً التحقق من امتثال النظام للحصول على تقرير دقيق يوضح الإعدادات المطبقة والغير مطبقة. يمكنك إزالة السياسات المطبقة بواسطة خط الأساس أيضاً.</value>
   </data>
-    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="Microsoft365AppsSecurityBaselinePageTitle" xml:space="preserve">
     <value>طبق خط الأساس الأمني لتطبيقات Microsoft 365 في هذه الصفحة. يمكنك أيضاً التحقق من امتثال النظام للحصول على تقرير دقيق يوضح الإعدادات المطبقة والغير مطبقة. يمكنك إزالة السياسات المطبقة بواسطة خط الأساس أيضاً.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
@@ -2327,7 +2285,7 @@
   <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
     <value>تجاوزات خطوط الأساس لمايكروسوفت</value>
   </data>
-  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftBaseLinesOverridesPageTitle" xml:space="preserve">
     <value>استعادة ميزات نظام التشغيل التي تم تعطيلها بعد تطبيق خطوط الأساس الأمنية لمايكروسوفت.</value>
   </data>
   <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -2842,7 +2800,7 @@
   <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>عرض وإدارة جميع سياسات التدقيق في النظام.</value>
   </data>
-    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <data name="AuditPoliciesPageTitle" xml:space="preserve">
     <value>عرض وإدارة جميع سياسات التدقيق في النظام.</value>
   </data>
   <!--Audit Policies ListView Headers Start-->
@@ -3809,7 +3767,7 @@
   <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>يكشف كشف المكوّنات التشفيرية (CBOM) عن جرد على مستوى النظام لتشفير نظام التشغيل - الخوارزميات، والمنحنيات، ومجموعات التشفير، والمزوّدين - بما يعكس الوضع التشفيري للمنصة.</value>
   </data>
-  <data name="CBOMPageTitle.Text" xml:space="preserve">
+  <data name="CBOMPageTitle" xml:space="preserve">
     <value>يوفّر كشف المكوّنات التشفيرية (CBOM) جردًا على مستوى النظام ونظرة تفحصية لتشفير نظام التشغيل، مبرزًا الخوارزميات والمنحنيات ومجموعات التشفير والمزوّدين التي تحدد الوضع التشفيري للمنصة. ومن خلال توحيد ما يعرضه نظام التشغيل، يقدّم شفافية شبيهة بـ SBOM لعالم التشفير: يتيح التدقيقات المبنية على الأدلة، وفحوصات الامتثال لخطوط الأساس، وكشف الانجراف عبر التحديثات، وتحديد البدائيات القديمة/الضعيفة، والتخطيط للانتقال إلى ما بعد الكم.</value>
   </data>
 <data name="CA_NameHeader.Text" xml:space="preserve">
@@ -4252,5 +4210,20 @@
   </data>
   <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
     <value>اكتمل التحقق من وجود تحديثات لتطبيقات متجر Microsoft بنجاح. لعرض أي تنزيلات تم البدء بها، يُرجى فتح تطبيق متجر Microsoft.</value>
+  </data>
+    <data name="NoOptionalFeaturesAvailableForExport" xml:space="preserve">
+    <value>لا توجد ميزات أو قدرات اختيارية للتصدير. يرجى جلبها أولاً.</value>
+  </data>
+  <data name="SuccessfullyExportedOptionalFeatures" xml:space="preserve">
+    <value>تم تصدير {0} من الميزات الاختيارية و/أو القدرات بنجاح إلى {1}</value>
+  </data>
+  <data name="SuccessfullyExportedASRRules" xml:space="preserve">
+    <value>تم تصدير {0} من قواعد تقليل سطح الهجوم بنجاح إلى {1}</value>
+  </data>
+  <data name="NoInstalledAppsForExport" xml:space="preserve">
+    <value>لا توجد تطبيقات مثبتة للتصدير. يرجى جلبها أولاً.</value>
+  </data>
+  <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
+    <value>تم تصدير {0} من التطبيقات المثبتة بنجاح إلى {1}</value>
   </data>
 </root>

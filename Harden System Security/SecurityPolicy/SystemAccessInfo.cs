@@ -20,6 +20,7 @@ namespace HardenSystemSecurity.SecurityPolicy;
 /// <summary>
 /// Represents the policies defined in the [System Access].
 /// Many of them implemented according to the specs defined here: https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/0d94df7c-9752-4b08-84de-bf29e389c074
+/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/0b40db09-d95d-40a6-8467-32aedec8140c
 /// </summary>
 internal sealed class SystemAccessInfo
 {

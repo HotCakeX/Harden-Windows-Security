@@ -140,6 +140,16 @@
                 <Setter Property="Margin" Value="6,0,6,5"/>
             </Style>
 
+            <!-- The styles of the Wrap Panel that is inside the Expander for the toolbar of the page -->
+            <Style x:Key="UnifiedToolbarStyle" TargetType="controls:WrapPanel">
+                <Setter Property="Padding" Value="6"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalSpacing" Value="8"/>
+                <Setter Property="HorizontalSpacing" Value="8"/>
+                <Setter Property="Orientation" Value="Horizontal"/>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

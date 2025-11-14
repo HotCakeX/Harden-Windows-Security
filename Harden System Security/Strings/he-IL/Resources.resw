@@ -439,7 +439,7 @@
     <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
     <value>קוד מקור</value>
   </data>
-    <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <data name="UpdatePageTitle" xml:space="preserve">
     <value>בדוק עדכונים בעמוד זה. ניתן גם לאפשר בדיקת עדכונים אוטומטית שתתבצע פעם אחת בעת ההפעלה ותקבל התראה כאשר גרסה חדשה זמינה.</value>
   </data>
     <data name="GuideButtonAtTop.Content" xml:space="preserve">
@@ -601,7 +601,7 @@
     <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>מלא</value>
   </data>
-  <data name="ProtectPageTitle.Text" xml:space="preserve">
+  <data name="ProtectPageTitle" xml:space="preserve">
     <value>נהל תצורות אבטחה ובחר כיצד לאבטח את המכשיר שלך.</value>
   </data>
   <data name="ProtectCategory_MSFTSecBaseline" xml:space="preserve">
@@ -889,7 +889,7 @@
   <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>נקה</value>
   </data>
-  <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="GroupPolicyEditorPageTitle" xml:space="preserve">
     <value>פתח וקרא קובצי Group Policy בעמוד זה. באפשרותך לחפש בנתונים ולהסיר מדיניות בודדות מהקובץ. ניתן גם להציג את המדיניות האפקטיבית במערכת.</value>
   </data>
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
@@ -1270,58 +1270,58 @@
   <data name="InstalledAppsManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>צפה והסר התקנה של האפליקציות המותקנות.</value>
   </data>
-  <data name="MicrosoftDefenderPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftDefenderPageTitle" xml:space="preserve">
     <value>קבע תצורה לכל ההיבטים של Microsoft Defender והפעל יכולות רבות שבו המושבתות כברירת מחדל.</value>
   </data>
-  <data name="ASRRulesPageTitle.Text" xml:space="preserve">
+  <data name="ASRRulesPageTitle" xml:space="preserve">
     <value>קבע תצורה לכל כלל Attack Surface Reduction בעמוד זה. הם יכולים למנוע הדבקת נוזקה וניצול פגיעויות.</value>
   </data>
-  <data name="BitLockerPageTitle.Text" xml:space="preserve">
+  <data name="BitLockerPageTitle" xml:space="preserve">
     <value>בעמוד זה ניתן להחיל מדיניות שתהפוך את BitLocker לעמיד יותר מהברירה ותגן על הנתונים שלך במנוחה.</value>
   </data>
-  <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
+  <data name="CertificateCheckingPageTitle" xml:space="preserve">
     <value>מצא את כל התעודות במערכת שלך שאינן מעוגנות לאף תעודה ברשימת תעודות השורש המהימנות של Microsoft.</value>
   </data>
-  <data name="CountryIPBlockingPageTitle.Text" xml:space="preserve">
+  <data name="CountryIPBlockingPageTitle" xml:space="preserve">
     <value>חסום את טווחי כתובות ה-IP של מדינות ברשימות הבאות: נותנות חסות לטרור - Office of Foreign Assets Control (OFAC)</value>
   </data>
-  <data name="DeviceGuardPageTitle.Text" xml:space="preserve">
+  <data name="DeviceGuardPageTitle" xml:space="preserve">
     <value>נצל את יכולות האבטחה המוצעות על-ידי החומרה כדי לקשח את מערכת ההפעלה במספר שכבות ביצוע שונות.</value>
   </data>
-  <data name="EdgePageTitle.Text" xml:space="preserve">
+  <data name="EdgePageTitle" xml:space="preserve">
     <value>החל מדיניות הקשורות לאבטחה ופרטיות על Microsoft Edge כדי להפוך אותו לבטוח ופרטי יותר בעת גלישה באינטרנט.</value>
   </data>
-  <data name="LockScreenPageTitle.Text" xml:space="preserve">
+  <data name="LockScreenPageTitle" xml:space="preserve">
     <value>קשח את מסך הנעילה של מערכת ההפעלה כנגד ניצולים אפשריים והפחת את כמות המידע שנחשפת לאנשים לא מורשים כאשר המכשיר נעול.</value>
   </data>
-  <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
+  <data name="MiscellaneousConfigsPageTitle" xml:space="preserve">
     <value>עמוד זה מכיל אמצעי אבטחה חשובים שאינם נכנסים לקטגוריות ייעודיות יותר. החלתם יכולה לשפר ולחזק את אבטחת המערכת והמכשיר שלך.</value>
   </data>
-  <data name="NonAdminPageTitle.Text" xml:space="preserve">
+  <data name="NonAdminPageTitle" xml:space="preserve">
     <value>המדיניות בעמוד זה חלה רק על המשתמש הנוכחי ואינה חלה על כל המשתמשים במערכת. לכן, אינך נדרש להרשאות מנהל כדי להחילן.</value>
   </data>
-  <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
+  <data name="OptionalWindowsFeaturesPageTitle" xml:space="preserve">
     <value>משיכה, הצגה, צפייה, הפעלה והשבתה של כל התכונות והיכולות האופציונליות שמערכת ההפעלה מציעה באופן מאוחד.</value>
   </data>
-  <data name="TLSPageTitle.Text" xml:space="preserve">
+  <data name="TLSPageTitle" xml:space="preserve">
     <value>קשח את SChannel (Secure Channel) במערכת ההפעלה. זהו ספק תמיכת אבטחה (SSP) שפותח על-ידי Microsoft המיישם פרוטוקולי אבטחה כגון Transport Layer Security (TLS).</value>
   </data>
-  <data name="UACPageTitle.Text" xml:space="preserve">
+  <data name="UACPageTitle" xml:space="preserve">
     <value>UAC מסייע במניעת שינויים לא מורשים במערכת ההפעלה על ידי בקשת הרשאה או אישורי מנהל. עמוד זה מציע מדיניות שתקשיח את תהליך זה.</value>
   </data>
-  <data name="WindowsFirewallPageTitle.Text" xml:space="preserve">
+  <data name="WindowsFirewallPageTitle" xml:space="preserve">
     <value>Windows Firewall מסייע להגן על המחשב שלך על-ידי סינון תעבורה נכנסת ויוצאת. כאן ניתן להחיל כללים ותצורות שונות כדי לשפר את אבטחתו.</value>
   </data>
-  <data name="WindowsNetworkingPageTitle.Text" xml:space="preserve">
+  <data name="WindowsNetworkingPageTitle" xml:space="preserve">
     <value>הגדרות Windows Networking מאפשרות לקבוע היבטים שונים של קישוריות ואבטחת רשת כגון כיצד המכשיר שלך מתקשר עם מכשירים אחרים ברשת.</value>
   </data>
-  <data name="WindowsUpdatePageTitle.Text" xml:space="preserve">
+  <data name="WindowsUpdatePageTitle" xml:space="preserve">
     <value>התקנת עדכוני Windows בהקדם האפשרי לאחר שחרורם חיונית לשמירה על אבטחת ויציבות המערכת, במיוחד כנגד ניצולים חדשים ו-0-day. עמוד זה מסייע לאכוף מדיניות שתבטיח שהעדכונים יותקנו בזמן.</value>
   </data>
-  <data name="FileReputationPageTitle.Text" xml:space="preserve">
+  <data name="FileReputationPageTitle" xml:space="preserve">
     <value>אמת את המוניטין של קבצים ניתנים להרצה וקבצים אחרים באמצעות Microsoft Defender Smart Screen או Microsoft's Intelligent Security Graph.</value>
   </data>
-  <data name="InstalledAppsManagementPageTitle.Text" xml:space="preserve">
+  <data name="InstalledAppsManagementPageTitle" xml:space="preserve">
     <value>צפה ברשימת כל היישומים המותקנים במערכת והסר את הלא רצויים.</value>
   </data>
   <data name="PFNVersionLabel.Text" xml:space="preserve">
@@ -1711,9 +1711,6 @@
   <data name="DependencyNotFound" xml:space="preserve">
     <value>תלות לא נמצאה: {0} שמוזכרת על ידי {1}</value>
   </data>
-  <data name="SecurityPolicyRegistryApplyBulkInvokeError" xml:space="preserve">
-    <value>SecurityPolicyRegistryApply צריך להיקרא באצווה דרך SecurityPolicyManager</value>
-  </data>
   <data name="GroupPolicyApplyBulkInvokeError" xml:space="preserve">
     <value>GroupPolicyApply צריך להיקרא באצווה דרך ApplyPolicies</value>
   </data>
@@ -1743,9 +1740,6 @@
   </data>
   <data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
     <value>שגיאה בעיבוד Registry MUnits באצווה.</value>
-  </data>
-  <data name="ErrorProcessingSecurityPolicyRegistryMUnits" xml:space="preserve">
-    <value>שגיאה בעיבוד Security Policy Registry MUnits באצווה.</value>
   </data>
   <data name="FallbackVerifyResult" xml:space="preserve">
     <value>אימות חלופי: {0}\{1} = {2}</value>
@@ -1785,9 +1779,6 @@
   </data>
   <data name="InvalidSource" xml:space="preserve">
     <value>מקור לא חוקי: {0}</value>
-  </data>
-  <data name="SecurityPolicyRegistryEntryMustHaveDefaultRegValue" xml:space="preserve">
-    <value>רשומת SecurityPolicyRegistry ‏{0}\{1} חייבת להכיל DefaultRegValue שאינו null</value>
   </data>
   <data name="ErrorCreatingMUnitsForCategory" xml:space="preserve">
     <value>שגיאה ביצירת MUnits עבור קטגוריה {0}: {1}</value>
@@ -1894,41 +1885,8 @@
   <data name="RegistryVerificationComplete" xml:space="preserve">
     <value>אימות רישום הושלם: {0} מתוך {1} מדיניות תואמות</value>
   </data>
-  <data name="NoSettingsProvided" xml:space="preserve">
-    <value>לא סופקו הגדרות</value>
-  </data>
-  <data name="SettingSystemAccessPolicyViaSecedit" xml:space="preserve">
-    <value>מגדיר System Access Policy באמצעות secedit...</value>
-  </data>
   <data name="CreatedSecurityTemplate" xml:space="preserve">
     <value>נוצר תבנית אבטחה: {0}</value>
-  </data>
-  <data name="TemplateContent" xml:space="preserve">
-    <value>תוכן תבנית: {0}</value>
-  </data>
-  <data name="FailedToStartSeceditProcess" xml:space="preserve">
-    <value>נכשל בהפעלת תהליך secedit</value>
-  </data>
-  <data name="SeceditExitCode" xml:space="preserve">
-    <value>קוד יציאה של secedit: {0}</value>
-  </data>
-  <data name="SeceditOutput" xml:space="preserve">
-    <value>פלט secedit: {0}</value>
-  </data>
-  <data name="SeceditError" xml:space="preserve">
-    <value>שגיאת secedit: {0}</value>
-  </data>
-  <data name="SeceditCompletedSuccessfully" xml:space="preserve">
-    <value>secedit הושלם בהצלחה</value>
-  </data>
-  <data name="SeceditFailedWithExitCode" xml:space="preserve">
-    <value>secedit נכשל עם קוד יציאה: {0}</value>
-  </data>
-  <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
-    <value>לא נמצאו הגדרות [System Access] בקובץ שצוין</value>
-  </data>
-  <data name="ExtractedSystemAccessSettingsFromFile" xml:space="preserve">
-    <value>הופקו {0} הגדרות System Access מהקובץ: {1}</value>
   </data>
   <data name="FileNotFoundPath" xml:space="preserve">
     <value>קובץ לא נמצא: {0}</value>
@@ -2248,7 +2206,7 @@
   <data name="AppDescription" xml:space="preserve">
     <value>Harden System Security היא אפליקציה המסייעת לך להגדיר את המערכת כך שתהיה מאובטחת בפני איומים מתקדמים רבים, תוך שימוש בכלים ותכונות הזמינים במערכת ההפעלה ומוצעים על ידי Microsoft ללא שימוש בכלי או בתוכנות צד שלישי.</value>
   </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>הבאים הם היומנים ש-Harden System Security יוצר ושומר אוטומטית בתיקייה הייעודית. הגודל הכולל של תיקיית היומנים לעולם לא יעלה על 1GB.</value>
   </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
@@ -2287,10 +2245,10 @@
   <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
     <value>קו הבסיס לאבטחה של Microsoft 365 Apps</value>
   </data>
-    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="MicrosoftSecurityBaselinePageTitle" xml:space="preserve">
     <value>החל את קו הבסיס לאבטחה של Microsoft בדף זה. באפשרותך גם לאמת תאימות מערכת כדי לקבל דוח מדויק המציג אילו הגדרות הוחלו ואילו לא. ניתן גם להסיר את המדיניות שהוחלה על ידי קו הבסיס.</value>
   </data>
-    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="Microsoft365AppsSecurityBaselinePageTitle" xml:space="preserve">
     <value>החל את קו הבסיס לאבטחה של Microsoft 365 Apps בדף זה. באפשרותך גם לאמת תאימות מערכת כדי לקבל דוח מדויק המציג אילו הגדרות הוחלו ואילו לא. ניתן גם להסיר את המדיניות שהוחלה על ידי קו הבסיס.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
@@ -2327,7 +2285,7 @@
   <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
     <value>עקיפות לקווי הבסיס של Microsoft</value>
   </data>
-  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftBaseLinesOverridesPageTitle" xml:space="preserve">
     <value>שחזר תכונות מערכת הפעלה שנוטרלו לאחר החלת קווי הבסיס לאבטחה של Microsoft.</value>
   </data>
   <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -2839,7 +2797,7 @@
   <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>הצג ונהל את כל מדיניות הביקורת במערכת.</value>
   </data>
-    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <data name="AuditPoliciesPageTitle" xml:space="preserve">
     <value>הצג ונהל את כל מדיניות הביקורת במערכת.</value>
   </data>
   <!--Audit Policies ListView Headers Start-->
@@ -3809,7 +3767,7 @@
   <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>רשימת החומרים הקריפטוגרפית (CBOM) מספקת מלאי ברמת המערכת של קריפטוגרפיית מערכת ההפעלה-אלגוריתמים, עקומות, חבילות צופן וספקים-ומשקפת את עמדת הקריפטוגרפיה של הפלטפורמה.</value>
   </data>
-  <data name="CBOMPageTitle.Text" xml:space="preserve">
+  <data name="CBOMPageTitle" xml:space="preserve">
     <value>רשימת החומרים הקריפטוגרפית (CBOM) מספקת מלאי והתבוננות פנימית ברמת המערכת של קריפטוגרפיית מערכת ההפעלה, ומציפה את האלגוריתמים, העקומות, חבילות הצופן והספקים המגדירים את עמדת הקריפטוגרפיה של הפלטפורמה. באמצעות נירמול מה שהמערכת חושפת, היא מעניקה שקיפות בסגנון SBOM עבור קריפטוגרפיה: מאפשרת ביקורות המבוססות על ראיות, בדיקות תאימות לבסיס, זיהוי סטיות בין עדכונים, איתור פרימיטיבים מיושנים/חלשים ותכנון למעברים שלאחר הקוונטום.</value>
   </data>
 <data name="CA_NameHeader.Text" xml:space="preserve">
@@ -4252,5 +4210,20 @@
   </data>
   <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
     <value>הבדיקה לעדכונים לאפליקציות ב־Microsoft Store הושלמה בהצלחה. להצגת הורדות שהחלו, יש לפתוח את אפליקציית Microsoft Store.</value>
+  </data>
+    <data name="NoOptionalFeaturesAvailableForExport" xml:space="preserve">
+    <value>אין תכונות או יכולות אופציונליות לייצוא. נא לאחזר אותן תחילה.</value>
+  </data>
+  <data name="SuccessfullyExportedOptionalFeatures" xml:space="preserve">
+    <value>יוצאו בהצלחה {0} תכונות אופציונליות ו/או יכולות אל {1}</value>
+  </data>
+  <data name="SuccessfullyExportedASRRules" xml:space="preserve">
+    <value>יוצאו בהצלחה {0} כללי הפחתת משטח התקיפה אל {1}</value>
+  </data>
+  <data name="NoInstalledAppsForExport" xml:space="preserve">
+    <value>אין אפליקציות מותקנות לייצוא. נא לאחזר אותן תחילה.</value>
+  </data>
+  <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
+    <value>יוצאו בהצלחה {0} אפליקציות מותקנות אל {1}</value>
   </data>
 </root>

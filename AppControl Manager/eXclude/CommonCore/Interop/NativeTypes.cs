@@ -657,13 +657,28 @@ internal struct SAMPR_USER_INFO_BUFFER
 {
 	[FieldOffset(0)]
 	internal SAMPR_USER_CONTROL_INFORMATION UserControlInformation;
+
+	[FieldOffset(0)]
+	internal SAMPR_USER_NAME_INFORMATION UserNameInformation;
 }
 
 /// <summary>
 /// [MS-SAMR] 2.2.6.28/2.2.6.29
+/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/eb5f1508-ede1-4ff1-be82-55f3e2ef1633
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct SAMPR_USER_CONTROL_INFORMATION
 {
 	internal uint Control;
+}
+
+/// <summary>
+/// SAMPR_USER_NAME_INFORMATION structure used with SamSetInformationUser(UserNameInformation).
+/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/400d937e-66e5-44af-929d-13dfab550d46
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SAMPR_USER_NAME_INFORMATION
+{
+	internal LSA_UNICODE_STRING UserName;
+	internal LSA_UNICODE_STRING FullName;
 }

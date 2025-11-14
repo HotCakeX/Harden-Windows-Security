@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <UserControl
     x:Class="AppControlManager.CustomUIElements.MUnitListViewControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -204,7 +203,7 @@
         </Grid.Resources>
 
         <!-- Control Bar with Search and Buttons -->
-        <Border Grid.Row="0" Margin="0,0,0,5" Style="{StaticResource GridCardStyle}" Padding="12">
+        <Border Grid.Row="0" Margin="0,0,0,5" Style="{StaticResource GridCardStyle}" Padding="10">
             <ani:Implicit.HideAnimations>
                 <ani:OpacityAnimation Duration="0:0:0.3" To="0.0"/>
                 <ani:TranslationAnimation Duration="0:0:0.3" To="0,-30,0"/>
@@ -556,6 +555,20 @@
                         </MenuFlyout>
                     </DropDownButton.Flyout>
                 </DropDownButton>
+
+                <!-- Export to JSON Button -->
+                <Button x:Uid="ExportToJsonButton"
+                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                        Click="{x:Bind ExportToJson_Click}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE74E;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
 
                 <!-- Selected Items Count -->
                 <Border Background="#aa4b6b"

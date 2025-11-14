@@ -2006,7 +2006,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
     <value>Recuperar y consultar las Configuraciones Seguras en el sistema.</value>
   </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>Los siguientes son los registros que AppControl Manager genera y almacena automáticamente en la carpeta "AppControl Manager" en Archivos de Programa (si se ejecuta con privilegios elevados, de lo contrario se guardarán en el directorio TEMP). El tamaño total de la carpeta de registros nunca excederá 1 GB.</value>
   </data>
   <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
@@ -2027,7 +2027,7 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
     <value>Ver los archivos de modo Kernel detectados que se utilizarán para crear la directiva en modo forzado. Elimine de la lista los elementos que no desea que se incluyan en la directiva final de modo Kernel Estricto.</value>
   </data>
-  <data name="UpdatePageTitle.Text" xml:space="preserve">
+  <data name="UpdatePageTitle" xml:space="preserve">
     <value>Busque actualizaciones en esta página. También puede habilitar la verificación automática de actualizaciones que ocurrirá una vez al iniciar y se le notificará cada vez que haya una nueva versión disponible.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">

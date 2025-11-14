@@ -48,6 +48,6 @@ internal sealed partial class MicrosoftDefender : Page, CommonCore.UI.IPageHeade
 		SecurityMeasuresList.Dispose();
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MicrosoftDefenderPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("MicrosoftDefenderPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Defender");
 }

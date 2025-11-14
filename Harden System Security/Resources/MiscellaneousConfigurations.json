@@ -578,7 +578,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Policies\\Microsoft\\Cryptography",
         "ValueName": "ForceKeyProtection",
         "Type": 4,

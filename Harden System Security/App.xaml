@@ -161,6 +161,15 @@
                 <GradientStop Color="#FFFFDDE1" Offset="1"/>
             </LinearGradientBrush>
 
+            <Style x:Key="UnifiedToolbarStyle" TargetType="controls:WrapPanel">               
+                <Setter Property="Padding" Value="6"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>                
+                <Setter Property="VerticalSpacing" Value="8"/>
+                <Setter Property="HorizontalSpacing" Value="8"/>
+                <Setter Property="Orientation" Value="Horizontal"/>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

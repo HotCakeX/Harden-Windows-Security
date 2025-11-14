@@ -2006,7 +2006,7 @@
   <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
     <value>സിസ്റ്റത്തിലെ സുരക്ഷിത ക്രമീകരണങ്ങൾ വീണ്ടെടുക്കുകയും അന്വേഷിക്കുകയും ചെയ്യുക.</value>
   </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>താഴെ പറയുന്നവ ആപ്പ്കൺട്രോൾ മാനേജർ സ്വയം സൃഷ്ടിക്കുകയും പ്രോഗ്രാം ഫയലുകളിലെ "ആപ്പ്കൺട്രോൾ മാനേജർ" ഫോൾഡറിൽ സംഭരിക്കുകയും ചെയ്യുന്ന ലോഗുകളാണ് (എലിവേറ്റഡ് ആയി പ്രവർത്തിക്കുകയാണെങ്കിൽ, അല്ലെങ്കിൽ അവ TEMP ഡയറക്ടറിയിൽ സംരക്ഷിക്കപ്പെടും). ലോഗ്സ് ഫോൾഡറിന്റെ ആകെ വലുപ്പം 1GB കവിയരുത്.</value>
   </data>
   <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
@@ -2027,7 +2027,7 @@
   <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
     <value>എൻഫോഴ്‌സ്ഡ് മോഡ് നയം സൃഷ്ടിക്കാൻ ഉപയോഗിക്കുന്ന കണ്ടെത്തിയ കേർണൽ-മോഡ് ഫയലുകൾ കാണുക. അന്തിമ സ്ട്രിക്റ്റ് കേർണൽ-മോഡ് നയത്തിൽ ഉൾപ്പെടുത്താൻ നിങ്ങൾ ആഗ്രഹിക്കാത്ത ഇനങ്ങൾ ലിസ്റ്റിൽ നിന്ന് നീക്കം ചെയ്യുക.</value>
   </data>
-  <data name="UpdatePageTitle.Text" xml:space="preserve">
+  <data name="UpdatePageTitle" xml:space="preserve">
     <value>ഈ പേജിൽ അപ്‌ഡേറ്റുകൾക്കായി പരിശോധിക്കുക. നിങ്ങൾക്ക് യാന്ത്രിക അപ്‌ഡേറ്റ് പരിശോധന പ്രവർത്തനക്ഷമമാക്കാനും കഴിയും, അത് സ്റ്റാർട്ടപ്പിൽ ഒരിക്കൽ സംഭവിക്കുകയും പുതിയ പതിപ്പ് ലഭ്യമാകുമ്പോഴെല്ലാം നിങ്ങളെ അറിയിക്കുകയും ചെയ്യും.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">

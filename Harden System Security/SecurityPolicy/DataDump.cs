@@ -34,7 +34,8 @@ internal static class DataDump
 		await Task.Run(() =>
 		{
 
-			SecurityPolicyInfo policyInfo = SecurityPolicyReader.GetSecurityPolicyInfo();
+			SystemAccessInfo systemAccess = SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
+			Dictionary<string, string[]> privilegeRights = SecurityPolicy.SecurityPolicyReader.GetPrivilegeRights();
 
 			StringBuilder content = new();
 
@@ -113,41 +114,26 @@ internal static class DataDump
 			_ = content.AppendLine("┌─ SYSTEM ACCESS POLICIES");
 			_ = content.AppendLine("│");
 			_ = content.AppendLine($"│  Password Policies:");
-			_ = content.AppendLine($"│    • Minimum Password Age: {FormatValue(policyInfo.SystemAccess.MinimumPasswordAge)} days");
-			_ = content.AppendLine($"│    • Maximum Password Age: {FormatValue(policyInfo.SystemAccess.MaximumPasswordAge)} days");
-			_ = content.AppendLine($"│    • Minimum Password Length: {FormatValue(policyInfo.SystemAccess.MinimumPasswordLength)} characters");
-			_ = content.AppendLine($"│    • Password Complexity: {FormatBooleanValue(policyInfo.SystemAccess.PasswordComplexity)}");
-			_ = content.AppendLine($"│    • Password History Size: {FormatValue(policyInfo.SystemAccess.PasswordHistorySize)} passwords");
-			_ = content.AppendLine($"│    • Clear Text Password: {FormatBooleanValue(policyInfo.SystemAccess.ClearTextPassword)}");
+			_ = content.AppendLine($"│    • Minimum Password Age: {FormatValue(systemAccess.MinimumPasswordAge)} days");
+			_ = content.AppendLine($"│    • Maximum Password Age: {FormatValue(systemAccess.MaximumPasswordAge)} days");
+			_ = content.AppendLine($"│    • Minimum Password Length: {FormatValue(systemAccess.MinimumPasswordLength)} characters");
+			_ = content.AppendLine($"│    • Password Complexity: {FormatBooleanValue(systemAccess.PasswordComplexity)}");
+			_ = content.AppendLine($"│    • Password History Size: {FormatValue(systemAccess.PasswordHistorySize)} passwords");
+			_ = content.AppendLine($"│    • Clear Text Password: {FormatBooleanValue(systemAccess.ClearTextPassword)}");
 			_ = content.AppendLine("│");
 			_ = content.AppendLine($"│  Account Lockout Policies:");
-			_ = content.AppendLine($"│    • Lockout Bad Count: {FormatValue(policyInfo.SystemAccess.LockoutBadCount)} attempts");
-			_ = content.AppendLine($"│    • Reset Lockout Count: {FormatValue(policyInfo.SystemAccess.ResetLockoutCount)} minutes");
-			_ = content.AppendLine($"│    • Lockout Duration: {FormatValue(policyInfo.SystemAccess.LockoutDuration)} minutes");
-			_ = content.AppendLine($"│    • Allow Administrator Lockout: {FormatBooleanValue(policyInfo.SystemAccess.AllowAdministratorLockout)}");
+			_ = content.AppendLine($"│    • Lockout Bad Count: {FormatValue(systemAccess.LockoutBadCount)} attempts");
+			_ = content.AppendLine($"│    • Reset Lockout Count: {FormatValue(systemAccess.ResetLockoutCount)} minutes");
+			_ = content.AppendLine($"│    • Lockout Duration: {FormatValue(systemAccess.LockoutDuration)} minutes");
+			_ = content.AppendLine($"│    • Allow Administrator Lockout: {FormatBooleanValue(systemAccess.AllowAdministratorLockout)}");
 			_ = content.AppendLine("│");
 			_ = content.AppendLine($"│  Account Settings:");
-			_ = content.AppendLine($"│    • Require Logon to Change Password: {FormatBooleanValue(policyInfo.SystemAccess.RequireLogonToChangePassword)}");
-			_ = content.AppendLine($"│    • Force Logoff When Hour Expire: {FormatBooleanValue(policyInfo.SystemAccess.ForceLogoffWhenHourExpire)}");
-			_ = content.AppendLine($"│    • Enable Admin Account: {FormatBooleanValue(policyInfo.SystemAccess.EnableAdminAccount)}");
-			_ = content.AppendLine($"│    • Enable Guest Account: {FormatBooleanValue(policyInfo.SystemAccess.EnableGuestAccount)}");
-			_ = content.AppendLine($"│    • New Administrator Name: {FormatStringValue(policyInfo.SystemAccess.NewAdministratorName)}");
-			_ = content.AppendLine($"│    • New Guest Name: {FormatStringValue(policyInfo.SystemAccess.NewGuestName)}");
-			_ = content.AppendLine("└─");
-			_ = content.AppendLine();
-
-			// Event Audit Section
-			_ = content.AppendLine("┌─ EVENT AUDIT POLICIES");
-			_ = content.AppendLine("│");
-			_ = content.AppendLine($"│    • Audit System Events: {FormatAuditValue(policyInfo.EventAudit.AuditSystemEvents)}");
-			_ = content.AppendLine($"│    • Audit Logon Events: {FormatAuditValue(policyInfo.EventAudit.AuditLogonEvents)}");
-			_ = content.AppendLine($"│    • Audit Object Access: {FormatAuditValue(policyInfo.EventAudit.AuditObjectAccess)}");
-			_ = content.AppendLine($"│    • Audit Privilege Use: {FormatAuditValue(policyInfo.EventAudit.AuditPrivilegeUse)}");
-			_ = content.AppendLine($"│    • Audit Policy Change: {FormatAuditValue(policyInfo.EventAudit.AuditPolicyChange)}");
-			_ = content.AppendLine($"│    • Audit Account Management: {FormatAuditValue(policyInfo.EventAudit.AuditAccountManage)}");
-			_ = content.AppendLine($"│    • Audit Process Tracking: {FormatAuditValue(policyInfo.EventAudit.AuditProcessTracking)}");
-			_ = content.AppendLine($"│    • Audit Directory Service Access: {FormatAuditValue(policyInfo.EventAudit.AuditDSAccess)}");
-			_ = content.AppendLine($"│    • Audit Account Logon: {FormatAuditValue(policyInfo.EventAudit.AuditAccountLogon)}");
+			_ = content.AppendLine($"│    • Require Logon to Change Password: {FormatBooleanValue(systemAccess.RequireLogonToChangePassword)}");
+			_ = content.AppendLine($"│    • Force Logoff When Hour Expire: {FormatBooleanValue(systemAccess.ForceLogoffWhenHourExpire)}");
+			_ = content.AppendLine($"│    • Enable Admin Account: {FormatBooleanValue(systemAccess.EnableAdminAccount)}");
+			_ = content.AppendLine($"│    • Enable Guest Account: {FormatBooleanValue(systemAccess.EnableGuestAccount)}");
+			_ = content.AppendLine($"│    • New Administrator Name: {FormatStringValue(systemAccess.NewAdministratorName)}");
+			_ = content.AppendLine($"│    • New Guest Name: {FormatStringValue(systemAccess.NewGuestName)}");
 			_ = content.AppendLine("└─");
 			_ = content.AppendLine();
 
@@ -155,10 +141,10 @@ internal static class DataDump
 			_ = content.AppendLine("┌─ USER RIGHTS ASSIGNMENTS");
 			_ = content.AppendLine("│");
 
-			if (policyInfo.PrivilegeRights.Count != 0)
+			if (privilegeRights.Count != 0)
 			{
 				// Group and sort privileges
-				Dictionary<string, string[]> sortedPrivileges = policyInfo.PrivilegeRights
+				Dictionary<string, string[]> sortedPrivileges = privilegeRights
 					.OrderBy(kvp => kvp.Key, StringComparer.OrdinalIgnoreCase)
 					.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
@@ -183,41 +169,6 @@ internal static class DataDump
 			else
 			{
 				_ = content.AppendLine("│    (No privilege rights configured)");
-				_ = content.AppendLine("│");
-			}
-
-			_ = content.AppendLine("└─");
-			_ = content.AppendLine();
-
-			// Registry Values Section
-			_ = content.AppendLine("┌─ SECURITY POLICY REGISTRY VALUES");
-			_ = content.AppendLine("│");
-
-			if (policyInfo.RegistryValues.Count != 0)
-			{
-				// Group registry values by key path
-				IGrouping<string, RegistryValue>[] groupedValues = policyInfo.RegistryValues
-					.GroupBy(rv => GetRegistryKeyPath(rv.Name))
-					.OrderBy(g => g.Key, StringComparer.OrdinalIgnoreCase)
-					.ToArray();
-
-				foreach (IGrouping<string, RegistryValue> group in groupedValues)
-				{
-					_ = content.AppendLine($"│  Registry Key: {group.Key}");
-
-					foreach (RegistryValue regValue in group.OrderBy(rv => GetRegistryValueName(rv.Name), StringComparer.OrdinalIgnoreCase))
-					{
-						string valueName = GetRegistryValueName(regValue.Name);
-						_ = content.AppendLine($"│    • {valueName}");
-						_ = content.AppendLine($"│      Type: {regValue.Type}");
-						_ = content.AppendLine($"│      Value: {FormatRegistryValue(regValue.Value, regValue.Type.ToString())}");
-					}
-					_ = content.AppendLine("│");
-				}
-			}
-			else
-			{
-				_ = content.AppendLine("│    (No registry values configured)");
 				_ = content.AppendLine("│");
 			}
 

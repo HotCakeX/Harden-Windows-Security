@@ -18,7 +18,7 @@
             </Grid.RowDefinitions>
 
             <customUI:InfoBarV2 Grid.Row="0"
-                                Margin="10,0,10,5"
+                                Margin="0,0,0,5"
                                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"

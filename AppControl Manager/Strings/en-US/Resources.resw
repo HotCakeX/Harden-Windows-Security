@@ -2006,7 +2006,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
     <value>Retrieve and query the Secure Settings on the system.</value>
   </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>The following are the logs that the AppControl Manager automatically generates and stores in the &quot;AppControl Manager&quot; folder in Program Files (if running elevated, otherwise they will be saved in the TEMP directory). The total size of the logs folder will never exceed 1GB.</value>
   </data>
   <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
@@ -2027,7 +2027,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
     <value>View the detected Kernel-mode files that will be used to create the enforced mode policy. Remove items you don't want to be included in the final Strict Kernel-mode policy from the list.</value>
   </data>
-  <data name="UpdatePageTitle.Text" xml:space="preserve">
+  <data name="UpdatePageTitle" xml:space="preserve">
     <value>Check for updates on this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">

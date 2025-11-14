@@ -2006,7 +2006,7 @@
   <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
     <value>استرجع واستعلم عن الإعدادات الآمنة على النظام.</value>
   </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>فيما يلي السجلات التي يقوم مدير AppControl بإنشائها وتخزينها تلقائيًا في مجلد "AppControl Manager" في Program Files (إذا كان يعمل بامتيازات مرتفعة، وإلا فسيتم حفظها في دليل TEMP). لن يتجاوز الحجم الإجمالي لمجلد السجلات 1 جيجابايت.</value>
   </data>
   <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
@@ -2027,7 +2027,7 @@
   <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
     <value>اعرض ملفات وضع النواة المكتشفة التي سيتم استخدامها لإنشاء نهج الوضع المفروض. أزل العناصر التي لا تريد تضمينها في نهج وضع النواة الصارم النهائي من القائمة.</value>
   </data>
-  <data name="UpdatePageTitle.Text" xml:space="preserve">
+  <data name="UpdatePageTitle" xml:space="preserve">
     <value>تحقق من وجود تحديثات في هذه الصفحة. يمكنك أيضًا تمكين التحقق التلقائي من التحديثات والذي سيحدث مرة واحدة عند بدء التشغيل وسيتم إعلامك عند توفر إصدار جديد.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">

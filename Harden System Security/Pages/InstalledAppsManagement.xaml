@@ -369,115 +369,132 @@
                   Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
                   IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
 
-        <Border Grid.Row="1" Margin="0,5,0,10" Style="{StaticResource GridCardStyle}" Padding="8">
+        <Expander Grid.Row="1" Margin="0,0,0,5" HorizontalAlignment="Stretch">
+            <Expander.Header>
 
-            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      HorizontalSpacing="10"
-                      VerticalSpacing="10">
+                <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
 
-                <ProgressRing Visibility="{x:Bind ViewModel.ProgressBarVisibility,Mode=OneWay}"
+                    <ProgressRing Visibility="{x:Bind ViewModel.ProgressBarVisibility,Mode=OneWay}"
                               VerticalAlignment="Center"
                               IsIndeterminate="True" />
 
-                <TextBox x:Uid="SearchForAppsPlaceHolder"
-                         MinWidth="200"
+                    <TextBox x:Uid="SearchForAppsPlaceHolder"                         
                          Text="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                          VerticalAlignment="Center"/>
 
-                <!-- Total and Filtered Count Display Border -->
-                <Border Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                    <!-- Total and Filtered Count Display Border -->
+                    <Border Background="{ThemeResource SubtleFillColorSecondaryBrush}"
                         CornerRadius="6"
                         Padding="12,8"
                         BorderThickness="0">
 
-                    <TextBlock VerticalAlignment="Center"
+                        <TextBlock VerticalAlignment="Center"
                                FontSize="14"
                                FontWeight="SemiBold">
                         <Run x:Uid="TotalText"/>
                         <Run Text="{x:Bind ViewModel.TotalItemsCount, Mode=OneWay}"/>
                         <Run Text=" | Displayed: "/>
                         <Run Text="{x:Bind ViewModel.FilteredItemsCount, Mode=OneWay}"/>
-                    </TextBlock>
-                </Border>
+                        </TextBlock>
+                    </Border>
 
-                <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                    <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                         VerticalAlignment="Center"
                         Click="{x:Bind ViewModel.RefreshAppsListButton_Click}">
 
-                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
 
-                        <AnimatedIcon Height="18" Width="18">
-                            <AnimatedIcon.Source>
-                                <animatedvisuals:MindMap/>
-                            </AnimatedIcon.Source>
-                        </AnimatedIcon>
+                            <AnimatedIcon Height="18" Width="18">
+                                <AnimatedIcon.Source>
+                                    <animatedvisuals:MindMap/>
+                                </AnimatedIcon.Source>
+                            </AnimatedIcon>
 
-                        <TextBlock x:Uid="GetAppsListText"
+                            <TextBlock x:Uid="GetAppsListText"
                                    FontSize="12"
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
-                    </StackPanel>
+                        </StackPanel>
 
-                </Button>
+                    </Button>
 
-                <!-- Uninstall Selected Apps Button -->
-                <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                    <!-- Uninstall Selected Apps Button -->
+                    <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                         VerticalAlignment="Center"
                         Click="{x:Bind ViewModel.UninstallSelectedApps_Click}">
-                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
 
-                        <AnimatedIcon Height="18" Width="18">
-                            <AnimatedIcon.Source>
-                                <animatedvisuals:Caution/>
-                            </AnimatedIcon.Source>
-                        </AnimatedIcon>
+                            <AnimatedIcon Height="18" Width="18">
+                                <AnimatedIcon.Source>
+                                    <animatedvisuals:Caution/>
+                                </AnimatedIcon.Source>
+                            </AnimatedIcon>
 
-                        <TextBlock x:Uid="UninstallSelectedAppsText"
+                            <TextBlock x:Uid="UninstallSelectedAppsText"
                                    FontSize="12"
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
+                        </StackPanel>
+                    </Button>
 
-                <DropDownButton x:Uid="ManageSelectionsDropDownButton">
+                    <DropDownButton x:Uid="ManageSelectionsDropDownButton">
 
-                    <DropDownButton.Flyout>
-                        <MenuFlyout Placement="Bottom">
-                            <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.SelectAllMenuFlyoutItem_Click}">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE8B3;"/>
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                        <DropDownButton.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem x:Uid="SelectAllMenuFlyoutItem" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.SelectAllMenuFlyoutItem_Click}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8B3;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Uid="RemoveSelectionsMenuFlyoutItem" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.RemoveSelectionsMenuFlyoutItem_Click}">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE8E6;"/>
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
+                                <MenuFlyoutItem x:Uid="RemoveSelectionsMenuFlyoutItem" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.RemoveSelectionsMenuFlyoutItem_Click}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8E6;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
-                        </MenuFlyout>
-                    </DropDownButton.Flyout>
-                </DropDownButton>
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
 
-                <!-- Selected Items Count Badge -->
-                <Border Background="#aa4b6b"
+                    <!-- Selected Items Count Badge -->
+                    <Border Background="#aa4b6b"
                         CornerRadius="12"
                         Padding="12,8">
 
-                    <TextBlock FontSize="14"
+                        <TextBlock FontSize="14"
                                FontWeight="SemiBold"
                                Foreground="WhiteSmoke"
                                VerticalAlignment="Center">
                         <Run Text="Selected: "/>
                         <Run Text="{x:Bind ViewModel.SelectedItemsCount, Mode=OneWay}"/>
-                    </TextBlock>
-                </Border>
+                        </TextBlock>
+                    </Border>
 
-            </controls:WrapPanel>
-        </Border>
+                </controls:WrapPanel>
 
+            </Expander.Header>
+
+            <Expander.Content>
+
+                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+
+                    <Button x:Uid="ExportToJsonButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ExportToJson_Click}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE74E;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                </controls:WrapPanel>
+
+            </Expander.Content>
+        </Expander>
 
         <RefreshContainer Grid.Row="2"
                           IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"

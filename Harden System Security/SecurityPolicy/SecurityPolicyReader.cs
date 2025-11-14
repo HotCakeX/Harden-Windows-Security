@@ -15,13 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using Microsoft.Win32;
 
 namespace HardenSystemSecurity.SecurityPolicy;
 
@@ -30,7 +28,7 @@ internal static class SecurityPolicyReader
 	/// <summary>
 	/// https://learn.microsoft.com/openspecs/windows_protocols/ms-erref/18d8fbe8-a967-4f1c-ae50-99ca8e491d2d
 	/// </summary>
-	internal const uint NERR_Success = 0;
+	internal const uint NERR_Success = 0x00000000;
 
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/iads/ne-iads-ads_user_flag_enum
@@ -53,10 +51,12 @@ internal static class SecurityPolicyReader
 	internal const uint DOMAIN_PASSWORD_STORE_CLEARTEXT = 0x00000010;
 
 	/// <summary>
+	/// Maximum Access.
 	/// https://learn.microsoft.com/en-us/windows/win32/secauthz/access-mask
 	/// https://learn.microsoft.com/en-us/windows/win32/secauthz/requesting-access-rights-to-an-object
+	/// https://learn.microsoft.com/en-us/windows/win32/secmgmt/policy-object-access-rights#standard-access-types
 	/// </summary>
-	internal const int MAXIMUM_ALLOWED = 0x02000000;
+	internal const int POLICY_ALL_ACCESS = 0x000F0FFF;
 
 	/// <summary>
 	/// https://learn.microsoft.com/en-us/windows-hardware/drivers/ifs/security-information#dacl_security_information
@@ -92,6 +92,11 @@ internal static class SecurityPolicyReader
 	internal const int UserControlInformation = 16;
 
 	/// <summary>
+	/// Per [MS-SAMR] 2.2.6.28 USER_INFORMATION_CLASS
+	/// </summary>
+	internal const int UserNameInformation = 6;
+
+	/// <summary>
 	/// Source in the PDF => https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/4df07fab-1bbc-452f-8e92-7853a3c7e380
 	/// 2.2.1.3 Server ACCESS_MASK Values
 	/// </summary>
@@ -124,116 +129,16 @@ internal static class SecurityPolicyReader
 	internal const uint USER_ACCOUNT_DISABLED = 0x00000001;
 
 	/// <summary>
-	/// Gets the Audit info for the [Event Audit] section.
+	/// Source in the PDF => https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/4df07fab-1bbc-452f-8e92-7853a3c7e380
+	/// 2.2.1.4 Domain ACCESS_MASK Values
 	/// </summary>
-	/// <returns></returns>
-	private unsafe static EventAuditInfo GetEventAudit()
-	{
-		EventAuditInfo eventAudit = new();
+	internal const uint DOMAIN_READ_PASSWORD_PARAMETERS = 0x00000001;
 
-		Dictionary<string, string> auditMapping = new(StringComparer.OrdinalIgnoreCase)
-		{
-			{ "0cce923f-69ae-11d9-bed3-505054503030", "AuditSystemEvents" },
-			{ "0cce9240-69ae-11d9-bed3-505054503030", "AuditLogonEvents" },
-			{ "0cce9241-69ae-11d9-bed3-505054503030", "AuditObjectAccess" },
-			{ "0cce9242-69ae-11d9-bed3-505054503030", "AuditPrivilegeUse" },
-			{ "0cce9243-69ae-11d9-bed3-505054503030", "AuditPolicyChange" },
-			{ "0cce9244-69ae-11d9-bed3-505054503030", "AuditAccountManage" },
-			{ "0cce9245-69ae-11d9-bed3-505054503030", "AuditProcessTracking" },
-			{ "0cce9246-69ae-11d9-bed3-505054503030", "AuditDSAccess" },
-			{ "0cce9247-69ae-11d9-bed3-505054503030", "AuditAccountLogon" }
-		};
-
-		if (!NativeMethods.AuditEnumerateCategories(out nint categoriesPtr, out uint categoriesCount))
-		{
-			return eventAudit;
-		}
-
-		try
-		{
-			int guidSize = sizeof(Guid);
-			List<Guid> subCatGuids = [];
-
-			for (uint i = 0; i < categoriesCount; i++)
-			{
-				Guid catGuid = *(Guid*)IntPtr.Add(categoriesPtr, (int)i * guidSize);
-				if (!NativeMethods.AuditEnumerateSubCategories(IntPtr.Add(categoriesPtr, (int)i * guidSize), true, out nint subCatPtr, out uint subCatCount))
-				{
-					continue;
-				}
-
-				try
-				{
-					for (uint j = 0; j < subCatCount; j++)
-					{
-						Guid subGuid = *(Guid*)IntPtr.Add(subCatPtr, (int)j * guidSize);
-						subCatGuids.Add(subGuid);
-					}
-				}
-				finally
-				{
-					NativeMethods.AuditFree(subCatPtr);
-				}
-			}
-
-			if (subCatGuids.Count == 0)
-			{
-				return eventAudit;
-			}
-
-			IntPtr allGuidsPtr = Marshal.AllocHGlobal(subCatGuids.Count * guidSize);
-			try
-			{
-				for (int i = 0; i < subCatGuids.Count; i++)
-				{
-					*(Guid*)IntPtr.Add(allGuidsPtr, i * guidSize) = subCatGuids[i];
-				}
-
-				if (!NativeMethods.AuditQuerySystemPolicy(allGuidsPtr, (uint)subCatGuids.Count, out nint auditPolicyPtr) || auditPolicyPtr == IntPtr.Zero)
-				{
-					return eventAudit;
-				}
-
-				try
-				{
-					Dictionary<string, uint> found = new(StringComparer.Ordinal);
-					for (int i = 0; i < subCatGuids.Count; i++)
-					{
-						AUDIT_POLICY_INFORMATION info = *(AUDIT_POLICY_INFORMATION*)IntPtr.Add(auditPolicyPtr, i * sizeof(AUDIT_POLICY_INFORMATION));
-						string key = info.AuditSubCategoryGuid.ToString();
-						if (auditMapping.TryGetValue(key.ToLowerInvariant(), out string? name))
-						{
-							found[name] = info.AuditingInformation;
-						}
-					}
-
-					eventAudit.AuditSystemEvents = found.TryGetValue("AuditSystemEvents", out uint value) ? value : 0;
-					eventAudit.AuditLogonEvents = found.TryGetValue("AuditLogonEvents", out uint value1) ? value1 : 0;
-					eventAudit.AuditObjectAccess = found.TryGetValue("AuditObjectAccess", out uint value2) ? value2 : 0;
-					eventAudit.AuditPrivilegeUse = found.TryGetValue("AuditPrivilegeUse", out uint value3) ? value3 : 0;
-					eventAudit.AuditPolicyChange = found.TryGetValue("AuditPolicyChange", out uint value4) ? value4 : 0;
-					eventAudit.AuditAccountManage = found.TryGetValue("AuditAccountManage", out uint value5) ? value5 : 0;
-					eventAudit.AuditProcessTracking = found.TryGetValue("AuditProcessTracking", out uint value7) ? value7 : 0;
-					eventAudit.AuditDSAccess = found.TryGetValue("AuditDSAccess", out uint value6) ? value6 : 0;
-					eventAudit.AuditAccountLogon = found.TryGetValue("AuditAccountLogon", out uint value8) ? value8 : 0;
-				}
-				finally
-				{
-					NativeMethods.AuditFree(auditPolicyPtr);
-				}
-			}
-			finally
-			{
-				Marshal.FreeHGlobal(allGuidsPtr);
-			}
-		}
-		finally
-		{
-			NativeMethods.AuditFree(categoriesPtr);
-		}
-
-		return eventAudit;
-	}
+	/// <summary>
+	/// Source in the PDF => https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/4df07fab-1bbc-452f-8e92-7853a3c7e380
+	/// 2.2.1.4 Domain ACCESS_MASK Values
+	/// </summary>
+	internal const uint DOMAIN_WRITE_PASSWORD_PARAMS = 0x00000002;
 
 	/// <summary>
 	/// All of the items in the [Privilege Rights] section of the secedit export.
@@ -299,7 +204,7 @@ internal static class SecurityPolicyReader
 		};
 		LSA_UNICODE_STRING system = new(null);
 
-		uint openPolicyStatus = NativeMethods.LsaOpenPolicy(ref system, ref lsaAttr, 0x000F0FFF, out nint policyHandle);
+		uint openPolicyStatus = NativeMethods.LsaOpenPolicy(ref system, ref lsaAttr, POLICY_ALL_ACCESS, out nint policyHandle);
 		if (openPolicyStatus != STATUS_SUCCESS)
 		{
 			return privilegeRights;
@@ -333,186 +238,21 @@ internal static class SecurityPolicyReader
 					}
 					finally
 					{
-						_ = NativeMethods.LsaFreeMemory(enumBuffer);
+						FreeLSAMemory(enumBuffer);
 					}
 				}
 
 				privilegeRights[privilege] = sidList.ToArray();
+
+				FreeLsaUnicodeString(ref userRight);
 			}
 		}
 		finally
 		{
-			_ = NativeMethods.LsaClose(policyHandle);
+			ClosePolicy(policyHandle);
 		}
 
 		return privilegeRights;
-	}
-
-	/// <summary>
-	/// Used by the <see cref="GetRegistryValues"/> method.
-	/// It needs to stay up to date if new security policies need to be verified such as new entries added to the exported INF file by Secedit.
-	/// </summary>
-	private static readonly FrozenDictionary<string, (RegistryKey rootKey, string subKey, string valueName, int type)> registryPaths = new Dictionary<string, (RegistryKey rootKey, string subKey, string valueName, int type)>(StringComparer.Ordinal)
-	{
-		{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\CachedLogonsCount", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "CachedLogonsCount", 1) },
-		{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ForceUnlockLogon", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "ForceUnlockLogon", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\PasswordExpiryWarning", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "PasswordExpiryWarning", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ScRemoveOption", (Registry.LocalMachine, @"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", "ScRemoveOption", 1) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ConsentPromptBehaviorAdmin", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorEnhancedAdmin", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ConsentPromptBehaviorEnhancedAdmin", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ConsentPromptBehaviorUser", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "DontDisplayLastUserName", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "DontDisplayLockedUserId", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "DontDisplayUserName", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableInstallerDetection", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableInstallerDetection", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableLUA", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableSecureUIAPaths", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableSecureUIAPaths", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableUIADesktopToggle", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableUIADesktopToggle", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableVirtualization", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "EnableVirtualization", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\FilterAdministratorToken", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "FilterAdministratorToken", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "InactivityTimeoutSecs", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeCaption", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "LegalNoticeCaption", 1) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeText", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "LegalNoticeText", 7) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "MaxDevicePasswordFailedAttempts", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\PromptOnSecureDesktop", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "PromptOnSecureDesktop", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ScForceOption", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ScForceOption", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ShutdownWithoutLogon", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ShutdownWithoutLogon", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\TypeOfAdminApprovalMode", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "TypeOfAdminApprovalMode", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\UndockWithoutLogon", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "UndockWithoutLogon", 4) },
-		{ @"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures", (Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Policies\System", "ValidateAdminCodeSignatures", 4) },
-		{ @"MACHINE\Software\Policies\Microsoft\Cryptography\ForceKeyProtection", (Registry.LocalMachine, @"Software\Policies\Microsoft\Cryptography", "ForceKeyProtection", 4) },
-		{ @"MACHINE\Software\Policies\Microsoft\Windows\Safer\CodeIdentifiers\AuthenticodeEnabled", (Registry.LocalMachine, @"Software\Policies\Microsoft\Windows\Safer\CodeIdentifiers", "AuthenticodeEnabled", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\AuditBaseObjects", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "AuditBaseObjects", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\CrashOnAuditFail", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "CrashOnAuditFail", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\DisableDomainCreds", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "DisableDomainCreds", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\EveryoneIncludesAnonymous", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "EveryoneIncludesAnonymous", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy\Enabled", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy", "Enabled", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\ForceGuest", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "ForceGuest", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\FullPrivilegeAuditing", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "FullPrivilegeAuditing", 3) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\LimitBlankPasswordUse", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "LimitBlankPasswordUse", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\LmCompatibilityLevel", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "LmCompatibilityLevel", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\allownullsessionfallback", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "allownullsessionfallback", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\NTLMMinClientSec", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "NTLMMinClientSec", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\NTLMMinServerSec", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "NTLMMinServerSec", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\RestrictReceivingNTLMTraffic", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "RestrictReceivingNTLMTraffic", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\RestrictSendingNTLMTraffic", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa\MSV1_0", "RestrictSendingNTLMTraffic", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\NoLMHash", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "NoLMHash", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymous", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "RestrictAnonymous", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymousSAM", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "RestrictAnonymousSAM", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\RestrictRemoteSAM", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "RestrictRemoteSAM", 1) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Lsa\SCENoApplyLegacyAuditPolicy", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Lsa", "SCENoApplyLegacyAuditPolicy", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers\AddPrinterDrivers", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers", "AddPrinterDrivers", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine", (Registry.LocalMachine, @"System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths", "Machine", 7) },
-		{ @"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine", (Registry.LocalMachine, @"System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths", "Machine", 7) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\Kernel\ObCaseInsensitive", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager\Kernel", "ObCaseInsensitive", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\Memory Management\ClearPageFileAtShutdown", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager\Memory Management", "ClearPageFileAtShutdown", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\ProtectionMode", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager", "ProtectionMode", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Control\Session Manager\SubSystems\optional", (Registry.LocalMachine, @"System\CurrentControlSet\Control\Session Manager\SubSystems", "optional", 7) },
-		{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableForcedLogOff", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "EnableForcedLogOff", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "EnableSecuritySignature", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\NullSessionPipes", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "NullSessionPipes", 7) },
-		{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "RequireSecuritySignature", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RestrictNullSessAccess", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanManServer\Parameters", "RestrictNullSessAccess", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnablePlainTextPassword", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanmanWorkstation\Parameters", "EnablePlainTextPassword", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnableSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanmanWorkstation\Parameters", "EnableSecuritySignature", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\RequireSecuritySignature", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LanmanWorkstation\Parameters", "RequireSecuritySignature", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\LDAP\LDAPClientConfidentiality", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LDAP", "LDAPClientConfidentiality", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\LDAP\LDAPClientIntegrity", (Registry.LocalMachine, @"System\CurrentControlSet\Services\LDAP", "LDAPClientIntegrity", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "DisablePasswordChange", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\MaximumPasswordAge", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "MaximumPasswordAge", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireSignOrSeal", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "RequireSignOrSeal", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireStrongKey", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "RequireStrongKey", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SealSecureChannel", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "SealSecureChannel", 4) },
-		{ @"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SignSecureChannel", (Registry.LocalMachine, @"System\CurrentControlSet\Services\Netlogon\Parameters", "SignSecureChannel", 4) }
-	}.ToFrozenDictionary(StringComparer.Ordinal);
-
-	/// <summary>
-	/// Gets the Registry data for the [Registry Values] section.
-	/// </summary>
-	/// <returns></returns>
-	internal static List<RegistryValue> GetRegistryValues()
-	{
-		List<RegistryValue> registryValues = [];
-
-		foreach (KeyValuePair<string, (RegistryKey rootKey, string subKey, string valueName, int type)> item in registryPaths)
-		{
-			try
-			{
-				using RegistryKey? key = item.Value.rootKey.OpenSubKey(item.Value.subKey);
-				if (key is not null)
-				{
-					object? value = key.GetValue(item.Value.valueName);
-					string formattedValue;
-
-					if (value is null)
-					{
-						formattedValue = item.Value.type == 7 ? "" : "0";
-					}
-					else
-					{
-						switch (item.Value.type)
-						{
-							case 1: // REG_SZ
-								formattedValue = $"\"{value}\"";
-								break;
-							case 3: // REG_BINARY
-								if (value is byte[] bytes)
-								{
-									formattedValue = string.Join(",", bytes);
-								}
-								else
-								{
-									formattedValue = value.ToString() ?? "";
-								}
-								break;
-							case 4: // REG_DWORD
-								formattedValue = value.ToString() ?? "0";
-								break;
-							case 7: // REG_MULTI_SZ
-								if (value is string[] strings)
-								{
-									formattedValue = string.Join("\n", strings);
-								}
-								else
-								{
-									formattedValue = value.ToString() ?? "";
-								}
-								break;
-							default:
-								formattedValue = value.ToString() ?? "";
-								break;
-						}
-					}
-
-					registryValues.Add(new RegistryValue
-					(
-						name: item.Key,
-						type: item.Value.type,
-						value: formattedValue
-					));
-				}
-				else
-				{
-					registryValues.Add(new RegistryValue
-					(
-						name: item.Key,
-						type: item.Value.type,
-						value: item.Value.type == 7 ? "" : "0"
-					));
-				}
-			}
-			catch
-			{
-				registryValues.Add(new RegistryValue
-					(
-						name: item.Key,
-						type: item.Value.type,
-						value: item.Value.type == 7 ? "" : "0"
-					));
-			}
-		}
-
-		return registryValues;
 	}
 
 	/// <summary>
@@ -584,7 +324,7 @@ internal static class SecurityPolicyReader
 
 		LSA_UNICODE_STRING system = new(null);
 
-		uint openStatus = NativeMethods.LsaOpenPolicy(ref system, ref lsaAttr, 0x000F0FFF, out nint policyHandle);
+		uint openStatus = NativeMethods.LsaOpenPolicy(ref system, ref lsaAttr, POLICY_ALL_ACCESS, out nint policyHandle);
 		if (openStatus == STATUS_SUCCESS && policyHandle != IntPtr.Zero)
 		{
 			try
@@ -633,31 +373,31 @@ internal static class SecurityPolicyReader
 											}
 											finally
 											{
-												_ = NativeMethods.SamFreeMemory(passwordBuffer);
+												FreeSAMMemory(passwordBuffer);
 											}
 										}
 									}
 									finally
 									{
-										_ = NativeMethods.SamCloseHandle(domainHandle);
+										CloseSAMHandle(domainHandle);
 									}
 								}
 							}
 							finally
 							{
-								_ = NativeMethods.SamCloseHandle(serverHandle);
+								CloseSAMHandle(serverHandle);
 							}
 						}
 					}
 					finally
 					{
-						_ = NativeMethods.LsaFreeMemory(domainBuffer);
+						FreeLSAMemory(domainBuffer);
 					}
 				}
 			}
 			finally
 			{
-				_ = NativeMethods.LsaClose(policyHandle);
+				ClosePolicy(policyHandle);
 			}
 		}
 
@@ -725,7 +465,7 @@ internal static class SecurityPolicyReader
 			systemAccess.EnableGuestAccount = 0;
 		}
 
-		systemAccess.LSAAnonymousNameLookup = LsaAnonymousNameLookupManager.GetValue();
+		systemAccess.LSAAnonymousNameLookup = LsaAnonymousNameLookupGetValue();
 
 		return systemAccess;
 	}
@@ -750,7 +490,7 @@ internal static class SecurityPolicyReader
 			};
 
 			LSA_UNICODE_STRING system = new(null);
-			uint openStatus = NativeMethods.LsaOpenPolicy(ref system, ref lsaAttr, 0x000F0FFF, out nint policyHandle);
+			uint openStatus = NativeMethods.LsaOpenPolicy(ref system, ref lsaAttr, POLICY_ALL_ACCESS, out nint policyHandle);
 			if (openStatus != STATUS_SUCCESS)
 				return string.Empty;
 
@@ -799,32 +539,32 @@ internal static class SecurityPolicyReader
 								}
 								finally
 								{
-									_ = NativeMethods.SamFreeMemory(userBuffer);
+									FreeSAMMemory(userBuffer);
 								}
 							}
 							finally
 							{
-								_ = NativeMethods.SamCloseHandle(userHandle);
+								CloseSAMHandle(userHandle);
 							}
 						}
 						finally
 						{
-							_ = NativeMethods.SamCloseHandle(domainHandle);
+							CloseSAMHandle(domainHandle);
 						}
 					}
 					finally
 					{
-						_ = NativeMethods.SamCloseHandle(serverHandle);
+						CloseSAMHandle(serverHandle);
 					}
 				}
 				finally
 				{
-					_ = NativeMethods.LsaFreeMemory(domainBuffer);
+					FreeLSAMemory(domainBuffer);
 				}
 			}
 			finally
 			{
-				_ = NativeMethods.LsaClose(policyHandle);
+				ClosePolicy(policyHandle);
 			}
 		}
 		catch
@@ -834,332 +574,326 @@ internal static class SecurityPolicyReader
 	}
 
 	/// <summary>
-	/// Reads the Security Policies of the system and returns the main object that contains all of the information for Security Policies.
+	/// Opens the LSA Policy handle.
 	/// </summary>
 	/// <returns></returns>
-	internal static SecurityPolicyInfo GetSecurityPolicyInfo()
+	private unsafe static IntPtr OpenPolicy()
 	{
-		SecurityPolicyInfo policyInfo = new(
-			systemAccess: GetSystemAccess(),
-			eventAudit: GetEventAudit(),
-			privilegeRights: GetPrivilegeRights(),
-			registryValues: GetRegistryValues()
-		);
+		LSA_OBJECT_ATTRIBUTES objectAttributes = new()
+		{
+			Length = sizeof(LSA_OBJECT_ATTRIBUTES),
+			RootDirectory = IntPtr.Zero,
+			ObjectName = IntPtr.Zero,
+			Attributes = 0,
+			SecurityDescriptor = IntPtr.Zero,
+			SecurityQualityOfService = IntPtr.Zero
+		};
 
-		return policyInfo;
+		LSA_UNICODE_STRING systemName = new(null);
+		uint status = NativeMethods.LsaOpenPolicy(ref systemName, ref objectAttributes, POLICY_ALL_ACCESS, out IntPtr policyHandle);
+		FreeLsaUnicodeString(ref systemName);
+
+		ThrowIfError(status, "LsaOpenPolicy");
+
+		return policyHandle;
 	}
 
-
-	internal static class LsaAnonymousNameLookupManager
+	internal static void ClosePolicy(IntPtr handle)
 	{
-		/// <summary>
-		/// Opens the LSA Policy handle with MAXIMUM_ALLOWED access.
-		/// </summary>
-		/// <returns></returns>
-		private unsafe static IntPtr OpenPolicy()
+		if (handle != IntPtr.Zero)
+			_ = NativeMethods.LsaClose(handle);
+	}
+
+	private static void CloseSAMHandle(IntPtr handle)
+	{
+		if (handle != IntPtr.Zero)
+			_ = NativeMethods.SamCloseHandle(handle);
+	}
+
+	private static void FreeSAMMemory(IntPtr handle)
+	{
+		if (handle != IntPtr.Zero)
+			_ = NativeMethods.SamFreeMemory(handle);
+	}
+
+	internal static void FreeLSAMemory(IntPtr handle)
+	{
+		if (handle != IntPtr.Zero)
+			_ = NativeMethods.LsaFreeMemory(handle);
+	}
+
+	internal static void FreeGlobalHandle(IntPtr handle)
+	{
+		if (handle != IntPtr.Zero)
+			Marshal.FreeHGlobal(handle);
+	}
+
+	/// <summary>
+	/// Retrieves current value.
+	/// 1 if DACL includes an ACCESS_ALLOWED ACE for the Anonymous SID whose AccessMask is exactly POLICY_LOOKUP_NAMES.
+	/// otherwise 0.
+	/// </summary>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static int LsaAnonymousNameLookupGetValue()
+	{
+		IntPtr policyHandle = IntPtr.Zero;
+		IntPtr securityDescriptorPtr = IntPtr.Zero;
+		try
 		{
-			LSA_OBJECT_ATTRIBUTES objectAttributes = new()
-			{
-				Length = sizeof(LSA_OBJECT_ATTRIBUTES),
-				RootDirectory = IntPtr.Zero,
-				ObjectName = IntPtr.Zero,
-				Attributes = 0,
-				SecurityDescriptor = IntPtr.Zero,
-				SecurityQualityOfService = IntPtr.Zero
-			};
+			policyHandle = OpenPolicy();
 
-			LSA_UNICODE_STRING systemName = new(null);
-			uint status = NativeMethods.LsaOpenPolicy(ref systemName, ref objectAttributes, MAXIMUM_ALLOWED, out IntPtr policyHandle);
-			FreeLsaUnicodeString(ref systemName);
+			uint queryStatus = NativeMethods.LsaQuerySecurityObject(
+				policyHandle,
+				DACL_SECURITY_INFORMATION,
+				out securityDescriptorPtr
+			);
 
-			if (status != 0)
+			if (queryStatus != 0 || securityDescriptorPtr == IntPtr.Zero)
 			{
-				ThrowIfError(status, "LsaOpenPolicy");
+				ThrowIfError(queryStatus, "LsaQuerySecurityObject");
 			}
-			return policyHandle;
+
+			uint sdLen = NativeMethods.GetSecurityDescriptorLength(securityDescriptorPtr);
+			if (sdLen == 0)
+			{
+				throw new InvalidOperationException("GetSecurityDescriptorLength returned 0.");
+			}
+
+			byte[] sdBytes = new byte[sdLen];
+			Marshal.Copy(securityDescriptorPtr, sdBytes, 0, (int)sdLen);
+
+			RawSecurityDescriptor raw = new(sdBytes, 0);
+			RawAcl? dacl = raw.DiscretionaryAcl;
+
+			if (dacl == null)
+			{
+				return 0;
+			}
+
+			SecurityIdentifier anonymousSid = GetAnonymousSidManaged();
+
+			for (int i = 0; i < dacl.Count; i++)
+			{
+				GenericAce ace = dacl[i];
+				CommonAce? commonAce = ace as CommonAce;
+				if (commonAce == null)
+				{
+					continue;
+				}
+
+				if (commonAce.AceQualifier == AceQualifier.AccessAllowed)
+				{
+					SecurityIdentifier sid = commonAce.SecurityIdentifier;
+					if (sid.Equals(anonymousSid))
+					{
+						int mask = commonAce.AccessMask;
+						// Strict check, mask must equal exactly POLICY_LOOKUP_NAMES
+						if (mask == POLICY_LOOKUP_NAMES)
+						{
+							return 1;
+						}
+					}
+				}
+			}
+
+			return 0;
+		}
+		finally
+		{
+			FreeLSAMemory(securityDescriptorPtr);
+			ClosePolicy(policyHandle);
+		}
+	}
+
+	/// <summary>
+	/// 1 => add an ACCESS_ALLOWED ACE for Anonymous SID with AccessMask exactly POLICY_LOOKUP_NAMES, without modifying any existing ACEs.
+	/// 0 => remove only ACEs for Anonymous SID whose AccessMask is exactly POLICY_LOOKUP_NAMES.
+	/// </summary>
+	/// <param name="value"></param>
+	/// <exception cref="ArgumentOutOfRangeException"></exception>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static void LsaAnonymousNameLookupSetValue(int value)
+	{
+		if (value != 0 && value != 1)
+		{
+			throw new ArgumentOutOfRangeException(nameof(value), "Value must be 0 or 1.");
 		}
 
-		private static void ClosePolicy(IntPtr handle)
+		IntPtr policyHandle = IntPtr.Zero;
+		IntPtr securityDescriptorPtr = IntPtr.Zero;
+		try
 		{
-			if (handle != IntPtr.Zero)
+			policyHandle = OpenPolicy();
+
+			uint queryStatus = NativeMethods.LsaQuerySecurityObject(
+				policyHandle,
+				DACL_SECURITY_INFORMATION,
+				out securityDescriptorPtr
+			);
+
+			if (queryStatus != 0 || securityDescriptorPtr == IntPtr.Zero)
 			{
-				_ = NativeMethods.LsaClose(handle);
+				ThrowIfError(queryStatus, "LsaQuerySecurityObject");
 			}
-		}
 
-		/// <summary>
-		/// Retrieves current value.
-		/// 1 if DACL includes an ACCESS_ALLOWED ACE for the Anonymous SID whose AccessMask is exactly POLICY_LOOKUP_NAMES.
-		/// otherwise 0.
-		/// </summary>
-		/// <returns></returns>
-		/// <exception cref="InvalidOperationException"></exception>
-		internal static int GetValue()
-		{
-			IntPtr policyHandle = IntPtr.Zero;
-			IntPtr securityDescriptorPtr = IntPtr.Zero;
-			try
+			uint sdLen = NativeMethods.GetSecurityDescriptorLength(securityDescriptorPtr);
+			if (sdLen == 0)
 			{
-				policyHandle = OpenPolicy();
+				throw new InvalidOperationException("GetSecurityDescriptorLength returned 0.");
+			}
 
-				uint queryStatus = NativeMethods.LsaQuerySecurityObject(
-					policyHandle,
-					DACL_SECURITY_INFORMATION,
-					out securityDescriptorPtr
-				);
+			byte[] sdBytes = new byte[sdLen];
+			Marshal.Copy(securityDescriptorPtr, sdBytes, 0, (int)sdLen);
 
-				if (queryStatus != 0 || securityDescriptorPtr == IntPtr.Zero)
-				{
-					ThrowIfError(queryStatus, "LsaQuerySecurityObject");
-				}
+			// Parse existing SD into managed RawSecurityDescriptor
+			RawSecurityDescriptor raw = new(sdBytes, 0);
+			RawAcl? dacl = raw.DiscretionaryAcl;
 
-				uint sdLen = NativeMethods.GetSecurityDescriptorLength(securityDescriptorPtr);
-				if (sdLen == 0)
-				{
-					throw new InvalidOperationException("GetSecurityDescriptorLength returned 0.");
-				}
+			// If no DACL present, create a new RawAcl
+			dacl ??= new RawAcl(ACL_REVISION, 1);
 
-				byte[] sdBytes = new byte[sdLen];
-				Marshal.Copy(securityDescriptorPtr, sdBytes, 0, (int)sdLen);
+			SecurityIdentifier anonymousSid = GetAnonymousSidManaged();
+			bool changed = false;
 
-				RawSecurityDescriptor raw = new(sdBytes, 0);
-				RawAcl? dacl = raw.DiscretionaryAcl;
-
-				if (dacl == null)
-				{
-					return 0;
-				}
-
-				SecurityIdentifier anonymousSid = GetAnonymousSidManaged();
+			if (value == 1)
+			{
+				// Enabling: add an ACE with EXACT mask if none exists. Do not modify existing ACEs.
+				bool existsExactAce = false;
 
 				for (int i = 0; i < dacl.Count; i++)
 				{
-					GenericAce ace = dacl[i];
-					CommonAce? commonAce = ace as CommonAce;
-					if (commonAce == null)
+					CommonAce? commonAce = dacl[i] as CommonAce;
+					if (commonAce == null || commonAce.AceQualifier != AceQualifier.AccessAllowed)
 					{
 						continue;
 					}
 
-					if (commonAce.AceQualifier == AceQualifier.AccessAllowed)
+					SecurityIdentifier sid = commonAce.SecurityIdentifier;
+					if (!sid.Equals(anonymousSid))
 					{
-						SecurityIdentifier sid = commonAce.SecurityIdentifier;
-						if (sid.Equals(anonymousSid))
-						{
-							int mask = commonAce.AccessMask;
-							// Strict check, mask must equal exactly POLICY_LOOKUP_NAMES
-							if (mask == POLICY_LOOKUP_NAMES)
-							{
-								return 1;
-							}
-						}
+						continue;
+					}
+
+					if (commonAce.AccessMask == POLICY_LOOKUP_NAMES)
+					{
+						existsExactAce = true;
+						break;
 					}
 				}
 
-				return 0;
-			}
-			finally
-			{
-				if (securityDescriptorPtr != IntPtr.Zero)
+				if (!existsExactAce)
 				{
-					_ = NativeMethods.LsaFreeMemory(securityDescriptorPtr);
+					CommonAce aceToAdd = new(
+						AceFlags.None,
+						AceQualifier.AccessAllowed,
+						POLICY_LOOKUP_NAMES,
+						anonymousSid,
+						false,
+						null
+					);
+
+					// Insert at the beginning to minimize impact. Windows may canonicalize as needed.
+					dacl.InsertAce(0, aceToAdd);
+					changed = true;
 				}
-				ClosePolicy(policyHandle);
 			}
-		}
-
-		/// <summary>
-		/// 1 => add an ACCESS_ALLOWED ACE for Anonymous SID with AccessMask exactly POLICY_LOOKUP_NAMES, without modifying any existing ACEs.
-		/// 0 => remove only ACEs for Anonymous SID whose AccessMask is exactly POLICY_LOOKUP_NAMES.
-		/// </summary>
-		/// <param name="value"></param>
-		/// <exception cref="ArgumentOutOfRangeException"></exception>
-		/// <exception cref="InvalidOperationException"></exception>
-		internal static void SetValue(int value)
-		{
-			if (value != 0 && value != 1)
+			else
 			{
-				throw new ArgumentOutOfRangeException(nameof(value), "Value must be 0 or 1.");
-			}
-
-			IntPtr policyHandle = IntPtr.Zero;
-			IntPtr securityDescriptorPtr = IntPtr.Zero;
-			try
-			{
-				policyHandle = OpenPolicy();
-
-				uint queryStatus = NativeMethods.LsaQuerySecurityObject(
-					policyHandle,
-					DACL_SECURITY_INFORMATION,
-					out securityDescriptorPtr
-				);
-
-				if (queryStatus != 0 || securityDescriptorPtr == IntPtr.Zero)
+				// value == 0: remove only ACEs whose mask is exactly POLICY_LOOKUP_NAMES for Anonymous SID.
+				// Iterate backwards when removing to avoid index reordering issues.
+				for (int i = dacl.Count - 1; i >= 0; i--)
 				{
-					ThrowIfError(queryStatus, "LsaQuerySecurityObject");
-				}
-
-				uint sdLen = NativeMethods.GetSecurityDescriptorLength(securityDescriptorPtr);
-				if (sdLen == 0)
-				{
-					throw new InvalidOperationException("GetSecurityDescriptorLength returned 0.");
-				}
-
-				byte[] sdBytes = new byte[sdLen];
-				Marshal.Copy(securityDescriptorPtr, sdBytes, 0, (int)sdLen);
-
-				// Parse existing SD into managed RawSecurityDescriptor
-				RawSecurityDescriptor raw = new(sdBytes, 0);
-				RawAcl? dacl = raw.DiscretionaryAcl;
-
-				// If no DACL present, create a new RawAcl
-				dacl ??= new RawAcl(ACL_REVISION, 1);
-
-				SecurityIdentifier anonymousSid = GetAnonymousSidManaged();
-				bool changed = false;
-
-				if (value == 1)
-				{
-					// Enabling: add an ACE with EXACT mask if none exists. Do not modify existing ACEs.
-					bool existsExactAce = false;
-
-					for (int i = 0; i < dacl.Count; i++)
+					CommonAce? commonAce = dacl[i] as CommonAce;
+					if (commonAce == null || commonAce.AceQualifier != AceQualifier.AccessAllowed)
 					{
-						CommonAce? commonAce = dacl[i] as CommonAce;
-						if (commonAce == null || commonAce.AceQualifier != AceQualifier.AccessAllowed)
-						{
-							continue;
-						}
-
-						SecurityIdentifier sid = commonAce.SecurityIdentifier;
-						if (!sid.Equals(anonymousSid))
-						{
-							continue;
-						}
-
-						if (commonAce.AccessMask == POLICY_LOOKUP_NAMES)
-						{
-							existsExactAce = true;
-							break;
-						}
+						continue;
 					}
 
-					if (!existsExactAce)
+					SecurityIdentifier sid = commonAce.SecurityIdentifier;
+					if (!sid.Equals(anonymousSid))
 					{
-						CommonAce aceToAdd = new(
-							AceFlags.None,
-							AceQualifier.AccessAllowed,
-							POLICY_LOOKUP_NAMES,
-							anonymousSid,
-							false,
-							null
-						);
+						continue;
+					}
 
-						// Insert at the beginning to minimize impact. Windows may canonicalize as needed.
-						dacl.InsertAce(0, aceToAdd);
+					if (commonAce.AccessMask == POLICY_LOOKUP_NAMES)
+					{
+						dacl.RemoveAce(i);
 						changed = true;
 					}
 				}
-				else
+			}
+
+			if (!changed)
+			{
+				// Nothing to write back
+				return;
+			}
+
+			// Assign updated DACL back to descriptor
+			raw.DiscretionaryAcl = dacl;
+
+			// Serialize to self-relative SD bytes (LSAR_SR_SECURITY_DESCRIPTOR)
+			int newLen = raw.BinaryLength;
+			byte[] newSdBytes = new byte[newLen];
+			raw.GetBinaryForm(newSdBytes, 0);
+
+			// Pin and set
+			IntPtr newSdPtr = Marshal.AllocHGlobal(newLen);
+			try
+			{
+				Marshal.Copy(newSdBytes, 0, newSdPtr, newLen);
+
+				uint setStatus = NativeMethods.LsaSetSecurityObject(
+					policyHandle,
+					DACL_SECURITY_INFORMATION,
+					newSdPtr
+				);
+
+				if (setStatus != 0)
 				{
-					// value == 0: remove only ACEs whose mask is exactly POLICY_LOOKUP_NAMES for Anonymous SID.
-					// Iterate backwards when removing to avoid index reordering issues.
-					for (int i = dacl.Count - 1; i >= 0; i--)
-					{
-						CommonAce? commonAce = dacl[i] as CommonAce;
-						if (commonAce == null || commonAce.AceQualifier != AceQualifier.AccessAllowed)
-						{
-							continue;
-						}
-
-						SecurityIdentifier sid = commonAce.SecurityIdentifier;
-						if (!sid.Equals(anonymousSid))
-						{
-							continue;
-						}
-
-						if (commonAce.AccessMask == POLICY_LOOKUP_NAMES)
-						{
-							dacl.RemoveAce(i);
-							changed = true;
-						}
-					}
-				}
-
-				if (!changed)
-				{
-					// Nothing to write back
-					return;
-				}
-
-				// Assign updated DACL back to descriptor
-				raw.DiscretionaryAcl = dacl;
-
-				// Serialize to self-relative SD bytes (LSAR_SR_SECURITY_DESCRIPTOR)
-				int newLen = raw.BinaryLength;
-				byte[] newSdBytes = new byte[newLen];
-				raw.GetBinaryForm(newSdBytes, 0);
-
-				// Pin and set
-				IntPtr newSdPtr = Marshal.AllocHGlobal(newLen);
-				try
-				{
-					Marshal.Copy(newSdBytes, 0, newSdPtr, newLen);
-
-					uint setStatus = NativeMethods.LsaSetSecurityObject(
-						policyHandle,
-						DACL_SECURITY_INFORMATION,
-						newSdPtr
-					);
-
-					if (setStatus != 0)
-					{
-						ThrowIfError(setStatus, "LsaSetSecurityObject");
-					}
-				}
-				finally
-				{
-					Marshal.FreeHGlobal(newSdPtr);
+					ThrowIfError(setStatus, "LsaSetSecurityObject");
 				}
 			}
 			finally
 			{
-				if (securityDescriptorPtr != IntPtr.Zero)
-				{
-					_ = NativeMethods.LsaFreeMemory(securityDescriptorPtr);
-				}
-				ClosePolicy(policyHandle);
+				FreeGlobalHandle(newSdPtr);
 			}
 		}
-
-		/// <summary>
-		/// Returns managed Anonymous SID.
-		/// </summary>
-		/// <returns></returns>
-		/// <exception cref="InvalidOperationException"></exception>
-		private static SecurityIdentifier GetAnonymousSidManaged()
+		finally
 		{
-			uint size = 64;
-			byte[] sidBytes = new byte[size];
-			bool created = NativeMethods.CreateWellKnownSid(WinAnonymousSid, IntPtr.Zero, sidBytes, ref size);
-			if (!created)
-			{
-				int winErr = Marshal.GetLastPInvokeError();
-				throw new InvalidOperationException("CreateWellKnownSid failed. Win32Error=" + winErr.ToString(CultureInfo.InvariantCulture));
-			}
-			byte[] exact = new byte[size];
-			Buffer.BlockCopy(sidBytes, 0, exact, 0, (int)size);
-			SecurityIdentifier sid = new(exact, 0);
-			return sid;
+			FreeLSAMemory(securityDescriptorPtr);
+			ClosePolicy(policyHandle);
 		}
+	}
 
-		private static void FreeLsaUnicodeString(ref LSA_UNICODE_STRING lsa)
+	/// <summary>
+	/// Returns managed Anonymous SID.
+	/// </summary>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	private static SecurityIdentifier GetAnonymousSidManaged()
+	{
+		uint size = 64;
+		byte[] sidBytes = new byte[size];
+		bool created = NativeMethods.CreateWellKnownSid(WinAnonymousSid, IntPtr.Zero, sidBytes, ref size);
+		if (!created)
 		{
-			if (lsa.Buffer != IntPtr.Zero)
-			{
-				Marshal.FreeHGlobal(lsa.Buffer);
-				lsa.Buffer = IntPtr.Zero;
-			}
+			int winErr = Marshal.GetLastPInvokeError();
+			throw new InvalidOperationException("CreateWellKnownSid failed. Win32Error=" + winErr.ToString(CultureInfo.InvariantCulture));
+		}
+		byte[] exact = new byte[size];
+		Buffer.BlockCopy(sidBytes, 0, exact, 0, (int)size);
+		SecurityIdentifier sid = new(exact, 0);
+		return sid;
+	}
+
+	internal static void FreeLsaUnicodeString(ref LSA_UNICODE_STRING lsa)
+	{
+		if (lsa.Buffer != IntPtr.Zero)
+		{
+			Marshal.FreeHGlobal(lsa.Buffer);
+			lsa.Buffer = IntPtr.Zero;
 		}
 	}
 
@@ -1180,7 +914,7 @@ internal static class SecurityPolicyReader
 	/// - Set with SamSetInformationUser(UserControlInformation) using:
 	///   value == 1 => Control AND 0xFFFFFFFE (enable)
 	///   value == 0 => Control OR USER_ACCOUNT_DISABLED (disable)
-	/// The user is opened via SamOpenUser with DesiredAccess=MAXIMUM_ALLOWED and the specified RID.
+	/// The user is opened via SamOpenUser with DesiredAccess=POLICY_ALL_ACCESS and the specified RID.
 	/// DomainHandle is obtained via:
 	///   LsaOpenPolicy -> LsaQueryInformationPolicy(PolicyAccountDomainInformation) -> DomainSid -> SamConnect -> SamOpenDomain.
 	/// </summary>
@@ -1203,23 +937,10 @@ internal static class SecurityPolicyReader
 
 		try
 		{
-			// Open LSA Policy with MAXIMUM_ALLOWED to obtain the local machine's domain SID
-			LSA_OBJECT_ATTRIBUTES objectAttributes = new()
-			{
-				Length = sizeof(LSA_OBJECT_ATTRIBUTES),
-				RootDirectory = IntPtr.Zero,
-				ObjectName = IntPtr.Zero,
-				Attributes = 0,
-				SecurityDescriptor = IntPtr.Zero,
-				SecurityQualityOfService = IntPtr.Zero
-			};
-			LSA_UNICODE_STRING systemName = new(null);
-
-			uint nt = NativeMethods.LsaOpenPolicy(ref systemName, ref objectAttributes, MAXIMUM_ALLOWED, out policyHandle);
-			ThrowIfError(nt, "LsaOpenPolicy");
+			policyHandle = OpenPolicy();
 
 			// Query PolicyAccountDomainInformation (class 5) to get DomainSid
-			nt = NativeMethods.LsaQueryInformationPolicy(policyHandle, PolicyAccountDomainInformation, out domainInfoBuffer);
+			uint nt = NativeMethods.LsaQueryInformationPolicy(policyHandle, PolicyAccountDomainInformation, out domainInfoBuffer);
 			ThrowIfError(nt, "LsaQueryInformationPolicy");
 
 			if (domainInfoBuffer == IntPtr.Zero)
@@ -1243,8 +964,8 @@ internal static class SecurityPolicyReader
 			nt = NativeMethods.SamOpenDomain(serverHandle, DOMAIN_LOOKUP, domainSid, out domainHandle);
 			ThrowIfError(nt, "SamOpenDomain");
 
-			// Open the target user by RID with DesiredAccess = MAXIMUM_ALLOWED
-			nt = NativeMethods.SamOpenUser(domainHandle, MAXIMUM_ALLOWED, rid, out userHandle);
+			// Open the target user by RID with DesiredAccess = POLICY_ALL_ACCESS
+			nt = NativeMethods.SamOpenUser(domainHandle, POLICY_ALL_ACCESS, rid, out userHandle);
 			ThrowIfError(nt, "SamOpenUser");
 
 			// Step 1, Query current Control flags
@@ -1285,34 +1006,656 @@ internal static class SecurityPolicyReader
 		}
 		finally
 		{
-			if (setBuffer != IntPtr.Zero)
+			FreeGlobalHandle(setBuffer);
+			FreeSAMMemory(queryBuffer);
+			CloseSAMHandle(userHandle);
+			CloseSAMHandle(domainHandle);
+			CloseSAMHandle(serverHandle);
+			FreeLSAMemory(domainInfoBuffer);
+			ClosePolicy(policyHandle);
+		}
+	}
+
+	/// <summary>
+	/// Implements the behavior described in [MS-GPSB] for "NewAdministratorName".
+	/// UserInformationClass MUST be UserNameInformation; buffer MUST be SAMPR_USER_NAME_INFORMATION with UserName set to the provided value.
+	/// </summary>
+	/// <param name="newName">The new name for the built-in Administrator account.</param>
+	internal static void SetNewAdministratorName(string newName) => SetLocalAccountNameByRid(DOMAIN_USER_RID_ADMIN, newName);
+
+	/// <summary>
+	/// Implements the behavior described in [MS-GPSB] for "NewGuestName".
+	/// UserInformationClass MUST be UserNameInformation; buffer MUST be SAMPR_USER_NAME_INFORMATION with UserName set to the provided value.
+	/// </summary>
+	/// <param name="newName">The new name for the built-in Guest account.</param>
+	internal static void SetNewGuestName(string newName) => SetLocalAccountNameByRid(DOMAIN_USER_RID_GUEST, newName);
+
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/0d94df7c-9752-4b08-84de-bf29e389c074
+	/// Core implementation for renaming a local account by RID using SAM, strictly following [MS-GPSB] and [MS-SAMR].
+	/// Steps:
+	/// - LsaOpenPolicy(POLICY_ALL_ACCESS) -> LsaQueryInformationPolicy(PolicyAccountDomainInformation) -> DomainSid
+	/// - SamConnect(SAM_SERVER_LOOKUP_DOMAIN) -> SamOpenDomain(DOMAIN_LOOKUP)
+	/// - SamOpenUser(POLICY_ALL_ACCESS, rid)
+	/// - SamSetInformationUser(UserNameInformation, SAMPR_USER_NAME_INFORMATION{UserName = newName})
+	/// If SamSetInformationUser returns an error, throw (aligns with "stop processing Local Account policies and log an error").
+	/// </summary>
+	/// <param name="rid">Target user RID (e.g., 500 Administrator, 501 Guest).</param>
+	/// <param name="newName">New account name to set.</param>
+	internal static unsafe void SetLocalAccountNameByRid(uint rid, string newName)
+	{
+		if (string.IsNullOrWhiteSpace(newName))
+		{
+			throw new ArgumentException("New account name must not be null, empty, or whitespace.", nameof(newName));
+		}
+
+		IntPtr policyHandle = IntPtr.Zero;
+		IntPtr domainInfoBuffer = IntPtr.Zero;
+		IntPtr serverHandle = IntPtr.Zero;
+		IntPtr domainHandle = IntPtr.Zero;
+		IntPtr userHandle = IntPtr.Zero;
+
+		// We will query current general info to preserve FullNam.
+		IntPtr generalInfoBuffer = IntPtr.Zero;
+
+		IntPtr nameInfoBuffer = IntPtr.Zero;
+
+		// UNICODE_STRINGs we own and must free
+		LSA_UNICODE_STRING newUserName = default;
+		LSA_UNICODE_STRING existingFullNameCopy = default;
+
+		try
+		{
+			policyHandle = OpenPolicy();
+
+			// Query PolicyAccountDomainInformation to get DomainSid
+			uint nt = NativeMethods.LsaQueryInformationPolicy(policyHandle, PolicyAccountDomainInformation, out domainInfoBuffer);
+			ThrowIfError(nt, "LsaQueryInformationPolicy");
+
+			if (domainInfoBuffer == IntPtr.Zero)
 			{
-				Marshal.FreeHGlobal(setBuffer);
+				throw new InvalidOperationException("LsaQueryInformationPolicy returned a null buffer.");
 			}
-			if (queryBuffer != IntPtr.Zero)
+
+			POLICY_ACCOUNT_DOMAIN_INFO* domainInfo = (POLICY_ACCOUNT_DOMAIN_INFO*)domainInfoBuffer;
+			IntPtr domainSid = domainInfo->DomainSid;
+			if (domainSid == IntPtr.Zero)
 			{
-				_ = NativeMethods.SamFreeMemory(queryBuffer);
+				throw new InvalidOperationException("PolicyAccountDomainInformation does not contain a DomainSid.");
 			}
-			if (userHandle != IntPtr.Zero)
+
+			// Connect to SAM with SAM_SERVER_LOOKUP_DOMAIN
+			LSA_UNICODE_STRING server = new(null);
+			nt = NativeMethods.SamConnect(ref server, out serverHandle, SAM_SERVER_LOOKUP_DOMAIN, IntPtr.Zero);
+			ThrowIfError(nt, "SamConnect");
+
+			// Open the domain with DOMAIN_LOOKUP to allow opening users by RID
+			nt = NativeMethods.SamOpenDomain(serverHandle, DOMAIN_LOOKUP, domainSid, out domainHandle);
+			ThrowIfError(nt, "SamOpenDomain");
+
+			// Open the target user by RID with DesiredAccess = POLICY_ALL_ACCESS
+			nt = NativeMethods.SamOpenUser(domainHandle, POLICY_ALL_ACCESS, rid, out userHandle);
+			ThrowIfError(nt, "SamOpenUser");
+
+			// Query current general user information to obtain existing FullName (UserGeneralInformation = 1)
+			nt = NativeMethods.SamQueryInformationUser(userHandle, 1, out generalInfoBuffer);
+			ThrowIfError(nt, "SamQueryInformationUser(UserGeneralInformation)");
+
+			if (generalInfoBuffer == IntPtr.Zero)
 			{
-				_ = NativeMethods.SamCloseHandle(userHandle);
+				throw new InvalidOperationException("SamQueryInformationUser(UserGeneralInformation) returned a null buffer.");
 			}
-			if (domainHandle != IntPtr.Zero)
+
+			SAM_USER_GENERAL_INFORMATION* generalInfo = (SAM_USER_GENERAL_INFORMATION*)generalInfoBuffer;
+
+			// Duplicate existing FullName into a UNICODE_STRING we own or leave empty if none
+			if (generalInfo->FullName.Length > 0 && generalInfo->FullName.Buffer != IntPtr.Zero)
 			{
-				_ = NativeMethods.SamCloseHandle(domainHandle);
+				int fullNameChars = generalInfo->FullName.Length / 2;
+				string fullName = Marshal.PtrToStringUni(generalInfo->FullName.Buffer, fullNameChars) ?? string.Empty;
+				existingFullNameCopy = new LSA_UNICODE_STRING(fullName);
 			}
-			if (serverHandle != IntPtr.Zero)
+			else
 			{
-				_ = NativeMethods.SamCloseHandle(serverHandle);
+				existingFullNameCopy = new LSA_UNICODE_STRING(null);
 			}
-			if (domainInfoBuffer != IntPtr.Zero)
+
+			// Prepare the new account name as UNICODE_STRING
+			newUserName = new LSA_UNICODE_STRING(newName);
+
+			// Allocate the union buffer and zero it to avoid stray data
+			int unionSize = sizeof(SAMPR_USER_INFO_BUFFER);
+			nameInfoBuffer = Marshal.AllocHGlobal(unionSize);
+
+			Span<byte> zeroSpan = new((void*)nameInfoBuffer, unionSize);
+			zeroSpan.Clear();
+
+			// Populate both fields in the union member for UserNameInformation
+			// - UserName set to the new policy value
+			// - FullName preserved because ABI expects this structure to include both
+			((SAMPR_USER_INFO_BUFFER*)nameInfoBuffer)->UserNameInformation.UserName = newUserName;
+			((SAMPR_USER_INFO_BUFFER*)nameInfoBuffer)->UserNameInformation.FullName = existingFullNameCopy;
+
+			// Perform the rename using UserNameInformation (6), per [MS-GPSB].
+			nt = NativeMethods.SamSetInformationUser(userHandle, UserNameInformation, nameInfoBuffer);
+			ThrowIfError(nt, "SamSetInformationUser(UserNameInformation)");
+		}
+		finally
+		{
+			// Free allocations we own		
+			FreeGlobalHandle(nameInfoBuffer);
+			FreeGlobalHandle(newUserName.Buffer);
+			FreeGlobalHandle(existingFullNameCopy.Buffer);
+			// Free SAM-returned buffers and close handles	
+			FreeSAMMemory(generalInfoBuffer);
+			CloseSAMHandle(userHandle);
+			CloseSAMHandle(domainHandle);
+			CloseSAMHandle(serverHandle);
+			FreeLSAMemory(domainInfoBuffer);
+			ClosePolicy(policyHandle);
+		}
+	}
+
+	/// <summary>
+	/// Sets the "PasswordComplexity" policy by toggling the DOMAIN_PASSWORD_COMPLEX flag in DOMAIN_PASSWORD_INFORMATION.PasswordProperties.
+	/// Uses SAM APIs:
+	/// SamQueryInformationDomain (DomainPasswordInformation = 1) -> modify PasswordProperties bit -> SamSetInformationDomain.
+	/// </summary>
+	/// <param name="enable">1 to enable complexity, 0 to disable.</param>
+	/// <exception cref="ArgumentOutOfRangeException">If enable is not 0 or 1.</exception>
+	/// <exception cref="InvalidOperationException">On any failure to retrieve or apply the setting.</exception>
+	internal unsafe static void SetPasswordComplexity(int enable)
+	{
+		if (enable != 0 && enable != 1)
+		{
+			throw new ArgumentOutOfRangeException(nameof(enable), "Value must be 0 or 1.");
+		}
+
+		IntPtr policyHandle = IntPtr.Zero;
+		IntPtr domainInfoBuffer = IntPtr.Zero;
+		IntPtr serverHandle = IntPtr.Zero;
+		IntPtr domainHandle = IntPtr.Zero;
+		IntPtr passwordInfoBuffer = IntPtr.Zero;
+		IntPtr setBuffer = IntPtr.Zero;
+
+		try
+		{
+			policyHandle = OpenPolicy();
+
+			// Query PolicyAccountDomainInformation for DomainSid.
+			uint ntStatus = NativeMethods.LsaQueryInformationPolicy(policyHandle, PolicyAccountDomainInformation, out domainInfoBuffer);
+			if (ntStatus != STATUS_SUCCESS || domainInfoBuffer == IntPtr.Zero)
 			{
-				_ = NativeMethods.LsaFreeMemory(domainInfoBuffer);
+				throw new InvalidOperationException("LsaQueryInformationPolicy(PolicyAccountDomainInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
 			}
-			if (policyHandle != IntPtr.Zero)
+
+			POLICY_ACCOUNT_DOMAIN_INFO* domainInfo = (POLICY_ACCOUNT_DOMAIN_INFO*)domainInfoBuffer;
+			if (domainInfo->DomainSid == IntPtr.Zero)
 			{
-				_ = NativeMethods.LsaClose(policyHandle);
+				throw new InvalidOperationException("DomainSid is null in POLICY_ACCOUNT_DOMAIN_INFO.");
 			}
+
+			// Connect to SAM with lookup rights.
+			LSA_UNICODE_STRING server = new(null);
+			ntStatus = NativeMethods.SamConnect(ref server, out serverHandle, SAM_SERVER_LOOKUP_DOMAIN, IntPtr.Zero);
+			if (ntStatus != STATUS_SUCCESS || serverHandle == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamConnect failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			// Open domain with read + write password parameter rights (least privilege for modification).
+			uint desiredDomainAccess = DOMAIN_READ_PASSWORD_PARAMETERS | DOMAIN_WRITE_PASSWORD_PARAMS; // 0x00000003
+			ntStatus = NativeMethods.SamOpenDomain(serverHandle, desiredDomainAccess, domainInfo->DomainSid, out domainHandle);
+			if (ntStatus != STATUS_SUCCESS || domainHandle == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamOpenDomain failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			// Query current DOMAIN_PASSWORD_INFORMATION
+			ntStatus = NativeMethods.SamQueryInformationDomain(domainHandle, 1, out passwordInfoBuffer);
+			if (ntStatus != STATUS_SUCCESS || passwordInfoBuffer == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamQueryInformationDomain(DomainPasswordInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			DOMAIN_PASSWORD_INFORMATION currentInfo = *(DOMAIN_PASSWORD_INFORMATION*)passwordInfoBuffer;
+
+			uint originalProps = currentInfo.PasswordProperties;
+			bool currentlyEnabled = (originalProps & DOMAIN_PASSWORD_COMPLEX) != 0;
+			bool wantEnable = enable == 1;
+
+			// If already in desired state, nothing to do.
+			if (currentlyEnabled == wantEnable)
+			{
+				return;
+			}
+
+			// Toggle only the DOMAIN_PASSWORD_COMPLEX bit, preserve all other flags and numeric fields.
+			currentInfo.PasswordProperties = wantEnable ? originalProps | DOMAIN_PASSWORD_COMPLEX
+				: originalProps & ~DOMAIN_PASSWORD_COMPLEX;
+
+			int size = sizeof(DOMAIN_PASSWORD_INFORMATION);
+			setBuffer = Marshal.AllocHGlobal(size);
+
+			// Zero for safety then copy modified struct.
+			Span<byte> zeroSpan = new((void*)setBuffer, size);
+			zeroSpan.Clear();
+			*(DOMAIN_PASSWORD_INFORMATION*)setBuffer = currentInfo;
+
+			ntStatus = NativeMethods.SamSetInformationDomain(domainHandle, 1, setBuffer);
+			if (ntStatus != STATUS_SUCCESS)
+			{
+				throw new InvalidOperationException("SamSetInformationDomain(DomainPasswordInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+		}
+		finally
+		{
+			FreeGlobalHandle(setBuffer);
+			FreeSAMMemory(passwordInfoBuffer);
+			CloseSAMHandle(domainHandle);
+			CloseSAMHandle(serverHandle);
+			FreeLSAMemory(domainInfoBuffer);
+			ClosePolicy(policyHandle);
+		}
+	}
+
+	/// <summary>
+	/// Sets the "ForceLogoffWhenHourExpire" policy.
+	/// Mapping:
+	///   enable == 1 => force immediate logoff when hours expire (store force_logoff = 0 seconds).
+	///   enable == 0 => do not force logoff (store force_logoff = TIMEQ_FOREVER = uint.MaxValue).
+	/// Underlying field: USER_MODALS_INFO_0.force_logoff (seconds; TIMEQ_FOREVER means never).
+	/// </summary>
+	/// <param name="enable">1 to enable forced logoff at hour expiration; 0 to disable.</param>
+	/// <exception cref="ArgumentOutOfRangeException">If enable is not 0 or 1.</exception>
+	/// <exception cref="InvalidOperationException">On failure to retrieve or apply the setting.</exception>
+	internal unsafe static void SetForceLogoffWhenHourExpire(int enable)
+	{
+		if (enable != 0 && enable != 1)
+		{
+			throw new ArgumentOutOfRangeException(nameof(enable), "Value must be 0 or 1.");
+		}
+
+		IntPtr currentBuffer = IntPtr.Zero;
+		IntPtr newBuffer = IntPtr.Zero;
+
+		try
+		{
+			// Retrieve current modal info (level 0)
+			uint getStatus = NativeMethods.NetUserModalsGet(null, 0, out currentBuffer);
+			if (getStatus != NERR_Success || currentBuffer == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("NetUserModalsGet(level 0) failed. Status=0x" + getStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			USER_MODALS_INFO_0 currentInfo = *(USER_MODALS_INFO_0*)currentBuffer;
+
+			// Determine desired underlying force_logoff value.
+			// Enabled => immediate logoff => 0 seconds.
+			// Disabled => TIMEQ_FOREVER => uint.MaxValue.
+			uint desired = enable == 1 ? 0u : uint.MaxValue;
+
+			// Early exit if already matches desired state.
+			bool currentlyEnabled = currentInfo.force_logoff != uint.MaxValue; // any non-FOREVER is treated as enabled
+			if ((enable == 1 && currentlyEnabled && currentInfo.force_logoff == 0u) ||
+				(enable == 0 && currentInfo.force_logoff == uint.MaxValue))
+			{
+				return;
+			}
+
+			// Allocate new buffer for updated struct
+			uint allocStatus = NativeMethods.NetApiBufferAllocate((uint)sizeof(USER_MODALS_INFO_0), out newBuffer);
+			if (allocStatus != NERR_Success || newBuffer == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("NetApiBufferAllocate failed. Status=0x" + allocStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			USER_MODALS_INFO_0 updated = new()
+			{
+				min_passwd_len = currentInfo.min_passwd_len,
+				max_passwd_age = currentInfo.max_passwd_age,
+				min_passwd_age = currentInfo.min_passwd_age,
+				force_logoff = desired,
+				password_hist_len = currentInfo.password_hist_len
+			};
+
+			*(USER_MODALS_INFO_0*)newBuffer = updated;
+
+			uint setStatus = NativeMethods.NetUserModalsSet(null, 0, newBuffer, out uint parmErr);
+			if (setStatus != NERR_Success)
+			{
+				throw new InvalidOperationException("NetUserModalsSet(level 0) failed. Status=0x" + setStatus.ToString("X8", CultureInfo.InvariantCulture) +
+					" ParmErr=" + parmErr.ToString(CultureInfo.InvariantCulture));
+			}
+		}
+		finally
+		{
+			if (newBuffer != IntPtr.Zero)
+			{
+				_ = NativeMethods.NetApiBufferFree(newBuffer);
+			}
+			if (currentBuffer != IntPtr.Zero)
+			{
+				_ = NativeMethods.NetApiBufferFree(currentBuffer);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Sets the "RequireLogonToChangePassword" policy by toggling the DOMAIN_PASSWORD_NO_ANON_CHANGE flag
+	/// inside DOMAIN_PASSWORD_INFORMATION.PasswordProperties.
+	/// Mapping:
+	///   enable == 1 => set DOMAIN_PASSWORD_NO_ANON_CHANGE (anonymous users cannot change passwords).
+	///   enable == 0 => clear DOMAIN_PASSWORD_NO_ANON_CHANGE.
+	/// Uses SAM APIs:
+	///   LsaOpenPolicy -> LsaQueryInformationPolicy(PolicyAccountDomainInformation) -> SamConnect ->
+	///   SamOpenDomain(DOMAIN_READ_PASSWORD_PARAMETERS | DOMAIN_WRITE_PASSWORD_PARAMS) ->
+	///   SamQueryInformationDomain(DomainPasswordInformation = 1) -> modify bit -> SamSetInformationDomain.
+	/// </summary>
+	/// <param name="enable">1 to require logon to change password; 0 to allow anonymous change.</param>
+	/// <exception cref="ArgumentOutOfRangeException">If enable is not 0 or 1.</exception>
+	/// <exception cref="InvalidOperationException">On any failure to retrieve or apply the setting.</exception>
+	internal unsafe static void SetRequireLogonToChangePassword(int enable)
+	{
+		if (enable != 0 && enable != 1)
+		{
+			throw new ArgumentOutOfRangeException(nameof(enable), "Value must be 0 or 1.");
+		}
+
+		IntPtr policyHandle = IntPtr.Zero;
+		IntPtr domainInfoBuffer = IntPtr.Zero;
+		IntPtr serverHandle = IntPtr.Zero;
+		IntPtr domainHandle = IntPtr.Zero;
+		IntPtr passwordInfoBuffer = IntPtr.Zero;
+		IntPtr setBuffer = IntPtr.Zero;
+
+		try
+		{
+			policyHandle = OpenPolicy();
+
+			// Query PolicyAccountDomainInformation for DomainSid.
+			uint ntStatus = NativeMethods.LsaQueryInformationPolicy(policyHandle, PolicyAccountDomainInformation, out domainInfoBuffer);
+			if (ntStatus != STATUS_SUCCESS || domainInfoBuffer == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("LsaQueryInformationPolicy(PolicyAccountDomainInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			POLICY_ACCOUNT_DOMAIN_INFO* domainInfo = (POLICY_ACCOUNT_DOMAIN_INFO*)domainInfoBuffer;
+			if (domainInfo->DomainSid == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("DomainSid is null in POLICY_ACCOUNT_DOMAIN_INFO.");
+			}
+
+			// Connect to SAM with lookup rights.
+			LSA_UNICODE_STRING server = new(null);
+			ntStatus = NativeMethods.SamConnect(ref server, out serverHandle, SAM_SERVER_LOOKUP_DOMAIN, IntPtr.Zero);
+			if (ntStatus != STATUS_SUCCESS || serverHandle == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamConnect failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			// Open domain with read + write password parameter rights.
+			uint desiredDomainAccess = DOMAIN_READ_PASSWORD_PARAMETERS | DOMAIN_WRITE_PASSWORD_PARAMS; // 0x00000003
+			ntStatus = NativeMethods.SamOpenDomain(serverHandle, desiredDomainAccess, domainInfo->DomainSid, out domainHandle);
+			if (ntStatus != STATUS_SUCCESS || domainHandle == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamOpenDomain failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			// Query current DOMAIN_PASSWORD_INFORMATION
+			ntStatus = NativeMethods.SamQueryInformationDomain(domainHandle, 1, out passwordInfoBuffer);
+			if (ntStatus != STATUS_SUCCESS || passwordInfoBuffer == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamQueryInformationDomain(DomainPasswordInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			DOMAIN_PASSWORD_INFORMATION currentInfo = *(DOMAIN_PASSWORD_INFORMATION*)passwordInfoBuffer;
+
+			uint originalProps = currentInfo.PasswordProperties;
+			bool currentlyEnabled = (originalProps & DOMAIN_PASSWORD_NO_ANON_CHANGE) != 0;
+			bool wantEnable = enable == 1;
+
+			// If already in desired state, nothing to do.
+			if (currentlyEnabled == wantEnable)
+			{
+				return;
+			}
+
+			// Toggle only the DOMAIN_PASSWORD_NO_ANON_CHANGE bit, preserve other flags.
+			currentInfo.PasswordProperties = wantEnable ? originalProps | DOMAIN_PASSWORD_NO_ANON_CHANGE : originalProps & ~DOMAIN_PASSWORD_NO_ANON_CHANGE;
+
+			int size = sizeof(DOMAIN_PASSWORD_INFORMATION);
+			setBuffer = Marshal.AllocHGlobal(size);
+
+			// Zero for safety then copy modified struct.
+			Span<byte> zeroSpan = new((void*)setBuffer, size);
+			zeroSpan.Clear();
+			*(DOMAIN_PASSWORD_INFORMATION*)setBuffer = currentInfo;
+
+			ntStatus = NativeMethods.SamSetInformationDomain(domainHandle, 1, setBuffer);
+			if (ntStatus != STATUS_SUCCESS)
+			{
+				throw new InvalidOperationException("SamSetInformationDomain(DomainPasswordInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+		}
+		finally
+		{
+			FreeGlobalHandle(setBuffer);
+			FreeSAMMemory(passwordInfoBuffer);
+			CloseSAMHandle(domainHandle);
+			CloseSAMHandle(serverHandle);
+			FreeLSAMemory(domainInfoBuffer);
+			ClosePolicy(policyHandle);
+		}
+	}
+
+	/// <summary>
+	/// Sets the "AllowAdministratorLockout" policy by toggling the DOMAIN_LOCKOUT_ADMINS flag
+	/// inside DOMAIN_PASSWORD_INFORMATION.PasswordProperties.
+	/// Mapping:
+	///   enable == 1 => set DOMAIN_LOCKOUT_ADMINS (built-in Administrator can be locked out).
+	///   enable == 0 => clear DOMAIN_LOCKOUT_ADMINS (built-in Administrator cannot be locked out).
+	/// Implementation is surgical, only this bit is modified, all other bits and numeric fields are preserved.
+	/// </summary>
+	/// <param name="enable">1 to allow Administrator lockout; 0 to disallow.</param>
+	/// <exception cref="ArgumentOutOfRangeException">If enable is not 0 or 1.</exception>
+	/// <exception cref="InvalidOperationException">On any failure to retrieve or apply the setting.</exception>
+	internal unsafe static void SetAllowAdministratorLockout(int enable)
+	{
+		if (enable != 0 && enable != 1)
+		{
+			throw new ArgumentOutOfRangeException(nameof(enable), "Value must be 0 or 1.");
+		}
+
+		IntPtr policyHandle = IntPtr.Zero;
+		IntPtr domainInfoBuffer = IntPtr.Zero;
+		IntPtr serverHandle = IntPtr.Zero;
+		IntPtr domainHandle = IntPtr.Zero;
+		IntPtr passwordInfoBuffer = IntPtr.Zero;
+		IntPtr setBuffer = IntPtr.Zero;
+
+		try
+		{
+			policyHandle = OpenPolicy();
+
+			// Query PolicyAccountDomainInformation to get DomainSid.
+			uint ntStatus = NativeMethods.LsaQueryInformationPolicy(policyHandle, PolicyAccountDomainInformation, out domainInfoBuffer);
+			if (ntStatus != STATUS_SUCCESS || domainInfoBuffer == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("LsaQueryInformationPolicy(PolicyAccountDomainInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			POLICY_ACCOUNT_DOMAIN_INFO* domainInfo = (POLICY_ACCOUNT_DOMAIN_INFO*)domainInfoBuffer;
+			if (domainInfo->DomainSid == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("DomainSid is null in POLICY_ACCOUNT_DOMAIN_INFO.");
+			}
+
+			// Connect to SAM.
+			LSA_UNICODE_STRING server = new(null);
+			ntStatus = NativeMethods.SamConnect(ref server, out serverHandle, SAM_SERVER_LOOKUP_DOMAIN, IntPtr.Zero);
+			if (ntStatus != STATUS_SUCCESS || serverHandle == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamConnect failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			// Open domain with minimal rights needed to read and write password parameters.
+			uint desiredDomainAccess = DOMAIN_READ_PASSWORD_PARAMETERS | DOMAIN_WRITE_PASSWORD_PARAMS;
+			ntStatus = NativeMethods.SamOpenDomain(serverHandle, desiredDomainAccess, domainInfo->DomainSid, out domainHandle);
+			if (ntStatus != STATUS_SUCCESS || domainHandle == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamOpenDomain failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			// Query current DOMAIN_PASSWORD_INFORMATION (DomainPasswordInformation = 1).
+			ntStatus = NativeMethods.SamQueryInformationDomain(domainHandle, 1, out passwordInfoBuffer);
+			if (ntStatus != STATUS_SUCCESS || passwordInfoBuffer == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamQueryInformationDomain(DomainPasswordInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			DOMAIN_PASSWORD_INFORMATION currentInfo = *(DOMAIN_PASSWORD_INFORMATION*)passwordInfoBuffer;
+
+			uint originalProps = currentInfo.PasswordProperties;
+			bool currentlyEnabled = (originalProps & DOMAIN_LOCKOUT_ADMINS) != 0;
+			bool wantEnable = enable == 1;
+
+			// Early exit if already desired state.
+			if (currentlyEnabled == wantEnable)
+			{
+				return;
+			}
+
+			// Toggle only DOMAIN_LOCKOUT_ADMINS bit.
+			currentInfo.PasswordProperties = wantEnable ? originalProps | DOMAIN_LOCKOUT_ADMINS : originalProps & ~DOMAIN_LOCKOUT_ADMINS;
+
+			int size = sizeof(DOMAIN_PASSWORD_INFORMATION);
+			setBuffer = Marshal.AllocHGlobal(size);
+
+			// Zero buffer then copy updated structure.
+			Span<byte> zeroSpan = new((void*)setBuffer, size);
+			zeroSpan.Clear();
+			*(DOMAIN_PASSWORD_INFORMATION*)setBuffer = currentInfo;
+
+			ntStatus = NativeMethods.SamSetInformationDomain(domainHandle, 1, setBuffer);
+			if (ntStatus != STATUS_SUCCESS)
+			{
+				throw new InvalidOperationException("SamSetInformationDomain(DomainPasswordInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+		}
+		finally
+		{
+			FreeGlobalHandle(setBuffer);
+			FreeSAMMemory(passwordInfoBuffer);
+			CloseSAMHandle(domainHandle);
+			CloseSAMHandle(serverHandle);
+			FreeLSAMemory(domainInfoBuffer);
+			ClosePolicy(policyHandle);
+		}
+	}
+
+	/// <summary>
+	/// Sets the "ClearTextPassword" policy by toggling the DOMAIN_PASSWORD_STORE_CLEARTEXT flag
+	/// inside DOMAIN_PASSWORD_INFORMATION.PasswordProperties.
+	/// Mapping:
+	///   enable == 1 => set DOMAIN_PASSWORD_STORE_CLEARTEXT (store reversible encryption passwords).
+	///   enable == 0 => clear DOMAIN_PASSWORD_STORE_CLEARTEXT.
+	/// Implementation is surgical, only this bit is changed, all other bits and numeric fields are preserved.
+	/// </summary>
+	/// <param name="enable">1 to allow storing clear text (reversible) passwords; 0 to disallow.</param>
+	/// <exception cref="ArgumentOutOfRangeException">If enable is not 0 or 1.</exception>
+	/// <exception cref="InvalidOperationException">On any failure to retrieve or apply the setting.</exception>
+	internal unsafe static void SetClearTextPassword(int enable)
+	{
+		if (enable != 0 && enable != 1)
+		{
+			throw new ArgumentOutOfRangeException(nameof(enable), "Value must be 0 or 1.");
+		}
+
+		IntPtr policyHandle = IntPtr.Zero;
+		IntPtr domainInfoBuffer = IntPtr.Zero;
+		IntPtr serverHandle = IntPtr.Zero;
+		IntPtr domainHandle = IntPtr.Zero;
+		IntPtr passwordInfoBuffer = IntPtr.Zero;
+		IntPtr setBuffer = IntPtr.Zero;
+
+		try
+		{
+			policyHandle = OpenPolicy();
+
+			// Get Domain SID.
+			uint ntStatus = NativeMethods.LsaQueryInformationPolicy(policyHandle, PolicyAccountDomainInformation, out domainInfoBuffer);
+			if (ntStatus != STATUS_SUCCESS || domainInfoBuffer == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("LsaQueryInformationPolicy(PolicyAccountDomainInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			POLICY_ACCOUNT_DOMAIN_INFO* domainInfo = (POLICY_ACCOUNT_DOMAIN_INFO*)domainInfoBuffer;
+			if (domainInfo->DomainSid == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("DomainSid is null in POLICY_ACCOUNT_DOMAIN_INFO.");
+			}
+
+			// Connect to SAM.
+			LSA_UNICODE_STRING server = new(null);
+			ntStatus = NativeMethods.SamConnect(ref server, out serverHandle, SAM_SERVER_LOOKUP_DOMAIN, IntPtr.Zero);
+			if (ntStatus != STATUS_SUCCESS || serverHandle == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamConnect failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			// Open domain with read + write password parameter rights.
+			uint desiredDomainAccess = DOMAIN_READ_PASSWORD_PARAMETERS | DOMAIN_WRITE_PASSWORD_PARAMS;
+			ntStatus = NativeMethods.SamOpenDomain(serverHandle, desiredDomainAccess, domainInfo->DomainSid, out domainHandle);
+			if (ntStatus != STATUS_SUCCESS || domainHandle == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamOpenDomain failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			// Query current DOMAIN_PASSWORD_INFORMATION (DomainPasswordInformation = 1).
+			ntStatus = NativeMethods.SamQueryInformationDomain(domainHandle, 1, out passwordInfoBuffer);
+			if (ntStatus != STATUS_SUCCESS || passwordInfoBuffer == IntPtr.Zero)
+			{
+				throw new InvalidOperationException("SamQueryInformationDomain(DomainPasswordInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+
+			DOMAIN_PASSWORD_INFORMATION currentInfo = *(DOMAIN_PASSWORD_INFORMATION*)passwordInfoBuffer;
+
+			uint originalProps = currentInfo.PasswordProperties;
+			bool currentlyEnabled = (originalProps & DOMAIN_PASSWORD_STORE_CLEARTEXT) != 0;
+			bool wantEnable = enable == 1;
+
+			// Early exit if already desired state.
+			if (currentlyEnabled == wantEnable)
+			{
+				return;
+			}
+
+			// Toggle only DOMAIN_PASSWORD_STORE_CLEARTEXT bit.
+			currentInfo.PasswordProperties = wantEnable ? originalProps | DOMAIN_PASSWORD_STORE_CLEARTEXT : originalProps & ~DOMAIN_PASSWORD_STORE_CLEARTEXT;
+
+			int size = sizeof(DOMAIN_PASSWORD_INFORMATION);
+			setBuffer = Marshal.AllocHGlobal(size);
+
+			// Zero buffer then copy updated structure.
+			Span<byte> zeroSpan = new((void*)setBuffer, size);
+			zeroSpan.Clear();
+			*(DOMAIN_PASSWORD_INFORMATION*)setBuffer = currentInfo;
+
+			ntStatus = NativeMethods.SamSetInformationDomain(domainHandle, 1, setBuffer);
+			if (ntStatus != STATUS_SUCCESS)
+			{
+				throw new InvalidOperationException("SamSetInformationDomain(DomainPasswordInformation) failed. NTSTATUS=0x" + ntStatus.ToString("X8", CultureInfo.InvariantCulture));
+			}
+		}
+		finally
+		{
+			FreeGlobalHandle(setBuffer);
+			FreeSAMMemory(passwordInfoBuffer);
+			CloseSAMHandle(domainHandle);
+			CloseSAMHandle(serverHandle);
+			FreeLSAMemory(domainInfoBuffer);
+			ClosePolicy(policyHandle);
 		}
 	}
 }

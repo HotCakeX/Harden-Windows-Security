@@ -32,6 +32,6 @@ internal sealed partial class CountryIPBlocking : Page, CommonCore.UI.IPageHeade
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CountryIPBlockingPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CountryIPBlockingPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking");
 }

@@ -103,7 +103,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "InactivityTimeoutSecs",
         "Type": 4,
@@ -113,7 +113,7 @@
         "Hive": 0,
         "PolicyAction": 0,
         "FriendlyName": "InactivityTimeoutSecs-LockScreen",
-        "URL": "",
+        "URL": "https://learn.microsoft.com/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/interactive-logon-machine-inactivity-limit",
         "Category": 6,
         "SubCategory": null,
         "DefaultRegValue": "0",
@@ -124,7 +124,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "DisableCAD",
         "Type": 4,
@@ -134,7 +134,7 @@
         "Hive": 0,
         "PolicyAction": 0,
         "FriendlyName": "DisableCAD-LockScreen",
-        "URL": "",
+        "URL": "https://learn.microsoft.com/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del",
         "Category": 6,
         "SubCategory": 5,
         "DefaultRegValue": "1",
@@ -143,7 +143,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "MaxDevicePasswordFailedAttempts",
         "Type": 4,
@@ -162,7 +162,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "DontDisplayLockedUserId",
         "Type": 4,
@@ -183,7 +183,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "DontDisplayUserName",
         "Type": 4,
@@ -193,7 +193,7 @@
         "Hive": 0,
         "PolicyAction": 0,
         "FriendlyName": "DontDisplayUserName-LockScreen",
-        "URL": "",
+        "URL": "https://learn.microsoft.com/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/interactive-logon-dont-display-username-at-sign-in",
         "Category": 6,
         "SubCategory": null,
         "DefaultRegValue": "0",
@@ -204,7 +204,7 @@
         ]
     },
     {
-        "Source": 2,
+        "Source": 1,
         "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
         "ValueName": "DontDisplayLastUserName",
         "Type": 4,
@@ -214,7 +214,7 @@
         "Hive": 0,
         "PolicyAction": 0,
         "FriendlyName": "DontDisplayLastUserName-LockScreen",
-        "URL": "",
+        "URL": "https://learn.microsoft.com/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/interactive-logon-do-not-display-last-user-name",
         "Category": 6,
         "SubCategory": 6,
         "DefaultRegValue": "0",

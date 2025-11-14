@@ -18,7 +18,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity;
 using HardenSystemSecurity.Helpers;
@@ -1052,6 +1055,75 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 		ViewModel.ShowUndetermined = effective;
 		ApplyCombinedFilters();
+	}
+
+	#endregion
+
+	#region Export to JSON
+
+	/// <summary>
+	/// Exports all of the security measures that belong to the current category to a JSON file.
+	/// </summary>
+	internal async void ExportToJson_Click(object sender, RoutedEventArgs e)
+	{
+		if (_isDisposed || ViewModel is null)
+		{
+			return;
+		}
+
+		try
+		{
+			if (ViewModel.ListViewItemsSourceBackingField.Count == 0)
+			{
+				ViewModel.MainInfoBar.WriteWarning(GlobalVars.GetStr("NoVerificationResultsToExport"));
+				return;
+			}
+
+			ViewModel.ElementsAreEnabled = false;
+			ViewModel.MainInfoBar.IsClosable = false;
+
+			// Flatten the groups into a single list
+			List<MUnit> itemsToExport = [];
+			foreach (GroupInfoListForMUnit group in ViewModel.ListViewItemsSourceBackingField)
+			{
+				foreach (MUnit m in group)
+				{
+					itemsToExport.Add(m);
+				}
+			}
+
+			if (itemsToExport.Count == 0)
+			{
+				ViewModel.MainInfoBar.WriteWarning(GlobalVars.GetStr("NoVerificationResultsToExport"));
+				return;
+			}
+
+			DateTime now = DateTime.Now;
+			string defaultFileName = $"Security Measures {now:yyyy-MM-dd_HH-mm-ss}.json";
+
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, defaultFileName);
+			if (string.IsNullOrWhiteSpace(savePath))
+			{
+				return;
+			}
+
+			await Task.Run(() =>
+			{
+				string json = MUnitJsonContext.SerializeList(itemsToExport);
+				File.WriteAllText(savePath, json, Encoding.UTF8);
+			});
+
+			ViewModel.MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedVerificationResults"), itemsToExport.Count, savePath));
+		}
+		catch (Exception ex)
+		{
+			ViewModel.MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ViewModel.ElementsAreEnabled = true;
+			ViewModel.MainInfoBar.IsClosable = true;
+		}
 	}
 
 	#endregion

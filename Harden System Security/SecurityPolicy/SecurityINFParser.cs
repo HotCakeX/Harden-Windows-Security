@@ -20,6 +20,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using HardenSystemSecurity.GroupPolicy;
+using HardenSystemSecurity.RegistryManager;
 
 namespace HardenSystemSecurity.SecurityPolicy;
 
@@ -102,13 +103,13 @@ internal static class SecurityINFParser
 			if (!ParseRegistryPath(registryPath, out Hive hive, out string keyName, out string valueName))
 				return null;
 
-			// Parse the type and value
+			// Parse the type and value (canonicalize to JSON-like formats)
 			if (!ParseTypeAndValue(typeAndValue, out RegistryValueType registryType, out string regValue, out byte[] data, out uint size))
 				return null;
 
 			// Create and return the RegistryPolicyEntry
 			return new RegistryPolicyEntry(
-				source: Source.SecurityPolicyRegistry,
+				source: Source.Registry,
 				keyName: keyName,
 				valueName: valueName,
 				type: registryType,
@@ -116,6 +117,11 @@ internal static class SecurityINFParser
 				data: data,
 				hive: hive)
 			{
+				// Canonical RegValue for verification via RegistryManager:
+				// - REG_BINARY: Base64
+				// - REG_MULTI_SZ: semicolon-separated
+				// - REG_SZ/REG_EXPAND_SZ: plain string (REG_EXPAND_SZ expanded)
+				// - REG_DWORD/REG_QWORD: decimal string
 				RegValue = regValue,
 				policyAction = PolicyAction.Apply,
 				FriendlyName = "",
@@ -125,50 +131,35 @@ internal static class SecurityINFParser
 				DefaultRegValue = null
 			};
 		}
-		catch
+		catch (Exception ex)
 		{
-			// Return null if any parsing fails
+			Logger.Write(ex);
 			return null;
 		}
 	}
 
 	/// <summary>
 	/// Parses the registry path to extract hive, key name, and value name.
+	/// Accepts the INF "MACHINE\..." and standard "HKLM\..." styles.
 	/// </summary>
-	/// <param name="registryPath">The full registry path</param>
-	/// <param name="hive">Output: The registry hive</param>
-	/// <param name="keyName">Output: The registry key path</param>
-	/// <param name="valueName">Output: The registry value name</param>
-	/// <returns>True if parsing succeeds, false otherwise</returns>
-	private static bool ParseRegistryPath(string registryPath, out Hive hive, out string keyName, out string valueName)
+	internal static bool ParseRegistryPath(string registryPath, out Hive hive, out string keyName, out string valueName)
 	{
-		// Setting initial values
 		hive = Hive.HKLM;
 		keyName = "";
 		valueName = "";
 
-		// Split the path by backslashes
 		string[] pathParts = registryPath.Split('\\');
 		if (pathParts.Length < 3) // Need at least hive + one key part + value name
 			return false;
 
-		// Determine the hive from the first part
 		string hivePart = pathParts[0].ToUpperInvariant();
-		switch (hivePart)
+		hive = hivePart switch
 		{
-			case "MACHINE":
-				hive = Hive.HKLM;
-				break;
-			case "USER":
-			case "USERS":
-				hive = Hive.HKCU;
-				break;
-			case "CLASSES_ROOT":
-				hive = Hive.HKCR;
-				break;
-			default:
-				return false; // Unknown hive
-		}
+			"MACHINE" or "HKLM" or "HKEY_LOCAL_MACHINE" => Hive.HKLM,
+			"USER" or "USERS" or "HKCU" or "HKEY_CURRENT_USER" => Hive.HKCU,
+			"CLASSES_ROOT" or "HKCR" or "HKEY_CLASSES_ROOT" => Hive.HKCR,
+			_ => throw new InvalidOperationException($"Unknown registry hive in path: {hivePart}"),
+		};
 
 		// The last part is the value name
 		valueName = pathParts[^1];
@@ -176,12 +167,10 @@ internal static class SecurityINFParser
 		// Everything in between (excluding the first and last parts) forms the key name
 		if (pathParts.Length == 2)
 		{
-			// Only hive and value name, no intermediate path
 			keyName = "";
 		}
 		else
 		{
-			// Join all parts except the first (hive) and last (value name)
 			string[] keyParts = new string[pathParts.Length - 2];
 			Array.Copy(pathParts, 1, keyParts, 0, pathParts.Length - 2);
 			keyName = string.Join("\\", keyParts);
@@ -191,28 +180,25 @@ internal static class SecurityINFParser
 	}
 
 	/// <summary>
-	/// Parses the type and value portion of a registry value line.
-	/// Format: Type,Value (e.g., "4,1" or "1,\"Some String\"")
+	/// Parses "Type,Value" into canonical RegValue + Data/Size.
+	/// Canonicalization rules (string form centralized in Manager.BuildRegValueFromParsedValue):
+	/// - REG_BINARY: Data = bytes; RegValue = Base64
+	/// - REG_MULTI_SZ: Data = UTF-16 with '\0' separators + double null; RegValue semicolon-separated
+	/// - REG_SZ/REG_EXPAND_SZ: Data = UTF-16 NUL-terminated; RegValue plain string (REG_EXPAND_SZ expanded)
+	/// - REG_DWORD/QWORD: Data = LE bytes; 4/8; RegValue decimal string
 	/// </summary>
-	/// <param name="typeAndValue">The type and value string</param>
-	/// <param name="registryType">Output: The registry value type</param>
-	/// <param name="regValue">Output: The string representation of the value</param>
-	/// <param name="data">Output: The binary data</param>
-	/// <param name="size">Output: The size of the data</param>
-	/// <returns>True if parsing succeeds, false otherwise</returns>
-	private static bool ParseTypeAndValue(string typeAndValue, out RegistryValueType registryType, out string regValue, out byte[] data, out uint size)
+	internal static bool ParseTypeAndValue(string typeAndValue, out RegistryValueType registryType, out string regValue, out byte[] data, out uint size)
 	{
 		registryType = RegistryValueType.REG_NONE;
 		regValue = "";
 		data = [];
 		size = 0;
 
-		// Find the first comma that separates type from value
 		int commaIndex = typeAndValue.IndexOf(',');
 		if (commaIndex == -1)
 		{
 			// No comma found, treat as type only with empty value
-			if (uint.TryParse(typeAndValue, CultureInfo.InvariantCulture, out uint typeValue))
+			if (uint.TryParse(typeAndValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint typeValue))
 			{
 				registryType = (RegistryValueType)typeValue;
 				regValue = "";
@@ -227,147 +213,290 @@ internal static class SecurityINFParser
 		string valueString = typeAndValue[(commaIndex + 1)..].Trim();
 
 		// Parse the type
-		if (!uint.TryParse(typeString, CultureInfo.InvariantCulture, out uint typeNum))
+		if (!uint.TryParse(typeString, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint typeNum))
 			return false;
 
 		registryType = (RegistryValueType)typeNum;
 
-		// Parse the value based on the type
+		// Build Data for each supported type
 		switch (registryType)
 		{
 			case RegistryValueType.REG_SZ:
 			case RegistryValueType.REG_EXPAND_SZ:
-				// String value - remove quotes if present
-				regValue = valueString;
-				if (regValue.StartsWith('"') && regValue.EndsWith('"') && regValue.Length >= 2)
 				{
-					regValue = regValue[1..^1];
+					string s = Unquote(valueString);
+					string withNull = string.Concat(s, '\0'); // UTF-16 + single NUL terminator
+					data = Encoding.Unicode.GetBytes(withNull);
+					break;
 				}
-				data = Encoding.Unicode.GetBytes(regValue + '\0');
-				size = (uint)data.Length;
-				break;
 
 			case RegistryValueType.REG_DWORD:
-				// DWORD value
-				if (uint.TryParse(valueString, CultureInfo.InvariantCulture, out uint dwordValue))
 				{
-					regValue = dwordValue.ToString(CultureInfo.InvariantCulture);
-					data = BitConverter.GetBytes(dwordValue);
-					size = 4;
+					if (!uint.TryParse(valueString, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint dword))
+						return false;
+					data = BitConverter.GetBytes(dword); // little-endian
+					break;
 				}
-				else
-				{
-					return false;
-				}
-				break;
 
 			case RegistryValueType.REG_QWORD:
-				// QWORD value
-				if (ulong.TryParse(valueString, CultureInfo.InvariantCulture, out ulong qwordValue))
 				{
-					regValue = qwordValue.ToString(CultureInfo.InvariantCulture);
-					data = BitConverter.GetBytes(qwordValue);
-					size = 8;
+					if (!ulong.TryParse(valueString, NumberStyles.Integer, CultureInfo.InvariantCulture, out ulong qword))
+						return false;
+					data = BitConverter.GetBytes(qword); // little-endian
+					break;
 				}
-				else
-				{
-					return false;
-				}
-				break;
 
 			case RegistryValueType.REG_BINARY:
-				// Binary value - parse as comma-separated bytes or hex string
-				regValue = valueString;
-				data = ParseBinaryData(valueString);
-				size = (uint)data.Length;
-				break;
+				{
+					data = ParseBinaryData(valueString); // single-token and multi-token parsing
+					break;
+				}
 
 			case RegistryValueType.REG_MULTI_SZ:
-				// Multi-string value - handle as single string for now
-				regValue = valueString;
-				if (regValue.StartsWith('"') && regValue.EndsWith('"') && regValue.Length >= 2)
 				{
-					regValue = regValue[1..^1];
+					string dequoted = Unquote(valueString);
+					string[] items = SplitMultiStringFlexible(dequoted);
+					data = BuildMultiSzBytes(items); // MULTI_SZ encoding
+					break;
 				}
-				// For multi-string, we need to add double null terminator
-				data = Encoding.Unicode.GetBytes(regValue + "\0\0");
-				size = (uint)data.Length;
-				break;
+
 			case RegistryValueType.REG_NONE:
-				break;
 			case RegistryValueType.REG_DWORD_BIG_ENDIAN:
-				break;
 			case RegistryValueType.REG_LINK:
-				break;
 			case RegistryValueType.REG_RESOURCE_LIST:
-				break;
 			case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:
-				break;
 			case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
-				break;
 			default:
-				// For unknown types, store as string
-				regValue = valueString;
-				data = Encoding.UTF8.GetBytes(regValue);
-				size = (uint)data.Length;
-				break;
+				{
+					// Unknown/unsupported types, preserve original string in Data and RegValue
+					regValue = valueString;
+					data = Encoding.UTF8.GetBytes(valueString);
+					break;
+				}
 		}
+
+		size = (uint)data.Length;
+
+		// Centralize canonical RegValue string creation
+		// This expands REG_EXPAND_SZ and formats all types consistently with RegistryManager expectations.
+		if (registryType is RegistryValueType.REG_SZ or
+			RegistryValueType.REG_EXPAND_SZ or
+			RegistryValueType.REG_DWORD or
+			RegistryValueType.REG_QWORD or
+			RegistryValueType.REG_BINARY or
+			RegistryValueType.REG_MULTI_SZ)
+		{
+			RegistryPolicyEntry tempEntry = new(
+				source: Source.Registry,
+				keyName: string.Empty,
+				valueName: string.Empty,
+				type: registryType,
+				size: size,
+				data: data,
+				hive: Hive.HKLM);
+
+			string? canonical = Manager.BuildRegValueFromParsedValue(tempEntry);
+			regValue = canonical ?? string.Empty;
+		}
+		// else keep regValue from default branch
 
 		return true;
 	}
 
+	internal static string Unquote(string s)
+	{
+		if (s.Length >= 2 && s[0] == '"' && s[^1] == '"')
+		{
+			return s[1..^1];
+		}
+		return s;
+	}
+
 	/// <summary>
-	/// Parses binary data from a string representation.
-	/// Supports comma-separated bytes or hex strings.
+	/// Parses binary data from INF-style representation:
+	/// - Comma-separated bytes (decimal), e.g. "1,2,255"
+	/// - Comma-separated hex tokens (with or without 0x), e.g. "0x0A,FF"
+	/// - Contiguous hex string, e.g. "0A0BFF"
+	/// - Single-token decimal or hex (e.g. "0", "255", "0x0A", "A")
+	/// Falls back to UTF-8 bytes if parsing fails (rare).
 	/// </summary>
-	/// <param name="binaryString">The binary data string</param>
-	/// <returns>Byte array representation</returns>
-	private static byte[] ParseBinaryData(string binaryString)
+	internal static byte[] ParseBinaryData(string binaryString)
 	{
 		try
 		{
-			// Try parsing as comma-separated bytes first
-			if (binaryString.Contains(','))
+			string s = binaryString.Trim();
+			if (s.Length == 0)
 			{
-				string[] byteStrings = binaryString.Split(',');
-				byte[] bytes = new byte[byteStrings.Length];
-				for (int i = 0; i < byteStrings.Length; i++)
+				return [];
+			}
+
+			// Comma-separated tokens (decimal or hex)
+			if (s.Contains(',', StringComparison.OrdinalIgnoreCase))
+			{
+				string[] tokens = s.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+				if (tokens.Length == 0) return [];
+
+				// Detect hex usage
+				bool anyHex = false;
+				for (int i = 0; i < tokens.Length && !anyHex; i++)
 				{
-					if (!byte.TryParse(byteStrings[i].Trim(), CultureInfo.InvariantCulture, out bytes[i]))
+					string tk = tokens[i];
+					if (tk.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
 					{
-						// If parsing fails, return the string as UTF-8 bytes
+						anyHex = true;
+						break;
+					}
+					for (int j = 0; j < tk.Length; j++)
+					{
+						char c = tk[j];
+						if ((c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))
+						{
+							anyHex = true;
+							break;
+						}
+					}
+				}
+
+				byte[] result = new byte[tokens.Length];
+				for (int i = 0; i < tokens.Length; i++)
+				{
+					string tk = tokens[i];
+					if (tk.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+					{
+						tk = tk[2..];
+					}
+
+					bool ok = anyHex
+						? byte.TryParse(tk, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out result[i])
+						: byte.TryParse(tk, NumberStyles.Integer, CultureInfo.InvariantCulture, out result[i]);
+
+					if (!ok)
+					{
 						return Encoding.UTF8.GetBytes(binaryString);
 					}
 				}
-				return bytes;
+				return result;
 			}
-			else
+
+			// Hex char check
+			static bool IsHexChar(char c)
 			{
-				// Try parsing as hex string
-				if (binaryString.Length % 2 == 0)
+				return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
+			}
+
+			// Single token (no commas)
+			string token = s;
+			bool hasHexPrefix = token.StartsWith("0x", StringComparison.OrdinalIgnoreCase);
+			if (hasHexPrefix)
+			{
+				token = token[2..];
+			}
+
+			// All hex digits
+			bool tokenIsHex = token.Length > 0;
+			for (int i = 0; i < token.Length && tokenIsHex; i++)
+			{
+				if (!IsHexChar(token[i]))
 				{
-					byte[] bytes = new byte[binaryString.Length / 2];
-					for (int i = 0; i < bytes.Length; i++)
+					tokenIsHex = false;
+				}
+			}
+
+			if (tokenIsHex)
+			{
+				// Even length => contiguous hex string (pairs of bytes)
+				if ((token.Length & 1) == 0)
+				{
+					byte[] result = new byte[token.Length / 2];
+					for (int i = 0; i < result.Length; i++)
 					{
-						if (!byte.TryParse(binaryString.AsSpan(i * 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out bytes[i]))
+						if (!byte.TryParse(token.AsSpan(i * 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out result[i]))
 						{
-							// If hex parsing fails, return the string as UTF-8 bytes
 							return Encoding.UTF8.GetBytes(binaryString);
 						}
 					}
-					return bytes;
+					return result;
 				}
-				else
+
+				// Single nibble => treat as one byte (e.g., "A" => 0x0A)
+				if (token.Length == 1)
 				{
-					// Not a valid hex string, return as UTF-8 bytes
+					if (byte.TryParse(token, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte bNibble))
+					{
+						return [bNibble];
+					}
 					return Encoding.UTF8.GetBytes(binaryString);
 				}
+
+				// Odd length > 1 is ambiguous => fallback
+				return Encoding.UTF8.GetBytes(binaryString);
 			}
+
+			// Decimal single token (0..255)
+			bool allDigits = true;
+			for (int i = 0; i < token.Length && allDigits; i++)
+			{
+				char ch = token[i];
+				allDigits = ch >= '0' && ch <= '9';
+			}
+			if (allDigits)
+			{
+				if (byte.TryParse(token, NumberStyles.Integer, CultureInfo.InvariantCulture, out byte b))
+				{
+					return [b];
+				}
+				return Encoding.UTF8.GetBytes(binaryString);
+			}
+
+			// Fallback, not recognized, treat as UTF-8 bytes
+			return Encoding.UTF8.GetBytes(binaryString);
 		}
 		catch
 		{
-			// If all parsing fails, return the string as UTF-8 bytes
 			return Encoding.UTF8.GetBytes(binaryString);
 		}
+	}
+
+	/// <summary>
+	/// Splits a multi-string value accepting newline, semicolon, or comma as delimiters.
+	/// Empty input => [].
+	/// </summary>
+	internal static string[] SplitMultiStringFlexible(string input)
+	{
+		if (string.IsNullOrEmpty(input))
+		{
+			return [];
+		}
+
+		string normalized = input.Replace("\r\n", "\n", StringComparison.OrdinalIgnoreCase);
+
+		if (normalized.Contains('\n', StringComparison.OrdinalIgnoreCase))
+		{
+			return normalized.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+		}
+		if (normalized.Contains(';', StringComparison.OrdinalIgnoreCase))
+		{
+			return normalized.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+		}
+		if (normalized.Contains(',', StringComparison.OrdinalIgnoreCase))
+		{
+			return normalized.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+		}
+
+		// Single token
+		string single = normalized.Trim();
+		if (single.Length == 0) return [];
+		return [single];
+	}
+
+	/// <summary>
+	/// Builds MULTI_SZ bytes (UTF-16): items joined by '\0' and double-null terminated.
+	/// </summary>
+	internal static byte[] BuildMultiSzBytes(string[] items)
+	{
+		// Join with single NULs and add final double NUL
+		string joined = items.Length == 0 ? string.Empty : string.Join("\0", items);
+		string withDoubleNull = string.Concat(joined, "\0\0");
+		return Encoding.Unicode.GetBytes(withDoubleNull);
 	}
 }

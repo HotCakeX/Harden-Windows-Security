@@ -15,18 +15,21 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Helpers;
-using HardenSystemSecurity.SecurityPolicy;
+using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml;
 
 namespace HardenSystemSecurity.Protect;
@@ -158,30 +161,6 @@ internal static class MUnitDependencyRegistry
 internal interface IApplyStrategy
 {
 	void Apply();
-}
-
-/// <summary>
-/// A marker + payload strategy for bulk security policy registry application.
-/// Used for specific policies that we use SecurityPolicyWriter to apply.
-/// </summary>
-internal interface IApplySecurityPolicyRegistry : IApplyStrategy
-{
-	/// <summary>
-	/// One or more Security Policy Registry entries that need to be applied for one specific protection measure.
-	/// </summary>
-	List<RegistryPolicyEntry> Policies { get; }
-}
-
-/// <summary>
-/// Implementation of the <see cref="IApplySecurityPolicyRegistry"/> strategy.
-/// </summary>
-internal sealed class SecurityPolicyRegistryApply(List<RegistryPolicyEntry> policies) : IApplySecurityPolicyRegistry
-{
-	public List<RegistryPolicyEntry> Policies => policies;
-
-	// This will never be called on its own: we bulk-invoke via SecurityPolicyManager instead.
-	public void Apply() =>
-		throw new InvalidOperationException(GlobalVars.GetStr("SecurityPolicyRegistryApplyBulkInvokeError"));
 }
 
 /// <summary>
@@ -337,31 +316,6 @@ internal sealed class RegistryVerify(List<RegistryPolicyEntry> policies) : IVeri
 }
 
 /// <summary>
-/// A marker + payload strategy for bulk Security Policy Registry verification.
-/// </summary>
-internal interface IVerifySecurityPolicyRegistry : IVerifyStrategy
-{
-	/// <summary>
-	/// One or more Security Policy Registry entries that need to be verified for one specific protection measure.
-	/// </summary>
-	List<RegistryPolicyEntry> Policies { get; }
-}
-
-/// <summary>
-/// Implementation of the <see cref="IVerifySecurityPolicyRegistry"/> strategy.
-/// </summary>
-/// <param name="policies"></param>
-internal sealed class SecurityPolicyRegistryVerify(List<RegistryPolicyEntry> policies) : IVerifySecurityPolicyRegistry
-{
-	public List<RegistryPolicyEntry> Policies => policies;
-
-	// This will never be called on its own.
-	public bool Verify() =>
-		throw new InvalidOperationException(GlobalVars.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
-
-}
-
-/// <summary>
 /// A delegate‐based verify strategy whose logic is provided at construction time.
 /// </summary>
 internal sealed class DefaultVerify(Func<bool> func) : IVerifyStrategy
@@ -426,30 +380,6 @@ internal interface IRemoveRegistry : IRemoveStrategy
 /// </summary>
 /// <param name="policies"></param>
 internal sealed class RegistryRemove(List<RegistryPolicyEntry> policies) : IRemoveRegistry
-{
-	public List<RegistryPolicyEntry> Policies => policies;
-
-	// This will never be called on its own.
-	public void Remove() =>
-		throw new InvalidOperationException(GlobalVars.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
-}
-
-/// <summary>
-/// A marker + payload strategy for bulk Security Policy Registry removal.
-/// </summary>
-internal interface IRemoveSecurityPolicyRegistry : IRemoveStrategy
-{
-	/// <summary>
-	/// One or more Security Policy Registry entries that need to be removed for one specific protection measure.
-	/// </summary>
-	List<RegistryPolicyEntry> Policies { get; }
-}
-
-/// <summary>
-/// Implementation of the <see cref="IRemoveSecurityPolicyRegistry"/> strategy.
-/// </summary>
-/// <param name="policies"></param>
-internal sealed class SecurityPolicyRegistryRemove(List<RegistryPolicyEntry> policies) : IRemoveSecurityPolicyRegistry
 {
 	public List<RegistryPolicyEntry> Policies => policies;
 
@@ -666,7 +596,7 @@ internal static class SpecializedStrategiesRegistry
 				// Availability check
 				if (string.Equals(category, nameof(Categories.MicrosoftDefender), StringComparison.OrdinalIgnoreCase))
 				{
-					if (!ViewModels.MicrosoftDefenderVM.IsWmiPropertyAvailable(wmiNamespace, wmiClass, wmiProperty))
+					if (!MicrosoftDefenderVM.IsWmiPropertyAvailable(wmiNamespace, wmiClass, wmiProperty))
 					{
 						return false;
 					}
@@ -711,6 +641,84 @@ internal static class SpecializedStrategiesRegistry
 	}
 }
 
+
+[JsonSourceGenerationOptions(
+	WriteIndented = true,
+	PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
+	PropertyNameCaseInsensitive = false,
+	Converters = [
+		typeof(JsonStringEnumConverter<Categories>),
+		typeof(JsonStringEnumConverter<SubCategories>),
+		typeof(JsonStringEnumConverter<DeviceIntents.Intent>),
+		typeof(JsonStringEnumConverter<StatusState>)
+	])]
+[JsonSerializable(typeof(MUnit))]
+[JsonSerializable(typeof(List<MUnit>))]
+internal sealed partial class MUnitJsonContext : JsonSerializerContext
+{
+	/// <summary>
+	/// Serialize a list of MUnit instances.
+	/// Uses Utf8JsonWriter to apply JavaScriptEncoder.UnsafeRelaxedJsonEscaping without mutating the context's Options.
+	/// </summary>
+	internal static string SerializeList(List<MUnit> units)
+	{
+		// Use a writer with relaxed escaping and indentation.
+		ArrayBufferWriter<byte> buffer = new();
+		JsonWriterOptions writerOptions = new()
+		{
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+			Indented = true
+		};
+		Utf8JsonWriter writer = new(buffer, writerOptions);
+
+		try
+		{
+			JsonSerializer.Serialize(writer, units, Default.ListMUnit);
+		}
+		finally
+		{
+			writer.Dispose();
+		}
+
+		return Encoding.UTF8.GetString(buffer.WrittenSpan);
+	}
+
+	/// <summary>
+	/// Serialize a single MUnit instance.
+	/// </summary>
+	internal static string SerializeSingle(MUnit unit)
+	{
+		ArrayBufferWriter<byte> buffer = new();
+		JsonWriterOptions writerOptions = new()
+		{
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+			Indented = true
+		};
+		Utf8JsonWriter writer = new(buffer, writerOptions);
+
+		try
+		{
+			JsonSerializer.Serialize(writer, unit, Default.MUnit);
+		}
+		finally
+		{
+			writer.Dispose();
+		}
+
+		return Encoding.UTF8.GetString(buffer.WrittenSpan);
+	}
+
+	/// <summary>
+	/// Deserialize a JSON string into a list of MUnit instances.
+	/// </summary>
+	internal static List<MUnit>? DeserializeList(string json) => JsonSerializer.Deserialize(json, Default.ListMUnit);
+
+	/// <summary>
+	/// Deserialize a JSON string into a single MUnit instance.
+	/// </summary>
+	internal static MUnit? DeserializeSingle(string json) => JsonSerializer.Deserialize(json, Default.MUnit);
+}
+
 /// <summary>
 /// Represents a unit that can contain any security measure.
 /// It defines how to apply, remove and verify it.
@@ -728,33 +736,45 @@ internal sealed partial class MUnit(
 	/// <summary>
 	/// The category this unit belongs to.
 	/// </summary>
+	[JsonInclude]
+	[JsonPropertyOrder(1)]
+	[JsonPropertyName("Category")]
 	internal Categories Category => category;
 
 	/// <summary>
 	/// The name of this unit.
 	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("Name")]
+	[JsonPropertyOrder(0)]
 	internal string? Name => name;
 
 	/// <summary>
 	/// What runs for applying this unit.
 	/// </summary>
+	[JsonIgnore]
 	internal IApplyStrategy ApplyStrategy => applyStrategy;
 
 	/// <summary>
 	/// What runs for verifying this unit.
 	/// Not all strategies need/can have verification.
 	/// </summary>
+	[JsonIgnore]
 	internal IVerifyStrategy? VerifyStrategy => verifyStrategy;
 
 	/// <summary>
 	/// What runs for removing this unit.
 	/// Not all strategies need/can have removal.
 	/// </summary>
+	[JsonIgnore]
 	internal IRemoveStrategy? RemoveStrategy => removeStrategy;
 
 	/// <summary>
 	/// To store the result whether this protection measure is applied or not.
 	/// </summary>
+	[JsonInclude]
+	[JsonPropertyOrder(2)]
+	[JsonPropertyName("IsApplied")]
 	internal bool? IsApplied
 	{
 		get;
@@ -774,32 +794,44 @@ internal sealed partial class MUnit(
 	/// <summary>
 	/// Optional sub-category this unit belongs to.
 	/// </summary>
+	[JsonInclude]
+	[JsonPropertyOrder(4)]
+	[JsonPropertyName("SubCategory")]
 	internal SubCategories? SubCategory => subCategory;
 
 	/// <summary>
 	/// Used to point the ListView in the UI to a web location for more info or documentation.
 	/// </summary>
+	[JsonInclude]
+	[JsonPropertyOrder(7)]
+	[JsonPropertyName("URL")]
 	internal string? URL => url;
 
 	/// <summary>
 	/// Device Intents this MUnit belongs to.
 	/// </summary>
+	[JsonInclude]
+	[JsonPropertyOrder(6)]
+	[JsonPropertyName("DeviceIntents")]
 	internal List<DeviceIntents.Intent> DeviceIntents => deviceIntents;
 
 	/// <summary>
 	/// Reference to the user control that contains this MUnit. Set by the user control when the ViewModel is assigned.
 	/// </summary>
+	[JsonIgnore]
 	internal MUnitListViewControl? UserControlReference { get; set; }
 
 	/// <summary>
 	/// Gets the unique identifier for this MUnit using Category|Name pattern (for non-JSON MUnits)
 	/// </summary>
+	[JsonIgnore]
 	internal string MUnitId => $"{Category}|{Name}";
 
 	/// <summary>
 	/// Gets the registry-based identifier for JSON-based MUnits using KeyName|ValueName pattern
 	/// Returns null for non-JSON based MUnits
 	/// </summary>
+	[JsonIgnore]
 	internal string? JsonPolicyId
 	{
 		get
@@ -815,18 +847,18 @@ internal sealed partial class MUnit(
 				RegistryPolicyEntry policy = registryApply.Policies[0];
 				return $"{policy.KeyName}|{policy.ValueName}";
 			}
-			else if (ApplyStrategy is IApplySecurityPolicyRegistry securityPolicyApply && securityPolicyApply.Policies.Count > 0)
-			{
-				RegistryPolicyEntry policy = securityPolicyApply.Policies[0];
-				return $"{policy.KeyName}|{policy.ValueName}";
-			}
 
 			// Return null for non-JSON based MUnits
 			return null;
 		}
 	}
 
-	// Properties for UI binding
+	/// <summary>
+	/// Properties for UI binding
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyOrder(3)]
+	[JsonPropertyName("StatusState")]
 	internal StatusState StatusState => IsApplied switch
 	{
 		true => StatusState.Applied,
@@ -834,14 +866,21 @@ internal sealed partial class MUnit(
 		null => StatusState.Undetermined
 	};
 
+	[JsonIgnore]
 	internal bool HasSubCategory => SubCategory.HasValue;
 
+	[JsonInclude]
+	[JsonPropertyOrder(5)]
+	[JsonPropertyName("SubCategoryName")]
 	internal string SubCategoryName => SubCategoryToDisplayString(SubCategory);
 
+	[JsonIgnore]
 	internal bool HasURL => !string.IsNullOrWhiteSpace(URL);
 
+	[JsonIgnore]
 	internal Visibility SubCategoryVisibility => HasSubCategory ? Visibility.Visible : Visibility.Collapsed;
 
+	[JsonIgnore]
 	internal Visibility URLVisibility => HasURL ? Visibility.Visible : Visibility.Collapsed;
 
 	/// <summary>
@@ -881,18 +920,6 @@ internal sealed partial class MUnit(
 		return mUnit.ApplyStrategy is IApplyRegistry ||
 			   mUnit.VerifyStrategy is IVerifyRegistry ||
 			   mUnit.RemoveStrategy is IRemoveRegistry;
-	}
-
-	/// <summary>
-	/// Determines if an MUnit uses Security Policy Registry strategies.
-	/// </summary>
-	/// <param name="mUnit">The MUnit to check</param>
-	/// <returns>True if it's a Security Policy Registry MUnit</returns>
-	private static bool IsSecurityPolicyRegistryMUnit(MUnit mUnit)
-	{
-		return mUnit.ApplyStrategy is IApplySecurityPolicyRegistry ||
-			   mUnit.VerifyStrategy is IVerifySecurityPolicyRegistry ||
-			   mUnit.RemoveStrategy is IRemoveSecurityPolicyRegistry;
 	}
 
 	/// <summary>
@@ -1032,129 +1059,196 @@ internal sealed partial class MUnit(
 	{
 		try
 		{
+			ProcessMUnitsBulkUnified(groupPolicyMUnits, operation, allAvailableMUnits, isGroupPolicy: true, cancellationToken);
+		}
+		catch (Exception ex)
+		{
+			if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
+			Logger.Write(GlobalVars.GetStr("ErrorProcessingGroupPolicyMUnits"));
+			throw;
+		}
+	}
+
+	/// <summary>
+	/// Processes Registry MUnits in bulk.
+	/// </summary>
+	/// <param name="registryMUnits">The Registry MUnits to process</param>
+	/// <param name="operation">The operation to perform</param>
+	/// <param name="allAvailableMUnits">All available MUnits for dependency resolution</param>
+	/// <param name="cancellationToken">Optional cancellation token</param>
+	private static void ProcessRegistryMUnitsBulk(List<MUnit> registryMUnits, MUnitOperation operation, List<MUnit> allAvailableMUnits, CancellationToken? cancellationToken = null)
+	{
+		try
+		{
+			ProcessMUnitsBulkUnified(registryMUnits, operation, allAvailableMUnits, isGroupPolicy: false, cancellationToken);
+		}
+		catch (Exception ex)
+		{
+			if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
+			Logger.Write(GlobalVars.GetStr("ErrorProcessingRegistryMUnits"));
+			throw;
+		}
+	}
+
+	/// <summary>
+	/// One unified core method for Group Policy and Registry MUnits.
+	/// isGroupPolicy = true  => Group Policy behavior (RegistryPolicyParser + POL verification with fallback)
+	/// isGroupPolicy = false => Registry behavior (direct RegistryManager verification with fallback)
+	/// </summary>
+	private static void ProcessMUnitsBulkUnified(List<MUnit> mUnits, MUnitOperation operation, List<MUnit> allAvailableMUnits, bool isGroupPolicy, CancellationToken? cancellationToken = null)
+	{
+		cancellationToken?.ThrowIfCancellationRequested();
+
+		List<RegistryPolicyEntry> allPolicies = [];
+
+		// Collect all policies from the MUnits
+		foreach (MUnit mUnit in mUnits)
+		{
 			cancellationToken?.ThrowIfCancellationRequested();
 
-			List<RegistryPolicyEntry> allPolicies = [];
-
-			// Collect all policies from the MUnits
-			foreach (MUnit mUnit in groupPolicyMUnits)
+			List<RegistryPolicyEntry>? policies = operation switch
 			{
-				cancellationToken?.ThrowIfCancellationRequested();
+				// Apply
+				MUnitOperation.Apply when isGroupPolicy && mUnit.ApplyStrategy is IApplyGroupPolicy applyGp => applyGp.Policies,
+				MUnitOperation.Apply when !isGroupPolicy && mUnit.ApplyStrategy is IApplyRegistry applyReg => applyReg.Policies,
 
-				List<RegistryPolicyEntry>? policies = operation switch
-				{
-					MUnitOperation.Apply when mUnit.ApplyStrategy is IApplyGroupPolicy applyStrategy => applyStrategy.Policies,
-					MUnitOperation.Remove when mUnit.RemoveStrategy is IRemoveGroupPolicy removeStrategy => removeStrategy.Policies,
-					MUnitOperation.Verify when mUnit.VerifyStrategy is IVerifyGroupPolicy verifyStrategy => verifyStrategy.Policies,
-					_ => null
-				};
+				// Remove
+				MUnitOperation.Remove when isGroupPolicy && mUnit.RemoveStrategy is IRemoveGroupPolicy removeGp => removeGp.Policies,
+				MUnitOperation.Remove when !isGroupPolicy && mUnit.RemoveStrategy is IRemoveRegistry removeReg => removeReg.Policies,
 
-				if (policies != null)
-				{
-					allPolicies.AddRange(policies);
-				}
+				// Verify
+				MUnitOperation.Verify when isGroupPolicy && mUnit.VerifyStrategy is IVerifyGroupPolicy verifyGp => verifyGp.Policies,
+				MUnitOperation.Verify when !isGroupPolicy && mUnit.VerifyStrategy is IVerifyRegistry verifyReg => verifyReg.Policies,
+
+				_ => null
+			};
+
+			if (policies != null)
+			{
+				allPolicies.AddRange(policies);
 			}
+		}
 
-			if (allPolicies.Count > 0)
-			{
-				// Perform bulk operation with specialized strategies and dependencies
-				switch (operation)
+		if (allPolicies.Count == 0)
+		{
+			return;
+		}
+
+		// Perform bulk operation with specialized strategies and dependencies
+		switch (operation)
+		{
+			case MUnitOperation.Apply:
 				{
-					case MUnitOperation.Apply:
-						// Process Before dependencies for JSON-based MUnits
-						List<MUnit> beforeDependencies = ResolveDependencies(groupPolicyMUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
-						if (beforeDependencies.Count > 0)
+					// Process Before dependencies for JSON-based MUnits
+					List<MUnit> beforeDependencies = ResolveDependencies(mUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
+					if (beforeDependencies.Count > 0)
+					{
+						Logger.Write(string.Format(GlobalVars.GetStr("ProcessingBeforeDependencies"), beforeDependencies.Count, operation));
+						ProcessGroupPolicyMUnitsBulk(beforeDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
+						ProcessRegistryMUnitsBulk(beforeDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
+						foreach (MUnit regularDep in beforeDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m)))
 						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingBeforeDependencies"), beforeDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(beforeDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(beforeDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(beforeDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in beforeDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
+							ProcessRegularMUnit(regularDep, operation, cancellationToken);
 						}
+					}
 
-						// Execute-Before specialized apply strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.Before, operation, cancellationToken);
+					// Execute-Before specialized apply strategies
+					ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.Before, operation, cancellationToken);
 
-						cancellationToken?.ThrowIfCancellationRequested();
+					cancellationToken?.ThrowIfCancellationRequested();
 
-						// Execute main bulk apply operation
+					// Execute main bulk apply operation
+					if (isGroupPolicy)
+					{
 						RegistryPolicyParser.AddPoliciesToSystem(allPolicies, GroupPolicyContext.Machine);
+					}
+					else
+					{
+						RegistryManager.Manager.AddPoliciesToSystem(allPolicies);
+					}
 
-						// Execute-After specialized apply strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
+					// Execute-After specialized apply strategies
+					ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
 
-						// Process After dependencies for JSON-based MUnits
-						List<MUnit> afterDependencies = ResolveDependencies(groupPolicyMUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
-						if (afterDependencies.Count > 0)
+					// Process After dependencies for JSON-based MUnits
+					List<MUnit> afterDependencies = ResolveDependencies(mUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
+					if (afterDependencies.Count > 0)
+					{
+						Logger.Write(string.Format(GlobalVars.GetStr("ProcessingAfterDependencies"), afterDependencies.Count, operation));
+						ProcessGroupPolicyMUnitsBulk(afterDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
+						ProcessRegistryMUnitsBulk(afterDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
+						foreach (MUnit regularDep in afterDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m)))
 						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingAfterDependencies"), afterDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(afterDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(afterDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(afterDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in afterDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
+							ProcessRegularMUnit(regularDep, operation, cancellationToken);
 						}
+					}
 
-						// Mark all as applied
-						foreach (MUnit mUnit in groupPolicyMUnits)
+					// Mark all as applied
+					foreach (MUnit mUnit in mUnits)
+					{
+						mUnit.IsApplied = true;
+					}
+					break;
+				}
+
+			case MUnitOperation.Remove:
+				{
+					// Process Before dependencies for JSON-based MUnits
+					List<MUnit> beforeRemoveDependencies = ResolveDependencies(mUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
+					if (beforeRemoveDependencies.Count > 0)
+					{
+						Logger.Write(string.Format(GlobalVars.GetStr("ProcessingBeforeDependencies"), beforeRemoveDependencies.Count, operation));
+						ProcessGroupPolicyMUnitsBulk(beforeRemoveDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
+						ProcessRegistryMUnitsBulk(beforeRemoveDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
+						foreach (MUnit regularDep in beforeRemoveDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m)))
 						{
-							mUnit.IsApplied = true;
+							ProcessRegularMUnit(regularDep, operation, cancellationToken);
 						}
-						break;
+					}
 
-					case MUnitOperation.Remove:
-						// Process Before dependencies for JSON-based MUnits
-						List<MUnit> beforeRemoveDependencies = ResolveDependencies(groupPolicyMUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
-						if (beforeRemoveDependencies.Count > 0)
-						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingBeforeDependencies"), beforeRemoveDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(beforeRemoveDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(beforeRemoveDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(beforeRemoveDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in beforeRemoveDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
-						}
+					// Execute-Before specialized remove strategies
+					ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.Before, operation, cancellationToken);
 
-						// Execute-Before specialized remove strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.Before, operation, cancellationToken);
+					cancellationToken?.ThrowIfCancellationRequested();
 
-						cancellationToken?.ThrowIfCancellationRequested();
-
-						// Execute main bulk remove operation
+					// Execute main bulk remove operation
+					if (isGroupPolicy)
+					{
 						RegistryPolicyParser.RemovePoliciesFromSystem(allPolicies, GroupPolicyContext.Machine);
+					}
+					else
+					{
+						RegistryManager.Manager.RemovePoliciesFromSystem(allPolicies);
+					}
 
-						// Execute-After specialized remove strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
+					// Execute-After specialized remove strategies
+					ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
 
-						// Process After dependencies for JSON-based MUnits
-						List<MUnit> afterRemoveDependencies = ResolveDependencies(groupPolicyMUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
-						if (afterRemoveDependencies.Count > 0)
+					// Process After dependencies for JSON-based MUnits
+					List<MUnit> afterRemoveDependencies = ResolveDependencies(mUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
+					if (afterRemoveDependencies.Count > 0)
+					{
+						Logger.Write(string.Format(GlobalVars.GetStr("ProcessingAfterDependencies"), afterRemoveDependencies.Count, operation));
+						ProcessGroupPolicyMUnitsBulk(afterRemoveDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
+						ProcessRegistryMUnitsBulk(afterRemoveDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
+						foreach (MUnit regularDep in afterRemoveDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m)))
 						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingAfterDependencies"), afterRemoveDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(afterRemoveDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(afterRemoveDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(afterRemoveDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in afterRemoveDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
+							ProcessRegularMUnit(regularDep, operation, cancellationToken);
 						}
+					}
 
-						// Mark all as not applied
-						foreach (MUnit mUnit in groupPolicyMUnits)
-						{
-							mUnit.IsApplied = false;
-						}
-						break;
+					// Mark all as not applied
+					foreach (MUnit mUnit in mUnits)
+					{
+						mUnit.IsApplied = false;
+					}
+					break;
+				}
 
-					case MUnitOperation.Verify:
+			case MUnitOperation.Verify:
+				{
+					if (isGroupPolicy)
+					{
 						// Primary verification: check via POL file for the selected Group Policy context.
 						// If any MUnit fails, fall back to direct registry verification (treat as Source = Registry).
 						GroupPolicyContext contextForVerification = GroupPolicyContext.Machine;
@@ -1166,7 +1260,7 @@ internal sealed partial class MUnit(
 									RegistryPolicyParser.VerifyPoliciesInSystem(allPolicies, contextForVerification);
 
 						// 2) Per‑MUnit evaluation with fallback to direct Registry verification when needed
-						foreach (MUnit mUnit in groupPolicyMUnits)
+						foreach (MUnit mUnit in mUnits)
 						{
 							cancellationToken?.ThrowIfCancellationRequested();
 
@@ -1262,160 +1356,15 @@ internal sealed partial class MUnit(
 								mUnit.IsApplied = specializedFallback;
 							}
 						}
-						break;
-					default:
-						break;
-				}
-			}
-		}
-		catch (Exception ex)
-		{
-			if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
-			Logger.Write(GlobalVars.GetStr("ErrorProcessingGroupPolicyMUnits"));
-			throw;
-		}
-	}
-
-	/// <summary>
-	/// Processes Registry MUnits in bulk.
-	/// </summary>
-	/// <param name="registryMUnits">The Registry MUnits to process</param>
-	/// <param name="operation">The operation to perform</param>
-	/// <param name="allAvailableMUnits">All available MUnits for dependency resolution</param>
-	/// <param name="cancellationToken">Optional cancellation token</param>
-	private static void ProcessRegistryMUnitsBulk(List<MUnit> registryMUnits, MUnitOperation operation, List<MUnit> allAvailableMUnits, CancellationToken? cancellationToken = null)
-	{
-		try
-		{
-			cancellationToken?.ThrowIfCancellationRequested();
-
-			List<RegistryPolicyEntry> allPolicies = [];
-
-			// Collect all policies from the MUnits
-			foreach (MUnit mUnit in registryMUnits)
-			{
-				cancellationToken?.ThrowIfCancellationRequested();
-
-				List<RegistryPolicyEntry>? policies = operation switch
-				{
-					MUnitOperation.Apply when mUnit.ApplyStrategy is IApplyRegistry applyStrategy => applyStrategy.Policies,
-					MUnitOperation.Remove when mUnit.RemoveStrategy is IRemoveRegistry removeStrategy => removeStrategy.Policies,
-					MUnitOperation.Verify when mUnit.VerifyStrategy is IVerifyRegistry verifyStrategy => verifyStrategy.Policies,
-					_ => null
-				};
-
-				if (policies != null)
-				{
-					allPolicies.AddRange(policies);
-				}
-			}
-
-			if (allPolicies.Count > 0)
-			{
-				// Perform bulk operation with specialized strategies and dependencies
-				switch (operation)
-				{
-					case MUnitOperation.Apply:
-						// Process Before dependencies for JSON-based MUnits
-						List<MUnit> beforeDependencies = ResolveDependencies(registryMUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
-						if (beforeDependencies.Count > 0)
-						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingBeforeDependencies"), beforeDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(beforeDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(beforeDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(beforeDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in beforeDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
-						}
-
-						// Execute-Before specialized apply strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.Before, operation, cancellationToken);
-
-						cancellationToken?.ThrowIfCancellationRequested();
-
-						// Execute main bulk apply operation
-						RegistryManager.Manager.AddPoliciesToSystem(allPolicies);
-
-						// Execute-After specialized apply strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
-
-						// Process After dependencies for JSON-based MUnits
-						List<MUnit> afterDependencies = ResolveDependencies(registryMUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
-						if (afterDependencies.Count > 0)
-						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingAfterDependencies"), afterDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(afterDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(afterDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(afterDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in afterDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
-						}
-
-						// Mark all as applied
-						foreach (MUnit mUnit in registryMUnits)
-						{
-							mUnit.IsApplied = true;
-						}
-						break;
-
-					case MUnitOperation.Remove:
-						// Process Before dependencies for JSON-based MUnits
-						List<MUnit> beforeRemoveDependencies = ResolveDependencies(registryMUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
-						if (beforeRemoveDependencies.Count > 0)
-						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingBeforeDependencies"), beforeRemoveDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(beforeRemoveDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(beforeRemoveDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(beforeRemoveDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in beforeRemoveDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
-						}
-
-						// Execute-Before specialized remove strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.Before, operation, cancellationToken);
-
-						cancellationToken?.ThrowIfCancellationRequested();
-
-						// Execute main bulk remove operation
-						RegistryManager.Manager.RemovePoliciesFromSystem(allPolicies);
-
-						// Execute-After specialized remove strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
-
-						// Process After dependencies for JSON-based MUnits
-						List<MUnit> afterRemoveDependencies = ResolveDependencies(registryMUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
-						if (afterRemoveDependencies.Count > 0)
-						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingAfterDependencies"), afterRemoveDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(afterRemoveDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(afterRemoveDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(afterRemoveDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in afterRemoveDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
-						}
-
-						// Mark all as not applied
-						foreach (MUnit mUnit in registryMUnits)
-						{
-							mUnit.IsApplied = false;
-						}
-						break;
-
-					case MUnitOperation.Verify:
+					}
+					else
+					{
 						cancellationToken?.ThrowIfCancellationRequested();
 
 						Dictionary<RegistryPolicyEntry, bool> verificationResults = RegistryManager.Manager.VerifyPoliciesInSystem(allPolicies);
 
 						// Update status based on verification results, with fallback support
-						foreach (MUnit mUnit in registryMUnits)
+						foreach (MUnit mUnit in mUnits)
 						{
 							cancellationToken?.ThrowIfCancellationRequested();
 
@@ -1443,198 +1392,12 @@ internal sealed partial class MUnit(
 								}
 							}
 						}
-						break;
-					default:
-						break;
+					}
+					break;
 				}
-			}
-		}
-		catch (Exception ex)
-		{
-			if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
-			Logger.Write(GlobalVars.GetStr("ErrorProcessingRegistryMUnits"));
-			throw;
-		}
-	}
 
-	/// <summary>
-	/// Processes Security Policy Registry MUnits in bulk.
-	/// </summary>
-	/// <param name="securityPolicyRegistryMUnits">The Security Policy Registry MUnits to process</param>
-	/// <param name="operation">The operation to perform</param>
-	/// <param name="allAvailableMUnits">All available MUnits for dependency resolution</param>
-	/// <param name="cancellationToken">Optional cancellation token</param>
-	private static void ProcessSecurityPolicyRegistryMUnitsBulk(List<MUnit> securityPolicyRegistryMUnits, MUnitOperation operation, List<MUnit> allAvailableMUnits, CancellationToken? cancellationToken = null)
-	{
-		try
-		{
-			cancellationToken?.ThrowIfCancellationRequested();
-
-			List<RegistryPolicyEntry> allPolicies = [];
-
-			// Collect all policies from the MUnits
-			foreach (MUnit mUnit in securityPolicyRegistryMUnits)
-			{
-				cancellationToken?.ThrowIfCancellationRequested();
-
-				List<RegistryPolicyEntry>? policies = operation switch
-				{
-					MUnitOperation.Apply when mUnit.ApplyStrategy is IApplySecurityPolicyRegistry applyStrategy => applyStrategy.Policies,
-					MUnitOperation.Remove when mUnit.RemoveStrategy is IRemoveSecurityPolicyRegistry removeStrategy => removeStrategy.Policies,
-					MUnitOperation.Verify when mUnit.VerifyStrategy is IVerifySecurityPolicyRegistry verifyStrategy => verifyStrategy.Policies,
-					_ => null
-				};
-
-				if (policies != null)
-				{
-					allPolicies.AddRange(policies);
-				}
-			}
-
-			if (allPolicies.Count > 0)
-			{
-				// Perform bulk operation with specialized strategies and dependencies
-				switch (operation)
-				{
-					case MUnitOperation.Apply:
-						// Process Before dependencies for JSON-based MUnits
-						List<MUnit> beforeDependencies = ResolveDependencies(securityPolicyRegistryMUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
-						if (beforeDependencies.Count > 0)
-						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingBeforeDependencies"), beforeDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(beforeDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(beforeDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(beforeDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in beforeDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
-						}
-
-						// Execute-Before specialized apply strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.Before, operation, cancellationToken);
-
-						cancellationToken?.ThrowIfCancellationRequested();
-
-						// Execute main bulk apply operation for Security Policy Registry
-						SecurityPolicyRegistryManager.AddPoliciesToSystem(allPolicies);
-
-						// Execute-After specialized apply strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
-
-						// Process After dependencies for JSON-based MUnits
-						List<MUnit> afterDependencies = ResolveDependencies(securityPolicyRegistryMUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
-						if (afterDependencies.Count > 0)
-						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingAfterDependencies"), afterDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(afterDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(afterDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(afterDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in afterDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
-						}
-
-						// Mark all as applied
-						foreach (MUnit mUnit in securityPolicyRegistryMUnits)
-						{
-							mUnit.IsApplied = true;
-						}
-						break;
-
-					case MUnitOperation.Remove:
-						// Process Before dependencies for JSON-based MUnits
-						List<MUnit> beforeRemoveDependencies = ResolveDependencies(securityPolicyRegistryMUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
-						if (beforeRemoveDependencies.Count > 0)
-						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingBeforeDependencies"), beforeRemoveDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(beforeRemoveDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(beforeRemoveDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(beforeRemoveDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in beforeRemoveDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
-						}
-
-						// Execute-Before specialized remove strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.Before, operation, cancellationToken);
-
-						cancellationToken?.ThrowIfCancellationRequested();
-
-						// Execute main bulk remove operation for Security Policy Registry
-						SecurityPolicyRegistryManager.RemovePoliciesFromSystem(allPolicies);
-
-						// Execute-After specialized remove strategies
-						ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
-
-						// Process After dependencies for JSON-based MUnits
-						List<MUnit> afterRemoveDependencies = ResolveDependencies(securityPolicyRegistryMUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
-						if (afterRemoveDependencies.Count > 0)
-						{
-							Logger.Write(string.Format(GlobalVars.GetStr("ProcessingAfterDependencies"), afterRemoveDependencies.Count, operation));
-							ProcessGroupPolicyMUnitsBulk(afterRemoveDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessRegistryMUnitsBulk(afterRemoveDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							ProcessSecurityPolicyRegistryMUnitsBulk(afterRemoveDependencies.Where(IsSecurityPolicyRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-							foreach (MUnit regularDep in afterRemoveDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m) && !IsSecurityPolicyRegistryMUnit(m)))
-							{
-								ProcessRegularMUnit(regularDep, operation, cancellationToken);
-							}
-						}
-
-						// Mark all as not applied
-						foreach (MUnit mUnit in securityPolicyRegistryMUnits)
-						{
-							mUnit.IsApplied = false;
-						}
-						break;
-
-					case MUnitOperation.Verify:
-						cancellationToken?.ThrowIfCancellationRequested();
-
-						Dictionary<RegistryPolicyEntry, bool> verificationResults = SecurityPolicyRegistryManager.VerifyPoliciesInSystem(allPolicies);
-
-						// Update status based on verification results, with fallback support
-						foreach (MUnit mUnit in securityPolicyRegistryMUnits)
-						{
-							cancellationToken?.ThrowIfCancellationRequested();
-
-							if (mUnit.VerifyStrategy is IVerifySecurityPolicyRegistry verifyStrategy)
-							{
-								bool allPoliciesApplied = true;
-								foreach (RegistryPolicyEntry policy in verifyStrategy.Policies)
-								{
-									if (!verificationResults.TryGetValue(policy, out bool isApplied) || !isApplied)
-									{
-										allPoliciesApplied = false;
-										break;
-									}
-								}
-
-								// If primary verification is false, try fallback verification
-								if (!allPoliciesApplied)
-								{
-									bool fallbackResult = TryFallbackVerification(verifyStrategy.Policies, cancellationToken);
-									mUnit.IsApplied = fallbackResult;
-								}
-								else
-								{
-									mUnit.IsApplied = true;
-								}
-							}
-						}
-						break;
-					default:
-						break;
-				}
-			}
-		}
-		catch (Exception ex)
-		{
-			if (IsCancellationException(ex)) throw; // Skip writing the custom error message since this is cancellation exception.
-			Logger.Write(GlobalVars.GetStr("ErrorProcessingSecurityPolicyRegistryMUnits"));
-			throw;
+			default:
+				break;
 		}
 	}
 
@@ -1770,7 +1533,6 @@ internal sealed partial class MUnit(
 				// Separate different types of MUnits
 				List<MUnit> groupPolicyMUnits = [];
 				List<MUnit> registryMUnits = [];
-				List<MUnit> securityPolicyRegistryMUnits = [];
 				List<MUnit> regularMUnits = [];
 
 				foreach (MUnit mUnit in mUnits)
@@ -1784,10 +1546,6 @@ internal sealed partial class MUnit(
 					else if (IsRegistryMUnit(mUnit))
 					{
 						registryMUnits.Add(mUnit);
-					}
-					else if (IsSecurityPolicyRegistryMUnit(mUnit))
-					{
-						securityPolicyRegistryMUnits.Add(mUnit);
 					}
 					else
 					{
@@ -1805,12 +1563,6 @@ internal sealed partial class MUnit(
 				if (registryMUnits.Count > 0)
 				{
 					ProcessRegistryMUnitsBulk(registryMUnits, operation, allAvailableMUnits, cancellationToken);
-				}
-
-				// Process Security Policy Registry MUnits in bulk with dependency support
-				if (securityPolicyRegistryMUnits.Count > 0)
-				{
-					ProcessSecurityPolicyRegistryMUnitsBulk(securityPolicyRegistryMUnits, operation, allAvailableMUnits, cancellationToken);
 				}
 
 				// Process regular MUnits individually (no dependency support for these as they are not JSON-based)
@@ -1888,25 +1640,6 @@ internal sealed partial class MUnit(
 						applyStrategy: new RegistryApply([entry]),
 						verifyStrategy: new RegistryVerify([entry]),
 						removeStrategy: new RegistryRemove([entry]),
-						subCategory: entry.SubCategory,
-						url: entry.URL,
-						deviceIntents: entry.DeviceIntents);
-				}
-				else if (entry.Source == Source.SecurityPolicyRegistry)
-				{
-					// Validate that DefaultRegValue is not null for SecurityPolicyRegistry entries
-					if (entry.DefaultRegValue is null)
-					{
-						throw new InvalidOperationException(string.Format(GlobalVars.GetStr("SecurityPolicyRegistryEntryMustHaveDefaultRegValue"), entry.KeyName, entry.ValueName));
-					}
-
-					// Create Security Policy Registry MUnit
-					mUnit = new(
-						category: category,
-						name: entry.FriendlyName,
-						applyStrategy: new SecurityPolicyRegistryApply([entry]),
-						verifyStrategy: new SecurityPolicyRegistryVerify([entry]),
-						removeStrategy: new SecurityPolicyRegistryRemove([entry]),
 						subCategory: entry.SubCategory,
 						url: entry.URL,
 						deviceIntents: entry.DeviceIntents);

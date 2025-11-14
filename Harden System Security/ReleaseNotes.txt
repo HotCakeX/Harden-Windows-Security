@@ -1,7 +1,15 @@
-* When running Harden System Security unelevated and try to navigate to a page that requires elevation, after accepting the elevation prompt, you will no longer be taken to the home page, instead the app will automatically navigate to the same page you were trying to access before the elevation prompt, improving user experience and saving time.
+* Updated dependencies to the latest version.
 
-* Fixed an incompatibility with Nvidia drivers. In the Microsoft Defender category, there is an item that offers applying exploit protections to the "HardenSystemSecurity.exe" which is the main process of the application. In one of the previous versions, 2 new exploit protections named "MicrosoftSignedOnly" and "AllowStoreSignedBinaries" were added to the list, however Nvidia driver causes compatibility issues because it tries to load into the app's process which is something it isn't supposed to do, however as users reported on GitHub, this is causing inconvenience so in this version those 2 exploit protections are no longer applied when you apply exploit protections to Harden System Security in the Microsoft Defender category. Please see this GitHub issue for more info regarding this change: https://github.com/HotCakeX/Harden-Windows-Security/issues/913
+* Removed any dependency on secedit that used to exist; From now on, all security policies are applied, verified and/or removed by the Harden System Security app itself via low level APIs.
 
-* Added a new policy to Microsoft Defender category to set the maximum time an IP address is blocked by Brute-Force Protection to the maximum possible value.
+* Changed the device usage intent for Administrator Protection policy in the User Account Control category to only apply to School, Business, Specialized and Enterprise devices, excluding Development and Gaming device usage intents.
 
-* A lot more at: https://github.com/HotCakeX/Harden-Windows-Security/releases
+* Added links in the UI to many security measures that didn't have them.
+
+* Added an Export button to the Optional Windows Features page. Use it to export the list of all optional Windows features and capabilities along with their current status and details to a structured JSON file.
+
+* Added an Export button to the Attack Surface Reduction rules page. Use it to export the list of all Attack Surface Reduction rules and their status to a structured JSON file.
+
+* Added an Export button to every page that offers security measures configurations. You'll be able to export all of the data about your system for that specific category quickly to a JSON for safe keeping or tracking/backup.
+
+* Added an Export button to the Manage Installed Apps page. Use it to export the list of all installed apps along with their full details to a structured JSON file.

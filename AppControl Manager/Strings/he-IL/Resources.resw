@@ -2006,7 +2006,7 @@
   <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
     <value>אחזר ושאל את ההגדרות המאובטחות במערכת.</value>
   </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>להלן היומנים שמנהל AppControl מייצר אוטומטית ומאחסן בתיקיית &quot;AppControl Manager&quot; ב-Program Files (אם פועל עם הרשאות מוגברות, אחרת הם יישמרו בספריית TEMP). הגודל הכולל של תיקיית היומנים לעולם לא יעלה על 1GB.</value>
   </data>
   <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
@@ -2027,7 +2027,7 @@
   <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
     <value>צפה בקבצי מצב הליבה שזוהו שישמשו ליצירת מדיניות מצב אכיפה. הסר פריטים שאינך רוצה שייכללו במדיניות מצב הליבה המחמירה הסופית מהרשימה.</value>
   </data>
-  <data name="UpdatePageTitle.Text" xml:space="preserve">
+  <data name="UpdatePageTitle" xml:space="preserve">
     <value>בדוק עדכונים בדף זה. תוכל גם להפעיל בדיקת עדכונים אוטומטית שתתבצע פעם אחת בעת ההפעלה ותקבל הודעה בכל פעם שגרסה חדשה זמינה.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">

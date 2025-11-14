@@ -439,7 +439,7 @@
     <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
     <value>Código fuente</value>
   </data>
-    <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <data name="UpdatePageTitle" xml:space="preserve">
     <value>Busque actualizaciones en esta página. También puede habilitar la verificación automática de actualizaciones que ocurrirá una vez al inicio y se le notificará cuando una nueva versión esté disponible.</value>
   </data>
     <data name="GuideButtonAtTop.Content" xml:space="preserve">
@@ -601,7 +601,7 @@
     <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>Completo</value>
   </data>
-  <data name="ProtectPageTitle.Text" xml:space="preserve">
+  <data name="ProtectPageTitle" xml:space="preserve">
     <value>Administre las configuraciones de seguridad y elija cómo asegurar su dispositivo.</value>
   </data>
   <data name="ProtectCategory_MSFTSecBaseline" xml:space="preserve">
@@ -889,7 +889,7 @@
   <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Limpiar</value>
   </data>
-  <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="GroupPolicyEditorPageTitle" xml:space="preserve">
     <value>Abra y lea archivos de directiva de grupo en esta página. Puede buscar en los datos y eliminar directivas individuales del archivo. También puede ver las directivas efectivas en el sistema.</value>
   </data>
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
@@ -1270,58 +1270,58 @@
   <data name="InstalledAppsManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ver y desinstalar aplicaciones instaladas.</value>
   </data>
-  <data name="MicrosoftDefenderPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftDefenderPageTitle" xml:space="preserve">
     <value>Configure todos los aspectos de Microsoft Defender y habilite muchas de sus características que están deshabilitadas por defecto.</value>
   </data>
-  <data name="ASRRulesPageTitle.Text" xml:space="preserve">
+  <data name="ASRRulesPageTitle" xml:space="preserve">
     <value>Configure cada regla de reducción de superficie de ataque en esta página. Pueden prevenir infecciones de malware y explotación de vulnerabilidades.</value>
   </data>
-  <data name="BitLockerPageTitle.Text" xml:space="preserve">
+  <data name="BitLockerPageTitle" xml:space="preserve">
     <value>En esta página puede aplicar directivas que harán BitLocker más fuerte que el predeterminado y proteger sus datos en reposo.</value>
   </data>
-  <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
+  <data name="CertificateCheckingPageTitle" xml:space="preserve">
     <value>Encontrar todos los certificados en su sistema que no tengan raíz en ningún certificado en la lista de certificados raíz confiables de Microsoft.</value>
   </data>
-  <data name="CountryIPBlockingPageTitle.Text" xml:space="preserve">
+  <data name="CountryIPBlockingPageTitle" xml:space="preserve">
     <value>Bloquear rangos de direcciones IP de países en las siguientes listas: Patrocinadores estatales del terrorismo - Oficina de Control de Activos Extranjeros (OFAC)</value>
   </data>
-  <data name="DeviceGuardPageTitle.Text" xml:space="preserve">
+  <data name="DeviceGuardPageTitle" xml:space="preserve">
     <value>Aprovechar las características de seguridad proporcionadas por el hardware para endurecer el sistema operativo en múltiples capas de ejecución diferentes.</value>
   </data>
-  <data name="EdgePageTitle.Text" xml:space="preserve">
+  <data name="EdgePageTitle" xml:space="preserve">
     <value>Aplicar directivas relacionadas con la seguridad y privacidad en Microsoft Edge para hacerlo más seguro y privado al navegar por la web.</value>
   </data>
-  <data name="LockScreenPageTitle.Text" xml:space="preserve">
+  <data name="LockScreenPageTitle" xml:space="preserve">
     <value>Endurecer la pantalla de bloqueo del sistema operativo contra posibles explotaciones y reducir la cantidad de información expuesta a individuos no autorizados cuando el dispositivo está bloqueado.</value>
   </data>
-  <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
+  <data name="MiscellaneousConfigsPageTitle" xml:space="preserve">
     <value>Esta página contiene medidas de seguridad importantes que no encajan en categorías más especializadas. Aplicarlas puede mejorar y fortalecer la seguridad de su sistema y dispositivo.</value>
   </data>
-  <data name="NonAdminPageTitle.Text" xml:space="preserve">
+  <data name="NonAdminPageTitle" xml:space="preserve">
     <value>Las directivas en esta página se aplican solo al usuario actual y no se aplican a nivel del sistema para todos los usuarios. Por esta razón, no necesita permisos de administrador para aplicarlas.</value>
   </data>
-  <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
+  <data name="OptionalWindowsFeaturesPageTitle" xml:space="preserve">
     <value>Recuperar, ver, habilitar y deshabilitar todas las características y capacidades opcionales proporcionadas por el sistema operativo de manera unificada.</value>
   </data>
-  <data name="TLSPageTitle.Text" xml:space="preserve">
+  <data name="TLSPageTitle" xml:space="preserve">
     <value>Endurecer SChannel (Canal Seguro) en el sistema operativo. Es el proveedor de soporte de seguridad (SSP) desarrollado por Microsoft que implementa protocolos de seguridad como Transport Layer Security (TLS).</value>
   </data>
-  <data name="UACPageTitle.Text" xml:space="preserve">
+  <data name="UACPageTitle" xml:space="preserve">
     <value>UAC ayuda a prevenir cambios no autorizados en el sistema operativo solicitando permiso o credenciales de administrador. Esta página ofrece directivas que endurecerán este flujo de trabajo.</value>
   </data>
-  <data name="WindowsFirewallPageTitle.Text" xml:space="preserve">
+  <data name="WindowsFirewallPageTitle" xml:space="preserve">
     <value>El Firewall de Windows ayuda a proteger su computadora filtrando el tráfico entrante y saliente. Aquí puede aplicar varias reglas y configuraciones para mejorar su seguridad.</value>
   </data>
-  <data name="WindowsNetworkingPageTitle.Text" xml:space="preserve">
+  <data name="WindowsNetworkingPageTitle" xml:space="preserve">
     <value>La configuración de redes de Windows le permite configurar varios aspectos de la conectividad de red y seguridad como la forma en que su dispositivo se comunica con otros dispositivos en la red.</value>
   </data>
-  <data name="WindowsUpdatePageTitle.Text" xml:space="preserve">
+  <data name="WindowsUpdatePageTitle" xml:space="preserve">
     <value>Instalar las actualizaciones de Windows lo más pronto posible después de su lanzamiento es vital para mantener la seguridad y estabilidad de su sistema, especialmente contra nuevas explotaciones y zero-day. Esta página le ayuda a forzar directivas que asegurarán que las actualizaciones se instalen de manera oportuna.</value>
   </data>
-  <data name="FileReputationPageTitle.Text" xml:space="preserve">
+  <data name="FileReputationPageTitle" xml:space="preserve">
     <value>Verificar la reputación de archivos ejecutables y otros archivos usando Microsoft Defender Smart Screen o el gráfico de inteligencia de seguridad de Microsoft.</value>
   </data>
-  <data name="InstalledAppsManagementPageTitle.Text" xml:space="preserve">
+  <data name="InstalledAppsManagementPageTitle" xml:space="preserve">
     <value>Ver una lista de todas las aplicaciones instaladas en el sistema y desinstalar las no deseadas.</value>
   </data>
   <data name="PFNVersionLabel.Text" xml:space="preserve">
@@ -1711,9 +1711,6 @@
 <data name="DependencyNotFound" xml:space="preserve">
   <value>Dependencia no encontrada: {0} referenciada por {1}</value>
 </data>
-<data name="SecurityPolicyRegistryApplyBulkInvokeError" xml:space="preserve">
-  <value>SecurityPolicyRegistryApply debe invocarse en lote a través de SecurityPolicyManager</value>
-</data>
 <data name="GroupPolicyApplyBulkInvokeError" xml:space="preserve">
   <value>GroupPolicyApply debe invocarse en lote a través de ApplyPolicies</value>
 </data>
@@ -1743,9 +1740,6 @@
 </data>
 <data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
   <value>Error procesando unidades M del registro en lote.</value>
-</data>
-<data name="ErrorProcessingSecurityPolicyRegistryMUnits" xml:space="preserve">
-  <value>Error procesando unidades M del registro de directiva de seguridad en lote.</value>
 </data>
 <data name="FallbackVerifyResult" xml:space="preserve">
   <value>Verificación de respaldo: {0}\{1} = {2}</value>
@@ -1785,9 +1779,6 @@
 </data>
 <data name="InvalidSource" xml:space="preserve">
   <value>Fuente inválida: {0}</value>
-</data>
-<data name="SecurityPolicyRegistryEntryMustHaveDefaultRegValue" xml:space="preserve">
-  <value>La entrada SecurityPolicyRegistry {0}\{1} debe tener DefaultRegValue no vacío</value>
 </data>
 <data name="ErrorCreatingMUnitsForCategory" xml:space="preserve">
   <value>Error creando unidades M para categoría {0}: {1}</value>
@@ -1894,41 +1885,8 @@
 <data name="RegistryVerificationComplete" xml:space="preserve">
   <value>Verificación del registro completa: {0} de {1} directivas coinciden</value>
 </data>
-<data name="NoSettingsProvided" xml:space="preserve">
-  <value>No se proporcionaron configuraciones</value>
-</data>
-<data name="SettingSystemAccessPolicyViaSecedit" xml:space="preserve">
-  <value>Configurando directiva de acceso al sistema vía secedit...</value>
-</data>
 <data name="CreatedSecurityTemplate" xml:space="preserve">
   <value>Plantilla de seguridad creada: {0}</value>
-</data>
-<data name="TemplateContent" xml:space="preserve">
-  <value>Contenido de plantilla: {0}</value>
-</data>
-<data name="FailedToStartSeceditProcess" xml:space="preserve">
-  <value>Falló al iniciar proceso secedit</value>
-</data>
-<data name="SeceditExitCode" xml:space="preserve">
-  <value>Código de salida de Secedit: {0}</value>
-</data>
-<data name="SeceditOutput" xml:space="preserve">
-  <value>Salida de Secedit: {0}</value>
-</data>
-<data name="SeceditError" xml:space="preserve">
-  <value>Error de Secedit: {0}</value>
-</data>
-<data name="SeceditCompletedSuccessfully" xml:space="preserve">
-  <value>Secedit completado exitosamente</value>
-</data>
-<data name="SeceditFailedWithExitCode" xml:space="preserve">
-  <value>Secedit falló con código de salida: {0}</value>
-</data>
-<data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
-  <value>No se encontraron configuraciones [System Access] en el archivo especificado</value>
-</data>
-<data name="ExtractedSystemAccessSettingsFromFile" xml:space="preserve">
-  <value>Se extrajeron {0} configuraciones System Access del archivo: {1}</value>
 </data>
 <data name="FileNotFoundPath" xml:space="preserve">
   <value>Archivo no encontrado: {0}</value>
@@ -2248,7 +2206,7 @@
   <data name="AppDescription" xml:space="preserve">
   <value>Harden System Security es una aplicación que te ayuda a configurar tu sistema para que sea seguro contra muchas amenazas avanzadas, utilizando únicamente herramientas y características disponibles en el sistema operativo y ofrecidas por Microsoft sin usar ninguna herramienta o programa de terceros.</value>
 </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>Los siguientes son los registros que Harden System Security genera automáticamente y almacena en la carpeta designada. El tamaño total de la carpeta de registros nunca excederá 1GB.</value>
   </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
@@ -2287,10 +2245,10 @@
   <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
     <value>Línea Base de Seguridad de Aplicaciones de Microsoft 365</value>
   </data>
-    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="MicrosoftSecurityBaselinePageTitle" xml:space="preserve">
     <value>Aplique la Línea Base de Seguridad de Microsoft en esta página. También puede verificar el cumplimiento del sistema para obtener un reporte preciso que muestre qué configuraciones están aplicadas y cuáles no. También puede remover las políticas aplicadas por la línea base.</value>
   </data>
-    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="Microsoft365AppsSecurityBaselinePageTitle" xml:space="preserve">
     <value>Aplique la Línea Base de Seguridad de Aplicaciones de Microsoft 365 en esta página. También puede verificar el cumplimiento del sistema para obtener un reporte preciso que muestre qué configuraciones están aplicadas y cuáles no. También puede remover las políticas aplicadas por la línea base.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
@@ -2327,7 +2285,7 @@
   <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
     <value>Anulaciones de Líneas Base de Microsoft</value>
   </data>
-  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftBaseLinesOverridesPageTitle" xml:space="preserve">
     <value>Restaure las características del Sistema Operativo que han sido deshabilitadas después de aplicar las Líneas Base de Seguridad de Microsoft.</value>
   </data>
   <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -2842,7 +2800,7 @@ Huella Digital: {3}</value>
   <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ver y administrar todas las Políticas de Auditoría del sistema.</value>
   </data>
-    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <data name="AuditPoliciesPageTitle" xml:space="preserve">
     <value>Ver y administrar todas las Políticas de Auditoría del sistema.</value>
   </data>
   <!--Audit Policies ListView Headers Start-->
@@ -3809,7 +3767,7 @@ Huella Digital: {3}</value>
   <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>La lista de materiales criptográficos (CBOM) proporciona un inventario a nivel de sistema de la criptografía del sistema operativo -algoritmos, curvas, conjuntos de cifrado y proveedores- capturando la postura criptográfica de la plataforma.</value>
   </data>
-  <data name="CBOMPageTitle.Text" xml:space="preserve">
+  <data name="CBOMPageTitle" xml:space="preserve">
     <value>La lista de materiales criptográficos (CBOM) ofrece un inventario y una introspección a nivel de sistema de la criptografía del sistema operativo, poniendo a la vista los algoritmos, las curvas, los conjuntos de cifrado y los proveedores que definen la postura criptográfica de la plataforma. Al normalizar lo que expone el sistema operativo, proporciona una transparencia similar a un SBOM para el ámbito criptográfico: habilita auditorías basadas en evidencia, verificaciones de conformidad con la línea base, detección de desviaciones a través de las actualizaciones, identificación de primitivas heredadas/débiles y la planificación de transiciones poscuánticas.</value>
   </data>
 <data name="CA_NameHeader.Text" xml:space="preserve">
@@ -4252,5 +4210,20 @@ Huella Digital: {3}</value>
   </data>
   <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
     <value>La comprobación de actualizaciones para las aplicaciones de Microsoft Store se completó correctamente. Para ver las descargas que se iniciaron, por favor abra la aplicación Microsoft Store.</value>
+  </data>
+    <data name="NoOptionalFeaturesAvailableForExport" xml:space="preserve">
+    <value>No hay características opcionales ni capacidades para exportar. Primero obténgalas.</value>
+  </data>
+  <data name="SuccessfullyExportedOptionalFeatures" xml:space="preserve">
+    <value>Se exportaron correctamente {0} características opcionales y/o capacidades a {1}</value>
+  </data>
+  <data name="SuccessfullyExportedASRRules" xml:space="preserve">
+    <value>Se exportaron correctamente {0} reglas de reducción de la superficie de ataque a {1}</value>
+  </data>
+  <data name="NoInstalledAppsForExport" xml:space="preserve">
+    <value>No hay aplicaciones instaladas para exportar. Primero obténgalas.</value>
+  </data>
+  <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
+    <value>Se exportaron correctamente {0} aplicaciones instaladas a {1}</value>
   </data>
 </root>

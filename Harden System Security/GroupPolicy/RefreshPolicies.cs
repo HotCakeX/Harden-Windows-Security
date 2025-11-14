@@ -48,8 +48,5 @@ internal static class RefreshPolicies
 
 		// Using the Save method of the IGroupPolicyObject via this method once before and once after policies are applied, has same effect as gpupdate /force and is faster.
 		CSEMgr.RegisterCSEGuids();
-
-		// _ = ProcessStarter.RunCommand("gpupdate", "/force");
-
 	}
 }

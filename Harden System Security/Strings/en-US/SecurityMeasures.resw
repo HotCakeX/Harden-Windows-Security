@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
     <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
         <xsd:element name="root" msdata:IsDataSet="true">
@@ -890,7 +890,7 @@
     <value>Set the behavior of the elevation prompt for administrators in Enhanced Privilege Protection Mode: Prompt for Credentials on the Secure Desktop</value>
   </data>
     <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
-    <value>Set the type of Admin Approval Mode to be Admin Approval Mode with enhanced privilege protection</value>
+    <value>Administrator Protection: Set the type of Admin Approval Mode to be Admin Approval Mode with enhanced privilege protection</value>
   </data>
   <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
     <value>Remove remotely accessible registry paths.</value>

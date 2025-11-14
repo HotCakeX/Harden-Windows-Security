@@ -32,6 +32,6 @@ internal sealed partial class OptionalWindowsFeatures : Page, CommonCore.UI.IPag
 		DataContext = ViewModel;
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("OptionalWindowsFeaturesPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("OptionalWindowsFeaturesPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features");
 }

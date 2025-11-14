@@ -2006,7 +2006,7 @@
   <data name="GetSecurePolicySettingsPageTitle.Text" xml:space="preserve">
     <value>Ανακτήστε και ερωτήστε τις Ασφαλείς Ρυθμίσεις στο σύστημα.</value>
   </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>Τα παρακάτω είναι τα αρχεία καταγραφής που ο AppControl Manager δημιουργεί αυτόματα και αποθηκεύει στο φάκελο "AppControl Manager" στα Program Files (εάν εκτελείται με ανύψωση, διαφορετικά θα αποθηκευτούν στον κατάλογο TEMP). Το συνολικό μέγεθος του φακέλου αρχείων καταγραφής δεν θα υπερβεί ποτέ το 1GB.</value>
   </data>
   <data name="MDEAHPolicyCreationPageTitle.Text" xml:space="preserve">
@@ -2027,7 +2027,7 @@
   <data name="StrictKernelModePolicyScanResultsPageTitle.Text" xml:space="preserve">
     <value>Προβολή των ανιχνευθέντων αρχείων λειτουργίας πυρήνα που θα χρησιμοποιηθούν για τη δημιουργία της πολιτικής λειτουργίας επιβολής. Αφαιρέστε στοιχεία που δεν θέλετε να συμπεριληφθούν στην τελική πολιτική Strict Kernel-mode από τη λίστα.</value>
   </data>
-  <data name="UpdatePageTitle.Text" xml:space="preserve">
+  <data name="UpdatePageTitle" xml:space="preserve">
     <value>Ελέγξτε για ενημερώσεις σε αυτήν τη σελίδα. Μπορείτε επίσης να ενεργοποιήσετε τον αυτόματο έλεγχο ενημερώσεων που θα γίνεται μία φορά κατά την εκκίνηση και θα ειδοποιείστε όποτε είναι διαθέσιμη μια νέα έκδοση.</value>
   </data>
   <data name="ValidatePolicyPageTitle.Text" xml:space="preserve">

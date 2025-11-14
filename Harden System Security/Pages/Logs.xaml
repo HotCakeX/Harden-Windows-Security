@@ -65,7 +65,6 @@
 
             <!-- Search TextBox -->
             <TextBox x:Uid="SearchBoxTextBox"
-                     MinWidth="300"
                      Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <!-- Progress Ring for loading indication -->

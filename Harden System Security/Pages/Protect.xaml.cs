@@ -35,7 +35,7 @@ internal sealed partial class Protect : Page, CommonCore.UI.IPageHeaderProvider
 		ViewModel.UIListView = ProtectionCategoriesListView; // Save a reference to the ListView in the ViewModel for direct access.
 	}
 
-	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ProtectPageTitle/Text");
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("ProtectPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect");
 
 	private async void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)

@@ -23,6 +23,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AppControlManager.ViewModels;
+using HardenSystemSecurity.GroupPolicy;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -281,6 +282,9 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 						}
 					default: break;
 				}
+
+				// Update policies to take effect immediately
+				CSEMgr.RegisterCSEGuids();
 			});
 
 			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyAddedIPRangeMessage"));
@@ -331,6 +335,9 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 						}
 					default: break;
 				}
+
+				// Update policies to take effect immediately
+				CSEMgr.RegisterCSEGuids();
 			});
 
 			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SuccessfullyRemovedIPRangeMessage"));
@@ -376,6 +383,9 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 
 				// Add IPv6 rules
 				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} true"));
+
+				// Update policies to take effect immediately
+				CSEMgr.RegisterCSEGuids();
 			});
 
 			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyAddedIPBlockingRulesMessage"), selectedCountry.FriendlyName));
@@ -421,6 +431,9 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 
 				// Remove IPv6 rules
 				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} false"));
+
+				// Update policies to take effect immediately
+				CSEMgr.RegisterCSEGuids();
 			});
 
 			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyRemovedIPBlockingRulesMessage"), selectedCountry.FriendlyName));

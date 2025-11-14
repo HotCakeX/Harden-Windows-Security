@@ -19,10 +19,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
+using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
@@ -700,5 +702,68 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		}
 	}
 
+	#region Export to JSON
+
+	/// <summary>
+	/// Exports all of the installed apps to a JSON file.
+	/// </summary>
+	internal async void ExportToJson_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			if (AppsListItemsSourceBackingList.Count == 0)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoInstalledAppsForExport"));
+				return;
+			}
+
+			ElementsAreEnabled = false;
+			MainInfoBar.IsClosable = false;
+
+			// Flatten the groups into a single list
+			List<PackagedAppView> itemsToExport = [];
+			foreach (GroupInfoListForPackagedAppView group in AppsListItemsSourceBackingList)
+			{
+				foreach (PackagedAppView m in group)
+				{
+					itemsToExport.Add(m);
+				}
+			}
+
+			if (itemsToExport.Count == 0)
+			{
+				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoInstalledAppsForExport"));
+				return;
+			}
+
+			DateTime now = DateTime.Now;
+			string defaultFileName = $"Installed Apps {now:yyyy-MM-dd_HH-mm-ss}.json";
+
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, defaultFileName);
+			if (string.IsNullOrWhiteSpace(savePath))
+			{
+				return;
+			}
+
+			await Task.Run(() =>
+			{
+				string json = PackagedAppViewJsonContext.SerializeList(itemsToExport);
+				File.WriteAllText(savePath, json, Encoding.UTF8);
+			});
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedInstalledApps"), itemsToExport.Count, savePath));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+	#endregion
 
 }

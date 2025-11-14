@@ -439,7 +439,7 @@
     <data name="SourceCodeHyperLinkButton.Content" xml:space="preserve">
     <value>സോഴ്സ് കോഡ്</value>
   </data>
-    <data name="UpdatePageTitle.Text" xml:space="preserve">
+    <data name="UpdatePageTitle" xml:space="preserve">
     <value>ഈ പേജിൽ അപ്ഡേറ്റുകൾക്കായി പരിശോധിക്കുക. സ്റ്റാർട്ടപ്പിൽ ഒരു തവണ സംഭവിക്കുന്ന ഓട്ടോമാറ്റിക് അപ്ഡേറ്റ് ചെക്കിംഗും നിങ്ങൾക്ക് സാധ്യമാക്കാം, പുതിയ പതിപ്പ് ലഭ്യമാകുമ്പോൾ നിങ്ങളെ അറിയിക്കും.</value>
   </data>
     <data name="GuideButtonAtTop.Content" xml:space="preserve">
@@ -601,7 +601,7 @@
     <data name="CompleteProtectionPresetComboBoxItemText" xml:space="preserve">
     <value>പൂർണ്ണ</value>
   </data>
-  <data name="ProtectPageTitle.Text" xml:space="preserve">
+  <data name="ProtectPageTitle" xml:space="preserve">
     <value>സുരക്ഷാ കോൺഫിഗറേഷനുകൾ നിയന്ത്രിക്കുകയും നിങ്ങളുടെ ഉപകരണം എങ്ങനെ സുരക്ഷിതമാക്കണമെന്ന് തിരഞ്ഞെടുക്കുകയും ചെയ്യുക.</value>
   </data>
   <data name="ProtectCategory_MSFTSecBaseline" xml:space="preserve">
@@ -889,7 +889,7 @@
   <data name="ClearButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>മായ്ക്കുക</value>
   </data>
-  <data name="GroupPolicyEditorPageTitle.Text" xml:space="preserve">
+  <data name="GroupPolicyEditorPageTitle" xml:space="preserve">
     <value>ഈ പേജിൽ ഗ്രൂപ്പ് പോളിസി ഫയലുകൾ തുറക്കുകയും വായിക്കുകയും ചെയ്യുക. നിങ്ങൾക്ക് ഡാറ്റയിൽ തിരയാനും ഫയലിൽ നിന്ന് വ്യക്തിഗത നയങ്ങൾ നീക്കം ചെയ്യാനും കഴിയും. സിസ്റ്റത്തിലെ ഫലപ്രദമായ നയങ്ങളും നിങ്ങൾക്ക് കാണാം.</value>
   </data>
   <data name="ViewSelectedGroupPolicyFileTextBlock.Text" xml:space="preserve">
@@ -1270,58 +1270,58 @@
   <data name="InstalledAppsManagementNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പുകൾ കാണുകയും അൺഇൻസ്റ്റാൾ ചെയ്യുകയും ചെയ്യുക.</value>
   </data>
-  <data name="MicrosoftDefenderPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftDefenderPageTitle" xml:space="preserve">
     <value>Microsoft Defender-ന്റെ എല്ലാ വശങ്ങളും കോൺഫിഗർ ചെയ്യുകയും സ്ഥിരമായി പ്രാപ്തമല്ലാത്ത അതിന്റെ പല ഫീച്ചറുകളും പ്രാപ്തമാക്കുകയും ചെയ്യുക.</value>
   </data>
-  <data name="ASRRulesPageTitle.Text" xml:space="preserve">
+  <data name="ASRRulesPageTitle" xml:space="preserve">
     <value>ഈ പേജിൽ ഓരോ ആക്രമണ പ്രതലം കുറയ്ക്കൽ നിയമവും കോൺഫിഗർ ചെയ്യുക. അവയ്ക്ക് മാൽവെയർ അണുബാധയും അപകട ചൂഷണവും തടയാൻ കഴിയും.</value>
   </data>
-  <data name="BitLockerPageTitle.Text" xml:space="preserve">
+  <data name="BitLockerPageTitle" xml:space="preserve">
     <value>ഈ പേജിൽ നിങ്ങൾക്ക് BitLocker-നെ സ്ഥിരമായതിനേക്കാൾ ശക്തമാക്കുകയും നിങ്ങളുടെ ഡാറ്റയെ വിശ്രമത്തിൽ സംരക്ഷിക്കുകയും ചെയ്യുന്ന നയങ്ങൾ പ്രയോഗിക്കാം.</value>
   </data>
-  <data name="CertificateCheckingPageTitle.Text" xml:space="preserve">
+  <data name="CertificateCheckingPageTitle" xml:space="preserve">
     <value>Microsoft-ന്റെ വിശ്വസനീയ റൂട്ട് സർട്ടിഫിക്കറ്റ് ലിസ്റ്റിലെ ഏതെങ്കിലും സർട്ടിഫിക്കറ്റിൽ റൂട്ട് ഇല്ലാത്ത നിങ്ങളുടെ സിസ്റ്റത്തിലെ എല്ലാ സർട്ടിഫിക്കറ്റുകളും കണ്ടെത്തുക.</value>
   </data>
-  <data name="CountryIPBlockingPageTitle.Text" xml:space="preserve">
+  <data name="CountryIPBlockingPageTitle" xml:space="preserve">
     <value>ഇനിപ്പറയുന്ന ലിസ്റ്റുകളിലെ രാജ്യങ്ങളുടെ IP വിലാസ ശ്രേണികൾ ബ്ലോക്ക് ചെയ്യുക: സ്റ്റേറ്റ് സ്പോൺസർഡ് ടെററിസം - ഓഫീസ് ഓഫ് ഫോറിൻ അസെറ്റ്‌സ് കൺട്രോൾ (OFAC)</value>
   </data>
-  <data name="DeviceGuardPageTitle.Text" xml:space="preserve">
+  <data name="DeviceGuardPageTitle" xml:space="preserve">
     <value>വിവിധ എക്സിക്യൂഷൻ ലെയറുകളിൽ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തെ കഠിനമാക്കാൻ ഹാർഡ്‌വെയർ നൽകുന്ന സുരക്ഷാ ഫീച്ചറുകൾ പ്രയോജനപ്പെടുത്തുക.</value>
   </data>
-  <data name="EdgePageTitle.Text" xml:space="preserve">
+  <data name="EdgePageTitle" xml:space="preserve">
     <value>വെബ് ബ്രൗസിംഗിൽ കൂടുതൽ സുരക്ഷിതവും സ്വകാര്യവുമാക്കാൻ Microsoft Edge-ൽ സുരക്ഷയും സ്വകാര്യതയുമായി ബന്ധപ്പെട്ട നയങ്ങൾ പ്രയോഗിക്കുക.</value>
   </data>
-  <data name="LockScreenPageTitle.Text" xml:space="preserve">
+  <data name="LockScreenPageTitle" xml:space="preserve">
     <value>സാധ്യമായ ചൂഷണങ്ങൾക്കെതിരെ ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിന്റെ ലോക്ക് സ്ക്രീൻ കഠിനമാക്കുകയും ഉപകരണം ലോക്ക് ചെയ്തിരിക്കുമ്പോൾ അനധികൃത വ്യക്തികൾക്ക് തുറന്നുകാട്ടുന്ന വിവരങ്ങളുടെ അളവ് കുറയ്ക്കുകയും ചെയ്യുക.</value>
   </data>
-  <data name="MiscellaneousConfigsPageTitle.Text" xml:space="preserve">
+  <data name="MiscellaneousConfigsPageTitle" xml:space="preserve">
     <value>ഈ പേജിൽ മറ്റ് കൂടുതൽ പ്രത്യേകവൽക്കരിച്ച വിഭാഗങ്ങളിൽ യോജിക്കാത്ത പ്രധാന സുരക്ഷാ നടപടികൾ അടങ്ങിയിരിക്കുന്നു. ഇവ പ്രയോഗിക്കുന്നത് നിങ്ങളുടെ സിസ്റ്റത്തിന്റെയും ഉപകരണത്തിന്റെയും സുരക്ഷ മെച്ചപ്പെടുത്തുകയും ശക്തിപ്പെടുത്തുകയും ചെയ്യും.</value>
   </data>
-  <data name="NonAdminPageTitle.Text" xml:space="preserve">
+  <data name="NonAdminPageTitle" xml:space="preserve">
     <value>ഈ പേജിലെ നയങ്ങൾ നിലവിലെ ഉപയോക്താവിൽ മാത്രം ബാധകമാകുന്നു, എല്ലാ ഉപയോക്താക്കൾക്കുമായി സിസ്റ്റം തലത്തിൽ ബാധകമാകുന്നില്ല. ഈ കാരണത്താൽ, ഇവ പ്രയോഗിക്കാൻ നിങ്ങൾക്ക് അഡ്മിനിസ്ട്രേറ്റർ അനുമതികൾ ആവശ്യമില്ല.</value>
   </data>
-  <data name="OptionalWindowsFeaturesPageTitle.Text" xml:space="preserve">
+  <data name="OptionalWindowsFeaturesPageTitle" xml:space="preserve">
     <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റം നൽകുന്ന എല്ലാ ഓപ്ഷണൽ ഫീച്ചറുകളും കഴിവുകളും ഏകീകൃത രീതിയിൽ പുനർലഭിക്കുക, കാണുക, പ്രാപ്തമാക്കുക, പ്രാപ്തമല്ലാതാക്കുക.</value>
   </data>
-  <data name="TLSPageTitle.Text" xml:space="preserve">
+  <data name="TLSPageTitle" xml:space="preserve">
     <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ SChannel (സെക്യൂർ ചാനൽ) കഠിനമാക്കുക. Transport Layer Security (TLS) പോലുള്ള സുരക്ഷാ പ്രോട്ടോക്കോളുകൾ നടപ്പിലാക്കുന്ന Microsoft വികസിപ്പിച്ച സുരക്ഷാ സപ്പോർട്ട് പ്രൊവൈഡർ (SSP) ആണിത്.</value>
   </data>
-  <data name="UACPageTitle.Text" xml:space="preserve">
+  <data name="UACPageTitle" xml:space="preserve">
     <value>UAC അനുമതി അല്ലെങ്കിൽ അഡ്മിനിസ്ട്രേറ്റർ ക്രെഡൻഷ്യലുകൾ അഭ്യർത്ഥിച്ചുകൊണ്ട് ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ അനധികൃത മാറ്റങ്ങൾ തടയാൻ സഹായിക്കുന്നു. ഈ വർക്ക്ഫ്ലോ കഠിനമാക്കുന്ന നയങ്ങൾ ഈ പേജ് നൽകുന്നു.</value>
   </data>
-  <data name="WindowsFirewallPageTitle.Text" xml:space="preserve">
+  <data name="WindowsFirewallPageTitle" xml:space="preserve">
     <value>ഇൻകമിംഗ്, ഔട്ട്ഗോയിംഗ് ട്രാഫിക് ഫിൽറ്റർ ചെയ്ത് നിങ്ങളുടെ കമ്പ്യൂട്ടറിന്റെ സുരക്ഷയിൽ Windows ഫയർവാൾ സഹായിക്കുന്നു. ഇവിടെ നിങ്ങൾക്ക് അതിന്റെ സുരക്ഷ മെച്ചപ്പെടുത്താൻ വിവിധ നിയമങ്ങളും കോൺഫിഗറേഷനുകളും പ്രയോഗിക്കാം.</value>
   </data>
-  <data name="WindowsNetworkingPageTitle.Text" xml:space="preserve">
+  <data name="WindowsNetworkingPageTitle" xml:space="preserve">
     <value>Windows നെറ്റ്‌വർക്കിംഗ് സെറ്റിംഗുകൾ നിങ്ങളുടെ ഉപകരണം നെറ്റ്‌വർക്കിലെ മറ്റ് ഉപകരണങ്ങളുമായി എങ്ങനെ ആശയവിനിമയം നടത്തുന്നു എന്നത് പോലുള്ള നെറ്റ്‌വർക്ക് കണക്റ്റിവിറ്റിയുടെയും സുരക്ഷയുടെയും വിവിധ വശങ്ങൾ കോൺഫിഗർ ചെയ്യാൻ നിങ്ങളെ അനുവദിക്കുന്നു.</value>
   </data>
-  <data name="WindowsUpdatePageTitle.Text" xml:space="preserve">
+  <data name="WindowsUpdatePageTitle" xml:space="preserve">
     <value>Windows അപ്ഡേറ്റുകൾ റിലീസിന് ശേഷം എത്രയും വേഗം ഇൻസ്റ്റാൾ ചെയ്യുന്നത് നിങ്ങളുടെ സിസ്റ്റത്തിന്റെ സുരക്ഷയും സ്ഥിരതയും നിലനിർത്താൻ നിർണ്ണായകമാണ്, പ്രത്യേകിച്ച് പുതിയ ചൂഷണങ്ങൾക്കും zero-day കൾക്കുമെതിരെ. അപ്ഡേറ്റുകൾ സമയബന്ധിതമായി ഇൻസ്റ്റാൾ ചെയ്യപ്പെടുന്നുവെന്ന് ഉറപ്പാക്കുന്ന നയങ്ങൾ പ്രയോഗിക്കാൻ ഈ പേജ് നിങ്ങളെ സഹായിക്കുന്നു.</value>
   </data>
-  <data name="FileReputationPageTitle.Text" xml:space="preserve">
+  <data name="FileReputationPageTitle" xml:space="preserve">
     <value>Microsoft Defender Smart Screen അല്ലെങ്കിൽ Microsoft-ന്റെ സുരക്ഷാ ഇന്റലിജൻസ് ഗ്രാഫ് ഉപയോഗിച്ച് എക്സിക്യൂട്ടബിൾ ഫയലുകളുടെയും മറ്റ് ഫയലുകളുടെയും പ്രശസ്തി പരിശോധിക്കുക.</value>
   </data>
-  <data name="InstalledAppsManagementPageTitle.Text" xml:space="preserve">
+  <data name="InstalledAppsManagementPageTitle" xml:space="preserve">
     <value>സിസ്റ്റത്തിൽ ഇൻസ്റ്റാൾ ചെയ്ത എല്ലാ ആപ്പുകളുടെയും ലിസ്റ്റ് കാണുകയും അനാവശ്യ ആപ്പുകൾ അൺഇൻസ്റ്റാൾ ചെയ്യുകയും ചെയ്യുക.</value>
   </data>
   <data name="PFNVersionLabel.Text" xml:space="preserve">
@@ -1711,9 +1711,6 @@
 <data name="DependencyNotFound" xml:space="preserve">
   <value>ആശ്രിതത്വം കണ്ടെത്തിയില്ല: {0} റഫർ ചെയ്യുന്ന {1}</value>
 </data>
-<data name="SecurityPolicyRegistryApplyBulkInvokeError" xml:space="preserve">
-  <value>SecurityPolicyRegistryApply SecurityPolicyManager വഴി ബൾക്കിൽ ആവാഹിക്കണം</value>
-</data>
 <data name="GroupPolicyApplyBulkInvokeError" xml:space="preserve">
   <value>GroupPolicyApply ApplyPolicies വഴി ബൾക്കിൽ ആവാഹിക്കണം</value>
 </data>
@@ -1743,9 +1740,6 @@
 </data>
 <data name="ErrorProcessingRegistryMUnits" xml:space="preserve">
   <value>രജിസ്ട്രി M യൂണിറ്റുകൾ ബൾക്കിൽ പ്രോസസ് ചെയ്യുന്നതിൽ പിശക്.</value>
-</data>
-<data name="ErrorProcessingSecurityPolicyRegistryMUnits" xml:space="preserve">
-  <value>സുരക്ഷാ നയ രജിസ്ട്രി M യൂണിറ്റുകൾ ബൾക്കിൽ പ്രോസസ് ചെയ്യുന്നതിൽ പിശക്.</value>
 </data>
 <data name="FallbackVerifyResult" xml:space="preserve">
   <value>ഫാൾബാക്ക് പരിശോധന: {0}\{1} = {2}</value>
@@ -1785,9 +1779,6 @@
   </data>
   <data name="InvalidSource" xml:space="preserve">
     <value>അസാധുവായ സ്രോതസ്സ്: {0}</value>
-  </data>
-  <data name="SecurityPolicyRegistryEntryMustHaveDefaultRegValue" xml:space="preserve">
-    <value>SecurityPolicyRegistry എൻട്രി {0}\{1}-നിൽ ശൂന്യമല്ലാത്ത DefaultRegValue ഉണ്ടായിരിക്കണം</value>
   </data>
   <data name="ErrorCreatingMUnitsForCategory" xml:space="preserve">
     <value>വിഭാഗം {0}-നുള്ള M യൂണിറ്റുകൾ സൃഷ്ടിക്കുന്നതിൽ പിശക്: {1}</value>
@@ -1894,41 +1885,8 @@
   <data name="RegistryVerificationComplete" xml:space="preserve">
     <value>രജിസ്ട്രി പരിശോധന പൂർത്തിയായി: {1}-ൽ നിന്നും {0} നയങ്ങൾ പൊരുത്തപ്പെടുന്നു</value>
   </data>
-  <data name="NoSettingsProvided" xml:space="preserve">
-    <value>സെറ്റിംഗുകളൊന്നും നൽകിയിട്ടില്ല</value>
-  </data>
-  <data name="SettingSystemAccessPolicyViaSecedit" xml:space="preserve">
-    <value>secedit വഴി സിസ്റ്റം ആക്സസ് നയം സെറ്റ് ചെയ്യുന്നു...</value>
-  </data>
   <data name="CreatedSecurityTemplate" xml:space="preserve">
     <value>സുരക്ഷാ ടെംപ്ലേറ്റ് സൃഷ്ടിച്ചു: {0}</value>
-  </data>
-  <data name="TemplateContent" xml:space="preserve">
-    <value>ടെംപ്ലേറ്റ് ഉള്ളടക്കം: {0}</value>
-  </data>
-  <data name="FailedToStartSeceditProcess" xml:space="preserve">
-    <value>secedit പ്രോസസ് ആരംഭിക്കുന്നതിൽ പരാജയപ്പെട്ടു</value>
-  </data>
-  <data name="SeceditExitCode" xml:space="preserve">
-    <value>Secedit എക്സിറ്റ് കോഡ്: {0}</value>
-  </data>
-  <data name="SeceditOutput" xml:space="preserve">
-    <value>Secedit ഔട്ട്പുട്ട്: {0}</value>
-  </data>
-  <data name="SeceditError" xml:space="preserve">
-    <value>Secedit പിശക്: {0}</value>
-  </data>
-  <data name="SeceditCompletedSuccessfully" xml:space="preserve">
-    <value>Secedit വിജയകരമായി പൂർത്തിയായി</value>
-  </data>
-  <data name="SeceditFailedWithExitCode" xml:space="preserve">
-    <value>Secedit എക്സിറ്റ് കോഡിനൊപ്പം പരാജയപ്പെട്ടു: {0}</value>
-  </data>
-  <data name="NoSystemAccessSettingsFoundInFile" xml:space="preserve">
-    <value>നിർദ്ദിഷ്ട ഫയലിൽ [System Access] സെറ്റിംഗുകളൊന്നും കണ്ടെത്തിയില്ല</value>
-  </data>
-  <data name="ExtractedSystemAccessSettingsFromFile" xml:space="preserve">
-    <value>ഫയലിൽ നിന്ന് {0} System Access സെറ്റിംഗുകൾ എക്സ്ട്രാക്റ്റ് ചെയ്തു: {1}</value>
   </data>
   <data name="FileNotFoundPath" xml:space="preserve">
     <value>ഫയൽ കണ്ടെത്തിയില്ല: {0}</value>
@@ -2248,7 +2206,7 @@
   <data name="AppDescription" xml:space="preserve">
   <value>Harden System Security എന്നത് നിരവധി വിപുലമായ ഭീഷണികൾക്കെതിരെ സുരക്ഷിതമായിരിക്കാൻ നിങ്ങളുടെ സിസ്റ്റം കോൺഫിഗർ ചെയ്യാൻ സഹായിക്കുന്ന ഒരു ആപ്ലിക്കേഷനാണ്, ഓപ്പറേറ്റിംഗ് സിസ്റ്റത്തിൽ ലഭ്യമായതും Microsoft നൽകുന്നതുമായ ടൂളുകളും സവിശേഷതകളും മാത്രം ഉപയോഗിച്ച്, മൂന്നാം കക്ഷി ടൂളുകളോ പ്രോഗ്രാമുകളോ ഉപയോഗിക്കാതെ.</value>
 </data>
-  <data name="LogsPageTitle.Text" xml:space="preserve">
+  <data name="LogsPageTitle" xml:space="preserve">
     <value>Harden System Security സ്വയമേവ സൃഷ്ടിക്കുകയും നിയുക്ത ഫോൾഡറിൽ സംഭരിക്കുകയും ചെയ്യുന്ന ലോഗുകൾ താഴെ പറഞ്ഞിരിക്കുന്നവയാണ്. ലോഗ് ഫോൾഡറിന്റെ മൊത്തം വലുപ്പം ഒരിക്കലും 1GB കവിയില്ല.</value>
   </data>
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
@@ -2287,10 +2245,10 @@
   <data name="Microsoft365AppsSecurityBaselineNavItem.Content" xml:space="preserve">
     <value>Microsoft 365 ആപ്പുകളുടെ സുരക്ഷാ അടിസ്ഥാനം</value>
   </data>
-    <data name="MicrosoftSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="MicrosoftSecurityBaselinePageTitle" xml:space="preserve">
     <value>ഈ പേജിൽ മൈക്രോസോഫ്റ്റ് സുരക്ഷാ അടിസ്ഥാനം പ്രയോഗിക്കുക. ഏതു സജ്ജീകരണങ്ങൾ പ്രയോഗിച്ചിട്ടുണ്ടെന്നും ഏതുവ അല്ലെന്നും കാണിക്കുന്ന കൃത്യമായ റിപ്പോർട്ട് ലഭിക്കാൻ സിസ്റ്റം പാലിക്കൽ സ്ഥിരീകരിക്കാനും നിങ്ങൾക്ക് കഴിയും. അടിസ്ഥാനം പ്രയോഗിച്ച നയങ്ങൾ നീക്കം ചെയ്യാനും നിങ്ങൾക്ക് കഴിയും.</value>
   </data>
-    <data name="Microsoft365AppsSecurityBaselinePageTitle.Text" xml:space="preserve">
+    <data name="Microsoft365AppsSecurityBaselinePageTitle" xml:space="preserve">
     <value>ഈ പേജിൽ Microsoft 365 ആപ്പുകളുടെ സുരക്ഷാ അടിസ്ഥാനം പ്രയോഗിക്കുക. ഏതു സജ്ജീകരണങ്ങൾ പ്രയോഗിച്ചിട്ടുണ്ടെന്നും ഏതുവ അല്ലെന്നും കാണിക്കുന്ന കൃത്യമായ റിപ്പോർട്ട് ലഭിക്കാൻ സിസ്റ്റം പാലിക്കൽ സ്ഥിരീകരിക്കാനും നിങ്ങൾക്ക് കഴിയും. അടിസ്ഥാനം പ്രയോഗിച്ച നയങ്ങൾ നീക്കം ചെയ്യാനും നിങ്ങൾക്ക് കഴിയും.</value>
   </data>
    <!--Security Baselines ListView Headers Start-->
@@ -2327,7 +2285,7 @@
   <data name="MicrosoftBaseLinesOverridesNavItem.Content" xml:space="preserve">
     <value>മൈക്രോസോഫ്റ്റ് അടിസ്ഥാന അതിലംഘനങ്ങൾ</value>
   </data>
-  <data name="MicrosoftBaseLinesOverridesPageTitle.Text" xml:space="preserve">
+  <data name="MicrosoftBaseLinesOverridesPageTitle" xml:space="preserve">
     <value>മൈക്രോസോഫ്റ്റ് സുരക്ഷാ അടിസ്ഥാനങ്ങൾ പ്രയോഗിച്ചതിനുശേഷം പ്രവർത്തനരഹിതമാക്കിയ ഓപ്പറേറ്റിംഗ് സിസ്റ്റം സവിശേഷതകൾ പുനഃസ്ഥാപിക്കുക.</value>
   </data>
   <data name="ExportToJsonButton.ToolTipService.ToolTip" xml:space="preserve">
@@ -2842,7 +2800,7 @@
   <data name="AuditPoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>സിസ്റ്റത്തിലെ എല്ലാ ഓഡിറ്റ് നയങ്ങളും കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
   </data>
-    <data name="AuditPoliciesPageTitle.Text" xml:space="preserve">
+    <data name="AuditPoliciesPageTitle" xml:space="preserve">
     <value>സിസ്റ്റത്തിലെ എല്ലാ ഓഡിറ്റ് നയങ്ങളും കാണുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക.</value>
   </data>
   <!--Audit Policies ListView Headers Start-->
@@ -3809,7 +3767,7 @@
   <data name="CBOMNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>ക്രിപ്റ്റോഗ്രാഫിക് ബിൽ ഓഫ് മെറ്റീരിയൽസ് (CBOM) ഓ.എസ്. ക്രിപ്റ്റോഗ്രാഫിയുടെ സിസ്റ്റം-ലെവൽ ഇൻവെന്ററി - ആൽഗൊരിതങ്ങൾ, വക്രങ്ങൾ, സൈഫർ സ്യൂട്ടുകൾ, പ്രൊവൈഡർമാർ - നൽകുന്നു, പ്ലാറ്റ്‌ഫോമിന്റെ ക്രിപ്റ്റോഗ്രാഫിക് നിലപാട് രേഖപ്പെടുത്തുന്നു.</value>
   </data>
-  <data name="CBOMPageTitle.Text" xml:space="preserve">
+  <data name="CBOMPageTitle" xml:space="preserve">
     <value>ക്രിപ്റ്റോഗ്രാഫിക് ബിൽ ഓഫ് മെറ്റീരിയൽസ് (CBOM) ഓപ്പറേറ്റിംഗ് സിസ്റ്റം ക്രിപ്റ്റോഗ്രാഫിയുടെ സിസ്റ്റം-ലെവൽ ഇൻവെന്ററിയും ആന്തരാവലോകനവും നൽകുന്നു, പ്ലാറ്റ്‌ഫോം നിർവചിക്കുന്ന ആൽഗൊരിതങ്ങൾ, വക്രങ്ങൾ, സൈഫർ സ്യൂട്ടുകൾ, പ്രൊവൈഡർമാർ എന്നിവയെ പ്രത്യക്ഷപ്പെടുത്തുന്നു. ഓ.എസ്. പുറത്തുവിടുന്നതിനെ സാധാരണമാക്കുന്നതിലൂടെ, ഇത് ക്രിപ്റ്റോ മേഖലക്ക് SBOM പോലുള്ള വ്യക്തത നൽകുന്നു: തെളിവ്-അധിഷ്ഠിത ഓഡിറ്റുകൾ, ബേസ്ലൈൻ അനുയോജ്യത പരിശോധനകൾ, അപ്‌ഡേറ്റുകളിലുടനീളം ഡ്രിഫ്റ്റ് കണ്ടെത്തൽ, പരമ്പരാഗത/ദുർബല പ്രിമിറ്റീവുകളുടെ തിരിച്ചറിവ്, പോസ്റ്റ്-ക്വാണ്ടം മാറലുകൾക്കുള്ള പദ്ധതിയിടൽ.</value>
   </data>
 <data name="CA_NameHeader.Text" xml:space="preserve">
@@ -4252,5 +4210,20 @@
   </data>
   <data name="SuccessfullyCheckedForMicrosoftStoreAppUpdates" xml:space="preserve">
     <value>Microsoft Store ആപ്പുകളുടെ അപ്‌ഡേറ്റുകൾക്കായി വിജയകരമായി പരിശോധിച്ചു. ആരംഭിച്ചിട്ടുള്ള ഏതാനും ഡൗൺലോഡുകൾ കാണാൻ, ദയവായി Microsoft Store ആപ്പ് തുറക്കുക.</value>
+  </data>
+    <data name="NoOptionalFeaturesAvailableForExport" xml:space="preserve">
+    <value>കയറ്റുമതിക്കായി ഐച്ഛിക സവിശേഷതകളോ ശേഷികളോ ഒന്നുമില്ല. ആദ്യം അവ ലഭ്യമാക്കുക.</value>
+  </data>
+  <data name="SuccessfullyExportedOptionalFeatures" xml:space="preserve">
+    <value>വിജയകരമായി {0} ഐച്ഛിക സവിശേഷതകളും/അല്ലെങ്കിൽ ശേഷികളും {1} ലേക്ക് കയറ്റുമതി ചെയ്തു</value>
+  </data>
+  <data name="SuccessfullyExportedASRRules" xml:space="preserve">
+    <value>വിജയകരമായി {0} ആക്രമണ ഉപരിതല കുറവ് ചട്ടങ്ങൾ {1} ലേക്ക് കയറ്റുമതി ചെയ്തു</value>
+  </data>
+  <data name="NoInstalledAppsForExport" xml:space="preserve">
+    <value>കയറ്റുമതിക്കായി ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പുകളൊന്നുമില്ല. ആദ്യം അവ ലഭ്യമാക്കുക.</value>
+  </data>
+  <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
+    <value>വിജയകരമായി {0} ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പുകൾ {1} ലേക്ക് കയറ്റുമതി ചെയ്തു</value>
   </data>
 </root>

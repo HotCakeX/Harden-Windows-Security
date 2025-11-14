@@ -93,7 +93,10 @@ internal static class Manager
 			return null;
 
 		// Try get the raw value
-		object? rawValue = subKey.GetValue(package.ValueName);
+		object? rawValue = package.Type == RegistryValueType.REG_EXPAND_SZ
+					? subKey.GetValue(package.ValueName, null, RegistryValueOptions.DoNotExpandEnvironmentNames)
+					: subKey.GetValue(package.ValueName);
+
 		if (rawValue is null)
 			return null;
 
@@ -260,7 +263,7 @@ internal static class Manager
 	/// <param name="actualValue">Actual value from registry</param>
 	/// <param name="expectedValue">Expected value</param>
 	/// <returns>True if values match, false otherwise</returns>
-	private static bool CompareRegistryValues(RegistryValueType type, string actualValue, string expectedValue)
+	internal static bool CompareRegistryValues(RegistryValueType type, string actualValue, string expectedValue)
 	{
 		try
 		{
@@ -275,15 +278,15 @@ internal static class Manager
 					   actualDword == expectedDword,
 
 				RegistryValueType.REG_QWORD
-					=> long.TryParse(actualValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out long actualQword) &&
-					   long.TryParse(expectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out long expectedQword) &&
+					=> ulong.TryParse(actualValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out ulong actualQword) &&
+					   ulong.TryParse(expectedValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out ulong expectedQword) &&
 					   actualQword == expectedQword,
 
 				RegistryValueType.REG_MULTI_SZ
 					=> CompareMultiStringValues(actualValue, expectedValue),
 
 				RegistryValueType.REG_BINARY
-					=> string.Equals(actualValue, expectedValue, StringComparison.OrdinalIgnoreCase),
+					=> string.Equals(actualValue, expectedValue, StringComparison.Ordinal),
 
 				_ => string.Equals(actualValue, expectedValue, StringComparison.OrdinalIgnoreCase)
 			};
@@ -300,7 +303,7 @@ internal static class Manager
 	/// <param name="actualValue">Actual multi-string value (semicolon separated)</param>
 	/// <param name="expectedValue">Expected multi-string value (semicolon separated)</param>
 	/// <returns>True if values match, false otherwise</returns>
-	private static bool CompareMultiStringValues(string actualValue, string expectedValue)
+	internal static bool CompareMultiStringValues(string actualValue, string expectedValue)
 	{
 		string[] actualArray = actualValue.Split(Separator, StringSplitOptions.None);
 		string[] expectedArray = expectedValue.Split(Separator, StringSplitOptions.None);
@@ -312,7 +315,7 @@ internal static class Manager
 	/// <summary>
 	/// Maps <see cref="Hive"/> to its base <see cref="RegistryKey"/>.
 	/// </summary>
-	private static RegistryKey GetBaseRegistryKey(Hive hive)
+	internal static RegistryKey GetBaseRegistryKey(Hive hive)
 	{
 		return hive switch
 		{
@@ -330,7 +333,7 @@ internal static class Manager
 	/// <param name="value">String value to convert</param>
 	/// <returns>Tuple of (RegistryValueKind, converted object)</returns>
 	/// <exception cref="ArgumentException">Thrown for invalid registry value types.</exception>
-	private static (RegistryValueKind kind, object converted) ConvertStringToRegistryData(RegistryValueType type, string value)
+	internal static (RegistryValueKind kind, object converted) ConvertStringToRegistryData(RegistryValueType type, string value)
 	{
 		switch (type)
 		{
@@ -340,12 +343,12 @@ internal static class Manager
 				}
 			case RegistryValueType.REG_DWORD:
 				{
-					int convertedValue = int.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
+					uint convertedValue = uint.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
 					return (RegistryValueKind.DWord, convertedValue);
 				}
 			case RegistryValueType.REG_QWORD:
 				{
-					long convertedValue = long.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
+					ulong convertedValue = ulong.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
 					return (RegistryValueKind.QWord, convertedValue);
 				}
 			case RegistryValueType.REG_BINARY:
@@ -393,7 +396,6 @@ internal static class Manager
 		if (parsed is null)
 		{
 			// Leave as null when policy carries "no value" (Size == 0).
-			// If we want registry-fallback to treat "absent value" as compliant, we should handle that in the verifier.
 			return null;
 		}
 
@@ -407,14 +409,14 @@ internal static class Manager
 
 			case RegistryValueType.REG_EXPAND_SZ:
 				{
-					// Expand env vars to match RegistryKey.GetValue default expansion in RegistryManager.Manager.ReadRegistry
+					// Do NOT expand environment variables. Preserve literal baseline text for compliance
+					// so that "%SystemRoot%\\System32" stays exactly that, rather than being expanded.
 					string? s = parsed as string ?? parsed.ToString();
-					return Environment.ExpandEnvironmentVariables(s ?? string.Empty);
+					return s;
 				}
 
 			case RegistryValueType.REG_DWORD:
 				{
-					// ParsedValue is UInt32 for DWORD
 					if (parsed is uint u) return u.ToString(CultureInfo.InvariantCulture);
 					if (parsed is int i && i >= 0) return ((uint)i).ToString(CultureInfo.InvariantCulture);
 					if (parsed is long l && l >= 0 && l <= uint.MaxValue) return ((uint)l).ToString(CultureInfo.InvariantCulture);
@@ -423,17 +425,36 @@ internal static class Manager
 
 			case RegistryValueType.REG_QWORD:
 				{
-					// ParsedValue is UInt64 for QWORD
-					if (parsed is ulong ul) return ul.ToString(CultureInfo.InvariantCulture);
-					if (parsed is long ll && ll >= 0) return ((ulong)ll).ToString(CultureInfo.InvariantCulture);
-					if (parsed is uint ui) return ((ulong)ui).ToString(CultureInfo.InvariantCulture);
-					if (parsed is int ii && ii >= 0) return ((ulong)ii).ToString(CultureInfo.InvariantCulture);
+					if (parsed is ulong u) return u.ToString(CultureInfo.InvariantCulture);
+					if (parsed is long l)
+					{
+						if (l < 0) return null;
+						return ((ulong)l).ToString(CultureInfo.InvariantCulture);
+					}
+					if (parsed is uint ui) return ui.ToString(CultureInfo.InvariantCulture);
+					if (parsed is int iInt)
+					{
+						if (iInt < 0) return null;
+						return ((ulong)iInt).ToString(CultureInfo.InvariantCulture);
+					}
 					return null;
 				}
 
 			case RegistryValueType.REG_BINARY:
 				{
-					return parsed is not byte[] bytes ? null : Convert.ToBase64String(bytes);
+					if (parsed is ReadOnlyMemory<byte> rom)
+					{
+						if (rom.IsEmpty)
+						{
+							return Convert.ToBase64String(Array.Empty<byte>());
+						}
+						return Convert.ToBase64String(rom.ToArray());
+					}
+					if (parsed is byte[] bytes)
+					{
+						return Convert.ToBase64String(bytes);
+					}
+					return null;
 				}
 
 			case RegistryValueType.REG_MULTI_SZ:
@@ -450,7 +471,6 @@ internal static class Manager
 			case RegistryValueType.REG_RESOURCE_REQUIREMENTS_LIST:
 			default:
 				{
-					// Fallback stringification
 					return parsed.ToString();
 				}
 		}

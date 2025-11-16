@@ -1,15 +1,5 @@
-* Updated dependencies to the latest version.
+* Fixed an issue with WebView2 content in the app. Now they load correctly when Administrator Protection is enabled and the app is running with elevated privileges. See this for more info: https://github.com/HotCakeX/Harden-Windows-Security/issues/916
 
-* Removed any dependency on secedit that used to exist; From now on, all security policies are applied, verified and/or removed by the Harden System Security app itself via low level APIs.
+* In this update, the WebView2 profile directory is saved under `ProgramData` and it is completely cleared upon app exit, ensuring no residual data is ever left behind. It explicitly uses InPrivate mode and extensions disabled.
 
-* Changed the device usage intent for Administrator Protection policy in the User Account Control category to only apply to School, Business, Specialized and Enterprise devices, excluding Development and Gaming device usage intents.
-
-* Added links in the UI to many security measures that didn't have them.
-
-* Added an Export button to the Optional Windows Features page. Use it to export the list of all optional Windows features and capabilities along with their current status and details to a structured JSON file.
-
-* Added an Export button to the Attack Surface Reduction rules page. Use it to export the list of all Attack Surface Reduction rules and their status to a structured JSON file.
-
-* Added an Export button to every page that offers security measures configurations. You'll be able to export all of the data about your system for that specific category quickly to a JSON for safe keeping or tracking/backup.
-
-* Added an Export button to the Manage Installed Apps page. Use it to export the list of all installed apps along with their full details to a structured JSON file.
+* Hovering over links of security measures now results in faster display of the link content in the flyout due to WebView2 instance reuse and caching.

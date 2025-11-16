@@ -261,7 +261,7 @@ public partial class App : Application
 	/// <summary>
 	/// Logics to run when the app is being closed.
 	/// </summary>
-	private void AppCleanUp()
+	private static void AppCleanUp()
 	{
 
 		if (Interlocked.Exchange(ref CleanUpHappened, 1) == 1) return;

@@ -53,7 +53,6 @@
                   x:Name="MicrosoftDocumentationWebView2"
                   NavigationCompleted="{x:Bind WebView2_NavigationCompleted}"
                   DefaultBackgroundColor="Transparent"
-                  Source="https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/appcontrol"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   MinHeight="500"

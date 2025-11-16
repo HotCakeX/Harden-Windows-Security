@@ -672,7 +672,7 @@
 
                     <!-- Inline header row (wide widths) -->
                     <controls:WrapPanel Grid.Row="1"
-                                        Margin="20,10,0,0"
+                                        Margin="20,10,10,0"
                                         Visibility="{x:Bind ViewModel.HeaderInlineVisibility, Mode=OneWay}"
                                         Style="{StaticResource PageHeaderWrapPanelStyle}">
                         <TextBlock Text="{x:Bind ViewModel.PageHeaderTitle, Mode=OneWay}"

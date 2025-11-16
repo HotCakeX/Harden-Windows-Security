@@ -38,10 +38,8 @@
         </controls:WrapPanel>
 
         <WebView2 Grid.Row="1"
-                  x:Name="LinkPreviewWebView2"
-                  NavigationCompleted="{x:Bind WebView2_NavigationCompleted}"
+                  x:Name="LinkPreviewWebView2"                 
                   DefaultBackgroundColor="Transparent"
-                  Source="{x:Bind PreviewUrl, Mode=OneWay}"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   ScrollViewer.HorizontalScrollBarVisibility="Visible"

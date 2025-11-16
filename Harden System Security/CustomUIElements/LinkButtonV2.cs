@@ -62,6 +62,11 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 	private bool _isPointerOver;
 	private bool _isFlyoutOpen;
 
+	// Shared preview host across all LinkButtonV2 instances to ensure only one WebView2 is used.
+	private static Frame? s_sharedPreviewFrame;
+	private static LinkPreview? s_sharedPreviewPage;
+	private static Flyout? s_sharedFlyout; // single shared Flyout reused by all buttons
+
 	internal static readonly DependencyProperty LinkUrlProperty =
 		DependencyProperty.Register(
 			nameof(LinkUrl),
@@ -131,6 +136,13 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 			return;
 		}
 
+		// Reuse a single shared Flyout across all buttons.
+		if (s_sharedFlyout != null)
+		{
+			_previewFlyout = s_sharedFlyout;
+			return;
+		}
+
 		_previewFlyout = new Flyout
 		{
 			Placement = FlyoutPlacementMode.Bottom,
@@ -148,8 +160,12 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 			}
 		};
 
+		// Wire events once on the shared flyout (owned by the first control that creates it).
 		_previewFlyout.Opened += PreviewFlyout_Opened;
 		_previewFlyout.Closed += PreviewFlyout_Closed;
+
+		// Store as the shared Flyout so all other buttons reuse it.
+		s_sharedFlyout = _previewFlyout;
 	}
 
 	/// <summary>
@@ -190,39 +206,38 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 
 		try
 		{
-			// Clean up any existing frame first
-			CleanupCurrentFrame();
-
-			_currentPreviewFrame = new Frame
+			// Lazily create the shared frame and page once, then reuse.
+			if (s_sharedPreviewFrame == null)
 			{
-				Width = 400,
-				Height = 300,
-				HorizontalAlignment = HorizontalAlignment.Stretch,
-				VerticalAlignment = VerticalAlignment.Stretch
-			};
+				s_sharedPreviewFrame = new()
+				{
+					Width = 400,
+					Height = 300,
+					HorizontalAlignment = HorizontalAlignment.Stretch,
+					VerticalAlignment = VerticalAlignment.Stretch
+				};
 
-			// Navigate to LinkPreview page
-			bool navigationSucceeded = _currentPreviewFrame.Navigate(typeof(LinkPreview));
-
-			if (!navigationSucceeded)
-			{
-				// Clean up frame if navigation failed
-				CleanupCurrentFrame();
-				return;
-			}
-
-			// Set the URL on the preview page
-			if (_currentPreviewFrame.Content is LinkPreview previewPage)
-			{
-				previewPage.PreviewUrl = LinkUrl;
-				_previewFlyout.Content = _currentPreviewFrame;
-				_previewFlyout.ShowAt(this);
+				s_sharedPreviewPage = new();
+				s_sharedPreviewFrame.Content = s_sharedPreviewPage;
 			}
 			else
 			{
-				// Clean up frame if we couldn't get the preview page
-				CleanupCurrentFrame();
+				// If previous operation cleared the frame's content, reattach the shared page.
+				if (s_sharedPreviewFrame.Content == null && s_sharedPreviewPage != null)
+				{
+					s_sharedPreviewFrame.Content = s_sharedPreviewPage;
+				}
 			}
+
+			// Update the URL on the single shared preview page.
+			_ = (s_sharedPreviewPage?.PreviewUrl = LinkUrl);
+
+			// Use the shared frame in the single shared flyout.
+			_currentPreviewFrame = s_sharedPreviewFrame;
+			_previewFlyout.Content = _currentPreviewFrame;
+
+			// Show the shared flyout anchored to this button.
+			_previewFlyout.ShowAt(this);
 		}
 		catch (Exception ex)
 		{
@@ -234,38 +249,14 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 	}
 
 	/// <summary>
-	/// Properly cleans up the current preview frame and its content
+	/// Cleans up the current preview frame and its content.
 	/// </summary>
-	private void CleanupCurrentFrame()
-	{
-		if (_currentPreviewFrame != null)
-		{
-			// If the frame has content that implements IDisposable, dispose it
-			if (_currentPreviewFrame.Content is IDisposable disposableContent)
-			{
-				try
-				{
-					disposableContent.Dispose();
-				}
-				catch (Exception ex)
-				{
-					Logger.Write($"LinkButtonV2 frame content disposal failed: {ex.Message}");
-				}
-			}
-
-			// Clear the content and nullify the frame
-			_currentPreviewFrame.Content = null;
-			_currentPreviewFrame = null;
-		}
-	}
+	private void CleanupCurrentFrame() => _currentPreviewFrame = null;
 
 	/// <summary>
 	/// Handles flyout opened event
 	/// </summary>
-	private void PreviewFlyout_Opened(object? sender, object e)
-	{
-		_isFlyoutOpen = true;
-	}
+	private void PreviewFlyout_Opened(object? sender, object e) => _isFlyoutOpen = true;
 
 	/// <summary>
 	/// Handles flyout closed event to reset state and clean up resources
@@ -289,10 +280,7 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 		}
 	}
 
-	private void UpdateEnabledState()
-	{
-		IsEnabled = !string.IsNullOrWhiteSpace(LinkUrl);
-	}
+	private void UpdateEnabledState() => IsEnabled = !string.IsNullOrWhiteSpace(LinkUrl);
 
 	private void UpdateTooltipAndHelpText()
 	{

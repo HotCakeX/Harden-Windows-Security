@@ -1,11 +1,5 @@
-* When running AppControl Manager unelevated and try to navigate to a page that requires elevation, after accepting the elevation prompt, you will no longer be taken to the home page, instead the app will automatically navigate to the same page you were trying to access before the elevation prompt, improving user experience and saving time.
+* Fixed an issue with WebView2 content in the app. Now they load correctly when Administrator Protection is enabled and the app is running with elevated privileges. See this for more info: https://github.com/HotCakeX/Harden-Windows-Security/issues/916
 
-* Removed the title from the home page, providing a more immersive experience.
-
-* The description and guide button in all of the pages now have an adaptive and responsive design; when the width of the window gets small, they will no longer be displayed inline and instead will become available via a dedicated access point next to the page title where you can click/tap on to view them in a flyout. The flyout doesn't push the main page content down. This improves the overall design of the user interface by making use of the available spaces better and **partially** completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/783.
-
-* The titles of the pages no longer have a fixed size, instead they will change style depending on the app window's width, making it easier to use the app in tight screen sizes.
-
-* Reduced empty spaces around many exterior elements of pages. Also made spacings and styles consistent.
+* In this update, the WebView2 profile directory is saved under `ProgramData` and it is completely cleared upon app exit, ensuring no residual data is ever left behind. It explicitly uses InPrivate mode and extensions disabled.
 
 * Updated dependencies to the latest version.

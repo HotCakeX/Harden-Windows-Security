@@ -24,7 +24,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
-using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;

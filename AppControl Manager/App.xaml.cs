@@ -83,6 +83,11 @@ public partial class App : Application
 		? 1 : 2);
 
 	/// <summary>
+	/// Tracks whether the cleanup logics have been run.
+	/// </summary>
+	private static int CleanUpHappened;
+
+	/// <summary>
 	/// The application settings for AppControl Manager. Retrieved early in a Non-ThreadSafe manner.
 	/// Any references (instance or static) throughout the app to App settings use this property.
 	/// </summary>
@@ -172,6 +177,9 @@ public partial class App : Application
 		// Check for the SoundSetting in the local settings
 		ElementSoundPlayer.State = Settings.SoundSetting ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
 		ElementSoundPlayer.SpatialAudioMode = Settings.SoundSetting ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
+
+		// Subscribing to ProcessExit because Window_Closed doesn't run when "Application.Current.Exit();" is used.
+		AppDomain.CurrentDomain.ProcessExit += (s, e) => AppCleanUp();
 	}
 
 	/*
@@ -248,8 +256,16 @@ public partial class App : Application
 	/// <summary>
 	/// Event handler for when the window is closed.
 	/// </summary>
-	private void Window_Closed(object sender, WindowEventArgs e)
+	private void Window_Closed(object sender, WindowEventArgs e) => AppCleanUp();
+
+	/// <summary>
+	/// Logics to run when the app is being closed.
+	/// </summary>
+	private static void AppCleanUp()
 	{
+
+		if (Interlocked.Exchange(ref CleanUpHappened, 1) == 1) return;
+
 #if HARDEN_SYSTEM_SECURITY
 		// Terminate our DISM exe if it's still running and user closed the window.
 		DismServiceClient.TerminateActiveService();
@@ -295,10 +311,13 @@ public partial class App : Application
 
 		try
 		{
-			// Dispose of disposable ViewModels on App exist
+			// Dispose of disposable ViewModels on App exit
 			ViewModelProvider.DisposeCreatedViewModels();
 		}
 		catch { }
+
+		// WebView2 cleanup
+		WebView2Config.CleanUpWebView2();
 	}
 
 	/// <summary>

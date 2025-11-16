@@ -17,6 +17,7 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Web.WebView2.Core;
 
 namespace AppControlManager.Pages;
 
@@ -30,40 +31,34 @@ internal sealed partial class MicrosoftDocumentation : Page
 
 		// Make sure navigating to/from this page maintains its state
 		NavigationCacheMode = NavigationCacheMode.Enabled;
+
+		_ = WebView2Config.ConfigureWebView2(MicrosoftDocumentationWebView2, URLToUse);
 	}
 
 	// Event handler for Back button
 	private void BackButton_Click()
 	{
 		if (MicrosoftDocumentationWebView2.CanGoBack)
-		{
 			MicrosoftDocumentationWebView2.GoBack();
-		}
 	}
 
 	// Event handler for Forward button
 	private void ForwardButton_Click()
 	{
 		if (MicrosoftDocumentationWebView2.CanGoForward)
-		{
 			MicrosoftDocumentationWebView2.GoForward();
-		}
 	}
+
+	private static readonly Uri URLToUse = new("https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/appcontrol");
 
 	// Event handler for Reload button
-	private void ReloadButton_Click()
-	{
-		MicrosoftDocumentationWebView2.Reload();
-	}
+	private void ReloadButton_Click() => MicrosoftDocumentationWebView2.Reload();
 
 	// Event handler for Home button
-	private void HomeButton_Click()
-	{
-		MicrosoftDocumentationWebView2.Source = new Uri("https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/appcontrol");
-	}
+	private void HomeButton_Click() => MicrosoftDocumentationWebView2.Source = URLToUse;
 
 	// Update the state of navigation buttons when navigation is completed so that the Back/Forward buttons will be enabled only when they can be used
-	private void WebView2_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+	private void WebView2_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
 	{
 		// The following checks are required to prevent any errors when intentionally spam navigating between pages and elements extremely fast
 		try

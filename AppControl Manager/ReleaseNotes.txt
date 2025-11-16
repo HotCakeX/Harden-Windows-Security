@@ -1,3 +1,5 @@
 * Fixed an issue with WebView2 content in the app. Now they load correctly when Administrator Protection is enabled and the app is running with elevated privileges. See this for more info: https://github.com/HotCakeX/Harden-Windows-Security/issues/916
 
 * In this update, the WebView2 profile directory is saved under `ProgramData` and it is completely cleared upon app exit, ensuring no residual data is ever left behind. It explicitly uses InPrivate mode and extensions disabled.
+
+* Updated dependencies to the latest version.

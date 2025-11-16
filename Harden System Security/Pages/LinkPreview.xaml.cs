@@ -16,6 +16,7 @@
 //
 
 using System.ComponentModel;
+using System.Threading.Tasks;
 using HardenSystemSecurity;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -23,85 +24,64 @@ using Windows.System;
 
 namespace AppControlManager.Pages;
 
-internal sealed partial class LinkPreview : Page, INotifyPropertyChanged
+internal sealed partial class LinkPreview : Page
 {
 	private HardenSystemSecurity.AppSettings.Main AppSettings => App.Settings;
 
 	internal string PreviewUrl
 	{
-		get;
-		set
+		get; set
 		{
-			if (field != value)
+			if (!string.Equals(field, value, StringComparison.OrdinalIgnoreCase))
 			{
 				field = value;
-				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PreviewUrl)));
+				_ = App.AppDispatcher.TryEnqueue(() => { LinkPreviewWebView2.Source = new(value); });
 			}
 		}
 	} = "https://bing.com";
 
-	public event PropertyChangedEventHandler? PropertyChanged;
-
 	internal LinkPreview()
 	{
-		this.InitializeComponent();
-		this.NavigationCacheMode = NavigationCacheMode.Disabled;
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+
+		// Initialize WebView2 and then re-apply the current PreviewUrl so it always wins over the initializer's source
+		_ = InitializeWebView2Async();
+	}
+
+	private async Task InitializeWebView2Async()
+	{
+		await WebView2Config.ConfigureWebView2(LinkPreviewWebView2, new(PreviewUrl));
+
+		// Re-apply the current PreviewUrl after initialization to ensure it is the final navigation target
+		LinkPreviewWebView2.Source = new(PreviewUrl);
 	}
 
 	// Event handler for Back button
 	private void BackButton_Click()
 	{
 		if (LinkPreviewWebView2.CanGoBack)
-		{
 			LinkPreviewWebView2.GoBack();
-		}
 	}
 
 	// Event handler for Forward button
 	private void ForwardButton_Click()
 	{
 		if (LinkPreviewWebView2.CanGoForward)
-		{
 			LinkPreviewWebView2.GoForward();
-		}
 	}
 
 	// Event handler for Reload button
-	private void ReloadButton_Click()
-	{
-		LinkPreviewWebView2.Reload();
-	}
+	private void ReloadButton_Click() => LinkPreviewWebView2.Reload();
 
 	// Event handler for Home button
-	private void HomeButton_Click()
-	{
-		LinkPreviewWebView2.Source = new Uri(PreviewUrl);
-	}
-
-	// Update the state of navigation buttons when navigation is completed so that the Back/Forward buttons will be enabled only when they can be used
-	private void WebView2_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
-	{
-		// The following checks are required to prevent any errors when intentionally spam navigating between pages and elements extremely fast
-		try
-		{
-			// Check if the WebView2 control or its CoreWebView2 instance is disposed
-			if (LinkPreviewWebView2 is { CoreWebView2: not null })
-			{
-				BackButton.IsEnabled = LinkPreviewWebView2.CanGoBack;
-				ForwardButton.IsEnabled = LinkPreviewWebView2.CanGoForward;
-			}
-		}
-		catch (ObjectDisposedException ex)
-		{
-			Logger.Write("WebView2 in Link Preview Page has been disposed: " + ex.Message);
-		}
-	}
+	private void HomeButton_Click() => LinkPreviewWebView2.Source = new(PreviewUrl);
 
 	private async void OpenURL_Click()
 	{
 		try
 		{
-			_ = await Launcher.LaunchUriAsync(new Uri(PreviewUrl));
+			_ = await Launcher.LaunchUriAsync(LinkPreviewWebView2.Source);
 		}
 		catch (Exception ex)
 		{

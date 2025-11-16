@@ -17,6 +17,7 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Web.WebView2.Core;
 
 #if APP_CONTROL_MANAGER
 namespace AppControlManager.Pages;
@@ -25,10 +26,6 @@ namespace AppControlManager.Pages;
 namespace HardenSystemSecurity.Pages;
 #endif
 
-/// <summary>
-/// Initializes the GitHubDocumentation component, sets the WebView2 background color, and manages navigation events.
-/// Maintains page state.
-/// </summary>
 internal sealed partial class GitHubDocumentation : Page
 {
 	private AppSettings.Main AppSettings => App.Settings;
@@ -39,6 +36,8 @@ internal sealed partial class GitHubDocumentation : Page
 
 		// Make sure navigating to/from this page maintains its state
 		NavigationCacheMode = NavigationCacheMode.Enabled;
+
+		_ = WebView2Config.ConfigureWebView2(GitHubDocumentationWebView2, URLToUse);
 	}
 
 	/// <summary>
@@ -47,9 +46,7 @@ internal sealed partial class GitHubDocumentation : Page
 	private void BackButton_Click()
 	{
 		if (GitHubDocumentationWebView2.CanGoBack)
-		{
 			GitHubDocumentationWebView2.GoBack();
-		}
 	}
 
 	/// <summary>
@@ -58,9 +55,7 @@ internal sealed partial class GitHubDocumentation : Page
 	private void ForwardButton_Click()
 	{
 		if (GitHubDocumentationWebView2.CanGoForward)
-		{
 			GitHubDocumentationWebView2.GoForward();
-		}
 	}
 
 	/// <summary>
@@ -68,27 +63,25 @@ internal sealed partial class GitHubDocumentation : Page
 	/// </summary>
 	private void ReloadButton_Click() => GitHubDocumentationWebView2.Reload();
 
+#if APP_CONTROL_MANAGER
+	private static readonly Uri URLToUse = new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction");
+#endif
+#if HARDEN_SYSTEM_SECURITY
+	private static readonly Uri URLToUse = new("https://github.com/HotCakeX/Harden-Windows-Security");
+#endif
+
 	/// <summary>
 	/// Event handler for Home button
 	/// </summary>
-	private void HomeButton_Click()
-	{
-#if APP_CONTROL_MANAGER
-		GitHubDocumentationWebView2.Source = new Uri("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction");
-#endif
-#if HARDEN_SYSTEM_SECURITY
-		GitHubDocumentationWebView2.Source = new Uri("https://github.com/HotCakeX/Harden-Windows-Security");
-#endif
-	}
+	private void HomeButton_Click() => GitHubDocumentationWebView2.Source = URLToUse;
 
 	// Update the state of navigation buttons when navigation is completed so that the Back/Forward buttons will be enabled only when they can be used
-	private void WebView2_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+	private void WebView2_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
 	{
 
 		// The following checks are required to prevent any errors when intentionally spam navigating between pages and elements extremely fast
 		try
 		{
-
 			// Check if the WebView2 control or its CoreWebView2 instance is disposed
 			if (GitHubDocumentationWebView2 is { CoreWebView2: not null })
 			{

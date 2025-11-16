@@ -31,7 +31,6 @@ using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.Graphics;
 
-
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.ViewModels;
 namespace HardenSystemSecurity.ViewModels;
@@ -379,7 +378,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	internal Visibility HeaderFlyoutVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	// Style used by Breadcrumb items
-	internal Style? BreadcrumbItemStyle { get; private set => SP(ref field, value); }
+	internal Style? BreadcrumbItemStyle { get; private set => SP(ref field, value); } = (Style)Application.Current.Resources["SubtitleTextBlockStyle"];
 
 	// Whether the current page supplies a header, aka implements the IPageHeaderProvider interface.
 	internal bool HasPageHeader { get; set => SP(ref field, value); }

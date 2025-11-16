@@ -51,7 +51,6 @@
         <!-- WebView2 Control -->
         <WebView2 Grid.Row="1"
                   x:Name="GitHubDocumentationWebView2"
-                  Source="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security"
                   NavigationCompleted="{x:Bind WebView2_NavigationCompleted}"
                   DefaultBackgroundColor="Transparent"
                   HorizontalAlignment="Stretch"

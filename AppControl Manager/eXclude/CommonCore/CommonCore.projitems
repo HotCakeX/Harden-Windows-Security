@@ -44,6 +44,7 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)Others\UnifiedSearchBarResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebView2Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\IInvisibleCrumbar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\IPageHeaderProvider.cs" />

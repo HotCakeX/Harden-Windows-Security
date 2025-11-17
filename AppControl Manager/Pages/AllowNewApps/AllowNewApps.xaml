@@ -7,7 +7,7 @@
 
     <NavigationView x:Name="AllowNewAppsNavigation"
                  PaneDisplayMode="Top"
-                 IsTabStop="True"                
+                 IsTabStop="True"
                  SelectionChanged="{x:Bind NavigationView_SelectionChanged}"
                  IsSettingsVisible="False"
                  IsBackButtonVisible="Collapsed">

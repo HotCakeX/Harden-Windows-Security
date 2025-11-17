@@ -20,7 +20,7 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Spacing="15" Orientation="Horizontal" Margin="6,0,6,5">
-                <Button Click="{x:Bind ViewModel.ResetStepsButton_Click}"                        
+                <Button Click="{x:Bind ViewModel.ResetStepsButton_Click}"
                         IsEnabled="{x:Bind ViewModel.ResetStepsButtonIsEnabled, Mode=OneWay}"
                         x:Uid="ResetStepsButton">
                     <Button.ContentTemplate>

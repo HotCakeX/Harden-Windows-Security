@@ -1,5 +1,18 @@
-* Fixed an issue with WebView2 content in the app. Now they load correctly when Administrator Protection is enabled and the app is running with elevated privileges. See this for more info: https://github.com/HotCakeX/Harden-Windows-Security/issues/916
+Full System Report Generation 🎊
 
-* In this update, the WebView2 profile directory is saved under `ProgramData` and it is completely cleared upon app exit, ensuring no residual data is ever left behind. It explicitly uses InPrivate mode and extensions disabled.
+Harden System Security now supports comprehensive system reports you can save to a file. Every security category participates, including Microsoft Security baselines and Microsoft 365 apps security baselines. The header records device name, user account, and time. Reports include a security score, per-category item counts, and total compliant vs. non-compliant items.
 
-* Hovering over links of security measures now results in faster display of the link content in the flyout due to WebView2 instance reuse and caching.
+Back Up and Restore 🪅
+
+After generating a report (full or single category), you can import and apply it on any system with the app. Two modes:
+
+Partial: only items marked Applied in the report are applied.
+Full: the system is synchronized to the report: measures marked Applied are applied; those marked Not Applied are removed. You can back up selected categories or the entire system state to JSON and deploy to many workstations. Fully automatable via the new CLI. Documentation: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security#commandline-interface-cli-support
+
+Unified Search 🎉
+
+The top bar is now a unified, localized search with contextual results across all categories and pages. Type a few letters (for example, "Administrator Protection") without knowing the category; accurate suggestions appear with page icons. Works in your app language (for example, German or Polish).
+
+Other Improvements 🎈
+
+Updated dependencies to the latest versions.

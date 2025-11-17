@@ -9,6 +9,7 @@
     xmlns:ani="using:CommunityToolkit.WinUI.Animations"
     xmlns:DI="using:HardenSystemSecurity.DeviceIntents"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -471,8 +472,6 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center">
 
-                        <TextBlock x:Uid="ProtectionPresets" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,4,0" FontWeight="Bold" />
-
                         <ComboBox x:Uid="ProtectionPresetsComboBox"
                                   IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                   ItemsSource="{x:Bind ViewModel.ProtectionPresetsSource}"
@@ -541,6 +540,56 @@
                                                             ExternalInternalIsOperationInProgress="{x:Bind ViewModel.RemoveSelectedCancellableButton.InternalIsOperationInProgress, Mode=OneWay}"
                                                             ExternalOperationStarted="{x:Bind ViewModel.RemoveSelectedCancellableButton.OperationStarted, Mode=OneWay}"
                                                             Click="{x:Bind ViewModel.RemoveSelectedCategories}"/>
+
+                        <Button x:Uid="SystemStateButton"
+                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                VerticalAlignment="Center">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Padding="0" Margin="0">
+                                        <AnimatedIcon Height="35" Width="35" Margin="-6">
+                                            <AnimatedIcon.Source>
+                                                <animatedvisuals:SystemStates/>
+                                            </AnimatedIcon.Source>
+                                        </AnimatedIcon>
+                                        <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Uid="BackupSystemStateMenuFlyoutItem"
+                                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                    Click="{x:Bind ViewModel.GenerateSystemReport}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE78C;"/>
+                                        </MenuFlyoutItem.Icon>
+
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem x:Uid="RestoreSystemStateMenuFlyoutItem"
+                                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                    Click="{x:Bind ViewModel.RestoreSystemState}" >
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xED10;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutSubItem x:Uid="RestoreModeMenuFlyoutItem"
+                                                       IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                        <RadioMenuFlyoutItem x:Uid="PartialRestoreModeMenuFlyoutItem"
+                                                             GroupName="Mode"
+                                                             IsChecked="{x:Bind ViewModel.RestorationModePartial, Mode=TwoWay}"/>
+                                        <RadioMenuFlyoutItem x:Uid="FullRestoreModeMenuFlyoutItem"
+                                                             GroupName="Mode"
+                                                             IsChecked="{x:Bind ViewModel.RestorationModeFull, Mode=TwoWay}"/>
+                                    </MenuFlyoutSubItem>
+
+                                </MenuFlyout>
+                            </Button.Flyout>
+
+                        </Button>
 
                     </controls:WrapPanel>
 

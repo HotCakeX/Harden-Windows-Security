@@ -1127,7 +1127,7 @@ internal static unsafe partial class NativeMethods
 	/// </summary>
 	[LibraryImport("kernel32.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	private static unsafe partial IntPtr GetProcAddress(IntPtr hModule, byte* lpProcName);
+	private static partial IntPtr GetProcAddress(IntPtr hModule, byte* lpProcName);
 
 	/// <summary>
 	/// Safe wrapper around GetProcAddress that takes a string and does necessary validation and conversion.

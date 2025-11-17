@@ -18,7 +18,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-245c-7915-80a8-42e06eb15599"
     },
     {
         "Source": 1,
@@ -37,7 +38,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-245d-70b5-b821-46edb81a7afd"
     },
     {
         "Source": 1,
@@ -57,7 +59,8 @@
         "DeviceIntents": [
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-245d-7870-a90c-8b9e89bede12"
     },
     {
         "Source": 1,
@@ -76,7 +79,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-245d-7cd6-bb97-2d07cb3b4d9b"
     },
     {
         "Source": 1,
@@ -99,7 +103,8 @@
             2,
             3,
             4
-        ]
+        ],
+        "ID": "019a8dfa-245d-7adf-90ec-8be2fc3205a8"
     },
     {
         "Source": 1,
@@ -118,7 +123,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-245e-7e24-ba82-cab3ba9957df"
     },
     {
         "Source": 1,
@@ -141,7 +147,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-245e-7ebe-b8c9-84a2aa63fa7e"
     },
     {
         "Source": 1,
@@ -161,7 +168,8 @@
         "DeviceIntents": [
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-245e-72fe-bdc3-b344f1830eb9"
     },
     {
         "Source": 1,
@@ -181,7 +189,8 @@
         "DeviceIntents": [
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-245e-71f0-a20f-07a85b192eb3"
     },
     {
         "Source": 1,
@@ -201,7 +210,8 @@
         "DeviceIntents": [
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-245e-7d3e-9bec-fcfd217fdc9e"
     },
     {
         "Source": 1,
@@ -221,7 +231,8 @@
         "DeviceIntents": [
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-245f-721b-8ac9-5d8b3e511cba"
     },
     {
         "Source": 1,
@@ -241,7 +252,8 @@
         "DeviceIntents": [
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-245f-7942-a7bc-e23b734b1818"
     },
     {
         "Source": 1,
@@ -261,7 +273,8 @@
         "DeviceIntents": [
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-245f-7277-bba9-451f218089da"
     },
     {
         "Source": 1,
@@ -280,7 +293,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-245f-7f71-ac20-65ce6c7a2658"
     },
     {
         "Source": 1,
@@ -301,7 +315,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-245f-7346-b42e-c77f0f111436"
     },
     {
         "Source": 1,
@@ -320,6 +335,7 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-2460-70c9-8579-bfcf1b4a6122"
     }
 ]

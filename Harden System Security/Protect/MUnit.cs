@@ -15,12 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -113,13 +112,9 @@ internal static class MUnitDependencyRegistry
 	/// <param name="timing">When the dependency should be executed</param>
 	internal static void RegisterDependency(string primaryMUnitId, string dependentMUnitId, DependencyType type, ExecutionTiming timing)
 	{
-		if (!_dependencies.TryGetValue(primaryMUnitId, out List<MUnitDependency>? value))
-		{
-			value = [];
-			_dependencies[primaryMUnitId] = value;
-		}
-
-		value.Add(new MUnitDependency(dependentMUnitId, type, timing));
+		ref List<MUnitDependency>? listRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_dependencies, primaryMUnitId, out _);
+		listRef ??= [];
+		listRef.Add(new MUnitDependency(dependentMUnitId, type, timing));
 		Logger.Write(string.Format(GlobalVars.GetStr("JSONDependencyRegistered"), primaryMUnitId, dependentMUnitId, type, timing));
 	}
 
@@ -402,10 +397,8 @@ internal static class SpecializedStrategiesRegistry
 	/// </summary>
 	/// <param name="policyKey">The policy key in format "KeyName|ValueName"</param>
 	/// <param name="strategy">The specialized verification strategy</param>
-	internal static void RegisterSpecializedVerification(string policyKey, ISpecializedVerificationStrategy strategy)
-	{
+	internal static void RegisterSpecializedVerification(string policyKey, ISpecializedVerificationStrategy strategy) =>
 		_verificationStrategies[policyKey] = strategy;
-	}
 
 	/// <summary>
 	/// Registers a specialized apply strategy for a specific policy.
@@ -414,13 +407,9 @@ internal static class SpecializedStrategiesRegistry
 	/// <param name="strategy">The specialized apply strategy</param>
 	internal static void RegisterSpecializedApply(string policyKey, ISpecializedApplyStrategy strategy)
 	{
-		if (!_applyStrategies.TryGetValue(policyKey, out List<ISpecializedApplyStrategy>? value))
-		{
-			value = [];
-			_applyStrategies[policyKey] = value;
-		}
-
-		value.Add(strategy);
+		ref List<ISpecializedApplyStrategy>? applyListRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_applyStrategies, policyKey, out _);
+		applyListRef ??= new(2);
+		applyListRef.Add(strategy);
 	}
 
 	/// <summary>
@@ -430,13 +419,9 @@ internal static class SpecializedStrategiesRegistry
 	/// <param name="strategy">The specialized remove strategy</param>
 	internal static void RegisterSpecializedRemove(string policyKey, ISpecializedRemoveStrategy strategy)
 	{
-		if (!_removeStrategies.TryGetValue(policyKey, out List<ISpecializedRemoveStrategy>? value))
-		{
-			value = [];
-			_removeStrategies[policyKey] = value;
-		}
-
-		value.Add(strategy);
+		ref List<ISpecializedRemoveStrategy>? removeListRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_removeStrategies, policyKey, out _);
+		removeListRef ??= [];
+		removeListRef.Add(strategy);
 	}
 
 	/// <summary>
@@ -562,7 +547,7 @@ internal static class SpecializedStrategiesRegistry
 	/// <param name="items">WMI verification items.</param>
 	private static void RegisterWmiSpecializedVerificationsCore(List<WmiSpecialVerificationItem> items)
 	{
-		foreach (WmiSpecialVerificationItem item in items)
+		foreach (WmiSpecialVerificationItem item in CollectionsMarshal.AsSpan(items))
 		{
 			ISpecializedVerificationStrategy strategy = new WmiJsonVerificationStrategy(
 				item.Category,
@@ -609,7 +594,7 @@ internal static class SpecializedStrategiesRegistry
 				string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, command).Trim('"');
 
 				// If any of the desired values match then it means the security measure is applied on the system.
-				foreach (WmiDesiredValue dv in desiredValues)
+				foreach (WmiDesiredValue dv in CollectionsMarshal.AsSpan(desiredValues))
 				{
 					if (string.Equals(dv.Type, "string", StringComparison.OrdinalIgnoreCase))
 					{
@@ -641,84 +626,6 @@ internal static class SpecializedStrategiesRegistry
 	}
 }
 
-
-[JsonSourceGenerationOptions(
-	WriteIndented = true,
-	PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
-	PropertyNameCaseInsensitive = false,
-	Converters = [
-		typeof(JsonStringEnumConverter<Categories>),
-		typeof(JsonStringEnumConverter<SubCategories>),
-		typeof(JsonStringEnumConverter<DeviceIntents.Intent>),
-		typeof(JsonStringEnumConverter<StatusState>)
-	])]
-[JsonSerializable(typeof(MUnit))]
-[JsonSerializable(typeof(List<MUnit>))]
-internal sealed partial class MUnitJsonContext : JsonSerializerContext
-{
-	/// <summary>
-	/// Serialize a list of MUnit instances.
-	/// Uses Utf8JsonWriter to apply JavaScriptEncoder.UnsafeRelaxedJsonEscaping without mutating the context's Options.
-	/// </summary>
-	internal static string SerializeList(List<MUnit> units)
-	{
-		// Use a writer with relaxed escaping and indentation.
-		ArrayBufferWriter<byte> buffer = new();
-		JsonWriterOptions writerOptions = new()
-		{
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-			Indented = true
-		};
-		Utf8JsonWriter writer = new(buffer, writerOptions);
-
-		try
-		{
-			JsonSerializer.Serialize(writer, units, Default.ListMUnit);
-		}
-		finally
-		{
-			writer.Dispose();
-		}
-
-		return Encoding.UTF8.GetString(buffer.WrittenSpan);
-	}
-
-	/// <summary>
-	/// Serialize a single MUnit instance.
-	/// </summary>
-	internal static string SerializeSingle(MUnit unit)
-	{
-		ArrayBufferWriter<byte> buffer = new();
-		JsonWriterOptions writerOptions = new()
-		{
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-			Indented = true
-		};
-		Utf8JsonWriter writer = new(buffer, writerOptions);
-
-		try
-		{
-			JsonSerializer.Serialize(writer, unit, Default.MUnit);
-		}
-		finally
-		{
-			writer.Dispose();
-		}
-
-		return Encoding.UTF8.GetString(buffer.WrittenSpan);
-	}
-
-	/// <summary>
-	/// Deserialize a JSON string into a list of MUnit instances.
-	/// </summary>
-	internal static List<MUnit>? DeserializeList(string json) => JsonSerializer.Deserialize(json, Default.ListMUnit);
-
-	/// <summary>
-	/// Deserialize a JSON string into a single MUnit instance.
-	/// </summary>
-	internal static MUnit? DeserializeSingle(string json) => JsonSerializer.Deserialize(json, Default.MUnit);
-}
-
 /// <summary>
 /// Represents a unit that can contain any security measure.
 /// It defines how to apply, remove and verify it.
@@ -727,6 +634,7 @@ internal sealed partial class MUnit(
 	Categories category,
 	string? name,
 	List<DeviceIntents.Intent> deviceIntents,
+	Guid id,
 	IApplyStrategy applyStrategy,
 	IVerifyStrategy? verifyStrategy = null,
 	IRemoveStrategy? removeStrategy = null,
@@ -856,10 +764,9 @@ internal sealed partial class MUnit(
 	/// <summary>
 	/// Properties for UI binding
 	/// </summary>
-	[JsonInclude]
 	[JsonPropertyOrder(3)]
 	[JsonPropertyName("StatusState")]
-	internal StatusState StatusState => IsApplied switch
+	public StatusState StatusState => IsApplied switch
 	{
 		true => StatusState.Applied,
 		false => StatusState.NotApplied,
@@ -869,10 +776,14 @@ internal sealed partial class MUnit(
 	[JsonIgnore]
 	internal bool HasSubCategory => SubCategory.HasValue;
 
-	[JsonInclude]
 	[JsonPropertyOrder(5)]
 	[JsonPropertyName("SubCategoryName")]
-	internal string SubCategoryName => SubCategoryToDisplayString(SubCategory);
+	public string SubCategoryName => SubCategoryToDisplayString(SubCategory);
+
+	[JsonInclude]
+	[JsonPropertyOrder(100)]
+	[JsonPropertyName("ID")]
+	internal Guid ID => id;
 
 	[JsonIgnore]
 	internal bool HasURL => !string.IsNullOrWhiteSpace(URL);
@@ -940,7 +851,7 @@ internal sealed partial class MUnit(
 		HashSet<string> visitedForCycleDetection = new(StringComparer.OrdinalIgnoreCase);
 
 		// First, collect all JSON-based policy IDs from original MUnits to avoid duplicates
-		foreach (MUnit mUnit in originalMUnits)
+		foreach (MUnit mUnit in CollectionsMarshal.AsSpan(originalMUnits))
 		{
 			if (mUnit.JsonPolicyId != null)
 			{
@@ -949,7 +860,7 @@ internal sealed partial class MUnit(
 		}
 
 		// Process dependencies only for JSON-based MUnits
-		foreach (MUnit mUnit in originalMUnits)
+		foreach (MUnit mUnit in CollectionsMarshal.AsSpan(originalMUnits))
 		{
 			cancellationToken?.ThrowIfCancellationRequested();
 
@@ -957,7 +868,7 @@ internal sealed partial class MUnit(
 
 			List<string> dependencyIds = MUnitDependencyRegistry.GetDependencies(mUnit.JsonPolicyId, operation, timing);
 
-			foreach (string dependencyId in dependencyIds)
+			foreach (string dependencyId in CollectionsMarshal.AsSpan(dependencyIds))
 			{
 				cancellationToken?.ThrowIfCancellationRequested();
 
@@ -1008,7 +919,7 @@ internal sealed partial class MUnit(
 	/// <param name="cancellationToken">Optional cancellation token</param>
 	private static void ExecuteSpecializedStrategies(List<RegistryPolicyEntry> policies, ExecutionTiming timing, MUnitOperation operation, CancellationToken? cancellationToken = null)
 	{
-		foreach (RegistryPolicyEntry policy in policies)
+		foreach (RegistryPolicyEntry policy in CollectionsMarshal.AsSpan(policies))
 		{
 			cancellationToken?.ThrowIfCancellationRequested();
 
@@ -1297,7 +1208,8 @@ internal sealed partial class MUnit(
 										type: policy.Type,
 										size: policy.Size,
 										data: policy.Data,
-										hive: policy.Hive)
+										hive: policy.Hive,
+										id: policy.ID)
 									{
 										// Ensure we have the string form expected by Registry verification if it's missing
 										RegValue = policy.RegValue ?? RegistryManager.Manager.BuildRegValueFromParsedValue(policy)
@@ -1629,7 +1541,8 @@ internal sealed partial class MUnit(
 						removeStrategy: new GroupPolicyRemove([entry]),
 						subCategory: entry.SubCategory,
 						url: entry.URL,
-						deviceIntents: entry.DeviceIntents);
+						deviceIntents: entry.DeviceIntents,
+						id: entry.ID);
 				}
 				else if (entry.Source == Source.Registry)
 				{
@@ -1642,7 +1555,8 @@ internal sealed partial class MUnit(
 						removeStrategy: new RegistryRemove([entry]),
 						subCategory: entry.SubCategory,
 						url: entry.URL,
-						deviceIntents: entry.DeviceIntents);
+						deviceIntents: entry.DeviceIntents,
+						id: entry.ID);
 				}
 				else
 				{
@@ -1706,5 +1620,33 @@ internal sealed partial class MUnit(
 		}
 
 		return result.ToString();
+	}
+
+	/// <summary>
+	/// JSON deserialization constructor.
+	/// Only includes parameters that have serializable properties.
+	/// Strategies are replaced with safe no-op/null because importer maps by ID to MUnit catalog instances.
+	/// </summary>
+	[JsonConstructor]
+	internal MUnit(
+		Categories category,
+		string? name,
+		List<DeviceIntents.Intent> deviceIntents,
+		Guid id,
+		SubCategories? subCategory,
+		string? url,
+		bool? isApplied)
+		: this(
+			category: category,
+			name: name,
+			deviceIntents: deviceIntents,
+			id: id,
+			applyStrategy: new DefaultApply(() => { }), // no-op
+			verifyStrategy: null,
+			removeStrategy: null,
+			subCategory: subCategory,
+			url: url)
+	{
+		IsApplied = isApplied;
 	}
 }

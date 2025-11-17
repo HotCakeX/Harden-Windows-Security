@@ -38,7 +38,7 @@ internal static partial class GetFileHashes
 
 		if (policyObj.FileRules is not null)
 		{
-			// Get the hash from the Allow rules			
+			// Get the hash from the Allow rules
 			foreach (object item in policyObj.FileRules)
 			{
 				if (item is Allow allowItem)

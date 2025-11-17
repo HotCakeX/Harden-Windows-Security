@@ -27,7 +27,8 @@ indent_style = tab
 insert_final_newline = true
 
 # https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/dotnet-formatting-options
-dotnet_sort_system_directives_first = true
+dotnet_sort_system_directives_first = true:error
+dotnet_separate_import_directive_groups = false:error
 
 # https://learn.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options
 csharp_using_directive_placement = outside_namespace:error
@@ -35,6 +36,42 @@ csharp_prefer_simple_using_statement = true:error
 csharp_new_line_before_members_in_object_initializers = true:error
 csharp_space_after_dot = false:error
 csharp_space_before_comma = false:error
+# csharp_new_line_before_open_brace = all:error
+csharp_new_line_before_else = true:error
+csharp_new_line_before_catch = true:error
+csharp_new_line_before_finally = true:error
+csharp_new_line_before_members_in_anonymous_types = true:error
+csharp_new_line_between_query_expression_clauses = true:error
+# csharp_indent_case_contents = true:error
+csharp_indent_switch_labels = true:error
+csharp_indent_labels = one_less_than_current:error
+csharp_indent_block_contents = true:error
+csharp_indent_braces = false:error
+# csharp_indent_case_contents_when_block = true:error
+csharp_space_after_cast = false:error
+csharp_space_after_keywords_in_control_flow_statements = true:error
+csharp_space_between_parentheses = false:error
+csharp_space_before_colon_in_inheritance_clause = true:error
+csharp_space_after_colon_in_inheritance_clause = true:error
+csharp_space_around_binary_operators = before_and_after:error
+csharp_space_between_method_declaration_parameter_list_parentheses = false:error
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false:error
+csharp_space_between_method_declaration_name_and_open_parenthesis = false:error
+csharp_space_between_method_call_parameter_list_parentheses = false:error
+csharp_space_between_method_call_empty_parameter_list_parentheses = false:error
+csharp_space_between_method_call_name_and_opening_parenthesis = false:error
+csharp_space_after_comma = true:error
+csharp_space_before_comma = false:error
+csharp_space_after_dot = false:error
+csharp_space_before_dot = false:error
+csharp_space_after_semicolon_in_for_statement = true:error
+csharp_space_before_semicolon_in_for_statement = false:error
+csharp_space_around_declaration_statements = false:error
+csharp_space_before_open_square_brackets = false:error
+csharp_space_between_empty_square_brackets = false:error
+csharp_space_between_square_brackets = false:error
+csharp_preserve_single_line_statements = true:error
+csharp_preserve_single_line_blocks = true:error
 
 # CA1304: Specify CultureInfo
 dotnet_diagnostic.CA1304.severity = error
@@ -1092,7 +1129,7 @@ dotnet_diagnostic.IDE0150.severity = error
 dotnet_diagnostic.IDE0084.severity = error
 
 # IDE0079: Remove unnecessary suppression
-dotnet_diagnostic.IDE0079.severity = silent
+dotnet_diagnostic.IDE0079.severity = error
 
 # CA1505: Avoid unmaintainable code
 dotnet_diagnostic.CA1505.severity = error
@@ -1778,6 +1815,60 @@ dotnet_diagnostic.SYSLIB0061.severity = error
 
 # SYSLIB0062: XsltSettings.EnableScript is obsolete.
 dotnet_diagnostic.SYSLIB0062.severity = error
+
+# IDE0074: Use compound assignment
+dotnet_diagnostic.IDE0074.severity = error
+
+# IDE0042: Deconstruct variable declaration
+dotnet_diagnostic.IDE0042.severity = error
+
+# IDE1005: Use conditional delegate call
+dotnet_diagnostic.IDE1005.severity = error
+
+# IDE2000: Use conditional delegate call
+dotnet_diagnostic.IDE2000.severity = error
+
+# IDE0380: Remove unnecessary unsafe modifier
+dotnet_diagnostic.IDE0380.severity = error
+
+# IDE0370: Remove unnecessary suppression
+dotnet_diagnostic.IDE0370.severity = error
+
+# IDE0360: Simplify property accessor
+dotnet_diagnostic.IDE0360.severity = error
+
+# IDE0350: Use implicitly typed lambda
+dotnet_diagnostic.IDE0350.severity = error
+
+# IDE0340: Use unbound generic type
+dotnet_diagnostic.IDE0340.severity = error
+
+# IDE0340: Use unbound generic type
+dotnet_diagnostic.IDE0340.severity = error
+
+# IDE3000: Implement with Copilot
+dotnet_diagnostic.IDE3000.severity = error
+
+# IDE0077: Avoid legacy format target in global 'SuppressMessageAttribute'
+dotnet_diagnostic.IDE0077.severity = error
+
+# IDE0076: Remove invalid global 'SuppressMessageAttribute'
+dotnet_diagnostic.IDE0076.severity = error
+
+# IDE0055: Formatting rule
+dotnet_diagnostic.IDE0055.severity = error
+
+# CA1877: Use 'Path.Combine' or 'Path.Join' overloads
+dotnet_diagnostic.CA1877.severity = error
+
+# JSON001: Invalid JSON pattern
+dotnet_diagnostic.JSON001.severity = error
+
+# JSON002: Probable JSON string detected
+dotnet_diagnostic.JSON002.severity = error
+
+# RE0001: Invalid regex pattern
+dotnet_diagnostic.RE0001.severity = error
 
 # All Code quality rule configuration options: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/code-quality-rule-options
 # dotnet_code_quality.dispose_analysis_kind = AllPaths

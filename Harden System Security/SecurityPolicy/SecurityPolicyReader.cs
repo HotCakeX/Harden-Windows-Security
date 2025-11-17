@@ -86,8 +86,8 @@ internal static class SecurityPolicyReader
 
 	/// <summary>
 	/// Source in the PDF => https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/4df07fab-1bbc-452f-8e92-7853a3c7e380
-	/// 2.2.6.28 USER_INFORMATION_CLASS 
-	/// typedef  enum _USER_INFORMATION_CLASS 
+	/// 2.2.6.28 USER_INFORMATION_CLASS
+	/// typedef  enum _USER_INFORMATION_CLASS
 	/// </summary>
 	internal const int UserControlInformation = 16;
 
@@ -1142,11 +1142,11 @@ internal static class SecurityPolicyReader
 		}
 		finally
 		{
-			// Free allocations we own		
+			// Free allocations we own
 			FreeGlobalHandle(nameInfoBuffer);
 			FreeGlobalHandle(newUserName.Buffer);
 			FreeGlobalHandle(existingFullNameCopy.Buffer);
-			// Free SAM-returned buffers and close handles	
+			// Free SAM-returned buffers and close handles
 			FreeSAMMemory(generalInfoBuffer);
 			CloseSAMHandle(userHandle);
 			CloseSAMHandle(domainHandle);

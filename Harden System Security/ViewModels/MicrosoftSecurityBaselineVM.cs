@@ -46,7 +46,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		VerifyAllCancellableButton = new(GlobalVars.GetStr("VerifyAllButtonText"));
 
 		// To adjust the initial width of the columns, giving them nice paddings.
-		CalculateColumnWidths();
+		_ = Dispatcher.TryEnqueue(CalculateColumnWidths);
 
 		// Enrich the data to improve detection rate by ensuring specialized strategies are registered.
 		SpecializedStrategiesRegistry.RegisterWmiSpecializedVerificationsOnceFromFile();
@@ -159,11 +159,11 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		}
 
 		// Set the column width properties.
-		ColumnWidth1 = new GridLength(maxWidth1);
-		ColumnWidth2 = new GridLength(maxWidth2);
-		ColumnWidth3 = new GridLength(ListViewHelper.MeasureText(GlobalVars.GetStr("NotAppliedText"), maxWidth3) + 60); // Using the same string as the one StatusIndicatorV2 uses, the longer one.
-		ColumnWidth4 = new GridLength(maxWidth4);
-		ColumnWidth5 = new GridLength(maxWidth5);
+		ColumnWidth1 = new(maxWidth1);
+		ColumnWidth2 = new(maxWidth2);
+		ColumnWidth3 = new(ListViewHelper.MeasureText(GlobalVars.GetStr("NotAppliedText"), maxWidth3) + 60); // Using the same string as the one StatusIndicatorV2 uses, the longer one.
+		ColumnWidth4 = new(maxWidth4);
+		ColumnWidth5 = new(maxWidth5);
 	}
 
 	#endregion
@@ -540,5 +540,17 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// If user selects a custom baseline file, disable the multi-baseline ComboBox.
 	/// </summary>
 	internal bool IsMultiBaselineComboBoxEnabled { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
+	/// Used for <see cref="Traverse.MContainer"/> data retrieval.
+	/// </summary>
+	/// <returns></returns>
+	internal async Task<Traverse.MicrosoftSecurityBaseline> GetTraverseData()
+	{
+		if (AllVerificationResults.Count == 0)
+			await VerifyInternal();
+
+		return new(items: AllVerificationResults) { Score = AllVerificationResults.Count(x => x.IsCompliant) };
+	}
 
 }

@@ -416,7 +416,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 
 	private void InitializeClickDelayTimer()
 	{
-		_clickDelayTimer = new DispatcherTimer
+		_clickDelayTimer = new()
 		{
 			Interval = FiftyMsTimeSpan
 		};
@@ -548,9 +548,9 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 	{
 		try
 		{
-			_shadowAnimationStoryboard = new Storyboard();
+			_shadowAnimationStoryboard = new();
 
-			_shadowTimer = new DispatcherTimer
+			_shadowTimer = new()
 			{
 				Interval = FiftyMsTimeSpan
 			};
@@ -564,7 +564,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 		catch (Exception)
 		{
-			_shadowTimer = new DispatcherTimer
+			_shadowTimer = new()
 			{
 				Interval = FiftyMsTimeSpan
 			};
@@ -890,7 +890,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		InitializeAnimations();
 		InitializeShadowAnimation();
 		InitializeClickDelayTimer();
-		_disposalCancellationTokenSource = new CancellationTokenSource();
+		_disposalCancellationTokenSource = new();
 	}
 
 	private void AnimatedCancellableButton_Loaded(object? sender, RoutedEventArgs e)
@@ -904,7 +904,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 
 	private void InitializeAnimations()
 	{
-		_fadeOutAnimation = new DoubleAnimation
+		_fadeOutAnimation = new()
 		{
 			From = 1.0,
 			To = 0.0,
@@ -912,11 +912,11 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 			EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
 		};
 
-		_fadeOutStoryboard = new Storyboard();
+		_fadeOutStoryboard = new();
 		_fadeOutStoryboard.Children.Add(_fadeOutAnimation);
 		_fadeOutStoryboard.Completed += FadeOutStoryboard_Completed;
 
-		_fadeInAnimation = new DoubleAnimation
+		_fadeInAnimation = new()
 		{
 			From = 0.0,
 			To = 1.0,
@@ -924,7 +924,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 			EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
 		};
 
-		_fadeInStoryboard = new Storyboard();
+		_fadeInStoryboard = new();
 		_fadeInStoryboard.Children.Add(_fadeInAnimation);
 	}
 

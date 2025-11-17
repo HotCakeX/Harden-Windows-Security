@@ -494,7 +494,7 @@
                             <BreadcrumbBar.ItemTemplate>
                                 <DataTemplate x:DataType="WindowComponents:Crumb"
                                               xmlns:vms="using:AppControlManager.ViewModels">
-                                    <TextBlock Text="{x:Bind Label}"                                            
+                                    <TextBlock Text="{x:Bind Label}"
                                                Style="{x:Bind vms:ViewModelProvider.MainWindowVM.BreadcrumbItemStyle, Mode=OneWay}"
                                                TextWrapping="NoWrap"/>
                                 </DataTemplate>

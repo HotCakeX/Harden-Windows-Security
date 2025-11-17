@@ -52,7 +52,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 
 		// To size the listview columns with some padding after initial page load.
-		ComputeColumnWidths();
+		_ = Dispatcher.TryEnqueue(ComputeColumnWidths);
 	}
 
 	/// <summary>
@@ -175,7 +175,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				DeviceIntents.Intent.SpecializedAccessWorkstation,
 				DeviceIntents.Intent.PrivilegedAccessWorkstation,
 				DeviceIntents.Intent.School
-			]
+			],
+			id: new("019a9060-c319-742a-8ee6-f31481846eaa")
 			));
 
 		// AllowSwitchToAsyncInspection
@@ -222,7 +223,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 			deviceIntents: [
 				DeviceIntents.Intent.All
-			]
+			],
+			id: new("019a9060-e172-7876-885d-633d2dbd65eb")
 			));
 
 		// EnableConvertWarnToBlock
@@ -272,7 +274,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				DeviceIntents.Intent.SpecializedAccessWorkstation,
 				DeviceIntents.Intent.PrivilegedAccessWorkstation,
 				DeviceIntents.Intent.School
-			]
+			],
+			id: new("019a9061-41b0-7baa-afc8-b253b43025fd")
 			));
 
 		// BruteForceProtectionLocalNetworkBlocking
@@ -322,7 +325,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				DeviceIntents.Intent.SpecializedAccessWorkstation,
 				DeviceIntents.Intent.PrivilegedAccessWorkstation,
 				DeviceIntents.Intent.School
-			]
+			],
+			id: new("019a9061-8aba-789f-9291-fa4fd6464fda")
 			));
 
 		// Adding OneDrive directories to Controlled Folder Access
@@ -349,7 +353,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			}),
 			deviceIntents: [
 				DeviceIntents.Intent.All
-			]
+			],
+			id: new("019a9061-ff1a-7c33-9152-2395ed108dfe")
 			));
 
 
@@ -408,7 +413,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				DeviceIntents.Intent.SpecializedAccessWorkstation,
 				DeviceIntents.Intent.PrivilegedAccessWorkstation,
 				DeviceIntents.Intent.School
-			]
+			],
+			id: new("019a9062-247e-7b49-a029-e2e3917b7ba9")
 
 			));
 
@@ -456,7 +462,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			}),
 			deviceIntents: [
 				DeviceIntents.Intent.All
-			]
+			],
+			id: new("019a9062-6faa-7196-9f28-0b3e8b67abad")
 			));
 
 
@@ -495,7 +502,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 			deviceIntents: [
 				DeviceIntents.Intent.Development
-			]
+			],
+			id: new("019a9062-e303-7f26-85db-29b45813cfa3")
 			));
 
 
@@ -559,7 +567,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 
 			deviceIntents: [
 				DeviceIntents.Intent.SpecializedAccessWorkstation
-			]
+			],
+			id: new("019a9063-39db-7eb4-b5c3-99394df239c4")
 			));
 
 
@@ -595,9 +604,9 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					DeviceIntents.Intent.Business,
 					DeviceIntents.Intent.SpecializedAccessWorkstation,
 					DeviceIntents.Intent.PrivilegedAccessWorkstation
-				]
+				],
+				id: new("019a9063-824a-71a0-9564-1618d602830c")
 				));
-
 
 		return temp;
 	}
@@ -765,8 +774,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			w2 = ListViewHelper.MeasureText(v.SourceFriendlyName, w2);
 		}
 
-		EXColWidth1 = new GridLength(w1);
-		EXColWidth2 = new GridLength(w2);
+		EXColWidth1 = new(w1);
+		EXColWidth2 = new(w2);
 	}
 
 	internal readonly ObservableCollection<Exclusions> Exclusions = [];

@@ -190,29 +190,29 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		}
 
 		// Set the column width properties.
-		ColumnWidth1 = new GridLength(maxWidth1);
-		ColumnWidth2 = new GridLength(maxWidth2);
-		ColumnWidth3 = new GridLength(maxWidth3);
-		ColumnWidth4 = new GridLength(maxWidth4);
-		ColumnWidth5 = new GridLength(maxWidth5);
-		ColumnWidth6 = new GridLength(maxWidth6);
-		ColumnWidth7 = new GridLength(maxWidth7);
-		ColumnWidth8 = new GridLength(maxWidth8);
-		ColumnWidth9 = new GridLength(maxWidth9);
-		ColumnWidth10 = new GridLength(maxWidth10);
-		ColumnWidth11 = new GridLength(maxWidth11);
-		ColumnWidth12 = new GridLength(maxWidth12);
-		ColumnWidth13 = new GridLength(maxWidth13);
-		ColumnWidth14 = new GridLength(maxWidth14);
-		ColumnWidth15 = new GridLength(maxWidth15);
-		ColumnWidth16 = new GridLength(maxWidth16);
-		ColumnWidth17 = new GridLength(maxWidth17);
-		ColumnWidth18 = new GridLength(maxWidth18);
-		ColumnWidth19 = new GridLength(maxWidth19);
-		ColumnWidth20 = new GridLength(maxWidth20);
-		ColumnWidth21 = new GridLength(maxWidth21);
-		ColumnWidth22 = new GridLength(maxWidth22);
-		ColumnWidth23 = new GridLength(maxWidth23);
+		ColumnWidth1 = new(maxWidth1);
+		ColumnWidth2 = new(maxWidth2);
+		ColumnWidth3 = new(maxWidth3);
+		ColumnWidth4 = new(maxWidth4);
+		ColumnWidth5 = new(maxWidth5);
+		ColumnWidth6 = new(maxWidth6);
+		ColumnWidth7 = new(maxWidth7);
+		ColumnWidth8 = new(maxWidth8);
+		ColumnWidth9 = new(maxWidth9);
+		ColumnWidth10 = new(maxWidth10);
+		ColumnWidth11 = new(maxWidth11);
+		ColumnWidth12 = new(maxWidth12);
+		ColumnWidth13 = new(maxWidth13);
+		ColumnWidth14 = new(maxWidth14);
+		ColumnWidth15 = new(maxWidth15);
+		ColumnWidth16 = new(maxWidth16);
+		ColumnWidth17 = new(maxWidth17);
+		ColumnWidth18 = new(maxWidth18);
+		ColumnWidth19 = new(maxWidth19);
+		ColumnWidth20 = new(maxWidth20);
+		ColumnWidth21 = new(maxWidth21);
+		ColumnWidth22 = new(maxWidth22);
+		ColumnWidth23 = new(maxWidth23);
 	}
 
 	#endregion

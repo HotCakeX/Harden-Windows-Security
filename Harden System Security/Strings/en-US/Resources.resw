@@ -583,9 +583,6 @@
   <data name="UserCanceledUACMessage" xml:space="preserve">
   <value>User canceled the UAC prompt.</value>
   </data>
-  <data name="ProtectionPresets.Text" xml:space="preserve">
-    <value>Protection Presets</value>
-  </data>
     <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Choose one of the protection presets to apply, they are pre-configured sets of configurations made for different security levels.</value>
   </data>
@@ -4225,5 +4222,83 @@ Thumbprint: {3}</value>
   </data>
   <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
     <value>Successfully exported {0} installed apps to {1}</value>
+  </data>
+  <data name="SystemStateButton.Content" xml:space="preserve">
+    <value>System State</value>
+  </data>
+  <data name="SystemStateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Back up the current system state to a file or restore it from an existing backup.</value>
+  </data>
+  <data name="SystemStateButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Back up the current system state to a file or restore it from an existing backup.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Backup</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Back up the current system state to a structured file. It contains complete detail of the current system state and can be used for restoration.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Back up the current system state to a structured file. It contains complete detail of the current system state and can be used for restoration.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Restore the system state from a previously created backup file. This will revert the system to the state captured in the backup.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Restore the system state from a previously created backup file. This will revert the system to the state captured in the backup.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select the mode of the restoration operation.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Select the mode of the restoration operation.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Partial</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Applies only the security measures marked as applied or compliant in the provided file, while ignoring those not marked accordingly. This results in a partial restoration of the system state.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Applies only the security measures marked as applied or compliant in the provided file, while ignoring those not marked accordingly. This results in a partial restoration of the system state.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Full</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Implements all security measures defined in the provided file. Measures marked as applied or compliant will be enforced on the system, while those marked as not applied or non-compliant will be removed. This ensures complete restoration of the system state in accordance with the file.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Implements all security measures defined in the provided file. Measures marked as applied or compliant will be enforced on the system, while those marked as not applied or non-compliant will be removed. This ensures complete restoration of the system state in accordance with the file.</value>
+  </data>
+  <data name="SystemStateRestorationBeginsMsg" xml:space="preserve">
+   <value>Beginning system state restoration.</value>
+  </data>
+  <data name="SystemStateRestorationFinishedMsg" xml:space="preserve">
+   <value>System state restoration has been completed successfully.</value>
+  </data>
+  <data name="SystemStateReportGenerationBeginsMsg" xml:space="preserve">
+   <value>Generating full system state report, please wait.</value>
+  </data>
+  <data name="SystemStateReportGenerationFinishedMsg" xml:space="preserve">
+   <value>Full system state report has been successfully generated and saved to the following location: '{0}'.</value>
+  </data>
+  <data name="ImportOperationBeginApplyCountMsg" xml:space="preserve">
+   <value>Import Operation: There are {0} security measures to apply among {1} categories.</value>
+  </data>
+  <data name="ImportOperationBeginRemoveCountMsg" xml:space="preserve">
+   <value>Import Operation: There are {0} security measures to remove among {1} categories.</value>
+  </data>
+  <data name="ImportOperationIndividualApplyOperationMsg" xml:space="preserve">
+   <value>Import Operation: Applying {0} items for category {1}</value>
+  </data>
+  <data name="ImportOperationIndividualRemoveOperationMsg" xml:space="preserve">
+   <value>Import Operation: Removing {0} items for category {1}</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Restoration Mode</value>
   </data>
 </root>

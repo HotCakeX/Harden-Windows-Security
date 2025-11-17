@@ -148,6 +148,11 @@ internal static class RegistryPolicyParser
 		return new RegistryPolicyFile(signature: signature, version: version, entries: entries);
 	}
 
+	/// <summary>
+	/// This ID is used for <see cref="RegistryPolicyEntry"/> instances that are created by parsing .POL files.
+	/// </summary>
+	private static readonly Guid POLOriginatedID = new("019a97ba-275a-774d-a8c5-318a2652c0b0");
+
 	private static RegistryPolicyEntry? ReadEntry(BinaryReader reader)
 	{
 		// Check if we have enough data for the minimum entry structure
@@ -209,7 +214,7 @@ internal static class RegistryPolicyParser
 		if (closingBracket != 0x005D) // ']' in Unicode
 			throw new InvalidDataException(string.Format(GlobalVars.GetStr("ExpectedClosingBracketAfterData"), closingBracket));
 
-		return new RegistryPolicyEntry(source: Source.GroupPolicy, keyName: keyName, valueName: valueName, type: type, size: size, data: data, hive: Hive.HKLM);
+		return new RegistryPolicyEntry(source: Source.GroupPolicy, keyName: keyName, valueName: valueName, type: type, size: size, data: data, hive: Hive.HKLM, id: POLOriginatedID);
 	}
 
 	private static string ReadUnicodeString(BinaryReader reader)

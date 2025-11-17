@@ -192,103 +192,164 @@ The service supports Arbitrary Code Guard exploit protection as well as many oth
 
 ## CommandLine Interface (CLI) Support
 
-The Harden System Security app can be launched via command line for advanced users and automation scenarios. Below are the supported commands and their usage:
+The Harden System Security app can be launched via command line for advanced users and automation scenarios. All CLI arguments are case-insensitive.
+
+When `--cli` is present the app runs headless (no GUI).
+If an operation requires elevation, the app relaunches itself elevated and preserves all CLI arguments.
+If elevation is denied when required, no changes are performed and the process exits with code 0 (no-op).
+
+---
 
 ### Via Execution Alias
 
-* #### Open a Group Policy (.POL) file in the Group Policy Editor
+#### Open a Group Policy (.POL) file in the Group Policy Editor
 
-```
+```powershell
 HSS.exe --file="C:\Path\Policy.pol"
 ```
 
-<br>
+---
 
 ### Via File Activation (Supported File Types Only)
 
-* #### Opens a POL file in the Group Policy Editor, same as double-clicking/tapping on the file in File Explorer.
+#### Opens a POL file in the Group Policy Editor (same as double‑clicking in File Explorer)
 
 ```powershell
 Invoke-Item -Path "C:\Path\Policy.pol"
 ```
 
-<br>
+---
 
 ### Via AUMID (Application User Model ID) Activation
 
-* #### Simply launches Harden System Security
+#### Simply launches Harden System Security
 
-```
+```powershell
 explorer.exe shell:AppsFolder\VioletHansen.HardenSystemSecurity_ea7andspwdn10!App
 ```
 
-<br>
+---
 
-### Headless CLI Mode
+### Headless CLI Mode (`--cli`)
 
-Use `--cli` to run headless (no GUI). All CLI arguments are case-insensitive.
-
-- If an operation requires elevation, the app will relaunch itself elevated and preserve all CLI arguments.
-- If elevation is denied when required, no changes are performed.
+Use `--cli` to run without the GUI.
 
 #### Preset-based Operations
 
 Run a full preset across selected categories.
 
-```
+```powershell
 HSS.exe --cli --preset=0|1|2 --op=Apply|Remove|Verify
 ```
 
-- Presets
-  - 0 = Basic
-  - 1 = Recommended
-  - 2 = Complete
+Presets:
+- 0 = Basic
+- 1 = Recommended
+- 2 = Complete
 
-- Examples
-  - Apply the Recommended preset:
-    ```
-    HSS.exe --cli --preset=1 --op=Apply
-    ```
-  - Verify the Complete preset:
-    ```
-    HSS.exe --cli --preset=2 --op=Verify
-    ```
-  - Remove the Basic preset:
-    ```
-    HSS.exe --cli --preset=0 --op=Remove
-    ```
+Examples:
+```powershell
+# Apply the Recommended preset
+HSS.exe --cli --preset=1 --op=Apply
 
-<br>
+# Verify the Complete preset
+HSS.exe --cli --preset=2 --op=Verify
+
+# Remove the Basic preset
+HSS.exe --cli --preset=0 --op=Remove
+```
 
 #### Device Usage Intent Operations
 
-Apply protections tailored to a specific [device usage intent](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect#device-usage-intents). Only Apply is supported for intents at this time.
+Apply protections tailored to a specific [device usage intent](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect#device-usage-intents).
 
-```
+> [!NOTE]\
+> Only `Apply` is supported for intents at this time.
+
+```powershell
 HSS.exe --cli --intent=<IntentName> --op=Apply
 ```
 
-- Supported intents
-  - Development
-  - Gaming
-  - School
-  - Business
-  - SpecializedAccessWorkstation
-  - PrivilegedAccessWorkstation
+Supported intents:
+- Development
+- Gaming
+- School
+- Business
+- SpecializedAccessWorkstation
+- PrivilegedAccessWorkstation
 
-- Example (Business intent):
-
-```
+Example (Business intent):
+```powershell
 HSS.exe --cli --intent=Business --op=Apply
 ```
 
-<br>
+---
 
-#### Exit Codes
+### System State Report Export
 
-- 0: Success or no-op (including cases where elevation was required but not granted; no changes performed)
-- 1: Unexpected failure during execution
-- 2: Invalid arguments (e.g., unsupported `--preset`, invalid `--op`, invalid `--intent`)
+Create a full system state JSON report. Elevation is required.
+
+Syntax:
+```powershell
+HSS.exe --cli ExportReport --out="C:\Path\HardenSystemSecurity-Report.json"
+```
+
+Requirements:
+- `--out` is mandatory.
+
+Example:
+```powershell
+HSS.exe --cli ExportReport --out="C:\Reports\HSS-SystemState.json"
+```
+
+---
+
+### System State Report Import / Restore
+
+Import and apply a previously exported system state report. Elevation is required.
+
+Syntax:
+```powershell
+HSS.exe --cli ImportReport --in="C:\Path\Report.json" [--mode=full|partial]
+```
+
+Requirements:
+- `--in` is mandatory and must point to an existing `.json` file.
+- `--mode` defaults to `full` if omitted.
+
+Modes:
+- `full`    → Apply all measures marked applied AND remove all measures marked not applied.
+- `partial` → Apply only measures marked applied; skip removals.
+
+Examples:
+```powershell
+# Full synchronization (default)
+HSS.exe --cli ImportReport --in="C:\Reports\HSS-SystemState.json"
+
+# Partial (apply-only) restore
+HSS.exe --cli ImportReport --in="C:\Reports\HSS-SystemState.json" --mode=partial
+```
+
+---
+
+### Microsoft Store App Update Check
+
+Headless check for app updates (requires elevation):
+
+```powershell
+HSS.exe --cli CheckMSStoreAppUpdate
+```
+
+---
+
+### Exit Codes
+
+| Code | Meaning                                                                                       |
+|------|------------------------------------------------------------------------------------------------|
+| 0    | Success or no-op (including elevation denied before performing any change)                    |
+| 1    | Unexpected runtime failure (exception during execution)                                       |
+| 2    | Invalid arguments (missing required flag, unsupported value, invalid path/extension)          |
+
 
 <br>
 

@@ -34,8 +34,8 @@ internal static class DataDump
 		await Task.Run(() =>
 		{
 
-			SystemAccessInfo systemAccess = SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
-			Dictionary<string, string[]> privilegeRights = SecurityPolicy.SecurityPolicyReader.GetPrivilegeRights();
+			SystemAccessInfo systemAccess = SecurityPolicyReader.GetSystemAccess();
+			Dictionary<string, string[]> privilegeRights = SecurityPolicyReader.GetPrivilegeRights();
 
 			StringBuilder content = new();
 

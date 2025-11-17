@@ -64,15 +64,15 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	private void LoadLanguages()
 	{
-		LanguageOptions.Add(new LanguageOption("English", "ms-appx:///Assets/CountryFlags/usa-240.png"));
-		LanguageOptions.Add(new LanguageOption("עברית", "ms-appx:///Assets/CountryFlags/israel-240.png"));
-		LanguageOptions.Add(new LanguageOption("Ελληνικά", "ms-appx:///Assets/CountryFlags/greece-240.png"));
-		LanguageOptions.Add(new LanguageOption("हिंदी", "ms-appx:///Assets/CountryFlags/india-240.png"));
-		LanguageOptions.Add(new LanguageOption("Polski", "ms-appx:///Assets/CountryFlags/poland-240.png"));
-		LanguageOptions.Add(new LanguageOption("العربية", "ms-appx:///Assets/CountryFlags/saudi-arabia-240.png"));
-		LanguageOptions.Add(new LanguageOption("Español", "ms-appx:///Assets/CountryFlags/mexico-240.png"));
-		LanguageOptions.Add(new LanguageOption("മലയാളം", "ms-appx:///Assets/CountryFlags/india-240.png"));
-		LanguageOptions.Add(new LanguageOption("Deutsch", "ms-appx:///Assets/CountryFlags/germany-240.png"));
+		LanguageOptions.Add(new("English", "ms-appx:///Assets/CountryFlags/usa-240.png"));
+		LanguageOptions.Add(new("עברית", "ms-appx:///Assets/CountryFlags/israel-240.png"));
+		LanguageOptions.Add(new("Ελληνικά", "ms-appx:///Assets/CountryFlags/greece-240.png"));
+		LanguageOptions.Add(new("हिंदी", "ms-appx:///Assets/CountryFlags/india-240.png"));
+		LanguageOptions.Add(new("Polski", "ms-appx:///Assets/CountryFlags/poland-240.png"));
+		LanguageOptions.Add(new("العربية", "ms-appx:///Assets/CountryFlags/saudi-arabia-240.png"));
+		LanguageOptions.Add(new("Español", "ms-appx:///Assets/CountryFlags/mexico-240.png"));
+		LanguageOptions.Add(new("മലയാളം", "ms-appx:///Assets/CountryFlags/india-240.png"));
+		LanguageOptions.Add(new("Deutsch", "ms-appx:///Assets/CountryFlags/germany-240.png"));
 	}
 
 	/// <summary>

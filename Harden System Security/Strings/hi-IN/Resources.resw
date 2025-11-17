@@ -583,9 +583,6 @@
   <data name="UserCanceledUACMessage" xml:space="preserve">
   <value>उपयोगकर्ता ने UAC प्रॉम्प्ट रद्द किया।</value>
   </data>
-  <data name="ProtectionPresets.Text" xml:space="preserve">
-    <value>सुरक्षा प्रीसेट</value>
-  </data>
     <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>लागू करने के लिए सुरक्षा प्रीसेट में से एक चुनें, ये विभिन्न सुरक्षा स्तरों के लिए बनाए गए पूर्व-निर्धारित कॉन्फ़िगरेशन सेट हैं।</value>
   </data>
@@ -4226,4 +4223,82 @@
   <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
     <value>सफलतापूर्वक {0} स्थापित ऐप्स {1} में निर्यात कर दिए गए</value>
   </data>
+    <data name="SystemStateButton.Content" xml:space="preserve">
+    <value>सिस्टम स्थिति</value>
+  </data>
+  <data name="SystemStateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वर्तमान सिस्टम स्थिति का बैकअप फ़ाइल में लें या उसे मौजूदा बैकअप से पुनर्स्थापित करें.</value>
+  </data>
+  <data name="SystemStateButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>वर्तमान सिस्टम स्थिति का बैकअप फ़ाइल में लें या उसे मौजूदा बैकअप से पुनर्स्थापित करें.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>बैकअप</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वर्तमान सिस्टम स्थिति का बैकअप एक संरचित फ़ाइल में लें. इसमें वर्तमान सिस्टम स्थिति का पूरा विवरण होता है और इसका उपयोग पुनर्स्थापना के लिए किया जा सकता है.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>वर्तमान सिस्टम स्थिति का बैकअप एक संरचित फ़ाइल में लें. इसमें वर्तमान सिस्टम स्थिति का पूरा विवरण होता है और इसका उपयोग पुनर्स्थापना के लिए किया जा सकता है.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>पुनर्स्थापना</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पहले से बनाई गई बैकअप फ़ाइल से सिस्टम स्थिति को पुनर्स्थापित करें. इससे सिस्टम बैकअप में दर्ज स्थिति पर वापस आ जाएगा.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>पहले से बनाई गई बैकअप फ़ाइल से सिस्टम स्थिति को पुनर्स्थापित करें. इससे सिस्टम बैकअप में दर्ज स्थिति पर वापस आ जाएगा.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पुनर्स्थापना प्रक्रिया का मोड चुनें।</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>पुनर्स्थापना प्रक्रिया का मोड चुनें।</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>आंशिक</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>केवल उन्हीं सुरक्षा उपायों को लागू करता है जिन्हें प्रदत्त फ़ाइल में लागू या अनुरूप के रूप में चिह्नित किया गया है, और जो तदनुसार चिह्नित नहीं हैं उन्हें अनदेखा करता है। इसका परिणाम सिस्टम स्थिति की आंशिक पुनर्स्थापना में होता है.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>केवल उन्हीं सुरक्षा उपायों को लागू करता है जिन्हें प्रदत्त फ़ाइल में लागू या अनुरूप के रूप में चिह्नित किया गया है, और जो तदनुसार चिह्नित नहीं हैं उन्हें अनदेखा करता है। इसका परिणाम सिस्टम स्थिति की आंशिक पुनर्स्थापना में होता है.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>पूर्ण</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>प्रदत्त फ़ाइल में परिभाषित सभी सुरक्षा उपायों को लागू करता है। जिन उपायों को लागू या अनुरूप के रूप में चिह्नित किया गया है उन्हें सिस्टम पर लागू किया जाएगा, जबकि जिन्हें गैर-लागू या गैर-अनुरूप चिह्नित किया गया है उन्हें हटा दिया जाएगा। इससे फ़ाइल के अनुरूप सिस्टम स्थिति का पूर्ण पुनर्स्थापन सुनिश्चित होता है.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>प्रदत्त फ़ाइल में परिभाषित सभी सुरक्षा उपायों को लागू करता है। जिन उपायों को लागू या अनुरूप के रूप में चिह्नित किया गया है उन्हें सिस्टम पर लागू किया जाएगा, जबकि जिन्हें गैर-लागू या गैर-अनुरूप चिह्नित किया गया है उन्हें हटा दिया जाएगा। इससे फ़ाइल के अनुरूप सिस्टम स्थिति का पूर्ण पुनर्स्थापन सुनिश्चित होता है.</value>
+  </data>
+  <data name="SystemStateRestorationBeginsMsg" xml:space="preserve">
+   <value>सिस्टम की स्थिति की पुनर्स्थापना शुरू हो रही है।</value>
+  </data>
+  <data name="SystemStateRestorationFinishedMsg" xml:space="preserve">
+   <value>सिस्टम स्थिति की पुनर्स्थापना सफलतापूर्वक पूरी हो गई है।</value>
+  </data>
+  <data name="SystemStateReportGenerationBeginsMsg" xml:space="preserve">
+   <value>पूर्ण सिस्टम स्थिति रिपोर्ट तैयार की जा रही है, कृपया प्रतीक्षा करें।</value>
+  </data>
+  <data name="SystemStateReportGenerationFinishedMsg" xml:space="preserve">
+   <value>पूर्ण सिस्टम स्थिति रिपोर्ट सफलतापूर्वक जनरेट की गई और निम्न स्थान पर सहेजी गई: '{0}'.</value>
+  </data>
+  <data name="ImportOperationBeginApplyCountMsg" xml:space="preserve">
+   <value>आयात प्रक्रिया: {1} श्रेणियों में लागू करने के लिए {0} सुरक्षा उपाय हैं।</value>
+  </data>
+  <data name="ImportOperationBeginRemoveCountMsg" xml:space="preserve">
+   <value>आयात प्रक्रिया: {1} श्रेणियों में हटाने के लिए {0} सुरक्षा उपाय हैं।</value>
+  </data>
+  <data name="ImportOperationIndividualApplyOperationMsg" xml:space="preserve">
+   <value>आयात प्रक्रिया: श्रेणी {1} के लिए {0} आइटम लागू किए जा रहे हैं</value>
+  </data>
+  <data name="ImportOperationIndividualRemoveOperationMsg" xml:space="preserve">
+   <value>आयात प्रक्रिया: श्रेणी {1} के लिए {0} आइटम हटाए जा रहे हैं</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+  <value>पुनर्स्थापना मोड</value>
+</data>
 </root>

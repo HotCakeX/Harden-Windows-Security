@@ -18,14 +18,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
+using HardenSystemSecurity.Traverse;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -1073,47 +1072,26 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 
 		try
 		{
-			if (ViewModel.ListViewItemsSourceBackingField.Count == 0)
-			{
-				ViewModel.MainInfoBar.WriteWarning(GlobalVars.GetStr("NoVerificationResultsToExport"));
-				return;
-			}
-
 			ViewModel.ElementsAreEnabled = false;
 			ViewModel.MainInfoBar.IsClosable = false;
 
-			// Flatten the groups into a single list
-			List<MUnit> itemsToExport = [];
-			foreach (GroupInfoListForMUnit group in ViewModel.ListViewItemsSourceBackingField)
-			{
-				foreach (MUnit m in group)
-				{
-					itemsToExport.Add(m);
-				}
-			}
-
-			if (itemsToExport.Count == 0)
-			{
-				ViewModel.MainInfoBar.WriteWarning(GlobalVars.GetStr("NoVerificationResultsToExport"));
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, HardenSystemSecurity.Traverse.Generator.GetFileName());
+			if (string.IsNullOrEmpty(savePath))
 				return;
-			}
 
-			DateTime now = DateTime.Now;
-			string defaultFileName = $"Security Measures {now:yyyy-MM-dd_HH-mm-ss}.json";
-
-			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, defaultFileName);
-			if (string.IsNullOrWhiteSpace(savePath))
-			{
-				return;
-			}
+			// Get the up to date data for the current category
+			(int Score, List<MUnit> Items) =
+				await HardenSystemSecurity.Traverse.Generator.VerifyAndSnapshotMUnitCategoryAsync(ViewModel, System.Threading.CancellationToken.None);
 
 			await Task.Run(() =>
 			{
-				string json = MUnitJsonContext.SerializeList(itemsToExport);
-				File.WriteAllText(savePath, json, Encoding.UTF8);
+				// Build a traverse container with only this category populated and write directly to file
+				MContainer container = BuildSingleCategoryContainer(Score, Items);
+
+				MContainerJsonContext.SerializeSingle(container, savePath);
 			});
 
-			ViewModel.MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedVerificationResults"), itemsToExport.Count, savePath));
+			ViewModel.MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedVerificationResults"), Items.Count, savePath));
 		}
 		catch (Exception ex)
 		{
@@ -1124,6 +1102,104 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 			ViewModel.ElementsAreEnabled = true;
 			ViewModel.MainInfoBar.IsClosable = true;
 		}
+	}
+
+	/// <summary>
+	/// Builds an MContainer with only the current category populated, others are null.
+	/// </summary>
+	private static MContainer BuildSingleCategoryContainer(int score, List<MUnit> items)
+	{
+		int total = items.Count;
+		int compliant = score;
+		int nonCompliant = total - score;
+
+		// Detect category
+		Categories category = items[0].Category;
+
+		// Initialize all category objects as null initially.
+		MicrosoftDefender? microsoftDefender = null;
+		BitLockerSettings? bitLockerSettings = null;
+		TLSSecurity? tlsSecurity = null;
+		LockScreen? lockScreen = null;
+		UserAccountControl? userAccountControl = null;
+		DeviceGuard? deviceGuard = null;
+		WindowsFirewall? windowsFirewall = null;
+		WindowsNetworking? windowsNetworking = null;
+		MiscellaneousConfigurations? miscellaneousConfigurations = null;
+		WindowsUpdateConfigurations? windowsUpdateConfigurations = null;
+		EdgeBrowserConfigurations? edgeBrowserConfigurations = null;
+		NonAdminCommands? nonAdminCommands = null;
+		MSFTSecBaselines_OptionalOverrides? overrides = null;
+
+		switch (category)
+		{
+			case Categories.MicrosoftDefender:
+				microsoftDefender = new(items) { Score = score };
+				break;
+			case Categories.BitLockerSettings:
+				bitLockerSettings = new(items) { Score = score };
+				break;
+			case Categories.TLSSecurity:
+				tlsSecurity = new(items) { Score = score };
+				break;
+			case Categories.LockScreen:
+				lockScreen = new(items) { Score = score };
+				break;
+			case Categories.UserAccountControl:
+				userAccountControl = new(items) { Score = score };
+				break;
+			case Categories.DeviceGuard:
+				deviceGuard = new(items) { Score = score };
+				break;
+			case Categories.WindowsFirewall:
+				windowsFirewall = new(items) { Score = score };
+				break;
+			case Categories.WindowsNetworking:
+				windowsNetworking = new(items) { Score = score };
+				break;
+			case Categories.MiscellaneousConfigurations:
+				miscellaneousConfigurations = new(items) { Score = score };
+				break;
+			case Categories.WindowsUpdateConfigurations:
+				windowsUpdateConfigurations = new(items) { Score = score };
+				break;
+			case Categories.EdgeBrowserConfigurations:
+				edgeBrowserConfigurations = new(items) { Score = score };
+				break;
+			case Categories.NonAdminCommands:
+				nonAdminCommands = new(items) { Score = score };
+				break;
+			case Categories.MSFTSecBaselines_OptionalOverrides:
+				overrides = new(items) { Score = score };
+				break;
+			case Categories.MicrosoftSecurityBaseline:
+			case Categories.Microsoft365AppsSecurityBaseline:
+			case Categories.AttackSurfaceReductionRules:
+			case Categories.OptionalWindowsFeatures:
+			case Categories.CertificateChecking:
+			case Categories.CountryIPBlocking:
+			default:
+				break;
+		}
+
+		return new(
+			total: total,
+			compliant: compliant,
+			nonCompliant: nonCompliant,
+			microsoftDefender: microsoftDefender,
+			bitLockerSettings: bitLockerSettings,
+			tlsSecurity: tlsSecurity,
+			lockScreen: lockScreen,
+			userAccountControl: userAccountControl,
+			deviceGuard: deviceGuard,
+			windowsFirewall: windowsFirewall,
+			windowsNetworking: windowsNetworking,
+			miscellaneousConfigurations: miscellaneousConfigurations,
+			windowsUpdateConfigurations: windowsUpdateConfigurations,
+			edgeBrowserConfigurations: edgeBrowserConfigurations,
+			nonAdminCommands: nonAdminCommands,
+			msftSecBaselines_OptionalOverrides: overrides
+		);
 	}
 
 	#endregion

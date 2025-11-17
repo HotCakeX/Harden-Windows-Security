@@ -34,7 +34,7 @@
                 <customUI:ButtonV2 x:Name="PickPolicyFileButton"
                                    ObservedData="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                   Click="{x:Bind ViewModel.PickPolicyFileButton_Click}"                               
+                                   Click="{x:Bind ViewModel.PickPolicyFileButton_Click}"
                                    x:Uid="SelectAppControlPolicyFileButton">
 
                     <Button.ContentTemplate>

@@ -124,13 +124,13 @@ internal sealed partial class MainWindow : Window
 		// Adjust padding columns
 		if (isRtl)
 		{
-			LeftPaddingColumn.Width = new GridLength(AppWindow.TitleBar.RightInset / scale);
-			RightPaddingColumn.Width = new GridLength(AppWindow.TitleBar.LeftInset / scale);
+			LeftPaddingColumn.Width = new(AppWindow.TitleBar.RightInset / scale);
+			RightPaddingColumn.Width = new(AppWindow.TitleBar.LeftInset / scale);
 		}
 		else
 		{
-			RightPaddingColumn.Width = new GridLength(AppWindow.TitleBar.RightInset / scale);
-			LeftPaddingColumn.Width = new GridLength(AppWindow.TitleBar.LeftInset / scale);
+			RightPaddingColumn.Width = new(AppWindow.TitleBar.RightInset / scale);
+			LeftPaddingColumn.Width = new(AppWindow.TitleBar.LeftInset / scale);
 		}
 
 		// Compute each element's rect

@@ -348,13 +348,13 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 	{
 		return intent switch
 		{
-			Intent.Development => new Uri("ms-appx:///Assets/DeviceIntents/Development.png"),
-			Intent.Gaming => new Uri("ms-appx:///Assets/DeviceIntents/Gaming.png"),
-			Intent.School => new Uri("ms-appx:///Assets/DeviceIntents/School.png"),
-			Intent.Business => new Uri("ms-appx:///Assets/DeviceIntents/Business.png"),
-			Intent.SpecializedAccessWorkstation => new Uri("ms-appx:///Assets/DeviceIntents/Specialized.png"),
-			Intent.PrivilegedAccessWorkstation => new Uri("ms-appx:///Assets/DeviceIntents/Privileged.png"),
-			_ => new Uri("ms-appx:///Assets/DeviceIntents/Development.png")
+			Intent.Development => new("ms-appx:///Assets/DeviceIntents/Development.png"),
+			Intent.Gaming => new("ms-appx:///Assets/DeviceIntents/Gaming.png"),
+			Intent.School => new("ms-appx:///Assets/DeviceIntents/School.png"),
+			Intent.Business => new("ms-appx:///Assets/DeviceIntents/Business.png"),
+			Intent.SpecializedAccessWorkstation => new("ms-appx:///Assets/DeviceIntents/Specialized.png"),
+			Intent.PrivilegedAccessWorkstation => new("ms-appx:///Assets/DeviceIntents/Privileged.png"),
+			_ => new("ms-appx:///Assets/DeviceIntents/Development.png")
 		};
 	}
 

@@ -31,7 +31,8 @@ internal sealed class RegistryPolicyEntry(
 	RegistryValueType type,
 	uint size,
 	ReadOnlyMemory<byte> data,
-	Hive hive)
+	Hive hive,
+	Guid id)
 {
 	[JsonInclude]
 	[JsonPropertyOrder(0)]
@@ -106,7 +107,7 @@ internal sealed class RegistryPolicyEntry(
 	[JsonInclude]
 	[JsonPropertyOrder(13)]
 	[JsonPropertyName("DefaultRegValue")]
-	internal string? DefaultRegValue { get; set; }
+	internal string? DefaultRegValue { get; init; }
 
 	/// <summary>
 	/// This property is only used to retrieve the intents from the JSON file and relay it to <see cref="MUnit"/> instances that are created based on it.
@@ -115,7 +116,16 @@ internal sealed class RegistryPolicyEntry(
 	[JsonInclude]
 	[JsonPropertyOrder(14)]
 	[JsonPropertyName("DeviceIntents")]
-	internal List<DeviceIntents.Intent>? DeviceIntents { get; set; }
+	internal List<DeviceIntents.Intent>? DeviceIntents { get; init; }
+
+	/// <summary>
+	/// This property is only used to retrieve the ID from the JSON file and relay it to <see cref="MUnit"/> instances that are created based on it.
+	/// The <see cref="MUnit"/> is the actual and intended recipient of this value.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyOrder(100)]
+	[JsonPropertyName("ID")]
+	internal Guid ID => id;
 
 	/// <summary>
 	/// Calculated once, returns the parsed value based on the type and data.

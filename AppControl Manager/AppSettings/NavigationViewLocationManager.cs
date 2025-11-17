@@ -35,7 +35,7 @@ internal static class NavigationViewLocationManager
 		// Raise the NavigationViewLocationChanged event with the new location
 		NavigationViewLocationChanged?.Invoke(
 			null,
-			new NavigationViewLocationChangedEventArgs(newLocation)
+			new(newLocation)
 		);
 	}
 }

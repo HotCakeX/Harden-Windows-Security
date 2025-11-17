@@ -344,9 +344,7 @@ public partial class App : Application
 						// Remove it after hiding it
 						CurrentlyOpenContentDialog = null;
 					}
-#pragma warning disable IDE0001
 					using AppControlManager.CustomUIElements.ContentDialogV2 errorDialog = new()
-#pragma warning restore IDE0001
 					{
 						Title = GlobalVars.GetStr("ErrorDialogTitle"),
 						Content = string.Format(GlobalVars.GetStr("ErrorDialogContent"), ex.Message),

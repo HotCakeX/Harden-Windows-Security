@@ -53,7 +53,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 		IMUnitListViewModel.CreateUIValuesCategories(this);
 
-		ComputeColumnWidths();
+		_ = Dispatcher.TryEnqueue(ComputeColumnWidths);
 	}
 
 	/// <summary>
@@ -487,18 +487,18 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			w12 = ListViewHelper.MeasureText(v.FriendlyName, w12);
 		}
 
-		BLColWidth1 = new GridLength(w1);
-		BLColWidth2 = new GridLength(w2);
-		BLColWidth3 = new GridLength(w3);
-		BLColWidth4 = new GridLength(w4);
-		BLColWidth5 = new GridLength(w5);
-		BLColWidth6 = new GridLength(w6);
-		BLColWidth7 = new GridLength(w7);
-		BLColWidth8 = new GridLength(w8);
-		BLColWidth9 = new GridLength(w9);
-		BLColWidth10 = new GridLength(w10);
-		BLColWidth11 = new GridLength(w11);
-		BLColWidth12 = new GridLength(w12);
+		BLColWidth1 = new(w1);
+		BLColWidth2 = new(w2);
+		BLColWidth3 = new(w3);
+		BLColWidth4 = new(w4);
+		BLColWidth5 = new(w5);
+		BLColWidth6 = new(w6);
+		BLColWidth7 = new(w7);
+		BLColWidth8 = new(w8);
+		BLColWidth9 = new(w9);
+		BLColWidth10 = new(w10);
+		BLColWidth11 = new(w11);
+		BLColWidth12 = new(w12);
 	}
 
 	/// <summary>

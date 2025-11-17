@@ -171,16 +171,16 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		}
 
 		// Set the column width properties.
-		ColumnWidth1 = new GridLength(maxWidth1);
-		ColumnWidth2 = new GridLength(maxWidth2);
-		ColumnWidth3 = new GridLength(maxWidth3);
-		ColumnWidth4 = new GridLength(maxWidth4);
-		ColumnWidth5 = new GridLength(maxWidth5);
-		ColumnWidth6 = new GridLength(maxWidth6);
-		ColumnWidth7 = new GridLength(maxWidth7);
-		ColumnWidth8 = new GridLength(maxWidth8);
-		ColumnWidth9 = new GridLength(maxWidth9);
-		ColumnWidth10 = new GridLength(maxWidth10);
+		ColumnWidth1 = new(maxWidth1);
+		ColumnWidth2 = new(maxWidth2);
+		ColumnWidth3 = new(maxWidth3);
+		ColumnWidth4 = new(maxWidth4);
+		ColumnWidth5 = new(maxWidth5);
+		ColumnWidth6 = new(maxWidth6);
+		ColumnWidth7 = new(maxWidth7);
+		ColumnWidth8 = new(maxWidth8);
+		ColumnWidth9 = new(maxWidth9);
+		ColumnWidth10 = new(maxWidth10);
 	}
 
 
@@ -913,8 +913,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		else
 		{
 			// Get the EFI partition path if we haven't already gotten it
-			if (EFIRootPath is null)
-				EFIRootPath = IntelGathering.DriveLetterMapper.GetEfiPartitionRootPath();
+			EFIRootPath ??= IntelGathering.DriveLetterMapper.GetEfiPartitionRootPath();
 
 			// If we couldn't get the EFI partition path
 			if (EFIRootPath is not null)

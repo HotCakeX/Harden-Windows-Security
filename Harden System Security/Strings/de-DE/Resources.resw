@@ -583,9 +583,6 @@
   <data name="UserCanceledUACMessage" xml:space="preserve">
   <value>Der Benutzer hat die UAC-Eingabeaufforderung abgebrochen.</value>
   </data>
-  <data name="ProtectionPresets.Text" xml:space="preserve">
-    <value>Schutz-Voreinstellungen</value>
-  </data>
     <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wählen Sie eine der Schutz-Voreinstellungen, die angewendet werden sollen; dies sind vorkonfigurierte Konfigurationssätze für unterschiedliche Sicherheitsstufen.</value>
   </data>
@@ -4226,4 +4223,82 @@ Fingerabdruck: {3}</value>
   <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
     <value>Erfolgreich {0} installierte Apps in {1} exportiert</value>
   </data>
+    <data name="SystemStateButton.Content" xml:space="preserve">
+    <value>Systemzustand</value>
+  </data>
+  <data name="SystemStateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sichern Sie den aktuellen Systemzustand in eine Datei oder stellen Sie ihn aus einer vorhandenen Sicherung wieder her.</value>
+  </data>
+  <data name="SystemStateButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Sichern Sie den aktuellen Systemzustand in eine Datei oder stellen Sie ihn aus einer vorhandenen Sicherung wieder her.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Sicherung</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sichern Sie den aktuellen Systemzustand in eine strukturierte Datei. Sie enthält vollständige Details zum aktuellen Systemzustand und kann für die Wiederherstellung verwendet werden.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Sichern Sie den aktuellen Systemzustand in eine strukturierte Datei. Sie enthält vollständige Details zum aktuellen Systemzustand und kann für die Wiederherstellung verwendet werden.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Wiederherstellen</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Stellen Sie den Systemzustand aus einer zuvor erstellten Sicherungsdatei wieder her. Dadurch wird das System in den in der Sicherung erfassten Zustand zurückversetzt.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Stellen Sie den Systemzustand aus einer zuvor erstellten Sicherungsdatei wieder her. Dadurch wird das System in den in der Sicherung erfassten Zustand zurückversetzt.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie den Modus des Wiederherstellungsvorgangs.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Wählen Sie den Modus des Wiederherstellungsvorgangs.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Partiell</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wendet nur die Sicherheitsmaßnahmen an, die in der bereitgestellten Datei als angewendet oder konform gekennzeichnet sind, und ignoriert diejenigen, die nicht entsprechend gekennzeichnet sind. Dies führt zu einer teilweisen Wiederherstellung des Systemzustands.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Wendet nur die Sicherheitsmaßnahmen an, die in der bereitgestellten Datei als angewendet oder konform gekennzeichnet sind, und ignoriert diejenigen, die nicht entsprechend gekennzeichnet sind. Dies führt zu einer teilweisen Wiederherstellung des Systemzustands.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Vollständig</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Implementiert alle in der bereitgestellten Datei definierten Sicherheitsmaßnahmen. Als angewendet oder konform gekennzeichnete Maßnahmen werden auf dem System durchgesetzt, während als nicht angewendet oder nicht konform gekennzeichnete Maßnahmen entfernt werden. Dadurch wird eine vollständige Wiederherstellung des Systemzustands gemäß der Datei sichergestellt.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Implementiert alle in der bereitgestellten Datei definierten Sicherheitsmaßnahmen. Als angewendet oder konform gekennzeichnete Maßnahmen werden auf dem System durchgesetzt, während als nicht angewendet oder nicht konform gekennzeichnete Maßnahmen entfernt werden. Dadurch wird eine vollständige Wiederherstellung des Systemzustands gemäß der Datei sichergestellt.</value>
+  </data>
+  <data name="SystemStateRestorationBeginsMsg" xml:space="preserve">
+   <value>Beginn der Wiederherstellung des Systemzustands.</value>
+  </data>
+  <data name="SystemStateRestorationFinishedMsg" xml:space="preserve">
+   <value>Die Wiederherstellung des Systemzustands wurde erfolgreich abgeschlossen.</value>
+  </data>
+  <data name="SystemStateReportGenerationBeginsMsg" xml:space="preserve">
+   <value>Es wird ein vollständiger Systemzustandsbericht erstellt, bitte warten.</value>
+  </data>
+  <data name="SystemStateReportGenerationFinishedMsg" xml:space="preserve">
+   <value>Der vollständige Systemzustandsbericht wurde erfolgreich erstellt und am folgenden Speicherort gespeichert: '{0}'.</value>
+  </data>
+  <data name="ImportOperationBeginApplyCountMsg" xml:space="preserve">
+   <value>Importvorgang: Es gibt {0} Sicherheitsmaßnahmen, die in {1} Kategorien anzuwenden sind.</value>
+  </data>
+  <data name="ImportOperationBeginRemoveCountMsg" xml:space="preserve">
+   <value>Importvorgang: Es gibt {0} Sicherheitsmaßnahmen, die in {1} Kategorien zu entfernen sind.</value>
+  </data>
+  <data name="ImportOperationIndividualApplyOperationMsg" xml:space="preserve">
+   <value>Importvorgang: Anwenden von {0} Elementen für die Kategorie {1}</value>
+  </data>
+  <data name="ImportOperationIndividualRemoveOperationMsg" xml:space="preserve">
+   <value>Importvorgang: Entfernen von {0} Elementen für die Kategorie {1}</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Wiederherstellungsmodus</value>
+</data>
 </root>

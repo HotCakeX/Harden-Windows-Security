@@ -18,7 +18,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-24bd-7860-a435-0e2d6ea2852d"
     },
     {
         "Source": 0,
@@ -39,7 +40,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-24bd-751f-a0b4-46fdeb9c68d3"
     },
     {
         "Source": 0,
@@ -59,7 +61,8 @@
         "DeviceIntents": [
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-24bd-79fe-ad1a-adda5634bc7c"
     },
     {
         "Source": 0,
@@ -79,7 +82,8 @@
         "DeviceIntents": [
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-24bd-7d7b-bdd3-0dbd96fd6f45"
     },
     {
         "Source": 0,
@@ -100,7 +104,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-24bd-7a41-b3c7-9a9c917dbf6d"
     },
     {
         "Source": 1,
@@ -121,7 +126,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-24bd-7bb2-9fd0-65aa07ed0cf7"
     },
     {
         "Source": 1,
@@ -140,7 +146,8 @@
         "DefaultRegValue": "1",
         "DeviceIntents": [
             5
-        ]
+        ],
+        "ID": "019a8dfa-24be-7c7e-954a-1f6d256ef69b"
     },
     {
         "Source": 1,
@@ -159,7 +166,8 @@
         "DefaultRegValue": "0",
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-24be-749c-a8b3-cbc794c0f4ff"
     },
     {
         "Source": 1,
@@ -180,7 +188,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-24be-77e9-bcd1-57f33d8aa05d"
     },
     {
         "Source": 1,
@@ -201,7 +210,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-24be-7db6-988d-1d3a8871263f"
     },
     {
         "Source": 1,
@@ -220,6 +230,7 @@
         "DefaultRegValue": "0",
         "DeviceIntents": [
             5
-        ]
+        ],
+        "ID": "019a8dfa-24be-7ee6-b9c1-745266806dce"
     }
 ]

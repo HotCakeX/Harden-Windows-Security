@@ -506,27 +506,27 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		}
 
 		// Set the column width properties.
-		ColumnWidthEventLogs1 = new GridLength(maxWidth1);
-		ColumnWidthEventLogs2 = new GridLength(maxWidth2);
-		ColumnWidthEventLogs3 = new GridLength(maxWidth3);
-		ColumnWidthEventLogs4 = new GridLength(maxWidth4);
-		ColumnWidthEventLogs5 = new GridLength(maxWidth5);
-		ColumnWidthEventLogs6 = new GridLength(maxWidth6);
-		ColumnWidthEventLogs7 = new GridLength(maxWidth7);
-		ColumnWidthEventLogs8 = new GridLength(maxWidth8);
-		ColumnWidthEventLogs9 = new GridLength(maxWidth9);
-		ColumnWidthEventLogs10 = new GridLength(maxWidth10);
-		ColumnWidthEventLogs11 = new GridLength(maxWidth11);
-		ColumnWidthEventLogs12 = new GridLength(maxWidth12);
-		ColumnWidthEventLogs13 = new GridLength(maxWidth13);
-		ColumnWidthEventLogs14 = new GridLength(maxWidth14);
-		ColumnWidthEventLogs15 = new GridLength(maxWidth15);
-		ColumnWidthEventLogs16 = new GridLength(maxWidth16);
-		ColumnWidthEventLogs17 = new GridLength(maxWidth17);
-		ColumnWidthEventLogs18 = new GridLength(maxWidth18);
-		ColumnWidthEventLogs19 = new GridLength(maxWidth19);
-		ColumnWidthEventLogs20 = new GridLength(maxWidth20);
-		ColumnWidthEventLogs21 = new GridLength(maxWidth21);
+		ColumnWidthEventLogs1 = new(maxWidth1);
+		ColumnWidthEventLogs2 = new(maxWidth2);
+		ColumnWidthEventLogs3 = new(maxWidth3);
+		ColumnWidthEventLogs4 = new(maxWidth4);
+		ColumnWidthEventLogs5 = new(maxWidth5);
+		ColumnWidthEventLogs6 = new(maxWidth6);
+		ColumnWidthEventLogs7 = new(maxWidth7);
+		ColumnWidthEventLogs8 = new(maxWidth8);
+		ColumnWidthEventLogs9 = new(maxWidth9);
+		ColumnWidthEventLogs10 = new(maxWidth10);
+		ColumnWidthEventLogs11 = new(maxWidth11);
+		ColumnWidthEventLogs12 = new(maxWidth12);
+		ColumnWidthEventLogs13 = new(maxWidth13);
+		ColumnWidthEventLogs14 = new(maxWidth14);
+		ColumnWidthEventLogs15 = new(maxWidth15);
+		ColumnWidthEventLogs16 = new(maxWidth16);
+		ColumnWidthEventLogs17 = new(maxWidth17);
+		ColumnWidthEventLogs18 = new(maxWidth18);
+		ColumnWidthEventLogs19 = new(maxWidth19);
+		ColumnWidthEventLogs20 = new(maxWidth20);
+		ColumnWidthEventLogs21 = new(maxWidth21);
 	}
 
 	#endregion
@@ -607,24 +607,24 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		}
 
 		// Set the column width properties.
-		ColumnWidthLocalFiles1 = new GridLength(maxWidth1);
-		ColumnWidthLocalFiles2 = new GridLength(maxWidth2);
-		ColumnWidthLocalFiles3 = new GridLength(maxWidth3);
-		ColumnWidthLocalFiles4 = new GridLength(maxWidth4);
-		ColumnWidthLocalFiles5 = new GridLength(maxWidth5);
-		ColumnWidthLocalFiles6 = new GridLength(maxWidth6);
-		ColumnWidthLocalFiles7 = new GridLength(maxWidth7);
-		ColumnWidthLocalFiles8 = new GridLength(maxWidth8);
-		ColumnWidthLocalFiles9 = new GridLength(maxWidth9);
-		ColumnWidthLocalFiles10 = new GridLength(maxWidth10);
-		ColumnWidthLocalFiles11 = new GridLength(maxWidth11);
-		ColumnWidthLocalFiles12 = new GridLength(maxWidth12);
-		ColumnWidthLocalFiles13 = new GridLength(maxWidth13);
-		ColumnWidthLocalFiles14 = new GridLength(maxWidth14);
-		ColumnWidthLocalFiles15 = new GridLength(maxWidth15);
-		ColumnWidthLocalFiles16 = new GridLength(maxWidth16);
-		ColumnWidthLocalFiles17 = new GridLength(maxWidth17);
-		ColumnWidthLocalFiles18 = new GridLength(maxWidth18);
+		ColumnWidthLocalFiles1 = new(maxWidth1);
+		ColumnWidthLocalFiles2 = new(maxWidth2);
+		ColumnWidthLocalFiles3 = new(maxWidth3);
+		ColumnWidthLocalFiles4 = new(maxWidth4);
+		ColumnWidthLocalFiles5 = new(maxWidth5);
+		ColumnWidthLocalFiles6 = new(maxWidth6);
+		ColumnWidthLocalFiles7 = new(maxWidth7);
+		ColumnWidthLocalFiles8 = new(maxWidth8);
+		ColumnWidthLocalFiles9 = new(maxWidth9);
+		ColumnWidthLocalFiles10 = new(maxWidth10);
+		ColumnWidthLocalFiles11 = new(maxWidth11);
+		ColumnWidthLocalFiles12 = new(maxWidth12);
+		ColumnWidthLocalFiles13 = new(maxWidth13);
+		ColumnWidthLocalFiles14 = new(maxWidth14);
+		ColumnWidthLocalFiles15 = new(maxWidth15);
+		ColumnWidthLocalFiles16 = new(maxWidth16);
+		ColumnWidthLocalFiles17 = new(maxWidth17);
+		ColumnWidthLocalFiles18 = new(maxWidth18);
 	}
 
 	#endregion
@@ -1178,8 +1178,8 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				// Ensure primary button was selected
 				if (result is ContentDialogResult.Primary)
 				{
-					_CertPath = customDialog.CertificatePath!;
-					_CertCN = customDialog.CertificateCommonName!;
+					_CertPath = customDialog.CertificatePath;
+					_CertCN = customDialog.CertificateCommonName;
 				}
 				else
 				{

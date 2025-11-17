@@ -34,7 +34,7 @@ internal static class NavigationBackgroundManager
 		// Raise the NavViewBackgroundChange event with the new background status
 		NavViewBackgroundChange?.Invoke(
 			null,
-			new NavigationBackgroundChangedEventArgs(isBackgroundOn)
+			new(isBackgroundOn)
 		);
 	}
 }

@@ -84,24 +84,24 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 			{
 				switch (index)
 				{
-					case 0: ColumnWidth1 = new GridLength(width); break;
-					case 1: ColumnWidth2 = new GridLength(width); break;
-					case 2: ColumnWidth3 = new GridLength(width); break;
-					case 3: ColumnWidth4 = new GridLength(width); break;
-					case 4: ColumnWidth5 = new GridLength(width); break;
-					case 5: ColumnWidth6 = new GridLength(width); break;
-					case 6: ColumnWidth7 = new GridLength(width); break;
-					case 7: ColumnWidth8 = new GridLength(width); break;
-					case 8: ColumnWidth9 = new GridLength(width); break;
-					case 9: ColumnWidth10 = new GridLength(width); break;
-					case 10: ColumnWidth11 = new GridLength(width); break;
-					case 11: ColumnWidth12 = new GridLength(width); break;
-					case 12: ColumnWidth13 = new GridLength(width); break;
-					case 13: ColumnWidth14 = new GridLength(width); break;
-					case 14: ColumnWidth15 = new GridLength(width); break;
-					case 15: ColumnWidth16 = new GridLength(width); break;
-					case 16: ColumnWidth17 = new GridLength(width); break;
-					case 17: ColumnWidth18 = new GridLength(width); break;
+					case 0: ColumnWidth1 = new(width); break;
+					case 1: ColumnWidth2 = new(width); break;
+					case 2: ColumnWidth3 = new(width); break;
+					case 3: ColumnWidth4 = new(width); break;
+					case 4: ColumnWidth5 = new(width); break;
+					case 5: ColumnWidth6 = new(width); break;
+					case 6: ColumnWidth7 = new(width); break;
+					case 7: ColumnWidth8 = new(width); break;
+					case 8: ColumnWidth9 = new(width); break;
+					case 9: ColumnWidth10 = new(width); break;
+					case 10: ColumnWidth11 = new(width); break;
+					case 11: ColumnWidth12 = new(width); break;
+					case 12: ColumnWidth13 = new(width); break;
+					case 13: ColumnWidth14 = new(width); break;
+					case 14: ColumnWidth15 = new(width); break;
+					case 15: ColumnWidth16 = new(width); break;
+					case 16: ColumnWidth17 = new(width); break;
+					case 17: ColumnWidth18 = new(width); break;
 					default: break;
 				}
 			},

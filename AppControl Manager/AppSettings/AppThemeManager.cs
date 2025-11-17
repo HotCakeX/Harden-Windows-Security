@@ -33,6 +33,6 @@ internal static class AppThemeManager
 	internal static void OnAppThemeChanged(string newTheme)
 	{
 		// Trigger the AppThemeChanged event with the new theme
-		AppThemeChanged?.Invoke(null, new AppThemeChangedEventArgs(newTheme));
+		AppThemeChanged?.Invoke(null, new(newTheme));
 	}
 }

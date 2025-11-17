@@ -21,7 +21,7 @@ internal static class PolicyFileSigningStatusDetection
 {
 
 	/// <summary>
-	/// Check the signing status of an App Control policy file.	
+	/// Check the signing status of an App Control policy file.
 	/// </summary>
 	/// <param name="policyXMLPath">Path to the policy XML file.</param>
 	/// <returns>IsSigned if either signer collection is non-empty; otherwise IsUnsigned.</returns>

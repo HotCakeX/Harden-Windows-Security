@@ -583,9 +583,6 @@
   <data name="UserCanceledUACMessage" xml:space="preserve">
   <value>ألغى المستخدم مطالبة UAC.</value>
   </data>
-  <data name="ProtectionPresets.Text" xml:space="preserve">
-    <value>إعدادات الحماية المسبقة</value>
-  </data>
     <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>اختر إحدى إعدادات الحماية المسبقة للتطبيق، وهي مجموعات تكوين محددة مسبقاً مصممة لمستويات أمان مختلفة.</value>
   </data>
@@ -4226,4 +4223,82 @@
   <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
     <value>تم تصدير {0} من التطبيقات المثبتة بنجاح إلى {1}</value>
   </data>
+    <data name="SystemStateButton.Content" xml:space="preserve">
+    <value>حالة النظام</value>
+  </data>
+  <data name="SystemStateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انسخ حالة النظام الحالية احتياطيًا إلى ملف أو استعدها من نسخة احتياطية موجودة.</value>
+  </data>
+  <data name="SystemStateButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>انسخ حالة النظام الحالية احتياطيًا إلى ملف أو استعدها من نسخة احتياطية موجودة.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>نسخ احتياطي</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>انسخ حالة النظام الحالية احتياطيًا إلى ملف منظم. يحتوي على تفاصيل كاملة لحالة النظام الحالية ويمكن استخدامه للاستعادة.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>انسخ حالة النظام الحالية احتياطيًا إلى ملف منظم. يحتوي على تفاصيل كاملة لحالة النظام الحالية ويمكن استخدامه للاستعادة.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>استعادة</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استعد حالة النظام من ملف نسخ احتياطي تم إنشاؤه مسبقًا. سيعيد ذلك النظام إلى الحالة التي تم حفظها في النسخة الاحتياطية.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>استعد حالة النظام من ملف نسخ احتياطي تم إنشاؤه مسبقًا. سيعيد ذلك النظام إلى الحالة التي تم حفظها في النسخة الاحتياطية.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حدد وضع عملية الاستعادة.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>حدد وضع عملية الاستعادة.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>جزئي</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يطبّق فقط تدابير الأمان المعلَّمة على أنها مطبَّقة أو متوافقة في الملف المقدم، مع تجاهل التدابير غير المعلَّمة وفقًا لذلك. ينتج عن ذلك استعادة جزئية لحالة النظام.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>يطبّق فقط تدابير الأمان المعلَّمة على أنها مطبَّقة أو متوافقة في الملف المقدم، مع تجاهل التدابير غير المعلَّمة وفقًا لذلك. ينتج عن ذلك استعادة جزئية لحالة النظام.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>كامل</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يُطبِّق جميع تدابير الأمان المحددة في الملف المقدم. سيتم فرض التدابير المعلَّمة على أنها مطبَّقة أو متوافقة على النظام، بينما ستتم إزالة التدابير المعلَّمة على أنها غير مطبَّقة أو غير متوافقة. يضمن ذلك الاستعادة الكاملة لحالة النظام وفقًا للملف.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>يُطبِّق جميع تدابير الأمان المحددة في الملف المقدم. سيتم فرض التدابير المعلَّمة على أنها مطبَّقة أو متوافقة على النظام، بينما ستتم إزالة التدابير المعلَّمة على أنها غير مطبَّقة أو غير متوافقة. يضمن ذلك الاستعادة الكاملة لحالة النظام وفقًا للملف.</value>
+  </data>
+  <data name="SystemStateRestorationBeginsMsg" xml:space="preserve">
+   <value>بدء استعادة حالة النظام.</value>
+  </data>
+  <data name="SystemStateRestorationFinishedMsg" xml:space="preserve">
+   <value>اكتملت عملية استعادة حالة النظام بنجاح.</value>
+  </data>
+  <data name="SystemStateReportGenerationBeginsMsg" xml:space="preserve">
+   <value>جارٍ إنشاء تقرير كامل لحالة النظام، يرجى الانتظار.</value>
+  </data>
+  <data name="SystemStateReportGenerationFinishedMsg" xml:space="preserve">
+   <value>تم إنشاء تقرير كامل لحالة النظام بنجاح وحُفِظ في الموقع التالي: '{0}'.</value>
+  </data>
+  <data name="ImportOperationBeginApplyCountMsg" xml:space="preserve">
+   <value>عملية الاستيراد: يوجد {0} تدابير أمان لتطبيقها ضمن {1} فئات.</value>
+  </data>
+  <data name="ImportOperationBeginRemoveCountMsg" xml:space="preserve">
+   <value>عملية الاستيراد: يوجد {0} تدابير أمان لإزالتها ضمن {1} فئات.</value>
+  </data>
+  <data name="ImportOperationIndividualApplyOperationMsg" xml:space="preserve">
+   <value>عملية الاستيراد: جارٍ تطبيق {0} عناصر لفئة {1}</value>
+  </data>
+  <data name="ImportOperationIndividualRemoveOperationMsg" xml:space="preserve">
+   <value>عملية الاستيراد: جارٍ إزالة {0} عناصر للفئة {1}</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+  <value>وضع الاستعادة</value>
+</data>
 </root>

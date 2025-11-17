@@ -132,12 +132,12 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 		}
 
 		// Set the column width properties.
-		ColumnWidth1 = new GridLength(maxWidth1);
-		ColumnWidth2 = new GridLength(maxWidth2);
-		ColumnWidth3 = new GridLength(maxWidth3);
-		ColumnWidth4 = new GridLength(maxWidth4);
-		ColumnWidth5 = new GridLength(maxWidth5);
-		ColumnWidth6 = new GridLength(maxWidth6);
+		ColumnWidth1 = new(maxWidth1);
+		ColumnWidth2 = new(maxWidth2);
+		ColumnWidth3 = new(maxWidth3);
+		ColumnWidth4 = new(maxWidth4);
+		ColumnWidth5 = new(maxWidth5);
+		ColumnWidth6 = new(maxWidth6);
 	}
 
 

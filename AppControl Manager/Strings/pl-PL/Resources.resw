@@ -6146,4 +6146,46 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Włącz tę funkcję, aby udostępnić alternatywne metody wdrażania i usuwania zasad App Control. Metody te nie zależą od pliku wykonywalnego CiTool i można ich użyć, jeśli CiTool jest zablokowany lub niedostępny.</value>
   </data>
+    <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Wyczyść dzienniki systemowe</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyczyść różne dzienniki w systemie operacyjnym. Tej operacji nie można cofnąć.</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyczyść różne dzienniki w systemie operacyjnym. Tej operacji nie można cofnąć.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Wyczyść dzienniki Code Integrity</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyczyść wszystkie dzienniki operacyjne Code Integrity z systemu.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyczyść wszystkie dzienniki operacyjne Code Integrity z systemu.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Wyczyść dzienniki App Locker</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wyczyść wszystkie dzienniki App Locker z systemu.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wyczyść wszystkie dzienniki App Locker z systemu.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsSuccessMsg" xml:space="preserve">
+    <value>Pomyślnie wyczyszczono wszystkie dzienniki operacyjne Code Integrity z systemu.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsSuccessMsg" xml:space="preserve">
+    <value>Pomyślnie wyczyszczono wszystkie dzienniki App Locker z systemu.</value>
+  </data>
+  <data name="OSLogsDeletionContentDialogMsg" xml:space="preserve">
+    <value>Czy na pewno chcesz wyczyścić wybrane dzienniki? Tej operacji nie można cofnąć.</value>
+  </data>
+  <data name="OSCodeIntegrityLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>Usuwanie dzienników Code Integrity</value>
+  </data>
+  <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>Usuwanie dzienników App Locker</value>
+  </data>
 </root>

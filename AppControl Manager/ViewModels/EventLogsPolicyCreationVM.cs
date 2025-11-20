@@ -17,8 +17,10 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.IntelGathering;
 using AppControlManager.Main;
@@ -277,11 +279,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// <summary>
 	/// Clears the selected AppLocker EVTX file paths
 	/// </summary>
-	internal void SelectedAppLockerEVTXFilesFlyout_Clear_Click()
-	{
-		AppLockerEVTX = null;
-	}
-
+	internal void SelectedAppLockerEVTXFilesFlyout_Clear_Click() => AppLockerEVTX = null;
 
 	/// <summary>
 	/// Event handler for the Clear Data button
@@ -327,7 +325,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		List<FileIdentity> itemsToDelete = [.. lv.SelectedItems.Cast<FileIdentity>()];
 
 		// Remove each selected item from the FileIdentities collection
-		foreach (FileIdentity item in itemsToDelete)
+		foreach (FileIdentity item in CollectionsMarshal.AsSpan(itemsToDelete))
 		{
 			_ = FileIdentities.Remove(item);
 			_ = AllFileIdentities.Remove(item); // Removing it from the other list so that when user deletes data when search filtering is applied, after removing the search, the deleted data won't be restored
@@ -349,11 +347,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		}
 	}
 
-	internal void SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click()
-	{
-		CodeIntegrityEVTX = null;
-	}
-
+	internal void SelectedCodeIntegrityEVTXFilesFlyout_Clear_Click() => CodeIntegrityEVTX = null;
 
 	/// <summary>
 	/// Event handler to open the supplemental policy in the Policy Editor
@@ -790,6 +784,102 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		catch (Exception ex)
 		{
 			MainInfoBar.WriteError(ex);
+		}
+	}
+
+
+	internal static async Task ClearAppControlEventLogs(int log)
+	{
+		await Task.Run(() =>
+		{
+			EventLogSession session = new();
+			try
+			{
+				if (log is 0)
+				{
+					session.ClearLog("Microsoft-Windows-CodeIntegrity/Operational");
+				}
+				else if (log is 1)
+				{
+					session.ClearLog("Microsoft-Windows-AppLocker/MSI and Script");
+				}
+			}
+			finally
+			{
+				session.Dispose();
+			}
+		});
+	}
+
+	internal async void ClearCodeIntegrityOSLogs()
+	{
+		try
+		{
+			AreElementsEnabled = false;
+
+			// Create and configure the ContentDialog.
+			using CustomUIElements.ContentDialogV2 dialog = new()
+			{
+				Title = GlobalVars.GetStr("OSCodeIntegrityLogsDeletionContentDialogTitle"),
+				Content = GlobalVars.GetStr("OSLogsDeletionContentDialogMsg"),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = GlobalVars.GetStr("OK"),
+				FlowDirection = Enum.Parse<FlowDirection>(App.Settings.ApplicationGlobalFlowDirection),
+				DefaultButton = ContentDialogButton.Close
+			};
+
+			// Show the dialog and wait for user response
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			if (result is not ContentDialogResult.Primary)
+				return;
+
+			await ClearAppControlEventLogs(0);
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("ClearOSCodeIntegrityLogsSuccessMsg"));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+		}
+	}
+
+	internal async void ClearAppLockerOSLogs()
+	{
+		try
+		{
+			AreElementsEnabled = false;
+
+			// Create and configure the ContentDialog.
+			using CustomUIElements.ContentDialogV2 dialog = new()
+			{
+				Title = GlobalVars.GetStr("OSAppLockerLogsDeletionContentDialogTitle"),
+				Content = GlobalVars.GetStr("OSLogsDeletionContentDialogMsg"),
+				CloseButtonText = GlobalVars.GetStr("Cancel"),
+				PrimaryButtonText = GlobalVars.GetStr("OK"),
+				FlowDirection = Enum.Parse<FlowDirection>(App.Settings.ApplicationGlobalFlowDirection),
+				DefaultButton = ContentDialogButton.Close
+			};
+
+			// Show the dialog and wait for user response
+			ContentDialogResult result = await dialog.ShowAsync();
+
+			if (result is not ContentDialogResult.Primary)
+				return;
+
+			await ClearAppControlEventLogs(1);
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("ClearOSAppLockerLogsSuccessMsg"));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			AreElementsEnabled = true;
 		}
 	}
 }

@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Common.Collections;
@@ -363,10 +364,10 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 					// Suppress per-item notifications to avoid reentrancy during incremental loads.
 					using (BeginBulkUpdate())
 					{
-						for (int i = 0; i < batch.Count; i++)
+						foreach (TDataType item in CollectionsMarshal.AsSpan(batch))
 						{
 							// Add will be suppressed; a single Reset is emitted when the scope disposes.
-							Add(batch[i]);
+							Add(item);
 						}
 					}
 
@@ -613,9 +614,9 @@ internal sealed partial class GenericIncrementalCollection<TDataSource, TDataTyp
 						// Populate page 1 items without per-item events; emit a single Reset to avoid reentrancy.
 						using (BeginBulkUpdate())
 						{
-							for (int i = 0; i < batch.Count; i++)
+							foreach (TDataType item in CollectionsMarshal.AsSpan(batch))
 							{
-								Add(batch[i]);
+								Add(item);
 							}
 						}
 

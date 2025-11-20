@@ -52,9 +52,7 @@ internal static class LocalFilesScan
 
 		// Make sure scalability is always at least 2
 		if (scalability < 2)
-		{
 			scalability = 2;
-		}
 
 		try
 		{
@@ -126,7 +124,6 @@ internal static class LocalFilesScan
 
 							// Get the extended file attributes
 							ExFileInfo ExtendedFileInfo = GetExtendedFileAttrib.Get(file);
-
 
 							// To store all certificates of the file
 							List<AllFileSigners> FileSignatureResults = [];
@@ -455,7 +452,7 @@ internal static class LocalFilesScan
 	/// <returns></returns>
 	private static bool DetermineWHQL(X509ExtensionCollection Collection)
 	{
-		foreach (var ext in Collection)
+		foreach (X509Extension ext in Collection)
 		{
 			if (ext is X509EnhancedKeyUsageExtension eku)
 			{

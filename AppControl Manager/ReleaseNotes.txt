@@ -1,5 +1,7 @@
-* Fixed an issue with WebView2 content in the app. Now they load correctly when Administrator Protection is enabled and the app is running with elevated privileges. See this for more info: https://github.com/HotCakeX/Harden-Windows-Security/issues/916
-
-* In this update, the WebView2 profile directory is saved under `ProgramData` and it is completely cleared upon app exit, ensuring no residual data is ever left behind. It explicitly uses InPrivate mode and extensions disabled.
-
 * Updated dependencies to the latest version.
+
+* Added new options under the "Actions" button in Event Logs policy creation page that offers the ability to clear the entire system logs for Code Integrity and App Locker categories. There will be a confirmation dialog that you have to accept before the logs are cleared. Completes part of this feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/783
+
+* Made various performance improvements across the board.
+
+* Added a delete option to the selected files/folders previews across the app so that in addition to "clear all" button, you can remove the files or folders you've selected individually and easily.

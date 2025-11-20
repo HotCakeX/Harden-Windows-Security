@@ -6146,4 +6146,46 @@
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>App Control നയങ്ങൾ വിന്യസിക്കാൻയും നീക്കം ചെയ്യാനും ബദൽ രീതികൾ ലഭ്യമാക്കാൻ ഈ സവിശേഷത സജീവമാക്കുക. ഈ രീതികൾ CiTool എക്സിക്യൂട്ടബിളിനെ ആശ്രയിക്കുന്നതല്ല, CiTool തടഞ്ഞിട്ടുണ്ടെങ്കിൽ അല്ലെങ്കിൽ ലഭ്യമല്ലെങ്കിൽ അവ ഉപയോഗിക്കാം.</value>
   </data>
+    <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>സിസ്റ്റം ലോഗുകൾ മായ്ച്ചുകളയുക</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഓപ്പറേറ്റിങ് സിസ്റ്റത്തിലെ വിവിധ ലോഗുകൾ മായ്ക്കുക. ഈ പ്രവർത്തി മാറ്റിനിര്‍ത്താനാവില്ല.</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഓപ്പറേറ്റിങ് സിസ്റ്റത്തിലെ വിവിധ ലോഗുകൾ മായ്ക്കുക. ഈ പ്രവർത്തി മാറ്റിനിര്‍ത്താനാവില്ല.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Code Integrity ലോഗുകൾ മായ്ച്ചുകളയുക</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ നിന്ന് എല്ലാ Code Integrity Operational ലോഗുകളും മായ്ച്ചുകളയുക.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ നിന്ന് എല്ലാ Code Integrity Operational ലോഗുകളും മായ്ച്ചുകളയുക.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>App Locker ലോഗുകൾ മായ്ച്ചുകളയുക</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ നിന്ന് എല്ലാ App Locker ലോഗുകളും മായ്ച്ചുകളയുക.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ നിന്ന് എല്ലാ App Locker ലോഗുകളും മായ്ച്ചുകളയുക.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsSuccessMsg" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ നിന്ന് എല്ലാ Code Integrity Operational ലോഗുകളും വിജയകരമായി മായ്ച്ചുകളഞ്ഞു.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsSuccessMsg" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ നിന്ന് എല്ലാ App Locker ലോഗുകളും വിജയകരമായി മായ്ച്ചുകളഞ്ഞു.</value>
+  </data>
+  <data name="OSLogsDeletionContentDialogMsg" xml:space="preserve">
+    <value>നിങ്ങൾ തെരഞ്ഞെടുത്ത ലോഗുകൾ മായ്ച്ചുകളയാൻ നിങ്ങൾക്ക് ഉറപ്പാണോ? ഈ പ്രവർത്തി മാറ്റിനിര്‍ത്താനാവില്ല.</value>
+  </data>
+  <data name="OSCodeIntegrityLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>Code Integrity ലോഗുകൾ ഇല്ലാതാക്കുന്നു</value>
+  </data>
+  <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>App Locker ലോഗുകൾ ഇല്ലാതാക്കുന്നു</value>
+  </data>
 </root>

@@ -18,6 +18,7 @@
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Xml;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
@@ -182,9 +183,9 @@ internal static class GetSignerInfo
 			// These are all root certificates, they have no leaf or intermediate certificates in their chains, that's why they're called Trusted Roots
 
 			// Get the CertRoot node of the current Signer
-			string? certRootValue = CustomSerialization.ConvertByteArrayToHex(signer.CertRoot.Value);
+			string certRootValue = CustomSerialization.ConvertByteArrayToHex(signer.CertRoot.Value);
 
-			if (certRootValue is not null && wellKnownIDs.Contains(certRootValue))
+			if (wellKnownIDs.Contains(certRootValue))
 			{
 				switch (certRootValue)
 				{
@@ -267,7 +268,7 @@ internal static class GetSignerInfo
 
 				// Iterate through the rule IDs and find matching FileAttrib nodes in the dictionary that holds the FileAttrib nodes in the <FileRules> node
 				// Get all the FileAttribs associated with the signer
-				foreach (string id in ruleIds)
+				foreach (string id in CollectionsMarshal.AsSpan(ruleIds))
 				{
 					if (fileAttribDictionary.TryGetValue(id, out FileAttrib? matchingFileAttrib))
 					{
@@ -355,9 +356,7 @@ internal static class GetSignerInfo
 
 			foreach (string EkuID in CertEKUIDs)
 			{
-				_ = EKUAndValuesCorrelation.TryGetValue(EkuID, out string? EkuValue);
-
-				if (EkuValue is not null)
+				if (EKUAndValuesCorrelation.TryGetValue(EkuID, out string? EkuValue))
 				{
 					// Check if the current EKU of the signer is WHQL
 					if (string.Equals(EkuValue, WHQLEkuHex, StringComparison.OrdinalIgnoreCase))
@@ -379,7 +378,7 @@ internal static class GetSignerInfo
 				new SignerX(
 				   id: signer.ID,
 					name: signer.Name,
-					certRoot: certRootValue!,
+					certRoot: certRootValue,
 					certPublisher: signer.CertPublisher?.Value,
 					certIssuer: signer.CertIssuer?.Value,
 					certEKU: [.. CertEKUs],

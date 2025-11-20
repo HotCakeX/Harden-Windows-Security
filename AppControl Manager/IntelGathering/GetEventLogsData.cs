@@ -21,6 +21,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -59,7 +60,6 @@ internal static class GetEventLogsData
 
 		EventLogQuery eventQuery;
 
-
 		if (EvtxFilePath is null)
 		{
 			// Initialize the EventLogQuery with the log path and query
@@ -71,13 +71,11 @@ internal static class GetEventLogsData
 			eventQuery = new(EvtxFilePath, PathType.FilePath, query);
 		}
 
-
 		// Use EventLogReader to read the events
 		List<EventRecord> rawEvents = [];
 
 		try
 		{
-
 			// Read the events from the system based on the query
 			using (EventLogReader logReader = new(eventQuery))
 			{
@@ -104,14 +102,6 @@ internal static class GetEventLogsData
 			// Iterate over each group of events
 			foreach (IGrouping<Guid?, EventRecord> group in groupedEvents)
 			{
-				// Access the ActivityId for the group (key)
-				Guid? activityId = group.Key;
-
-				if (activityId is null)
-				{
-					continue;
-				}
-
 				// There are either blocked or audit events in each group
 				// If there are more than 1 of either block or audit events, selecting the first one because that means the same event was triggered by multiple deployed policies
 
@@ -190,9 +180,7 @@ internal static class GetEventLogsData
 					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
 
 					if (SHA256Hash is null)
-					{
 						continue;
-					}
 
 					// Extract values using XPath
 					FileIdentity eventData = new()
@@ -257,9 +245,7 @@ internal static class GetEventLogsData
 						string? PublisherName = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherName']");
 
 						if (PublisherTBSHash is null || PublisherName is null)
-						{
 							continue;
-						}
 
 						// Extract values using XPath
 						FileSignerInfo signerInfo = new(
@@ -282,10 +268,8 @@ internal static class GetEventLogsData
 							knownRoot: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='KnownRoot']")
 						);
 
-
 						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
 						_ = eventData.FilePublishers.Add(PublisherName);
-
 
 						// Add the current signer info/correlated event data to the main event package
 						_ = eventData.FileSignerInfos.Add(signerInfo);
@@ -294,10 +278,8 @@ internal static class GetEventLogsData
 					// Set the SignatureStatus based on the number of signers
 					eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
-
 					// Add the entire event package to the output list
 					_ = fileIdentities.Add(eventData);
-
 
 					continue;
 				}
@@ -369,10 +351,7 @@ internal static class GetEventLogsData
 					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
 
 					if (SHA256Hash is null)
-					{
 						continue;
-					}
-
 
 					// Extract values using XPath
 					FileIdentity eventData = new()
@@ -437,10 +416,7 @@ internal static class GetEventLogsData
 						string? PublisherName = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherName']");
 
 						if (PublisherTBSHash is null || PublisherName is null)
-						{
 							continue;
-						}
-
 
 						// Extract values using XPath
 						FileSignerInfo signerInfo = new(
@@ -463,14 +439,11 @@ internal static class GetEventLogsData
 							knownRoot: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='KnownRoot']")
 						);
 
-
 						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
 						_ = eventData.FilePublishers.Add(PublisherName);
 
-
 						// Add the current signer info/correlated event data to the main event package
 						_ = eventData.FileSignerInfos.Add(signerInfo);
-
 					}
 
 					// Set the SignatureStatus based on the number of signers
@@ -478,7 +451,6 @@ internal static class GetEventLogsData
 
 					// Add the populated EventData instance to the list
 					_ = fileIdentities.Add(eventData);
-
 
 					continue;
 				}
@@ -493,13 +465,12 @@ internal static class GetEventLogsData
 		}
 		finally
 		{
-			foreach (EventRecord item in rawEvents)
+			foreach (EventRecord item in CollectionsMarshal.AsSpan(rawEvents))
 			{
 				item.Dispose();
 			}
 		}
 	}
-
 
 	/// <summary>
 	/// Retrieves the AppLocker events from the local and EVTX files
@@ -517,9 +488,7 @@ internal static class GetEventLogsData
 		// 8038 - Correlated
 		const string query = "*[System[(EventID=8028 or EventID=8029 or EventID=8038)]]";
 
-
 		EventLogQuery eventQuery;
-
 
 		if (EvtxFilePath is null)
 		{
@@ -532,13 +501,11 @@ internal static class GetEventLogsData
 			eventQuery = new(EvtxFilePath, PathType.FilePath, query);
 		}
 
-
 		// Use EventLogReader to read the events
 		List<EventRecord> rawEvents = [];
 
 		try
 		{
-
 			// Read the events from the system based on the query
 			using (EventLogReader logReader = new(eventQuery))
 			{
@@ -565,14 +532,6 @@ internal static class GetEventLogsData
 			// Iterate over each group of events
 			foreach (IGrouping<Guid?, EventRecord> group in groupedEvents)
 			{
-				// Access the ActivityId for the group (key)
-				Guid? activityId = group.Key;
-
-				if (activityId is null)
-				{
-					continue;
-				}
-
 				// There are either blocked or audit events in each group
 				// If there are more than 1 of either block or audit events, selecting the first one because that means the same event was triggered by multiple deployed policies
 
@@ -582,7 +541,6 @@ internal static class GetEventLogsData
 				EventRecord? possibleBlockEvent = group.FirstOrDefault(g => g.Id == 8029);
 				// Get the possible correlated data
 				IEnumerable<EventRecord> correlatedEvents = group.Where(g => g.Id == 8038);
-
 
 				// If the current group belongs to an Audit event
 				if (possibleAuditEvent is not null)
@@ -643,10 +601,7 @@ internal static class GetEventLogsData
 					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
 
 					if (SHA256Hash is null)
-					{
 						continue;
-					}
-
 
 					// Extract values using XPath
 					FileIdentity eventData = new()
@@ -729,14 +684,12 @@ internal static class GetEventLogsData
 					// Add the entire event package to the output list
 					_ = fileIdentities.Add(eventData);
 
-
 					continue;
 				}
 
 				// If the current group belongs to a blocked event
 				if (possibleBlockEvent is not null)
 				{
-
 					// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
 					string xmlString = possibleBlockEvent.ToXml();
 
@@ -793,10 +746,7 @@ internal static class GetEventLogsData
 					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
 
 					if (SHA256Hash is null)
-					{
 						continue;
-					}
-
 
 					// Extract values using XPath
 					FileIdentity eventData = new()
@@ -850,9 +800,7 @@ internal static class GetEventLogsData
 						string? PublisherName = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherName']");
 
 						if (PublisherTBSHash is null || PublisherName is null)
-						{
 							continue;
-						}
 
 						// Extract values using XPath
 						FileSignerInfo signerInfo = new(
@@ -864,14 +812,11 @@ internal static class GetEventLogsData
 							issuerTBSHash: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerTBSHash']")
 						);
 
-
 						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
 						_ = eventData.FilePublishers.Add(PublisherName);
 
-
 						// Add the current signer info/correlated event data to the main event package
 						_ = eventData.FileSignerInfos.Add(signerInfo);
-
 					}
 
 					// Set the SignatureStatus based on the number of signers
@@ -879,7 +824,6 @@ internal static class GetEventLogsData
 
 					// Add the populated EventData instance to the list
 					_ = fileIdentities.Add(eventData);
-
 
 					continue;
 				}
@@ -1027,10 +971,8 @@ internal static class GetEventLogsData
 		// Output
 		HashSet<FileIdentity> combinedResult = [];
 
-
 		if (EventsToCapture == 0)
 		{
-
 			// Start both tasks in parallel
 			Task<HashSet<FileIdentity>> codeIntegrityTask = Task.Run(() => CodeIntegrityEventsRetriever(CodeIntegrityEvtxFilePath));
 			Task<HashSet<FileIdentity>> appLockerTask = Task.Run(() => AppLockerEventsRetriever(AppLockerEvtxFilePath));
@@ -1044,14 +986,12 @@ internal static class GetEventLogsData
 			// If there are AppLocker logs
 			if (results[1].Count > 0)
 			{
-
 				// Add elements from the AppLocker task's result, using Add to preserve uniqueness since the HashSet has its custom comparer
 				foreach (FileIdentity item in results[1])
 				{
 					_ = combinedResult.Add(item);
 				}
 			}
-
 		}
 
 		else if (EventsToCapture == 1)
@@ -1066,7 +1006,6 @@ internal static class GetEventLogsData
 			combinedResult = await Task.Run(() => AppLockerEventsRetriever(AppLockerEvtxFilePath));
 		}
 
-
 		Logger.Write(string.Format(
 			GlobalVars.GetStr("TotalLogsCountMessage"),
 			combinedResult.Count));
@@ -1075,8 +1014,6 @@ internal static class GetEventLogsData
 		return combinedResult;
 	}
 
-
 	#endregion
-
 
 }

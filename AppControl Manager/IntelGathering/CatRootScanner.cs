@@ -77,12 +77,9 @@ internal static class CatRootScanner
 			HashSet<string> catHashes = MeowParser.GetHashes(file);
 
 			// If the security catalog file has hashes, then add them to the dictionary
-			if (catHashes.Count > 0)
+			foreach (string hash in catHashes)
 			{
-				foreach (string hash in catHashes)
-				{
-					_ = output.TryAdd(hash, file);
-				}
+				_ = output.TryAdd(hash, file);
 			}
 		});
 

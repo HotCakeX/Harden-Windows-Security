@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace AppControlManager.IntelGathering;
@@ -48,25 +49,22 @@ internal static partial class DriveLetterMapper
 
 		// Scan volumes and pick the first one that contains an "EFI" directory at its root.
 		// This works even when the partition has no drive letter.
-		for (int i = 0; i < drives.Count; i++)
+		foreach (DriveMapping drive in CollectionsMarshal.AsSpan(drives))
 		{
-			string? volume = drives[i].VolumeName;
-			if (string.IsNullOrEmpty(volume))
-			{
+			if (string.IsNullOrEmpty(drive.VolumeName))
 				continue;
-			}
 
 			// Volume names returned by FindFirst/NextVolume usually include a trailing backslash.
 			// Build the path to the well-known "EFI" directory.
-			string efiDirPath = string.Concat(volume, "EFI");
+			string efiDirPath = string.Concat(drive.VolumeName, "EFI");
 
 			try
 			{
 				// Directory.Exists will return false on inaccessible or non-existent paths.
-				if (System.IO.Directory.Exists(efiDirPath))
+				if (Directory.Exists(efiDirPath))
 				{
 					// Found the ESP. Return its root Volume GUID path.
-					return volume;
+					return drive.VolumeName;
 				}
 			}
 			catch

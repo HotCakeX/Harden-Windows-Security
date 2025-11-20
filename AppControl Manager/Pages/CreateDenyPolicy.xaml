@@ -561,7 +561,7 @@
 
                                             <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.filesAndFoldersFilePaths, Mode=OneWay}" />
+                                            <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.filesAndFoldersFilePaths, Mode=OneWay}" />
 
                                         </controls:WrapPanel>
 
@@ -597,7 +597,7 @@
 
                                             <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.filesAndFoldersFolderPaths, Mode=OneWay}" />
+                                            <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.filesAndFoldersFolderPaths, Mode=OneWay}" />
 
                                         </controls:WrapPanel>
 

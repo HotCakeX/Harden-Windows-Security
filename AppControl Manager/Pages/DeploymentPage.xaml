@@ -125,7 +125,7 @@
 
                                         <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
-                                        <ListBox MinWidth="400"
+                                        <customUI:ListBoxV2 MinWidth="400"
                                                  SelectionMode="Single"
                                                  ItemsSource="{x:Bind ViewModel.XMLFiles, Mode=OneWay}" />
 
@@ -195,7 +195,7 @@
 
                                         <TextBlock x:Uid="ViewSelectedXMLFileTextBlock" TextWrapping="WrapWholeWords" />
 
-                                        <ListBox MinWidth="400"
+                                        <customUI:ListBoxV2 MinWidth="400"
                                                  SelectionMode="Single"
                                                  ItemsSource="{x:Bind ViewModel.SignedXMLFiles, Mode=OneWay}" />
 
@@ -263,7 +263,7 @@
                                         <TextBlock x:Uid="ViewSelectedCIPFilesTextBlock"
                                                    TextWrapping="WrapWholeWords" />
 
-                                        <ListBox MinWidth="400"
+                                        <customUI:ListBoxV2 MinWidth="400"
                                                  SelectionMode="Single"
                                                  ItemsSource="{x:Bind ViewModel.CIPFiles, Mode=OneWay}" />
 
@@ -320,7 +320,7 @@
                                         <TextBlock x:Uid="ViewSelectedXMLFilesTextBlock"
                                                    TextWrapping="WrapWholeWords" />
 
-                                        <ListBox MinWidth="400"
+                                        <customUI:ListBoxV2 MinWidth="400"
                                                  SelectionMode="Single"
                                                  ItemsSource="{x:Bind ViewModel.XMLFilesToConvertToCIP, Mode=OneWay}" />
 

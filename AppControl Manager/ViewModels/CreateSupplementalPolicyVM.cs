@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AppControlManager.IncrementalCollection;
@@ -1711,7 +1712,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		List<FileIdentity> itemsToDelete = [.. lv.SelectedItems.Cast<FileIdentity>()];
 
 		// Remove each selected item from the FileIdentities collection
-		foreach (FileIdentity item in itemsToDelete)
+		foreach (FileIdentity item in CollectionsMarshal.AsSpan(itemsToDelete))
 		{
 			_ = StrictKernelModeScanResults.Remove(item);
 			_ = StrictKernelModeScanResultsList.Remove(item);

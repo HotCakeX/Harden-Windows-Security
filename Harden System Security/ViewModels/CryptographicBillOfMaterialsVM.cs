@@ -43,11 +43,14 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			Dispatcher, null, null);
 
 		// Give column widths paddings to look better
-		CA_CalculateColumnWidths();
-		CNG_CalculateColumnWidths();
-		SSL_CalculateColumnWidths();
-		TLS_CalculateColumnWidths();
-		REG_CalculateColumnWidths();
+		_ = Dispatcher.TryEnqueue(() =>
+		{
+			CA_CalculateColumnWidths();
+			CNG_CalculateColumnWidths();
+			SSL_CalculateColumnWidths();
+			TLS_CalculateColumnWidths();
+			REG_CalculateColumnWidths();
+		});
 	}
 
 	// Main InfoBar for this VM
@@ -234,13 +237,13 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			w7 = ListViewHelper.MeasureText(a.SupportedParameterSets.Count.ToString(), w7);
 		}
 
-		CA_ColumnWidth1 = new GridLength(w1);
-		CA_ColumnWidth2 = new GridLength(w2);
-		CA_ColumnWidth3 = new GridLength(w3);
-		CA_ColumnWidth4 = new GridLength(w4);
-		CA_ColumnWidth5 = new GridLength(w5);
-		CA_ColumnWidth6 = new GridLength(w6);
-		CA_ColumnWidth7 = new GridLength(w7);
+		CA_ColumnWidth1 = new(w1);
+		CA_ColumnWidth2 = new(w2);
+		CA_ColumnWidth3 = new(w3);
+		CA_ColumnWidth4 = new(w4);
+		CA_ColumnWidth5 = new(w5);
+		CA_ColumnWidth6 = new(w6);
+		CA_ColumnWidth7 = new(w7);
 	}
 
 	#endregion
@@ -396,9 +399,9 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			w3 = ListViewHelper.MeasureText(c.PublicKeyLengthBits.ToString(), w3);
 		}
 
-		CNG_ColumnWidth1 = new GridLength(w1);
-		CNG_ColumnWidth2 = new GridLength(w2);
-		CNG_ColumnWidth3 = new GridLength(w3);
+		CNG_ColumnWidth1 = new(w1);
+		CNG_ColumnWidth2 = new(w2);
+		CNG_ColumnWidth3 = new(w3);
 	}
 
 	#endregion
@@ -564,11 +567,11 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			w5 = ListViewHelper.MeasureText(c.Flags.ToString(), w5);
 		}
 
-		SSL_ColumnWidth1 = new GridLength(w1);
-		SSL_ColumnWidth2 = new GridLength(w2);
-		SSL_ColumnWidth3 = new GridLength(w3);
-		SSL_ColumnWidth4 = new GridLength(w4);
-		SSL_ColumnWidth5 = new GridLength(w5);
+		SSL_ColumnWidth1 = new(w1);
+		SSL_ColumnWidth2 = new(w2);
+		SSL_ColumnWidth3 = new(w3);
+		SSL_ColumnWidth4 = new(w4);
+		SSL_ColumnWidth5 = new(w5);
 	}
 
 	#endregion
@@ -780,19 +783,19 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			w13 = ListViewHelper.MeasureText(s.KeyType.ToString(), w13);
 		}
 
-		TLS_ColumnWidth1 = new GridLength(w1);
-		TLS_ColumnWidth2 = new GridLength(w2);
-		TLS_ColumnWidth3 = new GridLength(w3);
-		TLS_ColumnWidth4 = new GridLength(w4);
-		TLS_ColumnWidth5 = new GridLength(w5);
-		TLS_ColumnWidth6 = new GridLength(w6);
-		TLS_ColumnWidth7 = new GridLength(w7);
-		TLS_ColumnWidth8 = new GridLength(w8);
-		TLS_ColumnWidth9 = new GridLength(w9);
-		TLS_ColumnWidth10 = new GridLength(w10);
-		TLS_ColumnWidth11 = new GridLength(w11);
-		TLS_ColumnWidth12 = new GridLength(w12);
-		TLS_ColumnWidth13 = new GridLength(w13);
+		TLS_ColumnWidth1 = new(w1);
+		TLS_ColumnWidth2 = new(w2);
+		TLS_ColumnWidth3 = new(w3);
+		TLS_ColumnWidth4 = new(w4);
+		TLS_ColumnWidth5 = new(w5);
+		TLS_ColumnWidth6 = new(w6);
+		TLS_ColumnWidth7 = new(w7);
+		TLS_ColumnWidth8 = new(w8);
+		TLS_ColumnWidth9 = new(w9);
+		TLS_ColumnWidth10 = new(w10);
+		TLS_ColumnWidth11 = new(w11);
+		TLS_ColumnWidth12 = new(w12);
+		TLS_ColumnWidth13 = new(w13);
 	}
 
 	#endregion
@@ -938,7 +941,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			w1 = ListViewHelper.MeasureText(name, w1);
 		}
 
-		REG_ColumnWidth1 = new GridLength(w1);
+		REG_ColumnWidth1 = new(w1);
 	}
 
 	#endregion
@@ -968,11 +971,11 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 			// Build the CBOM document from the already-populated collections
 			CbomDocument doc = new(
-				algorithms: new List<CryptoAlgorithm>(AllCryptoAlgorithms),
-				cngCurves: new List<EccCurveCng>(AllCngCurves),
-				sslProviderCurves: new List<EccCurveSslProvider>(AllSslProviderCurves),
-				tlsCipherSuites: new List<TlsCipherSuite>(AllTlsCipherSuites),
-				registeredProviders: new List<string>(AllRegisteredProviders)
+				algorithms: new(AllCryptoAlgorithms),
+				cngCurves: new(AllCngCurves),
+				sslProviderCurves: new(AllSslProviderCurves),
+				tlsCipherSuites: new(AllTlsCipherSuites),
+				registeredProviders: new(AllRegisteredProviders)
 				);
 
 			// Serialize with a resolver that combines all generated contexts
@@ -994,4 +997,39 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			MainInfoBarIsClosable = true;
 		}
 	}
+
+	/// <summary>
+	/// Used for <see cref="Traverse.MContainer"/> data retrieval.
+	/// </summary>
+	/// <returns></returns>
+	internal async Task<CbomDocument> GetTraverseData()
+	{
+		try
+		{
+			ElementsAreEnabled = false;
+			MainInfoBarIsClosable = false;
+
+			// Retrieve the latest data first
+			await _RetrieveCryptoAlgorithms();
+			await _RetrieveCngCurves();
+			await _RetrieveSslProviderCurves();
+			await _RetrieveTlsCipherSuites();
+			await _RetrieveRegisteredProviders();
+
+			// Build the CBOM document from the already-populated collections and return it
+			return new(
+				algorithms: new(AllCryptoAlgorithms),
+				cngCurves: new(AllCngCurves),
+				sslProviderCurves: new(AllSslProviderCurves),
+				tlsCipherSuites: new(AllTlsCipherSuites),
+				registeredProviders: new(AllRegisteredProviders)
+				);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
 }

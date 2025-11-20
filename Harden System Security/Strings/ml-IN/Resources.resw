@@ -583,9 +583,6 @@
   <data name="UserCanceledUACMessage" xml:space="preserve">
   <value>ഉപയോക്താവ് UAC പ്രോംപ്റ്റ് റദ്ദാക്കി.</value>
   </data>
-  <data name="ProtectionPresets.Text" xml:space="preserve">
-    <value>സംരക്ഷണ പ്രീസെറ്റുകൾ</value>
-  </data>
     <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>പ്രയോഗിക്കാനുള്ള സംരക്ഷണ പ്രീസെറ്റുകളിൽ ഒന്ന് തിരഞ്ഞെടുക്കുക, അവ വിവിധ സുരക്ഷാ നിലകൾക്കായി നിർമ്മിച്ച മുൻകൂട്ടി നിർണ്ണയിച്ച കോൺഫിഗറേഷൻ സെറ്റുകളാണ്.</value>
   </data>
@@ -4226,4 +4223,82 @@
   <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
     <value>വിജയകരമായി {0} ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പുകൾ {1} ലേക്ക് കയറ്റുമതി ചെയ്തു</value>
   </data>
+    <data name="SystemStateButton.Content" xml:space="preserve">
+    <value>സിസ്റ്റം നില</value>
+  </data>
+  <data name="SystemStateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലെ സിസ്റ്റം നില ഒരു ഫയലിലേക്ക് ബാക്കപ്പ് എടുക്കുക അല്ലെങ്കിൽ നിലവിലുള്ള ബാക്കപ്പിൽ നിന്ന് അത് പുനസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="SystemStateButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>നിലവിലെ സിസ്റ്റം നില ഒരു ഫയലിലേക്ക് ബാക്കപ്പ് എടുക്കുക അല്ലെങ്കിൽ നിലവിലുള്ള ബാക്കപ്പിൽ നിന്ന് അത് പുനസ്ഥാപിക്കുക.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ബാക്കപ്പ്</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നിലവിലെ സിസ്റ്റം നില ഒരു ഘടിത ഫയലിലേക്ക് ബാക്കപ്പ് എടുക്കുക. ഇതിൽ നിലവിലെ സിസ്റ്റം നിലയുടെ സമ്പൂർണ്ണ വിശദാംശങ്ങൾ ഉൾപ്പെടുന്നു, കൂടാതെ പുനഃസ്ഥാപിക്കാനായി ഇത് ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>നിലവിലെ സിസ്റ്റം നില ഒരു ഘടിത ഫയലിലേക്ക് ബാക്കപ്പ് എടുക്കുക. ഇതിൽ നിലവിലെ സിസ്റ്റം നിലയുടെ സമ്പൂർണ്ണ വിശദാംശങ്ങൾ ഉൾപ്പെടുന്നു, കൂടാതെ പുനഃസ്ഥാപിക്കാനായി ഇത് ഉപയോഗിക്കാം.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>പുനഃസ്ഥാപിക്കൽ</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മുൻകൂർ സൃഷ്ടിച്ച ബാക്കപ്പ് ഫയലിൽ നിന്ന് സിസ്റ്റം നില പുനഃസ്ഥാപിക്കുക. ഇതുവഴി സിസ്റ്റം ബാക്കപ്പിൽ പകർത്തപ്പെട്ട നിലയിലേക്ക് മടങ്ങും.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>മുൻകൂർ സൃഷ്ടിച്ച ബാക്കപ്പ് ഫയലിൽ നിന്ന് സിസ്റ്റം നില പുനഃസ്ഥാപിക്കുക. ഇതുവഴി സിസ്റ്റം ബാക്കപ്പിൽ പകർത്തപ്പെട്ട നിലയിലേക്ക് മടങ്ങും.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>പുനഃസ്ഥാപന പ്രവർത്തനത്തിന്റെ മോഡ് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>പുനഃസ്ഥാപന പ്രവർത്തനത്തിന്റെ മോഡ് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഭാഗികം</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നൽകിയ ഫയലിൽ പ്രയോഗിച്ചതെന്നോ അനുസൃതമാണെന്നോ ആയി അടയാളപ്പെടുത്തിയ സുരക്ഷാ നടപടികൾ മാത്രമേ പ്രയോഗിക്കൂ, അനുയോജ്യമായി അടയാളപ്പെടുത്താത്തവയെ അവഗണിക്കും. ഇതിന്റെ ഫലമായി സിസ്റ്റത്തിന്റെ നില ഭാഗികമായി പുനഃസ്ഥാപിക്കപ്പെടും.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>നൽകിയ ഫയലിൽ പ്രയോഗിച്ചതെന്നോ അനുസൃതമാണെന്നോ ആയി അടയാളപ്പെടുത്തിയ സുരക്ഷാ നടപടികൾ മാത്രമേ പ്രയോഗിക്കൂ, അനുയോജ്യമായി അടയാളപ്പെടുത്താത്തവയെ അവഗണിക്കും. ഇതിന്റെ ഫലമായി സിസ്റ്റത്തിന്റെ നില ഭാഗികമായി പുനഃസ്ഥാപിക്കപ്പെടും.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>പൂർണ്ണം</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>നൽകിയ ഫയലിൽ നിർവചിച്ചിരിക്കുന്ന എല്ലാ സുരക്ഷാ നടപടികളും നടപ്പിലാക്കുന്നു. പ്രയോഗിച്ചതോ അനുസൃതമോ എന്ന് അടയാളപ്പെടുത്തിയ നടപടികൾ സിസ്റ്റത്തിൽ നടപ്പാക്കപ്പെടും, പ്രയോഗിക്കാത്തതോ അനനുസൃതമോ എന്ന് അടയാളപ്പെടുത്തിയ നടപടികൾ നീക്കം ചെയ്യപ്പെടും. ഇതിലൂടെ ഫയലിനനുസരിച്ച് സിസ്റ്റത്തിന്റെ നില പൂർണ്ണമായി പുനഃസ്ഥാപിക്കപ്പെടുന്നത് ഉറപ്പാക്കുന്നു.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>നൽകിയ ഫയലിൽ നിർവചിച്ചിരിക്കുന്ന എല്ലാ സുരക്ഷാ നടപടികളും നടപ്പിലാക്കുന്നു. പ്രയോഗിച്ചതോ അനുസൃതമോ എന്ന് അടയാളപ്പെടുത്തിയ നടപടികൾ സിസ്റ്റത്തിൽ നടപ്പാക്കപ്പെടും, പ്രയോഗിക്കാത്തതോ അനനുസൃതമോ എന്ന് അടയാളപ്പെടുത്തിയ നടപടികൾ നീക്കം ചെയ്യപ്പെടും. ഇതിലൂടെ ഫയലിനനുസരിച്ച് സിസ്റ്റത്തിന്റെ നില പൂർണ്ണമായി പുനഃസ്ഥാപിക്കപ്പെടുന്നത് ഉറപ്പാക്കുന്നു.</value>
+  </data>
+  <data name="SystemStateRestorationBeginsMsg" xml:space="preserve">
+   <value>സിസ്റ്റം നില പുനഃസ്ഥാപനം ആരംഭിക്കുന്നു.</value>
+  </data>
+  <data name="SystemStateRestorationFinishedMsg" xml:space="preserve">
+   <value>സിസ്റ്റം നിലയുടെ പുനഃസ്ഥാപനം വിജയകരമായി പൂർത്തിയാക്കി.</value>
+  </data>
+  <data name="SystemStateReportGenerationBeginsMsg" xml:space="preserve">
+   <value>പൂർണ്ണ സിസ്റ്റം നില റിപ്പോർട്ട് സൃഷ്ടിക്കുന്നു, ദയവായി കാത്തിരിക്കുക.</value>
+  </data>
+  <data name="SystemStateReportGenerationFinishedMsg" xml:space="preserve">
+   <value>സിസ്റ്റത്തിന്റെ പൂർണ്ണ നില റിപ്പോർട്ട് വിജയകരമായി സൃഷ്ടിച്ച് താഴെക്കാണുന്ന സ്ഥാനത്ത് സംരക്ഷിച്ചു: '{0}'.</value>
+  </data>
+  <data name="ImportOperationBeginApplyCountMsg" xml:space="preserve">
+   <value>ഇറക്കുമതി പ്രവർത്തനം: {1} വിഭാഗങ്ങളിൽ പ്രയോഗിക്കേണ്ട {0} സുരക്ഷാ നടപടികൾ ഉണ്ട്.</value>
+  </data>
+  <data name="ImportOperationBeginRemoveCountMsg" xml:space="preserve">
+   <value>ഇറക്കുമതി പ്രവർത്തനം: നീക്കം ചെയ്യേണ്ട {0} സുരക്ഷാ നടപടികൾ {1} വിഭാഗങ്ങളിൽ ഉണ്ട്.</value>
+  </data>
+  <data name="ImportOperationIndividualApplyOperationMsg" xml:space="preserve">
+   <value>ഇറക്കുമതി പ്രവർത്തനം: വിഭാഗം {1} ന് {0} ഇനങ്ങൾ പ്രയോഗിക്കുന്നു</value>
+  </data>
+  <data name="ImportOperationIndividualRemoveOperationMsg" xml:space="preserve">
+   <value>ഇറക്കുമതി പ്രവർത്തനം: വിഭാഗം {1} ന് {0} ഇനങ്ങൾ നീക്കം ചെയ്യുന്നു</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+  <value>പുനഃസ്ഥാപന മോഡ്</value>
+</data>
 </root>

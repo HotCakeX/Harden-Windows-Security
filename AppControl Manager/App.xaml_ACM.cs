@@ -426,7 +426,7 @@ public partial class App : Application
 			}
 		}
 
-		// Parse navigation restoration arguments		
+		// Parse navigation restoration arguments
 		if (navTagArg is not null)
 		{
 			string rawTag = navTagArg["--navtag=".Length..].Trim();

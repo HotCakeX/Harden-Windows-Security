@@ -563,7 +563,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				// Return basic border as final fallback - must never throw
 				try
 				{
-					return new Border();
+					return new();
 				}
 				catch (Exception finalEx)
 				{

@@ -583,9 +583,6 @@
   <data name="UserCanceledUACMessage" xml:space="preserve">
   <value>המשתמש ביטל את בקשת ה-UAC.</value>
   </data>
-  <data name="ProtectionPresets.Text" xml:space="preserve">
-    <value>תבניות הגנה</value>
-  </data>
     <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>בחר אחת מתבניות ההגנה ליישום; אלו קבוצות מוגדרות מראש של תצורות שנועדו למפלסי אבטחה שונים.</value>
   </data>
@@ -4226,4 +4223,82 @@
   <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
     <value>יוצאו בהצלחה {0} אפליקציות מותקנות אל {1}</value>
   </data>
+    <data name="SystemStateButton.Content" xml:space="preserve">
+    <value>מצב מערכת</value>
+  </data>
+  <data name="SystemStateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>גבה את מצב המערכת הנוכחי לקובץ או שחזר אותו מגיבוי קיים.</value>
+  </data>
+  <data name="SystemStateButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>גבה את מצב המערכת הנוכחי לקובץ או שחזר אותו מגיבוי קיים.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>גיבוי</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>גבה את מצב המערכת הנוכחי לקובץ מובנה. הוא מכיל פירוט מלא של מצב המערכת הנוכחי וניתן להשתמש בו לשחזור.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>גבה את מצב המערכת הנוכחי לקובץ מובנה. הוא מכיל פירוט מלא של מצב המערכת הנוכחי וניתן להשתמש בו לשחזור.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>שחזור</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שחזר את מצב המערכת מקובץ גיבוי שנוצר בעבר. פעולה זו תחזיר את המערכת למצב שנשמר בגיבוי.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>שחזר את מצב המערכת מקובץ גיבוי שנוצר בעבר. פעולה זו תחזיר את המערכת למצב שנשמר בגיבוי.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את מצב פעולת השחזור.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>בחר את מצב פעולת השחזור.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>חלקי</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מיישם רק את אמצעי האבטחה שסומנו כמיושמים או כעומדים בדרישות בקובץ שסופק, ומתעלם מאלה שלא סומנו בהתאם. פעולה זו מביאה לשחזור חלקי של מצב המערכת.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>מיישם רק את אמצעי האבטחה שסומנו כמיושמים או כעומדים בדרישות בקובץ שסופק, ומתעלם מאלה שלא סומנו בהתאם. פעולה זו מביאה לשחזור חלקי של מצב המערכת.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>מלא</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מיישם את כל אמצעי האבטחה שהוגדרו בקובץ שסופק. אמצעים שסומנו כמיושמים או כעומדים בדרישות יאכפו על המערכת, בעוד שאמצעים שסומנו כלא מיושמים או כלא תואמים יוסרו. פעולה זו מבטיחה שחזור מלא של מצב המערכת בהתאם לקובץ.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>מיישם את כל אמצעי האבטחה שהוגדרו בקובץ שסופק. אמצעים שסומנו כמיושמים או כעומדים בדרישות יאכפו על המערכת, בעוד שאמצעים שסומנו כלא מיושמים או כלא תואמים יוסרו. פעולה זו מבטיחה שחזור מלא של מצב המערכת בהתאם לקובץ.</value>
+  </data>
+  <data name="SystemStateRestorationBeginsMsg" xml:space="preserve">
+   <value>מתחיל שחזור מצב המערכת.</value>
+  </data>
+  <data name="SystemStateRestorationFinishedMsg" xml:space="preserve">
+   <value>שחזור מצב המערכת הושלם בהצלחה.</value>
+  </data>
+  <data name="SystemStateReportGenerationBeginsMsg" xml:space="preserve">
+   <value>מייצר דוח מלא של מצב המערכת, נא להמתין.</value>
+  </data>
+  <data name="SystemStateReportGenerationFinishedMsg" xml:space="preserve">
+   <value>דוח מלא של מצב המערכת נוצר בהצלחה ונשמר במיקום הבא: '{0}'.</value>
+  </data>
+  <data name="ImportOperationBeginApplyCountMsg" xml:space="preserve">
+   <value>פעולת ייבוא: יש {0} אמצעי אבטחה ליישום בין {1} קטגוריות.</value>
+  </data>
+  <data name="ImportOperationBeginRemoveCountMsg" xml:space="preserve">
+   <value>פעולת ייבוא: יש {0} אמצעי אבטחה להסרה בין {1} קטגוריות.</value>
+  </data>
+  <data name="ImportOperationIndividualApplyOperationMsg" xml:space="preserve">
+   <value>פעולת ייבוא: מיישם {0} פריטים עבור קטגוריה {1}</value>
+  </data>
+  <data name="ImportOperationIndividualRemoveOperationMsg" xml:space="preserve">
+   <value>פעולת ייבוא: מסיר {0} פריטים עבור קטגוריה {1}</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+  <value>מצב שחזור</value>
+</data>
 </root>

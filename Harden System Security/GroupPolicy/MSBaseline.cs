@@ -71,7 +71,9 @@ internal sealed class VerificationResult(
 	[JsonPropertyName("Friendly Name")]
 	internal string FriendlyName => friendlyName;
 
-	[JsonIgnore]
+	[JsonInclude]
+	[JsonPropertyOrder(4)]
+	[JsonPropertyName("Source")]
 	internal SecurityMeasureSource Source => source;
 
 	[JsonInclude]
@@ -98,9 +100,7 @@ internal sealed class VerificationResult(
 	/// <summary>
 	/// Property for source display
 	/// </summary>
-	[JsonInclude]
-	[JsonPropertyOrder(4)]
-	[JsonPropertyName("Source")]
+	[JsonIgnore]
 	internal string SourceDisplay => Source switch
 	{
 		SecurityMeasureSource.AuditPolicy => "Audit Policy",
@@ -923,7 +923,7 @@ internal static class MSBaseline
 		// Get current privilege rights of the system.
 		Dictionary<string, string[]> currentPrivileges = SecurityPolicyReader.GetPrivilegeRights();
 
-		// Verify each expected privilege		
+		// Verify each expected privilege
 		foreach (KeyValuePair<string, string[]> expectedPrivilege in expectedPrivileges)
 		{
 			bool isCompliant;

@@ -583,9 +583,6 @@
   <data name="UserCanceledUACMessage" xml:space="preserve">
   <value>Użytkownik anulował monit UAC.</value>
   </data>
-  <data name="ProtectionPresets.Text" xml:space="preserve">
-    <value>Szablony ochrony</value>
-  </data>
     <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wybierz jeden z szablonów ochrony do zastosowania, są to predefiniowane zestawy konfiguracji zaprojektowane dla różnych poziomów bezpieczeństwa.</value>
   </data>
@@ -4226,4 +4223,82 @@ Odcisk Palca: {3}</value>
   <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
     <value>Pomyślnie wyeksportowano {0} zainstalowanych aplikacji do {1}</value>
   </data>
+    <data name="SystemStateButton.Content" xml:space="preserve">
+    <value>Stan systemu</value>
+  </data>
+  <data name="SystemStateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz kopię zapasową bieżącego stanu systemu do pliku lub przywróć go z istniejącej kopii zapasowej.</value>
+  </data>
+  <data name="SystemStateButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Utwórz kopię zapasową bieżącego stanu systemu do pliku lub przywróć go z istniejącej kopii zapasowej.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Kopia zapasowa</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utwórz kopię zapasową bieżącego stanu systemu do ustrukturyzowanego pliku. Zawiera on pełne szczegóły bieżącego stanu systemu i może zostać użyty do przywrócenia.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Utwórz kopię zapasową bieżącego stanu systemu do ustrukturyzowanego pliku. Zawiera on pełne szczegóły bieżącego stanu systemu i może zostać użyty do przywrócenia.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Przywracanie</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przywróć stan systemu z wcześniej utworzonego pliku kopii zapasowej. Spowoduje to przywrócenie systemu do stanu zapisanego w kopii zapasowej.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Przywróć stan systemu z wcześniej utworzonego pliku kopii zapasowej. Spowoduje to przywrócenie systemu do stanu zapisanego w kopii zapasowej.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wybierz tryb operacji przywracania.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Wybierz tryb operacji przywracania.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Częściowy</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zastosuje wyłącznie środki zabezpieczeń oznaczone w dostarczonym pliku jako zastosowane lub zgodne, ignorując te, które nie są odpowiednio oznaczone. Skutkuje to częściowym przywróceniem stanu systemu.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Zastosuje wyłącznie środki zabezpieczeń oznaczone w dostarczonym pliku jako zastosowane lub zgodne, ignorując te, które nie są odpowiednio oznaczone. Skutkuje to częściowym przywróceniem stanu systemu.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Pełny</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wdraża wszystkie środki zabezpieczeń zdefiniowane w dostarczonym pliku. Środki oznaczone jako zastosowane lub zgodne zostaną wymuszone w systemie, a te oznaczone jako niezastosowane lub niezgodne zostaną usunięte. Zapewnia to pełne przywrócenie stanu systemu zgodnie z plikiem.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Wdraża wszystkie środki zabezpieczeń zdefiniowane w dostarczonym pliku. Środki oznaczone jako zastosowane lub zgodne zostaną wymuszone w systemie, a te oznaczone jako niezastosowane lub niezgodne zostaną usunięte. Zapewnia to pełne przywrócenie stanu systemu zgodnie z plikiem.</value>
+  </data>
+  <data name="SystemStateRestorationBeginsMsg" xml:space="preserve">
+   <value>Rozpoczynanie przywracania stanu systemu.</value>
+  </data>
+  <data name="SystemStateRestorationFinishedMsg" xml:space="preserve">
+   <value>Przywracanie stanu systemu zostało pomyślnie ukończone.</value>
+  </data>
+  <data name="SystemStateReportGenerationBeginsMsg" xml:space="preserve">
+   <value>Trwa generowanie pełnego raportu stanu systemu, proszę czekać.</value>
+  </data>
+  <data name="SystemStateReportGenerationFinishedMsg" xml:space="preserve">
+   <value>Pełny raport stanu systemu został pomyślnie wygenerowany i zapisany w następującej lokalizacji: '{0}'.</value>
+  </data>
+  <data name="ImportOperationBeginApplyCountMsg" xml:space="preserve">
+   <value>Operacja importu: Należy zastosować {0} środków zabezpieczeń w {1} kategoriach.</value>
+  </data>
+  <data name="ImportOperationBeginRemoveCountMsg" xml:space="preserve">
+   <value>Operacja importu: Do usunięcia jest {0} środków zabezpieczeń w {1} kategoriach.</value>
+  </data>
+  <data name="ImportOperationIndividualApplyOperationMsg" xml:space="preserve">
+   <value>Operacja importu: Zastosowanie {0} elementów dla kategorii {1}</value>
+  </data>
+  <data name="ImportOperationIndividualRemoveOperationMsg" xml:space="preserve">
+   <value>Operacja importu: Usuwanie {0} elementów dla kategorii {1}</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Tryb przywracania</value>
+</data>
 </root>

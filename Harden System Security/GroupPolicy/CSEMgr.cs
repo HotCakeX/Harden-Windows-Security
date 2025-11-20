@@ -276,22 +276,22 @@ internal static class CSEMgr
 	// CSE GUIDs for machine extensions in order
 	// CSE (Client Side Extension) GUID and (Administrative Side Extension) GUID pairs.
 	private static readonly List<Guid> RequiredMachineExtensionsInOrder = [
-		new Guid("2A8FDC61-2347-4C87-92F6-B05EB91A201A"), // Mitigation Options
-		new Guid("35378EAC-683F-11D2-A89A-00C04FBBCFA2"), // Registry
-		new Guid("4CFB60C1-FAA6-47F1-89AA-0B18730C9FD3"), // Internet Explorer Zone Mapping
-		new Guid("827D319E-6EAC-11D2-A4EA-00C04F79F83A"), // Security
-		new Guid("D76B9641-3288-4F75-942D-087DE603E3EA"), // LAPS
-		new Guid("F312195E-3D9D-447A-A3F5-08DFFA24735E"), // Device Guard Virtualization Based Security
-		new Guid("F3CCC681-B74C-4060-9F26-CD84525DCA2A")  // Audit Policy Configuration
+		new("2A8FDC61-2347-4C87-92F6-B05EB91A201A"), // Mitigation Options
+		new("35378EAC-683F-11D2-A89A-00C04FBBCFA2"), // Registry
+		new("4CFB60C1-FAA6-47F1-89AA-0B18730C9FD3"), // Internet Explorer Zone Mapping
+		new("827D319E-6EAC-11D2-A4EA-00C04F79F83A"), // Security
+		new("D76B9641-3288-4F75-942D-087DE603E3EA"), // LAPS
+		new("F312195E-3D9D-447A-A3F5-08DFFA24735E"), // Device Guard Virtualization Based Security
+		new("F3CCC681-B74C-4060-9F26-CD84525DCA2A")  // Audit Policy Configuration
 	];
 
 	// CSE GUIDs for user extensions in order
 	private static readonly List<Guid> RequiredUserExtensionsInOrder = [
-		new Guid("2A8FDC61-2347-4C87-92F6-B05EB91A201A"), // Mitigation Options
-		new Guid("35378EAC-683F-11D2-A89A-00C04FBBCFA2"), // Registry
-		new Guid("4CFB60C1-FAA6-47F1-89AA-0B18730C9FD3"), // Internet Explorer Zone Mapping
-		new Guid("F312195E-3D9D-447A-A3F5-08DFFA24735E"), // Device Guard Virtualization Based Security
-		new Guid("F3CCC681-B74C-4060-9F26-CD84525DCA2A")  // Audit Policy Configuration
+		new("2A8FDC61-2347-4C87-92F6-B05EB91A201A"), // Mitigation Options
+		new("35378EAC-683F-11D2-A89A-00C04FBBCFA2"), // Registry
+		new("4CFB60C1-FAA6-47F1-89AA-0B18730C9FD3"), // Internet Explorer Zone Mapping
+		new("F312195E-3D9D-447A-A3F5-08DFFA24735E"), // Device Guard Virtualization Based Security
+		new("F3CCC681-B74C-4060-9F26-CD84525DCA2A")  // Audit Policy Configuration
 	];
 
 	// NOTE:

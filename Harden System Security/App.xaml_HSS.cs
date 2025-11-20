@@ -59,6 +59,11 @@ public partial class App : Application
 
 	private static Type? PageTypeToNavTo;
 
+	// CLI import/export arguments
+	private static string? _cliImportPath;
+	private static string? _cliExportPath;
+	private static bool _cliModeFull = true; // --mode defaults to full; partial sets this false
+
 	/// <summary>
 	/// Invoked when the application is launched.
 	/// </summary>
@@ -212,7 +217,35 @@ public partial class App : Application
 				// If a standalone CLI action was requested, execute it headlessly.
 				else if (!string.IsNullOrWhiteSpace(_cliAction))
 				{
-					if (string.Equals(_cliAction, "CheckMSStoreAppUpdate", StringComparison.OrdinalIgnoreCase))
+					// Import/Export CLI actions
+					if (string.Equals(_cliAction, "ExportReport", StringComparison.OrdinalIgnoreCase))
+					{
+						// Mandatory --out
+						if (string.IsNullOrWhiteSpace(_cliExportPath))
+						{
+							Logger.Write("Error: ExportReport requires --out=FILEPATH");
+							Environment.Exit(2);
+							return;
+						}
+
+						await Traverse.Generator.GenerateTraverseData(_cliExportPath);
+					}
+					else if (string.Equals(_cliAction, "ImportReport", StringComparison.OrdinalIgnoreCase))
+					{
+						// Mandatory --in
+						if (string.IsNullOrWhiteSpace(_cliImportPath))
+						{
+							Logger.Write("Error: ImportReport requires --in=FILEPATH");
+							Environment.Exit(2);
+							return;
+						}
+
+						await Traverse.Importer.ImportAndApplyAsync(
+							filePath: _cliImportPath,
+							synchronizeExact: _cliModeFull
+							);
+					}
+					else if (string.Equals(_cliAction, "CheckMSStoreAppUpdate", StringComparison.OrdinalIgnoreCase))
 					{
 						await ViewModelProvider.MainWindowVM.CheckForAllAppUpdates_Internal();
 					}
@@ -334,7 +367,7 @@ public partial class App : Application
 	/// </summary>
 	private static string? BuildRelaunchArguments()
 	{
-		List<string> parts = new(capacity: 6);
+		List<string> parts = new(capacity: 10);
 
 		// Preserve console across elevation if requested
 		if (Logger.CliRequested)
@@ -377,6 +410,19 @@ public partial class App : Application
 			parts.Add($"--navtag={_cliNavTag}");
 		}
 
+		// Include import/export specific arguments
+		if (!string.IsNullOrWhiteSpace(_cliImportPath))
+		{
+			string safeImport = _cliImportPath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase);
+			parts.Add($"--in=\"{safeImport}\"");
+		}
+		if (!string.IsNullOrWhiteSpace(_cliExportPath))
+		{
+			string safeExport = _cliExportPath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase);
+			parts.Add($"--out=\"{safeExport}\"");
+		}
+		parts.Add($"--mode={(_cliModeFull ? "full" : "partial")}");
+
 		if (parts.Count == 0)
 		{
 			return null;
@@ -414,7 +460,12 @@ public partial class App : Application
 					if (!string.IsNullOrWhiteSpace(possibleAction) && !possibleAction.StartsWith("--", StringComparison.Ordinal))
 					{
 						_cliAction = possibleAction;
-						requireAdminPrivilege = true;
+						// Elevation required for both actions
+						if (string.Equals(_cliAction, "ExportReport", StringComparison.OrdinalIgnoreCase) ||
+							string.Equals(_cliAction, "ImportReport", StringComparison.OrdinalIgnoreCase))
+						{
+							requireAdminPrivilege = true;
+						}
 					}
 				}
 			}
@@ -506,6 +557,50 @@ public partial class App : Application
 							requireAdminPrivilege = true;
 						}
 					}
+				}
+			}
+
+			// Parse import/export specific arguments
+			string? inArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--in=", StringComparison.OrdinalIgnoreCase));
+			if (inArg is not null)
+			{
+				string rawIn = inArg["--in=".Length..].Trim().Trim('"');
+				if (!string.IsNullOrWhiteSpace(rawIn))
+				{
+					_cliImportPath = rawIn;
+					// Elevation required regardless of validation specifics
+					requireAdminPrivilege = true;
+				}
+			}
+
+			string? outArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--out=", StringComparison.OrdinalIgnoreCase));
+			if (outArg is not null)
+			{
+				string rawOut = outArg["--out=".Length..].Trim().Trim('"');
+				if (!string.IsNullOrWhiteSpace(rawOut))
+				{
+					_cliExportPath = rawOut;
+					requireAdminPrivilege = true;
+				}
+			}
+
+			string? modeArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--mode=", StringComparison.OrdinalIgnoreCase));
+			if (modeArg is not null)
+			{
+				string rawMode = modeArg["--mode=".Length..].Trim();
+				if (string.Equals(rawMode, "full", StringComparison.OrdinalIgnoreCase))
+				{
+					_cliModeFull = true;
+				}
+				else if (string.Equals(rawMode, "partial", StringComparison.OrdinalIgnoreCase))
+				{
+					_cliModeFull = false;
+				}
+				else
+				{
+					Logger.Write("Error: --mode must be 'full' or 'partial'.");
+					Environment.Exit(2);
+					return;
 				}
 			}
 		}

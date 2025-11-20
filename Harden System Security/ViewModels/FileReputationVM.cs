@@ -38,7 +38,6 @@ internal sealed partial class FileReputationVM : ViewModelBase
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
-
 	}
 
 	/// <summary>

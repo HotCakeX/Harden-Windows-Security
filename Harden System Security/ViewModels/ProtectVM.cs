@@ -34,7 +34,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 {
 	internal ProtectVM()
 	{
-		MainInfoBar = new InfoBarSettings(
+		MainInfoBar = new(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
@@ -68,25 +68,25 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// The order of these must match the order of the Categories Enum.
 	/// </summary>
 	private readonly BitmapImage[] CategoryImages = [
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/Microsoft-Security-Baseline.png")),
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/Microsoft-365-Apps-Security-Baselines.png")),
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/WindowsDefender.png")),
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/ASRrules.png")),
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/Bitlocker.png")), // 4
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/TLS.png")), // 5
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/LockScreen.png")),
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/UAC.png")), // 7
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/DeviceGuard.png")), // 8
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/Firewall.png")), // 9
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/OptionalFeatures.png")), // 10
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/Networking.png")), // 11
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/MiscellaneousCommands.png")), // 12
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/WindowsUpdate.png")), // 13
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/EdgeBrowser.png")), // 14
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/Certificate.png")), // 15
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/CountryIPBlocking.png")), // 16
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/NonAdmin.png")), // 17
-		new BitmapImage(new Uri("ms-appx:///Assets/ProtectionCategoriesIcons/MicrosoftBaseLinesOverrides.png")) // 18
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/Microsoft-Security-Baseline.png")),
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/Microsoft-365-Apps-Security-Baselines.png")),
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/WindowsDefender.png")),
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/ASRrules.png")),
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/Bitlocker.png")), // 4
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/TLS.png")), // 5
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/LockScreen.png")),
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/UAC.png")), // 7
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/DeviceGuard.png")), // 8
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/Firewall.png")), // 9
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/OptionalFeatures.png")), // 10
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/Networking.png")), // 11
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/MiscellaneousCommands.png")), // 12
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/WindowsUpdate.png")), // 13
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/EdgeBrowser.png")), // 14
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/Certificate.png")), // 15
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/CountryIPBlocking.png")), // 16
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/NonAdmin.png")), // 17
+		new(new("ms-appx:///Assets/ProtectionCategoriesIcons/MicrosoftBaseLinesOverrides.png")) // 18
 	];
 
 	/// <summary>
@@ -290,10 +290,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	internal void RecomputeDeviceIntentsPreview()
 	{
 		// Ensure cache is built
-		if (_allMUnitsAcrossCategoriesCache is null)
-		{
-			_allMUnitsAcrossCategoriesCache = BuildAllMUnitsAcrossCategories();
-		}
+		_allMUnitsAcrossCategoriesCache ??= BuildAllMUnitsAcrossCategories();
 
 		// If nothing selected, clear both the backing list and the UI-bound collection, then return
 		if (SelectedDeviceIntent is null)
@@ -393,7 +390,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: null,
-			url: "https://www.microsoft.com/en-us/download/details.aspx?id=55319");
+			url: "https://www.microsoft.com/en-us/download/details.aspx?id=55319",
+			id: Guid.CreateVersion7());
 
 		result.Add(msSecurityBaselineProxy);
 
@@ -406,7 +404,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: null,
-			url: "https://www.microsoft.com/en-us/download/details.aspx?id=55319");
+			url: "https://www.microsoft.com/en-us/download/details.aspx?id=55319",
+			id: Guid.CreateVersion7());
 
 		result.Add(m365AppsBaselineProxy);
 
@@ -419,7 +418,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: null,
-			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features");
+			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features",
+			id: Guid.CreateVersion7());
 
 		result.Add(optionalWindowsFeaturesProxy);
 
@@ -432,7 +432,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: null,
-			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction");
+			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction",
+			id: Guid.CreateVersion7());
 
 		result.Add(asrProxy);
 
@@ -445,7 +446,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: null,
-			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking");
+			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking",
+			id: Guid.CreateVersion7());
 
 		result.Add(countryIPBlockingProxy);
 
@@ -516,6 +518,18 @@ internal sealed partial class ProtectVM : ViewModelBase
 	} = RunningOperation.None;
 
 	/// <summary>
+	/// Disables/Enables all animated buttons in this page.
+	/// </summary>
+	/// <param name="enable"></param>
+	private void EnableDisableAnimatedButtons(bool enable)
+	{
+		IsApplyButtonEnabled = enable;
+		IsRemoveButtonEnabled = enable;
+		IsVerifyButtonEnabled = enable;
+		IsApplyIntentsButtonEnabled = enable;
+	}
+
+	/// <summary>
 	/// Whether the Apply button should be enabled
 	/// </summary>
 	internal bool IsApplyButtonEnabled { get; set => SP(ref field, value); } = true;
@@ -574,37 +588,37 @@ internal sealed partial class ProtectVM : ViewModelBase
 				intent: Intent.Development,
 				title: GlobalVars.GetStr("DeviceUsageIntent-Development-Title"),
 				description: GlobalVars.GetStr("DeviceUsageIntent-Development-Description"),
-				image: new Uri("ms-appx:///Assets/DeviceIntents/Development.png")
+				image: new("ms-appx:///Assets/DeviceIntents/Development.png")
 			),
 			new (
 				intent: Intent.Gaming,
 				title: GlobalVars.GetStr("DeviceUsageIntent-Gaming-Title"),
 				description: GlobalVars.GetStr("DeviceUsageIntent-Gaming-Description"),
-				image: new Uri("ms-appx:///Assets/DeviceIntents/Gaming.png")
+				image: new("ms-appx:///Assets/DeviceIntents/Gaming.png")
 			),
 			new (
 				intent: Intent.School,
 				title: GlobalVars.GetStr("DeviceUsageIntent-School-Title"),
 				description: GlobalVars.GetStr("DeviceUsageIntent-School-Description"),
-				image: new Uri("ms-appx:///Assets/DeviceIntents/School.png")
+				image: new("ms-appx:///Assets/DeviceIntents/School.png")
 			),
 			new (
 				intent: Intent.Business,
 				title: GlobalVars.GetStr("DeviceUsageIntent-Business-Title"),
 				description: GlobalVars.GetStr("DeviceUsageIntent-Business-Description"),
-				image: new Uri("ms-appx:///Assets/DeviceIntents/Business.png")
+				image: new("ms-appx:///Assets/DeviceIntents/Business.png")
 			),
 			new (
 				intent: Intent.SpecializedAccessWorkstation,
 				title: GlobalVars.GetStr("DeviceUsageIntent-SpecializedAccessWorkstation-Title"),
 				description: GlobalVars.GetStr("DeviceUsageIntent-SpecializedAccessWorkstation-Description"),
-				image: new Uri("ms-appx:///Assets/DeviceIntents/Specialized.png")
+				image: new("ms-appx:///Assets/DeviceIntents/Specialized.png")
 			),
 			new (
 				intent: Intent.PrivilegedAccessWorkstation,
 				title: GlobalVars.GetStr("DeviceUsageIntent-PrivilegedAccessWorkstation-Title"),
 				description: GlobalVars.GetStr("DeviceUsageIntent-PrivilegedAccessWorkstation-Description"),
-				image: new Uri("ms-appx:///Assets/DeviceIntents/Privileged.png")
+				image: new("ms-appx:///Assets/DeviceIntents/Privileged.png")
 			),
 		];
 
@@ -1388,5 +1402,75 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 		await ApplySelectedDeviceIntents_Internal();
 	}
+
+	/// <summary>
+	/// Event handler for the UI.
+	/// </summary>
+	internal async void GenerateSystemReport()
+	{
+		try
+		{
+			ElementsAreEnabled = false;
+			EnableDisableAnimatedButtons(false);
+
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, Traverse.Generator.GetFileName());
+
+			if (savePath is null)
+				return;
+
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("SystemStateReportGenerationBeginsMsg"));
+
+			await Traverse.Generator.GenerateTraverseData(savePath);
+
+			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SystemStateReportGenerationFinishedMsg"), savePath));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			EnableDisableAnimatedButtons(true);
+		}
+	}
+
+	/// <summary>
+	/// Event handler for the UI.
+	/// </summary>
+	internal async void RestoreSystemState()
+	{
+		try
+		{
+			ElementsAreEnabled = false;
+			EnableDisableAnimatedButtons(false);
+
+			string? loadPath = FileDialogHelper.ShowFilePickerDialog(GlobalVars.JSONPickerFilter);
+
+			if (loadPath is null)
+				return;
+
+			MainInfoBar.WriteInfo(GlobalVars.GetStr("SystemStateRestorationBeginsMsg"));
+
+			await Traverse.Importer.ImportAndApplyAsync(
+				filePath: loadPath,
+				synchronizeExact: RestorationModeFull
+				);
+
+			MainInfoBar.WriteSuccess(GlobalVars.GetStr("SystemStateRestorationFinishedMsg"));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			EnableDisableAnimatedButtons(true);
+		}
+	}
+
+	internal bool RestorationModePartial { get; set => SP(ref field, value); }
+	internal bool RestorationModeFull { get; set => SP(ref field, value); } = true;
 
 }

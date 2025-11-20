@@ -199,7 +199,7 @@ internal static class WebView2Config
 	///	- Assigns a custom profile data directory which is accessible by all users.
 	///	  Required for environments where Administrator Protection is active.
 	///	- Enables InPrivate mode.
-	///	- Disables browser extensions. 
+	///	- Disables browser extensions.
 	/// </summary>
 	/// <returns></returns>
 	internal static async Task ConfigureWebView2(WebView2 webView, Uri initialSource)

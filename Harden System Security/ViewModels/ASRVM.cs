@@ -289,7 +289,7 @@ internal sealed partial class ASRVM : ViewModelBase
 				byte[] stateBytes = entry.PolicyEntry.Type switch
 				{
 					RegistryValueType.REG_DWORD => BitConverter.GetBytes((uint)entry.State),
-					RegistryValueType.REG_SZ => System.Text.Encoding.Unicode.GetBytes(((uint)entry.State).ToString() + "\0"),
+					RegistryValueType.REG_SZ => Encoding.Unicode.GetBytes(((uint)entry.State).ToString() + "\0"),
 					_ => BitConverter.GetBytes((uint)entry.State)
 				};
 
@@ -301,7 +301,8 @@ internal sealed partial class ASRVM : ViewModelBase
 					type: entry.PolicyEntry.Type,
 					size: (uint)stateBytes.Length,
 					data: stateBytes,
-					hive: entry.PolicyEntry.Hive)
+					hive: entry.PolicyEntry.Hive,
+					id: entry.PolicyEntry.ID)
 				{
 					RegValue = ((uint)entry.State).ToString(),
 					policyAction = entry.PolicyEntry.policyAction,
@@ -351,7 +352,7 @@ internal sealed partial class ASRVM : ViewModelBase
 					byte[] stateBytes = entry.PolicyEntry.Type switch
 					{
 						RegistryValueType.REG_DWORD => BitConverter.GetBytes((uint)entry.State),
-						RegistryValueType.REG_SZ => System.Text.Encoding.Unicode.GetBytes(((uint)entry.State).ToString() + "\0"),
+						RegistryValueType.REG_SZ => Encoding.Unicode.GetBytes(((uint)entry.State).ToString() + "\0"),
 						_ => BitConverter.GetBytes((uint)entry.State)
 					};
 
@@ -363,7 +364,8 @@ internal sealed partial class ASRVM : ViewModelBase
 						type: entry.PolicyEntry.Type,
 						size: (uint)stateBytes.Length,
 						data: stateBytes,
-						hive: entry.PolicyEntry.Hive)
+						hive: entry.PolicyEntry.Hive,
+						id: entry.PolicyEntry.ID)
 					{
 						RegValue = ((uint)entry.State).ToString(),
 						policyAction = entry.PolicyEntry.policyAction,
@@ -422,9 +424,14 @@ internal sealed partial class ASRVM : ViewModelBase
 	}
 
 	/// <summary>
+	/// Event handler for the UI.
+	/// </summary>
+	internal async void RetrieveLatest() => await RetrieveLatest_Internal();
+
+	/// <summary>
 	/// Retrieves all ASR rules states from the system and updates the UI to reflect current values.
 	/// </summary>
-	internal async void RetrieveLatest()
+	internal async Task RetrieveLatest_Internal()
 	{
 		try
 		{
@@ -598,6 +605,17 @@ internal sealed partial class ASRVM : ViewModelBase
 			ElementsAreEnabled = true;
 			MainInfoBarIsClosable = true;
 		}
+	}
+
+	/// <summary>
+	/// Used for <see cref="Traverse.MContainer"/> data retrieval.
+	/// </summary>
+	/// <returns></returns>
+	internal async Task<Traverse.AttackSurfaceReductionRules> GetTraverseData()
+	{
+		await RetrieveLatest_Internal();
+
+		return new(items: AllASRRules) { Score = AllASRRules.Count(x => x.State == ASRRuleState.Block) };
 	}
 
 }

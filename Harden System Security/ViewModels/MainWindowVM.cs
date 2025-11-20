@@ -279,42 +279,42 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Dictionary of all the pages in the app, used for the search bar.
 	/// Keys are page header contents which are localized and values are page types.
 	/// </summary>
-	internal readonly Dictionary<string, Type> NavigationPageToItemContentMapForSearch = [];
+	internal static readonly Dictionary<Type, string> NavigationPageToItemContentMapForSearch = [];
 
 	internal void RebuildNavigationPageToItemContentMapForSearch()
 	{
 		NavigationPageToItemContentMapForSearch.Clear();
 
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("ProtectNavigationViewItem/Content")] = typeof(Pages.Protect);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("LogsNavItem/Content")] = typeof(Pages.Logs);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("GitHubDocsNavItem/Content")] = typeof(Pages.GitHubDocumentation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("SettingsNavItem/Content")] = typeof(Pages.Settings);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("GroupPolicyEditorNavItem/Content")] = typeof(Pages.GroupPolicyEditor);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MicrosoftDefenderNavItem/Content")] = typeof(Pages.Protects.MicrosoftDefender);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("ASRNavItem/Content")] = typeof(Pages.Protects.ASR);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("BitLockerNavItem/Content")] = typeof(Pages.Protects.BitLocker);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("TLSSecurityNavItem/Content")] = typeof(Pages.Protects.TLS);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("LockScreenNavItem/Content")] = typeof(Pages.Protects.LockScreen);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("UACNavItem/Content")] = typeof(Pages.Protects.UAC);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("DeviceGuardNavItem/Content")] = typeof(Pages.Protects.DeviceGuard);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("WindowsFirewallNavItem/Content")] = typeof(Pages.Protects.WindowsFirewall);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("OptionalWindowsFeaturesNavItem/Content")] = typeof(Pages.Protects.OptionalWindowsFeatures);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("WindowsNetworkingNavItem/Content")] = typeof(Pages.Protects.WindowsNetworking);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MiscellaneousNavItem/Content")] = typeof(Pages.Protects.MiscellaneousConfigs);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("WindowsUpdateNavItem/Content")] = typeof(Pages.Protects.WindowsUpdate);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("EdgeBrowserNavItem/Content")] = typeof(Pages.Protects.Edge);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CertificatesNavItem/Content")] = typeof(Pages.Protects.CertificateChecking);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CountryIPBlockingNavItem/Content")] = typeof(Pages.Protects.CountryIPBlocking);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("NonAdminCommandsNavItem/Content")] = typeof(Pages.Protects.NonAdmin);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("FileReputationNavItem/Content")] = typeof(Pages.FileReputation);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("InstalledAppsManagementNavItem/Content")] = typeof(Pages.InstalledAppsManagement);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/Content")] = typeof(Pages.Protects.MicrosoftSecurityBaseline);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content")] = typeof(Pages.Protects.Microsoft365AppsSecurityBaseline);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content")] = typeof(Pages.Protects.MicrosoftBaseLinesOverrides);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("AuditPoliciesNavItem/Content")] = typeof(Pages.AuditPolicies);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("HomeNavItem/Content")] = typeof(AppControlManager.Pages.Home);
-		NavigationPageToItemContentMapForSearch[GlobalVars.GetStr("CBOMNavItem/Content")] = typeof(Pages.CryptographicBillOfMaterials);
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protect)] = GlobalVars.GetStr("ProtectNavigationViewItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Logs)] = GlobalVars.GetStr("LogsNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.UpdatePage)] = GlobalVars.GetStr("UpdateNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.GitHubDocumentation)] = GlobalVars.GetStr("GitHubDocsNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Settings)] = GlobalVars.GetStr("SettingsNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.GroupPolicyEditor)] = GlobalVars.GetStr("GroupPolicyEditorNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MicrosoftDefender)] = GlobalVars.GetStr("MicrosoftDefenderNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.ASR)] = GlobalVars.GetStr("ASRNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.BitLocker)] = GlobalVars.GetStr("BitLockerNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.TLS)] = GlobalVars.GetStr("TLSSecurityNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.LockScreen)] = GlobalVars.GetStr("LockScreenNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.UAC)] = GlobalVars.GetStr("UACNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.DeviceGuard)] = GlobalVars.GetStr("DeviceGuardNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.WindowsFirewall)] = GlobalVars.GetStr("WindowsFirewallNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.OptionalWindowsFeatures)] = GlobalVars.GetStr("OptionalWindowsFeaturesNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.WindowsNetworking)] = GlobalVars.GetStr("WindowsNetworkingNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MiscellaneousConfigs)] = GlobalVars.GetStr("MiscellaneousNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.WindowsUpdate)] = GlobalVars.GetStr("WindowsUpdateNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.Edge)] = GlobalVars.GetStr("EdgeBrowserNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.CertificateChecking)] = GlobalVars.GetStr("CertificatesNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.CountryIPBlocking)] = GlobalVars.GetStr("CountryIPBlockingNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.NonAdmin)] = GlobalVars.GetStr("NonAdminCommandsNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.FileReputation)] = GlobalVars.GetStr("FileReputationNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.InstalledAppsManagement)] = GlobalVars.GetStr("InstalledAppsManagementNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MicrosoftSecurityBaseline)] = GlobalVars.GetStr("MicrosoftSecurityBaselineNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.Microsoft365AppsSecurityBaseline)] = GlobalVars.GetStr("Microsoft365AppsSecurityBaselineNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Protects.MicrosoftBaseLinesOverrides)] = GlobalVars.GetStr("MicrosoftBaseLinesOverridesNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.AuditPolicies)] = GlobalVars.GetStr("AuditPoliciesNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(AppControlManager.Pages.Home)] = GlobalVars.GetStr("HomeNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.CryptographicBillOfMaterials)] = GlobalVars.GetStr("CBOMNavItem/Content");
 	}
 
 	/// <summary>
@@ -324,6 +324,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	{
 		RebuildBreadcrumbMappings();
 		RebuildNavigationPageToItemContentMapForSearch();
+
+		// Build mappings for pages, MUnit-based or not, so their titles can participate in the unified search experience
+		foreach (KeyValuePair<Type, string> kvp in NavigationPageToItemContentMapForSearch)
+		{
+			Traverse.MUnitCatalog.RegisterExtraPage(kvp.Key, kvp.Value);
+		}
 
 		// Subscribe to the UpdateAvailable event to handle updates to the InfoBadge visibility
 		Others.AppUpdate.UpdateAvailable += OnUpdateAvailable!;
@@ -339,7 +345,29 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			Dispatcher, null, null);
 	}
 
+	/// <summary>
+	/// A collection that maps each page type to its corresponding NavigationViewItem on the main menu.
+	/// </summary>
+	internal static FrozenDictionary<Type, NavigationViewItem>? PageTypeToNavItem;
+
 	#region UI-Bound Properties
+
+	/// <summary>
+	/// Collection of suggestions for the AutoSuggestBox in the Main Window.
+	/// </summary>
+	internal List<UnifiedSearchBarResult> UnifiedSearchBarSuggestionsCollection { get; set => SP(ref field, value); } = [];
+
+	/// <summary>
+	/// The text typed in the AutoSuggestBox on the Main Window.
+	/// </summary>
+	internal string? UnifiedSearchBarText
+	{
+		get; set
+		{
+			if (SPT(ref field, value))
+				UnifiedSearchBarSuggestionsCollection = Traverse.MUnitCatalog.GetPageFromQuery(field);
+		}
+	}
 
 	// Navigation Icon Properties
 

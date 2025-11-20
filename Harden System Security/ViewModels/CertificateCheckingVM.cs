@@ -47,7 +47,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			Dispatcher, null, null);
 
 		// Calculate initial column widths
-		CalculateColumnWidths();
+		_ = Dispatcher.TryEnqueue(CalculateColumnWidths);
 	}
 
 	/// <summary>
@@ -226,13 +226,13 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		}
 
 		// Set the column width properties
-		StoreLocationColumnWidth = new GridLength(maxStoreLocationWidth);
-		StoreNameColumnWidth = new GridLength(maxStoreNameWidth);
-		SubjectColumnWidth = new GridLength(maxSubjectWidth);
-		IssuerColumnWidth = new GridLength(maxIssuerWidth);
-		ThumbprintColumnWidth = new GridLength(maxThumbprintWidth);
-		RootSubjectColumnWidth = new GridLength(maxRootSubjectWidth);
-		RootSha256ColumnWidth = new GridLength(maxRootSha256Width);
+		StoreLocationColumnWidth = new(maxStoreLocationWidth);
+		StoreNameColumnWidth = new(maxStoreNameWidth);
+		SubjectColumnWidth = new(maxSubjectWidth);
+		IssuerColumnWidth = new(maxIssuerWidth);
+		ThumbprintColumnWidth = new(maxThumbprintWidth);
+		RootSubjectColumnWidth = new(maxRootSubjectWidth);
+		RootSha256ColumnWidth = new(maxRootSha256Width);
 	}
 
 	#endregion

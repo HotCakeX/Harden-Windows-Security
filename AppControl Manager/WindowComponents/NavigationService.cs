@@ -32,6 +32,7 @@ namespace AppControlManager.WindowComponents;
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.WindowComponents;
 using HardenSystemSecurity.ViewModels;
+using System.Collections.Frozen;
 namespace HardenSystemSecurity.WindowComponents;
 #endif
 
@@ -223,7 +224,7 @@ internal sealed class NavigationService
 						App.Settings.PromptForElevationOnStartup = true;
 					}
 
-					// Build navigation argument to restore this page after elevation.					
+					// Build navigation argument to restore this page after elevation.
 					string? navArg = null;
 
 					// Attempt to find a tag for the page, only top-level pages that have a tab in MainWindow XAML work
@@ -427,42 +428,12 @@ internal sealed class NavigationService
 	}
 
 	/// <summary>
-	/// Event handler for the AutoSuggestBox text change event
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	internal void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-	{
-		if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-		{
-			ViewModelBase.EmitTypingSound();
-
-			// Get the text user entered in the search box
-			string query = sender.Text.Trim();
-
-			// Filter menu items based on the search query
-			List<string> suggestions = new(mainWindowVM.NavigationPageToItemContentMapForSearch.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase)));
-
-			// Set the filtered items as suggestions in the AutoSuggestBox
-			sender.ItemsSource = suggestions;
-		}
-	}
-
-	/// <summary>
 	/// Event handler for when a suggestion is chosen in the AutoSuggestBox
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>
-	internal void SearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-	{
-		// Get the selected item's name and find the corresponding NavigationViewItem
-		string? chosenItemName = args.SelectedItem?.ToString();
-
-		if (chosenItemName is not null && mainWindowVM.NavigationPageToItemContentMapForSearch.TryGetValue(chosenItemName, out Type? selectedItem))
-		{
-			Navigate(selectedItem, null);
-		}
-	}
+	internal void SearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args) =>
+		Navigate(((UnifiedSearchBarResult)args.SelectedItem).PageType, null);
 
 	/// <summary>
 	/// Event handler to run at Window launch to restore its size to the one before closing
@@ -504,6 +475,32 @@ internal sealed class NavigationService
 		}
 	}
 
+#if APP_CONTROL_MANAGER
+
+	/// <summary>
+	/// Event handler for the AutoSuggestBox text change event
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="args"></param>
+	internal void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+	{
+		if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+		{
+			ViewModelBase.EmitTypingSound();
+
+			// Get the text user entered in the search box
+			string query = sender.Text.Trim();
+
+			// Filter menu items based on the search query
+			List<string> suggestions = new(mainWindowVM.NavigationPageToItemContentMapForSearch.Keys.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase)));
+
+			// Set the filtered items as suggestions in the AutoSuggestBox
+			sender.ItemsSource = suggestions;
+		}
+	}
+
+#endif
+
 	/// <summary>
 	/// Get all NavigationViewItem items in the MainNavigation, that includes MenuItems + any nested MenuItems + FooterMenuItems.
 	/// Only needs to run once.
@@ -518,6 +515,27 @@ internal sealed class NavigationService
 
 		static IEnumerable<NavigationViewItem> GetAllChildren(NavigationViewItem parent) =>
 			new[] { parent }.Concat(parent.MenuItems.OfType<NavigationViewItem>().SelectMany(GetAllChildren));
+
+#if HARDEN_SYSTEM_SECURITY
+
+		// Build Type -> NavigationViewItem map using Tag -> Type map we already have.
+		Dictionary<Type, NavigationViewItem> typeToItem = new(capacity: mainWindowVM.allNavigationItems.Count);
+
+		foreach (NavigationViewItem item in mainWindowVM.allNavigationItems)
+		{
+			// Tag is the non-localized identifier defined in XAML
+			string? tag = item.Tag?.ToString();
+
+			if (tag is not null && mainWindowVM.NavigationPageToItemContentMap.TryGetValue(tag, out Type? pageType))
+			{
+				typeToItem[pageType] = item;
+			}
+		}
+
+		MainWindowVM.PageTypeToNavItem = typeToItem.ToFrozenDictionary<Type, NavigationViewItem>();
+
+#endif
+
 	}
 
 	/// <summary>

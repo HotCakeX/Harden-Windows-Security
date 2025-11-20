@@ -189,7 +189,8 @@ internal static class Manager
 					type: policy.Type,
 					size: policy.Size,
 					data: policy.Data,
-					hive: policy.Hive)
+					hive: policy.Hive,
+					id: policy.ID)
 				{
 					RegValue = policy.RegValue,
 					policyAction = PolicyAction.Remove,

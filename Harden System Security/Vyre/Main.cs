@@ -1413,7 +1413,7 @@ internal static partial class CabinetArchiveExtractor
 		[ThreadStatic]
 		private static CabinetDecompressionContext? s_current;
 
-		internal unsafe CabinetDecompressionContext(byte[] decompressionBytes, Action<CabinetFileEntry> extractedEntryCallback)
+		internal CabinetDecompressionContext(byte[] decompressionBytes, Action<CabinetFileEntry> extractedEntryCallback)
 		{
 			cabinetContentBytes = decompressionBytes;
 			entryCallback = extractedEntryCallback;

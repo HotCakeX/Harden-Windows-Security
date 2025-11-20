@@ -20,7 +20,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <customUI:InfoBarV2 Grid.Row="0"                 
+        <customUI:InfoBarV2 Grid.Row="0"
                             IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
                             Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"

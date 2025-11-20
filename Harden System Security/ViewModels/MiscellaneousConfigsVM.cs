@@ -135,7 +135,9 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 
 				deviceIntents: [
 					DeviceIntents.Intent.All
-				]
+				],
+
+				id: new("019a905d-98d7-78ab-9064-4c5059f0b364")
 			));
 		}
 
@@ -152,7 +154,8 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 					DeviceIntents.Intent.PrivilegedAccessWorkstation,
 					DeviceIntents.Intent.School,
 					DeviceIntents.Intent.Business
-				]
+				],
+				id: new("019a905d-f082-7fae-853e-ad55a6c74f9a")
 			));
 
 		{
@@ -217,7 +220,8 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 					DeviceIntents.Intent.PrivilegedAccessWorkstation,
 					DeviceIntents.Intent.School,
 					DeviceIntents.Intent.Business
-				]
+				],
+				id: new("019a905e-7470-7be4-94d6-4cef2cd243df")
 			));
 		}
 
@@ -260,7 +264,8 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				type: RegistryValueType.REG_DWORD,
 				size: 4,
 				data: ReadOnlyMemory<byte>.Empty,
-				hive: Hive.HKLM)
+				hive: Hive.HKLM,
+				id: new("019a8dfa-25d9-7f7f-be0f-30dc1e6ea5c2"))
 			{
 				RegValue = "0",
 				policyAction = PolicyAction.Apply
@@ -286,7 +291,8 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 				type: RegistryValueType.REG_DWORD,
 				size: 4,
 				data: ReadOnlyMemory<byte>.Empty,
-				hive: Hive.HKLM)
+				hive: Hive.HKLM,
+				id: new("019a8dfa-25da-7271-a240-3d96a8274067"))
 			{
 				RegValue = "0",
 				policyAction = PolicyAction.Apply

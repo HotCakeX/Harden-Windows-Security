@@ -20,7 +20,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-2373-7b29-9ca4-1963d53b4c0f"
     },
     {
         "Source": 0,
@@ -39,7 +40,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-2375-71a5-8af8-bfc25ccdd0f5"
     },
     {
         "Source": 0,
@@ -58,7 +60,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-2376-79ed-8a3c-099118368f4c"
     },
     {
         "Source": 0,
@@ -77,7 +80,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-2376-770d-9f0e-720a9696ace9"
     },
     {
         "Source": 0,
@@ -96,7 +100,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-2377-7c32-bdd7-46ab3864cf90"
     },
     {
         "Source": 0,
@@ -115,7 +120,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-2377-789e-9b1f-d7a16beb0844"
     },
     {
         "Source": 0,
@@ -134,7 +140,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-2377-78e6-aa7b-8e973fab2475"
     },
     {
         "Source": 0,
@@ -157,7 +164,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-2378-71f2-ae2e-abd8b358ab7b"
     },
     {
         "Source": 0,
@@ -176,7 +184,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-2378-7dd6-8bdf-f07dedef0050"
     },
     {
         "Source": 0,
@@ -199,7 +208,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-2379-757e-8d0b-b056a01b0a74"
     },
     {
         "Source": 0,
@@ -220,7 +230,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-237a-7831-9954-14a0bcb42252"
     },
     {
         "Source": 0,
@@ -239,7 +250,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-237c-7763-a4c5-f9b256589415"
     },
     {
         "Source": 0,
@@ -260,7 +272,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-237e-70ec-9ac0-ace8ac0719b4"
     },
     {
         "Source": 0,
@@ -281,7 +294,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-2382-70fa-840a-fe285f9b03d4"
     },
     {
         "Source": 0,
@@ -302,7 +316,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-2386-711c-9b63-6b01a7160064"
     },
     {
         "Source": 0,
@@ -321,7 +336,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-2388-757f-a9cd-43f3fd2fe7c3"
     },
     {
         "Source": 0,
@@ -340,7 +356,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-2389-7dab-8dcb-871867b1af06"
     },
     {
         "Source": 0,
@@ -361,7 +378,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-238b-7c0f-ac74-a8ac650f9caf"
     },
     {
         "Source": 0,
@@ -382,7 +400,8 @@
             3,
             4,
             5
-        ]
+        ],
+        "ID": "019a8dfa-238e-789f-90b6-ef3c56a2237c"
     },
     {
         "Source": 0,
@@ -401,7 +420,8 @@
         "DefaultRegValue": null,
         "DeviceIntents": [
             99
-        ]
+        ],
+        "ID": "019a8dfa-2392-718f-8900-89074493fcd3"
     },
     {
         "Source": 0,
@@ -421,6 +441,7 @@
         "DeviceIntents": [
             3,
             4
-        ]
+        ],
+        "ID": "019a8dfa-2395-758e-a7c9-ac1bbe9e5d4f"
     }
 ]

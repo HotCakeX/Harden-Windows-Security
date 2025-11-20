@@ -11,6 +11,7 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animatedvisuals="using:AnimatedVisuals"
+    xmlns:CC="using:CommonCore.Others"
     SystemBackdrop="{x:Bind ViewModel.SystemBackDropStyle, Mode=OneWay}"
     Title="Harden System Security">
 
@@ -126,9 +127,48 @@
                             VerticalAlignment="Center"
                             MaxWidth="600"
                             AutomationProperties.LandmarkType="Search"
-                            TextChanged="{x:Bind Nav.SearchBox_TextChanged}"
+                            ItemsSource="{x:Bind ViewModel.UnifiedSearchBarSuggestionsCollection, Mode=OneWay}"
+                            Text="{x:Bind ViewModel.UnifiedSearchBarText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             SuggestionChosen="{x:Bind Nav.SearchBox_SuggestionChosen}"
-                            x:Uid="MainSearchAutoSuggestBox" Margin="0"/>
+                            x:Uid="MainSearchAutoSuggestBox"
+                            Margin="0"
+                            UpdateTextOnSelect="False">
+
+                <AutoSuggestBox.ItemTemplate>
+                    <DataTemplate x:DataType="CC:UnifiedSearchBarResult">
+                        <Grid ColumnSpacing="12" Padding="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Round image on the left -->
+                            <Border Grid.Column="0"
+                                    Width="32"
+                                    Height="32"
+                                    CornerRadius="16"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                                <ContentPresenter Content="{x:Bind Icon}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Title and subtitle on the right -->
+                            <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="2">
+                                <TextBlock Text="{x:Bind Title}"
+                                           Style="{StaticResource BodyStrongTextBlockStyle}"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{x:Bind Subtitle}"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Opacity="0.8"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </AutoSuggestBox.ItemTemplate>
+            </AutoSuggestBox>
 
             <!-- Sidebar access point -->
             <Button x:Name="SidebarButton"
@@ -623,7 +663,7 @@
                             <BreadcrumbBar.ItemTemplate>
                                 <DataTemplate x:DataType="WindowComponents:Crumb"
                                               xmlns:vms="using:HardenSystemSecurity.ViewModels">
-                                    <TextBlock Text="{x:Bind Label}"                                            
+                                    <TextBlock Text="{x:Bind Label}"
                                                Style="{x:Bind vms:ViewModelProvider.MainWindowVM.BreadcrumbItemStyle, Mode=OneWay}"
                                                TextWrapping="NoWrap"/>
                                 </DataTemplate>

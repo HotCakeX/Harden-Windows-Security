@@ -583,9 +583,6 @@
   <data name="UserCanceledUACMessage" xml:space="preserve">
   <value>Ο χρήστης ακύρωσε την προτροπή UAC.</value>
   </data>
-  <data name="ProtectionPresets.Text" xml:space="preserve">
-    <value>Προκαθορισμένες ρυθμίσεις προστασίας</value>
-  </data>
     <data name="ProtectionPresetsComboBox.AutomationProperties.HelpText" xml:space="preserve">
     <value>Επιλέξτε μία από τις προκαθορισμένες ρυθμίσεις προστασίας για εφαρμογή, είναι προκαθορισμένα σύνολα διαμορφώσεων που έχουν γίνει για διαφορετικά επίπεδα ασφάλειας.</value>
   </data>
@@ -4226,4 +4223,82 @@
   <data name="SuccessfullyExportedInstalledApps" xml:space="preserve">
     <value>Εξήχθησαν με επιτυχία {0} εγκατεστημένες εφαρμογές σε {1}</value>
   </data>
+    <data name="SystemStateButton.Content" xml:space="preserve">
+    <value>Κατάσταση συστήματος</value>
+  </data>
+  <data name="SystemStateButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε αντίγραφο ασφαλείας της τρέχουσας κατάστασης του συστήματος σε ένα αρχείο ή επαναφέρετέ την από υπάρχον αντίγραφο ασφαλείας.</value>
+  </data>
+  <data name="SystemStateButton.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Δημιουργήστε αντίγραφο ασφαλείας της τρέχουσας κατάστασης του συστήματος σε ένα αρχείο ή επαναφέρετέ την από υπάρχον αντίγραφο ασφαλείας.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αντίγραφο ασφαλείας</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε αντίγραφο ασφαλείας της τρέχουσας κατάστασης του συστήματος σε ένα δομημένο αρχείο. Αυτό περιέχει πλήρεις λεπτομέρειες για την τρέχουσα κατάσταση του συστήματος και μπορεί να χρησιμοποιηθεί για επαναφορά.</value>
+  </data>
+  <data name="BackupSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Δημιουργήστε αντίγραφο ασφαλείας της τρέχουσας κατάστασης του συστήματος σε ένα δομημένο αρχείο. Αυτό περιέχει πλήρεις λεπτομέρειες για την τρέχουσα κατάσταση του συστήματος και μπορεί να χρησιμοποιηθεί για επαναφορά.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Επαναφορά</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επαναφέρετε την κατάσταση του συστήματος από ένα αρχείο αντιγράφου ασφαλείας που δημιουργήθηκε προηγουμένως. Αυτό θα επαναφέρει το σύστημα στην κατάσταση που καταγράφηκε στο αντίγραφο ασφαλείας.</value>
+  </data>
+  <data name="RestoreSystemStateMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Επαναφέρετε την κατάσταση του συστήματος από ένα αρχείο αντιγράφου ασφαλείας που δημιουργήθηκε προηγουμένως. Αυτό θα επαναφέρει το σύστημα στην κατάσταση που καταγράφηκε στο αντίγραφο ασφαλείας.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε τη λειτουργία της διαδικασίας επαναφοράς.</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Επιλέξτε τη λειτουργία της διαδικασίας επαναφοράς.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Μερικό</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμόζει μόνο τα μέτρα ασφαλείας που έχουν επισημανθεί ως εφαρμοσμένα ή συμμορφούμενα στο παρεχόμενο αρχείο, ενώ αγνοεί εκείνα που δεν έχουν επισημανθεί αναλόγως. Αυτό έχει ως αποτέλεσμα μερική επαναφορά της κατάστασης του συστήματος.</value>
+  </data>
+  <data name="PartialRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Εφαρμόζει μόνο τα μέτρα ασφαλείας που έχουν επισημανθεί ως εφαρμοσμένα ή συμμορφούμενα στο παρεχόμενο αρχείο, ενώ αγνοεί εκείνα που δεν έχουν επισημανθεί αναλόγως. Αυτό έχει ως αποτέλεσμα μερική επαναφορά της κατάστασης του συστήματος.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Πλήρης</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμόζει όλα τα μέτρα ασφαλείας που ορίζονται στο παρεχόμενο αρχείο. Τα μέτρα που έχουν επισημανθεί ως εφαρμοσμένα ή συμμορφούμενα θα επιβληθούν στο σύστημα, ενώ εκείνα που έχουν επισημανθεί ως μη εφαρμοσμένα ή μη συμμορφούμενα θα αφαιρεθούν. Αυτό διασφαλίζει την πλήρη επαναφορά της κατάστασης του συστήματος σύμφωνα με το αρχείο.</value>
+  </data>
+  <data name="FullRestoreModeMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+   <value>Εφαρμόζει όλα τα μέτρα ασφαλείας που ορίζονται στο παρεχόμενο αρχείο. Τα μέτρα που έχουν επισημανθεί ως εφαρμοσμένα ή συμμορφούμενα θα επιβληθούν στο σύστημα, ενώ εκείνα που έχουν επισημανθεί ως μη εφαρμοσμένα ή μη συμμορφούμενα θα αφαιρεθούν. Αυτό διασφαλίζει την πλήρη επαναφορά της κατάστασης του συστήματος σύμφωνα με το αρχείο.</value>
+  </data>
+  <data name="SystemStateRestorationBeginsMsg" xml:space="preserve">
+   <value>Έναρξη επαναφοράς κατάστασης συστήματος.</value>
+  </data>
+  <data name="SystemStateRestorationFinishedMsg" xml:space="preserve">
+   <value>Η επαναφορά της κατάστασης του συστήματος ολοκληρώθηκε με επιτυχία.</value>
+  </data>
+  <data name="SystemStateReportGenerationBeginsMsg" xml:space="preserve">
+   <value>Δημιουργείται πλήρης αναφορά κατάστασης συστήματος, παρακαλώ περιμένετε.</value>
+  </data>
+  <data name="SystemStateReportGenerationFinishedMsg" xml:space="preserve">
+   <value>Η πλήρης αναφορά κατάστασης συστήματος δημιουργήθηκε με επιτυχία και αποθηκεύτηκε στην ακόλουθη τοποθεσία: '{0}'.</value>
+  </data>
+  <data name="ImportOperationBeginApplyCountMsg" xml:space="preserve">
+   <value>Λειτουργία εισαγωγής: Υπάρχουν {0} μέτρα ασφαλείας προς εφαρμογή σε {1} κατηγορίες.</value>
+  </data>
+  <data name="ImportOperationBeginRemoveCountMsg" xml:space="preserve">
+   <value>Λειτουργία εισαγωγής: Υπάρχουν {0} μέτρα ασφαλείας προς αφαίρεση σε {1} κατηγορίες.</value>
+  </data>
+  <data name="ImportOperationIndividualApplyOperationMsg" xml:space="preserve">
+   <value>Λειτουργία εισαγωγής: Εφαρμογή {0} στοιχείων για την κατηγορία {1}</value>
+  </data>
+  <data name="ImportOperationIndividualRemoveOperationMsg" xml:space="preserve">
+   <value>Λειτουργία εισαγωγής: Αφαίρεση {0} στοιχείων για την κατηγορία {1}</value>
+  </data>
+  <data name="RestoreModeMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Λειτουργία Επαναφοράς</value>
+</data>
 </root>

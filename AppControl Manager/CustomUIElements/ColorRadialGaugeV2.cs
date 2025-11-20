@@ -115,7 +115,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 		_radius = _centerX - ScalePadding - (ScaleWidth / 2.0);
 
 		// 3) Create segment paths
-		_segment1Path = new Path
+		_segment1Path = new()
 		{
 			StrokeThickness = ScaleWidth * ArcScaleFactor,
 			StrokeStartLineCap = PenLineCap.Round,
@@ -134,7 +134,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 				}
 			}
 		};
-		_segment2Path = new Path
+		_segment2Path = new()
 		{
 			StrokeThickness = ScaleWidth * ArcScaleFactor,
 			StrokeStartLineCap = PenLineCap.Round,
@@ -153,7 +153,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 				}
 			}
 		};
-		_segment3Path = new Path
+		_segment3Path = new()
 		{
 			StrokeThickness = ScaleWidth * ArcScaleFactor,
 			StrokeStartLineCap = PenLineCap.Round,
@@ -172,7 +172,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 				}
 			}
 		};
-		_segment4Path = new Path
+		_segment4Path = new()
 		{
 			StrokeThickness = ScaleWidth * ArcScaleFactor,
 			StrokeStartLineCap = PenLineCap.Round,
@@ -191,7 +191,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 				}
 			}
 		};
-		_segment5Path = new Path
+		_segment5Path = new()
 		{
 			StrokeThickness = ScaleWidth * ArcScaleFactor,
 			StrokeStartLineCap = PenLineCap.Round,
@@ -203,15 +203,15 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 
 		// 4) Insert segment paths above trail
 		int baseIndex = _containerGrid.Children.IndexOf(_backgroundTrail);
-		_containerGrid.Children.Insert(baseIndex + 1, _segment1Path!);
-		_containerGrid.Children.Insert(baseIndex + 2, _segment2Path!);
-		_containerGrid.Children.Insert(baseIndex + 3, _segment3Path!);
-		_containerGrid.Children.Insert(baseIndex + 4, _segment4Path!);
-		_containerGrid.Children.Insert(baseIndex + 5, _segment5Path!);
+		_containerGrid.Children.Insert(baseIndex + 1, _segment1Path);
+		_containerGrid.Children.Insert(baseIndex + 2, _segment2Path);
+		_containerGrid.Children.Insert(baseIndex + 3, _segment3Path);
+		_containerGrid.Children.Insert(baseIndex + 4, _segment4Path);
+		_containerGrid.Children.Insert(baseIndex + 5, _segment5Path);
 
 		// 5) Create and insert moving dot
 		double initialDotSize = ScaleWidth * ArcScaleFactor * DotScaleFactor;
-		_indicatorDot = new Ellipse
+		_indicatorDot = new()
 		{
 			Fill = new SolidColorBrush(Colors.White),
 			Width = initialDotSize,
@@ -239,7 +239,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 		};
 
 		// center text
-		_centerText = new TextBlock
+		_centerText = new()
 		{
 			FontSize = ScaleWidth * 2.0,
 			Text = Value.ToString(),
@@ -247,7 +247,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 		};
 
 		// fill rectangle (glass effect)
-		_fillRect = new Rectangle
+		_fillRect = new()
 		{
 			Fill = new LinearGradientBrush
 			{
@@ -265,7 +265,7 @@ internal sealed partial class ColorRadialGaugeV2 : RadialGauge
 		};
 
 		// inner grid for layering and clipping
-		_innerGrid = new Grid
+		_innerGrid = new()
 		{
 			// assign clip and update it on size change
 			Clip = new RectangleGeometry()

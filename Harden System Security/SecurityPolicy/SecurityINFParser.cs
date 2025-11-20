@@ -26,6 +26,8 @@ namespace HardenSystemSecurity.SecurityPolicy;
 
 internal static class SecurityINFParser
 {
+	private static readonly Guid INFCreatedGUID = new("019a96d0-e8bd-777e-b394-ac70cc8a38e6");
+
 	/// <summary>
 	/// Parses a Security INF file and extracts registry values from the [Registry Values] section,
 	/// converting them to <see cref="RegistryPolicyEntry"/> objects.
@@ -115,7 +117,8 @@ internal static class SecurityINFParser
 				type: registryType,
 				size: size,
 				data: data,
-				hive: hive)
+				hive: hive,
+				id: INFCreatedGUID)
 			{
 				// Canonical RegValue for verification via RegistryManager:
 				// - REG_BINARY: Base64
@@ -293,7 +296,8 @@ internal static class SecurityINFParser
 				type: registryType,
 				size: size,
 				data: data,
-				hive: Hive.HKLM);
+				hive: Hive.HKLM,
+				id: INFCreatedGUID);
 
 			string? canonical = Manager.BuildRegValueFromParsedValue(tempEntry);
 			regValue = canonical ?? string.Empty;

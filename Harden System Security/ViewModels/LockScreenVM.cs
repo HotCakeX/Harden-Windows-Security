@@ -95,7 +95,9 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 				DeviceIntents.Intent.SpecializedAccessWorkstation,
 				DeviceIntents.Intent.PrivilegedAccessWorkstation,
 				DeviceIntents.Intent.School
-			]
+			],
+
+			id: new("019a9053-c2ad-784a-a5f3-98833b9561ef")
 		));
 
 
@@ -129,7 +131,9 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 				DeviceIntents.Intent.SpecializedAccessWorkstation,
 				DeviceIntents.Intent.PrivilegedAccessWorkstation,
 				DeviceIntents.Intent.School
-			]
+			],
+
+			id: new("019a9054-432d-78e3-84dd-643d9c6f32e5")
 		));
 
 		temp.Add(new(
@@ -160,7 +164,9 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 				DeviceIntents.Intent.SpecializedAccessWorkstation,
 				DeviceIntents.Intent.PrivilegedAccessWorkstation,
 				DeviceIntents.Intent.School
-			]
+			],
+
+			id: new("019a9054-7174-7921-a470-8056254a15cf")
 		));
 
 		return temp;

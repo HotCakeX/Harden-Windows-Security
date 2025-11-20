@@ -83,7 +83,7 @@ internal sealed partial class AnimatedCancellableButtonInitializer(string button
 
 		// Create and assign cancellation token source for this operation
 		Cts?.Dispose();
-		Cts = new CancellationTokenSource();
+		Cts = new();
 
 		IsOperationInProgress = true;
 		IsCancelState = true;

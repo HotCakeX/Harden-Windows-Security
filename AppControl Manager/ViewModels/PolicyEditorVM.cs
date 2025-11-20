@@ -315,20 +315,20 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		}
 
 		// Set the column width properties.
-		FileBasedColumnWidth1 = new GridLength(maxWidth1);
-		FileBasedColumnWidth2 = new GridLength(maxWidth2);
-		FileBasedColumnWidth3 = new GridLength(maxWidth3);
-		FileBasedColumnWidth4 = new GridLength(maxWidth4);
-		FileBasedColumnWidth5 = new GridLength(maxWidth5);
-		FileBasedColumnWidth6 = new GridLength(maxWidth6);
-		FileBasedColumnWidth7 = new GridLength(maxWidth7);
-		FileBasedColumnWidth8 = new GridLength(maxWidth8);
-		FileBasedColumnWidth9 = new GridLength(maxWidth9);
-		FileBasedColumnWidth10 = new GridLength(maxWidth10);
-		FileBasedColumnWidth11 = new GridLength(maxWidth11);
-		FileBasedColumnWidth12 = new GridLength(maxWidth12);
-		FileBasedColumnWidth13 = new GridLength(maxWidth13);
-		FileBasedColumnWidth14 = new GridLength(maxWidth14);
+		FileBasedColumnWidth1 = new(maxWidth1);
+		FileBasedColumnWidth2 = new(maxWidth2);
+		FileBasedColumnWidth3 = new(maxWidth3);
+		FileBasedColumnWidth4 = new(maxWidth4);
+		FileBasedColumnWidth5 = new(maxWidth5);
+		FileBasedColumnWidth6 = new(maxWidth6);
+		FileBasedColumnWidth7 = new(maxWidth7);
+		FileBasedColumnWidth8 = new(maxWidth8);
+		FileBasedColumnWidth9 = new(maxWidth9);
+		FileBasedColumnWidth10 = new(maxWidth10);
+		FileBasedColumnWidth11 = new(maxWidth11);
+		FileBasedColumnWidth12 = new(maxWidth12);
+		FileBasedColumnWidth13 = new(maxWidth13);
+		FileBasedColumnWidth14 = new(maxWidth14);
 	}
 
 
@@ -364,13 +364,13 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		}
 
 		// Set the column width properties.
-		SignatureBasedColumnWidth1 = new GridLength(maxWidth1);
-		SignatureBasedColumnWidth2 = new GridLength(maxWidth2);
-		SignatureBasedColumnWidth3 = new GridLength(maxWidth3);
-		SignatureBasedColumnWidth4 = new GridLength(maxWidth4);
-		SignatureBasedColumnWidth5 = new GridLength(maxWidth5);
-		SignatureBasedColumnWidth6 = new GridLength(maxWidth6);
-		SignatureBasedColumnWidth7 = new GridLength(maxWidth7);
+		SignatureBasedColumnWidth1 = new(maxWidth1);
+		SignatureBasedColumnWidth2 = new(maxWidth2);
+		SignatureBasedColumnWidth3 = new(maxWidth3);
+		SignatureBasedColumnWidth4 = new(maxWidth4);
+		SignatureBasedColumnWidth5 = new(maxWidth5);
+		SignatureBasedColumnWidth6 = new(maxWidth6);
+		SignatureBasedColumnWidth7 = new(maxWidth7);
 	}
 
 	/// <summary>
@@ -1717,13 +1717,10 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 
 	internal PolicyEditor.PolicySettings? SelectedPresetPolicySetting
 	{
-		get => field;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
-			{
 				PresetAddButtonVisibility = field is null ? Visibility.Collapsed : Visibility.Visible;
-			}
 		}
 	}
 

@@ -64,7 +64,7 @@
             </Button>
 
             <!-- Search TextBox -->
-            <TextBox x:Uid="SearchBoxTextBox"                     
+            <TextBox x:Uid="SearchBoxTextBox"
                      Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <!-- Progress Ring for loading indication -->

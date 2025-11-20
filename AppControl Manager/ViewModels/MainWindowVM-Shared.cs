@@ -213,7 +213,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		double mainWindowWidth = sender.Size.Width; // Width of the main AppWindow
 
 		// Hide TitleColumn if width is less than certain amount, Restore the TitleColumn if width is more
-		TitleColumnWidth = mainWindowWidth < 950 ? new GridLength(0) : GridLength.Auto;
+		TitleColumnWidth = mainWindowWidth < 950 ? new(0) : GridLength.Auto;
 
 		bool wide = mainWindowWidth >= HeaderThresholdWidth;
 

@@ -253,7 +253,7 @@ internal static class PolicySettingsManager
 			2 => new SettingValueType { Item = Convert.ToUInt32(value) },
 
 			// 3 = string  (String)
-			3 => new SettingValueType { Item = Convert.ToString(value)! },
+			3 => new SettingValueType { Item = Convert.ToString(value) },
 
 			_ => throw new ArgumentOutOfRangeException(
 					 nameof(type),

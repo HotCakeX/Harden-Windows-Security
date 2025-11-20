@@ -62,24 +62,24 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			{
 				switch (index)
 				{
-					case 0: ColumnWidthFilesAndFolders1 = new GridLength(width); break;
-					case 1: ColumnWidthFilesAndFolders2 = new GridLength(width); break;
-					case 2: ColumnWidthFilesAndFolders3 = new GridLength(width); break;
-					case 3: ColumnWidthFilesAndFolders4 = new GridLength(width); break;
-					case 4: ColumnWidthFilesAndFolders5 = new GridLength(width); break;
-					case 5: ColumnWidthFilesAndFolders6 = new GridLength(width); break;
-					case 6: ColumnWidthFilesAndFolders7 = new GridLength(width); break;
-					case 7: ColumnWidthFilesAndFolders8 = new GridLength(width); break;
-					case 8: ColumnWidthFilesAndFolders9 = new GridLength(width); break;
-					case 9: ColumnWidthFilesAndFolders10 = new GridLength(width); break;
-					case 10: ColumnWidthFilesAndFolders11 = new GridLength(width); break;
-					case 11: ColumnWidthFilesAndFolders12 = new GridLength(width); break;
-					case 12: ColumnWidthFilesAndFolders13 = new GridLength(width); break;
-					case 13: ColumnWidthFilesAndFolders14 = new GridLength(width); break;
-					case 14: ColumnWidthFilesAndFolders15 = new GridLength(width); break;
-					case 15: ColumnWidthFilesAndFolders16 = new GridLength(width); break;
-					case 16: ColumnWidthFilesAndFolders17 = new GridLength(width); break;
-					case 17: ColumnWidthFilesAndFolders18 = new GridLength(width); break;
+					case 0: ColumnWidthFilesAndFolders1 = new(width); break;
+					case 1: ColumnWidthFilesAndFolders2 = new(width); break;
+					case 2: ColumnWidthFilesAndFolders3 = new(width); break;
+					case 3: ColumnWidthFilesAndFolders4 = new(width); break;
+					case 4: ColumnWidthFilesAndFolders5 = new(width); break;
+					case 5: ColumnWidthFilesAndFolders6 = new(width); break;
+					case 6: ColumnWidthFilesAndFolders7 = new(width); break;
+					case 7: ColumnWidthFilesAndFolders8 = new(width); break;
+					case 8: ColumnWidthFilesAndFolders9 = new(width); break;
+					case 9: ColumnWidthFilesAndFolders10 = new(width); break;
+					case 10: ColumnWidthFilesAndFolders11 = new(width); break;
+					case 11: ColumnWidthFilesAndFolders12 = new(width); break;
+					case 12: ColumnWidthFilesAndFolders13 = new(width); break;
+					case 13: ColumnWidthFilesAndFolders14 = new(width); break;
+					case 14: ColumnWidthFilesAndFolders15 = new(width); break;
+					case 15: ColumnWidthFilesAndFolders16 = new(width); break;
+					case 16: ColumnWidthFilesAndFolders17 = new(width); break;
+					case 17: ColumnWidthFilesAndFolders18 = new(width); break;
 					default: break;
 				}
 			},
@@ -1210,24 +1210,24 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 
 		// Set the column width properties.
-		ColumnWidthStrictKernelMode1 = new GridLength(maxWidth1);
-		ColumnWidthStrictKernelMode2 = new GridLength(maxWidth2);
-		ColumnWidthStrictKernelMode3 = new GridLength(maxWidth3);
-		ColumnWidthStrictKernelMode4 = new GridLength(maxWidth4);
-		ColumnWidthStrictKernelMode5 = new GridLength(maxWidth5);
-		ColumnWidthStrictKernelMode6 = new GridLength(maxWidth6);
-		ColumnWidthStrictKernelMode7 = new GridLength(maxWidth7);
-		ColumnWidthStrictKernelMode8 = new GridLength(maxWidth8);
-		ColumnWidthStrictKernelMode9 = new GridLength(maxWidth9);
-		ColumnWidthStrictKernelMode10 = new GridLength(maxWidth10);
-		ColumnWidthStrictKernelMode11 = new GridLength(maxWidth11);
-		ColumnWidthStrictKernelMode12 = new GridLength(maxWidth12);
-		ColumnWidthStrictKernelMode13 = new GridLength(maxWidth13);
-		ColumnWidthStrictKernelMode14 = new GridLength(maxWidth14);
-		ColumnWidthStrictKernelMode15 = new GridLength(maxWidth15);
-		ColumnWidthStrictKernelMode16 = new GridLength(maxWidth16);
-		ColumnWidthStrictKernelMode17 = new GridLength(maxWidth17);
-		ColumnWidthStrictKernelMode18 = new GridLength(maxWidth18);
+		ColumnWidthStrictKernelMode1 = new(maxWidth1);
+		ColumnWidthStrictKernelMode2 = new(maxWidth2);
+		ColumnWidthStrictKernelMode3 = new(maxWidth3);
+		ColumnWidthStrictKernelMode4 = new(maxWidth4);
+		ColumnWidthStrictKernelMode5 = new(maxWidth5);
+		ColumnWidthStrictKernelMode6 = new(maxWidth6);
+		ColumnWidthStrictKernelMode7 = new(maxWidth7);
+		ColumnWidthStrictKernelMode8 = new(maxWidth8);
+		ColumnWidthStrictKernelMode9 = new(maxWidth9);
+		ColumnWidthStrictKernelMode10 = new(maxWidth10);
+		ColumnWidthStrictKernelMode11 = new(maxWidth11);
+		ColumnWidthStrictKernelMode12 = new(maxWidth12);
+		ColumnWidthStrictKernelMode13 = new(maxWidth13);
+		ColumnWidthStrictKernelMode14 = new(maxWidth14);
+		ColumnWidthStrictKernelMode15 = new(maxWidth15);
+		ColumnWidthStrictKernelMode16 = new(maxWidth16);
+		ColumnWidthStrictKernelMode17 = new(maxWidth17);
+		ColumnWidthStrictKernelMode18 = new(maxWidth18);
 	}
 
 	#endregion

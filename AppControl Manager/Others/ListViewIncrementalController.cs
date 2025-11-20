@@ -211,7 +211,7 @@ internal sealed partial class ListViewIncrementalController(
 		{
 			_searchDebounceTimer = Dispatcher.CreateTimer();
 			_searchDebounceTimer.IsRepeating = false;
-			_searchDebounceTimer.Tick += (DispatcherQueueTimer s, object e) =>
+			_searchDebounceTimer.Tick += (s, e) =>
 			{
 				s.Stop();
 				_ = ApplySearchCoreAsync(_pendingSearchTerm);
@@ -240,7 +240,7 @@ internal sealed partial class ListViewIncrementalController(
 			{
 				_searchDebounceTimer = Dispatcher.CreateTimer();
 				_searchDebounceTimer.IsRepeating = false;
-				_searchDebounceTimer.Tick += (DispatcherQueueTimer s, object e2) =>
+				_searchDebounceTimer.Tick += (s, e2) =>
 				{
 					s.Stop();
 					_ = ApplySearchCoreAsync(_pendingSearchTerm);
@@ -479,7 +479,7 @@ internal sealed partial class ListViewIncrementalController(
 		_recalcTimer = Dispatcher.CreateTimer();
 		_recalcTimer.IsRepeating = false;
 		_recalcTimer.Interval = TimeSpan.FromMilliseconds(15);
-		_recalcTimer.Tick += (DispatcherQueueTimer s, object e) =>
+		_recalcTimer.Tick += (s, e) =>
 		{
 			RecalculateVisibleColumnWidths();
 		};

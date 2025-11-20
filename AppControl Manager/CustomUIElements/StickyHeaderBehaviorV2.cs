@@ -272,10 +272,7 @@ public static class StickyHeaderBehaviorV2
 
 			Compositor compositor = _scrollProperties.Compositor;
 
-			if (_animationProperties is null)
-			{
-				_animationProperties = compositor.CreatePropertySet();
-			}
+			_animationProperties ??= compositor.CreatePropertySet();
 
 			_animationProperties.InsertScalar("OffsetY", 0.0f);
 

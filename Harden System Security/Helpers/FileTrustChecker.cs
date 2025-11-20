@@ -24,6 +24,8 @@ namespace HardenSystemSecurity.Helpers;
 
 internal static class FileTrustChecker
 {
+	private static readonly Guid FileTrustCheckerResultGUID = new("019a96c5-da04-7c5b-8649-be3e78045775");
+
 	/// <summary>
 	/// The path to the MpClient.dll file
 	/// </summary>
@@ -165,7 +167,8 @@ internal static class FileTrustChecker
 				type: RegistryValueType.REG_DWORD,
 				size: 0,
 				data: ReadOnlyMemory<byte>.Empty,
-				hive: Hive.HKLM)
+				hive: Hive.HKLM,
+				id: FileTrustCheckerResultGUID)
 			{
 				RegValue = "1"
 			});

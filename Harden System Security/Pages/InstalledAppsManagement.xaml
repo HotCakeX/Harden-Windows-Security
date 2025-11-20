@@ -378,7 +378,7 @@
                               VerticalAlignment="Center"
                               IsIndeterminate="True" />
 
-                    <TextBox x:Uid="SearchForAppsPlaceHolder"                         
+                    <TextBox x:Uid="SearchForAppsPlaceHolder"
                          Text="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                          VerticalAlignment="Center"/>

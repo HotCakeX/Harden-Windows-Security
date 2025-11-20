@@ -23,7 +23,7 @@ jobs:
     # If you do not check out your code, Copilot will do this for you.
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Updating Winget
         shell: powershell
@@ -85,4 +85,4 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install Microsoft.VCRedist: $LASTEXITCODE") }
 
       - name: Check out the repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6

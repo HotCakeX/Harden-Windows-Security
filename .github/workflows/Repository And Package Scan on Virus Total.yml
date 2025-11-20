@@ -17,7 +17,7 @@ jobs:
     runs-on: windows-latest
     steps:
       # Step to check out the repository
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       # Step to create ZIP of the repository
       - name: Create a zip file of the entire repository

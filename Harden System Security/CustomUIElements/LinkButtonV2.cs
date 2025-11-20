@@ -60,12 +60,14 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 	private Frame? _currentPreviewFrame; // Track current frame for proper disposal
 	private bool _isDisposed;
 	private bool _isPointerOver;
-	private bool _isFlyoutOpen;
 
 	// Shared preview host across all LinkButtonV2 instances to ensure only one WebView2 is used.
 	private static Frame? s_sharedPreviewFrame;
 	private static LinkPreview? s_sharedPreviewPage;
 	private static Flyout? s_sharedFlyout; // single shared Flyout reused by all buttons
+
+	// Static flyout open state shared among all instances
+	private static bool s_isFlyoutOpen; // true when the shared flyout is open
 
 	internal static readonly DependencyProperty LinkUrlProperty =
 		DependencyProperty.Register(
@@ -150,22 +152,38 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 			AreOpenCloseAnimationsEnabled = false,
 
 			// Adjusts the flyout's default padding and margin
-			FlyoutPresenterStyle = new Style(typeof(FlyoutPresenter))
+			FlyoutPresenterStyle = new(typeof(FlyoutPresenter))
 			{
-				Setters =   {
-								new Setter(MarginProperty, new Thickness(0)),
-								new Setter(PaddingProperty, new Thickness(4)),
-								new Setter(CornerRadiusProperty, new CornerRadius(15))
-							}
+				Setters =
+				{
+					new Setter(MarginProperty, new Thickness(0)),
+					new Setter(PaddingProperty, new Thickness(4)),
+					new Setter(CornerRadiusProperty, new CornerRadius(15))
+				}
 			}
 		};
 
-		// Wire events once on the shared flyout (owned by the first control that creates it).
-		_previewFlyout.Opened += PreviewFlyout_Opened;
-		_previewFlyout.Closed += PreviewFlyout_Closed;
+		// Attach static handlers once
+		_previewFlyout.Opened += SharedFlyout_Opened;
+		_previewFlyout.Closed += SharedFlyout_Closed;
 
 		// Store as the shared Flyout so all other buttons reuse it.
 		s_sharedFlyout = _previewFlyout;
+	}
+
+	/// <summary>
+	/// flyout opened.
+	/// </summary>
+	private static void SharedFlyout_Opened(object? sender, object e) => s_isFlyoutOpen = true;
+
+	/// <summary>
+	/// flyout closed.
+	/// </summary>
+	private static void SharedFlyout_Closed(object? sender, object e)
+	{
+		s_isFlyoutOpen = false;
+		// Clear content to allow re-assignment cleanly
+		_ = (s_sharedFlyout?.Content = null);
 	}
 
 	/// <summary>
@@ -173,7 +191,7 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 	/// </summary>
 	private void CreateHoverTimer()
 	{
-		_hoverTimer = new DispatcherTimer
+		_hoverTimer = new()
 		{
 			Interval = HoverDelay
 		};
@@ -189,10 +207,8 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 
 		_hoverTimer?.Stop();
 
-		if (_isPointerOver && !_isFlyoutOpen && !string.IsNullOrWhiteSpace(LinkUrl))
-		{
+		if (_isPointerOver && !s_isFlyoutOpen && !string.IsNullOrWhiteSpace(LinkUrl))
 			ShowPreviewFlyout();
-		}
 	}
 
 	/// <summary>
@@ -200,8 +216,8 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 	/// </summary>
 	private void ShowPreviewFlyout()
 	{
-		// Check if link previews are enabled in settings before showing flyout
-		if (_isDisposed || _previewFlyout == null || !App.Settings.LinkPreviewsForSecurityMeasure)
+		// Check if link previews are enabled in settings before showing flyout, or if already open
+		if (_isDisposed || _previewFlyout == null || !App.Settings.LinkPreviewsForSecurityMeasure || s_isFlyoutOpen)
 			return;
 
 		try
@@ -242,7 +258,8 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 		catch (Exception ex)
 		{
 			Logger.Write($"LinkButtonV2 show preview flyout failed: {ex.Message}");
-			_isFlyoutOpen = false;
+			// Reset static open state on error
+			s_isFlyoutOpen = false;
 			// Clean up frame on error
 			CleanupCurrentFrame();
 		}
@@ -252,24 +269,6 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 	/// Cleans up the current preview frame and its content.
 	/// </summary>
 	private void CleanupCurrentFrame() => _currentPreviewFrame = null;
-
-	/// <summary>
-	/// Handles flyout opened event
-	/// </summary>
-	private void PreviewFlyout_Opened(object? sender, object e) => _isFlyoutOpen = true;
-
-	/// <summary>
-	/// Handles flyout closed event to reset state and clean up resources
-	/// </summary>
-	private void PreviewFlyout_Closed(object? sender, object e)
-	{
-		_isFlyoutOpen = false;
-
-		// Clean up the flyout content and current frame
-		_ = (_previewFlyout?.Content = null);
-
-		CleanupCurrentFrame();
-	}
 
 	private static void OnLinkUrlChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
@@ -469,8 +468,8 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 
 			_hoverInStoryboard?.Begin();
 
-			// Start hover timer for Flyout only if enabled in settings
-			if (!string.IsNullOrWhiteSpace(LinkUrl) && !_isFlyoutOpen && App.Settings.LinkPreviewsForSecurityMeasure)
+			// Start hover timer for Flyout only if enabled in settings and flyout not already open
+			if (!string.IsNullOrWhiteSpace(LinkUrl) && !s_isFlyoutOpen && App.Settings.LinkPreviewsForSecurityMeasure)
 			{
 				_hoverTimer?.Start();
 			}
@@ -653,17 +652,11 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 			_hoverInStoryboard = null;
 			_hoverOutStoryboard = null;
 
-			// Clean up flyout and its content
-			if (_previewFlyout != null)
-			{
-				_previewFlyout.Opened -= PreviewFlyout_Opened;
-				_previewFlyout.Closed -= PreviewFlyout_Closed;
-				_previewFlyout.Content = null;
-				_previewFlyout = null;
-			}
-
-			// Clean up current frame and its content
+			// Do not detach static flyout handlers here since they are shared for all instances.
+			// Clean up current frame reference only.
 			CleanupCurrentFrame();
+
+			_previewFlyout = null;
 
 			// Clear references to UI elements
 			_borderElement = null;
@@ -672,7 +665,7 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 			_grayBrush = null;
 			_hotPinkBrush = null;
 
-			// Unsubscribe from all events
+			// Unsubscribe from all instance events
 			Loaded -= LinkButtonV2_Loaded;
 			Unloaded -= LinkButtonV2_Unloaded;
 			PointerEntered -= LinkButtonV2_PointerEntered;

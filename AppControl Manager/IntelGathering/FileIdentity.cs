@@ -211,47 +211,44 @@ internal sealed class FileIdentity
 	/// <returns>A hash code for the current object.</returns>
 	public override int GetHashCode()
 	{
-		unchecked // Prevents OverflowException on arithmetic overflow, as intended for hash codes
-		{
-			int hash = 17;
-			hash = hash * 23 + Origin.GetHashCode();
-			hash = hash * 23 + SignatureStatus.GetHashCode();
-			hash = hash * 23 + Action.GetHashCode();
-			hash = hash * 23 + EventID.GetHashCode();
-			hash = hash * 23 + (TimeCreated?.GetHashCode() ?? 0);
-			hash = hash * 23 + (ComputerName is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(ComputerName));
-			hash = hash * 23 + (PolicyGUID?.GetHashCode() ?? 0);
-			hash = hash * 23 + (UserWriteable?.GetHashCode() ?? 0);
-			hash = hash * 23 + (ProcessName is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(ProcessName));
-			hash = hash * 23 + (RequestedSigningLevel is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(RequestedSigningLevel));
-			hash = hash * 23 + (ValidatedSigningLevel is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(ValidatedSigningLevel));
-			hash = hash * 23 + (Status is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(Status));
-			hash = hash * 23 + (USN?.GetHashCode() ?? 0);
-			hash = hash * 23 + (PolicyName is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(PolicyName));
-			hash = hash * 23 + (PolicyID is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(PolicyID));
-			hash = hash * 23 + (PolicyHash is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(PolicyHash));
-			hash = hash * 23 + (UserID is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(UserID));
-			hash = hash * 23 + (FilePath is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(FilePath));
-			hash = hash * 23 + (FileName is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(FileName));
-			hash = hash * 23 + (SHA1Hash is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(SHA1Hash));
-			hash = hash * 23 + (SHA256Hash is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(SHA256Hash));
-			hash = hash * 23 + (SHA1PageHash is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(SHA1PageHash));
-			hash = hash * 23 + (SHA256PageHash is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(SHA256PageHash));
-			hash = hash * 23 + (SHA1FlatHash is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(SHA1FlatHash));
-			hash = hash * 23 + (SHA256FlatHash is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(SHA256FlatHash));
-			hash = hash * 23 + SISigningScenario.GetHashCode();
-			hash = hash * 23 + (OriginalFileName is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(OriginalFileName));
-			hash = hash * 23 + (InternalName is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(InternalName));
-			hash = hash * 23 + (FileDescription is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(FileDescription));
-			hash = hash * 23 + (ProductName is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(ProductName));
-			hash = hash * 23 + (FileVersion?.GetHashCode() ?? 0);
-			hash = hash * 23 + (PackageFamilyName is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(PackageFamilyName));
-			hash = hash * 23 + GetHashCodeForHashSet(FileSignerInfos);
-			hash = hash * 23 + GetHashCodeForStringSet(FilePublishers);
-			hash = hash * 23 + (HasWHQLSigner?.GetHashCode() ?? 0);
-			hash = hash * 23 + (IsECCSigned?.GetHashCode() ?? 0);
-			return hash;
-		}
+		HashCode hash = new();
+		hash.Add(Origin);
+		hash.Add(SignatureStatus);
+		hash.Add(Action);
+		hash.Add(EventID);
+		hash.Add(TimeCreated);
+		hash.Add(ComputerName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(PolicyGUID);
+		hash.Add(UserWriteable);
+		hash.Add(ProcessName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(RequestedSigningLevel, StringComparer.OrdinalIgnoreCase);
+		hash.Add(ValidatedSigningLevel, StringComparer.OrdinalIgnoreCase);
+		hash.Add(Status, StringComparer.OrdinalIgnoreCase);
+		hash.Add(USN);
+		hash.Add(PolicyName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(PolicyID, StringComparer.OrdinalIgnoreCase);
+		hash.Add(PolicyHash, StringComparer.OrdinalIgnoreCase);
+		hash.Add(UserID, StringComparer.OrdinalIgnoreCase);
+		hash.Add(FilePath, StringComparer.OrdinalIgnoreCase);
+		hash.Add(FileName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(SHA1Hash, StringComparer.OrdinalIgnoreCase);
+		hash.Add(SHA256Hash, StringComparer.OrdinalIgnoreCase);
+		hash.Add(SHA1PageHash, StringComparer.OrdinalIgnoreCase);
+		hash.Add(SHA256PageHash, StringComparer.OrdinalIgnoreCase);
+		hash.Add(SHA1FlatHash, StringComparer.OrdinalIgnoreCase);
+		hash.Add(SHA256FlatHash, StringComparer.OrdinalIgnoreCase);
+		hash.Add(SISigningScenario);
+		hash.Add(OriginalFileName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(InternalName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(FileDescription, StringComparer.OrdinalIgnoreCase);
+		hash.Add(ProductName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(FileVersion);
+		hash.Add(PackageFamilyName, StringComparer.OrdinalIgnoreCase);
+		hash.Add(GetHashCodeForHashSet(FileSignerInfos));
+		hash.Add(GetHashCodeForStringSet(FilePublishers));
+		hash.Add(HasWHQLSigner);
+		hash.Add(IsECCSigned);
+		return hash.ToHashCode();
 	}
 
 	/// <summary>

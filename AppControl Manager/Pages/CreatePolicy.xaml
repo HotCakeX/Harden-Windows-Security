@@ -20,22 +20,23 @@
 
             <!-- Allow Microsoft -->
             <controls:SettingsExpander
-                           x:Uid="AllowMicrosoftSettings"
-                           IsExpanded="{x:Bind ViewModel.AllowMicrosoftSettingsIsExpanded, Mode=TwoWay}"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xF0EF;}">
+                x:Uid="AllowMicrosoftSettings"
+                IsExpanded="{x:Bind ViewModel.AllowMicrosoftSettingsIsExpanded, Mode=TwoWay}"
+                HeaderIcon="{ui:FontIcon Glyph=&#xF0EF;}">
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
-                             BorderThickness="0"
-                             CornerRadius="0"
-                             IsIconVisible="True"
-                             Message="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarMessage, Mode=OneWay}"
-                             IsOpen="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarIsOpen, Mode=TwoWay}"
-                             IsClosable="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarIsClosable, Mode=OneWay}"
-                             Severity="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarSeverity, Mode=OneWay}">
+                        BorderThickness="0"
+                        CornerRadius="0"
+                        IsIconVisible="True"
+                        Message="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarMessage, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarIsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarIsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.AllowMicrosoftSettingsInfoBarSeverity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
-                            <DropDownButton x:Uid="AdditionalActionsDropDownButton"
-                                                Visibility="{x:Bind ViewModel.AllowMicrosoftInfoBarActionButtonVisibility, Mode=OneWay}">
+                            <DropDownButton
+                                x:Uid="AdditionalActionsDropDownButton"
+                                Visibility="{x:Bind ViewModel.AllowMicrosoftInfoBarActionButtonVisibility, Mode=OneWay}">
                                 <DropDownButton.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
@@ -44,14 +45,17 @@
                                 </DropDownButton.Content>
                                 <DropDownButton.Flyout>
                                     <MenuFlyout Placement="Bottom">
-                                        <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
-                                                            Icon="Edit"
-                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_AllowMicrosoft}"/>
-                                        <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
-                                                            Icon="OpenWith"
-                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_AllowMicrosoft}"/>
-                                        <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
-                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_AllowMicrosoft}">
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                            Icon="Edit"
+                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_AllowMicrosoft}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenTheFileMenuFlyoutItem"
+                                            Icon="OpenWith"
+                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_AllowMicrosoft}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_AllowMicrosoft}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xEEA3;" />
                                             </MenuFlyoutItem.Icon>
@@ -65,59 +69,71 @@
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                    <Button x:Uid="AllowMicrosoftCreateButton"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"
-                                IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.AllowMicrosoftCreate_Click}" />
+                    <Button
+                        x:Uid="AllowMicrosoftCreateButton"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Margin="0,0,15,0"
+                        IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.AllowMicrosoftCreate_Click}" />
 
-                    <ToggleButton IsChecked="{x:Bind ViewModel.AllowMicrosoftCreateAndDeploy, Mode=TwoWay}"
-
-                             IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                    <ToggleButton
+                        IsChecked="{x:Bind ViewModel.AllowMicrosoftCreateAndDeploy, Mode=TwoWay}"
+                        IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}"
+                        x:Uid="DeployAfterCreationButton"
+                        Margin="0,0,15,0" />
 
                 </controls:WrapPanel>
 
                 <controls:SettingsExpander.Items>
 
                     <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftAudit, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.AllowMicrosoftAudit, Mode=TwoWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
                     <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
 
                         <NumberBox
-                                x:Uid="LogSizeNumberBox"
-                                Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
-                                SpinButtonPlacementMode="Inline"
-                                SmallChange="1"
-                                IsEnabled="{x:Bind ViewModel.AllowMicrosoftLogSizeInputIsEnabled, Mode=OneWay}"
-                                LargeChange="10" Minimum="2" Maximum="{x:Bind ViewModel.EventLogsUtil.MaxNumberBoxValue, Mode=OneTime}" Margin="0,0,30,0" />
+                            x:Uid="LogSizeNumberBox"
+                            Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
+                            SpinButtonPlacementMode="Inline"
+                            SmallChange="1"
+                            IsEnabled="{x:Bind ViewModel.AllowMicrosoftLogSizeInputIsEnabled, Mode=OneWay}"
+                            LargeChange="10"
+                            Minimum="2"
+                            Maximum="{x:Bind ViewModel.EventLogsUtil.MaxNumberBoxValue, Mode=OneTime}"
+                            Margin="0,0,30,0" />
 
                     </controls:SettingsCard>
 
                     <customUI:SettingsCardV2 x:Uid="RequireEVSignersRuleOption">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftRequireEVSigners, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.AllowMicrosoftRequireEVSigners, Mode=TwoWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="EnableScriptEnforcementRuleOption">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftEnableScriptEnforcement, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.AllowMicrosoftEnableScriptEnforcement, Mode=TwoWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="TestModeRuleOption">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftTestMode, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.AllowMicrosoftTestMode, Mode=TwoWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftNoBlockRules, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.AllowMicrosoftNoBlockRules, Mode=TwoWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
                 </controls:SettingsExpander.Items>
@@ -126,22 +142,23 @@
 
             <!-- Default Windows -->
             <controls:SettingsExpander
-                           x:Uid="DefaultWindowsSettings"
-                           IsExpanded="{x:Bind ViewModel.DefaultWindowsSettingsIsExpanded, Mode=TwoWay}"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xEA18;}">
+                x:Uid="DefaultWindowsSettings"
+                IsExpanded="{x:Bind ViewModel.DefaultWindowsSettingsIsExpanded, Mode=TwoWay}"
+                HeaderIcon="{ui:FontIcon Glyph=&#xEA18;}">
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
-                             BorderThickness="0"
-                             CornerRadius="0"
-                             IsIconVisible="True"
-                             Message="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarMessage, Mode=OneWay}"
-                             IsOpen="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarIsOpen, Mode=TwoWay}"
-                             IsClosable="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarIsClosable, Mode=OneWay}"
-                             Severity="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarSeverity, Mode=OneWay}">
+                        BorderThickness="0"
+                        CornerRadius="0"
+                        IsIconVisible="True"
+                        Message="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarMessage, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarIsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarIsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.DefaultWindowsSettingsInfoBarSeverity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
-                            <DropDownButton x:Uid="AdditionalActionsDropDownButton"
-                                                Visibility="{x:Bind ViewModel.DefaultWindowsInfoBarActionButtonVisibility, Mode=OneWay}">
+                            <DropDownButton
+                                x:Uid="AdditionalActionsDropDownButton"
+                                Visibility="{x:Bind ViewModel.DefaultWindowsInfoBarActionButtonVisibility, Mode=OneWay}">
                                 <DropDownButton.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
@@ -150,14 +167,17 @@
                                 </DropDownButton.Content>
                                 <DropDownButton.Flyout>
                                     <MenuFlyout Placement="Bottom">
-                                        <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
-                                                            Icon="Edit"
-                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_DefaultWindows}"/>
-                                        <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
-                                                            Icon="OpenWith"
-                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_DefaultWindows}"/>
-                                        <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
-                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_DefaultWindows}">
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                            Icon="Edit"
+                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_DefaultWindows}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenTheFileMenuFlyoutItem"
+                                            Icon="OpenWith"
+                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_DefaultWindows}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_DefaultWindows}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xEEA3;" />
                                             </MenuFlyoutItem.Icon>
@@ -171,55 +191,71 @@
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                    <Button IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" x:Uid="DefaultWindowsCreateButton"
-                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind ViewModel.DefaultWindowsCreate_Click}" />
+                    <Button
+                        IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
+                        x:Uid="DefaultWindowsCreateButton"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Margin="0,0,15,0"
+                        Click="{x:Bind ViewModel.DefaultWindowsCreate_Click}" />
 
-                    <ToggleButton IsChecked="{x:Bind ViewModel.DefaultWindowsCreateAndDeploy, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                    <ToggleButton
+                        IsChecked="{x:Bind ViewModel.DefaultWindowsCreateAndDeploy, Mode=TwoWay}"
+                        IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
+                        x:Uid="DeployAfterCreationButton"
+                        Margin="0,0,15,0" />
 
                 </controls:WrapPanel>
 
                 <controls:SettingsExpander.Items>
 
                     <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.DefaultWindowsAudit, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" />
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.DefaultWindowsAudit, Mode=TwoWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
                     <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
 
                         <NumberBox
-                               x:Uid="LogSizeNumberBox"
-                               IsEnabled="{x:Bind ViewModel.DefaultWindowsLogSizeInputIsEnabled, Mode=OneWay}"
-                               Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
-                               SpinButtonPlacementMode="Inline"
-                               SmallChange="1"
-                               LargeChange="10" Minimum="2" Maximum="{x:Bind ViewModel.EventLogsUtil.MaxNumberBoxValue, Mode=OneTime}" Margin="0,0,30,0" />
+                            x:Uid="LogSizeNumberBox"
+                            IsEnabled="{x:Bind ViewModel.DefaultWindowsLogSizeInputIsEnabled, Mode=OneWay}"
+                            Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
+                            SpinButtonPlacementMode="Inline"
+                            SmallChange="1"
+                            LargeChange="10"
+                            Minimum="2"
+                            Maximum="{x:Bind ViewModel.EventLogsUtil.MaxNumberBoxValue, Mode=OneTime}"
+                            Margin="0,0,30,0" />
 
                     </controls:SettingsCard>
 
                     <customUI:SettingsCardV2 x:Uid="RequireEVSignersRuleOption">
-                        <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsOn="{x:Bind ViewModel.DefaultWindowsRequireEVSigners,Mode=TwoWay}" />
+                        <ToggleSwitch
+                            IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsOn="{x:Bind ViewModel.DefaultWindowsRequireEVSigners,Mode=TwoWay}" />
                     </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="EnableScriptEnforcementRuleOption">
-                        <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsOn="{x:Bind ViewModel.DefaultWindowsEnableScriptEnforcement,Mode=TwoWay}" />
+                        <ToggleSwitch
+                            IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsOn="{x:Bind ViewModel.DefaultWindowsEnableScriptEnforcement,Mode=TwoWay}" />
                     </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="TestModeRuleOption">
-                        <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsOn="{x:Bind ViewModel.DefaultWindowsTestMode,Mode=TwoWay}" />
+                        <ToggleSwitch
+                            IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsOn="{x:Bind ViewModel.DefaultWindowsTestMode,Mode=TwoWay}" />
                     </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
-                        <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsOn="{x:Bind ViewModel.DefaultWindowsNoBlockRules,Mode=TwoWay}" />
+                        <ToggleSwitch
+                            IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsOn="{x:Bind ViewModel.DefaultWindowsNoBlockRules,Mode=TwoWay}" />
                     </customUI:SettingsCardV2>
 
                 </controls:SettingsExpander.Items>
@@ -228,21 +264,23 @@
 
             <!-- Signed and Reputable -->
             <controls:SettingsExpander
-                           IsExpanded="{x:Bind ViewModel.SignedAndReputableSettingsIsExpanded, Mode=TwoWay}"
-                           x:Uid="SignedAndReputableSettings"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xEA0D;}">
+                IsExpanded="{x:Bind ViewModel.SignedAndReputableSettingsIsExpanded, Mode=TwoWay}"
+                x:Uid="SignedAndReputableSettings"
+                HeaderIcon="{ui:FontIcon Glyph=&#xEA0D;}">
 
                 <controls:SettingsExpander.ItemsHeader>
-                    <customUI:InfoBarV2 BorderThickness="0"
-                             CornerRadius="0"
-                             IsIconVisible="True"
-                             Message="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarMessage, Mode=OneWay}"
-                             IsOpen="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarIsOpen, Mode=TwoWay}"
-                             IsClosable="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarIsClosable, Mode=OneWay}"
-                             Severity="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarSeverity, Mode=OneWay}">
+                    <customUI:InfoBarV2
+                        BorderThickness="0"
+                        CornerRadius="0"
+                        IsIconVisible="True"
+                        Message="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarMessage, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarIsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarIsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.SignedAndReputableSettingsInfoBarSeverity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
-                            <DropDownButton x:Uid="AdditionalActionsDropDownButton"
-                                                Visibility="{x:Bind ViewModel.SignedAndReputableInfoBarActionButtonVisibility, Mode=OneWay}">
+                            <DropDownButton
+                                x:Uid="AdditionalActionsDropDownButton"
+                                Visibility="{x:Bind ViewModel.SignedAndReputableInfoBarActionButtonVisibility, Mode=OneWay}">
                                 <DropDownButton.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
@@ -251,14 +289,17 @@
                                 </DropDownButton.Content>
                                 <DropDownButton.Flyout>
                                     <MenuFlyout Placement="Bottom">
-                                        <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
-                                                            Icon="Edit"
-                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_SignedAndReputable}"/>
-                                        <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
-                                                            Icon="OpenWith"
-                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_SignedAndReputable}"/>
-                                        <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
-                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_SignedAndReputable}">
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                            Icon="Edit"
+                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_SignedAndReputable}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenTheFileMenuFlyoutItem"
+                                            Icon="OpenWith"
+                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_SignedAndReputable}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_SignedAndReputable}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xEEA3;" />
                                             </MenuFlyoutItem.Icon>
@@ -272,55 +313,72 @@
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                    <Button IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" x:Name="SignedAndReputableCreate" x:Uid="SignedAndReputableCreateButton"
-                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="{x:Bind ViewModel.SignedAndReputableCreate_Click}" />
+                    <Button
+                        IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}"
+                        x:Name="SignedAndReputableCreate"
+                        x:Uid="SignedAndReputableCreateButton"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Margin="0,0,15,0"
+                        Click="{x:Bind ViewModel.SignedAndReputableCreate_Click}" />
 
-                    <ToggleButton IsChecked="{x:Bind ViewModel.SignedAndReputableCreateAndDeploy, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                    <ToggleButton
+                        IsChecked="{x:Bind ViewModel.SignedAndReputableCreateAndDeploy, Mode=TwoWay}"
+                        IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}"
+                        x:Uid="DeployAfterCreationButton"
+                        Margin="0,0,15,0" />
 
                 </controls:WrapPanel>
 
                 <controls:SettingsExpander.Items>
 
                     <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableAudit, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.SignedAndReputableAudit, Mode=TwoWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
                     <controls:SettingsCard x:Uid="LogSizeConfigSettingsCard">
 
                         <NumberBox
-                                x:Uid="LogSizeNumberBox"
-                                IsEnabled="{x:Bind ViewModel.SignedAndReputableLogSizeInputIsEnabled, Mode=OneWay}"
-                                Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
-                                SpinButtonPlacementMode="Inline"
-                                SmallChange="1"
-                                LargeChange="10" Minimum="2" Maximum="{x:Bind ViewModel.EventLogsUtil.MaxNumberBoxValue, Mode=OneTime}" Margin="0,0,30,0" />
+                            x:Uid="LogSizeNumberBox"
+                            IsEnabled="{x:Bind ViewModel.SignedAndReputableLogSizeInputIsEnabled, Mode=OneWay}"
+                            Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
+                            SpinButtonPlacementMode="Inline"
+                            SmallChange="1"
+                            LargeChange="10"
+                            Minimum="2"
+                            Maximum="{x:Bind ViewModel.EventLogsUtil.MaxNumberBoxValue, Mode=OneTime}"
+                            Margin="0,0,30,0" />
 
                     </controls:SettingsCard>
 
                     <customUI:SettingsCardV2 x:Uid="RequireEVSignersRuleOption">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableRequireEVSigners, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.SignedAndReputableRequireEVSigners, Mode=TwoWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="EnableScriptEnforcementRuleOption">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableEnableScriptEnforcement, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.SignedAndReputableEnableScriptEnforcement, Mode=TwoWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="TestModeRuleOption">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableTestMode, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.SignedAndReputableTestMode, Mode=TwoWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
-                        <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableNoBlockRules, Mode=TwoWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
+                        <ToggleSwitch
+                            IsOn="{x:Bind ViewModel.SignedAndReputableNoBlockRules, Mode=TwoWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
 
                 </controls:SettingsExpander.Items>
@@ -328,22 +386,24 @@
             </controls:SettingsExpander>
 
             <!-- Microsoft Recommended Driver Block Rules -->
-            <controls:SettingsExpander IsExpanded="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsIsExpanded, Mode=TwoWay}"
-                           x:Uid="RecommendedDriverBlockRulesSettings"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xEC1B;}">
+            <controls:SettingsExpander
+                IsExpanded="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsIsExpanded, Mode=TwoWay}"
+                x:Uid="RecommendedDriverBlockRulesSettings"
+                HeaderIcon="{ui:FontIcon Glyph=&#xEC1B;}">
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
-                            BorderThickness="0"
-                            CornerRadius="0"
-                            IsIconVisible="True"
-                            Message="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarMessage, Mode=OneWay}"
-                            IsOpen="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarIsOpen, Mode=TwoWay}"
-                            IsClosable="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarIsClosable, Mode=OneWay}"
-                            Severity="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarSeverity, Mode=OneWay}">
+                        BorderThickness="0"
+                        CornerRadius="0"
+                        IsIconVisible="True"
+                        Message="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarMessage, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarIsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarIsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.RecommendedDriverBlockRulesSettingsInfoBarSeverity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
-                            <DropDownButton x:Uid="AdditionalActionsDropDownButton"
-                                                Visibility="{x:Bind ViewModel.RecommendedDriverBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}">
+                            <DropDownButton
+                                x:Uid="AdditionalActionsDropDownButton"
+                                Visibility="{x:Bind ViewModel.RecommendedDriverBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}">
                                 <DropDownButton.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
@@ -352,14 +412,17 @@
                                 </DropDownButton.Content>
                                 <DropDownButton.Flyout>
                                     <MenuFlyout Placement="Bottom">
-                                        <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
-                                                            Icon="Edit"
-                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_RecommendedDriverBlockRules}"/>
-                                        <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
-                                                            Icon="OpenWith"
-                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RecommendedDriverBlockRules}"/>
-                                        <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
-                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RecommendedDriverBlockRules}">
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                            Icon="Edit"
+                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_RecommendedDriverBlockRules}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenTheFileMenuFlyoutItem"
+                                            Icon="OpenWith"
+                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RecommendedDriverBlockRules}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RecommendedDriverBlockRules}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xEEA3;" />
                                             </MenuFlyoutItem.Icon>
@@ -373,19 +436,25 @@
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                    <Button x:Uid="RecommendedDriverBlockRulesCreateButton"
-                            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"
-                            IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
-                            Click="{x:Bind ViewModel.RecommendedDriverBlockRulesCreate_Click}" />
+                    <Button
+                        x:Uid="RecommendedDriverBlockRulesCreateButton"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Margin="0,0,15,0"
+                        IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.RecommendedDriverBlockRulesCreate_Click}" />
 
-                    <ToggleButton IsChecked="{x:Bind ViewModel.RecommendedDriverBlockRulesCreateAndDeploy, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
-                                      x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                    <ToggleButton
+                        IsChecked="{x:Bind ViewModel.RecommendedDriverBlockRulesCreateAndDeploy, Mode=TwoWay}"
+                        IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
+                        x:Uid="DeployAfterCreationButton"
+                        Margin="0,0,15,0" />
 
-                    <Button x:Uid="RecommendedDriverBlockRulesScheduledAutoUpdate"
-                                Style="{StaticResource AccentButtonStyle}"
-                                IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.RecommendedDriverBlockRulesScheduledAutoUpdate_Click}" Margin="0,0,15,0" />
+                    <Button
+                        x:Uid="RecommendedDriverBlockRulesScheduledAutoUpdate"
+                        Style="{StaticResource AccentButtonStyle}"
+                        IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.RecommendedDriverBlockRulesScheduledAutoUpdate_Click}"
+                        Margin="0,0,15,0" />
 
                 </controls:WrapPanel>
 
@@ -393,8 +462,15 @@
                     <controls:SettingsCard x:Uid="DriversBlockRulesLittleSettingsCard">
 
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Uid="VersionLabel" FontWeight="Bold" Margin="0,0,5,0" Foreground="Violet"/>
-                            <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.RecommendedDriverBlockRulesVersionTextBlock, Mode=OneWay}" Foreground="Violet"/>
+                            <TextBlock
+                                x:Uid="VersionLabel"
+                                FontWeight="Bold"
+                                Margin="0,0,5,0"
+                                Foreground="Violet"/>
+                            <TextBlock
+                                IsTextSelectionEnabled="True"
+                                Text="{x:Bind ViewModel.RecommendedDriverBlockRulesVersionTextBlock, Mode=OneWay}"
+                                Foreground="Violet"/>
                         </StackPanel>
 
                     </controls:SettingsCard>
@@ -403,22 +479,24 @@
             </controls:SettingsExpander>
 
             <!-- Microsoft Recommended User Mode Block Rules -->
-            <controls:SettingsExpander x:Name="RecommendedUserModeBlockRulesSettings"
-                           x:Uid="RecommendedUserModeBlockRulesSettings"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xEC1B;}"
-                           IsExpanded="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsIsExpanded, Mode=TwoWay}">
+            <controls:SettingsExpander
+                x:Name="RecommendedUserModeBlockRulesSettings"
+                x:Uid="RecommendedUserModeBlockRulesSettings"
+                HeaderIcon="{ui:FontIcon Glyph=&#xEC1B;}"
+                IsExpanded="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsIsExpanded, Mode=TwoWay}">
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
-                                BorderThickness="0"
-                                CornerRadius="0"
-                                IsIconVisible="True"
-                                Message="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarMessage, Mode=OneWay}"
-                                IsOpen="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarIsOpen, Mode=TwoWay}"
-                                IsClosable="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarIsClosable, Mode=OneWay}"
-                                Severity="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarSeverity, Mode=OneWay}">
+                        BorderThickness="0"
+                        CornerRadius="0"
+                        IsIconVisible="True"
+                        Message="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarMessage, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarIsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarIsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.RecommendedUserModeBlockRulesSettingsInfoBarSeverity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
-                            <DropDownButton x:Uid="AdditionalActionsDropDownButton"
-                                                Visibility="{x:Bind ViewModel.RecommendedUserModeBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}">
+                            <DropDownButton
+                                x:Uid="AdditionalActionsDropDownButton"
+                                Visibility="{x:Bind ViewModel.RecommendedUserModeBlockRulesInfoBarActionButtonVisibility, Mode=OneWay}">
                                 <DropDownButton.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
@@ -427,14 +505,17 @@
                                 </DropDownButton.Content>
                                 <DropDownButton.Flyout>
                                     <MenuFlyout Placement="Bottom">
-                                        <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
-                                                            Icon="Edit"
-                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_RecommendedUserModeBlockRules}"/>
-                                        <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
-                                                            Icon="OpenWith"
-                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RecommendedUserModeBlockRules}"/>
-                                        <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
-                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RecommendedUserModeBlockRules}">
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                            Icon="Edit"
+                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_RecommendedUserModeBlockRules}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenTheFileMenuFlyoutItem"
+                                            Icon="OpenWith"
+                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RecommendedUserModeBlockRules}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RecommendedUserModeBlockRules}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xEEA3;" />
                                             </MenuFlyoutItem.Icon>
@@ -448,24 +529,28 @@
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                    <Button IsEnabled="{x:Bind ViewModel.RecommendedUserModeBlockRulesSectionIsEnabled, Mode=OneWay}"
-                              x:Uid="RecommendedUserModeBlockRulesCreateButton"
-                              Style="{StaticResource AccentButtonStyle}"
-                              Margin="0,0,15,0"
-                              Click="{x:Bind ViewModel.RecommendedUserModeBlockRulesCreate_Click}" />
+                    <Button
+                        IsEnabled="{x:Bind ViewModel.RecommendedUserModeBlockRulesSectionIsEnabled, Mode=OneWay}"
+                        x:Uid="RecommendedUserModeBlockRulesCreateButton"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Margin="0,0,15,0"
+                        Click="{x:Bind ViewModel.RecommendedUserModeBlockRulesCreate_Click}" />
 
-                    <ToggleButton IsEnabled="{x:Bind ViewModel.RecommendedUserModeBlockRulesSectionIsEnabled, Mode=OneWay}"
-                                      IsChecked="{x:Bind ViewModel.RecommendedUserModeBlockRulesCreateAndDeploy, Mode=TwoWay}"
-                                      x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                    <ToggleButton
+                        IsEnabled="{x:Bind ViewModel.RecommendedUserModeBlockRulesSectionIsEnabled, Mode=OneWay}"
+                        IsChecked="{x:Bind ViewModel.RecommendedUserModeBlockRulesCreateAndDeploy, Mode=TwoWay}"
+                        x:Uid="DeployAfterCreationButton"
+                        Margin="0,0,15,0" />
 
                 </controls:WrapPanel>
 
             </controls:SettingsExpander>
 
             <!-- Strict Kernel-mode policy -->
-            <controls:SettingsExpander IsExpanded="{x:Bind ViewModel.StrictKernelModesSettingsIsExpanded, Mode=TwoWay}"
-                     x:Uid="StrictKernelModePolicySection"
-                     HeaderIcon="{ui:FontIcon Glyph=&#xE945;}">
+            <controls:SettingsExpander
+                IsExpanded="{x:Bind ViewModel.StrictKernelModesSettingsIsExpanded, Mode=TwoWay}"
+                x:Uid="StrictKernelModePolicySection"
+                HeaderIcon="{ui:FontIcon Glyph=&#xE945;}">
 
                 <controls:SettingsExpander.ItemsHeader>
                     <customUI:InfoBarV2
@@ -478,8 +563,9 @@
                         IsClosable="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarIsClosable, Mode=OneWay}"
                         Severity="{x:Bind ViewModel.StrictKernelModesSettingsInfoBarSeverity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
-                            <DropDownButton x:Uid="AdditionalActionsDropDownButton"
-                                                Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}">
+                            <DropDownButton
+                                x:Uid="AdditionalActionsDropDownButton"
+                                Visibility="{x:Bind ViewModel.StrictKernelModeInfoBarActionButtonVisibility, Mode=OneWay}">
                                 <DropDownButton.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
@@ -488,14 +574,17 @@
                                 </DropDownButton.Content>
                                 <DropDownButton.Flyout>
                                     <MenuFlyout Placement="Bottom">
-                                        <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
-                                                            Icon="Edit"
-                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_StrictKernelModePolicy}"/>
-                                        <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
-                                                            Icon="OpenWith"
-                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_StrictKernelModePolicy}"/>
-                                        <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
-                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_StrictKernelModePolicy}">
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                            Icon="Edit"
+                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_StrictKernelModePolicy}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenTheFileMenuFlyoutItem"
+                                            Icon="OpenWith"
+                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_StrictKernelModePolicy}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_StrictKernelModePolicy}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xEEA3;" />
                                             </MenuFlyoutItem.Icon>
@@ -509,51 +598,60 @@
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                    <Button IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.StrictKernelModePolicyCreateButton_Click}"
-                                Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"
-                                x:Uid="StrictKernelModePolicyCreateButton" />
+                    <Button
+                        IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.StrictKernelModePolicyCreateButton_Click}"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Margin="0,0,15,0"
+                        x:Uid="StrictKernelModePolicyCreateButton" />
 
-                    <ToggleButton IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
-                                      IsChecked="{x:Bind ViewModel.StrictKernelModesCreateAndDeploy, Mode=TwoWay}"
-                                      x:Uid="DeployAfterCreationButton" Margin="0,0,15,0" />
+                    <ToggleButton
+                        IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
+                        IsChecked="{x:Bind ViewModel.StrictKernelModesCreateAndDeploy, Mode=TwoWay}"
+                        x:Uid="DeployAfterCreationButton"
+                        Margin="0,0,15,0" />
 
                 </controls:WrapPanel>
 
                 <controls:SettingsExpander.Items>
 
                     <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
-                        <ToggleSwitch IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsOn="{x:Bind ViewModel.StrictKernelModesAudit, Mode=TwoWay}" />
+                        <ToggleSwitch
+                            IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsOn="{x:Bind ViewModel.StrictKernelModesAudit, Mode=TwoWay}" />
                     </customUI:SettingsCardV2>
 
                     <customUI:SettingsCardV2 x:Uid="StrictKernelModePolicyUseNoFlightRootsToggleSwitchSettingsCard">
-                        <ToggleSwitch IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsOn="{x:Bind ViewModel.StrictKernelModeNoFlightRoots, Mode=TwoWay}" />
+                        <ToggleSwitch
+                            IsEnabled="{x:Bind ViewModel.StrictKernelModeSectionIsEnabled, Mode=OneWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsOn="{x:Bind ViewModel.StrictKernelModeNoFlightRoots, Mode=TwoWay}" />
                     </customUI:SettingsCardV2>
 
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
 
             <!-- RMM Blocking -->
-            <controls:SettingsExpander IsExpanded="{x:Bind ViewModel.RMMBlockingSettingsIsExpanded, Mode=TwoWay}"
-                                           x:Uid="RMMBlockingSection"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xEA14;}">
+            <controls:SettingsExpander
+                IsExpanded="{x:Bind ViewModel.RMMBlockingSettingsIsExpanded, Mode=TwoWay}"
+                x:Uid="RMMBlockingSection"
+                HeaderIcon="{ui:FontIcon Glyph=&#xEA14;}">
 
                 <controls:SettingsExpander.ItemsHeader>
-                    <customUI:InfoBarV2 x:Uid="CurrentStatusInfoBar"
-                                 BorderThickness="0"
-                                 CornerRadius="0"
-                                 IsIconVisible="True"
-                                 Message="{x:Bind ViewModel.RMMBlockingSettingsInfoBarMessage, Mode=OneWay}"
-                                 IsOpen="{x:Bind ViewModel.RMMBlockingSettingsInfoBarIsOpen, Mode=TwoWay}"
-                                 IsClosable="{x:Bind ViewModel.RMMBlockingSettingsInfoBarIsClosable, Mode=OneWay}"
-                                 Severity="{x:Bind ViewModel.RMMBlockingSettingsInfoBarSeverity, Mode=OneWay}">
+                    <customUI:InfoBarV2
+                        x:Uid="CurrentStatusInfoBar"
+                        BorderThickness="0"
+                        CornerRadius="0"
+                        IsIconVisible="True"
+                        Message="{x:Bind ViewModel.RMMBlockingSettingsInfoBarMessage, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.RMMBlockingSettingsInfoBarIsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.RMMBlockingSettingsInfoBarIsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.RMMBlockingSettingsInfoBarSeverity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
-                            <DropDownButton x:Uid="AdditionalActionsDropDownButton"
-                                                Visibility="{x:Bind ViewModel.RMMBlockingInfoBarActionButtonVisibility, Mode=OneWay}">
+                            <DropDownButton
+                                x:Uid="AdditionalActionsDropDownButton"
+                                Visibility="{x:Bind ViewModel.RMMBlockingInfoBarActionButtonVisibility, Mode=OneWay}">
                                 <DropDownButton.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
@@ -562,14 +660,17 @@
                                 </DropDownButton.Content>
                                 <DropDownButton.Flyout>
                                     <MenuFlyout Placement="Bottom">
-                                        <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
-                                                            Icon="Edit"
-                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_RMMBlockingPolicy}"/>
-                                        <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
-                                                            Icon="OpenWith"
-                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RMMBlockingPolicy}"/>
-                                        <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
-                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RMMBlockingPolicy}">
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                            Icon="Edit"
+                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_RMMBlockingPolicy}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenTheFileMenuFlyoutItem"
+                                            Icon="OpenWith"
+                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_RMMBlockingPolicy}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_RMMBlockingPolicy}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xEEA3;" />
                                             </MenuFlyoutItem.Icon>
@@ -583,47 +684,53 @@
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                    <Button IsEnabled="{x:Bind ViewModel.RMMBlockingSectionIsEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.RMMBlockingPolicyCreateButton_Click}"
-                                Style="{StaticResource AccentButtonStyle}"
-                                Margin="0,0,15,0"
-                                x:Uid="RMMBlockingCreateButton" />
+                    <Button
+                        IsEnabled="{x:Bind ViewModel.RMMBlockingSectionIsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.RMMBlockingPolicyCreateButton_Click}"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Margin="0,0,15,0"
+                        x:Uid="RMMBlockingCreateButton" />
 
-                    <ToggleButton IsEnabled="{x:Bind ViewModel.RMMBlockingSectionIsEnabled, Mode=OneWay}"
-                                      IsChecked="{x:Bind ViewModel.RMMBlockingCreateAndDeploy, Mode=TwoWay}"
-                                      x:Uid="DeployAfterCreationButton"
-                                      Margin="0,0,15,0" />
+                    <ToggleButton
+                        IsEnabled="{x:Bind ViewModel.RMMBlockingSectionIsEnabled, Mode=OneWay}"
+                        IsChecked="{x:Bind ViewModel.RMMBlockingCreateAndDeploy, Mode=TwoWay}"
+                        x:Uid="DeployAfterCreationButton"
+                        Margin="0,0,15,0" />
 
                 </controls:WrapPanel>
 
                 <controls:SettingsExpander.Items>
 
                     <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
-                        <ToggleSwitch IsEnabled="{x:Bind ViewModel.RMMBlockingSectionIsEnabled, Mode=OneWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsOn="{x:Bind ViewModel.RMMBlockingAudit, Mode=TwoWay}" />
+                        <ToggleSwitch
+                            IsEnabled="{x:Bind ViewModel.RMMBlockingSectionIsEnabled, Mode=OneWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsOn="{x:Bind ViewModel.RMMBlockingAudit, Mode=TwoWay}" />
                     </customUI:SettingsCardV2>
 
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
 
             <!-- Downloads Defense Measure -->
-            <controls:SettingsExpander IsExpanded="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsIsExpanded, Mode=TwoWay}"
-                           x:Uid="DownloadsDefenseMeasureSection"
-                           HeaderIcon="{ui:FontIcon Glyph=&#xEC9C;}">
+            <controls:SettingsExpander
+                IsExpanded="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsIsExpanded, Mode=TwoWay}"
+                x:Uid="DownloadsDefenseMeasureSection"
+                HeaderIcon="{ui:FontIcon Glyph=&#xEC9C;}">
 
                 <controls:SettingsExpander.ItemsHeader>
-                    <customUI:InfoBarV2 x:Uid="CurrentStatusInfoBar"
-                                            BorderThickness="0"
-                                            CornerRadius="0"
-                                            IsIconVisible="True"
-                                            Message="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarMessage, Mode=OneWay}"
-                                            IsOpen="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarIsOpen, Mode=TwoWay}"
-                                            IsClosable="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarIsClosable, Mode=OneWay}"
-                                            Severity="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarSeverity, Mode=OneWay}">
+                    <customUI:InfoBarV2
+                        x:Uid="CurrentStatusInfoBar"
+                        BorderThickness="0"
+                        CornerRadius="0"
+                        IsIconVisible="True"
+                        Message="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarMessage, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarIsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarIsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.DownloadsDefenseMeasureSettingsInfoBarSeverity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
-                            <DropDownButton x:Uid="AdditionalActionsDropDownButton"
-                                                Visibility="{x:Bind ViewModel.DownloadsDefenseMeasureInfoBarActionButtonVisibility, Mode=OneWay}">
+                            <DropDownButton
+                                x:Uid="AdditionalActionsDropDownButton"
+                                Visibility="{x:Bind ViewModel.DownloadsDefenseMeasureInfoBarActionButtonVisibility, Mode=OneWay}">
                                 <DropDownButton.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
@@ -632,14 +739,17 @@
                                 </DropDownButton.Content>
                                 <DropDownButton.Flyout>
                                     <MenuFlyout Placement="Bottom">
-                                        <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
-                                                            Icon="Edit"
-                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_DownloadsDefenseMeasurePolicy}"/>
-                                        <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
-                                                            Icon="OpenWith"
-                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_DownloadsDefenseMeasurePolicy}"/>
-                                        <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
-                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_DownloadsDefenseMeasurePolicy}">
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                            Icon="Edit"
+                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_DownloadsDefenseMeasurePolicy}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenTheFileMenuFlyoutItem"
+                                            Icon="OpenWith"
+                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_DownloadsDefenseMeasurePolicy}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_DownloadsDefenseMeasurePolicy}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xEEA3;" />
                                             </MenuFlyoutItem.Icon>
@@ -653,25 +763,28 @@
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                    <Button IsEnabled="{x:Bind ViewModel.DownloadsDefenseMeasureSectionIsEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.DownloadsDefenseMeasurePolicyCreateButton_Click}"
-                                Style="{StaticResource AccentButtonStyle}"
-                                Margin="0,0,15,0"
-                                x:Uid="DownloadsDefenseMeasureCreateButton" />
+                    <Button
+                        IsEnabled="{x:Bind ViewModel.DownloadsDefenseMeasureSectionIsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.DownloadsDefenseMeasurePolicyCreateButton_Click}"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Margin="0,0,15,0"
+                        x:Uid="DownloadsDefenseMeasureCreateButton" />
 
-                    <ToggleButton IsEnabled="{x:Bind ViewModel.DownloadsDefenseMeasureSectionIsEnabled, Mode=OneWay}"
-                                      IsChecked="{x:Bind ViewModel.DownloadsDefenseMeasureCreateAndDeploy, Mode=TwoWay}"
-                                      x:Uid="DeployAfterCreationButton"
-                                      Margin="0,0,15,0" />
+                    <ToggleButton
+                        IsEnabled="{x:Bind ViewModel.DownloadsDefenseMeasureSectionIsEnabled, Mode=OneWay}"
+                        IsChecked="{x:Bind ViewModel.DownloadsDefenseMeasureCreateAndDeploy, Mode=TwoWay}"
+                        x:Uid="DeployAfterCreationButton"
+                        Margin="0,0,15,0" />
 
                 </controls:WrapPanel>
 
                 <controls:SettingsExpander.Items>
 
                     <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
-                        <ToggleSwitch IsEnabled="{x:Bind ViewModel.DownloadsDefenseMeasureSectionIsEnabled, Mode=OneWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsOn="{x:Bind ViewModel.DownloadsDefenseMeasureAudit, Mode=TwoWay}" />
+                        <ToggleSwitch
+                            IsEnabled="{x:Bind ViewModel.DownloadsDefenseMeasureSectionIsEnabled, Mode=OneWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsOn="{x:Bind ViewModel.DownloadsDefenseMeasureAudit, Mode=TwoWay}" />
                     </customUI:SettingsCardV2>
 
                 </controls:SettingsExpander.Items>
@@ -679,22 +792,25 @@
 
 
             <!-- Dangerous Script Hosts Blocking -->
-            <controls:SettingsExpander IsExpanded="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsIsExpanded, Mode=TwoWay}"
-                                           x:Uid="DangerousScriptHostsBlockingSection"
-                                           HeaderIcon="{ui:FontIcon Glyph=&#xEA44;}">
+            <controls:SettingsExpander
+                IsExpanded="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsIsExpanded, Mode=TwoWay}"
+                x:Uid="DangerousScriptHostsBlockingSection"
+                HeaderIcon="{ui:FontIcon Glyph=&#xEA44;}">
 
                 <controls:SettingsExpander.ItemsHeader>
-                    <customUI:InfoBarV2 x:Uid="CurrentStatusInfoBar"
-                                            BorderThickness="0"
-                                            CornerRadius="0"
-                                            IsIconVisible="True"
-                                            Message="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarMessage, Mode=OneWay}"
-                                            IsOpen="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarIsOpen, Mode=TwoWay}"
-                                            IsClosable="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarIsClosable, Mode=OneWay}"
-                                            Severity="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarSeverity, Mode=OneWay}">
+                    <customUI:InfoBarV2
+                        x:Uid="CurrentStatusInfoBar"
+                        BorderThickness="0"
+                        CornerRadius="0"
+                        IsIconVisible="True"
+                        Message="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarMessage, Mode=OneWay}"
+                        IsOpen="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarIsOpen, Mode=TwoWay}"
+                        IsClosable="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarIsClosable, Mode=OneWay}"
+                        Severity="{x:Bind ViewModel.DangerousScriptHostsBlockingSettingsInfoBarSeverity, Mode=OneWay}">
                         <customUI:InfoBarV2.ActionButton>
-                            <DropDownButton x:Uid="AdditionalActionsDropDownButton"
-                                                Visibility="{x:Bind ViewModel.DangerousScriptHostsBlockingInfoBarActionButtonVisibility, Mode=OneWay}">
+                            <DropDownButton
+                                x:Uid="AdditionalActionsDropDownButton"
+                                Visibility="{x:Bind ViewModel.DangerousScriptHostsBlockingInfoBarActionButtonVisibility, Mode=OneWay}">
                                 <DropDownButton.Content>
                                     <StackPanel Orientation="Horizontal" Spacing="5">
                                         <FontIcon Glyph="&#xE712;" Foreground="Chartreuse" />
@@ -703,14 +819,17 @@
                                 </DropDownButton.Content>
                                 <DropDownButton.Flyout>
                                     <MenuFlyout Placement="Bottom">
-                                        <MenuFlyoutItem x:Uid="OpenInPolicyEditorMenuFlyoutItem"
-                                                            Icon="Edit"
-                                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_DangerousScriptHostsBlockingPolicy}"/>
-                                        <MenuFlyoutItem x:Uid="OpenTheFileMenuFlyoutItem"
-                                                            Icon="OpenWith"
-                                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_DangerousScriptHostsBlockingPolicy}"/>
-                                        <MenuFlyoutItem x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
-                                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_DangerousScriptHostsBlockingPolicy}">
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInPolicyEditorMenuFlyoutItem"
+                                            Icon="Edit"
+                                            Click="{x:Bind ViewModel.OpenInPolicyEditor_DangerousScriptHostsBlockingPolicy}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenTheFileMenuFlyoutItem"
+                                            Icon="OpenWith"
+                                            Click="{x:Bind ViewModel.OpenInDefaultFileHandler_DangerousScriptHostsBlockingPolicy}"/>
+                                        <MenuFlyoutItem
+                                            x:Uid="OpenInConfigurePolicyRuleOptionsMenuFlyoutItem"
+                                            Click="{x:Bind ViewModel.OpenInConfigurePolicyRuleOptions_DangerousScriptHostsBlockingPolicy}">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xEEA3;" />
                                             </MenuFlyoutItem.Icon>
@@ -724,25 +843,28 @@
 
                 <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
-                    <Button IsEnabled="{x:Bind ViewModel.DangerousScriptHostsBlockingSectionIsEnabled, Mode=OneWay}"
-                                Click="{x:Bind ViewModel.DangerousScriptHostsBlockingPolicyCreateButton_Click}"
-                                Style="{StaticResource AccentButtonStyle}"
-                                Margin="0,0,15,0"
-                                x:Uid="DangerousScriptHostsBlockingCreateButton" />
+                    <Button
+                        IsEnabled="{x:Bind ViewModel.DangerousScriptHostsBlockingSectionIsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.DangerousScriptHostsBlockingPolicyCreateButton_Click}"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Margin="0,0,15,0"
+                        x:Uid="DangerousScriptHostsBlockingCreateButton" />
 
-                    <ToggleButton IsEnabled="{x:Bind ViewModel.DangerousScriptHostsBlockingSectionIsEnabled, Mode=OneWay}"
-                                      IsChecked="{x:Bind ViewModel.DangerousScriptHostsBlockingCreateAndDeploy, Mode=TwoWay}"
-                                      x:Uid="DeployAfterCreationButton"
-                                      Margin="0,0,15,0" />
+                    <ToggleButton
+                        IsEnabled="{x:Bind ViewModel.DangerousScriptHostsBlockingSectionIsEnabled, Mode=OneWay}"
+                        IsChecked="{x:Bind ViewModel.DangerousScriptHostsBlockingCreateAndDeploy, Mode=TwoWay}"
+                        x:Uid="DeployAfterCreationButton"
+                        Margin="0,0,15,0" />
 
                 </controls:WrapPanel>
 
                 <controls:SettingsExpander.Items>
 
                     <customUI:SettingsCardV2 x:Uid="AuditRuleOptionSettingsCard">
-                        <ToggleSwitch IsEnabled="{x:Bind ViewModel.DangerousScriptHostsBlockingSectionIsEnabled, Mode=OneWay}"
-                                          x:Uid="ToggleSwitchGeneral"
-                                          IsOn="{x:Bind ViewModel.DangerousScriptHostsBlockingAudit, Mode=TwoWay}" />
+                        <ToggleSwitch
+                            IsEnabled="{x:Bind ViewModel.DangerousScriptHostsBlockingSectionIsEnabled, Mode=OneWay}"
+                            x:Uid="ToggleSwitchGeneral"
+                            IsOn="{x:Bind ViewModel.DangerousScriptHostsBlockingAudit, Mode=TwoWay}" />
                     </customUI:SettingsCardV2>
 
                 </controls:SettingsExpander.Items>

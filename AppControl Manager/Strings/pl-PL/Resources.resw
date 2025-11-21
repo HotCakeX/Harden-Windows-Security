@@ -6188,4 +6188,55 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
     <value>Usuwanie dzienników App Locker</value>
   </data>
+    <data name="SystemOverview.Text" xml:space="preserve">
+    <value>Przegląd systemu</value>
+  </data>
+  <data name="SystemTime.Text" xml:space="preserve">
+    <value>Czas systemowy</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>Strefa czasowa</value>
+  </data>
+  <data name="User.Text" xml:space="preserve">
+    <value>Użytkownik</value>
+  </data>
+  <data name="ComputerName.Text" xml:space="preserve">
+    <value>Nazwa komputera</value>
+  </data>
+  <data name="OperatingSystem.Text" xml:space="preserve">
+    <value>System operacyjny</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>Czas działania</value>
+  </data>
+  <data name="SystemRAM.Text" xml:space="preserve">
+    <value>Pamięć RAM systemu</value>
+  </data>
+  <data name="AppRAMUsage.Text" xml:space="preserve">
+    <value>Wykorzystanie pamięci RAM przez aplikację</value>
+  </data>
+  <data name="StorageSize.Text" xml:space="preserve">
+    <value>Pojemność pamięci masowej</value>
+  </data>
+  <data name="InternetSpeed.Text" xml:space="preserve">
+    <value>Prędkość internetu</value>
+  </data>
+  <data name="CPUTemperature.Text" xml:space="preserve">
+    <value>Temperatura procesora</value>
+  </data>
+  <data name="OnlineMicrosoftDefenderStatus.Text" xml:space="preserve">
+    <value>Status online Microsoft Defender</value>
+  </data>
+  <data name="EngineVersion.Text" xml:space="preserve">
+    <value>Wersja silnika</value>
+  </data>
+  <data name="SignatureVersion.Text" xml:space="preserve">
+    <value>Wersja sygnatur</value>
+  </data>
+  <data name="PlatformVersion.Text" xml:space="preserve">
+    <value>Wersja platformy</value>
+  </data>
+  <data name="SignatureUpdate.Text" xml:space="preserve">
+    <value>Aktualizacja sygnatur (UTC)</value>
+  </data>
 </root>

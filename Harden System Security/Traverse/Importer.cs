@@ -64,7 +64,37 @@ internal static class Importer
 			int totalMeasuresToApply = 0;
 			int totalMeasuresToRemove = 0;
 
-			// Collect from each MUnit-based category. Non-MUnit categories are ignored.
+			// Microsoft Security Baseline import
+			if (container.MicrosoftSecurityBaseline?.Items.Count > 0)
+			{
+				Logger.Write($"Importing Microsoft Security Baseline ({container.MicrosoftSecurityBaseline.Items.Count})...");
+
+				await ViewModelProvider.MicrosoftSecurityBaselineVM.ApplyImportedStates(container.MicrosoftSecurityBaseline.Items, synchronizeExact, cancellationToken);
+
+				Logger.Write("Finished importing Microsoft Security Baseline.");
+			}
+
+			// Microsoft 365 Apps Security Baseline import
+			if (container.Microsoft365AppsSecurityBaseline?.Items.Count > 0)
+			{
+				Logger.Write($"Importing Microsoft 365 Apps Security Baseline ({container.Microsoft365AppsSecurityBaseline.Items.Count})...");
+
+				await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.ApplyImportedStates(container.Microsoft365AppsSecurityBaseline.Items, synchronizeExact, cancellationToken);
+
+				Logger.Write("Finished importing Microsoft 365 Apps Security Baseline.");
+			}
+
+			// ASR rules import section
+			if (container.AttackSurfaceReductionRules?.Items.Count > 0)
+			{
+				Logger.Write($"Importing Attack Surface Reduction Rules ({container.AttackSurfaceReductionRules.Items.Count})...");
+
+				await ViewModelProvider.ASRVM.ApplyImportedStates(container.AttackSurfaceReductionRules.Items, synchronizeExact, cancellationToken);
+
+				Logger.Write("Finished importing Attack Surface Reduction Rules.");
+			}
+
+			// Collect from each MUnit-based category. Non-MUnit categories are ignored here.
 			CollectCategory(container.MicrosoftDefender?.Items, applyByCategory, removeByCategory, synchronizeExact, ref totalMeasuresToApply, ref totalMeasuresToRemove);
 			CollectCategory(container.BitLockerSettings?.Items, applyByCategory, removeByCategory, synchronizeExact, ref totalMeasuresToApply, ref totalMeasuresToRemove);
 			CollectCategory(container.TLSSecurity?.Items, applyByCategory, removeByCategory, synchronizeExact, ref totalMeasuresToApply, ref totalMeasuresToRemove);
@@ -79,7 +109,7 @@ internal static class Importer
 			CollectCategory(container.NonAdminCommands?.Items, applyByCategory, removeByCategory, synchronizeExact, ref totalMeasuresToApply, ref totalMeasuresToRemove);
 			CollectCategory(container.MSFTSecBaselines_OptionalOverrides?.Items, applyByCategory, removeByCategory, synchronizeExact, ref totalMeasuresToApply, ref totalMeasuresToRemove);
 
-			// Early exit if there is literally nothing to do.
+			// Early exit if there is nothing else (MUnits) to do.
 			if (applyByCategory.Count == 0 && removeByCategory.Count == 0)
 				return;
 

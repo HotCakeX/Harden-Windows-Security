@@ -578,12 +578,23 @@
                                     <MenuFlyoutSeparator/>
                                     <MenuFlyoutSubItem x:Uid="RestoreModeMenuFlyoutItem"
                                                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                        <MenuFlyoutSubItem.Icon>
+                                            <FontIcon Glyph="&#xEC49;"/>
+                                        </MenuFlyoutSubItem.Icon>
                                         <RadioMenuFlyoutItem x:Uid="PartialRestoreModeMenuFlyoutItem"
                                                              GroupName="Mode"
-                                                             IsChecked="{x:Bind ViewModel.RestorationModePartial, Mode=TwoWay}"/>
+                                                             IsChecked="{x:Bind ViewModel.RestorationModePartial, Mode=TwoWay}">
+                                            <RadioMenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xF0E7;"/>
+                                            </RadioMenuFlyoutItem.Icon>
+                                        </RadioMenuFlyoutItem>
                                         <RadioMenuFlyoutItem x:Uid="FullRestoreModeMenuFlyoutItem"
                                                              GroupName="Mode"
-                                                             IsChecked="{x:Bind ViewModel.RestorationModeFull, Mode=TwoWay}"/>
+                                                             IsChecked="{x:Bind ViewModel.RestorationModeFull, Mode=TwoWay}">
+                                            <RadioMenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE735;"/>
+                                            </RadioMenuFlyoutItem.Icon>
+                                        </RadioMenuFlyoutItem>
                                     </MenuFlyoutSubItem>
 
                                 </MenuFlyout>

@@ -30,7 +30,7 @@
                                 Tag="{x:Bind}"
                                 Click="DeleteItem_Click"
                                 MinWidth="32">
-                            <FontIcon Glyph="&#xE711;" Foreground="Red" />
+                            <FontIcon Glyph="&#xE74D;" />
                         </Button>
                     </Grid>
                 </DataTemplate>

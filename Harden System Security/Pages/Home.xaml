@@ -7,42 +7,79 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:customUI="using:HardenSystemSecurity.CustomUIElements.HomePageCarousel"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+    xmlns:sys="using:System"
     Loaded="{x:Bind OnInitialLoaded}"
     Unloaded="{x:Bind OnUnloadedDisposeResources}"
     Background="Transparent">
 
     <Page.Resources>
-
         <ResourceDictionary>
-            <!-- Card visuals used for information items -->
+
+            <!-- Base Border Style for Cards -->
             <Style x:Key="OverviewCardBorderStyle" TargetType="Border">
                 <Setter Property="CornerRadius" Value="8"/>
                 <Setter Property="Padding" Value="16"/>
                 <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
                 <Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefaultBrush}"/>
                 <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Width" Value="274"/>
+                <Setter Property="Height" Value="96"/>
+                <Setter Property="Margin" Value="0,0,8,8"/>
             </Style>
+
+            <!-- Grid Layout for Card Content -->
+            <Style x:Key="CardContentGridStyle" TargetType="Grid">
+                <Setter Property="RowSpacing" Value="8"/>
+            </Style>
+
+            <!-- Header Icon Style -->
+            <Style x:Key="CardHeaderIconStyle" TargetType="FontIcon">
+                <Setter Property="AutomationProperties.AccessibilityView" Value="Raw"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+            </Style>
+
+            <!-- Header StackPanel Style -->
+            <Style x:Key="CardHeaderStackStyle" TargetType="StackPanel">
+                <Setter Property="Orientation" Value="Horizontal"/>
+                <Setter Property="Spacing" Value="12"/>
+            </Style>
+
+            <!-- Header TextBlock Style (inherits from BodyStrong but adds vertical alignment) -->
+            <Style x:Key="CardHeaderTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyStrongTextBlockStyle}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+
+            <!-- Content/Body TextBlock Style -->
+            <Style x:Key="CardBodyTextStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+            </Style>
+
         </ResourceDictionary>
     </Page.Resources>
+
     <Grid Background="Transparent">
 
         <Grid x:Name="BackgroundLayer"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch">
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
             <!-- Background Web (first child draws behind everything else) -->
             <!-- Force LTR for Win2D coordinate space so RTL does not mirror drawing -->
             <canvas:CanvasControl x:Name="BackgroundCanvas"
-                                          FlowDirection="LeftToRight"
-                                          ClearColor="Transparent"
-                                          Draw="OnBackgroundCanvasDraw"
-                                          IsHitTestVisible="False"
-                                          HorizontalAlignment="Stretch"
-                                          VerticalAlignment="Stretch"/>
+                                  FlowDirection="LeftToRight"
+                                  ClearColor="Transparent"
+                                  Draw="OnBackgroundCanvasDraw"
+                                  IsHitTestVisible="False"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"/>
         </Grid>
 
         <Grid x:Name="ContentLayer"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch">
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -64,14 +101,13 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Section 1: System Overview -->
-                    <TextBlock
-                        Grid.Row="0"
-                        Margin="2,0,0,8"
-                        FontSize="16"
-                        FontWeight="SemiBold"
-                        Text="System Overview"
-                        TextWrapping="Wrap" />
+                    <!-- System Overview -->
+                    <TextBlock Grid.Row="0"
+                               Margin="2,0,0,8"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               x:Uid="SystemOverview"
+                               TextWrapping="Wrap" />
 
                     <!-- Using ItemsControl with a VariableSizedWrapGrid to allow direct XAML content and wrap layout -->
                     <ItemsControl Grid.Row="1">
@@ -84,241 +120,267 @@
                         </ItemsControl.ItemsPanel>
 
                         <!-- SYSTEM TIME -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xE823;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="System Time"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE823;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="SystemTime"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.SystemTimeText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.SystemTimeText, Mode=OneWay}"/>
                             </Grid>
                         </Border>
 
                         <!-- TIME ZONE -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xE707;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="Time Zone"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE707;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="TimeZone"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.TimeZoneText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.TimeZoneText, Mode=OneWay}"/>
                             </Grid>
                         </Border>
 
                         <!-- USER -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xE77B;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="User"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE77B;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="User"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.UserKindText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.UserKindText, Mode=OneWay}"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- COMPUTER NAME -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE770;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="ComputerName"/>
+                                </StackPanel>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind sys:Environment.MachineName}"
+                                           IsTextSelectionEnabled="True"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- OS INFO -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE9F9;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="OperatingSystem"/>
+                                </StackPanel>
+                                <ScrollViewer Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled"
+                                              IsVerticalRailEnabled="True"
+                                              VerticalScrollBarVisibility="Visible"
+                                              VerticalScrollMode="Enabled">
+                                    <TextBlock Width="240"
+                                               Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.OsInfoText, Mode=OneWay}"
+                                               IsTextSelectionEnabled="True"/>
+                                </ScrollViewer>
                             </Grid>
                         </Border>
 
                         <!-- UPTIME -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xE81C;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="Uptime"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE81C;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="Uptime"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.UptimeText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.UptimeText, Mode=OneWay}"/>
                             </Grid>
                         </Border>
 
                         <!-- SYSTEM RAM -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xE7F8;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="System RAM"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE7F8;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="SystemRAM"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.SystemRamText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.SystemRamText, Mode=OneWay}"
+                                           IsTextSelectionEnabled="True"/>
                             </Grid>
                         </Border>
 
-                        <!-- APP RAM -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <!-- APP RAM USAGE -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xEAC2;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="App RAM"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xEAC2;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="AppRAMUsage"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.AppRamText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.AppRamText, Mode=OneWay}"/>
                             </Grid>
                         </Border>
 
-                        <!-- DISK SIZE -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <!-- STORAGE SIZE -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xEDA2;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="Disk Size"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xEDA2;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="StorageSize"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.DiskSizeText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.DiskSizeText, Mode=OneWay}"/>
                             </Grid>
                         </Border>
 
                         <!-- INTERNET SPEED -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid RowSpacing="6">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE839;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="InternetSpeed"/>
+                                </StackPanel>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.InternetSpeedText, Mode=OneWay}"/>
+                                <TextBlock Grid.Row="2"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.InternetTotalText, Mode=OneWay}"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- CPU -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xE839;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="Internet Speed"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xEEA1;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               Text="CPU"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.InternetSpeedText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <ScrollViewer Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled"
+                                              IsVerticalRailEnabled="True"
+                                              VerticalScrollBarVisibility="Visible"
+                                              VerticalScrollMode="Enabled">
+                                    <TextBlock Width="240"
+                                               Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.CpuDetailsText, Mode=OneWay}"
+                                               IsTextSelectionEnabled="True"/>
+                                </ScrollViewer>
                             </Grid>
                         </Border>
+
+                        <!-- CPU TEMPERATURE -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE9CA;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="CPUTemperature"/>
+                                </StackPanel>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.CpuTemperatureText, Mode=OneWay}"/>
+                            </Grid>
+                        </Border>
+
                     </ItemsControl>
 
                     <!-- spacer between sections -->
                     <TextBlock Grid.Row="2" Text="" />
 
-                    <!-- Section 2: Online Microsoft Defender Status -->
-                    <TextBlock
-                        Grid.Row="3"
-                        Margin="2,0,0,8"
-                        FontSize="16"
-                        FontWeight="SemiBold"
-                        Text="Online Microsoft Defender Status"
-                        TextWrapping="Wrap" />
+                    <!-- Online Microsoft Defender Status -->
+                    <TextBlock Grid.Row="3"
+                               Margin="2,0,0,8"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               x:Uid="OnlineMicrosoftDefenderStatus"
+                               TextWrapping="Wrap" />
 
                     <!-- Using ItemsControl here as well -->
                     <ItemsControl Grid.Row="4">
@@ -331,114 +393,82 @@
                         </ItemsControl.ItemsPanel>
 
                         <!-- ENGINE VERSION -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xE7EF;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="Engine Version"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE7EF;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="EngineVersion"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.EngineVersionText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.EngineVersionText, Mode=OneWay}"
+                                           IsTextSelectionEnabled="True"/>
                             </Grid>
                         </Border>
 
                         <!-- SIGNATURE VERSION -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xE8A5;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="Signature Version"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE8A5;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="SignatureVersion"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.SignatureVersionText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.SignatureVersionText, Mode=OneWay}"
+                                           IsTextSelectionEnabled="True"/>
                             </Grid>
                         </Border>
 
                         <!-- PLATFORM VERSION -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xE7F8;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="Platform Version"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE7F8;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="PlatformVersion"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.PlatformVersionText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.PlatformVersionText, Mode=OneWay}"
+                                           IsTextSelectionEnabled="True"/>
                             </Grid>
                         </Border>
 
                         <!-- UPDATE DATE (UTC) -->
-                        <Border Style="{StaticResource OverviewCardBorderStyle}" Width="274" Height="96" Margin="0,0,8,8">
-                            <Grid RowSpacing="8">
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <FontIcon
-                                        AutomationProperties.AccessibilityView="Raw"
-                                        FontSize="20"
-                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                                        Glyph="&#xE823;"/>
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                                        Text="Signature Update (UTC)"/>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE823;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               x:Uid="SignatureUpdate"/>
                                 </StackPanel>
-                                <TextBlock
-                                    Grid.Row="1"
-                                    FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    Text="{x:Bind ViewModel.SignatureUpdateDateText, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"/>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.SignatureUpdateDateText, Mode=OneWay}"
+                                           IsTextSelectionEnabled="True"/>
                             </Grid>
                         </Border>
                     </ItemsControl>

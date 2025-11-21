@@ -41,7 +41,7 @@ internal static class RegistryPolicyParser
 	/// <param name="maxRetries">Maximum number of retry attempts</param>
 	/// <param name="baseDelayMs">Base delay in milliseconds for exponential backoff</param>
 	/// <returns>Result of the operation</returns>
-	private static T ExecuteWithRetry<T>(Func<T> operation, int maxRetries = 5, int baseDelayMs = 100)
+	private static T ExecuteWithRetry<T>(Func<T> operation, int maxRetries = 10, int baseDelayMs = 100)
 	{
 		int attempt = 0;
 		while (true)

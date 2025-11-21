@@ -2252,10 +2252,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>מצב</value>
   </data>
-  <data name="CurrentValueHeaderText" xml:space="preserve">
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
     <value>ערך נוכחי</value>
   </data>
-  <data name="ExpectedValueHeaderText" xml:space="preserve">
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
     <value>ערך צפוי</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -2399,9 +2399,6 @@
     <data name="DragAndDropHintFileReputationCaption" xml:space="preserve">
      <value>שחרר קובץ כדי לבדוק מוניטין</value>
   </data>
-  <data name="NoVerificationResultsToExport" xml:space="preserve">
-  <value>אין תוצאות אימות לייצוא</value>
-</data>
 <data name="ExportFileNameFormat" xml:space="preserve">
   <value>HardenSystemSecurity_ייצוא_נתונים_{0}.json</value>
 </data>
@@ -4301,4 +4298,55 @@
   <data name="RestoreModeMenuFlyoutItem.Text" xml:space="preserve">
   <value>מצב שחזור</value>
 </data>
+  <data name="SystemOverview.Text" xml:space="preserve">
+    <value>סקירת מערכת</value>
+  </data>
+  <data name="SystemTime.Text" xml:space="preserve">
+    <value>זמן מערכת</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>אזור זמן</value>
+  </data>
+  <data name="User.Text" xml:space="preserve">
+    <value>משתמש</value>
+  </data>
+  <data name="ComputerName.Text" xml:space="preserve">
+    <value>שם המחשב</value>
+  </data>
+  <data name="OperatingSystem.Text" xml:space="preserve">
+    <value>מערכת הפעלה</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>משך פעילות</value>
+  </data>
+  <data name="SystemRAM.Text" xml:space="preserve">
+    <value>זיכרון RAM של המערכת</value>
+  </data>
+  <data name="AppRAMUsage.Text" xml:space="preserve">
+    <value>שימוש בזיכרון RAM של היישום</value>
+  </data>
+  <data name="StorageSize.Text" xml:space="preserve">
+    <value>גודל האחסון</value>
+  </data>
+  <data name="InternetSpeed.Text" xml:space="preserve">
+    <value>מהירות אינטרנט</value>
+  </data>
+  <data name="CPUTemperature.Text" xml:space="preserve">
+    <value>טמפרטורת המעבד</value>
+  </data>
+  <data name="OnlineMicrosoftDefenderStatus.Text" xml:space="preserve">
+    <value>מצב מקוון של Microsoft Defender</value>
+  </data>
+  <data name="EngineVersion.Text" xml:space="preserve">
+    <value>גרסת מנוע</value>
+  </data>
+  <data name="SignatureVersion.Text" xml:space="preserve">
+    <value>גרסת חתימה</value>
+  </data>
+  <data name="PlatformVersion.Text" xml:space="preserve">
+    <value>גרסת פלטפורמה</value>
+  </data>
+  <data name="SignatureUpdate.Text" xml:space="preserve">
+    <value>עדכון חתימות (UTC)</value>
+  </data>
 </root>

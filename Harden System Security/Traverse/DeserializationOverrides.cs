@@ -26,37 +26,6 @@ namespace HardenSystemSecurity.Traverse;
 /// </summary>
 internal static class DeserializationOverrides
 {
-	/// <summary>
-	/// Write-only converter for <see cref="MContainer.AttackSurfaceReductionRules"/>
-	/// </summary>
-	internal sealed class AttackSurfaceReductionRulesWriteOnlyConverter : JsonConverter<AttackSurfaceReductionRules>
-	{
-		public override AttackSurfaceReductionRules? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			// Skip the entire JSON object for this category and return null.
-			if (reader.TokenType == JsonTokenType.StartObject)
-			{
-				int startDepth = reader.CurrentDepth;
-				while (reader.Read())
-				{
-					if (reader.TokenType == JsonTokenType.EndObject && reader.CurrentDepth == startDepth)
-					{
-						break;
-					}
-				}
-			}
-			else
-			{
-				// If it's not an object which is unexpected, advance once to avoid getting stuck.
-				_ = reader.Read();
-			}
-			return null;
-		}
-
-		// Delegate full serialization of AttackSurfaceReductionRules to its own source-generated metadata.
-		public override void Write(Utf8JsonWriter writer, AttackSurfaceReductionRules value, JsonSerializerOptions options) =>
-			JsonSerializer.Serialize(writer, value, MContainerJsonContext.Default.AttackSurfaceReductionRules);
-	}
 
 	/// <summary>
 	/// Write-only converter for <see cref="MContainer.OptionalWindowsFeatures"/>

@@ -46,20 +46,11 @@ internal enum SecurityMeasureSource : uint
 	SecurityPolicyRegistry = 4
 }
 
-[JsonSourceGenerationOptions(
-	PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
-	PropertyNameCaseInsensitive = true,
-	WriteIndented = true)]
-[JsonSerializable(typeof(VerificationResult))]
-[JsonSerializable(typeof(List<VerificationResult>))]
-internal sealed partial class VerificationResultJsonContext : JsonSerializerContext
-{
-}
-
 /// <summary>
 /// Represents the verification result for a single security measure.
 /// </summary>
 internal sealed class VerificationResult(
+	string id,
 	string friendlyName,
 	SecurityMeasureSource source,
 	bool isCompliant,
@@ -68,26 +59,31 @@ internal sealed class VerificationResult(
 {
 	[JsonInclude]
 	[JsonPropertyOrder(0)]
+	[JsonPropertyName("ID")]
+	internal string ID => id;
+
+	[JsonInclude]
+	[JsonPropertyOrder(1)]
 	[JsonPropertyName("Friendly Name")]
 	internal string FriendlyName => friendlyName;
 
 	[JsonInclude]
-	[JsonPropertyOrder(4)]
+	[JsonPropertyOrder(5)]
 	[JsonPropertyName("Source")]
 	internal SecurityMeasureSource Source => source;
 
 	[JsonInclude]
-	[JsonPropertyOrder(1)]
+	[JsonPropertyOrder(2)]
 	[JsonPropertyName("Is Compliant")]
 	internal bool IsCompliant => isCompliant;
 
 	[JsonInclude]
-	[JsonPropertyOrder(2)]
+	[JsonPropertyOrder(3)]
 	[JsonPropertyName("Current Value")]
 	internal string CurrentValue => currentValue;
 
 	[JsonInclude]
-	[JsonPropertyOrder(3)]
+	[JsonPropertyOrder(4)]
 	[JsonPropertyName("Expected Value")]
 	internal string ExpectedValue => expectedValue;
 
@@ -110,17 +106,6 @@ internal sealed class VerificationResult(
 		SecurityMeasureSource.SecurityPolicyRegistry => "Security Policy Registry",
 		_ => "Unknown"
 	};
-
-	/// <summary>
-	/// Saves a list of VerificationResult to a JSON file.
-	/// </summary>
-	/// <param name="path">The file path to save to</param>
-	/// <param name="results">The verification results to save</param>
-	internal static void Save(string path, List<VerificationResult> results)
-	{
-		string json = JsonSerializer.Serialize(results, VerificationResultJsonContext.Default.ListVerificationResult);
-		File.WriteAllText(path, json);
-	}
 }
 
 /// <summary>
@@ -212,12 +197,14 @@ internal static class MSBaseline
 	/// </summary>
 	/// <param name="downloadUrl">URL to download the security baseline ZIP file</param>
 	/// <param name="action">Whether to apply, remove, or verify the baseline policies</param>
+	/// <param name="filterIds">Optional set of IDs to filter the operation. If null, all items are processed.</param>
 	/// <returns>List of VerificationResult if action is Verify, null otherwise</returns>
 	/// <exception cref="InvalidOperationException">Thrown when download or operation fails</exception>
 	internal static async Task<List<VerificationResult>?> DownloadAndProcessSecurityBaseline(
 		Uri downloadUrl,
 		Action action,
-		CancellationToken? cancellationToken = null)
+		CancellationToken? cancellationToken = null,
+		HashSet<string>? filterIds = null)
 	{
 		// Many methods simply don't run in Async mode so we make sure the entire thing runs in another thread to prevent UI blocks
 		return await Task.Run(async () =>
@@ -233,6 +220,11 @@ internal static class MSBaseline
 			// Log depending on source type
 			string startVerb = downloadUrl.IsFile ? "load" : "download";
 			Logger.Write($"Starting {startVerb} and {actionText} of the Baseline from: {downloadUrl}");
+
+			if (filterIds != null)
+			{
+				Logger.Write($"Processing filtered subset of {filterIds.Count} items.");
+			}
 
 			cancellationToken?.ThrowIfCancellationRequested();
 
@@ -274,7 +266,7 @@ internal static class MSBaseline
 			{
 				// Find and apply/remove policies based on action
 				PolicyAction policyAction = action == Action.Apply ? PolicyAction.Apply : PolicyAction.Remove;
-				ApplyOrRemoveSecurityBaselinePolicies(extractedFiles, baselineRootPath, policyAction, cancellationToken);
+				ApplyOrRemoveSecurityBaselinePolicies(extractedFiles, baselineRootPath, policyAction, cancellationToken, filterIds);
 				Logger.Write($"{baselineRootPath} {actionText} completed successfully");
 				return null;
 			}
@@ -629,7 +621,10 @@ internal static class MSBaseline
 
 					string expectedValueStr = AuditPolicyInfo.GetAuditSettingDescription(entry.SettingValue);
 
+					string id = $"AuditPolicy|{entry.SubcategoryGuid}";
+
 					results.Add(new VerificationResult(
+						id: id,
 						friendlyName: entry.SubcategoryName,
 						source: SecurityMeasureSource.AuditPolicy,
 						isCompliant: isCompliant,
@@ -681,6 +676,7 @@ internal static class MSBaseline
 				{
 					// Friendly Name is a combination of KeyName and ValueName for the time being.
 					string friendlyName = $"{result.Key.KeyName}\\{result.Key.ValueName}";
+					string id = $"GroupPolicy|{result.Key.KeyName}|{result.Key.ValueName}";
 
 					// Expected value is the baseline entry's parsed value.
 					string expectedValue = FormatBaselineGroupPolicyValue(result.Key);
@@ -703,6 +699,7 @@ internal static class MSBaseline
 					}
 
 					results.Add(new VerificationResult(
+						id: id,
 						friendlyName: friendlyName,
 						source: SecurityMeasureSource.GroupPolicy,
 						isCompliant: result.Value.IsCompliant,
@@ -733,6 +730,7 @@ internal static class MSBaseline
 				foreach (KeyValuePair<RegistryPolicyEntry, (bool IsCompliant, RegistryPolicyEntry? SystemEntry)> result in verificationResults)
 				{
 					string friendlyName = $"{result.Key.KeyName}\\{result.Key.ValueName}";
+					string id = $"GroupPolicy|{result.Key.KeyName}|{result.Key.ValueName}";
 
 					// Expected value is the baseline entry's parsed value.
 					string expectedValue = FormatBaselineGroupPolicyValue(result.Key);
@@ -755,6 +753,7 @@ internal static class MSBaseline
 					}
 
 					results.Add(new VerificationResult(
+						id: id,
 						friendlyName: friendlyName,
 						source: SecurityMeasureSource.GroupPolicy,
 						isCompliant: result.Value.IsCompliant,
@@ -882,7 +881,10 @@ internal static class MSBaseline
 					break;
 			}
 
+			string id = $"SystemAccess|{expectedSetting.Key}";
+
 			results.Add(new VerificationResult(
+				id: id,
 				friendlyName: expectedSetting.Key,
 				source: SecurityMeasureSource.SystemAccess,
 				isCompliant: isCompliant,
@@ -990,7 +992,10 @@ internal static class MSBaseline
 				}
 			}
 
+			string id = $"Privilege|{expectedPrivilege.Key}";
+
 			results.Add(new VerificationResult(
+				id: id,
 				friendlyName: expectedPrivilege.Key,
 				source: SecurityMeasureSource.Privilege,
 				isCompliant: isCompliant,
@@ -1048,7 +1053,10 @@ internal static class MSBaseline
 				isCompliant = false;
 			}
 
+			string id = $"SecurityPolicyRegistry|{policy.KeyName}|{policy.ValueName}";
+
 			results.Add(new VerificationResult(
+				id: id,
 				friendlyName: policy.KeyName,
 				source: SecurityMeasureSource.SecurityPolicyRegistry,
 				isCompliant: isCompliant,
@@ -1147,7 +1155,13 @@ internal static class MSBaseline
 	/// <param name="extractedFiles">List of extracted files</param>
 	/// <param name="baselineRootPath">Root path of the security baseline</param>
 	/// <param name="action">Whether to apply or remove the policies</param>
-	private static void ApplyOrRemoveSecurityBaselinePolicies(List<InMemoryFile> extractedFiles, string baselineRootPath, PolicyAction action, CancellationToken? cancellationToken = null)
+	/// <param name="filterIds">Optional set of IDs to filter the operation. If null, all items are processed.</param>
+	private static void ApplyOrRemoveSecurityBaselinePolicies(
+		List<InMemoryFile> extractedFiles,
+		string baselineRootPath,
+		PolicyAction action,
+		CancellationToken? cancellationToken = null,
+		HashSet<string>? filterIds = null)
 	{
 		// Find all GUID directory paths
 		HashSet<string> guidDirectories = FindAllGUIDDirectoryPaths(extractedFiles, baselineRootPath);
@@ -1187,7 +1201,7 @@ internal static class MSBaseline
 		cancellationToken?.ThrowIfCancellationRequested();
 
 		// Apply or remove all found policies based on action
-		ApplyOrRemoveFoundPolicies(machinePolicyFiles, userPolicyFiles, auditCsvFiles, securityInfFiles, action, cancellationToken);
+		ApplyOrRemoveFoundPolicies(machinePolicyFiles, userPolicyFiles, auditCsvFiles, securityInfFiles, action, cancellationToken, filterIds);
 	}
 
 	/// <summary>
@@ -1308,8 +1322,15 @@ internal static class MSBaseline
 	/// <param name="auditCsvFiles">List of audit CSV files</param>
 	/// <param name="securityInfFiles">List of security INF files</param>
 	/// <param name="action">Whether to apply or remove the policies</param>
-	private static void ApplyOrRemoveFoundPolicies(List<InMemoryFile> machinePolicyFiles, List<InMemoryFile> userPolicyFiles,
-		List<InMemoryFile> auditCsvFiles, List<InMemoryFile> securityInfFiles, PolicyAction action, CancellationToken? cancellationToken = null)
+	/// <param name="filterIds">Optional set of IDs to filter the operation. If null, all items are processed.</param>
+	private static void ApplyOrRemoveFoundPolicies(
+		List<InMemoryFile> machinePolicyFiles,
+		List<InMemoryFile> userPolicyFiles,
+		List<InMemoryFile> auditCsvFiles,
+		List<InMemoryFile> securityInfFiles,
+		PolicyAction action,
+		CancellationToken? cancellationToken = null,
+		HashSet<string>? filterIds = null)
 	{
 		string actionText = action == PolicyAction.Apply ? "Applying" : "Removing";
 		Logger.Write($"{actionText} security baseline policies:");
@@ -1333,7 +1354,7 @@ internal static class MSBaseline
 		if (machinePolicyFiles.Count > 0)
 		{
 			Logger.Write($"{actionText} machine POL files...");
-			ProcessPolFilesFromMemory(GroupPolicyContext.Machine, machinePolicyFiles, action);
+			ProcessPolFilesFromMemory(GroupPolicyContext.Machine, machinePolicyFiles, action, filterIds);
 		}
 
 		cancellationToken?.ThrowIfCancellationRequested();
@@ -1342,7 +1363,7 @@ internal static class MSBaseline
 		if (userPolicyFiles.Count > 0)
 		{
 			Logger.Write($"{actionText} user POL files...");
-			ProcessPolFilesFromMemory(GroupPolicyContext.User, userPolicyFiles, action);
+			ProcessPolFilesFromMemory(GroupPolicyContext.User, userPolicyFiles, action, filterIds);
 		}
 
 		cancellationToken?.ThrowIfCancellationRequested();
@@ -1358,7 +1379,7 @@ internal static class MSBaseline
 				{
 					cancellationToken?.ThrowIfCancellationRequested();
 
-					ApplyAuditPoliciesFromMemory(auditCsvFile);
+					ApplyAuditPoliciesFromMemory(auditCsvFile, filterIds);
 					Logger.Write($"Applied audit policies from: {auditCsvFile.RelativePath}");
 				}
 			}
@@ -1369,7 +1390,7 @@ internal static class MSBaseline
 				cancellationToken?.ThrowIfCancellationRequested();
 
 				Logger.Write("Applying security INF files...");
-				ParseAndApplyInfFilesFromMemory(securityInfFiles);
+				ParseAndApplyInfFilesFromMemory(securityInfFiles, filterIds);
 			}
 		}
 
@@ -1384,8 +1405,9 @@ internal static class MSBaseline
 	/// <param name="context">The Group Policy context (Machine or User) for the POL files</param>
 	/// <param name="polFiles">In-memory POL files to process</param>
 	/// <param name="action">Whether to apply or remove the policies</param>
+	/// <param name="filterIds">Optional set of IDs to filter the operation. If null, all items are processed.</param>
 	/// <exception cref="ArgumentException">Thrown when no files are provided</exception>
-	private static void ProcessPolFilesFromMemory(GroupPolicyContext context, List<InMemoryFile> polFiles, PolicyAction action)
+	private static void ProcessPolFilesFromMemory(GroupPolicyContext context, List<InMemoryFile> polFiles, PolicyAction action, HashSet<string>? filterIds = null)
 	{
 		string actionText = action == PolicyAction.Apply ? "apply" : "remove";
 		Logger.Write($"Starting to {actionText} {polFiles.Count} POL file(s) in {context} context from memory");
@@ -1402,7 +1424,22 @@ internal static class MSBaseline
 
 			Logger.Write($"Loaded {policyFile.Entries.Count} policy entries from {polFile.RelativePath}");
 
-			accumulatedPolicies.AddRange(policyFile.Entries);
+			if (filterIds == null)
+			{
+				accumulatedPolicies.AddRange(policyFile.Entries);
+			}
+			else
+			{
+				foreach (RegistryPolicyEntry entry in policyFile.Entries)
+				{
+					// ID generation must match VerifyGroupPoliciesFromMemory
+					string id = $"GroupPolicy|{entry.KeyName}|{entry.ValueName}";
+					if (filterIds.Contains(id))
+					{
+						accumulatedPolicies.Add(entry);
+					}
+				}
+			}
 		}
 
 		Logger.Write($"Total accumulated policies to {actionText}: {accumulatedPolicies.Count}");
@@ -1424,27 +1461,49 @@ internal static class MSBaseline
 	/// Applies audit policies from a CSV file in memory to the system.
 	/// </summary>
 	/// <param name="csvFile">In-memory CSV file containing audit policies</param>
+	/// <param name="filterIds">Optional set of IDs to filter the operation. If null, all items are processed.</param>
 	/// <exception cref="InvalidOperationException">Thrown when policy application fails</exception>
-	private static void ApplyAuditPoliciesFromMemory(InMemoryFile csvFile)
+	private static void ApplyAuditPoliciesFromMemory(InMemoryFile csvFile, HashSet<string>? filterIds = null)
 	{
 		using MemoryStream stream = new(csvFile.Content);
 		using StreamReader reader = new(stream, Encoding.UTF8);
 
 		List<CsvAuditPolicyEntry> csvEntries = ParseAuditPolicyCsvFromReader(reader);
 
-		// Apply the audit policies
-		AuditPolicyManager.SetAuditPolicies(AuditPolicyManager.ConvertCSVEntriesToAuditPolicyInfo(csvEntries));
+		List<CsvAuditPolicyEntry> filteredEntries;
 
-		Logger.Write($"Successfully applied {csvEntries.Count} audit policies from {csvFile.RelativePath}");
+		if (filterIds == null)
+		{
+			filteredEntries = csvEntries;
+		}
+		else
+		{
+			filteredEntries = [];
+			foreach (CsvAuditPolicyEntry entry in csvEntries)
+			{
+				// ID generation must match VerifyAuditPoliciesFromMemory
+				string id = $"AuditPolicy|{entry.SubcategoryGuid}";
+				if (filterIds.Contains(id))
+				{
+					filteredEntries.Add(entry);
+				}
+			}
+		}
+
+		// Apply the audit policies
+		AuditPolicyManager.SetAuditPolicies(AuditPolicyManager.ConvertCSVEntriesToAuditPolicyInfo(filteredEntries));
+
+		Logger.Write($"Successfully applied {filteredEntries.Count} audit policies from {csvFile.RelativePath}");
 	}
 
 	/// <summary>
 	/// Parses one or more INF files from memory and applies all supported sections to the system.
 	/// </summary>
 	/// <param name="infFiles">In-memory INF files to parse and apply</param>
+	/// <param name="filterIds">Optional set of IDs to filter the operation. If null, all items are processed.</param>
 	/// <exception cref="ArgumentException">Thrown when no files are provided</exception>
 	/// <exception cref="InvalidOperationException">Thrown when application fails</exception>
-	private static void ParseAndApplyInfFilesFromMemory(List<InMemoryFile> infFiles)
+	private static void ParseAndApplyInfFilesFromMemory(List<InMemoryFile> infFiles, HashSet<string>? filterIds = null)
 	{
 		Logger.Write($"Starting to parse and apply {infFiles.Count} INF file(s) from memory");
 
@@ -1464,7 +1523,19 @@ internal static class MSBaseline
 			{
 				foreach (KeyValuePair<string, string> item in temp)
 				{
-					systemAccessSettings[item.Key] = item.Value;
+					if (filterIds == null)
+					{
+						systemAccessSettings[item.Key] = item.Value;
+					}
+					else
+					{
+						// ID generation must match VerifySystemAccessPoliciesFromMemory
+						string id = $"SystemAccess|{item.Key}";
+						if (filterIds.Contains(id))
+						{
+							systemAccessSettings[item.Key] = item.Value;
+						}
+					}
 				}
 			}
 		}
@@ -1476,7 +1547,7 @@ internal static class MSBaseline
 		}
 
 		// Parse all INF files and accumulate their data that are not System Access since we already applied those above.
-		ParsedInfData parsedData = ParseInfFilesFromMemory(infFiles);
+		ParsedInfData parsedData = ParseInfFilesFromMemory(infFiles, filterIds);
 
 		// Apply Privilege Rights policies
 		if (parsedData.PrivilegeRights.Count > 0)
@@ -1501,8 +1572,9 @@ internal static class MSBaseline
 	/// Parses one or more INF files from memory and accumulates their data, extracting Privilege Rights and Registry Values sections.
 	/// </summary>
 	/// <param name="infFiles">In-memory INF files to parse</param>
+	/// <param name="filterIds">Optional set of IDs to filter the operation. If null, all items are processed.</param>
 	/// <returns>Accumulated parsed INF data structure</returns>
-	private static ParsedInfData ParseInfFilesFromMemory(List<InMemoryFile> infFiles)
+	private static ParsedInfData ParseInfFilesFromMemory(List<InMemoryFile> infFiles, HashSet<string>? filterIds = null)
 	{
 		Dictionary<string, string[]> privilegeRights = new(StringComparer.Ordinal);
 		List<RegistryPolicyEntry> registryPolicyEntries = [];
@@ -1519,19 +1591,47 @@ internal static class MSBaseline
 			// Accumulate Privilege Rights (later files override earlier ones for same privileges)
 			foreach (KeyValuePair<string, string[]> privilege in fileData.PrivilegeRights)
 			{
-				privilegeRights[privilege.Key] = privilege.Value;
+				bool shouldAdd = true;
+				if (filterIds != null)
+				{
+					// ID generation must match VerifyPrivilegeRightsPoliciesFromMemory
+					string id = $"Privilege|{privilege.Key}";
+					if (!filterIds.Contains(id))
+					{
+						shouldAdd = false;
+					}
+				}
+
+				if (shouldAdd)
+				{
+					privilegeRights[privilege.Key] = privilege.Value;
+				}
 			}
 
 			// Accumulate Registry Policy Entries (later files override earlier ones for same registry paths)
 			foreach (RegistryPolicyEntry entry in fileData.RegistryPolicyEntries)
 			{
-				// Remove any existing entry with the same KeyName and ValueName to avoid duplicates
-				_ = registryPolicyEntries.RemoveAll(existing =>
-					string.Equals(existing.KeyName, entry.KeyName, StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(existing.ValueName, entry.ValueName, StringComparison.OrdinalIgnoreCase));
+				bool shouldAdd = true;
+				if (filterIds != null)
+				{
+					// ID generation must match VerifyRegistryValuesPoliciesFromMemory
+					string id = $"SecurityPolicyRegistry|{entry.KeyName}|{entry.ValueName}";
+					if (!filterIds.Contains(id))
+					{
+						shouldAdd = false;
+					}
+				}
 
-				// Add the new registry policy entry
-				registryPolicyEntries.Add(entry);
+				if (shouldAdd)
+				{
+					// Remove any existing entry with the same KeyName and ValueName to avoid duplicates
+					_ = registryPolicyEntries.RemoveAll(existing =>
+						string.Equals(existing.KeyName, entry.KeyName, StringComparison.OrdinalIgnoreCase) &&
+						string.Equals(existing.ValueName, entry.ValueName, StringComparison.OrdinalIgnoreCase));
+
+					// Add the new registry policy entry
+					registryPolicyEntries.Add(entry);
+				}
 			}
 
 			Logger.Write($"Parsed {fileData.PrivilegeRights.Count} Privilege Rights, {fileData.RegistryPolicyEntries.Count} Registry Policy Entries from {infFile.RelativePath}");
@@ -1661,113 +1761,6 @@ internal static class MSBaseline
 				.ToArray();
 
 		privilegeRights[privilege] = rights;
-	}
-
-	#region File Based Methods
-
-	/// <summary>
-	/// Parses one or more INF files and accumulates their data, extracting Privilege Rights and Registry Values sections.
-	/// </summary>
-	/// <param name="filePaths">Paths to one or more INF files</param>
-	/// <returns>Accumulated parsed INF data structure</returns>
-	/// <exception cref="ArgumentException">Thrown when no file paths are provided</exception>
-	/// <exception cref="FileNotFoundException">Thrown when any file doesn't exist</exception>
-	private static ParsedInfData ParseInfFiles(params string[] filePaths)
-	{
-		if (filePaths.Length is 0)
-			throw new ArgumentException("At least one INF file path must be provided");
-
-		Dictionary<string, string[]> privilegeRights = new(StringComparer.Ordinal);
-		List<RegistryPolicyEntry> registryPolicyEntries = [];
-
-		foreach (string filePath in filePaths)
-		{
-			Logger.Write($"Parsing INF file: {filePath}");
-
-			List<RegistryPolicyEntry> fileRegistryEntries = SecurityINFParser.ParseSecurityINFFile(filePath);
-
-			// Parse privilege rights manually since SecurityINFParser doesn't handle that section
-			using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-			using StreamReader reader = new(fileStream, Encoding.UTF8);
-
-			ParsedInfData fileData = ParseSingleInfFileFromReader(reader);
-
-			// Accumulate Privilege Rights (later files override earlier ones for same privileges)
-			foreach (KeyValuePair<string, string[]> privilege in fileData.PrivilegeRights)
-			{
-				privilegeRights[privilege.Key] = privilege.Value;
-			}
-
-			// Accumulate Registry Policy Entries from SecurityINFParser
-			foreach (RegistryPolicyEntry entry in fileRegistryEntries)
-			{
-				// Remove any existing entry with the same KeyName and ValueName to avoid duplicates
-				_ = registryPolicyEntries.RemoveAll(existing =>
-					string.Equals(existing.KeyName, entry.KeyName, StringComparison.OrdinalIgnoreCase) &&
-					string.Equals(existing.ValueName, entry.ValueName, StringComparison.OrdinalIgnoreCase));
-
-				// Add the new registry policy entry
-				registryPolicyEntries.Add(entry);
-			}
-
-			Logger.Write($"Parsed {fileData.PrivilegeRights.Count} Privilege Rights, {fileRegistryEntries.Count} Registry Policy Entries from {filePath}");
-		}
-
-		Logger.Write($"Total accumulated: {privilegeRights.Count} Privilege Rights, {registryPolicyEntries.Count} Registry Policy Entries");
-
-		return new(privilegeRights: privilegeRights, registryPolicyEntries: registryPolicyEntries);
-	}
-
-	/// <summary>
-	/// Parses one or more INF files and applies all supported sections to the system
-	/// </summary>
-	/// <param name="filePaths">Paths to one or more INF files</param>
-	/// <exception cref="ArgumentException">Thrown when no file paths are provided</exception>
-	/// <exception cref="FileNotFoundException">Thrown when any file doesn't exist</exception>
-	/// <exception cref="InvalidOperationException">Thrown when application fails</exception>
-	internal static void ParseAndApplyInfFiles(params string[] filePaths)
-	{
-		Logger.Write($"Starting to parse and apply {filePaths.Length} INF file(s)");
-
-		// Apply System Access policies
-		foreach (string filePath in filePaths)
-		{
-			if (!File.Exists(filePath))
-				throw new FileNotFoundException($"INF file not found: {filePath}");
-
-			Logger.Write($"Applying System Access policies from: {filePath}");
-
-			using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-			using StreamReader reader = new(fileStream, Encoding.UTF8);
-			Dictionary<string, string> settings = SecurityPolicyManager.ExtractSystemAccessSettingsFromReader(reader);
-
-			if (settings.Count > 0)
-			{
-				ApplySystemAccessSettings(settings);
-				Logger.Write("System Access policies applied successfully");
-			}
-		}
-
-		// Parse all INF files and accumulate their data
-		ParsedInfData parsedData = ParseInfFiles(filePaths);
-
-		// Apply Privilege Rights policies
-		if (parsedData.PrivilegeRights.Count > 0)
-		{
-			Logger.Write("Applying Privilege Rights policies...");
-			SecurityPolicyWriter.SetPrivilegeRights(parsedData.PrivilegeRights);
-			Logger.Write("Privilege Rights policies applied successfully");
-		}
-
-		// Apply Registry Policy Entries
-		if (parsedData.RegistryPolicyEntries.Count > 0)
-		{
-			Logger.Write("Applying Registry Policy Entries...");
-			RegistryManager.Manager.AddPoliciesToSystem(parsedData.RegistryPolicyEntries);
-			Logger.Write("Registry Policy Entries applied successfully");
-		}
-
-		Logger.Write("INF files application completed successfully");
 	}
 
 	/// <summary>
@@ -1949,42 +1942,4 @@ internal static class MSBaseline
 			}
 		}
 	}
-
-	/// <summary>
-	/// Applies one or more POL files to the system with the specified Group Policy context.
-	/// </summary>
-	/// <param name="context">The Group Policy context (Machine or User) for the POL files</param>
-	/// <param name="polFilePaths">Paths to one or more POL files to apply</param>
-	/// <exception cref="ArgumentException">Thrown when no file paths are provided</exception>
-	internal static void ApplyPolFiles(GroupPolicyContext context, params string[] polFilePaths)
-	{
-		if (polFilePaths.Length is 0)
-			throw new ArgumentException("At least one POL file path must be provided");
-
-		Logger.Write($"Starting to apply {polFilePaths.Length} POL file(s) in {context} context");
-
-		List<RegistryPolicyEntry> accumulatedPolicies = [];
-
-		// Parse each POL file and accumulate entries
-		foreach (string polFilePath in polFilePaths)
-		{
-			Logger.Write($"Parsing POL file: {polFilePath}");
-
-			RegistryPolicyFile policyFile = RegistryPolicyParser.ParseFile(polFilePath);
-
-			Logger.Write($"Loaded {policyFile.Entries.Count} policy entries from {polFilePath}");
-
-			accumulatedPolicies.AddRange(policyFile.Entries);
-		}
-
-		Logger.Write($"Total accumulated policies to apply: {accumulatedPolicies.Count}");
-
-		// Apply all accumulated policies to the system with the specified context
-		RegistryPolicyParser.AddPoliciesToSystem(accumulatedPolicies, context);
-
-		Logger.Write($"POL files application completed successfully in {context} context");
-	}
-
-	#endregion
-
 }

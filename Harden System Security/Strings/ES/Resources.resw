@@ -2252,10 +2252,10 @@
     <data name="StatusHeader.Text" xml:space="preserve">
     <value>Estado</value>
   </data>
-  <data name="CurrentValueHeaderText" xml:space="preserve">
+  <data name="CurrentValueHeader.Text" xml:space="preserve">
     <value>Valor Actual</value>
   </data>
-  <data name="ExpectedValueHeaderText" xml:space="preserve">
+  <data name="ExpectedValueHeader.Text" xml:space="preserve">
     <value>Valor Esperado</value>
   </data>
   <!--Security Baselines ListView Headers End-->
@@ -2402,9 +2402,6 @@
     <data name="DragAndDropHintFileReputationCaption" xml:space="preserve">
      <value>Soltar archivo para verificar reputación</value>
   </data>
-  <data name="NoVerificationResultsToExport" xml:space="preserve">
-  <value>No hay resultados de verificación para exportar</value>
-</data>
 <data name="ExportFileNameFormat" xml:space="preserve">
   <value>HardenSystemSecurity_Data_Export_{0}.json</value>
 </data>
@@ -4301,4 +4298,55 @@ Huella Digital: {3}</value>
   <data name="RestoreModeMenuFlyoutItem.Text" xml:space="preserve">
   <value>Modo de Restauración</value>
 </data>
+  <data name="SystemOverview.Text" xml:space="preserve">
+    <value>Panorama del sistema</value>
+  </data>
+  <data name="SystemTime.Text" xml:space="preserve">
+    <value>Hora del sistema</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>Zona horaria</value>
+  </data>
+  <data name="User.Text" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="ComputerName.Text" xml:space="preserve">
+    <value>Nombre del equipo</value>
+  </data>
+  <data name="OperatingSystem.Text" xml:space="preserve">
+    <value>Sistema operativo</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>Tiempo de actividad</value>
+  </data>
+  <data name="SystemRAM.Text" xml:space="preserve">
+    <value>Memoria RAM del sistema</value>
+  </data>
+  <data name="AppRAMUsage.Text" xml:space="preserve">
+    <value>Uso de RAM de la aplicación</value>
+  </data>
+  <data name="StorageSize.Text" xml:space="preserve">
+    <value>Capacidad de almacenamiento</value>
+  </data>
+  <data name="InternetSpeed.Text" xml:space="preserve">
+    <value>Velocidad de Internet</value>
+  </data>
+  <data name="CPUTemperature.Text" xml:space="preserve">
+    <value>Temperatura del procesador</value>
+  </data>
+  <data name="OnlineMicrosoftDefenderStatus.Text" xml:space="preserve">
+    <value>Estado en línea de Microsoft Defender</value>
+  </data>
+  <data name="EngineVersion.Text" xml:space="preserve">
+    <value>Versión del motor</value>
+  </data>
+  <data name="SignatureVersion.Text" xml:space="preserve">
+    <value>Versión de firmas</value>
+  </data>
+  <data name="PlatformVersion.Text" xml:space="preserve">
+    <value>Versión de la plataforma</value>
+  </data>
+  <data name="SignatureUpdate.Text" xml:space="preserve">
+    <value>Actualización de firmas (UTC)</value>
+  </data>
 </root>

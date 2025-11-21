@@ -273,6 +273,18 @@
 
                                 </ToggleMenuFlyoutItem>
 
+                                <MenuFlyoutSeparator/>
+
+                                <MenuFlyoutSubItem x:Uid="ClearOperationSystemLogsMenuFlyoutItem">
+                                    <MenuFlyoutSubItem.Icon>
+                                        <FontIcon Glyph="&#xE814;"/>
+                                    </MenuFlyoutSubItem.Icon>
+                                    <MenuFlyoutItem Click="{x:Bind ViewModel.ClearCodeIntegrityOSLogs}"
+                                                    x:Uid="ClearOSCodeIntegrityLogsMenuFlyoutItem" />
+                                    <MenuFlyoutItem Click="{x:Bind ViewModel.ClearAppLockerOSLogs}"
+                                                    x:Uid="ClearOSAppLockerLogsMenuFlyoutItem" />
+                                </MenuFlyoutSubItem>
+
                             </MenuFlyout>
 
                         </DropDownButton.Flyout>

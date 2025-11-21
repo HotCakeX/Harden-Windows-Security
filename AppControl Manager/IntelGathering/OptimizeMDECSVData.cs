@@ -32,11 +32,7 @@ internal static partial class OptimizeMDECSVData
 	/// </summary>
 	/// <param name="CSVFilePath"></param>
 	/// <returns></returns>
-	internal static List<MDEAdvancedHuntingData> Optimize(string CSVFilePath)
-	{
-		List<MDEAdvancedHuntingData> csvRecords = ReadCsv(CSVFilePath);
-		return csvRecords;
-	}
+	internal static List<MDEAdvancedHuntingData> Optimize(string CSVFilePath) => ReadCsv(CSVFilePath);
 
 	/// <summary>
 	/// Converts an entire MDE Advanced Hunting CSV file into a list of classes.

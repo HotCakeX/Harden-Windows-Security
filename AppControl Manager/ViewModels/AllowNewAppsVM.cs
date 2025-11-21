@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.IntelGathering;
@@ -972,7 +973,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		List<FileIdentity> itemsToDelete = [.. lv.SelectedItems.Cast<FileIdentity>()];
 
 		// Remove each selected item from the FileIdentities collection
-		foreach (FileIdentity item in itemsToDelete)
+		foreach (FileIdentity item in CollectionsMarshal.AsSpan(itemsToDelete))
 		{
 			_ = LocalFilesFileIdentities.Remove(item);
 			_ = LocalFilesAllFileIdentities.Remove(item);
@@ -1067,7 +1068,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		List<FileIdentity> itemsToDelete = [.. lv.SelectedItems.Cast<FileIdentity>()];
 
 		// Remove each selected item from the FileIdentities collection
-		foreach (FileIdentity item in itemsToDelete)
+		foreach (FileIdentity item in CollectionsMarshal.AsSpan(itemsToDelete))
 		{
 			_ = EventLogsFileIdentities.Remove(item);
 			_ = EventLogsAllFileIdentities.Remove(item);

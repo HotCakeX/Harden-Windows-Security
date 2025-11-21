@@ -21,6 +21,7 @@ using System.ComponentModel;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Runtime;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
@@ -563,7 +564,7 @@ internal sealed partial class IncrementalCollection<T>(
 						}
 					}, cancellationToken);
 
-					foreach (T item in itemsToAdd)
+					foreach (T item in CollectionsMarshal.AsSpan(itemsToAdd))
 					{
 						if (cancellationToken.IsCancellationRequested || _disposed)
 							break;

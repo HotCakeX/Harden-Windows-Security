@@ -6146,4 +6146,46 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Habilite esta característica para poner a disposición métodos alternativos para implementar y quitar directivas de App Control. Estos métodos no dependen del ejecutable CiTool y pueden usarse si CiTool está bloqueado o no está disponible.</value>
   </data>
+    <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Borrar registros del sistema</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Borrar distintos registros en el sistema operativo. Esta acción es irreversible.</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Borrar distintos registros en el sistema operativo. Esta acción es irreversible.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Borrar registros de Code Integrity</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Borrar todos los registros operativos de Code Integrity del sistema.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Borrar todos los registros operativos de Code Integrity del sistema.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Borrar registros de App Locker</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Borrar todos los registros de App Locker del sistema.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Borrar todos los registros de App Locker del sistema.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsSuccessMsg" xml:space="preserve">
+    <value>Se borraron correctamente todos los registros operativos de Code Integrity del sistema.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsSuccessMsg" xml:space="preserve">
+    <value>Se borraron correctamente todos los registros de App Locker del sistema.</value>
+  </data>
+  <data name="OSLogsDeletionContentDialogMsg" xml:space="preserve">
+    <value>¿Está seguro de que desea borrar los registros seleccionados? Esta acción es irreversible.</value>
+  </data>
+  <data name="OSCodeIntegrityLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>Eliminación de registros de Code Integrity</value>
+  </data>
+  <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>Eliminación de registros de App Locker</value>
+  </data>
 </root>

@@ -37,21 +37,12 @@ internal static class GetMDEAdvancedHuntingLogsData
 		// HashSet to store the output, ensures the data are unique and signed data are prioritized over unsigned data
 		FileIdentitySignatureBasedHashSet fileIdentities = new();
 
-
 		// Group the events based on the EtwActivityId, which is the unique identifier for each group of correlated events
-		IEnumerable<IGrouping<string, MDEAdvancedHuntingData>> groupedEvents = data.GroupBy(e => e.EtwActivityId!);
-
+		IEnumerable<IGrouping<string?, MDEAdvancedHuntingData>> groupedEvents = data.GroupBy(e => e.EtwActivityId);
 
 		// Iterate over each group of logs
-		foreach (IGrouping<string, MDEAdvancedHuntingData> group in groupedEvents)
+		foreach (IGrouping<string?, MDEAdvancedHuntingData> group in groupedEvents)
 		{
-			// Access the EtwActivityId for the group (key)
-			string? EtwActivityId = group.Key;
-
-			if (EtwActivityId is null)
-			{
-				continue;
-			}
 
 			// There are either blocked or audit type events in each group and they can be CodeIntegrity and AppLocker type at the same time
 			// If there are more than 1 of either block or audit events, selecting the first one because that means the same event was triggered by multiple deployed policies
@@ -77,17 +68,12 @@ internal static class GetMDEAdvancedHuntingLogsData
 			// If the current group has Code Integrity Audit log
 			if (possibleCodeIntegrityAuditEvent is not null)
 			{
-
 				if (possibleCodeIntegrityAuditEvent.SHA256 is null)
-				{
 					continue;
-				}
-
 
 				// Assign fields from MDE Advanced Hunting record properties
 				FileIdentity eventData = new()
 				{
-
 					Origin = FileIdentityOrigin.MDEAdvancedHunting,
 					Action = EventAction.Audit,
 					TimeCreated = GetEventDataDateTimeValue(possibleCodeIntegrityAuditEvent.Timestamp),
@@ -113,59 +99,44 @@ internal static class GetMDEAdvancedHuntingLogsData
 					InternalName = possibleCodeIntegrityAuditEvent.InternalName,
 					FileDescription = possibleCodeIntegrityAuditEvent.FileDescription,
 					PolicyGUID = GetGuidValue(possibleCodeIntegrityAuditEvent.PolicyGuid),
-					UserWriteable = possibleCodeIntegrityAuditEvent.UserWriteable
+					UserWriteable = possibleCodeIntegrityAuditEvent.UserWriteable,
+					FileVersion = SetFileVersion(possibleCodeIntegrityAuditEvent.FileVersion)
 				};
 
-				// Set the FileVersion using helper method
-				string? fileVersionString = possibleCodeIntegrityAuditEvent.FileVersion;
-				eventData.FileVersion = SetFileVersion(fileVersionString);
-
-
 				// If there are correlated events - for signer information of the file
-				if (correlatedEvents.Count > 0)
+				// Iterate over each correlated event - files can have multiple signers
+				foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
 				{
 
-					// Iterate over each correlated event - files can have multiple signers
-					foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
-					{
+					// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
+					// They have "Unknown" as their IssuerName and PublisherName too
+					// Leaf certificate is a must have for signed files	
+					if (correlatedEvent.PublisherTBSHash is null || correlatedEvent.PublisherName is null)
+						continue;
 
-						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
-						// They have "Unknown" as their IssuerName and PublisherName too
-						// Leaf certificate is a must have for signed files
-						string? PublisherTBSHash = correlatedEvent.PublisherTBSHash;
+					// Assign fields from MDE Advanced Hunting record properties
+					FileSignerInfo signerInfo = new(
+						totalSignatureCount: correlatedEvent.TotalSignatureCount,
+						signature: correlatedEvent.Signature,
+						hash: correlatedEvent.Hash,
+						signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+						validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+						verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+						flags: correlatedEvent.Flags,
+						notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
+						notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
+						publisherName: correlatedEvent.PublisherName,
+						issuerName: correlatedEvent.IssuerName,
+						publisherTBSHash: correlatedEvent.PublisherTBSHash,
+						issuerTBSHash: correlatedEvent.IssuerTBSHash
+					);
 
-						string? PublisherName = correlatedEvent.PublisherName;
+					// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+					_ = eventData.FilePublishers.Add(correlatedEvent.PublisherName);
 
-						if (PublisherTBSHash is null || PublisherName is null)
-						{
-							continue;
-						}
-
-						// // Assign fields from MDE Advanced Hunting record properties
-						FileSignerInfo signerInfo = new(
-							totalSignatureCount: correlatedEvent.TotalSignatureCount,
-							signature: correlatedEvent.Signature,
-							hash: correlatedEvent.Hash,
-							signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							flags: correlatedEvent.Flags,
-							notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
-							notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
-							publisherName: PublisherName,
-							issuerName: correlatedEvent.IssuerName,
-							publisherTBSHash: PublisherTBSHash,
-							issuerTBSHash: correlatedEvent.IssuerTBSHash
-						);
-
-						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
-						_ = eventData.FilePublishers.Add(PublisherName);
-
-						// Add the current signer info/correlated event data to the main event package
-						_ = eventData.FileSignerInfos.Add(signerInfo);
-					}
+					// Add the current signer info/correlated event data to the main event package
+					_ = eventData.FileSignerInfos.Add(signerInfo);
 				}
-
 
 				// Set the SignatureStatus based on the number of signers
 				eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
@@ -173,24 +144,18 @@ internal static class GetMDEAdvancedHuntingLogsData
 
 				// Add the entire event package to the output list
 				_ = fileIdentities.Add(eventData);
-
 			}
-
 
 			// If the current group has Code Integrity Blocked log
 			else if (possibleCodeIntegrityBlockEvent is not null)
 			{
 
 				if (possibleCodeIntegrityBlockEvent.SHA256 is null)
-				{
 					continue;
-				}
 
-
-				// // Assign fields from MDE Advanced Hunting record properties
+				// Assign fields from MDE Advanced Hunting record properties
 				FileIdentity eventData = new()
 				{
-
 					Origin = FileIdentityOrigin.MDEAdvancedHunting,
 					Action = EventAction.Block,
 					TimeCreated = GetEventDataDateTimeValue(possibleCodeIntegrityBlockEvent.Timestamp),
@@ -216,59 +181,43 @@ internal static class GetMDEAdvancedHuntingLogsData
 					InternalName = possibleCodeIntegrityBlockEvent.InternalName,
 					FileDescription = possibleCodeIntegrityBlockEvent.FileDescription,
 					PolicyGUID = GetGuidValue(possibleCodeIntegrityBlockEvent.PolicyGuid),
-					UserWriteable = possibleCodeIntegrityBlockEvent.UserWriteable
+					UserWriteable = possibleCodeIntegrityBlockEvent.UserWriteable,
+					FileVersion = SetFileVersion(possibleCodeIntegrityBlockEvent.FileVersion)
 				};
 
-				// Set the FileVersion using helper method
-				string? fileVersionString = possibleCodeIntegrityBlockEvent.FileVersion;
-				eventData.FileVersion = SetFileVersion(fileVersionString);
-
-
 				// If there are correlated events - for signer information of the file
-				if (correlatedEvents.Count > 0)
+				// Iterate over each correlated event - files can have multiple signers
+				foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
 				{
+					// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
+					// They have "Unknown" as their IssuerName and PublisherName too
+					// Leaf certificate is a must have for signed files
+					if (correlatedEvent.PublisherTBSHash is null || correlatedEvent.PublisherName is null)
+						continue;
 
-					// Iterate over each correlated event - files can have multiple signers
-					foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
-					{
+					// Assign fields from MDE Advanced Hunting record properties
+					FileSignerInfo signerInfo = new(
+						totalSignatureCount: correlatedEvent.TotalSignatureCount,
+						signature: correlatedEvent.Signature,
+						hash: correlatedEvent.Hash,
+						signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+						validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+						verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+						flags: correlatedEvent.Flags,
+						notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
+						notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
+						publisherName: correlatedEvent.PublisherName,
+						issuerName: correlatedEvent.IssuerName,
+						publisherTBSHash: correlatedEvent.PublisherTBSHash,
+						issuerTBSHash: correlatedEvent.IssuerTBSHash
+					);
 
-						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
-						// They have "Unknown" as their IssuerName and PublisherName too
-						// Leaf certificate is a must have for signed files
-						string? PublisherTBSHash = correlatedEvent.PublisherTBSHash;
+					// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+					_ = eventData.FilePublishers.Add(correlatedEvent.PublisherName);
 
-						string? PublisherName = correlatedEvent.PublisherName;
-
-						if (PublisherTBSHash is null || PublisherName is null)
-						{
-							continue;
-						}
-
-						// // Assign fields from MDE Advanced Hunting record properties
-						FileSignerInfo signerInfo = new(
-							totalSignatureCount: correlatedEvent.TotalSignatureCount,
-							signature: correlatedEvent.Signature,
-							hash: correlatedEvent.Hash,
-							signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							flags: correlatedEvent.Flags,
-							notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
-							notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
-							publisherName: PublisherName,
-							issuerName: correlatedEvent.IssuerName,
-							publisherTBSHash: PublisherTBSHash,
-							issuerTBSHash: correlatedEvent.IssuerTBSHash
-						);
-
-						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
-						_ = eventData.FilePublishers.Add(PublisherName);
-
-						// Add the current signer info/correlated event data to the main event package
-						_ = eventData.FileSignerInfos.Add(signerInfo);
-					}
+					// Add the current signer info/correlated event data to the main event package
+					_ = eventData.FileSignerInfos.Add(signerInfo);
 				}
-
 
 				// Set the SignatureStatus based on the number of signers
 				eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
@@ -276,26 +225,18 @@ internal static class GetMDEAdvancedHuntingLogsData
 
 				// Add the entire event package to the output list
 				_ = fileIdentities.Add(eventData);
-
-
 			}
-
 
 			// If the current group has AppLocker Audit log
 			if (possibleAppLockerAuditEvent is not null)
 			{
 
-
 				if (possibleAppLockerAuditEvent.SHA256 is null)
-				{
 					continue;
-				}
 
-
-				// // Assign fields from MDE Advanced Hunting record properties
+				// Assign fields from MDE Advanced Hunting record properties
 				FileIdentity eventData = new()
 				{
-
 					Origin = FileIdentityOrigin.MDEAdvancedHunting,
 					Action = EventAction.Audit,
 					TimeCreated = GetEventDataDateTimeValue(possibleAppLockerAuditEvent.Timestamp),
@@ -321,84 +262,62 @@ internal static class GetMDEAdvancedHuntingLogsData
 					InternalName = possibleAppLockerAuditEvent.InternalName,
 					FileDescription = possibleAppLockerAuditEvent.FileDescription,
 					PolicyGUID = GetGuidValue(possibleAppLockerAuditEvent.PolicyGuid),
-					UserWriteable = possibleAppLockerAuditEvent.UserWriteable
+					UserWriteable = possibleAppLockerAuditEvent.UserWriteable,
+					FileVersion = SetFileVersion(possibleAppLockerAuditEvent.FileVersion)
 				};
 
-				// Set the FileVersion using helper method
-				string? fileVersionString = possibleAppLockerAuditEvent.FileVersion;
-				eventData.FileVersion = SetFileVersion(fileVersionString);
-
-
 				// If there are correlated events - for signer information of the file
-				if (correlatedEvents.Count > 0)
+				// Iterate over each correlated event - files can have multiple signers
+				foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
 				{
 
-					// Iterate over each correlated event - files can have multiple signers
-					foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
-					{
+					// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
+					// They have "Unknown" as their IssuerName and PublisherName too
+					// Leaf certificate is a must have for signed files
+					if (correlatedEvent.PublisherTBSHash is null || correlatedEvent.PublisherName is null)
+						continue;
 
-						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
-						// They have "Unknown" as their IssuerName and PublisherName too
-						// Leaf certificate is a must have for signed files
-						string? PublisherTBSHash = correlatedEvent.PublisherTBSHash;
+					// Assign fields from MDE Advanced Hunting record properties
+					FileSignerInfo signerInfo = new(
+						totalSignatureCount: correlatedEvent.TotalSignatureCount,
+						signature: correlatedEvent.Signature,
+						hash: correlatedEvent.Hash,
+						signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+						validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+						verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+						flags: correlatedEvent.Flags,
+						notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
+						notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
+						publisherName: correlatedEvent.PublisherName,
+						issuerName: correlatedEvent.IssuerName,
+						publisherTBSHash: correlatedEvent.PublisherTBSHash,
+						issuerTBSHash: correlatedEvent.IssuerTBSHash
+					);
 
-						string? PublisherName = correlatedEvent.PublisherName;
+					// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+					_ = eventData.FilePublishers.Add(correlatedEvent.PublisherName);
 
-						if (PublisherTBSHash is null || PublisherName is null)
-						{
-							continue;
-						}
-
-						// // Assign fields from MDE Advanced Hunting record properties
-						FileSignerInfo signerInfo = new(
-							totalSignatureCount: correlatedEvent.TotalSignatureCount,
-							signature: correlatedEvent.Signature,
-							hash: correlatedEvent.Hash,
-							signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							flags: correlatedEvent.Flags,
-							notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
-							notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
-							publisherName: PublisherName,
-							issuerName: correlatedEvent.IssuerName,
-							publisherTBSHash: PublisherTBSHash,
-							issuerTBSHash: correlatedEvent.IssuerTBSHash
-						);
-
-						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
-						_ = eventData.FilePublishers.Add(PublisherName);
-
-						// Add the current signer info/correlated event data to the main event package
-						_ = eventData.FileSignerInfos.Add(signerInfo);
-					}
+					// Add the current signer info/correlated event data to the main event package
+					_ = eventData.FileSignerInfos.Add(signerInfo);
 				}
-
 
 				// Set the SignatureStatus based on the number of signers
 				eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
-
 				// Add the entire event package to the output list
 				_ = fileIdentities.Add(eventData);
-
 			}
 
 			// If the current group has AppLocker Blocked log
 			else if (possibleAppLockerBlockEvent is not null)
 			{
 
-
 				if (possibleAppLockerBlockEvent.SHA256 is null)
-				{
 					continue;
-				}
 
-
-				// // Assign fields from MDE Advanced Hunting record properties
+				// Assign fields from MDE Advanced Hunting record properties
 				FileIdentity eventData = new()
 				{
-
 					Origin = FileIdentityOrigin.MDEAdvancedHunting,
 					Action = EventAction.Block,
 					TimeCreated = GetEventDataDateTimeValue(possibleAppLockerBlockEvent.Timestamp),
@@ -424,70 +343,53 @@ internal static class GetMDEAdvancedHuntingLogsData
 					InternalName = possibleAppLockerBlockEvent.InternalName,
 					FileDescription = possibleAppLockerBlockEvent.FileDescription,
 					PolicyGUID = GetGuidValue(possibleAppLockerBlockEvent.PolicyGuid),
-					UserWriteable = possibleAppLockerBlockEvent.UserWriteable
+					UserWriteable = possibleAppLockerBlockEvent.UserWriteable,
+					FileVersion = SetFileVersion(possibleAppLockerBlockEvent.FileVersion)
 				};
 
-				// Set the FileVersion using helper method
-				string? fileVersionString = possibleAppLockerBlockEvent.FileVersion;
-				eventData.FileVersion = SetFileVersion(fileVersionString);
-
-
 				// If there are correlated events - for signer information of the file
-				if (correlatedEvents.Count > 0)
+
+				// Iterate over each correlated event - files can have multiple signers
+				foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
 				{
 
-					// Iterate over each correlated event - files can have multiple signers
-					foreach (MDEAdvancedHuntingData correlatedEvent in correlatedEvents)
-					{
+					// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
+					// They have "Unknown" as their IssuerName and PublisherName too
+					// Leaf certificate is a must have for signed files	
+					if (correlatedEvent.PublisherTBSHash is null || correlatedEvent.PublisherName is null)
+						continue;
 
-						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
-						// They have "Unknown" as their IssuerName and PublisherName too
-						// Leaf certificate is a must have for signed files
-						string? PublisherTBSHash = correlatedEvent.PublisherTBSHash;
+					// Assign fields from MDE Advanced Hunting record properties
+					FileSignerInfo signerInfo = new(
+						totalSignatureCount: correlatedEvent.TotalSignatureCount,
+						signature: correlatedEvent.Signature,
+						hash: correlatedEvent.Hash,
+						signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
+						validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
+						verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
+						flags: correlatedEvent.Flags,
+						notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
+						notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
+						publisherName: correlatedEvent.PublisherName,
+						issuerName: correlatedEvent.IssuerName,
+						publisherTBSHash: correlatedEvent.PublisherTBSHash,
+						issuerTBSHash: correlatedEvent.IssuerTBSHash
+					);
 
-						string? PublisherName = correlatedEvent.PublisherName;
+					// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+					_ = eventData.FilePublishers.Add(correlatedEvent.PublisherName);
 
-						if (PublisherTBSHash is null || PublisherName is null)
-						{
-							continue;
-						}
-
-						// // Assign fields from MDE Advanced Hunting record properties
-						FileSignerInfo signerInfo = new(
-							totalSignatureCount: correlatedEvent.TotalSignatureCount,
-							signature: correlatedEvent.Signature,
-							hash: correlatedEvent.Hash,
-							signatureType: CILogIntel.GetSignatureType(GetIntValue(correlatedEvent.SignatureType)),
-							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(correlatedEvent.ValidatedSigningLevel)),
-							verificationError: CILogIntel.GetVerificationError(GetIntValue(correlatedEvent.VerificationError)),
-							flags: correlatedEvent.Flags,
-							notValidBefore: GetEventDataDateTimeValue(correlatedEvent.NotValidBefore),
-							notValidAfter: GetEventDataDateTimeValue(correlatedEvent.NotValidAfter),
-							publisherName: PublisherName,
-							issuerName: correlatedEvent.IssuerName,
-							publisherTBSHash: PublisherTBSHash,
-							issuerTBSHash: correlatedEvent.IssuerTBSHash
-						);
-
-						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
-						_ = eventData.FilePublishers.Add(PublisherName);
-
-						// Add the current signer info/correlated event data to the main event package
-						_ = eventData.FileSignerInfos.Add(signerInfo);
-					}
+					// Add the current signer info/correlated event data to the main event package
+					_ = eventData.FileSignerInfos.Add(signerInfo);
 				}
-
 
 				// Set the SignatureStatus based on the number of signers
 				eventData.SignatureStatus = eventData.FileSignerInfos.Count > 0 ? SignatureStatus.IsSigned : SignatureStatus.IsUnsigned;
 
-
 				// Add the entire event package to the output list
 				_ = fileIdentities.Add(eventData);
-
 			}
 		}
-
 
 		// Return the internal data which is the right return type
 		return fileIdentities.FileIdentitiesInternal;
@@ -503,11 +405,8 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// <returns></returns>
 	private static Version? SetFileVersion(string? versionString)
 	{
-		if (!string.IsNullOrWhiteSpace(versionString) && Version.TryParse(versionString, out Version? version))
-		{
-			return version;
-		}
-		return null;
+		_ = Version.TryParse(versionString, out Version? version);
+		return version;
 	}
 
 	/// <summary>
@@ -517,7 +416,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// <returns></returns>
 	private static int? GetIntValue(string? data)
 	{
-		return data is not null && int.TryParse(data, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) ? result : null;
+		return int.TryParse(data, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) ? result : null;
 	}
 
 	/// <summary>
@@ -525,7 +424,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// </summary>
 	private static DateTime? GetEventDataDateTimeValue(string? data)
 	{
-		return data is not null && DateTime.TryParse(data, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime result) ? result : null;
+		return DateTime.TryParse(data, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime result) ? result : null;
 	}
 
 	/// <summary>
@@ -535,9 +434,8 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// <returns></returns>
 	private static Guid? GetGuidValue(string? data)
 	{
-		return data is not null && Guid.TryParse(data, out Guid guid) ? guid : null;
+		return Guid.TryParse(data, out Guid guid) ? guid : null;
 	}
 
 	#endregion
-
 }

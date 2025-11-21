@@ -41,7 +41,7 @@ internal static partial class Opus
 	// Returns a List of OpusInfoObj, taking a SignedCms parameter
 	// https://learn.microsoft.com/windows/win32/seccrypto/example-c-program--verifying-the-signature-of-a-pe-file
 	// https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fdownload.microsoft.com%2Fdownload%2F9%2Fc%2F5%2F9c5b2167-8017-4bae-9fde-d599bac8184a%2FAuthenticode_PE.docx
-	internal unsafe static List<OpusInfoObj> GetOpusData(SignedCms signature)
+	internal static List<OpusInfoObj> GetOpusData(SignedCms signature)
 	{
 		// Initializing a new List of OpusInfoObj to store the output data to return
 		List<OpusInfoObj> OEMOpusData = [];

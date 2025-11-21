@@ -6146,4 +6146,46 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Aktivieren Sie diese Funktion, um alternative Methoden zum Bereitstellen und Entfernen von App-Control-Richtlinien verfügbar zu machen. Diese Methoden sind nicht vom CiTool-Programm abhängig und können verwendet werden, wenn CiTool blockiert oder nicht verfügbar ist.</value>
   </data>
+    <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Systemprotokolle löschen</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verschiedene Protokolle im Betriebssystem löschen. Dieser Vorgang ist unwiderruflich.</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Verschiedene Protokolle im Betriebssystem löschen. Dieser Vorgang ist unwiderruflich.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Code-Integrity-Protokolle löschen</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle Code-Integrity-Betriebsprotokolle aus dem System löschen.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle Code-Integrity-Betriebsprotokolle aus dem System löschen.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>App Locker-Protokolle löschen</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle App Locker-Protokolle aus dem System löschen.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle App Locker-Protokolle aus dem System löschen.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsSuccessMsg" xml:space="preserve">
+    <value>Alle Code-Integrity-Betriebsprotokolle wurden erfolgreich aus dem System gelöscht.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsSuccessMsg" xml:space="preserve">
+    <value>Alle App Locker-Protokolle wurden erfolgreich aus dem System gelöscht.</value>
+  </data>
+  <data name="OSLogsDeletionContentDialogMsg" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie die ausgewählten Protokolle löschen möchten? Dieser Vorgang ist unwiderruflich.</value>
+  </data>
+  <data name="OSCodeIntegrityLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>Löschen von Code-Integrity-Protokollen</value>
+  </data>
+  <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>Löschen von App Locker-Protokollen</value>
+  </data>
 </root>

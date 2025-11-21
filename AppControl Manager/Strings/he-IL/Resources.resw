@@ -6147,4 +6147,46 @@
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>יש להפעיל תכונה זו כדי להפוך שיטות חלופיות לפריסה ולהסרה של מדיניות App Control לזמינות. שיטות אלה אינן תלויות בקובץ ההפעלה CiTool וניתן להשתמש בהן אם CiTool חסום או אינו זמין.</value>
   </data>
+    <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>נקה יומני מערכת</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נקה מגוון יומנים במערכת ההפעלה. פעולה זו אינה ניתנת לביטול.</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נקה מגוון יומנים במערכת ההפעלה. פעולה זו אינה ניתנת לביטול.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>נקה יומני Code Integrity</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נקה את כל יומני Code Integrity Operational מן המערכת.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נקה את כל יומני Code Integrity Operational מן המערכת.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>נקה יומני App Locker</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נקה את כל יומני App Locker מן המערכת.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נקה את כל יומני App Locker מן המערכת.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsSuccessMsg" xml:space="preserve">
+    <value>כל יומני Code Integrity Operational נוקו בהצלחה מן המערכת.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsSuccessMsg" xml:space="preserve">
+    <value>כל יומני App Locker נוקו בהצלחה מן המערכת.</value>
+  </data>
+  <data name="OSLogsDeletionContentDialogMsg" xml:space="preserve">
+    <value>האם אתה בטוח שברצונך לנקות את היומנים שנבחרו? פעולה זו אינה ניתנת לביטול.</value>
+  </data>
+  <data name="OSCodeIntegrityLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>מחיקת יומני Code Integrity</value>
+  </data>
+  <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>מחיקת יומני App Locker</value>
+  </data>
 </root>

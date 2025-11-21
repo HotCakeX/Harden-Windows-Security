@@ -110,7 +110,7 @@
 
                                         <TextBlock x:Uid="ViewTheSelectedOtherPolicies" TextWrapping="WrapWholeWords" />
 
-                                        <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.OtherPolicies, Mode=OneWay}" />
+                                        <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.OtherPolicies, Mode=OneWay}" />
 
                                     </controls:WrapPanel>
 

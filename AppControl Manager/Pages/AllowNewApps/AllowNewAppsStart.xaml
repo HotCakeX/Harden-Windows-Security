@@ -198,7 +198,7 @@
 
                                         <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" Width="400" />
 
-                                        <ListBox MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.selectedDirectoriesToScan, Mode=OneWay}" />
+                                        <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.selectedDirectoriesToScan, Mode=OneWay}" />
 
                                     </controls:WrapPanel>
 

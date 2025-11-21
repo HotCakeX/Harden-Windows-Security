@@ -6146,4 +6146,46 @@
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ενεργοποιήστε αυτήν τη δυνατότητα για να καταστήσετε διαθέσιμες εναλλακτικές μεθόδους ανάπτυξης και κατάργησης πολιτικών App Control. Αυτές οι μέθοδοι δεν εξαρτώνται από το εκτελέσιμο CiTool και μπορούν να χρησιμοποιηθούν αν το CiTool είναι μπλοκαρισμένο ή μη διαθέσιμο.</value>
   </data>
+    <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Καθαρισμός αρχείων καταγραφής συστήματος</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καθαρισμός διαφόρων αρχείων καταγραφής στο λειτουργικό σύστημα. Η ενέργεια αυτή είναι μη αναστρέψιμη.</value>
+  </data>
+  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καθαρισμός διαφόρων αρχείων καταγραφής στο λειτουργικό σύστημα. Η ενέργεια αυτή είναι μη αναστρέψιμη.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Καθαρισμός αρχείων καταγραφής Code Integrity</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καθαρισμός όλων των λειτουργικών αρχείων καταγραφής Code Integrity από το σύστημα.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καθαρισμός όλων των λειτουργικών αρχείων καταγραφής Code Integrity από το σύστημα.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Καθαρισμός αρχείων καταγραφής App Locker</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καθαρισμός όλων των αρχείων καταγραφής App Locker από το σύστημα.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καθαρισμός όλων των αρχείων καταγραφής App Locker από το σύστημα.</value>
+  </data>
+  <data name="ClearOSCodeIntegrityLogsSuccessMsg" xml:space="preserve">
+    <value>Όλα τα λειτουργικά αρχεία καταγραφής Code Integrity καθαρίστηκαν επιτυχώς από το σύστημα.</value>
+  </data>
+  <data name="ClearOSAppLockerLogsSuccessMsg" xml:space="preserve">
+    <value>Όλα τα αρχεία καταγραφής App Locker καθαρίστηκαν επιτυχώς από το σύστημα.</value>
+  </data>
+  <data name="OSLogsDeletionContentDialogMsg" xml:space="preserve">
+    <value>Είστε βέβαιοι ότι θέλετε να καθαρίσετε τα επιλεγμένα αρχεία καταγραφής; Η ενέργεια αυτή είναι μη αναστρέψιμη.</value>
+  </data>
+  <data name="OSCodeIntegrityLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>Διαγραφή αρχείων καταγραφής Code Integrity</value>
+  </data>
+  <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
+    <value>Διαγραφή αρχείων καταγραφής App Locker</value>
+  </data>
 </root>

@@ -1336,7 +1336,7 @@ internal static class CustomDeserialization
 			return;
 
 		// At this point both are non-null/non-empty, so attempt to parse:
-		if (!Version.TryParse(minimumVersion, out var minVer))
+		if (!Version.TryParse(minimumVersion, out Version? minVer))
 			throw new ArgumentException(
 				string.Format(
 					GlobalVars.GetStr("ValidateVersionRangeInvalidMinVersionMessage"),
@@ -1344,7 +1344,7 @@ internal static class CustomDeserialization
 					minimumVersion),
 				nameof(minimumVersion));
 
-		if (!Version.TryParse(maximumVersion, out var maxVer))
+		if (!Version.TryParse(maximumVersion, out Version? maxVer))
 			throw new ArgumentException(
 				string.Format(
 					GlobalVars.GetStr("ValidateVersionRangeInvalidMaxVersionMessage"),

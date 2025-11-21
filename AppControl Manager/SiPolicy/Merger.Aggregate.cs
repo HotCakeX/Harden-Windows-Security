@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using AppControlManager.SiPolicyIntel;
 
 namespace AppControlManager.SiPolicy;
@@ -35,7 +36,7 @@ internal static class Factory
 		HashSet<AllowRule> allowRules = new(new AllowRuleComparer());
 
 		// Loop over each policy input data
-		foreach (SiPolicy siPolicy in siPolicies)
+		foreach (SiPolicy siPolicy in CollectionsMarshal.AsSpan(siPolicies))
 		{
 
 			// Index Allow rules by their ID for quick lookup
@@ -120,7 +121,7 @@ internal static class Factory
 		HashSet<DenyRule> denyRules = new(new DenyRuleComparer());
 
 		// Loop over each policy input data
-		foreach (SiPolicy siPolicy in siPolicies)
+		foreach (SiPolicy siPolicy in CollectionsMarshal.AsSpan(siPolicies))
 		{
 			// Index Deny rules by their ID for quick lookup
 			// ID will be key and Deny rule itself will be the value
@@ -201,7 +202,7 @@ internal static class Factory
 		HashSet<FileRuleRule> fileRuleRules = new(new FileRuleRuleComparer());
 
 		// Loop over each policy input data
-		foreach (SiPolicy siPolicy in siPolicies)
+		foreach (SiPolicy siPolicy in CollectionsMarshal.AsSpan(siPolicies))
 		{
 
 			// Index FileRules by their ID for quick lookup
@@ -289,7 +290,7 @@ internal static class Factory
 		HashSet<SupplementalPolicySignerRule> supplementalPolicySignerRules = new(new SupplementalPolicySignerRuleComparer());
 
 		// Loop over each policy input data
-		foreach (SiPolicy siPolicy in siPolicies)
+		foreach (SiPolicy siPolicy in CollectionsMarshal.AsSpan(siPolicies))
 		{
 
 			// Index elements for efficient lookup

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
@@ -227,7 +228,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			AllPoliciesOutput.AddRange(policies);
 
 			// Store all of the policies in the ObservableCollection
-			foreach (CiPolicyInfo policy in policies)
+			foreach (CiPolicyInfo policy in CollectionsMarshal.AsSpan(policies))
 			{
 				// Add the retrieved policies to the ObservableCollection
 				AllPolicies.Add(policy);
@@ -514,12 +515,9 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 						// Find any automatic AppControlManagerSupplementalPolicy that is associated with it and still on the system
 						List<CiPolicyInfo> extraPoliciesToRemove = [.. currentlyDeployedAppControlManagerSupplementalPolicies.Where(p => string.Equals(p.BasePolicyID, ListViewSelectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase) && p.IsOnDisk)];
 
-						if (extraPoliciesToRemove.Count > 0)
+						foreach (CiPolicyInfo item in CollectionsMarshal.AsSpan(extraPoliciesToRemove))
 						{
-							foreach (CiPolicyInfo item in extraPoliciesToRemove)
-							{
-								policiesToRemove.Add(item);
-							}
+							policiesToRemove.Add(item);
 						}
 					}
 				}

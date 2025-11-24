@@ -20,10 +20,10 @@ using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace AppControlManager.IntelGathering;
 
@@ -40,7 +40,6 @@ internal static class GetEventLogsData
 
 	// Get "OSDrive:\Windows\System32" string
 	private static readonly string FullSystem32Path = Environment.SystemDirectory;
-
 
 	/// <summary>
 	/// Retrieves the Code Integrity events from the local and EVTX files
@@ -105,40 +104,49 @@ internal static class GetEventLogsData
 				// There are either blocked or audit events in each group
 				// If there are more than 1 of either block or audit events, selecting the first one because that means the same event was triggered by multiple deployed policies
 
-				// Get the possible audit event in the group
-				EventRecord? possibleAuditEvent = group.FirstOrDefault(g => g.Id == 3076);
-				// Get the possible blocked event
-				EventRecord? possibleBlockEvent = group.FirstOrDefault(g => g.Id == 3077);
-				// Get the possible correlated data
-				IEnumerable<EventRecord> correlatedEvents = group.Where(g => g.Id == 3089);
+				EventRecord? possibleAuditEvent = null;
+				EventRecord? possibleBlockEvent = null;
+				List<EventRecord> correlatedEvents = [];
+
+				foreach (EventRecord rec in group)
+				{
+					// Get the possible audit event in the group
+					if (rec.Id == 3076)
+					{
+						possibleAuditEvent ??= rec;
+					}
+					// Get the possible blocked event
+					else if (rec.Id == 3077)
+					{
+						possibleBlockEvent ??= rec;
+					}
+					// Get the possible correlated data
+					else if (rec.Id == 3089)
+					{
+						correlatedEvents.Add(rec);
+					}
+				}
 
 
 				// If the current group belongs to an Audit event
 				if (possibleAuditEvent is not null)
 				{
-					// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+					// Get the XML string directly
 					string xmlString = possibleAuditEvent.ToXml();
-
-					// Create an XmlDocument and load the XML string, convert it to XML document
-					XmlDocument xmlDocument = new();
-					xmlDocument.LoadXml(xmlString);
-
-					// Create a namespace manager for the XML document
-					XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
-					namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
+					ReadOnlySpan<char> xmlSpan = xmlString.AsSpan();
 
 					#region Get File name and fix file path
-					string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='File Name']");
+					string? FilePath = GetStringValue(xmlSpan, "File Name");
 
 					string? FileName = null;
 
 					if (FilePath is not null)
 					{
-
 						// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
-						if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
+						if (FilePath.AsSpan().StartsWith("System32", StringComparison.OrdinalIgnoreCase))
 						{
-							FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
+							// Concat the FullSystem32Path with the rest of the string
+							FilePath = string.Concat(FullSystem32Path, FilePath.AsSpan(8));
 						}
 						else
 						{
@@ -153,7 +161,6 @@ internal static class GetEventLogsData
 						FileName = Path.GetFileName(FilePath);
 					}
 					#endregion
-
 
 					// This increases the processing time a LOT
 					/*
@@ -177,12 +184,12 @@ internal static class GetEventLogsData
 
 
 					// Make sure the file has SHA256 Hash
-					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
+					string? SHA256Hash = GetStringValue(xmlSpan, "SHA256 Hash");
 
 					if (SHA256Hash is null)
 						continue;
 
-					// Extract values using XPath
+					// Extract values using Span-based methods
 					FileIdentity eventData = new()
 					{
 						// These don't require to be retrieved from XML, they are part of the <System> node/section
@@ -196,76 +203,68 @@ internal static class GetEventLogsData
 						// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
 						FilePath = FilePath,
 						FileName = FileName,
-						ProcessName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Process Name']"),
-						RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Requested Signing Level']")),
-						ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Validated Signing Level']")),
-						Status = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Status']"),
-						SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Hash']"),
+						ProcessName = GetStringValue(xmlSpan, "Process Name"),
+						RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlSpan, "Requested Signing Level")),
+						ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlSpan, "Validated Signing Level")),
+						Status = GetStringValue(xmlSpan, "Status"),
+						SHA1Hash = GetStringValue(xmlSpan, "SHA1 Hash"),
 						SHA256Hash = SHA256Hash,
-						SHA1FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Flat Hash']"),
-						SHA256FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Flat Hash']"),
-						USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
-						SISigningScenario = (SiPolicyIntel.SSType)(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SI Signing Scenario']") ?? 1),
-						PolicyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyName']"),
-						PolicyID = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyID']"),
-						PolicyHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyHash']"),
-						OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFileName']"),
-						InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
-						FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
-						ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
-						PolicyGUID = GetGuidValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyGUID']"),
-						UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']"),
-						PackageFamilyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PackageFamilyName']")
+						SHA1FlatHash = GetStringValue(xmlSpan, "SHA1 Flat Hash"),
+						SHA256FlatHash = GetStringValue(xmlSpan, "SHA256 Flat Hash"),
+						USN = GetLongValue(xmlSpan, "USN"),
+						SISigningScenario = (SiPolicyIntel.SSType)(GetIntValue(xmlSpan, "SI Signing Scenario") ?? 1),
+						PolicyName = GetStringValue(xmlSpan, "PolicyName"),
+						PolicyID = GetStringValue(xmlSpan, "PolicyID"),
+						PolicyHash = GetStringValue(xmlSpan, "PolicyHash"),
+						OriginalFileName = GetStringValue(xmlSpan, "OriginalFileName"),
+						InternalName = GetStringValue(xmlSpan, "InternalName"),
+						FileDescription = GetStringValue(xmlSpan, "FileDescription"),
+						ProductName = GetStringValue(xmlSpan, "ProductName"),
+						PolicyGUID = GetGuidValue(xmlSpan, "PolicyGUID"),
+						UserWriteable = GetBooleanValue(xmlSpan, "UserWriteable"),
+						PackageFamilyName = GetStringValue(xmlSpan, "PackageFamilyName")
 					};
 
 					// Safely set the FileVersion using helper method
-					string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
+					string? fileVersionString = GetStringValue(xmlSpan, "FileVersion");
 					eventData.FileVersion = SetFileVersion(fileVersionString);
 
 					// Iterate over each correlated event (if any) - files can have multiple signers
 					foreach (EventRecord correlatedEvent in correlatedEvents)
 					{
-						// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+						// Get the XML string directly
 						string xmlStringCore = correlatedEvent.ToXml();
-
-						// Create an XmlDocument and load the XML string, convert it to XML document
-						XmlDocument xmlDocumentCore = new();
-						xmlDocumentCore.LoadXml(xmlStringCore);
-
-						// Create a namespace manager for the XML document
-						XmlNamespaceManager namespaceManagerCore = new(xmlDocumentCore.NameTable);
-						namespaceManagerCore.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
-
+						ReadOnlySpan<char> xmlSpanCore = xmlStringCore.AsSpan();
 
 						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
 						// They have "Unknown" as their IssuerName and PublisherName too
 						// Leaf certificate is a must have for signed files
-						string? PublisherTBSHash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherTBSHash']");
+						string? PublisherTBSHash = GetStringValue(xmlSpanCore, "PublisherTBSHash");
 
-						string? PublisherName = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherName']");
+						string? PublisherName = GetStringValue(xmlSpanCore, "PublisherName");
 
 						if (PublisherTBSHash is null || PublisherName is null)
 							continue;
 
-						// Extract values using XPath
+						// Extract values using Span-based methods
 						FileSignerInfo signerInfo = new(
-							totalSignatureCount: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='TotalSignatureCount']"),
-							signature: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Signature']"),
-							hash: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Hash']"),
-							pageHash: GetBooleanValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PageHash']"),
-							signatureType: CILogIntel.GetSignatureType(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='SignatureType']")),
-							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='ValidatedSigningLevel']")),
-							verificationError: CILogIntel.GetVerificationError(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='VerificationError']")),
-							flags: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Flags']"),
-							notValidBefore: GetEventDataDateTimeValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='NotValidBefore']"),
-							notValidAfter: GetEventDataDateTimeValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='NotValidAfter']"),
+							totalSignatureCount: GetIntValue(xmlSpanCore, "TotalSignatureCount"),
+							signature: GetIntValue(xmlSpanCore, "Signature"),
+							hash: GetStringValue(xmlSpanCore, "Hash"),
+							pageHash: GetBooleanValue(xmlSpanCore, "PageHash"),
+							signatureType: CILogIntel.GetSignatureType(GetIntValue(xmlSpanCore, "SignatureType")),
+							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlSpanCore, "ValidatedSigningLevel")),
+							verificationError: CILogIntel.GetVerificationError(GetIntValue(xmlSpanCore, "VerificationError")),
+							flags: GetIntValue(xmlSpanCore, "Flags"),
+							notValidBefore: GetEventDataDateTimeValue(xmlSpanCore, "NotValidBefore"),
+							notValidAfter: GetEventDataDateTimeValue(xmlSpanCore, "NotValidAfter"),
 							publisherName: PublisherName,
-							issuerName: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerName']"),
+							issuerName: GetStringValue(xmlSpanCore, "IssuerName"),
 							publisherTBSHash: PublisherTBSHash,
-							issuerTBSHash: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerTBSHash']"),
-							oPUSInfo: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='OPUSInfo']"),
-							eKUs: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='EKUs']"),
-							knownRoot: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='KnownRoot']")
+							issuerTBSHash: GetStringValue(xmlSpanCore, "IssuerTBSHash"),
+							oPUSInfo: GetStringValue(xmlSpanCore, "OPUSInfo"),
+							eKUs: GetStringValue(xmlSpanCore, "EKUs"),
+							knownRoot: GetIntValue(xmlSpanCore, "KnownRoot")
 						);
 
 						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
@@ -287,20 +286,12 @@ internal static class GetEventLogsData
 				// If the current group belongs to a blocked event
 				if (possibleBlockEvent is not null)
 				{
-
-					// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+					// Get the XML string directly
 					string xmlString = possibleBlockEvent.ToXml();
-
-					// Create an XmlDocument and load the XML string, convert it to XML document
-					XmlDocument xmlDocument = new();
-					xmlDocument.LoadXml(xmlString);
-
-					// Create a namespace manager for the XML document
-					XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
-					namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
+					ReadOnlySpan<char> xmlSpan = xmlString.AsSpan();
 
 					#region Get File name and fix file path
-					string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='File Name']");
+					string? FilePath = GetStringValue(xmlSpan, "File Name");
 
 					string? FileName = null;
 
@@ -308,9 +299,9 @@ internal static class GetEventLogsData
 					{
 
 						// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
-						if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
+						if (FilePath.AsSpan().StartsWith("System32", StringComparison.OrdinalIgnoreCase))
 						{
-							FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
+							FilePath = string.Concat(FullSystem32Path, FilePath.AsSpan(8));
 						}
 						else
 						{
@@ -326,34 +317,13 @@ internal static class GetEventLogsData
 					}
 					#endregion
 
-
-					/*
-						#region Resolve UserID
-						string? UserIDString = null;
-
-						if (possibleBlockEvent.UserId is not null)
-						{
-							try
-							{
-								// If the user account SID doesn't exist on the system it'll throw error
-								UserIDString = possibleBlockEvent.UserId.Translate(typeof(NTAccount)).Value;
-							}
-							catch
-							{
-								UserIDString = possibleBlockEvent.UserId?.ToString();
-							}
-						}
-						#endregion
-						*/
-
-
 					// Make sure the file has SHA256 Hash
-					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
+					string? SHA256Hash = GetStringValue(xmlSpan, "SHA256 Hash");
 
 					if (SHA256Hash is null)
 						continue;
 
-					// Extract values using XPath
+					// Extract values using Span-based methods
 					FileIdentity eventData = new()
 					{
 						// These don't require to be retrieved from XML, they are part of the <System> node/section
@@ -367,76 +337,68 @@ internal static class GetEventLogsData
 						// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
 						FilePath = FilePath,
 						FileName = FileName,
-						ProcessName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Process Name']"),
-						RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Requested Signing Level']")),
-						ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Validated Signing Level']")),
-						Status = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Status']"),
-						SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Hash']"),
+						ProcessName = GetStringValue(xmlSpan, "Process Name"),
+						RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlSpan, "Requested Signing Level")),
+						ValidatedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlSpan, "Validated Signing Level")),
+						Status = GetStringValue(xmlSpan, "Status"),
+						SHA1Hash = GetStringValue(xmlSpan, "SHA1 Hash"),
 						SHA256Hash = SHA256Hash,
-						SHA1FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA1 Flat Hash']"),
-						SHA256FlatHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Flat Hash']"),
-						USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
-						SISigningScenario = (SiPolicyIntel.SSType)(GetIntValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SI Signing Scenario']") ?? 1),
-						PolicyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyName']"),
-						PolicyID = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyID']"),
-						PolicyHash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyHash']"),
-						OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFileName']"),
-						InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
-						FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
-						ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
-						PolicyGUID = GetGuidValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PolicyGUID']"),
-						UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']"),
-						PackageFamilyName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='PackageFamilyName']")
+						SHA1FlatHash = GetStringValue(xmlSpan, "SHA1 Flat Hash"),
+						SHA256FlatHash = GetStringValue(xmlSpan, "SHA256 Flat Hash"),
+						USN = GetLongValue(xmlSpan, "USN"),
+						SISigningScenario = (SiPolicyIntel.SSType)(GetIntValue(xmlSpan, "SI Signing Scenario") ?? 1),
+						PolicyName = GetStringValue(xmlSpan, "PolicyName"),
+						PolicyID = GetStringValue(xmlSpan, "PolicyID"),
+						PolicyHash = GetStringValue(xmlSpan, "PolicyHash"),
+						OriginalFileName = GetStringValue(xmlSpan, "OriginalFileName"),
+						InternalName = GetStringValue(xmlSpan, "InternalName"),
+						FileDescription = GetStringValue(xmlSpan, "FileDescription"),
+						ProductName = GetStringValue(xmlSpan, "ProductName"),
+						PolicyGUID = GetGuidValue(xmlSpan, "PolicyGUID"),
+						UserWriteable = GetBooleanValue(xmlSpan, "UserWriteable"),
+						PackageFamilyName = GetStringValue(xmlSpan, "PackageFamilyName")
 					};
 
 					// Safely set the FileVersion using helper method
-					string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
+					string? fileVersionString = GetStringValue(xmlSpan, "FileVersion");
 					eventData.FileVersion = SetFileVersion(fileVersionString);
 
 					// Iterate over each correlated event (if any) - files can have multiple signers
 					foreach (EventRecord correlatedEvent in correlatedEvents)
 					{
-						// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+						// Get the XML string directly
 						string xmlStringCore = correlatedEvent.ToXml();
-
-						// Create an XmlDocument and load the XML string, convert it to XML document
-						XmlDocument xmlDocumentCore = new();
-						xmlDocumentCore.LoadXml(xmlStringCore);
-
-						// Create a namespace manager for the XML document
-						XmlNamespaceManager namespaceManagerCore = new(xmlDocumentCore.NameTable);
-						namespaceManagerCore.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
-
+						ReadOnlySpan<char> xmlSpanCore = xmlStringCore.AsSpan();
 
 						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash)
 						// They have "Unknown" as their IssuerName and PublisherName too
 						// Leaf certificate is a must have for signed files
-						string? PublisherTBSHash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherTBSHash']");
+						string? PublisherTBSHash = GetStringValue(xmlSpanCore, "PublisherTBSHash");
 
-						string? PublisherName = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherName']");
+						string? PublisherName = GetStringValue(xmlSpanCore, "PublisherName");
 
 						if (PublisherTBSHash is null || PublisherName is null)
 							continue;
 
-						// Extract values using XPath
+						// Extract values using Span-based methods
 						FileSignerInfo signerInfo = new(
-							totalSignatureCount: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='TotalSignatureCount']"),
-							signature: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Signature']"),
-							hash: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Hash']"),
-							pageHash: GetBooleanValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PageHash']"),
-							signatureType: CILogIntel.GetSignatureType(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='SignatureType']")),
-							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='ValidatedSigningLevel']")),
-							verificationError: CILogIntel.GetVerificationError(GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='VerificationError']")),
-							flags: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Flags']"),
-							notValidBefore: GetEventDataDateTimeValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='NotValidBefore']"),
-							notValidAfter: GetEventDataDateTimeValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='NotValidAfter']"),
+							totalSignatureCount: GetIntValue(xmlSpanCore, "TotalSignatureCount"),
+							signature: GetIntValue(xmlSpanCore, "Signature"),
+							hash: GetStringValue(xmlSpanCore, "Hash"),
+							pageHash: GetBooleanValue(xmlSpanCore, "PageHash"),
+							signatureType: CILogIntel.GetSignatureType(GetIntValue(xmlSpanCore, "SignatureType")),
+							validatedSigningLevel: CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(xmlSpanCore, "ValidatedSigningLevel")),
+							verificationError: CILogIntel.GetVerificationError(GetIntValue(xmlSpanCore, "VerificationError")),
+							flags: GetIntValue(xmlSpanCore, "Flags"),
+							notValidBefore: GetEventDataDateTimeValue(xmlSpanCore, "NotValidBefore"),
+							notValidAfter: GetEventDataDateTimeValue(xmlSpanCore, "NotValidAfter"),
 							publisherName: PublisherName,
-							issuerName: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerName']"),
+							issuerName: GetStringValue(xmlSpanCore, "IssuerName"),
 							publisherTBSHash: PublisherTBSHash,
-							issuerTBSHash: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerTBSHash']"),
-							oPUSInfo: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='OPUSInfo']"),
-							eKUs: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='EKUs']"),
-							knownRoot: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='KnownRoot']")
+							issuerTBSHash: GetStringValue(xmlSpanCore, "IssuerTBSHash"),
+							oPUSInfo: GetStringValue(xmlSpanCore, "OPUSInfo"),
+							eKUs: GetStringValue(xmlSpanCore, "EKUs"),
+							knownRoot: GetIntValue(xmlSpanCore, "KnownRoot")
 						);
 
 						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
@@ -535,30 +497,39 @@ internal static class GetEventLogsData
 				// There are either blocked or audit events in each group
 				// If there are more than 1 of either block or audit events, selecting the first one because that means the same event was triggered by multiple deployed policies
 
-				// Get the possible audit event in the group
-				EventRecord? possibleAuditEvent = group.FirstOrDefault(g => g.Id == 8028);
-				// Get the possible blocked event
-				EventRecord? possibleBlockEvent = group.FirstOrDefault(g => g.Id == 8029);
-				// Get the possible correlated data
-				IEnumerable<EventRecord> correlatedEvents = group.Where(g => g.Id == 8038);
+				EventRecord? possibleAuditEvent = null;
+				EventRecord? possibleBlockEvent = null;
+				List<EventRecord> correlatedEvents = [];
+
+				foreach (EventRecord rec in group)
+				{
+					// Get the possible audit event in the group
+					if (rec.Id == 8028)
+					{
+						possibleAuditEvent ??= rec;
+					}
+					// Get the possible blocked event
+					else if (rec.Id == 8029)
+					{
+						possibleBlockEvent ??= rec;
+					}
+					// Get the possible correlated data
+					else if (rec.Id == 8038)
+					{
+						correlatedEvents.Add(rec);
+					}
+				}
 
 				// If the current group belongs to an Audit event
 				if (possibleAuditEvent is not null)
 				{
-					// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+					// Get the XML string directly
 					string xmlString = possibleAuditEvent.ToXml();
-
-					// Create an XmlDocument and load the XML string, convert it to XML document
-					XmlDocument xmlDocument = new();
-					xmlDocument.LoadXml(xmlString);
-
-					// Create a namespace manager for the XML document
-					XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
-					namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
+					ReadOnlySpan<char> xmlSpan = xmlString.AsSpan();
 
 
 					#region Get File name - the file path doesn't need fixing like Code integrity ones
-					string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FilePath']");
+					string? FilePath = GetStringValue(xmlSpan, "FilePath");
 
 					string? FileName = null;
 
@@ -566,9 +537,9 @@ internal static class GetEventLogsData
 					{
 
 						// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
-						if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
+						if (FilePath.AsSpan().StartsWith("System32", StringComparison.OrdinalIgnoreCase))
 						{
-							FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
+							FilePath = string.Concat(FullSystem32Path, FilePath.AsSpan(8));
 						}
 
 						// Doesn't matter if the file exists or not
@@ -576,34 +547,13 @@ internal static class GetEventLogsData
 					}
 					#endregion
 
-
-					/*
-						#region Resolve UserID
-						string? UserIDString = null;
-
-						if (possibleAuditEvent.UserId is not null)
-						{
-							try
-							{
-								// If the user account SID doesn't exist on the system it'll throw error
-								UserIDString = possibleAuditEvent.UserId.Translate(typeof(NTAccount)).Value;
-							}
-							catch
-							{
-								UserIDString = possibleAuditEvent.UserId?.ToString();
-							}
-						}
-						#endregion
-						*/
-
-
 					// Make sure the file has SHA256 Hash
-					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
+					string? SHA256Hash = GetStringValue(xmlSpan, "SHA256 Hash");
 
 					if (SHA256Hash is null)
 						continue;
 
-					// Extract values using XPath
+					// Extract values using Span-based methods
 					FileIdentity eventData = new()
 					{
 						// These don't require to be retrieved from XML, they are part of the <System> node/section
@@ -617,56 +567,48 @@ internal static class GetEventLogsData
 						// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
 						FilePath = FilePath,
 						FileName = FileName,
-						SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Sha1Hash']"),
+						SHA1Hash = GetStringValue(xmlSpan, "Sha1Hash"),
 						SHA256Hash = SHA256Hash,
-						USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
+						USN = GetLongValue(xmlSpan, "USN"),
 						SISigningScenario = SiPolicyIntel.SSType.UserMode, // AppLocker doesn't apply to Kernel mode files, so all of these logs have User-Mode Signing Scenario
-						OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFilename']"),
-						InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
-						FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
-						ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
-						UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']")
+						OriginalFileName = GetStringValue(xmlSpan, "OriginalFilename"),
+						InternalName = GetStringValue(xmlSpan, "InternalName"),
+						FileDescription = GetStringValue(xmlSpan, "FileDescription"),
+						ProductName = GetStringValue(xmlSpan, "ProductName"),
+						UserWriteable = GetBooleanValue(xmlSpan, "UserWriteable")
 					};
 
 					// Safely set the FileVersion using helper method
-					string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
+					string? fileVersionString = GetStringValue(xmlSpan, "FileVersion");
 					eventData.FileVersion = SetFileVersion(fileVersionString);
 
 					// Iterate over each correlated event (if any) - files can have multiple signers
 					foreach (EventRecord correlatedEvent in correlatedEvents)
 					{
-						// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+						// Get the XML string directly
 						string xmlStringCore = correlatedEvent.ToXml();
-
-						// Create an XmlDocument and load the XML string, convert it to XML document
-						XmlDocument xmlDocumentCore = new();
-						xmlDocumentCore.LoadXml(xmlStringCore);
-
-						// Create a namespace manager for the XML document
-						XmlNamespaceManager namespaceManagerCore = new(xmlDocumentCore.NameTable);
-						namespaceManagerCore.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
-
+						ReadOnlySpan<char> xmlSpanCore = xmlStringCore.AsSpan();
 
 						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash)
 						// They have "Unknown" as their IssuerName and PublisherName too
 						// Leaf certificate is a must have for signed files
-						string? PublisherTBSHash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherTBSHash']");
+						string? PublisherTBSHash = GetStringValue(xmlSpanCore, "PublisherTBSHash");
 
-						string? PublisherName = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherName']");
+						string? PublisherName = GetStringValue(xmlSpanCore, "PublisherName");
 
 						if (PublisherTBSHash is null || PublisherName is null)
 						{
 							continue;
 						}
 
-						// Extract values using XPath
+						// Extract values using Span-based methods
 						FileSignerInfo signerInfo = new(
-							totalSignatureCount: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='TotalSignatureCount']"),
-							signature: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Signature']"),
+							totalSignatureCount: GetIntValue(xmlSpanCore, "TotalSignatureCount"),
+							signature: GetIntValue(xmlSpanCore, "Signature"),
 							publisherName: PublisherName,
-							issuerName: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerName']"),
+							issuerName: GetStringValue(xmlSpanCore, "IssuerName"),
 							publisherTBSHash: PublisherTBSHash,
-							issuerTBSHash: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerTBSHash']")
+							issuerTBSHash: GetStringValue(xmlSpanCore, "IssuerTBSHash")
 						);
 
 						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
@@ -690,20 +632,13 @@ internal static class GetEventLogsData
 				// If the current group belongs to a blocked event
 				if (possibleBlockEvent is not null)
 				{
-					// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+					// Get the XML string directly
 					string xmlString = possibleBlockEvent.ToXml();
-
-					// Create an XmlDocument and load the XML string, convert it to XML document
-					XmlDocument xmlDocument = new();
-					xmlDocument.LoadXml(xmlString);
-
-					// Create a namespace manager for the XML document
-					XmlNamespaceManager namespaceManager = new(xmlDocument.NameTable);
-					namespaceManager.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
+					ReadOnlySpan<char> xmlSpan = xmlString.AsSpan();
 
 
 					#region Get File name - the file path doesn't need fixing like Code integrity ones
-					string? FilePath = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FilePath']");
+					string? FilePath = GetStringValue(xmlSpan, "FilePath");
 
 					string? FileName = null;
 
@@ -711,9 +646,9 @@ internal static class GetEventLogsData
 					{
 
 						// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
-						if (FilePath.StartsWith("System32", StringComparison.OrdinalIgnoreCase))
+						if (FilePath.AsSpan().StartsWith("System32", StringComparison.OrdinalIgnoreCase))
 						{
-							FilePath = FilePath.Replace("System32", FullSystem32Path, StringComparison.OrdinalIgnoreCase);
+							FilePath = string.Concat(FullSystem32Path, FilePath.AsSpan(8));
 						}
 
 						// Doesn't matter if the file exists or not
@@ -721,34 +656,13 @@ internal static class GetEventLogsData
 					}
 					#endregion
 
-
-					/*
-						#region Resolve UserID
-						string? UserIDString = null;
-
-						if (possibleBlockEvent.UserId is not null)
-						{
-							try
-							{
-								// If the user account SID doesn't exist on the system it'll throw error
-								UserIDString = possibleBlockEvent.UserId.Translate(typeof(NTAccount)).Value;
-							}
-							catch
-							{
-								UserIDString = possibleBlockEvent.UserId?.ToString();
-							}
-						}
-						#endregion
-						*/
-
-
 					// Make sure the file has SHA256 Hash
-					string? SHA256Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='SHA256 Hash']");
+					string? SHA256Hash = GetStringValue(xmlSpan, "SHA256 Hash");
 
 					if (SHA256Hash is null)
 						continue;
 
-					// Extract values using XPath
+					// Extract values using Span-based methods
 					FileIdentity eventData = new()
 					{
 						// These don't require to be retrieved from XML, they are part of the <System> node/section
@@ -762,54 +676,46 @@ internal static class GetEventLogsData
 						// Need to be retrieved from the XML because they are part of the <EventData> node of the Event, otherwise their property names wouldn't be available
 						FilePath = FilePath,
 						FileName = FileName,
-						SHA1Hash = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='Sha1Hash']"),
+						SHA1Hash = GetStringValue(xmlSpan, "Sha1Hash"),
 						SHA256Hash = SHA256Hash,
-						USN = GetLongValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='USN']"),
+						USN = GetLongValue(xmlSpan, "USN"),
 						SISigningScenario = SiPolicyIntel.SSType.UserMode, // AppLocker doesn't apply to Kernel mode files, so all of these logs have User-Mode Signing Scenario
-						OriginalFileName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='OriginalFilename']"),
-						InternalName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='InternalName']"),
-						FileDescription = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileDescription']"),
-						ProductName = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='ProductName']"),
-						UserWriteable = GetBooleanValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='UserWriteable']")
+						OriginalFileName = GetStringValue(xmlSpan, "OriginalFilename"),
+						InternalName = GetStringValue(xmlSpan, "InternalName"),
+						FileDescription = GetStringValue(xmlSpan, "FileDescription"),
+						ProductName = GetStringValue(xmlSpan, "ProductName"),
+						UserWriteable = GetBooleanValue(xmlSpan, "UserWriteable")
 					};
 
 					// Safely set the FileVersion using helper method
-					string? fileVersionString = GetStringValue(xmlDocument, namespaceManager, "//evt:EventData/evt:Data[@Name='FileVersion']");
+					string? fileVersionString = GetStringValue(xmlSpan, "FileVersion");
 					eventData.FileVersion = SetFileVersion(fileVersionString);
 
 					// Iterate over each correlated event (if any) - files can have multiple signers
 					foreach (EventRecord correlatedEvent in correlatedEvents)
 					{
-						// Use the ToXml method of the EventRecord to convert the entire event to XML but as string
+						// Get the XML string directly
 						string xmlStringCore = correlatedEvent.ToXml();
-
-						// Create an XmlDocument and load the XML string, convert it to XML document
-						XmlDocument xmlDocumentCore = new();
-						xmlDocumentCore.LoadXml(xmlStringCore);
-
-						// Create a namespace manager for the XML document
-						XmlNamespaceManager namespaceManagerCore = new(xmlDocumentCore.NameTable);
-						namespaceManagerCore.AddNamespace("evt", "http://schemas.microsoft.com/win/2004/08/events/event");
-
+						ReadOnlySpan<char> xmlSpanCore = xmlStringCore.AsSpan();
 
 						// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash)
 						// They have "Unknown" as their IssuerName and PublisherName too
 						// Leaf certificate is a must have for signed files
-						string? PublisherTBSHash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherTBSHash']");
+						string? PublisherTBSHash = GetStringValue(xmlSpanCore, "PublisherTBSHash");
 
-						string? PublisherName = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='PublisherName']");
+						string? PublisherName = GetStringValue(xmlSpanCore, "PublisherName");
 
 						if (PublisherTBSHash is null || PublisherName is null)
 							continue;
 
-						// Extract values using XPath
+						// Extract values using Span-based methods
 						FileSignerInfo signerInfo = new(
-							totalSignatureCount: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='TotalSignatureCount']"),
-							signature: GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='Signature']"),
+							totalSignatureCount: GetIntValue(xmlSpanCore, "TotalSignatureCount"),
+							signature: GetIntValue(xmlSpanCore, "Signature"),
 							publisherName: PublisherName,
-							issuerName: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerName']"),
+							issuerName: GetStringValue(xmlSpanCore, "IssuerName"),
 							publisherTBSHash: PublisherTBSHash,
-							issuerTBSHash: GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerTBSHash']")
+							issuerTBSHash: GetStringValue(xmlSpanCore, "IssuerTBSHash")
 						);
 
 						// Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
@@ -863,77 +769,134 @@ internal static class GetEventLogsData
 	}
 
 	/// <summary>
-	/// Method to safely get an integer value from the XML document
+	/// Core helper to extract the content of a Data node by its Name attribute from raw XML span.
+	/// Handles finding Name='AttributeName' or Name="AttributeName" and extracting the inner text.
 	/// </summary>
-	/// <param name="xmlDoc"></param>
-	/// <param name="nsManager"></param>
-	/// <param name="xpath"></param>
-	/// <returns></returns>
+	/// <param name="xml">The XML content as a ReadOnlySpan</param>
+	/// <param name="attributeName">The value of the Name attribute to look for</param>
+	/// <returns>The inner content of the node as a ReadOnlySpan, or an empty span if not found</returns>
+	private static ReadOnlySpan<char> GetRawXmlValue(ReadOnlySpan<char> xml, string attributeName)
+	{
+		// Try single quote first
+		// "Name='AttributeName'"
+		int index = xml.IndexOf(string.Concat("Name='", attributeName, "'"), StringComparison.Ordinal);
+
+		if (index < 0)
+		{
+			// Try double quote
+			// "Name="AttributeName""
+			index = xml.IndexOf(string.Concat("Name=\"", attributeName, "\""), StringComparison.Ordinal);
+		}
+
+		if (index < 0)
+		{
+			return default; // Not found
+		}
+
+		// index points to the start of "Name=...", we need to find the end of the opening tag '>'
+		// We can search for '>' starting from the match index
+		int closingTagIndex = xml[index..].IndexOf('>');
+
+		if (closingTagIndex < 0)
+		{
+			return default; // Malformed XML or not found
+		}
+
+		// Calculate the absolute index of the '>' character
+		int absoluteClosingTagIndex = index + closingTagIndex;
+
+		// Check for self-closing tag "/>"
+		// If the character before '>' is '/', it's an empty element
+		if (absoluteClosingTagIndex > 0 && xml[absoluteClosingTagIndex - 1] == '/')
+		{
+			return default; // Empty value
+		}
+
+		// The value starts right after the '>'
+		int valueStartIndex = absoluteClosingTagIndex + 1;
+
+		// Find the start of the closing tag "</"
+		int valueEndIndex = xml[valueStartIndex..].IndexOf("</", StringComparison.Ordinal);
+
+		if (valueEndIndex < 0)
+		{
+			return default; // Closing tag not found
+		}
+
+		// Return the slice containing the value
+		return xml.Slice(valueStartIndex, valueEndIndex);
+	}
+
+	/// <summary>
+	/// Safely get an integer value from the XML using Span.
+	/// </summary>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static int? GetIntValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
+	private static int? GetIntValue(ReadOnlySpan<char> xml, string attributeName)
 	{
-		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);
-		return node is not null && int.TryParse(node.InnerText, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) ? result : null;
+		ReadOnlySpan<char> valueSpan = GetRawXmlValue(xml, attributeName);
+		return !valueSpan.IsEmpty && int.TryParse(valueSpan, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) ? result : null;
 	}
 
-
 	/// <summary>
-	/// Only works for the "EventData" node of the Event
+	/// Safely get a DateTime value from the XML using Span.
 	/// </summary>
-	private static DateTime? GetEventDataDateTimeValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
+	private static DateTime? GetEventDataDateTimeValue(ReadOnlySpan<char> xml, string attributeName)
 	{
-		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);
-		return node is not null && DateTime.TryParse(node.InnerText, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime result) ? result : null;
+		ReadOnlySpan<char> valueSpan = GetRawXmlValue(xml, attributeName);
+		return !valueSpan.IsEmpty && DateTime.TryParse(valueSpan, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime result) ? result : null;
 	}
 
-
 	/// <summary>
-	/// Returns null if the string is null, empty or whitespaces
+	/// Safely get a string value from the XML using Span.
+	/// Performs XML decoding to ensure 100% compatibility with XmlDocument.
 	/// </summary>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static string? GetStringValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
+	private static string? GetStringValue(ReadOnlySpan<char> xml, string attributeName)
 	{
-		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);
-		return string.IsNullOrWhiteSpace(node?.InnerText) ? null : node?.InnerText;
+		ReadOnlySpan<char> valueSpan = GetRawXmlValue(xml, attributeName);
+
+		if (valueSpan.IsEmpty)
+		{
+			return null;
+		}
+
+		string value = valueSpan.ToString();
+
+		// If the string is just whitespace, return null to match the original behavior of string.IsNullOrWhiteSpace check on InnerText.
+		if (string.IsNullOrWhiteSpace(value))
+		{
+			return null;
+		}
+
+		// Decode XML entities (e.g., &amp; -> &) to ensure parity with XmlDocument
+		return WebUtility.HtmlDecode(value);
 	}
 
 	/// <summary>
-	/// Retrieves a long integer value from an XML document based on a specified XPath expression.
+	/// Safely get a long value from the XML using Span.
 	/// </summary>
-	/// <param name="xmlDoc">The XML document from which the value is extracted.</param>
-	/// <param name="nsManager">Manages the namespaces used in the XPath query.</param>
-	/// <param name="xpath">The XPath expression used to locate the desired node in the XML document.</param>
-	/// <returns>Returns the long integer value if found and valid, otherwise returns null.</returns>
-	private static long? GetLongValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
+	private static long? GetLongValue(ReadOnlySpan<char> xml, string attributeName)
 	{
-		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);
-		return node is not null && long.TryParse(node.InnerText, NumberStyles.Integer, CultureInfo.InvariantCulture, out long result) ? result : null;
+		ReadOnlySpan<char> valueSpan = GetRawXmlValue(xml, attributeName);
+		return !valueSpan.IsEmpty && long.TryParse(valueSpan, NumberStyles.Integer, CultureInfo.InvariantCulture, out long result) ? result : null;
 	}
 
 	/// <summary>
-	/// Retrieves a GUID value from an XML document based on a specified XPath expression.
+	/// Safely get a GUID value from the XML using Span.
 	/// </summary>
-	/// <param name="xmlDoc">The XML document from which the GUID value is extracted.</param>
-	/// <param name="nsManager">Manages the namespaces used in the XPath query.</param>
-	/// <param name="xpath">The XPath expression used to locate the desired node in the XML document.</param>
-	/// <returns>Returns the extracted GUID if found and valid, otherwise returns null.</returns>
-	private static Guid? GetGuidValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
+	private static Guid? GetGuidValue(ReadOnlySpan<char> xml, string attributeName)
 	{
-		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);
-		return node is not null && Guid.TryParse(node.InnerText, out Guid guid) ? guid : null;
+		ReadOnlySpan<char> valueSpan = GetRawXmlValue(xml, attributeName);
+		return !valueSpan.IsEmpty && Guid.TryParse(valueSpan, out Guid guid) ? guid : null;
 	}
 
 	/// <summary>
-	/// Retrieves a boolean value from an XML document based on a specified XPath expression.
+	/// Safely get a boolean value from the XML using Span.
 	/// </summary>
-	/// <param name="xmlDoc">The XML document from which the boolean value is extracted.</param>
-	/// <param name="nsManager">Manages the namespaces used in the XPath expression for accurate node selection.</param>
-	/// <param name="xpath">The XPath expression used to locate the desired node within the XML document.</param>
-	/// <returns>Returns the boolean value found at the specified node or null if not found or not a valid boolean.</returns>
-	private static bool? GetBooleanValue(XmlDocument xmlDoc, XmlNamespaceManager nsManager, string xpath)
+	private static bool? GetBooleanValue(ReadOnlySpan<char> xml, string attributeName)
 	{
-		XmlNode? node = xmlDoc.SelectSingleNode(xpath, nsManager);
-		return node is not null && bool.TryParse(node.InnerText, out bool result) ? result : null;
+		ReadOnlySpan<char> valueSpan = GetRawXmlValue(xml, attributeName);
+		return !valueSpan.IsEmpty && bool.TryParse(valueSpan, out bool result) ? result : null;
 	}
 
 	/// <summary>
@@ -944,12 +907,12 @@ internal static class GetEventLogsData
 	private static string ResolvePath(string path)
 	{
 		// Find the matching DriveMapping for the device path prefix
-		foreach (DriveLetterMapper.DriveMapping mapping in DriveLettersGlobalRootFix)
+		foreach (ref readonly DriveLetterMapper.DriveMapping mapping in CollectionsMarshal.AsSpan(DriveLettersGlobalRootFix))
 		{
-			if (mapping.DevicePath is not null && path.StartsWith(mapping.DevicePath, StringComparison.OrdinalIgnoreCase))
+			if (mapping.DevicePath is not null && path.AsSpan().StartsWith(mapping.DevicePath, StringComparison.OrdinalIgnoreCase))
 			{
-				// Replace the device path with the corresponding drive letter
-				return path.Replace(mapping.DevicePath, mapping.DriveLetter, StringComparison.OrdinalIgnoreCase);
+				// Replace the device path with the corresponding drive letter by concatenation
+				return string.Concat(mapping.DriveLetter, path.AsSpan(mapping.DevicePath.Length));
 			}
 		}
 

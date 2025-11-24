@@ -6188,4 +6188,55 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
     <value>App Locker लॉग हटाना</value>
   </data>
+    <data name="SystemOverview.Text" xml:space="preserve">
+    <value>सिस्टम अवलोकन</value>
+  </data>
+  <data name="SystemTime.Text" xml:space="preserve">
+    <value>सिस्टम समय</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>समय क्षेत्र</value>
+  </data>
+  <data name="User.Text" xml:space="preserve">
+    <value>उपयोगकर्ता</value>
+  </data>
+  <data name="ComputerName.Text" xml:space="preserve">
+    <value>कंप्यूटर नाम</value>
+  </data>
+  <data name="OperatingSystem.Text" xml:space="preserve">
+    <value>ऑपरेटिंग सिस्टम</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>सक्रिय समय</value>
+  </data>
+  <data name="SystemRAM.Text" xml:space="preserve">
+    <value>सिस्टम RAM</value>
+  </data>
+  <data name="AppRAMUsage.Text" xml:space="preserve">
+    <value>ऐप RAM उपयोग</value>
+  </data>
+  <data name="StorageSize.Text" xml:space="preserve">
+    <value>संग्रहण क्षमता</value>
+  </data>
+  <data name="InternetSpeed.Text" xml:space="preserve">
+    <value>इंटरनेट गति</value>
+  </data>
+  <data name="CPUTemperature.Text" xml:space="preserve">
+    <value>CPU तापमान</value>
+  </data>
+  <data name="OnlineMicrosoftDefenderStatus.Text" xml:space="preserve">
+    <value>ऑनलाइन Microsoft Defender स्थिति</value>
+  </data>
+  <data name="EngineVersion.Text" xml:space="preserve">
+    <value>इंजन संस्करण</value>
+  </data>
+  <data name="SignatureVersion.Text" xml:space="preserve">
+    <value>हस्ताक्षर संस्करण</value>
+  </data>
+  <data name="PlatformVersion.Text" xml:space="preserve">
+    <value>प्लेटफ़ॉर्म संस्करण</value>
+  </data>
+  <data name="SignatureUpdate.Text" xml:space="preserve">
+    <value>हस्ताक्षर अपडेट (UTC)</value>
+  </data>
 </root>

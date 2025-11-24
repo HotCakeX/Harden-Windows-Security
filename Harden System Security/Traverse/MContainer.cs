@@ -155,7 +155,6 @@ internal sealed class MContainer(
 	[JsonInclude]
 	[JsonPropertyName("AttackSurfaceReductionRules")]
 	[JsonPropertyOrder(10)]
-	[JsonConverter(typeof(DeserializationOverrides.AttackSurfaceReductionRulesWriteOnlyConverter))]
 	internal AttackSurfaceReductionRules? AttackSurfaceReductionRules => attackSurfaceReductionRules;
 
 	[JsonInclude]
@@ -236,12 +235,14 @@ internal sealed class MContainer(
 	PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
 	PropertyNameCaseInsensitive = false,
 	DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+	NumberHandling = JsonNumberHandling.AllowReadingFromString,
 	Converters = [
 		typeof(JsonStringEnumConverter<Categories>),
 		typeof(JsonStringEnumConverter<SubCategories>),
 		typeof(JsonStringEnumConverter<DeviceIntents.Intent>),
 		typeof(JsonStringEnumConverter<StatusState>),
-		typeof(JsonStringEnumConverter<SecurityMeasureSource>)
+		typeof(JsonStringEnumConverter<SecurityMeasureSource>),
+		typeof(JsonStringEnumConverter<ASRRuleState>)
 	]
 )]
 [JsonSerializable(typeof(MContainer))]
@@ -284,6 +285,12 @@ internal sealed partial class MContainerJsonContext : JsonSerializerContext
 		finally
 		{
 			writer.Dispose();
+		}
+
+		// Make sure the file has a .json extension
+		if (!string.Equals(Path.GetExtension(filePath), ".json", StringComparison.OrdinalIgnoreCase))
+		{
+			filePath += ".json";
 		}
 
 		File.WriteAllBytes(filePath, buffer.WrittenSpan);

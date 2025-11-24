@@ -227,6 +227,69 @@
                 <DataTemplate x:DataType="GroupPolicy:VerificationResult" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
                     <!-- Setting Background="Transparent" on the Grid makes it hit-test visible, meaning that even areas without any child elements (like empty spaces in the column) will respond to pointer events.  -->
                     <Grid Background="Transparent">
+                        <Grid.ContextFlyout>
+                            <MenuFlyout>
+
+                                <MenuFlyoutItem x:Uid="CopyRow"
+                                                Click="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.CopySelectedVerificationResults_Click}">
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control"
+                                                             Invoked="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.CopySelectedVerificationResults_Click}"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
+                                    <MenuFlyoutSubItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutSubItem.Icon>
+
+                                    <MenuFlyoutSubItem.Items>
+
+                                        <MenuFlyoutItem x:Uid="FriendlyNameHeader" Tag="FriendlyName"
+                                                        Click="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.CopyVerificationResultProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SourceHeader" Tag="Source"
+                                                        Click="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.CopyVerificationResultProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="StatusHeader" Tag="IsCompliant"
+                                                        Click="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.CopyVerificationResultProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="CurrentValueHeader" Tag="CurrentValue"
+                                                        Click="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.CopyVerificationResultProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="ExpectedValueHeader" Tag="ExpectedValue"
+                                                        Click="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.CopyVerificationResultProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                    </MenuFlyoutSubItem.Items>
+
+                                </MenuFlyoutSubItem>
+
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth1, Mode=OneWay}" />
                             <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.MicrosoftSecurityBaselineVM.ColumnWidth2, Mode=OneWay}" />

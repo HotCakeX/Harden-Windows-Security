@@ -180,6 +180,55 @@ internal unsafe struct MIB_IFROW
 	private fixed byte bDescr[256];
 }
 
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/netioapi/ns-netioapi-mib_if_row2
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal unsafe struct MIB_IF_ROW2
+{
+	internal ulong InterfaceLuid; // NET_LUID
+	internal uint InterfaceIndex; // NET_IFINDEX
+	internal Guid InterfaceGuid;
+	private fixed char Alias[257]; // IF_MAX_STRING_SIZE + 1
+	private fixed char Description[257]; // IF_MAX_STRING_SIZE + 1
+	internal uint PhysicalAddressLength;
+	private fixed byte PhysicalAddress[32]; // IF_MAX_PHYS_ADDRESS_LENGTH
+	private fixed byte PermanentPhysicalAddress[32]; // IF_MAX_PHYS_ADDRESS_LENGTH
+	internal uint Mtu;
+	internal uint Type; // IFT_FAMILY
+	internal int TunnelType; // TUNNEL_TYPE
+	internal int MediaType; // NDIS_MEDIUM
+	internal int PhysicalMediumType; // NDIS_PHYSICAL_MEDIUM
+	internal int AccessType; // NET_IF_ACCESS_TYPE
+	internal int DirectionType; // NET_IF_DIRECTION_TYPE
+	internal int InterfaceAndOperStatusFlags; // Bitfields (ULONG)
+	internal int OperStatus; // IF_OPER_STATUS
+	internal int AdminStatus; // NET_IF_ADMIN_STATUS
+	internal int MediaConnectState; // NET_IF_MEDIA_CONNECT_STATE
+	internal Guid NetworkGuid;
+	internal int ConnectionType; // NET_IF_CONNECTION_TYPE
+	internal ulong TransmitLinkSpeed;
+	internal ulong ReceiveLinkSpeed;
+	internal ulong InOctets;
+	internal ulong InUcastPkts;
+	internal ulong InNUcastPkts;
+	internal ulong InDiscards;
+	internal ulong InErrors;
+	internal ulong InUnknownProtos;
+	internal ulong InUcastOctets;
+	internal ulong InMulticastOctets;
+	internal ulong InBroadcastOctets;
+	internal ulong OutOctets;
+	internal ulong OutUcastPkts;
+	internal ulong OutNUcastPkts;
+	internal ulong OutDiscards;
+	internal ulong OutErrors;
+	internal ulong OutUcastOctets;
+	internal ulong OutMulticastOctets;
+	internal ulong OutBroadcastOctets;
+	internal ulong OutQLen;
+}
+
 [Flags]
 internal enum RegNotifyFilter : uint
 {
@@ -681,4 +730,94 @@ internal struct SAMPR_USER_NAME_INFORMATION
 {
 	internal LSA_UNICODE_STRING UserName;
 	internal LSA_UNICODE_STRING FullName;
+}
+
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winnt/ne-winnt-logical_processor_relationship
+/// </summary>
+internal enum LOGICAL_PROCESSOR_RELATIONSHIP
+{
+	RelationProcessorCore,
+	RelationNumaNode,
+	RelationCache,
+	RelationProcessorPackage,
+	RelationGroup,
+	RelationProcessorDie,
+	RelationNumaNodeEx,
+	RelationProcessorModule,
+	RelationAll = 0xffff
+}
+
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winnt/ne-winnt-processor_cache_type
+/// </summary>
+internal enum PROCESSOR_CACHE_TYPE
+{
+	CacheUnified = 0,
+	CacheInstruction = 1,
+	CacheData = 2,
+	CacheTrace = 3,
+	CacheUnknown
+}
+
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-group_affinity
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct GROUP_AFFINITY
+{
+	internal nuint Mask;
+	internal ushort Group;
+	internal ushort Reserved1;
+	internal ushort Reserved2;
+	internal ushort Reserved3;
+}
+
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-cache_relationship
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct CACHE_RELATIONSHIP
+{
+	internal byte Level;
+	internal byte Associativity;
+	internal ushort LineSize;
+	internal uint CacheSize;
+	internal PROCESSOR_CACHE_TYPE Type;
+	internal GROUP_AFFINITY GroupMask;
+}
+
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-processor_relationship
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct PROCESSOR_RELATIONSHIP
+{
+	internal byte Flags;
+	internal byte EfficiencyClass;
+	[MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
+	internal byte[] Reserved;
+	internal ushort GroupCount;
+
+}
+
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct PDH_FMT_COUNTERVALUE_DOUBLE
+{
+	internal uint CStatus;
+	internal double Value;
+}
+
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct PDH_FMT_COUNTERVALUE_ITEM_DOUBLE
+{
+	internal IntPtr NamePtr;
+	internal PDH_FMT_COUNTERVALUE_DOUBLE Value;
 }

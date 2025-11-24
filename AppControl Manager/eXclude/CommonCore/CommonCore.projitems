@@ -41,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Others\NoValidFilesSelectedException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\BinaryProtocol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\Helpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ThermalMonitors\TemperatureSampler.cs" />
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">

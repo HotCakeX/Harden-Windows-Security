@@ -6188,4 +6188,55 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
     <value>Deleting App Locker Logs</value>
   </data>
+   <data name="SystemOverview.Text" xml:space="preserve">
+    <value>System Overview</value>
+  </data>
+  <data name="SystemTime.Text" xml:space="preserve">
+    <value>System Time</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>Time Zone</value>
+  </data>
+  <data name="User.Text" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="ComputerName.Text" xml:space="preserve">
+    <value>Computer Name</value>
+  </data>
+  <data name="OperatingSystem.Text" xml:space="preserve">
+    <value>Operating System</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>Uptime</value>
+  </data>
+  <data name="SystemRAM.Text" xml:space="preserve">
+    <value>System RAM</value>
+  </data>
+  <data name="AppRAMUsage.Text" xml:space="preserve">
+    <value>App RAM Usage</value>
+  </data>
+  <data name="StorageSize.Text" xml:space="preserve">
+    <value>Storage Size</value>
+  </data>
+  <data name="InternetSpeed.Text" xml:space="preserve">
+    <value>Internet Speed</value>
+  </data>
+  <data name="CPUTemperature.Text" xml:space="preserve">
+    <value>CPU Temperature</value>
+  </data>
+  <data name="OnlineMicrosoftDefenderStatus.Text" xml:space="preserve">
+    <value>Online Microsoft Defender Status</value>
+  </data>
+  <data name="EngineVersion.Text" xml:space="preserve">
+    <value>Engine Version</value>
+  </data>
+  <data name="SignatureVersion.Text" xml:space="preserve">
+    <value>Signature Version</value>
+  </data>
+  <data name="PlatformVersion.Text" xml:space="preserve">
+    <value>Platform Version</value>
+  </data>
+  <data name="SignatureUpdate.Text" xml:space="preserve">
+    <value>Signature Update (UTC)</value>
+  </data>
 </root>

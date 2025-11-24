@@ -6188,4 +6188,55 @@
   <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
     <value>حذف سجلات App Locker</value>
   </data>
+    <data name="SystemOverview.Text" xml:space="preserve">
+    <value>نظرة عامة على النظام</value>
+  </data>
+  <data name="SystemTime.Text" xml:space="preserve">
+    <value>وقت النظام</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>المنطقة الزمنية</value>
+  </data>
+  <data name="User.Text" xml:space="preserve">
+    <value>المستخدم</value>
+  </data>
+  <data name="ComputerName.Text" xml:space="preserve">
+    <value>اسم الكمبيوتر</value>
+  </data>
+  <data name="OperatingSystem.Text" xml:space="preserve">
+    <value>نظام التشغيل</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>مدة التشغيل</value>
+  </data>
+  <data name="SystemRAM.Text" xml:space="preserve">
+    <value>ذاكرة RAM الخاصة بالنظام</value>
+  </data>
+  <data name="AppRAMUsage.Text" xml:space="preserve">
+    <value>استخدام ذاكرة RAM للتطبيق</value>
+  </data>
+  <data name="StorageSize.Text" xml:space="preserve">
+    <value>سعة التخزين</value>
+  </data>
+  <data name="InternetSpeed.Text" xml:space="preserve">
+    <value>سرعة الإنترنت</value>
+  </data>
+  <data name="CPUTemperature.Text" xml:space="preserve">
+    <value>درجة حرارة المعالج</value>
+  </data>
+  <data name="OnlineMicrosoftDefenderStatus.Text" xml:space="preserve">
+    <value>حالة Microsoft Defender عبر الإنترنت</value>
+  </data>
+  <data name="EngineVersion.Text" xml:space="preserve">
+    <value>إصدار المحرك</value>
+  </data>
+  <data name="SignatureVersion.Text" xml:space="preserve">
+    <value>إصدار التواقيع</value>
+  </data>
+  <data name="PlatformVersion.Text" xml:space="preserve">
+    <value>إصدار المنصة</value>
+  </data>
+  <data name="SignatureUpdate.Text" xml:space="preserve">
+    <value>تحديث التواقيع (UTC)</value>
+  </data>
 </root>

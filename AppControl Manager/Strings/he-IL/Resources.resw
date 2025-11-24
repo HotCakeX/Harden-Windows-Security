@@ -6189,4 +6189,55 @@
   <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
     <value>מחיקת יומני App Locker</value>
   </data>
+    <data name="SystemOverview.Text" xml:space="preserve">
+    <value>סקירת מערכת</value>
+  </data>
+  <data name="SystemTime.Text" xml:space="preserve">
+    <value>זמן מערכת</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>אזור זמן</value>
+  </data>
+  <data name="User.Text" xml:space="preserve">
+    <value>משתמש</value>
+  </data>
+  <data name="ComputerName.Text" xml:space="preserve">
+    <value>שם המחשב</value>
+  </data>
+  <data name="OperatingSystem.Text" xml:space="preserve">
+    <value>מערכת הפעלה</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>משך פעילות</value>
+  </data>
+  <data name="SystemRAM.Text" xml:space="preserve">
+    <value>זיכרון RAM של המערכת</value>
+  </data>
+  <data name="AppRAMUsage.Text" xml:space="preserve">
+    <value>שימוש בזיכרון RAM של היישום</value>
+  </data>
+  <data name="StorageSize.Text" xml:space="preserve">
+    <value>גודל האחסון</value>
+  </data>
+  <data name="InternetSpeed.Text" xml:space="preserve">
+    <value>מהירות אינטרנט</value>
+  </data>
+  <data name="CPUTemperature.Text" xml:space="preserve">
+    <value>טמפרטורת המעבד</value>
+  </data>
+  <data name="OnlineMicrosoftDefenderStatus.Text" xml:space="preserve">
+    <value>מצב מקוון של Microsoft Defender</value>
+  </data>
+  <data name="EngineVersion.Text" xml:space="preserve">
+    <value>גרסת מנוע</value>
+  </data>
+  <data name="SignatureVersion.Text" xml:space="preserve">
+    <value>גרסת חתימה</value>
+  </data>
+  <data name="PlatformVersion.Text" xml:space="preserve">
+    <value>גרסת פלטפורמה</value>
+  </data>
+  <data name="SignatureUpdate.Text" xml:space="preserve">
+    <value>עדכון חתימות (UTC)</value>
+  </data>
 </root>

@@ -771,6 +771,14 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/netioapi/nf-netioapi-getifentry2
+	/// </summary>
+	[LibraryImport("Iphlpapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetIfEntry2(ref MIB_IF_ROW2 Row);
+
+
+	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath
 	/// </summary>
 	[LibraryImport("shell32.dll")]
@@ -1934,7 +1942,7 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
+	/// https://learn.microsoft.com/windows/win32/api/ntsecapi/nf-ntsecapi-lsantstatustowinerror
 	/// </summary>
 	[LibraryImport("ADVAPI32")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -1942,7 +1950,7 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lsad/6b3291a2-1265-498e-8e9d-f7e28962255e
+	/// https://learn.microsoft.com/openspecs/windows_protocols/ms-lsad/6b3291a2-1265-498e-8e9d-f7e28962255e
 	/// </summary>
 	[LibraryImport("ADVAPI32")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -1954,7 +1962,7 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lsad/d4eb7286-5f19-4040-a0c1-d29136e0e58e
+	/// https://learn.microsoft.com/openspecs/windows_protocols/ms-lsad/d4eb7286-5f19-4040-a0c1-d29136e0e58e
 	/// </summary>
 	[LibraryImport("ADVAPI32")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -1966,7 +1974,7 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsecuritydescriptorlength
+	/// https://learn.microsoft.com/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsecuritydescriptorlength
 	/// </summary>
 	[LibraryImport("ADVAPI32")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -1974,7 +1982,7 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-createwellknownsid
+	/// https://learn.microsoft.com/windows/win32/api/securitybaseapi/nf-securitybaseapi-createwellknownsid
 	/// </summary>
 	[LibraryImport("ADVAPI32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -1988,7 +1996,7 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
-	/// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-samr/538222f7-1b89-4811-949a-0eac62e38dce
+	/// https://learn.microsoft.com/openspecs/windows_protocols/ms-samr/538222f7-1b89-4811-949a-0eac62e38dce
 	/// </summary>
 	[LibraryImport("samlib.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -1999,12 +2007,100 @@ internal static unsafe partial class NativeMethods
 	);
 
 
+	/// <summary>
+	/// https://learn.microsoft.com/openspecs/windows_protocols/ms-samr/5d6a2817-caa9-41ca-a269-fd13ecbb4fa8
+	/// </summary>
 	[LibraryImport("samlib.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint SamSetInformationDomain(
 		IntPtr DomainHandle,
 		int DomainInformationClass,
 		IntPtr Buffer);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlogicalprocessorinformationex
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GetLogicalProcessorInformationEx(
+		LOGICAL_PROCESSOR_RELATIONSHIP RelationshipType,
+		IntPtr Buffer,
+		ref int ReturnedLength);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/pdh/nf-pdh-pdhopenqueryw
+	/// </summary>
+	[LibraryImport("PDH", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PdhOpenQueryW(
+		string? szDataSource,
+		nuint dwUserData,
+		out IntPtr phQuery);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/pdh/nf-pdh-pdhaddenglishcounterw
+	/// </summary>
+	[LibraryImport("PDH", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PdhAddEnglishCounterW(
+		IntPtr hQuery,
+		string szFullCounterPath,
+		nuint dwUserData,
+		out IntPtr phCounter);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/pdh/nf-pdh-pdhcollectquerydata
+	/// </summary>
+	[LibraryImport("PDH")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PdhCollectQueryData(IntPtr hQuery);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/pdh/nf-pdh-pdhremovecounter
+	/// </summary>
+	[LibraryImport("PDH")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PdhRemoveCounter(IntPtr hCounter);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/pdh/nf-pdh-pdhclosequery
+	/// </summary>
+	[LibraryImport("PDH")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PdhCloseQuery(IntPtr hQuery);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/pdh/nf-pdh-pdhgetformattedcounterarrayw
+	/// </summary>
+	[LibraryImport("PDH")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint PdhGetFormattedCounterArrayW(
+		IntPtr hCounter,
+		uint dwFormat,
+		ref uint lpdwBufferSize,
+		ref uint lpdwItemCount,
+		IntPtr ItemBuffer);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemfirmwaretable
+	/// </summary>
+	[LibraryImport("kernel32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetSystemFirmwareTable(
+		uint FirmwareTableProviderSignature,
+		uint FirmwareTableID,
+		IntPtr pFirmwareTableBuffer,
+		uint BufferSize
+		);
 
 
 }

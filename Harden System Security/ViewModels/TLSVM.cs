@@ -87,29 +87,37 @@ internal sealed partial class TLSVM : MUnitListViewModelBase
 				// Load the policies from the JSON file
 				List<RegistryPolicyEntry> policies = RegistryPolicyEntry.LoadWithFriendlyNameKeyResolve(jsonConfigPath) ?? throw new InvalidOperationException(string.Format(GlobalVars.GetStr("CouldNotLoadPoliciesFromPath"), jsonConfigPath));
 
+				Guid CipherSuitesPolicyID = new("019a8dfa-2725-71bb-b3ab-1950941755fd");
+
 				// Find the specific policy for TLS Cipher Suites
-				string? cipherSuitesValue = policies.Find(x => string.Equals(x.KeyName, "SOFTWARE\\Policies\\Microsoft\\Cryptography\\Configuration\\SSL\\00010002", StringComparison.OrdinalIgnoreCase) && string.Equals(x.ValueName, "Functions", StringComparison.OrdinalIgnoreCase))?.RegValue;
+				string? cipherSuitesValue = policies.Find(x => x.ID == CipherSuitesPolicyID)?.RegValue;
 
 				if (cipherSuitesValue is null)
 					return false;
 
-				// Parse the configured cipher suites into a HashSet for easy lookup
-				HashSet<string> configuredCipherSuites = cipherSuitesValue.Split([','], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet();
+				// Parse the configured cipher suites into a HashSet
+				HashSet<string> configuredCipherSuites = cipherSuitesValue.Split([','], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
 				// Get the list of currently configured cipher suites via Arcane library
 				List<Arcane.TlsCipherSuite> results = Arcane.CipherSuiteManager.EnumerateConfiguredCipherSuites();
 
-				// Verify that all configured cipher suites are in the policy
+				// Check if the counts match first
+				if (configuredCipherSuites.Count != results.Count)
+				{
+					return false;
+				}
+
+				// Verify that all system cipher suites are in the policy configuration.
 				foreach (Arcane.TlsCipherSuite item in results)
 				{
 					if (!configuredCipherSuites.Contains(item.Name))
 					{
-						// A configured cipher suite is missing from the policy
+						// A system cipher suite is present that is not in the policy
 						return false;
 					}
 				}
 
-				// All configured cipher suites are present in the policy
+				// Exact match found
 				return true;
 			}
 			catch (Exception ex)

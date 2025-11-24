@@ -6188,4 +6188,55 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
     <value>Löschen von App Locker-Protokollen</value>
   </data>
+    <data name="SystemOverview.Text" xml:space="preserve">
+    <value>Systemübersicht</value>
+  </data>
+  <data name="SystemTime.Text" xml:space="preserve">
+    <value>Systemzeit</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>Zeitzone</value>
+  </data>
+  <data name="User.Text" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="ComputerName.Text" xml:space="preserve">
+    <value>Computername</value>
+  </data>
+  <data name="OperatingSystem.Text" xml:space="preserve">
+    <value>Betriebssystem</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>Betriebszeit</value>
+  </data>
+  <data name="SystemRAM.Text" xml:space="preserve">
+    <value>System-Arbeitsspeicher</value>
+  </data>
+  <data name="AppRAMUsage.Text" xml:space="preserve">
+    <value>RAM-Nutzung der Anwendung</value>
+  </data>
+  <data name="StorageSize.Text" xml:space="preserve">
+    <value>Speicherkapazität</value>
+  </data>
+  <data name="InternetSpeed.Text" xml:space="preserve">
+    <value>Internetgeschwindigkeit</value>
+  </data>
+  <data name="CPUTemperature.Text" xml:space="preserve">
+    <value>CPU-Temperatur</value>
+  </data>
+  <data name="OnlineMicrosoftDefenderStatus.Text" xml:space="preserve">
+    <value>Online-Status von Microsoft Defender</value>
+  </data>
+  <data name="EngineVersion.Text" xml:space="preserve">
+    <value>Engine-Version</value>
+  </data>
+  <data name="SignatureVersion.Text" xml:space="preserve">
+    <value>Signaturversion</value>
+  </data>
+  <data name="PlatformVersion.Text" xml:space="preserve">
+    <value>Plattformversion</value>
+  </data>
+  <data name="SignatureUpdate.Text" xml:space="preserve">
+    <value>Signatur-Update (UTC)</value>
+  </data>
 </root>

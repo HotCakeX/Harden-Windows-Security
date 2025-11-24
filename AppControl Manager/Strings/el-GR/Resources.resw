@@ -6188,4 +6188,55 @@
   <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
     <value>Διαγραφή αρχείων καταγραφής App Locker</value>
   </data>
+    <data name="SystemOverview.Text" xml:space="preserve">
+    <value>Επισκόπηση συστήματος</value>
+  </data>
+  <data name="SystemTime.Text" xml:space="preserve">
+    <value>Ώρα συστήματος</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>Ζώνη ώρας</value>
+  </data>
+  <data name="User.Text" xml:space="preserve">
+    <value>Χρήστης</value>
+  </data>
+  <data name="ComputerName.Text" xml:space="preserve">
+    <value>Όνομα υπολογιστή</value>
+  </data>
+  <data name="OperatingSystem.Text" xml:space="preserve">
+    <value>Λειτουργικό σύστημα</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>Χρόνος λειτουργίας</value>
+  </data>
+  <data name="SystemRAM.Text" xml:space="preserve">
+    <value>Μνήμη RAM συστήματος</value>
+  </data>
+  <data name="AppRAMUsage.Text" xml:space="preserve">
+    <value>Χρήση μνήμης RAM εφαρμογής</value>
+  </data>
+  <data name="StorageSize.Text" xml:space="preserve">
+    <value>Χωρητικότητα αποθήκευσης</value>
+  </data>
+  <data name="InternetSpeed.Text" xml:space="preserve">
+    <value>Ταχύτητα διαδικτύου</value>
+  </data>
+  <data name="CPUTemperature.Text" xml:space="preserve">
+    <value>Θερμοκρασία επεξεργαστή</value>
+  </data>
+  <data name="OnlineMicrosoftDefenderStatus.Text" xml:space="preserve">
+    <value>Κατάσταση online του Microsoft Defender</value>
+  </data>
+  <data name="EngineVersion.Text" xml:space="preserve">
+    <value>Έκδοση μηχανής</value>
+  </data>
+  <data name="SignatureVersion.Text" xml:space="preserve">
+    <value>Έκδοση υπογραφών</value>
+  </data>
+  <data name="PlatformVersion.Text" xml:space="preserve">
+    <value>Έκδοση πλατφόρμας</value>
+  </data>
+  <data name="SignatureUpdate.Text" xml:space="preserve">
+    <value>Ενημέρωση υπογραφών (UTC)</value>
+  </data>
 </root>

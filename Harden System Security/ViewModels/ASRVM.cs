@@ -23,9 +23,13 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
+using AnimatedVisuals;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.GroupPolicy;
+using HardenSystemSecurity.Pages.Protects;
+using HardenSystemSecurity.Traverse;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -35,14 +39,11 @@ namespace HardenSystemSecurity.ViewModels;
 	PropertyNameCaseInsensitive = true,
 	PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
 	WriteIndented = true,
-	NumberHandling = JsonNumberHandling.AllowReadingFromString,
-	Converters = [typeof(JsonStringEnumConverter<ASRRuleState>)]
+	NumberHandling = JsonNumberHandling.AllowReadingFromString
 	)]
 [JsonSerializable(typeof(string[]))]
 [JsonSerializable(typeof(uint[]))]
-[JsonSerializable(typeof(ASRRuleEntry))]
-[JsonSerializable(typeof(List<ASRRuleEntry>))]
-internal sealed partial class ASRArrayJsonContext : JsonSerializerContext
+internal sealed partial class PrimitiveJSONContext : JsonSerializerContext
 {
 }
 
@@ -114,12 +115,38 @@ internal sealed partial class ASRRuleEntry(RegistryPolicyEntry policyEntry, ASRV
 	internal string? Name => PolicyEntry.FriendlyName;
 
 	/// <summary>
+	/// Used for JSON import/export only.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyOrder(2)]
+	internal Guid ID => PolicyEntry.ID;
+
+	/// <summary>
+	/// JSON deserialization constructor.
+	/// </summary>
+	[JsonConstructor]
+	internal ASRRuleEntry(Guid id, ASRRuleState state, string? name) : this(
+			policyEntry: new(
+				source: Source.Registry,
+				keyName: string.Empty,
+				valueName: string.Empty,
+				type: RegistryValueType.REG_DWORD,
+				size: 4,
+				data: BitConverter.GetBytes((uint)state),
+				hive: Hive.HKLM,
+				id: id)
+			{
+				FriendlyName = name
+			},
+			asrVMRef: ViewModelProvider.ASRVM)
+	{
+		State = state;
+	}
+
+	/// <summary>
 	/// Apply this specific ASR rule, event handler for individual Apply buttons.
 	/// </summary>
-	internal void ApplyRule()
-	{
-		ASRVMRef.ApplyRule(this);
-	}
+	internal void ApplyRule() => ASRVMRef.ApplyRule(this);
 }
 
 internal sealed partial class ASRVM : ViewModelBase
@@ -190,10 +217,16 @@ internal sealed partial class ASRVM : ViewModelBase
 				policyEntry: item,
 				asrVMRef: this);
 
-			// Initialize the state based on the current data in the policy entry
-			if (item.Data.Length >= 4)
+			// Initialize the state based on the current data in the policy entry.
+			if (item.ParsedValue is not null)
 			{
-				uint currentValue = BitConverter.ToUInt32(item.Data.Span);
+				uint currentValue = item.ParsedValue switch
+				{
+					string strValue when uint.TryParse(strValue, CultureInfo.InvariantCulture, out uint parsedUint) => parsedUint,
+					uint uintValue => uintValue,
+					_ => 0
+				};
+
 				entry.State = currentValue switch
 				{
 					0 => ASRRuleState.NotConfigured,
@@ -235,8 +268,8 @@ internal sealed partial class ASRVM : ViewModelBase
 		}
 
 		// Parse the JSON data
-		string[]? ids = JsonSerializer.Deserialize(idsJson, ASRArrayJsonContext.Default.StringArray);
-		uint[]? actions = JsonSerializer.Deserialize(actionsJson, ASRArrayJsonContext.Default.UInt32Array);
+		string[]? ids = JsonSerializer.Deserialize(idsJson, PrimitiveJSONContext.Default.StringArray);
+		uint[]? actions = JsonSerializer.Deserialize(actionsJson, PrimitiveJSONContext.Default.UInt32Array);
 
 		if (ids == null || actions == null)
 		{
@@ -284,14 +317,8 @@ internal sealed partial class ASRVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-
 				// Convert the state value to appropriate byte array based on registry type
-				byte[] stateBytes = entry.PolicyEntry.Type switch
-				{
-					RegistryValueType.REG_DWORD => BitConverter.GetBytes((uint)entry.State),
-					RegistryValueType.REG_SZ => Encoding.Unicode.GetBytes(((uint)entry.State).ToString() + "\0"),
-					_ => BitConverter.GetBytes((uint)entry.State)
-				};
+				byte[] stateBytes = GetStateBytes(entry.PolicyEntry.Type, entry.State);
 
 				// Copy of the policy entry with updated data
 				RegistryPolicyEntry updatedEntry = new(
@@ -349,12 +376,7 @@ internal sealed partial class ASRVM : ViewModelBase
 				foreach (ASRRuleEntry entry in ASRItemsLVBound)
 				{
 					// Convert the state value to appropriate byte array based on registry type
-					byte[] stateBytes = entry.PolicyEntry.Type switch
-					{
-						RegistryValueType.REG_DWORD => BitConverter.GetBytes((uint)entry.State),
-						RegistryValueType.REG_SZ => Encoding.Unicode.GetBytes(((uint)entry.State).ToString() + "\0"),
-						_ => BitConverter.GetBytes((uint)entry.State)
-					};
+					byte[] stateBytes = GetStateBytes(entry.PolicyEntry.Type, entry.State);
 
 					// Create updated policy entry
 					RegistryPolicyEntry updatedEntry = new(
@@ -580,18 +602,23 @@ internal sealed partial class ASRVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBarIsClosable = false;
 
-			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(
-					"AttackSurfaceReductionRules|*.JSON",
-					"AttackSurfaceReductionRules.JSON");
+			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, Traverse.Generator.GetFileName());
 
 			if (saveLocation is null)
 				return;
 
+			Traverse.AttackSurfaceReductionRules results = await GetTraverseData();
+
 			await Task.Run(() =>
 			{
-				string jsonString = JsonSerializer.Serialize(AllASRRules, ASRArrayJsonContext.Default.ListASRRuleEntry);
+				MContainer container = new(
+				total: results.Count,
+				compliant: results.Score,
+				nonCompliant: results.Count - results.Score,
+				attackSurfaceReductionRules: results
+				);
 
-				File.WriteAllText(saveLocation, jsonString, Encoding.UTF8);
+				MContainerJsonContext.SerializeSingle(container, saveLocation);
 			});
 
 			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedASRRules"), AllASRRules.Count, saveLocation));
@@ -617,5 +644,165 @@ internal sealed partial class ASRVM : ViewModelBase
 
 		return new(items: AllASRRules) { Score = AllASRRules.Count(x => x.State == ASRRuleState.Block) };
 	}
+
+
+	/// <summary>
+	/// Applies imported ASR rule states by matching on GUID ID.
+	/// Partial sync (synchronizeExact == false):
+	///   - Apply only Block/Audit/Warn states.
+	///   - Ignore NotConfigured (do not change existing system values).
+	/// Full sync (synchronizeExact == true):
+	///   - If ALL imported states are NotConfigured: remove all ASR policies (including parent) and set UI states to NotConfigured.
+	///   - Otherwise: apply configured states (Block/Audit/Warn) and explicitly write 0 for NotConfigured rules.
+	/// The method updates UI state (State) for each matched runtime rule.
+	/// </summary>
+	/// <param name="imported">Imported rule entries (deserialized) containing ID, State, Name.</param>
+	/// <param name="synchronizeExact">True for full synchronization, false for apply-only.</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	internal async Task ApplyImportedStates(List<ASRRuleEntry> imported, bool synchronizeExact, CancellationToken cancellationToken)
+	{
+		try
+		{
+			ElementsAreEnabled = false;
+
+			int appliedCount = 0;
+			int resetCount = 0;
+
+			// Build runtime map (ID -> ASRRuleEntry) for fast lookup.
+			Dictionary<Guid, ASRRuleEntry> runtimeById = new(AllASRRules.Count);
+			foreach (ASRRuleEntry runtimeEntry in AllASRRules)
+			{
+				runtimeById[runtimeEntry.PolicyEntry.ID] = runtimeEntry;
+			}
+
+			// Determine if all imported states are NotConfigured (full removal scenario in full sync).
+			bool allNotConfigured = true;
+			foreach (ASRRuleEntry importedEntry in imported)
+			{
+				if (importedEntry.State is not ASRRuleState.NotConfigured)
+				{
+					allNotConfigured = false;
+					break;
+				}
+			}
+
+			// If full sync is used and all imported are NotConfigured, remove all ASR policies, including the parent.
+			if (synchronizeExact && allNotConfigured)
+			{
+				await Task.Run(() =>
+				{
+					RegistryPolicyParser.RemovePoliciesFromSystem(ASRPolicyFromJSON, GroupPolicyContext.Machine);
+				}, cancellationToken);
+
+				_ = Dispatcher.TryEnqueue(() =>
+				{
+					// Set UI states to NotConfigured.
+					foreach (ASRRuleEntry runtimeEntry in AllASRRules)
+					{
+						runtimeEntry.State = ASRRuleState.NotConfigured;
+					}
+				});
+
+				MainInfoBar.WriteSuccess("Imported ASR rules: all NotConfigured -> removed all rules.");
+				return;
+			}
+
+			await Task.Run(() =>
+			{
+				List<RegistryPolicyEntry> batch = new(imported.Count + 1);
+				bool parentNeeded = false;
+
+				foreach (ASRRuleEntry importedEntry in imported)
+				{
+					cancellationToken.ThrowIfCancellationRequested();
+
+					ASRRuleState desiredState = importedEntry.State;
+					ASRRuleEntry runtimeEntry = runtimeById[importedEntry.ID];
+					RegistryPolicyEntry runtimePolicy = runtimeEntry.PolicyEntry;
+
+					// Partial sync ignores NotConfigured.
+					if (desiredState is ASRRuleState.NotConfigured && !synchronizeExact)
+						continue;
+
+					// Build the bytes according to the runtime registry type.
+					byte[] stateBytes = GetStateBytes(runtimePolicy.Type, desiredState);
+
+					RegistryPolicyEntry updatedEntry = new(
+						source: runtimePolicy.Source,
+						keyName: runtimePolicy.KeyName,
+						valueName: runtimePolicy.ValueName,
+						type: runtimePolicy.Type,
+						size: (uint)stateBytes.Length,
+						data: stateBytes,
+						hive: runtimePolicy.Hive,
+						id: runtimePolicy.ID)
+					{
+						RegValue = ((uint)desiredState).ToString(),
+						policyAction = runtimePolicy.policyAction,
+						FriendlyName = runtimePolicy.FriendlyName,
+						URL = runtimePolicy.URL,
+						Category = runtimePolicy.Category,
+						SubCategory = runtimePolicy.SubCategory
+					};
+
+					batch.Add(updatedEntry);
+
+					if (desiredState != ASRRuleState.NotConfigured)
+					{
+						appliedCount++;
+						parentNeeded = true;
+						_ = Dispatcher.TryEnqueue(() =>
+						{
+							runtimeEntry.State = desiredState;
+						});
+					}
+					else
+					{
+						// Full sync explicit reset.
+						resetCount++;
+						_ = Dispatcher.TryEnqueue(() =>
+						{
+							runtimeEntry.State = ASRRuleState.NotConfigured;
+						});
+					}
+				}
+
+				// Include parent only if at least one rule is configured (Block/Audit/Warn).			
+				if (parentNeeded)
+				{
+					batch.Add(ParentPolicy!);
+				}
+
+				if (batch.Count > 0)
+				{
+					RegistryPolicyParser.AddPoliciesToSystem(batch, GroupPolicyContext.Machine);
+				}
+
+			}, cancellationToken);
+
+			MainInfoBar.WriteSuccess($"Imported ASR rules applied. Applied={appliedCount}, Reset={resetCount}.");
+		}
+		catch (OperationCanceledException)
+		{
+			MainInfoBar.WriteError(new OperationCanceledException("ASR import canceled."));
+			throw;
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+			throw;
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+		}
+	}
+
+	private static byte[] GetStateBytes(RegistryValueType type, ASRRuleState state) => type switch
+	{
+		RegistryValueType.REG_DWORD => BitConverter.GetBytes((uint)state),
+		RegistryValueType.REG_SZ => Encoding.Unicode.GetBytes(((uint)state).ToString() + "\0"),
+		_ => BitConverter.GetBytes((uint)state),
+	};
 
 }

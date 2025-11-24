@@ -6188,4 +6188,55 @@
   <data name="OSAppLockerLogsDeletionContentDialogTitle" xml:space="preserve">
     <value>App Locker ലോഗുകൾ ഇല്ലാതാക്കുന്നു</value>
   </data>
+    <data name="SystemOverview.Text" xml:space="preserve">
+    <value>സിസ്റ്റം അവലോകനം</value>
+  </data>
+  <data name="SystemTime.Text" xml:space="preserve">
+    <value>സിസ്റ്റം സമയം</value>
+  </data>
+  <data name="TimeZone.Text" xml:space="preserve">
+    <value>സമയം മേഖല</value>
+  </data>
+  <data name="User.Text" xml:space="preserve">
+    <value>ഉപയോക്താവ്</value>
+  </data>
+  <data name="ComputerName.Text" xml:space="preserve">
+    <value>കമ്പ്യൂട്ടർ പേര്</value>
+  </data>
+  <data name="OperatingSystem.Text" xml:space="preserve">
+    <value>ഓപ്പറേറ്റിംഗ് സിസ്റ്റം</value>
+  </data>
+  <data name="Uptime.Text" xml:space="preserve">
+    <value>പ്രവർത്തന സമയം</value>
+  </data>
+  <data name="SystemRAM.Text" xml:space="preserve">
+    <value>സിസ്റ്റം RAM</value>
+  </data>
+  <data name="AppRAMUsage.Text" xml:space="preserve">
+    <value>ആപ്പ് RAM ഉപയോഗം</value>
+  </data>
+  <data name="StorageSize.Text" xml:space="preserve">
+    <value>സംഭരണ ശേഷി</value>
+  </data>
+  <data name="InternetSpeed.Text" xml:space="preserve">
+    <value>ഇന്റർനെറ്റ് വേഗം</value>
+  </data>
+  <data name="CPUTemperature.Text" xml:space="preserve">
+    <value>പ്രോസസർ താപനില</value>
+  </data>
+  <data name="OnlineMicrosoftDefenderStatus.Text" xml:space="preserve">
+    <value>ഓൺലൈൻ Microsoft Defender നില</value>
+  </data>
+  <data name="EngineVersion.Text" xml:space="preserve">
+    <value>എഞ്ചിൻ പതിപ്പ്</value>
+  </data>
+  <data name="SignatureVersion.Text" xml:space="preserve">
+    <value>സിഗ്നേച്ചർ പതിപ്പ്</value>
+  </data>
+  <data name="PlatformVersion.Text" xml:space="preserve">
+    <value>പ്ലാറ്റ്ഫോം പതിപ്പ്</value>
+  </data>
+  <data name="SignatureUpdate.Text" xml:space="preserve">
+    <value>സിഗ്നേച്ചർ അപ്‌ഡേറ്റ് (UTC)</value>
+  </data>
 </root>

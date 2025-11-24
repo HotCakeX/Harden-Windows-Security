@@ -19,11 +19,13 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.GroupPolicy;
 using HardenSystemSecurity.Protect;
+using HardenSystemSecurity.Traverse;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -146,8 +148,8 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 		double maxWidth1 = ListViewHelper.MeasureText(GlobalVars.GetStr("FriendlyNameHeader/Text"));
 		double maxWidth2 = ListViewHelper.MeasureText(GlobalVars.GetStr("SourceHeader/Text"));
 		double maxWidth3 = ListViewHelper.MeasureText(GlobalVars.GetStr("StatusHeader/Text"));
-		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("CurrentValueHeaderText"));
-		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("ExpectedValueHeaderText"));
+		double maxWidth4 = ListViewHelper.MeasureText(GlobalVars.GetStr("CurrentValueHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(GlobalVars.GetStr("ExpectedValueHeader/Text"));
 
 		// Iterate over all items to determine the widest string for each column.
 		foreach (VerificationResult item in VerificationResults)
@@ -326,6 +328,49 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	}
 
 	/// <summary>
+	/// Applies security measures imported from a JSON file.
+	/// </summary>
+	/// <param name="importedItems">List of imported verification results</param>
+	/// <param name="synchronizeExact">If true, removes non-compliant settings (Group Policy only)</param>
+	/// <param name="cancellationToken">Cancellation token</param>
+	internal async Task ApplyImportedStates(List<HardenSystemSecurity.GroupPolicy.VerificationResult> importedItems, bool synchronizeExact, CancellationToken cancellationToken)
+	{
+		// Use the IDs from the verification results to selectively apply settings from the baseline ZIP
+		HashSet<string> applyIds = importedItems.Where(x => x.IsCompliant).Select(x => x.ID).ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+		// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
+		Uri sourceUri = !string.IsNullOrEmpty(CustomBaselineFilePath)
+			? new Uri(CustomBaselineFilePath)
+			: new Uri(DownloadURLs[SecurityBaselinesComboBoxSelectedItem]);
+
+		if (applyIds.Count > 0)
+		{
+			Logger.Write($"Applying {applyIds.Count} imported baseline settings...");
+			_ = await MSBaseline.DownloadAndProcessSecurityBaseline(
+				sourceUri,
+				MSBaseline.Action.Apply,
+				cancellationToken,
+				applyIds);
+		}
+
+		// If synchronizeExact is requested, try to remove the policies that are marked as not compliant in the import.
+		// P.S MSBaseline currently supports removal only for Group Policy settings (POL files).
+		if (synchronizeExact)
+		{
+			HashSet<string> removeIds = importedItems.Where(x => !x.IsCompliant).Select(x => x.ID).ToHashSet(StringComparer.OrdinalIgnoreCase);
+			if (removeIds.Count > 0)
+			{
+				Logger.Write($"Removing {removeIds.Count} non-compliant imported baseline settings (Group Policy only)...");
+				_ = await MSBaseline.DownloadAndProcessSecurityBaseline(
+					sourceUri,
+					MSBaseline.Action.Remove,
+					cancellationToken,
+					removeIds);
+			}
+		}
+	}
+
+	/// <summary>
 	/// Remove Microsoft 365 Apps Security Baseline.
 	/// </summary>
 	internal async void RemoveSecurityBaseline() => await RemoveInternal();
@@ -457,28 +502,25 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	{
 		try
 		{
-			if (VerificationResults.Count == 0)
-			{
-				MainInfoBar.WriteWarning(GlobalVars.GetStr("NoVerificationResultsToExport"));
-				return;
-			}
-
-			DateTime now = DateTime.Now;
-			string formattedDateTime = now.ToString("yyyy-MM-dd_HH-mm-ss");
-			string fileName = string.Format(GlobalVars.GetStr("ExportFileNameFormat"), formattedDateTime);
-
-			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, fileName);
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, Generator.GetFileName());
 
 			if (savePath is null)
 				return;
 
-			await Task.Run(async () =>
+			Traverse.Microsoft365AppsSecurityBaseline results = await GetTraverseData();
+
+			await Task.Run(() =>
 			{
-				List<VerificationResult> resultsToExport = VerificationResults.ToList();
+				MContainer container = new(
+				total: results.Count,
+				compliant: results.Score,
+				nonCompliant: results.Count - results.Score,
+				microsoft365AppsSecurityBaseline: results
+				);
 
-				VerificationResult.Save(savePath, resultsToExport);
+				MContainerJsonContext.SerializeSingle(container, savePath);
 
-				MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedVerificationResults"), resultsToExport.Count, savePath));
+				MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SuccessfullyExportedVerificationResults"), results.Count, savePath));
 			});
 		}
 		catch (Exception ex)
@@ -543,10 +585,46 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	/// <returns></returns>
 	internal async Task<Traverse.Microsoft365AppsSecurityBaseline> GetTraverseData()
 	{
-		if (AllVerificationResults.Count == 0)
-			await VerifyInternal();
+		// Always get fresh data, otherwise the data may be stale if user just applied the security measures and other categories override the data in the Security Baseline categories.
+		await VerifyInternal();
 
 		return new(items: AllVerificationResults) { Score = AllVerificationResults.Count(x => x.IsCompliant) };
 	}
+
+	#region Copy
+
+	/// <summary>
+	/// Converts the selected verification results into a labeled text block and copies it to the clipboard.
+	/// </summary>
+	internal void CopySelectedVerificationResults_Click()
+	{
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Microsoft365AppsSecurityBaseline);
+		if (lv is null) return;
+		if (lv.SelectedItems.Count > 0)
+		{
+			ListViewHelper.ConvertRowToText<VerificationResult>(lv.SelectedItems, MicrosoftSecurityBaselineVM.VerificationResultPropertyMappings);
+		}
+	}
+
+	/// <summary>
+	/// Copies a single property of the currently selected verification result to the clipboard.
+	/// </summary>
+	/// <param name="sender">MenuFlyoutItem whose Tag corresponds to the property key.</param>
+	/// <param name="e"></param>
+	internal void CopyVerificationResultProperty_Click(object sender, RoutedEventArgs e)
+	{
+		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
+		string key = (string)menuItem.Tag;
+
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Microsoft365AppsSecurityBaseline);
+		if (lv is null) return;
+
+		if (MicrosoftSecurityBaselineVM.VerificationResultPropertyMappings.TryGetValue(key, out (string Label, Func<VerificationResult, object?> Getter) map))
+		{
+			ListViewHelper.CopyToClipboard<VerificationResult>(ci => map.Getter(ci)?.ToString(), lv);
+		}
+	}
+
+	#endregion
 
 }

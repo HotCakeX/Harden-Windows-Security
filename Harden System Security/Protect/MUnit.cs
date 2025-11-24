@@ -613,6 +613,50 @@ internal static class SpecializedStrategiesRegistry
 							}
 						}
 					}
+					else if (string.Equals(dv.Type, "bool", StringComparison.OrdinalIgnoreCase))
+					{
+						// Support canonical "true"/"false" and numeric "1"/"0" representations.
+						if (!bool.TryParse(dv.Value, out bool desiredBool))
+						{
+							if (string.Equals(dv.Value, "1", StringComparison.OrdinalIgnoreCase))
+							{
+								desiredBool = true;
+							}
+							else if (string.Equals(dv.Value, "0", StringComparison.OrdinalIgnoreCase))
+							{
+								desiredBool = false;
+							}
+							else
+							{
+								throw new InvalidOperationException($"Unrecognized desired boolean format: '{dv.Value}'");
+							}
+						}
+
+						if (!bool.TryParse(result, out bool actualBool))
+						{
+							if (string.Equals(result, "1", StringComparison.OrdinalIgnoreCase))
+							{
+								actualBool = true;
+							}
+							else if (string.Equals(result, "0", StringComparison.OrdinalIgnoreCase))
+							{
+								actualBool = false;
+							}
+							else
+							{
+								throw new InvalidOperationException($"Unrecognized actual boolean format: '{result}'");
+							}
+						}
+
+						if (actualBool == desiredBool)
+						{
+							return true;
+						}
+					}
+					else
+					{
+						throw new InvalidOperationException($"Unrecognized desired value type: '{dv.Type}'");
+					}
 				}
 
 				return false;

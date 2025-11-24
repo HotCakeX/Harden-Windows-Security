@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net.Http;
-using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -49,28 +48,99 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			{
 				// Initialize and start the minute-aligned clock updater that only fires when the minute changes.
 				InitializeSystemTimeUpdater();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
+			try
+			{
 				// Initialize and start the app RAM usage updater that fires every 2 seconds.
 				InitializeAppRamUpdater();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
+			try
+			{
 				// Initialize CPU temperature sampler
 				InitializeCpuTemperatureSampler();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
+			try
+			{
 				// Initialize and start the internet speed updater that fires every 2 second.
 				InitializeInternetSpeedUpdater();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
+			try
+			{
 				// Refresh the Windows Defender feed info asynchronously (fire-and-forget)
 				_ = RefreshDefenderFeedAsync();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
+			try
+			{
 				CpuDetailsText = GetCpuDetailsString();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
+			try
+			{
 				TimeZoneText = GetLocalUtcOffsetString();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
+			try
+			{
 				UptimeText = GetSystemUptimeString();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
+			try
+			{
 				SystemRamText = GetPhysicalMemoryExtendedString();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
+			try
+			{
 				DiskSizeText = GetTotalPhysicalDiskSizeString();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+
+			try
+			{
 
 				OsInfoText = GetOsDetailsString();
 			}
@@ -78,6 +148,25 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			{
 				Logger.Write(ex);
 			}
+
+			try
+			{
+				ComputerNameText = Environment.MachineName;
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+
+			try
+			{
+				UserKindText = Environment.IsPrivilegedProcess ? $"{Environment.UserName} - Administrator Privilege" : $"{Environment.UserName} - Standard Privilege";
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+
 		});
 	}
 
@@ -112,7 +201,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	// Textblock sources bound to the UI for system info HUDs.
 	internal string? SystemTimeText { get; private set => SP(ref field, value); }
 	internal string? TimeZoneText { get; private set => SP(ref field, value); }
-	internal string? UserKindText { get; private set => SP(ref field, value); } = Environment.IsPrivilegedProcess ? $"{Environment.UserName} - Administrator Privilege" : $"{Environment.UserName} - Standard Privilege";
+	internal string? UserKindText { get; private set => SP(ref field, value); }
 	internal string? UptimeText { get; private set => SP(ref field, value); }
 	internal string? SystemRamText { get; private set => SP(ref field, value); }
 	internal string? AppRamText { get; private set => SP(ref field, value); }
@@ -122,6 +211,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	internal string? CpuTemperatureText { get; private set => SP(ref field, value); } = "CPU Temp: Unavailable";
 	internal string? OsInfoText { get; private set => SP(ref field, value); }
 	internal string? CpuDetailsText { get; private set => SP(ref field, value); }
+	internal string? ComputerNameText { get; private set => SP(ref field, value); }
 
 	/// <summary>
 	/// Timer first used as one-shot to align to next minute, then switched to repeating every minute.

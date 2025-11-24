@@ -25,7 +25,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class LinkPreview : Page
 {
-	private HardenSystemSecurity.AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => App.Settings;
 
 	internal string PreviewUrl
 	{

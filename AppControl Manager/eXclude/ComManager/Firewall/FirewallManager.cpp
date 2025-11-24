@@ -11,7 +11,7 @@ namespace Firewall {
 	static constexpr const wchar_t* HWS_WMI_FIREWALL_RULE = L"MSFT_NetFirewallRule";
 
 	// Forward declaration so DeleteFirewallRulesInPolicyStore can use it.
-	static inline bool IsTransientHresult(HRESULT hr);
+	bool IsTransientHresult(HRESULT hr);
 
 	/// <summary>
 	/// Downloads content from a URL and parses it into a vector of IP address strings
@@ -419,7 +419,7 @@ namespace Firewall {
 
 	// Helper to detect transient HRESULTs worth retrying for the PutInstance operation.
 	// These are known to occur under provider/RPC load and during short policy/store contention windows.
-	static inline bool IsTransientHresult(HRESULT hr)
+	bool IsTransientHresult(HRESULT hr)
 	{
 		switch (static_cast<unsigned long>(hr))
 		{
@@ -829,6 +829,315 @@ namespace Firewall {
 		}
 
 		return finalResult;
+	}
+
+	/// Enumerates MSFT_NetFirewallRule instances, filters for the mDNS rule group and inbound direction.
+	/// Collects matching IWbemClassObject pointers (AddRef'd) into matchedObjects for optional later modification.
+	/// Outputs flags: anyFound (at least one match), anyEnabled (one or more currently enabled).
+	/// </summary>
+	/// <param name="pSvc">Connected IWbemServices pointer</param>
+	/// <param name="anyFound">Set to true if any matching rules are found</param>
+	/// <param name="anyEnabled">Set to true if any matching rules are enabled</param>
+	/// <param name="matchedObjects">Vector receiving AddRef'ed IWbemClassObject pointers for matches</param>
+	/// <returns>True on successful enumeration, false on failure (error set)</returns>
+	static bool EnumerateMdnsInboundRules(IWbemServices* pSvc,
+		bool& anyFound,
+		bool& anyEnabled,
+		vector<wstring>& instancePaths)
+	{
+		anyFound = false;
+		anyEnabled = false;
+		instancePaths.clear();
+		if (!pSvc) return false;
+
+		IEnumWbemClassObject* pEnum = nullptr;
+		HRESULT hr = pSvc->ExecQuery(
+			_bstr_t(L"WQL"),
+			_bstr_t(L"SELECT __PATH, RuleGroup, Direction, Enabled FROM MSFT_NetFirewallRule"),
+			WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+			nullptr,
+			&pEnum);
+		if (FAILED(hr) || !pEnum)
+		{
+			SetLastErrorMsg(L"ExecQuery for MSFT_NetFirewallRule (mDNS enumeration) failed.");
+			if (pEnum) pEnum->Release();
+			return false;
+		}
+
+		const wchar_t* targetGroup = L"@%SystemRoot%\\system32\\firewallapi.dll,-37302";
+
+		for (;;)
+		{
+			IWbemClassObject* pObj = nullptr;
+			ULONG uRet = 0;
+			HRESULT hrNext = pEnum->Next(WBEM_INFINITE, 1, &pObj, &uRet);
+			if (hrNext != S_OK || uRet == 0 || !pObj)
+				break;
+
+			bool groupMatch = false;
+			{
+				VARIANT v; VariantInit(&v);
+				if (SUCCEEDED(pObj->Get(_bstr_t(L"RuleGroup"), 0, &v, nullptr, nullptr)) &&
+					v.vt == VT_BSTR && v.bstrVal)
+				{
+					if (EqualsOrdinalIgnoreCase(v.bstrVal, targetGroup))
+						groupMatch = true;
+				}
+				VariantClear(&v);
+			}
+			if (!groupMatch)
+			{
+				pObj->Release();
+				continue;
+			}
+
+			bool inboundMatch = false;
+			{
+				VARIANT v; VariantInit(&v);
+				if (SUCCEEDED(pObj->Get(_bstr_t(L"Direction"), 0, &v, nullptr, nullptr)))
+				{
+					LONG dirVal = -1;
+					switch (v.vt)
+					{
+					case VT_I2: dirVal = v.iVal; break;
+					case VT_UI2: dirVal = v.uiVal; break;
+					case VT_I4: dirVal = v.lVal; break;
+					case VT_UI4: dirVal = static_cast<LONG>(v.ulVal); break;
+					case VT_BSTR:
+						if (v.bstrVal)
+						{
+							if (EqualsOrdinalIgnoreCase(v.bstrVal, L"1")) dirVal = 1;
+							else if (EqualsOrdinalIgnoreCase(v.bstrVal, L"2")) dirVal = 2;
+						}
+						break;
+					default: break;
+					}
+					if (dirVal == static_cast<LONG>(NetSecurityDirection::Inbound))
+						inboundMatch = true;
+				}
+				VariantClear(&v);
+			}
+			if (!inboundMatch)
+			{
+				pObj->Release();
+				continue;
+			}
+
+			bool isEnabled = false;
+			{
+				VARIANT v; VariantInit(&v);
+				if (SUCCEEDED(pObj->Get(_bstr_t(L"Enabled"), 0, &v, nullptr, nullptr)))
+				{
+					LONG enabledVal = -1;
+					switch (v.vt)
+					{
+					case VT_I2: enabledVal = v.iVal; break;
+					case VT_UI2: enabledVal = v.uiVal; break;
+					case VT_I4: enabledVal = v.lVal; break;
+					case VT_UI4: enabledVal = static_cast<LONG>(v.ulVal); break;
+					case VT_BSTR:
+						if (v.bstrVal)
+						{
+							if (EqualsOrdinalIgnoreCase(v.bstrVal, L"1")) enabledVal = 1;
+							else if (EqualsOrdinalIgnoreCase(v.bstrVal, L"2")) enabledVal = 2;
+						}
+						break;
+					default: break;
+					}
+					isEnabled = (enabledVal == static_cast<LONG>(NetSecurityEnabled::True));
+				}
+				VariantClear(&v);
+			}
+
+			anyFound = true;
+			if (isEnabled) anyEnabled = true;
+
+			// Capture __PATH
+			VARIANT vPath; VariantInit(&vPath);
+			if (SUCCEEDED(pObj->Get(_bstr_t(L"__PATH"), 0, &vPath, nullptr, nullptr)) &&
+				vPath.vt == VT_BSTR && vPath.bstrVal)
+			{
+				instancePaths.emplace_back(vPath.bstrVal);
+			}
+			VariantClear(&vPath);
+
+			pObj->Release();
+		}
+
+		pEnum->Release();
+		return true;
+	}
+
+	// PowerShell equivalent: Get-NetFirewallRule |
+	// Where - Object - FilterScript{ ($_.RuleGroup - eq '@%SystemRoot%\system32\firewallapi.dll,-37302') - and ($_.Direction - eq 'inbound') } |
+	// ForEach - Object - Process{ Disable - NetFirewallRule - DisplayName $_.DisplayName }
+
+	// mDNS UDP-In firewall rule management (RuleGroup + Direction)
+	// RuleGroup resource token: "@%SystemRoot%\\system32\\firewallapi.dll,-37302"
+	// Direction: Inbound (1)
+	// Returns true if all matching rules are disabled (Enabled != 1) OR none exist.
+	// Returns false if any matching rule is enabled OR on enumeration failure.
+	// Caller can differentiate error by checking GetLastErrorMessage().
+	extern "C" __declspec(dllexport) bool __stdcall FW_AreMdnsInboundRulesDisabled()
+	{
+		ClearLastErrorMsg();
+
+		IWbemLocator* pLoc = nullptr;
+		IWbemServices* pSvc = nullptr;
+		bool didInitCOM = false;
+		if (!ConnectToWmiNamespace(HWS_WMI_NS_STANDARDCIMV2, &pLoc, &pSvc, didInitCOM) || !pSvc)
+		{
+			if (pLoc) pLoc->Release();
+			if (pSvc) pSvc->Release();
+			return false;
+		}
+
+		bool anyFound = false;
+		bool anyEnabled = false;
+		vector<wstring> paths;
+		bool enumOk = EnumerateMdnsInboundRules(pSvc, anyFound, anyEnabled, paths);
+
+		pSvc->Release();
+		pLoc->Release();
+		if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+
+		if (!enumOk)
+		{
+			return false;
+		}
+
+		// No matches -> treat as disabled
+		if (!anyFound)
+		{
+			return true;
+		}
+
+		return !anyEnabled;
+	}
+
+	/// <summary>
+	/// Enables or disables all mDNS inbound firewall rules.
+	/// enable == true  -> Enabled=1 (rule active)
+	/// enable == false -> Enabled=2 (rule disabled)
+	/// Returns true if all modifications succeed (or none found), false otherwise.
+	/// </summary>
+	extern "C" __declspec(dllexport) bool __stdcall FW_SetMdnsInboundRulesEnabled(bool enable)
+	{
+		ClearLastErrorMsg();
+
+		IWbemLocator* pLoc = nullptr;
+		IWbemServices* pSvc = nullptr;
+		bool didInitCOM = false;
+		if (!ConnectToWmiNamespace(HWS_WMI_NS_STANDARDCIMV2, &pLoc, &pSvc, didInitCOM) || !pSvc)
+		{
+			if (pLoc) pLoc->Release();
+			if (pSvc) pSvc->Release();
+			return false;
+		}
+
+		bool anyFound = false;
+		bool anyEnabledIgnore = false;
+		vector<wstring> paths;
+		if (!EnumerateMdnsInboundRules(pSvc, anyFound, anyEnabledIgnore, paths))
+		{
+			pSvc->Release();
+			pLoc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return false;
+		}
+
+		// No matching rules -> nothing to change (idempotent success)
+		if (!anyFound)
+		{
+			pSvc->Release();
+			pLoc->Release();
+			if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+			return true;
+		}
+
+		bool allOk = true;
+
+		// For each path, re-fetch the full instance (projection instances are incomplete -> WBEM_E_INVALID_OBJECT on PutInstance).
+		for (const wstring& path : paths)
+		{
+			if (path.empty()) continue;
+
+			IWbemClassObject* pFull = nullptr;
+			HRESULT hrGet = pSvc->GetObject(_bstr_t(path.c_str()), 0, nullptr, &pFull, nullptr);
+			if (FAILED(hrGet) || !pFull)
+			{
+				allOk = false;
+				string hex = ErrorCodeHexString(hrGet);
+				wstring whex = Utf8ToWide(hex);
+				wstringstream wss;
+				wss << L"Failed to retrieve full firewall rule instance. HRESULT=" << whex
+					<< L" Msg=" << _com_error(hrGet).ErrorMessage();
+				SetLastErrorMsg(wss.str());
+				LogErr(wss.str().c_str());
+				if (pFull) pFull->Release();
+				continue;
+			}
+
+			// Set Enabled property
+			VARIANT vSet; VariantInit(&vSet);
+			vSet.vt = VT_I4;
+			vSet.lVal = enable ? static_cast<LONG>(NetSecurityEnabled::True)
+				: static_cast<LONG>(NetSecurityEnabled::False);
+
+			HRESULT hrPutProp = pFull->Put(_bstr_t(L"Enabled"), 0, &vSet, 0);
+			VariantClear(&vSet);
+			if (FAILED(hrPutProp))
+			{
+				allOk = false;
+				string hex = ErrorCodeHexString(hrPutProp);
+				wstring whex = Utf8ToWide(hex);
+				wstringstream wss;
+				wss << L"Failed to set Enabled property. HRESULT=" << whex
+					<< L" Msg=" << _com_error(hrPutProp).ErrorMessage();
+				SetLastErrorMsg(wss.str());
+				LogErr(wss.str().c_str());
+				pFull->Release();
+				continue;
+			}
+
+			// Commit updated instance (UPDATE_ONLY to indicate modification)
+			const int kMaxAttempts = 8;
+			DWORD delayMs = 100;
+			HRESULT hrCommit = E_FAIL;
+			for (int attempt = 1; attempt <= kMaxAttempts; ++attempt)
+			{
+				hrCommit = pSvc->PutInstance(pFull, WBEM_FLAG_UPDATE_ONLY, nullptr, nullptr);
+				if (SUCCEEDED(hrCommit))
+					break;
+				if (!IsTransientHresult(hrCommit))
+					break;
+				::Sleep(delayMs);
+				if (delayMs < 2000) delayMs <<= 1;
+			}
+
+			if (FAILED(hrCommit))
+			{
+				allOk = false;
+				string hex = ErrorCodeHexString(hrCommit);
+				wstring whex = Utf8ToWide(hex);
+				wstringstream wss;
+				wss << L"PutInstance failed while updating Enabled state. HRESULT=" << whex
+					<< L" Msg=" << _com_error(hrCommit).ErrorMessage();
+				SetLastErrorMsg(wss.str());
+				LogErr(wss.str().c_str());
+				pFull->Release();
+				continue;
+			}
+
+			// Success for this instance
+			pFull->Release();
+		}
+
+		pSvc->Release();
+		pLoc->Release();
+		if (!g_skipCOMInit && didInitCOM) CoUninitialize();
+
+		return allOk;
 	}
 
 }

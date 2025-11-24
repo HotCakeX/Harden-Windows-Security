@@ -22,13 +22,7 @@ using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Windows.Storage;
 
-#if HARDEN_SYSTEM_SECURITY
-using AppControlManager.AppSettings;
-namespace HardenSystemSecurity.AppSettings;
-#endif
-#if APP_CONTROL_MANAGER
-namespace AppControlManager.AppSettings;
-#endif
+namespace CommonCore.AppSettings;
 
 /// <summary>
 /// A thread-safe, unified settings manager for the application.
@@ -69,9 +63,7 @@ internal sealed partial class Main : ViewModelBase
 		LinkPreviewsForSecurityMeasure = ReadValue(nameof(LinkPreviewsForSecurityMeasure), LinkPreviewsForSecurityMeasure);
 		AutoResizeListViewColumns = ReadValue(nameof(AutoResizeListViewColumns), AutoResizeListViewColumns);
 		ListViewFontFamily = ReadValue(nameof(ListViewFontFamily), ListViewFontFamily);
-#if APP_CONTROL_MANAGER
 		SelectedSignInMethodForMSGraph = ReadValue(nameof(SelectedSignInMethodForMSGraph), SelectedSignInMethodForMSGraph);
-#endif
 		IsAnimatedRainbowEnabled = ReadValue(nameof(IsAnimatedRainbowEnabled), IsAnimatedRainbowEnabled);
 		CustomAppWindowsBorder = ReadValue(nameof(CustomAppWindowsBorder), CustomAppWindowsBorder);
 		UseV2CIManagement = ReadValue(nameof(UseV2CIManagement), UseV2CIManagement);
@@ -471,7 +463,6 @@ internal sealed partial class Main : ViewModelBase
 		}
 	} = "Segoe UI"; // https://github.com/MicrosoftDocs/winapps-winrt-api/blob/docs//microsoft.ui.xaml.media/fontfamily_xamlautofontfamily.md
 
-#if APP_CONTROL_MANAGER
 	/// <summary>
 	/// The selected sign-in method for Microsoft Graph authentication in ComboBox.
 	/// </summary>
@@ -486,7 +477,6 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = (int)SignInMethods.WebBrowser;
-#endif
 
 	/// <summary>
 	/// Whether the app's window is using animated rainbow effect.

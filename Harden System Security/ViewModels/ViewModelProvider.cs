@@ -33,8 +33,8 @@ internal static class ViewModelProvider
 	/// <summary>
 	/// Initialized early during App startup by a single thread, doesn't need thread safety.
 	/// </summary>
-	private static readonly Lazy<AppSettings.Main> _appSettings = new(() =>
-		new AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.None);
+	private static readonly Lazy<CommonCore.AppSettings.Main> _appSettings = new(() =>
+		new CommonCore.AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.None);
 
 	// View Models \\
 	private static readonly Lazy<ProtectVM> _protectVM = new(() =>
@@ -124,14 +124,18 @@ internal static class ViewModelProvider
 	private static readonly Lazy<AuditPoliciesVM> _auditPoliciesVM = new(() =>
 		new AuditPoliciesVM(), false);
 
-	private static readonly Lazy<HomeVM> _homeVM = new(() =>
-		new HomeVM(), false);
+	private static readonly Lazy<HomeVM> _homeVM = new(() => new HomeVM(), false);
 
 	private static readonly Lazy<CryptographicBillOfMaterialsVM> _cryptographicBillOfMaterialsVM = new(() =>
 		new CryptographicBillOfMaterialsVM(), false);
 
+	private static readonly Lazy<IntuneVM> _intuneVM = new(() => new IntuneVM(), false);
+
+	private static readonly Lazy<IntuneDeploymentDetailsVM> _intuneDeploymentDetailsVM = new(() =>
+		new IntuneDeploymentDetailsVM(), false);
+
 	// Internal Properties - Core Dependencies \\
-	internal static AppSettings.Main AppSettings => _appSettings.Value;
+	internal static CommonCore.AppSettings.Main AppSettings => _appSettings.Value;
 
 	// Internal Properties - View Models \\
 	internal static ProtectVM ProtectVM => _protectVM.Value;
@@ -165,6 +169,8 @@ internal static class ViewModelProvider
 	internal static AuditPoliciesVM AuditPoliciesVM => _auditPoliciesVM.Value;
 	internal static HomeVM HomeVM => _homeVM.Value;
 	internal static CryptographicBillOfMaterialsVM CryptographicBillOfMaterialsVM => _cryptographicBillOfMaterialsVM.Value;
+	internal static IntuneVM IntuneVM => _intuneVM.Value;
+	internal static IntuneDeploymentDetailsVM IntuneDeploymentDetailsVM => _intuneDeploymentDetailsVM.Value;
 
 
 	/// <summary>
@@ -172,10 +178,7 @@ internal static class ViewModelProvider
 	/// </summary>
 	internal static void DisposeCreatedViewModels()
 	{
-		try
-		{
-			if (_logsVM.IsValueCreated) _logsVM.Value.Dispose();
-		}
-		catch { }
+		try { if (_logsVM.IsValueCreated) _logsVM.Value.Dispose(); } catch { }
+		try { if (_optionalWindowsFeaturesVM.IsValueCreated) _optionalWindowsFeaturesVM.Value.Dispose(); } catch { }
 	}
 }

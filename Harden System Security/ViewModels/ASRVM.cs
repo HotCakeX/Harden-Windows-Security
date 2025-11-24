@@ -25,10 +25,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using AnimatedVisuals;
 using AppControlManager.ViewModels;
 using HardenSystemSecurity.GroupPolicy;
-using HardenSystemSecurity.Pages.Protects;
 using HardenSystemSecurity.Traverse;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -250,7 +248,7 @@ internal sealed partial class ASRVM : ViewModelBase
 		Dictionary<string, ASRRuleState> output = [];
 
 		// Get ASR rule IDs from the system
-		string? idsJson = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Ids");
+		string? idsJson = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Ids");
 
 		if (string.IsNullOrEmpty(idsJson))
 		{
@@ -259,7 +257,7 @@ internal sealed partial class ASRVM : ViewModelBase
 		}
 
 		// Get ASR rule actions from the system
-		string? actionsJson = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Actions");
+		string? actionsJson = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Actions");
 
 		if (string.IsNullOrEmpty(actionsJson))
 		{
@@ -602,7 +600,7 @@ internal sealed partial class ASRVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBarIsClosable = false;
 
-			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, Traverse.Generator.GetFileName());
+			string? saveLocation = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, Generator.GetFileName());
 
 			if (saveLocation is null)
 				return;
@@ -767,7 +765,7 @@ internal sealed partial class ASRVM : ViewModelBase
 					}
 				}
 
-				// Include parent only if at least one rule is configured (Block/Audit/Warn).			
+				// Include parent only if at least one rule is configured (Block/Audit/Warn).
 				if (parentNeeded)
 				{
 					batch.Add(ParentPolicy!);

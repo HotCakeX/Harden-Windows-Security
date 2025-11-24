@@ -36,7 +36,7 @@ namespace AppControlManager.CustomUIElements;
 /// </summary>
 internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 {
-	private HardenSystemSecurity.AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => App.Settings;
 
 	internal MUnitListViewControl()
 	{
@@ -1075,13 +1075,13 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 			ViewModel.ElementsAreEnabled = false;
 			ViewModel.MainInfoBar.IsClosable = false;
 
-			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, HardenSystemSecurity.Traverse.Generator.GetFileName());
+			string? savePath = FileDialogHelper.ShowSaveFileDialog(GlobalVars.JSONPickerFilter, Generator.GetFileName());
 			if (string.IsNullOrEmpty(savePath))
 				return;
 
 			// Get the up to date data for the current category
 			(int Score, List<MUnit> Items) =
-				await HardenSystemSecurity.Traverse.Generator.VerifyAndSnapshotMUnitCategoryAsync(ViewModel, System.Threading.CancellationToken.None);
+				await Generator.VerifyAndSnapshotMUnitCategoryAsync(ViewModel, System.Threading.CancellationToken.None);
 
 			await Task.Run(() =>
 			{

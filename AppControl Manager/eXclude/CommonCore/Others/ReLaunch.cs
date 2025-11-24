@@ -31,7 +31,7 @@ internal static unsafe class Relaunch
 	internal static bool RelaunchAppElevated(string aumid, string? arguments = null)
 	{
 		uint processId = 0;
-		int hr = NativeMethods.relaunch_app_elevated(aumid, arguments, &processId);
+		int hr = NativeMethods.launch_app(aumid, arguments, &processId, 0x20000000);
 
 		if (hr < 0)
 		{

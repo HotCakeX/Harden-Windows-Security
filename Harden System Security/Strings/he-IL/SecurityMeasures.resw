@@ -955,4 +955,16 @@
 <data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
     <value>הגדר את משך הזמן המרבי שבו כתובת IP נחסמת באמצעות ההגנה מפני מתקפות Brute Force לערך המרבי האפשרי. לאחר זמן זה, כתובות IP שנחסמו יוכלו להתחבר ולהתחיל הפעלות.</value>
 </data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>הגדר את משך הזמן המרבי שבו כתובת IP נחסמת על‑ידי Remote Encryption Protection לערך המרבי האפשרי. לאחר פרק זמן זה כתובות ה‑IP החסומות יוכלו ליזום חיבור.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>הפעל איתור עבור יישומים שעשויים להיות לא רצויים. הם יופיעו בהיסטוריית Microsoft Defender לצד איומים אחרים.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>השבת כללי חומת האש של mDNS UDP-In. פעולה זו מוסיפה שכבת אבטחה נוספת במקומות ציבוריים, כמו בית קפה, אך עלולה להפריע לשיתוף מסך Miracast, הנשען על הפרופיל הציבורי או על רשתות ביתיות שבהן הפרופיל הפרטי אינו נבחר.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>הגדר את פרופיל הרשת של כל החיבורים לציבורי. רשת ציבורית משמעה רמת אמון נמוכה יותר כלפי התקני רשת אחרים.</value>
+</data>
 </root>

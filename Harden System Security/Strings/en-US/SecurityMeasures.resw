@@ -955,4 +955,16 @@
 <data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
     <value>Set the maximum time an IP address is blocked by Brute-Force Protection to the maximum possible value. After this time, blocked IP addresses will be able to sign-in and initiate sessions.</value>
 </data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Set the maximum time an IP address is blocked by Remote Encryption Protection to the maximum possible value. After this time, blocked IP addresses will be able to initiate connection.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>Enable detection for potentially unwanted applications. They will show in Microsoft Defender history along with other threats.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>Disable mDNS UDP-In Firewall Rules. It adds an extra measure of security in public places, like a coffee shop but might interfere with Miracast screen sharing, which relies on the Public profile or home networks where the Private profile is not selected.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Set the Network Location of all connections to Public. Public network means less trust to other network devices.</value>
+</data>
 </root>

@@ -306,7 +306,11 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	/// <summary>
 	/// Authentication context ComboBox source
 	/// </summary>
+#if HARDEN_SYSTEM_SECURITY
+	internal readonly Array AuthenticationContextComboBoxSource = new AuthenticationContext[] { AuthenticationContext.Intune };
+#else
 	internal readonly Array AuthenticationContextComboBoxSource = Enum.GetValues<AuthenticationContext>();
+#endif
 
 	/// <summary>
 	/// Bound to the ComboBox's SelectedItem property.

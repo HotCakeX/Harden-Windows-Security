@@ -955,4 +955,16 @@
 <data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
     <value>Ustaw maksymalny czas, przez jaki adres IP jest blokowany przez ochronę przed atakami brute force, na najwyższą możliwą wartość. Po tym czasie zablokowane adresy IP będą mogły ponownie się logować i inicjować sesje.</value>
 </data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Ustaw maksymalny czas, przez jaki adres IP jest blokowany przez Remote Encryption Protection, na najwyższą możliwą wartość. Po tym czasie zablokowane adresy IP będą mogły zainicjować połączenie.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>Włącz wykrywanie potencjalnie niechcianych aplikacji. Pojawią się w historii Microsoft Defender wraz z innymi zagrożeniami.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>Wyłącz reguły zapory mDNS UDP-In. Zapewnia to dodatkowy poziom zabezpieczeń w miejscach publicznych, takich jak kawiarnia, ale może zakłócać udostępnianie ekranu Miracast, które polega na profilu publicznym lub sieciach domowych, w których profil prywatny nie jest wybrany.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Ustaw profil sieci wszystkich połączeń na Publiczny. Sieć publiczna oznacza mniejsze zaufanie do innych urządzeń w sieci.</value>
+</data>
 </root>

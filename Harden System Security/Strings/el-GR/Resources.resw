@@ -4349,4 +4349,453 @@
   <data name="SignatureUpdate.Text" xml:space="preserve">
     <value>Ενημέρωση υπογραφών (UTC)</value>
   </data>
+    <data name="IntunePageTitle" xml:space="preserve">
+    <value>Μεταφόρτωση, προβολή, ανάπτυξη και τροποποίηση πολιτικών διαχείρισης συσκευών στο Intune.</value>
+  </data>
+  <data name="IntuneNavItem.Content" xml:space="preserve">
+    <value>Intune</value>
+  </data>
+  <data name="IntuneNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχειριστείτε και μεταφορτώστε πολιτικές στο Intune.</value>
+  </data>
+  <data name="IntuneNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαχειριστείτε και μεταφορτώστε πολιτικές στο Intune.</value>
+  </data>
+  <data name="SignInProcessCancelledMessage" xml:space="preserve">
+    <value>Η διαδικασία σύνδεσης ακυρώθηκε</value>
+  </data>
+  <data name="SuccessfullyLoggedOutSelectedAccountMessage" xml:space="preserve">
+    <value>Η αποσύνδεση από τον επιλεγμένο λογαριασμό ολοκληρώθηκε με επιτυχία.</value>
+  </data>
+  <data name="SuccessfullySetActiveAccountMessage" xml:space="preserve">
+    <value>Ο λογαριασμός με το όνομα χρήστη ({0}) ορίστηκε με επιτυχία ως ο ενεργός λογαριασμός για την τρέχουσα σελίδα.</value>
+  </data>
+  <data name="SigningIntoMSGraphMessage" xml:space="preserve">
+    <value>Γίνεται σύνδεση στο MSGraph</value>
+  </data>
+  <data name="SuccessfullySignedIntoMSGraphMessage" xml:space="preserve">
+    <value>Η σύνδεση στο MSGraph ολοκληρώθηκε με επιτυχία</value>
+  </data>
+  <data name="SignInProcessCancelledByUserMessage" xml:space="preserve">
+    <value>Η σύνδεση στο MSGraph ακυρώθηκε από τον χρήστη</value>
+  </data>
+  <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
+    <value>Παρουσιάστηκε σφάλμα κατά τη σύνδεση στο MSGraph:</value>
+  </data>
+    <data name="SuccessfullyRefreshedMSGraphTokenMsg" xml:space="preserve">
+    <value>Το διακριτικό Microsoft Graph ανανεώθηκε με επιτυχία για τον λογαριασμό: {0}</value>
+  </data>
+    <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
+    <value>Το ερώτημα Advanced Hunting του MDE ολοκληρώθηκε με επιτυχία.</value>
+  </data>
+    <data name="FailedToRunMDEAdvancedHuntingQueryMessage" xml:space="preserve">
+    <value>Αποτυχία εκτέλεσης του ερωτήματος Advanced Hunting του MDE. Κωδικός κατάστασης: {0}</value>
+  </data>
+    <data name="ErrorDetailsMessage" xml:space="preserve">
+    <value>Λεπτομέρειες σφάλματος: {0}</value>
+  </data>
+    <data name="NoGroupsFoundInResponseMessage" xml:space="preserve">
+    <value>Δεν βρέθηκαν ομάδες στην απόκριση.</value>
+  </data>
+  <data name="FailedToFetchGroupsMessage" xml:space="preserve">
+    <value>Αποτυχία ανάκτησης ομάδων. Κωδικός κατάστασης: {0}</value>
+  </data>
+  <data name="InvalidSignInMethodUsedMessage" xml:space="preserve">
+    <value>Χρησιμοποιήθηκε μη έγκυρη μέθοδος σύνδεσης.</value>
+  </data>
+  <data name="SignInOperationCanceledByCallerMessage" xml:space="preserve">
+    <value>Η λειτουργία σύνδεσης ακυρώθηκε από τον καλούντα.</value>
+  </data>
+      <data name="SuccessfullyFetchedGroupsMessage" xml:space="preserve">
+    <value>Ανακτήθηκαν με επιτυχία {0} ομάδες.</value>
+  </data>
+    <data name="DuplicateAccountReplacedMessage" xml:space="preserve">
+    <value>Υπάρχει ήδη λογαριασμός με το όνομα χρήστη {0} που έχει τα ίδια δικαιώματα, TenantID και αναγνωριστικό, γίνεται κατάργησή του και αντικατάστασή του με τον νέο.</value>
+  </data>
+    <data name="SignedOutAccountMessage" xml:space="preserve">
+    <value>Αποσυνδέθηκε ο λογαριασμός: {0}</value>
+  </data>
+    <data name="PolicyCreatedMessage" xml:space="preserve">
+    <value>{0} είναι το ID της πολιτικής που δημιουργήθηκε</value>
+  </data>
+      <data name="PolicyAssignedSuccessfullyToGroupMessage" xml:space="preserve">
+    <value>Η πολιτική εκχωρήθηκε με επιτυχία στην ομάδα: {0}</value>
+  </data>
+    <data name="FailedToAssignPolicyToGroupMessage" xml:space="preserve">
+    <value>Αποτυχία εκχώρησης πολιτικής στην ομάδα: {0}. Κωδικός κατάστασης: {1}</value>
+  </data>
+  <data name="ErrorDetailsForGroupMessage" xml:space="preserve">
+    <value>Λεπτομέρειες σφάλματος για την ομάδα {0}: {1}</value>
+  </data>
+    <data name="CustomPolicyCreatedSuccessMessage" xml:space="preserve">
+    <value>Η προσαρμοσμένη πολιτική δημιουργήθηκε με επιτυχία:</value>
+  </data>
+    <data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
+    <value>Αποτυχία δημιουργίας προσαρμοσμένης πολιτικής. Κωδικός κατάστασης: {0}</value>
+  </data>
+    <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>Το δυαδικό αρχείο της πολιτικής '{0}' υπερβαίνει το όριο μεγέθους {1} byte. Το μέγεθός του είναι {2} byte.</value>
+  </data>
+   <data name="FailedToRetrieveDeviceConfigurationsMessage" xml:space="preserve">
+    <value>Αποτυχία ανάκτησης ρυθμίσεων συσκευής. Κωδικός κατάστασης: {0}</value>
+  </data>
+  <data name="PolicyDeletedSuccessfullyMessage" xml:space="preserve">
+    <value>Η πολιτική {0} διαγράφηκε με επιτυχία.</value>
+  </data>
+  <data name="FailedToDeletePolicyExceptionMessage" xml:space="preserve">
+    <value>Αποτυχία διαγραφής της πολιτικής {0}. Κωδικός κατάστασης: {1}. Λεπτομέρειες σφάλματος: {2}</value>
+  </data>
+    <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
+    <value>Οι ρυθμίσεις συσκευής ανακτήθηκαν με επιτυχία.</value>
+  </data>
+  <data name="GroupDisplayNameEmptyError" xml:space="preserve">
+    <value>Το εμφανιζόμενο όνομα ομάδας δεν μπορεί να είναι null ή κενό.</value>
+  </data>
+  <data name="SuccessfullyCreatedGroupMessage" xml:space="preserve">
+    <value>Η ομάδα δημιουργήθηκε με επιτυχία με εμφανιζόμενο όνομα: {0} και περιγραφή: {1} και ID: {2} και Αναγνωριστικό Ασφαλείας: {3} στις: {4}</value>
+  </data>
+  <data name="FailedCreatingGroupError" xml:space="preserve">
+    <value>Αποτυχία δημιουργίας της ομάδας με κωδικό κατάστασης: {0} και περιεχόμενο: {1}</value>
+  </data>
+<data name="DeleteGroupButton.Content" xml:space="preserve">
+  <value>Διαγραφή ομάδας</value>
+</data>
+  <data name="DeleteGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγράψτε τις επιλεγμένες ομάδες από το Entra ID σας.</value>
+  </data>
+  <data name="DeleteGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγράψτε τις επιλεγμένες ομάδες από το Entra ID σας.</value>
+  </data>
+  <data name="DeleteGroupDialogTitle" xml:space="preserve">
+  <value>Επιβεβαίωση διαγραφής ομάδας</value>
+</data>
+<data name="DeleteGroupDialogIntroSingle" xml:space="preserve">
+  <value>Διαγραφή της ομάδας '{0}' ?</value>
+</data>
+<data name="DeleteGroupDialogIntroMultiple" xml:space="preserve">
+  <value>Διαγραφή {0} επιλεγμένων ομάδων ?</value>
+</data>
+<data name="DeleteGroupDialogWarning" xml:space="preserve">
+  <value>Αυτή η ενέργεια είναι μη αναστρέψιμη. Οι επιλεγμένες ομάδες θα διαγραφούν οριστικά από τον μισθωτή σας.</value>
+</data>
+<data name="SuccessfullyDeletedGroupMessage" xml:space="preserve">
+  <value>Διαγράφηκε η ομάδα {0} (ID: {1}).</value>
+</data>
+<data name="DeleteGroupDeletionErrorLogTemplate" xml:space="preserve">
+  <value>Αποτυχία διαγραφής της ομάδας {0}: {1}</value>
+</data>
+<data name="ProvideNewGroupDetails" xml:space="preserve">
+  <value>Παρέχετε λεπτομέρειες για τη νέα ομάδα.</value>
+</data>
+<data name="GroupType" xml:space="preserve">
+  <value>Τύπος ομάδας:</value>
+</data>
+<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+  <value>Διαχειριστείτε τις ομάδες Entra στον μισθωτή σας και επιλέξτε τις ομάδες στις οποίες θέλετε να αναπτύξετε την πολιτική.</value>
+</data>
+<data name="SelectedGroups.Text" xml:space="preserve">
+  <value>Επιλεγμένες ομάδες:</value>
+</data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Δημιουργία 50 ομάδων δοκιμής</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργήστε 50 ομάδες δοκιμής στο Entra του μισθωτή σας με τυχαίες λεπτομέρειες για σκοπούς δοκιμών.</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργήστε 50 ομάδες δοκιμής στο Entra του μισθωτή σας με τυχαίες λεπτομέρειες για σκοπούς δοκιμών.</value>
+  </data>
+  <data name="ConfirmationTextForDummyGroupsCreation" xml:space="preserve">
+    <value>Είστε βέβαιοι ότι θέλετε να δημιουργήσετε 50 ομάδες δοκιμής στο Entra του μισθωτή σας με τυχαίες λεπτομέρειες για σκοπούς δοκιμών;</value>
+  </data>
+  <data name="SignInAuthenticationRequiredMsg" xml:space="preserve">
+    <value>Απαιτείται έλεγχος ταυτότητας. Συνδεθείτε πρώτα στον μισθωτή σας στο Microsoft.</value>
+  </data>
+  <data name="MicrosoftGraphButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κεντρικοποιήστε τους ελέγχους ταυτότητας των μισθωτών σας στο Microsoft με ευκολία. Από αυτήν την ενότητα μπορείτε να επιλέξετε τον λογαριασμό που θέλετε να χρησιμοποιήσετε στην τρέχουσα σελίδα, να προβάλετε όλους τους συνδεδεμένους λογαριασμούς, να αποσυνδεθείτε όταν χρειάζεται και πολλά άλλα.</value>
+  </data>
+  <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κεντρικοποιήστε τους ελέγχους ταυτότητας των μισθωτών σας στο Microsoft με ευκολία. Από αυτήν την ενότητα μπορείτε να επιλέξετε τον λογαριασμό που θέλετε να χρησιμοποιήσετε στην τρέχουσα σελίδα, να προβάλετε όλους τους συνδεδεμένους λογαριασμούς, να αποσυνδεθείτε όταν χρειάζεται και πολλά άλλα.</value>
+  </data>
+    <data name="ActiveAccountSegmentedItem.Content" xml:space="preserve">
+    <value>Ενεργός λογαριασμός</value>
+  </data>
+    <data name="SignInSegmentedItem.Content" xml:space="preserve">
+    <value>Σύνδεση</value>
+  </data>
+    <data name="SignedInAccountsSegmentedItem.Content" xml:space="preserve">
+    <value>Συνδεδεμένοι λογαριασμοί</value>
+  </data>
+    <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
+    <value>Λεπτομέρειες του λογαριασμού που χρησιμοποιείται αυτήν τη στιγμή</value>
+  </data>
+    <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
+    <value>Όνομα χρήστη</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το όνομα χρήστη του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το όνομα χρήστη του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
+    <value>Το όνομα χρήστη του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
+    <value>Tenant ID</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το αναγνωριστικό μισθωτή του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το αναγνωριστικό μισθωτή του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
+    <value>Το αναγνωριστικό μισθωτή του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
+  </data>
+    <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
+    <value>Αναγνωριστικό λογαριασμού</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Το αναγνωριστικό λογαριασμού του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Το αναγνωριστικό λογαριασμού του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
+    <value>Το αναγνωριστικό του επιλεγμένου λογαριασμού θα εμφανιστεί εδώ</value>
+  </data>
+    <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
+    <value>Δικαιώματα</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Τα δικαιώματα του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Τα δικαιώματα του λογαριασμού που έχει επιλεγεί αυτήν τη στιγμή για την εκτέλεση των εργασιών σε αυτήν τη σελίδα.</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
+    <value>Τα δικαιώματα του επιλεγμένου λογαριασμού θα εμφανιστούν εδώ</value>
+  </data>
+    <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Συνδεθείτε στον μισθωτή σας στο Microsoft. Μετά από επιτυχή σύνδεση, οι πληροφορίες του λογαριασμού θα αποθηκευτούν στη μνήμη της εφαρμογής έως ότου η εφαρμογή κλείσει ή το αφαιρέσετε από την ενότητα &quot;Συνδεδεμένοι λογαριασμοί&quot;.</value>
+  </data>
+  <data name="SignInButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Συνδεθείτε στον μισθωτή σας στο Microsoft. Μετά από επιτυχή σύνδεση, οι πληροφορίες του λογαριασμού θα αποθηκευτούν στη μνήμη της εφαρμογής έως ότου η εφαρμογή κλείσει ή το αφαιρέσετε από την ενότητα &quot;Συνδεδεμένοι λογαριασμοί&quot;.</value>
+  </data>
+    <data name="SignInTextBlock.Text" xml:space="preserve">
+    <value>Σύνδεση</value>
+  </data>
+  <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
+    <value>Ορισμός ως ενεργό</value>
+  </data>
+  <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
+    <value>Οι αλλαγές στο αρχείο πολιτικής αποθηκεύτηκαν με επιτυχία.</value>
+  </data>
+    <data name="CancelSigningInButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ακύρωση της τρέχουσας διαδικασίας σύνδεσης που βρίσκεται σε εξέλιξη.</value>
+  </data>
+  <data name="CancelSigningInButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ακύρωση της τρέχουσας διαδικασίας σύνδεσης που βρίσκεται σε εξέλιξη.</value>
+  </data>
+    <data name="SignInMethodsComboBox.Header" xml:space="preserve">
+    <value>Μέθοδος σύνδεσης</value>
+  </data>
+  <data name="SignInMethodsComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε μέθοδο σύνδεσης σύμφωνα με την προτίμησή σας</value>
+  </data>
+  <data name="SignInMethodsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε μέθοδο σύνδεσης σύμφωνα με την προτίμησή σας</value>
+  </data>
+    <data name="AuthenticationContextComboBox.Header" xml:space="preserve">
+    <value>Πλαίσιο ελέγχου ταυτότητας</value>
+  </data>
+  <data name="AuthenticationContextComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιλέξτε το πλαίσιο ελέγχου ταυτότητας που θα χρησιμοποιηθεί για τη λειτουργία σύνδεσης. Κάθε πλαίσιο είναι ένα σύνολο από δικαιώματα του Microsoft Graph που απαιτούνται για την επιτυχή ολοκλήρωση των εργασιών που προσφέρει το AppControl Manager.</value>
+  </data>
+  <data name="AuthenticationContextComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιλέξτε το πλαίσιο ελέγχου ταυτότητας που θα χρησιμοποιηθεί για τη λειτουργία σύνδεσης. Κάθε πλαίσιο είναι ένα σύνολο από δικαιώματα του Microsoft Graph που απαιτούνται για την επιτυχή ολοκλήρωση των εργασιών που προσφέρει το AppControl Manager.</value>
+  </data>
+    <data name="RemoveAccountButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κατάργηση του λογαριασμού από τη λίστα. Θα αφαιρεθεί πλήρως από τη μνήμη της εφαρμογής και την προσωρινή μνήμη της Microsoft Authentication Library.</value>
+  </data>
+  <data name="RemoveAccountButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κατάργηση του λογαριασμού από τη λίστα. Θα αφαιρεθεί πλήρως από τη μνήμη της εφαρμογής και την προσωρινή μνήμη της Microsoft Authentication Library.</value>
+  </data>
+    <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <value>Κατάργηση</value>
+  </data>
+    <data name="SetAccountAsActiveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ορίστε τον επιλεγμένο λογαριασμό ως ενεργό για τις διαδικτυακές λειτουργίες στην τρέχουσα σελίδα.</value>
+  </data>
+  <data name="SetAccountAsActiveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ορίστε τον επιλεγμένο λογαριασμό ως ενεργό για τις διαδικτυακές λειτουργίες στην τρέχουσα σελίδα.</value>
+  </data>
+    <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <value>Ορισμός ως ενεργό</value>
+  </data>
+    <!-- For Intune Groups ListView - Headers -->
+  <data name="GroupNameHeader.Text" xml:space="preserve">
+    <value>Όνομα</value>
+  </data>
+  <data name="GroupIDHeader.Text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+    <data name="GroupDescriptionHeader.Text" xml:space="preserve">
+    <value>Περιγραφή</value>
+  </data>
+    <data name="GroupSecurityIdentifierHeader.Text" xml:space="preserve">
+    <value>Αναγνωριστικό ασφαλείας</value>
+  </data>
+    <data name="GroupCreatedDateTimeHeader.Text" xml:space="preserve">
+    <value>Χρόνος δημιουργίας</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Headers -->
+  <!-- For Intune Groups ListView - Buttons -->
+  <data name="GroupNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Όνομα</value>
+  </data>
+  <data name="GroupIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ID</value>
+  </data>
+    <data name="GroupDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Περιγραφή</value>
+  </data>
+    <data name="GroupSecurityIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αναγνωριστικό ασφαλείας</value>
+  </data>
+    <data name="GroupCreatedDateTimeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Χρόνος δημιουργίας</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Buttons -->
+    <data name="CreateTextBlock.Text" xml:space="preserve">
+    <value>Δημιουργία</value>
+  </data>
+    <data name="CreateGroupButton.Content" xml:space="preserve">
+    <value>Δημιουργία νέας ομάδας</value>
+  </data>
+  <data name="CreateGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Δημιουργία νέας ομάδας στο Microsoft Entra ID</value>
+  </data>
+  <data name="CreateGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Δημιουργία νέας ομάδας στο Microsoft Entra ID</value>
+  </data>
+    <data name="ExtraActionsDropDownButton.Content" xml:space="preserve">
+    <value>Ενέργειες</value>
+  </data>
+  <data name="ExtraActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Προσφέρει πολλαπλές διαφορετικές ενέργειες στα εμφανιζόμενα δεδομένα</value>
+  </data>
+  <data name="ExtraActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Προσφέρει πολλαπλές διαφορετικές ενέργειες στα εμφανιζόμενα δεδομένα</value>
+  </data>
+    <data name="DeSelectAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Κατάργηση επιλογής όλων</value>
+  </data>
+  <data name="DeSelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Κατάργηση οποιασδήποτε υπάρχουσας επιλογής</value>
+  </data>
+  <data name="DeSelectAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Κατάργηση οποιασδήποτε υπάρχουσας επιλογής</value>
+  </data>
+    <data name="ClearDataMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Καθαρισμός δεδομένων</value>
+  </data>
+  <data name="ClearDataMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καθαρίστε όλα τα εμφανιζόμενα δεδομένα</value>
+  </data>
+  <data name="ClearDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καθαρίστε όλα τα εμφανιζόμενα δεδομένα</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>Εξαγωγή σε αρχείο JSON</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <value>Λεπτομέρειες ανάπτυξης πολιτικής Intune</value>
+</data>
+<data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Καθορίστε τις λεπτομέρειες της ανάπτυξης πολιτικής Intune</value>
+</data>
+<data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Καθορίστε τις λεπτομέρειες της ανάπτυξης πολιτικής Intune</value>
+</data>
+<!-- For Intune Configuration Policies ListView - Headers -->
+  <data name="NameHeader.Text" xml:space="preserve">
+    <value>Όνομα</value>
+  </data>
+  <data name="DescriptionHeader.Text" xml:space="preserve">
+    <value>Περιγραφή</value>
+  </data>
+    <data name="PlatformsHeader.Text" xml:space="preserve">
+    <value>Πλατφόρμες</value>
+  </data>
+      <data name="TechnologiesHeader.Text" xml:space="preserve">
+    <value>Τεχνολογίες</value>
+  </data>
+      <data name="SettingCountHeader.Text" xml:space="preserve">
+    <value>Αριθμός ρυθμίσεων</value>
+  </data>
+      <data name="CreatedHeader.Text" xml:space="preserve">
+    <value>Δημιουργήθηκε</value>
+  </data>
+      <data name="ModifiedHeader.Text" xml:space="preserve">
+    <value>Τροποποιήθηκε</value>
+  </data>
+      <data name="IDHeader.Text" xml:space="preserve">
+    <value>Αναγνωριστικό</value>
+  </data>
+  <!-- End Of For Intune Configuration Policies ListView - Headers -->
+  <!-- For Intune Configuration Policies ListView - Buttons -->
+  <data name="NameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Όνομα</value>
+  </data>
+      <data name="DescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Περιγραφή</value>
+  </data>
+      <data name="PlatformsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Πλατφόρμες</value>
+  </data>
+      <data name="TechnologiesColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Τεχνολογίες</value>
+  </data>
+      <data name="SettingCountColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αριθμός ρυθμίσεων</value>
+  </data>
+      <data name="CreatedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Δημιουργήθηκε</value>
+  </data>
+  <data name="ModifiedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Τροποποιήθηκε</value>
+  </data>
+  <data name="IdColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Αναγνωριστικό</value>
+  </data>
+  <!-- End Of For Intune Configuration Policies ListView - Buttons -->
+  <data name="RetrieveIntunePoliciesButton.Content" xml:space="preserve">
+    <value>Ανάκτηση πολιτικών Intune</value>
+  </data>
+  <data name="RetrieveIntunePoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανακτήστε όλες τις πολιτικές ρύθμισης συσκευών από το Intune.</value>
+  </data>
+  <data name="RetrieveIntunePoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανακτήστε όλες τις πολιτικές ρύθμισης συσκευών από το Intune.</value>
+  </data>
+  <data name="DeploySelectedIntunePolicyButton.Content" xml:space="preserve">
+    <value>Αναπτύξτε την επιλεγμένη πολιτική</value>
+  </data>
+  <data name="DeploySelectedIntunePolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αναπτύξτε την επιλεγμένη πολιτική ρύθμισης συσκευής στο Intune.</value>
+  </data>
+  <data name="DeploySelectedIntunePolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αναπτύξτε την επιλεγμένη πολιτική ρύθμισης συσκευής στο Intune.</value>
+  </data>
+  <data name="DeleteSelectedPolicyButton.Content" xml:space="preserve">
+    <value>Διαγράψτε την επιλεγμένη πολιτική</value>
+  </data>
+  <data name="DeleteSelectedPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαγράψτε την επιλεγμένη πολιτική ρύθμισης συσκευής από το Intune.</value>
+  </data>
+  <data name="DeleteSelectedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαγράψτε την επιλεγμένη πολιτική ρύθμισης συσκευής από το Intune.</value>
+  </data>
 </root>

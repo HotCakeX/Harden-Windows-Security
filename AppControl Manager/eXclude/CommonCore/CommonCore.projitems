@@ -45,12 +45,19 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)AppSettings\AppThemeManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppSettings\Main.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppSettings\NavigationBackgroundManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppSettings\NavigationViewLocationManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\UnifiedSearchBarResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebView2Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\IInvisibleCrumbar.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UI\IPageHeaderProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\AuthenticationCompanion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\Main.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\ConfigurationPolicyAssignmentsEnvelope.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\DeviceManagementConfigurationPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\IntunePolicyFileItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\AssignmentPayload.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\AuthenticatedAccounts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MicrosoftGraph\AuthenticationContext.cs" />

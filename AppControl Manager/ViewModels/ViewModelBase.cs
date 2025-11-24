@@ -26,9 +26,9 @@ using Windows.ApplicationModel.UserActivities;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using CommonCore.AppSettings;
 
 #if HARDEN_SYSTEM_SECURITY
-using HardenSystemSecurity.AppSettings;
 using HardenSystemSecurity;
 #endif
 
@@ -62,7 +62,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// <summary>
 	/// An instance property reference to the App settings that pages can x:Bind to.
 	/// </summary>
-	internal AppSettings.Main AppSettings => App.Settings;
+	internal CommonCore.AppSettings.Main AppSettings => App.Settings;
 #endif
 
 #if HARDEN_SYSTEM_SECURITY

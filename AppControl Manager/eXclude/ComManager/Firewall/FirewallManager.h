@@ -92,4 +92,17 @@ namespace Firewall {
 	extern "C" __declspec(dllexport) bool __stdcall FW_BlockIpListInGpo(const wchar_t* displayName, const wchar_t** ipArray, int arraySize, bool toAdd);
 	extern "C" __declspec(dllexport) bool __stdcall FW_BlockIPAddressListsInGroupPolicy(const wchar_t* displayName, const wchar_t* listDownloadURL, bool toAdd);
 
+	// Returns true if all matching rules are disabled (Enabled != 1) or none exist.
+	// Returns false if any matching rule is enabled OR on error.
+	extern "C" __declspec(dllexport) bool __stdcall FW_AreMdnsInboundRulesDisabled();
+
+	// enable == true  -> set Enabled=1 (NetSecurityEnabled::True) on all matching rules.
+	// enable == false -> set Enabled=2 (NetSecurityEnabled::False) on all matching rules.
+	// Returns true if all modifications succeed (or none exist), false otherwise (error set).
+	extern "C" __declspec(dllexport) bool __stdcall FW_SetMdnsInboundRulesEnabled(bool enable);
+
+	// Helper to detect transient HRESULTs worth retrying for the PutInstance operation.
+	// These are known to occur under provider/RPC load and during short policy/store contention windows.
+	bool IsTransientHresult(HRESULT hr);
+
 }

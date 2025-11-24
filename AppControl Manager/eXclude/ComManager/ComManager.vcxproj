@@ -158,6 +158,7 @@
     <ClCompile Include="ComManager.cpp" />
     <ClCompile Include="Firewall/FirewallManager.cpp" />
     <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="Network\NetConnectionProfilesManager.cpp" />
     <ClCompile Include="ScheduledTasks\ScheduledTasks.cpp" />
     <ClCompile Include="StringUtilities.cpp" />
     <ClCompile Include="Virtualization\Virtualization.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="ComHelpers.h" />
     <ClInclude Include="Firewall/FirewallManager.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Network\NetConnectionProfilesManager.h" />
     <ClInclude Include="ScheduledTasks\ScheduledTasks.h" />
     <ClInclude Include="StringUtilities.h" />
     <ClInclude Include="Virtualization\Virtualization.h" />

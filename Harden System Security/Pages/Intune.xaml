@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="HardenSystemSecurity.Pages.Intune"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:CCGraph="using:CommonCore.MicrosoftGraph"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <customUI:InfoBarV2 Grid.Row="0"
+                 IsOpen="{x:Bind ViewModel.MainInfoBarIsOpen, Mode=TwoWay}"
+                 Message="{x:Bind ViewModel.MainInfoBarMessage, Mode=OneWay}"
+                 Severity="{x:Bind ViewModel.MainInfoBarSeverity, Mode=OneWay}"
+                 IsClosable="{x:Bind ViewModel.MainInfoBarIsClosable, Mode=OneWay}" />
+
+        <Expander Grid.Row="1" Margin="0,0,0,5" HorizontalAlignment="Stretch">
+            <Expander.Header>
+
+                <controls:WrapPanel Style="{StaticResource UnifiedToolbarStyle}">
+
+                    <ProgressRing IsActive="True"
+                                  Visibility="{x:Bind ViewModel.ProgressBarVisibility, Mode=OneWay}"
+                                  VerticalAlignment="Center" />
+
+                    <customUI:GraphAuthPanel Host="{x:Bind ViewModel}"
+                                             VerticalAlignment="Center" />
+
+                    <Button Click="{x:Bind ViewModel.SelectGroups_Click}"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            VerticalAlignment="Center">
+
+                        <!-- Selected Groups chip -->
+                        <Border>
+                            <StackPanel Orientation="Horizontal"
+                                Spacing="6"
+                                VerticalAlignment="Center">
+                                <FontIcon Glyph="&#xE8A9;"
+                                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                                <TextBlock VerticalAlignment="Center">
+                                <Run x:Uid="SelectedGroups" />
+                                <Run Text="{x:Bind ViewModel.SelectedIntuneGroupsCount, Mode=OneWay}"
+                                    FontWeight="SemiBold" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                    </Button>
+
+                    <!-- Retrieve Policies -->
+                    <Button x:Uid="RetrieveIntunePoliciesButton"
+                            VerticalAlignment="Center"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.RetrievePolicies_Click}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                    <!-- Total chip -->
+                    <Border CornerRadius="8"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Padding="10,6"
+                            BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <FontIcon Glyph="&#xE8A9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            <TextBlock VerticalAlignment="Center">
+                                    <Run x:Uid="TotalText" />
+                                    <Run Text="{x:Bind ViewModel.Policies.Count, Mode=OneWay}" FontWeight="SemiBold" />
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Search box -->
+                    <TextBox x:Uid="SearchBoxTextBox"
+                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                             VerticalAlignment="Center"
+                             VerticalContentAlignment="Center"
+                             Text="{x:Bind ViewModel.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <!-- Policy Files ComboBox -->
+                    <ComboBox VerticalAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                              ItemsSource="{x:Bind ViewModel.PolicyFiles, Mode=OneWay}"
+                              SelectedItem="{x:Bind ViewModel.SelectedPolicyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="CCGraph:IntunePolicyFileItem">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xEA18;" />
+                                    <TextBlock Text="{x:Bind FileName}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <!-- Deploy selected policy JSON to Intune -->
+                    <Button x:Uid="DeploySelectedIntunePolicyButton"
+                            VerticalAlignment="Center"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.DeploySelectedPolicy_Click}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE9F5;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                </controls:WrapPanel>
+            </Expander.Header>
+
+            <Expander.Content>
+
+                <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+
+                    <!-- Delete selected policy -->
+                    <Button x:Uid="DeleteSelectedPolicyButton"
+                            VerticalAlignment="Center"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            Click="{x:Bind ViewModel.DeleteSelectedPolicy_Click}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+
+                </controls:WrapPanel>
+
+            </Expander.Content>
+        </Expander>
+
+        <!-- Policies ListView -->
+        <customUI:ListViewV2 Grid.Row="2"
+                             RegistryKey="OnlineIntuneDeviceConfigs"
+                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                             ItemsSource="{x:Bind ViewModel.Policies, Mode=OneWay}"
+                             SelectedItem="{x:Bind ViewModel.SelectedPolicyInListView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             SelectionMode="Single">
+
+            <customUI:ListViewV2.Header>
+                <Border CornerRadius="5" Background="Black" customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth1, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth2, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth3, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth4, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth5, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth6, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth7, Mode=TwoWay}" MinWidth="50" />
+                            <ColumnDefinition Width="{x:Bind ViewModel.ColumnWidth8, Mode=TwoWay}" MinWidth="50" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Uid="NameColumnHeaderBtn" Tag="Name" Grid.Column="0" Margin="10,0,0,0" Style="{StaticResource ListViewHeaderButton}" />
+                        <Button x:Uid="DescriptionColumnHeaderBtn" Tag="Description" Grid.Column="1" Style="{StaticResource ListViewHeaderButton}" />
+                        <Button x:Uid="PlatformsColumnHeaderBtn" Tag="Platforms" Grid.Column="2" Style="{StaticResource ListViewHeaderButton}" />
+                        <Button x:Uid="TechnologiesColumnHeaderBtn" Tag="Technologies" Grid.Column="3" Style="{StaticResource ListViewHeaderButton}" />
+                        <Button x:Uid="SettingCountColumnHeaderBtn" Tag="SettingCount" Grid.Column="4" Style="{StaticResource ListViewHeaderButton}" />
+                        <Button x:Uid="CreatedColumnHeaderBtn" Tag="CreatedDateTime" Grid.Column="5" Style="{StaticResource ListViewHeaderButton}" />
+                        <Button x:Uid="ModifiedColumnHeaderBtn" Tag="LastModifiedDateTime" Grid.Column="6" Style="{StaticResource ListViewHeaderButton}" />
+                        <Button x:Uid="IdColumnHeaderBtn" Tag="Id" Grid.Column="7" Style="{StaticResource ListViewHeaderButton}" />
+
+                        <controls:GridSplitter Grid.Column="1" />
+                        <controls:GridSplitter Grid.Column="2" />
+                        <controls:GridSplitter Grid.Column="3" />
+                        <controls:GridSplitter Grid.Column="4" />
+                        <controls:GridSplitter Grid.Column="5" />
+                        <controls:GridSplitter Grid.Column="6" />
+                        <controls:GridSplitter Grid.Column="7" />
+                    </Grid>
+                </Border>
+            </customUI:ListViewV2.Header>
+
+            <customUI:ListViewV2.ItemTemplate>
+                <DataTemplate x:DataType="CCGraph:DeviceManagementConfigurationPolicy"
+                              xmlns:VMs="using:HardenSystemSecurity.ViewModels">
+                    <!-- Setting Background="Transparent" makes the full row hit-test visible -->
+                    <Grid Background="Transparent">
+                        <Grid.ContextFlyout>
+                            <MenuFlyout>
+
+                                <!-- Copy entire row -->
+                                <MenuFlyoutItem x:Uid="CopyRow"
+                                                Click="{x:Bind VMs:ViewModelProvider.IntuneVM.CopySelectedPolicies_Click}">
+                                    <MenuFlyoutItem.KeyboardAccelerators>
+                                        <KeyboardAccelerator Key="C"
+                                                             Modifiers="Control"
+                                                             Invoked="{x:Bind VMs:ViewModelProvider.IntuneVM.CopySelectedPolicies_Click}"/>
+                                    </MenuFlyoutItem.KeyboardAccelerators>
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <MenuFlyoutSeparator />
+
+                                <!-- Copy individual properties -->
+                                <MenuFlyoutSubItem x:Uid="CopyIndividualItems">
+                                    <MenuFlyoutSubItem.Icon>
+                                        <FontIcon Glyph="&#xE8C8;" />
+                                    </MenuFlyoutSubItem.Icon>
+                                    <MenuFlyoutSubItem.Items>
+
+                                        <MenuFlyoutItem x:Uid="NameHeader"
+                                                        Tag="Name"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="DescriptionHeader"
+                                                        Tag="Description"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="PlatformsHeader"
+                                                        Tag="Platforms"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="TechnologiesHeader"
+                                                        Tag="Technologies"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="SettingCountHeader"
+                                                        Tag="SettingCount"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="CreatedHeader"
+                                                        Tag="CreatedDateTime"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="ModifiedHeader"
+                                                        Tag="LastModifiedDateTime"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                        <MenuFlyoutItem x:Uid="IDHeader"
+                                                        Tag="Id"
+                                                        Click="{x:Bind VMs:ViewModelProvider.IntuneVM.CopyPolicyProperty_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE8C8;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+
+                                    </MenuFlyoutSubItem.Items>
+                                </MenuFlyoutSubItem>
+
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneVM.ColumnWidth1, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneVM.ColumnWidth2, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneVM.ColumnWidth3, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneVM.ColumnWidth4, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneVM.ColumnWidth5, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneVM.ColumnWidth6, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneVM.ColumnWidth7, Mode=OneWay}" />
+                            <ColumnDefinition Width="{x:Bind VMs:ViewModelProvider.IntuneVM.ColumnWidth8, Mode=OneWay}" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{x:Bind Name}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="0"/>
+                        <TextBlock Text="{x:Bind Description}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="1"/>
+                        <TextBlock Text="{x:Bind Platforms}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="2"/>
+                        <TextBlock Text="{x:Bind Technologies}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="3"/>
+                        <TextBlock Text="{x:Bind SettingCount}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="4"/>
+                        <TextBlock Text="{x:Bind CreatedDateTime}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="5"/>
+                        <TextBlock Text="{x:Bind LastModifiedDateTime}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="6"/>
+                        <TextBlock Text="{x:Bind Id}" Style="{StaticResource ListViewCellTextBlock}" Grid.Column="7"/>
+                    </Grid>
+                </DataTemplate>
+            </customUI:ListViewV2.ItemTemplate>
+        </customUI:ListViewV2>
+
+    </Grid>
+</Page>

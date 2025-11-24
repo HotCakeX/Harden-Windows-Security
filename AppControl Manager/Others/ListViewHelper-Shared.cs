@@ -79,7 +79,8 @@ internal static partial class ListViewHelper
 		CBOM_SSLProviderCurves = 10009,
 		CBOM_TlsCipherSuites = 10010,
 		CBOM_RegisteredProviders = 10011,
-		MD_Exclusions = 10012
+		MD_Exclusions = 10012,
+		OnlineIntuneDeviceConfigs = 10013,
 	}
 
 	/// <summary>

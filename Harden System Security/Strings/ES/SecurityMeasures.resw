@@ -955,4 +955,16 @@
 <data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
     <value>Establezca el tiempo máximo durante el cual una dirección IP queda bloqueada por la Protección contra ataques de fuerza bruta al valor máximo posible. Después de este tiempo, las direcciones IP bloqueadas podrán iniciar sesión e iniciar sesiones.</value>
 </data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Establezca el tiempo máximo durante el cual una dirección IP queda bloqueada por Remote Encryption Protection en el valor máximo posible. Después de este período las direcciones IP bloqueadas podrán iniciar conexión.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>Habilite la detección de aplicaciones potencialmente no deseadas. Se mostrarán en el historial de Microsoft Defender junto con otras amenazas.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>Deshabilite las reglas de firewall de mDNS UDP-In. Esto agrega una medida adicional de seguridad en lugares públicos, como una cafetería, pero puede interferir con el uso compartido de pantalla Miracast, que depende del perfil público o de redes domésticas en las que el perfil privado no está seleccionado.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Establezca el perfil de red de todas las conexiones en Público. Una red pública implica un menor nivel de confianza hacia otros dispositivos de la red.</value>
+</data>
 </root>

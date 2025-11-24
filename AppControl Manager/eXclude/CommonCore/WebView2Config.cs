@@ -114,7 +114,7 @@ internal static class WebView2Config
 	/// <param name="path">Target directory path to delete.</param>
 	/// <param name="maxAttempts">Maximum number of attempts.</param>
 	/// <param name="delayMs">Delay between attempts in milliseconds.</param>
-	private static void TryDeleteDirectoryWithRetries(string path, int maxAttempts, int delayMs)
+	internal static void TryDeleteDirectoryWithRetries(string path, int maxAttempts, int delayMs)
 	{
 		for (int attempt = 1; attempt <= maxAttempts; attempt++)
 		{

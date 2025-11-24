@@ -44,7 +44,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.GroupPolicyEditor),
 		typeof(Pages.Protects.NonAdmin),
 		typeof(Pages.FileReputation),
-		typeof(AppControlManager.Pages.Home)
+		typeof(AppControlManager.Pages.Home),
+		typeof(Pages.Intune),
+		typeof(AppControlManager.Pages.IntuneDeploymentDetails)
 		];
 
 
@@ -231,6 +233,18 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("CBOMNavItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.CryptographicBillOfMaterials)]
 		);
+
+		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Intune)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("IntuneNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItem/Content")],
+			pages: [typeof(HardenSystemSecurity.Pages.Intune), typeof(AppControlManager.Pages.IntuneDeploymentDetails)]
+		);
+
+		breadCrumbMappingsV2[typeof(AppControlManager.Pages.IntuneDeploymentDetails)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("IntuneNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItem/Content")],
+			pages: [typeof(HardenSystemSecurity.Pages.Intune), typeof(AppControlManager.Pages.IntuneDeploymentDetails)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -272,7 +286,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "MicrosoftBaseLinesOverrides", typeof(Pages.Protects.MicrosoftBaseLinesOverrides) },
 		{ "AuditPolicies", typeof(Pages.AuditPolicies) },
 		{ "Home", typeof(AppControlManager.Pages.Home) },
-		{ "CBOM", typeof(Pages.CryptographicBillOfMaterials) }
+		{ "CBOM", typeof(Pages.CryptographicBillOfMaterials) },
+		{ "Intune", typeof(Pages.Intune) }
 	}.ToFrozenDictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -315,6 +330,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.AuditPolicies)] = GlobalVars.GetStr("AuditPoliciesNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(AppControlManager.Pages.Home)] = GlobalVars.GetStr("HomeNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.CryptographicBillOfMaterials)] = GlobalVars.GetStr("CBOMNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Intune)] = GlobalVars.GetStr("IntuneNavItem/Content");
 	}
 
 	/// <summary>
@@ -421,6 +437,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// </summary>
 	internal IconElement? CBOMIcon { get; set => SP(ref field, value); }
 
+	/// <summary>
+	/// Icon for the Intune navigation item.
+	/// </summary>
+	internal IconElement? IntuneIcon { get; set => SP(ref field, value); }
+
 	#endregion
 
 	/// <summary>
@@ -509,6 +530,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new CBOM()
 					};
 
+					IntuneIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -25, -25, -25),
+						Source = new Intune()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -576,6 +603,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					IntuneIcon = new FontIcon
+					{
+						Glyph = "\uE753",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -591,6 +624,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					AuditPoliciesIcon = new FontIcon { Glyph = "\uE9D5" };
 					HomeIcon = new FontIcon { Glyph = "\uE80F" };
 					CBOMIcon = new FontIcon { Glyph = "\uE705" };
+					IntuneIcon = new FontIcon { Glyph = "\uE753" };
 					break;
 				}
 		}
@@ -630,7 +664,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					? "Virtualization ExposeVirtualizationExtensions --all --enable true"
 					: "Virtualization ExposeVirtualizationExtensions --all --enable false";
 
-				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, command));
+				Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, command));
 			});
 
 			MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("NestedVirtSuccessFormat"), enable ? GlobalVars.GetStr("EnabledLowercase") : GlobalVars.GetStr("DisabledLowercase")));

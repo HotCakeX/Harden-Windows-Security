@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using AppControlManager.AppSettings;
 using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
@@ -26,6 +25,7 @@ using Windows.ApplicationModel;
 using Windows.Graphics;
 using AnimatedVisuals;
 using Microsoft.UI.Xaml.Automation;
+using CommonCore.AppSettings;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;
@@ -47,7 +47,7 @@ internal sealed partial class MainWindow : Window
 {
 
 	private MainWindowVM ViewModel => ViewModelProvider.MainWindowVM;
-	private AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => App.Settings;
 #if APP_CONTROL_MANAGER
 	private SidebarVM sidebarVM => ViewModelProvider.SidebarVM;
 #endif
@@ -546,6 +546,10 @@ internal sealed partial class MainWindow : Window
 			CBOMNavItem.Content = GlobalVars.GetStr("CBOMNavItem/Content");
 			AutomationProperties.SetHelpText(CBOMNavItem, GlobalVars.GetStr("CBOMNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(CBOMNavItem, GlobalVars.GetStr("CBOMNavItem/ToolTipService/ToolTip"));
+
+			IntuneNavItem.Content = GlobalVars.GetStr("IntuneNavItem/Content");
+			AutomationProperties.SetHelpText(IntuneNavItem, GlobalVars.GetStr("IntuneNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(IntuneNavItem, GlobalVars.GetStr("IntuneNavItem/ToolTipService/ToolTip"));
 
 #endif
 

@@ -32,6 +32,9 @@ namespace CommonCore.MicrosoftGraph;
 [JsonSerializable(typeof(OmaSettingBase64))]
 [JsonSerializable(typeof(DeviceConfigurationPoliciesResponse))]
 [JsonSerializable(typeof(Group))]
+[JsonSerializable(typeof(DeviceManagementConfigurationPolicy))]
+[JsonSerializable(typeof(DeviceManagementConfigurationPoliciesResponse))]
+[JsonSerializable(typeof(ConfigurationPolicyAssignmentsEnvelope))]
 internal sealed partial class MSGraphJsonContext : JsonSerializerContext
 {
 }

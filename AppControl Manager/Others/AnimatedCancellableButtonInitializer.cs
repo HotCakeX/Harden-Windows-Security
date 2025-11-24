@@ -45,9 +45,7 @@ internal sealed partial class AnimatedCancellableButtonInitializer(string button
 				await Cts.CancelAsync();
 			}
 		}
-		catch
-		{
-		}
+		catch { }
 	};
 
 	internal bool IsOperationInProgress { get; set => SP(ref field, value); }

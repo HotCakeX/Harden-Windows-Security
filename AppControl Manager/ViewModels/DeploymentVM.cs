@@ -113,15 +113,9 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	}
 
 	/// <summary>
-	/// The groups to assign the policy to.
-	/// They are selected in the IntuneDeploymentDetails page and stored here for usage.
-	/// </summary>
-	internal static readonly List<IntuneGroupItemListView> SelectedIntuneGroups = [];
-
-	/// <summary>
 	/// Used to display the number of selected groups in the UI.
 	/// </summary>
-	internal int SelectedIntuneGroupsCount => SelectedIntuneGroups.Count;
+	internal int SelectedIntuneGroupsCount => IntuneDeploymentDetailsVM.SelectedIntuneGroups.Count;
 
 	/// <summary>
 	/// Controls the visibility of the Main progress bar.
@@ -375,7 +369,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			}
 		});
 
-		await CommonCore.MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, SelectedIntuneGroups.Select(x => x.GroupID).ToList(), policyName, policyID, descriptionText);
+		await CommonCore.MicrosoftGraph.Main.UploadPolicyToIntune(AuthCompanionCLS.CurrentActiveAccount, file, IntuneDeploymentDetailsVM.SelectedIntuneGroups.Select(x => x.GroupID).ToList(), policyName, policyID, descriptionText);
 	}
 
 

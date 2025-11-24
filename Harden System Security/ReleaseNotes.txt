@@ -1,18 +1,27 @@
-Full System Report Generation 🎊
+* Added real-time CPU temperature to the Home page.
 
-Harden System Security now supports comprehensive system reports you can save to a file. Every security category participates, including Microsoft Security baselines and Microsoft 365 apps security baselines. The header records device name, user account, and time. Reports include a security score, per-category item counts, and total compliant vs. non-compliant items.
+* Added advanced CPU details to the home page.
 
-Back Up and Restore 🪅
+* Added Computer name to the home page.
 
-After generating a report (full or single category), you can import and apply it on any system with the app. Two modes:
+* Added OS edition, version and build information to the home page.
 
-Partial: only items marked Applied in the report are applied.
-Full: the system is synchronized to the report: measures marked Applied are applied; those marked Not Applied are removed. You can back up selected categories or the entire system state to JSON and deploy to many workstations. Fully automatable via the new CLI. Documentation: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security#commandline-interface-cli-support
+* Added RAM speed and generation details to the home page.
 
-Unified Search 🎉
+* Added real-time total amount of Internet uploaded data and downloaded data to the home page.
 
-The top bar is now a unified, localized search with contextual results across all categories and pages. Type a few letters (for example, "Administrator Protection") without knowing the category; accurate suggestions appear with page icons. Works in your app language (for example, German or Polish).
+* Features in the home page that display real-time data such as CPU temperature, network speed and so on, are highly optimized, fast and only active when the user is on the home page. If you navigate away to another page, they will stop gathering data and will not run in the background so they do not consume unnecessary resources.
 
-Other Improvements 🎈
+* The time it takes from clicking on the app icon on taskbar or start menu to launch it to the home page load is less than 1 second and will stay that way.
 
-Updated dependencies to the latest versions.
+* Localized the home page information for all of the supported languages.
+
+* Added context menu options for copying rows and individual details to the Microsoft Security Baseline page.
+
+* Added context menu options for copying rows and individual details to the Microsoft 365 Apps Security Baseline page.
+
+* CTRL + C keyboard shortcut can be used to copy one or multiple rows to the clipboard.
+
+* Added icons for the restoration mode and its options in the Protect page.
+
+* Added support for restoring new categories. Please check GitHub release notes for more info.

@@ -1,7 +1,19 @@
-* Updated dependencies to the latest version.
+* Added real-time CPU temperature to the Home page.
 
-* Added new options under the "Actions" button in Event Logs policy creation page that offers the ability to clear the entire system logs for Code Integrity and App Locker categories. There will be a confirmation dialog that you have to accept before the logs are cleared. Completes part of this feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/783
+* Added advanced CPU details to the home page.
 
-* Made various performance improvements across the board.
+* Added Computer name to the home page.
 
-* Added a delete option to the selected files/folders previews across the app so that in addition to "clear all" button, you can remove the files or folders you've selected individually and easily.
+* Added OS edition, version and build information to the home page.
+
+* Added RAM speed and generation details to the home page.
+
+* Added real-time total amount of Internet uploaded data and downloaded data to the home page.
+
+* Features in the home page that display real-time data such as CPU temperature, network speed and so on, are highly optimized, fast and only active when the user is on the home page. If you navigate away to another page, they will stop gathering data and will not run in the background so they do not consume unnecessary resources.
+
+* The time it takes from clicking on the app icon on taskbar or start menu to launch it to the home page load is less than 1 second and will stay that way.
+
+* Localized the home page information for all of the supported languages.
+
+* Significantly improved the speed and performance of the Event Log Policy Creation. Now the scans of Code Integrity and App Locker event logs from local system or custom EVTX files *take half of the time* compared to the previous version. This performance boost is achieved by implementing new algorithms and optimizations in the scanning engine, rather than simply using more CPU cores and parallelism. The system resource usage actually remains the same as before or even lower in some cases, while the speed is greatly improved.

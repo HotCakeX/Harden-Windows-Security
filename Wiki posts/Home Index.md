@@ -92,6 +92,7 @@
 
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="50"> [Miscellaneous](#-miscellaneous)
 
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [How To Install Microsoft Store Apps Completely Offline](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Install-Microsoft-Store-Apps-Completely-Offline)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Create Bootable USB flash drive with no 3rd party tools](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Bootable-USB-flash-drive-with-no-3rd-party-tools)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Event Viewer](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Event-Viewer)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Group Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy)

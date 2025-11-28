@@ -5730,7 +5730,7 @@
 <data name="DeleteGroupDialogTitle" xml:space="preserve">
   <value>אישור מחיקת קבוצה</value>
 </data>
-<data name="Delete" xml:space="preserve">
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
   <value>מחק</value>
 </data>
 <data name="DeleteGroupDialogIntroSingle" xml:space="preserve">

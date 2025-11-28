@@ -5729,7 +5729,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
 <data name="DeleteGroupDialogTitle" xml:space="preserve">
   <value>Löschung der Gruppe bestätigen</value>
 </data>
-<data name="Delete" xml:space="preserve">
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
   <value>Löschen</value>
 </data>
 <data name="DeleteGroupDialogIntroSingle" xml:space="preserve">

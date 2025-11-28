@@ -5729,7 +5729,7 @@
 <data name="DeleteGroupDialogTitle" xml:space="preserve">
   <value>ഗ്രൂപ്പ് ഇല്ലാതാക്കൽ സ്ഥിരീകരിക്കുക</value>
 </data>
-<data name="Delete" xml:space="preserve">
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
   <value>ഇല്ലാതാക്കുക</value>
 </data>
 <data name="DeleteGroupDialogIntroSingle" xml:space="preserve">

@@ -5729,7 +5729,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 <data name="DeleteGroupDialogTitle" xml:space="preserve">
   <value>समूह हटाने की पुष्टि</value>
 </data>
-<data name="Delete" xml:space="preserve">
+<data name="DeleteCertificateDialogPrimaryButton" xml:space="preserve">
   <value>हटाएँ</value>
 </data>
 <data name="DeleteGroupDialogIntroSingle" xml:space="preserve">

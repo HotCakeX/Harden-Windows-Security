@@ -11,6 +11,7 @@
 #include "BitLocker/BitLockerSuspend.h"
 #include "ScheduledTasks/ScheduledTasks.h"
 #include "Virtualization/Virtualization.h"
+#include "Network/NetConnectionProfilesManager.h"
 
 #pragma comment(lib, "wbemuuid.lib")
 #pragma comment(lib, "winhttp.lib")
@@ -21,6 +22,7 @@ using namespace std;
 
 using namespace BitLocker;
 using namespace Firewall;
+using namespace NetworkProfiles;
 
 // Exported function to allow setting the DLL mode from external callers (e.g. C# via DllImport).
 extern "C" __declspec(dllexport) void __stdcall SetDllMode(bool skipInit)
@@ -290,6 +292,163 @@ int wmain(int argc, wchar_t* argv[])
 			LogOut(L"Successfully removed firewall rules for: ", displayName);
 
 		return 0;
+	}
+
+	// Primary: FIREWALLMDNS
+	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"firewallmdns"))
+	{
+		if (argc < 3)
+		{
+			return 2;
+		}
+
+		wstring sub = argv[2];
+
+		// Report whether all matching mDNS inbound rules are disabled.
+		if (EqualsOrdinalIgnoreCase(sub.c_str(), L"status"))
+		{
+			if (argc != 3)
+			{
+				return 2;
+			}
+
+			bool allDisabled = FW_AreMdnsInboundRulesDisabled();
+			const wchar_t* err = GetLastErrorMessage();
+			if (err && *err)
+			{
+				LogErr(L"Failed to enumerate mDNS inbound firewall rules. Error: ", err);
+				return 1;
+			}
+
+			// Print boolean token indicating whether all are disabled.
+			LogOut(allDisabled ? L"true" : L"false");
+			return 0;
+		}
+
+		// SET: enable or disable all mDNS inbound firewall rules.
+		else if (EqualsOrdinalIgnoreCase(sub.c_str(), L"set"))
+		{
+			if (argc != 4)
+			{
+				return 2;
+			}
+
+			bool enableFlag = false;
+			if (!TryParseBool(argv[3], enableFlag))
+			{
+				return 2;
+			}
+
+			bool ok = FW_SetMdnsInboundRulesEnabled(enableFlag);
+			const wchar_t* err = GetLastErrorMessage();
+			if (!ok)
+			{
+				if (err && *err)
+				{
+					LogErr(L"Failed to modify mDNS inbound firewall rules. Error: ", err);
+				}
+				else
+				{
+					LogErr(L"Failed to modify mDNS inbound firewall rules.");
+				}
+				return 1;
+			}
+
+			if (enableFlag)
+				LogOut(L"Successfully enabled all matching mDNS inbound firewall rules.");
+			else
+				LogOut(L"Successfully disabled all matching mDNS inbound firewall rules.");
+
+			return 0;
+		}
+		else
+		{
+			// Unknown subcommand
+			return 2;
+		}
+	}
+
+	// Primary: NETWORKPROFILES
+	if (EqualsOrdinalIgnoreCase(primary.c_str(), L"networkprofiles"))
+	{
+		if (argc < 3)
+		{
+			return 2;
+		}
+
+		wstring sub = argv[2];
+
+		if (EqualsOrdinalIgnoreCase(sub.c_str(), L"status"))
+		{
+			if (argc != 3)
+				return 2;
+
+			bool allPublic = NET_AreAllNetworkLocationsPublic();
+			const wchar_t* err = GetLastErrorMessage();
+			if (err && *err)
+			{
+				LogErr(L"Failed to enumerate network connection profiles. Error: ", err);
+				return 1;
+			}
+
+			LogOut(allPublic ? L"true" : L"false");
+			return 0;
+		}
+		else if (EqualsOrdinalIgnoreCase(sub.c_str(), L"set"))
+		{
+			if (argc != 4)
+				return 2;
+
+			const wchar_t* catToken = argv[3];
+			if (!catToken || *catToken == L'\0')
+				return 2;
+
+			// Strict integer validation for category
+			const wchar_t* p = catToken;
+			bool allDigits = true;
+			for (; *p; ++p)
+			{
+				if (*p < L'0' || *p > L'9')
+				{
+					allDigits = false;
+					break;
+				}
+			}
+			if (!allDigits) return 2;
+
+			int category = _wtoi(catToken);
+
+			bool ok = NET_SetAllNetworkLocationsCategory(category);
+			const wchar_t* err = GetLastErrorMessage();
+			if (!ok)
+			{
+				// Underlying function sets specific error for invalid category.
+				if (err && *err)
+				{
+					LogErr(L"Failed to set NetworkCategory for all profiles. Error: ", err);
+				}
+				else
+				{
+					LogErr(L"Failed to set NetworkCategory for all profiles.");
+				}
+				return 1;
+			}
+
+			// Success messages only for supported settable categories (0,1).
+			switch (category)
+			{
+			case 0: LogOut(L"Successfully set all network profiles to Public."); break;
+			case 1: LogOut(L"Successfully set all network profiles to Private."); break;
+			default:
+				LogOut(L"Successfully set all network profiles.");
+				break;
+			}
+			return 0;
+		}
+		else
+		{
+			return 2; // unknown subcommand
+		}
 	}
 
 	// Primary: BITLOCKER

@@ -191,6 +191,12 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	#region UI COMMAND HANDLERS
 
 	/// <summary>
+	/// The groups to assign the policy to.
+	/// They are selected in the IntuneDeploymentDetails page and stored here for usage.
+	/// </summary>
+	internal static readonly List<IntuneGroupItemListView> SelectedIntuneGroups = [];
+
+	/// <summary>
 	/// Handles the click event for the Refresh Intune Groups button. It fetches groups from Microsoft Graph and updates
 	/// the ListView with group names.
 	/// </summary>
@@ -218,7 +224,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 			AllGroupItems.Clear();
 
 			// Clear the selected items in the DeploymentVM as well.
-			DeploymentVM.SelectedIntuneGroups.Clear();
+			SelectedIntuneGroups.Clear();
 
 			// Update the ListView with group names
 			foreach (IntuneGroupItemListView item in groups)
@@ -260,12 +266,12 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 
 			foreach (IntuneGroupItemListView item in e.AddedItems.Cast<IntuneGroupItemListView>())
 			{
-				DeploymentVM.SelectedIntuneGroups.Add(item);
+				SelectedIntuneGroups.Add(item);
 			}
 
 			foreach (IntuneGroupItemListView item in e.RemovedItems.Cast<IntuneGroupItemListView>())
 			{
-				_ = DeploymentVM.SelectedIntuneGroups.Remove(item);
+				_ = SelectedIntuneGroups.Remove(item);
 			}
 		}
 		catch (Exception ex)
@@ -298,7 +304,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 			ListView lv = (ListView)sender;
 
 			// Re-select all of the items after the page was navigated away and then navigated back to since we don't use navigation cache.
-			foreach (IntuneGroupItemListView item in DeploymentVM.SelectedIntuneGroups)
+			foreach (IntuneGroupItemListView item in SelectedIntuneGroups)
 			{
 				lv.SelectedItems.Add(item);
 			}
@@ -582,7 +588,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 			using CustomUIElements.ContentDialogV2 dialog = new()
 			{
 				Title = GlobalVars.GetStr("DeleteGroupDialogTitle"),
-				PrimaryButtonText = GlobalVars.GetStr("Delete"),
+				PrimaryButtonText = GlobalVars.GetStr("DeleteCertificateDialogPrimaryButton"),
 				CloseButtonText = GlobalVars.GetStr("Cancel"),
 				DefaultButton = ContentDialogButton.Close,
 				Content = panel
@@ -639,7 +645,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	{
 		GroupNamesCollection.Clear();
 		AllGroupItems.Clear();
-		DeploymentVM.SelectedIntuneGroups.Clear();
+		SelectedIntuneGroups.Clear();
 	}
 
 	#endregion

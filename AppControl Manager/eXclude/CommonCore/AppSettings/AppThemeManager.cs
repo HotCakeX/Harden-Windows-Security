@@ -15,26 +15,24 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace AppControlManager.AppSettings;
+namespace CommonCore.AppSettings;
 
-// Custom EventArgs class for navigation background changes
-internal sealed class NavigationBackgroundChangedEventArgs(bool isBackgroundOn) : EventArgs
+// Custom EventArgs class for app theme changes
+internal sealed class AppThemeChangedEventArgs(string? newTheme) : EventArgs
 {
-	internal bool IsBackgroundOn => isBackgroundOn;
+	internal string? NewTheme => newTheme;
 }
 
-internal static class NavigationBackgroundManager
+internal static class AppThemeManager
 {
-	// Event for when the NavigationView background changes
-	internal static event EventHandler<NavigationBackgroundChangedEventArgs>? NavViewBackgroundChange;
+	// The static event for App theme dark/light changes
+	// MainWindow listens to this
+	internal static event EventHandler<AppThemeChangedEventArgs>? AppThemeChanged;
 
-	// Method to invoke the event
-	internal static void OnNavigationBackgroundChanged(bool isBackgroundOn)
+	// Method to raise the event
+	internal static void OnAppThemeChanged(string newTheme)
 	{
-		// Raise the NavViewBackgroundChange event with the new background status
-		NavViewBackgroundChange?.Invoke(
-			null,
-			new(isBackgroundOn)
-		);
+		// Trigger the AppThemeChanged event with the new theme
+		AppThemeChanged?.Invoke(null, new(newTheme));
 	}
 }

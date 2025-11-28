@@ -88,6 +88,9 @@ internal static partial class GlobalVars
 	// Path to the CppInteropPath directory
 	private static readonly string CppInteropPath = Path.Combine(AppContext.BaseDirectory, "CppInterop");
 
+	// Path to the Intune hardening policies
+	internal static readonly string HardeningPoliciesPath = Path.Combine(AppContext.BaseDirectory, "Resources", "Intune Files", "Hardening Policies");
+
 	// Get the current OS version
 	private static readonly Version CurrentOSVersion = Environment.OSVersion.Version;
 

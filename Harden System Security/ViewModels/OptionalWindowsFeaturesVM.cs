@@ -18,7 +18,6 @@
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
@@ -41,53 +40,6 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class DismServiceClient : IDisposable
 {
-
-	/// <summary>
-	/// Find all processes with the name "DISMService" and terminates them.
-	/// </summary>
-	private void ForceKillExistingProcesses()
-	{
-		try
-		{
-
-			Process[] processes = Process.GetProcessesByName("DISMService");
-
-			foreach (Process process in processes)
-			{
-				try
-				{
-					LogReceived?.Invoke(string.Format(GlobalVars.GetStr("FoundExistingDISMServiceProcess"), process.Id), LogTypeIntel.Information);
-
-					if (!process.HasExited)
-					{
-						process.Kill();
-						_ = process.WaitForExit(2000);
-					}
-
-					LogReceived?.Invoke(string.Format(GlobalVars.GetStr("SuccessfullyTerminatedDISMServiceProcess"), process.Id), LogTypeIntel.Information);
-				}
-				catch (Exception ex)
-				{
-					LogReceived?.Invoke(string.Format(GlobalVars.GetStr("FailedToTerminateDISMServiceProcess"), process.Id, ex.Message), LogTypeIntel.Warning);
-				}
-				finally
-				{
-					process.Dispose();
-				}
-			}
-
-			// Give the system a moment to release file handles
-			if (processes.Length > 0)
-			{
-				System.Threading.Thread.Sleep(500);
-			}
-		}
-		catch (Exception ex)
-		{
-			LogReceived?.Invoke(string.Format(GlobalVars.GetStr("ErrorCheckingExistingDISMServiceProcesses"), ex.Message), LogTypeIntel.Warning);
-		}
-	}
-
 	private readonly string DISMServiceLocationInPackage = Path.Combine(AppContext.BaseDirectory, "DISMService.exe");
 
 	private string DISMFileHash = string.Empty;
@@ -116,10 +68,8 @@ internal sealed partial class DismServiceClient : IDisposable
 		}
 
 		if (Directory.Exists(SecureDirectory))
-		{
-			ForceKillExistingProcesses();
 			Directory.Delete(SecureDirectory, true);
-		}
+
 		_ = Directory.CreateDirectory(SecureDirectory);
 
 		using FileStream sourceStream = new(DISMServiceLocationInPackage, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize);
@@ -140,14 +90,10 @@ internal sealed partial class DismServiceClient : IDisposable
 			bool isValid = await Task.Run(() =>
 			{
 				if (!File.Exists(SecureDISMServicePath))
-				{
 					return false;
-				}
 
 				if (string.IsNullOrEmpty(DISMFileHash))
-				{
 					return false;
-				}
 
 				const int bufferSize = 4096 * 1024;
 
@@ -184,7 +130,7 @@ internal sealed partial class DismServiceClient : IDisposable
 	internal event Action<string, uint, uint>? ItemProgressUpdated;
 
 	// To track the active service for termination
-	internal static DismServiceClient? ActiveInstance { get; private set; }
+	private static DismServiceClient? ActiveInstance;
 
 	internal DismServiceClient(string? customPipeName = null)
 	{
@@ -204,7 +150,6 @@ internal sealed partial class DismServiceClient : IDisposable
 				LogReceived?.Invoke(GlobalVars.GetStr("DISMServiceFileIntegrityVerificationFailed"), LogTypeIntel.Error);
 				return false;
 			}
-
 
 			IntPtr desktopPtr = Marshal.StringToHGlobalUni("");
 			IntPtr titlePtr = Marshal.StringToHGlobalUni("");
@@ -268,7 +213,6 @@ internal sealed partial class DismServiceClient : IDisposable
 					_reader = new BinaryReader(_pipeClient);
 
 					return true;
-
 				});
 			}
 			finally
@@ -318,7 +262,6 @@ internal sealed partial class DismServiceClient : IDisposable
 
 			return await Task.Run(async () =>
 			{
-
 				_writer!.Write((byte)Command.GetSpecificCapabilities);
 				_writer.Write(capabilityNames.Length);
 
@@ -348,7 +291,6 @@ internal sealed partial class DismServiceClient : IDisposable
 
 			return await Task.Run(async () =>
 			{
-
 				_writer!.Write((byte)Command.GetSpecificFeatures);
 				_writer.Write(featureNames.Length);
 
@@ -477,24 +419,6 @@ internal sealed partial class DismServiceClient : IDisposable
 		catch { }
 	}
 
-	/// <summary>
-	/// Terminate the active DISM service from anywhere in the application, used in the App class when app is shutting down.
-	/// </summary>
-	internal static void TerminateActiveService()
-	{
-		try
-		{
-			ActiveInstance?.Dispose();
-			ActiveInstance = null;
-
-			if (Directory.Exists(SecureDirectory))
-			{
-				Directory.Delete(SecureDirectory, true);
-			}
-		}
-		catch { }
-	}
-
 	private async Task<Response> WaitForResponse()
 	{
 		await Task.Yield();
@@ -586,15 +510,13 @@ internal sealed partial class DismServiceClient : IDisposable
 		try
 		{
 			if (_writer != null && _pipeClient?.IsConnected == true)
-			{
 				_writer.Write((byte)Command.Exit);
-			}
 		}
 		catch { }
 
-		_writer?.Dispose();
-		_reader?.Dispose();
-		_pipeClient?.Dispose();
+		try { _writer?.Dispose(); } catch { }
+		try { _reader?.Dispose(); } catch { }
+		try { _pipeClient?.Dispose(); } catch { }
 
 		try
 		{
@@ -618,6 +540,9 @@ internal sealed partial class DismServiceClient : IDisposable
 
 		if (ActiveInstance == this)
 			ActiveInstance = null;
+
+		if (Directory.Exists(SecureDirectory))
+			CommonCore.WebView2Config.TryDeleteDirectoryWithRetries(SecureDirectory, 10, 500);
 	}
 
 	private enum Command : byte
@@ -725,8 +650,7 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 	[JsonIgnore]
 	internal uint ProgressCurrent
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -739,8 +663,7 @@ internal sealed partial class DISMOutputEntry(DISMOutput dismOutput, OptionalWin
 	[JsonIgnore]
 	internal uint ProgressTotal
 	{
-		get;
-		set
+		get; set
 		{
 			if (SP(ref field, value))
 			{
@@ -1192,7 +1115,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 		{
 			if (_dismServiceClient == null)
 			{
-				_dismServiceClient = new DismServiceClient();
+				_dismServiceClient = new();
 
 				// Subscribe to item-specific progress updates
 				_dismServiceClient.ItemProgressUpdated += async (itemName, current, total) =>
@@ -1278,7 +1201,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			// Add results to the master list
 			foreach (DISMOutput result in results)
 			{
-				AllItems.Add(new DISMOutputEntry(result, this));
+				AllItems.Add(new(result, this));
 			}
 
 			// Update grouped view and counts

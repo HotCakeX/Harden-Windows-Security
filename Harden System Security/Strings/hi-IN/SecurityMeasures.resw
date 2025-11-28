@@ -955,4 +955,16 @@
 <data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
     <value>ब्रूट-फोर्स सुरक्षा द्वारा किसी IP पते को अवरुद्ध रखने की अधिकतम अवधि को संभव अधिकतम मान पर सेट करें। इस समय के बाद, अवरुद्ध IP पते साइन-इन कर सकेंगे और सत्र आरंभ कर सकेंगे.</value>
 </data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Remote Encryption Protection द्वारा किसी IP पते को अवरोधित किए जाने की अधिकतम अवधि को संभावित अधिकतम मान पर सेट करें. इस अवधि के बाद अवरोधित IP पते कनेक्शन आरंभ कर सकेंगे.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>संभावित रूप से अवांछित अनुप्रयोगों के लिए पहचान सक्षम करें. वे अन्य खतरों के साथ Microsoft Defender इतिहास में दिखाई देंगे.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>mDNS UDP-In फ़ायरवॉल नियमों को अक्षम करें. यह सार्वजनिक स्थानों पर, जैसे किसी कॉफ़ी शॉप में, एक अतिरिक्त सुरक्षा उपाय जोड़ता है, लेकिन Miracast स्क्रीन साझाकरण में बाधा डाल सकता है, जो सार्वजनिक प्रोफ़ाइल या उन घरेलू नेटवर्क पर निर्भर करता है जहाँ निजी प्रोफ़ाइल चयनित नहीं है.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>सभी कनेक्शनों की नेटवर्क प्रोफ़ाइल को सार्वजनिक पर सेट करें. सार्वजनिक नेटवर्क का अर्थ अन्य नेटवर्क उपकरणों पर कम भरोसा होना है.</value>
+</data>
 </root>

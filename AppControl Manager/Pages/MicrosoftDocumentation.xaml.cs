@@ -23,7 +23,7 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class MicrosoftDocumentation : Page
 {
-	private AppSettings.Main AppSettings => App.Settings;
+	private CommonCore.AppSettings.Main AppSettings => App.Settings;
 
 	internal MicrosoftDocumentation()
 	{

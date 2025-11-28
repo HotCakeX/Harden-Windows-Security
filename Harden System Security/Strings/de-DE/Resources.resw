@@ -4349,4 +4349,453 @@ Fingerabdruck: {3}</value>
   <data name="SignatureUpdate.Text" xml:space="preserve">
     <value>Signatur-Update (UTC)</value>
   </data>
+    <data name="IntunePageTitle" xml:space="preserve">
+    <value>Hochladen, Anzeigen, Bereitstellen und Ändern von Intune‑Richtlinien für die Geräteverwaltung.</value>
+  </data>
+  <data name="IntuneNavItem.Content" xml:space="preserve">
+    <value>Intune</value>
+  </data>
+  <data name="IntuneNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Richtlinien in Intune verwalten und hochladen.</value>
+  </data>
+  <data name="IntuneNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Richtlinien in Intune verwalten und hochladen.</value>
+  </data>
+  <data name="SignInProcessCancelledMessage" xml:space="preserve">
+    <value>Anmeldevorgang wurde abgebrochen</value>
+  </data>
+  <data name="SuccessfullyLoggedOutSelectedAccountMessage" xml:space="preserve">
+    <value>Abmeldung vom ausgewählten Konto erfolgreich.</value>
+  </data>
+  <data name="SuccessfullySetActiveAccountMessage" xml:space="preserve">
+    <value>Das Konto mit dem Benutzernamen ({0}) wurde erfolgreich als aktives Konto für die aktuelle Seite festgelegt.</value>
+  </data>
+  <data name="SigningIntoMSGraphMessage" xml:space="preserve">
+    <value>Anmeldung bei MSGraph</value>
+  </data>
+  <data name="SuccessfullySignedIntoMSGraphMessage" xml:space="preserve">
+    <value>Erfolgreich bei MSGraph angemeldet</value>
+  </data>
+  <data name="SignInProcessCancelledByUserMessage" xml:space="preserve">
+    <value>Anmeldung bei MSGraph wurde vom Benutzer abgebrochen</value>
+  </data>
+  <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
+    <value>Fehler bei der Anmeldung bei MSGraph:</value>
+  </data>
+    <data name="SuccessfullyRefreshedMSGraphTokenMsg" xml:space="preserve">
+    <value>Microsoft Graph-Token für das Konto erfolgreich aktualisiert: {0}</value>
+  </data>
+    <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
+    <value>MDE Advanced Hunting-Abfrage war erfolgreich.</value>
+  </data>
+    <data name="FailedToRunMDEAdvancedHuntingQueryMessage" xml:space="preserve">
+    <value>Ausführen der MDE Advanced Hunting-Abfrage fehlgeschlagen. Statuscode: {0}</value>
+  </data>
+    <data name="ErrorDetailsMessage" xml:space="preserve">
+    <value>Fehlerdetails: {0}</value>
+  </data>
+    <data name="NoGroupsFoundInResponseMessage" xml:space="preserve">
+    <value>In der Antwort wurden keine Gruppen gefunden.</value>
+  </data>
+  <data name="FailedToFetchGroupsMessage" xml:space="preserve">
+    <value>Abrufen der Gruppen fehlgeschlagen. Statuscode: {0}</value>
+  </data>
+  <data name="InvalidSignInMethodUsedMessage" xml:space="preserve">
+    <value>Es wurde eine ungültige Anmeldemethode verwendet.</value>
+  </data>
+  <data name="SignInOperationCanceledByCallerMessage" xml:space="preserve">
+    <value>Der Anmeldevorgang wurde vom Aufrufer abgebrochen.</value>
+  </data>
+      <data name="SuccessfullyFetchedGroupsMessage" xml:space="preserve">
+    <value>{0} Gruppen erfolgreich abgerufen.</value>
+  </data>
+    <data name="DuplicateAccountReplacedMessage" xml:space="preserve">
+    <value>Ein Konto mit dem Benutzernamen {0} und identischen Berechtigungen, TenantID und Kennung ist bereits vorhanden; es wird entfernt und durch das neue ersetzt.</value>
+  </data>
+    <data name="SignedOutAccountMessage" xml:space="preserve">
+    <value>Abgemeldetes Konto: {0}</value>
+  </data>
+    <data name="PolicyCreatedMessage" xml:space="preserve">
+    <value>{0} ist die ID der erstellten Richtlinie</value>
+  </data>
+      <data name="PolicyAssignedSuccessfullyToGroupMessage" xml:space="preserve">
+    <value>Richtlinie erfolgreich der Gruppe zugewiesen: {0}</value>
+  </data>
+    <data name="FailedToAssignPolicyToGroupMessage" xml:space="preserve">
+    <value>Zuweisen der Richtlinie zur Gruppe fehlgeschlagen: {0}. Statuscode: {1}</value>
+  </data>
+  <data name="ErrorDetailsForGroupMessage" xml:space="preserve">
+    <value>Fehlerdetails für Gruppe {0}: {1}</value>
+  </data>
+    <data name="CustomPolicyCreatedSuccessMessage" xml:space="preserve">
+    <value>Benutzerdefinierte Richtlinie erfolgreich erstellt:</value>
+  </data>
+    <data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
+    <value>Erstellen der benutzerdefinierten Richtlinie fehlgeschlagen. Statuscode: {0}</value>
+  </data>
+    <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>Die Binärdatei der Richtlinie '{0}' überschreitet das Größenlimit von {1} Byte. Ihre Größe beträgt {2} Byte.</value>
+  </data>
+   <data name="FailedToRetrieveDeviceConfigurationsMessage" xml:space="preserve">
+    <value>Abrufen der Gerätekonfigurationen fehlgeschlagen. Statuscode: {0}</value>
+  </data>
+  <data name="PolicyDeletedSuccessfullyMessage" xml:space="preserve">
+    <value>Richtlinie {0} erfolgreich gelöscht.</value>
+  </data>
+  <data name="FailedToDeletePolicyExceptionMessage" xml:space="preserve">
+    <value>Löschen der Richtlinie {0} fehlgeschlagen. Statuscode: {1}. Fehlerdetails: {2}</value>
+  </data>
+    <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
+    <value>Gerätekonfigurationen erfolgreich abgerufen.</value>
+  </data>
+  <data name="GroupDisplayNameEmptyError" xml:space="preserve">
+    <value>Anzeigename der Gruppe darf nicht null oder leer sein.</value>
+  </data>
+  <data name="SuccessfullyCreatedGroupMessage" xml:space="preserve">
+    <value>Gruppe erfolgreich erstellt mit dem Anzeigenamen: {0} und der Beschreibung: {1} sowie der ID: {2} und dem Sicherheitsbezeichner: {3} um: {4}</value>
+  </data>
+  <data name="FailedCreatingGroupError" xml:space="preserve">
+    <value>Erstellen der Gruppe fehlgeschlagen mit dem Statuscode: {0} und Inhalt: {1}</value>
+  </data>
+<data name="DeleteGroupButton.Content" xml:space="preserve">
+  <value>Gruppe löschen</value>
+</data>
+  <data name="DeleteGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die ausgewählte(n) Gruppe(n) aus Ihrer Microsoft Entra ID löschen.</value>
+  </data>
+  <data name="DeleteGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die ausgewählte(n) Gruppe(n) aus Ihrer Microsoft Entra ID löschen.</value>
+  </data>
+  <data name="DeleteGroupDialogTitle" xml:space="preserve">
+  <value>Löschung der Gruppe bestätigen</value>
+</data>
+<data name="DeleteGroupDialogIntroSingle" xml:space="preserve">
+  <value>Gruppe '{0}' löschen ?</value>
+</data>
+<data name="DeleteGroupDialogIntroMultiple" xml:space="preserve">
+  <value>{0} ausgewählte Gruppen löschen ?</value>
+</data>
+<data name="DeleteGroupDialogWarning" xml:space="preserve">
+  <value>Diese Aktion ist irreversibel. Die ausgewählte(n) Gruppe(n) werden dauerhaft aus Ihrem Mandanten gelöscht.</value>
+</data>
+<data name="SuccessfullyDeletedGroupMessage" xml:space="preserve">
+  <value>Gruppe {0} gelöscht (ID: {1}).</value>
+</data>
+<data name="DeleteGroupDeletionErrorLogTemplate" xml:space="preserve">
+  <value>Löschen der Gruppe {0} fehlgeschlagen: {1}</value>
+</data>
+<data name="ProvideNewGroupDetails" xml:space="preserve">
+  <value>Geben Sie Details für die neue Gruppe an.</value>
+</data>
+<data name="GroupType" xml:space="preserve">
+  <value>Gruppentyp:</value>
+</data>
+<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+  <value>Verwalten Sie die Entra‑Gruppen in Ihrem Mandanten und wählen Sie die Gruppen aus, auf die die Richtlinie bereitgestellt werden soll.</value>
+</data>
+<data name="SelectedGroups.Text" xml:space="preserve">
+  <value>Ausgewählte Gruppen:</value>
+</data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>50 Dummy-Gruppen erstellen</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erstellen Sie 50 Dummy-Gruppen in Entra Ihres Mandanten mit zufälligen Details zu Testzwecken.</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erstellen Sie 50 Dummy-Gruppen in Entra Ihres Mandanten mit zufälligen Details zu Testzwecken.</value>
+  </data>
+  <data name="ConfirmationTextForDummyGroupsCreation" xml:space="preserve">
+    <value>Möchten Sie wirklich 50 Dummy-Gruppen in Entra Ihres Mandanten mit zufälligen Details zu Testzwecken erstellen?</value>
+  </data>
+  <data name="SignInAuthenticationRequiredMsg" xml:space="preserve">
+    <value>Authentifizierung erforderlich. Melden Sie sich zuerst bei Ihrem Microsoft-Mandanten an.</value>
+  </data>
+  <data name="MicrosoftGraphButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zentralisieren Sie die Authentifizierungen Ihrer Microsoft‑Mandanten mit Leichtigkeit. In diesem Bereich können Sie das Konto für die aktuelle Seite auswählen, alle angemeldeten Konten anzeigen, sich bei Bedarf abmelden und vieles mehr.</value>
+  </data>
+  <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zentralisieren Sie die Authentifizierungen Ihrer Microsoft‑Mandanten mit Leichtigkeit. In diesem Bereich können Sie das Konto für die aktuelle Seite auswählen, alle angemeldeten Konten anzeigen, sich bei Bedarf abmelden und vieles mehr.</value>
+  </data>
+    <data name="ActiveAccountSegmentedItem.Content" xml:space="preserve">
+    <value>Aktives Konto</value>
+  </data>
+    <data name="SignInSegmentedItem.Content" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+    <data name="SignedInAccountsSegmentedItem.Content" xml:space="preserve">
+    <value>Angemeldete Konten</value>
+  </data>
+    <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
+    <value>Details des aktuell verwendeten Kontos</value>
+  </data>
+    <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Der Benutzername des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Der Benutzername des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
+    <value>Der Benutzername des ausgewählten Kontos wird hier angezeigt</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
+    <value>Mandanten-ID</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die Mandanten-ID des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die Mandanten-ID des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
+    <value>Die Mandanten-ID des ausgewählten Kontos wird hier angezeigt</value>
+  </data>
+    <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
+    <value>Kontokennung</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die Kontokennung des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die Kontokennung des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
+    <value>Die Kennung des ausgewählten Kontos wird hier angezeigt</value>
+  </data>
+    <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
+    <value>Berechtigungen</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die Berechtigungen des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die Berechtigungen des Kontos, das derzeit für die Aufgaben auf dieser Seite ausgewählt ist.</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
+    <value>Die Berechtigungen des ausgewählten Kontos werden hier angezeigt</value>
+  </data>
+    <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Melden Sie sich bei Ihrem Microsoft-Mandanten an. Nach erfolgreicher Anmeldung werden die Kontoinformationen im Arbeitsspeicher der Anwendung gespeichert, bis die App geschlossen wird oder Sie es im Abschnitt &quot;Angemeldete Konten&quot; entfernen.</value>
+  </data>
+  <data name="SignInButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Melden Sie sich bei Ihrem Microsoft-Mandanten an. Nach erfolgreicher Anmeldung werden die Kontoinformationen im Arbeitsspeicher der Anwendung gespeichert, bis die App geschlossen wird oder Sie es im Abschnitt &quot;Angemeldete Konten&quot; entfernen.</value>
+  </data>
+    <data name="SignInTextBlock.Text" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+  <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
+    <value>Als aktiv festlegen</value>
+  </data>
+  <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
+    <value>Änderungen an der Richtliniendatei wurden erfolgreich gespeichert.</value>
+  </data>
+    <data name="CancelSigningInButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Den aktuell laufenden Anmeldevorgang abbrechen.</value>
+  </data>
+  <data name="CancelSigningInButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Den aktuell laufenden Anmeldevorgang abbrechen.</value>
+  </data>
+    <data name="SignInMethodsComboBox.Header" xml:space="preserve">
+    <value>Anmeldemethode</value>
+  </data>
+  <data name="SignInMethodsComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie eine Anmeldemethode nach Ihrer Präferenz</value>
+  </data>
+  <data name="SignInMethodsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie eine Anmeldemethode nach Ihrer Präferenz</value>
+  </data>
+    <data name="AuthenticationContextComboBox.Header" xml:space="preserve">
+    <value>Authentifizierungskontext</value>
+  </data>
+  <data name="AuthenticationContextComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie den Authentifizierungskontext für den Anmeldevorgang. Jeder Kontext ist ein Satz von Microsoft Graph-Berechtigungen, die erforderlich sind, um die in AppControl Manager angebotenen Aufgaben erfolgreich abzuschließen.</value>
+  </data>
+  <data name="AuthenticationContextComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie den Authentifizierungskontext für den Anmeldevorgang. Jeder Kontext ist ein Satz von Microsoft Graph-Berechtigungen, die erforderlich sind, um die in AppControl Manager angebotenen Aufgaben erfolgreich abzuschließen.</value>
+  </data>
+    <data name="RemoveAccountButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Konto aus der Liste entfernen. Es wird vollständig aus dem Arbeitsspeicher der App und dem Cache der Microsoft Authentication Library entfernt.</value>
+  </data>
+  <data name="RemoveAccountButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Konto aus der Liste entfernen. Es wird vollständig aus dem Arbeitsspeicher der App und dem Cache der Microsoft Authentication Library entfernt.</value>
+  </data>
+    <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+    <data name="SetAccountAsActiveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Das aktuell ausgewählte Konto als aktives Konto für die Onlinevorgänge auf der aktuellen Seite festlegen.</value>
+  </data>
+  <data name="SetAccountAsActiveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Das aktuell ausgewählte Konto als aktives Konto für die Onlinevorgänge auf der aktuellen Seite festlegen.</value>
+  </data>
+    <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <value>Als aktiv festlegen</value>
+  </data>
+    <!-- For Intune Groups ListView - Headers -->
+  <data name="GroupNameHeader.Text" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="GroupIDHeader.Text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+    <data name="GroupDescriptionHeader.Text" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+    <data name="GroupSecurityIdentifierHeader.Text" xml:space="preserve">
+    <value>Sicherheitsbezeichner</value>
+  </data>
+    <data name="GroupCreatedDateTimeHeader.Text" xml:space="preserve">
+    <value>Erstellungszeit</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Headers -->
+  <!-- For Intune Groups ListView - Buttons -->
+  <data name="GroupNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="GroupIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ID</value>
+  </data>
+    <data name="GroupDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+    <data name="GroupSecurityIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Sicherheitsbezeichner</value>
+  </data>
+    <data name="GroupCreatedDateTimeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Erstellungszeit</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Buttons -->
+    <data name="CreateTextBlock.Text" xml:space="preserve">
+    <value>Erstellen</value>
+  </data>
+    <data name="CreateGroupButton.Content" xml:space="preserve">
+    <value>Neue Gruppe erstellen</value>
+  </data>
+  <data name="CreateGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Neue Gruppe in Microsoft Entra ID erstellen</value>
+  </data>
+  <data name="CreateGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Neue Gruppe in Microsoft Entra ID erstellen</value>
+  </data>
+    <data name="ExtraActionsDropDownButton.Content" xml:space="preserve">
+    <value>Aktionen</value>
+  </data>
+  <data name="ExtraActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Bietet mehrere unterschiedliche Aktionen für die angezeigten Daten an</value>
+  </data>
+  <data name="ExtraActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Bietet mehrere unterschiedliche Aktionen für die angezeigten Daten an</value>
+  </data>
+    <data name="DeSelectAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Auswahl aufheben</value>
+  </data>
+  <data name="DeSelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Jegliche ausgewählten Daten abwählen</value>
+  </data>
+  <data name="DeSelectAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Jegliche ausgewählten Daten abwählen</value>
+  </data>
+    <data name="ClearDataMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Daten löschen</value>
+  </data>
+  <data name="ClearDataMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle angezeigten Daten löschen</value>
+  </data>
+  <data name="ClearDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle angezeigten Daten löschen</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>In eine JSON-Datei exportieren</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <value>Details zur Bereitstellung einer Intune-Richtlinie</value>
+</data>
+<data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Geben Sie die Details zur Bereitstellung einer Intune-Richtlinie an</value>
+</data>
+<data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Geben Sie die Details zur Bereitstellung einer Intune-Richtlinie an</value>
+</data>
+<!-- For Intune Configuration Policies ListView - Headers -->
+  <data name="NameHeader.Text" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="DescriptionHeader.Text" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+    <data name="PlatformsHeader.Text" xml:space="preserve">
+    <value>Plattformen</value>
+  </data>
+      <data name="TechnologiesHeader.Text" xml:space="preserve">
+    <value>Technologien</value>
+  </data>
+      <data name="SettingCountHeader.Text" xml:space="preserve">
+    <value>Anzahl der Einstellungen</value>
+  </data>
+      <data name="CreatedHeader.Text" xml:space="preserve">
+    <value>Erstellt</value>
+  </data>
+      <data name="ModifiedHeader.Text" xml:space="preserve">
+    <value>Geändert</value>
+  </data>
+      <data name="IDHeader.Text" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <!-- End Of For Intune Configuration Policies ListView - Headers -->
+  <!-- For Intune Configuration Policies ListView - Buttons -->
+  <data name="NameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Name</value>
+  </data>
+      <data name="DescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+      <data name="PlatformsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Plattformen</value>
+  </data>
+      <data name="TechnologiesColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Technologien</value>
+  </data>
+      <data name="SettingCountColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Anzahl der Einstellungen</value>
+  </data>
+      <data name="CreatedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Erstellt</value>
+  </data>
+  <data name="ModifiedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>Geändert</value>
+  </data>
+  <data name="IdColumnHeaderBtn.Content" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <!-- End Of For Intune Configuration Policies ListView - Buttons -->
+  <data name="RetrieveIntunePoliciesButton.Content" xml:space="preserve">
+    <value>Intune-Richtlinien abrufen</value>
+  </data>
+  <data name="RetrieveIntunePoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle Gerätekonfigurationsrichtlinien aus Intune abrufen.</value>
+  </data>
+  <data name="RetrieveIntunePoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle Gerätekonfigurationsrichtlinien aus Intune abrufen.</value>
+  </data>
+  <data name="DeploySelectedIntunePolicyButton.Content" xml:space="preserve">
+    <value>Ausgewählte Richtlinie bereitstellen</value>
+  </data>
+  <data name="DeploySelectedIntunePolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die ausgewählte Gerätekonfigurationsrichtlinie in Intune bereitstellen.</value>
+  </data>
+  <data name="DeploySelectedIntunePolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die ausgewählte Gerätekonfigurationsrichtlinie in Intune bereitstellen.</value>
+  </data>
+  <data name="DeleteSelectedPolicyButton.Content" xml:space="preserve">
+    <value>Ausgewählte Richtlinie löschen</value>
+  </data>
+  <data name="DeleteSelectedPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die ausgewählte Gerätekonfigurationsrichtlinie aus Intune löschen.</value>
+  </data>
+  <data name="DeleteSelectedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Die ausgewählte Gerätekonfigurationsrichtlinie aus Intune löschen.</value>
+  </data>
 </root>

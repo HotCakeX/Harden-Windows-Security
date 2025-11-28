@@ -464,7 +464,7 @@ fn create_fallback_error_result(file_path: &str) -> SecurityAnalysisResult {
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn scan_directory_via_interop(
+pub extern "system" fn scan_directory_via_interop(
     directory_path: *const c_char,
 ) -> *mut SecurityAnalysisCollection {
     if directory_path.is_null() {
@@ -550,7 +550,7 @@ pub extern "C" fn scan_directory_via_interop(
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn release_analysis_results(results: *mut SecurityAnalysisCollection) {
+pub extern "system" fn release_analysis_results(results: *mut SecurityAnalysisCollection) {
     if results.is_null() {
         return;
     }
@@ -1384,7 +1384,7 @@ fn update_taskbar_progress_internal(
 /// Returns: pointer to C string with selected file path, or null on error/cancel
 /// Caller must free the returned string using free_string()
 #[unsafe(no_mangle)]
-pub extern "C" fn show_file_picker(
+pub extern "system" fn show_file_picker(
     filter: *const c_char,
     initial_dir: *const c_char,
     last_error: *mut i32,
@@ -1424,7 +1424,7 @@ pub extern "C" fn show_file_picker(
 /// Returns: pointer to C string with save file path, or null on error/cancel
 /// Caller must free the returned string using free_string()
 #[unsafe(no_mangle)]
-pub extern "C" fn show_save_file_dialog(
+pub extern "system" fn show_save_file_dialog(
     filter: *const c_char,
     initial_dir: *const c_char,
     default_filename: *const c_char,
@@ -1470,7 +1470,7 @@ pub extern "C" fn show_save_file_dialog(
 /// Returns: StringArray structure with selected file paths
 /// Caller must free the returned array using free_string_array()
 #[unsafe(no_mangle)]
-pub extern "C" fn show_files_picker(
+pub extern "system" fn show_files_picker(
     filter: *const c_char,
     initial_dir: *const c_char,
     last_error: *mut i32,
@@ -1501,7 +1501,7 @@ pub extern "C" fn show_files_picker(
 /// Returns: pointer to C string with selected folder path, or null on error/cancel
 /// Caller must free the returned string using free_string()
 #[unsafe(no_mangle)]
-pub extern "C" fn show_folder_picker(
+pub extern "system" fn show_folder_picker(
     initial_dir: *const c_char,
     last_error: *mut i32,
 ) -> *mut c_char {
@@ -1534,7 +1534,7 @@ pub extern "C" fn show_folder_picker(
 /// Returns: StringArray structure with selected folder paths
 /// Caller must free the returned array using free_string_array()
 #[unsafe(no_mangle)]
-pub extern "C" fn show_folders_picker(
+pub extern "system" fn show_folders_picker(
     initial_dir: *const c_char,
     last_error: *mut i32,
 ) -> StringArray {
@@ -1564,7 +1564,7 @@ pub extern "C" fn show_folders_picker(
 /// last_error: Out parameter to receive the last HRESULT on error
 /// Returns: 0 on success, non-zero on failure
 #[unsafe(no_mangle)]
-pub extern "C" fn update_taskbar_progress(
+pub extern "system" fn update_taskbar_progress(
     hwnd: isize,
     completed: u64,
     total: u64,
@@ -1588,7 +1588,7 @@ pub extern "C" fn update_taskbar_progress(
 /// Frees a string allocated by the library
 /// Must be called for every string returned by single picker functions
 #[unsafe(no_mangle)]
-pub extern "C" fn free_string(s: *mut c_char) {
+pub extern "system" fn free_string(s: *mut c_char) {
     if !s.is_null() {
         unsafe {
             let _ = CString::from_raw(s);
@@ -1599,7 +1599,7 @@ pub extern "C" fn free_string(s: *mut c_char) {
 /// Frees a StringArray allocated by the library
 /// Must be called for every StringArray returned by multiple picker functions
 #[unsafe(no_mangle)]
-pub extern "C" fn free_string_array(arr: StringArray) {
+pub extern "system" fn free_string_array(arr: StringArray) {
     if !arr.strings.is_null() && arr.count > 0 {
         unsafe {
             for i in 0..arr.count {
@@ -1614,18 +1614,20 @@ pub extern "C" fn free_string_array(arr: StringArray) {
     }
 }
 
-// Relaunches a registered application (by its AUMID) with Administrator elevation (AO_ELEVATE).
+// Launches a registered application (by its AUMID) with caller-provided ACTIVATEOPTIONS flags.
 //
 // - `aumid` must be a null-terminated UTF-16 string pointer.
 // - `arguments` may be null or a null-terminated UTF-16 string pointer.
 // - `process_id_out` may be null or point to a u32 to receive the new process ID.
+// - `options` is a bitmask of ACTIVATEOPTIONS flags (e.g., AO_ELEVATE, AO_NOERRORUI).
 //
 // Returns 0 (S_OK) on success or the raw HRESULT (as i32) on failure.
 #[unsafe(no_mangle)]
-pub unsafe extern "system" fn relaunch_app_elevated(
+pub unsafe extern "system" fn launch_app(
     aumid: *const u16,
     arguments: *const u16,
     process_id_out: *mut u32,
+    options: i32,
 ) -> i32 {
     // Initialize COM on this thread
     let init_hr: HRESULT = unsafe { CoInitializeEx(None, COINIT_APARTMENTTHREADED) };
@@ -1643,7 +1645,7 @@ pub unsafe extern "system" fn relaunch_app_elevated(
     };
 
     // Might not work if Explorer.exe is not available like early in boot process
-
+    // https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-iapplicationactivationmanager-activateapplication
     /*
        AO_NONE (0x00000000)
        AO_DESIGNMODE (0x00000001)
@@ -1662,13 +1664,13 @@ pub unsafe extern "system" fn relaunch_app_elevated(
        AO_HOSTEDVIEW (0x40000000)
     */
 
-    // Invoke ActivateApplication with AO_ELEVATE
+    // Invoke ActivateApplication with provided ACTIVATEOPTIONS
     let hr: i32 = if let Ok(manager) = inst {
         match unsafe {
             manager.ActivateApplication(
                 PCWSTR(aumid),
                 PCWSTR(arguments),
-                ACTIVATEOPTIONS(0x2000_0000), // AO_ELEVATE
+                ACTIVATEOPTIONS(options),
             )
         } {
             Ok(pid) => {
@@ -2188,7 +2190,7 @@ fn create_fallback_gpu_error_result() -> GpuInformation {
 /// Returns: GpuInformationCollection with detected GPU information
 /// Caller must free the returned collection using release_gpu_information()
 #[unsafe(no_mangle)]
-pub extern "C" fn detect_system_gpus() -> *mut GpuInformationCollection {
+pub extern "system" fn detect_system_gpus() -> *mut GpuInformationCollection {
     let detector: GpuDetectorInternal = GpuDetectorInternal::new();
     let detected_gpus: std::result::Result<Vec<GpuInformationInternal>, windows::core::Error> =
         detector.detect_gpus_via_wmi();
@@ -2379,7 +2381,7 @@ pub extern "C" fn detect_system_gpus() -> *mut GpuInformationCollection {
 /// Releases GPU information collection and frees all associated memory
 /// Must be called for every collection returned by detect_system_gpus()
 #[unsafe(no_mangle)]
-pub extern "C" fn release_gpu_information(results: *mut GpuInformationCollection) {
+pub extern "system" fn release_gpu_information(results: *mut GpuInformationCollection) {
     if results.is_null() {
         return;
     }
@@ -2426,4 +2428,123 @@ pub extern "C" fn release_gpu_information(results: *mut GpuInformationCollection
     }
 }
 
+
 // End Region - GPU DETECTION
+
+// Region - UNELEVATED LAUNCHER
+
+// https://devblogs.microsoft.com/oldnewthing/20131118-00/?p=2643
+
+// Service ID for Top Level Browser
+const SID_STOP_LEVEL_BROWSER: GUID = GUID::from_u128(0x4C96BE40_915C_11CF_99D3_00AA004AE837);
+
+/// Launches a program unelevated (Medium Integrity) from an elevated process
+/// by leveraging the Explorer.exe process via IShellDispatch2.
+/// executable_path: Path to the executable
+/// args: Command line arguments (can be null or empty)
+/// work_dir: Working directory (can be null or empty)
+/// Returns: S_OK (0) on success, or HRESULT error code on failure
+#[unsafe(no_mangle)]
+pub extern "system" fn launch_unelevated(
+    executable_path: *const c_char,
+    args: *const c_char,
+    work_dir: *const c_char,
+) -> i32 {
+    unsafe {
+        // Initialize COM
+        let init_hr = CoInitializeEx(None, COINIT_APARTMENTTHREADED);
+
+        // Proceed even if S_FALSE (already initialized) or RPC_E_CHANGED_MODE
+        if init_hr.is_err() {
+             let code = init_hr.0;
+             // RPC_E_CHANGED_MODE = 0x80010106 (-2147417850) is acceptable
+             if code < 0 && code != -2147417850 {
+                 return code;
+             }
+        }
+
+        let result = (|| -> Result<()> {
+            // Create ShellWindows to find the desktop
+            let shell_windows: IShellWindows = CoCreateInstance(
+                &ShellWindows,
+                None,
+                CLSCTX_LOCAL_SERVER
+            )?;
+
+            // Find Desktop Window
+            // FindWindowSW requires empty variants for the search parameters when looking for desktop
+            let var_empty = VARIANT::default();
+            let mut hwnd_out: i32 = 0;
+
+            // SWC_DESKTOP = 8, SWFO_NEEDDISPATCH = 1
+            let disp: IDispatch = shell_windows.FindWindowSW(
+                &var_empty,
+                &var_empty,
+                SWC_DESKTOP,
+                &mut hwnd_out,
+                SWFO_NEEDDISPATCH
+            )?;
+
+            // Get IServiceProvider
+            let service_provider: IServiceProvider = disp.cast()?;
+
+            // QueryService for STopLevelBrowser -> IShellBrowser
+            let shell_browser: IShellBrowser = service_provider.QueryService(
+                &SID_STOP_LEVEL_BROWSER
+            )?;
+
+            // Get Active Shell View
+            let shell_view: IShellView = shell_browser.QueryActiveShellView()?;
+
+            // Get Background Item Object (IDispatch)
+            // SVGIO_BACKGROUND = 0
+            let folder_view_disp: IDispatch = shell_view.GetItemObject(SVGIO_BACKGROUND)?;
+
+            // Cast to IShellFolderViewDual
+            let folder_view: IShellFolderViewDual = folder_view_disp.cast()?;
+
+            // Get Application object (IShellDispatch2) which runs in the context of Explorer
+            let shell_dispatch_disp: IDispatch = folder_view.Application()?;
+            let shell_dispatch: IShellDispatch2 = shell_dispatch_disp.cast()?;
+
+            // Prepare arguments for ShellExecute
+            let exe_str = c_char_to_string(executable_path).unwrap_or_default();
+            let args_str = c_char_to_string(args).unwrap_or_default();
+            let dir_str = c_char_to_string(work_dir).unwrap_or_default();
+
+            let bstr_file = BSTR::from(exe_str);
+            let bstr_args = BSTR::from(args_str);
+            let bstr_dir = BSTR::from(dir_str);
+            let bstr_op = BSTR::from("open");
+
+            // Create VARIANTs for the optional parameters
+            let v_args = VARIANT::from(bstr_args);
+            let v_dir = VARIANT::from(bstr_dir);
+            let v_op = VARIANT::from(bstr_op);
+            // SW_SHOWNORMAL = 1
+            let v_show = VARIANT::from(1i32);
+
+            shell_dispatch.ShellExecute(
+                &bstr_file,
+                &v_args,
+                &v_dir,
+                &v_op,
+                &v_show
+            )?;
+
+            Ok(())
+        })();
+
+        // Uninitialize if we were the ones who initialized it (S_OK or S_FALSE)
+        if init_hr.is_ok() || init_hr.0 == 1 {
+            CoUninitialize();
+        }
+
+        match result {
+            Ok(_) => 0,
+            Err(e) => e.code().0,
+        }
+    }
+}
+
+// End Region - UNELEVATED LAUNCHER

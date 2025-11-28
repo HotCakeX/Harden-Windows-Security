@@ -380,6 +380,7 @@
                 <NavigationViewItem x:Name="GroupPolicyEditorNavItem" x:Uid="GroupPolicyEditorNavItem" Icon="{x:Bind ViewModel.GroupPolicyEditorIcon, Mode=OneWay}" Tag="GroupPolicyEditor"/>
                 <NavigationViewItem x:Name="AuditPoliciesNavItem" x:Uid="AuditPoliciesNavItem" Icon="{x:Bind ViewModel.AuditPoliciesIcon, Mode=OneWay}" Tag="AuditPolicies"/>
                 <NavigationViewItem x:Name="CBOMNavItem" Icon="{x:Bind ViewModel.CBOMIcon, Mode=OneWay}" x:Uid="CBOMNavItem" Tag="CBOM"/>
+                <NavigationViewItem x:Name="IntuneNavItem" Icon="{x:Bind ViewModel.IntuneIcon, Mode=OneWay}" x:Uid="IntuneNavItem" Tag="Intune"/>
 
                 <!-- Documentation Group -->
                 <NavigationViewItemHeader x:Name="DocumentationNavigationViewItemHeader" x:Uid="DocumentationNavigationViewItemHeader"/>

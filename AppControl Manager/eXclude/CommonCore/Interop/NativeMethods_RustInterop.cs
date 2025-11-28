@@ -95,10 +95,11 @@ internal static unsafe partial class NativeMethods
 #if !DEBUG
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf16)]
 #endif
-	internal static partial int relaunch_app_elevated(
+	internal static partial int launch_app(
 			string aumid,
 			string? arguments,
-			uint* processId);
+			uint* processId,
+			int options);
 
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
@@ -164,5 +165,18 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("rust_interop")]
 #endif
 	internal static partial void release_gpu_information(nint results);
+
+
+#if DEBUG
+	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
+#endif
+#if !DEBUG
+	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+#endif
+	internal static partial int launch_unelevated(
+			string executablePath,
+			string? args,
+			string? workDir);
 
 }

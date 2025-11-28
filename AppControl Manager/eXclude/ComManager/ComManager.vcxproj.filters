@@ -54,6 +54,12 @@
     <ClCompile Include="ScheduledTasks\ScheduledTasks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Virtualization\Virtualization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\NetConnectionProfilesManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitLocker/BitLockerDisable.h">
@@ -90,6 +96,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScheduledTasks\ScheduledTasks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Virtualization\Virtualization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\NetConnectionProfilesManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

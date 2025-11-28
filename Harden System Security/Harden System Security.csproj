@@ -64,7 +64,7 @@
 		<AssemblyName>HardenSystemSecurity</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>1.0.26.0</FileVersion>
+		<FileVersion>1.0.27.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 		<StartupObject>HardenSystemSecurity.Program</StartupObject>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -170,11 +170,7 @@
 
 	<!-- Code reuse from other projects -->
 	<ItemGroup>
-		<Compile Include="..\AppControl Manager\App.xaml.cs" Link="App.xaml.cs" />
-		<Compile Include="..\AppControl Manager\AppSettings\AppThemeManager.cs" Link="AppSettings\AppThemeManager.cs" />
-		<Compile Include="..\AppControl Manager\AppSettings\Main.cs" Link="AppSettings\Main.cs" />
-		<Compile Include="..\AppControl Manager\AppSettings\NavigationBackgroundManager.cs" Link="AppSettings\NavigationBackgroundManager.cs" />
-		<Compile Include="..\AppControl Manager\AppSettings\NavigationViewLocationManager.cs" Link="AppSettings\NavigationViewLocationManager.cs" />
+		<Compile Include="..\AppControl Manager\App.xaml.cs" Link="App.xaml.cs" />		
 		<Compile Include="..\AppControl Manager\CustomUIElements\AnimatedCancellableButton.cs" Link="CustomUIElements\AnimatedCancellableButton.cs" />
 		<Compile Include="..\AppControl Manager\CustomUIElements\ButtonV2.cs" Link="CustomUIElements\ButtonV2.cs" />
 		<Compile Include="..\AppControl Manager\CustomUIElements\ColorRadialGaugeV2.cs" Link="CustomUIElements\ColorRadialGaugeV2.cs" />
@@ -215,7 +211,9 @@
 		<Compile Include="..\AppControl Manager\WindowComponents\IAnimatedIconsManager.cs" Link="WindowComponents\IAnimatedIconsManager.cs" />
 		<Compile Include="..\AppControl Manager\WindowComponents\NavigationService.cs" Link="WindowComponents\NavigationService.cs" />
 		<Compile Include="..\AppControl Manager\WindowComponents\PageTitleMap.cs" Link="WindowComponents\PageTitleMap.cs" />
-		<Compile Include="..\AppControl Manager\Others\GetAppsList.cs" Link="Others\GetAppsList.cs" />
+		<Compile Include="..\AppControl Manager\Others\GetAppsList.cs" Link="Others\GetAppsList.cs" />        
+		<Compile Include="..\AppControl Manager\ViewModels\IntuneDeploymentDetailsVM.cs" Link="ViewModels\IntuneDeploymentDetailsVM.cs" />
+		<Compile Include="..\AppControl Manager\Pages\IntuneDeploymentDetails.xaml.cs" Link="Pages\IntuneDeploymentDetails.xaml.cs" />
 	</ItemGroup>
 
 	<!-- NuGet packages
@@ -314,7 +312,6 @@
 
 		<Compile Remove="X64MSBuildLog.binlog" />
 		<Content Remove="X64MSBuildLog.binlog" />
-		<None Remove="Resources\WMI\WMISettings.json" />
 		<None Remove="X64MSBuildLog.binlog" />
 
 		<Compile Remove="MSIXOutputX64\**" />
@@ -407,6 +404,45 @@
 		</Content>
 		<Content Include="Resources\EventViewerCustomViews\USB storage Connects &amp; Disconnects.xml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Compliance\Harden Windows Security Device Compliance Policy.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\Attack Surface Reduction Rules.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\BitLocker.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\Device Guard.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\Exploit Protections\Settings.xml">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\Lock Screen.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\Microsoft Defender.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\Miscellaneous Configurations.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\TLS Settings.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\User Account Control.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\Windows Firewall.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\Windows Networking.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Resources\Intune Files\Hardening Policies\Windows Update.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Resources\LockScreen.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -268,7 +268,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 						{
 							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), RuleNameForSSOT));
 
-							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt true"));
+							Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt true"));
 							break;
 						}
 					case 1:
@@ -277,7 +277,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 
 							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingRulesForMessage"), ruleName));
 
-							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt true"));
+							Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt true"));
 							break;
 						}
 					default: break;
@@ -321,7 +321,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 						{
 							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), RuleNameForSSOT));
 
-							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt false"));
+							Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{RuleNameForSSOT}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt false"));
 							break;
 						}
 					case 1:
@@ -330,7 +330,7 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 
 							MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingRulesForMessage"), ruleName));
 
-							Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt false"));
+							Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleName}\" https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt false"));
 							break;
 						}
 					default: break;
@@ -377,12 +377,12 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingIPv4RulesMessage"), selectedCountry.FriendlyName));
 
 				// Add IPv4 rules
-				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv4}\" {selectedCountry.IPv4Link} true"));
+				Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv4}\" {selectedCountry.IPv4Link} true"));
 
 				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("CreatingIPv6RulesMessage"), selectedCountry.FriendlyName));
 
 				// Add IPv6 rules
-				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} true"));
+				Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} true"));
 
 				// Update policies to take effect immediately
 				CSEMgr.RegisterCSEGuids();
@@ -425,12 +425,12 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingIPv4RulesMessage"), selectedCountry.FriendlyName));
 
 				// Remove IPv4 rules
-				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv4}\" {selectedCountry.IPv4Link} false"));
+				Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv4}\" {selectedCountry.IPv4Link} false"));
 
 				MainInfoBar.WriteInfo(string.Format(GlobalVars.GetStr("RemovingIPv6RulesMessage"), selectedCountry.FriendlyName));
 
 				// Remove IPv6 rules
-				Logger.Write(ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} false"));
+				Logger.Write(QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, $"firewall \"{ruleNameIPv6}\" {selectedCountry.IPv6Link} false"));
 
 				// Update policies to take effect immediately
 				CSEMgr.RegisterCSEGuids();

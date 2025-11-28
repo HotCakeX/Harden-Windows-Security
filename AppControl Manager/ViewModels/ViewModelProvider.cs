@@ -33,8 +33,8 @@ internal static class ViewModelProvider
 	/// <summary>
 	/// Initialized early during App startup by a single thread, doesn't need thread safety.
 	/// </summary>
-	private static readonly Lazy<AppSettings.Main> _appSettings = new(() =>
-		new AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.None);
+	private static readonly Lazy<CommonCore.AppSettings.Main> _appSettings = new(() =>
+		new CommonCore.AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.None);
 
 	private static readonly Lazy<EventLogUtility> _eventLogUtility = new(() =>
 		new EventLogUtility(), LazyThreadSafetyMode.PublicationOnly);
@@ -123,7 +123,7 @@ internal static class ViewModelProvider
 		new ViewOnlinePoliciesVM(), false);
 
 	// Core Dependencies \\
-	internal static AppSettings.Main AppSettings => _appSettings.Value;
+	internal static CommonCore.AppSettings.Main AppSettings => _appSettings.Value;
 	internal static EventLogUtility EventLogUtility => _eventLogUtility.Value;
 
 	// View Models \\

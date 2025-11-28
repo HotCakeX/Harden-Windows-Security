@@ -29,6 +29,8 @@ All examples assume the executable is named `ComManager.exe`.
 | `GetAvailability` | Check if a WMI class contains a given property (prints true/false) |
 | `Do` | Invoke a parameterless WMI class method |
 | `VIRTUALIZATION` | Manage Hyper‑V nested virtualization CPU setting |
+| `FIREWALLMDNS` | Manage mDNS Firewall Rules |
+| `NetworkProfiles` | Manage network connection profiles |
 
 Minimal invocation pattern:
 ```
@@ -276,12 +278,12 @@ ComManager.exe scheduledtasks --deletefolder --folder <TaskFolder>
 | `--logon` | Logon type as integer (optional, default: 5 for TASK_LOGON_SERVICE_ACCOUNT), 0: NONE, 1: PASSWORD, 2: S4U, 3: INTERACTIVE_TOKEN, 4: GROUP, 5: SERVICE_ACCOUNT, 6: UAC |
 | `--runlevel` | Run level as integer (0 for LUA, 1 for HIGHEST, optional, default: 1) |
 | `--password` | Password for logon types requiring it (optional, use with caution) |
-| `--useunifiedschedulingengine true/false` | (optional, advanced; default: system default) |
+| `--useunifiedschedulingengine true|false` | (optional, advanced; default: system default) |
 | `--executiontimelimit <Duration>` | Execution time limit for the whole task (optional, ISO8601, e.g., P3D fodays, PT1H for 1 hour) |
-| `--waketorun true/false` | Wake the computer to run this task (optional) |
+| `--waketorun true|false` | Wake the computer to run this task (optional) |
 | `--multipleinstancespolicy <Policy>` | Multiple instances policy: 0=Parallel, 1=Queue, 2=IgnoreN3=StopExisting (optional) |
-| `--allowhardterminate true/false` | Allow hard terminate on end/killed (optional) |
-| `--allowdemandstart true/false` | Allow demand start (optional) |
+| `--allowhardterminate true|false` | Allow hard terminate on end/killed (optional) |
+| `--allowdemandstart true|false` | Allow demand start (optional) |
 | `--delete` | Delete mode: delete all tasks with the given name (in optional folder) |
 | `--deletefolder` | Delete the specified folder and all tasks in it (use with --folder) |
 | `--trigger` | Trigger definition string; can be specified multiple times for multiple triggers. |
@@ -442,3 +444,78 @@ ComManager.exe do root\cimv2\mdm\dmmap MDM_EnterpriseModernAppManagement_AppMana
 ```
 
 If the provider supplies a `ReturnValue`, it will be printed to stdout (informational).
+
+---
+
+## 9. FIREWALLMDNS
+
+Manage the Enabled state of built‑in mDNS UDP-In firewall rules.
+
+Primary pattern:
+```
+ComManager.exe firewallmdns <subcommand>
+```
+
+Subcommands:
+- `status`
+  - Prints `true` if all matching mDNS inbound rules are disabled (or none exist), `false` if at least one is enabled.
+- `set <true|false|1|0>`
+  - Enables (`true`/`1`) or disables (`false`/`0`) all matching mDNS inbound rules.
+
+Matching criteria:
+- `RuleGroup` equals `@%SystemRoot%\system32\firewallapi.dll,-37302`
+- `Direction` equals `1` (Inbound)
+
+Exit codes:
+| Code | Meaning |
+|------|---------|
+| 0 | Operation succeeded |
+| 1 | Provider / runtime error (enumeration or update failed) |
+| 2 | Invalid arguments / syntax error |
+
+Examples:
+```
+ComManager.exe firewallmdns status
+ComManager.exe firewallmdns set false
+ComManager.exe firewallmdns set true
+```
+
+---
+
+## 10. NETWORKPROFILES
+
+Manage the NetworkCategory of all network connection profiles (MSFT_NetConnectionProfile).
+
+Primary pattern:
+```
+ComManager.exe networkprofiles <subcommand>
+```
+
+Subcommands:
+- `status`
+  - Prints `true` if every profile is Public (NetworkCategory == 0) or no profiles exist; otherwise prints `false`.
+- `set <0|1>`
+  - Sets all profiles to Public (`0`) or Private (`1`).
+
+Categories:
+- `0` = Public
+- `1` = Private
+- `2` = DomainAuthenticated (read-only; cannot be set manually, attempts produce an error)
+
+Exit codes:
+| Code | Meaning |
+|------|---------|
+| 0 | Operation succeeded |
+| 1 | Provider / runtime error (enumeration or update failed) |
+| 2 | Invalid arguments / syntax error |
+
+Examples:
+```
+ComManager.exe networkprofiles status
+ComManager.exe networkprofiles set 0
+ComManager.exe networkprofiles set 1
+```
+
+Notes:
+- Setting `2` (DomainAuthenticated) is not supported; the command returns an error.
+- `status` returning `false` still uses exit code 0 unless an error occurred (then exit code 1).

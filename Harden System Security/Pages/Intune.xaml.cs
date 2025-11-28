@@ -15,27 +15,22 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-namespace AppControlManager.AppSettings;
+using HardenSystemSecurity.ViewModels;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
-// Custom EventArgs class for navigation view location changes
-internal sealed class NavigationViewLocationChangedEventArgs(string newLocation) : EventArgs
+namespace HardenSystemSecurity.Pages;
+
+internal sealed partial class Intune : Page, CommonCore.UI.IPageHeaderProvider
 {
-	internal string NewLocation => newLocation;
-}
-
-internal static class NavigationViewLocationManager
-{
-	// The static event for NavigationView location changes
-	// MainWindow listens to this to set the NavigationView's location
-	internal static event EventHandler<NavigationViewLocationChangedEventArgs>? NavigationViewLocationChanged;
-
-	// Method to raise the event when the location changes
-	internal static void OnNavigationViewLocationChanged(string newLocation)
+	private IntuneVM ViewModel => ViewModelProvider.IntuneVM;
+	internal Intune()
 	{
-		// Raise the NavigationViewLocationChanged event with the new location
-		NavigationViewLocationChanged?.Invoke(
-			null,
-			new(newLocation)
-		);
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
 	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("IntunePageTitle");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/HSSIntune");
 }

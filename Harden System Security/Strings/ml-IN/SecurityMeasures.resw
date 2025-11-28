@@ -955,4 +955,16 @@
 <data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
     <value>ബ്രൂട്ട്-ഫോഴ്‌സ് സംരക്ഷണം ഒരു IP വിലാസത്തെ തടയുന്ന പരമാവധി ദൈർഘ്യം സാധ്യമായ പരമാവധി മൂല്യമായി ക്രമീകരിക്കുക. ഈ സമയം കഴിഞ്ഞാൽ തടഞ്ഞിരിക്കുന്ന IP വിലാസങ്ങൾ വീണ്ടും സൈൻ ഇൻ ചെയ്യുകയും സെഷനുകൾ ആരംഭിക്കുകയും ചെയ്യും.</value>
 </data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Remote Encryption Protection വഴി ഒരു IP വിലാസം ബ്ലോക്ക് ചെയ്യപ്പെടുന്ന പരമാവധി സമയത്തെ ലഭ്യമായ പരമാവധി മൂല്യമായി ക്രമീകരിക്കുക. ഈ സമയത്തിന് ശേഷം ബ്ലോക്ക് ചെയ്ത IP വിലാസങ്ങൾക്ക് കണക്ഷൻ ആരംഭിക്കാൻ കഴിയും.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>സാധ്യതയുള്ള ആവശ്യമില്ലാത്ത അപ്ലിക്കേഷനുകളുടെ കണ്ടെത്തൽ പ്രവർത്തനക്ഷമമാക്കുക. അവ മറ്റ് ഭീഷണികളോടൊപ്പം Microsoft Defender ചരിത്രത്തിൽ പ്രദർശിപ്പിക്കും.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>mDNS UDP-In ഫയർവാൾ ചട്ടങ്ങൾ പ്രവർത്തനരഹിതമാക്കുക. ഇത് കഫേ പോലുള്ള പൊതുസ്ഥലങ്ങളിൽ ഒരു അധിക സുരക്ഷാ നടപടി നൽകുന്നു, എന്നാൽ പൊതുവായ പ്രൊഫൈൽ അല്ലെങ്കിൽ സ്വകാര്യ പ്രൊഫൈൽ തിരഞ്ഞെടുക്കാത്ത ആഭ്യന്തര നെറ്റ്വർക്കുകൾ ആശ്രയിക്കുന്ന Miracast സ്ക്രീൻ പങ്കിടലിനെ ബാധിക്കാം.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>എല്ലാ കണക്ഷനുകളുടെയും നെറ്റ്‌വർക്ക് പ്രൊഫൈൽ പൊതു ആയി ക്രമീകരിക്കുക. പൊതു നെറ്റ്‌വർക്ക് മറ്റ് നെറ്റ്‌വർക്ക് ഉപകരണങ്ങളോടുള്ള വിശ്വാസം കുറവാണെന്നർത്ഥമാണ്.</value>
+</data>
 </root>

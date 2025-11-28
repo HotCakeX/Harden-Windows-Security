@@ -4349,4 +4349,453 @@
   <data name="SignatureUpdate.Text" xml:space="preserve">
     <value>עדכון חתימות (UTC)</value>
   </data>
+    <data name="IntunePageTitle" xml:space="preserve">
+    <value>העלאה, צפייה, פריסה ושינוי של מדיניות ניהול מכשירים ב-Intune.</value>
+  </data>
+  <data name="IntuneNavItem.Content" xml:space="preserve">
+    <value>Intune</value>
+  </data>
+  <data name="IntuneNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נהל והעלה מדיניות ל-Intune.</value>
+  </data>
+  <data name="IntuneNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נהל והעלה מדיניות ל-Intune.</value>
+  </data>
+  <data name="SignInProcessCancelledMessage" xml:space="preserve">
+    <value>תהליך ההתחברות בוטל</value>
+  </data>
+  <data name="SuccessfullyLoggedOutSelectedAccountMessage" xml:space="preserve">
+    <value>ההתנתקות מהחשבון הנבחר הושלמה בהצלחה.</value>
+  </data>
+  <data name="SuccessfullySetActiveAccountMessage" xml:space="preserve">
+    <value>החשבון עם שם המשתמש ({0}) הוגדר בהצלחה כחשבון הפעיל עבור העמוד הנוכחי.</value>
+  </data>
+  <data name="SigningIntoMSGraphMessage" xml:space="preserve">
+    <value>מתחבר ל-MSGraph</value>
+  </data>
+  <data name="SuccessfullySignedIntoMSGraphMessage" xml:space="preserve">
+    <value>ההתחברות ל-MSGraph בוצעה בהצלחה</value>
+  </data>
+  <data name="SignInProcessCancelledByUserMessage" xml:space="preserve">
+    <value>התחברות ל‑MSGraph בוטלה על ידי המשתמש</value>
+  </data>
+  <data name="ErrorSigningIntoMSGraphMessage" xml:space="preserve">
+    <value>אירעה שגיאה בהתחברות ל‑MSGraph:</value>
+  </data>
+    <data name="SuccessfullyRefreshedMSGraphTokenMsg" xml:space="preserve">
+    <value>רענון אסימון Microsoft Graph לחשבון בוצע בהצלחה: {0}</value>
+  </data>
+    <data name="MDEAdvancedHuntingQuerySuccessfulMessage" xml:space="preserve">
+    <value>שאילתת Advanced Hunting של MDE הושלמה בהצלחה.</value>
+  </data>
+    <data name="FailedToRunMDEAdvancedHuntingQueryMessage" xml:space="preserve">
+    <value>כשל בהפעלת שאילתת Advanced Hunting של MDE. קוד סטטוס: {0}</value>
+  </data>
+    <data name="ErrorDetailsMessage" xml:space="preserve">
+    <value>פרטי שגיאה: {0}</value>
+  </data>
+    <data name="NoGroupsFoundInResponseMessage" xml:space="preserve">
+    <value>לא נמצאו קבוצות בתגובה.</value>
+  </data>
+  <data name="FailedToFetchGroupsMessage" xml:space="preserve">
+    <value>כשל באחזור קבוצות. קוד סטטוס: {0}</value>
+  </data>
+  <data name="InvalidSignInMethodUsedMessage" xml:space="preserve">
+    <value>נעשה שימוש בשיטת התחברות לא תקפה.</value>
+  </data>
+  <data name="SignInOperationCanceledByCallerMessage" xml:space="preserve">
+    <value>פעולת ההתחברות בוטלה על ידי הקורא.</value>
+  </data>
+      <data name="SuccessfullyFetchedGroupsMessage" xml:space="preserve">
+    <value>אוחזרו בהצלחה {0} קבוצות.</value>
+  </data>
+    <data name="DuplicateAccountReplacedMessage" xml:space="preserve">
+    <value>קיים כבר חשבון עם שם המשתמש {0} בעל אותן הרשאות, מזהה דייר (TenantID) ומזהה, מסירים אותו ומחליפים בחדש.</value>
+  </data>
+    <data name="SignedOutAccountMessage" xml:space="preserve">
+    <value>החשבון שנותק: {0}</value>
+  </data>
+    <data name="PolicyCreatedMessage" xml:space="preserve">
+    <value>{0} הוא המזהה של המדיניות שנוצרה</value>
+  </data>
+      <data name="PolicyAssignedSuccessfullyToGroupMessage" xml:space="preserve">
+    <value>המדיניות הוקצתה בהצלחה לקבוצה: {0}</value>
+  </data>
+    <data name="FailedToAssignPolicyToGroupMessage" xml:space="preserve">
+    <value>כשל בהקצאת המדיניות לקבוצה: {0}. קוד סטטוס: {1}</value>
+  </data>
+  <data name="ErrorDetailsForGroupMessage" xml:space="preserve">
+    <value>פרטי שגיאה עבור קבוצה {0}: {1}</value>
+  </data>
+    <data name="CustomPolicyCreatedSuccessMessage" xml:space="preserve">
+    <value>מדיניות מותאמת נוצרה בהצלחה:</value>
+  </data>
+    <data name="FailedToCreateCustomPolicyMessage" xml:space="preserve">
+    <value>כשל ביצירת מדיניות מותאמת. קוד סטטוס: {0}</value>
+  </data>
+    <data name="CipPolicyFileSizeExceedsLimitMessage" xml:space="preserve">
+    <value>קובץ הבינרי של המדיניות '{0}' חורג ממגבלת הגודל של {1} בתים. הגודל שלו הוא {2} בתים.</value>
+  </data>
+   <data name="FailedToRetrieveDeviceConfigurationsMessage" xml:space="preserve">
+    <value>כשל בקבלת תצורות המכשיר. קוד סטטוס: {0}</value>
+  </data>
+  <data name="PolicyDeletedSuccessfullyMessage" xml:space="preserve">
+    <value>המדיניות {0} נמחקה בהצלחה.</value>
+  </data>
+  <data name="FailedToDeletePolicyExceptionMessage" xml:space="preserve">
+    <value>כשל במחיקת המדיניות {0}. קוד סטטוס: {1}. פרטי שגיאה: {2}</value>
+  </data>
+    <data name="DeviceConfigurationsRetrievedSuccessfullyMessage" xml:space="preserve">
+    <value>תצורות המכשיר התקבלו בהצלחה.</value>
+  </data>
+  <data name="GroupDisplayNameEmptyError" xml:space="preserve">
+    <value>שם התצוגה של הקבוצה לא יכול להיות null או ריק.</value>
+  </data>
+  <data name="SuccessfullyCreatedGroupMessage" xml:space="preserve">
+    <value>נוצרה בהצלחה קבוצה עם שם תצוגה: {0} ותיאור: {1} ומזהה: {2} ומזהה אבטחה (SID): {3} ב: {4}</value>
+  </data>
+  <data name="FailedCreatingGroupError" xml:space="preserve">
+    <value>כשל ביצירת הקבוצה עם קוד הסטטוס: {0} ותוכן: {1}</value>
+  </data>
+<data name="DeleteGroupButton.Content" xml:space="preserve">
+  <value>מחק קבוצה</value>
+</data>
+  <data name="DeleteGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את הקבוצה/ות שנבחרו מ-Microsoft Entra ID שלך.</value>
+  </data>
+  <data name="DeleteGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מחק את הקבוצה/ות שנבחרו מ-Microsoft Entra ID שלך.</value>
+  </data>
+  <data name="DeleteGroupDialogTitle" xml:space="preserve">
+  <value>אישור מחיקת קבוצה</value>
+</data>
+<data name="DeleteGroupDialogIntroSingle" xml:space="preserve">
+  <value>למחוק את הקבוצה '{0}' ?</value>
+</data>
+<data name="DeleteGroupDialogIntroMultiple" xml:space="preserve">
+  <value>למחוק {0} קבוצות נבחרות ?</value>
+</data>
+<data name="DeleteGroupDialogWarning" xml:space="preserve">
+  <value>פעולה זו בלתי הפיכה. הקבוצה/ות שנבחרו יימחקו לצמיתות מהטננט שלך.</value>
+</data>
+<data name="SuccessfullyDeletedGroupMessage" xml:space="preserve">
+  <value>הקבוצה {0} נמחקה (מזהה: {1}).</value>
+</data>
+<data name="DeleteGroupDeletionErrorLogTemplate" xml:space="preserve">
+  <value>כשל במחיקת הקבוצה {0}: {1}</value>
+</data>
+<data name="ProvideNewGroupDetails" xml:space="preserve">
+  <value>ספק פרטים עבור הקבוצה החדשה.</value>
+</data>
+<data name="GroupType" xml:space="preserve">
+  <value>סוג הקבוצה:</value>
+</data>
+<data name="IntuneDeploymentDetailsPageTitle.Text" xml:space="preserve">
+  <value>נהל את קבוצות Entra בטננט שלך ובחר את הקבוצות שאליהן ברצונך לפרוס את המדיניות.</value>
+</data>
+<data name="SelectedGroups.Text" xml:space="preserve">
+  <value>קבוצות נבחרות:</value>
+</data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.Text" xml:space="preserve">
+    <value>צור 50 קבוצות דמה</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור 50 קבוצות דמה ב-Entra של הטננט שלך עם פרטים אקראיים למטרות בדיקה.</value>
+  </data>
+  <data name="CreateDummyGroupsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור 50 קבוצות דמה ב-Entra של הטננט שלך עם פרטים אקראיים למטרות בדיקה.</value>
+  </data>
+  <data name="ConfirmationTextForDummyGroupsCreation" xml:space="preserve">
+    <value>האם אתה בטוח שברצונך ליצור 50 קבוצות דמה ב-Entra של הטננט שלך עם פרטים אקראיים למטרות בדיקה?</value>
+  </data>
+  <data name="SignInAuthenticationRequiredMsg" xml:space="preserve">
+    <value>נדרש אימות. נא להיכנס תחילה לטננט של Microsoft.</value>
+  </data>
+  <data name="MicrosoftGraphButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>רכז את האימותים של הטננטים של Microsoft שלך בקלות. מהקטע הזה תוכל לבחור את החשבון שברצונך להשתמש בו בעמוד הנוכחי, לעיין בכל החשבונות המחוברים, להתנתק לפי הצורך, ועוד.</value>
+  </data>
+  <data name="MicrosoftGraphButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>רכז את האימותים של הטננטים של Microsoft שלך בקלות. מהקטע הזה תוכל לבחור את החשבון שברצונך להשתמש בו בעמוד הנוכחי, לעיין בכל החשבונות המחוברים, להתנתק לפי הצורך, ועוד.</value>
+  </data>
+    <data name="ActiveAccountSegmentedItem.Content" xml:space="preserve">
+    <value>חשבון פעיל</value>
+  </data>
+    <data name="SignInSegmentedItem.Content" xml:space="preserve">
+    <value>התחבר</value>
+  </data>
+    <data name="SignedInAccountsSegmentedItem.Content" xml:space="preserve">
+    <value>חשבונות מחוברים</value>
+  </data>
+    <data name="CurrentlyInUseAccountDetailsTextBlock.Text" xml:space="preserve">
+    <value>פרטי החשבון שנמצא כעת בשימוש</value>
+  </data>
+    <data name="CurrentActiveAccountUsername.Header" xml:space="preserve">
+    <value>שם משתמש</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שם המשתמש של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.AutomationProperties.HelpText" xml:space="preserve">
+    <value>שם המשתמש של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
+  </data>
+  <data name="CurrentActiveAccountUsername.PlaceholderText" xml:space="preserve">
+    <value>שם המשתמש של החשבון שנבחר יופיע כאן</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.Header" xml:space="preserve">
+    <value>מזהה טננט</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מזהה הטננט של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מזהה הטננט של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
+  </data>
+  <data name="CurrentActiveAccountTenantID.PlaceholderText" xml:space="preserve">
+    <value>מזהה הטננט של החשבון שנבחר יופיע כאן</value>
+  </data>
+    <data name="CurrentActiveAccountAccountIdentifier.Header" xml:space="preserve">
+    <value>מזהה חשבון</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מזהה החשבון של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מזהה החשבון של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
+  </data>
+  <data name="CurrentActiveAccountAccountIdentifier.PlaceholderText" xml:space="preserve">
+    <value>המזהה של החשבון שנבחר יופיע כאן</value>
+  </data>
+    <data name="CurrentActiveAccountPermissions.Header" xml:space="preserve">
+    <value>הרשאות</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ההרשאות של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ההרשאות של החשבון שנבחר כרגע לביצוע המשימות בעמוד זה.</value>
+  </data>
+  <data name="CurrentActiveAccountPermissions.PlaceholderText" xml:space="preserve">
+    <value>ההרשאות של החשבון שנבחר יופיעו כאן</value>
+  </data>
+    <data name="SignInButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>התחבר לטננט של Microsoft שלך. לאחר התחברות מוצלחת, פרטי החשבון יישמרו בזיכרון היישום עד לסגירת האפליקציה או להסרתו מקטע &quot;חשבונות מחוברים&quot;.</value>
+  </data>
+  <data name="SignInButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>התחבר לטננט של Microsoft שלך. לאחר התחברות מוצלחת, פרטי החשבון יישמרו בזיכרון היישום עד לסגירת האפליקציה או להסרתו מקטע &quot;חשבונות מחוברים&quot;.</value>
+  </data>
+    <data name="SignInTextBlock.Text" xml:space="preserve">
+    <value>התחבר</value>
+  </data>
+  <data name="CancelSigningInTextBlock.Text" xml:space="preserve">
+    <value>הגדר כפעיל</value>
+  </data>
+  <data name="PolicyEditorSuccessfulSaveMessage" xml:space="preserve">
+    <value>השינויים בקובץ המדיניות נשמרו בהצלחה.</value>
+  </data>
+    <data name="CancelSigningInButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל את תהליך ההתחברות הנוכחי שנמצא בתהליך.</value>
+  </data>
+  <data name="CancelSigningInButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בטל את תהליך ההתחברות הנוכחי שנמצא בתהליך.</value>
+  </data>
+    <data name="SignInMethodsComboBox.Header" xml:space="preserve">
+    <value>שיטת התחברות</value>
+  </data>
+  <data name="SignInMethodsComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר שיטת התחברות לפי העדפתך</value>
+  </data>
+  <data name="SignInMethodsComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר שיטת התחברות לפי העדפתך</value>
+  </data>
+    <data name="AuthenticationContextComboBox.Header" xml:space="preserve">
+    <value>הקשר אימות</value>
+  </data>
+  <data name="AuthenticationContextComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בחר את הקשר האימות לשימוש בפעולת ההתחברות. כל הקשר הוא קבוצת הרשאות של Microsoft Graph הנדרשות להשלמת המשימות שמציע AppControl Manager.</value>
+  </data>
+  <data name="AuthenticationContextComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בחר את הקשר האימות לשימוש בפעולת ההתחברות. כל הקשר הוא קבוצת הרשאות של Microsoft Graph הנדרשות להשלמת המשימות שמציע AppControl Manager.</value>
+  </data>
+    <data name="RemoveAccountButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר את החשבון מהרשימה. הוא יוסר לחלוטין מזיכרון האפליקציה וממטמון ספריית האימות של Microsoft.</value>
+  </data>
+  <data name="RemoveAccountButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר את החשבון מהרשימה. הוא יוסר לחלוטין מזיכרון האפליקציה וממטמון ספריית האימות של Microsoft.</value>
+  </data>
+    <data name="RemoveTextBlock.Text" xml:space="preserve">
+    <value>הסר</value>
+  </data>
+    <data name="SetAccountAsActiveButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הגדר את החשבון הנבחר כחשבון הפעיל לשימוש בפעולות המקוונות בעמוד הנוכחי.</value>
+  </data>
+  <data name="SetAccountAsActiveButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הגדר את החשבון הנבחר כחשבון הפעיל לשימוש בפעולות המקוונות בעמוד הנוכחי.</value>
+  </data>
+    <data name="SetAsActiveTextBlock.Text" xml:space="preserve">
+    <value>הגדר כפעיל</value>
+  </data>
+    <!-- For Intune Groups ListView - Headers -->
+  <data name="GroupNameHeader.Text" xml:space="preserve">
+    <value>שם</value>
+  </data>
+  <data name="GroupIDHeader.Text" xml:space="preserve">
+    <value>מזהה</value>
+  </data>
+    <data name="GroupDescriptionHeader.Text" xml:space="preserve">
+    <value>תיאור</value>
+  </data>
+    <data name="GroupSecurityIdentifierHeader.Text" xml:space="preserve">
+    <value>מזהה אבטחה</value>
+  </data>
+    <data name="GroupCreatedDateTimeHeader.Text" xml:space="preserve">
+    <value>זמן יצירה</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Headers -->
+  <!-- For Intune Groups ListView - Buttons -->
+  <data name="GroupNameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם</value>
+  </data>
+  <data name="GroupIDColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מזהה</value>
+  </data>
+    <data name="GroupDescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>תיאור</value>
+  </data>
+    <data name="GroupSecurityIdentifierColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מזהה אבטחה</value>
+  </data>
+    <data name="GroupCreatedDateTimeColumnHeaderBtn.Content" xml:space="preserve">
+    <value>זמן יצירה</value>
+  </data>
+  <!-- End Of For Intune Groups ListView - Buttons -->
+    <data name="CreateTextBlock.Text" xml:space="preserve">
+    <value>צור</value>
+  </data>
+    <data name="CreateGroupButton.Content" xml:space="preserve">
+    <value>צור קבוצה חדשה</value>
+  </data>
+  <data name="CreateGroupButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>צור קבוצה חדשה ב-Microsoft Entra ID</value>
+  </data>
+  <data name="CreateGroupButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>צור קבוצה חדשה ב-Microsoft Entra ID</value>
+  </data>
+    <data name="ExtraActionsDropDownButton.Content" xml:space="preserve">
+    <value>פעולות</value>
+  </data>
+  <data name="ExtraActionsDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מציע מגוון פעולות לביצוע על הנתונים המוצגים</value>
+  </data>
+  <data name="ExtraActionsDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מציע מגוון פעולות לביצוע על הנתונים המוצגים</value>
+  </data>
+    <data name="DeSelectAllMenuFlyoutItem.Text" xml:space="preserve">
+    <value>בטל בחירה בהכול</value>
+  </data>
+  <data name="DeSelectAllMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>בטל כל בחירה קיימת</value>
+  </data>
+  <data name="DeSelectAllMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>בטל כל בחירה קיימת</value>
+  </data>
+    <data name="ClearDataMenuFlyoutItem.Text" xml:space="preserve">
+    <value>נקה נתונים</value>
+  </data>
+  <data name="ClearDataMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נקה את כל הנתונים המוצגים</value>
+  </data>
+  <data name="ClearDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נקה את כל הנתונים המוצגים</value>
+  </data>
+    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <value>ייצא לקובץ JSON</value>
+  </data>
+  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+  <value>פרטי פריסת מדיניות Intune</value>
+</data>
+<data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>ציין את פרטי פריסת מדיניות Intune</value>
+</data>
+<data name="IntuneDeploymentDetailsNavItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>ציין את פרטי פריסת מדיניות Intune</value>
+</data>
+<!-- For Intune Configuration Policies ListView - Headers -->
+  <data name="NameHeader.Text" xml:space="preserve">
+    <value>שם</value>
+  </data>
+  <data name="DescriptionHeader.Text" xml:space="preserve">
+    <value>תיאור</value>
+  </data>
+    <data name="PlatformsHeader.Text" xml:space="preserve">
+    <value>פלטפורמות</value>
+  </data>
+      <data name="TechnologiesHeader.Text" xml:space="preserve">
+    <value>טכנולוגיות</value>
+  </data>
+      <data name="SettingCountHeader.Text" xml:space="preserve">
+    <value>מספר הגדרות</value>
+  </data>
+      <data name="CreatedHeader.Text" xml:space="preserve">
+    <value>נוצר</value>
+  </data>
+      <data name="ModifiedHeader.Text" xml:space="preserve">
+    <value>עודכן</value>
+  </data>
+      <data name="IDHeader.Text" xml:space="preserve">
+    <value>מזהה</value>
+  </data>
+  <!-- End Of For Intune Configuration Policies ListView - Headers -->
+  <!-- For Intune Configuration Policies ListView - Buttons -->
+  <data name="NameColumnHeaderBtn.Content" xml:space="preserve">
+    <value>שם</value>
+  </data>
+      <data name="DescriptionColumnHeaderBtn.Content" xml:space="preserve">
+    <value>תיאור</value>
+  </data>
+      <data name="PlatformsColumnHeaderBtn.Content" xml:space="preserve">
+    <value>פלטפורמות</value>
+  </data>
+      <data name="TechnologiesColumnHeaderBtn.Content" xml:space="preserve">
+    <value>טכנולוגיות</value>
+  </data>
+      <data name="SettingCountColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מספר הגדרות</value>
+  </data>
+      <data name="CreatedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>נוצר</value>
+  </data>
+  <data name="ModifiedColumnHeaderBtn.Content" xml:space="preserve">
+    <value>עודכן</value>
+  </data>
+  <data name="IdColumnHeaderBtn.Content" xml:space="preserve">
+    <value>מזהה</value>
+  </data>
+  <!-- End Of For Intune Configuration Policies ListView - Buttons -->
+  <data name="RetrieveIntunePoliciesButton.Content" xml:space="preserve">
+    <value>אחזר את מדיניות Intune</value>
+  </data>
+  <data name="RetrieveIntunePoliciesButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את כל מדיניות תצורת ההתקנים מ-Intune.</value>
+  </data>
+  <data name="RetrieveIntunePoliciesButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את כל מדיניות תצורת ההתקנים מ-Intune.</value>
+  </data>
+  <data name="DeploySelectedIntunePolicyButton.Content" xml:space="preserve">
+    <value>פרוס את המדיניות שנבחרה</value>
+  </data>
+  <data name="DeploySelectedIntunePolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פרוס את מדיניות תצורת ההתקנים שנבחרה אל Intune.</value>
+  </data>
+  <data name="DeploySelectedIntunePolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פרוס את מדיניות תצורת ההתקנים שנבחרה אל Intune.</value>
+  </data>
+  <data name="DeleteSelectedPolicyButton.Content" xml:space="preserve">
+    <value>מחק את המדיניות שנבחרה</value>
+  </data>
+  <data name="DeleteSelectedPolicyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>מחק את מדיניות תצורת ההתקנים שנבחרה מ-Intune.</value>
+  </data>
+  <data name="DeleteSelectedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>מחק את מדיניות תצורת ההתקנים שנבחרה מ-Intune.</value>
+  </data>
 </root>

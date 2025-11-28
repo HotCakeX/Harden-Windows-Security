@@ -286,7 +286,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		BitLockerVolume[] volumes = await Task.Run(() =>
 		{
 			const string command = "bitlocker list all";
-			string result = ProcessStarter.RunCommand(GlobalVars.ComManagerProcessPath, command)
+			string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, command)
 				?? throw new InvalidOperationException(string.Format(GlobalVars.GetStr("NoOutputReturnedFromPath"), GlobalVars.ComManagerProcessPath));
 			return JsonSerializer.Deserialize(result, BitLockerJsonContext.Default.BitLockerVolumeArray)!;
 		});

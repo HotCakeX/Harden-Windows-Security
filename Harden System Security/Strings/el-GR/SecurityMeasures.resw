@@ -955,4 +955,16 @@
 <data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
     <value>Ορίστε τη μέγιστη διάρκεια για την οποία μια διεύθυνση IP αποκλείεται από την Προστασία Brute Force στη μέγιστη δυνατή τιμή. Μετά από αυτόν τον χρόνο, οι αποκλεισμένες διευθύνσεις IP θα μπορούν να συνδέονται και να εκκινούν συνεδρίες.</value>
 </data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Ορίστε τον μέγιστο χρόνο κατά τον οποίο μια διεύθυνση IP αποκλείεται από το Remote Encryption Protection στην μέγιστη δυνατή τιμή. Μετά από αυτό το χρονικό διάστημα οι αποκλεισμένες διευθύνσεις IP θα μπορούν να εκκινήσουν σύνδεση.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>Ενεργοποιήστε την ανίχνευση για ενδεχομένως ανεπιθύμητες εφαρμογές. Θα εμφανίζονται στο ιστορικό του Microsoft Defender μαζί με άλλες απειλές.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>Απενεργοποιήστε τους κανόνες τείχους προστασίας mDNS UDP-In. Αυτό προσθέτει ένα επιπλέον επίπεδο ασφάλειας σε δημόσιους χώρους, όπως ένα καφέ, αλλά μπορεί να επηρεάσει την κοινή χρήση οθόνης Miracast, η οποία βασίζεται στο δημόσιο προφίλ ή σε οικιακά δίκτυα όπου δεν έχει επιλεγεί το ιδιωτικό προφίλ.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Ορίστε το προφίλ δικτύου όλων των συνδέσεων σε Δημόσιο. Το δημόσιο δίκτυο σημαίνει μειωμένη εμπιστοσύνη προς άλλες συσκευές στο δίκτυο.</value>
+</data>
 </root>

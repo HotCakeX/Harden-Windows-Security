@@ -955,4 +955,16 @@
 <data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
     <value>Setzen Sie die maximale Dauer, für die eine IP-Adresse durch den Brute-Force-Schutz blockiert wird, auf den höchstmöglichen Wert. Nach Ablauf dieser Zeit können blockierte IP-Adressen sich wieder anmelden und Sitzungen starten.</value>
 </data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Legen Sie die maximale Dauer, für die eine IP-Adresse durch Remote Encryption Protection blockiert wird, auf den höchstmöglichen Wert fest. Nach Ablauf dieser Zeit können die blockierten IP-Adressen eine Verbindung initiieren.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>Aktivieren Sie die Erkennung potenziell unerwünschter Anwendungen. Diese werden zusammen mit anderen Bedrohungen im Verlauf von Microsoft Defender angezeigt.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>Deaktivieren Sie die mDNS-UDP-In-Firewallregeln. Dies bietet eine zusätzliche Sicherheitsmaßnahme an öffentlichen Orten, wie in einem Café, kann jedoch die Miracast-Bildschirmfreigabe beeinträchtigen, die auf das öffentliche Profil oder Heimnetzwerke angewiesen ist, in denen das private Profil nicht ausgewählt ist.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Setzen Sie das Netzwerkprofil aller Verbindungen auf Öffentlich. Ein öffentliches Netzwerk bedeutet geringeres Vertrauen gegenüber anderen Netzwerkgeräten.</value>
+</data>
 </root>

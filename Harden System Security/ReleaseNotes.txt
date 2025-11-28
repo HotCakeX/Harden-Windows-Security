@@ -1,27 +1,19 @@
-* Added real-time CPU temperature to the Home page.
+# Introducing Intune Support
 
-* Added advanced CPU details to the home page.
+You can now scale the security policies you trust locally to your entire fleet of Windows devices. The Harden System Security app introduces an Intune dashboard, allowing you to bridge the gap between local hardening and cloud management.
 
-* Added Computer name to the home page.
+* Unified Policy Control: Instantly view your existing Device Configuration policies or push the hardened standards directly to the cloud.
 
-* Added OS edition, version and build information to the home page.
+* Complete Group Management: Effortlessly search, sort, add, remove, and export Entra groups without leaving the app.
 
-* Added RAM speed and generation details to the home page.
+* Streamlined Assignments: Deploy new policies and assign them to the right security groups in a single workflow.
 
-* Added real-time total amount of Internet uploaded data and downloaded data to the home page.
+## Other Changes
 
-* Features in the home page that display real-time data such as CPU temperature, network speed and so on, are highly optimized, fast and only active when the user is on the home page. If you navigate away to another page, they will stop gathering data and will not run in the background so they do not consume unnecessary resources.
+* Added many new detections for Intune applied policies, especially for Microsoft Defender and Windows Firewall categories.
 
-* The time it takes from clicking on the app icon on taskbar or start menu to launch it to the home page load is less than 1 second and will stay that way.
+* Implemented a policy for Windows Firewall category: Disables mDNS UDP-In Firewall Rules. It adds an extra measure of security in public places, like a coffee shop but might interfere with Miracast screen sharing, which relies on the Public profile or home networks where the Private profile is not selected. It is not for Gaming, School or Development device usage intents.
 
-* Localized the home page information for all of the supported languages.
+* Implemented another policy for Windows Firewall category: Sets all network locations to public. Public means less trust to other devices in the network. It is not for Gaming, School or Development device usage intents.
 
-* Added context menu options for copying rows and individual details to the Microsoft Security Baseline page.
-
-* Added context menu options for copying rows and individual details to the Microsoft 365 Apps Security Baseline page.
-
-* CTRL + C keyboard shortcut can be used to copy one or multiple rows to the clipboard.
-
-* Added icons for the restoration mode and its options in the Protect page.
-
-* Added support for restoring new categories. Please check GitHub release notes for more info.
+* The list of optional features and capabilities now populate faster than before.

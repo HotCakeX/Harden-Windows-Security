@@ -7,7 +7,6 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements.HomePageCarousel"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
-    xmlns:sys="using:System"
     Loaded="{x:Bind OnInitialLoaded}"
     Unloaded="{x:Bind OnUnloadedDisposeResources}"
     Background="Transparent">
@@ -191,7 +190,7 @@
                                 </StackPanel>
                                 <TextBlock Grid.Row="1"
                                            Style="{StaticResource CardBodyTextStyle}"
-                                           Text="{x:Bind sys:Environment.MachineName}"
+                                           Text="{x:Bind ViewModel.ComputerNameText,Mode=OneWay}"
                                            IsTextSelectionEnabled="True"/>
                             </Grid>
                         </Border>

@@ -950,5 +950,50 @@
             5
         ],
         "ID": "019a8dfa-253f-7bab-a801-a65d8f334260"
+    },
+    {
+        "Source": 0,
+        "KeyName": "Software\\Policies\\Microsoft\\Windows Defender\\Remediation\\Behavioral Network Blocks\\Remote Encryption Protection",
+        "ValueName": "RemoteEncryptionProtectionMaxBlockTime",
+        "Type": 4,
+        "Size": 4,
+        "Data": "/////w==",
+        "RegValue": "4294967295",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender",
+        "URL": "https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksremoteencryptionprotectionremoteencryptionprotectionmaxblocktime",
+        "Category": 2,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            3,
+            4,
+            5
+        ],
+        "ID": "019ab6f0-79fa-7f0c-891b-84d4db119bf6"
+    },
+    {
+        "Source": 0,
+        "KeyName": "software\\policies\\microsoft\\Windows Defender",
+        "ValueName": "PUAProtection",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AQAAAA==",
+        "RegValue": "1",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "Root_PUAProtection-MSDefender",
+        "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-defender#puaprotection",
+        "Category": 2,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            2,
+            3,
+            4,
+            5
+        ],
+        "ID": "019ab74b-7b27-7594-a31b-66b2d5157929"
     }
 ]

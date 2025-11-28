@@ -91,7 +91,7 @@ public partial class App : Application
 	/// The application settings for AppControl Manager. Retrieved early in a Non-ThreadSafe manner.
 	/// Any references (instance or static) throughout the app to App settings use this property.
 	/// </summary>
-	internal static AppSettings.Main Settings => ViewModelProvider.AppSettings;
+	internal static CommonCore.AppSettings.Main Settings => ViewModelProvider.AppSettings;
 
 	/// <summary>
 	/// Global dispatcher queue for the application that can be accessed from anywhere.
@@ -139,10 +139,10 @@ public partial class App : Application
 
 		// Location where File/Folder picker dialog will be opened
 #if APP_CONTROL_MANAGER
-		FileDialogHelper.DirectoryToOpen = IsElevated ? GlobalVars.UserConfigDir : Path.GetPathRoot(Environment.SystemDirectory)!;
+		FileDialogHelper.DirectoryToOpen = IsElevated ? GlobalVars.UserConfigDir : Path.GetPathRoot(Environment.SystemDirectory) ?? "C:";
 #endif
 #if HARDEN_SYSTEM_SECURITY
-		FileDialogHelper.DirectoryToOpen = Path.GetPathRoot(Environment.SystemDirectory)!;
+		FileDialogHelper.DirectoryToOpen = Path.GetPathRoot(Environment.SystemDirectory) ?? "C:";
 #endif
 
 		// Capture the dispatcher queue as early as possible.
@@ -170,13 +170,28 @@ public partial class App : Application
 		// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/VersionInfo/VersionInfo.md
 		Logger.Write($"Built with Windows App SDK: {ReleaseInfo.AsString} - Runtime Info: {RuntimeInfo.AsString}");
 
-		// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
-		// https://learn.microsoft.com/windows/apps/design/style/reveal-focus
-		this.FocusVisualKind = FocusVisualKind.Reveal;
+		try
+		{
+			// Give beautiful outline to the UI elements when using the tab key and keyboard for navigation
+			// https://learn.microsoft.com/windows/apps/design/style/reveal-focus
+			this.FocusVisualKind = FocusVisualKind.Reveal;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
 
-		// Check for the SoundSetting in the local settings
-		ElementSoundPlayer.State = Settings.SoundSetting ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
-		ElementSoundPlayer.SpatialAudioMode = Settings.SoundSetting ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
+		try
+		{
+			// Check for the SoundSetting in the local settings
+			ElementSoundPlayer.State = Settings.SoundSetting ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
+			ElementSoundPlayer.SpatialAudioMode = Settings.SoundSetting ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write("Failed to set the sound settings");
+			Logger.Write(ex);
+		}
 
 		// Subscribing to ProcessExit because Window_Closed doesn't run when "Application.Current.Exit();" is used.
 		AppDomain.CurrentDomain.ProcessExit += (s, e) => AppCleanUp();
@@ -263,13 +278,7 @@ public partial class App : Application
 	/// </summary>
 	private static void AppCleanUp()
 	{
-
 		if (Interlocked.Exchange(ref CleanUpHappened, 1) == 1) return;
-
-#if HARDEN_SYSTEM_SECURITY
-		// Terminate our DISM exe if it's still running and user closed the window.
-		DismServiceClient.TerminateActiveService();
-#endif
 
 		try
 		{
@@ -309,12 +318,8 @@ public partial class App : Application
 			}
 		}
 
-		try
-		{
-			// Dispose of disposable ViewModels on App exit
-			ViewModelProvider.DisposeCreatedViewModels();
-		}
-		catch { }
+		// Dispose of disposable ViewModels on App exit
+		ViewModelProvider.DisposeCreatedViewModels();
 
 		// WebView2 cleanup
 		WebView2Config.CleanUpWebView2();
@@ -335,7 +340,6 @@ public partial class App : Application
 				// Ensure we're on the UI thread before showing the dialog
 				await MainWindow.DispatcherQueue.EnqueueAsync(async () =>
 				{
-
 					// Since only 1 content dialog can be displayed at a time, we close any currently active ones before showing the error
 					if (CurrentlyOpenContentDialog is ContentDialog dialog)
 					{

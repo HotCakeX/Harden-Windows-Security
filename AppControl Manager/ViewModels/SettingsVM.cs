@@ -16,11 +16,11 @@
 //
 
 using System.Collections.Generic;
-using AppControlManager.AppSettings;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.Globalization;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Dispatching;
+using CommonCore.AppSettings;
 
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.ViewModels;

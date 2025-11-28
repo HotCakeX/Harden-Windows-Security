@@ -1040,4 +1040,251 @@ DeviceEvents
 			throw new InvalidOperationException(errorContent);
 		}
 	}
+
+	/// <summary>
+	/// Get all of the non-Custom-OMAURI policies.
+	/// </summary>
+	/// <param name="account"></param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static async Task<List<DeviceManagementConfigurationPolicy>> RetrieveConfigurationPolicies(AuthenticatedAccounts account)
+	{
+		List<DeviceManagementConfigurationPolicy> allPolicies = [];
+
+		using SecHttpClient httpClient = new();
+
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
+		httpClient.DefaultRequestHeaders.Authorization =
+			new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+		httpClient.DefaultRequestHeaders.Accept
+			.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+		// Beta endpoint for configuration policies (standard, non-custom).
+		string nextLink = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies";
+
+		while (!string.IsNullOrEmpty(nextLink))
+		{
+			using System.Net.Http.HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+				"RetrieveConfigurationPolicies",
+				() => new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, new Uri(nextLink)),
+				httpClient
+			);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				string errorContent = await response.Content.ReadAsStringAsync();
+				Logger.Write(string.Format(
+					GlobalVars.GetStr("FailedToRetrieveDeviceConfigurationsMessage"),
+					response.StatusCode));
+				throw new InvalidOperationException(string.Format(
+					GlobalVars.GetStr("ErrorDetailsMessage"),
+					errorContent));
+			}
+
+			string jsonResponse = await response.Content.ReadAsStringAsync();
+
+			System.Text.Json.JsonElement root = System.Text.Json.JsonSerializer.Deserialize(
+				jsonResponse,
+				MSGraphJsonContext.Default.JsonElement);
+
+			DeviceManagementConfigurationPoliciesResponse? page = System.Text.Json.JsonSerializer.Deserialize(
+				jsonResponse,
+				MSGraphJsonContext.Default.DeviceManagementConfigurationPoliciesResponse);
+
+			if (page?.Value is not null && page.Value.Count > 0)
+			{
+				allPolicies.AddRange(page.Value);
+			}
+
+			if (root.TryGetProperty("@odata.nextLink", out System.Text.Json.JsonElement nextLinkElement))
+			{
+				nextLink = nextLinkElement.GetString() ?? string.Empty;
+			}
+			else
+			{
+				nextLink = string.Empty;
+			}
+		}
+
+		Logger.Write(GlobalVars.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
+		return allPolicies;
+	}
+
+
+	/// <summary>
+	/// Creates an Intune configuration policy from a JSON file.
+	/// </summary>
+	/// <param name="account"></param>
+	/// <param name="jsonFilePath"></param>
+	/// <returns></returns>
+	/// <exception cref="ArgumentException"></exception>
+	/// <exception cref="InvalidOperationException"></exception>
+	internal static async Task<string?> CreateConfigurationPolicyFromJson(AuthenticatedAccounts account, string jsonFilePath)
+	{
+		if (account is null)
+			return null;
+
+		if (string.IsNullOrEmpty(jsonFilePath) || !File.Exists(jsonFilePath))
+		{
+			throw new ArgumentException("Policy JSON file path is invalid or does not exist.", nameof(jsonFilePath));
+		}
+
+		// Read JSON payload from disk (as-is). We post it directly to Graph.
+		string jsonPayload = await File.ReadAllTextAsync(jsonFilePath);
+
+		using SecHttpClient httpClient = new();
+
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
+		httpClient.DefaultRequestHeaders.Authorization =
+			new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+		httpClient.DefaultRequestHeaders.Accept
+			.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+		// Beta endpoint for creating configuration policies.
+		Uri createUri = new("https://graph.microsoft.com/beta/deviceManagement/configurationPolicies");
+
+		using System.Net.Http.HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"CreateConfigurationPolicyFromJson",
+			() => new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, createUri)
+			{
+				Content = new System.Net.Http.StringContent(jsonPayload, Encoding.UTF8, "application/json")
+			},
+			httpClient
+		);
+
+		string responseContent = await response.Content.ReadAsStringAsync();
+
+		if (response.IsSuccessStatusCode)
+		{
+			Logger.Write(GlobalVars.GetStr("CustomPolicyCreatedSuccessMessage"));
+			Logger.Write(responseContent);
+
+			// Extract ID from response
+			System.Text.Json.JsonElement root = System.Text.Json.JsonSerializer.Deserialize(
+				responseContent,
+				MSGraphJsonContext.Default.JsonElement);
+
+			string? id = root.TryGetProperty("id", out System.Text.Json.JsonElement idEl) ? idEl.GetString() : null;
+			return id;
+		}
+		else
+		{
+			Logger.Write(string.Format(
+				GlobalVars.GetStr("FailedToCreateCustomPolicyMessage"),
+				response.StatusCode));
+
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.GetStr("ErrorDetailsMessage"),
+				responseContent));
+		}
+
+	}
+
+	/// <summary>
+	/// Assigns a configuration policy to multiple Entra ID groups.
+	/// Endpoint: POST /beta/deviceManagement/configurationPolicies/{id}/assign
+	/// </summary>
+	/// <param name="account">Authenticated account.</param>
+	/// <param name="policyId">Configuration policy ID.</param>
+	/// <param name="groupIds">Group IDs to assign to.</param>
+	internal static async Task AssignConfigurationPolicyToGroups(AuthenticatedAccounts account, string policyId, List<string> groupIds)
+	{
+		using SecHttpClient httpClient = new();
+
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+		// Build the assignments payload using strongly-typed envelope.
+		List<AssignmentPayload> assignments = new();
+
+		foreach (string gid in groupIds)
+		{
+			Dictionary<string, object> target = new()
+			{
+				{ "@odata.type", "#microsoft.graph.groupAssignmentTarget" },
+				{ "groupId", gid }
+			};
+
+			assignments.Add(new AssignmentPayload(target));
+		}
+
+		ConfigurationPolicyAssignmentsEnvelope envelope = new(assignments);
+
+		// Serialize using the source-generated context
+		string jsonPayload = JsonSerializer.Serialize(
+			envelope,
+			MSGraphJsonContext.Default.ConfigurationPolicyAssignmentsEnvelope);
+
+		Uri assignUri = new($"https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/{policyId}/assign");
+
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"AssignConfigurationPolicyToGroups",
+			() => new HttpRequestMessage(HttpMethod.Post, assignUri)
+			{
+				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
+			},
+			httpClient
+		);
+
+		string responseContent = await response.Content.ReadAsStringAsync();
+
+		if (response.IsSuccessStatusCode)
+		{
+			Logger.Write($"Assigned configuration policy {policyId} to {groupIds.Count} groups.");
+			Logger.Write(responseContent);
+		}
+		else
+		{
+			Logger.Write($"Failed to assign configuration policy {policyId} - {response.StatusCode}");
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.GetStr("ErrorDetailsMessage"),
+				responseContent));
+		}
+	}
+
+	/// <summary>
+	/// Deletes a configuration policy by ID.
+	/// Endpoint: DELETE /beta/deviceManagement/configurationPolicies/{id}
+	/// </summary>
+	/// <param name="account">Authenticated account.</param>
+	/// <param name="policyId">Policy ID to delete.</param>
+	internal static async Task DeleteConfigurationPolicy(AuthenticatedAccounts account, string policyId)
+	{
+		using SecHttpClient httpClient = new();
+
+		// Obtain a valid access token (silent refresh if needed)
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+
+		httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+		httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+		Uri deleteUri = new($"https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/{policyId}");
+
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"DeleteConfigurationPolicy",
+			() => new HttpRequestMessage(HttpMethod.Delete, deleteUri),
+			httpClient
+		);
+
+		if (response.IsSuccessStatusCode)
+		{
+			Logger.Write($"Deleted configuration policy {policyId}");
+		}
+		else
+		{
+			string errorContent = await response.Content.ReadAsStringAsync();
+			Logger.Write($"Failed to delete configuration policy {policyId} - {response.StatusCode}");
+			throw new InvalidOperationException(string.Format(
+				GlobalVars.GetStr("ErrorDetailsMessage"),
+				errorContent));
+		}
+	}
+
 }

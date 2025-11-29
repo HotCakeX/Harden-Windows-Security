@@ -127,7 +127,7 @@ Use the [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-
 
 If you are a personal user, you can use the Harden System Security to harden your Operating System, remove unnecessary features or apps and gain advanced visibility into the security structure of your system.
 
-If you are an enterprise user or admin, you can use the [provided Intune security policies](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Intune%20Files) from this repository and apply them from your Intune Portal to all of your workstations using [Microsoft Graph API](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph-Explorer-and-API-Basics). You can then use the app to verify the compliance of the workstations against the applied policies and receive a security score.
+If you are an enterprise user or admin, you can use the [provided Intune security policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Intune-%7C-Harden-System-Security) and apply them to all of your workstations using the Harden System Security app. You can then use the app to verify the compliance of the workstations against the applied policies and receive a security score.
 
 It uses the same security features built into your device and Windows operating system to fine-tune it towards the highest security and locked-down state. It does not install any outside components and does not increase your attack surface at all.
 

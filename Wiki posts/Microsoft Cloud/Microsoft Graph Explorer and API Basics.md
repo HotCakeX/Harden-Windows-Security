@@ -48,7 +48,7 @@ Send a `POST` request to the following endpoint:
 https://graph.microsoft.com/beta/deviceManagement/configurationPolicies
 ```
 
-And in the request body, include the JSON payload for the device configuration policy you want to upload. [You can find them in here.](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Intune%20Files/Hardening%20Policies)
+And in the request body, include the JSON payload for the device configuration policy you want to upload. [You can find them in here.](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/Intune%20Files/Hardening%20Policies)
 
 <br>
 
@@ -70,7 +70,7 @@ Send a `POST` request to the following endpoint:
 https://graph.microsoft.com/beta/deviceManagement/deviceCompliancePolicies
 ```
 
-And in the request body, include the JSON payload for the device compliance policy you want to upload. [You can find them in here.](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Intune%20Files/Compliance)
+And in the request body, include the JSON payload for the device compliance policy you want to upload. [You can find them in here.](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/Intune%20Files/Compliance)
 
 <br>
 

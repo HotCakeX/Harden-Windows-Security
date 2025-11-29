@@ -131,7 +131,7 @@ If you are an enterprise user or admin, you can use the [provided Intune securit
 
 It uses the same security features built into your device and Windows operating system to fine-tune it towards the highest security and locked-down state. It does not install any outside components and does not increase your attack surface at all.
 
-Let's Take a look at the infographics below:
+Let's take a look at the infographics below:
 
 <br>
 

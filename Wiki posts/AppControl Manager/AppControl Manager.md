@@ -43,7 +43,7 @@ winget install --id 9PNG1JDDTGP8 --exact --accept-package-agreements --accept-so
 
 ### Offline Installation for Air-gapped Systems
 
-Please [**follow this guide**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Install-Microsoft-Store-Apps-Completely-Offline) to instructions.
+Please [**follow this guide**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Install-Microsoft-Store-Apps-Completely-Offline) for instructions.
 
 <br>
 

@@ -20,6 +20,10 @@ You can utilize Winget to automate the installation of the Harden System Securit
 winget install --id 9p7ggfl7dx57 --exact --accept-package-agreements --accept-source-agreements --force --source msstore
 ```
 
+### Offline Installation for Air-gapped Systems
+
+Please [**follow this guide**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Install-Microsoft-Store-Apps-Completely-Offline) to instructions.
+
 <br>
 
 Please feel free to open a discussion if you have any questions about the build process, security, how to use or have feedbacks. [**Source code on this repository**](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security)
@@ -371,6 +375,8 @@ Here is the breakdown of some of the directories and files used by the Harden Sy
 * [DISMService.exe](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden%20System%20Security/DISMService.exe) is one of the components of the Harden System Security app that provides DISM functionalities via named pipe.
 
 * [CppInterop](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/CppInterop) directory contains parts of the Harden System Security app written in C++.
+
+* [Intune Files](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security/Resources/Intune%20Files) directory contains files to be used for Intune, such as policies the app offers for Intune deployment.
 
 <br>
 

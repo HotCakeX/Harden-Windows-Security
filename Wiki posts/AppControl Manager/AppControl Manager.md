@@ -41,6 +41,10 @@ You can utilize Winget to automate the installation of the AppControl Manager. I
 winget install --id 9PNG1JDDTGP8 --exact --accept-package-agreements --accept-source-agreements --force --source msstore
 ```
 
+### Offline Installation for Air-gapped Systems
+
+Please [**follow this guide**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Install-Microsoft-Store-Apps-Completely-Offline) to instructions.
+
 <br>
 
 Please feel free to open a discussion if you have any questions about the build process, security, how to use or have feedbacks. [**Source code on this repository**](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager)

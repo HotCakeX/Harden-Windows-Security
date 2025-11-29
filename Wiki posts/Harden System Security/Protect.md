@@ -66,3 +66,33 @@ The preview **ListView** lets you remove individual security measures before pre
 ![HardenSystemSecurity_FIWig6IIer](https://github.com/user-attachments/assets/fae592a3-3473-4d92-b11f-911094f162c9)
 
 <br>
+
+## Backup and Restore System State
+
+<div align="center">
+
+<img src="https://github.com/user-attachments/assets/9e8fa354-e004-4a64-a298-e9eb7560950b" width="600"/>
+
+</div>
+
+<br>
+
+The Harden System Security app now provides comprehensive system report generation capabilities, allowing users to gain deeper insights into their system's security status and save the results to a file for further analysis. All of the security categories participate in this report, including Microsoft Security baselines and Microsoft 365 apps security baselines.
+
+The name of the device, user account and time is also mentioned in the report header so you can easily identify when and where the report was generated.
+
+The report provides a security score, the exact number of items in each category and the total number of compliant and non-compliant items.
+
+After you generate a system report, whether it's a full system report that includes all categories or only contains 1 category, you can import and apply it to any system where Harden System Security app is installed.
+
+### There are 2 modes of application: Partial and Full
+
+* In partial mode, only items marked as `Applied` in the report will be applied to the system.
+
+* In full mode, the system will be fully synchronized according to the report, that means any security measure marked as `Applied` will be applied onto the system and any security measure marked as `Not Applied` will be removed from the system.
+
+Let's say you've configured a system to your liking and it's in a compliant golden state, you can back up the categories you want or the entire system state to a JSON file and import it on as many workstations as you want.
+
+**The great thing about all of this? You can totally automate it, thanks to the new CLI support. [Documentation for CLI usage available here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security#commandline-interface-cli-support).**
+
+<br>

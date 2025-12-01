@@ -180,12 +180,12 @@
         "RegistryKeyName": "Software\\Policies\\Microsoft\\Windows Defender\\Features",
         "RegistryValueName": "TDTFeatureEnabled",
         "WMINamespace": "ROOT\\Microsoft\\Windows\\Defender",
-        "WMIClass": "MSFT_MpComputerStatus",
-        "WMIProperty": "TDTStatus",
+        "WMIClass": "MSFT_MpPreference",
+        "WMIProperty": "IntelTDTEnabled",
         "DesiredWMIValues": [
             {
-                "Value": "enabled",
-                "Type": "string"
+                "Value": "True",
+                "Type": "bool"
             }
         ],
         "IsSpecialVerification": true

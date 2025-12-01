@@ -81,6 +81,7 @@ internal static partial class ListViewHelper
 		CBOM_RegisteredProviders = 10011,
 		MD_Exclusions = 10012,
 		OnlineIntuneDeviceConfigs = 10013,
+		CSPData = 10014,
 	}
 
 	/// <summary>

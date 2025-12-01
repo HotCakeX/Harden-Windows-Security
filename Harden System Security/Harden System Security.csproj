@@ -64,7 +64,7 @@
 		<AssemblyName>HardenSystemSecurity</AssemblyName>
 		<!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-		<FileVersion>1.0.28.0</FileVersion>
+		<FileVersion>1.0.29.0</FileVersion>
 		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
 		<StartupObject>HardenSystemSecurity.Program</StartupObject>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -170,7 +170,7 @@
 
 	<!-- Code reuse from other projects -->
 	<ItemGroup>
-		<Compile Include="..\AppControl Manager\App.xaml.cs" Link="App.xaml.cs" />		
+		<Compile Include="..\AppControl Manager\App.xaml.cs" Link="App.xaml.cs" />
 		<Compile Include="..\AppControl Manager\CustomUIElements\AnimatedCancellableButton.cs" Link="CustomUIElements\AnimatedCancellableButton.cs" />
 		<Compile Include="..\AppControl Manager\CustomUIElements\ButtonV2.cs" Link="CustomUIElements\ButtonV2.cs" />
 		<Compile Include="..\AppControl Manager\CustomUIElements\ColorRadialGaugeV2.cs" Link="CustomUIElements\ColorRadialGaugeV2.cs" />
@@ -211,7 +211,7 @@
 		<Compile Include="..\AppControl Manager\WindowComponents\IAnimatedIconsManager.cs" Link="WindowComponents\IAnimatedIconsManager.cs" />
 		<Compile Include="..\AppControl Manager\WindowComponents\NavigationService.cs" Link="WindowComponents\NavigationService.cs" />
 		<Compile Include="..\AppControl Manager\WindowComponents\PageTitleMap.cs" Link="WindowComponents\PageTitleMap.cs" />
-		<Compile Include="..\AppControl Manager\Others\GetAppsList.cs" Link="Others\GetAppsList.cs" />        
+		<Compile Include="..\AppControl Manager\Others\GetAppsList.cs" Link="Others\GetAppsList.cs" />
 		<Compile Include="..\AppControl Manager\ViewModels\IntuneDeploymentDetailsVM.cs" Link="ViewModels\IntuneDeploymentDetailsVM.cs" />
 		<Compile Include="..\AppControl Manager\Pages\IntuneDeploymentDetails.xaml.cs" Link="Pages\IntuneDeploymentDetails.xaml.cs" />
 	</ItemGroup>

@@ -245,6 +245,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [GlobalVars.GetStr("IntuneNavItem/Content"), GlobalVars.GetStr("IntuneDeploymentDetailsNavItem/Content")],
 			pages: [typeof(HardenSystemSecurity.Pages.Intune), typeof(AppControlManager.Pages.IntuneDeploymentDetails)]
 		);
+
+		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.CSP)] = new PageTitleMap
+		(
+			titles: [GlobalVars.GetStr("CSPNavItem/Content")],
+			pages: [typeof(HardenSystemSecurity.Pages.CSP)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -287,7 +293,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "AuditPolicies", typeof(Pages.AuditPolicies) },
 		{ "Home", typeof(AppControlManager.Pages.Home) },
 		{ "CBOM", typeof(Pages.CryptographicBillOfMaterials) },
-		{ "Intune", typeof(Pages.Intune) }
+		{ "Intune", typeof(Pages.Intune) },
+		{ "CSP", typeof(Pages.CSP) }
 	}.ToFrozenDictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -331,6 +338,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(AppControlManager.Pages.Home)] = GlobalVars.GetStr("HomeNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.CryptographicBillOfMaterials)] = GlobalVars.GetStr("CBOMNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Intune)] = GlobalVars.GetStr("IntuneNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.CSP)] = GlobalVars.GetStr("CSPNavItem/Content");
 	}
 
 	/// <summary>

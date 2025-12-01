@@ -5563,7 +5563,7 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Protokollordner öffnen</value>
   </data>
-  <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+  <data name="ExportToJSONButton.Content" xml:space="preserve">
     <value>In JSON-Datei exportieren</value>
   </data>
     <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">

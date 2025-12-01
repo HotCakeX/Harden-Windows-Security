@@ -4707,10 +4707,7 @@
   <data name="ClearDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>सभी प्रदर्शित डेटा साफ़ करें</value>
   </data>
-    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
-    <value>JSON फ़ाइल में निर्यात करें</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
   <value>Intune नीति परिनियोजन विवरण</value>
 </data>
 <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -4798,4 +4795,105 @@
   <data name="DeleteSelectedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Intune से चयनित डिवाइस कॉन्फ़िगरेशन नीति हटाएँ.</value>
   </data>
+    <data name="CSPPageTitle" xml:space="preserve">
+    <value>यह पृष्ठ आपको Windows कॉन्फ़िगरेशन सेवा प्रदाता (CSP) नीतियों का निरीक्षण और क्वेरी करने की अनुमति देता है।</value>
+  </data>
+  <data name="CSPNavItem.Content" xml:space="preserve">
+    <value>कॉन्फ़िगरेशन सेवा प्रदाता</value>
+  </data>
+    <data name="CSPNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>यह पृष्ठ आपको Windows कॉन्फ़िगरेशन सेवा प्रदाता (CSP) नीतियों का निरीक्षण और क्वेरी करने की अनुमति देता है।</value>
+  </data>
+  <data name="CSPNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>यह पृष्ठ आपको Windows कॉन्फ़िगरेशन सेवा प्रदाता (CSP) नीतियों का निरीक्षण और क्वेरी करने की अनुमति देता है।</value>
+  </data>
+  <data name="DefaultValueHeader.Text" xml:space="preserve">
+    <value>डिफ़ॉल्ट मान</value>
+  </data>
+  <data name="AllowedValuesHeader.Text" xml:space="preserve">
+    <value>अनुमत मान</value>
+  </data>
+  <data name="FormatHeader.Text" xml:space="preserve">
+    <value>प्रारूप</value>
+  </data>
+  <data name="AccessTypeHeader.Text" xml:space="preserve">
+    <value>एक्सेस प्रकार</value>
+  </data>
+  <data name="ScopeHeader.Text" xml:space="preserve">
+    <value>स्कोप</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.Content" xml:space="preserve">
+    <value>डेटा पुनर्प्राप्त करें</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सिस्टम से कॉन्फ़िगरेशन सेवा प्रदाता डेटा पुनर्प्राप्त करें।</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सिस्टम से कॉन्फ़िगरेशन सेवा प्रदाता डेटा पुनर्प्राप्त करें।</value>
+  </data>
+  <data name="SuccessfullyExportedCSPData" xml:space="preserve">
+    <value>{0} CSP डेटा को सफलतापूर्वक {1} में निर्यात किया गया</value>
+  </data>
+  <data name="SelectedLocalFilesReady" xml:space="preserve">
+    <value>{0} स्थानीय फ़ाइलें चयनित। लोड और क्वेरी के लिए तैयार।</value>
+  </data>
+  <data name="ParsingLocalFiles" xml:space="preserve">
+    <value>{0} स्थानीय फ़ाइलों को पार्स किया जा रहा है...</value>
+  </data>
+  <data name="LocalFilesNoValidPolicies" xml:space="preserve">
+    <value>स्थानीय फ़ाइलों में कोई वैध नीतियां नहीं मिलीं। कैश/ऑनलाइन पर वापस जा रहे हैं...</value>
+  </data>
+  <data name="UsingCachedDefinitions" xml:space="preserve">
+    <value>कैश की गई ऑनलाइन परिभाषाओं का उपयोग किया जा रहा है...</value>
+  </data>
+  <data name="DownloadingDDFDefinitions" xml:space="preserve">
+    <value>Microsoft से DDF परिभाषाएँ डाउनलोड की जा रही हैं...</value>
+  </data>
+  <data name="ProcessingDownloadedDefinitions" xml:space="preserve">
+    <value>डाउनलोड की गई परिभाषाओं को संसाधित किया जा रहा है...</value>
+  </data>
+  <data name="NoValidDDFPolicies" xml:space="preserve">
+    <value>किसी भी स्रोत से कोई वैध DDF नीतियां नहीं मिलीं।</value>
+  </data>
+  <data name="QueryingSystemForPolicies" xml:space="preserve">
+    <value>सिस्टम से {0} नीतियों के लिए क्वेरी की जा रही है...</value>
+  </data>
+  <data name="SuccessfullyLoadedAndQueriedPolicies" xml:space="preserve">
+    <value>{0} नीतियों को सफलतापूर्वक लोड और क्वेरी किया गया।</value>
+  </data>
+  <data name="FailedToUnregisterDevice" xml:space="preserve">
+    <value>स्थानीय प्रबंधन से डिवाइस का पंजीकरण रद्द करने में विफल। त्रुटि कोड: {0}</value>
+  </data>
+  <data name="FailedToParseFile" xml:space="preserve">
+    <value>फ़ाइल पार्स करने में विफल: '{0}'</value>
+  </data>
+  <data name="FailedToParseZipEntry" xml:space="preserve">
+    <value>ZIP प्रविष्टि पार्स करने में विफल: '{0}'</value>
+  </data>
+  <data name="AdmxFilePolicyFormat" xml:space="preserve">
+    <value>ADMX फ़ाइल: {0}, नीति: {1}</value>
+  </data>
+  <data name="XSDSchemaText" xml:space="preserve">
+    <value>XSD स्कीमा</value>
+  </data>
+  <data name="RegisterFailedFormat" xml:space="preserve">
+    <value>(पंजीकरण विफल: {0:X})</value>
+  </data>
+  <data name="EmptyText" xml:space="preserve">
+    <value>(रिक्त)</value>
+  </data>
+  <data name="NotFoundText" xml:space="preserve">
+    <value>(नहीं मिला)</value>
+  </data>
+  <data name="StatusFormat" xml:space="preserve">
+    <value>(स्थिति: {0})</value>
+  </data>
+    <data name="ProtectSubCategory_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>सक्रिय करने के लिए अनुशंसित आइटम शामिल करें</value>
+  </data>
+  <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>हटाने के लिए अनुशंसित फीचर्स और क्षमताओं के अलावा, सक्रिय करने के लिए अनुशंसित उन आइटमों को भी शामिल करें.</value>
+  </data>  
 </root>

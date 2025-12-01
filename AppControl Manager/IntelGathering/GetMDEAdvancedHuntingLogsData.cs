@@ -110,7 +110,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 
 					// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
 					// They have "Unknown" as their IssuerName and PublisherName too
-					// Leaf certificate is a must have for signed files	
+					// Leaf certificate is a must have for signed files
 					if (correlatedEvent.PublisherTBSHash is null || correlatedEvent.PublisherName is null)
 						continue;
 
@@ -355,7 +355,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 
 					// Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash) or PublisherName
 					// They have "Unknown" as their IssuerName and PublisherName too
-					// Leaf certificate is a must have for signed files	
+					// Leaf certificate is a must have for signed files
 					if (correlatedEvent.PublisherTBSHash is null || correlatedEvent.PublisherName is null)
 						continue;
 

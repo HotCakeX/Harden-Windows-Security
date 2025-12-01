@@ -268,12 +268,14 @@
 
                     <Button Click="{x:Bind ViewModel.ExportToJsonButton_Click}"
                             x:Uid="ExportToJSONButton">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                <FontIcon Glyph="&#xE96A;" />
-                                <TextBlock x:Uid="ExportToJSONButtonText" />
-                            </StackPanel>
-                        </Button.Content>
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE96A;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
                     </Button>
 
                 </controls:WrapPanel>

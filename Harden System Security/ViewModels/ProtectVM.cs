@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using AppControlManager.ViewModels;
@@ -41,6 +42,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
 
+		_ = IsVM(); // Do not wait
+
 		// Initialize cancellable buttons for Presets section
 		ApplySelectedCancellableButton = new(GlobalVars.GetStr("ApplySelectedMenuFlyoutItem/Text"));
 		RemoveSelectedCancellableButton = new(GlobalVars.GetStr("RemoveSelectedMenuFlyoutItem/Text"));
@@ -52,6 +55,52 @@ internal sealed partial class ProtectVM : ViewModelBase
 		// Initial protections category population
 		ProtectionCategoriesListItemsSource = new(GenerateCategories(ProtectionPresetsSelectedIndex));
 		SelectAllItemsInListView();
+	}
+
+	/// <summary>
+	/// Used to track if running in a VM so we can check/uncheck the <see cref="SubCategories.OptionalWindowsFeatures_IncludeEnablements"/>
+	/// Whenever the <see cref="GenerateCategories"/> method recreates the categories/subcategories.
+	/// </summary>
+	private volatile bool IsSystemVM;
+
+	/// <summary>
+	/// Determines if running in a VM and if so, unchecks the enablements for the <see cref="SubCategories.OptionalWindowsFeatures_IncludeEnablements"/> since they enable virtualization-based features.
+	/// </summary>
+	private async Task IsVM()
+	{
+		await Task.Run(() =>
+		{
+			try
+			{
+				string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpComputerStatus IsVirtualMachine");
+				if (bool.TryParse(result, out bool actualResult))
+				{
+					// Apply the changes to the checkbox immediately without waiting for user to use ComboBox to switch between presets.
+					_ = Dispatcher.TryEnqueue(() =>
+					{
+						foreach (ProtectionCategoryListViewItem item in ProtectionCategoriesListItemsSource)
+						{
+							if (item.Category == Categories.OptionalWindowsFeatures)
+							{
+								foreach (SubCategoryDefinition sub in item.SubCategories)
+								{
+									if (sub.SubCategory == SubCategories.OptionalWindowsFeatures_IncludeEnablements)
+									{
+										sub.IsChecked = !actualResult;
+									}
+								}
+							}
+						}
+					});
+
+					IsSystemVM = actualResult;
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+		});
 	}
 
 	/// <summary>
@@ -778,7 +827,13 @@ internal sealed partial class ProtectVM : ViewModelBase
 						title: GlobalVars.GetStr("ProtectCategory_OptionalWinFeatures"),
 						subTitle: GlobalVars.GetStr("ProtectCategory_Description_OptionalWinFeatures"),
 						logo: CategoryImages[(int)Categories.OptionalWindowsFeatures],
-						subCategories: []
+						subCategories: [
+										new SubCategoryDefinition(
+										subCategory:SubCategories.OptionalWindowsFeatures_IncludeEnablements,
+										description: GlobalVars.GetStr("ProtectSubCategory_IncludeEnablements"),
+										tip: GlobalVars.GetStr("OptionalWindowsFeatures_IncludeEnablements"))
+										{ IsChecked = !IsSystemVM }
+										]
 						));
 
 					output.Add(new ProtectionCategoryListViewItem(
@@ -892,7 +947,13 @@ internal sealed partial class ProtectVM : ViewModelBase
 						title: GlobalVars.GetStr("ProtectCategory_OptionalWinFeatures"),
 						subTitle: GlobalVars.GetStr("ProtectCategory_Description_OptionalWinFeatures"),
 						logo: CategoryImages[(int)Categories.OptionalWindowsFeatures],
-						subCategories: []
+						subCategories: [
+										new SubCategoryDefinition(
+										subCategory:SubCategories.OptionalWindowsFeatures_IncludeEnablements,
+										description: GlobalVars.GetStr("ProtectSubCategory_IncludeEnablements"),
+										tip: GlobalVars.GetStr("OptionalWindowsFeatures_IncludeEnablements"))
+										{ IsChecked = !IsSystemVM }
+										]
 						));
 
 					output.Add(new ProtectionCategoryListViewItem(
@@ -1090,7 +1151,13 @@ internal sealed partial class ProtectVM : ViewModelBase
 						title: GlobalVars.GetStr("ProtectCategory_OptionalWinFeatures"),
 						subTitle: GlobalVars.GetStr("ProtectCategory_Description_OptionalWinFeatures"),
 						logo: CategoryImages[(int)Categories.OptionalWindowsFeatures],
-						subCategories: []
+						subCategories: [
+										new SubCategoryDefinition(
+										subCategory:SubCategories.OptionalWindowsFeatures_IncludeEnablements,
+										description: GlobalVars.GetStr("ProtectSubCategory_IncludeEnablements"),
+										tip: GlobalVars.GetStr("OptionalWindowsFeatures_IncludeEnablements"))
+										{ IsChecked = !IsSystemVM }
+										]
 						));
 
 					output.Add(new ProtectionCategoryListViewItem(

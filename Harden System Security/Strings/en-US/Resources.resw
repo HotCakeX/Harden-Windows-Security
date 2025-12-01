@@ -4707,9 +4707,6 @@ Thumbprint: {3}</value>
   <data name="ClearDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Clear all of the displayed data</value>
   </data>
-    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
-    <value>Export To JSON File</value>
-  </data>
   <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
     <value>Intune Policy Deployment Details</value>
   </data>
@@ -4798,4 +4795,105 @@ Thumbprint: {3}</value>
   <data name="DeleteSelectedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Delete the selected Device Configuration policy from the Intune.</value>
   </data>
+  <data name="CSPPageTitle" xml:space="preserve">
+    <value>This page allows you to inspect and query Windows Configuration Service Provider (CSP) policies.</value>
+  </data>
+  <data name="CSPNavItem.Content" xml:space="preserve">
+    <value>Configuration System Provider</value>
+  </data>
+    <data name="CSPNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>This page allows you to inspect and query Windows Configuration Service Provider (CSP) policies.</value>
+  </data>
+  <data name="CSPNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>This page allows you to inspect and query Windows Configuration Service Provider (CSP) policies.</value>
+  </data>
+  <data name="DefaultValueHeader.Text" xml:space="preserve">
+    <value>Default Value</value>
+  </data>
+  <data name="AllowedValuesHeader.Text" xml:space="preserve">
+    <value>Allowed Values</value>
+  </data>
+  <data name="FormatHeader.Text" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="AccessTypeHeader.Text" xml:space="preserve">
+    <value>Access Type</value>
+  </data>
+  <data name="ScopeHeader.Text" xml:space="preserve">
+    <value>Scope</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.Content" xml:space="preserve">
+    <value>Retrieve Data</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the Configuration System Provider data from the system.</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the Configuration System Provider data from the system.</value>
+  </data>
+  <data name="SuccessfullyExportedCSPData" xml:space="preserve">
+    <value>Successfully exported {0} CSP data to {1}</value>
+  </data>
+  <data name="SelectedLocalFilesReady" xml:space="preserve">
+    <value>Selected {0} local file(s). Ready to Load &amp; Query.</value>
+  </data>
+  <data name="ParsingLocalFiles" xml:space="preserve">
+    <value>Parsing {0} local file(s)...</value>
+  </data>
+  <data name="LocalFilesNoValidPolicies" xml:space="preserve">
+    <value>Local files contained no valid policies. Falling back to cache/online...</value>
+  </data>
+  <data name="UsingCachedDefinitions" xml:space="preserve">
+    <value>Using cached online definitions...</value>
+  </data>
+  <data name="DownloadingDDFDefinitions" xml:space="preserve">
+    <value>Downloading DDF definitions from Microsoft...</value>
+  </data>
+  <data name="ProcessingDownloadedDefinitions" xml:space="preserve">
+    <value>Processing downloaded definitions...</value>
+  </data>
+  <data name="NoValidDDFPolicies" xml:space="preserve">
+    <value>No valid DDF policies found from any source.</value>
+  </data>
+  <data name="QueryingSystemForPolicies" xml:space="preserve">
+    <value>Querying system for {0} policies...</value>
+  </data>
+  <data name="SuccessfullyLoadedAndQueriedPolicies" xml:space="preserve">
+    <value>Successfully loaded and queried {0} policies.</value>
+  </data>
+  <data name="FailedToUnregisterDevice" xml:space="preserve">
+    <value>Failed to unregister device from local management. Error code: {0}</value>
+  </data>
+  <data name="FailedToParseFile" xml:space="preserve">
+    <value>Failed to parse the file: '{0}'</value>
+  </data>
+  <data name="FailedToParseZipEntry" xml:space="preserve">
+    <value>Failed to parse the ZIP entry: '{0}'</value>
+  </data>
+  <data name="AdmxFilePolicyFormat" xml:space="preserve">
+    <value>ADMX File: {0}, Policy: {1}</value>
+  </data>
+  <data name="XSDSchemaText" xml:space="preserve">
+    <value>XSD Schema</value>
+  </data>
+  <data name="RegisterFailedFormat" xml:space="preserve">
+    <value>(Register Failed: {0:X})</value>
+  </data>
+  <data name="EmptyText" xml:space="preserve">
+    <value>(Empty)</value>
+  </data>
+  <data name="NotFoundText" xml:space="preserve">
+    <value>(Not Found)</value>
+  </data>
+  <data name="StatusFormat" xml:space="preserve">
+    <value>(Status: {0})</value>
+  </data>
+  <data name="ProtectSubCategory_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Include the items recommended to be enabled</value>
+  </data>
+  <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>In addition to the features and capabilities recommended to be removed, also include those recommended to be enabled.</value>
+  </data>  
 </root>

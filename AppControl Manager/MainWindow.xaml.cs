@@ -551,6 +551,10 @@ internal sealed partial class MainWindow : Window
 			AutomationProperties.SetHelpText(IntuneNavItem, GlobalVars.GetStr("IntuneNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(IntuneNavItem, GlobalVars.GetStr("IntuneNavItem/ToolTipService/ToolTip"));
 
+			CSPNavItem.Content = GlobalVars.GetStr("CSPNavItem/Content");
+			AutomationProperties.SetHelpText(CSPNavItem, GlobalVars.GetStr("CSPNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(CSPNavItem, GlobalVars.GetStr("CSPNavItem/ToolTipService/ToolTip"));
+
 #endif
 
 #if APP_CONTROL_MANAGER

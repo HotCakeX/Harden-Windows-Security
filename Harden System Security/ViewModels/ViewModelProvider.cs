@@ -134,6 +134,8 @@ internal static class ViewModelProvider
 	private static readonly Lazy<IntuneDeploymentDetailsVM> _intuneDeploymentDetailsVM = new(() =>
 		new IntuneDeploymentDetailsVM(), false);
 
+	private static readonly Lazy<CSPVM> _cspVM = new(() => new CSPVM(), false);
+
 	// Internal Properties - Core Dependencies \\
 	internal static CommonCore.AppSettings.Main AppSettings => _appSettings.Value;
 
@@ -171,6 +173,7 @@ internal static class ViewModelProvider
 	internal static CryptographicBillOfMaterialsVM CryptographicBillOfMaterialsVM => _cryptographicBillOfMaterialsVM.Value;
 	internal static IntuneVM IntuneVM => _intuneVM.Value;
 	internal static IntuneDeploymentDetailsVM IntuneDeploymentDetailsVM => _intuneDeploymentDetailsVM.Value;
+	internal static CSPVM CSPVM => _cspVM.Value;
 
 
 	/// <summary>

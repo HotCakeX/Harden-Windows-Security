@@ -5572,7 +5572,7 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="CopySelectedButton.Content" xml:space="preserve">
     <value>चयनित कॉपी करें</value>
   </data>
-    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <data name="ExportToJSONButton.Content" xml:space="preserve">
     <value>JSON फ़ाइल में निर्यात करें</value>
   </data>
     <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">

@@ -951,7 +951,7 @@
         "FriendlyName": "Configure Log file size for Public profile",
         "RegistryHive": 0,
         "RegistryKeyName": "SOFTWARE\\Policies\\Microsoft\\WindowsFirewall\\PublicProfile\\Logging",
-        "RegistryValueName": "LogMaxFileSize",
+        "RegistryValueName": "LogFileSize",
         "WMINamespace": "root\\cimv2\\mdm\\dmmap",
         "WMIClass": "MDM_Firewall_PublicProfile02",
         "WMIProperty": "LogMaxFileSize",

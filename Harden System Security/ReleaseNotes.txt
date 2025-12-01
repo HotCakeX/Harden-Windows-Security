@@ -1,19 +1,7 @@
-# Introducing Intune Support
+* Updated Intune policies of Device Guard category to have the recently added security features.
 
-You can now scale the security policies you trust locally to your entire fleet of Windows devices. The Harden System Security app introduces an Intune dashboard, allowing you to bridge the gap between local hardening and cloud management.
+* Aligned the Intune policies of Windows Firewall category and improved their detections on the system.
 
-* Unified Policy Control: Instantly view your existing Device Configuration policies or push the hardened standards directly to the cloud.
+* Added 2 more countries to the Country IP Blocking page.
 
-* Complete Group Management: Effortlessly search, sort, add, remove, and export Entra groups without leaving the app.
-
-* Streamlined Assignments: Deploy new policies and assign them to the right security groups in a single workflow.
-
-## Other Changes
-
-* Added many new detections for Intune applied policies, especially for Microsoft Defender and Windows Firewall categories.
-
-* Implemented a policy for Windows Firewall category: Disables mDNS UDP-In Firewall Rules. It adds an extra measure of security in public places, like a coffee shop but might interfere with Miracast screen sharing, which relies on the Public profile or home networks where the Private profile is not selected. It is not for Gaming, School or Development device usage intents.
-
-* Implemented another policy for Windows Firewall category: Sets all network locations to public. Public means less trust to other devices in the network. It is not for Gaming, School or Development device usage intents.
-
-* The list of optional features and capabilities now populate faster than before.
+* Updated Intune policies for Exploit Mitigations to align with what the app locally applies.

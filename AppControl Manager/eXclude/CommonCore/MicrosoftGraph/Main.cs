@@ -1057,18 +1057,18 @@ DeviceEvents
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
 		httpClient.DefaultRequestHeaders.Authorization =
-			new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+			new AuthenticationHeaderValue("Bearer", accessToken);
 		httpClient.DefaultRequestHeaders.Accept
-			.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+			.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Beta endpoint for configuration policies (standard, non-custom).
 		string nextLink = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies";
 
 		while (!string.IsNullOrEmpty(nextLink))
 		{
-			using System.Net.Http.HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 				"RetrieveConfigurationPolicies",
-				() => new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, new Uri(nextLink)),
+				() => new HttpRequestMessage(HttpMethod.Get, new Uri(nextLink)),
 				httpClient
 			);
 
@@ -1085,11 +1085,11 @@ DeviceEvents
 
 			string jsonResponse = await response.Content.ReadAsStringAsync();
 
-			System.Text.Json.JsonElement root = System.Text.Json.JsonSerializer.Deserialize(
+			JsonElement root = JsonSerializer.Deserialize(
 				jsonResponse,
 				MSGraphJsonContext.Default.JsonElement);
 
-			DeviceManagementConfigurationPoliciesResponse? page = System.Text.Json.JsonSerializer.Deserialize(
+			DeviceManagementConfigurationPoliciesResponse? page = JsonSerializer.Deserialize(
 				jsonResponse,
 				MSGraphJsonContext.Default.DeviceManagementConfigurationPoliciesResponse);
 
@@ -1098,7 +1098,7 @@ DeviceEvents
 				allPolicies.AddRange(page.Value);
 			}
 
-			if (root.TryGetProperty("@odata.nextLink", out System.Text.Json.JsonElement nextLinkElement))
+			if (root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement))
 			{
 				nextLink = nextLinkElement.GetString() ?? string.Empty;
 			}
@@ -1140,18 +1140,18 @@ DeviceEvents
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
 		httpClient.DefaultRequestHeaders.Authorization =
-			new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+			new AuthenticationHeaderValue("Bearer", accessToken);
 		httpClient.DefaultRequestHeaders.Accept
-			.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+			.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 		// Beta endpoint for creating configuration policies.
 		Uri createUri = new("https://graph.microsoft.com/beta/deviceManagement/configurationPolicies");
 
-		using System.Net.Http.HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
 			"CreateConfigurationPolicyFromJson",
-			() => new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, createUri)
+			() => new HttpRequestMessage(HttpMethod.Post, createUri)
 			{
-				Content = new System.Net.Http.StringContent(jsonPayload, Encoding.UTF8, "application/json")
+				Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json")
 			},
 			httpClient
 		);
@@ -1164,11 +1164,11 @@ DeviceEvents
 			Logger.Write(responseContent);
 
 			// Extract ID from response
-			System.Text.Json.JsonElement root = System.Text.Json.JsonSerializer.Deserialize(
+			JsonElement root = JsonSerializer.Deserialize(
 				responseContent,
 				MSGraphJsonContext.Default.JsonElement);
 
-			string? id = root.TryGetProperty("id", out System.Text.Json.JsonElement idEl) ? idEl.GetString() : null;
+			string? id = root.TryGetProperty("id", out JsonElement idEl) ? idEl.GetString() : null;
 			return id;
 		}
 		else

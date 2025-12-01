@@ -591,7 +591,29 @@ internal static class SpecializedStrategiesRegistry
 					return false;
 
 				string command = $"get {wmiNamespace} {wmiClass} {wmiProperty}"; // Remove double quotes as some like SmartAppControlState get it coming from ComManager service
-				string result = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, command).Trim('"');
+
+				string rawResult = QuantumRelayHSS.Client.RunCommand(GlobalVars.ComManagerProcessPath, command).Trim();
+				string result;
+
+				// Attempt to interpret the output as a JSON string first to properly handle escaped characters (like backslashes in paths).
+				// ComManager outputs properly formatted JSON (strings are quoted and escaped).
+				if (rawResult.StartsWith('"') && rawResult.EndsWith('"'))
+				{
+					try
+					{
+						result = JsonSerializer.Deserialize(rawResult, StringJsonContext.Default.String) ?? string.Empty;
+					}
+					catch
+					{
+						// if deserialization fails
+						result = rawResult.Trim('"');
+					}
+				}
+				else
+				{
+					// For boolean/numeric/null etc. outputs from ComManager which aren't quoted strings
+					result = rawResult;
+				}
 
 				// If any of the desired values match then it means the security measure is applied on the system.
 				foreach (WmiDesiredValue dv in CollectionsMarshal.AsSpan(desiredValues))
@@ -1693,4 +1715,12 @@ internal sealed partial class MUnit(
 	{
 		IsApplied = isApplied;
 	}
+}
+
+/// <summary>
+/// Source generation context for deserializing strings.
+/// </summary>
+[JsonSerializable(typeof(string))]
+internal sealed partial class StringJsonContext : JsonSerializerContext
+{
 }

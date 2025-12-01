@@ -1,9 +1,9 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-25T15:39:13.7526116Z",
+    "createdDateTime": "2025-12-01T08:23:22.9171836Z",
     "creationSource": null,
     "description": "Windows Update Category",
-    "lastModifiedDateTime": "2024-07-27T12:15:08.0446357Z",
+    "lastModifiedDateTime": "2025-12-01T08:23:22.9171836Z",
     "name": "Windows Update",
     "platforms": "windows10",
     "priorityMetaData": null,
@@ -12,7 +12,7 @@
     ],
     "settingCount": 16,
     "technologies": "mdm",
-    "id": "6af7eebf-3cd3-4325-b414-7d2c930a8eb9",
+    "id": "459d9a99-a6a8-4995-ad95-9d2427d1676e",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -26,6 +26,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_allowautoupdate",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_update_allowautoupdate_1",
@@ -39,6 +40,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_allowautowindowsupdatedownloadovermeterednetwork",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_update_allowautowindowsupdatedownloadovermeterednetwork_1",
@@ -52,6 +54,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_allowmuupdateservice",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_update_allowmuupdateservice_1",
@@ -65,6 +68,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_autorestartdeadlineperiodindays",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
@@ -78,6 +82,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_autorestartdeadlineperiodindaysforfeatureupdates",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
@@ -91,6 +96,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_autorestartnotificationschedule_v2",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_update_autorestartnotificationschedule_120",
@@ -104,6 +110,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_setdisablepauseuxaccess",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_update_setdisablepauseuxaccess_1",
@@ -117,6 +124,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_configuredeadlineforfeatureupdates",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
@@ -130,6 +138,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_configuredeadlinegraceperiod",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
@@ -143,6 +152,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_configuredeadlinegraceperiodforfeatureupdates",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
@@ -156,6 +166,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_configuredeadlinenoautoreboot",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_update_configuredeadlinenoautoreboot_1",
@@ -169,6 +180,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_configuredeadlineforqualityupdates",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
@@ -182,6 +194,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_setpolicydrivenupdatesourcefordriverupdates",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_update_setpolicydrivenupdatesourcefordriverupdates_0",
@@ -195,6 +208,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_setpolicydrivenupdatesourceforfeatureupdates",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_update_setpolicydrivenupdatesourceforfeatureupdates_0",
@@ -208,6 +222,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_setpolicydrivenupdatesourceforotherupdates",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_update_setpolicydrivenupdatesourceforotherupdates_0",
@@ -221,6 +236,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_update_setpolicydrivenupdatesourceforqualityupdates",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_update_setpolicydrivenupdatesourceforqualityupdates_0",

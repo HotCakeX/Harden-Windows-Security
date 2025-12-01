@@ -1,9 +1,9 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-12-13T09:50:21.3160332Z",
+    "createdDateTime": "2025-12-01T08:23:07.6734428Z",
     "creationSource": null,
     "description": "Miscellaneous Configurations Category",
-    "lastModifiedDateTime": "2024-12-13T09:55:33.2010251Z",
+    "lastModifiedDateTime": "2025-12-01T08:23:07.6734428Z",
     "name": "Miscellaneous Configurations",
     "platforms": "windows10",
     "priorityMetaData": null,
@@ -12,7 +12,7 @@
     ],
     "settingCount": 16,
     "technologies": "mdm",
-    "id": "e685a3fc-6823-4409-9d71-8406e4e1905d",
+    "id": "d9667bd8-d46d-48d0-b95d-c02e622ed4fc",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -26,6 +26,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_printers_restrictdriverinstallationtoadministrators",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_printers_restrictdriverinstallationtoadministrators_1",
@@ -39,6 +40,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_auditsettings_includecmdline",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_admx_auditsettings_includecmdline_1",
@@ -52,6 +54,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_system_bootstartdriverinitialization",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_system_bootstartdriverinitialization_1",
@@ -60,6 +63,7 @@
                             "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                             "settingDefinitionId": "device_vendor_msft_policy_config_system_bootstartdriverinitialization_selectdriverloadpolicy",
                             "settingInstanceTemplateReference": null,
+                            "auditRuleInformation": null,
                             "choiceSettingValue": {
                                 "settingValueTemplateReference": null,
                                 "value": "device_vendor_msft_policy_config_system_bootstartdriverinitialization_selectdriverloadpolicy_8",
@@ -76,6 +80,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_filesys_longpathsenabled",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_admx_filesys_longpathsenabled_1",
@@ -89,6 +94,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_kerberos_kerberosclientsupportsclaimscompoundarmor",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_kerberos_kerberosclientsupportsclaimscompoundarmor_1",
@@ -102,6 +108,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_remoteprocedurecall_rpcendpointmapperclientauthentication",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_remoteprocedurecall_rpcendpointmapperclientauthentication_1",
@@ -115,6 +122,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_servicecontrolmanager_svchostprocessmitigation",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_servicecontrolmanager_svchostprocessmitigation_1",
@@ -128,6 +136,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "user_vendor_msft_policy_config_admx_sensors_disablelocation_1",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "user_vendor_msft_policy_config_admx_sensors_disablelocation_1_1",
@@ -141,6 +150,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_sensors_disablelocationscripting_2",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_admx_sensors_disablelocationscripting_2_1",
@@ -154,6 +164,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "user_vendor_msft_policy_config_admx_sensors_disablelocationscripting_1",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "user_vendor_msft_policy_config_admx_sensors_disablelocationscripting_1_1",
@@ -167,6 +178,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_locationprovideradm_disablewindowslocationprovider_1",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_admx_locationprovideradm_disablewindowslocationprovider_1_1",
@@ -180,6 +192,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_audit_accountlogonlogoff_auditaccountlockout",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_audit_accountlogonlogoff_auditaccountlockout_3",
@@ -193,6 +206,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_microsoftnetworkclient_digitallysigncommunicationsalways",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_localpoliciessecurityoptions_microsoftnetworkclient_digitallysigncommunicationsalways_1",
@@ -206,6 +220,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_microsoftnetworkserver_digitallysigncommunicationsalways",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_localpoliciessecurityoptions_microsoftnetworkserver_digitallysigncommunicationsalways_1",
@@ -219,6 +234,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_privacy_letappsaccesslocation",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_privacy_letappsaccesslocation_2",
@@ -232,6 +248,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_system_allowlocation",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_system_allowlocation_0",

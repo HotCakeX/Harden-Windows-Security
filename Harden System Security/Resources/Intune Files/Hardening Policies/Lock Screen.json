@@ -1,9 +1,9 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-25T15:40:59.4753796Z",
+    "createdDateTime": "2025-12-01T08:22:59.8218259Z",
     "creationSource": null,
     "description": "Lock Screen Category",
-    "lastModifiedDateTime": "2024-08-28T21:55:32.6962214Z",
+    "lastModifiedDateTime": "2025-12-01T08:22:59.8218259Z",
     "name": "Lock Screen",
     "platforms": "windows10",
     "priorityMetaData": null,
@@ -12,7 +12,7 @@
     ],
     "settingCount": 12,
     "technologies": "mdm",
-    "id": "acbea7d2-64d0-47db-9b8b-31ec05cc3f51",
+    "id": "c5dcf7d5-63f6-425e-b6cc-cb33caa12e79",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -26,6 +26,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_windowslogon_dontdisplaynetworkselectionui",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_windowslogon_dontdisplaynetworkselectionui_1",
@@ -39,6 +40,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_credentialproviders_allowpinlogon",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_credentialproviders_allowpinlogon_1",
@@ -52,6 +54,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_tpm_standarduserauthorizationfailureindividualthreshold_name",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_admx_tpm_standarduserauthorizationfailureindividualthreshold_name_1",
@@ -60,6 +63,7 @@
                             "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                             "settingDefinitionId": "device_vendor_msft_policy_config_admx_tpm_standarduserauthorizationfailureindividualthreshold_name_dxt_standarduserauthorizationfailureindividualthreshold_name",
                             "settingInstanceTemplateReference": null,
+                            "auditRuleInformation": null,
                             "simpleSettingValue": {
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                                 "settingValueTemplateReference": null,
@@ -76,6 +80,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_tpm_standarduserauthorizationfailureduration_name",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_admx_tpm_standarduserauthorizationfailureduration_name_1",
@@ -84,6 +89,7 @@
                             "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                             "settingDefinitionId": "device_vendor_msft_policy_config_admx_tpm_standarduserauthorizationfailureduration_name_dxt_standarduserauthorizationfailureduration_name",
                             "settingInstanceTemplateReference": null,
+                            "auditRuleInformation": null,
                             "simpleSettingValue": {
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                                 "settingValueTemplateReference": null,
@@ -100,6 +106,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_tpm_standarduserauthorizationfailuretotalthreshold_name",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_admx_tpm_standarduserauthorizationfailuretotalthreshold_name_1",
@@ -108,6 +115,7 @@
                             "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                             "settingDefinitionId": "device_vendor_msft_policy_config_admx_tpm_standarduserauthorizationfailuretotalthreshold_name_dxt_standarduserauthorizationfailuretotalthreshold_name",
                             "settingInstanceTemplateReference": null,
+                            "auditRuleInformation": null,
                             "simpleSettingValue": {
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                                 "settingValueTemplateReference": null,
@@ -124,6 +132,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_interactivelogon_donotdisplayusernameatsignin",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_localpoliciessecurityoptions_interactivelogon_donotdisplayusernameatsignin_1",
@@ -137,6 +146,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_interactivelogon_donotrequirectrlaltdel",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_localpoliciessecurityoptions_interactivelogon_donotrequirectrlaltdel_0",
@@ -150,6 +160,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_localpoliciessecurityoptions_interactivelogon_machineinactivitylimit_v2",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
@@ -163,6 +174,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_passportforwork_biometrics_usebiometrics",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_passportforwork_biometrics_usebiometrics_true",
@@ -176,6 +188,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance",
                 "settingDefinitionId": "device_vendor_msft_passportforwork_{tenantid}",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "groupSettingCollectionValue": [
                     {
                         "settingValueTemplateReference": null,
@@ -184,6 +197,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                                 "settingDefinitionId": "device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_digits",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "choiceSettingValue": {
                                     "settingValueTemplateReference": null,
                                     "value": "device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_digits_1",
@@ -194,6 +208,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                                 "settingDefinitionId": "device_vendor_msft_passportforwork_{tenantid}_policies_enablepinrecovery",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "choiceSettingValue": {
                                     "settingValueTemplateReference": null,
                                     "value": "device_vendor_msft_passportforwork_{tenantid}_policies_enablepinrecovery_true",
@@ -204,6 +219,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                                 "settingDefinitionId": "device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_expiration",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "simpleSettingValue": {
                                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                                     "settingValueTemplateReference": null,
@@ -214,6 +230,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                                 "settingDefinitionId": "device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_lowercaseletters",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "choiceSettingValue": {
                                     "settingValueTemplateReference": null,
                                     "value": "device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_lowercaseletters_1",
@@ -224,6 +241,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                                 "settingDefinitionId": "device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "simpleSettingValue": {
                                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                                     "settingValueTemplateReference": null,
@@ -234,6 +252,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                                 "settingDefinitionId": "device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_specialcharacters",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "choiceSettingValue": {
                                     "settingValueTemplateReference": null,
                                     "value": "device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_specialcharacters_0",
@@ -244,6 +263,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                                 "settingDefinitionId": "device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_uppercaseletters",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "choiceSettingValue": {
                                     "settingValueTemplateReference": null,
                                     "value": "device_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_uppercaseletters_0",
@@ -254,6 +274,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                                 "settingDefinitionId": "device_vendor_msft_passportforwork_{tenantid}_policies_usepassportforwork",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "choiceSettingValue": {
                                     "settingValueTemplateReference": null,
                                     "value": "device_vendor_msft_passportforwork_{tenantid}_policies_usepassportforwork_true",
@@ -271,6 +292,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_passportforwork_biometrics_facialfeaturesuseenhancedantispoofing",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_passportforwork_biometrics_facialfeaturesuseenhancedantispoofing_true",
@@ -284,6 +306,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance",
                 "settingDefinitionId": "user_vendor_msft_passportforwork_{tenantid}",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "groupSettingCollectionValue": [
                     {
                         "settingValueTemplateReference": null,
@@ -292,6 +315,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                                 "settingDefinitionId": "user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_digits",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "choiceSettingValue": {
                                     "settingValueTemplateReference": null,
                                     "value": "user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_digits_1",
@@ -302,6 +326,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                                 "settingDefinitionId": "user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_lowercaseletters",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "choiceSettingValue": {
                                     "settingValueTemplateReference": null,
                                     "value": "user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_lowercaseletters_1",
@@ -312,6 +337,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                                 "settingDefinitionId": "user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_history",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "simpleSettingValue": {
                                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                                     "settingValueTemplateReference": null,
@@ -322,6 +348,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                                 "settingDefinitionId": "user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_specialcharacters",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "choiceSettingValue": {
                                     "settingValueTemplateReference": null,
                                     "value": "user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_specialcharacters_0",
@@ -332,6 +359,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                                 "settingDefinitionId": "user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_uppercaseletters",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "choiceSettingValue": {
                                     "settingValueTemplateReference": null,
                                     "value": "user_vendor_msft_passportforwork_{tenantid}_policies_pincomplexity_uppercaseletters_0",
@@ -342,6 +370,7 @@
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                                 "settingDefinitionId": "user_vendor_msft_passportforwork_{tenantid}_policies_usepassportforwork",
                                 "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
                                 "choiceSettingValue": {
                                     "settingValueTemplateReference": null,
                                     "value": "user_vendor_msft_passportforwork_{tenantid}_policies_usepassportforwork_true",

@@ -1,9 +1,9 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2025-01-02T07:52:18.9754212Z",
+    "createdDateTime": "2025-12-01T08:23:10.4937406Z",
     "creationSource": null,
     "description": "TLS Settings Category",
-    "lastModifiedDateTime": "2025-01-02T08:03:48.2719491Z",
+    "lastModifiedDateTime": "2025-12-01T08:23:10.4937406Z",
     "name": "TLS Settings",
     "platforms": "windows10",
     "priorityMetaData": null,
@@ -12,7 +12,7 @@
     ],
     "settingCount": 2,
     "technologies": "mdm",
-    "id": "f0131daa-abf4-41dd-b706-28c36c045a29",
+    "id": "8fbcccb1-8716-4924-a0da-692c435f72f7",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -26,6 +26,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_ciphersuiteorder_sslcurveorder",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_admx_ciphersuiteorder_sslcurveorder_1",
@@ -34,6 +35,7 @@
                             "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance",
                             "settingDefinitionId": "device_vendor_msft_policy_config_admx_ciphersuiteorder_sslcurveorder_sslcurveorderlist",
                             "settingInstanceTemplateReference": null,
+                            "auditRuleInformation": null,
                             "simpleSettingCollectionValue": [
                                 {
                                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationStringSettingValue",
@@ -67,6 +69,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_cryptography_tlsciphersuites",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingCollectionValue": [
                     {
                         "@odata.type": "#microsoft.graph.deviceManagementConfigurationStringSettingValue",

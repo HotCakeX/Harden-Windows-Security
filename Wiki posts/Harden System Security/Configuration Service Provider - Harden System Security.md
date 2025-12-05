@@ -1,6 +1,11 @@
 # Configuration Service Provider | Harden System Security
 
-This page allows you to inspect and query Windows Configuration Service Provider (CSP) policies. It parses Policy DDF (Device Description Framework) files that are either sourced from local XML files you browse for or downloaded directly from Microsoft's server to generate a comprehensive catalog of available system settings. The Harden System Security app interacts with the local MDM (Mobile Device Management) client to query the live system state of these policies via their OMA-URIs, providing real-time visibility into current configurations, default values, and allowed operations (`Get`, `Add`, `Replace`, `Delete`).
+This page allows you to inspect and query Windows Configuration Service Provider (CSP) policies and unlocks a wealth of deeply structured, real-time configuration intelligence. It parses Policy DDF (Device Description Framework) files that are either sourced from local XML files you browse for or downloaded directly from Microsoft's server to generate a comprehensive catalog of available system settings. 
+
+The Harden System Security app interacts with the local MDM (Mobile Device Management) client to query the live system state of these policies via their OMA-URIs (Open Mobile Alliance Uniform Resource Identifier), providing real-time visibility into current configurations, default values, and allowed operations (`Get`, `Add`, `Replace`, `Delete`).
+
+> [!NOTE]\
+> On systems not enrolled in an MDM such as Microsoft Intune, there will naturally be limited data available to display.
 
 ## User Interface Guide
 

@@ -595,7 +595,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 					try
 					{
 						// Get all of the file's certificates
-						signerDetails = AllCertificatesGrabber.GetAllFileSigners(selectedFile);
+						signerDetails = AllCertificatesGrabber.GetAllFileSigners(selectedFile, true);
 
 						// If the file has no signers and the user wants to include security catalogs
 						if (signerDetails.Count is 0 && IncludeSecurityCatalogsToggleSwitch)
@@ -610,7 +610,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 							{
 								try
 								{
-									signerDetails = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA1CatResult);
+									signerDetails = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA1CatResult, true);
 								}
 								catch (HashMismatchInCertificateException)
 								{
@@ -626,7 +626,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 							{
 								try
 								{
-									signerDetails = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA256CatResult);
+									signerDetails = AllCertificatesGrabber.GetAllFileSigners(CurrentFilePathHashSHA256CatResult, true);
 								}
 								catch (HashMismatchInCertificateException)
 								{

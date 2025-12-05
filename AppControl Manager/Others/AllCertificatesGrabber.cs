@@ -173,7 +173,7 @@ internal static class AllCertificatesGrabber
 	}
 
 	// This is the main method used to retrieve all signers for a given file
-	internal static unsafe List<AllFileSigners> GetAllFileSigners(string FilePath)
+	internal static unsafe List<AllFileSigners> GetAllFileSigners(string FilePath, bool includeInvalidCerts = false)
 	{
 		const int EncodedMessageParameter = 29;
 
@@ -235,14 +235,14 @@ internal static class AllCertificatesGrabber
 					}
 				}
 
-				// If the certificate is expired, continue to the next iteration
-				if (verifyTrustResult == WinVerifyTrustResult.CertExpired)
+				// If the certificate is expired and we don't want to include invalid certs, continue to the next iteration
+				if (verifyTrustResult == WinVerifyTrustResult.CertExpired && !includeInvalidCerts)
 				{
 					continue;
 				}
 
-				// if there is a hash mismatch in the file, throw an exception
-				if (verifyTrustResult == WinVerifyTrustResult.HashMismatch)
+				// if there is a hash mismatch in the file, throw an exception unless we want to include invalid certs
+				if (verifyTrustResult == WinVerifyTrustResult.HashMismatch && !includeInvalidCerts)
 				{
 					// Throw a custom exception
 					throw new HashMismatchInCertificateException(

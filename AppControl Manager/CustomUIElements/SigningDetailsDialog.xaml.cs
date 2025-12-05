@@ -193,7 +193,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>
-	private void OnPrimaryButtonClick(ContentDialogV2 sender, ContentDialogButtonClickEventArgs args)
+	private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 	{
 		// Fill in the text boxes based on the current user configs
 		CertificatePath = CertFilePathTextBox.Text;

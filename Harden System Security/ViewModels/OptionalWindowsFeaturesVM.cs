@@ -542,7 +542,7 @@ internal sealed partial class DismServiceClient : IDisposable
 			ActiveInstance = null;
 
 		if (Directory.Exists(SecureDirectory))
-			CommonCore.WebView2Config.TryDeleteDirectoryWithRetries(SecureDirectory, 10, 500);
+			WebView2Config.TryDeleteDirectoryWithRetries(SecureDirectory, 10, 500);
 	}
 
 	private enum Command : byte
@@ -1965,7 +1965,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// Apply the recommended configs by processing predefined features and capabilities according to their configurations we defined earlier.
 	/// Called from the Protect tab when Optional Windows Features category is applied and from the UI buttons.
 	/// </summary>
-	internal async Task ApplySecurityHardening()
+	internal async Task ApplySecurityHardening(bool includeEnablements = true)
 	{
 		bool errorsOccurred = false;
 
@@ -1998,6 +1998,12 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				foreach (OptionalFeatureConfig config in SecurityHardeningConfigs)
 				{
 					ApplyCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
+					// Filter based on sub-category selection - skip enablements if not requested
+					if (config.ApplyStrategy == ApplyOperation.Enable && !includeEnablements)
+					{
+						continue;
+					}
 
 					// Display a per-item "currently doing" message
 					string actionText = config.ApplyStrategy == ApplyOperation.Enable ? "Enabling" : "Disabling";
@@ -2310,7 +2316,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// Remove security hardening by executing the remove strategy for each item
 	/// Called from the Protect tab when Optional Windows Features category is removed and from the UI buttons
 	/// </summary>
-	internal async Task RemoveSecurityHardening()
+	internal async Task RemoveSecurityHardening(bool includeEnablements = true)
 	{
 		bool errorsOccurred = false;
 
@@ -2342,6 +2348,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 				foreach (OptionalFeatureConfig config in SecurityHardeningConfigs)
 				{
 					RemoveCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
+
+					// Filter based on sub-category selection.
+					// If an item's ApplyStrategy is Enable, it implies we Enabled it during Apply.
+					// Therefore, we should only process its removal (which disables it back) if includeEnablements is true.
+					if (config.ApplyStrategy == ApplyOperation.Enable && !includeEnablements)
+					{
+						continue;
+					}
 
 					// Display a per-item "currently doing" message for removal phase
 					string actionText = config.RemoveStrategy == ApplyOperation.Enable ? "Enabling" : "Disabling";
@@ -2461,7 +2475,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	{
 		// Ensure only recommended items are retrieved and grouped before applying
 		await EnsureRecommendedItemsRetrievedAndGroupAsync();
-		await ApplySecurityHardening();
+		// UI button assumes full recommended application (including enablements)
+		await ApplySecurityHardening(includeEnablements: true);
 	}
 
 	/// <summary>
@@ -2481,7 +2496,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	{
 		// Ensure only recommended items are retrieved and grouped before removing
 		await EnsureRecommendedItemsRetrievedAndGroupAsync();
-		await RemoveSecurityHardening();
+		// UI button assumes full removal
+		await RemoveSecurityHardening(includeEnablements: true);
 	}
 
 	#endregion

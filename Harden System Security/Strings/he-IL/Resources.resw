@@ -4707,10 +4707,7 @@
   <data name="ClearDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>נקה את כל הנתונים המוצגים</value>
   </data>
-    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
-    <value>ייצא לקובץ JSON</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
   <value>פרטי פריסת מדיניות Intune</value>
 </data>
 <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -4798,4 +4795,105 @@
   <data name="DeleteSelectedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>מחק את מדיניות תצורת ההתקנים שנבחרה מ-Intune.</value>
   </data>
+    <data name="CSPPageTitle" xml:space="preserve">
+    <value>דף זה מאפשר לך לבדוק ולתשאל פריטי מדיניות של ספק שירות תצורה (CSP) ב- Windows.</value>
+  </data>
+  <data name="CSPNavItem.Content" xml:space="preserve">
+    <value>ספק שירות תצורה</value>
+  </data>
+    <data name="CSPNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>דף זה מאפשר לך לבדוק ולתשאל פריטי מדיניות של ספק שירות תצורה (CSP) ב- Windows.</value>
+  </data>
+  <data name="CSPNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>דף זה מאפשר לך לבדוק ולתשאל פריטי מדיניות של ספק שירות תצורה (CSP) ב- Windows.</value>
+  </data>
+  <data name="DefaultValueHeader.Text" xml:space="preserve">
+    <value>ערך ברירת מחדל</value>
+  </data>
+  <data name="AllowedValuesHeader.Text" xml:space="preserve">
+    <value>ערכים מותרים</value>
+  </data>
+  <data name="FormatHeader.Text" xml:space="preserve">
+    <value>תבנית</value>
+  </data>
+  <data name="AccessTypeHeader.Text" xml:space="preserve">
+    <value>סוג גישה</value>
+  </data>
+  <data name="ScopeHeader.Text" xml:space="preserve">
+    <value>טווח</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.Content" xml:space="preserve">
+    <value>אחזר נתונים</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את נתוני ספק שירות התצורה מהמערכת.</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את נתוני ספק שירות התצורה מהמערכת.</value>
+  </data>
+  <data name="SuccessfullyExportedCSPData" xml:space="preserve">
+    <value>נתוני CSP של {0} יוצאו בהצלחה אל {1}</value>
+  </data>
+  <data name="SelectedLocalFilesReady" xml:space="preserve">
+    <value>נבחרו {0} קבצים מקומיים. מוכן לטעינה ותשאול.</value>
+  </data>
+  <data name="ParsingLocalFiles" xml:space="preserve">
+    <value>מנתח {0} קבצים מקומיים...</value>
+  </data>
+  <data name="LocalFilesNoValidPolicies" xml:space="preserve">
+    <value>קבצים מקומיים לא הכילו פריטי מדיניות תקפים. חוזר למטמון/מקוון...</value>
+  </data>
+  <data name="UsingCachedDefinitions" xml:space="preserve">
+    <value>משתמש בהגדרות מקוונות השמורות במטמון...</value>
+  </data>
+  <data name="DownloadingDDFDefinitions" xml:space="preserve">
+    <value>מוריד הגדרות DDF מ- Microsoft...</value>
+  </data>
+  <data name="ProcessingDownloadedDefinitions" xml:space="preserve">
+    <value>מעבד הגדרות שהורדו...</value>
+  </data>
+  <data name="NoValidDDFPolicies" xml:space="preserve">
+    <value>לא נמצאו פריטי מדיניות DDF תקפים מאף מקור.</value>
+  </data>
+  <data name="QueryingSystemForPolicies" xml:space="preserve">
+    <value>מתשאל את המערכת עבור {0} פריטי מדיניות...</value>
+  </data>
+  <data name="SuccessfullyLoadedAndQueriedPolicies" xml:space="preserve">
+    <value>{0} פריטי מדיניות נטענו ותושאלו בהצלחה.</value>
+  </data>
+  <data name="FailedToUnregisterDevice" xml:space="preserve">
+    <value>ביטול רישום ההתקן מניהול מקומי נכשל. קוד שגיאה: {0}</value>
+  </data>
+  <data name="FailedToParseFile" xml:space="preserve">
+    <value>ניתוח הקובץ נכשל: '{0}'</value>
+  </data>
+  <data name="FailedToParseZipEntry" xml:space="preserve">
+    <value>ניתוח רשומת ה- ZIP נכשל: '{0}'</value>
+  </data>
+  <data name="AdmxFilePolicyFormat" xml:space="preserve">
+    <value>קובץ ADMX:‏ {0}, מדיניות: {1}</value>
+  </data>
+  <data name="XSDSchemaText" xml:space="preserve">
+    <value>סכמת XSD</value>
+  </data>
+  <data name="RegisterFailedFormat" xml:space="preserve">
+    <value>(הרישום נכשל: {0:X})</value>
+  </data>
+  <data name="EmptyText" xml:space="preserve">
+    <value>(ריק)</value>
+  </data>
+  <data name="NotFoundText" xml:space="preserve">
+    <value>(לא נמצא)</value>
+  </data>
+  <data name="StatusFormat" xml:space="preserve">
+    <value>(מצב: {0})</value>
+  </data>
+  <data name="ProtectSubCategory_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>כלול את הפריטים שהומלץ להפעיל</value>
+  </data>
+  <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>בנוסף לתכונות וליכולות שהומלץ להסיר, כלול גם את אלו שהומלץ להפעיל.</value>
+  </data>  
 </root>

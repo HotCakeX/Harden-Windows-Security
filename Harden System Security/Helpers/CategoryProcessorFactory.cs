@@ -286,7 +286,10 @@ internal static class CategoryProcessorFactory
 			// Ensure the ListView's collection is loaded first. Not strictly needed for the other method
 			// But improves user experience.
 			await ViewModelProvider.OptionalWindowsFeaturesVM.EnsureRecommendedItemsRetrievedAndGroupAsync();
-			await ViewModelProvider.OptionalWindowsFeaturesVM.ApplySecurityHardening();
+
+			bool includeEnablements = selectedSubCategories?.Contains(SubCategories.OptionalWindowsFeatures_IncludeEnablements) ?? false;
+
+			await ViewModelProvider.OptionalWindowsFeaturesVM.ApplySecurityHardening(includeEnablements);
 		}
 
 		public async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
@@ -294,7 +297,10 @@ internal static class CategoryProcessorFactory
 			// Ensure the ListView's collection is loaded first. Not strictly needed for the other method
 			// But improves user experience.
 			await ViewModelProvider.OptionalWindowsFeaturesVM.EnsureRecommendedItemsRetrievedAndGroupAsync();
-			await ViewModelProvider.OptionalWindowsFeaturesVM.RemoveSecurityHardening();
+
+			bool includeEnablements = selectedSubCategories?.Contains(SubCategories.OptionalWindowsFeatures_IncludeEnablements) ?? false;
+
+			await ViewModelProvider.OptionalWindowsFeaturesVM.RemoveSecurityHardening(includeEnablements);
 		}
 
 		public async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)

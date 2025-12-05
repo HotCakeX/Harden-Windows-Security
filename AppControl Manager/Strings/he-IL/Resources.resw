@@ -5564,7 +5564,7 @@
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>פתח תיקיית לוגים</value>
   </data>
-    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <data name="ExportToJSONButton.Content" xml:space="preserve">
     <value>ייצוא לקובץ JSON</value>
   </data>
     <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">

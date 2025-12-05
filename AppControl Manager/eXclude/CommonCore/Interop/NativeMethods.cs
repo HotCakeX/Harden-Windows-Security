@@ -2103,4 +2103,18 @@ internal static unsafe partial class NativeMethods
 		);
 
 
+	[LibraryImport("mdmlocalmanagement.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint RegisterDeviceWithLocalManagement(out uint alreadyRegistered);
+
+
+	[LibraryImport("mdmlocalmanagement.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint ApplyLocalManagementSyncML(string syncMLRequest, out IntPtr syncMLResult);
+
+
+	[LibraryImport("mdmlocalmanagement.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint UnregisterDeviceWithLocalManagement();
+
 }

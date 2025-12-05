@@ -15,19 +15,23 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using HardenSystemSecurity.ViewModels;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
-namespace CommonCore.MicrosoftGraph;
+namespace HardenSystemSecurity.Pages;
 
-/// <summary>
-/// Envelope for configuration policy assignments.
-/// </summary>
-internal sealed class ConfigurationPolicyAssignmentsEnvelope(
-	List<AssignmentPayload> assignments
-)
+internal sealed partial class CSP : Page, CommonCore.UI.IPageHeaderProvider
 {
-	[JsonInclude]
-	[JsonPropertyName("assignments")]
-	internal List<AssignmentPayload> Assignments => assignments;
+	internal CSPVM ViewModel => ViewModelProvider.CSPVM;
+
+	internal CSP()
+	{
+		InitializeComponent();
+		NavigationCacheMode = NavigationCacheMode.Disabled;
+		DataContext = ViewModel;
+	}
+
+	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => GlobalVars.GetStr("CSPPageTitle");
+	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configuration-Service-Provider-%7C-Harden-System-Security");
 }

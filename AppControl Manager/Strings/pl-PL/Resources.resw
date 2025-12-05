@@ -5563,7 +5563,7 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
 <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Otwórz Katalog Logów</value>
   </data>
-    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <data name="ExportToJSONButton.Content" xml:space="preserve">
     <value>Eksport do pliku JSON</value>
   </data>
     <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">

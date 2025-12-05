@@ -4707,10 +4707,7 @@
   <data name="ClearDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>പ്രദർശിപ്പിച്ച എല്ലാ ഡാറ്റയും മായ്ക്കുക</value>
   </data>
-    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
-    <value>JSON ഫയലിലേക്ക് എക്‌സ്‌പോർട്ട് ചെയ്യുക</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
   <value>Intune നയം വിന്യാസ വിശദാംശങ്ങൾ</value>
 </data>
 <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -4798,4 +4795,105 @@
   <data name="DeleteSelectedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Intuneൽ നിന്ന് തെരഞ്ഞെടുത്ത ഉപകരണ കോൺഫിഗറേഷൻ നയം ഇല്ലാതാക്കുക.</value>
   </data>
+    <data name="CSPPageTitle" xml:space="preserve">
+    <value>വിൻഡോസ് കോൺഫിഗറേഷൻ സർവീസ് പ്രൊവൈഡർ (CSP) പോളിസികൾ പരിശോധിക്കാനും അന്വേഷിക്കാനും ഈ പേജ് നിങ്ങളെ അനുവദിക്കുന്നു.</value>
+  </data>
+  <data name="CSPNavItem.Content" xml:space="preserve">
+    <value>കോൺഫിഗറേഷൻ സർവീസ് പ്രൊവൈഡർ</value>
+  </data>
+    <data name="CSPNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>വിൻഡോസ് കോൺഫിഗറേഷൻ സർവീസ് പ്രൊവൈഡർ (CSP) പോളിസികൾ പരിശോധിക്കാനും അന്വേഷിക്കാനും ഈ പേജ് നിങ്ങളെ അനുവദിക്കുന്നു.</value>
+  </data>
+  <data name="CSPNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>വിൻഡോസ് കോൺഫിഗറേഷൻ സർവീസ് പ്രൊവൈഡർ (CSP) പോളിസികൾ പരിശോധിക്കാനും അന്വേഷിക്കാനും ഈ പേജ് നിങ്ങളെ അനുവദിക്കുന്നു.</value>
+  </data>
+  <data name="DefaultValueHeader.Text" xml:space="preserve">
+    <value>ഡിഫോൾട്ട് മൂല്യം</value>
+  </data>
+  <data name="AllowedValuesHeader.Text" xml:space="preserve">
+    <value>അനുവദനീയമായ മൂല്യങ്ങൾ</value>
+  </data>
+  <data name="FormatHeader.Text" xml:space="preserve">
+    <value>ഫോർമാറ്റ്</value>
+  </data>
+  <data name="AccessTypeHeader.Text" xml:space="preserve">
+    <value>ആക്സസ് തരം</value>
+  </data>
+  <data name="ScopeHeader.Text" xml:space="preserve">
+    <value>പരിധി</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.Content" xml:space="preserve">
+    <value>ഡാറ്റ വീണ്ടെടുക്കുക</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ നിന്ന് കോൺഫിഗറേഷൻ സർവീസ് പ്രൊവൈഡർ ഡാറ്റ വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റത്തിൽ നിന്ന് കോൺഫിഗറേഷൻ സർവീസ് പ്രൊവൈഡർ ഡാറ്റ വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="SuccessfullyExportedCSPData" xml:space="preserve">
+    <value>{0} CSP ഡാറ്റ {1}-ലേക്ക് വിജയകരമായി എക്‌സ്‌പോർട്ടുചെയ്‌തു</value>
+  </data>
+  <data name="SelectedLocalFilesReady" xml:space="preserve">
+    <value>{0} പ്രാദേശിക ഫയലുകൾ തിരഞ്ഞെടുത്തു. ലോഡുചെയ്യാനും അന്വേഷിക്കാനും തയ്യാറാണ്.</value>
+  </data>
+  <data name="ParsingLocalFiles" xml:space="preserve">
+    <value>{0} പ്രാദേശിക ഫയലുകൾ പാഴ്‌സുചെയ്യുന്നു...</value>
+  </data>
+  <data name="LocalFilesNoValidPolicies" xml:space="preserve">
+    <value>പ്രാദേശിക ഫയലുകളിൽ സാധുവായ പോളിസികളൊന്നും അടങ്ങിയിട്ടില്ല. കാഷെ/ഓൺലൈനിലേക്ക് മടങ്ങുന്നു...</value>
+  </data>
+  <data name="UsingCachedDefinitions" xml:space="preserve">
+    <value>കാഷെ ചെയ്‌ത ഓൺലൈൻ നിർവചനങ്ങൾ ഉപയോഗിക്കുന്നു...</value>
+  </data>
+  <data name="DownloadingDDFDefinitions" xml:space="preserve">
+    <value>മൈക്രോസോഫ്റ്റിൽ നിന്ന് DDF നിർവചനങ്ങൾ ഡൗൺലോഡ് ചെയ്യുന്നു...</value>
+  </data>
+  <data name="ProcessingDownloadedDefinitions" xml:space="preserve">
+    <value>ഡൗൺലോഡ് ചെയ്‌ത നിർവചനങ്ങൾ പ്രോസസ്സ് ചെയ്യുന്നു...</value>
+  </data>
+  <data name="NoValidDDFPolicies" xml:space="preserve">
+    <value>ഒരു ഉറവിടത്തിൽ നിന്നും സാധുവായ DDF പോളിസികളൊന്നും കണ്ടെത്തിയില്ല.</value>
+  </data>
+  <data name="QueryingSystemForPolicies" xml:space="preserve">
+    <value>{0} പോളിസികൾക്കായി സിസ്റ്റത്തിൽ അന്വേഷിക്കുന്നു...</value>
+  </data>
+  <data name="SuccessfullyLoadedAndQueriedPolicies" xml:space="preserve">
+    <value>{0} പോളിസികൾ വിജയകരമായി ലോഡുചെയ്യുകയും അന്വേഷിക്കുകയും ചെയ്തു.</value>
+  </data>
+  <data name="FailedToUnregisterDevice" xml:space="preserve">
+    <value>പ്രാദേശിക മാനേജ്‌മെന്റിൽ നിന്ന് ഉപകരണം അൺരജിസ്റ്റർ ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു. പിശക് കോഡ്: {0}</value>
+  </data>
+  <data name="FailedToParseFile" xml:space="preserve">
+    <value>ഫയൽ പാഴ്‌സുചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു: '{0}'</value>
+  </data>
+  <data name="FailedToParseZipEntry" xml:space="preserve">
+    <value>ZIP എൻട്രി പാഴ്‌സുചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു: '{0}'</value>
+  </data>
+  <data name="AdmxFilePolicyFormat" xml:space="preserve">
+    <value>ADMX ഫയൽ: {0}, പോളിസി: {1}</value>
+  </data>
+  <data name="XSDSchemaText" xml:space="preserve">
+    <value>XSD സ്‌കീമ</value>
+  </data>
+  <data name="RegisterFailedFormat" xml:space="preserve">
+    <value>(രജിസ്റ്റർ പരാജയപ്പെട്ടു: {0:X})</value>
+  </data>
+  <data name="EmptyText" xml:space="preserve">
+    <value>(ശൂന്യം)</value>
+  </data>
+  <data name="NotFoundText" xml:space="preserve">
+    <value>(കണ്ടെത്തിയില്ല)</value>
+  </data>
+  <data name="StatusFormat" xml:space="preserve">
+    <value>(അവസ്ഥ: {0})</value>
+  </data>
+    <data name="ProtectSubCategory_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>പ്രവർത്തനക്ഷമമാക്കാൻ ശുപാർശ ചെയ്ത ഇനങ്ങൾ ഉൾപ്പെടുത്തുക</value>
+  </data>
+  <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>നീക്കം ചെയ്യാൻ ശുപാർശ ചെയ്ത സവിശേഷതകളും ശേഷികളും കൂടാതെ, പ്രവർത്തനക്ഷമമാക്കാൻ ശുപാർശ ചെയ്തവയും ഉൾപ്പെടുത്തുക.</value>
+  </data>  
 </root>

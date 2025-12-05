@@ -4707,10 +4707,7 @@
   <data name="ClearDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Καθαρίστε όλα τα εμφανιζόμενα δεδομένα</value>
   </data>
-    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
-    <value>Εξαγωγή σε αρχείο JSON</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
   <value>Λεπτομέρειες ανάπτυξης πολιτικής Intune</value>
 </data>
 <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -4798,4 +4795,105 @@
   <data name="DeleteSelectedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Διαγράψτε την επιλεγμένη πολιτική ρύθμισης συσκευής από το Intune.</value>
   </data>
+    <data name="CSPPageTitle" xml:space="preserve">
+    <value>Αυτή η σελίδα σας επιτρέπει να επιθεωρήσετε και να υποβάλετε ερωτήματα για πολιτικές της υπηρεσίας παροχής ρύθμισης παραμέτρων των Windows (CSP).</value>
+  </data>
+  <data name="CSPNavItem.Content" xml:space="preserve">
+    <value>Υπηρεσία παροχής ρύθμισης παραμέτρων</value>
+  </data>
+    <data name="CSPNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αυτή η σελίδα σας επιτρέπει να επιθεωρήσετε και να υποβάλετε ερωτήματα για πολιτικές της υπηρεσίας παροχής ρύθμισης παραμέτρων των Windows (CSP).</value>
+  </data>
+  <data name="CSPNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αυτή η σελίδα σας επιτρέπει να επιθεωρήσετε και να υποβάλετε ερωτήματα για πολιτικές της υπηρεσίας παροχής ρύθμισης παραμέτρων των Windows (CSP).</value>
+  </data>
+  <data name="DefaultValueHeader.Text" xml:space="preserve">
+    <value>Προεπιλεγμένη τιμή</value>
+  </data>
+  <data name="AllowedValuesHeader.Text" xml:space="preserve">
+    <value>Επιτρεπόμενες τιμές</value>
+  </data>
+  <data name="FormatHeader.Text" xml:space="preserve">
+    <value>Μορφή</value>
+  </data>
+  <data name="AccessTypeHeader.Text" xml:space="preserve">
+    <value>Τύπος πρόσβασης</value>
+  </data>
+  <data name="ScopeHeader.Text" xml:space="preserve">
+    <value>Εμβέλεια</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.Content" xml:space="preserve">
+    <value>Ανάκτηση δεδομένων</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση δεδομένων της υπηρεσίας παροχής ρύθμισης παραμέτρων από το σύστημα.</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση δεδομένων της υπηρεσίας παροχής ρύθμισης παραμέτρων από το σύστημα.</value>
+  </data>
+  <data name="SuccessfullyExportedCSPData" xml:space="preserve">
+    <value>Επιτυχής εξαγωγή δεδομένων CSP {0} σε {1}</value>
+  </data>
+  <data name="SelectedLocalFilesReady" xml:space="preserve">
+    <value>Επιλέχθηκαν {0} τοπικά αρχεία. Έτοιμο για φόρτωση και υποβολή ερωτημάτων.</value>
+  </data>
+  <data name="ParsingLocalFiles" xml:space="preserve">
+    <value>Ανάλυση {0} τοπικών αρχείων...</value>
+  </data>
+  <data name="LocalFilesNoValidPolicies" xml:space="preserve">
+    <value>Τα τοπικά αρχεία δεν περιείχαν έγκυρες πολιτικές. Επιστροφή σε προσωρινή μνήμη/online...</value>
+  </data>
+  <data name="UsingCachedDefinitions" xml:space="preserve">
+    <value>Χρήση αποθηκευμένων online ορισμών...</value>
+  </data>
+  <data name="DownloadingDDFDefinitions" xml:space="preserve">
+    <value>Λήψη ορισμών DDF από τη Microsoft...</value>
+  </data>
+  <data name="ProcessingDownloadedDefinitions" xml:space="preserve">
+    <value>Επεξεργασία ληφθέντων ορισμών...</value>
+  </data>
+  <data name="NoValidDDFPolicies" xml:space="preserve">
+    <value>Δεν βρέθηκαν έγκυρες πολιτικές DDF από καμία πηγή.</value>
+  </data>
+  <data name="QueryingSystemForPolicies" xml:space="preserve">
+    <value>Υποβολή ερωτήματος στο σύστημα για {0} πολιτικές...</value>
+  </data>
+  <data name="SuccessfullyLoadedAndQueriedPolicies" xml:space="preserve">
+    <value>Επιτυχής φόρτωση και υποβολή ερωτημάτων για {0} πολιτικές.</value>
+  </data>
+  <data name="FailedToUnregisterDevice" xml:space="preserve">
+    <value>Αποτυχία κατάργησης εγγραφής της συσκευής από την τοπική διαχείριση. Κωδικός σφάλματος: {0}</value>
+  </data>
+  <data name="FailedToParseFile" xml:space="preserve">
+    <value>Αποτυχία ανάλυσης του αρχείου: '{0}'</value>
+  </data>
+  <data name="FailedToParseZipEntry" xml:space="preserve">
+    <value>Αποτυχία ανάλυσης της καταχώρησης ZIP: '{0}'</value>
+  </data>
+  <data name="AdmxFilePolicyFormat" xml:space="preserve">
+    <value>Αρχείο ADMX: {0}, Πολιτική: {1}</value>
+  </data>
+  <data name="XSDSchemaText" xml:space="preserve">
+    <value>Σχήμα XSD</value>
+  </data>
+  <data name="RegisterFailedFormat" xml:space="preserve">
+    <value>(Αποτυχία εγγραφής: {0:X})</value>
+  </data>
+  <data name="EmptyText" xml:space="preserve">
+    <value>(Κενό)</value>
+  </data>
+  <data name="NotFoundText" xml:space="preserve">
+    <value>(Δεν βρέθηκε)</value>
+  </data>
+  <data name="StatusFormat" xml:space="preserve">
+    <value>(Κατάσταση: {0})</value>
+  </data>
+    <data name="ProtectSubCategory_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Συμπεριλάβετε τα στοιχεία που συνιστάται να ενεργοποιηθούν</value>
+  </data>
+  <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Εκτός από τις δυνατότητες και λειτουργίες που συνιστάται να αφαιρεθούν, συμπεριλάβετε επίσης εκείνες που συνιστάται να ενεργοποιηθούν.</value>
+  </data>  
 </root>

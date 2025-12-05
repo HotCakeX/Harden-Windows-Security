@@ -5563,7 +5563,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>Open Logs Directory</value>
   </data>
-  <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+  <data name="ExportToJSONButton.Content" xml:space="preserve">
     <value>Export To JSON File</value>
   </data>
     <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">

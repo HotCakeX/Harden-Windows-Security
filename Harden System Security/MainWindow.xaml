@@ -381,6 +381,12 @@
                 <NavigationViewItem x:Name="AuditPoliciesNavItem" x:Uid="AuditPoliciesNavItem" Icon="{x:Bind ViewModel.AuditPoliciesIcon, Mode=OneWay}" Tag="AuditPolicies"/>
                 <NavigationViewItem x:Name="CBOMNavItem" Icon="{x:Bind ViewModel.CBOMIcon, Mode=OneWay}" x:Uid="CBOMNavItem" Tag="CBOM"/>
                 <NavigationViewItem x:Name="IntuneNavItem" Icon="{x:Bind ViewModel.IntuneIcon, Mode=OneWay}" x:Uid="IntuneNavItem" Tag="Intune"/>
+                <NavigationViewItem x:Name="CSPNavItem" x:Uid="CSPNavItem" Tag="CSP">
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="ms-appx:///Assets/ProtectionCategoriesIcons/CSP.png"
+                                    ShowAsMonochrome="False" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
 
                 <!-- Documentation Group -->
                 <NavigationViewItemHeader x:Name="DocumentationNavigationViewItemHeader" x:Uid="DocumentationNavigationViewItemHeader"/>
@@ -395,7 +401,7 @@
                 <NavigationViewItem x:Name="UpdateNavItem" x:Uid="UpdateNavItem" Icon="{x:Bind ViewModel.UpdateIcon, Mode=OneWay}" Tag="Update">
                     <NavigationViewItem.InfoBadge>
                         <InfoBadge Opacity="{x:Bind ViewModel.InfoBadgeOpacity, Mode=OneWay}"
-                            Style="{ThemeResource AttentionIconInfoBadgeStyle}">
+                                   Style="{ThemeResource AttentionIconInfoBadgeStyle}">
                             <InfoBadge.IconSource>
                                 <FontIconSource Glyph="&#xEA6A;"/>
                             </InfoBadge.IconSource>

@@ -5563,7 +5563,7 @@
   <data name="OpenLogsDirectoryButtonText.Text" xml:space="preserve">
     <value>ലോഗ് ഡയറക്ടറി തുറക്കുക</value>
   </data>
-    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
+    <data name="ExportToJSONButton.Content" xml:space="preserve">
     <value>JSON ഫയലിലേയ്ക്ക് എക്സ്പോർട്ട് ചെയ്യുക</value>
   </data>
     <data name="ExportToJSONButton.AutomationProperties.HelpText" xml:space="preserve">

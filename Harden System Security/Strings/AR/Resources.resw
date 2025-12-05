@@ -4707,10 +4707,7 @@
   <data name="ClearDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>امسح كل البيانات المعروضة</value>
   </data>
-    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
-    <value>تصدير إلى ملف JSON</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
   <value>تفاصيل نشر نهج Intune</value>
 </data>
 <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -4798,4 +4795,105 @@
   <data name="DeleteSelectedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>حذف سياسة تكوين الأجهزة المحددة من Intune.</value>
   </data>
+    <data name="CSPPageTitle" xml:space="preserve">
+    <value>تتيح لك هذه الصفحة فحص سياسات موفر خدمة تكوين Windows (CSP) والاستعلام عنها.</value>
+  </data>
+  <data name="CSPNavItem.Content" xml:space="preserve">
+    <value>موفر خدمة التكوين</value>
+  </data>
+    <data name="CSPNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تتيح لك هذه الصفحة فحص سياسات موفر خدمة تكوين Windows (CSP) والاستعلام عنها.</value>
+  </data>
+  <data name="CSPNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تتيح لك هذه الصفحة فحص سياسات موفر خدمة تكوين Windows (CSP) والاستعلام عنها.</value>
+  </data>
+  <data name="DefaultValueHeader.Text" xml:space="preserve">
+    <value>القيمة الافتراضية</value>
+  </data>
+  <data name="AllowedValuesHeader.Text" xml:space="preserve">
+    <value>القيم المسموح بها</value>
+  </data>
+  <data name="FormatHeader.Text" xml:space="preserve">
+    <value>تنسيق</value>
+  </data>
+  <data name="AccessTypeHeader.Text" xml:space="preserve">
+    <value>نوع الوصول</value>
+  </data>
+  <data name="ScopeHeader.Text" xml:space="preserve">
+    <value>النطاق</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.Content" xml:space="preserve">
+    <value>استرداد البيانات</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد بيانات موفر خدمة التكوين من النظام.</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد بيانات موفر خدمة التكوين من النظام.</value>
+  </data>
+  <data name="SuccessfullyExportedCSPData" xml:space="preserve">
+    <value>تم تصدير بيانات CSP {0} بنجاح إلى {1}</value>
+  </data>
+  <data name="SelectedLocalFilesReady" xml:space="preserve">
+    <value>تم تحديد {0} ملف (ملفات) محلي. جاهز للتحميل والاستعلام.</value>
+  </data>
+  <data name="ParsingLocalFiles" xml:space="preserve">
+    <value>جارٍ تحليل {0} ملف (ملفات) محلي...</value>
+  </data>
+  <data name="LocalFilesNoValidPolicies" xml:space="preserve">
+    <value>لم تحتوي الملفات المحلية على سياسات صالحة. العودة إلى ذاكرة التخزين المؤقت/عبر الإنترنت...</value>
+  </data>
+  <data name="UsingCachedDefinitions" xml:space="preserve">
+    <value>استخدام التعريفات المخزنة مؤقتًا عبر الإنترنت...</value>
+  </data>
+  <data name="DownloadingDDFDefinitions" xml:space="preserve">
+    <value>جارٍ تنزيل تعريفات DDF من Microsoft...</value>
+  </data>
+  <data name="ProcessingDownloadedDefinitions" xml:space="preserve">
+    <value>جارٍ معالجة التعريفات التي تم تنزيلها...</value>
+  </data>
+  <data name="NoValidDDFPolicies" xml:space="preserve">
+    <value>لم يتم العثور على سياسات DDF صالحة من أي مصدر.</value>
+  </data>
+  <data name="QueryingSystemForPolicies" xml:space="preserve">
+    <value>جارٍ الاستعلام من النظام عن {0} سياسات...</value>
+  </data>
+  <data name="SuccessfullyLoadedAndQueriedPolicies" xml:space="preserve">
+    <value>تم تحميل واستعلام {0} سياسات بنجاح.</value>
+  </data>
+  <data name="FailedToUnregisterDevice" xml:space="preserve">
+    <value>فشل إلغاء تسجيل الجهاز من الإدارة المحلية. رمز الخطأ: {0}</value>
+  </data>
+  <data name="FailedToParseFile" xml:space="preserve">
+    <value>فشل تحليل الملف: '{0}'</value>
+  </data>
+  <data name="FailedToParseZipEntry" xml:space="preserve">
+    <value>فشل تحليل إدخال ZIP: '{0}'</value>
+  </data>
+  <data name="AdmxFilePolicyFormat" xml:space="preserve">
+    <value>ملف ADMX:‏ {0}، النهج: {1}</value>
+  </data>
+  <data name="XSDSchemaText" xml:space="preserve">
+    <value>مخطط XSD</value>
+  </data>
+  <data name="RegisterFailedFormat" xml:space="preserve">
+    <value>(فشل التسجيل: {0:X})</value>
+  </data>
+  <data name="EmptyText" xml:space="preserve">
+    <value>(فارغ)</value>
+  </data>
+  <data name="NotFoundText" xml:space="preserve">
+    <value>(غير موجود)</value>
+  </data>
+  <data name="StatusFormat" xml:space="preserve">
+    <value>(الحالة: {0})</value>
+  </data>
+    <data name="ProtectSubCategory_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>ضمّن العناصر الموصى بتمكينها</value>
+  </data>
+  <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>بالإضافة إلى الميزات والقدرات الموصى بإزالتها، ضمّن أيضًا تلك الموصى بتمكينها.</value>
+  </data>  
 </root>

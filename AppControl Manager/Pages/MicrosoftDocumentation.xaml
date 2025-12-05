@@ -22,7 +22,7 @@
                 </StackPanel>
             </Button>
 
-            <!-- Forward Button with Icon - Set initially to falce until it makes sense to be enabled -->
+            <!-- Forward Button with Icon - Set initially to false until it makes sense to be enabled -->
             <Button Click="{x:Bind ForwardButton_Click}" IsEnabled="False" x:Name="ForwardButton">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Forward"/>

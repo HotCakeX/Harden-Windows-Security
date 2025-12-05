@@ -4707,10 +4707,7 @@ Huella Digital: {3}</value>
   <data name="ClearDataMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Borrar todos los datos mostrados</value>
   </data>
-    <data name="ExportToJSONButtonText.Text" xml:space="preserve">
-    <value>Exportar a un archivo JSON</value>
-  </data>
-  <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
+    <data name="IntuneDeploymentDetailsNavItem.Content" xml:space="preserve">
   <value>Detalles de la implementación de la directiva de Intune</value>
 </data>
 <data name="IntuneDeploymentDetailsNavItem.ToolTipService.ToolTip" xml:space="preserve">
@@ -4798,4 +4795,105 @@ Huella Digital: {3}</value>
   <data name="DeleteSelectedPolicyButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Eliminar la directiva de configuración de dispositivos seleccionada de Intune.</value>
   </data>
+    <data name="CSPPageTitle" xml:space="preserve">
+    <value>Esta página le permite inspeccionar y consultar las directivas del Proveedor de servicios de configuración (CSP) de Windows.</value>
+  </data>
+  <data name="CSPNavItem.Content" xml:space="preserve">
+    <value>Proveedor de servicios de configuración</value>
+  </data>
+    <data name="CSPNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Esta página le permite inspeccionar y consultar las directivas del Proveedor de servicios de configuración (CSP) de Windows.</value>
+  </data>
+  <data name="CSPNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Esta página le permite inspeccionar y consultar las directivas del Proveedor de servicios de configuración (CSP) de Windows.</value>
+  </data>
+  <data name="DefaultValueHeader.Text" xml:space="preserve">
+    <value>Valor predeterminado</value>
+  </data>
+  <data name="AllowedValuesHeader.Text" xml:space="preserve">
+    <value>Valores permitidos</value>
+  </data>
+  <data name="FormatHeader.Text" xml:space="preserve">
+    <value>Formato</value>
+  </data>
+  <data name="AccessTypeHeader.Text" xml:space="preserve">
+    <value>Tipo de acceso</value>
+  </data>
+  <data name="ScopeHeader.Text" xml:space="preserve">
+    <value>Ámbito</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.Content" xml:space="preserve">
+    <value>Recuperar datos</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recuperar del sistema los datos del Proveedor de servicios de configuración.</value>
+  </data>
+  <data name="LoadAndProcessDDFDataButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recuperar del sistema los datos del Proveedor de servicios de configuración.</value>
+  </data>
+  <data name="SuccessfullyExportedCSPData" xml:space="preserve">
+    <value>Se exportaron correctamente los datos de CSP {0} a {1}</value>
+  </data>
+  <data name="SelectedLocalFilesReady" xml:space="preserve">
+    <value>Se seleccionaron {0} archivos locales. Listo para cargar y consultar.</value>
+  </data>
+  <data name="ParsingLocalFiles" xml:space="preserve">
+    <value>Analizando {0} archivos locales...</value>
+  </data>
+  <data name="LocalFilesNoValidPolicies" xml:space="preserve">
+    <value>Los archivos locales no contenían directivas válidas. Usando caché/en línea...</value>
+  </data>
+  <data name="UsingCachedDefinitions" xml:space="preserve">
+    <value>Usando definiciones en línea en caché...</value>
+  </data>
+  <data name="DownloadingDDFDefinitions" xml:space="preserve">
+    <value>Descargando definiciones DDF de Microsoft...</value>
+  </data>
+  <data name="ProcessingDownloadedDefinitions" xml:space="preserve">
+    <value>Procesando definiciones descargadas...</value>
+  </data>
+  <data name="NoValidDDFPolicies" xml:space="preserve">
+    <value>No se encontraron directivas DDF válidas de ninguna fuente.</value>
+  </data>
+  <data name="QueryingSystemForPolicies" xml:space="preserve">
+    <value>Consultando al sistema por {0} directivas...</value>
+  </data>
+  <data name="SuccessfullyLoadedAndQueriedPolicies" xml:space="preserve">
+    <value>Se cargaron y consultaron correctamente {0} directivas.</value>
+  </data>
+  <data name="FailedToUnregisterDevice" xml:space="preserve">
+    <value>Error al anular el registro del dispositivo de la administración local. Código de error: {0}</value>
+  </data>
+  <data name="FailedToParseFile" xml:space="preserve">
+    <value>Error al analizar el archivo: '{0}'</value>
+  </data>
+  <data name="FailedToParseZipEntry" xml:space="preserve">
+    <value>Error al analizar la entrada ZIP: '{0}'</value>
+  </data>
+  <data name="AdmxFilePolicyFormat" xml:space="preserve">
+    <value>Archivo ADMX: {0}, Directiva: {1}</value>
+  </data>
+  <data name="XSDSchemaText" xml:space="preserve">
+    <value>Esquema XSD</value>
+  </data>
+  <data name="RegisterFailedFormat" xml:space="preserve">
+    <value>(Error de registro: {0:X})</value>
+  </data>
+  <data name="EmptyText" xml:space="preserve">
+    <value>(Vacío)</value>
+  </data>
+  <data name="NotFoundText" xml:space="preserve">
+    <value>(No encontrado)</value>
+  </data>
+  <data name="StatusFormat" xml:space="preserve">
+    <value>(Estado: {0})</value>
+  </data>
+    <data name="ProtectSubCategory_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Incluya los elementos recomendados para habilitar</value>
+  </data>
+  <data name="OptionalWindowsFeatures_IncludeEnablements" xml:space="preserve">
+    <comment>Protection Sub-Category</comment>
+    <value>Además de las características y capacidades recomendadas para eliminar, incluya también las recomendadas para habilitar.</value>
+  </data>  
 </root>

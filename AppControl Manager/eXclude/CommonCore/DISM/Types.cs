@@ -63,7 +63,7 @@ internal enum DismPackageFeatureState
 	DismStateInstallPending = 5,
 	DismStateSuperseded = 6,
 	DismStatePartiallyInstalled = 7,
-	NotAvailableOnSystem = 1000 // This is for CBS/DISM HRESULT 0x800F080C 
+	NotAvailableOnSystem = 1000 // This is for CBS/DISM HRESULT 0x800F080C
 }
 
 /// <summary>

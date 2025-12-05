@@ -6,6 +6,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    PrimaryButtonClick="{x:Bind OnPrimaryButtonClick}"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     x:Uid="SigningDetailsDialog"
     IsPrimaryButtonEnabled="False"

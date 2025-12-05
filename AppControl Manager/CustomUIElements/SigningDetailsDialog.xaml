@@ -8,6 +8,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     x:Uid="SigningDetailsDialog"
+    PrimaryButtonClick="{x:Bind OnPrimaryButtonClick}"
     IsPrimaryButtonEnabled="False"
     DefaultButton="Primary"
     Style="{ThemeResource DefaultContentDialogStyle}"

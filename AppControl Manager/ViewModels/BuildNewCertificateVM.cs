@@ -146,7 +146,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-				X509Certificate2 generatedCert = CertificateGenerator.BuildAppControlCertificate(
+				using X509Certificate2 generatedCert = CertificateGenerator.BuildAppControlCertificate(
 					 CommonName,
 					 Password,
 					 (int)Validity,
@@ -163,7 +163,6 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 				GlobalVars.GetStr("ErrorTitle"));
 			ErrorsOccurred = true;
 		}
-
 		finally
 		{
 			ElementsAreEnabled = true;

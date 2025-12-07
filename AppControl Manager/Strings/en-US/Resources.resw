@@ -6239,4 +6239,85 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="SignatureUpdate.Text" xml:space="preserve">
     <value>Signature Update (UTC)</value>
   </data>
+  <data name="FirmwareInfoDropdownButton.Content" xml:space="preserve">
+    <value>Firmware Info</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Access and analyze UEFI Secure Boot variables by retrieving certificates and cryptographic hashes from the PK (Platform Key), KEK (Key Exchange Key), db (Signature Database), and dbx (Forbidden Signature Database), including their factory default states.</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Access and analyze UEFI Secure Boot variables by retrieving certificates and cryptographic hashes from the PK (Platform Key), KEK (Key Exchange Key), db (Signature Database), and dbx (Forbidden Signature Database), including their factory default states.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.Text" xml:space="preserve">
+    <value>Get Signature Database</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the Signature Database (db), containing the list of trusted certificates and hashes allowed to execute on this system.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the Signature Database (db), containing the list of trusted certificates and hashes allowed to execute on this system.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.Text" xml:space="preserve">
+    <value>Get Default Signature Database</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the factory default Signature Database (dbDefault), containing the initial set of trusted certificates and hashes provided by the system manufacturer.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the factory default Signature Database (dbDefault), containing the initial set of trusted certificates and hashes provided by the system manufacturer.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>Get Forbidden Signature Database</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the Forbidden Signature Database (dbx), containing the revocation list of compromised certificates and hashes that are blocked from booting.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the Forbidden Signature Database (dbx), containing the revocation list of compromised certificates and hashes that are blocked from booting.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>Get Default Forbidden Signature Database</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the factory default Forbidden Signature Database (dbxDefault), containing the initial revocation list provided by the system manufacturer.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the factory default Forbidden Signature Database (dbxDefault), containing the initial revocation list provided by the system manufacturer.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.Text" xml:space="preserve">
+    <value>Get Platform Key</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the Platform Key (PK), the root of trust that controls access to the Key Exchange Key database and establishes ownership of the platform.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the Platform Key (PK), the root of trust that controls access to the Key Exchange Key database and establishes ownership of the platform.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.Text" xml:space="preserve">
+    <value>Get Default Platform Key</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the factory default Platform Key (PKDefault), representing the original root of trust provided by the system manufacturer.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the factory default Platform Key (PKDefault), representing the original root of trust provided by the system manufacturer.</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.Text" xml:space="preserve">
+    <value>Get Key Exchange Key</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the Key Exchange Key (KEK) database, containing keys trusted to update the signature database (db) and the forbidden signature database (dbx).</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the Key Exchange Key (KEK) database, containing keys trusted to update the signature database (db) and the forbidden signature database (dbx).</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.Text" xml:space="preserve">
+    <value>Get Default Key Exchange Key</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retrieve the factory default Key Exchange Key (KEKDefault) database, containing the initial set of keys trusted for database updates provided by the system manufacturer.</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Retrieve the factory default Key Exchange Key (KEKDefault) database, containing the initial set of keys trusted for database updates provided by the system manufacturer.</value>
+  </data>
 </root>

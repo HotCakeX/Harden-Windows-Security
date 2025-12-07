@@ -819,7 +819,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				foreach (string certificate in CertificatesBasedCertFilePaths)
 				{
 					// Create a certificate object from the .cer file
-					X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificate);
+					using X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificate);
 
 					// Create rule for the certificate based on the first element in its chain
 					certificateResults.Add(new CertificateSignerCreator(

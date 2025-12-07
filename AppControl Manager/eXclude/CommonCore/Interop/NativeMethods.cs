@@ -2117,4 +2117,17 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint UnregisterDeviceWithLocalManagement();
 
+
+	[LibraryImport("ntdll.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int NtEnumerateSystemEnvironmentValuesEx(uint InformationClass, IntPtr Buffer, ref uint BufferLength);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winbase/nf-winbase-getfirmwareenvironmentvariableexw
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetFirmwareEnvironmentVariableExW(string lpName, string lpGuid, IntPtr pBuffer, uint nSize, out uint pdwAttrib);
+
 }

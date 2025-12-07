@@ -6239,4 +6239,85 @@
   <data name="SignatureUpdate.Text" xml:space="preserve">
     <value>تحديث التواقيع (UTC)</value>
   </data>
+    <data name="FirmwareInfoDropdownButton.Content" xml:space="preserve">
+    <value>معلومات البرامج الثابتة</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>الوصول إلى متغيرات التمهيد الآمن لـ UEFI وتحليلها عن طريق استرداد الشهادات وتجزئة التشفير من PK (مفتاح النظام الأساسي)، وKEK (مفتاح تبادل المفاتيح)، وdb (قاعدة بيانات التواقيع)، وdbx (قاعدة بيانات التواقيع المحظورة)، بما في ذلك حالات المصنع الافتراضية الخاصة بها.</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>الوصول إلى متغيرات التمهيد الآمن لـ UEFI وتحليلها عن طريق استرداد الشهادات وتجزئة التشفير من PK (مفتاح النظام الأساسي)، وKEK (مفتاح تبادل المفاتيح)، وdb (قاعدة بيانات التواقيع)، وdbx (قاعدة بيانات التواقيع المحظورة)، بما في ذلك حالات المصنع الافتراضية الخاصة بها.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.Text" xml:space="preserve">
+    <value>الحصول على قاعدة بيانات التواقيع</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد قاعدة بيانات التواقيع (db)، التي تحتوي على قائمة الشهادات والتجزئات الموثوقة المسموح بتنفيذها على هذا النظام.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد قاعدة بيانات التواقيع (db)، التي تحتوي على قائمة الشهادات والتجزئات الموثوقة المسموح بتنفيذها على هذا النظام.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.Text" xml:space="preserve">
+    <value>الحصول على قاعدة بيانات التواقيع الافتراضية</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد قاعدة بيانات التواقيع الافتراضية للمصنع (dbDefault)، التي تحتوي على المجموعة الأولية من الشهادات والتجزئات الموثوقة المقدمة من قبل الشركة المصنعة للنظام.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد قاعدة بيانات التواقيع الافتراضية للمصنع (dbDefault)، التي تحتوي على المجموعة الأولية من الشهادات والتجزئات الموثوقة المقدمة من قبل الشركة المصنعة للنظام.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>الحصول على قاعدة بيانات التواقيع المحظورة</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد قاعدة بيانات التواقيع المحظورة (dbx)، التي تحتوي على قائمة إبطال الشهادات والتجزئات المخترقة المحظورة من التمهيد.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد قاعدة بيانات التواقيع المحظورة (dbx)، التي تحتوي على قائمة إبطال الشهادات والتجزئات المخترقة المحظورة من التمهيد.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>الحصول على قاعدة بيانات التواقيع المحظورة الافتراضية</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد قاعدة بيانات التواقيع المحظورة الافتراضية للمصنع (dbxDefault)، التي تحتوي على قائمة الإبطال الأولية المقدمة من قبل الشركة المصنعة للنظام.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد قاعدة بيانات التواقيع المحظورة الافتراضية للمصنع (dbxDefault)، التي تحتوي على قائمة الإبطال الأولية المقدمة من قبل الشركة المصنعة للنظام.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.Text" xml:space="preserve">
+    <value>الحصول على مفتاح النظام الأساسي</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد مفتاح النظام الأساسي (PK)، وهو جذر الثقة الذي يتحكم في الوصول إلى قاعدة بيانات مفتاح تبادل المفاتيح ويحدد ملكية النظام الأساسي.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد مفتاح النظام الأساسي (PK)، وهو جذر الثقة الذي يتحكم في الوصول إلى قاعدة بيانات مفتاح تبادل المفاتيح ويحدد ملكية النظام الأساسي.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.Text" xml:space="preserve">
+    <value>الحصول على مفتاح النظام الأساسي الافتراضي</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد مفتاح النظام الأساسي الافتراضي للمصنع (PKDefault)، الذي يمثل جذر الثقة الأصلي المقدم من قبل الشركة المصنعة للنظام.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد مفتاح النظام الأساسي الافتراضي للمصنع (PKDefault)، الذي يمثل جذر الثقة الأصلي المقدم من قبل الشركة المصنعة للنظام.</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.Text" xml:space="preserve">
+    <value>الحصول على مفتاح تبادل المفاتيح</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد قاعدة بيانات مفتاح تبادل المفاتيح (KEK)، التي تحتوي على مفاتيح موثوقة لتحديث قاعدة بيانات التواقيع (db) وقاعدة بيانات التواقيع المحظورة (dbx).</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد قاعدة بيانات مفتاح تبادل المفاتيح (KEK)، التي تحتوي على مفاتيح موثوقة لتحديث قاعدة بيانات التواقيع (db) وقاعدة بيانات التواقيع المحظورة (dbx).</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.Text" xml:space="preserve">
+    <value>الحصول على مفتاح تبادل المفاتيح الافتراضي</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استرداد قاعدة بيانات مفتاح تبادل المفاتيح الافتراضية للمصنع (KEKDefault)، التي تحتوي على المجموعة الأولية من المفاتيح الموثوقة لتحديثات قاعدة البيانات المقدمة من قبل الشركة المصنعة للنظام.</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استرداد قاعدة بيانات مفتاح تبادل المفاتيح الافتراضية للمصنع (KEKDefault)، التي تحتوي على المجموعة الأولية من المفاتيح الموثوقة لتحديثات قاعدة البيانات المقدمة من قبل الشركة المصنعة للنظام.</value>
+  </data>
 </root>

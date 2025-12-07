@@ -1,3 +1,17 @@
-* Fixed an issue where you'd have to click/tap the Deploy button twice in the Deployment page to deploy a signed policy: https://github.com/HotCakeX/Harden-Windows-Security/issues/948
+### Advanced UEFI Secure Boot Variable Inspector
 
-* The View File Certificates page now shows the certificates of files with revoked, expired or Hash mismatch certificates: https://github.com/HotCakeX/Harden-Windows-Security/issues/947
+This update introduces a new feature in the "View File Certificates" page for analyzing the firmware's UEFI variables and Secure Boot data directly from the application. Users can now gain full transparency into the platform's root of trust without relying on external tools or rebooting into BIOS setup.
+
+These features are especially useful for the upcoming Secure Boot Certificate updates so you can know if your device has automatically received the new certificates or you need to take manual actions.
+
+Key capabilities include:
+
+* **Get Platform Key:** Retrieve the Platform Key (PK), the root of trust that controls access to the Key Exchange Key database and establishes ownership of the platform.
+
+* **Get Key Exchange Key:** Retrieve the Key Exchange Key (KEK) database, containing keys trusted to update the signature database (db) and the forbidden signature database (dbx).
+
+* **Get Signature Database:** Retrieve the Signature Database (db), containing the list of trusted certificates and hashes allowed to execute on this system.
+
+* **Get Forbidden Signature Database:** Retrieve the Forbidden Signature Database (dbx), containing the revocation list of compromised certificates and hashes that are blocked from booting.
+
+The default variation of all of them can be independently retrieved as well, representing the factory default state provided by the system manufacturer.

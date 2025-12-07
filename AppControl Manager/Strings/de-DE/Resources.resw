@@ -6239,4 +6239,85 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="SignatureUpdate.Text" xml:space="preserve">
     <value>Signatur-Update (UTC)</value>
   </data>
+    <data name="FirmwareInfoDropdownButton.Content" xml:space="preserve">
+    <value>Firmware-Info</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zugriff und Analyse von UEFI Secure Boot-Variablen durch Abruf von Zertifikaten und kryptografischen Hashes aus dem PK (Platform Key), KEK (Key Exchange Key), db (Signaturdatenbank) und dbx (Datenbank für verbotene Signaturen), einschließlich ihrer werkseitigen Standardzustände.</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zugriff und Analyse von UEFI Secure Boot-Variablen durch Abruf von Zertifikaten und kryptografischen Hashes aus dem PK (Platform Key), KEK (Key Exchange Key), db (Signaturdatenbank) und dbx (Datenbank für verbotene Signaturen), einschließlich ihrer werkseitigen Standardzustände.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.Text" xml:space="preserve">
+    <value>Signaturdatenbank abrufen</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rufen Sie die Signaturdatenbank (db) ab, welche die Liste der vertrauenswürdigen Zertifikate und Hashes enthält, die auf diesem System ausgeführt werden dürfen.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rufen Sie die Signaturdatenbank (db) ab, welche die Liste der vertrauenswürdigen Zertifikate und Hashes enthält, die auf diesem System ausgeführt werden dürfen.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.Text" xml:space="preserve">
+    <value>Standard-Signaturdatenbank abrufen</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rufen Sie die werkseitige Standard-Signaturdatenbank (dbDefault) ab, welche den ursprünglichen Satz vertrauenswürdiger Zertifikate und Hashes enthält, der vom Systemhersteller bereitgestellt wurde.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rufen Sie die werkseitige Standard-Signaturdatenbank (dbDefault) ab, welche den ursprünglichen Satz vertrauenswürdiger Zertifikate und Hashes enthält, der vom Systemhersteller bereitgestellt wurde.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>Verbotene Signaturdatenbank abrufen</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rufen Sie die Datenbank für verbotene Signaturen (dbx) ab, welche die Widerrufsliste kompromittierter Zertifikate und Hashes enthält, die vom Bootvorgang ausgeschlossen sind.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rufen Sie die Datenbank für verbotene Signaturen (dbx) ab, welche die Widerrufsliste kompromittierter Zertifikate und Hashes enthält, die vom Bootvorgang ausgeschlossen sind.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>Standard-Verbotene Signaturdatenbank abrufen</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rufen Sie die werkseitige Standard-Datenbank für verbotene Signaturen (dbxDefault) ab, welche die ursprüngliche Widerrufsliste enthält, die vom Systemhersteller bereitgestellt wurde.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rufen Sie die werkseitige Standard-Datenbank für verbotene Signaturen (dbxDefault) ab, welche die ursprüngliche Widerrufsliste enthält, die vom Systemhersteller bereitgestellt wurde.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.Text" xml:space="preserve">
+    <value>Platform Key abrufen</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rufen Sie den Platform Key (PK) ab, den Vertrauensanker, der den Zugriff auf die Key Exchange Key-Datenbank steuert und das Eigentum an der Plattform festlegt.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rufen Sie den Platform Key (PK) ab, den Vertrauensanker, der den Zugriff auf die Key Exchange Key-Datenbank steuert und das Eigentum an der Plattform festlegt.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.Text" xml:space="preserve">
+    <value>Standard-Platform Key abrufen</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rufen Sie den werkseitigen Standard-Platform Key (PKDefault) ab, der den ursprünglichen Vertrauensanker darstellt, welcher vom Systemhersteller bereitgestellt wurde.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rufen Sie den werkseitigen Standard-Platform Key (PKDefault) ab, der den ursprünglichen Vertrauensanker darstellt, welcher vom Systemhersteller bereitgestellt wurde.</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.Text" xml:space="preserve">
+    <value>Key Exchange Key abrufen</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rufen Sie die Key Exchange Key-Datenbank (KEK) ab, welche Schlüssel enthält, die zur Aktualisierung der Signaturdatenbank (db) und der Datenbank für verbotene Signaturen (dbx) vertrauenswürdig sind.</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rufen Sie die Key Exchange Key-Datenbank (KEK) ab, welche Schlüssel enthält, die zur Aktualisierung der Signaturdatenbank (db) und der Datenbank für verbotene Signaturen (dbx) vertrauenswürdig sind.</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.Text" xml:space="preserve">
+    <value>Standard-Key Exchange Key abrufen</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rufen Sie die werkseitige Standard-Key Exchange Key-Datenbank (KEKDefault) ab, welche den ursprünglichen Satz an Schlüsseln enthält, die für Datenbankaktualisierungen vertrauenswürdig sind und vom Systemhersteller bereitgestellt wurden.</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rufen Sie die werkseitige Standard-Key Exchange Key-Datenbank (KEKDefault) ab, welche den ursprünglichen Satz an Schlüsseln enthält, die für Datenbankaktualisierungen vertrauenswürdig sind und vom Systemhersteller bereitgestellt wurden.</value>
+  </data>
 </root>

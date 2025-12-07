@@ -821,3 +821,14 @@ internal struct PDH_FMT_COUNTERVALUE_ITEM_DOUBLE
 	internal IntPtr NamePtr;
 	internal PDH_FMT_COUNTERVALUE_DOUBLE Value;
 }
+
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct VARIABLE_HEADER
+{
+	internal uint Size;
+	internal uint DataOffset;
+	internal uint DataSize;
+	internal uint Attributes;
+	internal Guid VendorGuid;
+}

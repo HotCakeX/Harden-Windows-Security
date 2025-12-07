@@ -39,7 +39,7 @@ internal static class CertificatePresence
 	internal static bool InferCertificatePresence(SiPolicy.SiPolicy policyObject, string certificatePath, string certCN)
 	{
 		// Create a certificate object from the .cer file
-		X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificatePath);
+		using X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificatePath);
 
 		// Get the TBS of the certificate
 		string CertTBS = CertificateHelper.GetTBSCertificate(CertObject);
@@ -105,7 +105,7 @@ internal static class CertificatePresence
 	internal static bool VerifyCertAndCNMatch(string certificatePath, string certCN)
 	{
 		// Create a certificate object from the .cer file
-		X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificatePath);
+		using X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificatePath);
 
 		// Get the Common Name of the certificate
 		string CertCommonName = CryptoAPI.GetNameString(

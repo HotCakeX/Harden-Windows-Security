@@ -38,10 +38,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 {
 	private CommonCore.AppSettings.Main AppSettings => App.Settings;
 
-	internal MUnitListViewControl()
-	{
-		this.InitializeComponent();
-	}
+	internal MUnitListViewControl() => this.InitializeComponent();
 
 	private bool _isDisposed;
 

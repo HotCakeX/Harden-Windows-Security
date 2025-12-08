@@ -34,15 +34,12 @@ namespace HardenSystemSecurity.ViewModels;
 internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 {
 
-	internal InstalledAppsManagementVM()
-	{
-		MainInfoBar = new InfoBarSettings(
+	internal InstalledAppsManagementVM() => MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
-	}
 
 	/// <summary>
 	/// The main InfoBar for this VM.

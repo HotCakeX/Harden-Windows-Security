@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CIManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConsoleHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DISM\Types.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Firmware.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeMethods_RustInterop.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes.cs" />

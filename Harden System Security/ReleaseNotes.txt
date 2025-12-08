@@ -1,7 +1,1 @@
-* Added a new page called CSP. This page allows you to inspect and query Windows Configuration Service Provider (CSP) policies. It parses Policy DDF (Device Description Framework) files that are either sourced from local XML files you browse for or downloaded directly from Microsoft server to generate a comprehensive catalog of available system settings. The Harden System Security app interacts with the local MDM (Mobile Device Management) client to query the live system state of these policies via their OMA-URIs, providing real-time visibility into current configurations, default values, and allowed operations (`Get`, `Add`, `Replace`, `Delete`).
-
-    * You have the option to export all of the results to a JSON file as backup. It is full of information about the current system state.
-
-* The Optional Windows Features category now has a sub-category that allows you to control the inclusion of recommended features and capabilities to be enabled. It's added as a Checkbox in the Protect page. It is checked when system is not a virtual machine and unchecked when it's a virtual machine.
-
-* Fixed the detection of Intel TDD when it is applied via Intune.
+* Changed a policy in the Microsoft Defender category named "Brute Force Aggressiveness" from "Medium" to "High". It now matches "Remote Encryption Protection Aggressiveness" policy which has already been set to "High".

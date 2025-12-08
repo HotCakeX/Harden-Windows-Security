@@ -24,15 +24,12 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class GetSecurePolicySettingsVM : ViewModelBase
 {
-	internal GetSecurePolicySettingsVM()
-	{
-		MainInfoBar = new InfoBarSettings(
+	internal GetSecurePolicySettingsVM() => MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
-	}
 
 	private readonly InfoBarSettings MainInfoBar;
 

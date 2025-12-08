@@ -158,17 +158,11 @@ internal static class FileUtility
 		Stopwatch stopwatch = Stopwatch.StartNew();
 
 		// A FrozenSet used to store extensions to filter files
-		FrozenSet<string> extensions;
+		FrozenSet<string> extensions = extensionsToFilterBy is { Length: > 0 }
+			? extensionsToFilterBy.ToFrozenSet(StringComparer.OrdinalIgnoreCase)
+			: AppControlExtensions;
 
 		// If custom extensions are provided, use them and make them case-insensitive
-		if (extensionsToFilterBy is { Length: > 0 })
-		{
-			extensions = extensionsToFilterBy.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
-		}
-		else
-		{
-			extensions = AppControlExtensions;
-		}
 
 		// https://learn.microsoft.com/dotnet/api/system.collections.concurrent.blockingcollection-1
 		// https://learn.microsoft.com/dotnet/standard/collections/thread-safe/when-to-use-a-thread-safe-collection

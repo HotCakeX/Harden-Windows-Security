@@ -26,15 +26,12 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 {
-	internal CodeIntegrityInfoVM()
-	{
-		MainInfoBar = new InfoBarSettings(
+	internal CodeIntegrityInfoVM() => MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
-	}
 
 	private readonly InfoBarSettings MainInfoBar;
 

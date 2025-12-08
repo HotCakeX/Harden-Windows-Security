@@ -31,22 +31,15 @@ namespace AppControlManager.IntelGathering;
 /// </summary>
 internal sealed class FileIdentitySignatureBasedHashSet
 {
-	// A HashSet to store FileIdentity objects with a custom comparer.
-	// This comparer defines equality based on selected properties in that comparer, ignoring SignatureStatus for now.
-	private readonly HashSet<FileIdentity> _set;
-
 	/// <summary>
 	/// Initializes a new instance of the FileIdentitySignatureBasedHashSet class.
 	/// </summary>
-	internal FileIdentitySignatureBasedHashSet()
-	{
-		_set = new HashSet<FileIdentity>(new FileIdentityComparer());
-	}
+	internal FileIdentitySignatureBasedHashSet() => FileIdentitiesInternal = new HashSet<FileIdentity>(new FileIdentityComparer());
 
 	/// <summary>
 	/// Expose the internal HashSet so we can access it directly.
 	/// </summary>
-	internal HashSet<FileIdentity> FileIdentitiesInternal => _set;
+	internal HashSet<FileIdentity> FileIdentitiesInternal { get; }
 
 	/// <summary>
 	/// Adds a FileIdentity item to the set.
@@ -56,7 +49,7 @@ internal sealed class FileIdentitySignatureBasedHashSet
 	public bool Add(FileIdentity item)
 	{
 		// Check if an equivalent item (based on FileIdentityComparer) already exists in the set
-		if (_set.TryGetValue(item, out FileIdentity? existingItem))
+		if (FileIdentitiesInternal.TryGetValue(item, out FileIdentity? existingItem))
 		{
 			// If an equivalent unsigned item exists, replace it with the signed item
 			if (existingItem.SignatureStatus == SignatureStatus.IsUnsigned && item.SignatureStatus == SignatureStatus.IsSigned)
@@ -67,8 +60,8 @@ internal sealed class FileIdentitySignatureBasedHashSet
 					existingItem.SHA256Hash));
 
 				// Remove the existing unsigned item and add the signed one
-				_ = _set.Remove(existingItem);
-				_ = _set.Add(item);
+				_ = FileIdentitiesInternal.Remove(existingItem);
+				_ = FileIdentitiesInternal.Add(item);
 				return true; // Indicate that an item was replaced
 			}
 
@@ -77,7 +70,7 @@ internal sealed class FileIdentitySignatureBasedHashSet
 		}
 
 		// If no equivalent item exists, add the new item to the set
-		_ = _set.Add(item);
+		_ = FileIdentitiesInternal.Add(item);
 		return true;
 	}
 
@@ -86,17 +79,17 @@ internal sealed class FileIdentitySignatureBasedHashSet
 	/// </summary>
 	/// <param name="item">The FileIdentity item to check for.</param>
 	/// <returns>True if an equivalent item exists in the set; false otherwise.</returns>
-	public bool Contains(FileIdentity item) => _set.Contains(item);
+	public bool Contains(FileIdentity item) => FileIdentitiesInternal.Contains(item);
 
 	/// <summary>
 	/// Removes an equivalent FileIdentity item from the set, if it exists.
 	/// </summary>
 	/// <param name="item">The FileIdentity item to remove.</param>
 	/// <returns>True if the item was removed; false if it did not exist in the set.</returns>
-	public bool Remove(FileIdentity item) => _set.Remove(item);
+	public bool Remove(FileIdentity item) => FileIdentitiesInternal.Remove(item);
 
 	/// <summary>
 	/// Gets the count of items in the set.
 	/// </summary>
-	public int Count => _set.Count;
+	public int Count => FileIdentitiesInternal.Count;
 }

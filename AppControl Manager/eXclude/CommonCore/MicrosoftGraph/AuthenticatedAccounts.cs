@@ -72,8 +72,5 @@ internal sealed class AuthenticatedAccounts(
 		return left.Equals(right);
 	}
 
-	public static bool operator !=(AuthenticatedAccounts? left, AuthenticatedAccounts? right)
-	{
-		return !(left == right);
-	}
+	public static bool operator !=(AuthenticatedAccounts? left, AuthenticatedAccounts? right) => !(left == right);
 }

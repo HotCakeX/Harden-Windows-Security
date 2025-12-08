@@ -51,10 +51,7 @@ namespace HardenSystemSecurity.CustomUIElements.HomePageCarousel;
 
 internal sealed partial class TileGallery : UserControl
 {
-	internal TileGallery()
-	{
-		InitializeComponent();
-	}
+	internal TileGallery() => InitializeComponent();
 
 	public object Source
 	{

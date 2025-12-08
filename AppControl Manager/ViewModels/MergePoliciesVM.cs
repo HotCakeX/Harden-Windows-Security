@@ -28,16 +28,13 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class MergePoliciesVM : ViewModelBase
 {
 
-	internal MergePoliciesVM()
-	{
-		MainInfoBar = new InfoBarSettings(
+	internal MergePoliciesVM() => MainInfoBar = new InfoBarSettings(
 			() => PolicyMergerInfoBarIsOpen, value => PolicyMergerInfoBarIsOpen = value,
 			() => PolicyMergerInfoBarMessage, value => PolicyMergerInfoBarMessage = value,
 			() => PolicyMergerInfoBarSeverity, value => PolicyMergerInfoBarSeverity = value,
 			() => PolicyMergerInfoBarIsClosable, value => PolicyMergerInfoBarIsClosable = value,
 			Dispatcher,
 			() => PolicyMergerInfoBarTitle, value => PolicyMergerInfoBarTitle = value);
-	}
 
 	private readonly InfoBarSettings MainInfoBar;
 

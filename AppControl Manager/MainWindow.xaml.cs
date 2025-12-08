@@ -62,9 +62,9 @@ internal sealed partial class MainWindow : Window
 	/// </summary>
 	internal MainWindow()
 	{
-		this.InitializeComponent();
+		InitializeComponent();
 
-		Nav.Initialize(this.ContentFrame, this.MainNavigation);
+		Nav.Initialize(ContentFrame, MainNavigation);
 
 		RootGridPub = RootGrid;
 
@@ -79,14 +79,14 @@ internal sealed partial class MainWindow : Window
 		ExtendsContentIntoTitleBar = true;
 
 		// Set the title bar's height style to tall
-		this.AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
+		AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
 
 		// Set the TitleBar title text to the app's display name
 		TitleBarTextBlock.Text = AppInfo.Current.DisplayInfo.DisplayName;
 
 		// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.settitlebar
 		// This is required. Without it, the page that has the TabView would make the App Window's TitleBar non-draggable.
-		this.SetTitleBar(AppTitleBar);
+		SetTitleBar(AppTitleBar);
 
 		// Set the DataContext of the Grid to enable bindings in XAML
 		RootGrid.DataContext = this;
@@ -150,7 +150,7 @@ internal sealed partial class MainWindow : Window
 			sidebarRect = MainWindowVM.FlipHorizontally(sidebarRect, windowWidthPx);
 		}
 
-		InputNonClientPointerSource nonClient = InputNonClientPointerSource.GetForWindowId(this.AppWindow.Id);
+		InputNonClientPointerSource nonClient = InputNonClientPointerSource.GetForWindowId(AppWindow.Id);
 
 		nonClient.ClearRegionRects(NonClientRegionKind.Passthrough);
 

@@ -6239,4 +6239,85 @@
   <data name="SignatureUpdate.Text" xml:space="preserve">
     <value>Ενημέρωση υπογραφών (UTC)</value>
   </data>
+    <data name="FirmwareInfoDropdownButton.Content" xml:space="preserve">
+    <value>Πληροφορίες υλικολογισμικού</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Πρόσβαση και ανάλυση μεταβλητών ασφαλούς εκκίνησης UEFI (Secure Boot) μέσω της ανάκτησης πιστοποιητικών και κρυπτογραφικών κατακερματισμών από το PK (Κλειδί πλατφόρμας), το KEK (Κλειδί ανταλλαγής κλειδιών), το db (Βάση δεδομένων υπογραφών) και το dbx (Βάση δεδομένων απαγορευμένων υπογραφών), συμπεριλαμβανομένων των προεπιλεγμένων εργοστασιακών καταστάσεών τους.</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Πρόσβαση και ανάλυση μεταβλητών ασφαλούς εκκίνησης UEFI (Secure Boot) μέσω της ανάκτησης πιστοποιητικών και κρυπτογραφικών κατακερματισμών από το PK (Κλειδί πλατφόρμας), το KEK (Κλειδί ανταλλαγής κλειδιών), το db (Βάση δεδομένων υπογραφών) και το dbx (Βάση δεδομένων απαγορευμένων υπογραφών), συμπεριλαμβανομένων των προεπιλεγμένων εργοστασιακών καταστάσεών τους.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.Text" xml:space="preserve">
+    <value>Λήψη βάσης δεδομένων υπογραφών</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση της Βάσης δεδομένων υπογραφών (db), η οποία περιέχει τη λίστα των αξιόπιστων πιστοποιητικών και κατακερματισμών που επιτρέπεται να εκτελεστούν σε αυτό το σύστημα.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση της Βάσης δεδομένων υπογραφών (db), η οποία περιέχει τη λίστα των αξιόπιστων πιστοποιητικών και κατακερματισμών που επιτρέπεται να εκτελεστούν σε αυτό το σύστημα.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.Text" xml:space="preserve">
+    <value>Λήψη προεπιλεγμένης βάσης δεδομένων υπογραφών</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση της εργοστασιακής προεπιλεγμένης Βάσης δεδομένων υπογραφών (dbDefault), η οποία περιέχει το αρχικό σύνολο αξιόπιστων πιστοποιητικών και κατακερματισμών που παρέχονται από τον κατασκευαστή του συστήματος.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση της εργοστασιακής προεπιλεγμένης Βάσης δεδομένων υπογραφών (dbDefault), η οποία περιέχει το αρχικό σύνολο αξιόπιστων πιστοποιητικών και κατακερματισμών που παρέχονται από τον κατασκευαστή του συστήματος.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>Λήψη βάσης δεδομένων απαγορευμένων υπογραφών</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση της Βάσης δεδομένων απαγορευμένων υπογραφών (dbx), η οποία περιέχει τη λίστα ανάκλησης παραβιασμένων πιστοποιητικών και κατακερματισμών που έχουν αποκλειστεί από την εκκίνηση.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση της Βάσης δεδομένων απαγορευμένων υπογραφών (dbx), η οποία περιέχει τη λίστα ανάκλησης παραβιασμένων πιστοποιητικών και κατακερματισμών που έχουν αποκλειστεί από την εκκίνηση.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>Λήψη προεπιλεγμένης βάσης δεδομένων απαγορευμένων υπογραφών</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση της εργοστασιακής προεπιλεγμένης Βάσης δεδομένων απαγορευμένων υπογραφών (dbxDefault), η οποία περιέχει την αρχική λίστα ανάκλησης που παρέχεται από τον κατασκευαστή του συστήματος.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση της εργοστασιακής προεπιλεγμένης Βάσης δεδομένων απαγορευμένων υπογραφών (dbxDefault), η οποία περιέχει την αρχική λίστα ανάκλησης που παρέχεται από τον κατασκευαστή του συστήματος.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.Text" xml:space="preserve">
+    <value>Λήψη κλειδιού πλατφόρμας</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση του Κλειδιού πλατφόρμας (PK), της ρίζας εμπιστοσύνης που ελέγχει την πρόσβαση στη βάση δεδομένων κλειδιών ανταλλαγής κλειδιών και καθιερώνει την ιδιοκτησία της πλατφόρμας.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση του Κλειδιού πλατφόρμας (PK), της ρίζας εμπιστοσύνης που ελέγχει την πρόσβαση στη βάση δεδομένων κλειδιών ανταλλαγής κλειδιών και καθιερώνει την ιδιοκτησία της πλατφόρμας.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.Text" xml:space="preserve">
+    <value>Λήψη προεπιλεγμένου κλειδιού πλατφόρμας</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση του εργοστασιακού προεπιλεγμένου Κλειδιού πλατφόρμας (PKDefault), που αντιπροσωπεύει την αρχική ρίζα εμπιστοσύνης που παρέχεται από τον κατασκευαστή του συστήματος.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση του εργοστασιακού προεπιλεγμένου Κλειδιού πλατφόρμας (PKDefault), που αντιπροσωπεύει την αρχική ρίζα εμπιστοσύνης που παρέχεται από τον κατασκευαστή του συστήματος.</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.Text" xml:space="preserve">
+    <value>Λήψη κλειδιού ανταλλαγής κλειδιών</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση της βάσης δεδομένων Κλειδιών ανταλλαγής κλειδιών (KEK), η οποία περιέχει κλειδιά που είναι αξιόπιστα για την ενημέρωση της βάσης δεδομένων υπογραφών (db) και της βάσης δεδομένων απαγορευμένων υπογραφών (dbx).</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση της βάσης δεδομένων Κλειδιών ανταλλαγής κλειδιών (KEK), η οποία περιέχει κλειδιά που είναι αξιόπιστα για την ενημέρωση της βάσης δεδομένων υπογραφών (db) και της βάσης δεδομένων απαγορευμένων υπογραφών (dbx).</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.Text" xml:space="preserve">
+    <value>Λήψη προεπιλεγμένου κλειδιού ανταλλαγής κλειδιών</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανάκτηση της εργοστασιακής προεπιλεγμένης βάσης δεδομένων Κλειδιών ανταλλαγής κλειδιών (KEKDefault), η οποία περιέχει το αρχικό σύνολο κλειδιών που είναι αξιόπιστα για ενημερώσεις βάσεων δεδομένων και παρέχονται από τον κατασκευαστή του συστήματος.</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανάκτηση της εργοστασιακής προεπιλεγμένης βάσης δεδομένων Κλειδιών ανταλλαγής κλειδιών (KEKDefault), η οποία περιέχει το αρχικό σύνολο κλειδιών που είναι αξιόπιστα για ενημερώσεις βάσεων δεδομένων και παρέχονται από τον κατασκευαστή του συστήματος.</value>
+  </data>
 </root>

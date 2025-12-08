@@ -98,18 +98,18 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			Style = (Style)Application.Current.Resources["DefaultContentDialogStyle"];
 
 			// Immediately disable the default ContentDialog shadow by setting the Translation property
-			this.Translation = ZeroVector;
+			Translation = ZeroVector;
 
 			// Immediately remove any shadow from the dialog itself
-			if (this.Shadow is not null)
+			if (Shadow is not null)
 			{
-				this.Shadow = null;
+				Shadow = null;
 			}
 
 			// Subscribe to events using the stored handlers
-			this.Loaded += _loadedHandler;
-			this.Opened += _openedHandler;
-			this.Closing += _closingHandler;
+			Loaded += _loadedHandler;
+			Opened += _openedHandler;
+			Closing += _closingHandler;
 		}
 		catch (Exception ex)
 		{
@@ -176,12 +176,12 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		try
 		{
 			// Set Translation to zero to remove elevation shadow
-			this.Translation = ZeroVector;
+			Translation = ZeroVector;
 
 			// Try to remove shadow from the dialog itself
-			if (this.Shadow is not null)
+			if (Shadow is not null)
 			{
-				this.Shadow = null;
+				Shadow = null;
 			}
 
 			// Find and disable any default shadow elements immediately
@@ -390,7 +390,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		try
 		{
 			// Unsubscribe from events using the stored handlers
-			this.Loaded -= _loadedHandler;
+			Loaded -= _loadedHandler;
 		}
 		catch (Exception ex)
 		{
@@ -400,7 +400,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 
 		try
 		{
-			this.Opened -= _openedHandler;
+			Opened -= _openedHandler;
 		}
 		catch (Exception ex)
 		{
@@ -410,7 +410,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 
 		try
 		{
-			this.Closing -= _closingHandler;
+			Closing -= _closingHandler;
 		}
 		catch (Exception ex)
 		{
@@ -472,12 +472,12 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			}
 
 			// Set Translation to zero to remove elevation shadow
-			this.Translation = ZeroVector;
+			Translation = ZeroVector;
 
 			// Try to remove shadow from the dialog itself
-			if (this.Shadow is not null)
+			if (Shadow is not null)
 			{
-				this.Shadow = null;
+				Shadow = null;
 			}
 
 			// Comprehensive removal of all shadows in the visual tree
@@ -1492,7 +1492,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 							}
 
 							// Create dialog container using static method
-							_dialogContainer = CreateDialogContainerWithDialogCorner(backgroundGrid.Background, this.BorderBrush, this.BorderThickness);
+							_dialogContainer = CreateDialogContainerWithDialogCorner(backgroundGrid.Background, BorderBrush, BorderThickness);
 							if (_dialogContainer is null)
 							{
 								// Skip shadow application if dialog container creation failed
@@ -1559,7 +1559,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 							}
 
 							// Create dialog container using static method
-							_dialogContainer = CreateDialogContainerWithDialogCorner(backgroundPanel.Background, this.BorderBrush, this.BorderThickness);
+							_dialogContainer = CreateDialogContainerWithDialogCorner(backgroundPanel.Background, BorderBrush, BorderThickness);
 							if (_dialogContainer is null)
 							{
 								// Skip shadow application if dialog container creation failed

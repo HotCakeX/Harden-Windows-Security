@@ -28,16 +28,13 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class BuildNewCertificateVM : ViewModelBase
 {
 
-	internal BuildNewCertificateVM()
-	{
-		MainInfoBar = new InfoBarSettings(
+	internal BuildNewCertificateVM() => MainInfoBar = new InfoBarSettings(
 		() => StatusInfoBarIsOpen, value => StatusInfoBarIsOpen = value,
 		() => StatusInfoBarMessage, value => StatusInfoBarMessage = value,
 		() => StatusInfoBarSeverity, value => StatusInfoBarSeverity = value,
 		() => StatusInfoBarIsClosable, value => StatusInfoBarIsClosable = value,
 		Dispatcher,
 		() => StatusInfoBarTitle, value => StatusInfoBarTitle = value);
-	}
 
 	private readonly InfoBarSettings MainInfoBar;
 
@@ -146,7 +143,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-				X509Certificate2 generatedCert = CertificateGenerator.BuildAppControlCertificate(
+				using X509Certificate2 generatedCert = CertificateGenerator.BuildAppControlCertificate(
 					 CommonName,
 					 Password,
 					 (int)Validity,
@@ -163,7 +160,6 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 				GlobalVars.GetStr("ErrorTitle"));
 			ErrorsOccurred = true;
 		}
-
 		finally
 		{
 			ElementsAreEnabled = true;

@@ -6239,4 +6239,85 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="SignatureUpdate.Text" xml:space="preserve">
     <value>Actualización de firmas (UTC)</value>
   </data>
+    <data name="FirmwareInfoDropdownButton.Content" xml:space="preserve">
+    <value>Información del firmware</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Acceda y analice variables de Arranque seguro UEFI al recuperar certificados y hashes criptográficos de la PK (Clave de plataforma), KEK (Clave de intercambio de claves), db (Base de datos de firmas) y dbx (Base de datos de firmas prohibidas), incluidos sus estados predeterminados de fábrica.</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Acceda y analice variables de Arranque seguro UEFI al recuperar certificados y hashes criptográficos de la PK (Clave de plataforma), KEK (Clave de intercambio de claves), db (Base de datos de firmas) y dbx (Base de datos de firmas prohibidas), incluidos sus estados predeterminados de fábrica.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.Text" xml:space="preserve">
+    <value>Obtener base de datos de firmas</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recupere la Base de datos de firmas (db), que contiene la lista de certificados y hashes de confianza permitidos para ejecutarse en este sistema.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recupere la Base de datos de firmas (db), que contiene la lista de certificados y hashes de confianza permitidos para ejecutarse en este sistema.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.Text" xml:space="preserve">
+    <value>Obtener base de datos de firmas predeterminada</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recupere la Base de datos de firmas predeterminada de fábrica (dbDefault), que contiene el conjunto inicial de certificados y hashes de confianza proporcionados por el fabricante del sistema.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recupere la Base de datos de firmas predeterminada de fábrica (dbDefault), que contiene el conjunto inicial de certificados y hashes de confianza proporcionados por el fabricante del sistema.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>Obtener base de datos de firmas prohibidas</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recupere la Base de datos de firmas prohibidas (dbx), que contiene la lista de revocación de certificados y hashes en peligro que están bloqueados para el arranque.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recupere la Base de datos de firmas prohibidas (dbx), que contiene la lista de revocación de certificados y hashes en peligro que están bloqueados para el arranque.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>Obtener base de datos de firmas prohibidas predeterminada</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recupere la Base de datos de firmas prohibidas predeterminada de fábrica (dbxDefault), que contiene la lista de revocación inicial proporcionada por el fabricante del sistema.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recupere la Base de datos de firmas prohibidas predeterminada de fábrica (dbxDefault), que contiene la lista de revocación inicial proporcionada por el fabricante del sistema.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.Text" xml:space="preserve">
+    <value>Obtener clave de plataforma</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recupere la Clave de plataforma (PK), la raíz de confianza que controla el acceso a la base de datos de Claves de intercambio de claves y establece la propiedad de la plataforma.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recupere la Clave de plataforma (PK), la raíz de confianza que controla el acceso a la base de datos de Claves de intercambio de claves y establece la propiedad de la plataforma.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.Text" xml:space="preserve">
+    <value>Obtener clave de plataforma predeterminada</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recupere la Clave de plataforma predeterminada de fábrica (PKDefault), que representa la raíz de confianza original proporcionada por el fabricante del sistema.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recupere la Clave de plataforma predeterminada de fábrica (PKDefault), que representa la raíz de confianza original proporcionada por el fabricante del sistema.</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.Text" xml:space="preserve">
+    <value>Obtener clave de intercambio de claves</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recupere la base de datos de Claves de intercambio de claves (KEK), que contiene claves de confianza para actualizar la base de datos de firmas (db) y la base de datos de firmas prohibidas (dbx).</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recupere la base de datos de Claves de intercambio de claves (KEK), que contiene claves de confianza para actualizar la base de datos de firmas (db) y la base de datos de firmas prohibidas (dbx).</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.Text" xml:space="preserve">
+    <value>Obtener clave de intercambio de claves predeterminada</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recupere la base de datos de Claves de intercambio de claves predeterminada de fábrica (KEKDefault), que contiene el conjunto inicial de claves de confianza para actualizaciones de la base de datos proporcionadas por el fabricante del sistema.</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Recupere la base de datos de Claves de intercambio de claves predeterminada de fábrica (KEKDefault), que contiene el conjunto inicial de claves de confianza para actualizaciones de la base de datos proporcionadas por el fabricante del sistema.</value>
+  </data>
 </root>

@@ -534,22 +534,17 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Simulation()
 					};
 
-					if (currentTheme == ElementTheme.Dark)
-					{
-						AllowNewAppsIcon = new AnimatedIcon
+					AllowNewAppsIcon = currentTheme == ElementTheme.Dark
+						? new AnimatedIcon
 						{
 							Margin = new Thickness(0, -6, -6, -6),
 							Source = new StarYellow()
-						};
-					}
-					else
-					{
-						AllowNewAppsIcon = new AnimatedIcon
+						}
+						: new AnimatedIcon
 						{
 							Margin = new Thickness(0, -6, -6, -6),
 							Source = new StarBlack()
 						};
-					}
 
 					CreatePolicyFromEventLogsIcon = new AnimatedIcon
 					{
@@ -593,22 +588,17 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Document()
 					};
 
-					if (currentTheme == ElementTheme.Dark)
-					{
-						UpdateIcon = new AnimatedIcon
+					UpdateIcon = currentTheme == ElementTheme.Dark
+						? new AnimatedIcon
 						{
 							Margin = new Thickness(0, -5, -5, -5),
 							Source = new Heart()
-						};
-					}
-					else
-					{
-						UpdateIcon = new AnimatedIcon
+						}
+						: new AnimatedIcon
 						{
 							Margin = new Thickness(0, -25, -25, -25),
 							Source = new HeartPulse()
 						};
-					}
 
 					BuildNewCertificateIcon = new AnimatedIcon
 					{

@@ -28,16 +28,13 @@ namespace AppControlManager.ViewModels;
 internal sealed partial class ValidatePolicyVM : ViewModelBase
 {
 
-	internal ValidatePolicyVM()
-	{
-		MainInfoBar = new InfoBarSettings(
+	internal ValidatePolicyVM() => MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher,
 			() => MainInfoBarTitle, value => MainInfoBarTitle = value);
-	}
 
 
 	private readonly InfoBarSettings MainInfoBar;

@@ -294,14 +294,7 @@ DeviceEvents
 				}
 
 				// Follow pagination if present
-				if (root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement))
-				{
-					nextLink = nextLinkElement.GetString();
-				}
-				else
-				{
-					nextLink = null;
-				}
+				nextLink = root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement) ? nextLinkElement.GetString() : null;
 			}
 			else
 			{
@@ -819,14 +812,9 @@ DeviceEvents
 			}
 
 			// Determine if there is another page.
-			if (root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement))
-			{
-				nextLink = nextLinkElement.GetString() ?? string.Empty;
-			}
-			else
-			{
-				nextLink = string.Empty;
-			}
+			nextLink = root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement)
+				? nextLinkElement.GetString() ?? string.Empty
+				: string.Empty;
 		}
 
 		// Log after all pages processed.
@@ -1098,14 +1086,9 @@ DeviceEvents
 				allPolicies.AddRange(page.Value);
 			}
 
-			if (root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement))
-			{
-				nextLink = nextLinkElement.GetString() ?? string.Empty;
-			}
-			else
-			{
-				nextLink = string.Empty;
-			}
+			nextLink = root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement)
+				? nextLinkElement.GetString() ?? string.Empty
+				: string.Empty;
 		}
 
 		Logger.Write(GlobalVars.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));

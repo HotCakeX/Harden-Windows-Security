@@ -1870,6 +1870,58 @@ dotnet_diagnostic.JSON002.severity = error
 # RE0001: Invalid regex pattern
 dotnet_diagnostic.RE0001.severity = error
 
+# IDE0003: Remove this or Me qualification
+dotnet_diagnostic.IDE0003.severity = error
+
+# IDE0008: Use explicit type instead of var
+dotnet_diagnostic.IDE0008.severity = suggestion
+
+# IDE0016: Use throw expression
+dotnet_diagnostic.IDE0016.severity = error
+
+# IDE0020: Use pattern matching to avoid 'is' check followed by a cast
+dotnet_diagnostic.IDE0020.severity = error
+
+# IDE0021: Use expression body for constructors
+dotnet_diagnostic.IDE0021.severity = error
+csharp_style_expression_bodied_constructors = true
+
+# IDE0023: Use expression body for conversion operators
+dotnet_diagnostic.IDE0023.severity = error
+
+# IDE0024: Use expression body for operators
+dotnet_diagnostic.IDE0024.severity = error
+
+# Applies to both IDE0023 and IDE0024
+csharp_style_expression_bodied_operators = true
+
+# IDE0025: Use expression body for properties
+dotnet_diagnostic.IDE0025.severity = error
+csharp_style_expression_bodied_properties = true
+
+# IDE0026: Use expression body for indexers
+dotnet_diagnostic.IDE0026.severity = error
+csharp_style_expression_bodied_indexers = true
+
+# IDE0027: Use expression body for accessors
+dotnet_diagnostic.IDE0027.severity = error
+csharp_style_expression_bodied_accessors = true
+
+# IDE0032: Use auto-implemented property
+dotnet_diagnostic.IDE0032.severity = error
+dotnet_style_prefer_auto_properties = true
+
+# IDE0034: Simplify 'default' expression
+dotnet_diagnostic.IDE0034.severity = error
+csharp_prefer_simple_default_expression = true
+
+# IDE0035: Remove unreachable code
+dotnet_diagnostic.IDE0035.severity = error
+
+# IDE0045: Use conditional expression for assignment
+dotnet_diagnostic.IDE0045.severity = error
+dotnet_style_prefer_conditional_expression_over_assignment = true
+
 # All Code quality rule configuration options: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/code-quality-rule-options
 # dotnet_code_quality.dispose_analysis_kind = AllPaths
 # dotnet_code_quality.CA2000.interprocedural_analysis_kind = ContextSensitive

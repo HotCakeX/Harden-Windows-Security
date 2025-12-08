@@ -62,7 +62,7 @@ internal sealed partial class ListViewV3 : ListView
 		ScrollViewer.SetVerticalScrollBarVisibility(this, ScrollBarVisibility.Visible);
 
 		// Set a default style of the ListView
-		this.ShowsScrollingPlaceholders = true;
+		ShowsScrollingPlaceholders = true;
 
 		// Subscribe to lifecycle events of the ListView
 		Loaded += OnLoaded;
@@ -77,7 +77,7 @@ internal sealed partial class ListViewV3 : ListView
 	private void OnLoaded(object? sender, RoutedEventArgs e)
 	{
 		// Delay execution until the visual tree is ready
-		_ = this.DispatcherQueue.TryEnqueue(() =>
+		_ = DispatcherQueue.TryEnqueue(() =>
 		{
 			// Grab the inner ScrollViewer
 			_innerScrollViewer = this.FindScrollViewer();

@@ -397,49 +397,22 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 				signedCms.Decode(File.ReadAllBytes(file));
 
 				X509Certificate2Collection certificates = signedCms.Certificates;
-				X509Certificate2[] certificateArray = new X509Certificate2[certificates.Count];
-				certificates.CopyTo(certificateArray, 0);
 
 				// Counter (in case the CIP file is signed by multiple certificates)
 				int i = 1;
 
-				// Loop over the array of X509Certificate2 objects that represent the certificates used to sign the message
-				foreach (X509Certificate2 signer in certificateArray)
+				// Loop over the collection of X509Certificate2 objects that represent the certificates used to sign the message
+				foreach (X509Certificate2 signer in certificates)
 				{
-					// Extract additional details similar to the comparer
-					(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
-						= ExtractDetailedFields(signer);
-
-					output.Add(new FileCertificateInfoCol
-					(
-						signerNumber: i,
-						type: CertificateType.Leaf,
-						subjectCN: CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
-						issuerCN: CryptoAPI.GetNameString(signer.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
-						notBefore: signer.NotBefore,
-						notAfter: signer.NotAfter,
-						hashingAlgorithm: signer.SignatureAlgorithm.FriendlyName,
-						serialNumber: signer.SerialNumber,
-						thumbprint: signer.Thumbprint,
-						tBSHash: CertificateHelper.GetTBSCertificate(signer),
-						oIDs: string.Join(", ", signer.Extensions
-								.Select(ext =>
-									ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-								.Where(oid => !string.IsNullOrWhiteSpace(oid))),
-						version: det.Version,
-						hasPrivateKey: det.HasPrivateKey,
-						archived: det.Archived,
-						certificatePolicies: det.CertificatePolicies,
-						authorityInformationAccess: det.AuthorityInformationAccess,
-						crlDistributionPoints: det.CrlDistributionPoints,
-						basicConstraints: det.BasicConstraints,
-						keyUsage: det.KeyUsage,
-						authorityKeyIdentifier: det.AuthorityKeyIdentifier,
-						subjectKeyIdentifier: det.SubjectKeyIdentifier,
-						rawDataLength: det.RawDataLength,
-						publicKeyLength: det.PublicKeyLength
-					));
-
+					try
+					{
+						output.Add(ProcessAndAddCertificates(signer, i, CertificateType.Leaf));
+					}
+					finally
+					{
+						// Dispose the certificate as we only need the extracted data
+						signer.Dispose();
+					}
 					i++;
 				}
 			});
@@ -469,43 +442,8 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			await Task.Run(() =>
 			{
 				// Create a certificate object from the .cer file
-				X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(file);
-
-				// Extract additional details similar to the comparer
-				(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
-					= ExtractDetailedFields(CertObject);
-
-				// Add the certificate as leaf certificate
-				output.Add(new FileCertificateInfoCol
-				(
-					signerNumber: 1,
-					type: CertificateType.Leaf,
-					subjectCN: CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
-					issuerCN: CryptoAPI.GetNameString(CertObject.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
-					notBefore: CertObject.NotBefore,
-					notAfter: CertObject.NotAfter,
-					hashingAlgorithm: CertObject.SignatureAlgorithm.FriendlyName,
-					serialNumber: CertObject.SerialNumber,
-					thumbprint: CertObject.Thumbprint,
-					tBSHash: CertificateHelper.GetTBSCertificate(CertObject),
-					oIDs: string.Join(", ", CertObject.Extensions
-							.Select(ext =>
-								ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-							.Where(oid => !string.IsNullOrWhiteSpace(oid))),
-					version: det.Version,
-					hasPrivateKey: det.HasPrivateKey,
-					archived: det.Archived,
-					certificatePolicies: det.CertificatePolicies,
-					authorityInformationAccess: det.AuthorityInformationAccess,
-					crlDistributionPoints: det.CrlDistributionPoints,
-					basicConstraints: det.BasicConstraints,
-					keyUsage: det.KeyUsage,
-					authorityKeyIdentifier: det.AuthorityKeyIdentifier,
-					subjectKeyIdentifier: det.SubjectKeyIdentifier,
-					rawDataLength: det.RawDataLength,
-					publicKeyLength: det.PublicKeyLength
-				));
-
+				using X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(file);
+				output.Add(ProcessAndAddCertificates(CertObject, 1, CertificateType.Leaf));
 			});
 
 			return output;
@@ -652,40 +590,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 							// If the signer has Leaf certificate
 							if (signer.LeafCertificate is not null)
 							{
-								X509Certificate2 LeafCert = signer.LeafCertificate.Certificate;
-
-								(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
-									= ExtractDetailedFields(LeafCert);
-
-								output.Add(new FileCertificateInfoCol
-								(
-									signerNumber: i,
-									type: CertificateType.Leaf,
-									subjectCN: signer.LeafCertificate.SubjectCN,
-									issuerCN: signer.LeafCertificate.IssuerCN,
-									notBefore: signer.LeafCertificate.NotBefore,
-									notAfter: signer.LeafCertificate.NotAfter,
-									hashingAlgorithm: LeafCert.SignatureAlgorithm.FriendlyName,
-									serialNumber: LeafCert.SerialNumber,
-									thumbprint: LeafCert.Thumbprint,
-									tBSHash: signer.LeafCertificate.TBSValue,
-									oIDs: string.Join(", ", LeafCert.Extensions
-										.Select(ext =>
-											ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-										.Where(oid => !string.IsNullOrWhiteSpace(oid))),
-									version: det.Version,
-									hasPrivateKey: det.HasPrivateKey,
-									archived: det.Archived,
-									certificatePolicies: det.CertificatePolicies,
-									authorityInformationAccess: det.AuthorityInformationAccess,
-									crlDistributionPoints: det.CrlDistributionPoints,
-									basicConstraints: det.BasicConstraints,
-									keyUsage: det.KeyUsage,
-									authorityKeyIdentifier: det.AuthorityKeyIdentifier,
-									subjectKeyIdentifier: det.SubjectKeyIdentifier,
-									rawDataLength: det.RawDataLength,
-									publicKeyLength: det.PublicKeyLength
-								));
+								output.Add(ProcessAndAddCertificates(signer.LeafCertificate.Certificate, i, CertificateType.Leaf));
 							}
 
 							// If the signer has any Intermediate Certificates
@@ -694,79 +599,13 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 								// Loop over Intermediate certificates of the file
 								foreach (ChainElement intermediate in signer.IntermediateCertificates)
 								{
-									X509Certificate2 IntCert = intermediate.Certificate;
-
-									(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
-										= ExtractDetailedFields(IntCert);
-
-									output.Add(new FileCertificateInfoCol
-									(
-										signerNumber: i,
-										type: CertificateType.Intermediate,
-										subjectCN: intermediate.SubjectCN,
-										issuerCN: intermediate.IssuerCN,
-										notBefore: intermediate.NotBefore,
-										notAfter: intermediate.NotAfter,
-										hashingAlgorithm: IntCert.SignatureAlgorithm.FriendlyName,
-										serialNumber: IntCert.SerialNumber,
-										thumbprint: IntCert.Thumbprint,
-										tBSHash: intermediate.TBSValue,
-										oIDs: string.Join(", ", IntCert.Extensions
-											.Select(ext =>
-												ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-											.Where(oid => !string.IsNullOrWhiteSpace(oid))),
-										version: det.Version,
-										hasPrivateKey: det.HasPrivateKey,
-										archived: det.Archived,
-										certificatePolicies: det.CertificatePolicies,
-										authorityInformationAccess: det.AuthorityInformationAccess,
-										crlDistributionPoints: det.CrlDistributionPoints,
-										basicConstraints: det.BasicConstraints,
-										keyUsage: det.KeyUsage,
-										authorityKeyIdentifier: det.AuthorityKeyIdentifier,
-										subjectKeyIdentifier: det.SubjectKeyIdentifier,
-										rawDataLength: det.RawDataLength,
-										publicKeyLength: det.PublicKeyLength
-									));
+									output.Add(ProcessAndAddCertificates(intermediate.Certificate, i, CertificateType.Intermediate));
 								}
 							}
 
 							// Add the root certificate
 							{
-								X509Certificate2 RootCert = signer.RootCertificate.Certificate;
-
-								(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
-									= ExtractDetailedFields(RootCert);
-
-								output.Add(new FileCertificateInfoCol
-								(
-									signerNumber: i,
-									type: CertificateType.Root,
-									subjectCN: signer.RootCertificate.SubjectCN,
-									issuerCN: signer.RootCertificate.SubjectCN, // Issuer is itself for Root certificate type
-									notBefore: signer.RootCertificate.NotBefore,
-									notAfter: signer.RootCertificate.NotAfter,
-									hashingAlgorithm: RootCert.SignatureAlgorithm.FriendlyName,
-									serialNumber: RootCert.SerialNumber,
-									thumbprint: RootCert.Thumbprint,
-									tBSHash: signer.RootCertificate.TBSValue,
-									oIDs: string.Join(", ", RootCert.Extensions
-									.Select(ext =>
-										ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
-									.Where(oid => !string.IsNullOrWhiteSpace(oid))),
-									version: det.Version,
-									hasPrivateKey: det.HasPrivateKey,
-									archived: det.Archived,
-									certificatePolicies: det.CertificatePolicies,
-									authorityInformationAccess: det.AuthorityInformationAccess,
-									crlDistributionPoints: det.CrlDistributionPoints,
-									basicConstraints: det.BasicConstraints,
-									keyUsage: det.KeyUsage,
-									authorityKeyIdentifier: det.AuthorityKeyIdentifier,
-									subjectKeyIdentifier: det.SubjectKeyIdentifier,
-									rawDataLength: det.RawDataLength,
-									publicKeyLength: det.PublicKeyLength
-								));
+								output.Add(ProcessAndAddCertificates(signer.RootCertificate.Certificate, i, CertificateType.Root));
 							}
 
 							// Increase the counter
@@ -823,6 +662,79 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	}
 
 	/// <summary>
+	/// Helper to create <see cref="FileCertificateInfoCol"/> from <see cref="X509Certificate2"/>
+	/// </summary>
+	private static FileCertificateInfoCol ProcessAndAddCertificates(X509Certificate2 cert, int signerNumber, CertificateType type)
+	{
+		(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
+			= ExtractDetailedFields(cert);
+
+		return new FileCertificateInfoCol
+		(
+			signerNumber: signerNumber,
+			type: type,
+			subjectCN: CryptoAPI.GetNameString(cert.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
+			issuerCN: CryptoAPI.GetNameString(cert.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true),
+			notBefore: cert.NotBefore,
+			notAfter: cert.NotAfter,
+			hashingAlgorithm: cert.SignatureAlgorithm.FriendlyName,
+			serialNumber: cert.SerialNumber,
+			thumbprint: cert.Thumbprint,
+			tBSHash: CertificateHelper.GetTBSCertificate(cert),
+			oIDs: string.Join(", ", cert.Extensions
+					.Select(ext =>
+						ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
+					.Where(oid => !string.IsNullOrWhiteSpace(oid))),
+			version: det.Version,
+			hasPrivateKey: det.HasPrivateKey,
+			archived: det.Archived,
+			certificatePolicies: det.CertificatePolicies,
+			authorityInformationAccess: det.AuthorityInformationAccess,
+			crlDistributionPoints: det.CrlDistributionPoints,
+			basicConstraints: det.BasicConstraints,
+			keyUsage: det.KeyUsage,
+			authorityKeyIdentifier: det.AuthorityKeyIdentifier,
+			subjectKeyIdentifier: det.SubjectKeyIdentifier,
+			rawDataLength: det.RawDataLength,
+			publicKeyLength: det.PublicKeyLength
+		);
+	}
+
+	/// <summary>
+	/// Helper to create a display-friendly <see cref="FileCertificateInfoCol"/> from a raw hash (e.g. from dbx).
+	/// This maps the hash into the columns reserved for certificate properties.
+	/// </summary>
+	private static FileCertificateInfoCol ProcessAndAddHash(string hash, Guid owner, int signerNumber, string hashingAlgorithm)
+	{
+		return new FileCertificateInfoCol
+		(
+			signerNumber: signerNumber,
+			type: CertificateType.Root,
+			subjectCN: $"Hash Owner: {owner}",
+			issuerCN: "N/A (Raw Hash)",
+			notBefore: DateTime.MinValue,
+			notAfter: DateTime.MinValue,
+			hashingAlgorithm: hashingAlgorithm,
+			serialNumber: null,
+			thumbprint: hash, // The actual Hash
+			tBSHash: null,
+			oIDs: null,
+			version: null,
+			hasPrivateKey: null,
+			archived: null,
+			certificatePolicies: null,
+			authorityInformationAccess: null,
+			crlDistributionPoints: null,
+			basicConstraints: null,
+			keyUsage: null,
+			authorityKeyIdentifier: null,
+			subjectKeyIdentifier: null,
+			rawDataLength: hash.Length / 2, // Approximate byte length from hex string
+			publicKeyLength: 0
+		);
+	}
+
+	/// <summary>
 	/// Called by the UI element in the page.
 	/// </summary>
 	internal async void BrowseForFilesSettingsCard_Click()
@@ -831,6 +743,111 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 		await Fetch();
 	}
+
+	internal async void GetUEFI_DB() =>
+		await ScanUEFICommon("UEFI:db", "db", Firmware.EfiImageSecurityDatabaseGuid);
+
+	internal async void GetUEFI_PK() =>
+		await ScanUEFICommon("UEFI:PK", "PK", Firmware.EfiGlobalVariableGuid);
+
+	internal async void GetUEFI_KEK() =>
+		await ScanUEFICommon("UEFI:KEK", "KEK", Firmware.EfiGlobalVariableGuid);
+
+	internal async void GetUEFI_DBX() =>
+		await ScanUEFICommon("UEFI:dbx", "dbx", Firmware.EfiImageSecurityDatabaseGuid);
+
+	internal async void GetUEFI_Default_DB() =>
+		await ScanUEFICommon("UEFI:dbDefault", "dbDefault", Firmware.EfiGlobalVariableGuid);
+
+	internal async void GetUEFI_Default_PK() =>
+		await ScanUEFICommon("UEFI:PKDefault", "PKDefault", Firmware.EfiGlobalVariableGuid);
+
+	internal async void GetUEFI_Default_KEK() =>
+		await ScanUEFICommon("UEFI:KEKDefault", "KEKDefault", Firmware.EfiGlobalVariableGuid);
+
+	internal async void GetUEFI_Default_DBX() =>
+		await ScanUEFICommon("UEFI:dbxDefault", "dbxDefault", Firmware.EfiGlobalVariableGuid);
+
+	/// <summary>
+	/// Common logic for scanning UEFI variables.
+	/// Automatically detects if the variable contains Certificates, Hashes, or both.
+	/// </summary>
+	private async Task ScanUEFICommon(string displayName, string variableName, Guid vendorGuid)
+	{
+		try
+		{
+			AreElementsEnabled = false;
+			MainInfoBarIsClosable = false;
+			MainInfoBar.WriteInfo($"Scanning UEFI '{variableName}' variable...");
+
+			List<FileCertificateInfoCol> output = [];
+
+			await Task.Run(() =>
+			{
+				// Returns a polymorphic list of objects (either X509Certificate2 or UefiHashEntry)
+				List<object> uefiItems = Firmware.GetUefiCertificatesOrHashes(variableName, vendorGuid);
+
+				try
+				{
+					int i = 1;
+					foreach (object item in uefiItems)
+					{
+						if (item is X509Certificate2 cert)
+						{
+							output.Add(ProcessAndAddCertificates(cert, i, CertificateType.Root));
+						}
+						else if (item is Firmware.UefiHashEntry hashEntry)
+						{
+							output.Add(ProcessAndAddHash(hashEntry.Hash, hashEntry.Owner, i, hashEntry.Algorithm));
+						}
+						i++;
+					}
+				}
+				finally
+				{
+					// Ensure all disposable items (X509Certificate2) are disposed
+					foreach (object item in uefiItems)
+					{
+						if (item is IDisposable disposable)
+						{
+							disposable.Dispose();
+						}
+					}
+				}
+			});
+
+			FileCertificates.Clear();
+			FilteredCertificates.Clear();
+			FilteredCertificates.AddRange(output);
+
+			foreach (FileCertificateInfoCol item in output)
+			{
+				FileCertificates.Add(item);
+			}
+
+			CalculateColumnWidths();
+
+			RawCmsDataLength = 0;
+			ContentInfoDataLength = 0;
+			CmsVersion = 0;
+			IsDetached = false;
+			ContentTypeOid = null;
+			ContentTypeFriendlyName = null;
+			selectedFile = displayName;
+
+			MainInfoBar.WriteSuccess($"Successfully retrieved {FilteredCertificates.Count} entries from UEFI '{variableName}'.");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+			MainInfoBarIsClosable = true;
+		}
+	}
+
 
 	/// <summary>
 	/// DragOver handler.

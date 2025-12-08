@@ -112,3 +112,40 @@ Keyboard shortcut:
 - Root certificates show the same value for Subject and Issuer (self-signed).
 - Some extensions may be unavailable or displayed as raw hex if decoding is not applicable.
 - Catalog hash mismatches are logged and skipped gracefully.
+
+<br>
+
+## Firmware Info
+
+Used for analyzing the firmware's UEFI variables and Secure Boot data directly from the application.
+
+Key capabilities include:
+
+* **Get Platform Key:** Retrieve the Platform Key (PK), the root of trust that controls access to the Key Exchange Key database and establishes ownership of the platform.
+
+* **Get Default Platform Key:** Retrieve the factory default Platform Key (PKDefault), representing the original root of trust provided by the system manufacturer.
+
+* **Get Key Exchange Key:** Retrieve the Key Exchange Key (KEK) database, containing keys trusted to update the signature database (db) and the forbidden signature database (dbx).
+
+* **Get Default Key Exchange Key:** Retrieve the factory default Key Exchange Key (KEKDefault) database, containing the initial set of keys trusted for database updates provided by the system manufacturer.
+
+* **Get Signature Database:** Retrieve the Signature Database (db), containing the list of trusted certificates and hashes allowed to execute on this system.
+
+* **Get Default Signature Database:** Retrieve the factory default Signature Database (dbDefault), containing the initial set of trusted certificates and hashes provided by the system manufacturer.
+
+* **Get Forbidden Signature Database:** Retrieve the Forbidden Signature Database (dbx), containing the revocation list of compromised certificates and hashes that are blocked from booting.
+
+* **Get Default Forbidden Signature Database:** Retrieve the factory default Forbidden Signature Database (dbxDefault), containing the initial revocation list provided by the system manufacturer.
+
+> [!TIP]\
+> You can read more about these UEFI Secure Boot variables on:
+>
+> * https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-secure-boot-key-creation-and-management-guidance
+>
+> * https://uefi.org/sites/default/files/resources/Evolving%20the%20Secure%20Boot%20Ecosystem_Flick%20and%20Sutherland.pdf
+> * https://uefi.org/specs/UEFI/2.9_A/32_Secure_Boot_and_Driver_Signing.html
+>
+> * https://github.com/microsoft/secureboot_objects
+>
+> * https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/validating-windows-uefi-firmware-update-platform-functionality
+>

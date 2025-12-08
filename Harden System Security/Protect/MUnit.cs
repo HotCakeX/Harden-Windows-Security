@@ -128,9 +128,7 @@ internal static class MUnitDependencyRegistry
 	internal static List<string> GetDependencies(string mUnitId, MUnitOperation operation, ExecutionTiming timing)
 	{
 		if (!_dependencies.TryGetValue(mUnitId, out List<MUnitDependency>? dependencies))
-		{
 			return [];
-		}
 
 		return dependencies
 			.Where(dep => dep.Timing == timing &&
@@ -139,14 +137,6 @@ internal static class MUnitDependencyRegistry
 						  (operation == MUnitOperation.Remove && dep.Type == DependencyType.Remove)))
 			.Select(dep => dep.DependentMUnitId)
 			.ToList();
-	}
-
-	/// <summary>
-	/// Clears all registered dependencies
-	/// </summary>
-	internal static void Clear()
-	{
-		_dependencies.Clear();
 	}
 }
 
@@ -282,7 +272,6 @@ internal sealed class GroupPolicyVerify(List<RegistryPolicyEntry> policies) : IV
 	// This will never be called on its own.
 	public bool Verify() =>
 		throw new InvalidOperationException(GlobalVars.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
-
 }
 
 /// <summary>
@@ -307,7 +296,6 @@ internal sealed class RegistryVerify(List<RegistryPolicyEntry> policies) : IVeri
 	// This will never be called on its own.
 	public bool Verify() =>
 		throw new InvalidOperationException(GlobalVars.GetStr("SecurityPolicyRegistryVerifyBulkInvokeError"));
-
 }
 
 /// <summary>
@@ -317,7 +305,6 @@ internal sealed class DefaultVerify(Func<bool> func) : IVerifyStrategy
 {
 	public bool Verify() => func();
 }
-
 
 /// <summary>
 /// The Remove strategy interface.
@@ -640,34 +627,20 @@ internal static class SpecializedStrategiesRegistry
 						// Support canonical "true"/"false" and numeric "1"/"0" representations.
 						if (!bool.TryParse(dv.Value, out bool desiredBool))
 						{
-							if (string.Equals(dv.Value, "1", StringComparison.OrdinalIgnoreCase))
-							{
-								desiredBool = true;
-							}
-							else if (string.Equals(dv.Value, "0", StringComparison.OrdinalIgnoreCase))
-							{
-								desiredBool = false;
-							}
-							else
-							{
-								throw new InvalidOperationException($"Unrecognized desired boolean format: '{dv.Value}'");
-							}
+							desiredBool = string.Equals(dv.Value, "1", StringComparison.OrdinalIgnoreCase)
+								? true
+								: string.Equals(dv.Value, "0", StringComparison.OrdinalIgnoreCase)
+									? false
+									: throw new InvalidOperationException($"Unrecognized desired boolean format: '{dv.Value}'");
 						}
 
 						if (!bool.TryParse(result, out bool actualBool))
 						{
-							if (string.Equals(result, "1", StringComparison.OrdinalIgnoreCase))
-							{
-								actualBool = true;
-							}
-							else if (string.Equals(result, "0", StringComparison.OrdinalIgnoreCase))
-							{
-								actualBool = false;
-							}
-							else
-							{
-								throw new InvalidOperationException($"Unrecognized actual boolean format: '{result}'");
-							}
+							actualBool = string.Equals(result, "1", StringComparison.OrdinalIgnoreCase)
+								? true
+								: string.Equals(result, "0", StringComparison.OrdinalIgnoreCase)
+									? false
+									: throw new InvalidOperationException($"Unrecognized actual boolean format: '{result}'");
 						}
 
 						if (actualBool == desiredBool)
@@ -1068,6 +1041,36 @@ internal sealed partial class MUnit(
 	}
 
 	/// <summary>
+	/// Processes JSON-based dependencies for a given timing and operation.
+	/// </summary>
+	/// <param name="mUnits">The primary MUnits being processed</param>
+	/// <param name="allAvailableMUnits">All available MUnits for dependency resolution</param>
+	/// <param name="operation">The operation being performed</param>
+	/// <param name="timing">When to process dependencies</param>
+	/// <param name="cancellationToken">Optional cancellation token</param>
+	private static void ProcessDependenciesPhase(
+		List<MUnit> mUnits,
+		List<MUnit> allAvailableMUnits,
+		MUnitOperation operation,
+		ExecutionTiming timing,
+		CancellationToken? cancellationToken = null)
+	{
+		List<MUnit> dependencies = ResolveDependencies(mUnits, allAvailableMUnits, operation, timing, cancellationToken);
+		if (dependencies.Count == 0)
+			return;
+
+		string resourceKey = timing == ExecutionTiming.Before ? "ProcessingBeforeDependencies" : "ProcessingAfterDependencies";
+		Logger.Write(string.Format(GlobalVars.GetStr(resourceKey), dependencies.Count, operation));
+
+		ProcessGroupPolicyMUnitsBulk(dependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
+		ProcessRegistryMUnitsBulk(dependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
+		foreach (MUnit regularDep in dependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m)))
+		{
+			ProcessRegularMUnit(regularDep, operation, cancellationToken);
+		}
+	}
+
+	/// <summary>
 	/// One unified core method for Group Policy and Registry MUnits.
 	/// isGroupPolicy = true  => Group Policy behavior (RegistryPolicyParser + POL verification with fallback)
 	/// isGroupPolicy = false => Registry behavior (direct RegistryManager verification with fallback)
@@ -1117,17 +1120,7 @@ internal sealed partial class MUnit(
 			case MUnitOperation.Apply:
 				{
 					// Process Before dependencies for JSON-based MUnits
-					List<MUnit> beforeDependencies = ResolveDependencies(mUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
-					if (beforeDependencies.Count > 0)
-					{
-						Logger.Write(string.Format(GlobalVars.GetStr("ProcessingBeforeDependencies"), beforeDependencies.Count, operation));
-						ProcessGroupPolicyMUnitsBulk(beforeDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-						ProcessRegistryMUnitsBulk(beforeDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-						foreach (MUnit regularDep in beforeDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m)))
-						{
-							ProcessRegularMUnit(regularDep, operation, cancellationToken);
-						}
-					}
+					ProcessDependenciesPhase(mUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
 
 					// Execute-Before specialized apply strategies
 					ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.Before, operation, cancellationToken);
@@ -1148,17 +1141,7 @@ internal sealed partial class MUnit(
 					ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
 
 					// Process After dependencies for JSON-based MUnits
-					List<MUnit> afterDependencies = ResolveDependencies(mUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
-					if (afterDependencies.Count > 0)
-					{
-						Logger.Write(string.Format(GlobalVars.GetStr("ProcessingAfterDependencies"), afterDependencies.Count, operation));
-						ProcessGroupPolicyMUnitsBulk(afterDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-						ProcessRegistryMUnitsBulk(afterDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-						foreach (MUnit regularDep in afterDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m)))
-						{
-							ProcessRegularMUnit(regularDep, operation, cancellationToken);
-						}
-					}
+					ProcessDependenciesPhase(mUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
 
 					// Mark all as applied
 					foreach (MUnit mUnit in mUnits)
@@ -1171,17 +1154,7 @@ internal sealed partial class MUnit(
 			case MUnitOperation.Remove:
 				{
 					// Process Before dependencies for JSON-based MUnits
-					List<MUnit> beforeRemoveDependencies = ResolveDependencies(mUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
-					if (beforeRemoveDependencies.Count > 0)
-					{
-						Logger.Write(string.Format(GlobalVars.GetStr("ProcessingBeforeDependencies"), beforeRemoveDependencies.Count, operation));
-						ProcessGroupPolicyMUnitsBulk(beforeRemoveDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-						ProcessRegistryMUnitsBulk(beforeRemoveDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-						foreach (MUnit regularDep in beforeRemoveDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m)))
-						{
-							ProcessRegularMUnit(regularDep, operation, cancellationToken);
-						}
-					}
+					ProcessDependenciesPhase(mUnits, allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
 
 					// Execute-Before specialized remove strategies
 					ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.Before, operation, cancellationToken);
@@ -1202,17 +1175,7 @@ internal sealed partial class MUnit(
 					ExecuteSpecializedStrategies(allPolicies, ExecutionTiming.After, operation, cancellationToken);
 
 					// Process After dependencies for JSON-based MUnits
-					List<MUnit> afterRemoveDependencies = ResolveDependencies(mUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
-					if (afterRemoveDependencies.Count > 0)
-					{
-						Logger.Write(string.Format(GlobalVars.GetStr("ProcessingAfterDependencies"), afterRemoveDependencies.Count, operation));
-						ProcessGroupPolicyMUnitsBulk(afterRemoveDependencies.Where(IsGroupPolicyMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-						ProcessRegistryMUnitsBulk(afterRemoveDependencies.Where(IsRegistryMUnit).ToList(), operation, allAvailableMUnits, cancellationToken);
-						foreach (MUnit regularDep in afterRemoveDependencies.Where(m => !IsGroupPolicyMUnit(m) && !IsRegistryMUnit(m)))
-						{
-							ProcessRegularMUnit(regularDep, operation, cancellationToken);
-						}
-					}
+					ProcessDependenciesPhase(mUnits, allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
 
 					// Mark all as not applied
 					foreach (MUnit mUnit in mUnits)
@@ -1711,10 +1674,7 @@ internal sealed partial class MUnit(
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: subCategory,
-			url: url)
-	{
-		IsApplied = isApplied;
-	}
+			url: url) => IsApplied = isApplied;
 }
 
 /// <summary>

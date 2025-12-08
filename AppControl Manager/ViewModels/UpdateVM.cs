@@ -56,15 +56,12 @@ internal sealed partial class UpdateVM : ViewModelBase
 	{
 	}
 
-	internal UpdateVM()
-	{
-		MainInfoBar = new InfoBarSettings(
+	internal UpdateVM() => MainInfoBar = new InfoBarSettings(
 			() => MainInfoBarIsOpen, value => MainInfoBarIsOpen = value,
 			() => MainInfoBarMessage, value => MainInfoBarMessage = value,
 			() => MainInfoBarSeverity, value => MainInfoBarSeverity = value,
 			() => MainInfoBarIsClosable, value => MainInfoBarIsClosable = value,
 			Dispatcher, null, null);
-	}
 
 	internal readonly InfoBarSettings MainInfoBar;
 
@@ -370,7 +367,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 						CertificateGenerator.DeleteCertificateByCN(CertCommonName);
 
 						// Generate a new certificate
-						X509Certificate2 generatedCert = CertificateGenerator.GenerateSelfSignedCertificate(
+						using X509Certificate2 generatedCert = CertificateGenerator.GenerateSelfSignedCertificate(
 						subjectName: CertCommonName,
 						validityInYears: 100,
 						keySize: 4096,
@@ -460,7 +457,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 						IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(new Uri(AppControlManagerSavePath), options);
 
 						// This event is signaled when the operation completes
-						ManualResetEvent opCompletedEvent = new(false);
+						using ManualResetEvent opCompletedEvent = new(false);
 
 						// Define the delegate using a statement lambda
 						deploymentOperation.Completed = (depProgress, status) => { _ = opCompletedEvent.Set(); };

@@ -668,20 +668,13 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					// Retrieve friendly names
 					AdmxAdmlParser.PopulateFriendlyNames(policy.Entries);
 
-					string? saveLoc = null;
-
-					if (OutputDirForJsonFilesAfterConversion is null)
-					{
-						saveLoc = Path.Combine(
+					string? saveLoc = OutputDirForJsonFilesAfterConversion is null
+						? Path.Combine(
 							Path.GetDirectoryName(item) ?? GlobalVars.SystemDrive,
-							Path.GetFileNameWithoutExtension(item) + ".json");
-					}
-					else
-					{
-						saveLoc = Path.Combine(
+							Path.GetFileNameWithoutExtension(item) + ".json")
+						: Path.Combine(
 							OutputDirForJsonFilesAfterConversion,
 							Path.GetFileNameWithoutExtension(item) + ".json");
-					}
 
 					// Populate RegValue for Group Policy entries at save time so the generated JSON includes it.
 					foreach (RegistryPolicyEntry entry in policy.Entries)
@@ -766,21 +759,13 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 							version: RegistryPolicyFile.REGISTRY_FILE_VERSION,
 							entries: policies);
 
-					string? saveLoc = null;
-
-					if (OutputDirForPOLFilesAfterConversion is null)
-					{
-						saveLoc = Path.Combine(
+					string? saveLoc = OutputDirForPOLFilesAfterConversion is null
+						? Path.Combine(
 							Path.GetDirectoryName(item) ?? GlobalVars.SystemDrive,
-							Path.GetFileNameWithoutExtension(item) + ".pol");
-					}
-					else
-					{
-						saveLoc = Path.Combine(
+							Path.GetFileNameWithoutExtension(item) + ".pol")
+						: Path.Combine(
 							OutputDirForPOLFilesAfterConversion,
 							Path.GetFileNameWithoutExtension(item) + ".pol");
-					}
-
 					RegistryPolicyParser.WriteFile(saveLoc, newPolicyFile);
 
 					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("JSONFileConvertedToPOLSuccess"), saveLoc));
@@ -850,21 +835,13 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 				{
 					List<RegistryPolicyEntry> policies = SecurityINFParser.ParseSecurityINFFile(item);
 
-					string? saveLoc = null;
-
-					if (OutputDirForSecurityINFToJSONConversion is null)
-					{
-						saveLoc = Path.Combine(
+					string? saveLoc = OutputDirForSecurityINFToJSONConversion is null
+						? Path.Combine(
 							Path.GetDirectoryName(item) ?? GlobalVars.SystemDrive,
-							Path.GetFileNameWithoutExtension(item) + ".json");
-					}
-					else
-					{
-						saveLoc = Path.Combine(
+							Path.GetFileNameWithoutExtension(item) + ".json")
+						: Path.Combine(
 							OutputDirForSecurityINFToJSONConversion,
 							Path.GetFileNameWithoutExtension(item) + ".json");
-					}
-
 					RegistryPolicyEntry.Save(saveLoc, policies);
 
 					MainInfoBar.WriteSuccess(string.Format(GlobalVars.GetStr("SecurityINFFileConvertedToJSONSuccess"), saveLoc));

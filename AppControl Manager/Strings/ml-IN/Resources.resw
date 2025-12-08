@@ -6239,4 +6239,85 @@
   <data name="SignatureUpdate.Text" xml:space="preserve">
     <value>സിഗ്നേച്ചർ അപ്‌ഡേറ്റ് (UTC)</value>
   </data>
+    <data name="FirmwareInfoDropdownButton.Content" xml:space="preserve">
+    <value>ഫേംവെയർ വിവരങ്ങൾ</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>PK (പ്ലാറ്റ്‌ഫോം കീ), KEK (കീ എക്‌സ്‌ചേഞ്ച് കീ), db (സിഗ്നേച്ചർ ഡാറ്റാബേസ്), dbx (നിരോധിത സിഗ്നേച്ചർ ഡാറ്റാബേസ്) എന്നിവയിൽ നിന്ന് സർട്ടിഫിക്കറ്റുകളും ക്രിപ്‌റ്റോഗ്രാഫിക് ഹാഷുകളും വീണ്ടെടുത്ത്, അവയുടെ ഫാക്ടറി ഡിഫോൾട്ട് അവസ്ഥകൾ ഉൾപ്പെടെ, UEFI സെക്യൂർ ബൂട്ട് വേരിയബിളുകൾ ആക്‌സസ് ചെയ്യുകയും വിശകലനം ചെയ്യുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>PK (പ്ലാറ്റ്‌ഫോം കീ), KEK (കീ എക്‌സ്‌ചേഞ്ച് കീ), db (സിഗ്നേച്ചർ ഡാറ്റാബേസ്), dbx (നിരോധിത സിഗ്നേച്ചർ ഡാറ്റാബേസ്) എന്നിവയിൽ നിന്ന് സർട്ടിഫിക്കറ്റുകളും ക്രിപ്‌റ്റോഗ്രാഫിക് ഹാഷുകളും വീണ്ടെടുത്ത്, അവയുടെ ഫാക്ടറി ഡിഫോൾട്ട് അവസ്ഥകൾ ഉൾപ്പെടെ, UEFI സെക്യൂർ ബൂട്ട് വേരിയബിളുകൾ ആക്‌സസ് ചെയ്യുകയും വിശകലനം ചെയ്യുകയും ചെയ്യുക.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.Text" xml:space="preserve">
+    <value>സിഗ്നേച്ചർ ഡാറ്റാബേസ് നേടുക</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ സിസ്റ്റത്തിൽ പ്രവർത്തിക്കാൻ അനുവദിച്ചിട്ടുള്ള വിശ്വസനീയമായ സർട്ടിഫിക്കറ്റുകളുടെയും ഹാഷുകളുടെയും ലിസ്റ്റ് അടങ്ങുന്ന സിഗ്നേച്ചർ ഡാറ്റാബേസ് (db) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ സിസ്റ്റത്തിൽ പ്രവർത്തിക്കാൻ അനുവദിച്ചിട്ടുള്ള വിശ്വസനീയമായ സർട്ടിഫിക്കറ്റുകളുടെയും ഹാഷുകളുടെയും ലിസ്റ്റ് അടങ്ങുന്ന സിഗ്നേച്ചർ ഡാറ്റാബേസ് (db) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.Text" xml:space="preserve">
+    <value>ഡിഫോൾട്ട് സിഗ്നേച്ചർ ഡാറ്റാബേസ് നേടുക</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റം നിർമ്മാതാവ് നൽകുന്ന വിശ്വസനീയമായ സർട്ടിഫിക്കറ്റുകളുടെയും ഹാഷുകളുടെയും പ്രാരംഭ സെറ്റ് അടങ്ങുന്ന ഫാക്ടറി ഡിഫോൾട്ട് സിഗ്നേച്ചർ ഡാറ്റാബേസ് (dbDefault) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റം നിർമ്മാതാവ് നൽകുന്ന വിശ്വസനീയമായ സർട്ടിഫിക്കറ്റുകളുടെയും ഹാഷുകളുടെയും പ്രാരംഭ സെറ്റ് അടങ്ങുന്ന ഫാക്ടറി ഡിഫോൾട്ട് സിഗ്നേച്ചർ ഡാറ്റാബേസ് (dbDefault) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>നിരോധിത സിഗ്നേച്ചർ ഡാറ്റാബേസ് നേടുക</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ബൂട്ടുചെയ്യുന്നതിൽ നിന്ന് തടഞ്ഞ വിട്ടുവീഴ്ച ചെയ്യപ്പെട്ട സർട്ടിഫിക്കറ്റുകളുടെയും ഹാഷുകളുടെയും റദ്ദാക്കൽ ലിസ്റ്റ് അടങ്ങുന്ന നിരോധിത സിഗ്നേച്ചർ ഡാറ്റാബേസ് (dbx) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ബൂട്ടുചെയ്യുന്നതിൽ നിന്ന് തടഞ്ഞ വിട്ടുവീഴ്ച ചെയ്യപ്പെട്ട സർട്ടിഫിക്കറ്റുകളുടെയും ഹാഷുകളുടെയും റദ്ദാക്കൽ ലിസ്റ്റ് അടങ്ങുന്ന നിരോധിത സിഗ്നേച്ചർ ഡാറ്റാബേസ് (dbx) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>ഡിഫോൾട്ട് നിരോധിത സിഗ്നേച്ചർ ഡാറ്റാബേസ് നേടുക</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റം നിർമ്മാതാവ് നൽകുന്ന പ്രാരംഭ റദ്ദാക്കൽ ലിസ്റ്റ് അടങ്ങുന്ന ഫാക്ടറി ഡിഫോൾട്ട് നിരോധിത സിഗ്നേച്ചർ ഡാറ്റാബേസ് (dbxDefault) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റം നിർമ്മാതാവ് നൽകുന്ന പ്രാരംഭ റദ്ദാക്കൽ ലിസ്റ്റ് അടങ്ങുന്ന ഫാക്ടറി ഡിഫോൾട്ട് നിരോധിത സിഗ്നേച്ചർ ഡാറ്റാബേസ് (dbxDefault) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.Text" xml:space="preserve">
+    <value>പ്ലാറ്റ്‌ഫോം കീ നേടുക</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>കീ എക്‌സ്‌ചേഞ്ച് കീ ഡാറ്റാബേസിലേക്കുള്ള ആക്‌സസ് നിയന്ത്രിക്കുകയും പ്ലാറ്റ്‌ഫോമിന്റെ ഉടമസ്ഥത സ്ഥാപിക്കുകയും ചെയ്യുന്ന വിശ്വാസത്തിന്റെ ഉറവിടമായ പ്ലാറ്റ്‌ഫോം കീ (PK) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>കീ എക്‌സ്‌ചേഞ്ച് കീ ഡാറ്റാബേസിലേക്കുള്ള ആക്‌സസ് നിയന്ത്രിക്കുകയും പ്ലാറ്റ്‌ഫോമിന്റെ ഉടമസ്ഥത സ്ഥാപിക്കുകയും ചെയ്യുന്ന വിശ്വാസത്തിന്റെ ഉറവിടമായ പ്ലാറ്റ്‌ഫോം കീ (PK) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.Text" xml:space="preserve">
+    <value>ഡിഫോൾട്ട് പ്ലാറ്റ്‌ഫോം കീ നേടുക</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റം നിർമ്മാതാവ് നൽകുന്ന വിശ്വാസത്തിന്റെ യഥാർത്ഥ ഉറവിടത്തെ പ്രതിനിധീകരിക്കുന്ന ഫാക്ടറി ഡിഫോൾട്ട് പ്ലാറ്റ്‌ഫോം കീ (PKDefault) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റം നിർമ്മാതാവ് നൽകുന്ന വിശ്വാസത്തിന്റെ യഥാർത്ഥ ഉറവിടത്തെ പ്രതിനിധീകരിക്കുന്ന ഫാക്ടറി ഡിഫോൾട്ട് പ്ലാറ്റ്‌ഫോം കീ (PKDefault) വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.Text" xml:space="preserve">
+    <value>കീ എക്‌സ്‌ചേഞ്ച് കീ നേടുക</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിഗ്നേച്ചർ ഡാറ്റാബേസും (db) നിരോധിത സിഗ്നേച്ചർ ഡാറ്റാബേസും (dbx) അപ്‌ഡേറ്റ് ചെയ്യാൻ വിശ്വസനീയമായ കീകൾ അടങ്ങുന്ന കീ എക്‌സ്‌ചേഞ്ച് കീ (KEK) ഡാറ്റാബേസ് വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിഗ്നേച്ചർ ഡാറ്റാബേസും (db) നിരോധിത സിഗ്നേച്ചർ ഡാറ്റാബേസും (dbx) അപ്‌ഡേറ്റ് ചെയ്യാൻ വിശ്വസനീയമായ കീകൾ അടങ്ങുന്ന കീ എക്‌സ്‌ചേഞ്ച് കീ (KEK) ഡാറ്റാബേസ് വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.Text" xml:space="preserve">
+    <value>ഡിഫോൾട്ട് കീ എക്‌സ്‌ചേഞ്ച് കീ നേടുക</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സിസ്റ്റം നിർമ്മാതാവ് നൽകുന്ന ഡാറ്റാബേസ് അപ്‌ഡേറ്റുകൾക്കായി വിശ്വസനീയമായ കീകളുടെ പ്രാരംഭ സെറ്റ് അടങ്ങുന്ന ഫാക്ടറി ഡിഫോൾട്ട് കീ എക്‌സ്‌ചേഞ്ച് കീ (KEKDefault) ഡാറ്റാബേസ് വീണ്ടെടുക്കുക.</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സിസ്റ്റം നിർമ്മാതാവ് നൽകുന്ന ഡാറ്റാബേസ് അപ്‌ഡേറ്റുകൾക്കായി വിശ്വസനീയമായ കീകളുടെ പ്രാരംഭ സെറ്റ് അടങ്ങുന്ന ഫാക്ടറി ഡിഫോൾട്ട് കീ എക്‌സ്‌ചേഞ്ച് കീ (KEKDefault) ഡാറ്റാബേസ് വീണ്ടെടുക്കുക.</value>
+  </data>
 </root>

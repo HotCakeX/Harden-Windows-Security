@@ -449,20 +449,11 @@ internal static class Helper
 	/// </summary>
 	internal static AppManifest RetrieveApplicationManifest(HttpClient c, Uri Manifest)
 	{
-		string content;
-
-		if (Manifest.Scheme == Uri.UriSchemeFile)
-		{
-			content = File.ReadAllText(Manifest.AbsolutePath);
-		}
-		else if (Manifest.Scheme == Uri.UriSchemeHttp || Manifest.Scheme == Uri.UriSchemeHttps)
-		{
-			content = c.GetStringAsync(Manifest).GetAwaiter().GetResult();
-		}
-		else
-		{
-			throw new InvalidOperationException(string.Format(GlobalVars.GetStr("InvalidUrlDetectedForAppManifest"), Manifest.Scheme));
-		}
+		string content = Manifest.Scheme == Uri.UriSchemeFile
+			? File.ReadAllText(Manifest.AbsolutePath)
+			: Manifest.Scheme == Uri.UriSchemeHttp || Manifest.Scheme == Uri.UriSchemeHttps
+				? c.GetStringAsync(Manifest).GetAwaiter().GetResult()
+				: throw new InvalidOperationException(string.Format(GlobalVars.GetStr("InvalidUrlDetectedForAppManifest"), Manifest.Scheme));
 
 		using MemoryStream xmlStream = new(Encoding.UTF8.GetBytes(content));
 

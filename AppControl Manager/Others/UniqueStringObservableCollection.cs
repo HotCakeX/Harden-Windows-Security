@@ -33,10 +33,7 @@ internal sealed partial class UniqueStringObservableCollection : ObservableColle
 	/// Initializes a new instance of the <see cref="UniqueStringObservableCollection"/> class.
 	/// Uses StringComparer.OrdinalIgnoreCase for uniqueness.
 	/// </summary>
-	internal UniqueStringObservableCollection()
-	{
-		_hashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-	}
+	internal UniqueStringObservableCollection() => _hashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="UniqueStringObservableCollection"/> class that contains elements copied from the specified collection.
@@ -44,10 +41,7 @@ internal sealed partial class UniqueStringObservableCollection : ObservableColle
 	/// </summary>
 	/// <param name="collection">The collection whose elements are copied to the new list.</param>
 	internal UniqueStringObservableCollection(IEnumerable<string> collection)
-		: base(collection.Distinct(StringComparer.OrdinalIgnoreCase))
-	{
-		_hashSet = new HashSet<string>(this, StringComparer.OrdinalIgnoreCase);
-	}
+		: base(collection.Distinct(StringComparer.OrdinalIgnoreCase)) => _hashSet = new HashSet<string>(this, StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// A read-only view of the internal set of unique items.

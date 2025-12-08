@@ -927,20 +927,13 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	private void UpdateFilteredItems()
 	{
 		// Choose the source items based on search query
-		IEnumerable<DISMOutputEntry> filtered;
-
-		if (string.IsNullOrEmpty(SearchQuery))
-		{
-			filtered = AllItems;
-		}
-		else
-		{
-			filtered = AllItems.Where(x =>
+		IEnumerable<DISMOutputEntry> filtered = string.IsNullOrEmpty(SearchQuery)
+			? AllItems
+			: AllItems.Where(x =>
 				x.Name.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
 				x.TypeDisplayName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
 				x.Description.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) ||
 				x.StateDisplayName.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase));
-		}
 
 		// Update total counts
 		TotalItemsCount = AllItems.Count;
@@ -1266,16 +1259,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			// After the operation, get the current state to verify the change.
 			if (result)
 			{
-				List<DISMOutput> updatedResults;
-				if (entry.Type == DISMResultType.Feature)
-				{
-					updatedResults = await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name]);
-				}
-				else
-				{
-					updatedResults = await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-				}
-
+				List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
+					? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
+					: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
 				await Dispatcher.EnqueueAsync(() =>
 				{
 					if (updatedResults.Count > 0)
@@ -1359,16 +1345,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			// After the operation, get the current state to verify the change
 			if (result)
 			{
-				List<DISMOutput> updatedResults;
-				if (entry.Type == DISMResultType.Feature)
-				{
-					updatedResults = await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name]);
-				}
-				else
-				{
-					updatedResults = await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-				}
-
+				List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
+					? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
+					: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
 				await Dispatcher.EnqueueAsync(() =>
 				{
 					if (updatedResults.Count > 0)
@@ -1466,16 +1445,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						if (result)
 						{
 							// Get updated state
-							List<DISMOutput> updatedResults;
-							if (entry.Type == DISMResultType.Feature)
-							{
-								updatedResults = await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name]);
-							}
-							else
-							{
-								updatedResults = await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-							}
-
+							List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
+								? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
+								: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
 							await Dispatcher.EnqueueAsync(() =>
 							{
 								if (updatedResults.Count > 0)
@@ -1610,16 +1582,9 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 						if (result)
 						{
 							// Get updated state
-							List<DISMOutput> updatedResults;
-							if (entry.Type == DISMResultType.Feature)
-							{
-								updatedResults = await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name]);
-							}
-							else
-							{
-								updatedResults = await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
-							}
-
+							List<DISMOutput> updatedResults = entry.Type == DISMResultType.Feature
+								? await _dismServiceClient!.GetSpecificFeaturesAsync([entry.Name])
+								: await _dismServiceClient!.GetSpecificCapabilitiesAsync([entry.Name]);
 							await Dispatcher.EnqueueAsync(() =>
 							{
 								if (updatedResults.Count > 0)

@@ -6240,4 +6240,85 @@
   <data name="SignatureUpdate.Text" xml:space="preserve">
     <value>עדכון חתימות (UTC)</value>
   </data>
+    <data name="FirmwareInfoDropdownButton.Content" xml:space="preserve">
+    <value>מידע קושחה</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>גישה וניתוח של משתני אתחול מאובטח (Secure Boot) של UEFI על ידי אחזור אישורים וגיבובים קריפטוגרפיים מ-PK (מפתח פלטפורמה), KEK (מפתח החלפת מפתחות), db (מסד נתונים של חתימות), ו-dbx (מסד נתונים של חתימות אסורות), כולל מצבי ברירת המחדל שלהם מהיצרן.</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>גישה וניתוח של משתני אתחול מאובטח (Secure Boot) של UEFI על ידי אחזור אישורים וגיבובים קריפטוגרפיים מ-PK (מפתח פלטפורמה), KEK (מפתח החלפת מפתחות), db (מסד נתונים של חתימות), ו-dbx (מסד נתונים של חתימות אסורות), כולל מצבי ברירת המחדל שלהם מהיצרן.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.Text" xml:space="preserve">
+    <value>קבל מסד נתונים של חתימות</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של החתימות (db), המכיל את רשימת האישורים והגיבובים המהימנים המורשים לפעול במערכת זו.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של החתימות (db), המכיל את רשימת האישורים והגיבובים המהימנים המורשים לפעול במערכת זו.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.Text" xml:space="preserve">
+    <value>קבל מסד נתונים של חתימות (ברירת מחדל)</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של החתימות המוגדר כברירת מחדל (dbDefault), המכיל את הסט הראשוני של אישורים וגיבובים מהימנים שסופקו על ידי יצרן המערכת.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של החתימות המוגדר כברירת מחדל (dbDefault), המכיל את הסט הראשוני של אישורים וגיבובים מהימנים שסופקו על ידי יצרן המערכת.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>קבל מסד נתונים של חתימות אסורות</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של החתימות האסורות (dbx), המכיל את רשימת השלילה של אישורים וגיבובים שנפרצו ונחסמו מפני אתחול.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של החתימות האסורות (dbx), המכיל את רשימת השלילה של אישורים וגיבובים שנפרצו ונחסמו מפני אתחול.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>קבל מסד נתונים של חתימות אסורות (ברירת מחדל)</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של החתימות האסורות המוגדר כברירת מחדל (dbxDefault), המכיל את רשימת השלילה הראשונית שסופקה על ידי יצרן המערכת.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של החתימות האסורות המוגדר כברירת מחדל (dbxDefault), המכיל את רשימת השלילה הראשונית שסופקה על ידי יצרן המערכת.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.Text" xml:space="preserve">
+    <value>קבל מפתח פלטפורמה</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את מפתח הפלטפורמה (PK), שורש האמון השולט בגישה למסד הנתונים של מפתחות החלפת המפתחות ומבסס בעלות על הפלטפורמה.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את מפתח הפלטפורמה (PK), שורש האמון השולט בגישה למסד הנתונים של מפתחות החלפת המפתחות ומבסס בעלות על הפלטפורמה.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.Text" xml:space="preserve">
+    <value>קבל מפתח פלטפורמה (ברירת מחדל)</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את מפתח הפלטפורמה המוגדר כברירת מחדל (PKDefault), המייצג את שורש האמון המקורי שסופק על ידי יצרן המערכת.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את מפתח הפלטפורמה המוגדר כברירת מחדל (PKDefault), המייצג את שורש האמון המקורי שסופק על ידי יצרן המערכת.</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.Text" xml:space="preserve">
+    <value>קבל מפתח החלפת מפתחות</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של מפתח החלפת המפתחות (KEK), המכיל מפתחות המהימנים לעדכון מסד הנתונים של החתימות (db) ומסד הנתונים של החתימות האסורות (dbx).</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של מפתח החלפת המפתחות (KEK), המכיל מפתחות המהימנים לעדכון מסד הנתונים של החתימות (db) ומסד הנתונים של החתימות האסורות (dbx).</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.Text" xml:space="preserve">
+    <value>קבל מפתח החלפת מפתחות (ברירת מחדל)</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של מפתח החלפת המפתחות המוגדר כברירת מחדל (KEKDefault), המכיל את הסט הראשוני של מפתחות המהימנים לעדכוני מסד נתונים שסופקו על ידי יצרן המערכת.</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>אחזר את מסד הנתונים של מפתח החלפת המפתחות המוגדר כברירת מחדל (KEKDefault), המכיל את הסט הראשוני של מפתחות המהימנים לעדכוני מסד נתונים שסופקו על ידי יצרן המערכת.</value>
+  </data>
 </root>

@@ -50,15 +50,13 @@ internal static class CustomDeserialization
 			// Make sure the policy file is valid
 			CiPolicyTest.TestCiPolicy(filePath);
 		}
-		else if (Xml is not null)
-		{
-			root = Xml.DocumentElement
-				   ?? throw new InvalidOperationException(
-					   GlobalVars.GetStr("InvalidXmlMissingRootElementValidationError"));
-		}
 		else
 		{
-			throw new InvalidOperationException(
+			root = Xml is not null
+				? Xml.DocumentElement
+				   ?? throw new InvalidOperationException(
+					   GlobalVars.GetStr("InvalidXmlMissingRootElementValidationError"))
+				: throw new InvalidOperationException(
 				GlobalVars.GetStr("FilePathOrXmlRequiredMessage"));
 		}
 

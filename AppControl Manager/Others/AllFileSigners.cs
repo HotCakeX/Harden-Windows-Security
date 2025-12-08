@@ -28,15 +28,13 @@ namespace AppControlManager.Others;
 /// <param name="chainContext"></param>
 internal sealed partial class AllFileSigners(SignedCms signerCertificate, IntPtr chainContext) : IDisposable
 {
-	private readonly X509Chain _chain = chainContext == IntPtr.Zero
+	internal SignedCms Signer => signerCertificate;
+	internal X509Chain Chain { get; } = chainContext == IntPtr.Zero
 		? new X509Chain()
 		: new X509Chain(chainContext);
 
-	internal SignedCms Signer => signerCertificate;
-	internal X509Chain Chain => _chain;
-
 	public void Dispose()
 	{
-		_chain.Dispose();
+		Chain.Dispose();
 	}
 }

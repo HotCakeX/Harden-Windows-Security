@@ -67,10 +67,7 @@ internal sealed partial class AnimatedImage : UserControl
 		set => SetValue(ImageUrlProperty, value);
 	}
 
-	public AnimatedImage()
-	{
-		this.InitializeComponent();
-	}
+	public AnimatedImage() => this.InitializeComponent();
 
 	private void AnimatedImage_Unloaded(object sender, RoutedEventArgs e)
 	{

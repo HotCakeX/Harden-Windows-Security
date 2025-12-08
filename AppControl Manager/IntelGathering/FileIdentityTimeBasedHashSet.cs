@@ -35,23 +35,14 @@ namespace AppControlManager.IntelGathering;
 internal sealed class FileIdentityTimeBasedHashSet
 {
 	/// <summary>
-	/// A HashSet to store FileIdentity objects with a custom comparer.
-	/// This comparer defines equality based on selected properties in that comparer, ignoring TimeCreated for now.
-	/// </summary>
-	private readonly HashSet<FileIdentity> _set;
-
-	/// <summary>
 	/// Initializes a new instance of the FileIdentityTimeBasedHashSet class.
 	/// </summary>
-	internal FileIdentityTimeBasedHashSet()
-	{
-		_set = new HashSet<FileIdentity>(new FileIdentityComparer());
-	}
+	internal FileIdentityTimeBasedHashSet() => FileIdentitiesInternal = new HashSet<FileIdentity>(new FileIdentityComparer());
 
 	/// <summary>
 	/// Expose the internal HashSet so we can access it directly.
 	/// </summary>
-	internal HashSet<FileIdentity> FileIdentitiesInternal => _set;
+	internal HashSet<FileIdentity> FileIdentitiesInternal { get; }
 
 	/// <summary>
 	/// Adds a FileIdentity item to the set, replacing an older equivalent item if it exists.
@@ -61,7 +52,7 @@ internal sealed class FileIdentityTimeBasedHashSet
 	public bool Add(FileIdentity item)
 	{
 		// Check if an equivalent item (based on FileIdentityComparer) already exists in the set
-		if (_set.TryGetValue(item, out FileIdentity? existingItem))
+		if (FileIdentitiesInternal.TryGetValue(item, out FileIdentity? existingItem))
 		{
 			// Prefer items that have TimeCreated over those that don't.
 			// If both have TimeCreated, prefer the newer one. If equal or older, keep existing.
@@ -73,8 +64,8 @@ internal sealed class FileIdentityTimeBasedHashSet
 			{
 				if (existingTime < newTime)
 				{
-					_ = _set.Remove(existingItem);
-					_ = _set.Add(item);
+					_ = FileIdentitiesInternal.Remove(existingItem);
+					_ = FileIdentitiesInternal.Add(item);
 					return true; // Replaced older with newer
 				}
 				return false; // Existing is newer or equal; keep it
@@ -83,8 +74,8 @@ internal sealed class FileIdentityTimeBasedHashSet
 			// Existing has no timestamp but new has one: prefer the one with a timestamp
 			if (!existingTime.HasValue && newTime.HasValue)
 			{
-				_ = _set.Remove(existingItem);
-				_ = _set.Add(item);
+				_ = FileIdentitiesInternal.Remove(existingItem);
+				_ = FileIdentitiesInternal.Add(item);
 				return true; // Replaced non-timestamped with timestamped
 			}
 
@@ -93,7 +84,7 @@ internal sealed class FileIdentityTimeBasedHashSet
 		}
 
 		// If no equivalent item exists, add the new item to the set
-		_ = _set.Add(item);
+		_ = FileIdentitiesInternal.Add(item);
 		return true;
 	}
 
@@ -102,17 +93,17 @@ internal sealed class FileIdentityTimeBasedHashSet
 	/// </summary>
 	/// <param name="item">The FileIdentity item to check for.</param>
 	/// <returns>True if an equivalent item exists in the set; false otherwise.</returns>
-	public bool Contains(FileIdentity item) => _set.Contains(item);
+	public bool Contains(FileIdentity item) => FileIdentitiesInternal.Contains(item);
 
 	/// <summary>
 	/// Removes an equivalent FileIdentity item from the set, if it exists.
 	/// </summary>
 	/// <param name="item">The FileIdentity item to remove.</param>
 	/// <returns>True if the item was removed; false if it did not exist in the set.</returns>
-	public bool Remove(FileIdentity item) => _set.Remove(item);
+	public bool Remove(FileIdentity item) => FileIdentitiesInternal.Remove(item);
 
 	/// <summary>
 	/// Gets the count of items in the set.
 	/// </summary>
-	public int Count => _set.Count;
+	public int Count => FileIdentitiesInternal.Count;
 }

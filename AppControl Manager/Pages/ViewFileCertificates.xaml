@@ -63,7 +63,100 @@
 
         <controls:WrapPanel Margin="10,5,10,5" Grid.Row="2" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" HorizontalAlignment="Center">
 
-            <TextBox Width="300" x:Uid="CertificatesSearchBox"
+            <DropDownButton x:Uid="FirmwareInfoDropdownButton"
+                            IsEnabled="{x:Bind ViewModel.IsElevated}">
+
+                <DropDownButton.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE963;" FontSize="16"/>
+                            <TextBlock Text="{x:Bind}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </DropDownButton.ContentTemplate>
+
+                <DropDownButton.Flyout>
+                    <MenuFlyout Placement="Bottom">
+
+                        <!-- Platform Key (PK) Pair -->
+                        <MenuFlyoutItem Click="{x:Bind ViewModel.GetUEFI_PK}"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            x:Uid="FirmwareInfoPKDropdownButton">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE964;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+
+                        <MenuFlyoutItem Click="{x:Bind ViewModel.GetUEFI_Default_PK}"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            x:Uid="FirmwareInfoDefaultPKDropdownButton">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE964;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+
+                        <MenuFlyoutSeparator />
+
+                        <!-- Key Exchange Key (KEK) Pair -->
+                        <MenuFlyoutItem Click="{x:Bind ViewModel.GetUEFI_KEK}"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            x:Uid="FirmwareInfoKEKDropdownButton">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xF211;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+
+                        <MenuFlyoutItem Click="{x:Bind ViewModel.GetUEFI_Default_KEK}"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            x:Uid="FirmwareInfoDefaultKEKDropdownButton">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xF211;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+
+                        <MenuFlyoutSeparator />
+
+                        <!-- Signature Database (db) Pair -->
+                        <MenuFlyoutItem Click="{x:Bind ViewModel.GetUEFI_DB}"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            x:Uid="FirmwareInfoDBDropdownButton">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xEB05;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+
+                        <MenuFlyoutItem Click="{x:Bind ViewModel.GetUEFI_Default_DB}"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            x:Uid="FirmwareInfoDefaultDBDropdownButton">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xEB05;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+
+                        <MenuFlyoutSeparator />
+
+                        <!-- Forbidden Signature Database (dbx) Pair -->
+                        <MenuFlyoutItem Click="{x:Bind ViewModel.GetUEFI_DBX}"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            x:Uid="FirmwareInfoForbiddenDBXDropdownButton">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xECA7;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+
+                        <MenuFlyoutItem Click="{x:Bind ViewModel.GetUEFI_Default_DBX}"
+                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                            x:Uid="FirmwareInfoDefaultForbiddenDBXDropdownButton">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xECA7;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+
+                    </MenuFlyout>
+                </DropDownButton.Flyout>
+            </DropDownButton>
+
+            <TextBox x:Uid="CertificatesSearchBox"
                      Text="{x:Bind ViewModel.SearchBoxTextBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                      VerticalAlignment="Center"

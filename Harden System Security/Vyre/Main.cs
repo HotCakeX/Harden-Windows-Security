@@ -379,15 +379,10 @@ internal static class AuthRootProcessor
 			}
 
 			// Check if this looks like an STL file by checking the file extension or content
-			if (cabinetEntry.Name.EndsWith(".stl", StringComparison.OrdinalIgnoreCase) ||
-				(cabinetEntry.Data.Length > 2 && cabinetEntry.Data.Span[0] == 0x30))
-			{
-				extractedStlBytes = cabinetEntry.Data.ToArray();
-			}
-			else
-			{
-				throw new InvalidDataException($"Extracted file '{cabinetEntry.Name}' does not appear to be an STL file.");
-			}
+			extractedStlBytes = cabinetEntry.Name.EndsWith(".stl", StringComparison.OrdinalIgnoreCase) ||
+				(cabinetEntry.Data.Length > 2 && cabinetEntry.Data.Span[0] == 0x30)
+				? cabinetEntry.Data.ToArray()
+				: throw new InvalidDataException($"Extracted file '{cabinetEntry.Name}' does not appear to be an STL file.");
 		}))
 		{
 			decompressionContext.Run();

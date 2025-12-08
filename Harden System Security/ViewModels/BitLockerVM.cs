@@ -659,10 +659,9 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 						}
 					case KeyProtectorType.RecoveryPassword:
 						{
-							if (customDialog.RecoveryPassword is null)
-								command = $"bitlocker addrecovery \"{SelectedBitLockerVolume.MountPoint}\" -";
-							else
-								command = $"bitlocker addrecovery \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.RecoveryPassword}\"";
+							command = customDialog.RecoveryPassword is null
+								? $"bitlocker addrecovery \"{SelectedBitLockerVolume.MountPoint}\" -"
+								: $"bitlocker addrecovery \"{SelectedBitLockerVolume.MountPoint}\" \"{customDialog.RecoveryPassword}\"";
 
 							break;
 						}

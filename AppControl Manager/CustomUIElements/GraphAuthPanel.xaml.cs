@@ -27,8 +27,7 @@ internal sealed partial class GraphAuthPanel : UserControl
 
 	public IGraphAuthHost Host
 	{
-		get { return (IGraphAuthHost)GetValue(HostProperty); }
-		set { SetValue(HostProperty, value); }
+		get => (IGraphAuthHost)GetValue(HostProperty); set => SetValue(HostProperty, value);
 	}
 
 	internal static readonly DependencyProperty HostProperty =
@@ -40,8 +39,5 @@ internal sealed partial class GraphAuthPanel : UserControl
 
 	internal ThreadSafeObservableCollection<AuthenticatedAccounts> AuthenticatedAccounts => AuthenticationCompanion.AuthenticatedAccounts;
 
-	internal GraphAuthPanel()
-	{
-		InitializeComponent();
-	}
+	internal GraphAuthPanel() => InitializeComponent();
 }

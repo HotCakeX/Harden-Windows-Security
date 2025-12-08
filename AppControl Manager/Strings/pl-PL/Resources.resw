@@ -6239,4 +6239,85 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="SignatureUpdate.Text" xml:space="preserve">
     <value>Aktualizacja sygnatur (UTC)</value>
   </data>
+    <data name="FirmwareInfoDropdownButton.Content" xml:space="preserve">
+    <value>Informacje o oprogramowaniu układowym</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dostęp i analiza zmiennych UEFI Secure Boot poprzez pobranie certyfikatów i skrótów kryptograficznych z PK (Klucz platformy), KEK (Klucz wymiany kluczy), db (Baza sygnatur) i dbx (Baza zabronionych sygnatur), w tym ich fabrycznych stanów domyślnych.</value>
+  </data>
+  <data name="FirmwareInfoDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dostęp i analiza zmiennych UEFI Secure Boot poprzez pobranie certyfikatów i skrótów kryptograficznych z PK (Klucz platformy), KEK (Klucz wymiany kluczy), db (Baza sygnatur) i dbx (Baza zabronionych sygnatur), w tym ich fabrycznych stanów domyślnych.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.Text" xml:space="preserve">
+    <value>Pobierz bazę sygnatur</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobierz bazę sygnatur (db), zawierającą listę zaufanych certyfikatów i skrótów dopuszczonych do wykonania w tym systemie.</value>
+  </data>
+  <data name="FirmwareInfoDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobierz bazę sygnatur (db), zawierającą listę zaufanych certyfikatów i skrótów dopuszczonych do wykonania w tym systemie.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.Text" xml:space="preserve">
+    <value>Pobierz domyślną bazę sygnatur</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobierz fabryczną domyślną bazę sygnatur (dbDefault), zawierającą początkowy zestaw zaufanych certyfikatów i skrótów dostarczonych przez producenta systemu.</value>
+  </data>
+  <data name="FirmwareInfoDefaultDBDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobierz fabryczną domyślną bazę sygnatur (dbDefault), zawierającą początkowy zestaw zaufanych certyfikatów i skrótów dostarczonych przez producenta systemu.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>Pobierz bazę zabronionych sygnatur</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobierz bazę zabronionych sygnatur (dbx), zawierającą listę odwołania skompromitowanych certyfikatów i skrótów, które są zablokowane podczas rozruchu.</value>
+  </data>
+  <data name="FirmwareInfoForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobierz bazę zabronionych sygnatur (dbx), zawierającą listę odwołania skompromitowanych certyfikatów i skrótów, które są zablokowane podczas rozruchu.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.Text" xml:space="preserve">
+    <value>Pobierz domyślną bazę zabronionych sygnatur</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobierz fabryczną domyślną bazę zabronionych sygnatur (dbxDefault), zawierającą początkową listę odwołań dostarczoną przez producenta systemu.</value>
+  </data>
+  <data name="FirmwareInfoDefaultForbiddenDBXDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobierz fabryczną domyślną bazę zabronionych sygnatur (dbxDefault), zawierającą początkową listę odwołań dostarczoną przez producenta systemu.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.Text" xml:space="preserve">
+    <value>Pobierz klucz platformy</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobierz klucz platformy (PK), stanowiący korzeń zaufania, który kontroluje dostęp do bazy kluczy wymiany kluczy i ustanawia własność platformy.</value>
+  </data>
+  <data name="FirmwareInfoPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobierz klucz platformy (PK), stanowiący korzeń zaufania, który kontroluje dostęp do bazy kluczy wymiany kluczy i ustanawia własność platformy.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.Text" xml:space="preserve">
+    <value>Pobierz domyślny klucz platformy</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobierz fabryczny domyślny klucz platformy (PKDefault), reprezentujący oryginalny korzeń zaufania dostarczony przez producenta systemu.</value>
+  </data>
+  <data name="FirmwareInfoDefaultPKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobierz fabryczny domyślny klucz platformy (PKDefault), reprezentujący oryginalny korzeń zaufania dostarczony przez producenta systemu.</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.Text" xml:space="preserve">
+    <value>Pobierz klucz wymiany kluczy</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobierz bazę kluczy wymiany kluczy (KEK), zawierającą klucze zaufane do aktualizacji bazy sygnatur (db) i bazy zabronionych sygnatur (dbx).</value>
+  </data>
+  <data name="FirmwareInfoKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobierz bazę kluczy wymiany kluczy (KEK), zawierającą klucze zaufane do aktualizacji bazy sygnatur (db) i bazy zabronionych sygnatur (dbx).</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.Text" xml:space="preserve">
+    <value>Pobierz domyślny klucz wymiany kluczy</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pobierz fabryczną domyślną bazę kluczy wymiany kluczy (KEKDefault), zawierającą początkowy zestaw kluczy zaufanych do aktualizacji bazy danych, dostarczonych przez producenta systemu.</value>
+  </data>
+  <data name="FirmwareInfoDefaultKEKDropdownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pobierz fabryczną domyślną bazę kluczy wymiany kluczy (KEKDefault), zawierającą początkowy zestaw kluczy zaufanych do aktualizacji bazy danych, dostarczonych przez producenta systemu.</value>
+  </data>
 </root>

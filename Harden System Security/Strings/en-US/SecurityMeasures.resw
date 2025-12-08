@@ -520,7 +520,7 @@
 <data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
     <value>Enable Svchost Mitigation</value>
 </data>
-<data name="DriverLoadPolicy-Miscellaneous" xml:space="preserve">
+<data name="DriverLoadPolicyGoodOnly-Miscellaneous" xml:space="preserve">
     <value>Boot-Start Driver Initialization Policy set to Good only</value>
 </data>
 <data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
@@ -966,5 +966,8 @@
 </data>
 <data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
     <value>Set the Network Location of all connections to Public. Public network means less trust to other network devices.</value>
+</data>
+<data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
+    <value>Boot-Start Driver Initialization Policy set to Good and Unknown</value>
 </data>
 </root>

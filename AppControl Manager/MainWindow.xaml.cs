@@ -304,13 +304,13 @@ internal sealed partial class MainWindow : Window
 #if APP_CONTROL_MANAGER
 						ViewModel.AllowNewAppsIcon = new AnimatedIcon
 						{
-							Margin = new Thickness(0, -6, -6, -6),
+							Margin = new(0, -6, -6, -6),
 							Source = new StarBlack()
 						};
 #endif
 						ViewModel.UpdateIcon = new AnimatedIcon
 						{
-							Margin = new Thickness(0, -25, -25, -25),
+							Margin = new(0, -25, -25, -25),
 							Source = new HeartPulse()
 						};
 
@@ -328,13 +328,13 @@ internal sealed partial class MainWindow : Window
 #if APP_CONTROL_MANAGER
 						ViewModel.AllowNewAppsIcon = new AnimatedIcon
 						{
-							Margin = new Thickness(0, -6, -6, -6),
+							Margin = new(0, -6, -6, -6),
 							Source = new StarYellow()
 						};
 #endif
 						ViewModel.UpdateIcon = new AnimatedIcon
 						{
-							Margin = new Thickness(0, -5, -5, -5),
+							Margin = new(0, -5, -5, -5),
 							Source = new Heart()
 						};
 
@@ -356,13 +356,13 @@ internal sealed partial class MainWindow : Window
 #if APP_CONTROL_MANAGER
 							ViewModel.AllowNewAppsIcon = new AnimatedIcon
 							{
-								Margin = new Thickness(0, -6, -6, -6),
+								Margin = new(0, -6, -6, -6),
 								Source = new StarYellow()
 							};
 #endif
 							ViewModel.UpdateIcon = new AnimatedIcon
 							{
-								Margin = new Thickness(0, -5, -5, -5),
+								Margin = new(0, -5, -5, -5),
 								Source = new Heart()
 							};
 
@@ -376,13 +376,13 @@ internal sealed partial class MainWindow : Window
 #if APP_CONTROL_MANAGER
 							ViewModel.AllowNewAppsIcon = new AnimatedIcon
 							{
-								Margin = new Thickness(0, -6, -6, -6),
+								Margin = new(0, -6, -6, -6),
 								Source = new StarBlack()
 							};
 #endif
 							ViewModel.UpdateIcon = new AnimatedIcon
 							{
-								Margin = new Thickness(0, -25, -25, -25),
+								Margin = new(0, -25, -25, -25),
 								Source = new HeartPulse()
 							};
 

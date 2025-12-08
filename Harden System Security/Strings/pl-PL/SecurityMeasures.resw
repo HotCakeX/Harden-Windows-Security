@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
     <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
         <xsd:element name="root" msdata:IsDataSet="true">
@@ -520,7 +520,7 @@
 <data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
     <value>Włącz środki zaradcze Svchost</value>
 </data>
-<data name="DriverLoadPolicy-Miscellaneous" xml:space="preserve">
+<data name="DriverLoadPolicyGoodOnly-Miscellaneous" xml:space="preserve">
     <value>Ustaw zasadę inicjalizacji sterownika rozruchowego tylko na dobre</value>
 </data>
 <data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
@@ -966,5 +966,8 @@
 </data>
 <data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
     <value>Ustaw profil sieci wszystkich połączeń na Publiczny. Sieć publiczna oznacza mniejsze zaufanie do innych urządzeń w sieci.</value>
+</data>
+<data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
+    <value>Zasada inicjowania sterowników rozruchowych ustawiona na Dobre i Nieznane</value>
 </data>
 </root>

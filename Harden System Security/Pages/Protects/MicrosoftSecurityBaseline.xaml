@@ -92,16 +92,30 @@
                     ExternalOperationStarted="{x:Bind ViewModel.VerifyAllCancellableButton.OperationStarted, Mode=OneWay}"
                     Click="{x:Bind ViewModel.VerifySecurityBaseline}"/>
 
-                    <Button x:Uid="ClearDataButton" IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}" Click="{x:Bind ViewModel.ClearData}">
-                        <Button.ContentTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <FontIcon Glyph="&#xED62;" FontSize="16"/>
-                                    <TextBlock Text="{x:Bind}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </Button.ContentTemplate>
-                    </Button>
+                    <!-- Actions Dropdown -->
+                    <DropDownButton x:Uid="ExtraActionsDropDownButton">
+                        <DropDownButton.Flyout>
+                            <MenuFlyout Placement="Bottom">
+
+                                <MenuFlyoutItem x:Uid="ClearDataMenuFlyoutItem"
+                                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                Click="{x:Bind ViewModel.ClearData}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xED62;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <ToggleMenuFlyoutItem x:Uid="ApplyBaselineOverridesToggleMenuFlyoutItem"
+                                                      IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                      IsChecked="{x:Bind ViewModel.ApplyBaselineOverridesToggle, Mode=TwoWay}">
+                                    <ToggleMenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xEA86;"/>
+                                    </ToggleMenuFlyoutItem.Icon>
+                                </ToggleMenuFlyoutItem>
+
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
 
                     <ComboBox ItemsSource="{x:Bind ViewModel.SecurityBaselinesComboBoxItemsSource}"
                               x:Uid="SecurityBaselinesComboBox"

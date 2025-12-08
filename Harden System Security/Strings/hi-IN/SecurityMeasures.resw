@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
     <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
         <xsd:element name="root" msdata:IsDataSet="true">
@@ -520,7 +520,7 @@
 <data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
     <value>Svchost शमन सक्षम करें</value>
 </data>
-<data name="DriverLoadPolicy-Miscellaneous" xml:space="preserve">
+<data name="DriverLoadPolicyGoodOnly-Miscellaneous" xml:space="preserve">
     <value>बूट ड्राइवर इनिशियलाइज़ेशन नीति केवल अच्छे पर सेट करें</value>
 </data>
 <data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
@@ -966,5 +966,8 @@
 </data>
 <data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
     <value>सभी कनेक्शनों की नेटवर्क प्रोफ़ाइल को सार्वजनिक पर सेट करें. सार्वजनिक नेटवर्क का अर्थ अन्य नेटवर्क उपकरणों पर कम भरोसा होना है.</value>
+</data>
+<data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
+    <value>बूट-स्टार्ट ड्राइवर आरंभीकरण नीति को अच्छा और अज्ञात पर सेट किया गया है</value>
 </data>
 </root>

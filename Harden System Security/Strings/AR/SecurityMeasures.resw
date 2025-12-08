@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
     <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
         <xsd:element name="root" msdata:IsDataSet="true">
@@ -520,7 +520,7 @@
 <data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
     <value>تفعيل تخفيف Svchost</value>
 </data>
-<data name="DriverLoadPolicy-Miscellaneous" xml:space="preserve">
+<data name="DriverLoadPolicyGoodOnly-Miscellaneous" xml:space="preserve">
     <value>تعيين سياسة تهيئة برنامج التشغيل عند بدء التمهيد إلى الجيد فقط</value>
 </data>
 <data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
@@ -966,5 +966,8 @@
 </data>
 <data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
     <value>عيّن ملف تعريف الشبكة لجميع الاتصالات إلى عام. تعني الشبكة العامة مستوى ثقة أقل بالأجهزة الأخرى على الشبكة.</value>
+</data>
+<data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
+    <value>تم تعيين سياسة تهيئة برامج تشغيل بدء التمهيد إلى "جيد" و "غير معروف"</value>
 </data>
 </root>

@@ -114,7 +114,7 @@ internal static class MUnitDependencyRegistry
 	{
 		ref List<MUnitDependency>? listRef = ref CollectionsMarshal.GetValueRefOrAddDefault(_dependencies, primaryMUnitId, out _);
 		listRef ??= [];
-		listRef.Add(new MUnitDependency(dependentMUnitId, type, timing));
+		listRef.Add(new(dependentMUnitId, type, timing));
 		Logger.Write(string.Format(GlobalVars.GetStr("JSONDependencyRegistered"), primaryMUnitId, dependentMUnitId, type, timing));
 	}
 
@@ -215,7 +215,12 @@ internal interface IVerifyStrategy
 /// </summary>
 internal interface ISpecializedVerificationStrategy
 {
-	bool Verify();
+	/// <summary>
+	/// Verifies the strategy using an optional target policy as context.
+	/// </summary>
+	/// <param name="targetPolicy">The policy being verified, allowing the strategy to adapt to specific expected values.</param>
+	/// <returns>True if the condition is met.</returns>
+	bool Verify(RegistryPolicyEntry? targetPolicy = null);
 }
 
 /// <summary>
@@ -561,7 +566,7 @@ internal static class SpecializedStrategiesRegistry
 			string wmiProperty,
 			List<WmiDesiredValue> desiredValues) : ISpecializedVerificationStrategy
 	{
-		public bool Verify()
+		public bool Verify(RegistryPolicyEntry? targetPolicy = null)
 		{
 			try
 			{
@@ -1363,7 +1368,8 @@ internal sealed partial class MUnit(
 			{
 				try
 				{
-					bool fallbackResult = fallbackStrategy.Verify();
+					// Pass the specific policy entry so the strategy knows exactly what values to expect
+					bool fallbackResult = fallbackStrategy.Verify(policy);
 					Logger.Write(string.Format(GlobalVars.GetStr("FallbackVerifyResult"), policy.KeyName, policy.ValueName, fallbackResult ? GlobalVars.GetStr("SUCCESS") : GlobalVars.GetStr("FAILED")));
 
 					if (fallbackResult)

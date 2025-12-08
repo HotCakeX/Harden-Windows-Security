@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
     <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
         <xsd:element name="root" msdata:IsDataSet="true">
@@ -520,7 +520,7 @@
 <data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
     <value>הפעלת הקלה ב-Svchost</value>
 </data>
-<data name="DriverLoadPolicy-Miscellaneous" xml:space="preserve">
+<data name="DriverLoadPolicyGoodOnly-Miscellaneous" xml:space="preserve">
     <value>מדיניות אתחול מנהל התקן בהפעלה מוגדרת לטובים בלבד</value>
 </data>
 <data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
@@ -966,5 +966,8 @@
 </data>
 <data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
     <value>הגדר את פרופיל הרשת של כל החיבורים לציבורי. רשת ציבורית משמעה רמת אמון נמוכה יותר כלפי התקני רשת אחרים.</value>
+</data>
+<data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
+    <value>מדיניות אתחול מנהלי התקנים בטעינת מערכת הוגדרה כטובים ולא ידועים</value>
 </data>
 </root>
